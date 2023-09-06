@@ -29,7 +29,7 @@
                 <td class="voting-option">
                     <ng-container *ngTemplateOutlet="showListForRow; context: { row: row }"></ng-container>
                     <div *ngIf="row.class !== 'list'">
-                        <span class="candidate-name">
+                        <span clsupass="candidate-name">
                             {{ row.votingOption | pollKeyVerbose | translate }}
                         </span>
                         <span class="user-subtitle" *ngIf="row.votingOptionSubtitle">
@@ -41,6 +41,7 @@
                 <td class="result" *ngFor="let vote of filterRelevantResults(row.value)">
                     <div class="single-result" [ngClass]="getVoteClass(vote)">
                         <span>
+                            
                             <span *ngIf="vote.showPercent">
                                 {{ getVoteAmount(vote, row) | pollPercentBase : poll : row }}
                             </span>

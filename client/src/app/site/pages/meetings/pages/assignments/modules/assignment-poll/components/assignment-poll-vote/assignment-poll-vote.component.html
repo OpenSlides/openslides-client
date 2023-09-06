@@ -108,7 +108,7 @@
             </div>
 
             <!-- global yes/no/abstain -->
-            <ng-container *ngIf="(poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled">
+            <ng-container *ngIf="(poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled && false">
                 <mat-divider></mat-divider>
                 <div class="global-option-grid">
                     <div *ngIf="poll.global_yes">
@@ -227,11 +227,12 @@
         <button
             mat-flat-button
             color="accent"
-            (click)="submitVote(delegation)"
-            [disabled]="getVotesCount(delegation) < minVotes"
+            (click)="submitVoteCheck(delegation)"
+            [disabled]="getButtonDisabledCheck(delegation)"
         >
             <mat-icon>how_to_vote</mat-icon>
             <span>
+
                 {{ 'Submit vote now' | translate }}
             </span>
         </button>

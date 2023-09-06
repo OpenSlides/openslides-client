@@ -48,6 +48,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     }
 
     public get tableData(): PollTableData[] {
+
         return this._tableData;
     }
 
@@ -142,8 +143,22 @@ export class AssignmentPollDetailContentComponent implements OnInit {
             .subscribe(options => this.setupTableData());
     }
 
+    private subtractAmounts(data): void {
+        // Find the object with votingOption = amount_global_abstain
+        let abstainObj = data.find(item => item.votingOption === 'amount_global_abstain');
+        
+        // Find the object with votingOption = votesvalid
+        let votesvalidObj = data.find(item => item.votingOption === 'votesvalid');
+        
+        // If both objects are found, subtract the amounts
+        if (abstainObj && votesvalidObj) {
+            votesvalidObj.value[0].amount -= abstainObj.value[0].amount;
+        }
+    }
+
     private setupTableData(): void {
         this._tableData = this.pollService.generateTableData(this.poll);
+        this.subtractAmounts(this._tableData);
         this.updateReformedTableData();
         this.setChartData();
         this.cd.markForCheck();
@@ -151,6 +166,8 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     private updateReformedTableData(): void {
         this.reformedTableData = [];
+        console.log(this.tableData)
+
         this.tableData.forEach(tableDate => {
             if ([`user`, `list`].includes(tableDate.class)) {
                 tableDate.value.forEach(value => {
@@ -187,6 +204,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     public getVoteAmount(vote: VotingResult, row: PollTableData): number {
         vote.amount = vote.amount ?? 0;
+
         if (this.isMethodN && [`user`, `list`].includes(row.class)) {
             if (vote.amount < 0) {
                 return vote.amount;

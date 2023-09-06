@@ -130,6 +130,13 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         return ``;
     }
 
+    getButtonDisabledCheck(delegation): boolean {
+        if(this.poll.global_abstain)
+            return false;
+        return this.getVotesCount(delegation) < this.minVotes;
+    }
+
+
     private defineVoteOptions(): void {
         this.voteActions = [];
         if (this.poll) {
@@ -207,6 +214,22 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         return value === `Y` || value === `N` || value === `A`;
     }
 
+    public submitVoteCheck(delegation): void{
+        if(this.poll.global_abstain && this.getVotesCount(delegation) < this.minVotes){
+            this.saveGlobalVote('A', delegation)
+        }else{
+            this.submitVote(delegation)
+        }
+    }
+
+    public async selectVote(user: ViewUser = this.user): Promise<void> {
+        const value = this.voteRequestData[user.id].value;
+        if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
+            this.raiseError(this.translate.instant(`There is an error in your vote.`));
+            return;
+        }
+    }
+    
     public async submitVote(user: ViewUser = this.user): Promise<void> {
         const value = this.voteRequestData[user.id].value;
         if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
@@ -268,7 +291,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
                 // if you have no options anymore, try to send
                 if (this.getVotesCount(user) === maxVotesAmount) {
-                    this.submitVote(user);
+                    this.selectVote(user);
                 }
             } else {
                 this.raiseError(
@@ -288,7 +311,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
             // if a user filled out every option, try to send
             if (Object.keys(this.voteRequestData[user.id].value).length === this.poll.options.length) {
-                this.submitVote(user);
+                this.selectVote(user);
             }
         }
     }
@@ -322,7 +345,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
                 // if you have no options anymore, try to send
                 if (this.getVotesCount(user) === maxVotesAmount && !this.isErrorInVoteEntry()) {
-                    this.submitVote(user);
+                    this.selectVote(user);
                 }
             } else {
                 this.raiseError(
