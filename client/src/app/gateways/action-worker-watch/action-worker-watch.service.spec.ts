@@ -1,8 +1,8 @@
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, map, Observable } from 'rxjs';
 import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
-import { ActionWorker } from 'src/app/domain/models/action-worker/action-worker';
+import { ActionWorker, ActionWorkerState } from 'src/app/domain/models/action-worker/action-worker';
 import { WaitForActionData, WaitForActionReason } from 'src/app/site/modules/wait-for-action-dialog/definitions';
 import { WaitForActionDialogService } from 'src/app/site/modules/wait-for-action-dialog/services';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
@@ -10,6 +10,7 @@ import { ModelRequestService } from 'src/app/site/services/model-request.service
 import { ActionWorkerRepositoryService } from '../repositories/action-worker/action-worker-repository.service';
 import { ViewActionWorker } from '../repositories/action-worker/view-action-worker';
 import { ActionWorkerWatchService } from './action-worker-watch.service';
+import { ACTION_WORKER_SUBSCRIPTION } from './action-worker-watch.subscription';
 
 function createHttpResponse(
     name: string,
@@ -45,16 +46,18 @@ class MockWaitForActionDialogService {
 }
 
 class MockModelRequestService {
-    public currentSubscriptions: { [subscriptionName: string]: SubscriptionConfig<any> } = {};
+    public currentSubscriptions = new BehaviorSubject<{ [subscriptionName: string]: SubscriptionConfig<any> }>({});
 
     public constructor() {}
 
     public async updateSubscribeTo(config: SubscriptionConfig<any>): Promise<void> {
-        this.currentSubscriptions[config.subscriptionName] = config;
+        this.currentSubscriptions.next({ ...this.currentSubscriptions.value, [config.subscriptionName]: config });
     }
 
     public closeSubscription(subscriptionName: string): void {
-        delete this.currentSubscriptions[subscriptionName];
+        const current = this.currentSubscriptions.value;
+        delete current[subscriptionName];
+        this.currentSubscriptions.next(current);
     }
 }
 
@@ -121,7 +124,9 @@ fdescribe(`ActionWorkerWatchService`, () => {
     });
 
     it(`test action worker watch for worker that wasn't written`, async () => {
-        await expectAsync(service.watch(createHttpResponse(`model.action`, `model/42`, false), true)).toBeRejectedWith(
+        await expectAsync(
+            service.watch(createHttpResponse(`model.action`, `action_worker/42`, false), true)
+        ).toBeRejectedWith(
             new HttpErrorResponse({
                 error: {
                     success: false,
@@ -129,6 +134,45 @@ fdescribe(`ActionWorkerWatchService`, () => {
                     url: null
                 },
                 status: 500
+            })
+        );
+    });
+
+    it(`test action worker watch for worker that is working correctly`, async () => {
+        const subscriptionPromise = firstValueFrom(
+            modelRequest.currentSubscriptions.pipe(filter(subscriptions => !!Object.keys(subscriptions).length))
+        );
+        const startData = {
+            id: 42,
+            created: Date.now(),
+            timestamp: Date.now(),
+            name: `model.action`,
+            state: ActionWorkerState.running
+        };
+        repo.viewModelList = [new ViewActionWorker(new ActionWorker(startData))];
+        repo.invisibleIds.push(42);
+        const originalResponse = createHttpResponse(`model.action`, `action_worker/42`, true);
+        const watchPromise = service.watch(originalResponse, true);
+        expect(Object.keys(await subscriptionPromise).length).toBe(1);
+        expect((await subscriptionPromise)[ACTION_WORKER_SUBSCRIPTION]).not.toBeFalsy();
+        repo.invisibleIds = [];
+        repo.viewModelList = [
+            new ViewActionWorker(
+                new ActionWorker({
+                    ...startData,
+                    timestamp: Date.now(),
+                    state: ActionWorkerState.end,
+                    result: { success: true, status_code: 200, message: `I have data`, data: `I have a result` }
+                })
+            )
+        ];
+        await expectAsync(watchPromise).toBeResolvedTo(
+            new HttpResponse({
+                // body: { success: true, status_code: 200, message: `I have data`, data: `I have a result` },
+                headers: originalResponse.headers,
+                status: 200,
+                url: originalResponse.url,
+                statusText: `I have data`
             })
         );
     });

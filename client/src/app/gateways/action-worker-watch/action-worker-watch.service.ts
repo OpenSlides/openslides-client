@@ -72,6 +72,7 @@ export class ActionWorkerWatchService {
         this.dialogService.removeAllDates(id);
         this.unsubscribeFromWorker(id);
         if (worker.state === ActionWorkerState.end) {
+            console.log(`WORKER RETURNED`, worker);
             if (worker.result?.success === false) {
                 throw new HttpErrorResponse({
                     error: { ...worker.result },
