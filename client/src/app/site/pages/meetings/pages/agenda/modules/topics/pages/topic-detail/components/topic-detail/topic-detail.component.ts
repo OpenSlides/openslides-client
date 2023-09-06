@@ -50,7 +50,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
     /**
      * Determine is created
      */
-    public newTopic: boolean = false;
+    public newTopic = false;
 
     /**
      * Holds the current view topic
@@ -75,6 +75,8 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
     public readonly hasLoaded = new Deferred<boolean>();
 
     private _topicId: Id | null = null;
+
+    public getTitleFn = () => this.topic.getListTitle();
 
     /**
      * Constructor for the topic detail page.
@@ -192,7 +194,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
             // repo sometimes delivers undefined values
             // also ensures edition cannot be interrupted by autoupdate
             if (newViewTopic) {
-                const title = newViewTopic.getTitle();
+                const title = newViewTopic.getListTitle();
                 super.setTitle(title);
                 this.topic = newViewTopic;
                 // personalInfoForm is undefined during 'new' and directly after reloading

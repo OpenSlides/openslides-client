@@ -86,6 +86,10 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this.cd.markForCheck();
     }
 
+    public get nextMotion(): ViewMotion | null {
+        return this._nextMotion;
+    }
+
     /**
      * preload the previous motion for direct navigation
      */
@@ -94,23 +98,19 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this.cd.markForCheck();
     }
 
-    public get nextMotion(): ViewMotion | null {
-        return this._nextMotion;
-    }
-
     public get previousMotion(): ViewMotion | null {
         return this._previousMotion;
     }
-
-    private _nextMotion: ViewMotion | null = null;
-
-    private _previousMotion: ViewMotion | null = null;
 
     public get showNavigateButtons(): boolean {
         return !!this.previousMotion || !!this.nextMotion;
     }
 
     public hasLoaded = new BehaviorSubject(false);
+
+    private _nextMotion: ViewMotion | null = null;
+
+    private _previousMotion: ViewMotion | null = null;
 
     /**
      * Subject for (other) motions
@@ -189,6 +189,8 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
         this.destroy();
+        this.amendmentSortService.exitSortService();
+        this.motionSortService.exitSortService();
     }
 
     public getSaveAction(): () => Promise<void> {
@@ -476,15 +478,20 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         // use the filter and the search service to get the current sorting
         if (this.motion && this.motion.lead_motion_id && !this._amendmentsInMainList) {
             // only use the amendments for this motion
+            this.amendmentSortService.initSorting();
             this.amendmentFilterService.initFilters(
-                this.amendmentRepo.getViewModelListObservableFor({ id: this.motion.lead_motion_id })
+                this.amendmentRepo.getSortedViewModelListObservableFor(
+                    { id: this.motion.lead_motion_id },
+                    this.amendmentSortService.repositorySortingKey
+                )
             );
-            this.amendmentSortService.initSorting(this.amendmentFilterService.outputObservable);
-            this._sortedMotionsObservable = this.amendmentSortService.outputObservable;
+            this._sortedMotionsObservable = this.amendmentFilterService.outputObservable;
         } else {
-            this.motionFilterService.initFilters(this._motionObserver);
-            this.motionSortService.initSorting(this.motionFilterService.outputObservable);
-            this._sortedMotionsObservable = this.motionSortService.outputObservable;
+            this.motionSortService.initSorting();
+            this.motionFilterService.initFilters(
+                this.repo.getSortedViewModelListObservable(this.motionSortService.repositorySortingKey)
+            );
+            this._sortedMotionsObservable = this.motionFilterService.outputObservable;
         }
 
         if (this._sortedMotionsObservable) {

@@ -161,14 +161,18 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             this.storeActiveFilters();
         }
 
-        if (this.inputDataSubscription) {
-            this.inputDataSubscription.unsubscribe();
-            this.inputDataSubscription = null;
-        }
+        this.exitFilterService();
         this.inputDataSubscription = inputData.subscribe(data => {
             this._source.next(this.preFilter(data));
             this.updateFilteredData();
         });
+    }
+
+    public exitFilterService(): void {
+        if (this.inputDataSubscription) {
+            this.inputDataSubscription.unsubscribe();
+            this.inputDataSubscription = null;
+        }
     }
 
     public getViewModelListObservable(): Observable<V[]> {
@@ -186,7 +190,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
 
         const nextDefinitions = this.getFilterDefinitions();
 
-        let storedFilters: OsFilter<V>[] = (await this.loadFilters()) ?? [];
+        const storedFilters: OsFilter<V>[] = (await this.loadFilters()) ?? [];
 
         if (!(storedFilters && storedFilters.length && nextDefinitions && nextDefinitions.length)) {
             return;
@@ -206,7 +210,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param filter
      * @param update
      */
-    public clearFilter(filter: OsFilter<V>, update: boolean = true): void {
+    public clearFilter(filter: OsFilter<V>, update = true): void {
         filter.options.forEach(option => {
             if (typeof option === `object` && option.isActive) {
                 this.removeFilterOption(filter.property, option);
@@ -279,6 +283,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                                 condition: model.id,
                                 label: model.getTitle(),
                                 isChild: !!model.parent,
+                                isActive: (<OsFilterOption>(
+                                    filter.options.find(f => (<OsFilterOption>f)?.condition === model.id)
+                                ))?.isActive,
                                 children:
                                     model.children && model.children.length
                                         ? model.children.map((child: any) => ({

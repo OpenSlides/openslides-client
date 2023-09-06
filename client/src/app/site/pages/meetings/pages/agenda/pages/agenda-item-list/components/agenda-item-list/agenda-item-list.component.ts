@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -55,7 +55,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     /**
      * Show or hide the numbering button
      */
-    public isNumberingAllowed: boolean = false;
+    public isNumberingAllowed = false;
 
     public showSubtitles: Observable<boolean> = this.meetingSettingsService.get(`agenda_show_subtitles`);
 
@@ -135,7 +135,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
                                 default: false
                             }
                         ],
-                        projectionDefault: Projectiondefault.agendaAllItems,
+                        projectionDefault: PROJECTIONDEFAULT.agendaItemList,
                         getDialogTitle: () => this.translate.instant(`Agenda`)
                     };
                 } else {
@@ -398,7 +398,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         this.modelRequestService
             .fetch(getTopicDuplicateSubscriptionConfig(...filteredItems.map(el => el.content_object.id)))
             .then(() => {
-                this.topicRepo.duplicateTopics(...filteredItems);
+                this.topicRepo.duplicateTopics(...filteredItems.map(item => this.repo.getViewModel(item.id)));
             });
     }
 

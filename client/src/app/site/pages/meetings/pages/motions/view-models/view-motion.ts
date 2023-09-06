@@ -6,12 +6,16 @@ import { Id } from '../../../../../../domain/definitions/key-types';
 import { AgendaItemType } from '../../../../../../domain/models/agenda/agenda-item';
 import { HasReferencedMotionInExtensionIds, Motion } from '../../../../../../domain/models/motions/motion';
 import { AmendmentType, ChangeRecoMode } from '../../../../../../domain/models/motions/motions.constants';
-import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
+import {
+    PROJECTIONDEFAULT,
+    ProjectiondefaultValue
+} from '../../../../../../domain/models/projector/projection-default';
 import { BaseViewModel } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { SlideOptions } from '../../../view-models/slide-options';
 import { ViewMeeting } from '../../../view-models/view-meeting';
+import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
@@ -210,6 +214,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return status;
     }
 
+    public get supporter_users(): ViewUser[] {
+        return this.supporter_meeting_users?.flatMap(user => user.user ?? []);
+    }
+
+    public get supporter_user_ids(): number[] {
+        return this.supporter_meeting_users?.flatMap(user => user.user_id ?? []);
+    }
+
     private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
     private _affectedAmendmentLines: DiffLinesInParagraph[] | null = null;
 
@@ -274,7 +286,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public hasSupporters(): boolean {
-        return !!(this.supporters && this.supporters.length > 0);
+        return !!(this.supporter_meeting_users && this.supporter_meeting_users.length > 0);
     }
 
     public hasAttachments(): boolean {
@@ -301,7 +313,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
      * specified by -array
      */
     public isParagraphBasedAmendment(): boolean {
-        return this.amendment_paragraph_$?.length > 0;
+        return this.amendment_paragraph_numbers?.length > 0;
     }
 
     public override getProjectionBuildDescriptor(
@@ -329,11 +341,11 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         };
     }
 
-    public getProjectiondefault(): Projectiondefault {
+    public getProjectiondefault(): ProjectiondefaultValue {
         if (this.isParagraphBasedAmendment()) {
-            return Projectiondefault.amendment;
+            return PROJECTIONDEFAULT.amendment;
         } else {
-            return Projectiondefault.motion;
+            return PROJECTIONDEFAULT.motion;
         }
     }
 }
@@ -355,7 +367,7 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     category?: ViewMotionCategory;
     block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
-    supporters: ViewUser[];
+    supporter_meeting_users: ViewMeetingUser[];
     change_recommendations: ViewMotionChangeRecommendation[];
     statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];

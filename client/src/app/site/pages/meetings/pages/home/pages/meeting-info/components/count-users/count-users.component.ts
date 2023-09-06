@@ -1,5 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
-import { auditTime, Observable } from 'rxjs';
+import { Component } from '@angular/core';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { CountUsersStatisticsService, CountUserStatistics } from '../../services/count-users-statistics.service';
@@ -9,33 +8,19 @@ import { CountUsersStatisticsService, CountUserStatistics } from '../../services
     templateUrl: `./count-users.component.html`,
     styleUrls: [`./count-users.component.scss`]
 })
-export class CountUsersComponent extends BaseUiComponent implements OnDestroy {
-    public token: string | null = null;
+export class CountUsersComponent extends BaseUiComponent {
     public stats: CountUserStatistics | null = null;
+
+    public get lastUpdated(): number {
+        return this.countUsersStatisticService.lastUpdated;
+    }
 
     public constructor(private countUsersStatisticService: CountUsersStatisticsService) {
         super();
     }
 
-    public countUsers(): void {
-        if (this.token) {
-            return;
-        }
-        let statsObservable: Observable<CountUserStatistics>;
-        [this.token, statsObservable] = this.countUsersStatisticService.countUsers();
-        this.subscriptions.push(
-            statsObservable.pipe(auditTime(100)).subscribe(stats => {
-                this.stats = stats;
-            })
-        );
-    }
-
-    public stopCounting(): void {
-        if (this.token) {
-            this.countUsersStatisticService.stopCounting(this.token);
-            this.token = null;
-            this.stats = null;
-        }
+    public async countUsers(): Promise<void> {
+        this.stats = await this.countUsersStatisticService.countUsers();
     }
 
     public userIds(): number[] {
@@ -48,10 +33,5 @@ export class CountUsersComponent extends BaseUiComponent implements OnDestroy {
 
     public userInGroupIds(groupId: number): number[] {
         return this.stats ? Object.keys(this.stats.groups[groupId].users).map(id => +id) : [];
-    }
-
-    public override ngOnDestroy(): void {
-        super.ngOnDestroy();
-        this.stopCounting();
     }
 }

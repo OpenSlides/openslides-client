@@ -109,7 +109,7 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
         [name: string]: Subject<NotifyResponse<any>>;
     } = {};
 
-    private channelId: string = ``;
+    private channelId = ``;
 
     /**
      * Constructor to create the NotifyService.

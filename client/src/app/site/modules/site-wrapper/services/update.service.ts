@@ -41,10 +41,16 @@ export class UpdateService {
     /**
      * Trigger that to manually check for updates
      */
-    public checkForUpdate(): void {
+    public async checkForUpdate(): Promise<boolean> {
         if (this.swUpdate.isEnabled) {
-            this.swUpdate.checkForUpdate();
+            try {
+                return await this.swUpdate.checkForUpdate();
+            } catch (e) {
+                return false;
+            }
         }
+
+        return false;
     }
 
     private checkVersion(version: VersionReadyEvent): void {

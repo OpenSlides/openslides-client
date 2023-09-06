@@ -13,6 +13,8 @@ module.exports = {
             },
             plugins: ['simple-import-sort', 'unused-imports'],
             extends: [
+                'plugin:@typescript-eslint/recommended',
+                'plugin:rxjs/recommended',
                 'plugin:@angular-eslint/recommended',
                 'plugin:@angular-eslint/template/process-inline-templates',
                 'plugin:prettier/recommended'
@@ -34,12 +36,6 @@ module.exports = {
                         style: 'camelCase'
                     }
                 ],
-                '@angular-eslint/no-conflicting-lifecycle': ['off'],
-                '@angular-eslint/no-output-native': ['off'],
-                '@typescript-eslint/adjacent-overload-signatures': ['off'],
-                '@typescript-eslint/ban-types': ['off'],
-                '@typescript-eslint/consistent-type-assertions': ['off'],
-                '@typescript-eslint/member-ordering': ['off'],
                 '@typescript-eslint/naming-convention': [
                     'error',
                     {
@@ -56,25 +52,28 @@ module.exports = {
                         'format': ['camelCase', 'PascalCase', 'snake_case', 'UPPER_CASE']
                     }
                 ],
-                '@typescript-eslint/no-empty-interface': ['off'],
-                '@typescript-eslint/no-namespace': ['off'],
-                '@typescript-eslint/no-unused-vars': 'off',
-                '@typescript-eslint/prefer-for-of': ['off'],
                 '@typescript-eslint/quotes': ['error', 'backtick', { 'avoidEscape': false }],
-                'arrow-body-style': ['off'],
-                'id-blacklist': ['off'],
-                'jsdoc/require-example': ['off'],
-                'jsdoc/newline-after-description': ['off'],
-                'jsdoc/no-types': ['off'],
-                'max-len': ['off'],
-                'no-bitwise': ['off'],
-                'no-console': ['off'],
-                'no-underscore-dangle': ['off'],
-                'object-shorthand': ['off'],
-                'prefer-arrow/prefer-arrow-functions': ['off'],
                 'simple-import-sort/imports': 'error',
                 'simple-import-sort/exports': 'error',
                 'unused-imports/no-unused-imports': 'error',
+
+                'jsdoc/require-example': ['off'],
+                'jsdoc/newline-after-description': ['off'],
+                'jsdoc/no-types': ['off'],
+                '@typescript-eslint/no-empty-function': ['off'],
+                '@typescript-eslint/no-empty-interface': ['off'],
+                'rxjs/no-async-subscribe': ['off'],
+
+                // Should be switched to error ordered by priority
+                '@typescript-eslint/no-unnecessary-type-constraint': ['warn'],
+                '@typescript-eslint/no-this-alias': ['warn'],
+                '@typescript-eslint/ban-types': ['warn'],
+                '@typescript-eslint/no-unused-vars': 'warn',
+                '@typescript-eslint/adjacent-overload-signatures': ['warn'],
+                '@typescript-eslint/ban-ts-comment': ['warn'],
+                '@typescript-eslint/no-explicit-any': ['off'],
+                '@typescript-eslint/no-non-null-assertion': ['off'],
+                'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }],
                 'no-restricted-properties': ['error', {
                     'property': 'asObservable',
                     'message': 'Please use a typecast or explicitly instantiate a new Observable.'

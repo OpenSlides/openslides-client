@@ -31,7 +31,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
         return this._ssoConfigRows;
     }
 
-    private _ssoConfigRows: number = 3;
+    private _ssoConfigRows = 3;
 
     private _currentOrgaSettings: ViewOrganization | null = null;
 
@@ -132,10 +132,12 @@ export class OrganizationSettingsComponent extends BaseComponent {
 
     public onSubmit(): void {
         const payload: any = this.orgaSettingsForm!.value;
-        payload.saml_attr_mapping = !!payload.saml_attr_mapping
-            ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
-            : null;
-        for (let key of Object.keys(payload)) {
+        if (this.operator.isSuperAdmin) {
+            payload.saml_attr_mapping = !!payload.saml_attr_mapping
+                ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
+                : null;
+        }
+        for (const key of Object.keys(payload)) {
             if (this.orgaSettingsForm.get(key).pristine) {
                 delete payload[key];
             }

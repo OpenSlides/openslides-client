@@ -6,6 +6,7 @@ import {
     MOTION_PDF_OPTIONS,
     PERSONAL_NOTE_ID
 } from 'src/app/domain/models/motions/motions.constants';
+import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
 import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
@@ -203,12 +204,7 @@ export class MotionPdfService {
         const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
 
         const number = motion.number ? motion.number : ``;
-        let title = ``;
-        if (this.pdfDocumentService.pageSize === `A4`) {
-            title += `${this.translate.instant(`Motion`)} `;
-        }
-
-        title += `${number}: ${changedTitle}`;
+        const title = `${this.translate.instant(`Motion`)} ${number}: ${changedTitle}`;
 
         return {
             text: title,
@@ -275,10 +271,10 @@ export class MotionPdfService {
         }
 
         // supporters
-        if (!infoToExport || infoToExport.includes(`supporters`)) {
+        if (!infoToExport || infoToExport.includes(`supporter_users`)) {
             const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
-            if (minSupporters && motion.supporters.length > 0) {
-                const supporters = motion.supporters.map(supporter => supporter.full_name).join(`, `);
+            if (minSupporters && motion.supporter_users.length > 0) {
+                const supporters = motion.supporter_users.map(supporter => supporter.full_name).join(`, `);
 
                 metaTableBody.push([
                     {
@@ -324,6 +320,26 @@ export class MotionPdfService {
                     text: this.motionService.getExtendedRecommendationLabel(motion)
                 }
             ]);
+        }
+
+        // referring motions
+        if (!infoToExport || infoToExport.includes(`referring_motions`)) {
+            if (motion.referenced_in_motion_recommendation_extensions.length) {
+                const referringMotions = motion.referenced_in_motion_recommendation_extensions
+                    .naturalSort(this.translate.currentLang, [`number`, `title`])
+                    .map(motion => motion.getNumberOrTitle())
+                    .join(`, `);
+
+                metaTableBody.push([
+                    {
+                        text: `${this.translate.instant(`Referring motions`)}:`,
+                        style: `boldText`
+                    },
+                    {
+                        text: referringMotions
+                    }
+                ]);
+            }
         }
 
         // category
@@ -388,22 +404,24 @@ export class MotionPdfService {
                             this.pollKeyVerbose.transform(votingResult.votingOption)
                         );
                         const value = votingResult.value[0];
-                        const resultValue = this.parsePollNumber.transform(value.amount!);
-                        column1.push(`${votingOption}:`);
-                        if (value.showPercent) {
-                            const resultInPercent = this.motionPollService.getVoteValueInPercent(value.amount!, {
-                                poll
-                            });
-                            // hard check for "null" since 0 is a valid number in this case
-                            if (resultInPercent !== null) {
-                                column2.push(`(${resultInPercent})`);
+                        if (value.amount !== VOTE_UNDOCUMENTED) {
+                            const resultValue = this.parsePollNumber.transform(value.amount!);
+                            column1.push(`${votingOption}:`);
+                            if (value.showPercent) {
+                                const resultInPercent = this.motionPollService.getVoteValueInPercent(value.amount!, {
+                                    poll
+                                });
+                                // hard check for "null" since 0 is a valid number in this case
+                                if (resultInPercent !== null) {
+                                    column2.push(`(${resultInPercent})`);
+                                } else {
+                                    column2.push(``);
+                                }
                             } else {
                                 column2.push(``);
                             }
-                        } else {
-                            column2.push(``);
+                            column3.push(resultValue);
                         }
-                        column3.push(resultValue);
                     });
                     metaTableBody.push([
                         {
@@ -463,7 +481,7 @@ export class MotionPdfService {
                     // change type column
                     if (change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION) {
                         const changeReco = change as ViewMotionChangeRecommendation;
-                        columnLineNumbers.push(`${this.translate.instant(`Line`)} ${line}: `);
+                        columnLineNumbers.push(`${this.translate.instant(`Line`)} ${line} `);
                         columnChangeType.push(
                             `(${this.translate.instant(`Change recommendation`)}) - ${this.translate.instant(
                                 getRecommendationTypeName(changeReco)
@@ -477,7 +495,7 @@ export class MotionPdfService {
                         } else if (amendment.isAccepted()) {
                             summaryText += ` ${this.translate.instant(amendment.stateName)}`;
                             // only append line and change, if the merge of the state of the amendment is accepted.
-                            columnLineNumbers.push(`${this.translate.instant(`Line`)} ${line}: `);
+                            columnLineNumbers.push(`${this.translate.instant(`Line`)} ${line} `);
                             columnChangeType.push(summaryText);
                         }
                     }

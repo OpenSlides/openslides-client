@@ -19,7 +19,7 @@ test.describe('motion history mode test', () => {
             category_id: null,
             attachment_ids: [],
             reason: '',
-            supporter_ids: [],
+            supporter_meeting_user_ids: [],
             agenda_create: false,
             agenda_type: 'internal'
         });

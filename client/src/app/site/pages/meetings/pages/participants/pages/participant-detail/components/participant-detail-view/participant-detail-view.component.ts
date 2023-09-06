@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -21,6 +22,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
 import { GroupControllerService } from '../../../../modules';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
+import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
 
 @Component({
     selector: `os-participant-detail-view`,
@@ -112,10 +114,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     private _userId: Id | undefined = undefined; // Not initialized
-    private _isVoteWeightEnabled: boolean = false;
-    private _isVoteDelegationEnabled: boolean = false;
-    private _isElectronicVotingEnabled: boolean = false;
-    private _isUserInScope: boolean = false;
+    private _isVoteWeightEnabled = false;
+    private _isVoteDelegationEnabled = false;
+    private _isElectronicVotingEnabled = false;
+    private _isUserInScope = false;
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
@@ -284,8 +286,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      * (Re)- send an invitation email for this user after confirmation
      */
     public async sendInvitationEmail(): Promise<void> {
-        const title = this.translate.instant(`Sending an invitation email`);
-        const content = this.translate.instant(`Are you sure you want to send an invitation email to the user?`);
+        const title = _(`Sending an invitation email`);
+        const content = _(`Are you sure you want to send an invitation email to the user?`);
         if (await this.promptService.open(title, content)) {
             this.userController
                 .sendInvitationEmails([this.user!], this.activeMeetingId)
@@ -312,10 +314,33 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             if (this.personalInfoFormValue.vote_delegated_to_id === 0) {
                 this.personalInfoFormValue.vote_delegated_to_id = null;
             }
-            await this.repo
-                .update(this.personalInfoFormValue, this.user!)
-                .concat(this.repo.setPresent(isPresent, this.user!))
-                .resolve();
+            const payload = {
+                ...this.personalInfoFormValue,
+                vote_delegated_to_id: this.personalInfoFormValue.vote_delegated_to_id
+                    ? this.repo.getViewModel(this.personalInfoFormValue.vote_delegated_to_id).getMeetingUser().id
+                    : null,
+                vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
+                    ? this.personalInfoFormValue.vote_delegations_from_ids
+                          .map(id => this.repo.getViewModel(id).getMeetingUser().id)
+                          .filter(id => !!id)
+                    : []
+            };
+            const title = _(`This action will remove you from one or more groups.`);
+            const content = _(
+                `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`
+            );
+            if (
+                !(
+                    this.user.id === this.operator.operatorId &&
+                    areGroupsDiminished(this.operator.user.group_ids(), payload.group_ids, this.activeMeeting)
+                ) ||
+                (await this.promptService.open(title, content))
+            ) {
+                await this.repo
+                    .update(payload, this.user!)
+                    .concat(this.repo.setPresent(isPresent, this.user!))
+                    .resolve();
+            }
         } else {
             await this.repo.updateSelf(this.personalInfoFormValue, this.user!);
         }

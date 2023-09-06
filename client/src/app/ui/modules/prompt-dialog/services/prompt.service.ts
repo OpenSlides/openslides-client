@@ -19,7 +19,7 @@ export class PromptService {
      * @param title The title to display in the dialog
      * @param content The content in the dialog
      */
-    public async open(title: string, content: string = ``): Promise<any> {
+    public async open(title: string, content = ``): Promise<any> {
         this.dialogRef = this.dialog.open(PromptDialogComponent, {
             width: `290px`,
             data: { title, content }

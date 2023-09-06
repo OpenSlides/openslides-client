@@ -32,8 +32,14 @@ export class MotionBlockControllerService extends BaseMeetingControllerService<V
         return this.repo.delete(...motionBlocks);
     }
 
-    public followRecommendation(motionBlock: MotionBlock): Promise<void> {
-        return this.motionRepo.followRecommendation(...motionBlock.motion_ids.map(id => ({ id })));
+    public followRecommendation(motionBlock: ViewMotionBlock): Promise<void> {
+        return this.motionRepo.followRecommendation(
+            ...motionBlock.motions.filter(motion =>
+                (motion.state?.next_state_ids ?? [])
+                    .concat(motion.state?.previous_state_ids ?? [])
+                    .includes(motion.recommendation_id)
+            )
+        );
     }
 
     /**

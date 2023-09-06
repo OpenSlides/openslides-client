@@ -7,10 +7,7 @@
         <!-- Submitters -->
         <ng-container *ngIf="getSubmittersObservable() | async as submitters">
             <h3 *ngIf="submitters.length > 0">{{ 'Submitters' | translate }}</h3>
-            <span *ngFor="let submitter of submitters; let last = last">
-                <span>{{ submitter }}</span>
-                <span *ngIf="!last">,</span>
-            </span>
+            <os-comma-separated-listing [list]="submitters"></os-comma-separated-listing>
         </ng-container>
 
         <!-- Recommendation -->
@@ -32,10 +29,9 @@
             <h2 *ngIf="data.data.show_sidebox && data.data.recommendation_referencing_motions" class="projector_h2">
                 <span>{{ 'Referring motions' | translate }}</span>
                 :
-                <span *ngFor="let titleInformation of referencingMotions; let last = last">
-                    <span>{{ getNumberOrTitle(titleInformation) }}</span>
-                    <span *ngIf="!last">,</span>
-                </span>
+                <os-comma-separated-listing [list]="referencingMotions">
+                    <ng-template let-information>{{ getNumberOrTitle(information) }}</ng-template>
+                </os-comma-separated-listing>
             </h2>
 
             <!-- Metainfo as table -->
@@ -47,10 +43,7 @@
                             <b>{{ 'Submitters' | translate }}:</b>
                         </td>
                         <td>
-                            <span *ngFor="let submitter of submitters; let last = last">
-                                <span>{{ submitter }}</span>
-                                <span *ngIf="!last">,</span>
-                            </span>
+                            <os-comma-separated-listing [list]="submitters"></os-comma-separated-listing>
                         </td>
                     </tr>
                 </ng-container>
@@ -69,10 +62,9 @@
                         <b>{{ 'Referring motions' | translate }}:</b>
                     </td>
                     <td>
-                        <span *ngFor="let titleInformation of referencingMotions; let last = last">
-                            <span>{{ getNumberOrTitle(titleInformation) }}</span>
-                            <span *ngIf="!last">,</span>
-                        </span>
+                        <os-comma-separated-listing [list]="referencingMotions">
+                            <ng-template let-information>{{ getNumberOrTitle(information) }}</ng-template>
+                        </os-comma-separated-listing>
                     </td>
                 </tr>
             </table>

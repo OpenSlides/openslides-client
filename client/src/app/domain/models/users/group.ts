@@ -15,7 +15,7 @@ export class Group extends BaseModel<Group> {
     public weight!: number;
     public external_id!: string;
 
-    public user_ids!: Id[]; // (user/group_$<meeting_id>_ids)[];
+    public meeting_user_ids!: Id[]; // (meeting_user/group_ids)[];
     public default_group_for_meeting_id!: Id; // meeting/default_group_id;
     public admin_group_for_meeting_id!: Id; // meeting/admin_group_id;
     public mediafile_access_group_ids!: Id[]; // (mediafile/access_group_ids)[];
@@ -41,13 +41,13 @@ export class Group extends BaseModel<Group> {
         super(Group.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Group | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Group)[] = [
         `id`,
         `external_id`,
         `name`,
         `permissions`,
         `weight`,
-        `user_ids`,
+        `meeting_user_ids`,
         `default_group_for_meeting_id`,
         `admin_group_for_meeting_id`,
         `mediafile_access_group_ids`,

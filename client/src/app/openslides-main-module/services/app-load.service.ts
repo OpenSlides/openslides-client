@@ -1,6 +1,7 @@
 import { Injectable, Injector, Type } from '@angular/core';
 import { ActionWorkerAppConfig } from 'src/app/gateways/repositories/action-worker/action-worker.config';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { MeetingUserAppConfig } from 'src/app/gateways/repositories/meeting_user/meeting-user-config';
 import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
 import { OpenSlidesInjector } from 'src/app/infrastructure/utils/di/openslides-injector';
@@ -51,7 +52,8 @@ const appConfigs: AppConfig[] = [
     AutopilotAppConfig,
     MeetingSettingsAppConfig,
     ChatAppConfig,
-    ActionWorkerAppConfig
+    ActionWorkerAppConfig,
+    MeetingUserAppConfig
 ];
 
 @Injectable({

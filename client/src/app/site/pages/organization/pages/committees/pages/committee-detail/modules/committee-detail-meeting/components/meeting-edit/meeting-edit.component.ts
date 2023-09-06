@@ -95,7 +95,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public addMeetingLabel = ADD_MEETING_LABEL;
     public editMeetingLabel = EDIT_MEETING_LABEL;
 
-    public isCreateView: boolean = false;
+    public isCreateView = false;
 
     public meetingForm!: UntypedFormGroup;
     public theDuplicateFromId: Id | null = null;
@@ -263,10 +263,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const rawForm: { [key: string]: any } = {
             name: [``, Validators.required],
             location: [``],
-            daterange: {
-                start: [currentDate],
-                end: [currentDate]
-            },
+            daterange: [
+                {
+                    start: null,
+                    end: null
+                }
+            ],
             admin_ids: [[], Validators.minLength(1)],
             organization_tag_ids: [[]],
             external_id: [``]

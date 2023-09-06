@@ -58,9 +58,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public users: ViewUser[] = [];
     public nonAvailableUserIds: number[] = [];
 
-    public isSortMode: boolean = false;
+    public isSortMode = false;
 
-    public isMobile: boolean = false;
+    public isMobile = false;
 
     public get showFirstContributionHintObservable(): Observable<boolean> {
         return this.meetingSettingsService.get(`list_of_speakers_show_first_contribution`);
@@ -74,7 +74,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.meetingSettingsService.get(`list_of_speakers_speaker_note_for_everyone`);
     }
 
-    public enableProContraSpeech: boolean = false;
+    public enableProContraSpeech = false;
 
     public get title(): string {
         return this._listOfSpeakers?.getTitle() || ``;
@@ -121,7 +121,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public isCallEnabled: Observable<boolean> = this.interactionService.showLiveConfObservable;
 
-    public pointOfOrderCategoriesEnabled: boolean = false;
+    public pointOfOrderCategoriesEnabled = false;
+
+    public restrictPointOfOrderActions = false;
 
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
@@ -133,8 +135,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
 
-    private pointOfOrderEnabled: boolean = false;
-    private canMarkSelf: boolean = false;
+    private pointOfOrderEnabled = false;
+    private canMarkSelf = false;
 
     private get onlyPresentUsers(): boolean {
         return this.meetingSettingsService.instant(`list_of_speakers_present_users_only`) ?? false;
@@ -159,7 +161,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         this.subscriptions.push(
             this.meetingSettingsService
                 .get(`list_of_speakers_enable_point_of_order_categories`)
-                .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled))
+                .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled)),
+            this.meetingSettingsService
+                .get(`list_of_speakers_closing_disables_point_of_order`)
+                .subscribe(enabled => (this.restrictPointOfOrderActions = enabled))
         );
     }
 
@@ -255,7 +260,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public async removePointOfOrder(): Promise<void> {
         const speakerToDelete = this.findOperatorSpeaker(true);
         if (speakerToDelete) {
-            await this.speakerRepo.delete(speakerToDelete.id);
+            const title = this.translate.instant(`Are you sure you want to irrevocably remove your point of order?`);
+            if (!(this.restrictPointOfOrderActions && this.closed) || (await this.promptService.open(title))) {
+                await this.speakerRepo.delete(speakerToDelete.id);
+            }
         }
     }
 
@@ -376,10 +384,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         const nonAvailableUsers = this.users
             .filter(
                 user =>
-                    !(!this.onlyPresentUsers || user.isPresentInMeeting()) ||
-                    this.waitingSpeakers.some(speaker => speaker.user_id === user.id)
+                    !(!this.onlyPresentUsers || user?.isPresentInMeeting()) ||
+                    this.waitingSpeakers.some(speaker => speaker.user_id === user?.id)
             )
-            .map(user => user.id);
+            .map(user => user?.id)
+            .filter(user => !!user);
         this.nonAvailableUserIds = nonAvailableUsers;
     }
 
@@ -393,7 +402,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         if (!data.userId) {
             data.userId = this.operator.operatorId;
         }
-        await this.speakerRepo.create(this.listOfSpeakers, data.userId!);
+        await this.speakerRepo.create(this.listOfSpeakers, data.userId!, {
+            meeting_user_id: data.user?.meeting_user_id
+        });
     }
 
     /**

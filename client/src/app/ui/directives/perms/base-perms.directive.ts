@@ -27,14 +27,14 @@ export abstract class BasePermsDirective<P> implements OnInit, OnDestroy {
      * <div *osPerms="'users.can_manage';or:ownPage"> something </div>
      * ```
      */
-    private _alternative: boolean = false;
+    private _alternative = false;
 
     /**
      * Switch, to invert the result of checkPermission. Usefull for using osPerms as if-else:
      * For one element you can use `*osPerms="'perm'"` and for the else-element use
      * `*osPerms="'perm';complement: true"`.
      */
-    private _complement: boolean = false;
+    private _complement = false;
 
     /**
      * Add a true-false-condition additional to osPerms
@@ -137,7 +137,7 @@ export abstract class BasePermsDirective<P> implements OnInit, OnDestroy {
      * @param forceUpdate Whether the view should be updated in any case. This is necessary, if the templates changed
      * but a view was already initiated.
      */
-    private updateView(forceUpdate: boolean = false): void {
+    private updateView(forceUpdate = false): void {
         if (this._hasPerms && (!this._thenViewRef || forceUpdate)) {
             // clean up and add the template,
             this.viewContainer.clear();

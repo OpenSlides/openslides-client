@@ -5,6 +5,7 @@ import {
     djb2hash,
     escapeRegExp,
     filterObject,
+    findIndexInSortedArray,
     getLongPreview,
     getShortPreview,
     isEasterEggTime,
@@ -221,7 +222,7 @@ describe(`utils: functions`, () => {
             jasmine.clock().uninstall();
         });
 
-        for (let date of data) {
+        for (const date of data) {
             it(`test with ${date.test.toLocaleString()}`, () => {
                 jasmine.clock().mockDate(date.test);
                 expect(isEasterEggTime()).toBe(date.expect);
@@ -247,7 +248,7 @@ describe(`utils: functions`, () => {
             { test: [1, Number.POSITIVE_INFINITY], expect: Number.POSITIVE_INFINITY }
         ];
 
-        for (let date of data) {
+        for (const date of data) {
             it(`test with ${date.test[0]} mm and ${date.test.length === 2 ? date.test[1] : `no`} density`, () => {
                 expect(mmToPoints(date.test[0], date.test[1])).toBe(date.expect);
             });
@@ -276,7 +277,7 @@ describe(`utils: functions`, () => {
             { test: [1, Number.POSITIVE_INFINITY], expect: `positive` }
         ];
 
-        for (let date of data) {
+        for (const date of data) {
             switch (date.expect) {
                 case `positive`:
                     it(`test ${date.test[0]} and ${date.test[1]} for positive comparison`, () => {
@@ -313,7 +314,7 @@ describe(`utils: functions`, () => {
             { test: { answer: 42 }, expect: false }
         ];
 
-        for (let date of data) {
+        for (const date of data) {
             it(`test with ${date.test}`, () => {
                 expect(isEmpty(date.test)).toBe(date.expect);
             });
@@ -335,7 +336,7 @@ describe(`utils: functions`, () => {
             { test: `\n`, expect: `\n`, name: `break-line` }
         ];
 
-        for (let date of data) {
+        for (const date of data) {
             it(`test with ${date.name ?? date.test}`, () => {
                 expect(escapeRegExp(date.test)).toBe(date.expect);
             });
@@ -369,7 +370,7 @@ describe(`utils: functions`, () => {
             }
         ];
 
-        for (let date of data) {
+        for (const date of data) {
             it(`test with "${date.test[0]}"`, () => {
                 const test = date.test;
                 test.push(undefined);
@@ -394,7 +395,7 @@ describe(`utils: functions`, () => {
             { test: `abcdefg`, expect: `442645281` }
         ];
 
-        for (let date of data) {
+        for (const date of data) {
             it(`test with "${date.test}"`, () => {
                 expect(djb2hash(date.test)).toBe(date.expect);
             });
@@ -403,11 +404,11 @@ describe(`utils: functions`, () => {
 
     describe(`joinTypedArrays function`, () => {
         it(`join two UInt8Arrays`, () => {
-            let a = Uint8Array.from([1, 2, 3, 4]);
-            let b = Uint8Array.from([5, 6, 7, 8]);
+            const a = Uint8Array.from([1, 2, 3, 4]);
+            const b = Uint8Array.from([5, 6, 7, 8]);
 
-            let joined = joinTypedArrays(Uint8Array, a, b);
-            let expected = Uint8Array.from([1, 2, 3, 4, 5, 6, 7, 8]);
+            const joined = joinTypedArrays(Uint8Array, a, b);
+            const expected = Uint8Array.from([1, 2, 3, 4, 5, 6, 7, 8]);
 
             expect(joined).toEqual(expected);
         });
@@ -415,37 +416,37 @@ describe(`utils: functions`, () => {
 
     describe(`splitTypedArray function`, () => {
         it(`split array no seperator at end`, () => {
-            let a = Uint8Array.from([1, 2, 10, 3, 4]);
+            const a = Uint8Array.from([1, 2, 10, 3, 4]);
 
-            let joined = splitTypedArray(10, a);
-            let expected = [Uint8Array.from([1, 2, 10]), Uint8Array.from([3, 4])];
+            const joined = splitTypedArray(10, a);
+            const expected = [Uint8Array.from([1, 2, 10]), Uint8Array.from([3, 4])];
 
             expect(joined).toEqual(expected);
         });
 
         it(`split array seperator at end`, () => {
-            let a = Uint8Array.from([1, 2, 10, 3, 4, 10]);
+            const a = Uint8Array.from([1, 2, 10, 3, 4, 10]);
 
-            let joined = splitTypedArray(10, a);
-            let expected = [Uint8Array.from([1, 2, 10]), Uint8Array.from([3, 4, 10])];
+            const joined = splitTypedArray(10, a);
+            const expected = [Uint8Array.from([1, 2, 10]), Uint8Array.from([3, 4, 10])];
 
             expect(joined).toEqual(expected);
         });
 
         it(`split array seperator at start`, () => {
-            let a = Uint8Array.from([10, 1, 2, 10, 3, 4]);
+            const a = Uint8Array.from([10, 1, 2, 10, 3, 4]);
 
-            let joined = splitTypedArray(10, a);
-            let expected = [Uint8Array.from([10]), Uint8Array.from([1, 2, 10]), Uint8Array.from([3, 4])];
+            const joined = splitTypedArray(10, a);
+            const expected = [Uint8Array.from([10]), Uint8Array.from([1, 2, 10]), Uint8Array.from([3, 4])];
 
             expect(joined).toEqual(expected);
         });
 
         it(`split array seperators following directly`, () => {
-            let a = Uint8Array.from([1, 2, 10, 10, 3, 4]);
+            const a = Uint8Array.from([1, 2, 10, 10, 3, 4]);
 
-            let joined = splitTypedArray(10, a);
-            let expected = [Uint8Array.from([1, 2, 10]), Uint8Array.from([10]), Uint8Array.from([3, 4])];
+            const joined = splitTypedArray(10, a);
+            const expected = [Uint8Array.from([1, 2, 10]), Uint8Array.from([10]), Uint8Array.from([3, 4])];
 
             expect(joined).toEqual(expected);
         });
@@ -602,7 +603,7 @@ describe(`utils: functions`, () => {
             }
         ];
 
-        for (let date of data) {
+        for (const date of data) {
             it(`test with ${date.title}`, () => {
                 expect(partitionModelsForUpdate<TestModel>(date.test.newValues, date.test.originals)).toEqual(
                     date.expect
@@ -662,6 +663,32 @@ describe(`utils: functions`, () => {
                     [`f`, `g h`]
                 ])
             ).toEqual({ b: `b`, e: `e`, 'g h': `g h` });
+        });
+    });
+
+    describe(`findIndexInSortedArray function`, () => {
+        const sortedArray = [1, 4, 5, 7, 8, 9];
+
+        for (let searchValue = 0; searchValue < 10; searchValue++) {
+            const expected = sortedArray.findIndex(val => searchValue === val);
+            it(`test result for ${searchValue} in ${JSON.stringify(sortedArray)}`, () => {
+                expect(findIndexInSortedArray(sortedArray, searchValue, (a, b) => a - b)).toBe(expected);
+            });
+        }
+
+        const sortedStringArray = [`a`, `b`, `d`];
+
+        for (const searchValue of [`b`, `c`, `d`, `e`]) {
+            const expected = sortedStringArray.findIndex(val => searchValue === val);
+            it(`test result for "${searchValue}" in ${JSON.stringify(sortedStringArray)}`, () => {
+                expect(findIndexInSortedArray(sortedStringArray, searchValue, (a, b) => a.localeCompare(b))).toBe(
+                    expected
+                );
+            });
+        }
+
+        it(`finds first among many`, () => {
+            expect(findIndexInSortedArray([1, 1, 1, 1, 1, 1, 1], 1, (a, b) => a - b)).toBe(0);
         });
     });
 });

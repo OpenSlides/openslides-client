@@ -134,7 +134,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         });
 
         if (selectedChoice) {
-            let requestData: Promise<void>[] = [];
+            const requestData: Promise<void>[] = [];
             if (selectedChoice.action === ADD) {
                 this.addTags(committees, selectedChoice);
             } else if (selectedChoice.action === REMOVE) {
@@ -146,7 +146,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
             const message = `${committees.length} ` + this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: async () => {
-                    for (let request of requestData) {
+                    for (const request of requestData) {
                         await request;
                     }
                 }

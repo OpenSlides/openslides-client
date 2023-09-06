@@ -5,7 +5,9 @@ import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-r
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
 import {
+    AGENDA_LIST_ITEM_SUBSCRIPTION,
     getAgendaListMinimalSubscriptionConfig,
+    getAgendaListSubscriptionConfig,
     getTopicDetailSubscriptionConfig
 } from '../../../../../../agenda.subscription';
 
@@ -44,7 +46,12 @@ export class TopicDetailMainComponent extends BaseModelRequestHandlerComponent {
         this.updateSubscribeTo(getTopicDetailSubscriptionConfig(this._currentTopicId), { hideWhenDestroyed: true });
     }
 
-    private loadTopicList(meetingId: number): void {
-        this.updateSubscribeTo(getAgendaListMinimalSubscriptionConfig(meetingId));
+    private async loadTopicList(meetingId: number): Promise<void> {
+        const hasMaxSubscription = await this.modelRequestService.subscriptionGotData(AGENDA_LIST_ITEM_SUBSCRIPTION);
+        this.updateSubscribeTo(
+            hasMaxSubscription
+                ? getAgendaListSubscriptionConfig(meetingId)
+                : getAgendaListMinimalSubscriptionConfig(meetingId)
+        );
     }
 }

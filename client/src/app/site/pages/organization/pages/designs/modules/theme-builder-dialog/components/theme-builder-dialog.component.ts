@@ -80,8 +80,8 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
 
     public onConfirm(): void {
         const values = this.paletteBuilderForm!.value as { [key: string]: any };
-        let newValues = {};
-        for (let key of Object.keys(values)) {
+        const newValues = {};
+        for (const key of Object.keys(values)) {
             newValues[key] = values[key] || (this.data && this.data[key] ? null : undefined);
         }
         this.dialogRef.close({

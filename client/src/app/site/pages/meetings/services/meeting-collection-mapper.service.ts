@@ -31,13 +31,13 @@ export class MeetingCollectionMapperService extends CollectionMapperService impl
         if (!repo) {
             return false;
         }
-        return repo instanceof BaseMeetingRelatedRepository;
+        return repo instanceof BaseMeetingRelatedRepository && repo.resetOnMeetingChange;
     }
 
     public getViewModelByFqid(fqid: Fqid): BaseViewModel<any> | null {
         const collection = fqid.split(`/`)[0];
         const id = Number(fqid.split(`/`)[1]);
-        for (let repo of this._meetingRepositoriesSubject.value) {
+        for (const repo of this._meetingRepositoriesSubject.value) {
             if (repo.collection === collection) {
                 return repo.getViewModel(id);
             }

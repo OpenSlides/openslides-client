@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, Injector, Optional, ProviderToken } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { StorageService } from 'src/app/gateways/storage.service';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
 import {
     BaseSortListService,
     OsSortingDefinition,
@@ -12,10 +14,9 @@ import {
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewMotion } from '../../../view-models';
-import { MotionsListServiceModule } from '../motions-list-service.module';
 
 @Injectable({
-    providedIn: MotionsListServiceModule
+    providedIn: `root`
 })
 export class MotionListSortService extends BaseSortListService<ViewMotion> {
     /**
@@ -23,31 +24,41 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
      */
     protected storageKey = `MotionList`;
 
+    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = MotionRepositoryService;
+
     /**
      * Hold the default motion sorting
      */
     private defaultMotionSorting: string;
 
     /**
-     * To wait until the default motion was loaded once
-     */
-    private readonly defaultSortingLoaded: Deferred<void> = new Deferred();
-
-    /**
      * Define the sort options
      */
     protected motionSortOptions: OsSortingOption<ViewMotion>[] = [
-        { property: `tree_weight`, label: `Call list` },
+        { property: `tree_weight`, label: `Call list`, baseKeys: [`sort_weight`, `sort_parent_id`] },
         { property: `number` },
         { property: `title` },
-        { property: `submitters` },
-        { property: `category`, sortFn: this.categorySortFn },
+        {
+            property: `submitters`,
+            foreignBaseKeys: {
+                user: [`username`, `first_name`, `last_name`, `default_structure_level`],
+                meeting_user: [`structure_level`]
+            }
+        },
+        {
+            property: `category`,
+            sortFn: this.categorySortFn,
+            baseKeys: [`category_id`, `category_weight`],
+            foreignBaseKeys: { category: [`parent_id`, `weight`] }
+        },
         { property: `block_id`, label: `Motion block` },
-        { property: `state` },
+        { property: `state`, baseKeys: [`state_id`], foreignBaseKeys: { motion_state: [`name`] } },
         { property: `created`, label: _(`Creation date`) },
         { property: `sequential_number`, label: _(`Sequential number`) },
         { property: `last_modified`, label: _(`Last modified`) }
     ];
+
+    private defaultDefinitionSubject: BehaviorSubject<OsSortingDefinition<ViewMotion>>;
 
     /**
      * Constructor.
@@ -59,36 +70,35 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
     public constructor(
         protected override translate: TranslateService,
         store: StorageService,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService,
+        injector: Injector,
+        @Optional()
+        @Inject(undefined)
+        defaultDefinition?: OsSortingDefinition<ViewMotion> | Observable<OsSortingDefinition<ViewMotion>>
     ) {
-        super(translate, store);
+        const defaultDefinitions = new BehaviorSubject<OsSortingDefinition<ViewMotion>>(null);
+        super(translate, store, injector, defaultDefinition ?? defaultDefinitions);
+        this.defaultDefinitionSubject = defaultDefinitions;
 
         this.defaultMotionSorting = `number`;
-        this.defaultSortingLoaded.resolve();
+        this.defaultDefinitionSubject.next({
+            sortProperty: this.getDefaultSortProperty(),
+            sortAscending: true
+        });
 
         this.meetingSettingsService.get(`motions_default_sorting`).subscribe(defSortProp => {
             if (defSortProp) {
                 this.defaultMotionSorting = defSortProp;
-                this.defaultSortingLoaded.resolve();
+                this.defaultDefinitionSubject.next({
+                    sortProperty: this.getDefaultSortProperty(),
+                    sortAscending: true
+                });
             }
         });
     }
 
     protected getSortOptions(): OsSortingOption<ViewMotion>[] {
         return this.motionSortOptions;
-    }
-
-    /**
-     * Required by parent
-     *
-     * @returns the default sorting strategy
-     */
-    protected async getDefaultDefinition(): Promise<OsSortingDefinition<ViewMotion>> {
-        await this.defaultSortingLoaded;
-        return {
-            sortProperty: this.getDefaultSortProperty(),
-            sortAscending: true
-        };
     }
 
     private getDefaultSortProperty(): OsSortProperty<ViewMotion> {

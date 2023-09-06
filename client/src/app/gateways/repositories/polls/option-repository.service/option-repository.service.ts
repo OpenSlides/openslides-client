@@ -15,5 +15,5 @@ export class OptionRepositoryService extends BaseMeetingRelatedRepository<ViewOp
 
     public getTitle = (_viewOption: ViewOption) => `Option`;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Options` : `Option`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Options` : `Option`);
 }

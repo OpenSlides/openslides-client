@@ -117,22 +117,22 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     }
 
     @Input()
-    public showEntriesNumber: number = 4;
+    public showEntriesNumber = 4;
 
     @Input()
-    public excludeIds: boolean = false;
+    public excludeIds = false;
 
     /**
      * If true, the dialog will not close when a value is selected.
      */
     @Input()
-    public keepOpen: boolean = false;
+    public keepOpen = false;
 
     /**
      * If true, the dialog will be opened with double width.
      */
     @Input()
-    public wider: boolean = false;
+    public wider = false;
 
     public itemSizeInPx = 50;
 
@@ -242,7 +242,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         );
 
         //Create css style for the mat-selects panel
-        let sheet = document.createElement(`style`);
+        const sheet = document.createElement(`style`);
         sheet.innerHTML = `.os-search-selector { max-height: ${this.maxHeight} !important;}`;
         document.body.appendChild(sheet);
     }

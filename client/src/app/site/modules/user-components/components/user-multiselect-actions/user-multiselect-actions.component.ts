@@ -46,7 +46,7 @@ export class UserMultiselectActionsComponent extends BaseComponent {
     @Output()
     public selectedUsersChange = new EventEmitter<ViewUser[]>();
 
-    public hasSelectedNonSamlUsers: boolean = false;
+    public hasSelectedNonSamlUsers = false;
 
     private _selectedUsers: ViewUser[] = [];
 

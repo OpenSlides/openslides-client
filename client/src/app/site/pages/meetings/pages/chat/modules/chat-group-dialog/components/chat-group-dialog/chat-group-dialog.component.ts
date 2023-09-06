@@ -19,8 +19,10 @@ export class ChatGroupDialogComponent implements OnInit {
 
     public readonly previousChatGroupName!: string;
 
+    public readonly groupsObservable = this.groupsRepo.getViewModelListObservable();
+
     public constructor(
-        public readonly groupsRepo: GroupControllerService,
+        private groupsRepo: GroupControllerService,
         private fb: UntypedFormBuilder,
         @Inject(MAT_DIALOG_DATA) private readonly data?: ChatGroupDialogData
     ) {

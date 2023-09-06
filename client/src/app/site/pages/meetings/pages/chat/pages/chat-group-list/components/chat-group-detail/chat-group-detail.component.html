@@ -14,11 +14,9 @@
                 *ngIf="group.write_groups.length"
                 matTooltip="{{ 'Groups with write permissions' | translate }}"
             >
-                <span *ngFor="let userGroup of group.write_groups | slice : 0 : 3; let last = last">
-                    <span>{{ userGroup.getTitle() | translate }}</span>
-                    <span *ngIf="!last">,&nbsp;</span>
-                    <span *ngIf="last && group.write_groups.length > 3">...</span>
-                </span>
+                <os-comma-separated-listing [list]="group.write_groups" [showElementsAmount]="3">
+                    <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                </os-comma-separated-listing>
             </os-icon-container>
         </div>
 
@@ -28,11 +26,9 @@
                 *ngIf="getReadonlyGroups(group).length"
                 matTooltip="{{ 'Groups with read permissions' | translate }}"
             >
-                <span *ngFor="let userGroup of getReadonlyGroups(group) | slice : 0 : 3; let last = last">
-                    <span>{{ userGroup.getTitle() | translate }}</span>
-                    <span *ngIf="!last">,&nbsp;</span>
-                    <span *ngIf="last && group.read_groups.length > 3">...</span>
-                </span>
+                <os-comma-separated-listing [list]="getReadonlyGroups(group)" [showElementsAmount]="3">
+                    <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                </os-comma-separated-listing>
             </os-icon-container>
         </div>
         <div class="spacer"></div>

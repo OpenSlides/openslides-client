@@ -20,7 +20,7 @@ export class MotionStatuteParagraph extends BaseModel<MotionStatuteParagraph> {
         super(MotionStatuteParagraph.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionStatuteParagraph | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionStatuteParagraph)[] = [
         `id`,
         `title`,
         `text`,

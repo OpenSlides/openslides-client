@@ -25,8 +25,8 @@ import { StreamService } from '../../../../services/stream.service';
 export class StreamComponent extends BaseMeetingComponent implements AfterViewInit, OnDestroy {
     private streamRunning = false;
 
-    public liveStreamUrl: string = ``;
-    private streamLoadedOnce: boolean = false;
+    public liveStreamUrl = ``;
+    private streamLoadedOnce = false;
 
     public get showParticles(): Observable<boolean> {
         return this.applauseService.showParticles;

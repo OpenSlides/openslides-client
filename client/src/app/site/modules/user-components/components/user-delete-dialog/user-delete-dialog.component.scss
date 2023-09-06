@@ -1,19 +1,30 @@
 .user-delete-dialog-content {
     display: flex;
     height: 50vh;
-    overflow-y: auto;
 
     .user-list-block {
         width: 100%;
         flex: 1;
+        display: flex;
+        flex-direction: column;
 
         .section-title {
             height: 30px;
             margin: 0;
         }
 
-        div.cdk-virtual-scroll-content-wrapper {
-            width: 100%;
+        .user-list-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+
+            .cdk-virtual-scroll-viewport {
+                flex: 1;
+
+                .cdk-virtual-scroll-content-wrapper {
+                    width: 100%;
+                }
+            }
         }
 
         .user {

@@ -15,7 +15,7 @@ export class ProjectorMessage extends BaseModel<ProjectorMessage> {
         super(ProjectorMessage.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof ProjectorMessage | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof ProjectorMessage)[] = [
         `id`,
         `message`,
         `projection_ids`,

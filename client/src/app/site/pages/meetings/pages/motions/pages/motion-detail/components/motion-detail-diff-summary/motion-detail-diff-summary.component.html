@@ -6,12 +6,16 @@
         <ul>
             <li *cdkVirtualFor="let change of changes; let index = index">
                 <span class="one-line">
-                    <a href="" (click)="scrollToChangeClicked(change, $event)" *ngIf="!change.isTitleChange()">
-                        <span>{{ 'Line' | translate }} {{ formatLineRange(change) }}</span>
+                    <a href="" (click)="scrollToChangeClicked(change, $event)">
+                        <span *ngIf="!change.isTitleChange()">
+                            {{ 'Line' | translate }} {{ formatLineRange(change) }}
+                        </span>
                         <span *ngIf="change.isTitleChange()">{{ 'Title' | translate }}</span>
-                        <span *ngIf="isChangeRecommendation(change)">({{ 'Change recommendation' | translate }})</span>
+                        <span *ngIf="isChangeRecommendation(change)">
+                            &ensp;({{ 'Change recommendation' | translate }})
+                        </span>
                         <span *ngIf="isAmendment(change)">
-                            ({{ 'Amendment' | translate }} {{ change.getIdentifier() }})
+                            &ensp;({{ 'Amendment' | translate }} {{ change.getIdentifier() }})
                         </span>
                     </a>
                     <i class="user-subtitle" *ngIf="isChangeRecommendation(change)">

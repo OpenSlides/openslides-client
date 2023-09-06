@@ -5,7 +5,6 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { map, OperatorFunction } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { CML } from 'src/app/domain/definitions/organization-permission';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -34,13 +33,13 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     public addCommitteeLabel = CREATE_COMMITTEE_LABEL;
     public editCommitteeLabel = EDIT_COMMITTEE_LABEL;
 
-    public isCreateView: boolean = false;
+    public isCreateView = false;
     public committeeForm!: UntypedFormGroup;
 
     public editCommittee!: ViewCommittee;
 
     private get managerIdCtrl(): AbstractControl {
-        return this.committeeForm.get(`user_$_management_level`)!;
+        return this.committeeForm.get(`manager_ids`)!;
     }
 
     private navigatedFrom: string | undefined;
@@ -125,10 +124,6 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         this.navigateBack(this.committeeId!);
     }
 
-    public getTransformPropagateFn(): (value?: any) => any {
-        return value => ({ [CML.can_manage]: value });
-    }
-
     /**
      * Function to automatically unselect a user from the manager-array. If the user remains as committee-manager,
      * then the backend would remain them as manager and remain them as user, too. If a user would only be added as
@@ -210,7 +205,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
             name: [``, Validators.required],
             description: [``],
             organization_tag_ids: [[]],
-            user_$_management_level: [[]],
+            manager_ids: [[]],
             forward_to_committee_ids: [[]],
             receive_forwardings_from_committee_ids: [[]],
             external_id: [``]

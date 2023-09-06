@@ -25,7 +25,7 @@ export class Speaker extends BaseModel<Speaker> {
     public note!: UnsafeHtml;
 
     public list_of_speakers_id!: Id; // list_of_speakers/speaker_ids;
-    public user_id!: Id; // user/speaker_$<meeting_id>_ids;
+    public meeting_user_id!: Id; // meeting_user/speaker_ids;
 
     public point_of_order_category_id!: Id; // point_of_order_category/speaker_ids;
 
@@ -37,7 +37,7 @@ export class Speaker extends BaseModel<Speaker> {
         super(Speaker.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Speaker | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Speaker)[] = [
         `id`,
         `begin_time`,
         `end_time`,
@@ -46,8 +46,8 @@ export class Speaker extends BaseModel<Speaker> {
         `note`,
         `point_of_order`,
         `list_of_speakers_id`,
+        `meeting_user_id`,
         `point_of_order_category_id`,
-        `user_id`,
         `meeting_id`
     ];
 }

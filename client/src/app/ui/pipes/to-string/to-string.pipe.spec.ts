@@ -18,7 +18,7 @@ describe(`ToStringPipe`, () => {
 
     it(`test with function`, () => {
         const pipe = new ToStringPipe();
-        let func: () => number = function (): number {
+        const func: () => number = function (): number {
             return 10;
         };
         expect(pipe.transform(func)).toEqual(`10`);

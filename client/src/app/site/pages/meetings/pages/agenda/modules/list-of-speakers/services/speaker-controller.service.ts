@@ -6,6 +6,7 @@ import { Speaker } from 'src/app/domain/models/speakers/speaker';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 import { MeetingControllerServiceCollectorService } from '../../../../../services/meeting-controller-service-collector.service';
 import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
@@ -16,7 +17,8 @@ import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
 export class SpeakerControllerService extends BaseMeetingControllerService<ViewSpeaker, Speaker> {
     constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: SpeakerRepositoryService
+        protected override repo: SpeakerRepositoryService,
+        protected userRepo: UserControllerService
     ) {
         super(controllerServiceCollector, Speaker, repo);
     }
@@ -33,9 +35,16 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
             note?: UnsafeHtml;
             speechState?: SpeechState;
             point_of_order_category_id?: Id;
+            meeting_user_id?: Id;
         }
     ): Promise<Identifiable> {
-        return this.repo.create(listOfSpeakers, userId, optionalInformation);
+        const meetingUserId =
+            optionalInformation.meeting_user_id ??
+            this.userRepo.getViewModel(userId)?.getMeetingUser(listOfSpeakers.meeting_id).id;
+        if (!meetingUserId) {
+            throw new Error(`Speaker creation failed: Selected user may not be in meeting`);
+        }
+        return this.repo.create(listOfSpeakers, meetingUserId, optionalInformation);
     }
 
     public delete(id: Id): Promise<void> {

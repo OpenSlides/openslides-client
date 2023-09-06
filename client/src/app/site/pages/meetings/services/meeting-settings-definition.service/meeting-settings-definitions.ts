@@ -218,6 +218,32 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     }
                 ]
+            },
+            {
+                label: _(`Wifi`),
+                settings: [
+                    {
+                        key: `users_pdf_wlan_ssid`,
+                        label: _(`WLAN name (SSID)`),
+                        helpText: _(`Used for WLAN QRCode projection.`)
+                    },
+                    {
+                        key: `users_pdf_wlan_password`,
+                        label: _(`WLAN password`),
+                        helpText: _(`Used for WLAN QRCode projection.`)
+                    },
+                    {
+                        key: `users_pdf_wlan_encryption`,
+                        label: _(`WLAN encryption`),
+                        type: `choice`,
+                        helpText: _(`Used for WLAN QRCode projection.`),
+                        choices: {
+                            WEP: `WEP`,
+                            WPA: `WPA/WPA2`,
+                            nopass: _(`No encryption`)
+                        }
+                    }
+                ]
             }
         ]
     },
@@ -322,13 +348,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
-                        key: `list_of_speakers_speaker_note_for_everyone`,
-                        label: _(
-                            `Everyone can see the request of a point of order (instead of managers for list of speakers only)`
-                        ),
-                        type: `boolean`
-                    },
-                    {
                         key: `list_of_speakers_initially_closed`,
                         label: _(`List of speakers is initially closed`),
                         type: `boolean`
@@ -387,6 +406,18 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `list_of_speakers_enable_point_of_order_speakers`,
                         label: _(`Enable point of order`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_speaker_note_for_everyone`,
+                        label: _(
+                            `Everyone can see the request of a point of order (instead of managers for list of speakers only)`
+                        ),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_closing_disables_point_of_order`,
+                        label: _(`Disallow new point of order when list of speakers is closed`),
                         type: `boolean`
                     },
                     {
@@ -855,28 +886,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `users_pdf_welcometext`,
                         label: _(`Help text for access data and welcome PDF`)
-                    },
-                    {
-                        key: `users_pdf_wlan_ssid`,
-                        label: _(`WLAN name (SSID)`),
-                        helpText: _(`Used for WLAN QRCode in PDF of access data.`)
-                    },
-                    {
-                        key: `users_pdf_wlan_password`,
-                        label: _(`WLAN password`),
-                        helpText: _(`Used for WLAN QRCode in PDF of access data.`)
-                    },
-                    {
-                        key: `users_pdf_wlan_encryption`,
-                        label: _(`WLAN encryption`),
-                        type: `choice`,
-                        helpText: _(`Used for WLAN QRCode in PDF of access data.`),
-                        choices: {
-                            '': `---------`,
-                            WEP: `WEP`,
-                            WPA: `WPA/WPA2`,
-                            nopass: _(`No encryption`)
-                        }
                     }
                 ]
             },
@@ -887,7 +896,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_email_sender`,
                         label: _(`Sender name`),
                         helpText: _(
-                            `The sender address is defined in the OpenSlides server settings and should modified by administrator only.`
+                            `IMPORTANT: The sender address (noreply@openslides.com) is defined in the OpenSlides server settings and cannot be changed here. 
+                            To receive replies you have to enter a reply address in the next field. Please test the email dispatch in case of changes!`
                         ),
                         dontTranslateDefault: true
                     },

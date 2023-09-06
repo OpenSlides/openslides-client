@@ -73,7 +73,7 @@ export function DtoClassProperty(fnName: string, dataType: DataType, options: Dt
     };
 }
 
-export function ValidateDtoFor(fnName: string, dataArgumentIndex: number = 0): any {
+export function ValidateDtoFor(fnName: string, dataArgumentIndex = 0): any {
     return (_: Constructable, methodName: string, descriptor: PropertyDescriptor) => {
         const fn = descriptor.value;
         const description = DtoContainer.getClassDescriptionFor(fnName);

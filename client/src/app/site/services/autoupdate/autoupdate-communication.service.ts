@@ -7,21 +7,22 @@ import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 import { HttpStreamEndpointService } from 'src/app/gateways/http-stream';
 import { formatQueryParams } from 'src/app/infrastructure/definitions/http';
 import { djb2hash } from 'src/app/infrastructure/utils';
+import { fqidFromCollectionAndId } from 'src/app/infrastructure/utils/transform-functions';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 import {
     AutoupdateAuthChange,
+    AutoupdateCleanupCache,
     AutoupdateCloseStream,
     AutoupdateNewUser,
     AutoupdateOpenStream,
     AutoupdateReceiveData,
     AutoupdateReceiveError,
-    AutoupdateReconnectForce,
     AutoupdateReconnectInactive,
     AutoupdateSetConnectionStatus,
     AutoupdateSetEndpoint,
     AutoupdateSetStreamId,
     AutoupdateStatus
-} from 'src/app/worker/interfaces-autoupdate';
+} from 'src/app/worker/autoupdate/interfaces-autoupdate';
 
 import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';
@@ -37,7 +38,7 @@ export class AutoupdateCommunicationService {
     private endpointName: string;
     private autoupdateEndpointStatus: 'healthy' | 'unhealthy' = `healthy`;
     private unhealtyTimeout: any;
-    private tryReconnectOpen: boolean = false;
+    private tryReconnectOpen = false;
     private subscriptionsWithData = new Set<string>();
 
     constructor(
@@ -100,7 +101,6 @@ export class AutoupdateCommunicationService {
         }
 
         this.registerConnectionStatusListener();
-        this.handleBrowserReload();
     }
 
     /**
@@ -142,19 +142,21 @@ export class AutoupdateCommunicationService {
      * @param params Additional url params
      */
     public open(streamId: Id | null, description: string, request: ModelRequest, params = {}): Promise<Id> {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             const requestHash = djb2hash(JSON.stringify(request));
             this.openResolvers.set(requestHash, resolve);
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `open`,
-                params: {
-                    streamId,
-                    description,
-                    queryParams: formatQueryParams(params),
-                    requestHash: requestHash,
-                    request
-                }
-            } as AutoupdateOpenStream);
+            this.sharedWorker
+                .sendMessage(`autoupdate`, {
+                    action: `open`,
+                    params: {
+                        streamId,
+                        description,
+                        queryParams: formatQueryParams(params),
+                        requestHash: requestHash,
+                        request
+                    }
+                } as AutoupdateOpenStream)
+                .catch(reject);
         });
     }
 
@@ -173,10 +175,42 @@ export class AutoupdateCommunicationService {
     }
 
     /**
+     * Notifies the worker about deleted fqids
+     *
+     * @param streamId Id of the stream
+     * @param deletedData map op collections and ids to be deleted
+     */
+    public cleanupCollections(streamId: Id, deletedData: { [collection: string]: Id[] }): void {
+        const deletedFqids: string[] = [];
+        for (const coll of Object.keys(deletedData)) {
+            for (const id of deletedData[coll]) {
+                deletedFqids.push(fqidFromCollectionAndId(coll, id));
+            }
+        }
+
+        if (deletedFqids.length) {
+            this.sharedWorker.sendMessage(`autoupdate`, {
+                action: `cleanup-cache`,
+                params: {
+                    streamId,
+                    deletedFqids
+                }
+            } as AutoupdateCleanupCache);
+        }
+    }
+
+    /**
      * @returns Observable containing messages from autoupdate
      */
     public listen(): Observable<any> {
         return this.autoupdateDataObservable;
+    }
+
+    /**
+     * @returns Observable containing messages from autoupdate
+     */
+    public listenShouldReconnect(): Observable<any> {
+        return this.sharedWorker.restartObservable;
     }
 
     public hasReceivedDataForSubscription(description: string): boolean {
@@ -264,21 +298,6 @@ export class AutoupdateCommunicationService {
             }, 1000);
         } else {
             clearTimeout(this.unhealtyTimeout);
-        }
-    }
-
-    private handleBrowserReload(): void {
-        if (
-            (window.performance.navigation && window.performance.navigation.type === 1) ||
-            (window.performance.getEntriesByType &&
-                window.performance
-                    .getEntriesByType(`navigation`)
-                    .map(nav => nav.name)
-                    .includes(`reload`))
-        ) {
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `reconnect-force`
-            } as AutoupdateReconnectForce);
         }
     }
 }

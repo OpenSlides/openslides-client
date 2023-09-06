@@ -70,7 +70,7 @@ export async function createCommittee(
     const committeeData = {
         organization_id: 1,
         name,
-        user_$_management_level: { can_manage: [1] }
+        manager_ids: [1]
     };
 
     return await os4request(context, `committee.create`, committeeData).then(res => ({ id: res.id, name }));

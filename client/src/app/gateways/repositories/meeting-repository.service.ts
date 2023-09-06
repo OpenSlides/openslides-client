@@ -19,7 +19,8 @@ import { UserAction } from './users/user-action';
 export enum MeetingProjectionType {
     CurrentListOfSpeakers = `current_list_of_speakers`,
     CurrentSpeakerChyron = `current_speaker_chyron`,
-    AgendaItemList = `agenda_item_list`
+    AgendaItemList = `agenda_item_list`,
+    WiFiAccess = `wifi_access_data`
 }
 
 export interface ImportMeeting {
@@ -48,16 +49,16 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         // This field is used to determine, if a user can access a meeting: It is restricted for non-authorized users
         // but always present, if the user is allowed to access the meeting. We have to always query this fields to
         // decide about the accessibility.
-        const accessField: TypedFieldset<Meeting> = [ViewMeeting.ACCESSIBILITY_FIELD];
+        const accessField: TypedFieldset<Meeting> = [];
 
         const sharedFields: TypedFieldset<Meeting> = accessField.concat([
             `name`,
+            `description`,
             `start_time`,
             `end_time`,
             `is_active_in_organization_id`,
-            `is_archived_organization_id`,
             `template_for_organization_id`,
-            `user_ids`,
+            `meeting_user_ids`,
             `description`,
             `location`,
             `organization_tag_ids`,
@@ -71,7 +72,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `language`
         ]);
         const detailEditFields: TypedFieldset<Meeting> = [
-            `is_template`,
             `default_meeting_for_committee_id`,
             `jitsi_domain`,
             `jitsi_room_name`,
@@ -91,7 +91,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
 
     public getTitle = (viewMeeting: ViewMeeting) => viewMeeting.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Meetings` : `Meeting`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Meetings` : `Meeting`);
 
     public getProjectorTitle = (_: ViewMeeting, projection: Projection) => {
         let title: string;
@@ -105,6 +105,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
                 break;
             case MeetingProjectionType.AgendaItemList:
                 title = this.translate.instant(`Agenda`);
+                break;
+            case MeetingProjectionType.WiFiAccess:
+                title = this.translate.instant(`Wifi access data`);
                 break;
             default:
                 console.warn(`Unknown slide type for meeting:`, projection.type);
@@ -169,7 +172,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             userActions.push(
                 ...Object.keys(userUpdate).map(userId => ({
                     id: parseInt(userId, 10),
-                    group_$_ids: { [meeting!.id]: userUpdate[parseInt(userId, 10)] }
+                    meeting_id: meeting!.id,
+                    group_ids: userUpdate[parseInt(userId, 10)]
                 }))
             );
         }

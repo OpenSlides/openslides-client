@@ -10,22 +10,23 @@ export class Action<T = void> {
     }
 
     public concat(...actions: (Action<any | any[]> | ActionRequest | null)[]): Action<T> {
-        actions = actions.filter(action => action[`data`]?.length || action[`_actions`]?.length);
+        actions = actions.filter(action => !!action && (action[`data`]?.length || action[`_actions`]?.length));
         if (actions.length === 0) {
             return this;
         }
-        const concatedActions = actions
-            .filter(action => action !== null)
-            .flatMap(action => {
-                if (action instanceof Action) {
-                    return action._actions;
-                } else {
-                    return [action];
-                }
-            })
-            .concat(this._actions);
+        const concatedActions = this._actions.concat(
+            actions
+                .filter(action => action !== null)
+                .flatMap(action => {
+                    if (action instanceof Action) {
+                        return action._actions;
+                    } else {
+                        return [action];
+                    }
+                })
+        );
         return new Action(
-            (actions.find(action => action instanceof Action) as Action<T>)?._sendActionFn ?? this._sendActionFn,
+            this._sendActionFn ?? (actions.find(action => action instanceof Action) as Action<T>)?._sendActionFn,
             concatedActions
         );
     }

@@ -7,6 +7,7 @@ import {
     AssignMeetingsPayload,
     AssignMeetingsResult,
     EmailSentResult,
+    ExtendedUserPatchFn,
     FullNameInformation,
     ShortNameInformation,
     UserPatchFn,
@@ -47,7 +48,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         return this.repo.create(...payload);
     }
 
-    public update(patch: UserPatchFn, ...users: ViewUser[]): Action<void> {
+    public update(patch: ExtendedUserPatchFn, ...users: ViewUser[]): Action<void> {
         return this.repo.update(patch, ...users);
     }
 
@@ -113,7 +114,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
      * @param length The length of the password to generate
      * @returns a random password
      */
-    public getRandomPassword(length: number = 10): string {
+    public getRandomPassword(length = 10): string {
         let pw = ``;
         const characters = `abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789`;
         // set charactersLengthPower2 to characters.length rounded up to the next power of two

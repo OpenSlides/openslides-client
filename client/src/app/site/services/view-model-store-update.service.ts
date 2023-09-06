@@ -8,7 +8,7 @@ import { DataStoreUpdateManagerService } from 'src/app/site/services/data-store-
 interface DeletedModels {
     [collection: string]: number[];
 }
-interface ChangedModels {
+export interface ChangedModels {
     [collection: string]: BaseModel[];
 }
 
@@ -56,7 +56,7 @@ export class ViewModelStoreUpdateService {
         changedFullListModels,
         deletedModels,
         patch
-    }: UpdatePatch): Promise<void> {
+    }: UpdatePatch): Promise<DeletedModels> {
         const _deletedModels: DeletedModels = {};
         const _changedModels: ChangedModels = {};
 
@@ -86,6 +86,7 @@ export class ViewModelStoreUpdateService {
         }
 
         await this.doCollectionUpdates(_changedModels, _deletedModels);
+        return _deletedModels;
     }
 
     private createCollectionUpdate(
@@ -123,7 +124,7 @@ export class ViewModelStoreUpdateService {
             await this.DS.addOrUpdate(changedModels[collection]);
         }
 
-        this.DSUpdateService.commit(updateSlot);
+        this.DSUpdateService.commit(updateSlot, changedModels);
     }
 
     /**

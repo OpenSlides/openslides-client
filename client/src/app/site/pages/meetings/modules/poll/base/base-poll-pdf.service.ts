@@ -1,8 +1,8 @@
 import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting';
-import { PollMethod, PollTableData, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
+import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting.constants';
+import { PollMethod, PollTableData, PollType, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewOption, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -14,7 +14,7 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { ViewAssignment } from '../../../pages/assignments';
 import { ViewUser } from '../../../view-models/view-user';
 import { EntitledUsersTableEntry } from '../definitions';
-import { PollKeyVerbosePipe } from '../pipes';
+import { PollKeyVerbosePipe, PollParseNumberPipe } from '../pipes';
 import { PollService } from '../services/poll.service';
 import { BaseVoteData } from './base-poll-detail.component';
 
@@ -43,17 +43,17 @@ export abstract class BasePollPdfService {
      * An arbitrary number of ballots to print, if {@link ballotCountSelection} is set
      * to CUSTOM_NUMBER. Value is expected to be fetched from the configuration`
      */
-    protected ballotCustomCount: number = 0;
+    protected ballotCustomCount = 0;
 
     /**
      * The event name
      */
-    protected eventName: string = ``;
+    protected eventName = ``;
 
     /**
      * The url of the logo to be printed
      */
-    protected logoUrl: string = ``;
+    protected logoUrl = ``;
 
     private get activeMeeting(): ViewMeeting {
         return this.activeMeetingService.meeting!;
@@ -71,7 +71,8 @@ export abstract class BasePollPdfService {
         protected pdfExport: MeetingPdfExportService,
         protected translate: TranslateService,
         protected pollService: PollService,
-        private pollKeyVerbose: PollKeyVerbosePipe
+        private pollKeyVerbose: PollKeyVerbosePipe,
+        private pollParseNumber: PollParseNumberPipe
     ) {
         this.meetingSettingsService.get(`name`).subscribe(name => (this.eventName = name));
         this.mediaManageService.getLogoUrlObservable(`pdf_ballot_paper`).subscribe(url => (this.logoUrl = url));
@@ -378,7 +379,7 @@ export abstract class BasePollPdfService {
             pollResultPdfContent.push(resultsData);
         }
 
-        if (exportInfo.votesData?.length) {
+        if (exportInfo.votesData?.length && poll.type !== PollType.Analog) {
             pollResultPdfContent.push({
                 text: this.translate.instant(`Single votes`),
                 margin: [0, 20, 0, 5],
@@ -499,6 +500,11 @@ export abstract class BasePollPdfService {
             ]
         ];
 
+        const showPercent = !resultsTable.some(date =>
+            date.value.some(
+                val => [`yes`, `no`, `abstain`].includes(val.vote ?? date.votingOption) && val.amount && val.amount < 0
+            )
+        );
         let i = 0;
         for (const date of resultsTable) {
             const tableLine = [
@@ -513,8 +519,9 @@ export abstract class BasePollPdfService {
                             : undefined;
                         return hasValue
                             ? {
-                                  text: `${currentValue.amount}${
-                                      [`yes`, `no`, `abstain`].includes(currentValue.vote ?? date.votingOption)
+                                  text: `${this.pollParseNumber.transform(currentValue.amount)}${
+                                      [`yes`, `no`, `abstain`].includes(currentValue.vote ?? date.votingOption) &&
+                                      showPercent
                                           ? ` (${this.pollService.getVoteValueInPercent(
                                                 currentValue.amount,
                                                 currentValue.vote ? { poll, row: resultsTableData[i] } : { poll }

@@ -1,38 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { CheckDatabasePresenterService } from 'src/app/gateways/presenter/check-database-presenter.service';
+import { filter, firstValueFrom, map } from 'rxjs';
 import { OrganizationRepositoryService } from 'src/app/gateways/repositories/organization-repository.service';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { LifecycleService } from 'src/app/site/services/lifecycle.service';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
+
+const INFO_SUBSCRIPTION = `meeting_info`;
 
 @Component({
     selector: `os-meeting-info`,
     templateUrl: `./meeting-info.component.html`,
     styleUrls: [`./meeting-info.component.scss`]
 })
-export class MeetingInfoComponent extends BaseComponent implements OnInit {
+export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit {
     public get canSeeStatistics(): boolean {
-        return this.osIsManager || this.operator.hasPerms(Permission.userCanManage);
+        return this.osIsManager || this.osIsMeetingAdmin;
     }
 
-    private get osIsManager(): boolean {
-        return this.operator.isSuperAdmin || this.operator.isOrgaManager;
+    public get osIsManager(): boolean {
+        return this.operator.isSuperAdmin || this.operator.isOrgaManager || this.operator.isMeetingAdmin;
+    }
+
+    public get osIsMeetingAdmin(): boolean {
+        return this.operator.isMeetingAdmin;
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
+        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private orgaRepo: OrganizationRepositoryService,
-        private operator: OperatorService,
-        private lifecycleService: LifecycleService,
-        private presenter: CheckDatabasePresenterService,
-        private snackbar: MatSnackBar
+        private operator: OperatorService
     ) {
         super(componentServiceCollector, translate);
+        firstValueFrom(this.activeMeetingIdService.meetingIdObservable.pipe(filter(val => !!val))).then(() =>
+            this.modelRequestService.subscribeTo({
+                modelRequest: {
+                    viewModelCtor: ViewMeeting,
+                    ids: [this.activeMeetingId],
+                    follow: [
+                        {
+                            idField: `meeting_user_ids`,
+                            fieldset: `groups`,
+                            follow: [
+                                { idField: `group_ids`, fieldset: [`name`, `meeting_id`] },
+                                {
+                                    idField: `user_id`,
+                                    fieldset: [`meeting_user_ids`]
+                                }
+                            ]
+                        },
+                        {
+                            idField: `list_of_speakers_ids`,
+                            fieldset: [],
+                            follow: [
+                                {
+                                    idField: `speaker_ids`,
+                                    fieldset: [`begin_time`, `end_time`, `point_of_order`],
+                                    follow: [`meeting_user_id`]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                subscriptionName: `${INFO_SUBSCRIPTION}_${this.activeMeetingId}`,
+                hideWhen: this.activeMeetingIdService.meetingIdChanged.pipe(map(id => !id))
+            })
+        );
     }
 
     public ngOnInit(): void {

@@ -92,7 +92,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     public userPasswordForm!: PasswordForm;
 
     private _self: ViewUser | null = null;
-    private _isUserInScope: boolean = false;
+    private _isUserInScope = false;
     private _isEditing = false;
 
     public constructor(
@@ -140,7 +140,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         if (!this.self) {
             return [];
         }
-        const meetingIds = this.self.group_$_ids.map(groupId => parseInt(groupId, 10));
+        const meetingIds = this.self.ensuredMeetingIds;
         return meetingIds
             .map(id => this.meetingRepo.getViewModel(id) as ViewMeeting)
             .sort((meetingA, meetingB) => meetingA.name.localeCompare(meetingB.name));

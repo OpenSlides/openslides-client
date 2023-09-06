@@ -69,10 +69,9 @@
             <!-- Tags -->
             <div *ngIf="item.tags && item.tags.length">
                 <os-icon-container icon="local_offer">
-                    <span *ngFor="let tag of item.tags; let last = last">
-                        {{ tag.getTitle() }}
-                        <span *ngIf="!last">,&nbsp;</span>
-                    </span>
+                    <os-comma-separated-listing [list]="item.tags">
+                        <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
+                    </os-comma-separated-listing>
                 </os-icon-container>
             </div>
 

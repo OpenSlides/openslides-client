@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { HttpService } from 'src/app/gateways/http.service';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 export class Position {
     public position: number;
@@ -60,7 +60,7 @@ const getUniqueItems = (positions: Position[]) => {
     providedIn: `root`
 })
 export class HistoryPresenterService {
-    public constructor(private http: HttpService, private userRepo: UserRepositoryService) {}
+    public constructor(private http: HttpService, private userRepo: UserControllerService) {}
 
     public async call(fqid: Fqid): Promise<HistoryPosition[]> {
         const response = await this.http.post<HistoryPresenterResponse>(HISTORY_ENDPOINT, undefined, { fqid });
@@ -70,6 +70,9 @@ export class HistoryPresenterService {
             .map(position => {
                 return new HistoryPosition({
                     ...position,
+                    information: Array.isArray(position.information)
+                        ? position.information
+                        : position?.information[fqid],
                     fqid,
                     user: this.userRepo.getViewModel(position.user_id)?.getFullName()
                 });

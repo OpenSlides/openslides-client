@@ -22,11 +22,11 @@ export class MotionSubmitterRepositoryService extends BaseMeetingRelatedReposito
     public getTitle = (submitter: ViewMotionSubmitter) =>
         submitter?.user?.getTitle() || this.translate.instant(`Unknown participant`);
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Submitters` : `Submitter`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Submitters` : `Submitter`);
 
-    public create(motion: Identifiable, ...users: Identifiable[]): Action<Identifiable[]> {
-        const payload = users.map(user => ({
-            user_id: user.id,
+    public create(motion: Identifiable, ...meetingUsers: Identifiable[]): Action<Identifiable[]> {
+        const payload = meetingUsers.map(user => ({
+            meeting_user_id: user.id,
             motion_id: motion.id
         }));
         return this.createAction(MotionSubmitterAction.CREATE, payload);

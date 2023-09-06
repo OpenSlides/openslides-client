@@ -41,10 +41,9 @@
         <small *ngIf="poll.entitled_groups && poll.type && poll.type !== 'analog'">
             {{ 'Entitled to vote' | translate }}:
 
-            <span *ngFor="let group of poll.entitled_groups; let last = last">
-                <span>{{ group.getTitle() | translate }}</span>
-                <span *ngIf="!last">,&ensp;</span>
-            </span>
+            <os-comma-separated-listing [list]="poll.entitled_groups">
+                <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+            </os-comma-separated-listing>
             <br />
         </small>
 

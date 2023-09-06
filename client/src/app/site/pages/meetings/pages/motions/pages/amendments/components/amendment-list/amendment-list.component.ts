@@ -35,7 +35,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
      */
     private parentMotionId: Id | null = null;
 
-    public ready: boolean = false;
+    public ready = false;
 
     /**
      * Hold the parent motion if present
@@ -47,7 +47,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
      */
     public itemVisibility = ItemTypeChoices;
 
-    public showSequentialNumber: boolean = false;
+    public showSequentialNumber = false;
 
     /**
      * To filter stuff

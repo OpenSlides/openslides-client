@@ -198,7 +198,7 @@ Prerequisites:
             type: `check`
         },
         {
-            name: _(`Set timestamp`),
+            name: _(`Set submission timestamp`),
             help_text: _(
                 `Activates the automatic logging of the date and time when this state was first reached. A set time stamp cannot be removed.`
             ),
@@ -534,14 +534,13 @@ Note: Does not affect the visibility of change recommendations.`
         return (<any>state)[perm.selector];
     }
 
-    private deleteWorkflowState(state: ViewMotionState): void {
-        const content = this.translate.instant(`Delete`) + ` ${state.name}?`;
+    private async deleteWorkflowState(state: ViewMotionState): Promise<void> {
+        const title = this.translate.instant(`Are you sure you want to delete this state?`);
+        const content = `${state.name}`;
 
-        this.promptService.open(`Are you sure`, content).then(promptResult => {
-            if (promptResult) {
-                this.handleRequest(this.stateRepo.delete(state));
-            }
-        });
+        if (await this.promptService.open(title, content)) {
+            this.handleRequest(this.stateRepo.delete(state));
+        }
     }
 
     private updateWorkflowStateName(name: string, state: ViewMotionState): void {

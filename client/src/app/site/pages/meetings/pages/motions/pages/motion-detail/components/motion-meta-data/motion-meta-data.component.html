@@ -32,13 +32,12 @@
     </button>
     <!-- show supporters (TODO: open in dialog) -->
     <button type="button" *ngIf="motion.hasSupporters()" (click)="openSupportersDialog()" mat-button>
-        {{ motion.supporters.length }} {{ 'supporters' | translate }}
+        {{ motion.supporter_users.length }} {{ 'supporters' | translate }}
     </button>
     <p *ngIf="showSupporters" class="supporters">
-        <span *ngFor="let supporter of motion.supporters; let last = last">
-            {{ supporter.full_name }}
-            <span *ngIf="!last">,</span>
-        </span>
+        <os-comma-separated-listing [list]="motion.supporter_users">
+            <ng-template let-supporter>{{ supporter.full_name }}</ng-template>
+        </os-comma-separated-listing>
     </p>
 </div>
 
@@ -135,6 +134,14 @@
             </button>
         </span>
     </os-motion-extension-field>
+
+    <!-- recommendation referenced motions -->
+    <div class="spacer-top-10" *ngIf="showReferringMotions && referencedMotions?.length > 0">
+        <span *ngFor="let motion of referencedMotions; let last = last">
+            <a [routerLink]="motion.getDetailStateUrl()">{{ motion.numberOrTitle }}</a>
+            <span *ngIf="!last" class="referencelist">&nbsp;·&nbsp;</span>
+        </span>
+    </div>
 
     <button mat-stroked-button *ngIf="canFollowRecommendation()" (click)="onFollowRecButton()" class="spacer-top-10">
         <span>{{ 'Follow recommendation' | translate }}</span>

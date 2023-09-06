@@ -44,8 +44,7 @@ export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeaker
 
     public getTitle = (viewMotionBlock: ViewMotionBlock) => viewMotionBlock.title;
 
-    public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? `Motion blocks` : `Motion block`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Motion blocks` : `Motion block`);
 
     /**
      * Sets the default sorting (e.g. in dropdowns and for new users) to 'title'

@@ -10,10 +10,12 @@ import { UserStateField } from 'src/app/gateways/repositories/users';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service';
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
@@ -23,6 +25,14 @@ import { ParticipantListFilterService } from '../../services/participant-list-fi
 import { ParticipantListSortService } from '../../services/participant-list-sort.service/participant-list-sort.service';
 
 const PARTICIPANTS_LIST_STORAGE_INDEX = `participants`;
+
+export function areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[], activeMeeting: ViewMeeting): boolean {
+    return (
+        oldGroupIds
+            .filter(group => group !== activeMeeting.default_group_id)
+            .some(id => !(newGroupIds ?? []).includes(id)) && !newGroupIds.includes(activeMeeting.admin_group_id)
+    );
+}
 
 @Component({
     selector: `os-participant-list`,
@@ -53,8 +63,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return this._presenceViewConfigured && this.operator.hasPerms(Permission.userCanManage);
     }
 
-    private voteWeightEnabled: boolean = false;
-    public voteDelegationEnabled: boolean = false;
+    private voteWeightEnabled = false;
+    public voteDelegationEnabled = false;
 
     /**
      * Helper to check for main button permissions
@@ -89,9 +99,14 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      */
     public filterProps = [`full_name`, `groups`, `structure_level`, `number`, `delegationName`];
 
-    private _allowSelfSetPresent: boolean = false;
-    private _isElectronicVotingEnabled: boolean = false;
+    private _allowSelfSetPresent = false;
+    private _isElectronicVotingEnabled = false;
     private _isUserInScope = true;
+
+    private readonly selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
+    private readonly selfGroupRemovalDialogContent = _(
+        `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`
+    );
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
@@ -106,7 +121,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         private pdfExport: ParticipantPdfExportService,
         private infoDialog: ParticipantListInfoDialogService,
         private organizationSettingsService: OrganizationSettingsService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private prompt: PromptService
     ) {
         super(componentServiceCollector, translate);
 
@@ -182,11 +198,11 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             group_ids: user.group_ids(),
             structure_level: user.structure_level(),
             number: user.number(),
-            vote_delegations_from_ids: user.vote_delegations_from_ids(),
-            vote_delegated_to_id: user.vote_delegated_to_id()
+            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
+            vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
         });
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe(async result => {
             if (result) {
                 if (!result.group_ids?.length) {
                     result.group_ids = [this.activeMeeting!.default_group_id];
@@ -194,7 +210,15 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 if (result.vote_delegated_to_id === 0) {
                     result.vote_delegated_to_id = null;
                 }
-                this.repo.update(result, user).resolve();
+                if (
+                    !(
+                        user.id === this.operator.operatorId &&
+                        areGroupsDiminished(this.operator.user.group_ids(), result.group_ids, this.activeMeeting)
+                    ) ||
+                    (await this.prompt.open(this.selfGroupRemovalDialogTitle, this.selfGroupRemovalDialogContent))
+                ) {
+                    this.repo.update(result, user).resolve();
+                }
             }
         });
     }
@@ -232,30 +256,41 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * SelectedRows is only filled with data in multiSelect mode
      */
     public async setGroupSelected(): Promise<void> {
-        const content = this.translate.instant(
-            `This will add or remove the following groups for all selected participants:`
-        );
+        const content = _(`This will add or remove the following groups for all selected participants:`);
         const ADD = _(`add group(s)`);
         const REMOVE = _(`remove group(s)`);
         const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(content, this.groupsObservable, true, choices);
         if (selectedChoice && selectedChoice.ids.length) {
-            const choosedGroupIds = selectedChoice.ids as Ids;
+            const chosenGroupIds = selectedChoice.ids as Ids;
             if (selectedChoice.action === ADD) {
                 this.repo
                     .update(user => {
                         const nextGroupIds = user.group_ids().filter(id => this.activeMeeting.default_group_id !== id);
                         return {
                             id: user.id,
-                            group_ids: nextGroupIds.concat(choosedGroupIds)
+                            group_ids: nextGroupIds.concat(chosenGroupIds)
                         };
                     }, ...this.selectedRows)
                     .resolve();
-            } else {
+            } else if (
+                this.selectedRows.every(
+                    user =>
+                        !(
+                            user.id === this.operator.operatorId &&
+                            areGroupsDiminished(
+                                this.operator.user.group_ids(),
+                                this.operator.user.group_ids().filter(id => !chosenGroupIds.includes(id)),
+                                this.activeMeeting
+                            )
+                        )
+                ) ||
+                (await this.prompt.open(this.selfGroupRemovalDialogTitle, this.selfGroupRemovalDialogContent))
+            ) {
                 this.repo
                     .update(user => {
                         const nextGroupIds = new Set(user.group_ids());
-                        choosedGroupIds.forEach(id => nextGroupIds.delete(id));
+                        chosenGroupIds.forEach(id => nextGroupIds.delete(id));
                         return {
                             id: user.id,
                             group_ids:
@@ -319,7 +354,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 actions = [_(`natural person`), _(`no natural person`)];
                 break;
         }
-        const content = this.translate.instant(`Set status for selected participants:`);
+        const content = _(`Set status for selected participants:`);
 
         const selectedChoice = await this.choiceService.open({ title: content, multiSelect: false, actions });
         if (selectedChoice) {

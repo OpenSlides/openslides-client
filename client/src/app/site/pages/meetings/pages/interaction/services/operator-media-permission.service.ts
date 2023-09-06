@@ -13,8 +13,8 @@ const noMicMessage = _(`Your device has no microphone`);
     providedIn: InteractionServiceModule
 })
 export class OperatorMediaPermissionService {
-    private hasAudioDevice: boolean = false;
-    private hasVideoDevice: boolean = false;
+    private hasAudioDevice = false;
+    private hasVideoDevice = false;
 
     public constructor(private translate: TranslateService, private spinnerService: SpinnerService) {}
 

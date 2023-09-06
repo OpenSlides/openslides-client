@@ -9,6 +9,7 @@ import { StorageService } from 'src/app/gateways/storage.service';
 import { langToTimeLocale } from 'src/app/infrastructure/utils';
 import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
@@ -35,7 +36,8 @@ export class OpenSlidesMainComponent implements OnInit {
         private matIconRegistry: MatIconRegistry,
         private translate: TranslateService,
         private storageService: StorageService,
-        private config: DateFnsConfigurationService
+        private config: DateFnsConfigurationService,
+        private updateService: UpdateService
     ) {
         overloadJsFunctions();
         this.waitForAppLoaded();
@@ -93,10 +95,13 @@ export class OpenSlidesMainComponent implements OnInit {
             )
         );
         await this.onInitDone;
-
-        setTimeout(() => {
-            this.lifecycleService.appLoaded.next();
-        }, 0);
+        if (await this.updateService.checkForUpdate()) {
+            this.updateService.applyUpdate();
+        } else {
+            setTimeout(() => {
+                this.lifecycleService.appLoaded.next();
+            }, 0);
+        }
     }
 
     private loadCustomIcons(): void {

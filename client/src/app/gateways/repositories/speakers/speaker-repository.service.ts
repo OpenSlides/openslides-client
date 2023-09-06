@@ -18,13 +18,13 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         super(repositoryServiceCollector, Speaker);
     }
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Speakers` : `Speaker`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Speakers` : `Speaker`);
 
     public getTitle = (viewSpeaker: ViewSpeaker) => (viewSpeaker.user ? viewSpeaker.user.getFullName() : ``);
 
     public create(
         listOfSpeakers: ListOfSpeakers,
-        userId: Id,
+        meetingUserId: Id,
         optionalInformation: {
             pointOfOrder?: boolean;
             note?: UnsafeHtml;
@@ -34,7 +34,7 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
     ): Promise<Identifiable> {
         const payload: any = {
             list_of_speakers_id: listOfSpeakers.id,
-            user_id: userId,
+            meeting_user_id: meetingUserId,
             speech_state: optionalInformation.speechState,
             point_of_order: optionalInformation.pointOfOrder,
             point_of_order_category_id: optionalInformation.pointOfOrder

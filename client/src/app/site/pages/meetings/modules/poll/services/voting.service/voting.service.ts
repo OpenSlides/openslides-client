@@ -37,7 +37,7 @@ const VotingProhibitionVerbose = {
 })
 export class VotingService {
     private _currentUser: ViewUser | null = null;
-    private _voteDelegationEnabled: boolean = false;
+    private _voteDelegationEnabled = false;
 
     public constructor(
         private activeMeetingService: ActiveMeetingService,
