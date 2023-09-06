@@ -49,9 +49,11 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
         return checkSpeaker.state === SpeakerState.FINISHED;
     }
 
-    public hasUserSpoken(userId: Id): boolean {
-        return userId
-            ? !!this.speakers.find(speaker => speaker.user_id === userId && speaker.state === SpeakerState.FINISHED)
+    public hasUserSpoken(meetingUserId: Id): boolean {
+        return meetingUserId
+            ? !!this.speakers.find(
+                  speaker => speaker.meeting_user_id === meetingUserId && speaker.state === SpeakerState.FINISHED
+              )
             : false;
     }
 
