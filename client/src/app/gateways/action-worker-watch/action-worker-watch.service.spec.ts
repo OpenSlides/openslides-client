@@ -1,9 +1,26 @@
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { BehaviorSubject, filter, firstValueFrom, map, Observable } from 'rxjs';
+import {
+    BehaviorSubject,
+    filter,
+    firstValueFrom,
+    interval,
+    lastValueFrom,
+    map,
+    Observable,
+    startWith,
+    takeUntil
+} from 'rxjs';
 import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
 import { ActionWorker, ActionWorkerState } from 'src/app/domain/models/action-worker/action-worker';
-import { WaitForActionData, WaitForActionReason } from 'src/app/site/modules/wait-for-action-dialog/definitions';
+import { BaseModel } from 'src/app/domain/models/base/base-model';
+import { copy } from 'src/app/infrastructure/utils/transform-functions';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import {
+    WaitForActionData,
+    WaitForActionReason,
+    waitForActionReason
+} from 'src/app/site/modules/wait-for-action-dialog/definitions';
 import { WaitForActionDialogService } from 'src/app/site/modules/wait-for-action-dialog/services';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 
@@ -28,20 +45,92 @@ function createHttpResponse(
     });
 }
 
+function createActionWorker(data: Partial<ActionWorker>): ViewActionWorker {
+    let viewModel = new ViewActionWorker(new ActionWorker(data));
+    viewModel = new Proxy(viewModel, {
+        get: (target: ViewActionWorker, property) => {
+            let result: any; // This is what we have to resolve: viewModel[property] -> result
+            const _model: ActionWorker = target.getModel();
+
+            // try to find a getter for property
+            if (property in target) {
+                // iterate over prototype chain
+                let prototypeFunc = ViewActionWorker;
+                let descriptor = null;
+                do {
+                    descriptor = Object.getOwnPropertyDescriptor(prototypeFunc.prototype, property);
+                    if (!descriptor || !descriptor.get) {
+                        prototypeFunc = Object.getPrototypeOf(prototypeFunc);
+                    }
+                } while (!(descriptor && descriptor.get) && prototypeFunc && prototypeFunc.prototype);
+
+                if (descriptor && descriptor.get) {
+                    // if getter was found in prototype chain, bind it with this proxy for right `this` access
+                    result = descriptor.get.bind(viewModel)();
+                } else {
+                    result = target[property as keyof BaseViewModel];
+                }
+            } else if (property in _model) {
+                result = _model[property as keyof BaseModel];
+            }
+            return result;
+        }
+    });
+    return viewModel;
+}
+
+interface ActionWorkerData {
+    id: number;
+    created: number;
+    timestamp: number;
+    name: string;
+    state: ActionWorkerState;
+    result?: any;
+}
+
+function getStartActionWorkerData(): ActionWorkerData {
+    return {
+        id: 42,
+        created: Date.now() / 1000,
+        timestamp: Date.now() / 1000,
+        name: `model.action`,
+        state: ActionWorkerState.running
+    };
+}
+
+function getUpdatedActionWorkerData(
+    data: ActionWorkerData,
+    newState: ActionWorkerState,
+    result?: any
+): ActionWorkerData {
+    return {
+        ...data,
+        timestamp: Date.now() / 1000,
+        state: newState,
+        result
+    };
+}
+
 class MockWaitForActionDialogService {
     public closingPromptOpenFor: (Partial<ActionWorker> & { closed: number })[] = [];
-    public currentDialogs: { [workerId: number]: { reason: WaitForActionReason; data: WaitForActionData } } = [];
+    public currentDialogs = new BehaviorSubject<{
+        [workerId: number]: { reason: WaitForActionReason; data: WaitForActionData };
+    }>({});
 
     public constructor() {}
 
     public removeAllDates(workerId: number): void {
-        delete this.currentDialogs[workerId];
+        const currentDialogs = copy(this.currentDialogs.value);
+        delete currentDialogs[workerId];
+        this.currentDialogs.next(currentDialogs);
     }
     public async openClosingPrompt(snapshot: Partial<ActionWorker> & { closed: number }): Promise<void> {
         this.closingPromptOpenFor.push(snapshot);
     }
     public addNewDialog(reason: WaitForActionReason, data: WaitForActionData): void {
-        this.currentDialogs[data.workerId] = { reason, data };
+        const currentDialogs = copy(this.currentDialogs.value);
+        currentDialogs[data.workerId] = { reason, data };
+        this.currentDialogs.next(currentDialogs);
     }
 }
 
@@ -106,6 +195,7 @@ fdescribe(`ActionWorkerWatchService`, () => {
     let dialog: MockWaitForActionDialogService;
     let modelRequest: MockModelRequestService;
     let repo: MockActionWorkerRepositoryService;
+    let startData: ActionWorkerData;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -121,9 +211,16 @@ fdescribe(`ActionWorkerWatchService`, () => {
         dialog = TestBed.inject(WaitForActionDialogService) as unknown as MockWaitForActionDialogService;
         modelRequest = TestBed.inject(ModelRequestService) as unknown as MockModelRequestService;
         repo = TestBed.inject(ActionWorkerRepositoryService) as unknown as MockActionWorkerRepositoryService;
+        jasmine.clock().install();
+        jasmine.clock().mockDate(new Date());
+        startData = getStartActionWorkerData();
     });
 
-    it(`test action worker watch for worker that wasn't written`, async () => {
+    afterEach(() => {
+        jasmine.clock().uninstall();
+    });
+
+    it(`watch worker that wasn't written`, async () => {
         await expectAsync(
             service.watch(createHttpResponse(`model.action`, `action_worker/42`, false), true)
         ).toBeRejectedWith(
@@ -138,42 +235,110 @@ fdescribe(`ActionWorkerWatchService`, () => {
         );
     });
 
-    it(`test action worker watch for worker that is working correctly`, async () => {
+    it(`watch worker that resolves quickly`, async () => {
         const subscriptionPromise = firstValueFrom(
             modelRequest.currentSubscriptions.pipe(filter(subscriptions => !!Object.keys(subscriptions).length))
         );
-        const startData = {
-            id: 42,
-            created: Date.now(),
-            timestamp: Date.now(),
-            name: `model.action`,
-            state: ActionWorkerState.running
-        };
-        repo.viewModelList = [new ViewActionWorker(new ActionWorker(startData))];
-        repo.invisibleIds.push(42);
-        const originalResponse = createHttpResponse(`model.action`, `action_worker/42`, true);
+        const originalResponse = createHttpResponse(startData.name, `action_worker/${startData.id}`, true);
         const watchPromise = service.watch(originalResponse, true);
         expect(Object.keys(await subscriptionPromise).length).toBe(1);
         expect((await subscriptionPromise)[ACTION_WORKER_SUBSCRIPTION]).not.toBeFalsy();
-        repo.invisibleIds = [];
-        repo.viewModelList = [
-            new ViewActionWorker(
-                new ActionWorker({
-                    ...startData,
-                    timestamp: Date.now(),
-                    state: ActionWorkerState.end,
-                    result: { success: true, status_code: 200, message: `I have data`, data: `I have a result` }
-                })
-            )
-        ];
+        expect(service.currentWorkerIds).toEqual([startData.id]);
+        repo.viewModelList = [createActionWorker(startData)];
+        jasmine.clock().tick(1000);
+        const result = {
+            success: true,
+            status_code: 200,
+            message: `Actions handled successfully`,
+            data: `I have a result`
+        };
+        repo.viewModelList = [createActionWorker(getUpdatedActionWorkerData(startData, ActionWorkerState.end, result))];
+        jasmine.clock().tick(1000);
         await expectAsync(watchPromise).toBeResolvedTo(
             new HttpResponse({
-                // body: { success: true, status_code: 200, message: `I have data`, data: `I have a result` },
+                body: result,
                 headers: originalResponse.headers,
                 status: 200,
                 url: originalResponse.url,
-                statusText: `I have data`
+                statusText: result.message
             })
         );
+        expect(service.currentWorkerIds).toEqual([]);
     });
+
+    for (const test of [
+        { test: `takes long but isn't slow`, gap: 1000, dialogExpectation: undefined },
+        { test: `is slow`, gap: 3000, dialogExpectation: [waitForActionReason.slow] },
+        { test: `is inactive`, gap: 21000, dialogExpectation: [waitForActionReason.inactive] }
+    ]) {
+        it(`watch worker that ${test.test}`, async () => {
+            const subscriptionPromise = firstValueFrom(
+                modelRequest.currentSubscriptions.pipe(filter(subscriptions => !!Object.keys(subscriptions).length))
+            );
+            const originalResponse = createHttpResponse(startData.name, `action_worker/${startData.id}`, true);
+            const watchPromise = service.watch(originalResponse, true);
+            expect((await subscriptionPromise)[ACTION_WORKER_SUBSCRIPTION]).not.toBeFalsy();
+            repo.viewModelList = [createActionWorker(startData)];
+            jasmine.clock().tick(1000);
+            repo.viewModelList = [createActionWorker(getUpdatedActionWorkerData(startData, ActionWorkerState.running))];
+            const time = Date.now();
+            const dialogPromise = lastValueFrom(
+                dialog.currentDialogs.pipe(
+                    filter(dialogs => !!Object.keys(dialogs).length),
+                    map(dialogs => Object.values(dialogs).map(dialog => dialog.reason)),
+                    startWith(undefined),
+                    takeUntil(interval(500).pipe(filter(() => Date.now() - time >= test.gap + 1500)))
+                )
+            );
+            jasmine.clock().tick(test.gap);
+            const result = {
+                success: true,
+                status_code: 200,
+                message: `Actions handled successfully`,
+                data: `I have a result`
+            };
+            repo.viewModelList = [
+                createActionWorker(getUpdatedActionWorkerData(startData, ActionWorkerState.end, result))
+            ];
+            jasmine.clock().tick(1500);
+            await expectAsync(watchPromise).toBeResolvedTo(
+                new HttpResponse({
+                    body: result,
+                    headers: originalResponse.headers,
+                    status: 200,
+                    url: originalResponse.url,
+                    statusText: result.message
+                })
+            );
+            await expectAsync(dialogPromise).toBeResolvedTo(test.dialogExpectation);
+        });
+    }
+
+    for (const test of [
+        { test: `is slow`, gap: 3000, dialogExpectation: [waitForActionReason.slow] },
+        { test: `is inactive`, gap: 21000, dialogExpectation: [waitForActionReason.inactive] }
+    ]) {
+        it(`watch worker that ${test.test} and is stopped`, async () => {
+            const subscriptionPromise = firstValueFrom(
+                modelRequest.currentSubscriptions.pipe(filter(subscriptions => !!Object.keys(subscriptions)?.length))
+            );
+            const originalResponse = createHttpResponse(startData.name, `action_worker/${startData.id}`, true);
+            const watchPromise = service.watch(originalResponse, true);
+            expect((await subscriptionPromise)[ACTION_WORKER_SUBSCRIPTION]).not.toBeFalsy();
+            console.log(`BONJOUR`);
+            repo.viewModelList = [createActionWorker(startData)];
+            jasmine.clock().tick(1000);
+            repo.viewModelList = [createActionWorker(getUpdatedActionWorkerData(startData, ActionWorkerState.running))];
+            jasmine.clock().tick(test.gap);
+            expect(
+                Object.values(dialog.currentDialogs.value)?.length &&
+                    Object.values(dialog.currentDialogs.value).map(dialog => dialog.reason)
+            ).toEqual(test.dialogExpectation);
+            await service.unsubscribeFromWorkers([startData.id]);
+            console.log(`BONJOUR AGAIN`);
+            jasmine.clock().tick(1500);
+            console.log(`WATCHPROMISE SEEMS TO NOT TERMINATE`);
+            await expectAsync(watchPromise).toBeRejectedWith(`Blablabla`);
+        });
+    }
 });

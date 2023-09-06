@@ -118,7 +118,7 @@ export class WaitForActionDialogService {
     public wait(all = false, noConfirmation = false): WaitForActionData[] {
         const map = this._dataSubject.value;
         let removed: WaitForActionData[];
-        if (all || map.get(this.currentReason).length === 1) {
+        if (all || map.get(this.currentReason)?.length === 1) {
             removed = map.get(this.currentReason);
             map.delete(this.currentReason);
         } else {
@@ -163,6 +163,6 @@ export class WaitForActionDialogService {
 
     private newCurrentReason(): void {
         const keys = Array.from(this._dataSubject.value.keys()).sort((a, b) => a - b);
-        this.currentReason = keys.length ? keys[0] : null;
+        this.currentReason = keys?.length ? keys[0] : null;
     }
 }

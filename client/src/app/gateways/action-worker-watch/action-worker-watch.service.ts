@@ -45,7 +45,7 @@ export class ActionWorkerWatchService {
             );
     }
 
-    public async watch<T>(originalResponse: HttpResponse<T>, watchActivity: boolean): Promise<HttpResponse<T>> {
+    public async watch<T>(originalResponse: HttpResponse<T>, watchActivity: boolean): Promise<HttpResponse<any>> {
         const actionName = originalResponse.body[`results`][0][0][`name`];
         const fqid: string = originalResponse.body[`results`][0][0][`fqid`];
         const id = idFromFqid(fqid);
@@ -72,7 +72,6 @@ export class ActionWorkerWatchService {
         this.dialogService.removeAllDates(id);
         this.unsubscribeFromWorker(id);
         if (worker.state === ActionWorkerState.end) {
-            console.log(`WORKER RETURNED`, worker);
             if (worker.result?.success === false) {
                 throw new HttpErrorResponse({
                     error: { ...worker.result },
@@ -81,7 +80,7 @@ export class ActionWorkerWatchService {
                     statusText: worker.result?.message
                 });
             } else {
-                return new HttpResponse<T>({
+                return new HttpResponse<{ status_code: number; success: boolean; message: string; results: any }>({
                     body: worker.result,
                     headers: originalResponse.headers,
                     status: worker.result?.status_code,
