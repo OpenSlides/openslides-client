@@ -26,7 +26,7 @@ export class Action<T = void> {
                 })
         );
         return new Action(
-            (actions.find(action => action instanceof Action) as Action<T>)?._sendActionFn ?? this._sendActionFn,
+            this._sendActionFn ?? (actions.find(action => action instanceof Action) as Action<T>)?._sendActionFn,
             concatedActions
         );
     }
