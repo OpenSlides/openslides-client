@@ -152,6 +152,15 @@ export class AutoupdateStreamPool {
     }
 
     /**
+     * @param subscription Subscription to be managed by pool
+     */
+    public addSubscription(subscription: AutoupdateSubscription, stream: AutoupdateStream): void {
+        subscription.stream = stream;
+        stream.subscriptions.push(subscription);
+        this.subscriptions[subscription.id] = subscription;
+    }
+
+    /**
      * Searches a subscription that fulfills the given queryParams
      * and modelRequest
      *
