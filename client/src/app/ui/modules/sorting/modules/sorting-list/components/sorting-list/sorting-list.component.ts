@@ -1,6 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, ContentChild, EventEmitter, Input, OnDestroy, Output, TemplateRef } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, Observable, Subscription } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 
 @Component({
@@ -93,6 +93,9 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      */
     private currentItems: T[] = [];
 
+    private draggingFinished = new BehaviorSubject<boolean>(true);
+    private sortingChangedFrom: T[];
+
     /**
      * Inform the parent view about sorting.
      * Alternative approach to submit a new order of elements
@@ -114,9 +117,20 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      *
      * @param newValues The new values to set.
      */
-    private updateArray(newValues: T[]): void {
+    private async updateArray(newValues: T[]): Promise<void> {
+        // const oldItems = this.currentItems;
         this.currentItems = newValues.map(val => val);
-        if (this.sortedItems.length !== newValues.length || this.live) {
+        if (!this.draggingFinished.value) {
+            this.sortingChangedFrom = this.sortedItems;
+            await firstValueFrom(this.draggingFinished.pipe(filter(finished => finished)));
+            newValues = [...this.currentItems];
+        }
+        this.updateSortedList(newValues);
+    }
+
+    private updateSortedList(newValues: T[]): void {
+        const set = new Set(this.sortedItems.map(item => item.id));
+        if (this.live || this.sortedItems.length !== newValues.length || newValues.some(value => !set.has(value.id))) {
             this.sortedItems = newValues.map(val => val);
         } else {
             this.sortedItems = this.sortedItems.map(arrayValue =>
@@ -128,7 +142,10 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
     /**
      * Restore the old order from the last update
      */
-    public restore(): void {
+    public async restore(): Promise<void> {
+        if (!this.draggingFinished.value) {
+            await firstValueFrom(this.draggingFinished.pipe(filter(finished => finished)));
+        }
         this.sortedItems = this.currentItems.map(val => val);
     }
 
@@ -137,6 +154,7 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      * is not part of the selected items
      */
     public dragStarted(index: number): void {
+        this.draggingFinished.next(false);
         if (this.multiSelectedIndex.length && !this.multiSelectedIndex.includes(index)) {
             this.multiSelectedIndex = [];
         }
@@ -150,40 +168,22 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      * 'natural drop logic'
      */
     public drop(event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number }, dropBehind?: boolean): void {
-        if (!this.multiSelectedIndex.length) {
-            moveItemInArray(this.sortedItems, event.previousIndex, event.currentIndex);
-        } else {
-            const before: T[] = [];
-            const insertions: T[] = [];
-            const behind: T[] = [];
-            // TODO: this must be refactored!
-            for (let i = 0; i < this.sortedItems.length; i++) {
-                if (!this.multiSelectedIndex.includes(i)) {
-                    if (i < event.currentIndex) {
-                        before.push(this.sortedItems[i]);
-                    } else if (i > event.currentIndex) {
-                        behind.push(this.sortedItems[i]);
-                    } else {
-                        if (dropBehind === false) {
-                            behind.push(this.sortedItems[i]);
-                        } else if (dropBehind === true) {
-                            before.push(this.sortedItems[i]);
-                        } else {
-                            if (Math.min(...this.multiSelectedIndex) < i) {
-                                before.push(this.sortedItems[i]);
-                            } else {
-                                behind.push(this.sortedItems[i]);
-                            }
-                        }
-                    }
-                } else {
-                    insertions.push(this.sortedItems[i]);
-                }
-            }
-            this.sortedItems = [...before, ...insertions, ...behind];
+        let multiSelectedIndex = this.multiSelectedIndex;
+        if (this.sortingChangedFrom) {
+            ({ event, multiSelectedIndex } = this.calculateNewDropIndices(event, multiSelectedIndex));
+            this.updateSortedList([...this.currentItems]);
+            this.sortingChangedFrom = undefined;
         }
-        this.sortEvent.emit(this.sortedItems);
-        this.multiSelectedIndex = [];
+        if (event.previousIndex !== undefined) {
+            if (!multiSelectedIndex.length) {
+                moveItemInArray(this.sortedItems, event.previousIndex, event.currentIndex);
+            } else {
+                this.moveMultipleItemsInArray(event, multiSelectedIndex, dropBehind);
+            }
+            this.sortEvent.emit(this.sortedItems);
+            this.multiSelectedIndex = [];
+        }
+        this.draggingFinished.next(true);
     }
 
     /**
@@ -220,5 +220,64 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      */
     public isSelectedRow(index: number): boolean {
         return this.multiSelectedIndex.includes(index);
+    }
+
+    private calculateNewDropIndices(
+        event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number },
+        multiSelectedIndex: number[]
+    ): { event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number }; multiSelectedIndex: number[] } {
+        if (this.sortingChangedFrom) {
+            let newPreviousIndex = this.currentItems.findIndex(
+                item => item.id === this.sortingChangedFrom[event.previousIndex].id
+            );
+            const newMultiSelectedIndex = multiSelectedIndex
+                .map(index => this.currentItems.findIndex(item => item.id === this.sortingChangedFrom[index].id))
+                .filter(index => index !== -1)
+                .sort();
+            const newCurrentIndex = Math.min(event.currentIndex, this.currentItems.length - 1);
+            if (newPreviousIndex === -1) {
+                newPreviousIndex = newMultiSelectedIndex.length ? newMultiSelectedIndex[0] : undefined;
+            }
+            return {
+                event: { currentIndex: newCurrentIndex, previousIndex: newPreviousIndex },
+                multiSelectedIndex: newMultiSelectedIndex
+            };
+        }
+        return { event, multiSelectedIndex };
+    }
+
+    private moveMultipleItemsInArray(
+        event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number },
+        multiSelectedIndex: number[],
+        dropBehind?: boolean
+    ): void {
+        const before: T[] = [];
+        const insertions: T[] = [];
+        const behind: T[] = [];
+        // TODO: this must be refactored!
+        for (let i = 0; i < this.sortedItems.length; i++) {
+            if (!multiSelectedIndex.includes(i)) {
+                if (i < event.currentIndex) {
+                    before.push(this.sortedItems[i]);
+                } else if (i > event.currentIndex) {
+                    behind.push(this.sortedItems[i]);
+                } else {
+                    if (dropBehind === false) {
+                        behind.push(this.sortedItems[i]);
+                    } else if (dropBehind === true) {
+                        before.push(this.sortedItems[i]);
+                    } else {
+                        if (Math.min(...multiSelectedIndex) < i) {
+                            before.push(this.sortedItems[i]);
+                        } else {
+                            behind.push(this.sortedItems[i]);
+                        }
+                    }
+                }
+            } else {
+                insertions.push(this.sortedItems[i]);
+            }
+        }
+        this.sortedItems = [...before, ...insertions, ...behind];
     }
 }
