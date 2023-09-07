@@ -96,14 +96,14 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
 
     /**
      * Define what happens when a message is received from the ICC service.
-     * @param response The message that was received.
+     * @param message The message that was received.
      */
     protected abstract onMessage(message: ICCResponseType): void;
 
     /**
      * General send function for messages. Subclasses should call this to build their own more specific send functions.
      */
-    protected async send<T>(data?: any): Promise<void> {
+    protected async send(data?: any): Promise<void> {
         if (!this.sendPath) {
             throw new Error(`Cannot send to ICC, no path was provided`);
         }

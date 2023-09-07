@@ -120,8 +120,8 @@ export class CallComponent extends BaseMeetingComponent implements OnInit, After
 
     // closing the tab should also try to stop jitsi.
     // this will usually not be caught by ngOnDestroy
-    @HostListener(`window:beforeunload`, [`$event`])
-    public beforeunload($event: any): void {
+    @HostListener(`window:beforeunload`)
+    public beforeunload(): void {
         this.rtcService.stopJitsi();
     }
 

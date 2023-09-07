@@ -112,7 +112,7 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
      */
     protected onAfterUpdatePoll(_poll: ViewPoll<C>): void {}
 
-    protected loadPoll(id: Id): void {
+    protected loadPoll(_id: Id): void {
         this.subscriptions.push(
             this.repo.getViewModelObservable(this._id).subscribe(poll => {
                 if (poll) {

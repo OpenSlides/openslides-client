@@ -11,9 +11,7 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 
 import { HasTags } from '../../motions';
 
-export class ViewAgendaItem<
-    C extends BaseViewModel & HasAgendaItem = any
-> extends BaseProjectableViewModel<AgendaItem> {
+export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
     public static COLLECTION = AgendaItem.COLLECTION;
     protected _collection = AgendaItem.COLLECTION;
 
@@ -35,7 +33,7 @@ export class ViewAgendaItem<
         return type ? type.name : ``;
     }
 
-    public override getProjectorTitle = (projection: Projection) => {
+    public override getProjectorTitle = (_projection: Projection) => {
         const subtitle = this.item.comment || undefined;
         return { title: this.getTitle(), subtitle };
     };

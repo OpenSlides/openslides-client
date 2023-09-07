@@ -9,7 +9,6 @@ describe(`HtmlToPdfService`, () => {
 
     const LINE_HEIGHT = 1.25;
     const P_MARGIN_BOTTOM = 4.0;
-    const H_MARGIN_TOP = 10.0;
 
     beforeEach(() => {
         TestBed.configureTestingModule({

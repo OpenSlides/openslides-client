@@ -236,7 +236,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
         return true;
     }
 
-    public scrolled(event: any): void {
+    public scrolled(_e: any): void {
         this.isNearBottom = this.isUserNearBottom();
     }
 }

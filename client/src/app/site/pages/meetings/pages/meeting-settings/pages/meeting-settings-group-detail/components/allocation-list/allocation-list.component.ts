@@ -187,16 +187,16 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
     /**
      * To satisfy the interface.
      *
-     * @param fn
+     * @param _fn
      */
-    public registerOnTouched(fn: any): void {}
+    public registerOnTouched(_fn: any): void {}
 
     /**
      * To satisfy the interface
      *
-     * @param isDisabled
+     * @param _isDisabled
      */
-    public setDisabledState?(isDisabled: boolean): void {}
+    public setDisabledState?(_isDisabled: boolean): void {}
 
     /**
      * Removes a custom allocation

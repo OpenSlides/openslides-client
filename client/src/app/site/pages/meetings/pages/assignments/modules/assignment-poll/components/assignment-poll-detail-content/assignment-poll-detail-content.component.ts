@@ -36,12 +36,12 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         this.cd.markForCheck();
     }
 
-    @Input()
-    public iconSize: 'large' | 'gigantic' = `large`;
-
     public get poll(): PollData {
         return this._poll;
     }
+
+    @Input()
+    public iconSize: 'large' | 'gigantic' = `large`;
 
     public get chartData(): ChartData {
         return this._chartData;
@@ -139,7 +139,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
                 combineLatestWith(this.themeService.currentGeneralColorsSubject),
                 map(([options, _]) => options)
             )
-            .subscribe(options => this.setupTableData());
+            .subscribe(() => this.setupTableData());
     }
 
     private setupTableData(): void {

@@ -51,7 +51,7 @@ export abstract class BaseViewModel<M extends BaseModel = any> implements Detail
         return ``;
     }
 }
-export interface BaseViewModel<M extends BaseModel = any> extends Displayable, Identifiable, HasCollection {
+export interface BaseViewModel extends Displayable, Identifiable, HasCollection {
     getTitle: () => string;
     getListTitle: () => string;
 

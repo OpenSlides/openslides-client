@@ -49,7 +49,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         super(repositoryServiceCollector, Vote);
     }
 
-    public getTitle = (viewVote: object) => `Vote`;
+    public getTitle = () => `Vote`;
 
     public getVerboseName = (plural = false) => this.translate.instant(plural ? `Votes` : `Vote`);
 

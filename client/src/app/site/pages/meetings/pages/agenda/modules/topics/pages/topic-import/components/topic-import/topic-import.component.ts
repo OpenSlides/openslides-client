@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
-import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { DurationService } from 'src/app/site/services/duration.service';
@@ -18,7 +17,7 @@ const TEXT_IMPORT_TAB_INDEX = 0;
     templateUrl: `./topic-import.component.html`,
     styleUrls: [`./topic-import.component.scss`]
 })
-export class TopicImportComponent extends BaseViaBackendImportListComponent<Topic> {
+export class TopicImportComponent extends BaseViaBackendImportListComponent {
     /**
      * A form for text input
      */

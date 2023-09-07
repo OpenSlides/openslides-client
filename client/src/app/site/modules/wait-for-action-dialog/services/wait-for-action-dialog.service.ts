@@ -25,6 +25,19 @@ export class WaitForActionDialogService {
         return this._currentReasonSubject.value;
     }
 
+    private set currentReason(reason: WaitForActionReason) {
+        const oldReason = this.currentReason;
+        if (oldReason !== reason) {
+            this._currentReasonSubject.next(reason);
+            if (oldReason === null) {
+                this.openDialog();
+            }
+            if (reason === null) {
+                this.closeDialog();
+            }
+        }
+    }
+
     public get dataObservable(): Observable<Map<WaitForActionReason, WaitForActionData[]>> {
         return this._dataObservable;
     }
@@ -38,19 +51,6 @@ export class WaitForActionDialogService {
             this._workerWatch = this.injector.get(ActionWorkerWatchService);
         }
         return this._workerWatch;
-    }
-
-    private set currentReason(reason: WaitForActionReason) {
-        const oldReason = this.currentReason;
-        if (oldReason !== reason) {
-            this._currentReasonSubject.next(reason);
-            if (oldReason === null) {
-                this.openDialog();
-            }
-            if (reason === null) {
-                this.closeDialog();
-            }
-        }
     }
 
     private _workerWatch: ActionWorkerWatchService;
@@ -115,7 +115,7 @@ export class WaitForActionDialogService {
         this.newCurrentReason();
     }
 
-    public wait(all = false, noConfirmation = false): WaitForActionData[] {
+    public wait(all = false, _noConfirmation = false): WaitForActionData[] {
         const map = this._dataSubject.value;
         let removed: WaitForActionData[];
         if (all || map.get(this.currentReason).length === 1) {

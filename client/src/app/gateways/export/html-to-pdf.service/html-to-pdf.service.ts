@@ -228,7 +228,7 @@ export class HtmlToPdfService {
     }
 
     protected formatDivParagraph(paragraph: any, data: CreateSpecificParagraphPayload): any {
-        const { element, nodeName, classes, styles } = data;
+        const { element, nodeName, styles } = data;
         paragraph.margin = [0, 0, 0, 0];
 
         // determine the "normal" top and button margins
@@ -428,10 +428,10 @@ export class HtmlToPdfService {
      * Determine the ideal margin for a given node.
      * May be overwritten in subclasses.
      *
-     * @param nodeName the node to parse
+     * @param _nodeName the node to parse
      * @returns the margin bottom as number
      */
-    protected getMarginBottom(nodeName: string): number {
+    protected getMarginBottom(_nodeName: string): number {
         return this.P_MARGIN_BOTTOM;
     }
 
