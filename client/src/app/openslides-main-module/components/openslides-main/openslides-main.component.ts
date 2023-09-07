@@ -95,13 +95,15 @@ export class OpenSlidesMainComponent implements OnInit {
             )
         );
         await this.onInitDone;
-        if (await this.updateService.checkForUpdate()) {
-            this.updateService.applyUpdate();
-        } else {
-            setTimeout(() => {
-                this.lifecycleService.appLoaded.next();
-            }, 0);
-        }
+        try {
+            if (await this.updateService.checkForUpdate()) {
+                await this.updateService.applyUpdate();
+            }
+        } catch (_) {}
+
+        setTimeout(() => {
+            this.lifecycleService.appLoaded.next();
+        }, 0);
     }
 
     private loadCustomIcons(): void {
