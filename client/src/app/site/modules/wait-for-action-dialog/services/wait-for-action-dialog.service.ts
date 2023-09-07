@@ -130,7 +130,8 @@ export class WaitForActionDialogService {
         removed.forEach(date => {
             const worker = this.repo.getViewModel(date.workerId);
             if (worker) {
-                worker.lastConfirmationToWaitTimestamp = Date.now();
+                this.workerWatch.setWaitingConfirmed(worker.id);
+                // worker.lastConfirmationToWaitTimestamp = Date.now();
             }
         });
         return removed;

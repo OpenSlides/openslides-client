@@ -42,7 +42,5 @@ export class ViewActionWorker extends BaseViewModel<ActionWorker> {
     public get isSlow(): boolean {
         return this.timeSinceCreation > 2;
     }
-
-    public lastConfirmationToWaitTimestamp: number = undefined;
 }
 export interface ViewActionWorker extends ActionWorker {}
