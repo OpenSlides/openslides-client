@@ -134,8 +134,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     private _accountId: Id | null = null;
     private _suitableAccountList: Partial<User>[] = [];
 
-    private _currentUser: ViewUser | null = null;
-
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -158,7 +156,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                 validators: [OneOfValidator.validation([`username`, `first_name`, `last_name`, `email`], `name`)]
             }
         );
-        this.createUserForm.valueChanges.pipe(distinctUntilChanged()).subscribe(val => {
+        this.createUserForm.valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
             if (this._accountId) {
                 this.detailView?.enableSelfUpdate();
                 this.account = null;
@@ -246,8 +244,8 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                     : undefined,
                 vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
                     ? this.personalInfoFormValue.vote_delegations_from_ids
-                          .map(id => this.repo.getViewModel(id).getMeetingUser().id)
-                          .filter(id => !!id)
+                          .map((id: Id) => this.repo.getViewModel(id).getMeetingUser().id)
+                          .filter((id: Id | undefined) => !!id)
                     : []
             };
             if (this._accountId) {

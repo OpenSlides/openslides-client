@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Content, ContentColumns } from 'pdfmake/interfaces';
 import { ExportServiceModule } from 'src/app/gateways/export';
 
 export interface ChildNodeParagraphPayload {
@@ -86,7 +87,7 @@ export class HtmlToPdfService {
      *
      * @returns {object} The converted html as DocDef.
      */
-    public addPlainText(text: string): object {
+    public addPlainText(text: string): ContentColumns {
         return {
             columns: [{ stack: this.convertHtml({ htmlText: text }) }]
         };
@@ -99,7 +100,7 @@ export class HtmlToPdfService {
      * @param htmlText the html text to translate as string
      * @returns pdfmake doc definition as object
      */
-    public convertHtml({ htmlText }: { htmlText: string }): object {
+    public convertHtml({ htmlText }: { htmlText: string }): Content[] {
         const docDef = [];
 
         // Create a HTML DOM tree out of html string

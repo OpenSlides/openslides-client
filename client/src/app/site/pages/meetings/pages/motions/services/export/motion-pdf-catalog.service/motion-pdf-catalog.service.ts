@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Content } from 'pdfmake/interfaces';
 import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
 import { BorderType, PdfError, StyleType } from 'src/app/gateways/export/pdf-document.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
@@ -40,7 +41,7 @@ export class MotionPdfCatalogService {
      * @param motions the list of view motions to convert
      * @returns pdfmake doc definition as object
      */
-    public motionListToDocDef(motions: ViewMotion[], exportInfo: MotionExportInfo): object {
+    public motionListToDocDef(motions: ViewMotion[], exportInfo: MotionExportInfo): Content {
         let doc = [];
         const motionDocList = [];
         const printToc = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.Toc);
@@ -99,10 +100,9 @@ export class MotionPdfCatalogService {
      * Considers sorting by categories and no sorting.
      *
      * @param motions The motions to add in the TOC
-     * @param sorting The optional sorting strategy
      * @returns the table of contents as document definition
      */
-    private createToc(motions: ViewMotion[], sorting?: string): object {
+    private createToc(motions: ViewMotion[]): Content {
         const toc = [];
         const categories = this.categoryRepo.getViewModelList();
 
@@ -227,9 +227,9 @@ export class MotionPdfCatalogService {
      * for exporting motion-list as PDF. Needed, if submitters
      * and recommendation should also be exported to the `Table of contents`.
      *
-     * @returns {object} The DocDefinition for `pdfmake.js`.
+     * @returns {Content} The DocDefinition for `pdfmake.js`.
      */
-    private getTocHeaderDefinition(): object {
+    private getTocHeaderDefinition(): Content {
         return [
             { text: this.translate.instant(`Number`), style: `tocHeaderRow` },
             {
@@ -249,9 +249,9 @@ export class MotionPdfCatalogService {
      * @param motion The motion containing the information
      * @param style Optional `StyleType`. Defaults to `tocEntry`.
      *
-     * @returns {Array<Object>} An array containing the `DocDefinitions` for `pdf-make`.
+     * @returns {Array<Content>} An array containing the `DocDefinitions` for `pdf-make`.
      */
-    private appendSubmittersAndRecommendation(motion: ViewMotion, style: StyleType = StyleType.DEFAULT): Object[] {
+    private appendSubmittersAndRecommendation(motion: ViewMotion, style: StyleType = StyleType.DEFAULT): Content[] {
         let submitterList = ``;
         let state = ``;
         if (motion.state!.isFinalState) {

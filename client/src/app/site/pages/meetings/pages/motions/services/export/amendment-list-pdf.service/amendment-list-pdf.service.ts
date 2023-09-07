@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Content, ContentTable, TableCell } from 'pdfmake/interfaces';
 import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 
 import { ViewMotion } from '../../../view-models';
@@ -37,7 +38,7 @@ export class AmendmentListPdfService {
      * @amendment the amendment to convert
      * @returns a line in the row as PDF doc definition
      */
-    private amendmentToTableRow(amendment: ViewMotion): object {
+    private amendmentToTableRow(amendment: ViewMotion): TableCell[] {
         let recommendationText = ``;
         if (amendment.recommendation) {
             if (amendment.recommendation.show_recommendation_extension_field && amendment.recommendationExtension) {
@@ -72,13 +73,13 @@ export class AmendmentListPdfService {
      * @param docTitle the header
      * @param amendments the amendments to render
      */
-    public overviewToDocDef(docTitle: string, amendments: ViewMotion[]): object {
+    public overviewToDocDef(docTitle: string, amendments: ViewMotion[]): Content[] {
         const title = {
             text: docTitle,
             style: `title`
         };
 
-        const amendmentTableBody: object[] = [
+        const amendmentTableBody: TableCell[][] = [
             [
                 {
                     text: this.translate.instant(`Motion`),
@@ -103,12 +104,12 @@ export class AmendmentListPdfService {
             ]
         ];
 
-        const amendmentRows: object[] = [];
+        const amendmentRows: TableCell[][] = [];
         for (const amendment of amendments) {
             amendmentRows.push(this.amendmentToTableRow(amendment));
         }
 
-        const table: object = {
+        const table: ContentTable = {
             table: {
                 widths: [`auto`, `auto`, `auto`, `*`, `auto`],
                 headerRows: 1,

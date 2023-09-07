@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Content } from 'pdfmake/interfaces';
 import { PdfError } from 'src/app/gateways/export/pdf-document.service';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -56,7 +57,7 @@ export class AssignmentExportService {
      *
      * @returns doc definition as object
      */
-    private createDocOfMultipleAssignments(assignments: ViewAssignment[]): object {
+    private createDocOfMultipleAssignments(assignments: ViewAssignment[]): Content[] {
         const doc = [];
         const fileList = assignments.map((assignment, index) => {
             try {
@@ -97,7 +98,7 @@ export class AssignmentExportService {
      *
      * @returns The toc as
      */
-    private createToc(assignments: ViewAssignment[]): Object {
+    private createToc(assignments: ViewAssignment[]): Content[] {
         const toc = [];
         const tocTitle = {
             text: this.translate.instant(`Table of contents`),

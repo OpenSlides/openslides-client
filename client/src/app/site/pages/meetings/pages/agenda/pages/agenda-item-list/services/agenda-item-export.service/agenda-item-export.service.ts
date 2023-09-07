@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Content } from 'pdfmake/interfaces';
 import { OSTreeNode } from 'src/app/infrastructure/definitions/tree';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
@@ -57,7 +58,7 @@ export class AgendaItemExportService {
      * will be ignored, all other items will be sorted by their parents and weight
      * @returns definitions ready to be opened or exported via {@link PdfDocumentService}
      */
-    private agendaListToDocDef(items: ViewAgendaItem[]): object {
+    private agendaListToDocDef(items: ViewAgendaItem[]): Content[] {
         const tree: OSTreeNode<ViewAgendaItem>[] = this.treeService.makeSortedTree(items, `weight`, `parent_id`);
         const title = {
             text: this.translate.instant(`Agenda`),

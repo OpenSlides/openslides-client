@@ -54,6 +54,7 @@
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
     "@tinymce/tinymce-angular": "^7.0.0",
+    "@types/pdfmake": "^0.2.2",
     "@videojs/http-streaming": "^2.15.0",
     "acorn": "^8.8.0",
     "ascii-art-api": "^1.0.0",
