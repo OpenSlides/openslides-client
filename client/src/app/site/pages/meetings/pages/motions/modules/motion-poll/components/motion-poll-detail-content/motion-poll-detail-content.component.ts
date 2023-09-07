@@ -91,7 +91,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
 
     public ngOnInit(): void {
         this.subscriptions.push(
-            this._poll.options_as_observable.subscribe(data => {
+            this._poll.options_as_observable.subscribe(() => {
                 this.setupTableData();
             })
         );

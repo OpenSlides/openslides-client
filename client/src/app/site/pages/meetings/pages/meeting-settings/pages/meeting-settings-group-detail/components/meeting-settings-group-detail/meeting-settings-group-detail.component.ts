@@ -113,7 +113,7 @@ export class MeetingSettingsGroupDetailComponent
             const data = deepCopy(this.changedSettings);
             for (const key of Object.keys(this.keyTransformConfigs)) {
                 if (Array.isArray(data[key])) {
-                    data[key] = data[key].map(val =>
+                    data[key] = data[key].map((val: unknown) =>
                         typeof val === `object` ? replaceObjectKeys(val, this.keyTransformConfigs[key], true) : val
                     );
                 } else if (typeof data[key] === `object`) {
