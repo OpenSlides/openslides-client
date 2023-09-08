@@ -8,7 +8,7 @@ env:
   NG_CLI_ANALYTICS: ci
 
 jobs:
-  build-and-test-dev-image:    
+  build-and-test-prod-image:    
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -58,7 +58,7 @@ jobs:
         working-directory: "./dev/localprod"
         run: docker-compose down --volumes --remove-orphans
 
-  build-and-check-dev-image:
+  build-and-test-dev-image:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -75,7 +75,7 @@ jobs:
       - name: Run karma tests
         run: make run-karma-tests
 
-  build-and-test-prod-image:
+  build-prod-image:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
