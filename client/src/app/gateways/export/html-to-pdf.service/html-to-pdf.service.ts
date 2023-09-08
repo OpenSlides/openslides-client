@@ -480,20 +480,10 @@ export class HtmlToPdfService {
                             break;
                         }
                         case `text-decoration`: {
-                            if (!styleObject.decoration) {
-                                styleObject.decoration = [];
-                            }
                             switch (value) {
+                                case `line-through`:
                                 case `underline`: {
-                                    if (!styleObject.decoration.includes(`underline`)) {
-                                        styleObject.decoration.push(`underline`);
-                                    }
-                                    break;
-                                }
-                                case `line-through`: {
-                                    if (!styleObject.decoration.includes(`lineThrough`)) {
-                                        styleObject.decoration.push(`lineThrough`);
-                                    }
+                                    styleObject.decoration = value;
                                     break;
                                 }
                             }
