@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { NotifyService } from 'src/app/gateways/notify.service';
 import { StorageService } from 'src/app/gateways/storage.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ViewChatMessage } from '../view-models';
 import { ChatMessageControllerService } from './chat-message-controller.service';
@@ -41,7 +43,12 @@ export class ChatNotificationService {
     private _lastMessageAmount = 0;
     private _chatMessages: ViewChatMessage[] = [];
 
-    public constructor(private storage: StorageService, private chatMessageRepo: ChatMessageControllerService) {
+    public constructor(
+        private storage: StorageService,
+        private chatMessageRepo: ChatMessageControllerService,
+        private notifyService: NotifyService,
+        private operator: OperatorService
+    ) {
         storage.addNoClearKey(STORAGE_KEY);
         this.setup();
     }
@@ -52,7 +59,7 @@ export class ChatNotificationService {
         // clear notification
         this._chatGroupLastSeenObject[chatGroupId] = new Date(); // set current date as new seen.
 
-        this.saveToStorage();
+        this.save();
 
         // mute notifications locally
         this.getChatGroupNotificationSubject(chatGroupId).next(0);
@@ -62,7 +69,7 @@ export class ChatNotificationService {
     public closeChatGroup(chatGroupId: Id): void {
         // clear notification
         this._chatGroupLastSeenObject[chatGroupId] = new Date(); // set current date as new seen.
-        this.saveToStorage();
+        this.save();
 
         // unmute notifications locally
         this._openChatGroupIds = this._openChatGroupIds.filter(id => id !== chatGroupId);
@@ -81,6 +88,16 @@ export class ChatNotificationService {
                 this.doChatMessageUpdate();
             }
         });
+        this.notifyService.getMessageObservable(STORAGE_KEY).subscribe(data => {
+            if (data.sendByThisUser) {
+                this.load(data.message);
+            }
+        });
+    }
+
+    private async save(): Promise<void> {
+        await this.saveToStorage();
+        await this.notifyService.sendToUsers(STORAGE_KEY, await this.storage.get(STORAGE_KEY), this.operator.user.id);
     }
 
     private async saveToStorage(): Promise<void> {
@@ -92,11 +109,19 @@ export class ChatNotificationService {
 
     private async loadFromStorage(): Promise<void> {
         const lastTimestamps = await this.storage.get(STORAGE_KEY);
+        this.load(lastTimestamps);
+    }
+
+    private load(lastTimestamps: any): void {
         if (isLastSeenTimestampEvent(lastTimestamps)) {
             Object.keys(lastTimestamps).forEach(id => {
-                this._chatGroupLastSeenObject[+id] = new Date(lastTimestamps[+id]);
+                const date = new Date(lastTimestamps[+id]);
+                if (!this._chatGroupLastSeenObject[+id] || date > this._chatGroupLastSeenObject[+id]) {
+                    this._chatGroupLastSeenObject[+id] = date;
+                }
             });
         }
+        this.saveToStorage();
     }
 
     private getChatGroupNotificationSubject(chatGroupId: Id): BehaviorSubject<number> {
