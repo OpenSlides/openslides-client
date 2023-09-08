@@ -481,9 +481,12 @@ export class HtmlToPdfService {
                         }
                         case `text-decoration`: {
                             switch (value) {
-                                case `line-through`:
                                 case `underline`: {
                                     styleObject.decoration = value;
+                                    break;
+                                }
+                                case `line-through`: {
+                                    styleObject.decoration = `lineThrough`;
                                     break;
                                 }
                             }
