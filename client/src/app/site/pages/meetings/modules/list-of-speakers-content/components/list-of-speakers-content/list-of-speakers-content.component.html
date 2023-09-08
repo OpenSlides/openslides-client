@@ -110,7 +110,8 @@
             [live]="true"
             [input]="waitingSpeakers"
             [count]="canSee"
-            [enable]="canManage && (isSortMode || !isMobile)"
+            [enable]="canManage"
+            [dragDelay]="isMobile ? 500 : 0"
             (sortEvent)="onSortingChanged($event)"
         >
             <!-- implicit speaker references into the component using ng-template slot -->
