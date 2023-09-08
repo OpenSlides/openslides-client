@@ -74,11 +74,3 @@ jobs:
 
       - name: Run karma tests
         run: make run-karma-tests
-
-  build-prod-image:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Build prod image
-        run: make build-prod
