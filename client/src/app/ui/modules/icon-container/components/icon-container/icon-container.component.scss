@@ -54,10 +54,12 @@
         margin: auto 5px;
         text-overflow: ellipsis;
         overflow: hidden;
-        width: 100%;
         line-height: normal;
         &.content-swapped {
             margin-left: 0;
+        }
+        &.fill-space {
+            width: 100%;
         }
     }
 
