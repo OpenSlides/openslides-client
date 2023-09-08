@@ -1,7 +1,8 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, ContentChild, EventEmitter, Input, OnDestroy, Output, TemplateRef } from '@angular/core';
-import { BehaviorSubject, filter, firstValueFrom, Observable, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
+import { Mutex } from 'src/app/infrastructure/utils/promises';
 
 @Component({
     selector: `os-sorting-list`,
@@ -93,8 +94,9 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      */
     private currentItems: T[] = [];
 
-    private draggingFinished = new BehaviorSubject<boolean>(true);
-    private sortingChangedFrom: T[];
+    private draggingMutex = new Mutex();
+    private draggingUnlockFnPromise: PromiseLike<() => void> = null;
+    private sortingChanged = false;
 
     /**
      * Inform the parent view about sorting.
@@ -118,14 +120,12 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      * @param newValues The new values to set.
      */
     private async updateArray(newValues: T[]): Promise<void> {
-        // const oldItems = this.currentItems;
         this.currentItems = newValues.map(val => val);
-        if (!this.draggingFinished.value) {
-            this.sortingChangedFrom = this.sortedItems;
-            await firstValueFrom(this.draggingFinished.pipe(filter(finished => finished)));
-            newValues = [...this.currentItems];
-        }
+        this.sortingChanged = true;
+        const unlock = await this.draggingMutex.lock();
+        newValues = [...this.currentItems];
         this.updateSortedList(newValues);
+        unlock();
     }
 
     private updateSortedList(newValues: T[]): void {
@@ -143,18 +143,17 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      * Restore the old order from the last update
      */
     public async restore(): Promise<void> {
-        if (!this.draggingFinished.value) {
-            await firstValueFrom(this.draggingFinished.pipe(filter(finished => finished)));
-        }
+        const unlock = await this.draggingMutex.lock();
         this.sortedItems = this.currentItems.map(val => val);
+        unlock();
     }
 
     /**
      * Handles the start of a dragDrop event and clears multiSelect if the dragged item
      * is not part of the selected items
      */
-    public dragStarted(index: number): void {
-        this.draggingFinished.next(false);
+    public async dragStarted(index: number): Promise<void> {
+        this.draggingUnlockFnPromise = this.draggingMutex.lock();
         if (this.multiSelectedIndex.length && !this.multiSelectedIndex.includes(index)) {
             this.multiSelectedIndex = [];
         }
@@ -167,12 +166,19 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      * 'insert before' (false) behavior instead of relying on a
      * 'natural drop logic'
      */
-    public drop(event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number }, dropBehind?: boolean): void {
+    public async drop(
+        event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number },
+        dropBehind?: boolean
+    ): Promise<void> {
+        if (!this.draggingUnlockFnPromise) {
+            throw new Error(`Drop was claaed without previous drag call`);
+        }
+        const unlock = await this.draggingUnlockFnPromise;
         let multiSelectedIndex = this.multiSelectedIndex;
-        if (this.sortingChangedFrom) {
+        if (this.sortingChanged) {
             ({ event, multiSelectedIndex } = this.calculateNewDropIndices(event, multiSelectedIndex));
             this.updateSortedList([...this.currentItems]);
-            this.sortingChangedFrom = undefined;
+            this.sortingChanged = false;
         }
         if (event.previousIndex !== undefined) {
             if (!multiSelectedIndex.length) {
@@ -183,7 +189,7 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
             this.sortEvent.emit(this.sortedItems);
             this.multiSelectedIndex = [];
         }
-        this.draggingFinished.next(true);
+        unlock();
     }
 
     /**
@@ -226,12 +232,12 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
         event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number },
         multiSelectedIndex: number[]
     ): { event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number }; multiSelectedIndex: number[] } {
-        if (this.sortingChangedFrom) {
+        if (this.sortingChanged) {
             let newPreviousIndex = this.currentItems.findIndex(
-                item => item.id === this.sortingChangedFrom[event.previousIndex].id
+                item => item.id === this.sortedItems[event.previousIndex].id
             );
             const newMultiSelectedIndex = multiSelectedIndex
-                .map(index => this.currentItems.findIndex(item => item.id === this.sortingChangedFrom[index].id))
+                .map(index => this.currentItems.findIndex(item => item.id === this.sortedItems[index].id))
                 .filter(index => index !== -1)
                 .sort();
             const newCurrentIndex = Math.min(event.currentIndex, this.currentItems.length - 1);
