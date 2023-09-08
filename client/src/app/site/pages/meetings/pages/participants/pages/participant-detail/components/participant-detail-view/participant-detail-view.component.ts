@@ -4,6 +4,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
@@ -66,6 +67,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 return PERSONAL_FORM_CONTROLS.includes(controlName);
             }
         };
+    }
+
+    public get operatorHasEqualOrHigherOML(): boolean {
+        const userOML = this.user?.organization_management_level;
+        return userOML ? this.operator.hasOrganizationPermissions(userOML as OML) : true;
     }
 
     public isFormValid = false;
