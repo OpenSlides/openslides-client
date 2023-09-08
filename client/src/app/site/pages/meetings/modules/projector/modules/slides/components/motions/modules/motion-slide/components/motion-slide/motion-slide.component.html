@@ -84,7 +84,7 @@
             <!-- Regular motions or traditional amendments -->
             <ng-container *ngIf="!isStatuteAmendment() && !isParagraphBasedAmendment()">
                 <div
-                    class="motion-text"
+                    class="motion-text underlined-links"
                     [class.line-numbers-none]="isLineNumberingNone()"
                     [class.line-numbers-inline]="isLineNumberingInline()"
                     [class.line-numbers-outside]="isLineNumberingOutside()"
@@ -99,7 +99,7 @@
 
             <!-- Statute amendments -->
             <div
-                class="motion-text line-numbers-none"
+                class="motion-text underlined-links line-numbers-none"
                 *ngIf="isStatuteAmendment()"
                 [innerHTML]="getFormattedStatuteAmendment() | trust : 'html'"
             ></div>
@@ -110,7 +110,7 @@
                     <span>{{ 'No changes at the text.' | translate }}</span>
                 </div>
                 <div
-                    class="motion-text"
+                    class="motion-text underlined-links"
                     [class.line-numbers-none]="isLineNumberingNone()"
                     [class.line-numbers-inline]="isLineNumberingInline()"
                     [class.line-numbers-outside]="isLineNumberingOutside()"
@@ -119,7 +119,7 @@
                 ></div>
                 <div
                     *ngFor="let paragraph of getAmendedParagraphs()"
-                    class="motion-text motion-text-diff amendment-view"
+                    class="motion-text motion-text-diff amendment-view underlined-links"
                     [class.line-numbers-none]="isLineNumberingNone()"
                     [class.line-numbers-inline]="isLineNumberingInline()"
                     [class.line-numbers-outside]="isLineNumberingOutside()"

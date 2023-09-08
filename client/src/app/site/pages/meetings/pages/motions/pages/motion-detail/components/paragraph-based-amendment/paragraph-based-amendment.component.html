@@ -19,7 +19,7 @@
 
                 <ng-container *ngFor="let paragraph of getAmendmentParagraphs(); trackBy: trackByIndex">
                     <div
-                        class="motion-text motion-text-diff amendment-view"
+                        class="motion-text motion-text-diff amendment-view underlined-links"
                         [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
                         [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
                         [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
