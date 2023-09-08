@@ -35,43 +35,36 @@
         <mat-horizontal-stepper #matStepper linear>
             <mat-step [completed]="contentForm.value.selectedParagraphs.length > 0">
                 <ng-template matStepLabel>{{ 'Select paragraphs' | translate }}</ng-template>
-                <div class="amendment-create-wizard-wrapper">
-                    <cdk-virtual-scroll-viewport
-                        itemSize="90"
-                        minBufferPx="400"
-                        maxBufferPx="600"
-                        class="paragraph-scroll"
+                <div class="amendment-create-wizard-wrapper spacer-bottom-20">
+                    <section
+                        *ngFor="let paragraph of paragraphs; let i = index"
+                        class="paragraph-row background-hover"
+                        [class.outlined-hover]="isParagraphSelected(paragraph)"
+                        (click)="onParagraphClicked(paragraph)"
                     >
-                        <section
-                            *ngFor="let paragraph of paragraphs; let i = index"
-                            class="paragraph-row background-hover"
-                            [class.outlined-hover]="isParagraphSelected(paragraph)"
-                            (click)="onParagraphClicked(paragraph)"
-                        >
-                            <mat-checkbox
-                                *ngIf="multipleParagraphsAllowed"
-                                class="flex-center paragraph-select"
-                                [checked]="isParagraphSelected(paragraph)"
-                                (click)="checkboxClicked($event)"
-                            ></mat-checkbox>
-                            <mat-radio-button
-                                *ngIf="!multipleParagraphsAllowed"
-                                class="flex-center paragraph-select"
-                                [checked]="isParagraphSelected(paragraph)"
-                            ></mat-radio-button>
-                            <div class="paragraph-text motion-text">
-                                <div>
-                                    <i *ngIf="paragraph.lineFrom >= paragraph.lineTo" class="line-number">
-                                        {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
-                                    </i>
-                                    <i *ngIf="paragraph.lineFrom < paragraph.lineTo" class="line-number">
-                                        {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}:
-                                    </i>
-                                </div>
-                                <div [innerHTML]="getParagraphPreview(i) | trust : 'html'"></div>
+                        <mat-checkbox
+                            *ngIf="multipleParagraphsAllowed"
+                            class="flex-center paragraph-select"
+                            [checked]="isParagraphSelected(paragraph)"
+                            (click)="checkboxClicked($event)"
+                        ></mat-checkbox>
+                        <mat-radio-button
+                            *ngIf="!multipleParagraphsAllowed"
+                            class="flex-center paragraph-select"
+                            [checked]="isParagraphSelected(paragraph)"
+                        ></mat-radio-button>
+                        <div class="paragraph-text motion-text">
+                            <div>
+                                <i *ngIf="paragraph.lineFrom >= paragraph.lineTo" class="line-number">
+                                    {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
+                                </i>
+                                <i *ngIf="paragraph.lineFrom < paragraph.lineTo" class="line-number">
+                                    {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}:
+                                </i>
                             </div>
-                        </section>
-                    </cdk-virtual-scroll-viewport>
+                            <div [innerHTML]="getParagraphPreview(i) | trust : 'html'"></div>
+                        </div>
+                    </section>
                 </div>
             </mat-step>
             <mat-step>
