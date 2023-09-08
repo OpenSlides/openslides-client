@@ -50,6 +50,12 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
     public enable = true;
 
     /**
+     * The time before dragging starts
+     */
+    @Input()
+    public dragDelay = 0;
+
+    /**
      * The Input List Values
      *
      * If live updates are enabled, new values are always converted into the sorting array.
