@@ -95,7 +95,7 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
     private currentItems: T[] = [];
 
     private draggingMutex = new Mutex();
-    private draggingUnlockFnPromise: PromiseLike<() => void> = null;
+    private draggingUnlockFnPromise: PromiseLike<() => void> = undefined;
     private sortingChanged = false;
 
     /**
@@ -171,9 +171,10 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
         dropBehind?: boolean
     ): Promise<void> {
         if (!this.draggingUnlockFnPromise) {
-            throw new Error(`Drop was claaed without previous drag call`);
+            throw new Error(`Drop was called without previous drag call`);
         }
         const unlock = await this.draggingUnlockFnPromise;
+        this.draggingUnlockFnPromise = undefined;
         let multiSelectedIndex = this.multiSelectedIndex;
         if (this.sortingChanged) {
             ({ event, multiSelectedIndex } = this.calculateNewDropIndices(event, multiSelectedIndex));
