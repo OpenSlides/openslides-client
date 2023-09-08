@@ -120,6 +120,7 @@ span {
 .desktop-view {
     .desktop-left {
         width: 30%;
+        min-width: 320px;
         float: left;
         padding-right: 25px;
     }
@@ -132,7 +133,6 @@ span {
         .os-card {
             display: grid;
             max-width: 900px;
-            min-width: 400px;
             margin-left: 0 !important;
             margin-top: 0 !important;
         }

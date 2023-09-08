@@ -9,10 +9,10 @@
     display: flex;
     column-gap: 2em;
     flex-flow: row wrap;
+    justify-content: center;
 
     .result-table {
-        flex-basis: 150px;
-        flex-grow: 2;
+        width: 240px;
         th {
             text-align: right;
             font-weight: initial;
@@ -48,8 +48,7 @@
 
     .doughnut-chart {
         display: block;
-        flex-basis: 150px;
-        min-width: 150px;
-        flex-grow: 2;
+        flex-basis: 240px;
+        width: 240px;
     }
 }
