@@ -8,6 +8,7 @@
         iconTooltip="{{ 'Edit' | translate }}"
         icon="create"
         [swap]="true"
+        [noFill]="true"
         [showIcon]="!editMode && canBeEdited && hasExtension"
         (iconAction)="changeEditMode()"
     >

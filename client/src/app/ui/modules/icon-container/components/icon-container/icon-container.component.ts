@@ -77,6 +77,13 @@ export class IconContainerComponent {
     public color: string | undefined;
 
     /**
+     * Will cause the content not to fill the parent element space.
+     * If swap is true this effectively causes the icon to always be right next to the content.
+     */
+    @Input()
+    public noFill = false;
+
+    /**
      * Optional action for clicking on the icon.
      */
     @Output()
