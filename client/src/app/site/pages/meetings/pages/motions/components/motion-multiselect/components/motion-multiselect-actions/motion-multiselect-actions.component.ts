@@ -7,6 +7,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
 import { TagControllerService } from '../../../../modules/tags/services/tag-controller.service/tag-controller.service';
+import { MotionListSortService } from '../../../../services/list/motion-list-sort.service';
 import { MotionExportDialogService } from '../../../motion-export-dialog/services/motion-export-dialog.service';
 import { MotionMultiselectService } from '../../services/motion-multiselect.service';
 
@@ -56,7 +57,8 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
         private motionBlockRepo: MotionBlockControllerService,
         private tagRepo: TagControllerService,
         private meetingSettingsService: MeetingSettingsService,
-        private exportDialog: MotionExportDialogService
+        private exportDialog: MotionExportDialogService,
+        private sortService: MotionListSortService
     ) {
         super();
     }
@@ -80,7 +82,7 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
     /**
      * Opens the dialog to choose options for exporting selected motions.
      */
-    public openExportDialog(): void {
-        this.exportDialog.export(this.selectedMotions);
+    public async openExportDialog(): Promise<void> {
+        this.exportDialog.export(await this.sortService.sort(this.selectedMotions));
     }
 }
