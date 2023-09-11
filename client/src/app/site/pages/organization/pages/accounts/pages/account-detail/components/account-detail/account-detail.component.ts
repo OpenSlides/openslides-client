@@ -43,6 +43,11 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         );
     }
 
+    public get operatorHasEqualOrHigherOML(): boolean {
+        const userOML = this.user?.organization_management_level;
+        return userOML ? this.operator.hasOrganizationPermissions(userOML as OML) : true;
+    }
+
     public get orgaManagementLevelChangeDisabled(): boolean {
         return this.user?.id === this.operator.operatorId && this.operator.isSuperAdmin;
     }
