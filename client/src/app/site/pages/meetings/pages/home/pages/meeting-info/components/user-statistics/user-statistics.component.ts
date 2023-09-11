@@ -70,7 +70,7 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.speakerListRepo.getViewModelListObservable().subscribe(value => {
+            this.speakerListRepo.getViewModelListObservable().subscribe(() => {
                 this.updateRelationSpeakingTimeStructureLevelSubject();
             })
         );

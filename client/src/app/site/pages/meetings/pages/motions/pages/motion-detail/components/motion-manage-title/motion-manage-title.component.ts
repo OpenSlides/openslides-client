@@ -85,7 +85,7 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
             this.changeRecoRepo
                 .getTitleChangeRecoOfMotionObservable(this.motion?.id)
                 ?.subscribe(changeReco => (this.titleChangeRecommendation = changeReco)),
-            this.viewService.changeRecommendationModeSubject.pipe(distinctUntilChanged()).subscribe(reco => {
+            this.viewService.changeRecommendationModeSubject.pipe(distinctUntilChanged()).subscribe(() => {
                 if (this.titleComponent) {
                     this.titleComponent.update();
                 }

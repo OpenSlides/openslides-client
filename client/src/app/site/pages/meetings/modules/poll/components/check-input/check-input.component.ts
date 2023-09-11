@@ -120,16 +120,16 @@ export class CheckInputComponent extends BaseUiComponent implements OnInit, Cont
     /**
      * To satisfy the interface.
      *
-     * @param fn
+     * @param _fn
      */
-    public registerOnTouched(fn: any): void {}
+    public registerOnTouched(_fn: any): void {}
 
     /**
      * To satisfy the interface
      *
-     * @param isDisabled
+     * @param _isDisabled
      */
-    public setDisabledState?(isDisabled: boolean): void {}
+    public setDisabledState?(_isDisabled: boolean): void {}
 
     /**
      * Helper function to determine which information to give to the parent form

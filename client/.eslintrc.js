@@ -53,9 +53,14 @@ module.exports = {
                     }
                 ],
                 '@typescript-eslint/quotes': ['error', 'backtick', { 'avoidEscape': false }],
+                '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
                 'simple-import-sort/imports': 'error',
                 'simple-import-sort/exports': 'error',
                 'unused-imports/no-unused-imports': 'error',
+                'no-restricted-properties': ['error', {
+                    'property': 'asObservable',
+                    'message': 'Please use a typecast or explicitly instantiate a new Observable.'
+                }],
 
                 'jsdoc/require-example': ['off'],
                 'jsdoc/newline-after-description': ['off'],
@@ -68,16 +73,11 @@ module.exports = {
                 '@typescript-eslint/no-unnecessary-type-constraint': ['warn'],
                 '@typescript-eslint/no-this-alias': ['warn'],
                 '@typescript-eslint/ban-types': ['warn'],
-                '@typescript-eslint/no-unused-vars': 'warn',
                 '@typescript-eslint/adjacent-overload-signatures': ['warn'],
                 '@typescript-eslint/ban-ts-comment': ['warn'],
                 '@typescript-eslint/no-explicit-any': ['off'],
                 '@typescript-eslint/no-non-null-assertion': ['off'],
-                'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }],
-                'no-restricted-properties': ['error', {
-                    'property': 'asObservable',
-                    'message': 'Please use a typecast or explicitly instantiate a new Observable.'
-                }]
+                'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }]
             }
         },
         {

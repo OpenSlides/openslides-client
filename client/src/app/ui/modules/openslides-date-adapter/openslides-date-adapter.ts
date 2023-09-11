@@ -1,7 +1,7 @@
 import { Inject, Injectable, Optional } from '@angular/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { DateFnsAdapter } from '@angular/material-date-fns-adapter';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { langToTimeLocale } from 'src/app/infrastructure/utils';
 
 /**
@@ -15,7 +15,7 @@ export class OpenSlidesDateAdapter extends DateFnsAdapter {
         // subscribe to language changes to change localisation of dates accordingly
         // DateAdapter seems not to be a singleton so we do that in this subclass instead of app.component
         this.updateLocaleByName(translate.currentLang);
-        translate.onLangChange.subscribe((e: LangChangeEvent) => {
+        translate.onLangChange.subscribe(() => {
             this.updateLocaleByName(translate.currentLang);
         });
     }

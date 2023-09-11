@@ -23,8 +23,6 @@ enum MenuItems {
     SHOW_MEETINGS = `My meetings`
 }
 
-const PERSONAL_PERMISSIONS = [`seePersonal`, `seeName`, `changePersonal`];
-
 @Component({
     selector: `os-account-dialog`,
     templateUrl: `./account-dialog.component.html`,

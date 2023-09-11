@@ -19,7 +19,6 @@ import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 import { BackendImportService } from 'src/app/ui/base/import-service';
@@ -54,7 +53,7 @@ export enum BackendImportPhase {
     styleUrls: [`./backend-import-list.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
-export class BackendImportListComponent<M extends Identifiable> implements OnInit, OnDestroy {
+export class BackendImportListComponent implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
 
@@ -80,15 +79,15 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
     public additionalInfo = ``;
 
     @Input()
-    public set importer(importer: BackendImportService<M>) {
+    public set importer(importer: BackendImportService) {
         this._importer = importer;
     }
 
-    public get importer(): BackendImportService<M> {
+    public get importer(): BackendImportService {
         return this._importer;
     }
 
-    private _importer!: BackendImportService<M>;
+    private _importer!: BackendImportService;
 
     /**
      * Defines all necessary and optional fields, that a .csv-file can contain.

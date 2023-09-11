@@ -114,7 +114,6 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
 
         const name = this.selectedGroup ? this.selectedGroup.name : ``;
         const external_id = this.selectedGroup?.external_id ?? ``;
-        const forbiddenNames = this.groups.filter(group => group.name !== name).map(group => group.name);
 
         this.groupForm = this.formBuilder.group({
             name: [

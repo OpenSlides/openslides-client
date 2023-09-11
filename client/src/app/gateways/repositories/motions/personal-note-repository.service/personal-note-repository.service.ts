@@ -19,7 +19,7 @@ export class PersonalNoteRepositoryService extends BaseMeetingRelatedRepository<
         super(repositoryServiceCollector, PersonalNote);
     }
 
-    public getTitle = (viewPersonalNote: ViewPersonalNote) => this.getVerboseName();
+    public getTitle = () => this.getVerboseName();
 
     public getVerboseName = (plural = false) => this.translate.instant(plural ? `Personal notes` : `Personal note`);
 

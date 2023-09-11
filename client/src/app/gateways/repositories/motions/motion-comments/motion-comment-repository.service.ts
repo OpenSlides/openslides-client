@@ -15,7 +15,7 @@ export class MotionCommentRepositoryService extends BaseMeetingRelatedRepository
         super(repositoryServiceCollector, MotionComment);
     }
 
-    public getTitle = (viewMotionComment: ViewMotionComment) => `Comment`;
+    public getTitle = () => `Comment`;
 
     public getVerboseName = (plural = false) => this.translate.instant(plural ? `Comments` : `Comment`);
 

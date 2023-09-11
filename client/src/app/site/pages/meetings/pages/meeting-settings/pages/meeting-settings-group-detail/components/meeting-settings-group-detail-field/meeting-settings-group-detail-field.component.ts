@@ -125,7 +125,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     public get getChangeFn(): (currentValue: any, currentWatchPropertyValues: any[]) => any {
         return (
             this.setting.automaticChangesSetting?.getChangeFn ??
-            ((currentValue, currentWatchPropertyValues) => currentValue)
+            ((currentValue, _currentWatchPropertyValues) => currentValue)
         );
     }
 

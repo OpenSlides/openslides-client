@@ -12,7 +12,7 @@ import {
     startWith,
     Subscription
 } from 'rxjs';
-import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
+import { NotifyService } from 'src/app/gateways/notify.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ActiveMeetingService } from '../../../services/active-meeting.service';
@@ -143,7 +143,7 @@ export class InteractionReceiveService {
             this.promptService.close();
         });
 
-        this._kickObservable.subscribe(response => this.onKickMessage(response));
+        this._kickObservable.subscribe(() => this.onKickMessage());
     }
 
     public async enterCall(): Promise<void> {
@@ -174,7 +174,7 @@ export class InteractionReceiveService {
         }
     }
 
-    private async onKickMessage(message: NotifyResponse<kickMessage>): Promise<void> {
+    private async onKickMessage(): Promise<void> {
         if (await firstValueFrom(this.rtcService.isJitsiActiveObservable)) {
             this.rtcService.stopJitsi();
         }

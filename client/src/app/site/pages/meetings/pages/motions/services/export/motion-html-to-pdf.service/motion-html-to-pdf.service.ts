@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Content, ContentColumns } from 'pdfmake/interfaces';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import {
     ChildNodeParagraphPayload,
@@ -37,13 +38,13 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
      */
     private lineNumberingMode: LineNumberingMode = LineNumberingMode.Outside;
 
-    public override addPlainText(htmlText: string): object {
+    public override addPlainText(htmlText: string): ContentColumns {
         return {
             columns: [{ stack: this.convertHtml({ htmlText, lnMode: LineNumberingMode.None }) }]
         };
     }
 
-    public override convertHtml({ htmlText, lnMode, lineHeight }: HtmlToPdfConfig): object {
+    public override convertHtml({ htmlText, lnMode, lineHeight }: HtmlToPdfConfig): Content[] {
         this.lineNumberingMode = lnMode || LineNumberingMode.None;
 
         if (lineHeight) {
@@ -153,7 +154,7 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
             return super.createListParagraph(data);
         }
 
-        const { element, nodeName, classes, styles } = data;
+        const { element, nodeName, styles } = data;
         const list = this.create(nodeName);
 
         // keep the numbers of the ol list

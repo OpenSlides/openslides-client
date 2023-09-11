@@ -413,7 +413,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * Returns an array with custom arguments for said function.
      * If any filter property needs to receive arguments this function may be expanded.
      */
-    protected getFilterPropertyFunctionArguments(property: keyof V): any[] {
+    protected getFilterPropertyFunctionArguments(_property: keyof V): any[] {
         return [];
     }
 

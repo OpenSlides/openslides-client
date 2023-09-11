@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Content, ContentColumns } from 'pdfmake/interfaces';
 import { ExportServiceModule } from 'src/app/gateways/export';
 
 export interface ChildNodeParagraphPayload {
@@ -86,7 +87,7 @@ export class HtmlToPdfService {
      *
      * @returns {object} The converted html as DocDef.
      */
-    public addPlainText(text: string): object {
+    public addPlainText(text: string): ContentColumns {
         return {
             columns: [{ stack: this.convertHtml({ htmlText: text }) }]
         };
@@ -99,7 +100,7 @@ export class HtmlToPdfService {
      * @param htmlText the html text to translate as string
      * @returns pdfmake doc definition as object
      */
-    public convertHtml({ htmlText }: { htmlText: string }): object {
+    public convertHtml({ htmlText }: { htmlText: string }): Content[] {
         const docDef = [];
 
         // Create a HTML DOM tree out of html string
@@ -227,7 +228,7 @@ export class HtmlToPdfService {
     }
 
     protected formatDivParagraph(paragraph: any, data: CreateSpecificParagraphPayload): any {
-        const { element, nodeName, classes, styles } = data;
+        const { element, nodeName, styles } = data;
         paragraph.margin = [0, 0, 0, 0];
 
         // determine the "normal" top and button margins
@@ -427,10 +428,10 @@ export class HtmlToPdfService {
      * Determine the ideal margin for a given node.
      * May be overwritten in subclasses.
      *
-     * @param nodeName the node to parse
+     * @param _nodeName the node to parse
      * @returns the margin bottom as number
      */
-    protected getMarginBottom(nodeName: string): number {
+    protected getMarginBottom(_nodeName: string): number {
         return this.P_MARGIN_BOTTOM;
     }
 
@@ -479,20 +480,13 @@ export class HtmlToPdfService {
                             break;
                         }
                         case `text-decoration`: {
-                            if (!styleObject.decoration) {
-                                styleObject.decoration = [];
-                            }
                             switch (value) {
                                 case `underline`: {
-                                    if (!styleObject.decoration.includes(`underline`)) {
-                                        styleObject.decoration.push(`underline`);
-                                    }
+                                    styleObject.decoration = value;
                                     break;
                                 }
                                 case `line-through`: {
-                                    if (!styleObject.decoration.includes(`lineThrough`)) {
-                                        styleObject.decoration.push(`lineThrough`);
-                                    }
+                                    styleObject.decoration = `lineThrough`;
                                     break;
                                 }
                             }

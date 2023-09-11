@@ -6,18 +6,14 @@ import {
     BackendImportPhase
 } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 
-import { Identifiable } from '../../domain/interfaces';
 import { getLongPreview, getShortPreview } from '../../infrastructure/utils';
 import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { BaseBackendImportService } from './base-import.service/base-backend-import.service';
 
 @Directive()
-export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
-    extends BaseComponent
-    implements OnInit
-{
+export abstract class BaseViaBackendImportListComponent extends BaseComponent implements OnInit {
     @ViewChild(BackendImportListComponent)
-    private list: BackendImportListComponent<M>;
+    private list: BackendImportListComponent;
 
     /**
      * Helper function for previews
@@ -69,7 +65,7 @@ export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
-        protected importer: BaseBackendImportService<M>
+        protected importer: BaseBackendImportService
     ) {
         super(componentServiceCollector, translate);
     }

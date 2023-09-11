@@ -147,7 +147,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
     private titleFieldUpdateSubscription: Subscription;
-    private textFieldUpdateSubscription: Subscription;
 
     private _canSaveParagraphBasedAmendment = true;
     private _paragraphBasedAmendmentContent: any = {};
@@ -190,9 +189,9 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     /**
      * If the checkbox is deactivated, the statute_paragraph_id-field needs to be reset, as only that field is saved
      *
-     * @param {MatCheckboxChange} $event
+     * @param {MatCheckboxChange} _event
      */
-    public onStatuteAmendmentChange($event: MatCheckboxChange): void {
+    public onStatuteAmendmentChange(_event: MatCheckboxChange): void {
         this.contentForm.patchValue({
             statute_paragraph_id: null,
             workflow_id: this.getWorkflowIdForCreateFormByParagraph()

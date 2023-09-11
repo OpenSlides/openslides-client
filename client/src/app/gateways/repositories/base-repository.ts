@@ -502,7 +502,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         return viewModel;
     }
 
-    protected onCreateViewModel(viewModel: V): void {}
+    protected onCreateViewModel(_viewModel: V): void {}
 
     private updateViewModelListSubject(viewModels: V[]): void {
         this.viewModelListSubject.next(viewModels?.filter(m => m.canAccess())?.sort(this.viewModelSortFn));

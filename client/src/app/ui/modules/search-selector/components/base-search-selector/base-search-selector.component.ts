@@ -105,7 +105,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
      * Allows for the definition of additional strings that should be checked against the search value for a given item
      */
     @Input()
-    public getAdditionallySearchedValuesFn: (item: Selectable) => string[] = item => [];
+    public getAdditionallySearchedValuesFn: (item: Selectable) => string[] = () => [];
 
     @Input()
     public set sortFn(fn: false | ((valueA: Selectable, valueB: Selectable) => number)) {
@@ -114,6 +114,10 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         } else {
             this._sortFn = this._defaultSortFn;
         }
+    }
+
+    public get sortFn(): false | ((valueA: Selectable, valueB: Selectable) => number) {
+        return this._sortFn;
     }
 
     @Input()
@@ -142,10 +146,6 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
 
     public get maxHeight(): string {
         return 112 + this.panelHeight + `px`;
-    }
-
-    public get sortFn(): false | ((valueA: Selectable, valueB: Selectable) => number) {
-        return this._sortFn;
     }
 
     private _defaultSortFn = (a: Selectable, b: Selectable) =>
