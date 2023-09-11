@@ -3,6 +3,7 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { SortListService } from 'src/app/ui/modules/list';
 
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
@@ -31,6 +32,9 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
     @Output()
     public action = new EventEmitter<Promise<void>>();
 
+    @Input()
+    public sortService: SortListService<ViewMotion> = this._sortService;
+
     /**
      * Boolean, if the recommendation is enabled.
      */
@@ -58,7 +62,7 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
         private tagRepo: TagControllerService,
         private meetingSettingsService: MeetingSettingsService,
         private exportDialog: MotionExportDialogService,
-        private sortService: MotionListSortService
+        private _sortService: MotionListSortService
     ) {
         super();
     }
