@@ -105,7 +105,16 @@ function openConnection(
 
     const existingSubscription = autoupdatePool.getMatchingSubscription(queryParams, request);
     if (existingSubscription) {
-        existingSubscription.addPort(ctx);
+        if (existingSubscription.description !== description) {
+            const subscription = new AutoupdateSubscription(streamId, queryParams, requestHash, request, description, [
+                ctx
+            ]);
+            autoupdatePool.addSubscription(subscription, existingSubscription.stream);
+            subscription.resendTo(ctx);
+        } else {
+            existingSubscription.addPort(ctx);
+        }
+
         if (!existingSubscription.stream.active) {
             autoupdatePool.reconnect(existingSubscription.stream, false);
         }

@@ -8,7 +8,7 @@ env:
   NG_CLI_ANALYTICS: ci
 
 jobs:
-  build-and-test-dev-image:    
+  build-and-test-prod-image:    
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -27,13 +27,23 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: "./openslides-client"
-      - name: Start dev setup
-        run: make run-dev ARGS="-d"
+      - name: Copy example data
+        run: cp openslides-backend/global/data/example-data.json openslides-datastore-service/cli/
+      - name: Start setup
+        working-directory: "./dev/localprod"
+        run: |
+          ./setup.sh
+          sed -i '/x-default-environment/a \ \ DATASTORE_INITIAL_DATA_FILE: cli/example-data.json' docker-compose.yml
+          docker-compose build --parallel
+          docker-compose up -d
       - name: Wait for dev setup
         uses: iFaxity/wait-on-action@v1.1.0
         with:
           resource: https://localhost:8000
-          timeout: 330000
+          timeout: 30000
+      - name: Setup initial data
+        working-directory: "./dev/localprod"
+        run: docker-compose exec -T datastoreWriter python cli/create_initial_data.py
       - name: Start tests 
         working-directory: "./openslides-client"
         run: make run-playwright
@@ -43,11 +53,12 @@ jobs:
           name: playwright-report
           path: "./openslides-client/client/tests/playwright-report/"
           retention-days: 7
-      - name: Shut down dev setup
+      - name: Shut down setup
         if: always()
-        run: make stop-dev
+        working-directory: "./dev/localprod"
+        run: docker-compose down --volumes --remove-orphans
 
-  build-and-check-dev-image:
+  build-and-test-dev-image:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -63,11 +74,3 @@ jobs:
 
       - name: Run karma tests
         run: make run-karma-tests
-
-  build-and-test-prod-image:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Build prod image
-        run: make build-prod

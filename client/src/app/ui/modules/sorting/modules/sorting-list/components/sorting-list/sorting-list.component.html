@@ -7,6 +7,7 @@
         class="line margin-bottom-5"
         *ngFor="let item of sortedItems; let i = index"
         cdkDrag
+        [cdkDragStartDelay]="dragDelay"
         (click)="onItemClick($event, i)"
         (cdkDragStarted)="dragStarted(i)"
     >

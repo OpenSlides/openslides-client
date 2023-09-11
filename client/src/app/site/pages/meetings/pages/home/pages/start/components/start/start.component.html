@@ -14,7 +14,7 @@
 
 <mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'">
     <ng-container *ngIf="!isEditing">
-        <div class="app-content">
+        <div class="app-content underlined-links">
             <ng-container *ngIf="welcomeTitleObservable | async as welcomeTitle">
                 <h1>{{ welcomeTitle }}</h1>
             </ng-container>

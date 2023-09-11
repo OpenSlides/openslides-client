@@ -105,7 +105,9 @@ export class AutoupdateService {
     }
 
     public async pauseUntilVisible(): Promise<void> {
-        this.bannerService.addBanner(OUT_OF_SYNC_BANNER);
+        const showBannerTimeout = setTimeout(() => {
+            this.bannerService.addBanner(OUT_OF_SYNC_BANNER);
+        }, 2000);
         const pausedRequests: { start: () => Promise<any>; info: any }[] = [];
         for (const id of Object.keys(this._activeRequestObjects)) {
             const streamId = Number(id);
@@ -140,6 +142,7 @@ export class AutoupdateService {
         }
 
         Promise.all(openRequests).then(() => {
+            clearTimeout(showBannerTimeout);
             this.bannerService.removeBanner(OUT_OF_SYNC_BANNER);
         });
     }

@@ -13,6 +13,9 @@ msgstr ""
 msgid "%num% emails were send sucessfully."
 msgstr ""
 
+msgid "(Default)"
+msgstr ""
+
 msgid "-Ä"
 msgstr ""
 
@@ -82,6 +85,9 @@ msgid "Access groups"
 msgstr ""
 
 msgid "Access-data"
+msgstr ""
+
+msgid "Account"
 msgstr ""
 
 msgid "Account admin"
@@ -213,6 +219,11 @@ msgstr ""
 msgid "After verifying the preview click on \"import\" please (see top right)."
 msgstr ""
 
+msgid ""
+"Afterwards you may be unable to regain your status in this meeting on your "
+"own. Are you sure you want to do this?"
+msgstr ""
+
 msgid "Agenda"
 msgstr ""
 
@@ -232,6 +243,9 @@ msgid "All entitled users"
 msgstr ""
 
 msgid "All lists of speakers will be cleared."
+msgstr ""
+
+msgid "All meetings"
 msgstr ""
 
 msgid "All other fields are optional and may be empty."
@@ -499,6 +513,9 @@ msgid ""
 msgstr ""
 
 msgid "Are you sure you want to remove all selected items from the agenda?"
+msgstr ""
+
+msgid "Are you sure you want to remove these participants?"
 msgstr ""
 
 msgid "Are you sure you want to remove this entry from the agenda?"
@@ -1855,6 +1872,9 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
+msgid "Filtered"
+msgstr ""
+
 msgid "Final version"
 msgstr ""
 
@@ -2859,6 +2879,9 @@ msgstr ""
 msgid "No recommendation"
 msgstr ""
 
+msgid "No results found"
+msgstr ""
+
 msgid "No results yet."
 msgstr ""
 
@@ -3054,6 +3077,9 @@ msgid "Original"
 msgstr ""
 
 msgid "Original version"
+msgstr ""
+
+msgid "Out of sync"
 msgstr ""
 
 msgid "Outside"
@@ -3877,9 +3903,6 @@ msgstr ""
 msgid "Single votes"
 msgstr ""
 
-msgid "Size"
-msgstr ""
-
 msgid "Slide"
 msgstr ""
 
@@ -4210,7 +4233,7 @@ msgstr ""
 msgid "These accounts will be deleted:"
 msgstr ""
 
-msgid "These accounts will be removed from the meeting:"
+msgid "These participants will be removed:"
 msgstr ""
 
 msgid "This account has relations to meetings or committees"
@@ -4219,6 +4242,15 @@ msgstr ""
 msgid ""
 "This account is not linked as candidate, submitter or speaker in any "
 "meeting and is not manager of any committee"
+msgstr ""
+
+msgid "This action will diminish your organization management level"
+msgstr ""
+
+msgid "This action will remove you from one or more groups."
+msgstr ""
+
+msgid "This action will remove you from one or more meetings."
 msgstr ""
 
 msgid "This ballot contains deleted users."
@@ -4237,6 +4269,14 @@ msgid "This field is required."
 msgstr ""
 
 msgid "This is not a number."
+msgstr ""
+
+msgid ""
+"This may diminish your ability to do things in this meeting and you may not "
+"be able to revert it by youself. Are you sure you want to do this?"
+msgstr ""
+
+msgid "This meeting"
 msgstr ""
 
 msgid "This meeting is archived"
@@ -4279,6 +4319,11 @@ msgid "This will add or remove the following tags for all selected motions:"
 msgstr ""
 
 msgid "This will add or remove the selected accounts to following meetings:"
+msgstr ""
+
+msgid ""
+"This will diminish your ability to do things on the organization level and "
+"you will not be able to revert this yourself."
 msgstr ""
 
 msgid "This will move all selected motions as childs to:"
@@ -4334,6 +4379,9 @@ msgstr ""
 msgid "Title for access data and welcome PDF"
 msgstr ""
 
+msgid "To start your search press Enter or the search icon"
+msgstr ""
+
 msgid "Toggle to list of speakers"
 msgstr ""
 
@@ -4359,6 +4407,9 @@ msgid "Topics updated"
 msgstr ""
 
 msgid "Topics with warnings (will be skipped)"
+msgstr ""
+
+msgid "Total"
 msgstr ""
 
 msgid "Total topics"
@@ -4631,9 +4682,6 @@ msgstr ""
 msgid "Yes per option"
 msgstr ""
 
-msgid "Yes, delete"
-msgstr ""
-
 msgid "Yes, inclusive meetings"
 msgstr ""
 
@@ -4859,6 +4907,9 @@ msgstr ""
 msgid "dateless"
 msgstr ""
 
+msgid "delete"
+msgstr ""
+
 msgid "deleted"
 msgstr ""
 
@@ -5049,6 +5100,9 @@ msgid "rejected"
 msgstr ""
 
 msgid "rejected (not authorized)"
+msgstr ""
+
+msgid "remove"
 msgstr ""
 
 msgid "remove group(s)"
