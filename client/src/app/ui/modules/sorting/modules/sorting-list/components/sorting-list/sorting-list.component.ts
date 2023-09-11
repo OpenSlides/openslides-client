@@ -84,6 +84,9 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
         }
     }
 
+    @Input()
+    public isPriorityItemFunction: (item: T) => boolean;
+
     /**
      * Saves the subscription, if observables are used. Cleared in the onDestroy hook.
      */
@@ -241,16 +244,53 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
                 .map(index => this.currentItems.findIndex(item => item.id === this.sortedItems[index].id))
                 .filter(index => index !== -1)
                 .sort();
-            const newCurrentIndex = Math.min(event.currentIndex, this.currentItems.length - 1);
+            let newCurrentIndex = Math.min(event.currentIndex, this.currentItems.length - 1);
             if (newPreviousIndex === -1) {
                 newPreviousIndex = newMultiSelectedIndex.length ? newMultiSelectedIndex[0] : undefined;
             }
+            newCurrentIndex = this.transformDropIndexByPriority(newPreviousIndex, event.currentIndex, newCurrentIndex);
             return {
                 event: { currentIndex: newCurrentIndex, previousIndex: newPreviousIndex },
                 multiSelectedIndex: newMultiSelectedIndex
             };
         }
         return { event, multiSelectedIndex };
+    }
+
+    private transformDropIndexByPriority(
+        newPreviousIndex: number,
+        oldCurrentIndex: number,
+        newCurrentIndex: number
+    ): number {
+        const item = this.currentItems[newPreviousIndex];
+        if (!this.isPriorityItemFunction) {
+            return newCurrentIndex;
+        }
+        let oldPriorityIndex = -1;
+        let newPriorityIndex = -1;
+        for (
+            let i = -1;
+            (i < this.currentItems.length || i < this.sortedItems.length) &&
+            (i === oldPriorityIndex || i === newPriorityIndex);
+            i++
+        ) {
+            if (oldPriorityIndex === i && this.isPriorityItemFunction(this.sortedItems[i + 1])) {
+                oldPriorityIndex++;
+            }
+            if (newPriorityIndex === i && this.isPriorityItemFunction(this.currentItems[i + 1])) {
+                newPriorityIndex++;
+            }
+        }
+        if (this.isPriorityItemFunction(item)) {
+            if (oldCurrentIndex <= oldPriorityIndex && newCurrentIndex > newPriorityIndex) {
+                return newPreviousIndex > newPriorityIndex ? newPriorityIndex + 1 : newPriorityIndex;
+            }
+            return newCurrentIndex;
+        }
+        if (oldCurrentIndex > oldPriorityIndex && newCurrentIndex <= newPriorityIndex) {
+            return newPriorityIndex + 1;
+        }
+        return newCurrentIndex;
     }
 
     private moveMultipleItemsInArray(
