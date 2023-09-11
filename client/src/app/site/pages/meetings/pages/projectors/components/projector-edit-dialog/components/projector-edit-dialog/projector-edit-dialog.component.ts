@@ -208,6 +208,8 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             const copy = new Projector(this.previewProjector);
             this.previewProjector = Object.assign(copy, this.updateForm.value);
             this.previewProjector.current_projections = this.projector.current_projections;
+            this.previewProjector.scale = this.projector.scale;
+            this.previewProjector.scroll = this.projector.scroll;
             this.cd.markForCheck();
         }
     }
