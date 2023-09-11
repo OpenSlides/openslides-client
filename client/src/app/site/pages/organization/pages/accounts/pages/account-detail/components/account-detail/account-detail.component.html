@@ -244,9 +244,9 @@
 
 <mat-menu #userExtraMenu="matMenu">
     <button
-        *ngIf="!user?.saml_id && operatorHasEqualOrHigherOML"
+        *ngIf="user && !user.saml_id && operatorHasEqualOrHigherOML"
         mat-menu-item
-        [routerLink]="['/', 'accounts', user?.id, 'password']"
+        [routerLink]="['/', 'accounts', user.id, 'password']"
     >
         <mat-icon>security</mat-icon>
         <span>{{ 'Change password' | translate }}</span>
