@@ -95,7 +95,12 @@
     <div *osScrollingTableCell="'summary'; row as motion" class="cell-slot fill">
         <os-detail-view-navigator *ngIf="!isMultiSelect" [model]="motion"></os-detail-view-navigator>
         <div class="innerTable">
-            <div class="motion-text underlined-links" [innerHtml]="getAmendmentSummary(motion) | trust : 'html'"></div>
+            <div
+                class="motion-text underlined-links"
+                *ngIf="getAmendmentSummary(motion)"
+                [innerHtml]="getAmendmentSummary(motion) | trust : 'html'"
+            ></div>
+            <i *ngIf="!getAmendmentSummary(motion)">{{ 'No changes at the text.' | translate }}</i>
         </div>
     </div>
 
