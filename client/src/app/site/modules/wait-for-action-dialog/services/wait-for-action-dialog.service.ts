@@ -115,7 +115,7 @@ export class WaitForActionDialogService {
         this.newCurrentReason();
     }
 
-    public wait(all = false, _noConfirmation = false): WaitForActionData[] {
+    public wait(all = false, noConfirmation = false): WaitForActionData[] {
         const map = this._dataSubject.value;
         let removed: WaitForActionData[];
         if (all || map.get(this.currentReason)?.length === 1) {
