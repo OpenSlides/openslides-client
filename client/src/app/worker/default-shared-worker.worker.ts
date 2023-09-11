@@ -1,13 +1,10 @@
-import { WorkerMessage } from './interfaces';
+import { SW_BROADCAST_CHANNEL_NAME, WorkerMessage } from './interfaces';
 import { autoupdateMessageHandler } from './sw-autoupdate';
 import { controlGeneralMessageHandler, controlMessageHandler } from './sw-control';
 
-const contexts = [];
-
+const broadcastChannel = new BroadcastChannel(SW_BROADCAST_CHANNEL_NAME);
 function broadcast(sender: string, action: string, content?: any) {
-    for (const ctx of contexts) {
-        ctx.postMessage({ sender, action, content });
-    }
+    broadcastChannel.postMessage({ sender, action, content });
 }
 
 function registerMessageListener(ctx: any) {
@@ -25,7 +22,6 @@ function registerMessageListener(ctx: any) {
 
 if ((<any>self).Window && self instanceof (<any>self).Window) {
     registerMessageListener(self);
-    contexts.push(self);
     self.postMessage(`ready`);
 } else {
     (<any>self).addEventListener(`connect`, (e: any) => {
@@ -34,7 +30,6 @@ if ((<any>self).Window && self instanceof (<any>self).Window) {
         registerMessageListener(port);
 
         port.start();
-        contexts.push(port);
         port.postMessage(`ready`);
     });
 }
