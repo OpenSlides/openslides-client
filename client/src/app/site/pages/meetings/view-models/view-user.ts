@@ -264,8 +264,22 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.vote_delegations_from_ids().includes(user.id);
     }
 
+    private meetingUserIndexMap = new Map<Id, number>();
     public getMeetingUser(meetingId?: Id): ViewMeetingUser {
-        return this.meeting_users.find(user => user.meeting_id === (meetingId || this.getEnsuredActiveMeetingId()));
+        meetingId = meetingId || this.getEnsuredActiveMeetingId();
+        if (
+            !this.meetingUserIndexMap.has(meetingId) ||
+            this.meeting_users[this.meetingUserIndexMap.get(meetingId)]?.id !== meetingId
+        ) {
+            this.meetingUserIndexMap.set(
+                meetingId,
+                this.meeting_users.findIndex(
+                    user => user.meeting_id === (meetingId || this.getEnsuredActiveMeetingId())
+                )
+            );
+        }
+
+        return this.meeting_users[this.meetingUserIndexMap.get(meetingId)];
     }
 
     public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser {
