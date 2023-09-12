@@ -204,12 +204,14 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      * React to form changes to update the preview
      */
     public onChangeForm(): void {
-        if (this.previewProjector && this.projector && this.updateForm.valid) {
-            const copy = new Projector(this.previewProjector);
-            this.previewProjector = Object.assign(copy, this.updateForm.value);
-            this.previewProjector.current_projections = this.projector.current_projections;
-            this.previewProjector.scale = this.projector.scale;
-            this.previewProjector.scroll = this.projector.scroll;
+        if (this.previewProjector && this.data.projector && this.updateForm.valid) {
+            const copy = new Projector(this.data.projector.getModel());
+            this.previewProjector = Object.assign(copy, this.updateForm.value, {
+                scale: this.data.projector.scale,
+                scroll: this.data.projector.scroll,
+                sequential_number: this.data.projector.sequential_number
+            });
+            this.previewProjector.current_projections = this.data.projector.current_projections;
             this.cd.markForCheck();
         }
     }
