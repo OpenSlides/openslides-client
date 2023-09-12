@@ -2,7 +2,7 @@
     #matSelect
     [formControl]="contentForm"
     [multiple]="multiple"
-    [panelClass]="{ 'os-search-selector-wider': wider }"
+    [panelClass]="{ 'os-search-selector-wider': wider, 'os-search-selector-panel': true }"
     [errorStateMatcher]="errorStateMatcher"
     (openedChange)="onOpenChanged($event)"
 >
@@ -16,7 +16,7 @@
         </ng-container>
     </mat-select-trigger>
 
-    <div class="os-search-selector--input-wrapper" *ngIf="matSelect.panelOpen">
+    <div #searchSelectorInput class="os-search-selector--input-wrapper" *ngIf="matSelect.panelOpen">
         <input
             matInput
             osAutofocus
@@ -78,7 +78,25 @@
             (onSelectionChange)="onSelectionChange(selectableItem, $event)"
             (click)="keepOpen ? matSelect.open() : null"
         >
-            {{ selectableItem.getTitle() | translate }} {{ getItemAdditionalInfoFn(selectableItem) }}
+            <ng-container *ngTemplateOutlet="optionContent; context: { item: selectableItem }"></ng-container>
         </mat-option>
     </cdk-virtual-scroll-viewport>
+
+    <!-- Ensure that selected options are always loaded, so that the mat-trigger is shown-->
+    <ng-container *ngIf="multiple">
+        <mat-option class="selected-options-hidden" *ngIf="selectedItems.length" [value]="selectedItems[0].id" disabled>
+            <ng-container *ngTemplateOutlet="optionContent; context: { item: selectedItems[0] }"></ng-container>
+        </mat-option>
+    </ng-container>
+    <ng-container *ngIf="!multiple">
+        <mat-option class="selected-options-hidden" *ngIf="contentForm.value" [value]="contentForm.value" disabled>
+            <ng-container
+                *ngTemplateOutlet="optionContent; context: { item: getItemById(contentForm.value) }"
+            ></ng-container>
+        </mat-option>
+    </ng-container>
 </mat-select>
+
+<ng-template #optionContent let-item="item">
+    <ng-container *ngIf="item">{{ item.getTitle() | translate }} {{ getItemAdditionalInfoFn(item) }}</ng-container>
+</ng-template>

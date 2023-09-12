@@ -6,6 +6,12 @@
     }
 }
 
+.os-search-selector-panel {
+    height: var(--os-search-selector-panel-height, 296px);
+    max-height: none !important;
+    overflow: hidden !important;
+}
+
 .os-search-selector--no-options {
     mat-pseudo-checkbox {
         display: none;
@@ -57,4 +63,9 @@
 
 .vscroll-viewport {
     display: block;
+}
+
+.selected-options-hidden {
+    visibility: hidden;
+    position: absolute;
 }
