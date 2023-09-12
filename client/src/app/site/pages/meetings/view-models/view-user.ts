@@ -269,7 +269,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         meetingId = meetingId || this.getEnsuredActiveMeetingId();
         if (
             !this.meetingUserIndexMap.has(meetingId) ||
-            this.meeting_users[this.meetingUserIndexMap.get(meetingId)]?.id !== meetingId
+            this.meeting_users[this.meetingUserIndexMap.get(meetingId)]?.meeting_id !== meetingId
         ) {
             this.meetingUserIndexMap.set(
                 meetingId,
