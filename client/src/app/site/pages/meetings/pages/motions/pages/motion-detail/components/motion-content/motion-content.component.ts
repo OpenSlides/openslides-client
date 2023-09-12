@@ -49,7 +49,9 @@ interface MotionFormFields {
     workflow_id: Id;
 }
 
-type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any };
+type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any } & {
+    supporter_user_ids?: any;
+};
 
 @Component({
     selector: `os-motion-content`,
@@ -487,7 +489,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             attachment_ids: [[]],
             agenda_parent_id: [],
             submitter_ids: [[]],
-            supporter_meeting_user_ids: [[]],
+            supporter_user_ids: [[]],
             workflow_id: [],
             tag_ids: [[]],
             statute_amendment: [``], // Internal value for the checkbox, not saved to the model

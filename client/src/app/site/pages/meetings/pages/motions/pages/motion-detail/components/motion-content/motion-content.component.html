@@ -216,7 +216,7 @@
             <div class="content-field" *ngIf="editMotion && minSupporters">
                 <mat-form-field>
                     <os-repo-search-selector
-                        formControlName="supporter_meeting_user_ids"
+                        formControlName="supporter_user_ids"
                         [multiple]="true"
                         placeholder="{{ 'Supporters' | translate }}"
                         [repo]="participantRepo"
