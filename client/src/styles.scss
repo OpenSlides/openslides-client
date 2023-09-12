@@ -25,6 +25,7 @@
 
 :root {
     --global-headbar-height: 28px;
+    --view-headbar-height: 50px;
 }
 
 /**
@@ -530,7 +531,7 @@ button.mat-menu-item.selected {
 
 .content-container {
     margin: 0 25px;
-    
+
     h1 {
         font-size: 30px;
     }
