@@ -178,12 +178,12 @@ export class DataStoreUpdateManagerService {
         // Phase 1: deleting and creating of view models (in this order)
         for (const repo of repositories) {
             const deletedModelIds = slot.getDeletedModelIdsForCollection(repo.collection);
-            if (deletedModelIds.length) {
+            if (deletedModelIds?.length) {
                 repo.deleteModels(deletedModelIds);
             }
 
             const changedModelIds = slot.getChangedModelIdsForCollection(repo.collection);
-            if (changedModelIds.length) {
+            if (changedModelIds?.length) {
                 repo.changedModels(changedModelIds, changedModels[repo.COLLECTION]);
             }
         }
