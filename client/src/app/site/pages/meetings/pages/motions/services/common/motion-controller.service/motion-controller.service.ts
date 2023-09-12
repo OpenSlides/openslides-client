@@ -203,10 +203,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     }
 
     public hasAmendments(motion: ViewMotion): boolean {
-        if (motion.amendment_ids) {
-            return !!motion.amendment_ids.length;
-        }
-        return !!this.getViewModelList().find(_motion => _motion.lead_motion_id === motion.id);
+        return !!motion.amendment_ids?.length;
     }
 
     /**
