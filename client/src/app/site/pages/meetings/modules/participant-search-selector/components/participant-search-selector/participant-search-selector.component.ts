@@ -92,7 +92,7 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
                 }
             }),
             //The list should be updated when the participants have been edited
-            this.userRepo.getViewModelListObservable().subscribe(users => {
+            this.userRepo.getSortedViewModelListObservable(`default`).subscribe(users => {
                 this._users = users;
                 this.filterUsers();
             })
