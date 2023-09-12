@@ -2,7 +2,7 @@
     #matSelect
     [formControl]="contentForm"
     [multiple]="multiple"
-    [panelClass]="{ 'os-search-selector-wider': wider, 'os-search-selector-panel': true }"
+    [panelClass]="{ 'os-search-selector-wider': wider }"
     [errorStateMatcher]="errorStateMatcher"
     (openedChange)="onOpenChanged($event)"
 >
@@ -54,7 +54,13 @@
             <ng-container *ngTemplateOutlet="notFoundTemplate"></ng-container>
         </button>
     </ng-container>
-    <div #scrollViewport [ngStyle]="{ height: panelHeight + 'px' }" class="vscroll-viewport">
+    <cdk-virtual-scroll-viewport
+        [ngStyle]="{ height: panelHeight + 'px' }"
+        class="vscroll-viewport"
+        minBufferPx="400"
+        maxBufferPx="600"
+        [itemSize]="50"
+    >
         <mat-option
             *ngIf="(filteredItemsObservable | async)?.length === 0"
             class="os-search-selector--no-options"
@@ -64,7 +70,7 @@
         </mat-option>
         <mat-option
             #currentOption
-            *ngFor="let selectableItem of filteredItemsObservable | async"
+            *cdkVirtualFor="let selectableItem of filteredItemsObservable | async"
             [value]="selectableItem.id"
             [disabled]="disableOptionWhenFn(selectableItem) || selectableItem.disabled"
             [matTooltip]="tooltipFn(selectableItem, currentOption)"
@@ -74,5 +80,5 @@
         >
             {{ selectableItem.getTitle() | translate }} {{ getItemAdditionalInfoFn(selectableItem) }}
         </mat-option>
-    </div>
+    </cdk-virtual-scroll-viewport>
 </mat-select>
