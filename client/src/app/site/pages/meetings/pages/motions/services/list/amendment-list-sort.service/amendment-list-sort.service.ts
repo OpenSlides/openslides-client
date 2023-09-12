@@ -36,7 +36,7 @@ export class AmendmentListSortService extends MotionListSortService {
         injector: Injector
     ) {
         super(translate, store, meetingSettingsService, injector, {
-            sortProperty: `title`,
+            sortProperty: `parentAndLineNumber`,
             sortAscending: true
         });
     }
