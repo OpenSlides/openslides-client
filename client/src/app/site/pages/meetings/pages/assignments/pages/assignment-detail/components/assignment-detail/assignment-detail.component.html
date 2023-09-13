@@ -154,7 +154,7 @@
             <div>
                 <div class="candidates-list" *ngIf="assignment?.candidates?.length">
                     <os-sorting-list
-                        [input]="assignment.candidates"
+                        [input]="assignmentCandidates"
                         [live]="true"
                         [count]="assignment.number_poll_candidates"
                         [enable]="hasPerms('manage')"
