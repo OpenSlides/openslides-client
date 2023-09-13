@@ -6,13 +6,12 @@
 
 .result-wrapper {
     cursor: pointer;
-    display: flex;
-    column-gap: 2em;
-    flex-flow: row wrap;
-    justify-content: center;
+    display: grid;
+    grid-gap: 2em;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
     .result-table {
-        width: 240px;
+        // display: block;
         th {
             text-align: right;
             font-weight: initial;
@@ -48,7 +47,5 @@
 
     .doughnut-chart {
         display: block;
-        flex-basis: 240px;
-        width: 240px;
     }
 }
