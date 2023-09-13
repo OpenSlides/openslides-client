@@ -665,8 +665,13 @@ export class OperatorService {
                         follow: [
                             {
                                 idField: `vote_delegations_from_ids`,
-                                fieldset: [`meeting_id`],
-                                follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                                fieldset: [`meeting_id`, `group_ids`],
+                                follow: [
+                                    {
+                                        idField: `user_id`,
+                                        fieldset: UserFieldsets.FullNameSubscription.fieldset.concat(`meeting_user_ids`)
+                                    }
+                                ]
                             }
                         ]
                     }

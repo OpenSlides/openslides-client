@@ -125,6 +125,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public restrictPointOfOrderActions = false;
 
+    public isPointOfOrderFn = (speaker: ViewSpeaker) => speaker.point_of_order;
+
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
 
