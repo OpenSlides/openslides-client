@@ -239,7 +239,7 @@
         </div>
 
         <!-- Amendments -->
-        <div *ngIf="amendmentsEnabled && (perms.isAllowed('manage') || hasAmendments())">
+        <div *ngIf="amendmentsEnabled && (perms.isAllowed('manage') || hasAmendments)">
             <button mat-menu-item routerLink="amendments">
                 <!-- color_lens -->
                 <!-- format_paint -->
@@ -266,7 +266,7 @@
 
         <mat-divider
             *ngIf="
-                (hasCategories || hasMotionBlocks || hasAmendments() || perms.isAllowed('manage')) &&
+                (hasCategories || hasMotionBlocks || hasAmendments || perms.isAllowed('manage')) &&
                 (perms.isAllowed('manage') || selectedView === 'list' || perms.isAllowed('can_manage_config'))
             "
         ></mat-divider>

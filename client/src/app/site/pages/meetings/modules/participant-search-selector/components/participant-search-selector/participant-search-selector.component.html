@@ -7,6 +7,7 @@
             [multiple]="false"
             placeholder="{{ placeholder | translate }}"
             [inputListValues]="filteredUsersSubject"
+            [sortFn]="false"
             (clickNotFound)="createNewSelectedUser($event)"
         >
             <ng-template osSearchSelectorNotFoundTemplate *osPerms="permission.userCanManage">

@@ -22,6 +22,7 @@ import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
+import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort.service/participant-list-sort.service';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
@@ -168,7 +169,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         private route: ActivatedRoute,
         private cd: ChangeDetectorRef,
         private perms: MotionPermissionService,
-        private motionController: MotionControllerService
+        private motionController: MotionControllerService,
+        public participantSortService: ParticipantListSortService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
         this.motionController

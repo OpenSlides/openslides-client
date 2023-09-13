@@ -102,6 +102,7 @@
                         placeholder="{{ 'Committee admin' | translate }}"
                         [subscriptionConfig]="committeeSubscriptionConfig"
                         [repo]="committeeController"
+                        [sortService]="committeeSortService"
                         [transformPropagateFn]="getTransformPropagateFn()"
                         [transformSetFn]="getTransformSetFn()"
                     ></os-repo-search-selector>

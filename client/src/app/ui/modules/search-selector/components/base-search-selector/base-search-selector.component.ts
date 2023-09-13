@@ -1,3 +1,4 @@
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
     ContentChild,
     Directive,
@@ -24,11 +25,14 @@ import { ParentErrorStateMatcher } from '../../validators';
 
 @Directive()
 export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlComponent<Selectable> implements OnInit {
-    @ViewChild(`scrollViewport`, { static: true })
-    public scrollViewport!: ElementRef<HTMLElement>;
+    @ViewChild(CdkVirtualScrollViewport, { static: true })
+    public cdkVirtualScrollViewPort!: CdkVirtualScrollViewport;
 
     @ViewChild(`matSelect`)
     public matSelect!: MatSelect;
+
+    @ViewChild(`searchSelectorInput`)
+    public inputDiv!: ElementRef;
 
     @ViewChild(`chipPlaceholder`, { static: false })
     public chipPlaceholder!: ElementRef<HTMLElement>;
@@ -269,7 +273,22 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     public onOpenChanged(event: boolean): void {
         this.openedChange.emit(event);
         if (event) {
-            this.scrollViewport.nativeElement.scroll({ top: 0 });
+            // Ensure that the main panel doesn't ever scroll away from the top
+            const panelElement = this.matSelect.panel.nativeElement as HTMLElement;
+            const inputRect = this.inputDiv.nativeElement.getBoundingClientRect();
+            const cdkRect = this.cdkVirtualScrollViewPort.elementRef.nativeElement.getBoundingClientRect();
+            document.documentElement.style.setProperty(
+                `--os-search-selector-panel-height`,
+                `${cdkRect.bottom - inputRect.top}px`
+            );
+            panelElement.addEventListener(`scroll`, () => {
+                if (panelElement.scrollTop !== 0) {
+                    panelElement.scrollTo({ top: 0 });
+                }
+            });
+
+            this.cdkVirtualScrollViewPort.scrollToIndex(0);
+            this.cdkVirtualScrollViewPort.checkViewportSize();
         } else {
             this.searchValueForm.setValue(``);
         }
@@ -305,6 +324,10 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     public onNotFoundClick(): void {
         this.clickNotFound.emit(this.searchValueForm.value);
         this.searchValueForm.setValue(``);
+    }
+
+    public getItemById(id: number): Selectable {
+        return this.selectableItems.find(item => item.id === id);
     }
 
     protected onSearchValueUpdated(nextValue: string): void {

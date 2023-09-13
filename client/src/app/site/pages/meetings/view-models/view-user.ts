@@ -104,6 +104,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public getShortName!: () => string;
     public getFullName!: () => string;
     public getLevelAndNumber!: () => string;
+    public getMeetingUser!: (meetingId?: Id) => ViewMeetingUser;
 
     /**
      * A function which will return the id of the currently active meeting, if one is chosen.
@@ -262,10 +263,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
             return false;
         }
         return this.vote_delegations_from_ids().includes(user.id);
-    }
-
-    public getMeetingUser(meetingId?: Id): ViewMeetingUser {
-        return this.meeting_users.find(user => user.meeting_id === (meetingId || this.getEnsuredActiveMeetingId()));
     }
 
     public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser {

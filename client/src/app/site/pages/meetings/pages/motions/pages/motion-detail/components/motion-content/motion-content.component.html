@@ -66,6 +66,7 @@
                     [multiple]="true"
                     placeholder="{{ 'Submitters' | translate }}"
                     [repo]="participantRepo"
+                    [sortService]="participantSortService"
                     [subscriptionConfig]="participantSubscriptionConfig"
                     (clickNotFound)="createNewSubmitter($event)"
                 >
@@ -220,6 +221,7 @@
                         [multiple]="true"
                         placeholder="{{ 'Supporters' | translate }}"
                         [repo]="participantRepo"
+                        [sortService]="participantSortService"
                         [subscriptionConfig]="participantSubscriptionConfig"
                         (clickNotFound)="createNewSupporter($event)"
                     >
