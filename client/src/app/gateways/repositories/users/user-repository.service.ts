@@ -314,6 +314,16 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return fullName;
     }
 
+    private getMeetingUser(meetingUserIdMap: Map<Id, number>, meetingId: Id): ViewMeetingUser | null {
+        if (meetingUserIdMap.has(meetingId)) {
+            meetingId = meetingId || this.activeMeetingIdService.meetingId;
+
+            return this.meetingUserRepo.getViewModel(meetingUserIdMap.get(meetingId));
+        }
+
+        return null;
+    }
+
     private getLevelAndNumber(user: LevelAndNumberInformation): string {
         if (user.structure_level() && user.number()) {
             return `${user.structure_level()} · ${this.translate.instant(`No.`)} ${user.number()}`;
@@ -333,9 +343,16 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      */
     protected override createViewModel(model: User): ViewUser {
         const viewModel = super.createViewModel(model);
+
+        const meetingUserIdMap = new Map<Id, number>();
+        for (const meetingUser of viewModel.meeting_users) {
+            meetingUserIdMap.set(meetingUser.meeting_id, meetingUser.id);
+        }
+
         viewModel.getName = () => this.getName(viewModel);
         viewModel.getShortName = () => this.getShortName(viewModel);
         viewModel.getFullName = () => this.getFullName(viewModel);
+        viewModel.getMeetingUser = (meetingId: Id) => this.getMeetingUser(meetingUserIdMap, meetingId);
         viewModel.getLevelAndNumber = () => this.getLevelAndNumber(viewModel);
         viewModel.getEnsuredActiveMeetingId = () => this.activeMeetingIdService.meetingId;
         return viewModel;

@@ -104,6 +104,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public getShortName!: () => string;
     public getFullName!: () => string;
     public getLevelAndNumber!: () => string;
+    public getMeetingUser!: (meetingId?: Id) => ViewMeetingUser;
 
     /**
      * A function which will return the id of the currently active meeting, if one is chosen.
@@ -262,24 +263,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
             return false;
         }
         return this.vote_delegations_from_ids().includes(user.id);
-    }
-
-    private meetingUserIndexMap = new Map<Id, number>();
-    public getMeetingUser(meetingId?: Id): ViewMeetingUser {
-        meetingId = meetingId || this.getEnsuredActiveMeetingId();
-        if (
-            !this.meetingUserIndexMap.has(meetingId) ||
-            this.meeting_users[this.meetingUserIndexMap.get(meetingId)]?.meeting_id !== meetingId
-        ) {
-            this.meetingUserIndexMap.set(
-                meetingId,
-                this.meeting_users.findIndex(
-                    user => user.meeting_id === (meetingId || this.getEnsuredActiveMeetingId())
-                )
-            );
-        }
-
-        return this.meeting_users[this.meetingUserIndexMap.get(meetingId)];
     }
 
     public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser {
