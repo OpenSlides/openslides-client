@@ -314,14 +314,13 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return fullName;
     }
 
-    private getMeetingUser(meetingUserIdMap: Map<Id, number>, meetingId: Id): ViewMeetingUser | null {
-        if (meetingUserIdMap.has(meetingId)) {
-            meetingId = meetingId || this.activeMeetingIdService.meetingId;
-
-            return this.meetingUserRepo.getViewModel(meetingUserIdMap.get(meetingId));
+    private getMeetingUser(getMeetingUserId: (m: Id) => Id | null, meetingId?: Id): ViewMeetingUser | null {
+        const meetingUserId = getMeetingUserId(meetingId || this.activeMeetingIdService.meetingId);
+        if (!meetingUserId) {
+            return null;
         }
 
-        return null;
+        return this.meetingUserRepo.getViewModel(meetingUserId);
     }
 
     private getLevelAndNumber(user: LevelAndNumberInformation): string {
@@ -344,15 +343,24 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     protected override createViewModel(model: User): ViewUser {
         const viewModel = super.createViewModel(model);
 
-        const meetingUserIdMap = new Map<Id, number>();
-        for (const meetingUser of viewModel.meeting_users) {
-            meetingUserIdMap.set(meetingUser.meeting_id, meetingUser.id);
-        }
+        const meetingUserIdMap = new Map<Id, Id>();
+        const getMeetingUserId = (meetingId: Id) => {
+            if (!meetingUserIdMap.has(meetingId)) {
+                for (const meetingUser of this.relationManager.handleRelation(
+                    viewModel.getModel(),
+                    this.relationsByKey[`meeting_users`]
+                )) {
+                    meetingUserIdMap.set(meetingUser.meeting_id, meetingUser.id);
+                }
+            }
+
+            return meetingUserIdMap.get(meetingId);
+        };
 
         viewModel.getName = () => this.getName(viewModel);
         viewModel.getShortName = () => this.getShortName(viewModel);
         viewModel.getFullName = () => this.getFullName(viewModel);
-        viewModel.getMeetingUser = (meetingId: Id) => this.getMeetingUser(meetingUserIdMap, meetingId);
+        viewModel.getMeetingUser = (meetingId: Id) => this.getMeetingUser(getMeetingUserId, meetingId);
         viewModel.getLevelAndNumber = () => this.getLevelAndNumber(viewModel);
         viewModel.getEnsuredActiveMeetingId = () => this.activeMeetingIdService.meetingId;
         return viewModel;
