@@ -112,6 +112,7 @@
             [count]="canSee"
             [enable]="canManage"
             [dragDelay]="isMobile ? 500 : 0"
+            [isPriorityItemFunction]="isPointOfOrderFn"
             (sortEvent)="onSortingChanged($event)"
         >
             <!-- implicit speaker references into the component using ng-template slot -->
