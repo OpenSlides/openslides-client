@@ -70,22 +70,32 @@ const fakeSettings: SettingsGroup[] = [
                     },
                     {
                         key: `translations` as keyof Settings,
-                        label: `Boolean setting`,
+                        label: `Translation setting`,
                         type: `translations`
                     },
                     {
                         key: `ranking` as keyof Settings,
-                        label: `Boolean setting`,
+                        label: `Ranking setting`,
                         type: `ranking`
                     },
                     {
-                        key: `choice` as keyof Settings,
-                        label: `Boolean setting`,
+                        key: `static` as keyof Settings,
+                        label: `Static choice setting`,
                         type: `choice`,
                         choices: {
                             a: `A`,
                             b: `B`,
                             c: `C`
+                        }
+                    },
+                    {
+                        key: `dynamic` as keyof Settings,
+                        label: `Dynamic choice setting`,
+                        type: `choice`,
+                        choicesFunc: {
+                            collection: `model`,
+                            idKey: `id`,
+                            labelKey: `stuff`
                         }
                     }
                 ]
@@ -93,28 +103,43 @@ const fakeSettings: SettingsGroup[] = [
         ]
     }
 ];
+
 const fakeSettingsMap: { [key: string]: SettingsItem } = fakeSettings
     .flatMap(group => group.subgroups.flatMap(subgroup => subgroup.settings))
+    .filter(setting => !!setting)
     .mapToObject(setting =>
         (Array.isArray(setting.key) ? setting.key : [setting.key]).mapToObject(key => ({ [key]: setting }))
     );
+
 const fakeSettingsDefaults: { [key: string]: any } = {
     ...[`one`, `two`, `four`, `five`].mapToObject((prop, index) => ({ [prop]: index + 1 })),
     bool: true,
     ...[`a`, `b`, `c`, `d`].mapToObject(letter => ({ [letter]: letter })),
     e: `e.mail@email.mail`,
     groups: [new Group()],
-    translations: [],
-    ranking: [],
-    choice: `b`
+    translations: { a: `b`, c: `d`, e: `f` },
+    ranking: [{ id: 1, entry: `a`, allocation: 2 }],
+    static: `b`,
+    dynamic: `s`
 };
-const emptyFakeSettingsDefaults: { [key: string]: any } = {};
+
+const fakeBrokenSettingsDefaults: { [key: string]: any } = {
+    ...[`one`, `two`, `four`, `five`].mapToObject(letter => ({ [letter]: letter })),
+    bool: `not a bool`,
+    ...[`a`, `b`, `c`, `d`].mapToObject((prop, index) => ({ [prop]: index + 1 })),
+    e: 3,
+    groups: true,
+    translations: `abcdefghijklmnopqrstuvwxyz`,
+    ranking: 123456,
+    static: [`d`],
+    dynamic: 4
+};
 
 const typeToDefault: { [type in SettingsType]: any } = {
     integer: 0,
     boolean: false,
     groups: [],
-    translations: [],
+    translations: {},
     ranking: [],
     choice: null,
     date: null,
@@ -126,14 +151,12 @@ const typeToDefault: { [type in SettingsType]: any } = {
     email: ``
 };
 
-fdescribe(`MeetingSettingsDefinitionService`, () => {
+describe(`MeetingSettingsDefinitionService`, () => {
     let service: MeetingSettingsDefinitionService;
 
-    function mockGetters(haveDefaults = true): void {
+    function mockGetters(settingsDefaults = fakeSettingsDefaults): void {
         spyOnProperty(service, `settings`).and.returnValue(fakeSettings);
-        spyOnProperty(service, `settingsDefaults`).and.returnValue(
-            haveDefaults ? fakeSettingsDefaults : emptyFakeSettingsDefaults
-        );
+        spyOnProperty(service, `settingsDefaults`).and.returnValue(settingsDefaults);
         spyOnProperty(service, `settingsMap`).and.returnValue(fakeSettingsMap as SettingsMap);
     }
 
@@ -182,7 +205,7 @@ fdescribe(`MeetingSettingsDefinitionService`, () => {
             it(`test getDefaultValue for ${setting.type ?? `no given type`}${
                 haveDefaults ? `` : ` if there's no defaults`
             }`, () => {
-                mockGetters(haveDefaults);
+                mockGetters(haveDefaults ? fakeSettingsDefaults : {});
                 expect(service.getDefaultValue(setting)).toEqual(
                     haveDefaults
                         ? setting.type === `daterange`
@@ -196,7 +219,7 @@ fdescribe(`MeetingSettingsDefinitionService`, () => {
                 it(`test getDefaultValue for ${setting.type ?? `no given type`} with settings keys${
                     haveDefaults ? `` : ` if there's no defaults`
                 } ${i + 1}`, () => {
-                    mockGetters(haveDefaults);
+                    mockGetters(haveDefaults ? fakeSettingsDefaults : {});
                     expect(service.getDefaultValue(keys[i])).toEqual(
                         haveDefaults
                             ? setting.type === `daterange`
@@ -207,5 +230,24 @@ fdescribe(`MeetingSettingsDefinitionService`, () => {
                 });
             }
         }
+    }
+
+    for (const type of Object.keys(typeToDefault)) {
+        const setting = Object.values(fakeSettingsMap).find(setting => setting.type === type);
+        if (setting) {
+            it(`test getDefaultValueForType for ${type}`, () => {
+                mockGetters();
+                expect(service.getDefaultValueForType(setting)).toEqual(typeToDefault[type]);
+            });
+        }
+        const key = Array.isArray(setting.key) ? setting.key[0] : setting.key;
+        it(`test validateDefault for ${type}`, () => {
+            mockGetters();
+            expect(() => service.validateDefault(key, fakeSettingsDefaults[key])).not.toThrowError();
+        });
+        it(`test validateDefault for ${type} with broken default`, () => {
+            mockGetters(fakeBrokenSettingsDefaults);
+            expect(() => service.validateDefault(key, fakeBrokenSettingsDefaults[key])).toThrowError();
+        });
     }
 });

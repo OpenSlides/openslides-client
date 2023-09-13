@@ -49,8 +49,9 @@ export class MeetingSettingsDefinitionService {
                 return 0;
             case `boolean`:
                 return false;
-            case `groups`:
             case `translations`:
+                return {};
+            case `groups`:
             case `ranking`:
                 return [];
             case `choice`:
@@ -71,8 +72,9 @@ export class MeetingSettingsDefinitionService {
     public validateDefault(settingKey: keyof Settings, defaultValue: any): void {
         const setting = this.settingsMap[settingKey];
         if (
-            ((!setting.type || setting.type === `text`) && typeof defaultValue !== `string`) ||
-            (setting.type === `integer` && typeof defaultValue !== `number`) ||
+            ((!setting.type || [`string`, `text`, `email`, `markupText`].includes(setting.type)) &&
+                typeof defaultValue !== `string`) ||
+            ([`integer`, `date`, `datetime`, `daterange`].includes(setting.type) && typeof defaultValue !== `number`) ||
             (setting.type === `boolean` && typeof defaultValue !== `boolean`)
         ) {
             throw new Error(`Invalid default for ${setting.key}: ${defaultValue} (${typeof defaultValue})`);
@@ -81,6 +83,12 @@ export class MeetingSettingsDefinitionService {
             throw new Error(
                 `Invalid default for ${setting.key}: ${defaultValue} (valid choices: ${Object.keys(setting.choices)})`
             );
+        }
+        if ([`ranking`, `groups`].includes(setting.type) && !Array.isArray(defaultValue)) {
+            throw new Error(`Invalid default for ${setting.key}: ${defaultValue} is not an array`);
+        }
+        if (setting.type === `translations` && typeof defaultValue !== `object`) {
+            throw new Error(`Invalid default for ${setting.key}: ${defaultValue} is not an object`);
         }
     }
 
