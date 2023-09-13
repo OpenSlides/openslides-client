@@ -93,7 +93,7 @@ export class MotionSlideComponent
 
     @Input()
     public set scroll(value: number) {
-        this._scroll = value;
+        this._scroll = value ?? 0;
 
         value *= -100;
         value += 40;
@@ -108,7 +108,7 @@ export class MotionSlideComponent
 
     @Input()
     public set scale(value: number) {
-        this._scale = value;
+        this._scale = value ?? 0;
 
         value *= 10;
         value += 100;
