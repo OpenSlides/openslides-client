@@ -4,16 +4,68 @@ import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { meetingSettingsDefaults } from '../../../../../domain/definitions/meeting-settings-defaults';
 import { meetingSettings, SettingsGroup, SettingsItem } from './meeting-settings-definitions';
 
-type SettingsMap = { [key in keyof Settings]: SettingsItem };
+export type SettingsMap = { [key in keyof Settings]: SettingsItem };
 
 @Injectable({
     providedIn: `root`
 })
 export class MeetingSettingsDefinitionService {
+    public get settings(): SettingsGroup[] {
+        return meetingSettings;
+    }
+
+    public get settingsDefaults(): {
+        [key: string]: any;
+    } {
+        return meetingSettingsDefaults;
+    }
+
+    public get settingsMap(): SettingsMap {
+        return this._settingsMap;
+    }
+
     private readonly _settingsMap: SettingsMap;
 
     public constructor() {
         this._settingsMap = this.createSettingsMap();
+    }
+
+    public getSettingsGroup(name: string): SettingsGroup | undefined {
+        return this.settings.find(group => group.label.toLowerCase() === name.toLowerCase());
+    }
+
+    public getSettingsKeys(): (keyof Settings)[] {
+        return Object.keys(this.settingsMap) as (keyof Settings)[];
+    }
+
+    public getDefaultValue(setting: keyof Settings | SettingsItem): any {
+        const settingItem = typeof setting === `string` ? this.settingsMap[setting] : setting;
+        return this.getDefaultValueForItem(settingItem) ?? this.getDefaultValueForType(settingItem);
+    }
+
+    public getDefaultValueForType(setting: SettingsItem): any {
+        switch (setting.type) {
+            case `integer`:
+                return 0;
+            case `boolean`:
+                return false;
+            case `groups`:
+            case `translations`:
+            case `ranking`:
+                return [];
+            case `choice`:
+            case `date`:
+            case `datetime`:
+                return null;
+            case `daterange`:
+                return [null, null];
+            case `string`:
+            case `text`:
+            case `markupText`:
+            default:
+                // default type is text
+                return ``;
+        }
     }
 
     public validateDefault(settingKey: keyof Settings, defaultValue: any): void {
@@ -32,63 +84,13 @@ export class MeetingSettingsDefinitionService {
         }
     }
 
-    public getSettings(): SettingsGroup[] {
-        return meetingSettings;
-    }
-
-    public getSettingsGroup(name: string): SettingsGroup | undefined {
-        return meetingSettings.find(group => group.label.toLowerCase() === name);
-    }
-
-    public getSettingsKeys(): (keyof Settings)[] {
-        return Object.keys(this.settingsMap) as (keyof Settings)[];
-    }
-
-    public getSettingsMap(): { [key in keyof Settings]: SettingsItem } {
-        return this.settingsMap;
-    }
-
-    public getDefaultValue(setting: keyof Settings | SettingsItem): any {
-        const settingItem = typeof setting === `string` ? this.settingsMap[setting] : setting;
-        return this.getDefaultValueForItem(settingItem) ?? this.getDefaultValueForType(settingItem);
-    }
-
     private getDefaultValueForItem(item: SettingsItem): any {
         const isArray = Array.isArray(item.key);
-        const value = meetingSettingsDefaults[isArray ? item.key[0] : (item.key as keyof Settings)];
+        const value = this.settingsDefaults[isArray ? item.key[0] : (item.key as keyof Settings)];
         if (item.type === `daterange`) {
-            return [value ?? null, meetingSettingsDefaults[item.key[1]] ?? null];
+            return [value ?? null, this.settingsDefaults[item.key[1]] ?? null];
         }
         return value;
-    }
-
-    public getDefaultValueForType(setting: SettingsItem): any {
-        switch (setting.type) {
-            case `integer`:
-                return 0;
-            case `boolean`:
-                return false;
-            case `choice`:
-                return null;
-            case `groups`:
-            case `translations`:
-            case `ranking`:
-                return [];
-            case `datetime`:
-                return null;
-            case `daterange`:
-                return [Date.now(), Date.now()];
-            case `string`:
-            case `text`:
-            case `markupText`:
-            default:
-                // default type is text
-                return ``;
-        }
-    }
-
-    private get settingsMap(): SettingsMap {
-        return this._settingsMap;
     }
 
     private validateSetting(setting: SettingsItem): void {
@@ -101,7 +103,7 @@ export class MeetingSettingsDefinitionService {
 
     private createSettingsMap(): SettingsMap {
         const localSettingsMap: any = {};
-        for (const group of meetingSettings) {
+        for (const group of this.settings) {
             for (const subgroup of group.subgroups) {
                 for (const setting of subgroup.settings) {
                     this.validateSetting(setting);
