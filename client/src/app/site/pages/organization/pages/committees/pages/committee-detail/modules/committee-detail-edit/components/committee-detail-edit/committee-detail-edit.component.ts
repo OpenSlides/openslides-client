@@ -17,6 +17,7 @@ import { OsOptionSelectionChanged } from 'src/app/ui/modules/search-selector';
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
 import { ViewCommittee } from '../../../../../../view-models';
 import { NAVIGATION_FROM_LIST } from '../../../../../committee-list/components/committee-list/committee-list.component';
+import { CommitteeSortService } from '../../../../../committee-list/services/committee-list-sort.service/committee-sort.service';
 
 const CREATE_COMMITTEE_LABEL = _(`New committee`);
 const EDIT_COMMITTEE_LABEL = _(`Edit committee`);
@@ -49,6 +50,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         protected override translate: TranslateService,
         private formBuilder: UntypedFormBuilder,
         public committeeRepo: CommitteeControllerService,
+        public committeeSortService: CommitteeSortService,
         public orgaTagRepo: OrganizationTagControllerService,
         private route: ActivatedRoute,
         private operator: OperatorService

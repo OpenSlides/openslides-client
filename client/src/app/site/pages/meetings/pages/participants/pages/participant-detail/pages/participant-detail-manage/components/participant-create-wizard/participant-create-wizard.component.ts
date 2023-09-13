@@ -22,6 +22,7 @@ import {
     getParticipantMinimalSubscriptionConfig
 } from '../../../../../../participants.subscription';
 import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common/participant-controller.service/participant-controller.service';
+import { ParticipantListSortService } from '../../../../../participant-list/services/participant-list-sort.service/participant-list-sort.service';
 
 @Component({
     selector: `os-participant-create-wizard`,
@@ -139,6 +140,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         protected override translate: TranslateService,
         fb: UntypedFormBuilder,
         public readonly repo: ParticipantControllerService,
+        public readonly sortService: ParticipantListSortService,
         private groupRepo: GroupControllerService,
         private userService: UserService,
         private presenter: SearchUsersPresenterService,
