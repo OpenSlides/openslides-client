@@ -68,4 +68,11 @@ export abstract class BaseController<V extends BaseViewModel, M extends BaseMode
     public getVerboseName = (plural?: boolean): string => {
         return this.repo.getVerboseName(plural);
     };
+
+    /**
+     * This observable fires on every update once contains each changed id.
+     */
+    public getModifiedIdsObservable(): Observable<Id[]> {
+        return this.repo.getModifiedIdsObservable();
+    }
 }

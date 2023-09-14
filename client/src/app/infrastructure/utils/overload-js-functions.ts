@@ -13,6 +13,12 @@ declare global {
          */
         intersect(other: T[]): T[];
         /**
+         * Compares two arrays, and returns true if they intersect
+         *
+         * @param other Another array, which elements are compared to the original ones.
+         */
+        intersects(other: T[]): boolean;
+        /**
          * Compares each element of two arrays to check, which elements are included in one array but not in the other.
          * It returns a new array, containing all elements, that are included only one of them. If `symmetric` is equals
          * to `false`, only the elements, that are included in the first array and not in the second one will be
@@ -102,6 +108,19 @@ function overloadArrayFunctions(): void {
         enumerable: false
     });
 
+    Object.defineProperty(Array.prototype, `intersects`, {
+        value<T>(other: T[] = []): boolean {
+            let a = this;
+            let b = other;
+            if (b.length < a.length) {
+                [a, b] = [b, a];
+            }
+            const intersect = new Set<T>(b);
+            return a.some((element: T) => intersect.has(element));
+        },
+        enumerable: false
+    });
+
     Object.defineProperty(Array.prototype, `difference`, {
         value<T>(other: T[], symmetric = false): T[] {
             const difference = new Set<T>(this);
@@ -120,7 +139,7 @@ function overloadArrayFunctions(): void {
 
     Object.defineProperty(Array.prototype, `equals`, {
         value<T>(other: T[]): boolean {
-            return this.length == other.length && this.every((val, idx) => val === other[idx]);
+            return this.length == (other ?? []).length && this.every((val, idx) => val === other[idx]);
         },
         enumerable: false
     });
