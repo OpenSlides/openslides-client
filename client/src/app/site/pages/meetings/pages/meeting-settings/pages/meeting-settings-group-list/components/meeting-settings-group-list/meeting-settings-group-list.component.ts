@@ -32,7 +32,7 @@ export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
      */
     public async resetAll(): Promise<void> {
         const title = this.translate.instant(
-            `Are you sure you want to reset all options to factory defaults?`,
+            `Are you sure you want to reset all options to default settings?`,
             `Changes of all settings group will be lost!`
         );
         if (await this.promptDialog.open(title)) {
