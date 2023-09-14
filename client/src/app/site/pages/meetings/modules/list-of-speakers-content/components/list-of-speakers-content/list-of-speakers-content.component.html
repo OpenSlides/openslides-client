@@ -110,8 +110,7 @@
             [live]="true"
             [input]="waitingSpeakers"
             [count]="canSee"
-            [enable]="canManage"
-            [dragDelay]="isMobile ? 500 : 0"
+            [enable]="canManage && (isSortMode || !isMobile)"
             [isPriorityItemFunction]="isPointOfOrderFn"
             (sortEvent)="onSortingChanged($event)"
         >
