@@ -3,7 +3,8 @@
         height: calc(
             100vh -
                 (
-                    var(--global-headbar-height) + var(--view-headbar-height) // Offset for the headbars
+                    var(--global-headbar-height) + var(--view-headbar-height) + var(--banner-area-height)
+                        // Offset for the headbars
                     + 96px // Offset for the stepper
                     + 20px // Offset for the bottom spacer
                 )
