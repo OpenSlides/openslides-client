@@ -100,7 +100,7 @@ export class OpenSlidesMainComponent implements OnInit {
                 if (
                     await Promise.race([
                         this.updateService.checkForUpdate(),
-                        new Promise((_, reject) => setTimeout(() => reject(), 8000))
+                        new Promise((_, reject) => setTimeout(() => reject(), 3000))
                     ])
                 ) {
                     await this.updateService.applyUpdate();
