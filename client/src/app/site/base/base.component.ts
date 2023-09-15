@@ -158,7 +158,7 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
      * To catch swipe gestures.
      * Should be overwritten by children which need swipe gestures
      */
-    protected swipe(e: TouchEvent, when: string): void {}
+    protected swipe(_e: TouchEvent, _when: string): void {}
 
     /**
      * TinyMCE Init callback. Used for certain mobile editors
@@ -172,7 +172,7 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
         }
     }
 
-    public onLeaveTinyMce(event: any): void {
+    public onLeaveTinyMce(_event: any): void {
         this.saveHint = false;
     }
 }

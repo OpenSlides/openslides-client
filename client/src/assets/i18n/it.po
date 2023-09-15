@@ -518,12 +518,12 @@ msgstr ""
 "Sicuro di voler dare una nuova numerazione a tutte le mozioni di questa "
 "sezione?"
 
-msgid "Are you sure you want to reset all options to factory defaults?"
+msgid "Are you sure you want to reset all options to default settings?"
 msgstr ""
 "Siete sicuri di voler ripristinare tutte le opzioni ai valori di fabbrica?"
 
 msgid ""
-"Are you sure you want to reset all options to factory defaults? All changes "
+"Are you sure you want to reset all options to default settings? All changes "
 "of this settings group will be lost!"
 msgstr ""
 "Sicuro di voler resettare tutti i valori a quelli iniziali? Tutti i "
@@ -3288,7 +3288,7 @@ msgstr "Raccomandazione resettare"
 msgid "Reset state"
 msgstr "Resettare stato"
 
-msgid "Reset to factory defaults"
+msgid "Reset to default settings"
 msgstr "Resettare allo stato di fabbrica"
 
 msgid "Reset your OpenSlides password"

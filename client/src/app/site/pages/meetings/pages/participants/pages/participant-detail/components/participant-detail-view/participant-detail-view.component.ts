@@ -4,6 +4,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
@@ -23,6 +24,7 @@ import { ParticipantPdfExportService } from '../../../../export/participant-pdf-
 import { GroupControllerService } from '../../../../modules';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
 import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
+import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort.service/participant-list-sort.service';
 
 @Component({
     selector: `os-participant-detail-view`,
@@ -66,6 +68,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 return PERSONAL_FORM_CONTROLS.includes(controlName);
             }
         };
+    }
+
+    public get operatorHasEqualOrHigherOML(): boolean {
+        const userOML = this.user?.organization_management_level;
+        return userOML ? this.operator.hasOrganizationPermissions(userOML as OML) : true;
     }
 
     public isFormValid = false;
@@ -124,6 +131,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: ParticipantControllerService,
+        public sortService: ParticipantListSortService,
         private userController: UserControllerService,
         private operator: OperatorService,
         private promptService: PromptService,

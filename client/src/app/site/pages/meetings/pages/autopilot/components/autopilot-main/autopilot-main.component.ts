@@ -36,6 +36,7 @@ export class AutopilotMainComponent extends BaseModelRequestHandlerComponent {
                                 const fqid = projection.content_object_id;
 
                                 return (
+                                    fqid &&
                                     collectionFromFqid(fqid) !== `meeting` &&
                                     (this.collectionMapper
                                         .getModelConstructor(collectionFromFqid(fqid))

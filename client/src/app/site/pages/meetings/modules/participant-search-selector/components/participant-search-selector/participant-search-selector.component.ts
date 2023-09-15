@@ -5,6 +5,7 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
+import { ParticipantListSortService } from '../../../../pages/participants/pages/participant-list/services/participant-list-sort.service/participant-list-sort.service';
 import {
     getParticipantMinimalSubscriptionConfig,
     PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
@@ -70,6 +71,7 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
 
     public constructor(
         private userRepo: ParticipantControllerService,
+        private userSortService: ParticipantListSortService,
         private modelRequestService: ModelRequestService,
         private activeMeeting: ActiveMeetingService,
         formBuilder: UntypedFormBuilder
@@ -82,6 +84,7 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
     }
 
     public ngOnInit(): void {
+        this.userSortService.initSorting();
         this.subscriptions.push(
             // ovserve changes to the form
             this.usersForm.valueChanges.subscribe(async formResult => {
@@ -92,10 +95,12 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
                 }
             }),
             //The list should be updated when the participants have been edited
-            this.userRepo.getViewModelListObservable().subscribe(users => {
-                this._users = users;
-                this.filterUsers();
-            })
+            this.userRepo
+                .getSortedViewModelListObservable(this.userSortService.repositorySortingKey)
+                .subscribe(users => {
+                    this._users = users;
+                    this.filterUsers();
+                })
         );
 
         this._participantSubscription = PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL + `_${Date.now()}`;
@@ -106,6 +111,7 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
     }
 
     public override ngOnDestroy(): void {
+        this.userSortService.exitSortService();
         if (this._participantSubscription) {
             this.modelRequestService.closeSubscription(this._participantSubscription);
         }

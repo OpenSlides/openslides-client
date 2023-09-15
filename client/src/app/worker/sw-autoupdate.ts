@@ -76,7 +76,7 @@ function openConnection(
 ): void {
     function getRequestCategory(
         description: string,
-        _request: Object
+        _request: unknown
     ): 'required' | 'requiredMeeting' | 'other' | 'sequentialnumbermapping' {
         const required = [`theme_list:subscription`, `operator:subscription`, `organization:subscription`];
         if (required.indexOf(description) !== -1) {

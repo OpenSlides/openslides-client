@@ -16,6 +16,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewCommittee } from '../../../../../committees';
 import { getCommitteeListMinimalSubscriptionConfig } from '../../../../../committees/committees.subscription';
+import { CommitteeSortService } from '../../../../../committees/pages/committee-list/services/committee-list-sort.service/committee-sort.service';
 import { CommitteeControllerService } from '../../../../../committees/services/committee-controller.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 
@@ -41,6 +42,11 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 this.operator.hasOrganizationPermissions(level) &&
                 !(this.orgaManagementLevelChangeDisabled && level !== this.user.organization_management_level)
         );
+    }
+
+    public get operatorHasEqualOrHigherOML(): boolean {
+        const userOML = this.user?.organization_management_level;
+        return userOML ? this.operator.hasOrganizationPermissions(userOML as OML) : true;
     }
 
     public get orgaManagementLevelChangeDisabled(): boolean {
@@ -99,6 +105,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         private osRouter: OpenSlidesRouterService,
         private operator: OperatorService,
         public readonly committeeController: CommitteeControllerService,
+        public readonly committeeSortService: CommitteeSortService,
         private accountController: AccountControllerService,
         private userController: UserControllerService,
         private promptService: PromptService

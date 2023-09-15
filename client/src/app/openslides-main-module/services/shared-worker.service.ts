@@ -6,6 +6,7 @@ import {
     forkJoin,
     from,
     fromEvent,
+    merge,
     Observable,
     of,
     repeat,
@@ -16,7 +17,12 @@ import {
     timeout,
     timer
 } from 'rxjs';
-import { WorkerMessage, WorkerMessageContent, WorkerResponse } from 'src/app/worker/interfaces';
+import {
+    SW_BROADCAST_CHANNEL_NAME,
+    WorkerMessage,
+    WorkerMessageContent,
+    WorkerResponse
+} from 'src/app/worker/interfaces';
 import { environment } from 'src/environments/environment';
 
 const SHARED_WORKER_MESSAGE_ACK_TIMEOUT = 4000;
@@ -38,6 +44,7 @@ export class SharedWorkerService {
 
     private restartSubject: Subject<void> = new Subject();
     private conn: MessagePort | Window;
+    private broadcastChannel = new BroadcastChannel(SW_BROADCAST_CHANNEL_NAME);
     private ready = false;
     private healthCheckSubscription: Subscription;
     private messageEventSubscription: Subscription;
@@ -174,7 +181,7 @@ export class SharedWorkerService {
     }
 
     private async registerMessageListener(windowMode = false): Promise<Event> {
-        let eventListener = fromEvent(this.conn, `message`);
+        let eventListener = merge(fromEvent(this.conn, `message`), fromEvent(this.broadcastChannel, `message`));
         if (!windowMode) {
             eventListener = eventListener.pipe(timeout({ first: SHARED_WORKER_READY_TIMEOUT }));
         }

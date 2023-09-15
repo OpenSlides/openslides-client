@@ -111,6 +111,7 @@
             [input]="waitingSpeakers"
             [count]="canSee"
             [enable]="canManage && (isSortMode || !isMobile)"
+            [isPriorityItemFunction]="isPointOfOrderFn"
             (sortEvent)="onSortingChanged($event)"
         >
             <!-- implicit speaker references into the component using ng-template slot -->

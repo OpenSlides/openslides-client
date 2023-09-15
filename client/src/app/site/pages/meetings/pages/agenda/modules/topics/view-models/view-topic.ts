@@ -40,7 +40,7 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
         return this.attachments && this.attachments.length > 0;
     }
 
-    public override getProjectorTitle(projection: Projection): ProjectorTitle {
+    public override getProjectorTitle(_projection: Projection): ProjectorTitle {
         return { title: this.getListTitle() };
     }
 }

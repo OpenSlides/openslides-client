@@ -1,5 +1,6 @@
 import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Content, ContentText, StyleDictionary, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting.constants';
 import { PollMethod, PollTableData, PollType, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
@@ -160,11 +161,11 @@ export abstract class BasePollPdfService {
      * @param data predefined data to be used
      * @returns pdfmake definitions
      */
-    protected getPages(rowsPerPage: number, data: AbstractPollData): object {
+    protected getPages(rowsPerPage: number, data: AbstractPollData): Content[] {
         const amount = this.getBallotCount();
         const fullpages = Math.floor(amount / (rowsPerPage * 2));
         let partialpageEntries = amount % (rowsPerPage * 2);
-        const content: object[] = [];
+        const content: Content[] = [];
         for (let i = 0; i < fullpages; i++) {
             const body = [];
             for (let j = 0; j < rowsPerPage; j++) {
@@ -174,10 +175,9 @@ export abstract class BasePollPdfService {
                 table: {
                     headerRows: 1,
                     widths: [`*`, `*`],
-                    body,
-                    pageBreak: `after`
+                    body
                 },
-                rowsperpage: rowsPerPage
+                pageBreak: `after`
             });
         }
         if (partialpageEntries) {
@@ -194,8 +194,7 @@ export abstract class BasePollPdfService {
                     headerRows: 1,
                     widths: [`50%`, `50%`],
                     body: partialPageBody
-                },
-                rowsperpage: rowsPerPage
+                }
             });
         }
         return content;
@@ -206,8 +205,8 @@ export abstract class BasePollPdfService {
      *
      * @returns pdfMake definitions
      */
-    protected getHeader(): object {
-        const columns: object[] = [];
+    protected getHeader(): any {
+        const columns: any[] = [];
         columns.push({
             text: this.eventName,
             fontSize: 8,
@@ -238,7 +237,7 @@ export abstract class BasePollPdfService {
      * @param title
      * @returns pdfmake definition
      */
-    protected getTitle(title: string): object {
+    protected getTitle(title: string): ContentText {
         return {
             text: title,
             style: `title`
@@ -251,7 +250,7 @@ export abstract class BasePollPdfService {
      * @param subtitle
      * @returns pdfmake definition
      */
-    protected getSubtitle(subtitle?: string): object {
+    protected getSubtitle(subtitle?: string): ContentText {
         return {
             text: subtitle,
             style: `description`
@@ -266,7 +265,7 @@ export abstract class BasePollPdfService {
      * @param docDefinition the structure of the PDF document
      * @param filename the name of the file to use
      */
-    public downloadWithBallotPaper(docDefinition: object, filename: string): void {
+    public downloadWithBallotPaper(docDefinition: Content, filename: string): void {
         this.pdfExport.downloadWaitableDoc(filename, () => this.getBallotPaper(docDefinition));
     }
 
@@ -277,8 +276,8 @@ export abstract class BasePollPdfService {
      * @param documentContent the content of the pdf as object
      * @returns the pdf document definition ready to export
      */
-    private async getBallotPaper(documentContent: object): Promise<object> {
-        const result = {
+    private async getBallotPaper(documentContent: Content): Promise<TDocumentDefinitions> {
+        return {
             pageSize: `A4`,
             pageMargins: [0, 0, 0, 0],
             defaultStyle: {
@@ -288,7 +287,6 @@ export abstract class BasePollPdfService {
             content: documentContent,
             styles: this.getBlankPaperStyles()
         };
-        return result;
     }
 
     protected getRowsPerPage(poll: ViewPoll): number {
@@ -347,7 +345,7 @@ export abstract class BasePollPdfService {
             votesData?: BaseVoteData[];
             entitledUsersData?: EntitledUsersTableEntry[];
         }
-    ): object {
+    ): Content[] {
         let pollResultPdfContent: any[] = [];
         const title = this.getTitle(`${poll.content_object?.getTitle()} · ${poll.getTitle()}`);
 
@@ -690,7 +688,7 @@ export abstract class BasePollPdfService {
      * @returns an object that contains a limited set of pdf styles
      *  used for ballots
      */
-    private getBlankPaperStyles(): object {
+    private getBlankPaperStyles(): StyleDictionary {
         return {
             title: {
                 fontSize: 14,

@@ -40,6 +40,8 @@ const config: PlaywrightTestConfig = {
 
         ignoreHTTPSErrors: true,
 
+        serviceWorkers: 'block',
+
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry'
     },

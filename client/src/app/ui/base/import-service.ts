@@ -42,7 +42,7 @@ export interface ImportService<M extends Identifiable> {
     downloadCsvExample(): void;
 }
 
-export interface BackendImportService<M extends Identifiable> {
+export interface BackendImportService {
     readonly rawFileObservable: Observable<File | null>;
     readonly encodings: ValueLabelCombination[];
     readonly columnSeparators: ValueLabelCombination[];

@@ -102,6 +102,7 @@
                         placeholder="{{ 'Committee admin' | translate }}"
                         [subscriptionConfig]="committeeSubscriptionConfig"
                         [repo]="committeeController"
+                        [sortService]="committeeSortService"
                         [transformPropagateFn]="getTransformPropagateFn()"
                         [transformSetFn]="getTransformSetFn()"
                     ></os-repo-search-selector>
@@ -243,7 +244,11 @@
 </ng-template>
 
 <mat-menu #userExtraMenu="matMenu">
-    <button *ngIf="!user?.saml_id" mat-menu-item [routerLink]="['/', 'accounts', user?.id, 'password']">
+    <button
+        *ngIf="user && !user.saml_id && operatorHasEqualOrHigherOML"
+        mat-menu-item
+        [routerLink]="['/', 'accounts', user.id, 'password']"
+    >
         <mat-icon>security</mat-icon>
         <span>{{ 'Change password' | translate }}</span>
     </button>

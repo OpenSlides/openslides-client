@@ -117,12 +117,17 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         return this._hasMotionBlocks;
     }
 
+    protected get hasAmendments(): boolean {
+        return this._hasAmendments;
+    }
+
     /**
      * The recommender of the current meeting.
      */
     private _recommender?: string;
     private _hasCategories = false;
     private _hasMotionBlocks = false;
+    private _hasAmendments = false;
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
@@ -188,6 +193,9 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
                 if (motions && motions.length) {
                     this.createMotionTiles(motions);
                 }
+            }),
+            this.amendmentController.getViewModelListObservable().subscribe(amendments => {
+                this._hasAmendments = !!amendments.length;
             })
         );
     }
@@ -374,13 +382,6 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         }
 
         this.selectedMotion = null;
-    }
-
-    /**
-     * @returns if there are amendments or not
-     */
-    public hasAmendments(): boolean {
-        return !!this.amendmentController.getViewModelList().length;
     }
 
     private setupListView(isAvailable: boolean): void {

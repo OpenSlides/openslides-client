@@ -215,7 +215,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                     this.setVotesAndEntitledUsersData();
                 }
             }),
-            this.userRepo.getViewModelListObservable().subscribe(users => this.setVotesAndEntitledUsersData())
+            this.userRepo.getViewModelListObservable().subscribe(() => this.setVotesAndEntitledUsersData())
         );
     }
 

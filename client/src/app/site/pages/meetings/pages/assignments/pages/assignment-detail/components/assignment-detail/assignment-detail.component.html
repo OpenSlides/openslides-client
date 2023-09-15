@@ -108,6 +108,7 @@
         <os-projectable-title *ngIf="!isEditing && assignment.getTitle" [model]="assignment"></os-projectable-title>
         <div *ngIf="assignment">
             <div
+                class="underlined-links"
                 *ngIf="assignment.assignment.description"
                 [innerHTML]="assignment.assignment.description | trust : 'html'"
             ></div>
@@ -153,7 +154,7 @@
             <div>
                 <div class="candidates-list" *ngIf="assignment?.candidates?.length">
                     <os-sorting-list
-                        [input]="assignment.candidates"
+                        [input]="assignmentCandidates"
                         [live]="true"
                         [count]="assignment.number_poll_candidates"
                         [enable]="hasPerms('manage')"

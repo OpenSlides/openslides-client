@@ -46,11 +46,11 @@ function applyLayout(content: any): void {
  * Sets the internal PdfMake fonts and VFS
  */
 function initPdfMake(data: any): void {
-    pdfMake.fonts = {
+    (<any>pdfMake).fonts = {
         PdfFont: data.fonts
     };
 
-    pdfMake.vfs = data.vfs;
+    (<any>pdfMake).vfs = data.vfs;
 }
 
 /**

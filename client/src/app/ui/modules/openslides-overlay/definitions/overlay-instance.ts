@@ -32,7 +32,7 @@ export class OverlayInstance<T = any> {
         }
     }
 
-    public attachTemplate(templateRef: TemplateRef<T>): void {}
+    public attachTemplate(_templateRef: TemplateRef<T>): void {}
 
     public attachComponent(component: Type<T>): void {
         const instance = this._overlayComponent.attachComponent(component);

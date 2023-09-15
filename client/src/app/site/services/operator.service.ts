@@ -303,7 +303,7 @@ export class OperatorService {
         });
         this.DS.getChangeObservable(Group)
             .pipe(debounceTime(50))
-            .subscribe(changes => {
+            .subscribe(() => {
                 if (!this._groupsLoaded) {
                     console.log(`operator: group permissions loaded`);
                     this._groupsLoaded = true;
@@ -665,8 +665,13 @@ export class OperatorService {
                         follow: [
                             {
                                 idField: `vote_delegations_from_ids`,
-                                fieldset: [`meeting_id`],
-                                follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                                fieldset: [`meeting_id`, `group_ids`],
+                                follow: [
+                                    {
+                                        idField: `user_id`,
+                                        fieldset: UserFieldsets.FullNameSubscription.fieldset.concat(`meeting_user_ids`)
+                                    }
+                                ]
                             }
                         ]
                     }

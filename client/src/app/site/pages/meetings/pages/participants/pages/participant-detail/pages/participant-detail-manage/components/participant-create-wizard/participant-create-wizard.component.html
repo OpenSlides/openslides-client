@@ -210,6 +210,7 @@
                                     <os-repo-search-selector
                                         formControlName="vote_delegations_from_ids"
                                         [repo]="repo"
+                                        [sortService]="sortService"
                                         [multiple]="true"
                                         [subscriptionConfig]="participantSubscriptionConfig"
                                         placeholder="{{ 'Voting right received from (principals)' | translate }}"
@@ -221,6 +222,7 @@
                                     <os-repo-search-selector
                                         formControlName="vote_delegated_to_id"
                                         [repo]="repo"
+                                        [sortService]="sortService"
                                         [multiple]="false"
                                         [includeNone]="true"
                                         [subscriptionConfig]="participantSubscriptionConfig"

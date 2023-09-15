@@ -176,18 +176,22 @@ export class DataStoreUpdateManagerService {
         const repositories = this.mapperService.getAllRepositories();
 
         // Phase 1: deleting and creating of view models (in this order)
-        repositories.forEach(repo => {
+        for (const repo of repositories) {
             const deletedModelIds = slot.getDeletedModelIdsForCollection(repo.collection);
-            repo.deleteModels(deletedModelIds);
+            if (deletedModelIds?.length) {
+                repo.deleteModels(deletedModelIds);
+            }
 
             const changedModelIds = slot.getChangedModelIdsForCollection(repo.collection);
-            repo.changedModels(changedModelIds, changedModels[repo.COLLECTION]);
-        });
+            if (changedModelIds?.length) {
+                repo.changedModels(changedModelIds, changedModels[repo.COLLECTION]);
+            }
+        }
 
         // Phase 2: updating all repositories
-        repositories.forEach(repo => {
+        for (const repo of repositories) {
             repo.commitUpdate(slot.getAllModelsIdsForCollection(repo.collection));
-        });
+        }
 
         slot.DS.triggerModifiedObservable();
 

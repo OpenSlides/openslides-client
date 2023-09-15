@@ -95,13 +95,25 @@ export class OpenSlidesMainComponent implements OnInit {
             )
         );
         await this.onInitDone;
-        if (await this.updateService.checkForUpdate()) {
-            this.updateService.applyUpdate();
-        } else {
-            setTimeout(() => {
-                this.lifecycleService.appLoaded.next();
-            }, 0);
-        }
+        try {
+            if ((await navigator.serviceWorker?.getRegistrations())?.length) {
+                if (
+                    await Promise.race([
+                        this.updateService.checkForUpdate(),
+                        new Promise((_, reject) => setTimeout(() => reject(), 3000))
+                    ])
+                ) {
+                    await this.updateService.applyUpdate();
+                    return;
+                }
+            } else {
+                this.updateService.checkForUpdate();
+            }
+        } catch (_) {}
+
+        setTimeout(() => {
+            this.lifecycleService.appLoaded.next();
+        }, 0);
     }
 
     private loadCustomIcons(): void {

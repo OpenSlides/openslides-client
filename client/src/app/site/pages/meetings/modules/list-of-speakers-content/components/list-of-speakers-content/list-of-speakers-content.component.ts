@@ -125,6 +125,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public restrictPointOfOrderActions = false;
 
+    public isPointOfOrderFn = (speaker: ViewSpeaker) => speaker.point_of_order;
+
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
 
@@ -213,7 +215,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         if (this.finishedSpeakers?.length > 0) {
             const lastSpeaker = this.finishedSpeakers[this.finishedSpeakers.length - 1];
             const isLastSpeakerWaiting = this.waitingSpeakers.some(speaker => speaker.user_id === lastSpeaker.user_id);
-            canReaddLast = !lastSpeaker.point_of_order && !isLastSpeakerWaiting;
+            canReaddLast = !isLastSpeakerWaiting;
         } else {
             canReaddLast = false;
         }

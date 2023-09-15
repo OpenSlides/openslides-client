@@ -152,7 +152,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     public ngOnInit(): void {
         this.manageService.currentScrollingTableComponent = this;
         this.subscriptions.push(
-            this.manageService.cellDefinitionsObservable.subscribe(def => {
+            this.manageService.cellDefinitionsObservable.subscribe(() => {
                 this.cd.markForCheck();
             })
         );

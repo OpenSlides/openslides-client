@@ -56,7 +56,7 @@ export class ActiveMeetingService {
     ) {
         this.activeMeetingIdService.meetingIdObservable.subscribe(id => {
             if (id !== undefined) {
-                this.setupModelSubscription(id);
+                this.setupModelSubscription();
             }
         });
         this.lifecycle.openslidesBooted.subscribe();
@@ -74,7 +74,7 @@ export class ActiveMeetingService {
         return null;
     }
 
-    private async setupModelSubscription(id: number | null): Promise<void> {
+    private async setupModelSubscription(): Promise<void> {
         if (!!this.meetingId) {
             await this.refreshAutoupdateSubscription();
             this.refreshRepoSubscription();

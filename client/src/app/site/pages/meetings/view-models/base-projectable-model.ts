@@ -11,7 +11,7 @@ import { ProjectionBuildDescriptor } from './projection-build-descriptor';
  */
 export abstract class BaseProjectableViewModel<M extends BaseModel = any> extends BaseViewModel<M> {
     public getProjectionBuildDescriptor(
-        meetingSettingsService?: MeetingSettingsService
+        _meetingSettingsService?: MeetingSettingsService
     ): ProjectionBuildDescriptor | null {
         return {
             content_object_id: this.fqid,
@@ -25,8 +25,8 @@ export abstract class BaseProjectableViewModel<M extends BaseModel = any> extend
     /**
      * @returns the projector title used for managing projector elements.
      */
-    public getProjectorTitle(projection: Projection): ProjectorTitle {
+    public getProjectorTitle(_projection: Projection): ProjectorTitle {
         return { title: this.getTitle() };
     }
 }
-export interface BaseProjectableViewModel<M extends BaseModel = any> extends Projectable {}
+export interface BaseProjectableViewModel extends Projectable {}

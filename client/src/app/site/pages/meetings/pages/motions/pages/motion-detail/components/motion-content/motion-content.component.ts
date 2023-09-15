@@ -22,6 +22,7 @@ import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
+import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort.service/participant-list-sort.service';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
@@ -49,7 +50,9 @@ interface MotionFormFields {
     workflow_id: Id;
 }
 
-type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any };
+type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any } & {
+    supporter_user_ids?: any;
+};
 
 @Component({
     selector: `os-motion-content`,
@@ -147,7 +150,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
     private titleFieldUpdateSubscription: Subscription;
-    private textFieldUpdateSubscription: Subscription;
 
     private _canSaveParagraphBasedAmendment = true;
     private _paragraphBasedAmendmentContent: any = {};
@@ -167,7 +169,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         private route: ActivatedRoute,
         private cd: ChangeDetectorRef,
         private perms: MotionPermissionService,
-        private motionController: MotionControllerService
+        private motionController: MotionControllerService,
+        public participantSortService: ParticipantListSortService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
         this.motionController
@@ -190,9 +193,9 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     /**
      * If the checkbox is deactivated, the statute_paragraph_id-field needs to be reset, as only that field is saved
      *
-     * @param {MatCheckboxChange} $event
+     * @param {MatCheckboxChange} _event
      */
-    public onStatuteAmendmentChange($event: MatCheckboxChange): void {
+    public onStatuteAmendmentChange(_event: MatCheckboxChange): void {
         this.contentForm.patchValue({
             statute_paragraph_id: null,
             workflow_id: this.getWorkflowIdForCreateFormByParagraph()
@@ -488,7 +491,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             attachment_ids: [[]],
             agenda_parent_id: [],
             submitter_ids: [[]],
-            supporter_meeting_user_ids: [[]],
+            supporter_user_ids: [[]],
             workflow_id: [],
             tag_ids: [[]],
             statute_amendment: [``], // Internal value for the checkbox, not saved to the model
