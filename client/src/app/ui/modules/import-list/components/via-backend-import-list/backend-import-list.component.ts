@@ -13,9 +13,9 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSelectChange } from '@angular/material/select';
-import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
+import { MatLegacyTab as MatTab, MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';

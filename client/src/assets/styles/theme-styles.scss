@@ -10,7 +10,7 @@
 
 /** Mix the component-related style-rules. Every single custom style goes here */
 @mixin openslides-components-theme($theme) {
-    @include mat.all-component-themes($theme);
+    @include mat.all-legacy-component-themes($theme);
     @include os-component-themes($theme);
 }
 

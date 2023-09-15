@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions } from '@angular/material/checkbox';
+import { MAT_LEGACY_CHECKBOX_DEFAULT_OPTIONS as MAT_CHECKBOX_DEFAULT_OPTIONS, MatLegacyCheckboxDefaultOptions as MatCheckboxDefaultOptions } from '@angular/material/legacy-checkbox';
 
 import { PromptService } from '../../../prompt-dialog';
 

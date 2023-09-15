@@ -1,5 +1,5 @@
 import { Component, EmbeddedViewRef, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar, MatLegacySnackBarRef as MatSnackBarRef } from '@angular/material/legacy-snack-bar';
 import { ActivationEnd, Router } from '@angular/router';
 import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
 import { ThemeService } from 'src/app/site/services/theme.service';
