@@ -64,11 +64,9 @@
         </mat-nav-list>
     </ng-template>
     <ng-template osSidenavMainContent>
-        <div class="content">
+        <div class="content ensure-bottom-spacers-work-in-chrome">
             <os-global-headbar></os-global-headbar>
-            <div class="ensure-bottom-spacers-work-in-chrome">
-                <router-outlet #o="outlet"></router-outlet>
-            </div>
+            <router-outlet #o="outlet"></router-outlet>
         </div>
         <div class="toolbars">
             <os-action-bar></os-action-bar>
