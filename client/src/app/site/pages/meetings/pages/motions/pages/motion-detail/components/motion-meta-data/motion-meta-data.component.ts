@@ -1,6 +1,15 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { distinctUntilChanged, distinctUntilKeyChanged, filter, map, merge, Subscription, tap } from 'rxjs';
+import {
+    distinctUntilChanged,
+    distinctUntilKeyChanged,
+    filter,
+    map,
+    merge,
+    Subscription,
+    tap,
+    throttleTime
+} from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
@@ -349,10 +358,12 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
                     filter(modified => this._supporter_user_ids?.intersects(modified ?? [])),
                     map(() => this.repo.getViewModel(this.motion.id))
                 )
-            ).subscribe(motion => {
-                this._supporters =
-                    motion?.supporter_users?.sort((a, b) => a.getName().localeCompare(b.getName())) ?? [];
-            });
+            )
+                .pipe(throttleTime(5000))
+                .subscribe(motion => {
+                    this._supporters =
+                        motion?.supporter_users?.sort((a, b) => a.getName().localeCompare(b.getName())) ?? [];
+                });
         }
         this.setupRecommender();
     }
