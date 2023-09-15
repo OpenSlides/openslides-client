@@ -97,7 +97,12 @@ export class OpenSlidesMainComponent implements OnInit {
         await this.onInitDone;
         try {
             if ((await navigator.serviceWorker?.getRegistrations())?.length) {
-                if (await this.updateService.checkForUpdate()) {
+                if (
+                    await Promise.race([
+                        this.updateService.checkForUpdate(),
+                        new Promise((_, reject) => setTimeout(() => reject(), 3000))
+                    ])
+                ) {
                     await this.updateService.applyUpdate();
                     return;
                 }
