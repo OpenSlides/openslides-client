@@ -1,15 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import {
-    distinctUntilChanged,
-    distinctUntilKeyChanged,
-    filter,
-    map,
-    merge,
-    Subscription,
-    tap,
-    throttleTime
-} from 'rxjs';
+import { distinctUntilChanged, map, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
@@ -19,9 +10,7 @@ import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/ap
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
@@ -34,7 +23,7 @@ import { SearchListDefinition } from '../motion-extension-field/motion-extension
     templateUrl: `./motion-meta-data.component.html`,
     styleUrls: [`./motion-meta-data.component.scss`]
 })
-export class MotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnDestroy {
+export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public motionBlocks: MotionBlock[] = [];
 
     public categories: ViewMotionCategory[] = [];
@@ -118,13 +107,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this._referencedMotions;
     }
 
-    public get supporters(): ViewUser[] {
-        return this._supporters;
-    }
-
-    private _supporters: ViewUser[];
-    private _supportersSubscription: Subscription;
-
     private _referencingMotions: ViewMotion[];
 
     private _referencedMotions: ViewMotion[];
@@ -136,8 +118,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      */
     private recommenderSubscription: Subscription | null = null;
 
-    private _supporter_user_ids: number[] = [];
-
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -145,8 +125,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         public perms: MotionPermissionService,
         private operator: OperatorService,
         private motionForwardingService: MotionForwardDialogService,
-        private meetingController: MeetingControllerService,
-        private userController: UserControllerService
+        private meetingController: MeetingControllerService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
 
@@ -157,11 +136,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         } else {
             this._forwardingAvailable = false;
         }
-    }
-
-    public override ngOnDestroy(): void {
-        this._supportersSubscription.unsubscribe();
-        super.ngOnDestroy();
     }
 
     /**
@@ -351,25 +325,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     protected override onAfterInit(): void {
-        this._supportersSubscription?.unsubscribe();
-        this._supporters = [];
-        if (this.motion.id) {
-            this._supportersSubscription = merge(
-                this.repo.getViewModelObservable(this.motion.id).pipe(
-                    distinctUntilKeyChanged(`supporter_meeting_user_ids`, (prev, curr) => (prev ?? []).equals(curr)),
-                    tap(motion => (this._supporter_user_ids = motion.supporter_user_ids ?? []))
-                ),
-                this.userController.getModifiedIdsObservable().pipe(
-                    filter(modified => this._supporter_user_ids?.intersects(modified ?? [])),
-                    map(() => this.repo.getViewModel(this.motion.id))
-                )
-            )
-                .pipe(throttleTime(5000))
-                .subscribe(motion => {
-                    this._supporters =
-                        motion?.supporter_users?.sort((a, b) => a.getName().localeCompare(b.getName())) ?? [];
-                });
-        }
         this.setupRecommender();
     }
 
