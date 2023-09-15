@@ -511,11 +511,11 @@ msgid "Are you sure you want to renumber all motions of this category?"
 msgstr ""
 "Вы уверены, что хотите изменить нумерацию всех заявлений этой категории?"
 
-msgid "Are you sure you want to reset all options to factory defaults?"
+msgid "Are you sure you want to reset all options to default settings?"
 msgstr ""
 
 msgid ""
-"Are you sure you want to reset all options to factory defaults? All changes "
+"Are you sure you want to reset all options to default settings? All changes "
 "of this settings group will be lost!"
 msgstr ""
 "Вы уверены, что хотите сбросить все параметры до заводских значений по "
@@ -3244,7 +3244,7 @@ msgstr "Сброс рекомендации"
 msgid "Reset state"
 msgstr "Сброс состояния"
 
-msgid "Reset to factory defaults"
+msgid "Reset to default settings"
 msgstr "Сброс до заводских настроек по умолчанию"
 
 msgid "Reset your OpenSlides password"

@@ -506,11 +506,11 @@ msgstr "Opravdu chcete odebrat sebe z tohoto seznamu řečníků?"
 msgid "Are you sure you want to renumber all motions of this category?"
 msgstr "Opravdu mají být přečíslovány všechny návrhy v této třídě?"
 
-msgid "Are you sure you want to reset all options to factory defaults?"
+msgid "Are you sure you want to reset all options to default settings?"
 msgstr "Opravdu mají být obnoveny všechny volby na výchozí?"
 
 msgid ""
-"Are you sure you want to reset all options to factory defaults? All changes "
+"Are you sure you want to reset all options to default settings? All changes "
 "of this settings group will be lost!"
 msgstr ""
 "Opravdu mají být obnoveny všechny volby na výchozí? Všechna nastavení této "
@@ -3253,7 +3253,7 @@ msgstr "Vynulovat doporučení"
 msgid "Reset state"
 msgstr "Vynulovat stav"
 
-msgid "Reset to factory defaults"
+msgid "Reset to default settings"
 msgstr "Obnovit výchozí nastavení"
 
 msgid "Reset your OpenSlides password"

@@ -164,7 +164,7 @@ export class MeetingSettingsGroupDetailComponent
      */
     public async resetAll(): Promise<void> {
         const title = this.translate.instant(
-            `Are you sure you want to reset all options to factory defaults? All changes of this settings group will be lost!`
+            `Are you sure you want to reset all options to default settings? All changes of this settings group will be lost!`
         );
         if (await this.promptDialog.open(title)) {
             for (const settingsField of this.settingsFields) {
