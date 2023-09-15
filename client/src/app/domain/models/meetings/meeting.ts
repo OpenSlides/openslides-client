@@ -225,6 +225,7 @@ export class Meeting extends BaseModel<Meeting> {
     public chat_message_ids!: Id[]; // (chat_message/meeting_id)[];
     public poll_candidate_list_ids!: Id[]; // (poll_candidate_list/meeting_id)[];
     public poll_candidate_ids!: Id[]; // (poll_candidate/meeting_id)[];
+    public user_ids!: Id[];
 
     // Other relations
     public present_user_ids!: Id[]; // (user/is_present_in_meeting_ids)[];
@@ -371,6 +372,7 @@ export class Meeting extends BaseModel<Meeting> {
         `poll_candidate_list_ids`,
         `poll_candidate_ids`,
         `meeting_user_ids`,
+        `user_ids`,
         `users_enable_presence_view`,
         `users_enable_vote_weight`,
         `users_allow_self_set_present`,
