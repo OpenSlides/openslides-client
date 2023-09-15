@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import {
+    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+    MatLegacyDialogRef as MatDialogRef
+} from '@angular/material/legacy-dialog';
 
 import { AgendaItemInfoDialogComponent } from './agenda-item-info-dialog.component';
 

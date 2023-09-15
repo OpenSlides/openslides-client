@@ -1,5 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatLegacyListOption as MatListOption, MatLegacySelectionList as MatSelectionList } from '@angular/material/legacy-list';
+import {
+    MatLegacyListOption as MatListOption,
+    MatLegacySelectionList as MatSelectionList
+} from '@angular/material/legacy-list';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
