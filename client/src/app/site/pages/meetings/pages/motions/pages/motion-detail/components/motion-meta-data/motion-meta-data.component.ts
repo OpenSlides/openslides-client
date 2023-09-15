@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
     distinctUntilChanged,
@@ -34,7 +34,7 @@ import { SearchListDefinition } from '../motion-extension-field/motion-extension
     templateUrl: `./motion-meta-data.component.html`,
     styleUrls: [`./motion-meta-data.component.scss`]
 })
-export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
+export class MotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnDestroy {
     public motionBlocks: MotionBlock[] = [];
 
     public categories: ViewMotionCategory[] = [];
@@ -157,6 +157,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         } else {
             this._forwardingAvailable = false;
         }
+    }
+
+    public override ngOnDestroy(): void {
+        this._supportersSubscription.unsubscribe();
+        super.ngOnDestroy();
     }
 
     /**
