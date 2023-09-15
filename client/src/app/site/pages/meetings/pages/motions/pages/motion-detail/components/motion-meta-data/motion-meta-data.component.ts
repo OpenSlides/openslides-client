@@ -351,7 +351,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
                 )
             ).subscribe(motion => {
                 this._supporters =
-                    motion?.supporter_users.sort((a, b) => a.getName().localeCompare(b.getName())) ?? this._supporters;
+                    motion?.supporter_users?.sort((a, b) => a.getName().localeCompare(b.getName())) ?? [];
             });
         }
         this.setupRecommender();
