@@ -9,6 +9,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import { ParticipantListServiceModule } from '../participant-list-service.module';
+import { GENDERS, GENDER_FITLERABLE } from 'src/app/domain/models/users/user';
 
 @Injectable({
     providedIn: ParticipantListServiceModule
@@ -96,6 +97,16 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 options: [
                     { condition: [false, null], label: this.translate.instant(`Has changed vote weight`) },
                     { condition: true, label: this.translate.instant(`Has unchanged vote weight`) }
+                ]
+            },
+            {
+                property: `gender`,
+                label: this.translate.instant(`Gender`),
+                options: [
+                    { condition: GENDER_FITLERABLE[0], label: this.translate.instant(GENDERS[0]) },
+                    { condition: GENDER_FITLERABLE[1], label: this.translate.instant(GENDERS[1]) },
+                    { condition: GENDER_FITLERABLE[2], label: this.translate.instant(GENDERS[2]) },
+                    { condition: GENDER_FITLERABLE[3], label: this.translate.instant(GENDERS[3]) }
                 ]
             },
             {
