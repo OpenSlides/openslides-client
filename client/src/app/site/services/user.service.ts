@@ -88,7 +88,10 @@ export class UserService {
             .map(userId => parseInt(userId, 10))
             .some(userId => {
                 const toCompare = result[userId];
-                return this.presenter.compareScope(ownScope, toCompare) === -1;
+                return (
+                    this.presenter.compareScope(ownScope, toCompare) === -1 ||
+                    (ownScope.collection === toCompare.collection && ownScope.id !== toCompare.id)
+                );
             });
     }
 
