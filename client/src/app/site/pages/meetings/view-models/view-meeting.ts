@@ -63,7 +63,7 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     }
 
     public get userAmount(): number {
-        return this.meeting_user_ids?.length || 0;
+        return this.user_ids?.length || 0;
     }
 
     public get motionsAmount(): number {
