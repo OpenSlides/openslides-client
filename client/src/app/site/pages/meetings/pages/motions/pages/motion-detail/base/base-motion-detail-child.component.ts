@@ -34,6 +34,8 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
         if (!Object.keys(previousMotion || {}).length && Object.keys(motion).length) {
             this.onInitTextBasedAmendment(); // Assuming that it's an amendment
         }
+
+        this.onAfterSetMotion(previousMotion, motion);
     }
 
     public get motion(): ViewMotion {
@@ -205,6 +207,11 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
      * Function called when a new motion is passed and it's an text-based amendment
      */
     protected onInitTextBasedAmendment(): void {}
+
+    /**
+     * Function called after all eventual updates whenever the motion setter is called
+     */
+    protected onAfterSetMotion(_previous: ViewMotion, _current: ViewMotion): void {}
 
     /**
      * Function called when a new motion is passed and right after the internal `init`-function was called
