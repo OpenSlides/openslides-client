@@ -67,8 +67,10 @@ export class MotionMultiselectService {
      */
     public async delete(motions: ViewMotion[]): Promise<void> {
         let title = this.translate.instant(`Are you sure you want to delete all selected motions?`);
-        if(motions.some(motion => motion.amendments?.length)) {
-            title = this.translate.instant(`Warning: Amendments exist for at least one of the selected motions. Are you sure you want to delete these motions regardless?`)
+        if (motions.some(motion => motion.amendments?.length)) {
+            title = this.translate.instant(
+                `Warning: Amendments exist for at least one of the selected motions. Are you sure you want to delete these motions regardless?`
+            );
         }
         if (await this.promptService.open(title)) {
             const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;

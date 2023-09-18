@@ -221,11 +221,17 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         let title = this.translate.instant(`Are you sure you want to delete this motion? `);
         let content = this.motion.getTitle();
         if (this.motion.amendments.length) {
-            title = this.translate.instant(`Warning: Amendments exist for this motion. Are you sure you want to delete this motion regardless?`);
-            content = this.translate.instant(`Motion: `) + this.motion.getTitle() 
-            + this.translate.instant(`. Deleting this motion will likely impact it's amendments negatively and they could become unusable. List of amendments: `)
-            + this.motion.amendments;
-        } 
+            title = this.translate.instant(
+                `Warning: Amendments exist for this motion. Are you sure you want to delete this motion regardless?`
+            );
+            content =
+                this.translate.instant(`Motion: `) +
+                this.motion.getTitle() +
+                this.translate.instant(
+                    `. Deleting this motion will likely impact it's amendments negatively and they could become unusable. List of amendments: `
+                ) +
+                this.motion.amendments;
+        }
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.motion);
             this.router.navigate([this.activeMeetingId, `motions`]);
