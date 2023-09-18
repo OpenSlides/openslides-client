@@ -363,7 +363,7 @@ export class C4DialogComponent implements OnInit, OnDestroy {
      */
     public enter_search(): void {
         this.caption = this.translate.instant(`Searching for players ...`);
-        this.notifyService.sendToAllUsers(`c4_search_request`, { name: this.getPlayerName() });
+        this.notifyService.sendToMeeting(`c4_search_request`, { name: this.getPlayerName() });
     }
 
     /**
