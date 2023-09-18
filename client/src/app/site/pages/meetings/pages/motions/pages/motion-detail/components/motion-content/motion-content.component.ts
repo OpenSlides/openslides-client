@@ -149,6 +149,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
+    public getCategorySearchValuesFunction = (item: ViewMotionCategory) => [item.prefix, item.getTitle()];
+
     private titleFieldUpdateSubscription: Subscription;
 
     private _canSaveParagraphBasedAmendment = true;
