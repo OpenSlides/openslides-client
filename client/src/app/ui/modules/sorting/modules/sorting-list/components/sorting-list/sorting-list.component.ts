@@ -237,7 +237,7 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
             const newMultiSelectedIndex = multiSelectedIndex
                 .map(index => this.currentItems.findIndex(item => item.id === this.sortedItems[index].id))
                 .filter(index => index !== -1)
-                .sort();
+                .sort((a, b) => a - b);
             let newCurrentIndex = Math.min(event.currentIndex, this.currentItems.length - 1);
             if (newPreviousIndex === -1) {
                 newPreviousIndex = newMultiSelectedIndex.length ? newMultiSelectedIndex[0] : undefined;
