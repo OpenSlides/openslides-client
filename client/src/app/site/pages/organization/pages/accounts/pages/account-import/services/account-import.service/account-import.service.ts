@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { User } from 'src/app/domain/models/users/user';
 import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
@@ -12,7 +11,7 @@ import { AccountImportServiceModule } from '../account-import-service.module';
 @Injectable({
     providedIn: AccountImportServiceModule
 })
-export class AccountImportService extends BaseBackendImportService<User> {
+export class AccountImportService extends BaseBackendImportService {
     /**
      * The minimimal number of header entries needed to successfully create an entry
      */
