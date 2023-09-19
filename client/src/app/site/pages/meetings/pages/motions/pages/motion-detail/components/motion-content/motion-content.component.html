@@ -182,7 +182,7 @@
                 formControlName="category_id"
                 placeholder="{{ 'Category' | translate }}"
                 [repo]="categoryRepo"
-                [getAdditionallySearchedValuesFn]="getCategorySearchValuesFunction"
+                [excludeIds]="true"
             ></os-repo-search-selector>
         </mat-form-field>
     </div>
