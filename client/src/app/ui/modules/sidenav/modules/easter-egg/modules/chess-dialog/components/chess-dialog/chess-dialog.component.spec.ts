@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { C4DialogComponent } from './c4-dialog.component';
+import { ChessDialogComponent } from './chess-dialog.component';
 
-xdescribe(`C4DialogComponent`, () => {
-    let component: C4DialogComponent;
-    let fixture: ComponentFixture<C4DialogComponent>;
+xdescribe(`ChessDialogComponent`, () => {
+    let component: ChessDialogComponent;
+    let fixture: ComponentFixture<ChessDialogComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [C4DialogComponent]
+            declarations: [ChessDialogComponent]
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(C4DialogComponent);
+        fixture = TestBed.createComponent(ChessDialogComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
