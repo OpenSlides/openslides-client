@@ -513,6 +513,9 @@ export class HtmlToPdfService {
                 }
             }
         }
+        if (Array.isArray(styleObject.decoration) && styleObject.decoration.length === 1) {
+            styleObject.decoration = styleObject.decoration[0];
+        }
         return styleObject;
     }
 
