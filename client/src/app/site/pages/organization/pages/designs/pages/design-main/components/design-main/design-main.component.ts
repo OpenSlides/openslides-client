@@ -10,6 +10,6 @@ import { getDesignListSubscriptionConfig } from '../../../../designs.subscriptio
 })
 export class DesignMainComponent extends BaseModelRequestHandlerComponent {
     protected override onShouldCreateModelRequests(): void {
-        this.updateSubscribeTo(getDesignListSubscriptionConfig());
+        this.subscribeTo(getDesignListSubscriptionConfig());
     }
 }
