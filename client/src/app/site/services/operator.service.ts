@@ -496,15 +496,12 @@ export class OperatorService {
             return true;
         }
 
-        let result: boolean;
         if (!this._groupIds) {
-            result = false;
+            return false;
         } else if (this.isAuthenticated && this._groupIds.find(id => id === this.adminGroupId)) {
-            result = true;
-        } else {
-            result = checkPerms.some(permission => this._permissions?.includes(permission));
+            return true;
         }
-        return result;
+        return checkPerms.some(permission => this._permissions?.includes(permission));
     }
 
     /**
@@ -523,18 +520,15 @@ export class OperatorService {
             return true;
         }
         const groups = this.user.groups(meetingId);
-        let result: boolean;
         if (!groups || !groups.length) {
-            result = false;
+            return false;
         } else if (
             this.isAuthenticated &&
             groups.find(group => group.id === this.meetingRepo.getViewModel(meetingId)?.admin_group_id)
         ) {
-            result = true;
-        } else {
-            result = checkPerms.some(permission => groups.some(group => group.hasPermission(permission)));
+            return true;
         }
-        return result;
+        return checkPerms.some(permission => groups.some(group => group.hasPermission(permission)));
     }
 
     /**
