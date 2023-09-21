@@ -23,13 +23,14 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
 
     public override getFieldsets(): Fieldsets<MeetingUser> {
         const groupFields: TypedFieldset<MeetingUser> = [`group_ids`, `meeting_id`, `user_id`];
-        const nameFields: TypedFieldset<MeetingUser> = groupFields.concat([`structure_level`, `number`]);
-        const participantListFieldsMinimal: TypedFieldset<MeetingUser> = nameFields.concat([
+        const participantListFieldsMinimal: TypedFieldset<MeetingUser> = groupFields.concat([
             `vote_delegated_to_id`,
             `vote_delegations_from_ids`,
             `vote_weight`,
             `comment`,
-            `user_id`
+            `user_id`,
+            `structure_level`,
+            `number`
         ]);
 
         const detailFields: TypedFieldset<MeetingUser> = [`about_me`, `user_id`, `meeting_id`];
@@ -37,7 +38,6 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
         return {
             [DEFAULT_FIELDSET]: detailFields,
             groups: groupFields,
-            name: nameFields,
             participantListMinimal: participantListFieldsMinimal,
             all: detailFields.concat(participantListFieldsMinimal)
         };
