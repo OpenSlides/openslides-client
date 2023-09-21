@@ -31,7 +31,10 @@ export class TreeService {
             name: item.getTitle(),
             id: item.id,
             item,
-            children
+            children,
+            toString: function () {
+                return this.item.toString();
+            }
         };
     }
 
@@ -352,7 +355,10 @@ export class TreeService {
             isSeen: true,
             expandable: false,
             id: item.id,
-            position: index + oldMaxPosition + 1
+            position: index + oldMaxPosition + 1,
+            toString: function () {
+                return this.item.toString();
+            }
         }));
         return tree.concat(items);
     }
@@ -406,7 +412,10 @@ export class TreeService {
             expandable: !!children,
             isExpanded: !!children,
             level,
-            isSeen: true
+            isSeen: true,
+            toString: function () {
+                return this.item.toString();
+            }
         };
         return new Proxy(node, {
             get: (target: FlatNode<T>, property: keyof Identifiable & Displayable & T) => {
