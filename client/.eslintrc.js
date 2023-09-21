@@ -53,7 +53,7 @@ module.exports = {
                     }
                 ],
                 '@typescript-eslint/quotes': ['error', 'backtick', { 'avoidEscape': false }],
-                '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
+                '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'varsIgnorePattern': '^_' }],
                 'simple-import-sort/imports': 'error',
                 'simple-import-sort/exports': 'error',
                 'unused-imports/no-unused-imports': 'error',

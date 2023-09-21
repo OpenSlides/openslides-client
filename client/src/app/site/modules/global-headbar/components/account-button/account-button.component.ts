@@ -8,6 +8,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -16,6 +17,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { ChessDialogComponent } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
 
 import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 
@@ -66,6 +68,8 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private _userSubscription: Subscription | null = null;
     private _isAllowedSelfSetPresent = false;
     private _languageTrigger: MatMenuTrigger | undefined = undefined;
+    private clickCounter = 0;
+    private clickTimeout: number | null = null;
 
     public constructor(
         private translate: TranslateService,
@@ -147,6 +151,20 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         buttonEvent.preventDefault();
         buttonEvent.stopPropagation();
         this.theme.toggleDarkMode();
+
+        this.clickCounter++;
+        if (this.clickTimeout) {
+            clearTimeout(<any>this.clickTimeout);
+        }
+
+        if (this.clickCounter === 4) {
+            this.clickCounter = 0;
+            this.dialog.open(ChessDialogComponent, { ...mediumDialogSettings });
+        } else {
+            this.clickTimeout = <any>setTimeout(() => {
+                this.clickCounter = 0;
+            }, 200);
+        }
     }
 
     public getStructureLevel(): string {
