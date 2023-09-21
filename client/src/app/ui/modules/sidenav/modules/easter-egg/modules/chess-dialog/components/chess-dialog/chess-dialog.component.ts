@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Chess, EVENT_TYPE } from 'cm-chess/src/Chess';
 import { BORDER_TYPE, Chessboard, COLOR, FEN, INPUT_EVENT_TYPE } from 'cm-chessboard/src/Chessboard';
 import { PromotionDialog } from 'cm-chessboard/src/extensions/promotion-dialog/PromotionDialog';
@@ -11,7 +11,7 @@ import { BaseGameDialogComponent, State } from '../../../../components/base-game
     styleUrls: [`./chess-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
-export class ChessDialogComponent extends BaseGameDialogComponent implements OnInit, OnDestroy {
+export class ChessDialogComponent extends BaseGameDialogComponent implements OnInit {
     protected prefix = `chess`;
 
     /**
@@ -34,21 +34,23 @@ export class ChessDialogComponent extends BaseGameDialogComponent implements OnI
 
     public override ngOnInit(): void {
         super.ngOnInit();
-        this.board = new Chessboard(this.boardContainer.nativeElement, {
-            position: FEN.start,
-            language: this.translate.currentLang == `de` ? `de` : `en`,
-            assetsUrl: `./chess/`,
-            style: {
-                borderType: BORDER_TYPE.frame
-            },
-            extensions: [{ class: PromotionDialog }]
-        });
-        this.chess.addObserver(({ type }) => {
-            if (type === EVENT_TYPE.initialized || type === EVENT_TYPE.legalMove) {
-                this.board.setPosition(this.chess.fen(), true);
-            }
-        });
         this.caption = this.translate.instant(`Chess`);
+        if (this.inMeeting) {
+            this.board = new Chessboard(this.boardContainer.nativeElement, {
+                position: FEN.start,
+                language: this.translate.currentLang == `de` ? `de` : `en`,
+                assetsUrl: `./chess/`,
+                style: {
+                    borderType: BORDER_TYPE.frame
+                },
+                extensions: [{ class: PromotionDialog }]
+            });
+            this.chess.addObserver(({ type }) => {
+                if (type === EVENT_TYPE.initialized || type === EVENT_TYPE.legalMove) {
+                    this.board.setPosition(this.chess.fen(), true);
+                }
+            });
+        }
     }
 
     protected override reset(): void {
