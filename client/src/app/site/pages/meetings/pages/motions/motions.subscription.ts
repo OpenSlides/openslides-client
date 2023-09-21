@@ -67,7 +67,13 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                         follow: [
                             {
                                 idField: `meeting_user_id`,
-                                follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                                follow: [
+                                    {
+                                        idField: `user_id`,
+                                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                                    }
+                                ],
+                                fieldset: `name`
                             }
                         ]
                     }
