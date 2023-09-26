@@ -304,7 +304,7 @@ export class TreeService {
         if (!deleteIds.length) {
             return tree;
         }
-        deleteIds = deleteIds.sort();
+        deleteIds = deleteIds.sort((a, b) => a - b);
         tree = tree.sort((a, b) =>
             a.position != null && b.position != null ? a.position - b.position : b != null ? -1 : 0
         );
