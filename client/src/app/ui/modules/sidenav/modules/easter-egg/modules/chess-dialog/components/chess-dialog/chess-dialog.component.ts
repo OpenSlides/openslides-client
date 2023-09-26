@@ -1,9 +1,20 @@
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Chess, EVENT_TYPE } from 'cm-chess/src/Chess';
 import { BORDER_TYPE, Chessboard, COLOR, FEN, INPUT_EVENT_TYPE } from 'cm-chessboard/src/Chessboard';
 import { PromotionDialog } from 'cm-chessboard/src/extensions/promotion-dialog/PromotionDialog';
 
 import { BaseGameDialogComponent, State } from '../../../../components/base-game-dialog/base-game-dialog';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { TranslateService } from '@ngx-translate/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Id } from 'src/app/domain/definitions/key-types';
+
+interface ChessDialogConfig {
+    userId?: Id;
+    notify?: NotifyResponse<{ name: string }>;
+}
 
 @Component({
     selector: `os-chess-dialog`,
@@ -24,6 +35,9 @@ export class ChessDialogComponent extends BaseGameDialogComponent implements OnI
      */
     private board: Chessboard = null;
 
+    /**
+     * The HTML element for the chess board
+     */
     @ViewChild(`chessboard`, { static: true })
     public boardContainer: ElementRef;
 
@@ -31,6 +45,16 @@ export class ChessDialogComponent extends BaseGameDialogComponent implements OnI
      * Color of this user
      */
     private ownColor: COLOR = COLOR.white;
+
+    public constructor(
+        activeMeetingService: ActiveMeetingService,
+        notifyService: NotifyService,
+        op: OperatorService,
+        translate: TranslateService,
+        @Inject(MAT_DIALOG_DATA) private config: ChessDialogConfig
+    ) {
+        super(activeMeetingService, notifyService, op, translate);
+    }
 
     public override ngOnInit(): void {
         super.ngOnInit();
@@ -50,6 +74,22 @@ export class ChessDialogComponent extends BaseGameDialogComponent implements OnI
                     this.board.setPosition(this.chess.fen(), true);
                 }
             });
+        }
+        if (this.config?.userId) {
+            this.state = `waitForResponse`;
+            this.notifyService.sendToUsers(`chess_challenge`, { name: this.getPlayerName() }, this.config.userId);
+            this.caption = this.translate.instant(`Waiting for response...`);
+            const handle = this.SM.waitForResponse.receivedACK.handle;
+            this.SM.waitForResponse.receivedACK.handle = (notify: NotifyResponse<{ name: string }>) => {
+                if (notify.sender_user_id === this.config.userId) {
+                    this.replyChannel = notify.sender_channel_id;
+                    return handle(notify);
+                }
+                return null;
+            };
+        } else if (this.config?.notify) {
+            this.state = `search`;
+            this.handleEvent(`receivedSearchResponse`, this.config.notify);
         }
     }
 

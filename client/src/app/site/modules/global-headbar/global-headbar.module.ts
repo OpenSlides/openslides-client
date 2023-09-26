@@ -26,6 +26,7 @@ import { AccountButtonComponent } from './components/account-button/account-butt
 import { AccountDialogComponent } from './components/account-dialog/account-dialog.component';
 import { GlobalHeadbarComponent } from './components/global-headbar/global-headbar.component';
 import { GlobalSearchComponent } from './components/global-search/global-search.component';
+import { ChessDialogModule } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog';
 
 const MODULES = [
     InputModule,
@@ -58,6 +59,7 @@ const DECLARATIONS = [GlobalHeadbarComponent];
         ScrollingModule,
         FormsModule,
         ReactiveFormsModule,
+        ChessDialogModule,
         ...MODULES
     ]
 })
