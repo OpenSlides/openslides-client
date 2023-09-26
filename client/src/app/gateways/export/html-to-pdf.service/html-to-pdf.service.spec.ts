@@ -81,6 +81,49 @@ describe(`HtmlToPdfService`, () => {
                 { text: [{ text: `Underlined`, decoration: `underline` }], decoration: `underline` }
             ]);
         });
+
+        it(`struck span`, () => {
+            const result = service.convertHtml({
+                htmlText: `<span style="text-decoration: line-through">Struck</span>`
+            });
+            expect(result).toEqual(<Content[]>[
+                { text: [{ text: `Struck`, decoration: `lineThrough` }], decoration: `lineThrough` }
+            ]);
+        });
+
+        it(`nested underlined and struck spans`, () => {
+            const result = service.convertHtml({
+                htmlText: `<span style="text-decoration: line-through"><span style="text-decoration: underline">Both</span></span>`
+            });
+            expect(result).toEqual(<Content[]>(<unknown>[
+                {
+                    text: [
+                        {
+                            text: [{ text: `Both`, decoration: [`underline`, `lineThrough`] }],
+                            decoration: [`underline`, `lineThrough`]
+                        }
+                    ],
+                    decoration: `lineThrough`
+                }
+            ]));
+        });
+
+        it(`nested underlined and struck spans 2`, () => {
+            const result = service.convertHtml({
+                htmlText: `<span style="text-decoration: underline"><span style="text-decoration: line-through">Both</span></span>`
+            });
+            expect(result).toEqual(<Content[]>(<unknown>[
+                {
+                    text: [
+                        {
+                            text: [{ text: `Both`, decoration: [`lineThrough`, `underline`] }],
+                            decoration: [`lineThrough`, `underline`]
+                        }
+                    ],
+                    decoration: `underline`
+                }
+            ]));
+        });
     });
 
     describe(`convert format tags`, () => {
