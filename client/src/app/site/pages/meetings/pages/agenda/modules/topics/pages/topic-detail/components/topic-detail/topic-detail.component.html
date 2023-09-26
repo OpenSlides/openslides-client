@@ -110,7 +110,7 @@
         </form>
     </mat-card>
 
-    <div *ngIf="!editTopic">
+    <div *ngIf="!editTopic" class="spacer-bottom-60">
         <ng-container *ngIf="topic && topic.poll_ids?.length">
             <ng-container *ngFor="let poll of topic.poll_ids | reverse; trackBy: trackById">
                 <os-topic-poll [pollId]="poll" (dialogOpened)="openDialog(poll)"></os-topic-poll>

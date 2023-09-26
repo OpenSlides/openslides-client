@@ -38,6 +38,7 @@
     [editFolderTemplate]="fileEditDialog"
     [fileMenuTemplate]="fileMenuTemplate"
     [shouldShowFileMenuFn]="shouldShowFileMenuFn"
+    [addBottomSpacer]="hasInteractionState | async"
     (directoryChanged)="changeDirectory($event.directoryId)"
     (beforeEditing)="onEditFile($event.file)"
     (saved)="onSaveFile($event.update)"

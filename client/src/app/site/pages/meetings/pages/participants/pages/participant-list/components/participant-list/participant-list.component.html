@@ -24,6 +24,7 @@
     [filterProps]="filterProps"
     [multiSelect]="isMultiSelect"
     [hiddenInMobile]="['group', 'presence']"
+    [addBottomSpacer]="hasInteractionState | async"
     [(selectedRows)]="selectedRows"
 >
     <!-- extra content in the filter bar -->
