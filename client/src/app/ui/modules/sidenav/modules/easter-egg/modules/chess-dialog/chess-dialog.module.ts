@@ -4,13 +4,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { PromptDialogModule, PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ChessDialogComponent } from './components/chess-dialog/chess-dialog.component';
-import { PromptDialogModule, PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 @NgModule({
     declarations: [ChessDialogComponent],
-    imports: [CommonModule, MatButtonModule, MatIconModule, MatDialogModule, OpenSlidesTranslationModule.forChild(), PromptDialogModule],
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDialogModule,
+        OpenSlidesTranslationModule.forChild(),
+        PromptDialogModule
+    ],
     providers: [PromptService]
 })
 export class ChessDialogModule {

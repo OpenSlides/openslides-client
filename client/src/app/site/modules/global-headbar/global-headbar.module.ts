@@ -19,6 +19,7 @@ import { RouterModule } from '@angular/router';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { InputModule } from 'src/app/ui/modules/input';
+import { ChessDialogModule } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog';
 
 import { OpenSlidesTranslationModule } from '../translations';
 import { UserComponentsModule } from '../user-components';
@@ -26,7 +27,6 @@ import { AccountButtonComponent } from './components/account-button/account-butt
 import { AccountDialogComponent } from './components/account-dialog/account-dialog.component';
 import { GlobalHeadbarComponent } from './components/global-headbar/global-headbar.component';
 import { GlobalSearchComponent } from './components/global-search/global-search.component';
-import { ChessDialogModule } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog';
 
 const MODULES = [
     InputModule,

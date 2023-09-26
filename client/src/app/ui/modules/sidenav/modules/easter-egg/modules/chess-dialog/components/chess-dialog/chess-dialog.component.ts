@@ -1,15 +1,15 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Chess, EVENT_TYPE } from 'cm-chess/src/Chess';
 import { BORDER_TYPE, Chessboard, COLOR, FEN, INPUT_EVENT_TYPE } from 'cm-chessboard/src/Chessboard';
 import { PromotionDialog } from 'cm-chessboard/src/extensions/promotion-dialog/PromotionDialog';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseGameDialogComponent, State } from '../../../../components/base-game-dialog/base-game-dialog';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { TranslateService } from '@ngx-translate/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Id } from 'src/app/domain/definitions/key-types';
 
 interface ChessDialogConfig {
     userId?: Id;
