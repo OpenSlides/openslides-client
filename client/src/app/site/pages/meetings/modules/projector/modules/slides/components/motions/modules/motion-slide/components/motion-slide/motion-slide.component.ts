@@ -211,7 +211,7 @@ export class MotionSlideComponent
 
         const paragraphNumbers = Object.keys(amendment.amendment_paragraphs)
             .map(x => +x)
-            .sort();
+            .sort((a, b) => a - b);
 
         return paragraphNumbers
             .map(paraNo => {
@@ -401,7 +401,7 @@ export class MotionSlideComponent
 
         const paragraphNumbers = Object.keys(motion.amendment_paragraphs)
             .map(x => +x)
-            .sort();
+            .sort((a, b) => a - b);
         const amendmentParagraphs: DiffLinesInParagraph[] = paragraphNumbers
             .map(paraNo =>
                 this.diff.getAmendmentParagraphsLines(

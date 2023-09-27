@@ -26,7 +26,7 @@ const FILE_TEMPLATE = dedent`
     const provider = new MeetingSettingsDefinitionService();
 
     let content = FILE_TEMPLATE + '\n';
-    for (const [key, value] of Object.entries(provider.getSettingsMap())) {
+    for (const [key, value] of Object.entries(provider.settingsMap)) {
         const defaultValue = meeting[key].default;
         if (defaultValue !== undefined) {
             provider.validateDefault(key, defaultValue);

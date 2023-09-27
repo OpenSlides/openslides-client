@@ -16,6 +16,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { ChessDialogModule } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules/sorting-list/sorting-list.module';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
@@ -60,7 +61,8 @@ import { AssignmentDetailServiceModule } from './services/assignment-detail-serv
         OpenSlidesTranslationModule.forChild(),
         ParticipantSearchSelectorModule,
         AgendaItemCommonServiceModule,
-        ChipSelectModule
+        ChipSelectModule,
+        ChessDialogModule
     ]
 })
 export class AssignmentDetailModule {}

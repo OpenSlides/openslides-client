@@ -9,6 +9,7 @@
             [sortService]="sortService!"
             [searchService]="searchService!"
             [searchFieldInput]="searchFieldValue"
+            [showSpacer]="addBottomSpacer"
             (searchFieldChanged)="searchFilterUpdated.emit($event)"
         >
             <div class="extra-info-slot">
@@ -23,6 +24,7 @@
             [tableHeight]="fullScreen ? undefined : '50vh'"
             [hiddenColumns]="hiddenColumns"
             [selectionMode]="multiSelect"
+            [addBottomSpacer]="addBottomSpacer"
             (selectionChanged)="selectedRowsChange.emit($event.selectedRows)"
         >
             <div *osScrollingTableNoData class="no-data-placeholder subtitle">{{ 'No data' | translate }}</div>

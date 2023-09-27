@@ -1,0 +1,19 @@
+/** cm-chessboard */
+@import 'cm-chessboard/assets/_chessboard-theme.scss';
+@import 'cm-chessboard/assets/chessboard.scss';
+@import 'cm-chessboard/assets/extensions/promotion-dialog/promotion-dialog.scss';
+
+.flex-container {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+
+    .left-align {
+        flex: 1;
+    }
+}
+
+.mat-dialog-content {
+    max-height: 95vh;
+    overflow: hidden;
+}

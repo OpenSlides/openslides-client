@@ -120,6 +120,9 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     @Input()
     public searchFieldValue = ``;
 
+    @Input()
+    public addBottomSpacer = false;
+
     /**
      * Double binding the selected rows
      */

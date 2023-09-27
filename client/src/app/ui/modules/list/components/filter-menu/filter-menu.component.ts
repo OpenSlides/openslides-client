@@ -54,6 +54,9 @@ export class FilterMenuComponent<V extends Identifiable> implements OnInit {
     @Input()
     public service!: FilterListService<V>;
 
+    @Input()
+    public showSpacer = false;
+
     public constructor(private cd: ChangeDetectorRef) {}
 
     /**

@@ -107,7 +107,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public committee!: ViewCommittee;
 
     public get meetingUsers(): ViewUser[] {
-        return this.editMeeting?.users || [];
+        return this.editMeeting?.calculated_users || [];
     }
 
     private meetingId: Id | null = null;
@@ -309,7 +309,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         }: any = meeting.getUpdatedModelData({
             start_time: start_time,
             end_time: end_time,
-            admin_ids: [...(meeting.admin_group?.user_ids || [])]
+            admin_ids: [...(meeting.admin_group?.calculated_user_ids || [])]
         } as any);
         const patchDaterange = {
             start,
@@ -373,7 +373,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
      */
     private getUsersToUpdateForMeetingObject(): MeetingUserModifiedFields {
         const nextAdminIds = this.meetingForm.value.admin_ids as Id[];
-        const previousAdminIds = this.editMeeting!.admin_group.user_ids || [];
+        const previousAdminIds = this.editMeeting!.admin_group.calculated_user_ids || [];
         const addedAdminIds = (nextAdminIds || []).difference(previousAdminIds);
         const removedAdminIds = previousAdminIds.difference(nextAdminIds);
 

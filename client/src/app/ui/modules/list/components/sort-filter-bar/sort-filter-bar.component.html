@@ -96,6 +96,7 @@
         *ngIf="filterService"
         (dismissed)="this.filterMenu.close()"
         [service]="filterService"
+        [showSpacer]="showSpacer"
     ></os-filter-menu>
 </mat-drawer>
 

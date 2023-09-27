@@ -51,6 +51,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     @ViewChild(SortingListComponent)
     public listElement!: SortingListComponent;
 
+    @Input()
+    public addBottomSpacer = false;
+
     public finishedSpeakers: ViewSpeaker[] = [];
     public waitingSpeakers: ViewSpeaker[] = [];
     public activeSpeaker: ViewSpeaker | null = null;

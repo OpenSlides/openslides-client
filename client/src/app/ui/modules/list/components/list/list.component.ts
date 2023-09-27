@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 
 import { BaseListComponent } from '../../base/base-list.component';
@@ -9,4 +9,7 @@ import { BaseListComponent } from '../../base/base-list.component';
     styleUrls: [`./list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent<V extends Identifiable> extends BaseListComponent<V> {}
+export class ListComponent<V extends Identifiable> extends BaseListComponent<V> {
+    @Input()
+    public addBottomSpacer = false;
+}

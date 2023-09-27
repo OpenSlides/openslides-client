@@ -24,7 +24,7 @@ export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
     ) {
         super(componentServiceCollector, translate);
 
-        this.groups = this.meetingSettingsDefinitionProvider.getSettings();
+        this.groups = this.meetingSettingsDefinitionProvider.settings;
     }
 
     /**

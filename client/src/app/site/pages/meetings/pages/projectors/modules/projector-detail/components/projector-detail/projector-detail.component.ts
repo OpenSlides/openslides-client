@@ -189,6 +189,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         const content = this.projector.name;
         if (this.projector && (await this.promptService.open(title, content))) {
             this.repo.delete(this.projector);
+            this.router.navigate([`../../`], { relativeTo: this.route });
         }
     }
 
