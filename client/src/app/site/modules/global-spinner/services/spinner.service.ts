@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router, RoutesRecognized } from '@angular/router';
+import { EventType, Router, RoutesRecognized } from '@angular/router';
 import { combineLatest, filter, startWith, Subscription } from 'rxjs';
 import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
@@ -14,10 +14,6 @@ import { GlobalSpinnerModule } from '../global-spinner.module';
     providedIn: GlobalSpinnerModule
 })
 export class SpinnerService {
-    public get isOffline(): boolean {
-        return this._isOffline;
-    }
-
     private overlayInstance: OverlayInstance<GlobalSpinnerComponent> | null = null;
 
     private isOperatorReady = false;
@@ -25,6 +21,10 @@ export class SpinnerService {
     private _isOffline = false;
     private isOnLoginMask = false;
     private isOnErrorPage = false;
+
+    public get isOffline(): boolean {
+        return this._isOffline;
+    }
 
     private set isOffline(isOffline: boolean) {
         this._isOffline = isOffline;
@@ -91,11 +91,12 @@ export class SpinnerService {
             this.operator.isReadyObservable,
             this.offlineService.isOfflineObservable,
             this.openslidesStatus.isStableObservable,
-            this.router.events.pipe(filter(event => event instanceof RoutesRecognized)).pipe(startWith(null))
-        ]).subscribe(([isReady, isOffline, isStable, event]) => {
+            this.router.events.pipe(filter(event => event instanceof RoutesRecognized)).pipe(startWith(null)),
+            this.router.events.pipe(filter(event => event.type === EventType.ActivationEnd)).pipe(startWith(null))
+        ]).subscribe(([isReady, isOffline, isStable, event, activationEnd]) => {
             this.isOperatorReady = isReady;
             this.isOffline = isOffline;
-            this.isStable = isStable;
+            this.isStable = isStable && !!activationEnd;
             if (event) {
                 this.isOnLoginMask = (event as RoutesRecognized).url.includes(`login`);
                 this.isOnErrorPage = (event as RoutesRecognized).url.includes(`error`);
