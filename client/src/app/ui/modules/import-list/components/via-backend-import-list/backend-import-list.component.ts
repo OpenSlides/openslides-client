@@ -44,7 +44,7 @@ export enum BackendImportPhase {
     IMPORTING,
     FINISHED,
     ERROR,
-    TRY_AGAIN
+    FINISHED_WITH_WARNING
 }
 
 @Component({
@@ -159,8 +159,8 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     /**
      * True if, after an attempted import failed, the view is waiting for the user to confirm the import on the new preview.
      */
-    public get tryAgain(): boolean {
-        return this._state === BackendImportPhase.TRY_AGAIN;
+    public get finishedWithWarning(): boolean {
+        return this._state === BackendImportPhase.FINISHED_WITH_WARNING;
     }
 
     /**
@@ -474,8 +474,10 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
             this._summary = undefined;
             this._rows = undefined;
         } else {
-            this._previewColumns = previews[0].headers;
-            this._summary = previews.flatMap(preview => preview.statistics).filter(point => point.value);
+            this._previewColumns = previews[0].headers ?? this._previewColumns;
+            this._summary = previews.some(preview => preview.statistics)
+                ? previews.flatMap(preview => preview.statistics).filter(point => point?.value)
+                : [];
             this._rows = this.calculateRows(previews);
             this.setHeaders({ preview: this._previewColumns });
         }

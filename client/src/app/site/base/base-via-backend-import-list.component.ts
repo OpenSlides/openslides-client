@@ -29,7 +29,7 @@ export abstract class BaseViaBackendImportListComponent extends BaseComponent im
      * True if the import is in a state in which an import can be conducted
      */
     public get canImport(): boolean {
-        return this._state === BackendImportPhase.AWAITING_CONFIRM || this.tryAgain;
+        return this._state === BackendImportPhase.AWAITING_CONFIRM;
     }
 
     /**
@@ -42,8 +42,8 @@ export abstract class BaseViaBackendImportListComponent extends BaseComponent im
     /**
      * True if, after an attempted import failed, the view is waiting for the user to confirm the import on the new preview.
      */
-    public get tryAgain(): boolean {
-        return this._state === BackendImportPhase.TRY_AGAIN;
+    public get finishedWithWarnings(): boolean {
+        return this._state === BackendImportPhase.FINISHED_WITH_WARNING;
     }
 
     /**

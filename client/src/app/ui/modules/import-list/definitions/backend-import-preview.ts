@@ -41,11 +41,11 @@ export interface BackendImportSummary {
 }
 
 export interface BackendImportRawPreview {
-    id: number; // id of action_worker to import
+    id?: number; // id of action_worker to import
     state: BackendImportState; // May be `error`, `warning` or `done`
-    headers: BackendImportHeader[];
+    headers?: BackendImportHeader[];
     rows: BackendImportRow[];
-    statistics: BackendImportSummary[];
+    statistics?: BackendImportSummary[];
 }
 
 export interface BackendImportPreview {
@@ -60,10 +60,10 @@ export function isBackendImportRawPreview(obj: any): obj is BackendImportRawPrev
     return (
         obj &&
         typeof obj === `object` &&
-        typeof obj.id === `number` &&
+        (!obj.id || typeof obj.id === `number`) &&
         typeof obj.state === `string` &&
-        Array.isArray(obj.headers) &&
+        (!obj.headers || Array.isArray(obj.headers)) &&
         Array.isArray(obj.rows) &&
-        Array.isArray(obj.statistics)
+        (!obj.statistics || Array.isArray(obj.statistics))
     );
 }
