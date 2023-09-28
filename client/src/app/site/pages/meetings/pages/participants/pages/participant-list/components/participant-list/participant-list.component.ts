@@ -275,7 +275,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                         const nextGroupIds = user.group_ids().filter(id => this.activeMeeting.default_group_id !== id);
                         return {
                             id: user.id,
-                            group_ids: nextGroupIds.concat(chosenGroupIds)
+                            group_ids: [...new Set(nextGroupIds.concat(chosenGroupIds))]
                         };
                     }, ...this.selectedRows)
                     .resolve();
