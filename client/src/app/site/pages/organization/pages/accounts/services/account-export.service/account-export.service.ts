@@ -25,9 +25,8 @@ export class AccountExportService {
     public downloadAccountCsvFile(dataSource: ViewUser[]): void {
         this.csvExportService.export(
             dataSource,
-            Object.entries(accountHeadersAndVerboseNames).map(([key, value]) => ({
-                property: key as keyof ViewUser,
-                label: value
+            Object.keys(accountHeadersAndVerboseNames).map(key => ({
+                property: key as keyof ViewUser
             })),
             `${this.translate.instant(`Accounts`)}.csv`
         );

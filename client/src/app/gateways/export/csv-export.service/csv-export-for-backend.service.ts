@@ -4,7 +4,7 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { ExportServiceModule } from '../export-service.module';
 import { FileExportService } from '../file-export.service';
 import {
-    CsvColumnsDefinition,
+    BackendCsvColumnsDefinition,
     DEFAULT_COLUMN_SEPARATOR,
     DEFAULT_ENCODING,
     DEFAULT_LINE_SEPARATOR,
@@ -30,7 +30,7 @@ export class CsvExportForBackendService {
      */
     public export<T extends BaseViewModel>(
         models: T[],
-        columns: CsvColumnsDefinition<T>,
+        columns: BackendCsvColumnsDefinition<T>,
         filename: string,
         {
             lineSeparator = DEFAULT_LINE_SEPARATOR,
@@ -54,7 +54,7 @@ export class CsvExportForBackendService {
         const header = columns.map(column => {
             let label = ``;
             if (isPropertyDefinition(column)) {
-                label = column.label ? column.label : (column.property as string);
+                label = column.property as string;
             } else if (isMapDefinition(column)) {
                 label = column.label;
             }
