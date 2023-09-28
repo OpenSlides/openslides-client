@@ -105,16 +105,20 @@
     </div>
 
     <!-- Indicator column -->
-    <div *osScrollingTableCell="'indicator'; row as mediafile; config: { width: 40 }" class="fill">
-        <div
-            [matMenuTriggerFor]="singleMediafileMenu"
-            [matMenuTriggerData]="{ mediafile: mediafile }"
-            [matTooltip]="tooltipFn(mediafile)"
-        >
-            <mat-icon class="foreground-icon" *ngIf="mediafile.isFont() && isUsedAsFontFn(mediafile)">
+    <div *osScrollingTableCell="'indicator'; row as mediafile; config: { width: 40 }" class="fill clickable">
+        <div>
+            <mat-icon
+                [matTooltip]="'File is being used' | translate"
+                class="foreground-icon"
+                *ngIf="mediafile.isFont() && isUsedAsFontFn(mediafile)"
+            >
                 text_fields
             </mat-icon>
-            <mat-icon class="foreground-icon" *ngIf="mediafile.isImage() && isUsedAsLogoFn(mediafile)">
+            <mat-icon
+                [matTooltip]="'File is being used' | translate"
+                class="foreground-icon"
+                *ngIf="mediafile.isImage() && isUsedAsLogoFn(mediafile)"
+            >
                 insert_photo
             </mat-icon>
         </div>
