@@ -5,13 +5,10 @@
             <mat-icon>close</mat-icon>
         </button>
     </div>
-    <ng-container *ngIf="opponentName">
-        <div class="center spacer-top-5 spacer-bottom-5">{{ 'Playing against' | translate }} {{ opponentName }}</div>
-    </ng-container>
-    <div #chessboard></div>
-
-    <div class="center spacer-top-5">
-        <button (click)="handleEvent('searchClicked')" *ngIf="state === 'start'" mat-raised-button color="accent">
+    <div *ngIf="opponentName" class="center spacer-top-5">{{ 'Playing against' | translate }} {{ opponentName }}</div>
+    <div #chessboard class="spacer-top-5"></div>
+    <div *ngIf="inMeeting && state === 'start'" class="center spacer-top-5">
+        <button (click)="handleEvent('searchClicked')" mat-raised-button color="accent">
             {{ 'Search player' | translate }}
         </button>
     </div>

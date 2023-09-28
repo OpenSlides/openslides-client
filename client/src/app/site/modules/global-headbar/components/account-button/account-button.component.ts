@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -18,6 +18,7 @@ import { ThemeService } from 'src/app/site/services/theme.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ChessDialogComponent } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
+import { ChessChallengeService } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
 
 import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 
@@ -81,9 +82,11 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         private theme: ThemeService,
         private meetingSettingsService: MeetingSettingsService,
         private activeMeetingIdService: ActiveMeetingIdService,
-        private controller: UserControllerService
+        private controller: UserControllerService,
+        chessChallengeService: ChessChallengeService
     ) {
         super();
+        chessChallengeService.startListening();
     }
 
     public ngOnInit(): void {
@@ -159,7 +162,12 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
         if (this.clickCounter === 4) {
             this.clickCounter = 0;
-            this.dialog.open(ChessDialogComponent, { ...mediumDialogSettings });
+            const config: MatDialogConfig = mediumDialogSettings;
+            const match = this.router.url.match(/.*\/participants\/(\d+)\/?$/);
+            if (match) {
+                config.data = { userId: +match[1] };
+            }
+            this.dialog.open(ChessDialogComponent, config);
         } else {
             this.clickTimeout = <any>setTimeout(() => {
                 this.clickCounter = 0;
