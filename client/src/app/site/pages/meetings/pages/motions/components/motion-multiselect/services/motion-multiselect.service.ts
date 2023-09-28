@@ -389,8 +389,13 @@ export class MotionMultiselectService {
             // `bulkSetStar` does imply that "true" sets favorites while "false" unsets favorites
             const isFavorite = selectedChoice.action === options[0];
             const message = this.translate.instant(`I have ${motions.length} favorite motions. Please wait ...`);
+
+            const filteredMotions = motions
+                .map(motion => this.repo.getViewModel(motion.id))
+                .filter(motion => isFavorite || motion.getPersonalNote());
             this.spinnerService.show(message, {
-                hideAfterPromiseResolved: () => this.personalNoteRepo.setPersonalNote({ star: isFavorite }, ...motions)
+                hideAfterPromiseResolved: () =>
+                    this.personalNoteRepo.setPersonalNote({ star: isFavorite }, ...filteredMotions)
             });
         }
     }
