@@ -1,6 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
-import { UserFieldsets } from 'src/app/domain/fieldsets/user';
+import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { FollowList } from 'src/app/site/services/model-request-builder';
@@ -21,13 +21,13 @@ export const agendaItemFollow: FollowList<any> = [
                 follow: [
                     {
                         idField: `meeting_user_id`,
-                        fieldset: [],
                         follow: [
                             {
                                 idField: `user_id`,
-                                ...UserFieldsets.FullNameSubscription
+                                fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
                             }
-                        ]
+                        ],
+                        ...MeetingUserFieldsets.FullNameSubscription
                     },
                     {
                         idField: `point_of_order_category_id`,
