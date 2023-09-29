@@ -15,6 +15,7 @@ import { Deferred } from '../../infrastructure/utils/promises';
 import { GroupControllerService } from '../pages/meetings/pages/participants';
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 import { NoActiveMeetingError } from '../pages/meetings/services/active-meeting-id.service';
+import { MeetingControllerService } from '../pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
 import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate';
@@ -213,7 +214,8 @@ export class OperatorService {
         private userRepo: UserRepositoryService,
         private groupRepo: GroupControllerService,
         private autoupdateService: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService
+        private modelRequestBuilder: ModelRequestBuilderService,
+        private meetingRepo: MeetingControllerService
     ) {
         this.setNotReady();
         // General environment in which the operator moves
@@ -494,15 +496,39 @@ export class OperatorService {
             return true;
         }
 
-        let result: boolean;
         if (!this._groupIds) {
-            result = false;
+            return false;
         } else if (this.isAuthenticated && this._groupIds.find(id => id === this.adminGroupId)) {
-            result = true;
-        } else {
-            result = checkPerms.some(permission => this._permissions?.includes(permission));
+            return true;
         }
-        return result;
+        return checkPerms.some(permission => this._permissions?.includes(permission));
+    }
+
+    /**
+     * Checks, if the operator has at least one of the given permissions for the given meetingId.
+     * @param checkPerms The permissions to check, if at least one matches.
+     */
+    public hasPermsInMeeting(meetingId: number, ...checkPerms: Permission[]): boolean {
+        if (meetingId === this.activeMeetingId) {
+            return this.hasPerms(...checkPerms);
+        }
+        if (!this._ready) {
+            // console.warn(`has perms: Operator is not ready!`);
+            return false;
+        }
+        if (this.isSuperAdmin) {
+            return true;
+        }
+        const groups = this.user.groups(meetingId);
+        if (!groups || !groups.length) {
+            return false;
+        } else if (
+            this.isAuthenticated &&
+            groups.find(group => group.id === this.meetingRepo.getViewModel(meetingId)?.admin_group_id)
+        ) {
+            return true;
+        }
+        return checkPerms.some(permission => groups.some(group => group.hasPermission(permission)));
     }
 
     /**
