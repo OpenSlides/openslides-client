@@ -110,8 +110,8 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         }
     }
 
-    public csvExportMemberList(): void {
-        this.exporter.downloadAccountCsvFile(this.listComponent.source);
+    public csvExportMemberList(users = this.listComponent.source): void {
+        this.exporter.downloadAccountCsvFile(users);
     }
 
     public getOmlByUser(user: ViewUser): string {
