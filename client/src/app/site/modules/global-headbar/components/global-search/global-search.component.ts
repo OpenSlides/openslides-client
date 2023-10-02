@@ -74,12 +74,8 @@ export class GlobalSearchComponent implements OnDestroy {
         this.filterChangeSubscription.unsubscribe();
     }
 
-    public getPermissionByFilter(filter: string): Permission {
-        if (filter === `topic`) {
-            return Permission.agendaItemCanSee;
-        }
-
-        return (filter + `.can_see`) as Permission;
+    public hasFilterPermission(filter: string): boolean {
+        return !this.activeMeeting.meetingId || this.operator.hasPerms(this.getPermissionByFilter(filter));
     }
 
     public async searchChange(): Promise<void> {
@@ -180,6 +176,14 @@ export class GlobalSearchComponent implements OnDestroy {
         }
 
         return resultText;
+    }
+
+    private getPermissionByFilter(filter: string): Permission {
+        if (filter === `topic`) {
+            return Permission.agendaItemCanSee;
+        }
+
+        return (filter + `.can_see`) as Permission;
     }
 
     private selectedFilters(): string[] {

@@ -21,7 +21,7 @@
 
         <div *ngIf="currentFilters.value.meetingFilter !== 'meetings'" class="filter-section">
             <ng-container *ngFor="let filter of currentlyAvailableFilters">
-                <mat-checkbox *osPerms="getPermissionByFilter(filter)" formControlName="{{ filter }}" class="filter">
+                <mat-checkbox *ngIf="hasFilterPermission(filter)" formControlName="{{ filter }}" class="filter">
                     {{ availableFilters[filter] | translate }}
                 </mat-checkbox>
             </ng-container>
