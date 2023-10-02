@@ -16,7 +16,7 @@ import {
     MatLegacyOptionSelectionChange as MatOptionSelectionChange
 } from '@angular/material/legacy-core';
 import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';

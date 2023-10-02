@@ -16,7 +16,7 @@ import {
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import { MatLegacyTab as MatTab, MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { auditTime, distinctUntilChanged, firstValueFrom, map, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
