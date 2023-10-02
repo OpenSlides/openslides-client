@@ -60,7 +60,7 @@
                         </h3>
                         <div class="info">
                             <span *ngIf="result.obj?.submitter_ids?.length">
-                                {{ 'Submitter' | translate }}:
+                                {{ 'From' | translate }}:
                                 <os-comma-separated-listing
                                     [list]="getNamesBySubmitters(result.obj.submitter_ids)"
                                 ></os-comma-separated-listing>
