@@ -19,6 +19,7 @@ import { RouterModule } from '@angular/router';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { InputModule } from 'src/app/ui/modules/input';
+import { ChessDialogModule } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog';
 
 import { OpenSlidesTranslationModule } from '../translations';
 import { UserComponentsModule } from '../user-components';
@@ -58,6 +59,7 @@ const DECLARATIONS = [GlobalHeadbarComponent];
         ScrollingModule,
         FormsModule,
         ReactiveFormsModule,
+        ChessDialogModule,
         ...MODULES
     ]
 })

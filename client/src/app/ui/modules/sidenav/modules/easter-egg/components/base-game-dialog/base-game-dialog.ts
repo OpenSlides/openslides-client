@@ -56,7 +56,7 @@ export abstract class BaseGameDialogComponent implements OnInit, OnDestroy {
     /**
      * The channel of the opponent.
      */
-    private replyChannel: string | null = null;
+    protected replyChannel: string | null = null;
 
     /**
      * The opponents name.
@@ -227,6 +227,15 @@ export abstract class BaseGameDialogComponent implements OnInit, OnDestroy {
         return this.op.shortName;
     }
 
+    protected setTimeout(): void {
+        if (this.waitTimout) {
+            clearTimeout(<any>this.waitTimout);
+        }
+        this.waitTimout = <any>setTimeout(() => {
+            this.handleEvent(`waitTimeout`);
+        }, 5000);
+    }
+
     /**
      * Main state machine handler. The current state handler will be called with
      * the given event. If the handler returns a state (and not null), this will be
@@ -276,12 +285,7 @@ export abstract class BaseGameDialogComponent implements OnInit, OnDestroy {
             { name: this.getPlayerName() },
             this.replyChannel!
         );
-        if (this.waitTimout) {
-            clearTimeout(<any>this.waitTimout);
-        }
-        this.waitTimout = <any>setTimeout(() => {
-            this.handleEvent(`waitTimeout`);
-        }, 5000);
+        this.setTimeout();
     }
 
     /**

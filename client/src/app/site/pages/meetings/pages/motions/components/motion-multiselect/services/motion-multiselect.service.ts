@@ -7,7 +7,6 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Action } from 'src/app/gateways/actions';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
@@ -24,6 +23,7 @@ import {
     getParticipantMinimalSubscriptionConfig,
     PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
 } from '../../../../participants/participants.subscription';
+import { ParticipantControllerService } from '../../../../participants/services/common/participant-controller.service';
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { PersonalNoteControllerService } from '../../../modules/personal-notes/services';
@@ -45,7 +45,7 @@ export class MotionMultiselectService {
         private translate: TranslateService,
         private promptService: PromptService,
         private choiceService: ChoiceService,
-        private userRepo: UserRepositoryService,
+        private userRepo: ParticipantControllerService,
         private workflowRepo: MotionWorkflowControllerService,
         private categoryRepo: MotionCategoryControllerService,
         private submitterRepo: MotionSubmitterControllerService,
@@ -389,8 +389,13 @@ export class MotionMultiselectService {
             // `bulkSetStar` does imply that "true" sets favorites while "false" unsets favorites
             const isFavorite = selectedChoice.action === options[0];
             const message = this.translate.instant(`I have ${motions.length} favorite motions. Please wait ...`);
+
+            const filteredMotions = motions
+                .map(motion => this.repo.getViewModel(motion.id))
+                .filter(motion => isFavorite || motion.getPersonalNote());
             this.spinnerService.show(message, {
-                hideAfterPromiseResolved: () => this.personalNoteRepo.setPersonalNote({ star: isFavorite }, ...motions)
+                hideAfterPromiseResolved: () =>
+                    this.personalNoteRepo.setPersonalNote({ star: isFavorite }, ...filteredMotions)
             });
         }
     }

@@ -88,7 +88,10 @@ export class UserService {
             .map(userId => parseInt(userId, 10))
             .some(userId => {
                 const toCompare = result[userId];
-                return this.presenter.compareScope(ownScope, toCompare) === -1;
+                return (
+                    this.presenter.compareScope(ownScope, toCompare) === -1 ||
+                    (ownScope.collection === toCompare.collection && ownScope.id !== toCompare.id)
+                );
             });
     }
 
@@ -106,7 +109,7 @@ export class UserService {
             .map(userId => parseInt(userId, 10))
             .every(userId => {
                 const toCompare = result[userId];
-                let hasPerms = this.operator.hasOrganizationPermissions(OML.can_manage_users);
+                let hasPerms = this.operator.hasOrganizationPermissions(toCompare.user_oml || OML.can_manage_users);
                 if (!hasPerms && toCompare.collection === UserScope.COMMITTEE) {
                     hasPerms = hasPerms || this.operator.hasCommitteePermissions(toCompare.id, CML.can_manage);
                 }
@@ -114,8 +117,7 @@ export class UserService {
                     const committee_id = this.meetingRepo.getViewModel(toCompare.id)?.committee_id;
                     hasPerms =
                         hasPerms ||
-                        (this.activeMeetingService.meetingId === toCompare.id &&
-                            this.operator.hasPerms(Permission.userCanManage)) ||
+                        this.operator.hasPermsInMeeting(toCompare.id, Permission.userCanManage) ||
                         (committee_id && this.operator.hasCommitteePermissions(committee_id, CML.can_manage));
                 }
                 return hasPerms;

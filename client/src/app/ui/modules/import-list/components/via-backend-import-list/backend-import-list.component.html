@@ -46,9 +46,9 @@
             </tr>
         </table>
         <div class="margin-top-12 margin-bottom-12" *ngIf="rows?.length">
-            <span *ngIf="tryAgain">
+            <span *ngIf="finishedWithWarning">
                 {{
-                    'The import has failed due to recent changes on the server. Please check the updated preview before clicking on "import" again.'
+                    'The import returned warnings. This does not mean that it failed, but some data may have been imported differently. Usually the warnings will be the same as during the preview, but as there is a possibility that new ones have arisen, the relevant rows will be displayed below.'
                         | translate
                 }}
             </span>
@@ -66,7 +66,7 @@
         </div>
 
         <ng-container *ngIf="!finishedSuccessfully">
-            <h2>{{ 'Preview' | translate }}</h2>
+            <h2>{{ finishedWithWarning ? ('Rows with warnings' | translate) : ('Preview' | translate) }}</h2>
             <div *ngIf="!isInFullscreen">
                 <ng-container *ngTemplateOutlet="previewList"></ng-container>
             </div>
@@ -181,17 +181,17 @@
 </ng-template>
 
 <ng-template #entryContentTemplate let-entry="entry" let-def="def">
-    <ng-container *ngIf="getHeader(def).type === 'object'">
+    <ng-container *ngIf="getHeader(def).is_object">
         <ng-container
             [ngTemplateOutlet]="nonObjectEntryTemplate"
-            [ngTemplateOutletContext]="{ entry: entry.value, type: entry.type }"
+            [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
         ></ng-container>
         <mat-icon class="newBadge" color="accent" inline *ngIf="getActionIcon(entry.info)">
-            {{ getActionIcon(entry.info) }}
+            {{ getEntryIcon(entry) }}
         </mat-icon>
     </ng-container>
     <ng-container
-        *ngIf="getHeader(def).type !== 'object'"
+        *ngIf="!getHeader(def).is_object"
         [ngTemplateOutlet]="nonObjectEntryTemplate"
         [ngTemplateOutletContext]="{ entry, type: getHeader(def).type}"
     ></ng-container>

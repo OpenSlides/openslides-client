@@ -5,6 +5,7 @@ import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { Id } from '../../../domain/definitions/key-types';
 import { Displayable } from '../../../domain/interfaces/displayable';
@@ -495,6 +496,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             id: user.id
         }));
         return this.createAction(UserAction.SET_PRESENT, payload);
+    }
+
+    public accountJsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+        return this.createAction<BackendImportRawPreview>(UserAction.ACCOUNT_JSON_UPLOAD, payload);
+    }
+
+    public accountImport(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
+        return this.createAction<BackendImportRawPreview | void>(UserAction.ACCOUNT_IMPORT, payload);
     }
 
     private sanitizePayload(payload: any): any {

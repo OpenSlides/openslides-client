@@ -155,6 +155,10 @@
             (deselectAll)="deselectAll()"
             (deleting)="deleteUsers()"
         >
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="csvExportMemberList(selectedRows)">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export as CSV' | translate }}</span>
+            </button>
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignMeetingToUsers()">
                 <mat-icon>event_available</mat-icon>
                 <span>{{ 'Set/remove meeting' | translate }} ...</span>

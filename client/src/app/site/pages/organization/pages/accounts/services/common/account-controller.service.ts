@@ -11,6 +11,7 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AccountCommonServiceModule } from './account-common-service.module';
@@ -74,5 +75,13 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
             await this.repo.delete(toDelete).resolve();
         }
         return answer as boolean;
+    }
+
+    public jsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+        return this.repo.accountJsonUpload(payload);
+    }
+
+    public import(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
+        return this.repo.accountImport(payload);
     }
 }

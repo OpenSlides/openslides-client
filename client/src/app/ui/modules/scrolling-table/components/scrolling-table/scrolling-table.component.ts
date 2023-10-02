@@ -141,6 +141,8 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     private _dataSource = new BehaviorSubject<T[]>([]);
     private _dataSourceMap: Mapable<DataSourceProvider<T>> = {};
 
+    private _oldDistTop = 0;
+
     public constructor(private manageService: ScrollingTableManageService, private cd: ChangeDetectorRef) {
         super();
     }
@@ -228,6 +230,12 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 
         if (this.cdkContainer) {
             const distTop = this.cdkContainer.nativeElement.getBoundingClientRect().top;
+            if (this._oldDistTop > distTop) {
+                setTimeout(() => {
+                    this.scrollViewport?.checkViewportSize();
+                }, 10);
+            }
+            this._oldDistTop = distTop;
             return `calc(100vh - ${distTop}px)`;
         }
 

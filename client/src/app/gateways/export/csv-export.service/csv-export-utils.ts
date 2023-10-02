@@ -2,6 +2,14 @@
  * Defines a csv column with a property of the model and an optional label. If this is not given, the
  * translated and capitalized property name is used.
  */
+export interface BackendCsvColumnDefinitionProperty<T> {
+    property: keyof T;
+}
+
+/**
+ * Defines a csv column with a property of the model and an optional label. If this is not given, the
+ * translated and capitalized property name is used.
+ */
 export interface CsvColumnDefinitionProperty<T> {
     label?: string;
     property: keyof T;
@@ -43,6 +51,12 @@ export function isMapDefinition<T>(obj: any): obj is CsvColumnDefinitionMap<T> {
  * a string to be put into the csv.
  */
 export type CsvColumnsDefinition<T> = (CsvColumnDefinitionProperty<T> | CsvColumnDefinitionMap<T>)[];
+
+/**
+ * The definition of columns in the export. Either use a property for every model or do a custom mapping to
+ * a string to be put into the csv.
+ */
+export type BackendCsvColumnsDefinition<T> = (BackendCsvColumnDefinitionProperty<T> | CsvColumnDefinitionMap<T>)[];
 
 export const ISO_8859_15_ENCODING = `iso-8859-15`;
 export const DEFAULT_LINE_SEPARATOR = `\r\n`;
