@@ -14,6 +14,7 @@ export class GlobalSearchService {
 
     public async searchChange(
         searchTerm: string,
+        reqCollections: string[] = [],
         collections: string[] = [],
         meeting?: Id
     ): Promise<{ resultList: GlobalSearchEntry[]; models: GlobalSearchResponse }> {
@@ -21,9 +22,12 @@ export class GlobalSearchService {
             return { resultList: [], models: {} };
         }
 
-        const params: { q: string; m?: string } = { q: searchTerm };
+        const params: { q: string; c?: string; m?: string } = { q: searchTerm };
         if (meeting) {
             params.m = meeting.toString();
+        }
+        if (reqCollections && reqCollections.length) {
+            params.c = reqCollections.join(`,`);
         }
 
         const rawResults: GlobalSearchResponse = await this.http.get(`/system/search`, null, params);
