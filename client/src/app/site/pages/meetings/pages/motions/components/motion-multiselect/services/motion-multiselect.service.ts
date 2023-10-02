@@ -202,18 +202,22 @@ export class MotionMultiselectService {
         this.modelRequestService.closeSubscription(subscriptionName);
         if (selectedChoice) {
             let action: Action<any> | null = null;
-            const users = (selectedChoice.ids as Ids).map(userId => ({ id: userId }));
+            const userIds = selectedChoice.ids as Ids;
+            const reloadedMotions = motions.map(motion => this.repo.getViewModel(motion.id));
+
             if (selectedChoice.action === ADD) {
-                action = Action.from(...motions.map(motion => this.submitterRepo.create(motion, ...users)));
-            } else if (selectedChoice.action === REMOVE) {
                 action = Action.from(
-                    this.submitterRepo.delete(
-                        ...this.getSubmitterIds(
-                            users.map(user => user.id),
-                            motions
+                    ...reloadedMotions
+                        .filter(motion => this.newSubmittersInMotion(userIds, motion).length)
+                        .map(motion =>
+                            this.submitterRepo.create(motion, ...this.newSubmittersInMotion(userIds, motion))
                         )
-                    )
                 );
+            } else if (selectedChoice.action === REMOVE) {
+                const deleteSubmitterIds = this.getSubmitterIds(userIds, reloadedMotions);
+                if (deleteSubmitterIds.length) {
+                    action = Action.from(this.submitterRepo.delete(...deleteSubmitterIds));
+                }
             }
 
             if (action) {
@@ -414,5 +418,12 @@ export class MotionMultiselectService {
             );
         }
         return submitterIds.map(id => ({ id }));
+    }
+    private submitterInMotion(userId: Id, motion: ViewMotion): boolean {
+        return motion.submitters.filter(submitter => userId == submitter.user_id).length > 0;
+    }
+    private newSubmittersInMotion(userIds: Ids, motion: ViewMotion): Identifiable[] {
+        const newSubmitters: Id[] = userIds.filter(userId => !this.submitterInMotion(userId, motion));
+        return newSubmitters.map(id => ({ id }));
     }
 }
