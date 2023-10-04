@@ -240,9 +240,7 @@
     </div>
 
     <div class="centered-text" *osPerms="permission.listOfSpeakersCanBeSpeaker">
-        <span *ngIf="!canAddDueToPresence" translate>
-            You have to be present to add yourself.
-        </span>
+        <span *ngIf="!canAddDueToPresence" translate>You have to be present to add yourself.</span>
     </div>
 
     <div class="add-self-buttons" *osPerms="permission.listOfSpeakersCanBeSpeaker">
