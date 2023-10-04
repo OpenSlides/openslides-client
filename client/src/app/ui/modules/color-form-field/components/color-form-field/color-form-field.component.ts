@@ -29,9 +29,11 @@ export class ColorFormFieldComponent extends BaseFormControlComponent<string> {
             this._defaultDisplayColorSubscription = displayCol.subscribe(col => this.setDefaultDisplayColor(col));
         }
     }
+
     public get defaultDisplayColor(): BehaviorSubject<string> {
         return this._defaultDisplayColor;
     }
+
     private _defaultDisplayColor = new BehaviorSubject<string>(``);
 
     private _defaultDisplayColorSubscription: Subscription;

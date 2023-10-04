@@ -28,6 +28,7 @@ export class GlobalSearchComponent implements OnDestroy {
         user: _(`Participants`),
         mediafile: _(`Files`)
     };
+
     public currentlyAvailableFilters = [];
 
     public currentFilters = this.formBuilder.group({

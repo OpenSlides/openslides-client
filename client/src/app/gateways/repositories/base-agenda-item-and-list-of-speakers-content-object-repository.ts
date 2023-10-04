@@ -23,6 +23,7 @@ export abstract class BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     ) {
         super(repositoryServiceCollector, baseModelCtor);
     }
+
     public getAgendaListTitle(viewModel: V): AgendaListTitle {
         // Return the agenda title with the model's verbose name appended
         const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewModel);

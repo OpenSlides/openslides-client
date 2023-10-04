@@ -20,6 +20,7 @@ export class SlideContainerComponent {
 
     @ViewChild(`slide`, { read: ViewContainerRef, static: true })
     private slide: ViewContainerRef | null = null;
+
     private slideRef!: ComponentRef<BaseSlideComponent<object>>;
 
     /**

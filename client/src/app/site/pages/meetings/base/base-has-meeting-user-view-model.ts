@@ -12,6 +12,7 @@ export abstract class BaseHasMeetingUserViewModel<M extends BaseModel<any> = any
     public get user(): ViewUser {
         return this.meeting_user?.user;
     }
+
     public get user_id(): number {
         return this.meeting_user?.user_id;
     }
@@ -25,6 +26,7 @@ export abstract class BaseHasMeetingUsersViewModel<M extends BaseModel<any> = an
     public get calculated_users(): ViewUser[] {
         return this.meeting_users?.flatMap(user => user.user ?? []);
     }
+
     public get calculated_user_ids(): number[] {
         return this.meeting_users?.flatMap(user => user.user_id ?? []);
     }

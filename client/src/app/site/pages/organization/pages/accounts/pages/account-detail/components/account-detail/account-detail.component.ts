@@ -146,6 +146,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             this.isEditingUser = false;
         }
     }
+
     /**
      * (Re)- send an invitation email for this user after confirmation
      */

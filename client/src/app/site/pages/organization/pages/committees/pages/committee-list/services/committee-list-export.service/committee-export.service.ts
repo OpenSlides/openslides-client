@@ -15,6 +15,7 @@ export class CommitteeExportService {
         private csvExport: CsvExportService,
         private meetingRepo: MeetingControllerService
     ) {}
+
     public export(committees: ViewCommittee[]): void {
         const properties: CsvColumnsDefinition<ViewCommittee> = [
             {

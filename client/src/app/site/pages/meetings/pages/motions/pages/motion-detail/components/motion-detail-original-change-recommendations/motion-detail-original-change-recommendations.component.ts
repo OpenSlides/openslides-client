@@ -83,6 +83,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         this._changeRecommendations = recos;
         this.setTextChangeRecommendations(recos);
     }
+
     public get changeRecommendations(): ViewUnifiedChange[] {
         return this._changeRecommendations;
     }
