@@ -12,16 +12,16 @@
 
     <section class="filters" [formGroup]="currentFilters">
         <mat-radio-group *ngIf="operator.knowsMultipleMeetings" class="filter-section" formControlName="meetingFilter">
-            <mat-radio-button *ngIf="inMeeting" class="filter" value="current">
+            <mat-radio-button *ngIf="inMeeting" color="primary" class="filter" value="current">
                 {{ 'This meeting' | translate }}
             </mat-radio-button>
-            <mat-radio-button class="filter" value="all">{{ 'All meetings' | translate }}</mat-radio-button>
-            <mat-radio-button class="filter" value="meetings">{{ 'Meeting title' | translate }}</mat-radio-button>
+            <mat-radio-button color="primary" class="filter" value="all">{{ 'All meetings' | translate }}</mat-radio-button>
+            <mat-radio-button color="primary" class="filter" value="meetings">{{ 'Meeting title' | translate }}</mat-radio-button>
         </mat-radio-group>
 
         <div *ngIf="currentFilters.value.meetingFilter !== 'meetings'" class="filter-section">
             <ng-container *ngFor="let filter of currentlyAvailableFilters">
-                <mat-checkbox *osPerms="getPermissionByFilter(filter)" formControlName="{{ filter }}" class="filter">
+                <mat-checkbox color="primary" *osPerms="getPermissionByFilter(filter)" formControlName="{{ filter }}" class="filter">
                     {{ availableFilters[filter] | translate }}
                 </mat-checkbox>
             </ng-container>
