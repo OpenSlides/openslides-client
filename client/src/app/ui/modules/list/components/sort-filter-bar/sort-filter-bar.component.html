@@ -11,7 +11,11 @@
     <!-- Current filters -->
     <div class="current-filters h-scroller" *ngIf="filterService">
         <div *ngFor="let filter of filterService.filterStack">
-            <button mat-stroked-button (click)="removeFilterFromStack(filter)">
+            <button
+                mat-stroked-button
+                (mouseup)="removeFilterFromStack(filter)"
+                (click)="removeFilterFromStack(filter)"
+            >
                 <os-icon-container icon="close" class="active-filter">
                     <span class="active-filter">
                         {{ filter.option.label | translate }}
