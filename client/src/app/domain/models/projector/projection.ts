@@ -13,6 +13,7 @@ export class Projection extends BaseModel<Projection> {
     public options!: {
         [key: string]: any;
     };
+
     public weight!: number;
 
     // Calculated field

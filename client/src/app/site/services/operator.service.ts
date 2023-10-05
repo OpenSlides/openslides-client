@@ -148,16 +148,20 @@ export class OperatorService {
     private get activeMeetingId(): number | null {
         return this.activeMeetingService.meetingId;
     }
+
     private get activeMeeting(): ViewMeeting | null {
         return this.activeMeetingService.meeting;
     }
+
     private get anonymousEnabled(): boolean {
         return this.activeMeetingService.guestsEnabled;
     }
+
     private get defaultGroupId(): number | null {
         const activeMeeting = this.activeMeetingService.meeting;
         return activeMeeting ? activeMeeting.default_group_id : null;
     }
+
     private get adminGroupId(): number | null {
         const activeMeeting = this.activeMeetingService.meeting;
         return activeMeeting ? activeMeeting.admin_group_id : null;
@@ -171,6 +175,7 @@ export class OperatorService {
     private readonly _operatorShortNameSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(
         null
     );
+
     private readonly _userSubject = new BehaviorSubject<ViewUser | null>(null);
     private readonly _operatorReadySubject = new BehaviorSubject<boolean>(false);
 
@@ -195,6 +200,7 @@ export class OperatorService {
     private set _permissions(perms: Permission[] | undefined) {
         this._permissionsSubject.next(perms);
     }
+
     private get _permissions(): Permission[] | undefined {
         return this._permissionsSubject.value;
     }
