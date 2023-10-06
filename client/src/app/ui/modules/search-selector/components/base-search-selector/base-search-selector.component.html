@@ -68,6 +68,7 @@
         >
             {{ noOptionsFoundLabel | translate }}
         </mat-option>
+        <mat-option *ngIf="!multiple" translate>Clear selection</mat-option>
         <mat-option
             #currentOption
             *cdkVirtualFor="let selectableItem of filteredItemsObservable | async"
