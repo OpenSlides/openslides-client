@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import {
     defer,
     filter,
+    first,
     firstValueFrom,
     forkJoin,
     from,
@@ -13,7 +14,6 @@ import {
     retry,
     Subject,
     Subscription,
-    take,
     timeout,
     timer
 } from 'rxjs';
@@ -27,6 +27,7 @@ import { environment } from 'src/environments/environment';
 
 const SHARED_WORKER_MESSAGE_ACK_TIMEOUT = 4000;
 const SHARED_WORKER_READY_TIMEOUT = 10000;
+const SHARED_WORKER_READY_TIMEOUT_TERMINATE = 2000;
 const SHARED_WORKER_WAIT_AFTER_TERMINATE = 2000;
 const SHARED_WORKER_HEALTHCHECK_INTERVAL = 5000;
 const SHARED_WORKER_HEALTH_RESPONSE_TIMEOUT = 8000;
@@ -106,8 +107,8 @@ export class SharedWorkerService {
                 const worker = new SharedWorker(new URL(`../../worker/default-shared-worker.worker`, import.meta.url), {
                     name: `openslides-shared-worker`
                 });
-                this.conn = worker.port;
 
+                this.conn = worker.port;
                 if (checkReload) {
                     await this.handleBrowserReload();
                 }
@@ -239,19 +240,30 @@ export class SharedWorkerService {
                     .map(nav => nav.name)
                     .includes(`reload`))
         ) {
-            const waitReady = this.waitForMessage(SHARED_WORKER_READY_TIMEOUT, (data: any) => data === `ready`);
-            (<MessagePort>this.conn).start();
-            await waitReady;
+            let readyFailed = false;
+            try {
+                await this.waitForMessage(
+                    SHARED_WORKER_READY_TIMEOUT_TERMINATE,
+                    (data: any) => data === `ready`,
+                    () => (<MessagePort>this.conn).start()
+                );
+            } catch (_) {
+                readyFailed = true;
+                console.debug(`[shared worker] failed ready wait`);
+            }
 
-            const waitTerminated = this.waitForMessage(
-                SHARED_WORKER_READY_TIMEOUT,
-                (data: any) => data?.action === `terminating` || data?.action === `terminate-rejected`
-            );
-            this.sendMessageForce(`control`, { action: `terminate` });
-            const terminateResp = await waitTerminated;
-            if (terminateResp.data.action === `terminate-rejected`) {
-                this.ready = true;
-                return;
+            try {
+                const terminateResp = await this.waitForMessage(
+                    readyFailed ? SHARED_WORKER_READY_TIMEOUT_TERMINATE : SHARED_WORKER_READY_TIMEOUT,
+                    (data: any) => data?.action === `terminating` || data?.action === `terminate-rejected`,
+                    () => this.sendMessageForce(`control`, { action: `terminate` })
+                );
+                if (terminateResp.data.action === `terminate-rejected`) {
+                    this.ready = true;
+                    return;
+                }
+            } catch (_) {
+                console.debug(`[shared worker] failed term wait`);
             }
             await new Promise(r => setTimeout(r, SHARED_WORKER_WAIT_AFTER_TERMINATE));
 
@@ -267,11 +279,11 @@ export class SharedWorkerService {
         isMessage: (data?: any) => boolean,
         doBefore?: () => void
     ): Promise<MessageEvent<WorkerResponse>> {
+        const eventListener = merge(fromEvent(this.conn, `message`), fromEvent(this.broadcastChannel, `message`));
         const promise = firstValueFrom(
-            fromEvent(this.conn, `message`).pipe(
-                filter(e => isMessage((<any>e)?.data)),
-                timeout({ first: timeoutDuration, with: () => of(false) }),
-                take(1)
+            eventListener.pipe(
+                first(e => isMessage((<any>e)?.data)),
+                timeout({ first: timeoutDuration, with: () => of(false) })
             )
         );
 
