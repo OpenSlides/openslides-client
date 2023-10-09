@@ -479,11 +479,15 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
 
     protected tapViewModels(_viewModels: V[]): void {}
 
-    protected createAction<T = void>(name: string, payload: unknown | unknown[]): Action<T> {
+    protected createAction<T = void>(
+        name: string,
+        payload: unknown | unknown[],
+        handle_separately?: boolean
+    ): Action<T> {
         if (!Array.isArray(payload)) {
             payload = [payload];
         }
-        return this.actions.create({ action: name, data: payload as unknown[] });
+        return this.actions.createFromArray([{ action: name, data: payload as unknown[] }], handle_separately ?? false);
     }
 
     /**
