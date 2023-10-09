@@ -32,18 +32,23 @@ export abstract class BaseViewModel<M extends BaseModel = any> implements Detail
     public getModel(): M {
         return this._model;
     }
+
     public toString(): string {
         return this.getTitle();
     }
+
     public toJSON(): M {
         return this.getModel();
     }
+
     public getUpdatedModelData(update: Partial<M>): object {
         return this.getModel().getUpdatedData(update);
     }
+
     public canAccess(): boolean {
         return true;
     }
+
     /**
      * Override in children
      */

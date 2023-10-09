@@ -28,6 +28,7 @@ export class ViewPoll<C extends PollContentObject = any>
     public get poll(): Poll {
         return this._model;
     }
+
     public static COLLECTION = Poll.COLLECTION;
 
     public set hasVoted(value: boolean | undefined) {

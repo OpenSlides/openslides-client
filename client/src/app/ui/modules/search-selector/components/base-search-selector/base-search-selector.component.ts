@@ -145,6 +145,12 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     @Input()
     public wider = false;
 
+    /**
+     * If true, a clear selection option is added to the selection list.
+     */
+    @Input()
+    public addClearSelection = false;
+
     public itemSizeInPx = 50;
 
     public get panelHeight(): number {

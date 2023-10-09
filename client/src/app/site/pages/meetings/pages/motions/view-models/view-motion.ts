@@ -238,6 +238,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         recoMode: ChangeRecoMode,
         includeUnchanged?: boolean
     ) => DiffLinesInParagraph[] = () => [];
+
     public getParagraphTitleByParagraph!: (paragraph: DiffLinesInParagraph) => string | null;
     // This is set by the repository
     public getNumberOrTitle!: () => string;

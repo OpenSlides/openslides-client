@@ -46,11 +46,13 @@ export class InteractionReceiveService {
         }
         return this._showLiveConfObservable;
     }
+
     private _showLiveConfObservable: Observable<boolean>;
 
     public get conferenceState(): ConferenceState {
         return this.conferenceStateSubject.value;
     }
+
     public set conferenceState(state: ConferenceState) {
         this.setConferenceState(state);
     }

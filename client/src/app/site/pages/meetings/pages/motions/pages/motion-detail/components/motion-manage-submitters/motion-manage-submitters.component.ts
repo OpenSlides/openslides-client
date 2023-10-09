@@ -3,7 +3,7 @@ import { BehaviorSubject, filter, firstValueFrom, map, Observable } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { Action } from 'src/app/gateways/actions';
+import { Action, ActionService } from 'src/app/gateways/actions';
 import { UserSelectionData } from 'src/app/site/pages/meetings/modules/participant-search-selector';
 import { ViewMotion, ViewMotionSubmitter } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
@@ -77,7 +77,8 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
         private userRepository: ParticipantControllerService,
         private motionSubmitterRepository: MotionSubmitterControllerService,
         public perms: MotionPermissionService,
-        private motionController: MotionControllerService
+        private motionController: MotionControllerService,
+        private actionService: ActionService
     ) {
         super();
 
@@ -111,13 +112,17 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
                     ...Array.from(this._addSubmittersSet).map(id => ({ id }))
                 )
             );
+
+            if (Object.values(this._removeSubmittersMap).length > 0) {
+                actions[0].setSendActionFn(r => this.actionService.sendRequests(r, true));
+            }
         }
-        await Action.from(...actions).resolve();
-        const submitters = await Promise.all(
-            this.editSubmitterSubject.value.map(async val =>
+
+        const submittersPromise = Promise.all(
+            this.editSubmitterSubject.value.map(val =>
                 val.user_id
                     ? val
-                    : await firstValueFrom(
+                    : firstValueFrom(
                           this.motionController.getViewModelObservable(this.motion.id).pipe(
                               map(motion => motion.submitters.find(sub => sub.user_id === val.id)),
                               filter(sub => !!sub)
@@ -125,7 +130,11 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
                       )
             )
         );
-        this.motionSubmitterRepository.sort(submitters, this.motion);
+
+        await Action.from(...actions).resolve();
+
+        const submitters = await submittersPromise;
+        this.motionSubmitterRepository.sort(submitters, this.motion).resolve();
         this.isEditMode = false;
     }
 

@@ -10,6 +10,7 @@ xdescribe(`TreeSortService`, () => {
         getTitle() {
             return `Title`;
         }
+
         getListTitle() {
             return `LTitle`;
         }

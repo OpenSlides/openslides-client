@@ -116,6 +116,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         this._defaultColumns = cols;
         this.setHeaders({ default: cols });
     }
+
     public get defaultColumns(): ImportListHeaderDefinition[] {
         return this._defaultColumns;
     }

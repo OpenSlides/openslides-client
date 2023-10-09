@@ -17,9 +17,11 @@ export class MeetingComponentServiceCollectorService {
     public get titleService(): Title {
         return this.componentServiceCollector.titleService;
     }
+
     public get matSnackBar(): MatSnackBar {
         return this.componentServiceCollector.matSnackBar;
     }
+
     public get storage(): StorageService {
         return this.componentServiceCollector.storage;
     }

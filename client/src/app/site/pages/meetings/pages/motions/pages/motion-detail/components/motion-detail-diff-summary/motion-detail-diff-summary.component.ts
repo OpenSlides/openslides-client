@@ -33,8 +33,10 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
 
     @Input()
     public changes: ViewUnifiedChange[] = [];
+
     @Input()
     public scrollToChange: ViewUnifiedChange | null = null;
+
     @Input()
     public elContainer: any;
 

@@ -10,9 +10,11 @@ export class ViewPollCandidateList extends BaseViewModel<PollCandidateList> impl
     public get entries(): SortedListEntry[] {
         return this.poll_candidates;
     }
+
     public get poll_candidate_list(): PollCandidateList {
         return this._model;
     }
+
     public static COLLECTION = PollCandidateList.COLLECTION;
 
     public getShortenedTitle(length: number): string {

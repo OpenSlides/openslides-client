@@ -61,6 +61,7 @@ module.exports = {
                     'property': 'asObservable',
                     'message': 'Please use a typecast or explicitly instantiate a new Observable.'
                 }],
+                'lines-between-class-members': ['error', 'always', { 'exceptAfterSingleLine': true }],
 
                 'jsdoc/require-example': ['off'],
                 'jsdoc/newline-after-description': ['off'],

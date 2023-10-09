@@ -39,6 +39,7 @@ export class ChoiceService {
         clearChoiceOption?: string,
         sortFn?: (a: T, b: T) => number
     ): Promise<ChoiceAnswer<T>>;
+
     public async open<T extends Selectable = Selectable>(
         titleOrConfig: string | ChoiceDialogConfig,
         choices?: Observable<T[]> | T[],
