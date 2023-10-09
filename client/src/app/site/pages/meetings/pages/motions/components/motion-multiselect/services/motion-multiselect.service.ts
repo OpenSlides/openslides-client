@@ -419,9 +419,11 @@ export class MotionMultiselectService {
         }
         return submitterIds.map(id => ({ id }));
     }
+
     private submitterInMotion(userId: Id, motion: ViewMotion): boolean {
         return motion.submitters.some(submitter => userId == submitter.user_id);
     }
+
     private newSubmittersInMotion(userIds: Ids, motion: ViewMotion): Identifiable[] {
         const newSubmitters: Id[] = userIds.filter(userId => !this.submitterInMotion(userId, motion));
         return newSubmitters.map(id => ({ id }));
