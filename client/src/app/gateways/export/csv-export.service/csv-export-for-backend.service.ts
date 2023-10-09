@@ -76,8 +76,6 @@ export class CsvExportForBackendService {
                             value = ``;
                         } else if (property === true) {
                             value = `1`;
-                        } else if (property === false) {
-                            value = `0`;
                         } else if (typeof property === `function`) {
                             const bindedFn = property.bind(model); // bind model to access 'this'
                             value = bindedFn()?.toString();
@@ -103,7 +101,7 @@ export class CsvExportForBackendService {
         }
     }
 
-    public dummyCSVExport<I>(headerAndVerboseNames: I, rows: I[], filename: string): void {
+    public dummyCSVExport<I>(headerAndVerboseNames: { [key in keyof I]: any }, rows: I[], filename: string): void {
         const separator = DEFAULT_COLUMN_SEPARATOR;
         const encoding: `utf-8` | `iso-8859-15` = DEFAULT_ENCODING as any;
         const headerRow = [Object.keys(headerAndVerboseNames).join(separator)];
