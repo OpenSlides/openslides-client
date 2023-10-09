@@ -14,6 +14,7 @@ export class GlobalSearchService {
 
     public async searchChange(
         searchTerm: string,
+        reqCollections: string[] = [],
         collections: string[] = [],
         meeting?: Id
     ): Promise<{ resultList: GlobalSearchEntry[]; models: GlobalSearchResponse }> {
@@ -21,9 +22,12 @@ export class GlobalSearchService {
             return { resultList: [], models: {} };
         }
 
-        const params: { q: string; m?: string } = { q: searchTerm };
+        const params: { q: string; c?: string; m?: string } = { q: searchTerm };
         if (meeting) {
             params.m = meeting.toString();
+        }
+        if (reqCollections && reqCollections.length) {
+            params.c = reqCollections.join(`,`);
         }
 
         const rawResults: GlobalSearchResponse = await this.http.get(`/system/search`, null, params);
@@ -101,6 +105,12 @@ export class GlobalSearchService {
         const content = results[fqid].content;
         const collection = collectionFromFqid(fqid);
         const id = content.sequential_number || idFromFqid(fqid);
+        let meeting = null;
+        if (content.meeting_id) {
+            meeting = results[`meeting/${content.meeting_id}`]?.content;
+        } else if (content.owner_id && content.owner_id.startsWith(`meeting`)) {
+            meeting = results[content.owner_id]?.content;
+        }
 
         return {
             title: this.getTitle(collection, content),
@@ -109,7 +119,7 @@ export class GlobalSearchService {
             fqid,
             collection,
             url: this.getUrl(collection, id, content),
-            meeting: results[`meeting/${content.meeting_id}`]?.content,
+            meeting,
             committee: results[`committee/${content.committee_id}`]?.content,
             score: results[fqid].score || 0
         };

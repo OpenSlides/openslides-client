@@ -64,12 +64,10 @@ export class GlobalSearchComponent implements OnDestroy {
         this.updateCurrentlyAvailableFilters();
         this.filterChangeSubscription = this.currentFilters.valueChanges
             .pipe(startWith(this.currentFilters.value), pairwise())
-            .subscribe(([last, next]) => {
-                if (last.meetingFilter !== next.meetingFilter) {
+            .subscribe(() => {
+                if (this.searchTerm) {
                     this.searchChange();
                 }
-
-                this.updateFilteredResults();
             });
     }
 
@@ -77,12 +75,8 @@ export class GlobalSearchComponent implements OnDestroy {
         this.filterChangeSubscription.unsubscribe();
     }
 
-    public getPermissionByFilter(filter: string): Permission {
-        if (filter === `topic`) {
-            return Permission.agendaItemCanSee;
-        }
-
-        return (filter + `.can_see`) as Permission;
+    public hasFilterPermission(filter: string): boolean {
+        return !this.activeMeeting.meetingId || this.operator.hasPerms(this.getPermissionByFilter(filter));
     }
 
     public async searchChange(): Promise<void> {
@@ -97,8 +91,13 @@ export class GlobalSearchComponent implements OnDestroy {
         this.cd.markForCheck();
 
         try {
+            const filters =
+                this.currentFilters.get(`meetingFilter`).getRawValue() === `meetings`
+                    ? [`meeting`]
+                    : this.selectedFilters();
             const search = await this.globalSearchService.searchChange(
                 this.searchTerm,
+                filters,
                 this.currentlyAvailableFilters,
                 searchMeeting
             );
@@ -178,6 +177,24 @@ export class GlobalSearchComponent implements OnDestroy {
         }
 
         return resultText;
+    }
+
+    private getPermissionByFilter(filter: string): Permission {
+        if (filter === `topic`) {
+            return Permission.agendaItemCanSee;
+        }
+
+        return (filter + `.can_see`) as Permission;
+    }
+
+    private selectedFilters(): string[] {
+        const filters = [];
+        for (const filter of this.currentlyAvailableFilters) {
+            if (this.currentFilters.get(filter) && this.currentFilters.get(filter).getRawValue()) {
+                filters.push(filter);
+            }
+        }
+        return filters;
     }
 
     private updateFilteredResults(): void {
