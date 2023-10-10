@@ -8,18 +8,14 @@
 /** Global component style definition */
 @import 'global-components-style.scss';
 
-/** Mix the component-related style-rules. Every single custom style goes here */
-@mixin openslides-components-theme($theme) {
-    @include mat.all-legacy-component-themes($theme);
-    @include os-component-themes($theme);
-}
-
 .openslides-light-theme {
-    @include openslides-components-theme($openslides-light-theme);
+    @include mat.all-legacy-component-themes($openslides-light-theme);
+    @include os-component-themes($openslides-light-theme);
 }
 
 .openslides-dark-theme {
-    @include openslides-components-theme($openslides-dark-theme);
+    @include mat.all-legacy-component-colors($openslides-dark-theme);
+    @include os-component-themes($openslides-dark-theme);
 }
 
 [class^='openslides-'][class*='-light-theme'] {
