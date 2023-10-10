@@ -89,7 +89,10 @@
                 </ng-container>
 
                 <!-- New Ballot button -->
-                <div class="new-ballot-button" *ngIf="assignment && assignment.candidatesAsUsers.length && hasPerms('createPoll')">
+                <div
+                    class="new-ballot-button"
+                    *ngIf="assignment && assignment.candidatesAsUsers.length && hasPerms('createPoll')"
+                >
                     <button mat-stroked-button (click)="openDialog()">
                         <mat-icon>add</mat-icon>
                         <span>{{ 'New ballot' | translate }}</span>
@@ -162,7 +165,7 @@
                     >
                         <!-- implicit item references into the component using ng-template slot -->
                         <ng-template let-item>
-                            <div [ngClass]="{'single-candidate-line': true, 'deleted-candidate': !item.user}">
+                            <div [ngClass]="{ 'single-candidate-line': true, 'deleted-candidate': !item.user }">
                                 <span>{{ item.getTitle() }}</span>
                                 <span *ngIf="hasPerms('manage')">
                                     <button
