@@ -7,6 +7,7 @@ import {
     GetUserRelatedModelsUser
 } from 'src/app/gateways/presenter';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 interface UserDeleteDialogConfig {
     toRemove: ViewUser[];
@@ -50,7 +51,10 @@ export class UserDeleteDialogComponent implements OnInit {
 
     public selectedUser: GetUserRelatedModelsUser | ViewUser = null;
 
-    public constructor(@Inject(MAT_DIALOG_DATA) private data: UserDeleteDialogConfig) {}
+    public constructor(
+        @Inject(MAT_DIALOG_DATA) private data: UserDeleteDialogConfig,
+        private operator: OperatorService
+    ) {}
 
     public ngOnInit(): void {
         this.selectedUser = this.toDeleteUsers[0] || this.toRemoveUsers[0];
@@ -66,5 +70,9 @@ export class UserDeleteDialogComponent implements OnInit {
 
     public getManagedCommittees(user: GetUserRelatedModelsUser): GetUserRelatedModelsCommittee[] {
         return (user.committees || []).filter(committee => committee.cml === CML.can_manage);
+    }
+
+    public isOperator(user: GetUserRelatedModelsUser): boolean {
+        return user.name == this.operator.user.name;
     }
 }

@@ -16,6 +16,7 @@ export interface GetUserRelatedModelsUser {
         motion_submitter_ids: Id[];
     }[];
     committees?: GetUserRelatedModelsCommittee[];
+    name?: string;
     error?: string; // This is in case the presenter fails in an unpredicted way
 }
 

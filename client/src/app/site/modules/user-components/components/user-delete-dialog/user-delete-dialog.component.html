@@ -115,6 +115,11 @@
                     <li>{{ 'Is manager' | translate }}</li>
                 </ul>
             </ng-container>
+            <ng-container *ngIf="isOperator(user)">
+                <p class="padding-left-25">
+                    {{ 'The account is the operator and cannot be deleted' | translate }}
+                </p>
+            </ng-container>
         </ng-container>
         <ng-container *ngIf="user.error">
             <p class="padding-left-25">
