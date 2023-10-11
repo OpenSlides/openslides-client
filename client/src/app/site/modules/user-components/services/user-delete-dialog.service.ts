@@ -52,7 +52,8 @@ export class UserDeleteDialogService extends BaseDialogService<
         }
         const toDelete = data.toDelete.map(user => ({
             ...result[user.id],
-            name: user.getTitle()
+            name: user.getTitle(),
+            id: user.id
         }));
 
         const module = await import(`../user-components.module`).then(m => m.UserComponentsModule);

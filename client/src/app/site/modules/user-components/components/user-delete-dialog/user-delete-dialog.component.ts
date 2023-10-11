@@ -73,6 +73,6 @@ export class UserDeleteDialogComponent implements OnInit {
     }
 
     public isOperator(user: GetUserRelatedModelsUser): boolean {
-        return user.name == this.operator.user.name;
+        return user.id == this.operator.operatorId;
     }
 }
