@@ -52,8 +52,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
 
     public dataSource: MatTableDataSource<HistoryPosition> = new MatTableDataSource<HistoryPosition>();
 
-    public pageSizes = [50, 100, 150, 200, 250];
-
     /**
      * The form for the selection of the model
      */
