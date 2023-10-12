@@ -66,18 +66,18 @@
                         </h3>
                         <div class="info">
                             <span *ngIf="result.obj?.submitter_ids?.length">
-                                {{ 'From' | translate }}:
+                                {{ 'by' | translate }}
                                 <os-comma-separated-listing
                                     [list]="getNamesBySubmitters(result.obj.submitter_ids)"
                                 ></os-comma-separated-listing>
                             </span>
                             <span>{{ 'Sequential number' | translate }} {{ result.obj.sequential_number }}</span>
                         </div>
-                        <p *ngIf="result.text" [innerHtml]="getTextSnippet(result.text)"></p>
+                        <p *ngIf="result.text" class="text-snippet" [innerHtml]="getTextSnippet(result.text)"></p>
                     </a>
                     <a *ngSwitchDefault [routerLink]="result.url" mat-dialog-close>
                         <h3 *ngIf="result.title" [innerHtml]="result.title"></h3>
-                        <p *ngIf="result.text" [innerHtml]="getTextSnippet(result.text)"></p>
+                        <p *ngIf="result.text" class="text-snippet" [innerHtml]="getTextSnippet(result.text)"></p>
                     </a>
                 </ng-container>
             </div>

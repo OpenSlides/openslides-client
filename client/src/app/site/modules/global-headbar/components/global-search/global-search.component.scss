@@ -96,6 +96,12 @@
                 padding: 0 4px;
             }
         }
+
+        .text-snippet {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
 }
 
