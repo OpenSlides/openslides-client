@@ -7,7 +7,7 @@ export interface GlobalSearchEntry {
     collection: string;
     url?: string;
     obj?: any;
-    meeting?: { id: Id; name: string };
+    meeting?: { id: Id; name: string; motions_show_sequential_number?: boolean };
     committee?: { id: Id; name: string };
     score?: number;
 }

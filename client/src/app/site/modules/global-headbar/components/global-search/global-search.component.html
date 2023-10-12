@@ -65,7 +65,9 @@
                                     [list]="getNamesBySubmitters(result.obj.submitter_ids)"
                                 ></os-comma-separated-listing>
                             </span>
-                            <span>{{ 'Sequential number' | translate }} {{ result.obj.sequential_number }}</span>
+                            <span *ngIf="result.meeting.motions_show_sequential_number">
+                                {{ 'Sequential number' | translate }} {{ result.obj.sequential_number }}
+                            </span>
                         </div>
                         <p *ngIf="result.text" class="text-snippet" [innerHtml]="getTextSnippet(result.text)"></p>
                     </a>
