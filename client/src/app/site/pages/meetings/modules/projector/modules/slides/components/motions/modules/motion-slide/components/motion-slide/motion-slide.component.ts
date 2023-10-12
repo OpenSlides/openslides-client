@@ -16,7 +16,6 @@ import {
 } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/services';
 import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { MotionFormatService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-format.service';
-import { MotionLineNumberingService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-line-numbering.service';
 import { ViewMotionAmendedParagraph } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion-amended-paragraph';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -159,7 +158,6 @@ export class MotionSlideComponent
     public constructor(
         protected override translate: TranslateService,
         motionRepo: MotionControllerService,
-        private motionLineNumbering: MotionLineNumberingService,
         private motionFormatService: MotionFormatService,
         private changeRepo: MotionChangeRecommendationControllerService,
         private lineNumbering: LineNumberingService,
