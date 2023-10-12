@@ -31,12 +31,6 @@
 
 <mat-dialog-content class="search-results">
     <ng-container *ngIf="searching === null">
-        <div *ngIf="resultCount" class="info result-info">
-            <span>{{ 'Total results' | translate }}: {{ resultCount }}</span>
-            <span *ngIf="resultCount !== filteredResultCount">
-                {{ 'Filtered' | translate }}: {{ filteredResultCount }}
-            </span>
-        </div>
         <section class="search-results-category alternating-list">
             <div *ngFor="let result of filteredResults" class="search-results-entry">
                 <div class="breadcrumb">
@@ -89,4 +83,5 @@
             <mat-spinner></mat-spinner>
         </div>
     </ng-container>
+    <div style="display: none">Results {{ filteredResultCount }}/{{ resultCount }}</div>
 </mat-dialog-content>
