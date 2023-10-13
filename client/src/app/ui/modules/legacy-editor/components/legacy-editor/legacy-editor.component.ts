@@ -6,12 +6,12 @@ import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import { RawEditorSettings } from 'tinymce';
 
 @Component({
-    selector: `os-editor`,
-    templateUrl: `./editor.component.html`,
-    styleUrls: [`./editor.component.scss`],
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => EditorComponent), multi: true }]
+    selector: `os-legacy-editor`,
+    templateUrl: `./legacy-editor.component.html`,
+    styleUrls: [`./legacy-editor.component.scss`],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => LegacyEditorComponent), multi: true }]
 })
-export class EditorComponent extends BaseFormControlComponent<string> implements AfterViewInit {
+export class LegacyEditorComponent extends BaseFormControlComponent<string> implements AfterViewInit {
     @Input()
     public customSettings: object = {};
 

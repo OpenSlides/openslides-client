@@ -12,8 +12,8 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { UserComponentsModule } from 'src/app/site/modules/user-components';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
-import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { LegacyEditorModule } from 'src/app/ui/modules/legacy-editor';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
@@ -31,7 +31,7 @@ import { ParticipantDetailRoutingModule } from './participant-detail-routing.mod
         ParticipantExportModule,
         RouterModule,
         SearchSelectorModule,
-        EditorModule,
+        LegacyEditorModule,
         OpenSlidesTranslationModule.forChild(),
         UserComponentsModule,
         PipesModule,

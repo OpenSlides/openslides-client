@@ -106,11 +106,11 @@
 
     <!-- The HTML Editor for motions and traditional amendments -->
     <ng-container *ngIf="editMotion && !isParagraphBasedAmendment">
-        <os-editor
+        <os-legacy-editor
             formControlName="text"
             [required]="!isParagraphBasedAmendment"
             [customSettings]="tinyMceConfig"
-        ></os-editor>
+        ></os-legacy-editor>
         <div
             *ngIf="
                 contentForm.get('text')?.invalid && (contentForm.get('text')?.dirty || contentForm.get('text')?.touched)
@@ -157,12 +157,12 @@
         ></div>
 
         <!-- The HTML Editor -->
-        <os-editor
+        <os-legacy-editor
             *ngIf="editMotion"
             formControlName="reason"
             [required]="reasonRequired"
             [customSettings]="tinyMceConfig"
-        ></os-editor>
+        ></os-legacy-editor>
         <div
             *ngIf="
                 reasonRequired &&

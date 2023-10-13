@@ -113,7 +113,7 @@
                     {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}
                 </span>
             </h3>
-            <os-editor [formControlName]="paragraph.paragraphNo"></os-editor>
+            <os-legacy-editor [formControlName]="paragraph.paragraphNo"></os-legacy-editor>
             <div *ngIf="isControlInvalid(paragraph.paragraphNo)" class="red-warning-text">
                 {{ 'This field is required.' | translate }}
             </div>

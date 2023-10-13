@@ -178,7 +178,7 @@
             <div *ngIf="isAllowed('seePersonal')" class="spacer-bottom-20">
                 <!-- The HTML Editor -->
                 <h4>{{ 'About me' | translate }}</h4>
-                <os-editor formControlName="about_me"></os-editor>
+                <os-legacy-editor formControlName="about_me"></os-legacy-editor>
             </div>
 
             <div *ngIf="isAllowed('manage')">

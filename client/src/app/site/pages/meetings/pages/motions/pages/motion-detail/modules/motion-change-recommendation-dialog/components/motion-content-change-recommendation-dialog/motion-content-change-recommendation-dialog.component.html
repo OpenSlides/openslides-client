@@ -19,7 +19,7 @@
             {{ lineRange.to }}:
         </h4>
         <div>
-            <os-editor formControlName="text" [customSettings]="getTinyMceSettings()"></os-editor>
+            <os-legacy-editor formControlName="text" [customSettings]="getTinyMceSettings()"></os-legacy-editor>
         </div>
 
         <mat-checkbox formControlName="public">{{ 'Public' | translate }}</mat-checkbox>

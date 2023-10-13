@@ -134,7 +134,10 @@
                 <!-- The editor -->
                 <div *ngIf="setting.type === 'markupText'">
                     <h4>{{ setting.label | translate }}</h4>
-                    <os-editor formControlName="value" [customSettings]="getTinyMceSettings()"></os-editor>
+                    <os-legacy-editor
+                        formControlName="value"
+                        [customSettings]="getTinyMceSettings()"
+                    ></os-legacy-editor>
                     <span matSuffix>
                         <mat-icon pull="right" class="red-warning-text" *ngIf="updateSuccessIcon">error</mat-icon>
                     </span>

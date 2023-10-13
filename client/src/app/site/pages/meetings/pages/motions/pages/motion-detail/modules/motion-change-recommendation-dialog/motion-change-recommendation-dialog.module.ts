@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { EditorModule } from 'src/app/ui/modules/editor';
+import { LegacyEditorModule } from 'src/app/ui/modules/legacy-editor';
 
 import { MotionContentChangeRecommendationDialogComponent } from './components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionTitleChangeRecommendationDialogComponent } from './components/motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
@@ -25,7 +25,7 @@ import { MotionTitleChangeRecommendationDialogComponent } from './components/mot
         MatButtonModule,
         ReactiveFormsModule,
         OpenSlidesTranslationModule.forChild(),
-        EditorModule
+        LegacyEditorModule
     ]
 })
 export class MotionChangeRecommendationDialogModule {

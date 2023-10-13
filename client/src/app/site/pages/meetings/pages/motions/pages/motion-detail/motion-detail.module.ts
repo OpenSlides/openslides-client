@@ -25,9 +25,9 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { ActionCardModule } from 'src/app/ui/modules/action-card';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
-import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { LegacyEditorModule } from 'src/app/ui/modules/legacy-editor';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { SortingModule } from 'src/app/ui/modules/sorting';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
@@ -107,7 +107,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         IconContainerModule,
         SortingModule,
         SearchSelectorModule,
-        EditorModule,
+        LegacyEditorModule,
         ActionCardModule,
         HeadBarModule,
         AttachmentControlModule,

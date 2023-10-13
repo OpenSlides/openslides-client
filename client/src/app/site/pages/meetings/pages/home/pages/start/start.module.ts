@@ -5,8 +5,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { EditorModule } from 'src/app/ui/modules/editor/editor.module';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { LegacyEditorModule } from 'src/app/ui/modules/legacy-editor';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
 import { StartComponent } from './components/start/start.component';
@@ -18,7 +18,7 @@ import { StartRoutingModule } from './start-routing.module';
         CommonModule,
         StartRoutingModule,
         HeadBarModule,
-        EditorModule,
+        LegacyEditorModule,
         PipesModule,
         MatCardModule,
         MatInputModule,
