@@ -13,7 +13,6 @@ import { HistoryPosition, HistoryPresenterService } from 'src/app/gateways/prese
 import { SearchDeletedModelsPresenterService } from 'src/app/gateways/presenter/search-deleted-models-presenter.service';
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import {
     collectionIdFromFqid,
@@ -29,6 +28,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
 import { ViewMotionState } from '../../../motions';
+import { ParticipantControllerService } from '../../../participants/services/common/participant-controller.service';
 import { Position } from '../../definitions';
 import { HistoryService } from '../../services/history.service';
 
@@ -116,7 +116,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         private historyService: HistoryService,
         private motionRepo: MotionRepositoryService,
         private assignmentRepo: AssignmentRepositoryService,
-        private userRepo: MeetingUserRepositoryService,
+        private userRepo: ParticipantControllerService,
         private collectionMapperService: CollectionMapperService
     ) {
         super(componentServiceCollector, translate);
