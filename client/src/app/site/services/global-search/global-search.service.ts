@@ -56,7 +56,7 @@ export class GlobalSearchService {
             const result = results[fqid];
             if (result.matched_by) {
                 for (const field of Object.keys(result.matched_by)) {
-                    if (result.content[field] && field != `title`) {
+                    if (result.content[field] && !this.isTitleField(collectionFromFqid(fqid), field)) {
                         for (const word of result.matched_by[field]) {
                             result.content[field] = `${result.content[field]}`.replace(
                                 new RegExp(word, `gi`),
@@ -66,6 +66,14 @@ export class GlobalSearchService {
                     }
                 }
             }
+        }
+    }
+
+    private isTitleField(collection: string, field: string): boolean {
+        if (collection === `user`) {
+            return [`first_name`, `last_name`, `username`, `title`].includes(field);
+        } else {
+            return [`name`, `title`].includes(field);
         }
     }
 
