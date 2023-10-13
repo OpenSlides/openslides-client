@@ -87,13 +87,13 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             historyRepos.push(this.userRepo);
         }
         return historyRepos.mapToObject(repo => {
-            return { [repo.collection]: repo };
+            return { [repo.collection || repo.repo?.collection]: repo };
         });
     }
 
     public get modelPlaceholder(): string {
         const value = this.modelSelectForm.controls[`collection`].value;
-        if (!value) {
+        if (!value || !this.modelsRepoMap[value]) {
             return `-`;
         } else {
             return this.modelsRepoMap[value].getVerboseName();
@@ -256,7 +256,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
      * Serves as an entry point for the time travel routine
      */
     public async onClickRow(position: Position): Promise<void> {
-        console.log(`click on row`, position, this.operator.hasOrganizationPermissions(OML.superadmin));
         if (!this.operator.hasOrganizationPermissions(OML.superadmin)) {
             return;
         }
@@ -264,7 +263,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         await this.historyService.enterHistoryMode(this.currentFqid, position);
         const [collection, id] = collectionIdFromFqid(this.currentFqid);
         const element = this.viewModelStore.get(collection, id);
-        console.log(`go to element:`, element);
         if (element && isDetailNavigable(element)) {
             this.router.navigate([element.getDetailStateUrl()]);
         } else {
