@@ -177,6 +177,7 @@ export class TreeService {
 
     /**
      * Removes the `item`-property from any node in the given tree.
+     * Deletes empty children-arrays.
      *
      * @param tree The tree with items
      * @returns The tree without items
@@ -188,7 +189,7 @@ export class TreeService {
                 id: node.id
             };
             if (node.children) {
-                nodeWithoutItem.children = this.stripTree(node.children);
+                nodeWithoutItem.children = node.children.length ? this.stripTree(node.children) : undefined;
             }
             return nodeWithoutItem;
         });
