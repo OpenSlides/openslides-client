@@ -11,6 +11,7 @@ import { filter, pairwise, startWith } from 'rxjs';
     providedIn: `root`
 })
 export class RoutingStateService {
+    private skipUnsafeRouteCheck = false;
     /**
      * Hold the previous URL
      */
@@ -32,7 +33,7 @@ export class RoutingStateService {
      * If this fails, the open nav button should be shown
      */
     public get isSafePrevUrl(): boolean {
-        if (this._previousUrl) {
+        if (this._previousUrl && !this.skipUnsafeRouteCheck) {
             return !this.unsafeUrls.some(unsafeUrl => this._previousUrl?.includes(unsafeUrl));
         } else {
             return true;
@@ -62,6 +63,7 @@ export class RoutingStateService {
                 pairwise()
             )
             .subscribe((event: any[]) => {
+                this.skipUnsafeRouteCheck = router.getCurrentNavigation()?.extras?.state[`canGoBack`] ?? false;
                 this._previousUrl = event[0]?.urlAfterRedirects ?? this._currentUrl;
                 const currentNavigationExtras = router.getCurrentNavigation()?.extras;
                 if (currentNavigationExtras && currentNavigationExtras.state && currentNavigationExtras.state[`back`]) {
