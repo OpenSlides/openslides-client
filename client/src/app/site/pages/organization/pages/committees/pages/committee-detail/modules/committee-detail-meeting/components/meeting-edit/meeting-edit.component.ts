@@ -107,7 +107,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public committee!: ViewCommittee;
 
     public get meetingUsers(): ViewUser[] {
-        return this.editMeeting?.calculated_users || [];
+        const users = this.editMeeting?.calculated_users;
+        if (users && !users.some(u => u.id === this.operator.operatorId)) {
+            users.push(this.operator.user);
+        }
+
+        return users || [];
     }
 
     private meetingId: Id | null = null;
