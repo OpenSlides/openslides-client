@@ -87,7 +87,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             historyRepos.push(this.userRepo);
         }
         return historyRepos.mapToObject(repo => {
-            return { [repo.collection || repo.repo?.collection]: repo };
+            return { [repo.collection]: repo };
         });
     }
 
