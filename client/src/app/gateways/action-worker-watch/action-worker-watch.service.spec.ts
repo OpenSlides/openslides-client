@@ -124,9 +124,11 @@ class MockWaitForActionDialogService {
         delete currentDialogs[workerId];
         this.currentDialogs.next(currentDialogs);
     }
+
     public async openClosingPrompt(snapshot: Partial<ActionWorker> & { closed: number }): Promise<void> {
         this.closingPromptOpenFor.push(snapshot);
     }
+
     public addNewDialog(reason: WaitForActionReason, data: WaitForActionData): void {
         const currentDialogs = copy(this.currentDialogs.value);
         currentDialogs[data.workerId] = { reason, data };
@@ -154,6 +156,7 @@ class MockActionWorkerRepositoryService {
     public set viewModelList(list: ViewActionWorker[]) {
         this._viewModelListSubject.next(list);
     }
+
     public get viewModelList(): ViewActionWorker[] {
         return this._viewModelListSubject.value;
     }

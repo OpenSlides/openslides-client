@@ -151,6 +151,7 @@ export class MotionCsvExportService {
 
         this.csvExport.export(motions, exportProperties, this.translate.instant(`Motions`) + `.csv`);
     }
+
     /**numberOrTitle
      * Exports the call list.
      *

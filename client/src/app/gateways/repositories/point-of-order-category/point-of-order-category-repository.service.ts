@@ -24,6 +24,7 @@ export class PointOfOrderCategoryRepositoryService
 
     public getVerboseName = (plural?: boolean): string =>
         plural ? `Point of order categories` : `Point of order category`;
+
     public getTitle = (viewModel: PointOfOrderCategory): string => viewModel.text;
 
     public create(pointOfOrderCategory: any, meeting_id: Id = this.activeMeetingId): Action<Identifiable> {

@@ -101,18 +101,14 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
         }
     }
 
+    @Input()
+    public addBottomSpacer = false;
+
     @Output()
     public selectionChanged = new EventEmitter<ScrollingTableSelectionChangeEvent<T>>();
 
     public get hasDataObservable(): Observable<boolean> {
         return this.dataSource.pipe(map(items => !!items.length));
-    }
-
-    public get ngStyle(): object {
-        return {
-            height: `${this.rowHeight}px`,
-            maxHeight: `${this.rowHeight}px`
-        };
     }
 
     public get isSelectionMode(): boolean {
@@ -145,6 +141,8 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     private _dataSource = new BehaviorSubject<T[]>([]);
     private _dataSourceMap: Mapable<DataSourceProvider<T>> = {};
 
+    private _oldDistTop = 0;
+
     public constructor(private manageService: ScrollingTableManageService, private cd: ChangeDetectorRef) {
         super();
     }
@@ -175,6 +173,14 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 
     public deselectAll(): void {
         this.changeSelection(this._fullSource, false);
+    }
+
+    public getNgStyle(isLast = false): object {
+        return {
+            height: `${this.rowHeight}px`,
+            maxHeight: `${this.rowHeight}px`,
+            ...(this.addBottomSpacer && isLast ? { marginBottom: `50px` } : {})
+        };
     }
 
     private select(rows: T[]): void {
@@ -224,6 +230,12 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 
         if (this.cdkContainer) {
             const distTop = this.cdkContainer.nativeElement.getBoundingClientRect().top;
+            if (this._oldDistTop > distTop) {
+                setTimeout(() => {
+                    this.scrollViewport?.checkViewportSize();
+                }, 10);
+            }
+            this._oldDistTop = distTop;
             return `calc(100vh - ${distTop}px)`;
         }
 

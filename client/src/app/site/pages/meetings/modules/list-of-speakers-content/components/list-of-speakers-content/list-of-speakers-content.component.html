@@ -1,4 +1,4 @@
-<mat-card class="os-card">
+<mat-card class="os-card" [ngClass]="{ 'spacer-bottom-60': addBottomSpacer }">
     <!-- Title -->
     <os-projectable-title class="los-title" *ngIf="!explicitTitleContent" [model]="listOfSpeakers">
         <mat-icon
@@ -237,6 +237,10 @@
             placeholder="{{ 'Select or search new speaker ...' | translate }}"
             (userSelected)="addUserAsNewSpeaker($event)"
         ></os-participant-search-selector>
+    </div>
+
+    <div class="centered-text" *osPerms="permission.listOfSpeakersCanBeSpeaker">
+        <span *ngIf="!canAddDueToPresence" translate>You have to be present to add yourself.</span>
     </div>
 
     <div class="add-self-buttons" *osPerms="permission.listOfSpeakersCanBeSpeaker">

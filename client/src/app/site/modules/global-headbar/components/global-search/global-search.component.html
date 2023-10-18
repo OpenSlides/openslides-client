@@ -21,7 +21,7 @@
 
         <div *ngIf="currentFilters.value.meetingFilter !== 'meetings'" class="filter-section">
             <ng-container *ngFor="let filter of currentlyAvailableFilters">
-                <mat-checkbox *osPerms="getPermissionByFilter(filter)" formControlName="{{ filter }}" class="filter">
+                <mat-checkbox *ngIf="hasFilterPermission(filter)" formControlName="{{ filter }}" class="filter">
                     {{ availableFilters[filter] | translate }}
                 </mat-checkbox>
             </ng-container>
@@ -31,6 +31,12 @@
 
 <mat-dialog-content class="search-results">
     <ng-container *ngIf="searching === null">
+        <div *ngIf="resultCount" class="info result-info">
+            <span>{{ 'Total results' | translate }}: {{ resultCount }}</span>
+            <span *ngIf="resultCount !== filteredResultCount">
+                {{ 'Filtered' | translate }}: {{ filteredResultCount }}
+            </span>
+        </div>
         <section class="search-results-category alternating-list">
             <div *ngFor="let result of filteredResults" class="search-results-entry">
                 <div class="breadcrumb">
@@ -60,7 +66,7 @@
                         </h3>
                         <div class="info">
                             <span *ngIf="result.obj?.submitter_ids?.length">
-                                {{ 'Submitter' | translate }}:
+                                {{ 'From' | translate }}:
                                 <os-comma-separated-listing
                                     [list]="getNamesBySubmitters(result.obj.submitter_ids)"
                                 ></os-comma-separated-listing>
@@ -77,10 +83,6 @@
             </div>
         </section>
         <h3 *ngIf="noResults" class="search-no-results">{{ 'No results found' | translate }}</h3>
-        <div *ngIf="resultCount" class="info result-info">
-            <span>{{ 'Total' | translate }}: {{ resultCount }}</span>
-            <span>{{ 'Filtered' | translate }}: {{ filteredResultCount }}</span>
-        </div>
     </ng-container>
     <ng-container *ngIf="searching !== null">
         <div class="spinner-container">

@@ -31,7 +31,10 @@ export class TreeService {
             name: item.getTitle(),
             id: item.id,
             item,
-            children
+            children,
+            toString: function () {
+                return this.item.toString();
+            }
         };
     }
 
@@ -174,6 +177,7 @@ export class TreeService {
 
     /**
      * Removes the `item`-property from any node in the given tree.
+     * Deletes empty children-arrays.
      *
      * @param tree The tree with items
      * @returns The tree without items
@@ -185,7 +189,7 @@ export class TreeService {
                 id: node.id
             };
             if (node.children) {
-                nodeWithoutItem.children = this.stripTree(node.children);
+                nodeWithoutItem.children = node.children.length ? this.stripTree(node.children) : undefined;
             }
             return nodeWithoutItem;
         });
@@ -301,7 +305,7 @@ export class TreeService {
         if (!deleteIds.length) {
             return tree;
         }
-        deleteIds = deleteIds.sort();
+        deleteIds = deleteIds.sort((a, b) => a - b);
         tree = tree.sort((a, b) =>
             a.position != null && b.position != null ? a.position - b.position : b != null ? -1 : 0
         );
@@ -352,7 +356,10 @@ export class TreeService {
             isSeen: true,
             expandable: false,
             id: item.id,
-            position: index + oldMaxPosition + 1
+            position: index + oldMaxPosition + 1,
+            toString: function () {
+                return this.item.toString();
+            }
         }));
         return tree.concat(items);
     }
@@ -406,7 +413,10 @@ export class TreeService {
             expandable: !!children,
             isExpanded: !!children,
             level,
-            isSeen: true
+            isSeen: true,
+            toString: function () {
+                return this.item.toString();
+            }
         };
         return new Proxy(node, {
             get: (target: FlatNode<T>, property: keyof Identifiable & Displayable & T) => {

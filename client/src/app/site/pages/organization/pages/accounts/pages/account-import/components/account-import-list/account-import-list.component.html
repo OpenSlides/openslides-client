@@ -11,9 +11,9 @@
     </div>
 </os-head-bar>
 
-<os-import-list
-    [columns]="generateImportColumns"
+<os-backend-import-list
+    [defaultColumns]="columns"
     [importer]="importer"
     [possibleFields]="possibleFields"
     modelName="Account"
-></os-import-list>
+></os-backend-import-list>

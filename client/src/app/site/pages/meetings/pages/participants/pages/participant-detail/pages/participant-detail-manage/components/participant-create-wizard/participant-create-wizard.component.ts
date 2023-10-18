@@ -283,7 +283,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     private async checkScope(): Promise<void> {
         if (this._accountId) {
-            this._isUserInScope = await this.userService.isUserInSameScope(this._accountId);
+            this._isUserInScope = await this.userService.hasScopeManagePerms(this._accountId);
             if (this._isUserInScope && this.account?.id !== this._accountId) {
                 this.account = new User(
                     (await this.modelRequestService.fetch(getParticipantDetailSubscription(this._accountId)))[`user`][

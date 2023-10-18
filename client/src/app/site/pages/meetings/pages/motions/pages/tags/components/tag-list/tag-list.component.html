@@ -15,6 +15,7 @@
     [hiddenInMobile]="['menu']"
     [(selectedRows)]="selectedRows"
     [filterProps]="['name']"
+    [addBottomSpacer]="hasInteractionState | async"
 >
     <!-- Name column -->
     <div *osScrollingTableCell="'name'; value as name" class="cell-slot fill">

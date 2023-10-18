@@ -44,9 +44,11 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
     public get selectedCategory(): ViewMotionCategory {
         return this._selectedCategory;
     }
+
     public set selectedCategory(category: ViewMotionCategory) {
         this._selectedCategory = category;
     }
+
     private _selectedCategory!: ViewMotionCategory;
 
     /**

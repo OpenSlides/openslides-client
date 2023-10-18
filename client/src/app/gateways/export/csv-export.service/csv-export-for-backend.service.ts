@@ -4,7 +4,7 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { ExportServiceModule } from '../export-service.module';
 import { FileExportService } from '../file-export.service';
 import {
-    CsvColumnsDefinition,
+    BackendCsvColumnsDefinition,
     DEFAULT_COLUMN_SEPARATOR,
     DEFAULT_ENCODING,
     DEFAULT_LINE_SEPARATOR,
@@ -30,7 +30,7 @@ export class CsvExportForBackendService {
      */
     public export<T extends BaseViewModel>(
         models: T[],
-        columns: CsvColumnsDefinition<T>,
+        columns: BackendCsvColumnsDefinition<T>,
         filename: string,
         {
             lineSeparator = DEFAULT_LINE_SEPARATOR,
@@ -54,7 +54,7 @@ export class CsvExportForBackendService {
         const header = columns.map(column => {
             let label = ``;
             if (isPropertyDefinition(column)) {
-                label = column.label ? column.label : (column.property as string);
+                label = column.property as string;
             } else if (isMapDefinition(column)) {
                 label = column.label;
             }
@@ -76,8 +76,6 @@ export class CsvExportForBackendService {
                             value = ``;
                         } else if (property === true) {
                             value = `1`;
-                        } else if (property === false) {
-                            value = `0`;
                         } else if (typeof property === `function`) {
                             const bindedFn = property.bind(model); // bind model to access 'this'
                             value = bindedFn()?.toString();
@@ -103,7 +101,7 @@ export class CsvExportForBackendService {
         }
     }
 
-    public dummyCSVExport<I>(headerAndVerboseNames: I, rows: I[], filename: string): void {
+    public dummyCSVExport<I>(headerAndVerboseNames: { [key in keyof I]: any }, rows: I[], filename: string): void {
         const separator = DEFAULT_COLUMN_SEPARATOR;
         const encoding: `utf-8` | `iso-8859-15` = DEFAULT_ENCODING as any;
         const headerRow = [Object.keys(headerAndVerboseNames).join(separator)];

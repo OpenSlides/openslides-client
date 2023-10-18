@@ -17,6 +17,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
+import { InteractionService } from '../../../../../interaction/services/interaction.service';
 import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service';
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
 import { GroupControllerService, ViewGroup } from '../../../../modules';
@@ -99,6 +100,10 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      */
     public filterProps = [`full_name`, `groups`, `structure_level`, `number`, `delegationName`];
 
+    public get hasInteractionState(): Observable<boolean> {
+        return this.interactionService.isConfStateNone.pipe(map(isNone => !isNone));
+    }
+
     private _allowSelfSetPresent = false;
     private _isElectronicVotingEnabled = false;
     private _isUserInScope = true;
@@ -122,7 +127,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         private infoDialog: ParticipantListInfoDialogService,
         private organizationSettingsService: OrganizationSettingsService,
         private route: ActivatedRoute,
-        private prompt: PromptService
+        private prompt: PromptService,
+        private interactionService: InteractionService
     ) {
         super(componentServiceCollector, translate);
 
@@ -269,7 +275,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                         const nextGroupIds = user.group_ids().filter(id => this.activeMeeting.default_group_id !== id);
                         return {
                             id: user.id,
-                            group_ids: nextGroupIds.concat(chosenGroupIds)
+                            group_ids: [...new Set(nextGroupIds.concat(chosenGroupIds))]
                         };
                     }, ...this.selectedRows)
                     .resolve();

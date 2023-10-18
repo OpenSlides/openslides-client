@@ -53,7 +53,7 @@ module.exports = {
                     }
                 ],
                 '@typescript-eslint/quotes': ['error', 'backtick', { 'avoidEscape': false }],
-                '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
+                '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'varsIgnorePattern': '^_' }],
                 'simple-import-sort/imports': 'error',
                 'simple-import-sort/exports': 'error',
                 'unused-imports/no-unused-imports': 'error',
@@ -61,6 +61,7 @@ module.exports = {
                     'property': 'asObservable',
                     'message': 'Please use a typecast or explicitly instantiate a new Observable.'
                 }],
+                'lines-between-class-members': ['error', 'always', { 'exceptAfterSingleLine': true }],
 
                 'jsdoc/require-example': ['off'],
                 'jsdoc/newline-after-description': ['off'],

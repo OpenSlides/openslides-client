@@ -89,6 +89,9 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         this._hiddenInMobile = [`indicator`, ...cols];
     }
 
+    @Input()
+    public addBottomSpacer = false;
+
     /**
      * Determine generally hidden columns
      */

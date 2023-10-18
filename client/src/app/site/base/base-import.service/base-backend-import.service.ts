@@ -282,15 +282,24 @@ export abstract class BaseBackendImportService implements BackendImportService {
                 isBackendImportRawPreview(result)
             ) as BackendImportRawPreview[];
             this.processRawPreviews(updatedPreviews);
-            if (this.previewHasRowErrors) {
+            const statesSet = new Set(updatedPreviews.map(preview => preview.state));
+            if (statesSet.has(BackendImportState.Error)) {
                 this._currentImportPhaseSubject.next(BackendImportPhase.ERROR);
+            } else if (statesSet.has(BackendImportState.Warning)) {
+                this.processRawPreviews(
+                    updatedPreviews
+                        .filter(preview => preview.state === BackendImportState.Warning)
+                        .map(preview => ({
+                            ...preview,
+                            rows: preview.rows.filter(row => row.messages && row.messages.length)
+                        }))
+                );
+                this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED_WITH_WARNING);
             } else {
-                this._currentImportPhaseSubject.next(BackendImportPhase.TRY_AGAIN);
+                this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED);
+                this._csvLines = [];
+                return true;
             }
-        } else {
-            this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED);
-            this._csvLines = [];
-            return true;
         }
         return false;
     }

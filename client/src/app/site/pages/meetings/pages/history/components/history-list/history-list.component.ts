@@ -205,7 +205,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     private filterHistoryData(positions: HistoryPosition[], fqid: Fqid): HistoryPosition[] {
         return positions.filter(position => {
             const newInformation = [];
-            if (!Array.isArray(position.information)) {
+            if (position.information && !Array.isArray(position.information)) {
                 position.information = position.information[fqid];
             }
             if (!position.information) {

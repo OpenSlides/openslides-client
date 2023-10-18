@@ -59,6 +59,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `is_active_in_organization_id`,
             `template_for_organization_id`,
             `meeting_user_ids`,
+            `user_ids`,
             `description`,
             `location`,
             `organization_tag_ids`,
@@ -136,6 +137,13 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             update.start_time = this.anyDateToUnix(update.start_time);
             update.end_time = this.anyDateToUnix(update.end_time);
         }
+        if (meeting && meeting.start_time === undefined && update.start_time === null) {
+            delete update.start_time;
+        }
+        if (meeting && meeting.end_time === undefined && update.end_time === null) {
+            delete update.end_time;
+        }
+
         if (update.organization_tag_ids === null) {
             update.organization_tag_ids = [];
         }

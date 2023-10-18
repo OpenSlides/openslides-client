@@ -58,6 +58,7 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
     public get empty(): boolean {
         return !this.contentForm.value.length;
     }
+
     public get controlType(): string {
         return `attachment-control`;
     }

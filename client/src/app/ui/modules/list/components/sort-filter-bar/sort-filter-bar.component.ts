@@ -117,6 +117,9 @@ export class SortFilterBarComponent<V extends Identifiable> {
     @Input()
     public totalCount = 0;
 
+    @Input()
+    public showSpacer = false;
+
     public get sortOptions(): OsSortOption<V>[] {
         return this.sortService.sortOptions;
     }

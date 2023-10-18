@@ -10,6 +10,7 @@ export class ViewPollCandidate extends BaseViewModel<PollCandidate> implements S
     public get poll_candidate(): PollCandidate {
         return this._model;
     }
+
     public static COLLECTION = PollCandidate.COLLECTION;
 
     public getSubtitle(): string {

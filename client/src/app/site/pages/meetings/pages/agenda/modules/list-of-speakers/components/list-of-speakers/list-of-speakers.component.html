@@ -33,6 +33,7 @@
         #content
         [listOfSpeakers]="viewListOfSpeakers"
         [sortMode]="manualSortMode"
+        [addBottomSpacer]="true"
         (isListOfSpeakersEmptyEvent)="isListOfSpeakersEmpty = $event"
         (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
     ></os-list-of-speakers-content>

@@ -13,64 +13,70 @@
 </os-head-bar>
 
 <div class="head-spacer"></div>
-<mat-accordion class="os-card">
-    <mat-expansion-panel *ngFor="let section of this.commentSections" multiple="false">
-        <mat-expansion-panel-header>
-            <mat-panel-title>
-                <div class="header-container">
-                    <div class="name ellipsis-overflow">
-                        {{ section.name }}
-                    </div>
-                    <div class="read">
-                        <os-icon-container icon="visibility">
-                            <ng-container *ngIf="section.read_groups?.length">
-                                <ng-container
-                                    *ngTemplateOutlet="groupList; context: { groups: section.read_groups }"
-                                ></ng-container>
+<div class="spacer-bottom-60">
+    <mat-accordion class="os-card">
+        <mat-expansion-panel *ngFor="let section of this.commentSections" multiple="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <div class="header-container">
+                        <div class="name ellipsis-overflow">
+                            {{ section.name }}
+                        </div>
+                        <div class="read">
+                            <os-icon-container icon="visibility">
+                                <ng-container *ngIf="section.read_groups?.length">
+                                    <ng-container
+                                        *ngTemplateOutlet="groupList; context: { groups: section.read_groups }"
+                                    ></ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="section.read_groups.length === 0">&ndash;</ng-container>
+                            </os-icon-container>
+                        </div>
+                        <div class="write">
+                            <os-icon-container icon="edit">
+                                <ng-container *ngIf="section.write_groups?.length">
+                                    <ng-container
+                                        *ngTemplateOutlet="groupList; context: { groups: section.write_groups }"
+                                    ></ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="section.write_groups.length === 0">&ndash;</ng-container>
+                            </os-icon-container>
+                        </div>
+                        <div class="submitter-write">
+                            <ng-container *ngIf="section.submitter_can_write">
+                                <i>{{ 'Allow submitter edit' | translate }}</i>
                             </ng-container>
-                            <ng-container *ngIf="section.read_groups.length === 0">&ndash;</ng-container>
-                        </os-icon-container>
+                        </div>
                     </div>
-                    <div class="write">
-                        <os-icon-container icon="edit">
-                            <ng-container *ngIf="section.write_groups?.length">
-                                <ng-container
-                                    *ngTemplateOutlet="groupList; context: { groups: section.write_groups }"
-                                ></ng-container>
-                            </ng-container>
-                            <ng-container *ngIf="section.write_groups.length === 0">&ndash;</ng-container>
-                        </os-icon-container>
-                    </div>
-                    <div class="submitter-write">
-                        <ng-container *ngIf="section.submitter_can_write">
-                            <i>{{ 'Allow submitter edit' | translate }}</i>
-                        </ng-container>
-                    </div>
-                </div>
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <h3>{{ 'Name' | translate }}</h3>
-        <div class="spacer-left">{{ section.name }}</div>
-        <h3>{{ 'Groups with read permissions' | translate }}</h3>
-        <ul *ngFor="let group of section.read_groups">
-            <li>{{ group.getTitle() | translate }}</li>
-        </ul>
-        <div class="spacer-left" *ngIf="section.read_groups.length === 0">{{ 'No groups selected' | translate }}</div>
-        <h3>{{ 'Groups with write permissions' | translate }}</h3>
-        <ul *ngFor="let group of section.write_groups">
-            <li>{{ group.getTitle() | translate }}</li>
-        </ul>
-        <div class="spacer-left" *ngIf="section.write_groups.length === 0">{{ 'No groups selected' | translate }}</div>
-        <mat-action-row>
-            <button mat-button (click)="openDialog(section)" mat-icon-button>
-                <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-button (click)="onDeleteButton(section)" mat-icon-button>
-                <mat-icon>delete</mat-icon>
-            </button>
-        </mat-action-row>
-    </mat-expansion-panel>
-</mat-accordion>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <h3>{{ 'Name' | translate }}</h3>
+            <div class="spacer-left">{{ section.name }}</div>
+            <h3>{{ 'Groups with read permissions' | translate }}</h3>
+            <ul *ngFor="let group of section.read_groups">
+                <li>{{ group.getTitle() | translate }}</li>
+            </ul>
+            <div class="spacer-left" *ngIf="section.read_groups.length === 0">
+                {{ 'No groups selected' | translate }}
+            </div>
+            <h3>{{ 'Groups with write permissions' | translate }}</h3>
+            <ul *ngFor="let group of section.write_groups">
+                <li>{{ group.getTitle() | translate }}</li>
+            </ul>
+            <div class="spacer-left" *ngIf="section.write_groups.length === 0">
+                {{ 'No groups selected' | translate }}
+            </div>
+            <mat-action-row>
+                <button mat-button (click)="openDialog(section)" mat-icon-button>
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-button (click)="onDeleteButton(section)" mat-icon-button>
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-action-row>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
 
 <mat-menu #commentListMenu="matMenu">
     <button mat-menu-item routerLink="sort">

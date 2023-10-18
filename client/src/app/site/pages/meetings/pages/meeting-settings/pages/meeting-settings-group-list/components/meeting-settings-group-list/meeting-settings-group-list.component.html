@@ -9,18 +9,25 @@
     </div>
 </os-head-bar>
 
-<os-grid>
-    <os-tile *ngFor="let group of this.groups" orientation="vertical" [preferredSize]="2">
-        <div class="settings-group-card" [osPaper]="2" [osPaperRaise]="true" [routerLink]="group.label.toLowerCase()">
-            <div class="flex-center background-selected">
-                <mat-icon>{{ group.icon }}</mat-icon>
+<div class="spacer-bottom-60">
+    <os-grid>
+        <os-tile *ngFor="let group of this.groups" orientation="vertical" [preferredSize]="2">
+            <div
+                class="settings-group-card"
+                [osPaper]="2"
+                [osPaperRaise]="true"
+                [routerLink]="group.label.toLowerCase()"
+            >
+                <div class="flex-center background-selected">
+                    <mat-icon>{{ group.icon }}</mat-icon>
+                </div>
+                <div class="flex-center-unsafe text-center background-card">
+                    {{ group.label | translate }}
+                </div>
             </div>
-            <div class="flex-center-unsafe text-center background-card">
-                {{ group.label | translate }}
-            </div>
-        </div>
-    </os-tile>
-</os-grid>
+        </os-tile>
+    </os-grid>
+</div>
 
 <mat-menu #settingsMenu="matMenu">
     <button mat-menu-item (click)="resetAll()">

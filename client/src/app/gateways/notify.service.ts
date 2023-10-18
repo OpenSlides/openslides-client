@@ -30,7 +30,6 @@ interface NotifyBase<T> {
  */
 export interface NotifyRequest<T> extends NotifyBase<T> {
     channel_id: string;
-    to_all?: boolean;
 
     /**
      * Targeted Meeting as MeetingID
@@ -83,7 +82,7 @@ interface ChannelIdResponse {
 interface NotifySendOptions<T> {
     name: string;
     message: T;
-    toAll?: boolean;
+    meeting?: number;
     users?: number[];
     channels?: string[];
 }
@@ -145,12 +144,17 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
     }
 
     /**
-     * Sents a notify message to all users (so all clients that are online).
+     * Sents a notify message to all users of a meeting.
      * @param name The name of the notify message
      * @param content The payload to send
+     * @param meetingId The meeting id to send this message to
      */
-    public async sendToAllUsers<T>(name: string, content: T): Promise<void> {
-        await this.send(this.buildRequest({ name, message: content, toAll: true }));
+    public async sendToMeeting<T>(
+        name: string,
+        content: T,
+        meetingId: number = this.activeMeetingIdService.meetingId
+    ): Promise<void> {
+        await this.send(this.buildRequest({ name, message: content, meeting: meetingId }));
     }
 
     /**
@@ -197,8 +201,8 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
             message: data.message,
             channel_id: this.channelId
         };
-        if (data.toAll === true) {
-            notify.to_all = true;
+        if (data.meeting) {
+            notify.to_meeting = data.meeting;
         }
         if (data.users) {
             notify.to_users = data.users;
@@ -206,7 +210,7 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
         if (data.channels) {
             notify.to_channels = data.channels;
         }
-        if (!(data.channels || data.toAll == true || data.users)) {
+        if (!(data.channels || data.users)) {
             notify.to_meeting = this.activeMeetingIdService.meetingId!;
         }
         return notify;
