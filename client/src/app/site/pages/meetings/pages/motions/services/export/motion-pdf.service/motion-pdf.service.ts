@@ -324,7 +324,7 @@ export class MotionPdfService {
         }
 
         // referring motions
-        if (!infoToExport || infoToExport.includes(`referring_motions`)) {
+        if (this.meetingSettingsService.instant(`motions_show_referring_motions`) && (!infoToExport || infoToExport.includes(`referring_motions`))) {
             if (motion.referenced_in_motion_recommendation_extensions.length) {
                 const referringMotions = motion.referenced_in_motion_recommendation_extensions
                     .naturalSort(this.translate.currentLang, [`number`, `title`])
