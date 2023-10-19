@@ -75,6 +75,9 @@
                     placeholder="{{ 'Default vote weight' | translate }}"
                     formControlName="default_vote_weight"
                 />
+                <mat-error *ngIf="isDefaultVoteWeightError" translate>
+                    Please select a vote weight bigger than or equal to zero.
+                </mat-error>
             </mat-form-field>
         </div>
 
