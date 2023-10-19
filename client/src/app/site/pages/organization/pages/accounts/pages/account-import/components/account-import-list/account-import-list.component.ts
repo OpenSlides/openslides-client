@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
@@ -17,14 +18,18 @@ export class AccountImportListComponent extends BaseViaBackendImportListComponen
 
     public columns: ImportListHeaderDefinition[] = Object.keys(accountHeadersAndVerboseNames).map(header => ({
         property: header,
-        label: (<any>accountHeadersAndVerboseNames)[header],
+        label: ((<any>accountHeadersAndVerboseNames)[header] as string).replace(
+            `%gender%`,
+            this.orgaSettings.instant(`genders`).join(`, `)
+        ),
         isTableColumn: true
     }));
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
-        public override importer: AccountImportService
+        public override importer: AccountImportService,
+        public orgaSettings: OrganizationSettingsService
     ) {
         super(componentServiceCollector, translate, importer);
     }

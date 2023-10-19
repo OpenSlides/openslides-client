@@ -381,7 +381,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
                     _(`There is an unspecified error in this line, which prevents the import.`)
                 );
             case BackendImportState.Warning:
-                return this.getErrorDescription(row) ?? _(`This row will not be imported, due to an unknown reason.`);
+                return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
             case BackendImportState.New:
                 return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`will be imported`);
             case BackendImportState.Done: // item will be updated / has been imported
@@ -394,6 +394,18 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
                 );
             default:
                 return undefined;
+        }
+    }
+
+    public getWarningRowTooltip(row: BackendImportIdentifiedRow): string {
+        switch (row.state) {
+            case BackendImportState.Error: // no import possible
+                return (
+                    this.getErrorDescription(row) ??
+                    _(`There is an unspecified error in this line, which prevents the import.`)
+                );
+            default:
+                return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
         }
     }
 
@@ -466,7 +478,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     }
 
     private getErrorDescription(entry: BackendImportIdentifiedRow): string {
-        return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`,\n `);
+        return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`\n `);
     }
 
     private fillPreviewData(previews: BackendImportPreview[]) {

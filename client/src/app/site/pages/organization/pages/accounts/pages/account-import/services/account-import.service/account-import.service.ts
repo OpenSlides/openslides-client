@@ -31,7 +31,7 @@ export class AccountImportService extends BaseBackendImportService {
         created: _(`Accounts created`),
         updated: _(`Accounts updated`),
         error: _(`Accounts with errors`),
-        warning: _(`Accounts with warnings (will be skipped)`)
+        warning: _(`Accounts with warnings (columns will be skipped)`)
     };
 
     public constructor(
