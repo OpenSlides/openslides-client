@@ -1,6 +1,6 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, Observable } from 'rxjs';
@@ -152,7 +152,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                 username: [``],
                 first_name: [``],
                 last_name: [``],
-                email: [``]
+                email: [``, Validators.email]
             },
             {
                 validators: [OneOfValidator.validation([`username`, `first_name`, `last_name`, `email`], `name`)]
