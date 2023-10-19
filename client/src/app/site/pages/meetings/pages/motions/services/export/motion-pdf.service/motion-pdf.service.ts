@@ -325,8 +325,8 @@ export class MotionPdfService {
 
         // referring motions
         if (
-            this.meetingSettingsService.instant(`motions_show_referring_motions`) &&
-            (!infoToExport || infoToExport.includes(`referring_motions`))
+            infoToExport?.includes(`referring_motions`) ||
+            (!infoToExport && this.meetingSettingsService.instant(`motions_show_referring_motions`))
         ) {
             if (motion.referenced_in_motion_recommendation_extensions.length) {
                 const referringMotions = motion.referenced_in_motion_recommendation_extensions
