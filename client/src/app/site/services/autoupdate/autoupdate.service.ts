@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { firstValueFrom } from 'rxjs';
 import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 
 import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
@@ -8,6 +9,7 @@ import { EndpointConfiguration } from '../../../gateways/http-stream/endpoint-co
 import { HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
 import { Mutex } from '../../../infrastructure/utils/promises';
 import { BannerDefinition, BannerService } from '../../modules/site-wrapper/services/banner.service';
+import { LifecycleService } from '../lifecycle.service';
 import { ModelRequestObject } from '../model-request-builder';
 import { ViewModelStoreUpdateService } from '../view-model-store-update.service';
 import { WindowVisibilityService } from '../window-visibility.service';
@@ -82,7 +84,8 @@ export class AutoupdateService {
         private viewmodelStoreUpdate: ViewModelStoreUpdateService,
         private communication: AutoupdateCommunicationService,
         private bannerService: BannerService,
-        private visibilityService: WindowVisibilityService
+        private visibilityService: WindowVisibilityService,
+        private lifecycle: LifecycleService
     ) {
         this.setAutoupdateConfig(null);
         this.httpEndpointService.registerEndpoint(
@@ -97,9 +100,12 @@ export class AutoupdateService {
         this.communication.listenShouldReconnect().subscribe(() => {
             this.pauseUntilVisible();
         });
-        this.visibilityService.hiddenFor(PAUSE_ON_INACTIVITY_TIMEOUT).subscribe(() => {
-            this.pauseUntilVisible();
-        });
+
+        firstValueFrom(this.lifecycle.appLoaded).then(() =>
+            this.visibilityService.hiddenFor(PAUSE_ON_INACTIVITY_TIMEOUT).subscribe(() => {
+                this.pauseUntilVisible();
+            })
+        );
 
         window.addEventListener(`beforeunload`, () => {
             for (const id of Object.keys(this._activeRequestObjects)) {
