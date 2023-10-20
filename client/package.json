@@ -82,7 +82,7 @@
     "qrcode": "^1.5.3",
     "rxjs": "^7.8.1",
     "tinycolor2": "1.4.2",
-    "tinymce": "^5.10.7",
+    "tinymce": "^5.10.8",
     "ts-dedent": "^2.2.0",
     "tslib": "^2.3.0",
     "tsparticles": "~1.42.4",
