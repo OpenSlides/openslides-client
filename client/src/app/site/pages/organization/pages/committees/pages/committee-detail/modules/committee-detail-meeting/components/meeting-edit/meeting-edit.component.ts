@@ -149,6 +149,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             super.setTitle(ADD_MEETING_LABEL);
         } else {
             super.setTitle(EDIT_MEETING_LABEL);
+            this.meetingForm.get(`language`)?.disable();
         }
 
         this.availableUsers = userRepo.getViewModelListObservable();
@@ -208,6 +209,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         this.theDuplicateFromId = id;
         if (id) {
             this.meetingForm.get(`language`)?.setValue(this.meetingRepo.getViewModel(id).language);
+            this.meetingForm.get(`language`)?.disable();
+        } else {
+            this.meetingForm.get(`language`)?.enable();
         }
     }
 
