@@ -77,8 +77,8 @@ OpenSlides uses the following software or parts of them:
 - [@angular-eslint/template-parser@13.1.0](https://github.com/angular-eslint/angular-eslint), License: MIT
 - [@angular/cli@13.2.4](https://github.com/angular/angular-cli), License: MIT
 - [@angular/compiler-cli@13.2.3](https://github.com/angular/angular), License: MIT
-- [@biesbjerg/ngx-translate-extract-marker@1.0.0](https://github.com/biesbjerg/ngx-translate-extract-marker), License: MIT
-- [@biesbjerg/ngx-translate-extract@7.0.4](https://github.com/biesbjerg/ngx-translate-extract), License: MIT
+- [@colsen1991/ngx-translate-extract-marker@1.0.0](https://github.com/Husbanken/ngx-translate-extract-marker), License: MIT
+- [@vendure/ngx-translate-extract@8.0.0](https://github.com/vendure-ecommerce/ngx-translate-extract), License: MIT
 - [@types/file-saver@2.0.5](https://github.com/DefinitelyTyped/DefinitelyTyped), License: MIT
 - [@types/jasmine@3.10.3](https://github.com/DefinitelyTyped/DefinitelyTyped), License: MIT
 - [@types/js-yaml@4.0.5](https://github.com/DefinitelyTyped/DefinitelyTyped), License: MIT
