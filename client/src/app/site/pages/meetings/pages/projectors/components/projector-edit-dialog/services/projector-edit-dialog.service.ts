@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { Projector } from 'src/app/domain/models/projector/projector';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
