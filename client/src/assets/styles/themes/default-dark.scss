@@ -7,7 +7,13 @@ $openslides-primary: mat.define-palette($dynamic-theme-primary);
 $openslides-accent: mat.define-palette($dynamic-theme-accent);
 $openslides-warn: mat.define-palette($dynamic-theme-warn);
 
-$openslides-dark-theme: mat.define-dark-theme($openslides-primary, $openslides-accent, $openslides-warn);
+$openslides-dark-theme: mat.define-dark-theme((
+    color: (
+        primary: $openslides-primary,
+        accent: $openslides-accent,
+        warn: $openslides-warn,
+    ),
+));
 
 $os-outline: mat.get-color-from-palette(mat.$grey-palette, 300);
 

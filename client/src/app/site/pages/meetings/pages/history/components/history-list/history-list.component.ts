@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
@@ -203,7 +203,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     private filterHistoryData(positions: HistoryPosition[], fqid: Fqid): HistoryPosition[] {
         return positions.filter(position => {
             const newInformation = [];
-            if (!Array.isArray(position.information)) {
+            if (position.information && !Array.isArray(position.information)) {
                 position.information = position.information[fqid];
             }
             if (!position.information) {
