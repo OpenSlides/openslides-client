@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { CanDeactivate } from '@angular/router';
 
 /**
  * Interface to describe the function that is necessary.
@@ -11,7 +10,7 @@ export interface CanComponentDeactivate {
 @Injectable({
     providedIn: `root`
 })
-export class WatchForChangesGuard implements CanDeactivate<CanComponentDeactivate> {
+export class WatchForChangesGuard {
     /**
      * Function to determine whether the route will change or not.
      *

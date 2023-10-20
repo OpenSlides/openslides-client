@@ -1,5 +1,5 @@
 import { ValidatorFn, Validators } from '@angular/forms';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';

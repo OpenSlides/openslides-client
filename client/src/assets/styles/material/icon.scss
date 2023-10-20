@@ -1,0 +1,37 @@
+mat-icon {
+    font-family: 'Material Icons' !important;
+}
+
+// for aligning text lines with an icon and or link
+.line-and-icon {
+    display: block;
+    line-height: 40px;
+    h2,
+    span,
+    a {
+        vertical-align: bottom;
+    }
+
+    .mat-icon-button,
+    .mat-icon {
+        margin: auto 0;
+        vertical-align: middle;
+    }
+}
+
+.icon-as-block.mat-icon {
+    display: block;
+}
+
+/**
+ * Can better align icons with text. Use like:
+ * <mat-icon inline class="inline-icon-text-align"> ...
+ * <span> ...
+ */
+.inline-icon-text-align.mat-icon {
+    vertical-align: bottom;
+}
+
+.icon-text-distance {
+    margin-left: 5px;
+}
