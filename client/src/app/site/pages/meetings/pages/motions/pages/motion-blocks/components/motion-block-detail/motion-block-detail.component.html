@@ -90,9 +90,9 @@
                     </span>
 
                     <span *ngIf="showSequential">
-                        <span *ngIf="motion.submitters.length">&middot;</span>
+                        <span *ngIf="motion.submitters.length">&middot;&thinsp;</span>
                         <span>{{ 'Sequential number' | translate }}</span>
-                        {{ motion.id }}
+                        {{ motion.sequential_number }}
                     </span>
                 </div>
 
