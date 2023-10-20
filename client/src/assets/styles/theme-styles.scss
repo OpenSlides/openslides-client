@@ -18,6 +18,10 @@
     @include os-component-themes($openslides-dark-theme);
 }
 
+.mat-calendar-body-cell {
+    --mat-datepicker-calendar-date-in-range-state-background-color: var(--theme-primary-500);
+}
+
 [class^='openslides-'][class*='-light-theme'] {
     .logo-container {
         img.dark {
