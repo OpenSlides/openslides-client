@@ -65,10 +65,11 @@ export class ViewModelStoreUpdateService {
         }
 
         for (const collection of Object.keys(changedModels)) {
-            const modelIds =
-                this.DS.get(changedModels[collection].parentCollection, changedModels[collection].parentId)[
-                    changedModels[collection].parentField
-                ] || [];
+            const parentModel = this.DS.get(
+                changedModels[collection].parentCollection,
+                changedModels[collection].parentId
+            );
+            const modelIds = (parentModel && parentModel[changedModels[collection].parentField]) || [];
             const ids = modelIds.difference(changedModels[collection].ids);
             _deletedModels[collection] = (_deletedModels[collection] || []).concat(ids);
         }
