@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 
 import { ChipSelectComponent } from './components/chip-select/chip-select.component';
 import { ChipSelectChipComponent } from './components/chip-select-chip/chip-select-chip.component';

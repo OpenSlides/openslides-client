@@ -181,7 +181,10 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
         };
 
         const { sequential_number } = await this.repo.createParagraphBased(motionCreate);
-        this.router.navigate([this.activeMeetingId, `motions`, sequential_number]);
+        this.router.navigate([this.activeMeetingId, `motions`, sequential_number], {
+            replaceUrl: true,
+            state: { canGoBack: true }
+        });
     }
 
     /**
