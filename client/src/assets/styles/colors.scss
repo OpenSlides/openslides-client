@@ -1,0 +1,73 @@
+$os-lightblue: rgb(33, 150, 243);
+$os-darkblue: rgb(63, 81, 181);
+$os-lightgreen: rgb(77, 243, 86);
+$os-green: rgb(76, 175, 80);
+$os-red: rgb(255, 82, 82);
+$os-yellow: rgb(255, 193, 7);
+$os-bluegrey: rgb(96, 125, 139);
+$os-grey: #e0e0e0;
+
+.white {
+    color: white;
+}
+
+.lightblue {
+    background-color: $os-lightblue !important;
+    color: white !important;
+}
+
+.darkblue {
+    background-color: $os-darkblue !important;
+    color: white !important;
+}
+.green,
+.success {
+    background-color: $os-green !important;
+    color: white !important;
+}
+
+// TODO: Remove save-button, add color
+.light-green,
+.save-button {
+    // needs to be important or will be overwritten locally
+    background-color: $os-lightgreen !important;
+}
+
+.red,
+.error {
+    background-color: $os-red !important;
+    color: white !important;
+}
+
+.yellow,
+.warning {
+    background-color: $os-yellow !important;
+    color: white !important;
+}
+
+.bluegrey {
+    background-color: $os-bluegrey !important;
+    color: white !important;
+}
+
+.grey,
+.gray {
+    background-color: $os-grey !important;
+    color: rgba(0, 0, 0, 0.87) !important;
+}
+
+// TODO: Update naming of text color helper classes to match a pattern
+.red-warning-text {
+    color: red !important;
+    .mat-icon {
+        color: red !important;
+    }
+}
+
+.green-text {
+    color: $os-green !important;
+}
+
+.text-success {
+    color: $os-lightgreen;
+}
