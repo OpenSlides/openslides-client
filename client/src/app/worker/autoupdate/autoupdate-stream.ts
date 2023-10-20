@@ -255,16 +255,16 @@ export class AutoupdateStream {
         }
 
         // Hotfix wrong status codes
-        const content = next && this.parse(this.decode(next));
+        const content = next ? this.parse(this.decode(next)) : null;
         const autoupdateSentUnmarkedError = content?.type !== ErrorType.UNKNOWN && content?.error;
 
         if (!response.ok || autoupdateSentUnmarkedError) {
-            if (headers.authentication ?? null !== this.authToken ?? null) {
+            if ((headers.authentication ?? null) !== (this.authToken ?? null)) {
                 return await this.doRequest();
             }
 
             let errorContent = null;
-            if (next && (errorContent = content?.error)) {
+            if (content && (errorContent = content)?.error) {
                 errorContent = errorContent.error;
             }
 
