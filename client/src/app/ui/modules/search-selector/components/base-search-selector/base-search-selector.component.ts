@@ -219,7 +219,6 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         }
         this._selectableItemsList = this.sortFn ? allItems.sort(this.sortFn) : allItems;
         this.filteredItemsSubject.next(this.getFilteredItemsBySearchValue());
-        this.updateOptionFocus();
     }
 
     protected get selectableItems(): Selectable[] {
@@ -259,15 +258,6 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         const sheet = document.createElement(`style`);
         sheet.innerHTML = `.os-search-selector { max-height: ${this.maxHeight} !important;}`;
         document.body.appendChild(sheet);
-    }
-
-    private updateOptionFocus(): void {
-        setTimeout(() => {
-            if (!this.matSelect?.options.some(o => o.active)) {
-                this.matSelect.options.first.focus();
-                this.matSelect.options.first.setActiveStyles();
-            }
-        }, 200);
     }
 
     public onChipRemove(itemId: Id): void {
@@ -351,7 +341,6 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
 
     protected onSearchValueUpdated(nextValue: string): void {
         this.filteredItemsSubject.next(this.getFilteredItemsBySearchValue(nextValue.toLowerCase()));
-        this.updateOptionFocus();
     }
 
     protected initializeForm(): void {
