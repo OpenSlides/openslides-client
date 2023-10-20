@@ -1,6 +1,7 @@
 import { ApplicationRef, Component, OnInit, ViewContainerRef } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { DateFnsConfigurationService } from 'ngx-date-fns';
 import { first, firstValueFrom, tap } from 'rxjs';
@@ -37,7 +38,8 @@ export class OpenSlidesMainComponent implements OnInit {
         private translate: TranslateService,
         private storageService: StorageService,
         private config: DateFnsConfigurationService,
-        private updateService: UpdateService
+        private updateService: UpdateService,
+        private router: Router
     ) {
         overloadJsFunctions();
         this.waitForAppLoaded();
@@ -94,7 +96,10 @@ export class OpenSlidesMainComponent implements OnInit {
                 })
             )
         );
+
+        this.router.initialNavigation();
         await this.onInitDone;
+
         try {
             if ((await navigator.serviceWorker?.getRegistrations())?.length) {
                 if (

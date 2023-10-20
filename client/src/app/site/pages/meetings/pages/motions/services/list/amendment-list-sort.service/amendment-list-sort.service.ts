@@ -3,14 +3,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
-import { MotionListSortService } from '../motion-list-sort.service';
+import { MotionListBaseSortService } from '../motion-list-base-sort.service';
 
 @Injectable({
     providedIn: `root`
 })
-export class AmendmentListSortService extends MotionListSortService {
+export class AmendmentListSortService extends MotionListBaseSortService {
     /**
      * set the storage key name
      */
@@ -29,13 +28,8 @@ export class AmendmentListSortService extends MotionListSortService {
         }
     ];
 
-    constructor(
-        translate: TranslateService,
-        store: StorageService,
-        meetingSettingsService: MeetingSettingsService,
-        injector: Injector
-    ) {
-        super(translate, store, meetingSettingsService, injector, {
+    constructor(translate: TranslateService, store: StorageService, injector: Injector) {
+        super(translate, store, injector, {
             sortProperty: `parentAndLineNumber`,
             sortAscending: true
         });

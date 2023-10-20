@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { CheckDatabasePresenterService } from 'src/app/gateways/presenter/check-database-presenter.service';
 import { BaseComponent } from 'src/app/site/base/base.component';

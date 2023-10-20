@@ -232,7 +232,7 @@ export class AutoupdateStream {
         const LINE_BREAK = `\n`.charCodeAt(0);
         const reader = response.body.getReader();
         let next: Uint8Array = null;
-        let result: ReadableStreamDefaultReadResult<Uint8Array>;
+        let result: ReadableStreamReadResult<Uint8Array>;
         while (!(result = await reader.read()).done) {
             const lines = splitTypedArray(LINE_BREAK, result.value);
             for (let line of lines) {

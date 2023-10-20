@@ -1,4 +1,4 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { AssignmentPhase } from 'src/app/domain/models/assignments/assignment-phase';
 
 /**

@@ -34,7 +34,7 @@ export class MotionSubmitterControllerService extends BaseMeetingControllerServi
         return this.repo.delete(...submitters);
     }
 
-    public sort(submitters: Identifiable[], motion: Identifiable): Promise<void> {
+    public sort(submitters: Identifiable[], motion: Identifiable): Action<void> {
         return this.repo.sort(submitters, motion);
     }
 }

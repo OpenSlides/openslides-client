@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 
 import { AuthCheckService } from '../services/auth-check.service';
 import { OpenSlidesRouterService } from '../services/openslides-router.service';
@@ -15,7 +15,7 @@ enum CannotAccessReason {
 @Injectable({
     providedIn: `root`
 })
-export class AuthGuard implements CanActivate, CanActivateChild {
+export class AuthGuard {
     private _cannotAccessReason: CannotAccessReason | null = null;
 
     public constructor(

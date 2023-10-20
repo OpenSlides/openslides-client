@@ -1,0 +1,53 @@
+* {
+    font-family: OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif;
+}
+
+body {
+    margin: 0 auto;
+    padding: 0;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+h1,
+h2,
+h3,
+h4,
+.title-font,
+.slidetitle h1,
+.slidetitle h2 {
+    font-family: OSFont Condensed, Fira Sans Condensed, Roboto-condensed, Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    padding-bottom: 10px;
+    line-height: 1.2;
+    margin: 0;
+    font-weight: normal;
+    font-size: 36px;
+}
+
+h3 {
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+h4 {
+    font-weight: 400;
+    font-size: 100%;
+    margin-bottom: 5px;
+
+    .mat-icon-button mat-icon {
+        font-size: 16px;
+    }
+}
+
+strong,
+b,
+.bold {
+    font-weight: 500;
+}
+
+.italic {
+    font-style: italic;
+}
