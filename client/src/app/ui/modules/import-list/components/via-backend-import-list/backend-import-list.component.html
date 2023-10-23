@@ -199,7 +199,8 @@
 
 <ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
     <ng-container *ngIf="type === 'string'">{{ entry | translate }}</ng-container>
-    <ng-container *ngIf="type === 'number' || type === 'integer' || type === 'decimal'">{{ entry }}</ng-container>
+    <ng-container *ngIf="type === 'number' || type === 'integer'">{{ entry }}</ng-container>
+    <ng-container *ngIf="type === 'decimal'">{{ getShortenedDecimal(entry) }}</ng-container>
     <ng-container *ngIf="type === 'date'">{{ entry }}</ng-container>
     <mat-checkbox *ngIf="type === 'boolean'" [checked]="entry" disabled></mat-checkbox>
     &nbsp;
@@ -291,8 +292,19 @@
     <div mat-dialog-content>
         <table>
             <tr *ngFor="let column of defaultColumns">
-                <td>{{ column.property }}:</td>
-                <td>&nbsp;{{ column.label | translate }}</td>
+                <td class="table-title-column">{{ column.property }}:</td>
+                <td>
+                    &nbsp;{{ column.label | translate }}
+                    <ng-container *ngIf="column.customInfo">
+                        <br />
+                        <ng-container *ngIf="isString(column.customInfo)">
+                            {{ column.customInfo | translate }}
+                        </ng-container>
+                        <ng-container *ngIf="!isString(column.customInfo)">
+                            {{ column.customInfo | async }}
+                        </ng-container>
+                    </ng-container>
+                </td>
             </tr>
         </table>
     </div>

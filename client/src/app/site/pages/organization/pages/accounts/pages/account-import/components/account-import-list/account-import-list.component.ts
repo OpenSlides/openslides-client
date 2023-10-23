@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { map, Observable } from 'rxjs';
 import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
@@ -18,11 +19,9 @@ export class AccountImportListComponent extends BaseViaBackendImportListComponen
 
     public columns: ImportListHeaderDefinition[] = Object.keys(accountHeadersAndVerboseNames).map(header => ({
         property: header,
-        label: ((<any>accountHeadersAndVerboseNames)[header] as string).replace(
-            `%gender%`,
-            this.orgaSettings.instant(`genders`).join(`, `)
-        ),
-        isTableColumn: true
+        label: (<any>accountHeadersAndVerboseNames)[header],
+        isTableColumn: true,
+        customInfo: header === `gender` ? this.getTranslatedGenderInfoObservable() : undefined
     }));
 
     public constructor(
@@ -32,5 +31,11 @@ export class AccountImportListComponent extends BaseViaBackendImportListComponen
         public orgaSettings: OrganizationSettingsService
     ) {
         super(componentServiceCollector, translate, importer);
+    }
+
+    private getTranslatedGenderInfoObservable(): Observable<string> {
+        return this.translate
+            .get(`Possible options`)
+            .pipe(map(framework => framework + `: ` + this.orgaSettings.instant(`genders`).join(`, `)));
     }
 }

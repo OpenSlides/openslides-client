@@ -465,6 +465,17 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         return this._importer.getVerboseSummaryPointTitle(title);
     }
 
+    public getShortenedDecimal(decimalString: string): string {
+        while (decimalString.length && [`0`, `.`].includes(decimalString.charAt(decimalString.length - 1))) {
+            decimalString = decimalString.substring(0, decimalString.length - 1);
+        }
+        return decimalString;
+    }
+
+    public isString(value: any): value is string {
+        return typeof value === `string`;
+    }
+
     private setHeaders(data: { default?: ImportListHeaderDefinition[]; preview?: BackendImportHeader[] }): void {
         for (const key of Object.keys(data)) {
             for (const header of data[key] ?? []) {
