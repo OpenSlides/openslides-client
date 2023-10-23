@@ -11,9 +11,12 @@ import {
 } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { MatOption, MatOptionSelectionChange } from '@angular/material/core';
-import { MatSelect } from '@angular/material/select';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import {
+    MatLegacyOption as MatOption,
+    MatLegacyOptionSelectionChange as MatOptionSelectionChange
+} from '@angular/material/legacy-core';
+import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
@@ -216,7 +219,6 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         }
         this._selectableItemsList = this.sortFn ? allItems.sort(this.sortFn) : allItems;
         this.filteredItemsSubject.next(this.getFilteredItemsBySearchValue());
-        this.updateOptionFocus();
     }
 
     protected get selectableItems(): Selectable[] {
@@ -256,15 +258,6 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         const sheet = document.createElement(`style`);
         sheet.innerHTML = `.os-search-selector { max-height: ${this.maxHeight} !important;}`;
         document.body.appendChild(sheet);
-    }
-
-    private updateOptionFocus(): void {
-        setTimeout(() => {
-            if (!this.matSelect?.options.some(o => o.active)) {
-                this.matSelect.options.first.focus();
-                this.matSelect.options.first.setActiveStyles();
-            }
-        }, 200);
     }
 
     public onChipRemove(itemId: Id): void {
@@ -348,7 +341,6 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
 
     protected onSearchValueUpdated(nextValue: string): void {
         this.filteredItemsSubject.next(this.getFilteredItemsBySearchValue(nextValue.toLowerCase()));
-        this.updateOptionFocus();
     }
 
     protected initializeForm(): void {

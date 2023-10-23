@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { of } from 'rxjs';
 import { OptionData, OptionTitle, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { PollClassType, PollState } from 'src/app/domain/models/poll/poll-constants';

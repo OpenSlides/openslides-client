@@ -63,3 +63,38 @@
         @include scrolling-table-style();
     }
 }
+
+.scrolling-table-cell ::ng-deep {
+    .fill {
+        position: relative;
+        display: inherit;
+        height: 100%;
+        width: 100%;
+
+        // try to put all children in the in the vertical middle
+        * {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+    }
+
+    .checkbox-ripple-padding {
+        padding-left: 12px;
+    }
+
+    .central-button {
+        justify-content: center;
+    }
+
+    .clickable {
+        cursor: pointer;
+    }
+
+    .detail-link {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+}
