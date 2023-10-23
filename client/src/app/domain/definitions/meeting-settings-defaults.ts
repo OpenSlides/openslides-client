@@ -1,6 +1,6 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT CHANGE IT MANUALLY.
 
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 export const meetingSettingsDefaults: { [key: string]: any } = {
     enable_anonymous: false,

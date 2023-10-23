@@ -1,6 +1,9 @@
 import { AfterViewInit, Component, Inject } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+    MatLegacyDialogRef as MatDialogRef
+} from '@angular/material/legacy-dialog';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { PollPercentBaseVerbose, VoteValue } from 'src/app/domain/models/poll';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';

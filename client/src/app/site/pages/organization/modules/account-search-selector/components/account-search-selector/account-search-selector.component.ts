@@ -1,8 +1,8 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
-import { MatOptionSelectionChange } from '@angular/material/core';
-import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatLegacyOptionSelectionChange as MatOptionSelectionChange } from '@angular/material/legacy-core';
+import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
 import { distinctUntilChanged } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
