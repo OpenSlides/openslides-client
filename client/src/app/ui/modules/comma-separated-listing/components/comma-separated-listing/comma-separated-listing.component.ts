@@ -6,12 +6,12 @@ import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef } 
     styleUrls: [`./comma-separated-listing.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CommaSeparatedListingComponent<T = any> {
+export class CommaSeparatedListingComponent<T = unknown> {
     /**
      * Declare the templateRef to coexist between parent in child
      */
     @ContentChild(TemplateRef, { static: true })
-    public templateRef: TemplateRef<T>;
+    public templateRef: TemplateRef<{ $implicit: T }>;
 
     @Input()
     public list: T[] = [];

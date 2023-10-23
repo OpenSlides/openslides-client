@@ -13,6 +13,11 @@
     padding-left: 26px;
 }
 
+.background-headbar {
+    background: var(--theme-headbar);
+    color: var(--theme-headbar-contrast);
+}
+
 .spacer {
     flex: 1;
     height: 100%;

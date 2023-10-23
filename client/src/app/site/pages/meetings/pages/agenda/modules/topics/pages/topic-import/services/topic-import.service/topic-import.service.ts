@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
 import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';

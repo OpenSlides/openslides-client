@@ -13,7 +13,7 @@ const DESTINATION = path.resolve(path.join(__dirname, '../src/app/domain/definit
 const FILE_TEMPLATE = dedent`
     // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT CHANGE IT MANUALLY.
 
-    import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+    import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
     export const meetingSettingsDefaults: { [key: string]: any } = {
 `;
