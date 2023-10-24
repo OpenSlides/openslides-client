@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LegacyEditorComponent } from './editor.component';
+import { EditorComponent } from './editor.component';
 
 xdescribe(`EditorComponent`, () => {
-    let component: LegacyEditorComponent;
-    let fixture: ComponentFixture<LegacyEditorComponent>;
+    let component: EditorComponent;
+    let fixture: ComponentFixture<EditorComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [LegacyEditorComponent]
+            declarations: [EditorComponent]
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(LegacyEditorComponent);
+        fixture = TestBed.createComponent(EditorComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
