@@ -1,17 +1,22 @@
-<div *ngIf="editor" class="editor-menu">
-    <mat-button-toggle-group multiple>
-        <mat-button-toggle [checked]="editor.isActive('bold')" (click)="editor.chain().focus().toggleBold().run()">
-            <mat-icon>format_bold</mat-icon>
-        </mat-button-toggle>
-        <mat-button-toggle [checked]="editor.isActive('italic')" (click)="editor.chain().focus().toggleItalic().run()">
-            <mat-icon>format_italic</mat-icon>
-        </mat-button-toggle>
-        <mat-button-toggle
-            [checked]="editor.isActive('strikethrough')"
-            (click)="editor.chain().focus().toggleStrike().run()"
-        >
-            <mat-icon>format_strikethrough</mat-icon>
-        </mat-button-toggle>
-    </mat-button-toggle-group>
+<div class="editor">
+    <div *ngIf="editor" class="editor-menu">
+        <mat-button-toggle-group multiple>
+            <mat-button-toggle [checked]="editor.isActive('bold')" (click)="editor.chain().focus().toggleBold().run()">
+                <mat-icon>format_bold</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle [checked]="editor.isActive('italic')" (click)="editor.chain().focus().toggleItalic().run()">
+                <mat-icon>format_italic</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle [checked]="editor.isActive('underline')" (click)="editor.chain().focus().toggleUnderline().run()">
+                <mat-icon>format_underline</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle
+                [checked]="editor.isActive('strike')"
+                (click)="editor.chain().focus().toggleStrike().run()"
+            >
+                <mat-icon>format_strikethrough</mat-icon>
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+    <div #editorEl class="editor-content"></div>
 </div>
-<div #editorEl></div>

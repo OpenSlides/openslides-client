@@ -11,15 +11,28 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { Editor, Extension } from '@tiptap/core';
+import Blockquote from '@tiptap/extension-blockquote';
 import Bold from '@tiptap/extension-bold';
 import BulletList from '@tiptap/extension-bullet-list';
+import Color from '@tiptap/extension-color';
 import Document from '@tiptap/extension-document';
+import HardBreak from '@tiptap/extension-hard-break';
 import Heading from '@tiptap/extension-heading';
+import Highlight from '@tiptap/extension-highlight';
+import History from '@tiptap/extension-history';
+import Image from '@tiptap/extension-image';
 import Italic from '@tiptap/extension-italic';
+import Link from '@tiptap/extension-link';
 import ListItem from '@tiptap/extension-list-item';
+import OrderedList from '@tiptap/extension-ordered-list';
 import Paragraph from '@tiptap/extension-paragraph';
 import Strike from '@tiptap/extension-strike';
+import Subscript from '@tiptap/extension-subscript';
+import Superscript from '@tiptap/extension-superscript';
 import Text from '@tiptap/extension-text';
+import TextAlign from '@tiptap/extension-text-align';
+import TextStyle from '@tiptap/extension-text-style';
+import Underline from '@tiptap/extension-underline';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 
 @Component({
@@ -44,15 +57,33 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         this.editor = new Editor({
             element: this.editorEl.nativeElement,
             extensions: [
+                // Nodes
                 Document,
+                Blockquote,
+                BulletList,
+                HardBreak,
+                Heading,
+                Image,
+                ListItem,
+                OrderedList,
                 Paragraph,
                 Text,
-                Heading,
-                BulletList,
-                ListItem,
+
+                //Marks
                 Bold,
+                Highlight,
                 Italic,
+                Link,
                 Strike,
+                Subscript,
+                Superscript,
+                TextStyle,
+                Underline,
+
+                // Extensions
+                Color,
+                History,
+                TextAlign,
                 Extension.create({
                     onSelectionUpdate: () => {
                         this.cd.detectChanges();
