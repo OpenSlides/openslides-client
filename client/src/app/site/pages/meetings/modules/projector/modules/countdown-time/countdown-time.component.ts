@@ -116,10 +116,10 @@ export class CountdownTimeComponent implements OnDestroy {
         }
 
         const time = new Date(seconds * 1000);
-        const m = `0` + time.getMinutes();
+        const m = Math.floor(+time / 1000 / 60).toString();
         const s = `0` + time.getSeconds();
 
-        this.time = m.slice(-2) + `:` + s.slice(-2);
+        this.time = (m.length < 2 ? `0` : ``) + m + `:` + s.slice(-2);
 
         if (negative) {
             this.time = `-` + this.time;
