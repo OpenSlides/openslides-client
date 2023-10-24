@@ -1,30 +1,31 @@
 <div class="editor">
     <div *ngIf="editor" class="editor-menu">
-        <mat-button-toggle-group multiple>
-            <mat-button-toggle [checked]="editor.isActive('bold')" (click)="editor.chain().focus().toggleBold().run()">
-                <mat-icon>format_bold</mat-icon>
-            </mat-button-toggle>
-            <mat-button-toggle
-                [checked]="editor.isActive('italic')"
-                (click)="editor.chain().focus().toggleItalic().run()"
-            >
-                <mat-icon>format_italic</mat-icon>
-            </mat-button-toggle>
-            <mat-button-toggle
-                [checked]="editor.isActive('underline')"
-                (click)="editor.chain().focus().toggleUnderline().run()"
-            >
-                <mat-icon>format_underline</mat-icon>
-            </mat-button-toggle>
-            <mat-button-toggle
-                [checked]="editor.isActive('strike')"
-                (click)="editor.chain().focus().toggleStrike().run()"
-            >
-                <mat-icon>format_strikethrough</mat-icon>
-            </mat-button-toggle>
-        </mat-button-toggle-group>
+        <button mat-ripple [ngClass]="{ active: editor.isActive('bold') }" (click)="editor.chain().focus().toggleBold().run()">
+            <mat-icon>format_bold</mat-icon>
+        </button>
+        <button
+            mat-ripple
+            [ngClass]="{ active: editor.isActive('italic') }"
+            (click)="editor.chain().focus().toggleItalic().run()"
+        >
+            <mat-icon>format_italic</mat-icon>
+        </button>
+        <button
+            mat-ripple
+            [ngClass]="{ active: editor.isActive('underline') }"
+            (click)="editor.chain().focus().toggleUnderline().run()"
+        >
+            <mat-icon>format_underline</mat-icon>
+        </button>
+        <button
+            mat-ripple
+            [ngClass]="{ active: editor.isActive('strike') }"
+            (click)="editor.chain().focus().toggleStrike().run()"
+        >
+            <mat-icon>format_strikethrough</mat-icon>
+        </button>
 
-        <button class="color-selection" [ngStyle]="{ color: editor.getAttributes('textStyle')['color'] }">
+        <button mat-ripple class="color-selection" [ngStyle]="{ color: editor.getAttributes('textStyle')['color'] }">
             <mat-icon>format_color_text</mat-icon>
             <input
                 [value]="editor.getAttributes('textStyle')['color']"
@@ -33,29 +34,30 @@
             />
         </button>
         <button
+            mat-ripple
             [ngClass]="{ active: editor.isActive('highlight') }"
             (click)="editor.chain().focus().toggleHighlight().run()"
         >
             <mat-icon>format_color_fill</mat-icon>
         </button>
-        <button (click)="clearSelectedFormat()">
+        <button mat-ripple (click)="clearSelectedFormat()">
             <mat-icon>format_clear</mat-icon>
         </button>
 
-        <mat-button-toggle-group multiple>
-            <mat-button-toggle
-                [checked]="editor.isActive('bulletList')"
-                (click)="editor.chain().focus().toggleBulletList().run()"
-            >
-                <mat-icon>format_list_bulleted</mat-icon>
-            </mat-button-toggle>
-            <mat-button-toggle
-                [checked]="editor.isActive('orderedList')"
-                (click)="editor.chain().focus().toggleOrderedList().run()"
-            >
-                <mat-icon>format_list_numbered</mat-icon>
-            </mat-button-toggle>
-        </mat-button-toggle-group>
+        <button
+            mat-ripple
+            [ngClass]="{ active: editor.isActive('bulletList') }"
+            (click)="editor.chain().focus().toggleBulletList().run()"
+        >
+            <mat-icon>format_list_bulleted</mat-icon>
+        </button>
+        <button
+            mat-ripple
+            [ngClass]="{ active: editor.isActive('orderedList') }"
+            (click)="editor.chain().focus().toggleOrderedList().run()"
+        >
+            <mat-icon>format_list_numbered</mat-icon>
+        </button>
     </div>
     <div #editorEl class="editor-content"></div>
 </div>

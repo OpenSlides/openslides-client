@@ -2,8 +2,18 @@
     .editor-menu {
         button {
             cursor: pointer;
+            background: none;
+            border: 1px solid rgba(0, 0, 0, 0.42);
+            display: inline-flex;
+            height: 34px;
+            align-items: center;
+            margin-right: 4px;
+            border-radius: 2px;
             &.color-selection {
                 position: relative;
+            }
+            &.active {
+                background: rgba(0, 0, 0, 0.32);
             }
             input[type='color'] {
                 position: absolute;
@@ -12,6 +22,7 @@
                 width: 100%;
                 height: 100%;
                 opacity: 0;
+                cursor: pointer;
             }
         }
     }
