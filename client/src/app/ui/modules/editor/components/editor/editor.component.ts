@@ -103,6 +103,26 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         this.editor.destroy();
     }
 
+    public updateFontColor(e: Event) {
+        const val = (<any>e.target)?.value;
+        if (val) {
+            this.editor.chain().focus().setColor(val).run();
+        }
+    }
+
+    public clearSelectedFormat() {
+        this.editor
+            .chain()
+            .focus()
+            .unsetBold()
+            .unsetStrike()
+            .unsetItalic()
+            .unsetUnderline()
+            .unsetColor()
+            .removeEmptyTextStyle()
+            .run();
+    }
+
     protected createForm(): UntypedFormControl {
         return this.fb.control([``]);
     }
