@@ -20,7 +20,7 @@ export class AutoupdateStream {
     private _abortResolver: (val?: any) => void | undefined;
     private error: any | ErrorDescription = null;
     private restarting = false;
-    private _currentData: Object | null = null;
+    private _currentData: unknown | null = null;
 
     public get active(): boolean {
         return this._active;
@@ -33,7 +33,7 @@ export class AutoupdateStream {
     /**
      * Full data object received by autoupdate
      */
-    public get currentData(): Object | null {
+    public get currentData(): unknown | null {
         return this._currentData;
     }
 
@@ -68,9 +68,9 @@ export class AutoupdateStream {
         if (this.abortCtrl !== undefined) {
             const abortPromise = new Promise(resolver => (this._abortResolver = resolver));
             setTimeout(this._abortResolver, 5000);
-            // @ts-ignore
             this.abortCtrl.abort();
             await abortPromise;
+            this._abortResolver = undefined;
         }
     }
 
