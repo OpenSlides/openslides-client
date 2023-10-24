@@ -5,7 +5,7 @@ import { ModelRequestService } from 'src/app/site/services/model-request.service
 import { OrganizationRepositoryService } from '../../../../gateways/repositories/organization-repository.service';
 import { ModelSubscription } from '../../../services/autoupdate';
 import { LifecycleService } from '../../../services/lifecycle.service';
-import { getMeetingListSubscriptionConfig, getOrganizationSubscriptionConfig } from '../organization.subscription';
+import { getOrganizationSubscriptionConfig } from '../organization.subscription';
 import { ViewOrganization } from '../view-models/view-organization';
 
 /**
@@ -55,7 +55,6 @@ export class OrganizationService {
         if (!this._hasInitiated) {
             this._hasInitiated = true;
             this.modelRequestService.subscribeTo(getOrganizationSubscriptionConfig());
-            this.modelRequestService.subscribeTo(getMeetingListSubscriptionConfig());
             this.repo
                 .getViewModelObservable(ORGANIZATION_ID)
                 .subscribe(organization => this.organizationSubject.next(organization));
