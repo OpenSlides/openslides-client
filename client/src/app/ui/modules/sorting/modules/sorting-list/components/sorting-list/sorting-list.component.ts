@@ -25,7 +25,7 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      * Declare the templateRef to coexist between parent in child
      */
     @ContentChild(TemplateRef, { static: true })
-    public templateRef: TemplateRef<T>;
+    public templateRef: TemplateRef<{ $implicit: T; index: number }>;
 
     /**
      * Set to true if events are directly fired after sorting.
