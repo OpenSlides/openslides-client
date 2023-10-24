@@ -48,6 +48,18 @@ export class GlobalSearchService {
         };
     }
 
+    public getTitle(collection: string, content: any) {
+        if (collection === `user`) {
+            const firstName = content.first_name?.trim() || ``;
+            const lastName = content.last_name?.trim() || ``;
+            const userName = content.username?.trim() || ``;
+            const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
+            return `${content.title?.trim() || ``} ${name?.trim()}`.trim() || ``;
+        }
+
+        return content.title || content.name;
+    }
+
     /**
      * Searches the content for search matches and replaces them with markers
      */
@@ -131,18 +143,6 @@ export class GlobalSearchService {
             committee: results[`committee/${content.committee_id}`]?.content,
             score: results[fqid].score || 0
         };
-    }
-
-    public getTitle(collection: string, content: any) {
-        if (collection === `user`) {
-            const firstName = content.first_name?.trim() || ``;
-            const lastName = content.last_name?.trim() || ``;
-            const userName = content.username?.trim() || ``;
-            const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
-            return `${content.title?.trim() || ``} ${name?.trim()}`.trim() || ``;
-        }
-
-        return content.title || content.name;
     }
 
     private getUrl(collection: string, id: Id, content: any): string {
