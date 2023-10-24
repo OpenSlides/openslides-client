@@ -95,7 +95,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             ],
             content: this.value
         });
-        console.log(this.editor);
     }
 
     public override ngOnDestroy(): void {

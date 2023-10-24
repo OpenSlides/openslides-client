@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -12,7 +10,7 @@ const DECLARATIONS = [EditorComponent];
 
 @NgModule({
     declarations: DECLARATIONS,
-    imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatButtonToggleModule, MatIconModule, MatRippleModule],
+    imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatRippleModule],
     exports: DECLARATIONS
 })
 export class EditorModule {}
