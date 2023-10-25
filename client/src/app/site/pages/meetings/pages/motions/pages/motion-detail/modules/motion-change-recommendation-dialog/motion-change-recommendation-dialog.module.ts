@@ -8,7 +8,7 @@ import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/materia
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy-radio';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { LegacyEditorModule } from 'src/app/ui/modules/legacy-editor';
+import { EditorModule } from 'src/app/ui/modules/editor';
 
 import { MotionContentChangeRecommendationDialogComponent } from './components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionTitleChangeRecommendationDialogComponent } from './components/motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
@@ -23,9 +23,9 @@ import { MotionTitleChangeRecommendationDialogComponent } from './components/mot
         MatFormFieldModule,
         MatRadioModule,
         MatButtonModule,
+        EditorModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild(),
-        LegacyEditorModule
+        OpenSlidesTranslationModule.forChild()
     ]
 })
 export class MotionChangeRecommendationDialogModule {
