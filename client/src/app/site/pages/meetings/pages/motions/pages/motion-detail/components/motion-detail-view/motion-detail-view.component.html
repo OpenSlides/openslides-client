@@ -14,9 +14,9 @@
             <!-- Title -->
             <div class="title-slot">
                 <h2 *ngIf="motion && !newMotion">
-                    <span>{{ 'Motion' | translate }}</span>
+                    <span *ngIf="!vp.isMobile">{{ 'Motion' | translate }}</span>
                     <!-- Whitespace between "Motion" and number -->
-                    <span>&nbsp;</span>
+                    <span *ngIf="!vp.isMobile">&nbsp;</span>
                     <span *ngIf="!editMotion">{{ motion.number }}</span>
                 </h2>
                 <h2 *ngIf="newMotion && !amendmentEdit">{{ 'New motion' | translate }}</h2>
@@ -25,7 +25,7 @@
 
             <!-- Back and forth buttons -->
             <div
-                *ngIf="!editMotion && !vp.isMobile && showNavigateButtons"
+                *ngIf="!editMotion && showNavigateButtons"
                 class="extra-controls-slot prev-next-motion-controls"
             >
                 <button
