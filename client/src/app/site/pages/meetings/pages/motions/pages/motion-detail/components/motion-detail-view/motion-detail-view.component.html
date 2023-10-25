@@ -58,27 +58,6 @@
             </div>
 
             <mat-menu #motionExtraMenu="matMenu">
-                <div *ngIf="vp.isMobile && showNavigateButtons">
-                    <button
-                        mat-menu-item
-                        (click)="navigateToMotion(previousMotion)"
-                        [disabled]="!previousMotion"
-                        class="motion-detail-nav-button"
-                    >
-                        <mat-icon>chevron_left</mat-icon>
-                        <span *ngIf="previousMotion">{{ 'Motion' | translate }} {{ previousMotion.number }}</span>
-                    </button>
-                    <button
-                        mat-menu-item
-                        (click)="navigateToMotion(nextMotion)"
-                        [disabled]="!nextMotion"
-                        class="motion-detail-nav-button"
-                    >
-                        <mat-icon>chevron_right</mat-icon>
-                        <span *ngIf="nextMotion">{{ 'Motion' | translate }} {{ nextMotion.number }}</span>
-                    </button>
-                    <mat-divider *ngIf="previousMotion || nextMotion"></mat-divider>
-                </div>
                 <!-- List of speakers -->
                 <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
                 <!-- PDF -->
