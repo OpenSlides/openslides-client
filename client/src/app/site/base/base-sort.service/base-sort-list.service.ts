@@ -1,4 +1,4 @@
-import { Directive, Injector, ProviderToken } from '@angular/core';
+import { Directive, inject, Injector, ProviderToken } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
     auditTime,
@@ -9,9 +9,11 @@ import {
     isObservable,
     Observable
 } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { StorageService } from '../../../gateways/storage.service';
@@ -177,6 +179,8 @@ export abstract class BaseSortListService<V extends BaseViewModel>
 
     private initializationCount = 0;
 
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+
     public constructor(
         translate: TranslateService,
         private store: StorageService,
@@ -203,6 +207,11 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         } else {
             this._defaultDefinitionSubject.next(defaultDefinition);
         }
+        this.activeMeetingIdService.meetingIdChanged.subscribe(event => {
+            if (event.nextMeetingId) {
+                this.setSortingAfterMeetingChange(event.nextMeetingId);
+            }
+        });
     }
 
     /**
@@ -360,48 +369,31 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     }
 
     private async loadDefinition(): Promise<void> {
-        let [storedDefinition, sortProperty, sortAscending]: [OsSortingDefinition<V>, OsSortProperty<V>, boolean] =
-            await Promise.all([
-                // TODO: Remove the sorting definition loading part and everything caused by 'transformDeprecated' at a later date, it is only here for backwards compatibility
-                this.store.get<OsSortingDefinition<V>>(`sorting_` + this.storageKey),
-                this.store.get<OsSortProperty<V>>(`sorting_property_` + this.storageKey),
-                this.store.get<boolean>(`sorting_ascending_` + this.storageKey)
-            ]);
+        let [sortProperty, sortAscending]: [OsSortProperty<V>, boolean] = await Promise.all([
+            this.store.get<OsSortProperty<V>>(this.calcStorageKey(`sorting_property`, this.storageKey)),
+            this.store.get<boolean>(this.calcStorageKey(`sorting_ascending`, this.storageKey))
+        ]);
 
-        const transformDeprecated = !!storedDefinition;
-        if (transformDeprecated) {
-            this.store.remove(`sorting_` + this.storageKey);
-        }
-
-        if ((sortAscending ?? sortProperty) != null) {
-            storedDefinition = {
-                sortAscending,
-                sortProperty
-            };
-        }
-
-        if (storedDefinition) {
-            this.sortDefinition = storedDefinition;
-        }
-
-        if (this.sortDefinition && this.sortDefinition.sortProperty) {
-            if (transformDeprecated) {
-                this.updateSortDefinitions();
-            } else {
-                this.calculateDefaultStatus();
-                this.updateSortedData();
-            }
-        } else {
-            const defaultDef = await this.getDefaultDefinition();
-            sortAscending = sortAscending ?? defaultDef.sortAscending;
-            sortProperty = sortProperty ?? defaultDef.sortProperty;
-            this.sortDefinition = {
-                sortAscending,
-                sortProperty
-            };
-            this.updateSortDefinitions();
-        }
+        const defaultDef = await this.getDefaultDefinition();
+        sortAscending = sortAscending ?? defaultDef.sortAscending;
+        sortProperty = sortProperty ?? defaultDef.sortProperty;
+        this.sortDefinition = {
+            sortAscending,
+            sortProperty
+        };
+        this.updateSortDefinitions();
         this.hasLoaded.resolve(true);
+    }
+
+    private async setSortingAfterMeetingChange(meetingId: Id): Promise<void> {
+        let [sortProperty, sortAscending]: [OsSortProperty<V>, boolean] = await Promise.all([
+            this.store.get<OsSortProperty<V>>(`sorting_property_${this.storageKey}_${meetingId}`),
+            this.store.get<boolean>(`sorting_ascending_${this.storageKey}_${meetingId}`)
+        ]);
+        const defaultDef = await this.getDefaultDefinition();
+        sortProperty = sortProperty ?? defaultDef.sortProperty;
+        sortAscending = sortAscending ?? defaultDef.sortAscending;
+        this.setSorting(sortProperty, sortAscending);
     }
 
     /**
@@ -430,11 +422,11 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         this.calculateDefaultStatus();
         this.updateSortedData();
         if (this._isDefaultSorting) {
-            this.store.remove(`sorting_property_` + this.storageKey);
+            this.store.remove(this.calcStorageKey(`sorting_property`, this.storageKey));
         } else {
-            this.store.set(`sorting_property_` + this.storageKey, this.sortDefinition?.sortProperty);
+            this.store.set(this.calcStorageKey(`sorting_property`, this.storageKey), this.sortDefinition?.sortProperty);
         }
-        this.store.set(`sorting_ascending_` + this.storageKey, this.sortDefinition?.sortAscending);
+        this.store.set(this.calcStorageKey(`sorting_ascending`, this.storageKey), this.sortDefinition?.sortAscending);
     }
 
     private calculateDefaultStatus(): void {
@@ -442,5 +434,13 @@ export abstract class BaseSortListService<V extends BaseViewModel>
             this.sortDefinition.sortProperty,
             this._defaultDefinitionSubject.value?.sortProperty
         );
+    }
+
+    private calcStorageKey(prefix: string, storageKey: string): string {
+        const possibleMeetingId = this.activeMeetingIdService.meetingId;
+        if (possibleMeetingId) {
+            return `${prefix}_${storageKey}_${possibleMeetingId}`;
+        }
+        return `${prefix}_${storageKey}`;
     }
 }
