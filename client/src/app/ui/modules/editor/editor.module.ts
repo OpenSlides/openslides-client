@@ -1,16 +1,31 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 import { EditorComponent } from './components/editor/editor.component';
+import { EditorLinkDialogComponent } from './components/editor-link-dialog/editor-link-dialog.component';
 
-const DECLARATIONS = [EditorComponent];
+const DECLARATIONS = [EditorComponent, EditorLinkDialogComponent];
 
 @NgModule({
     declarations: DECLARATIONS,
-    imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatRippleModule],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatRippleModule,
+        MatFormFieldModule,
+        MatDialogModule,
+        MatInputModule,
+        MatButtonModule,
+        FormsModule
+    ],
     exports: DECLARATIONS
 })
 export class EditorModule {}

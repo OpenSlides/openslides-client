@@ -10,6 +10,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Editor, Extension } from '@tiptap/core';
 import Blockquote from '@tiptap/extension-blockquote';
 import Bold from '@tiptap/extension-bold';
@@ -35,6 +36,8 @@ import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 
+import { EditorLinkDialogComponent } from '../editor-link-dialog/editor-link-dialog.component';
+
 @Component({
     selector: `os-editor`,
     templateUrl: `./editor.component.html`,
@@ -52,6 +55,10 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     public editor: Editor;
 
     private cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+    constructor(private dialog: MatDialog) {
+        super();
+    }
 
     public ngAfterViewInit(): void {
         this.editor = new Editor({
@@ -118,8 +125,24 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             .unsetItalic()
             .unsetUnderline()
             .unsetColor()
+            .unsetHighlight()
             .removeEmptyTextStyle()
             .run();
+    }
+
+    public async setLinkDialog() {
+        this.dialog
+            .open(EditorLinkDialogComponent, {
+                data: this.editor.getAttributes(`link`)
+            })
+            .afterClosed()
+            .subscribe(result => {
+                if (result) {
+                    this.editor.chain().focus().setLink(result).run();
+                } else if (result === null) {
+                    this.editor.chain().focus().unsetLink().run();
+                }
+            });
     }
 
     protected createForm(): UntypedFormControl {

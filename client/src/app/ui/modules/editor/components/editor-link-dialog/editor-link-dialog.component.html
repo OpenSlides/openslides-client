@@ -1,0 +1,13 @@
+<h1 mat-dialog-title translate>Insert/Edit Link</h1>
+<div mat-dialog-content>
+    <p>Test</p>
+    <mat-form-field>
+        <mat-label translate>URL</mat-label>
+        <input matInput [(ngModel)]="data.href" />
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button *ngIf="!!initialValue" mat-button [mat-dialog-close]="null" translate>Remove link</button>
+    <button mat-button [mat-dialog-close]="initialValue" translate>Cancel</button>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial translate>Ok</button>
+</div>
