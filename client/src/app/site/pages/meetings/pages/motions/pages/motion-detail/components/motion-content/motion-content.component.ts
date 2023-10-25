@@ -179,18 +179,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     }
 
     /**
-     * clicking Shift and Enter will save automatically
-     *
-     * @param event has the code
-     */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.save.emit(this.contentForm.value);
-            this.updateMotionNumbersSubject();
-        }
-    }
-
-    /**
      * If the checkbox is deactivated, the statute_paragraph_id-field needs to be reset, as only that field is saved
      *
      * @param {MatCheckboxChange} _event

@@ -37,7 +37,7 @@
     ></os-motion-detail-diff>
 </ng-container>
 
-<form class="motion-content" [formGroup]="contentForm" (keydown)="onKeyDown($event)">
+<form class="motion-content" [formGroup]="contentForm">
     <!-- Selecting statute paragraphs for amendment -->
     <div class="statute-amendment-selector" *ngIf="newMotion && statuteParagraphs.length && statutesEnabled">
         <mat-checkbox formControlName="statute_amendment" (change)="onStatuteAmendmentChange($event)">
