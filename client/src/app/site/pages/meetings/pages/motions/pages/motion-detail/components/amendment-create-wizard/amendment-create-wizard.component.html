@@ -91,9 +91,7 @@
                             {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}:
                         </span>
                     </h4>
-                    <os-editor
-                        [formControlName]="'text_' + paragraph.paragraphNo"
-                    ></os-editor>
+                    <os-editor [formControlName]="'text_' + paragraph.paragraphNo"></os-editor>
                 </section>
 
                 <!-- Reason -->
@@ -111,10 +109,7 @@
                     <span *ngIf="reasonRequired">*</span>
                 </h3>
 
-                <os-editor
-                    formControlName="reason"
-                    [required]="reasonRequired"
-                ></os-editor>
+                <os-editor formControlName="reason" [required]="reasonRequired"></os-editor>
                 <div
                     *ngIf="
                         reasonRequired &&
