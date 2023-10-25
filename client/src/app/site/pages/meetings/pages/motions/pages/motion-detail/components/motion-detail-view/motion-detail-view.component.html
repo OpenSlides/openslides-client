@@ -24,10 +24,7 @@
             </div>
 
             <!-- Back and forth buttons -->
-            <div
-                *ngIf="!editMotion && showNavigateButtons"
-                class="extra-controls-slot prev-next-motion-controls"
-            >
+            <div *ngIf="!editMotion && showNavigateButtons" class="extra-controls-slot prev-next-motion-controls">
                 <button
                     mat-button
                     (click)="navigateToMotion(previousMotion)"
