@@ -10,11 +10,13 @@
 
 .openslides-light-theme {
     @include mat.all-legacy-component-themes($openslides-light-theme);
+    @include mat.all-component-themes($openslides-light-theme);
     @include os-component-themes($openslides-light-theme);
 }
 
 .openslides-dark-theme {
     @include mat.all-legacy-component-colors($openslides-dark-theme);
+    @include mat.all-component-themes($openslides-dark-theme);
     @include os-component-themes($openslides-dark-theme);
 }
 

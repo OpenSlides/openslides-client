@@ -12,6 +12,7 @@
     mat.define-legacy-typography-config($font-family: "OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif")
 );
 @include mat.legacy-core();
+@include mat.core();
 
 /** theming */
 @import './assets/styles/theme-styles.scss';
