@@ -79,7 +79,7 @@ export class DurationService {
         const minutes = `0${Math.floor((duration % 3600) / 60)}`.slice(-2);
         const seconds = `0${Math.floor(duration % 60)}`.slice(-2);
         if (!isNaN(+minutes) && !isNaN(+seconds)) {
-            return `${prefix}${hours}:${minutes}:${seconds} h`;
+            return `${prefix}${hours}:${minutes} h`;
         } else {
             return ``;
         }
