@@ -29,9 +29,9 @@
 
     .editor-content ::ng-deep {
         .tiptap {
-            border: 1px solid rgba(0, 0, 0, 0.42);
-            padding: 0 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.42);
             margin-top: 8px;
+            outline: none;
         }
     }
 }
