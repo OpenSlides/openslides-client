@@ -277,6 +277,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             .pipe(
                 map(viewModels => {
                     if (viewModels && viewModels.length) {
+                        const sortFn = (a, b) => {
+                            return a.label.trim().localeCompare(b.label.trim());
+                        };
                         const filterProperties: (OsFilterOption | string)[] = viewModels
                             .filter(filterFn ?? (() => true))
                             .map((model: any) => ({
@@ -293,7 +296,8 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                                               condition: child.id
                                           }))
                                         : undefined
-                            }));
+                            }))
+                            .sort(sortFn);
 
                         if (noneOptionLabel) {
                             filterProperties.push(`-`);
@@ -302,7 +306,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                                 label: noneOptionLabel
                             });
                         }
-
                         return filterProperties;
                     }
 
