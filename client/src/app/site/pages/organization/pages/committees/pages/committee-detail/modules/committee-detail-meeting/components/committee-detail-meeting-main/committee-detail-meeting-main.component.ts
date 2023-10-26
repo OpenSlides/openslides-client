@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { getMeetingCreateSubscriptionConfig } from 'src/app/site/pages/organization/organization.subscription';
 
 import { getCommitteeMeetingDetailSubscriptionConfig } from '../../../../../../committees.subscription';
 
@@ -14,5 +15,9 @@ export class CommitteeDetailMeetingMainComponent extends BaseModelRequestHandler
         if (id) {
             this.subscribeTo(getCommitteeMeetingDetailSubscriptionConfig(id), { hideWhenDestroyed: true });
         }
+    }
+
+    protected override onShouldCreateModelRequests(): void {
+        this.subscribeTo(getMeetingCreateSubscriptionConfig());
     }
 }
