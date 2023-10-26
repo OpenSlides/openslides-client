@@ -87,7 +87,7 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
             });
             // TODO: Does we get a response for displaying?
             this.matSnackBar.open(
-                this.translate.instant(`Your password was resetted successfully!`),
+                this.translate.instant(`Your password has been reset successfully!`),
                 this.translate.instant(`OK`),
                 {
                     duration: 0
