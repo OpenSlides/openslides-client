@@ -85,14 +85,18 @@
             <mat-icon>format_strikethrough</mat-icon>
         </button>
 
-        <button mat-ripple
+        <button
+            mat-ripple
             [ngClass]="{ active: editor.isActive('superscript') }"
-            (click)="editor.chain().focus().toggleSuperscript().run()">
+            (click)="editor.chain().focus().toggleSuperscript().run()"
+        >
             <mat-icon>superscript</mat-icon>
         </button>
-        <button mat-ripple
+        <button
+            mat-ripple
             [ngClass]="{ active: editor.isActive('subscript') }"
-            (click)="editor.chain().focus().toggleSubscript().run()">
+            (click)="editor.chain().focus().toggleSubscript().run()"
+        >
             <mat-icon>subscript</mat-icon>
         </button>
 
