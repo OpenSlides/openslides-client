@@ -36,7 +36,7 @@ import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 
-import { EditorLinkDialogComponent } from '../editor-link-dialog/editor-link-dialog.component';
+import { EditorLinkDialogComponent, EditorLinkDialogOutput } from '../editor-link-dialog/editor-link-dialog.component';
 
 @Component({
     selector: `os-editor`,
@@ -82,7 +82,11 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 Bold,
                 Highlight,
                 Italic,
-                Link,
+                Link.configure({
+                    openOnClick: false
+                }).extend({
+                    inclusive: false
+                }),
                 Strike,
                 Subscript,
                 Superscript,
@@ -147,14 +151,37 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     public async setLinkDialog() {
         this.dialog
             .open(EditorLinkDialogComponent, {
-                data: this.editor.getAttributes(`link`)
+                data: {
+                    link: this.editor.getAttributes(`link`),
+                    needsText: this.editor.state.selection.empty && !this.editor.isActive(`link`)
+                }
             })
             .afterClosed()
-            .subscribe(result => {
-                if (result) {
-                    this.editor.chain().focus().setLink(result).run();
-                } else if (result === null) {
-                    this.editor.chain().focus().unsetLink().run();
+            .subscribe((result: EditorLinkDialogOutput) => {
+                const chain = this.editor.chain().focus().extendMarkRange(`link`);
+                if (result.action === `remove-link`) {
+                    chain.unsetLink().run();
+                } else if (result.action === `set-link`) {
+                    if (result.link) {
+                        if (result.text) {
+                            chain
+                                .insertContent({
+                                    type: `text`,
+                                    text: result.text,
+                                    marks: [
+                                        {
+                                            type: `link`,
+                                            attrs: result.link
+                                        }
+                                    ]
+                                })
+                                .run();
+                        } else {
+                            chain.setLink(result.link).run();
+                        }
+                    }
+
+                    this.editor.chain().focus(this.editor.state.selection.to).unsetMark(`link`).run();
                 }
             });
     }
