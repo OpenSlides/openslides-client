@@ -40,6 +40,7 @@ import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 
+import { EditorHtmlDialogComponent, EditorHtmlDialogOutput } from '../editor-html-dialog/editor-html-dialog.component';
 import { EditorLinkDialogComponent, EditorLinkDialogOutput } from '../editor-link-dialog/editor-link-dialog.component';
 
 @Component({
@@ -190,6 +191,19 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                     }
 
                     this.editor.chain().focus(this.editor.state.selection.to).unsetMark(`link`).run();
+                }
+            });
+    }
+
+    public editCode() {
+        this.dialog
+            .open(EditorHtmlDialogComponent, {
+                data: this.editor.getHTML()
+            })
+            .afterClosed()
+            .subscribe((result: EditorHtmlDialogOutput) => {
+                if (result.action === `set`) {
+                    this.editor.commands.setContent(result.html, true);
                 }
             });
     }

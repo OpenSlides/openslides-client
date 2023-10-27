@@ -9,9 +9,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 import { EditorComponent } from './components/editor/editor.component';
+import { EditorHtmlDialogComponent } from './components/editor-html-dialog/editor-html-dialog.component';
 import { EditorLinkDialogComponent } from './components/editor-link-dialog/editor-link-dialog.component';
 
-const DECLARATIONS = [EditorComponent, EditorLinkDialogComponent];
+const DECLARATIONS = [EditorComponent, EditorLinkDialogComponent, EditorHtmlDialogComponent];
 
 @NgModule({
     declarations: DECLARATIONS,

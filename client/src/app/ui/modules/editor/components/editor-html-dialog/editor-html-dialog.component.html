@@ -1,0 +1,8 @@
+<h1 mat-dialog-title translate>Edit HTML content</h1>
+<div mat-dialog-content>
+    <textarea rows="20" cols="100" mat-input [(ngModel)]="data"></textarea>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="cancel()" translate>Cancel</button>
+    <button mat-button (click)="save()" translate>Ok</button>
+</div>
