@@ -30,6 +30,10 @@ import Paragraph from '@tiptap/extension-paragraph';
 import Strike from '@tiptap/extension-strike';
 import Subscript from '@tiptap/extension-subscript';
 import Superscript from '@tiptap/extension-superscript';
+import Table from '@tiptap/extension-table';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
+import TableRow from '@tiptap/extension-table-row';
 import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
@@ -77,6 +81,10 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 OrderedList,
                 Paragraph,
                 Text,
+                Table,
+                TableRow,
+                TableHeader,
+                TableCell,
 
                 //Marks
                 Bold,
