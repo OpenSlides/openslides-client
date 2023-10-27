@@ -54,6 +54,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     public editor: Editor;
 
+    public editorReady = false;
+
     private cd: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     constructor(private dialog: MatDialog) {
@@ -92,6 +94,13 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 History,
                 TextAlign,
                 Extension.create({
+                    onCreate: () => {
+                        this.editorReady = true;
+                        this.cd.detectChanges();
+                    },
+                    onDestroy: () => {
+                        this.editorReady = false;
+                    },
                     onSelectionUpdate: () => {
                         this.cd.detectChanges();
                     },

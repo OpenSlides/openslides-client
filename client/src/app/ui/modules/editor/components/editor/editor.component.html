@@ -1,5 +1,5 @@
 <div class="editor">
-    <div *ngIf="editor" class="editor-menu">
+    <div *ngIf="editorReady" class="editor-menu">
         <button
             mat-ripple
             [ngClass]="{ active: editor.isActive('bold') }"
