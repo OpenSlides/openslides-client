@@ -1,5 +1,7 @@
 .editor {
     .editor-menu {
+        display: flex;
+        flex-wrap: wrap;
         > button {
             cursor: pointer;
             background: none;
@@ -8,6 +10,7 @@
             height: 34px;
             align-items: center;
             margin-right: 4px;
+            margin-bottom: 4px;
             border-radius: 2px;
             &.color-selection {
                 position: relative;

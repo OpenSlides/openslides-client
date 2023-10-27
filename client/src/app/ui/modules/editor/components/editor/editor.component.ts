@@ -92,7 +92,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 // Extensions
                 Color,
                 History,
-                TextAlign,
+                TextAlign.configure({
+                    types: [`heading`, `paragraph`]
+                }),
                 Extension.create({
                     onCreate: () => {
                         this.editorReady = true;
@@ -105,7 +107,10 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                         this.cd.detectChanges();
                     },
                     onUpdate: () => {
-                        this.updateForm(this.editor.getHTML());
+                        const content = this.editor.getHTML();
+                        if (this.value != content) {
+                            this.updateForm(content);
+                        }
                     }
                 })
             ],
@@ -152,6 +157,10 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                     this.editor.chain().focus().unsetLink().run();
                 }
             });
+    }
+
+    public todo() {
+        alert(`Not implemented`);
     }
 
     protected createForm(): UntypedFormControl {
