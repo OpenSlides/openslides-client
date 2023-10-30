@@ -72,7 +72,7 @@
     </os-list-of-speakers-content>
 
     <!-- Poll-Collection -->
-    <os-poll-collection [currentProjection]="projectedViewModel"></os-poll-collection>
+    <os-poll-collection *ngIf="showPollCollection" [currentProjection]="projectedViewModel"></os-poll-collection>
 
     <!-- Projector -->
     <mat-card class="os-card spacer-bottom-60">

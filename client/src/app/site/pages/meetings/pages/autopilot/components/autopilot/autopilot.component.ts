@@ -38,6 +38,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         }
     }
 
+    public get showPollCollection(): boolean {
+        return this.title !== this.translate.instant(`Agenda`);
+    }
+
     public get projectorTitle(): string {
         return this.projector?.getTitle() || ``;
     }
