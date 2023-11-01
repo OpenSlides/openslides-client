@@ -89,7 +89,17 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
                 //Marks
                 Bold,
-                Highlight,
+                Highlight.extend({
+                    parseHTML() {
+                        return [
+                            ...this.parent(),
+                            {
+                                tag: `span`,
+                                getAttrs: node => (node as HTMLElement).style.backgroundColor && null
+                            }
+                        ];
+                    }
+                }),
                 Italic,
                 Link.configure({
                     openOnClick: false
