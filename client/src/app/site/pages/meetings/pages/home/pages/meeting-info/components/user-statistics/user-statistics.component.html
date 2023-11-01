@@ -21,7 +21,7 @@
         <tr>
             <td>{{ 'Duration of all requests to speak' | translate }}</td>
             <!-- I believe we had a pipe fot that, but could not find it -->
-            <td>{{ parseDuration(totalSpeakingTime | async) }}</td>
+            <td>{{ parseDuration(totalSpeakingTime | async, true) }}</td>
         </tr>
     </table>
     <os-list
@@ -38,7 +38,7 @@
         </div>
         <div *osScrollingTableCell="'durationOfWordRequests'; row as object; config: { width: '100px' }">
             <div *osScrollingTableCellLabel>{{ 'Duration of requests to speak' | translate }}</div>
-            {{ parseDuration(object.speakingTime) }}
+            {{ parseDuration(object.speakingTime, true) }}
         </div>
         <div *osScrollingTableCell="'numberOfWordRequests'; row as object; config: { width: '50px' }">
             <div *osScrollingTableCellLabel>{{ 'Number of requests to speak' | translate }}</div>
