@@ -232,7 +232,7 @@ export class AutoupdateStream {
         const LINE_BREAK = `\n`.charCodeAt(0);
         const reader = response.body.getReader();
         let next: Uint8Array = null;
-        let result: ReadableStreamDefaultReadResult<Uint8Array>;
+        let result: ReadableStreamReadResult<Uint8Array>;
         while (!(result = await reader.read()).done) {
             const lines = splitTypedArray(LINE_BREAK, result.value);
             for (let line of lines) {
@@ -254,18 +254,22 @@ export class AutoupdateStream {
             }
         }
 
-        if (!response.ok) {
-            if (headers.authentication !== this.authToken) {
+        // Hotfix wrong status codes
+        const content = next ? this.parse(this.decode(next)) : null;
+        const autoupdateSentUnmarkedError = content?.type !== ErrorType.UNKNOWN && content?.error;
+
+        if (!response.ok || autoupdateSentUnmarkedError) {
+            if ((headers.authentication ?? null) !== (this.authToken ?? null)) {
                 return await this.doRequest();
             }
 
             let errorContent = null;
-            if (next && (errorContent = this.parse(this.decode(next)))?.error) {
+            if (content && (errorContent = content)?.error) {
                 errorContent = errorContent.error;
             }
 
             let type = ErrorType.UNKNOWN;
-            if (response.status >= 400 && response.status < 500) {
+            if ((response.status >= 400 && response.status < 500) || errorContent?.type === `invalid`) {
                 type = ErrorType.CLIENT;
             } else if (response.status >= 500) {
                 type = ErrorType.SERVER;

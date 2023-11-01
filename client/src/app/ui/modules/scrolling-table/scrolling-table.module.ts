@@ -3,8 +3,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
 
 import { ScrollingTableComponent } from './components/scrolling-table/scrolling-table.component';
 import { ScrollingTableCellDirective } from './directives/scrolling-table-cell.directive';

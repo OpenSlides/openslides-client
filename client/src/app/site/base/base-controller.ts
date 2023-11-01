@@ -14,6 +14,10 @@ export abstract class BaseController<V extends BaseViewModel, M extends BaseMode
         return this.controllerServiceCollector.translate;
     }
 
+    public get collection(): string {
+        return this.repo.collection;
+    }
+
     public constructor(
         protected controllerServiceCollector: ControllerServiceCollectorService,
         protected baseModelCtor: ModelConstructor<M>,

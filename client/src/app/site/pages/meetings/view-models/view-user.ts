@@ -255,7 +255,11 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     // ### block end.
 
     public override getDetailStateUrl(): string {
-        return `/${this.getActiveMeetingId()}/users/${this.id}`;
+        if (this.getEnsuredActiveMeetingId && this.getEnsuredActiveMeetingId()) {
+            return `/${this.getEnsuredActiveMeetingId()}/participants/${this.id}`;
+        }
+
+        return `/accounts/${this.id}`;
     }
 
     public canVoteFor(user: ViewUser | null): boolean {
