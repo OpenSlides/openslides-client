@@ -2,7 +2,7 @@
     .editor-menu {
         display: flex;
         flex-wrap: wrap;
-        > button {
+        > button, > .button-group > button {
             cursor: pointer;
             background: none;
             border: 1px solid rgba(0, 0, 0, 0.42);
@@ -27,6 +27,22 @@
                 height: 100%;
                 opacity: 0;
                 cursor: pointer;
+            }
+        }
+        > .button-group {
+            display: flex;
+            border: 1px solid rgba(0, 0, 0, 0.42);
+            border-radius: 2px;
+            margin-right: 4px;
+            margin-bottom: 4px;
+            > button {
+                border: none;
+                margin-right: 0;
+                margin-bottom: 0;
+                height: 32px;
+                &:not(:last-of-type) {
+                    border-right: 1px solid rgba(0, 0, 0, 0.42);
+                }
             }
         }
     }
