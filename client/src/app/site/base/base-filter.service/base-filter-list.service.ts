@@ -277,9 +277,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             .pipe(
                 map(viewModels => {
                     if (viewModels && viewModels.length) {
-                        const sortFn = (a, b) => {
-                            return a.label.trim().localeCompare(b.label.trim());
-                        };
                         const filterProperties: (OsFilterOption | string)[] = viewModels
                             .filter(filterFn ?? (() => true))
                             .map((model: any) => ({
@@ -297,7 +294,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                                           }))
                                         : undefined
                             }))
-                            .sort(sortFn);
+                            .sort((a, b) => a.label.trim().localeCompare(b.label.trim()));
 
                         if (noneOptionLabel) {
                             filterProperties.push(`-`);
