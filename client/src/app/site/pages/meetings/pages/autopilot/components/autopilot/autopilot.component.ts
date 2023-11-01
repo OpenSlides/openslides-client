@@ -39,7 +39,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     }
 
     public get showPollCollection(): boolean {
-        return this._currentProjection?.type !== "agenda_item_list";
+        return this._currentProjection?.type !== `agenda_item_list`;
     }
 
     public get projectorTitle(): string {
