@@ -99,12 +99,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                             }
                         ];
                     }
+                }).configure({
+                    multicolor: true
                 }),
                 Italic,
-                Link.configure({
-                    openOnClick: false
-                }).extend({
+                Link.extend({
                     inclusive: false
+                }).configure({
+                    openOnClick: false
                 }),
                 Strike,
                 Subscript,
@@ -150,6 +152,13 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         const val = (<any>e.target)?.value;
         if (val) {
             this.editor.chain().focus().setColor(val).run();
+        }
+    }
+
+    public updateHighlightColor(e: Event) {
+        const val = (<any>e.target)?.value;
+        if (val) {
+            this.editor.chain().focus().setHighlight({ color: val }).run();
         }
     }
 

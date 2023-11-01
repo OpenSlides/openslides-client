@@ -112,13 +112,23 @@
                 type="color"
             />
         </button>
-        <button
-            mat-ripple
-            [ngClass]="{ active: editor.isActive('highlight') }"
-            (click)="editor.chain().focus().toggleHighlight().run()"
-        >
-            <mat-icon>format_color_fill</mat-icon>
-        </button>
+        <div class="button-group">
+            <button
+                mat-ripple
+                [ngClass]="{ active: editor.isActive('highlight') }"
+                (click)="editor.chain().focus().toggleHighlight().run()"
+            >
+                <mat-icon>format_color_fill</mat-icon>
+            </button>
+            <button mat-ripple class="color-selection">
+                <mat-icon>arrow_drop_down</mat-icon>
+                <input
+                    [value]="editor.getAttributes('highlight')['color']"
+                    (change)="updateHighlightColor($event)"
+                    type="color"
+                />
+            </button>
+        </div>
         <button mat-ripple (click)="clearSelectedFormat()">
             <mat-icon>format_clear</mat-icon>
         </button>
