@@ -12,6 +12,7 @@
             margin-right: 4px;
             margin-bottom: 4px;
             border-radius: 2px;
+            color: var(--mdc-text-button-label-text-color, inherit);
             &.color-selection {
                 position: relative;
             }
