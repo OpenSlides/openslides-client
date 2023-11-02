@@ -62,7 +62,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public readonly additionalFormControls = {
         default_structure_level: [``],
         default_number: [``],
-        default_vote_weight: [``, Validators.min(0)],
+        default_vote_weight: [``, Validators.min(0.000001)],
         organization_management_level: [],
         committee_management_ids: []
     };
@@ -205,7 +205,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public get isDefaultVoteWeightError(): boolean {
-        return this.personalInfoFormValue.default_vote_weight < 0;
+        return this.personalInfoFormValue.default_vote_weight < 0.000001;
     }
 
     private generateParticipationTableData(): void {
