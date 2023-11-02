@@ -293,7 +293,8 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                                               condition: child.id
                                           }))
                                         : undefined
-                            }));
+                            }))
+                            .sort((a, b) => a.label.trim().localeCompare(b.label.trim()));
 
                         if (noneOptionLabel) {
                             filterProperties.push(`-`);
@@ -302,7 +303,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                                 label: noneOptionLabel
                             });
                         }
-
                         return filterProperties;
                     }
 

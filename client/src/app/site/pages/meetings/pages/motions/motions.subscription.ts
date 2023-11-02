@@ -217,7 +217,7 @@ export const getMotionListMinimalSubscriptionConfig: SubscriptionConfigGenerator
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [{ idField: `motion_ids`, fieldset: [`title`, `meeting_id`, `sequential_number`] }]
+        follow: [{ idField: `motion_ids`, fieldset: [`title`, `meeting_id`, `sequential_number`, `number`] }]
     },
     subscriptionName: MOTION_LIST_MINIMAL_SUBSCRIPTION
 });

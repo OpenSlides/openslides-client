@@ -48,6 +48,18 @@ export class GlobalSearchService {
         };
     }
 
+    public getTitle(collection: string, content: any) {
+        if (collection === `user`) {
+            const firstName = content.first_name?.trim() || ``;
+            const lastName = content.last_name?.trim() || ``;
+            const userName = content.username?.trim() || ``;
+            const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
+            return `${content.title?.trim() || ``} ${name?.trim()}`.trim() || ``;
+        }
+
+        return content.title || content.name;
+    }
+
     /**
      * Searches the content for search matches and replaces them with markers
      */
@@ -56,7 +68,7 @@ export class GlobalSearchService {
             const result = results[fqid];
             if (result.matched_by) {
                 for (const field of Object.keys(result.matched_by)) {
-                    if (result.content[field]) {
+                    if (result.content[field] && !this.isTitleField(collectionFromFqid(fqid), field)) {
                         for (const word of result.matched_by[field]) {
                             result.content[field] = `${result.content[field]}`.replace(
                                 new RegExp(word, `gi`),
@@ -66,6 +78,14 @@ export class GlobalSearchService {
                     }
                 }
             }
+        }
+    }
+
+    private isTitleField(collection: string, field: string): boolean {
+        if (collection === `user`) {
+            return [`first_name`, `last_name`, `username`, `title`].includes(field);
+        } else {
+            return [`name`, `title`].includes(field);
         }
     }
 
@@ -123,18 +143,6 @@ export class GlobalSearchService {
             committee: results[`committee/${content.committee_id}`]?.content,
             score: results[fqid].score || 0
         };
-    }
-
-    public getTitle(collection: string, content: any) {
-        if (collection === `user`) {
-            const firstName = content.first_name?.trim() || ``;
-            const lastName = content.last_name?.trim() || ``;
-            const userName = content.username?.trim() || ``;
-            const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
-            return `${content.title?.trim() || ``} ${name?.trim()}`.trim() || ``;
-        }
-
-        return content.title || content.name;
     }
 
     private getUrl(collection: string, id: Id, content: any): string {

@@ -41,6 +41,7 @@ import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMes
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
+export const MEETING_CREATE_SUBSCRIPTION = `meeting_create`;
 
 export enum RelatedTime {
     Future = 1,

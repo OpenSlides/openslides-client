@@ -223,21 +223,25 @@ export class MotionFormatService {
             firstLine
         });
 
+        let lastLineTo = -1;
         for (let i = 0; i < changesToShow.length; i++) {
-            text.push(
-                this.diffService.extractMotionLineRange(
-                    motionText,
-                    {
-                        from: i === 0 ? firstLine : changesToShow[i - 1].getLineTo() + 1,
-                        to: changesToShow[i].getLineFrom() - 1
-                    },
-                    true,
-                    lineLength,
-                    highlightedLine
-                )
-            );
+            if (changesToShow[i].getLineTo() > lastLineTo) {
+                text.push(
+                    this.diffService.extractMotionLineRange(
+                        motionText,
+                        {
+                            from: i === 0 ? firstLine : changesToShow[i - 1].getLineTo() + 1,
+                            to: changesToShow[i].getLineFrom() - 1
+                        },
+                        true,
+                        lineLength,
+                        highlightedLine
+                    )
+                );
+            }
 
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
+            lastLineTo = changesToShow[i].getLineTo();
         }
 
         text.push(

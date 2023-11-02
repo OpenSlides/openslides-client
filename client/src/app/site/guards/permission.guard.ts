@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanLoad, Route, Router, UrlSegment, UrlTree } from '@angular/router';
+import { Route, Router, UrlSegment, UrlTree } from '@angular/router';
 
 import { AuthCheckService } from '../services/auth-check.service';
 import { OpenSlidesRouterService } from '../services/openslides-router.service';
@@ -8,7 +8,7 @@ import { RerouteService } from '../services/reroute.service';
 @Injectable({
     providedIn: `root`
 })
-export class PermissionGuard implements CanLoad {
+export class PermissionGuard {
     public constructor(
         private router: Router,
         private reroute: RerouteService,

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 
 import { LineRange } from '../../../../../../definitions/index';
