@@ -9,6 +9,7 @@ import {
     PollTypeVerbose
 } from 'src/app/domain/models/poll/poll-constants';
 import { ObjectReplaceKeysConfig } from 'src/app/infrastructure/utils';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
@@ -905,7 +906,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_email_replyto`,
                         label: _(`Reply address`),
                         type: `email`,
-                        validators: [Validators.email]
+                        validators: [createEmailValidator()]
                     },
                     {
                         key: `users_email_subject`,

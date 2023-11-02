@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 
 @Component({
     selector: `os-reset-password`,
@@ -33,7 +34,7 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
     ) {
         super(componentServiceCollector, translate);
         this.resetPasswordForm = formBuilder.group({
-            email: [``, [Validators.required, Validators.email]]
+            email: [``, [Validators.required, createEmailValidator()]]
         });
     }
 

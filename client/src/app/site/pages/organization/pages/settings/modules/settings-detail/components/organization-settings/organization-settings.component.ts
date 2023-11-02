@@ -10,6 +10,7 @@ import { OrganizationControllerService } from 'src/app/site/pages/organization/s
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 
 @Component({
     selector: `os-organization-settings`,
@@ -70,7 +71,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 privacy_policy: [this._currentOrgaSettings.privacy_policy],
                 login_text: [this._currentOrgaSettings.login_text],
                 users_email_body: [this._currentOrgaSettings.users_email_body],
-                users_email_replyto: [this._currentOrgaSettings.users_email_replyto, [Validators.email]],
+                users_email_replyto: [this._currentOrgaSettings.users_email_replyto, [createEmailValidator()]],
                 users_email_sender: [this._currentOrgaSettings.users_email_sender],
                 users_email_subject: [this._currentOrgaSettings.users_email_subject],
                 default_language: [this._currentOrgaSettings.default_language]

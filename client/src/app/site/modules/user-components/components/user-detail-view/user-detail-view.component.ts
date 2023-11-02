@@ -18,6 +18,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { GENDERS } from '../../../../../domain/models/users/user';
 import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
 import { OneOfValidator } from '../../validators';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 
 @Component({
     selector: `os-user-detail-view`,
@@ -294,7 +295,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             first_name: [``],
             last_name: [``],
             gender: [``],
-            email: [``, [Validators.email]],
+            email: [``, [createEmailValidator()]],
             last_email_sent: [``],
             default_password: [``],
             is_active: [true],

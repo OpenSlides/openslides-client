@@ -15,6 +15,7 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { UserService } from 'src/app/site/services/user.service';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 
 import { GroupControllerService } from '../../../../../../modules/groups/services/group-controller.service';
 import {
@@ -152,7 +153,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                 username: [``],
                 first_name: [``],
                 last_name: [``],
-                email: [``, Validators.email]
+                email: [``, createEmailValidator()]
             },
             {
                 validators: [OneOfValidator.validation([`username`, `first_name`, `last_name`, `email`], `name`)]
