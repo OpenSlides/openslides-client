@@ -1,12 +1,13 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { User } from 'src/app/domain/models/users/user';
 import { SearchUsersPresenterService } from 'src/app/gateways/presenter/search-users-presenter.service';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 import { OneOfValidator, UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
@@ -15,7 +16,6 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { UserService } from 'src/app/site/services/user.service';
-import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 
 import { GroupControllerService } from '../../../../../../modules/groups/services/group-controller.service';
 import {

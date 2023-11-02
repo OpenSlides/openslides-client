@@ -12,13 +12,13 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { GENDERS } from '../../../../../domain/models/users/user';
 import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
 import { OneOfValidator } from '../../validators';
-import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 
 @Component({
     selector: `os-user-detail-view`,
