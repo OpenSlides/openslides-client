@@ -17,9 +17,11 @@ describe(`OpenSlidesStatusService`, () => {
 
     it(`check stable`, () => {
         expect((service.stable as Deferred).wasResolved).toBe(false);
+        service.setStable();
+        expect((service.stable as Deferred).wasResolved).toBe(true);
     });
 
-    it(`observe isStable`, () => {
+    it(`observe stableSubject`, () => {
         let actualValue: boolean | undefined;
         service.isStableObservable.subscribe(value => {
             actualValue = value;
@@ -27,14 +29,5 @@ describe(`OpenSlidesStatusService`, () => {
         expect(actualValue).toBe(false);
         service.setStable();
         expect(actualValue).toBe(true);
-        service.reset();
-        expect(actualValue).toBe(false);
-    });
-
-    it(`reset should unresolve stable`, () => {
-        service.setStable();
-        expect((service.stable as Deferred).wasResolved).toBe(true);
-        service.reset();
-        expect((service.stable as Deferred).wasResolved).toBe(false);
     });
 });
