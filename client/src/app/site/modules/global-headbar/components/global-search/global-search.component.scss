@@ -4,16 +4,6 @@
     padding-bottom: 24px;
 }
 
-.search-results {
-    width: 848px;
-    max-width: calc(100% + 48px);
-    margin: 0 -24px -24px -24px;
-}
-
-.search-field {
-    width: 100%;
-}
-
 .search-hint {
     padding: 4px 25px;
 }
@@ -25,6 +15,9 @@
 }
 
 .search-results {
+    width: 848px;
+    max-width: calc(100% + 48px);
+    margin: 0 -24px -24px -24px;
     padding: 0;
 
     .info {
@@ -33,10 +26,6 @@
             display: inline-block;
             padding: 0 4px;
         }
-    }
-
-    .result-info {
-        padding: 4px 24px;
     }
 
     .search-no-results {
