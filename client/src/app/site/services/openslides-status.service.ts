@@ -24,5 +24,6 @@ export class OpenSlidesStatusService {
 
     public reset(): void {
         this._stable = new Deferred();
+        this._stableSubject.next(false);
     }
 }

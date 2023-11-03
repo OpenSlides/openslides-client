@@ -28,6 +28,13 @@ describe(`OpenSlidesStatusService`, () => {
         service.setStable();
         expect(actualValue).toBe(true);
         service.reset();
-        expect(actualValue).toBe(true);
+        expect(actualValue).toBe(false);
+    });
+
+    it(`reset should unresolve stable`, () => {
+        service.setStable();
+        expect((service.stable as Deferred).wasResolved).toBe(true);
+        service.reset();
+        expect((service.stable as Deferred).wasResolved).toBe(false);
     });
 });
