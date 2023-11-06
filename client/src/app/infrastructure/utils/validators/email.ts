@@ -12,7 +12,7 @@ export function createEmailValidator(): ValidatorFn {
 
         const validEmail = EMAIL_VALIDATION_REGEX.test(value);
         if (!validEmail) {
-            return { email: `Please enter a valid email address` };
+            return { email: `Please enter a valid email address!` };
         }
         return null;
     };

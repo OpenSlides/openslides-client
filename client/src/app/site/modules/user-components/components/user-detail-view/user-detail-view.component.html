@@ -81,7 +81,7 @@
                     formControlName="email"
                 />
                 <mat-error *ngIf="personalInfoForm.get('email')?.hasError('email')">
-                    {{ 'Please enter a valid email address' | translate }}
+                    {{ 'Please enter a valid email address!' | translate }}
                 </mat-error>
             </mat-form-field>
 
