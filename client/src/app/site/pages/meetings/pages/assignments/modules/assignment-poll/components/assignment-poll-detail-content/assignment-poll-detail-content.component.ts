@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { combineLatest } from 'rxjs';
+import { auditTime, combineLatest } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
@@ -9,6 +9,7 @@ import {
     PollTableData,
     VotingResult
 } from 'src/app/domain/models/poll/poll-constants';
+import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -132,15 +133,19 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         private cd: ChangeDetectorRef,
         private operator: OperatorService,
         private themeService: ThemeService,
-        private participantController: ParticipantControllerService
+        private participantController: ParticipantControllerService,
+        private meetingUserRepo: MeetingUserRepositoryService
     ) {}
 
     public ngOnInit(): void {
         combineLatest([
             this.poll.options_as_observable,
             this.themeService.currentGeneralColorsSubject,
-            this.participantController.getViewModelListObservable()
-        ]).subscribe(() => this.setupTableData());
+            this.participantController.getViewModelListObservable(),
+            this.meetingUserRepo.getViewModelListObservable()
+        ])
+            .pipe(auditTime(1))
+            .subscribe(() => this.setupTableData());
     }
 
     private setupTableData(): void {
