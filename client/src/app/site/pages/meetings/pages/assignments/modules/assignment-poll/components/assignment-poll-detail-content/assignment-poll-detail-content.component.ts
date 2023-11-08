@@ -14,8 +14,8 @@ import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/c
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
-import { ParticipantControllerService } from '../../../../../participants/services/common/participant-controller.service';
 import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
@@ -133,7 +133,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         private cd: ChangeDetectorRef,
         private operator: OperatorService,
         private themeService: ThemeService,
-        private participantController: ParticipantControllerService,
+        private userController: UserControllerService,
         private meetingUserRepo: MeetingUserRepositoryService
     ) {}
 
@@ -141,7 +141,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         combineLatest([
             this.poll.options_as_observable,
             this.themeService.currentGeneralColorsSubject,
-            this.participantController.getViewModelListObservable(),
+            this.userController.getViewModelListObservable(),
             this.meetingUserRepo.getViewModelListObservable()
         ])
             .pipe(auditTime(1))

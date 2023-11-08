@@ -43,7 +43,7 @@ export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Opt
                     title: this.content_object.getShortName(),
                     subtitle: this.content_object.getLevelAndNumber()
                 };
-            } else if (this.poll.isAssignmentPoll) {
+            } else if (this.poll.isAssignmentPoll && !this.content_object_id) {
                 return {
                     title: UnknownUserLabel,
                     subtitle: ``
