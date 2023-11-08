@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { combineLatestWith, map } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
@@ -14,6 +14,7 @@ import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/p
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 
+import { ParticipantControllerService } from '../../../../../participants/services/common/participant-controller.service';
 import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
@@ -130,16 +131,16 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         private pollService: AssignmentPollService,
         private cd: ChangeDetectorRef,
         private operator: OperatorService,
-        private themeService: ThemeService
+        private themeService: ThemeService,
+        private participantController: ParticipantControllerService
     ) {}
 
     public ngOnInit(): void {
-        this.poll.options_as_observable
-            .pipe(
-                combineLatestWith(this.themeService.currentGeneralColorsSubject),
-                map(([options, _]) => options)
-            )
-            .subscribe(() => this.setupTableData());
+        combineLatest([
+            this.poll.options_as_observable,
+            this.themeService.currentGeneralColorsSubject,
+            this.participantController.getViewModelListObservable()
+        ]).subscribe(() => this.setupTableData());
     }
 
     private setupTableData(): void {
