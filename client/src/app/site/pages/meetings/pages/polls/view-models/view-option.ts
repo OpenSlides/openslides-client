@@ -48,6 +48,8 @@ export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Opt
                     title: UnknownUserLabel,
                     subtitle: ``
                 };
+            } else if (this.poll.isAssignmentPoll) {
+                return { title: `` };
             } else {
                 return { title: this.content_object?.getTitle() ?? _(`No data`) };
             }
