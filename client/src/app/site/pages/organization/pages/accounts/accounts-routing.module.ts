@@ -24,6 +24,11 @@ const routes: Routes = [
                     import(`./pages/account-import/account-import.module`).then(m => m.AccountImportModule)
             },
             {
+                path: `subdivisions`,
+                loadChildren: () =>
+                    import(`./pages/subdivisions/pages/subdivision-list/subdivision-list.module`).then(m => m.SubdivisionListModule)
+            },
+            {
                 path: `:id`,
                 loadChildren: () =>
                     import(`./pages/account-detail/account-detail.module`).then(m => m.AccountDetailModule)

@@ -1,0 +1,49 @@
+<os-head-bar [hasMainButton]="true" (mainEvent)="createNewMember()" [multiSelectMode]="isMultiSelect">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Subdivisions' | translate }}</h2>
+    </div>
+
+    <!-- Menu -->
+    <div class="menu-slot">
+        <button type="button" mat-icon-button [matMenuTriggerFor]="memberMenu"><mat-icon>more_vert</mat-icon></button>
+    </div>
+
+    <!-- Multiselect info -->
+    <div class="central-info-slot">
+        <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
+        <span>{{ selectedRows.length }}&nbsp;</span>
+        <span>{{ 'selected' | translate }}</span>
+    </div>
+</os-head-bar>
+
+<mat-menu #singleMenu="matMenu">
+    <ng-template matMenuContent let-member="member">
+        <a mat-menu-item [routerLink]="[member.id, 'edit']">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'Edit' | translate }}</span>
+        </a>
+        <!--<button mat-menu-item class="red-warning-text" (click)="deleteSubdivision([member])">
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>-->
+    </ng-template>
+</mat-menu>
+
+<mat-menu #memberMenu="matMenu">
+    <div *ngIf="!isMultiSelect">
+        <button mat-menu-item (click)="toggleMultiSelect()">
+            <mat-icon>library_add</mat-icon>
+            <span>{{ 'Multiselect' | translate }}</span>
+        </button>
+    </div>
+    <div *ngIf="isMultiSelect">
+        <!--<os-user-multiselect-actions
+            [(selectedUsers)]="selectedRows"
+            (selectAll)="selectAll()"
+            (deselectAll)="deselectAll()"
+            (deleting)="deleteUsers()"
+        >
+        </os-user-multiselect-actions>-->
+    </div>
+</mat-menu>
