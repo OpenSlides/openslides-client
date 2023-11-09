@@ -105,8 +105,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 Italic,
                 Link.extend({
                     inclusive: false
-                }).configure({
-                    openOnClick: false
                 }),
                 Strike,
                 Subscript,
