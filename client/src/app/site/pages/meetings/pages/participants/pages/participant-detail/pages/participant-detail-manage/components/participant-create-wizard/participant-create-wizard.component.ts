@@ -7,6 +7,7 @@ import { BehaviorSubject, distinctUntilChanged, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { User } from 'src/app/domain/models/users/user';
 import { SearchUsersPresenterService } from 'src/app/gateways/presenter/search-users-presenter.service';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 import { OneOfValidator, UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
@@ -152,7 +153,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                 username: [``],
                 first_name: [``],
                 last_name: [``],
-                email: [``]
+                email: [``, createEmailValidator()]
             },
             {
                 validators: [OneOfValidator.validation([`username`, `first_name`, `last_name`, `email`], `name`)]

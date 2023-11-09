@@ -6,7 +6,6 @@ import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-c
 import { MatLegacyOptionModule as MatOptionModule } from '@angular/material/legacy-core';
 import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
-import { MatLegacyPaginatorModule as MatPaginatorModule } from '@angular/material/legacy-paginator';
 import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
@@ -30,7 +29,6 @@ import { HistoryRoutingModule } from './history-routing.module';
         HistoryRoutingModule,
         MatCardModule,
         MatTableModule,
-        MatPaginatorModule,
         MatIconModule,
         MatInputModule,
         MatFormFieldModule,

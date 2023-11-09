@@ -419,7 +419,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      * @returns 0 or the number of times a speaker occurs in finishedSpeakers
      */
     public hasSpokenCount(speaker: ViewSpeaker): number {
-        return this.finishedSpeakers.filter(finishedSpeaker => finishedSpeaker.user_id === speaker.user_id).length;
+        return this.finishedSpeakers.filter(
+            finishedSpeaker => finishedSpeaker.user_id === speaker.user_id && !finishedSpeaker.point_of_order
+        ).length;
     }
 
     /**

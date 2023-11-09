@@ -1,4 +1,10 @@
-import { HttpDownloadProgressEvent, HttpErrorResponse, HttpEvent, HttpHeaderResponse } from '@angular/common/http';
+import {
+    HttpDownloadProgressEvent,
+    HttpErrorResponse,
+    HttpEvent,
+    HttpEventType,
+    HttpHeaderResponse
+} from '@angular/common/http';
 import * as fzstd from 'fzstd';
 import { firstValueFrom, Observable, Subscription } from 'rxjs';
 
@@ -313,8 +319,11 @@ export class HttpStream<T> {
         if (this.isClosed) {
             console.warn(`Got incoming message from stream ${this.id}, but it is closed.`);
             return;
+        } else if (event.type === HttpEventType.Response) {
+            this.reconnect();
+        } else {
+            this._parser.read(event);
         }
-        this._parser.read(event);
     }
 
     private async handleStreamError(error: unknown): Promise<void> {

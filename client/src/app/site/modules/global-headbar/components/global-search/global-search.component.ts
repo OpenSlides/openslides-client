@@ -136,10 +136,13 @@ export class GlobalSearchComponent implements OnDestroy {
     }
 
     public getTextSnippet(text: string): string {
-        const textSnippetSize = 90;
+        const textSnippetSize = 180;
         const removeTags = /<\/?(?!(?:mark)\b)[^/>]+>/g;
         let resultText = ``;
-        const textParts = text.replace(removeTags, ``).split(new RegExp(`(<mark>[^<]+<\/mark>)`, `g`));
+        const textParts = text
+            .replace(/<br\s*\/?>/g, `\n`)
+            .replace(removeTags, ``)
+            .split(new RegExp(`(<mark>[^<]+<\/mark>)`, `g`));
         let totalLength = 0;
 
         if (textParts.length > 1) {
@@ -147,7 +150,7 @@ export class GlobalSearchComponent implements OnDestroy {
             totalLength += textParts[1].length - 13;
             append += textParts[1];
             const preText = textParts[0].split(` `);
-            for (let j = preText.length - 1; j >= 0 && !preText[j].endsWith(`.`); j--) {
+            for (let j = preText.length - 1; j >= 0 && !preText[j].endsWith(`.`) && !preText[j].endsWith(`\n`); j--) {
                 append = preText[j] + ` ` + append;
                 totalLength += preText[j].length;
                 if (totalLength > textSnippetSize) {

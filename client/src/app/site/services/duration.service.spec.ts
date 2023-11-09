@@ -22,9 +22,9 @@ describe(`DurationService`, () => {
     });
 
     it(`test durationToStringWithHours`, () => {
-        expect(service.durationToStringWithHours(83)).toBe(`0:01:23 h`);
-        expect(service.durationToStringWithHours(7345)).toBe(`2:02:25 h`);
-        expect(service.durationToStringWithHours(-1)).toBe(`-0:00:01 h`);
+        expect(service.durationToStringWithHours(83)).toBe(`0:01 h`);
+        expect(service.durationToStringWithHours(7345)).toBe(`2:02 h`);
+        expect(service.durationToStringWithHours(-1)).toBe(`-0:00 h`);
         expect(service.durationToStringWithHours(undefined)).toBe(``);
     });
 

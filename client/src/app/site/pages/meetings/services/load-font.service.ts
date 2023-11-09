@@ -56,7 +56,7 @@ export class LoadFontService {
 
         this.mediaManageService.getFontUrlObservable(`chyron_speaker_name`).subscribe(chyronFont => {
             if (chyronFont) {
-                this.setNewFontFace(`OSFont ChyronName`, chyronFont);
+                this.setNewFontFace(`customChyronNameFont`, chyronFont);
             }
         });
 

@@ -37,10 +37,9 @@
                 (click)="onFollowRecButton()"
                 [disabled]="isFollowButtonDisabledObservable() | async"
             >
-                <os-icon-container
-                    icon="done_all"
-                    [iconTooltip]="'Follow recommendations for all motions' | translate"
-                ></os-icon-container>
+                <os-icon-container icon="done_all">
+                    {{ 'Follow recommendations for all motions' | translate }}
+                </os-icon-container>
             </button>
         </div>
     </os-head-bar>
@@ -63,7 +62,7 @@
             <div class="column-title innerTable overflow-hidden">
                 <div class="title-line ellipsis-overflow">
                     <!-- Is Favorite -->
-                    <span *ngIf="motion.star" class="favorite-star">
+                    <span *ngIf="motion.isFavorite" class="favorite-star">
                         <mat-icon inline>star</mat-icon>
                     </span>
 

@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { objectToFormattedString } from 'src/app/infrastructure/utils';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
@@ -70,7 +71,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 privacy_policy: [this._currentOrgaSettings.privacy_policy],
                 login_text: [this._currentOrgaSettings.login_text],
                 users_email_body: [this._currentOrgaSettings.users_email_body],
-                users_email_replyto: [this._currentOrgaSettings.users_email_replyto, [Validators.email]],
+                users_email_replyto: [this._currentOrgaSettings.users_email_replyto, [createEmailValidator()]],
                 users_email_sender: [this._currentOrgaSettings.users_email_sender],
                 users_email_subject: [this._currentOrgaSettings.users_email_subject],
                 default_language: [this._currentOrgaSettings.default_language]

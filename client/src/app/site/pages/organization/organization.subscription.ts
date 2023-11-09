@@ -1,6 +1,9 @@
 import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
-import { MEETING_LIST_SUBSCRIPTION } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import {
+    MEETING_CREATE_SUBSCRIPTION,
+    MEETING_LIST_SUBSCRIPTION
+} from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
@@ -36,6 +39,19 @@ export const getOrganizationSubscriptionConfig: SubscriptionConfigGenerator = ()
     isDelayed: false
 });
 
+export const getMeetingCreateSubscriptionConfig: SubscriptionConfigGenerator = () => ({
+    modelRequest: {
+        viewModelCtor: ViewOrganization,
+        ids: [ORGANIZATION_ID],
+        follow: [
+            getMeetingCreateFollowConfig(`active_meeting_ids`),
+            getMeetingCreateFollowConfig(`archived_meeting_ids`),
+            getMeetingCreateFollowConfig(`template_meeting_ids`)
+        ]
+    },
+    subscriptionName: MEETING_CREATE_SUBSCRIPTION
+});
+
 function getMeetingListFollowConfig(
     idField: `active_meeting_ids` | `archived_meeting_ids` | `template_meeting_ids`
 ): any {
@@ -46,5 +62,15 @@ function getMeetingListFollowConfig(
             { idField: `organization_tag_ids`, fieldset: FULL_FIELDSET }
         ],
         fieldset: `list`
+    };
+}
+
+function getMeetingCreateFollowConfig(
+    idField: `active_meeting_ids` | `archived_meeting_ids` | `template_meeting_ids`
+): any {
+    return {
+        idField: idField,
+        follow: [{ idField: `committee_id`, fieldset: `name` }],
+        fieldset: [`name`]
     };
 }

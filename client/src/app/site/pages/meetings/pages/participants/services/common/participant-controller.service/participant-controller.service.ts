@@ -107,7 +107,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
                 mUser.group_ids?.length &&
                 meetingUserIds.includes(mUser.id)
         );
-        const users = meetingUsers.map(mUser => mUser.user);
+        const users = meetingUsers.map(mUser => mUser?.user).filter(user => user);
         this._participantIdMapSubject.next(users.mapToObject(user => ({ [user.id]: user })));
         this._participantListSubject.next(users);
     }
