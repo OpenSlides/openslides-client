@@ -48,11 +48,15 @@
         }
     }
 
-    .editor-content ::ng-deep {
-        .tiptap {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.42);
-            margin-top: 8px;
+    .editor-content {
+        border: 1px solid rgba(0, 0, 0, 0.42);
+        padding: 0 16px;
+        margin-top: 8px;
+        max-height: 232px;
+        overflow-y: auto;
+        ::ng-deep .tiptap {
             outline: none;
+            min-height: 216px;
         }
     }
 }
