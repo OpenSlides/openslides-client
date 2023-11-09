@@ -26,7 +26,7 @@ const routes: Routes = [
             {
                 path: `subdivisions`,
                 loadChildren: () =>
-                    import(`./pages/subdivisions/pages/subdivision-list/subdivision-list.module`).then(m => m.SubdivisionListModule)
+                    import(`./pages/subdivisions/subdivision-list.module`).then(m => m.SubdivisionListModule)
             },
             {
                 path: `:id`,

@@ -7,12 +7,14 @@ import { BaseModel } from '../base/base-model';
 export class Subdivision extends BaseModel<Subdivision> {
     public static COLLECTION = `subdivision`;
 
-    public readonly title!: string;
+    public name: string;
+    public color: string;
+    public allow_additional_time: boolean;
 
     public constructor(input?: Partial<Subdivision>) {
         super(Subdivision.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Subdivision)[] = [`id`, `title`];
+    public static readonly REQUESTABLE_FIELDS: (keyof Subdivision)[] = [`id`, `name`, `color`, `allow_additional_time`];
 }
 export interface Subdivision {}

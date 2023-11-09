@@ -4,10 +4,8 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 export class ViewSubdivision extends BaseViewModel<Subdivision> {
     public static COLLECTION = Subdivision.COLLECTION;
 
-    private name: string;
-
     public get title(): string {
-        return this._model.title;
+        return this._model.name;
     }
 }
 export interface ViewSubdivision extends Subdivision {}

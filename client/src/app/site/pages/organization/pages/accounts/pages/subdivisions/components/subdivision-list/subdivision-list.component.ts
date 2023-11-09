@@ -12,9 +12,9 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 })
 export class SubdivisionListComponent extends BaseListViewComponent<ViewSubdivision> {
     public subdivisions: ViewSubdivision[] = [
-        new ViewSubdivision(new Subdivision({ title: `test1`, id: 1 })),
-        new ViewSubdivision(new Subdivision({ title: `test2`, id: 2 })),
-        new ViewSubdivision(new Subdivision({ title: `test3`, id: 3 }))
+        new ViewSubdivision(new Subdivision({ name: `test1`, id: 1 })),
+        new ViewSubdivision(new Subdivision({ name: `test2`, id: 2 })),
+        new ViewSubdivision(new Subdivision({ name: `test3`, id: 3 }))
     ];
 
     public constructor(
