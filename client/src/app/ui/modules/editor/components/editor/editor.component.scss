@@ -52,11 +52,12 @@
         border: 1px solid rgba(0, 0, 0, 0.42);
         padding: 0 16px;
         margin-top: 8px;
-        max-height: 232px;
+        height: 232px;
         overflow-y: auto;
+        resize: vertical;
         ::ng-deep .tiptap {
             outline: none;
-            min-height: 216px;
+            min-height: calc(100% - 32px);
         }
     }
 }
