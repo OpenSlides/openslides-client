@@ -20,6 +20,13 @@ export const PERMISSIONS: AppPermission[] = [
         name: `Projector`,
         permissions: [
             {
+                display_name: _(`Can see the autopilot`),
+                help_text: _(
+                    `Can see the Autopilot menu item with all content for which appropriate permissions are set.`
+                ),
+                value: Permission.meetingCanSeeAutopilot
+            },
+            {
                 display_name: _(`Can see the projector`),
                 help_text: _(
                     `Can see the Projector menu item and all projectors (in the Autopilot as well as in the Projector menu item)`
@@ -214,16 +221,11 @@ Meeting specific information: Structure level, Group, Participant number, About 
         name: `Files`,
         permissions: [
             {
-                display_name: _(`Can see the list of files`),
+                display_name: _(`Can see files`),
                 help_text: _(`Can see the Files menu item and all shared folders and files.
 
 Note: Sharing of folders and files may be restricted by group assignment.`),
                 value: Permission.mediafileCanSee
-            },
-            {
-                display_name: _(`Can manage logos and fonts`),
-                help_text: _(`Can activate and deactivate logos and fonts under > [Files].`),
-                value: Permission.meetingCanManageLogosAndFonts
             },
             {
                 display_name: _(`Can manage files`),
@@ -231,7 +233,12 @@ Note: Sharing of folders and files may be restricted by group assignment.`),
                     `Can upload, modify and delete files, administrate folders and change access restrictions.`
                 ),
                 value: Permission.mediafileCanManage
-            }
+            },
+            {
+                display_name: _(`Can manage logos and fonts`),
+                help_text: _(`Can activate and deactivate logos and fonts under > [Files].`),
+                value: Permission.meetingCanManageLogosAndFonts
+            },
         ]
     },
     {
@@ -241,13 +248,6 @@ Note: Sharing of folders and files may be restricted by group assignment.`),
                 display_name: _(`Can see the front page`),
                 help_text: _(`Can see the Home menu item.`),
                 value: Permission.meetingCanSeeFrontpage
-            },
-            {
-                display_name: _(`Can see the autopilot`),
-                help_text: _(
-                    `Can see the Autopilot menu item with all content for which appropriate permissions are set.`
-                ),
-                value: Permission.meetingCanSeeAutopilot
             },
             {
                 display_name: _(`Can see the live stream`),
