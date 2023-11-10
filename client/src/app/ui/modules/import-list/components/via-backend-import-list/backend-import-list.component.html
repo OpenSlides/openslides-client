@@ -200,6 +200,7 @@
 <ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
     <ng-container *ngIf="type === 'string'">{{ entry | translate }}</ng-container>
     <ng-container *ngIf="type === 'number' || type === 'integer'">{{ entry }}</ng-container>
+    <ng-container *ngIf="type === 'decimal'">{{ getShortenedDecimal(entry) }}</ng-container>
     <ng-container *ngIf="type === 'date'">{{ entry }}</ng-container>
     <mat-checkbox *ngIf="type === 'boolean'" [checked]="entry" disabled></mat-checkbox>
     &nbsp;
@@ -216,14 +217,32 @@
         rowClass="import-list-preview-row"
     >
         <div
-            *osScrollingTableCell="'status'; row as row; config: { width: 25, position: START_POSITION }"
+            *osScrollingTableCell="'errors'; row as row; config: { width: 25, position: START_POSITION }"
             class="flex-vertical-center"
         >
             <mat-icon
-                [ngClass]="{ 'red-warning-text': row.state === 'error', warn: row.state === 'warning' }"
+                *ngIf="row.state === 'error'"
+                class="red-warning-text"
                 matTooltip="{{ getRowTooltip(row) }}"
                 matTooltipPosition="right"
             >
+                {{ getActionIcon(row) }}
+            </mat-icon>
+            <mat-icon
+                *ngIf="row.state !== 'error' && row.messages.length"
+                class="warn"
+                matTooltip="{{ getWarningRowTooltip(row) }}"
+                matTooltipPosition="right"
+            >
+                warning
+            </mat-icon>
+        </div>
+
+        <div
+            *osScrollingTableCell="'status'; row as row; config: { width: 25, position: START_POSITION }"
+            class="flex-vertical-center"
+        >
+            <mat-icon *ngIf="row.state !== 'error'" matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
                 {{ getActionIcon(row) }}
             </mat-icon>
         </div>
@@ -273,8 +292,19 @@
     <div mat-dialog-content>
         <table>
             <tr *ngFor="let column of defaultColumns">
-                <td>{{ column.property }}:</td>
-                <td>&nbsp;{{ column.label | translate }}</td>
+                <td class="table-title-column">{{ column.property }}:</td>
+                <td>
+                    &nbsp;{{ column.label | translate }}
+                    <ng-container *ngIf="column.customInfo">
+                        <br />
+                        <ng-container *ngIf="isString(column.customInfo)">
+                            {{ column.customInfo | translate }}
+                        </ng-container>
+                        <ng-container *ngIf="!isString(column.customInfo)">
+                            {{ column.customInfo | async }}
+                        </ng-container>
+                    </ng-container>
+                </td>
             </tr>
         </table>
     </div>

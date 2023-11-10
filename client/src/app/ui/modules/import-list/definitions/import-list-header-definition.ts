@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 export type ImportListHeaderDefinition = HeaderDefinition;
 
 interface HeaderDefinition {
@@ -8,4 +10,5 @@ interface HeaderDefinition {
     isTableColumn?: boolean;
     width?: number;
     flexible?: boolean;
+    customInfo?: string | Observable<string>;
 }
