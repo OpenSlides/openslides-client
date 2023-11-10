@@ -14,7 +14,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
+import { MatSelectChange } from '@angular/material/select';
 import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { auditTime, distinctUntilChanged, firstValueFrom, map, Observable, of } from 'rxjs';

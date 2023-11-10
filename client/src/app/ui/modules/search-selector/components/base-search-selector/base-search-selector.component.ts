@@ -12,10 +12,10 @@ import {
 import { OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import {
-    MatLegacyOption as MatOption,
-    MatLegacyOptionSelectionChange as MatOptionSelectionChange
-} from '@angular/material/legacy-core';
-import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
+    MatOption,
+    MatOptionSelectionChange
+} from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';

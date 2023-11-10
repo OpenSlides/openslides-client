@@ -149,7 +149,7 @@
                 </mat-select>
             </mat-form-field>
             <ng-container *ngIf="isEVotingSelected && isCreated && !hideSelects.backendDuration">
-                <mat-form-field>
+                <mat-form-field subscriptSizing="dynamic">
                     <mat-select placeholder="{{ 'Voting duration' | translate }}" formControlName="backend" required>
                         <ng-container *ngFor="let option of pollBackendDurationChoices | keyvalue">
                             <mat-option [value]="option.key">
@@ -157,12 +157,7 @@
                             </mat-option>
                         </ng-container>
                     </mat-select>
-                    <mat-hint>
-                        {{
-                            'Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.'
-                                | translate
-                        }}
-                    </mat-hint>
+                    <mat-hint>Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.</mat-hint>
                 </mat-form-field>
             </ng-container>
         </div>
