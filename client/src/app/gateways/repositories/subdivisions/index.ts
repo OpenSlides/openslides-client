@@ -1,1 +1,1 @@
-export * from './subdivisions-repository.service';
+export * from './subdivision-repository.service';
