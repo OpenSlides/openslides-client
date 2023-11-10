@@ -63,24 +63,22 @@ describe(`ConnectionStatusService`, () => {
         expect(setOnline).toBe(true);
     }));
 
-    it("isOfflineObservable", () => {
+    it(`isOfflineObservable`, () => {
         let value = false;
-        service.isOfflineObservable.subscribe((v) => value = v);
+        service.isOfflineObservable.subscribe(v => (value = v));
         service.goOffline({ reason: `test`, isOnlineFn: () => false });
         expect(value).toBe(true);
     });
 
-    it("getReason", () => {
+    it(`getReason`, () => {
         expect(service.getReason()).toBe(null);
         service.goOffline({ reason: `test`, isOnlineFn: () => false });
-        expect(service.getReason()).toBe('test');
+        expect(service.getReason()).toBe(`test`);
     });
 
-
-    it("isOffline", () => {
+    it(`isOffline`, () => {
         expect(service.isOffline()).toBe(false);
         service.goOffline({ reason: `test`, isOnlineFn: () => false });
         expect(service.isOffline()).toBe(true);
     });
-
 });
