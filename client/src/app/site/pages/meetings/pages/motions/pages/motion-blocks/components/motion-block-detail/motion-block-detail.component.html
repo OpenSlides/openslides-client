@@ -101,14 +101,14 @@
                         {{ getStateLabel(motion) }}
                     </mat-basic-chip>
                 </div>
-            </div>
-        </div>
 
-        <!-- Recommendation column -->
-        <div *osScrollingTableCell="'recommendation'; row as motion; config: { width: 120 }" class="cell-slot fill">
-            <mat-basic-chip *ngIf="!!motion.recommendation" disableRipple class="bluegrey">
-                {{ getRecommendationLabel(motion) }}
-            </mat-basic-chip>
+                <!-- Recommendation column -->
+                <div class="ellipsis-overflow white spacer-top-3">
+                    <mat-basic-chip *ngIf="!!motion.recommendation" class="bluegrey" [disabled]="true">
+                        {{ getRecommendationLabel(motion) }}
+                    </mat-basic-chip>
+                </div>
+            </div>
         </div>
 
         <!-- Remove from block column -->
