@@ -11,10 +11,7 @@ import {
 } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import {
-    MatOption,
-    MatOptionSelectionChange
-} from '@angular/material/core';
+import { MatOption, MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, Observable } from 'rxjs';

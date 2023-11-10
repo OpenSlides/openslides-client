@@ -3,7 +3,8 @@
     <form class="item-dialog-form" [formGroup]="agendaInfoForm" (keydown)="onKeyDown($event)">
         <!-- Tag -->
         <mat-form-field *ngIf="isTagAvailable()">
-            <mat-select formControlName="tag_ids" multiple placeholder="{{ 'Tags' | translate }}">
+            <mat-label>{{ 'Tags' | translate }}</mat-label>
+            <mat-select formControlName="tag_ids" multiple>
                 <mat-option *ngFor="let tag of tags" [value]="tag.id">
                     {{ tag.getTitle() | translate }}
                 </mat-option>
@@ -12,7 +13,8 @@
 
         <!-- Visibility -->
         <mat-form-field>
-            <mat-select formControlName="type" placeholder="{{ 'Agenda visibility' | translate }}">
+            <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
+            <mat-select formControlName="type">
                 <mat-option *ngFor="let type of itemVisibility" [value]="type.key">
                     <span>{{ type.name | translate }}</span>
                 </mat-option>
@@ -21,7 +23,8 @@
 
         <!-- Duration -->
         <mat-form-field>
-            <input type="string" matInput placeholder="{{ 'Duration' | translate }}" formControlName="durationText" />
+            <mat-label>{{ 'Duration' | translate }}</mat-label>
+            <input type="string" matInput formControlName="durationText" />
             <mat-error *ngIf="agendaInfoForm.invalid">
                 {{ 'Your input does not match the following structure: "hh:mm"' | translate }}
             </mat-error>
@@ -29,15 +32,16 @@
 
         <!-- Item number (prefix) -->
         <mat-form-field>
-            <input matInput placeholder="{{ 'Item number' | translate }}" formControlName="item_number" />
+            <mat-label>{{ 'Item number' | translate }}</mat-label>
+            <input matInput formControlName="item_number" />
         </mat-form-field>
 
         <!-- Comment -->
         <mat-form-field>
+            <mat-label>{{ 'Comment' | translate }}</mat-label>
             <textarea
                 matInput
                 formControlName="comment"
-                placeholder="{{ 'Comment' | translate }}"
                 cdkTextareaAutosize
                 cdkAutosizeMinRows="3"
                 cdkAutosizeMaxRows="5"

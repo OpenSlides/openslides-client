@@ -12,7 +12,8 @@
             <!-- Visibility -->
             <div>
                 <mat-form-field [formGroup]="form">
-                    <mat-select formControlName="agenda_type" placeholder="{{ 'Agenda visibility' | translate }}">
+                    <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
+                    <mat-select formControlName="agenda_type">
                         <mat-option *ngFor="let type of itemVisibilityChoices" [value]="type.key">
                             <span>{{ type.name | translate }}</span>
                         </mat-option>
@@ -23,11 +24,11 @@
             <!-- Parent item -->
             <div *ngIf="hasItemsObservable | async" [formGroup]="form">
                 <mat-form-field>
+                    <mat-label>{{ 'Parent agenda item' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="agenda_parent_id"
                         [multiple]="false"
                         [includeNone]="true"
-                        placeholder="{{ 'Parent agenda item' | translate }}"
                         [inputListValues]="itemObserver"
                     ></os-list-search-selector>
                 </mat-form-field>

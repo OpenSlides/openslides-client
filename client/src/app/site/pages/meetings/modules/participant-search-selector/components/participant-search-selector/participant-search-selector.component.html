@@ -1,11 +1,11 @@
 <form [formGroup]="usersForm">
     <mat-form-field class="search-users-field full-width">
+        <mat-label>{{ placeholder | translate }}</mat-label>
         <os-list-search-selector
             class="search-users"
             formControlName="userId"
             [excludeIds]="true"
             [multiple]="false"
-            placeholder="{{ placeholder | translate }}"
             [inputListValues]="filteredUsersSubject"
             [sortFn]="false"
             (clickNotFound)="createNewSelectedUser($event)"
