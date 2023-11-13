@@ -51,7 +51,8 @@
             <!-- Prefix -->
             <p>
                 <mat-form-field>
-                    <input formControlName="prefix" matInput placeholder="{{ 'Prefix' | translate }}" />
+                    <mat-label>{{ 'Prefix' | translate }}</mat-label>
+                    <input formControlName="prefix" matInput/>
                     <mat-error>{{ 'This prefix already exists' | translate }}</mat-error>
                 </mat-form-field>
             </p>
@@ -59,10 +60,10 @@
             <!-- Name -->
             <p>
                 <mat-form-field>
+                    <mat-label>{{ 'Name of the new category' | translate }}</mat-label>
                     <input
                         formControlName="name"
                         matInput
-                        placeholder="{{ 'Name of the new category' | translate }}"
                         required
                     />
                     <mat-error>

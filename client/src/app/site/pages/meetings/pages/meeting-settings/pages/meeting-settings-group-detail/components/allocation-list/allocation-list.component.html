@@ -6,24 +6,24 @@
     >
         <ng-container [formGroupName]="i">
             <mat-form-field>
-                <input formControlName="entry" matInput placeholder="{{ entryLabel | translate }}" />
+                <mat-label>{{ entryLabel | translate }}</mat-label>
+                <input formControlName="entry" matInput/>
                 <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
             </mat-form-field>
             <mat-icon>arrow_forward</mat-icon>
             <mat-form-field>
+                <mat-label>{{ allocationLabel | translate }}</mat-label>
                 <input
                     *ngIf="config && isNumberAllocation"
                     formControlName="allocation"
                     type="number"
                     matInput
-                    placeholder="{{ allocationLabel | translate }}"
                 />
                 <input
                     *ngIf="config && !isNumberAllocation"
                     formControlName="allocation"
                     type="text"
                     matInput
-                    placeholder="{{ allocationLabel | translate }}"
                 />
                 <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
             </mat-form-field>

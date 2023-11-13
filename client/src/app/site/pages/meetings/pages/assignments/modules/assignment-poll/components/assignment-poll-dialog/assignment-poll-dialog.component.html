@@ -42,11 +42,11 @@
         <div *ngFor="let value of sumValues" class="votes-grid">
             <div class="assignment-dialog-input--container">
                 <mat-form-field class="amount">
+                    <mat-label>{{generalValueVerbose[value] | translate}}</mat-label>
                     <input
                         matInput
                         type="number"
                         [formControlName]="value"
-                        [placeholder]="generalValueVerbose[value] | translate"
                     />
                 </mat-form-field>
             </div>

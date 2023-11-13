@@ -45,8 +45,8 @@
         </mat-checkbox>
 
         <mat-form-field *ngIf="contentForm.value.statute_amendment">
+            <mat-label>{{ 'Statute paragraph' | translate }}</mat-label>
             <mat-select
-                [placeholder]="'Statute paragraph' | translate"
                 formControlName="statute_paragraph_id"
                 (valueChange)="onStatuteParagraphChange($event)"
             >
@@ -61,10 +61,10 @@
     <div *ngIf="newMotion" class="content-field">
         <ng-container *ngIf="canChangeMetadata">
             <mat-form-field>
+                <mat-label>{{ 'Submitters' | translate }}</mat-label>
                 <os-repo-search-selector
                     formControlName="submitter_ids"
                     [multiple]="true"
-                    placeholder="{{ 'Submitters' | translate }}"
                     [repo]="participantRepo"
                     [sortService]="participantSortService"
                     [subscriptionConfig]="participantSubscriptionConfig"
@@ -83,7 +83,8 @@
         <!-- number -->
         <div *ngIf="editMotion && !newMotion && canChangeMetadata" class="content-field form-number">
             <mat-form-field *ngIf="editMotion">
-                <input matInput osAutofocus placeholder="{{ 'Number' | translate }}" formControlName="number" />
+                <mat-label>{{ 'Number' | translate }}</mat-label>
+                <input matInput osAutofocus formControlName="number" />
                 <mat-error>{{ 'already exists' | translate }}</mat-error>
             </mat-form-field>
         </div>
@@ -91,7 +92,8 @@
         <!-- Title -->
         <div *ngIf="editMotion" class="content-field form-title">
             <mat-form-field *ngIf="editMotion">
-                <input matInput placeholder="{{ 'Title' | translate }}" formControlName="title" required />
+                <mat-label>{{ 'Title' | translate }}</mat-label>
+                <input matInput formControlName="title" required />
                 <mat-error>{{ 'The title is required' | translate }}</mat-error>
             </mat-form-field>
         </div>
@@ -178,9 +180,9 @@
     <!-- Category form -->
     <div class="content-field" *ngIf="newMotion && hasCategories">
         <mat-form-field>
+            <mat-label>{{ 'Category' | translate }}</mat-label>
             <os-repo-search-selector
                 formControlName="category_id"
-                placeholder="{{ 'Category' | translate }}"
                 [repo]="categoryRepo"
                 [excludeIds]="true"
                 [addClearSelection]="true"
@@ -218,10 +220,10 @@
             <!-- Supporter form -->
             <div class="content-field" *ngIf="editMotion && minSupporters">
                 <mat-form-field>
+                    <mat-label>{{ 'Supporters' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="supporter_user_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Supporters' | translate }}"
                         [repo]="participantRepo"
                         [sortService]="participantSortService"
                         [subscriptionConfig]="participantSubscriptionConfig"
@@ -238,9 +240,9 @@
             <!-- Workflow -->
             <div class="content-field" *ngIf="editMotion">
                 <mat-form-field>
+                    <mat-label>{{ 'Workflow' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="workflow_id"
-                        placeholder="{{ 'Workflow' | translate }}"
                         [repo]="workflowRepo"
                         [defaultDataConfigKey]="getDefaultWorkflowKeyOfSettingsByParagraph()"
                     ></os-repo-search-selector>

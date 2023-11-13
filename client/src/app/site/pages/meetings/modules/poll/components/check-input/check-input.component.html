@@ -1,7 +1,13 @@
 <div class="check-input--container">
     <mat-form-field>
-        <mat-label>{{ 'placeholder' | translate }}</mat-label>
-        <input matInput class="check-input--input" [type]="inputType" [formControl]="contentForm" [min]="0" />
+        <mat-label>{{ placeholder }}</mat-label>
+        <input
+            matInput
+            class="check-input--input"
+            [type]="inputType"
+            [formControl]="contentForm"
+            [min]="0"
+        />
     </mat-form-field>
     <mat-checkbox
         *ngIf="checkboxLabel"

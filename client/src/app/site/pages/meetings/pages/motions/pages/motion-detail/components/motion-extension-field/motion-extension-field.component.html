@@ -30,22 +30,22 @@
 <!-- Extension field -->
 <div *ngIf="hasExtension && editMode" class="spacer-top-10 extension-container">
     <mat-form-field>
+        <mat-label>{{ extensionLabel }}</mat-label>
         <input
             matInput
             autocomplete="off"
             osAutofocus
             [(ngModel)]="inputControl"
-            placeholder="{{ extensionLabel }}"
             (keydown)="keyDownFunction($event)"
             (change)="inputChanged()"
         />
     </mat-form-field>
     <mat-form-field *ngFor="let list of searchLists; let i = index" [formGroup]="extensionFieldForm">
+        <mat-label>{{ list.label ?? '' | translate }}</mat-label>
         <os-list-search-selector
             formControlName="{{ 'list' + i + '' }}"
             [inputListValues]="list.observable"
             [disableOptionWhenFn]="getIsDisabled(i)"
-            placeholder="{{ list.label ?? '' | translate }}"
             [keepOpen]="list.keepOpen"
             (openedChange)="openedChange($event, i)"
             [wider]="list.wider"

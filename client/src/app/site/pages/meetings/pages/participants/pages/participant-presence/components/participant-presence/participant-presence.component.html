@@ -9,11 +9,11 @@
     <p>{{ 'Check in or check out participants based on their participant numbers:' | translate }}</p>
 
     <mat-form-field [formGroup]="userForm">
+        <mat-label>{{ 'Enter participant number' | translate }}</mat-label>
         <input
             osAutofocus
             matInput
             formControlName="number"
-            placeholder="{{ 'Enter participant number' | translate }}"
             (keyup)="onKeyUp($event)"
         />
     </mat-form-field>

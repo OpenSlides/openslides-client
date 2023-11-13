@@ -27,11 +27,11 @@
     <ng-container *ngIf="isEditing">
         <form [formGroup]="startForm">
             <mat-form-field>
+                <mat-label>{{ 'Front page title' | translate }}</mat-label>
                 <input
                     matInput
                     formControlName="welcome_title"
                     required
-                    placeholder="{{ 'Front page title' | translate }}"
                 />
                 <mat-error>{{ 'The title is required' | translate }}</mat-error>
             </mat-form-field>

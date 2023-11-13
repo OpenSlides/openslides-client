@@ -218,7 +218,8 @@
             <div>
                 <!-- title -->
                 <mat-form-field class="full-width">
-                    <input matInput placeholder="{{ 'Title' | translate }}" formControlName="title" />
+                    <mat-label>{{ 'Title' | translate }}</mat-label>
+                    <input matInput formControlName="title" />
                     <mat-error>{{ 'The title is required' | translate }}</mat-error>
                 </mat-form-field>
             </div>
@@ -230,10 +231,10 @@
             <!-- searchValueSelector: tags -->
             <div class="content-field" *ngIf="tagsAvailable" [formGroup]="assignmentForm">
                 <mat-form-field>
+                    <mat-label>{{ 'Tags' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="tag_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Tags' | translate }}"
                         [inputListValues]="tagsObserver"
                     ></os-list-search-selector>
                 </mat-form-field>
@@ -249,9 +250,9 @@
             <!-- default_poll_description -->
             <div>
                 <mat-form-field>
+                    <mat-label>{{ 'Hint on voting' | translate }}</mat-label>
                     <input
                         matInput
-                        placeholder="{{ 'Hint on voting' | translate }}"
                         formControlName="default_poll_description"
                     />
                 </mat-form-field>
@@ -260,9 +261,9 @@
             <!-- open posts: number -->
             <div>
                 <mat-form-field>
+                    <mat-label>{{ 'Number of persons to be elected' | translate }}</mat-label>
                     <input
                         matInput
-                        placeholder="{{ 'Number of persons to be elected' | translate }}"
                         formControlName="open_posts"
                         type="number"
                     />

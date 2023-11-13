@@ -46,7 +46,8 @@
     <div class="os-form-card-mobile" mat-dialog-content>
         <form [formGroup]="tagForm" (keydown)="onKeyDown($event)">
             <mat-form-field>
-                <input required type="text" matInput formControlName="name" placeholder="{{ 'Name' | translate }}" />
+                <mat-label>{{ 'Name' | translate }}</mat-label>
+                <input required type="text" matInput formControlName="name"/>
             </mat-form-field>
         </form>
     </div>

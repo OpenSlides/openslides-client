@@ -43,10 +43,10 @@
                     form37: true
                 }"
             >
+                <mat-label>{{ 'Default structure level' | translate }}</mat-label>
                 <input
                     type="text"
                     matInput
-                    placeholder="{{ 'Default structure level' | translate }}"
                     formControlName="default_structure_level"
                 />
             </mat-form-field>
@@ -58,10 +58,10 @@
                     form37: true
                 }"
             >
+            <mat-label>{{ 'Default number' | translate }}</mat-label>
                 <input
                     type="text"
                     matInput
-                    placeholder="{{ 'Default number' | translate }}"
                     formControlName="default_number"
                 />
             </mat-form-field>
@@ -69,10 +69,10 @@
             <!-- Default Vote weight -->
             <!-- TODO Input type should be number with limited decimal spaces -->
             <mat-form-field class="form16 force-min-with">
+                <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
                 <input
                     type="number"
                     matInput
-                    placeholder="{{ 'Default vote weight' | translate }}"
                     formControlName="default_vote_weight"
                 />
                 <mat-error *ngIf="isDefaultVoteWeightError" translate>
@@ -99,10 +99,10 @@
             </div>
             <div *osOmlPerms="OML.can_manage_organization">
                 <mat-form-field>
+                    <mat-label>{{ 'Committee admin' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="committee_management_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Committee admin' | translate }}"
                         [subscriptionConfig]="committeeSubscriptionConfig"
                         [repo]="committeeController"
                         [sortService]="committeeSortService"

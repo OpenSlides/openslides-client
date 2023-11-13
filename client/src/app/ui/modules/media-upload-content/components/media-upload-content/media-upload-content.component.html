@@ -9,12 +9,11 @@
         <!-- Directory selector-->
         <div [formGroup]="directorySelectionForm">
             <mat-form-field>
+                <mat-label>{{ 'Upload to' | translate }}</mat-label>
                 <os-list-search-selector
                     formControlName="directoryId"
                     [multiple]="false"
                     [includeNone]="true"
-                    noneTitle="{{ 'Base folder' | translate }}"
-                    placeholder="{{ 'Upload to' | translate }}"
                     [inputListValues]="directories"
                 ></os-list-search-selector>
             </mat-form-field>

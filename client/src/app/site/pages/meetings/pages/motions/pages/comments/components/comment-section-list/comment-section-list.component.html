@@ -101,7 +101,8 @@
         <form [formGroup]="commentFieldForm" (keydown)="onKeyDown($event)">
             <p>
                 <mat-form-field>
-                    <input formControlName="name" matInput placeholder="{{ 'Name' | translate }}" required />
+                    <mat-label>{{ 'Name' | translate }}</mat-label>
+                    <input formControlName="name" matInput required />
                     <mat-error *ngIf="!commentFieldForm.controls['name'].valid">
                         <span>{{ 'Required' | translate }}</span>
                     </mat-error>
@@ -109,20 +110,20 @@
             </p>
             <p>
                 <mat-form-field>
+                    <mat-label>{{ 'Groups with read permissions' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="read_group_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Groups with read permissions' | translate }}"
                         [inputListValues]="groups"
                     ></os-list-search-selector>
                 </mat-form-field>
             </p>
             <p>
                 <mat-form-field>
+                    <mat-label>{{ 'Groups with write permissions' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="write_group_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Groups with write permissions' | translate }}"
                         [inputListValues]="groups"
                     ></os-list-search-selector>
                 </mat-form-field>

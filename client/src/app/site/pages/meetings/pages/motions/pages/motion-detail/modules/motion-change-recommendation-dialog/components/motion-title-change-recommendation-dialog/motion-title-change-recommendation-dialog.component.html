@@ -2,7 +2,8 @@
 <mat-dialog-content>
     <form class="motion-content" [formGroup]="contentForm" (ngSubmit)="submitChanges()">
         <mat-form-field>
-            <input matInput placeholder="{{ 'Changed title' | translate }}" formControlName="text" />
+            <mat-label>{{ 'Changed title' | translate }}</mat-label>
+            <input matInput formControlName="text" />
         </mat-form-field>
 
         <mat-checkbox formControlName="public">{{ 'Public' | translate }}</mat-checkbox>
