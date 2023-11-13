@@ -217,7 +217,16 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         let canReaddLast: boolean;
         if (this.finishedSpeakers?.length > 0) {
             const lastSpeaker = this.finishedSpeakers[this.finishedSpeakers.length - 1];
-            const isLastSpeakerWaiting = this.waitingSpeakers.some(speaker => speaker.user_id === lastSpeaker.user_id);
+            let isLastSpeakerWaiting = false;
+            if (lastSpeaker.point_of_order) {
+                isLastSpeakerWaiting = this.waitingSpeakers.some(
+                    speaker => speaker.point_of_order && speaker.user_id === lastSpeaker.user_id
+                );
+            } else {
+                isLastSpeakerWaiting = this.waitingSpeakers.some(
+                    speaker => !speaker.point_of_order && speaker.user_id === lastSpeaker.user_id
+                );
+            }
             canReaddLast = !isLastSpeakerWaiting;
         } else {
             canReaddLast = false;
