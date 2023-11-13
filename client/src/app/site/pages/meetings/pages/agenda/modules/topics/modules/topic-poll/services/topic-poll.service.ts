@@ -75,7 +75,7 @@ export class TopicPollService extends PollService {
         const poll: Partial<Poll> = {
             title: this.translate.instant(`Vote`),
             onehundred_percent_base: this.defaultPercentBase,
-            entitled_group_ids: Object.values(this.defaultGroupIds ?? {}),
+            entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             pollmethod: this.defaultPollMethod,
             type: this.defaultPollType,
             backend: PollBackendDurationType.FAST
