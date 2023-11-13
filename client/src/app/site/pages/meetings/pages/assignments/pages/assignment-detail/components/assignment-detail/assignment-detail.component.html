@@ -251,10 +251,7 @@
             <div>
                 <mat-form-field>
                     <mat-label>{{ 'Hint on voting' | translate }}</mat-label>
-                    <input
-                        matInput
-                        formControlName="default_poll_description"
-                    />
+                    <input matInput formControlName="default_poll_description" />
                 </mat-form-field>
             </div>
 
@@ -262,11 +259,7 @@
             <div>
                 <mat-form-field>
                     <mat-label>{{ 'Number of persons to be elected' | translate }}</mat-label>
-                    <input
-                        matInput
-                        formControlName="open_posts"
-                        type="number"
-                    />
+                    <input matInput formControlName="open_posts" type="number" />
                     <mat-error *ngIf="assignmentForm.get('open_posts')?.hasError('required')">
                         {{ 'This field is required.' | translate }}
                     </mat-error>

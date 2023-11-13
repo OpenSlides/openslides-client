@@ -166,13 +166,7 @@
         <form class="edit-file-form" [formGroup]="fileEditForm">
             <mat-form-field>
                 <mat-label>{{ 'New file name' | translate }}</mat-label>
-                <input
-                    type="text"
-                    matInput
-                    osAutofocus
-                    required
-                    formControlName="title"
-                />
+                <input type="text" matInput osAutofocus required formControlName="title" />
                 <mat-error *ngIf="fileEditForm.invalid">{{ 'Required' | translate }}</mat-error>
             </mat-form-field>
         </form>

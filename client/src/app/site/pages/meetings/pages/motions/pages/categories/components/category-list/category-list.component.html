@@ -52,7 +52,7 @@
             <p>
                 <mat-form-field>
                     <mat-label>{{ 'Prefix' | translate }}</mat-label>
-                    <input formControlName="prefix" matInput/>
+                    <input formControlName="prefix" matInput />
                     <mat-error>{{ 'This prefix already exists' | translate }}</mat-error>
                 </mat-form-field>
             </p>
@@ -61,11 +61,7 @@
             <p>
                 <mat-form-field>
                     <mat-label>{{ 'Name of the new category' | translate }}</mat-label>
-                    <input
-                        formControlName="name"
-                        matInput
-                        required
-                    />
+                    <input formControlName="name" matInput required />
                     <mat-error>
                         {{ 'A name is required' | translate }}
                     </mat-error>

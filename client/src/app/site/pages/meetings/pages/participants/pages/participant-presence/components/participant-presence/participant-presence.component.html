@@ -10,12 +10,7 @@
 
     <mat-form-field [formGroup]="userForm">
         <mat-label>{{ 'Enter participant number' | translate }}</mat-label>
-        <input
-            osAutofocus
-            matInput
-            formControlName="number"
-            (keyup)="onKeyUp($event)"
-        />
+        <input osAutofocus matInput formControlName="number" (keyup)="onKeyUp($event)" />
     </mat-form-field>
     <button mat-button (click)="changePresence()">{{ 'Change presence' | translate }}</button>
     <mat-card *ngIf="lastChangedUser" [ngClass]="lastChangedUserPresent ? 'success' : 'warning'">

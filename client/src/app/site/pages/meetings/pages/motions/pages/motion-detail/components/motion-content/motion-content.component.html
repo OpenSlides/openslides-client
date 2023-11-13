@@ -46,10 +46,7 @@
 
         <mat-form-field *ngIf="contentForm.value.statute_amendment">
             <mat-label>{{ 'Statute paragraph' | translate }}</mat-label>
-            <mat-select
-                formControlName="statute_paragraph_id"
-                (valueChange)="onStatuteParagraphChange($event)"
-            >
+            <mat-select formControlName="statute_paragraph_id" (valueChange)="onStatuteParagraphChange($event)">
                 <mat-option *ngFor="let paragraph of statuteParagraphs" [value]="paragraph.id">
                     {{ paragraph.title }}
                 </mat-option>

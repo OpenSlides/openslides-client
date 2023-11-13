@@ -28,11 +28,7 @@
         <form [formGroup]="startForm">
             <mat-form-field>
                 <mat-label>{{ 'Front page title' | translate }}</mat-label>
-                <input
-                    matInput
-                    formControlName="welcome_title"
-                    required
-                />
+                <input matInput formControlName="welcome_title" required />
                 <mat-error>{{ 'The title is required' | translate }}</mat-error>
             </mat-form-field>
             <os-editor formControlName="welcome_text"></os-editor>

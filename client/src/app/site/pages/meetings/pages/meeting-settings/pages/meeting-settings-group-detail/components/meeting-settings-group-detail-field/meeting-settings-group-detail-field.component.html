@@ -81,12 +81,7 @@
                 <!-- textarea -->
                 <div *ngIf="setting.type === 'text'">
                     <mat-form-field>
-                        <textarea
-                            formControlName="value"
-                            rows="10"
-                            matInput
-                            [value]="internalValue"
-                        ></textarea>
+                        <textarea formControlName="value" rows="10" matInput [value]="internalValue"></textarea>
                         <span matSuffix>
                             <mat-icon pull="right" class="red-warning-text" *ngIf="updateSuccessIcon">
                                 check_circle

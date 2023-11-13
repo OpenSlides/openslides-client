@@ -103,10 +103,7 @@
             <h3>{{ 'Projection defaults' | translate }}</h3>
             <mat-form-field>
                 <mat-label>{{ 'Projection defaults' | translate }}</mat-label>
-                <mat-select
-                    formControlName="projectiondefault_ids"
-                    [multiple]="true"
-                >
+                <mat-select formControlName="projectiondefault_ids" [multiple]="true">
                     <mat-option
                         *ngFor="let pd of projectiondefaultVerbose | keyvalue"
                         [value]="projectiondefaultKeys[pd.key]"

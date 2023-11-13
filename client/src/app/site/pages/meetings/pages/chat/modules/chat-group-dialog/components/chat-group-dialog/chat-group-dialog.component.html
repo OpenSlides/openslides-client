@@ -11,13 +11,7 @@
         <!-- Name -->
         <mat-form-field>
             <mat-label>{{ 'Name' | translate }}</mat-label>
-            <input
-                type="text"
-                matInput
-                osAutofocus
-                required
-                formControlName="name"
-            />
+            <input type="text" matInput osAutofocus required formControlName="name" />
             <mat-error *ngIf="chatGroupFormGroup.invalid">{{ 'Required' | translate }}</mat-error>
         </mat-form-field>
 

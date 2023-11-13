@@ -44,11 +44,7 @@
                 }"
             >
                 <mat-label>{{ 'Default structure level' | translate }}</mat-label>
-                <input
-                    type="text"
-                    matInput
-                    formControlName="default_structure_level"
-                />
+                <input type="text" matInput formControlName="default_structure_level" />
             </mat-form-field>
 
             <!-- Default Participant Number -->
@@ -58,23 +54,15 @@
                     form37: true
                 }"
             >
-            <mat-label>{{ 'Default number' | translate }}</mat-label>
-                <input
-                    type="text"
-                    matInput
-                    formControlName="default_number"
-                />
+                <mat-label>{{ 'Default number' | translate }}</mat-label>
+                <input type="text" matInput formControlName="default_number" />
             </mat-form-field>
 
             <!-- Default Vote weight -->
             <!-- TODO Input type should be number with limited decimal spaces -->
             <mat-form-field class="form16 force-min-with">
                 <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
-                <input
-                    type="number"
-                    matInput
-                    formControlName="default_vote_weight"
-                />
+                <input type="number" matInput formControlName="default_vote_weight" />
                 <mat-error *ngIf="isDefaultVoteWeightError" translate>
                     Please select a vote weight bigger than zero.
                 </mat-error>
