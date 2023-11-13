@@ -111,7 +111,7 @@
         <button mat-menu-item *ngIf="defaultOption" (click)="sortOption = defaultOption">
             <mat-icon>{{ getSortIcon(defaultOption) }}</mat-icon>
             <span>{{ sortService.getSortLabel(defaultOption) | translate }}&emsp;</span>
-            <small class="subtitle">{{ '(Default)' | translate }}</small>
+            <small class="subtitle">({{ 'Default' | translate }})</small>
         </button>
         <mat-divider *ngIf="defaultOption"></mat-divider>
         <!-- </mat-list-item> -->
