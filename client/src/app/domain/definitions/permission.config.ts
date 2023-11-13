@@ -238,7 +238,7 @@ Note: Sharing of folders and files may be restricted by group assignment.`),
                 display_name: _(`Can manage logos and fonts`),
                 help_text: _(`Can activate and deactivate logos and fonts under > [Files].`),
                 value: Permission.meetingCanManageLogosAndFonts
-            },
+            }
         ]
     },
     {
