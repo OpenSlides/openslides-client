@@ -219,13 +219,17 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             const lastSpeaker = this.finishedSpeakers[this.finishedSpeakers.length - 1];
             let isLastSpeakerWaiting = false;
             if (lastSpeaker.point_of_order) {
-                isLastSpeakerWaiting = this.waitingSpeakers.some(
-                    speaker => speaker.point_of_order && speaker.user_id === lastSpeaker.user_id
-                );
+                isLastSpeakerWaiting =
+                    this.waitingSpeakers.some(
+                        speaker => speaker.point_of_order && speaker.user_id === lastSpeaker.user_id
+                    ) ||
+                    (this.activeSpeaker.point_of_order && this.activeSpeaker.user_id === lastSpeaker.user_id);
             } else {
-                isLastSpeakerWaiting = this.waitingSpeakers.some(
-                    speaker => !speaker.point_of_order && speaker.user_id === lastSpeaker.user_id
-                );
+                isLastSpeakerWaiting =
+                    this.waitingSpeakers.some(
+                        speaker => !speaker.point_of_order && speaker.user_id === lastSpeaker.user_id
+                    ) ||
+                    (!this.activeSpeaker.point_of_order && this.activeSpeaker.user_id === lastSpeaker.user_id);
             }
             canReaddLast = !isLastSpeakerWaiting;
         } else {
