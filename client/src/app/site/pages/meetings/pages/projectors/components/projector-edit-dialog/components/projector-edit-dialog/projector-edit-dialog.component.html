@@ -52,13 +52,13 @@
             <div class="spacer-top-20 grid-form">
                 <mat-slider
                     class="grid-start"
-                    formControlName="width"
-                    [thumbLabel]="true"
+                    [discrete]="true"
                     [min]="minWidth"
                     [max]="maxResolution"
                     [step]="resolutionChangeStep"
-                    [value]="updateForm.value.width"
-                ></mat-slider>
+                >
+                    <input matSliderThumb formControlName="width" [value]="updateForm.value.width" />
+                </mat-slider>
                 <div class="grid-end">
                     <mat-form-field>
                         <input

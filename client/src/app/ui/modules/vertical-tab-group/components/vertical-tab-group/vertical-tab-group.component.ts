@@ -9,7 +9,7 @@ import {
     QueryList,
     TemplateRef
 } from '@angular/core';
-import { MatLegacyTab as MatTab } from '@angular/material/legacy-tabs';
+import { MatTab } from '@angular/material/tabs';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 

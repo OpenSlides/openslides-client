@@ -27,7 +27,9 @@
 }
 
 // most mat-lists are NGrid already. Group-List and Workflow-Detail still require these.
-.mat-table {
+// TODO(mdc-migration) Remove mat-table once migrated
+.mat-table,
+.mat-mdc-table {
     width: 100%;
 
     /** nide the anchor column from head row */
