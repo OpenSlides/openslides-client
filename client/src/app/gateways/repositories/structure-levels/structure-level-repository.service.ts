@@ -3,16 +3,16 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from '../../../domain/interfaces';
 import { StructureLevel } from '../../../domain/models/structure-levels/structure-level';
 import { ViewStructureLevel } from '../../../site/pages/meetings/pages/participants/pages/structure-levels/view-models/view-structure-level';
-import { BaseRepository } from '../base-repository';
-import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
+import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
+import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { StructureLevelAction } from './structure-level.action';
 
 @Injectable({
     providedIn: `root`
 })
-export class StructureLevelRepositoryService extends BaseRepository<ViewStructureLevel, StructureLevel> {
-    public constructor(serviceCollector: RepositoryServiceCollectorService) {
-        super(serviceCollector, StructureLevel);
+export class StructureLevelRepositoryService extends BaseMeetingRelatedRepository<ViewStructureLevel, StructureLevel> {
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+        super(repositoryServiceCollector, StructureLevel);
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `StructureLevels` : `StructureLevel`);
@@ -22,7 +22,8 @@ export class StructureLevelRepositoryService extends BaseRepository<ViewStructur
         const payload = structureLevels.map(structureLevel => ({
             name: structureLevel.name,
             color: structureLevel.color,
-            allow_additional_time: structureLevel.allow_additional_time
+            allow_additional_time: structureLevel.allow_additional_time,
+            meeting_id: this.activeMeetingId
         }));
         return this.sendBulkActionToBackend(StructureLevelAction.CREATE, payload);
     }

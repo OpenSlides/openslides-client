@@ -1,1 +1,1 @@
-import * from './view-structure-level.ts';
+export * from './view-structure-level';
