@@ -15,13 +15,13 @@ import { ListModule } from 'src/app/ui/modules/list';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 import { PipesModule } from 'src/app/ui/pipes';
 
-import { SubdivisionListComponent } from './components/subdivision-list/subdivision-list.component';
-import { SubdivisionListRoutingModule } from './subdivision-list-routing.module';
+import { StructureLevelListComponent } from './components/structure-level-list/structure-level-list.component';
+import { StructureLevelListRoutingModule } from './structure-level-list-routing.module';
 
 @NgModule({
-    declarations: [SubdivisionListComponent],
+    declarations: [StructureLevelListComponent],
     imports: [
-        SubdivisionListRoutingModule,
+        StructureLevelListRoutingModule,
         CommonModule,
         HeadBarModule,
         ListModule,
@@ -39,4 +39,4 @@ import { SubdivisionListRoutingModule } from './subdivision-list-routing.module'
         PipesModule
     ]
 })
-export class SubdivisionListModule {}
+export class StructureLevelListModule {}

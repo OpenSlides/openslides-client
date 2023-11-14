@@ -1,7 +1,7 @@
-<os-head-bar [hasMainButton]="true" (mainEvent)="createSubdivision()" [multiSelectMode]="isMultiSelect">
+<os-head-bar [hasMainButton]="true" (mainEvent)="createStructureLevel()" [multiSelectMode]="isMultiSelect">
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ 'Subdivisions' | translate }}</h2>
+        <h2>{{ 'StructureLevels' | translate }}</h2>
     </div>
 
     <!-- Menu -->
@@ -21,23 +21,23 @@
     [listObservable]="repo.getViewModelListObservable()"
     [(selectedRows)]="selectedRows"
     [multiSelect]="isMultiSelect"
-    listStorageKey="subdivisions"
+    listStorageKey="structure_levels"
     [vScrollFixed]="60"
     [filterProps]="['name']"
     [hiddenInMobile]="['info', 'menu']"
 >
-    <div *osScrollingTableCell="'name'; row as subdivision" class="cell-slot fill">
+    <div *osScrollingTableCell="'name'; row as structure_level" class="cell-slot fill">
         <div>
-            {{ subdivision.name }}
+            {{ structure_level.name }}
         </div>
     </div>
-    <div *osScrollingTableCell="'edit'; row as subdivision; config: { width: 40 }" class="cell-slot fill">
-        <button mat-icon-button (click)="editSubdivision(subdivision)">
+    <div *osScrollingTableCell="'edit'; row as structure_level; config: { width: 40 }" class="cell-slot fill">
+        <button mat-icon-button (click)="editStructureLevel(structure_level)">
             <mat-icon>edit</mat-icon>
         </button>
     </div>
-    <div *osScrollingTableCell="'delete'; row as subdivision; config: { width: 40 }" class="cell-slot fill">
-        <button mat-icon-button color="warn" (click)="deleteSubdivisions(subdivision)">
+    <div *osScrollingTableCell="'delete'; row as structure_level; config: { width: 40 }" class="cell-slot fill">
+        <button mat-icon-button color="warn" (click)="deleteStructureLevels(structure_level)">
             <mat-icon>delete</mat-icon>
         </button>
     </div>
@@ -49,7 +49,7 @@
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <!--<button mat-menu-item class="red-warning-text" (click)="deleteSubdivision([member])">
+        <!--<button mat-menu-item class="red-warning-text" (click)="deleteStructureLevel([member])">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>-->
