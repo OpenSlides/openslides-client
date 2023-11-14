@@ -166,7 +166,7 @@ export class DataStoreUpdateManagerService {
      *
      * @param slot The slot to commit
      */
-    public commit(slot: UpdateSlot, changedModels: ChangedModels): void {
+    public async commit(slot: UpdateSlot, changedModels: ChangedModels): Promise<void> {
         if (!this.currentUpdateSlot || !this.currentUpdateSlot.equal(slot)) {
             throw new Error(`No or wrong update slot to be finished!`);
         }
@@ -174,6 +174,7 @@ export class DataStoreUpdateManagerService {
 
         // notify repositories in two phases
         const repositories = this.mapperService.getAllRepositories();
+        const modelUpdates = [];
 
         // Phase 1: deleting and creating of view models (in this order)
         for (const repo of repositories) {
@@ -184,9 +185,10 @@ export class DataStoreUpdateManagerService {
 
             const changedModelIds = slot.getChangedModelIdsForCollection(repo.collection);
             if (changedModelIds?.length) {
-                repo.changedModels(changedModelIds, changedModels[repo.COLLECTION]);
+                modelUpdates.push(repo.changedModels(changedModelIds, changedModels[repo.COLLECTION]));
             }
         }
+        await Promise.all(modelUpdates);
 
         // Phase 2: updating all repositories
         for (const repo of repositories) {

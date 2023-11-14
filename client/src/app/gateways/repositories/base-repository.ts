@@ -3,6 +3,7 @@ import { auditTime, BehaviorSubject, filter, Observable, Subject, Subscription }
 import { HasSequentialNumber, Identifiable } from 'src/app/domain/interfaces';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
 import { ListUpdateData } from 'src/app/infrastructure/utils';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { OsSortProperty } from 'src/app/site/base/base-sort.service';
 import { SortListService } from 'src/app/ui/modules/list';
 
@@ -40,6 +41,7 @@ enum PipelineActionType {
 interface UpdatePipelineAction {
     funct: () => Promise<void>;
     type: PipelineActionType;
+    defer?: Deferred;
     key?: string;
 }
 
@@ -319,7 +321,8 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      *
      * @param ids All model ids.
      */
-    public changedModels(ids: Id[], changedModels: BaseModel<M>[]): void {
+    public changedModels(ids: Id[], changedModels: BaseModel<M>[]): Promise<void> {
+        const defer = new Deferred();
         this.pushToPipeline({
             funct: async () => {
                 const newViewModels: V[] = [];
@@ -344,9 +347,11 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                     await this.initChangeBasedResorting(newModels, updatedModels, newViewModels, updatedViewModels);
                 }
             },
-            type: PipelineActionType.General
+            type: PipelineActionType.General,
+            defer
         });
         this.activatePipeline();
+        return defer;
     }
 
     /**
@@ -565,10 +570,16 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                             this.updateActionPipeline[priority][index].key ===
                                 this.updateActionPipeline[priority][i].key)
                     ) {
+                        if (this.updateActionPipeline[priority][i].defer) {
+                            this.updateActionPipeline[priority][i].defer.resolve();
+                        }
                         this.updateActionPipeline[priority].splice(i, 1);
                     }
                 }
             }
+        }
+        if (this.updateActionPipeline[priority][index].defer) {
+            this.updateActionPipeline[priority][index].defer.resolve();
         }
         this.updateActionPipeline[priority].splice(index, 1);
     }
