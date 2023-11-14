@@ -188,8 +188,8 @@ export class DataStoreUpdateManagerService {
                 modelUpdates.push(repo.changedModels(changedModelIds, changedModels[repo.COLLECTION]));
             }
         }
-
         await Promise.all(modelUpdates);
+
         // Phase 2: updating all repositories
         for (const repo of repositories) {
             repo.commitUpdate(slot.getAllModelsIdsForCollection(repo.collection));
