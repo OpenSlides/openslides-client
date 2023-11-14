@@ -13,9 +13,6 @@ msgstr ""
 msgid "%num% emails were send sucessfully."
 msgstr ""
 
-msgid "(Default)"
-msgstr ""
-
 msgid "-Ä"
 msgstr ""
 
@@ -97,6 +94,22 @@ msgid "Account successfully assigned"
 msgstr ""
 
 msgid "Accounts"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/services/account-import.service/account-import.service.ts
+msgid "Accounts created"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/services/account-import.service/account-import.service.ts
+msgid "Accounts updated"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/services/account-import.service/account-import.service.ts
+msgid "Accounts with errors"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/services/account-import.service/account-import.service.ts
+msgid "Accounts with warnings (will be skipped)"
 msgstr ""
 
 msgid "Activate"
@@ -328,7 +341,8 @@ msgstr ""
 msgid "Amount of votes"
 msgstr ""
 
-msgid "An email with a password reset link was send!"
+#: /app/src/app/site/pages/login/pages/reset-password/components/reset-password/reset-password.component.ts
+msgid "An email with a password reset link has been sent."
 msgstr ""
 
 msgid "An error occurred while voting."
@@ -877,6 +891,10 @@ msgstr ""
 msgid "Can see elections"
 msgstr ""
 
+#: /app/src/app/domain/definitions/permission.config.ts
+msgid "Can see files"
+msgstr ""
+
 msgid "Can see history"
 msgstr ""
 
@@ -946,9 +964,6 @@ msgid "Can see the autopilot"
 msgstr ""
 
 msgid "Can see the front page"
-msgstr ""
-
-msgid "Can see the list of files"
 msgstr ""
 
 msgid "Can see the live stream"
@@ -1087,6 +1102,18 @@ msgid "Check datastore"
 msgstr ""
 
 msgid "Check in or check out participants based on their participant numbers:"
+msgstr ""
+
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
+msgid "Checkmate! You lost!"
+msgstr ""
+
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
+msgid "Checkmate! You won!"
+msgstr ""
+
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
+msgid "Chess"
 msgstr ""
 
 msgid "Choice"
@@ -1402,7 +1429,8 @@ msgstr ""
 msgid "Default structure level"
 msgstr ""
 
-msgid "Default text version for change recommendations"
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Default text version for change recommendations and projection of motions"
 msgstr ""
 
 msgid "Default visibility for new agenda items (except topics)"
@@ -1524,6 +1552,10 @@ msgid "Do not decide"
 msgstr ""
 
 msgid "Do not forget to save your changes!"
+msgstr ""
+
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service.ts
+msgid "Do you accept?"
 msgstr ""
 
 msgid "Do you really want to delete this color set?"
@@ -1863,6 +1895,13 @@ msgstr ""
 msgid "File"
 msgstr ""
 
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.html
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.html
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.html
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.html
+msgid "File is being used"
+msgstr ""
+
 msgid "Filename"
 msgstr ""
 
@@ -1870,9 +1909,6 @@ msgid "Files"
 msgstr ""
 
 msgid "Filter"
-msgstr ""
-
-msgid "Filtered"
 msgstr ""
 
 msgid "Final version"
@@ -2194,6 +2230,11 @@ msgstr ""
 msgid "Import successful"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/agenda/modules/topics/pages/topic-import/components/topic-import/topic-import.component.html
+#: /app/src/app/site/pages/meetings/pages/agenda/modules/topics/pages/topic-import/components/topic-import/topic-import.component.html
+msgid "Import successful with some warnings"
+msgstr ""
+
 msgid "Import topics"
 msgstr ""
 
@@ -2237,6 +2278,10 @@ msgid "Insert topics here"
 msgstr ""
 
 msgid "Insertion"
+msgstr ""
+
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
+msgid "Insufficient material! It's a draw!"
 msgstr ""
 
 msgid "Internal"
@@ -2349,7 +2394,12 @@ msgstr ""
 msgid "It is not allowed to delete countdowns used for list of speakers or polls"
 msgstr ""
 
-msgid "It's your partners turn"
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
+msgid "It's a draw!"
+msgstr ""
+
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/components/base-game-dialog/base-game-dialog.ts
+msgid "It's your opponent's turn"
 msgstr ""
 
 msgid "It's your turn!"
@@ -3016,6 +3066,10 @@ msgstr ""
 msgid "Open a meeting to play \"Connect 4\""
 msgstr ""
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.html
+msgid "Open a meeting to play chess"
+msgstr ""
+
 msgid "Open items"
 msgstr ""
 
@@ -3243,6 +3297,10 @@ msgstr ""
 msgid "Phase"
 msgstr ""
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.html
+msgid "Playing against"
+msgstr ""
+
 msgid "Please allow OpenSlides to access your microphone and/or camera"
 msgstr ""
 
@@ -3255,9 +3313,6 @@ msgstr ""
 msgid "Please enter a new workflow name:"
 msgstr ""
 
-msgid "Please enter a valid email address"
-msgstr ""
-
 msgid "Please enter a valid email address!"
 msgstr ""
 
@@ -3265,6 +3320,10 @@ msgid "Please enter your new password"
 msgstr ""
 
 msgid "Please join the conference room now!"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-detail/account-detail.component.html
+msgid "Please select a vote weight bigger than zero."
 msgstr ""
 
 msgid "Please select the directory:"
@@ -3582,10 +3641,18 @@ msgstr ""
 msgid "Roman"
 msgstr ""
 
+#: /app/src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component.html
+msgid "Rows with warnings"
+msgstr ""
+
 msgid "SSO"
 msgstr ""
 
 msgid "SSO Identification"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/definitions/index.ts
+msgid "SSO identification"
 msgstr ""
 
 msgid "Same email"
@@ -3953,6 +4020,10 @@ msgstr ""
 msgid "Staff"
 msgstr ""
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
+msgid "Stalemate! It's a draw!"
+msgstr ""
+
 msgid "Start and end time must either both be set or both be empty"
 msgstr ""
 
@@ -4135,12 +4206,15 @@ msgid ""
 "please check the preview for details."
 msgstr ""
 
-msgid ""
-"The import has failed due to recent changes on the server. Please check the "
-"updated preview before clicking on \"import\" again."
+msgid "The import is in progress, please wait ..."
 msgstr ""
 
-msgid "The import is in progress, please wait ..."
+#: /app/src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component.html
+msgid ""
+"The import returned warnings. This does not mean that it failed, but some "
+"data may have been imported differently. Usually the warnings will be the "
+"same as during the preview, but as there is a possibility that new ones "
+"have arisen, the relevant rows will be displayed below."
 msgstr ""
 
 msgid "The import was successful."
@@ -4358,6 +4432,10 @@ msgstr ""
 msgid "Thoroughly check datastore (unsafe)"
 msgstr ""
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
+msgid "Threefold repetition! It's a draw!"
+msgstr ""
+
 msgid "Tile view"
 msgstr ""
 
@@ -4409,7 +4487,8 @@ msgstr ""
 msgid "Topics with warnings (will be skipped)"
 msgstr ""
 
-msgid "Total"
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/services/account-import.service/account-import.service.ts
+msgid "Total accounts"
 msgstr ""
 
 msgid "Total topics"
@@ -4609,6 +4688,10 @@ msgstr ""
 msgid "Wait for response ..."
 msgstr ""
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
+msgid "Waiting for response ..."
+msgstr ""
+
 msgid "Warn color"
 msgstr ""
 
@@ -4769,6 +4852,10 @@ msgstr ""
 msgid "You have to be logged in to be able to vote."
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-content/list-of-speakers-content.component.html
+msgid "You have to be present to add yourself."
+msgstr ""
+
 msgid "You have to be present to vote."
 msgstr ""
 
@@ -4808,13 +4895,16 @@ msgstr ""
 msgid "Your input does not match the following structure: \"hh:mm\""
 msgstr ""
 
-msgid "Your partner couldn't stand it anymore... You are the winner!"
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/components/base-game-dialog/base-game-dialog.ts
+msgid "Your opponent couldn't stand it anymore... You are the winner!"
 msgstr ""
 
-msgid "Your partner has won!"
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/c4-dialog/components/c4-dialog/c4-dialog.component.ts
+msgid "Your opponent has won!"
 msgstr ""
 
-msgid "Your password was resetted successfully!"
+#: /app/src/app/site/pages/login/pages/reset-password-confirm/components/reset-password-confirm/reset-password-confirm.component.ts
+msgid "Your password has been reset successfully!"
 msgstr ""
 
 msgid "Your votes"
@@ -4875,6 +4965,10 @@ msgid "ballot-paper"
 msgstr ""
 
 msgid "by"
+msgstr ""
+
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service.ts
+msgid "challenged you to a chess match!"
 msgstr ""
 
 msgid "committee-example"
@@ -5166,6 +5260,10 @@ msgid "will be imported"
 msgstr ""
 
 msgid "will be referenced"
+msgstr ""
+
+#: /app/src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component.ts
+msgid "will be updated"
 msgstr ""
 
 msgid "withdrawn"
