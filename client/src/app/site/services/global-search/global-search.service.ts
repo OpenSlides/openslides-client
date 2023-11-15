@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
+import { Motion } from 'src/app/domain/models/motions';
 import { HttpService } from 'src/app/gateways/http.service';
-import { collectionFromFqid, idFromFqid } from 'src/app/infrastructure/utils/transform-functions';
+import {
+    collectionFromFqid,
+    fqidFromCollectionAndId,
+    idFromFqid
+} from 'src/app/infrastructure/utils/transform-functions';
 
 import { ActiveMeetingService } from '../../pages/meetings/services/active-meeting.service';
 import { GlobalSearchEntry, GlobalSearchResponse } from './definitions';
@@ -107,7 +112,7 @@ export class GlobalSearchService {
                 results[taggedFqid].score = Math.max(results[taggedFqid].score || 0, addScore);
                 this.updateScore(taggedFqid, results[taggedFqid].score, results);
             }
-        } else if (collection === `agenda_item` && result.content?.content_object_id) {
+        } else if ([`agenda_item`, `poll`].indexOf(collection) !== -1 && result.content?.content_object_id) {
             results[result.content.content_object_id].score = Math.max(
                 results[result.content.content_object_id].score || 0,
                 addScore
@@ -118,6 +123,10 @@ export class GlobalSearchService {
                 results[result.content.content_object_id].score,
                 results
             );
+        } else if (collection === `motion_change_recommendation` && results[fqid].content?.motion_id) {
+            const motionFqid = fqidFromCollectionAndId(Motion.COLLECTION, results[fqid].content?.motion_id);
+            results[motionFqid].score = Math.max(results[motionFqid].score || 0, addScore);
+            this.updateScore(motionFqid, results[motionFqid].score, results);
         }
     }
 
