@@ -81,10 +81,23 @@ export class GlobalSearchService {
                         !this.isIdField(field)
                     ) {
                         for (const word of result.matched_by[field]) {
-                            result.content[field] = `${result.content[field]}`.replace(
-                                new RegExp(word, `gi`),
-                                match => `<mark>${match}</mark>`
-                            );
+                            if (result.content[field] instanceof String) {
+                                result.content[field] = result.content[field].replace(
+                                    new RegExp(word, `gi`),
+                                    (match: string) => `<mark>${match}</mark>`
+                                );
+                            } else {
+                                // Generic way to parse matches in amendments. This might needs
+                                // improvement
+                                try {
+                                    result.content[field] = JSON.parse(
+                                        JSON.stringify(result.content[field]).replace(
+                                            new RegExp(word, `gi`),
+                                            match => `<mark>${match}</mark>`
+                                        )
+                                    );
+                                } catch (e) {}
+                            }
                         }
                     }
                 }
