@@ -1,7 +1,12 @@
-<os-head-bar [hasMainButton]="true" (mainEvent)="createStructureLevel()" [multiSelectMode]="isMultiSelect">
+<os-head-bar
+    [hasMainButton]="true"
+    [nav]="false"
+    (mainEvent)="createStructureLevel()"
+    [multiSelectMode]="isMultiSelect"
+>
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ 'StructureLevels' | translate }}</h2>
+        <h2>{{ 'Structure Levels' | translate }}</h2>
     </div>
 
     <!-- Menu -->

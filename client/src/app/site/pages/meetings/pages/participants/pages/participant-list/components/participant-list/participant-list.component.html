@@ -182,6 +182,11 @@
             <span>{{ 'Groups' | translate }}</span>
         </button>
 
+        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="structure-levels">
+            <mat-icon>people</mat-icon>
+            <span>{{ 'Structure Levels' | translate }}</span>
+        </button>
+
         <div *ngIf="presenceViewConfigured">
             <button mat-menu-item *osPerms="permission.userCanManage" routerLink="presence">
                 <mat-icon>transfer_within_a_station</mat-icon>
