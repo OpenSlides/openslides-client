@@ -18,15 +18,15 @@ export class StructureLevelControlService extends BaseController<ViewStructureLe
         super(controllerServiceCollector, StructureLevel, repo);
     }
 
-    public create(...subdivisons: Partial<StructureLevel>[]): Promise<Identifiable[]> {
-        return this.repo.create(...subdivisons);
+    public create(...structureLevels: Partial<StructureLevel>[]): Promise<Identifiable[]> {
+        return this.repo.create(...structureLevels);
     }
 
-    public update(update: Partial<StructureLevel>, subdivison: Identifiable): Promise<void> {
-        return this.repo.update(update, subdivison);
+    public update(update: Partial<StructureLevel>, structureLevel: Identifiable): Promise<void> {
+        return this.repo.update(update, structureLevel);
     }
 
-    public delete(...subdivisons: Identifiable[]): Promise<void> {
-        return this.repo.delete(...subdivisons);
+    public delete(...structureLevels: Identifiable[]): Promise<void> {
+        return this.repo.delete(...structureLevels);
     }
 }

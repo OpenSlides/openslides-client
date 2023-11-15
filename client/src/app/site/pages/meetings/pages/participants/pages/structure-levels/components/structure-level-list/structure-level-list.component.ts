@@ -8,7 +8,6 @@ import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/b
 import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { StructureLevelControlService } from '../../services/structure-level-controller.service';
 
@@ -31,7 +30,7 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
     /**
      * helper for permission checks
      *
-     * @returns true if the user may alter motions or their metadata
+     * @returns true if the user may alter structure levels
      */
     public get canEdit(): boolean {
         return this.operator.hasPerms(Permission.userCanManage);
@@ -41,17 +40,15 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: StructureLevelControlService,
-        private promptService: PromptService,
         private formBuilder: UntypedFormBuilder,
         private dialog: MatDialog,
         private operator: OperatorService
     ) {
         super(componentServiceCollector, translate);
         super.setTitle(`Structure Levels`);
-        this.canMultiSelect = true;
         this.createForm = this.formBuilder.group({
             name: [``, Validators.required],
-            color: [``, Validators.required],
+            color: [``, Validators.pattern(/^#[0-9a-fA-F]{6}$/)],
             allow_additional_time: [``]
         });
     }
@@ -70,50 +67,6 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
     }
 
     /**
-     * Sends the category to create to the repository.
-     */
-    private save(): void {
-        if (this.createForm.valid) {
-            this.repo.create(this.createForm.value);
-        }
-    }
-
-    public createStructureLevel(): Promise<void> {
-        console.log(`create SD`);
-        return this.editStructureLevel();
-    }
-
-    public async editStructureLevel(structure_level?: ViewStructureLevel): Promise<void> {
-        console.log(`edit SD`, structure_level);
-        /* const dialogRef = await this.dialog.open({
-            organizationTag: orgaTag,
-            defaultColor: this.theme.currentAccentColor,
-            getRandomColor: () => this.colorService.getRandomHtmlColor()
-        });*/
-        const result = { name: `test` }; /* await firstValueFrom(dialogRef.afterClosed()); */
-        if (result) {
-            if (!structure_level) {
-                // Creating a new structure_level...
-                this.repo.create(result);
-            } else {
-                this.repo.update(result, structure_level);
-            }
-        }
-    }
-
-    public async deleteStructureLevels(...structure_levels: ViewStructureLevel[]): Promise<void> {
-        console.log(`SD delete`, structure_levels);
-        const title =
-            structure_levels.length === 1
-                ? this.translate.instant(`Are you sure you want to delete this structure_level?`)
-                : this.translate.instant(`Are you sure you want to delete all selected subdivsions?`);
-        const content = structure_levels.length === 1 ? structure_levels[0].name : ``;
-        if (await this.promptService.open(title, content)) {
-            await this.repo.delete(...structure_levels);
-        }
-    }
-
-    /**
      * clicking Enter will save automatically
      * clicking Escape will cancel the process
      *
@@ -126,6 +79,15 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
         }
         if (event.key === `Escape`) {
             this.dialogRef!.close();
+        }
+    }
+
+    /**
+     * Sends the structure level to create to the repository.
+     */
+    private save(): void {
+        if (this.createForm.valid) {
+            this.repo.create(this.createForm.value);
         }
     }
 }
