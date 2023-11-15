@@ -1,8 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { RouterModule } from '@angular/router';
@@ -25,11 +30,16 @@ import { StructureLevelListRoutingModule } from './structure-level-list-routing.
         CommonModule,
         HeadBarModule,
         ListModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
         MatTooltipModule,
         MatIconModule,
         MatMenuModule,
         MatDividerModule,
         MatButtonModule,
+        MatCheckboxModule,
+        ReactiveFormsModule,
         OpenSlidesTranslationModule.forChild(),
         RouterModule,
         DirectivesModule,
