@@ -11,7 +11,7 @@ import {
 } from 'src/app/infrastructure/utils/transform-functions';
 
 import { ActiveMeetingService } from '../../pages/meetings/services/active-meeting.service';
-import { GlobalSearchEntry, GlobalSearchResponse } from './definitions';
+import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchResponseEntry } from './definitions';
 
 @Injectable({
     providedIn: `root`
@@ -166,7 +166,7 @@ export class GlobalSearchService {
 
         return {
             title: this.getTitle(collection, content),
-            text: content.text || content.description,
+            text: this.getText(collection, results[fqid]),
             obj: content,
             fqid,
             collection,
@@ -175,6 +175,15 @@ export class GlobalSearchService {
             committee: results[`committee/${content.committee_id}`]?.content,
             score: results[fqid].score || 0
         };
+    }
+
+    private getText(collection: string, result: GlobalSearchResponseEntry) {
+        const content = result.content;
+        if (collection === Motion.COLLECTION && !result.matched_by[`text`] && result.matched_by[`reason`]) {
+            return content.reason;
+        }
+
+        return content.text || content.description;
     }
 
     private getUrl(collection: string, id: Id, content: any): string {

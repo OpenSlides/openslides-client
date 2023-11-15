@@ -81,7 +81,7 @@
                         </div>
                         <p *ngIf="result.text" class="text-snippet" [innerHtml]="getTextSnippet(result.text)"></p>
                         <p
-                            *ngIf="result.obj?.amendment_paragraphs"
+                            *ngIf="!result.text && result.obj?.amendment_paragraphs"
                             class="text-snippet"
                             [innerHtml]="getTextSnippet(result.obj.amendment_paragraphs)"
                         ></p>
