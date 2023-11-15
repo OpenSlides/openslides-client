@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
+import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
 import { HttpService } from 'src/app/gateways/http.service';
 import {
     collectionFromFqid,
+    collectionIdFromFqid,
     fqidFromCollectionAndId,
     idFromFqid
 } from 'src/app/infrastructure/utils/transform-functions';
@@ -73,7 +75,11 @@ export class GlobalSearchService {
             const result = results[fqid];
             if (result.matched_by) {
                 for (const field of Object.keys(result.matched_by)) {
-                    if (result.content[field] && !this.isTitleField(collectionFromFqid(fqid), field)) {
+                    if (
+                        result.content[field] &&
+                        !this.isTitleField(collectionFromFqid(fqid), field) &&
+                        !this.isIdField(field)
+                    ) {
                         for (const word of result.matched_by[field]) {
                             result.content[field] = `${result.content[field]}`.replace(
                                 new RegExp(word, `gi`),
@@ -92,6 +98,10 @@ export class GlobalSearchService {
         } else {
             return [`name`, `title`].includes(field);
         }
+    }
+
+    private isIdField(field: string): boolean {
+        return [`owner_id`, `content_object_id`].indexOf(field) !== -1;
     }
 
     private updateScores(results: GlobalSearchResponse): void {
@@ -167,6 +177,13 @@ export class GlobalSearchService {
             case `topic`:
                 return `/${content.meeting_id}/agenda/topics/${id}`;
             case `mediafile`:
+                if (content?.is_directory) {
+                    const [coll, mid] = collectionIdFromFqid(content.owner_id);
+                    if (coll === Meeting.COLLECTION) {
+                        return `/${mid}/mediafiles/${id}`;
+                    }
+                    return `/mediafiles/${id}`;
+                }
                 return `/system/media/get/${id}`;
             case `user`:
                 if (this.activeMeeting.meetingId && content.meeting_ids?.includes(this.activeMeeting.meetingId)) {
