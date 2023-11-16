@@ -47,7 +47,7 @@ const routes: Routes = [
             {
                 path: `structure-levels`,
                 loadChildren: () =>
-                    import(`./pages/structure-levels/structure-level-list.module`).then(m => m.StructureLevelListModule)
+                    import(`./pages/structure-levels/structure-level.module`).then(m => m.StructureLevelModule)
             },
             {
                 path: ``,

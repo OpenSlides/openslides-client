@@ -10,6 +10,8 @@ import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/materia
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -19,14 +21,17 @@ import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 import { PipesModule } from 'src/app/ui/pipes';
+import { DetailViewModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/detail-view/detail-view.module';
+
 
 import { StructureLevelListComponent } from './components/structure-level-list/structure-level-list.component';
-import { StructureLevelListRoutingModule } from './structure-level-list-routing.module';
+import { StructureLevelDetailComponent } from './components/structure-level-detail/structure-level-detail.component';
+import { StructureLevelRoutingModule } from './structure-level-routing.module';
 
 @NgModule({
-    declarations: [StructureLevelListComponent],
+    declarations: [StructureLevelListComponent, StructureLevelDetailComponent],
     imports: [
-        StructureLevelListRoutingModule,
+        StructureLevelRoutingModule,
         CommonModule,
         HeadBarModule,
         ListModule,
@@ -39,6 +44,8 @@ import { StructureLevelListRoutingModule } from './structure-level-list-routing.
         MatDividerModule,
         MatButtonModule,
         MatCheckboxModule,
+        MatCardModule,
+        MatTableModule,
         ReactiveFormsModule,
         OpenSlidesTranslationModule.forChild(),
         RouterModule,
@@ -46,7 +53,8 @@ import { StructureLevelListRoutingModule } from './structure-level-list-routing.
         ChoiceDialogModule,
         IconContainerModule,
         PromptDialogModule,
-        PipesModule
+        PipesModule,
+        DetailViewModule
     ]
 })
-export class StructureLevelListModule {}
+export class StructureLevelModule {}
