@@ -25,9 +25,9 @@ export class StructureLevelRepositoryService extends BaseMeetingRelatedRepositor
         const models = Array.isArray(structureLevel) ? structureLevel : [structureLevel];
         const payload: any[] = models.map(model => ({
             meeting_id: model.meeting_id || meeting_id,
-            name: structureLevel.name,
-            color: structureLevel.color,
-            allow_additional_time: structureLevel.allow_additional_time
+            name: model.name,
+            color: model.color,
+            allow_additional_time: model.allow_additional_time
         }));
         return this.createAction(StructureLevelAction.CREATE, payload);
     }
