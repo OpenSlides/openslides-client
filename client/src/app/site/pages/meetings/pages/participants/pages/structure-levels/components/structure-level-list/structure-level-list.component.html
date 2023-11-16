@@ -14,6 +14,7 @@
     [hiddenInMobile]="['info', 'menu']"
 >
     <div *osScrollingTableCell="'name'; row as structure_level" class="cell-slot fill">
+        <os-detail-view-navigator [model]="structure_level"></os-detail-view-navigator>
         <div>
             {{ structure_level.name }}
         </div>
