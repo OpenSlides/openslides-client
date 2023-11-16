@@ -9,7 +9,7 @@ import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participan
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
-import { StructureLevelControlService } from '../../services/structure-level-controller.service';
+import { StructureLevelControllerService } from '../../services/structure-level-controller.service';
 
 @Component({
     selector: `os-structure-level-list`,
@@ -39,7 +39,7 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        public repo: StructureLevelControlService,
+        public repo: StructureLevelControllerService,
         private formBuilder: UntypedFormBuilder,
         private dialog: MatDialog,
         private operator: OperatorService
