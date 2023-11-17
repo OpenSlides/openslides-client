@@ -251,6 +251,16 @@ export class MotionSlideComponent
 
         if (this.data.data.change_recommendations) {
             this.data.data.change_recommendations.forEach(change => {
+                if (this.data.data.start_line_number > 1) {
+                    const offset = this.data.data.start_line_number - 1;
+                    if (change.line_from) {
+                        change.line_from += offset;
+                    }
+
+                    if (change.line_to) {
+                        change.line_to += offset;
+                    }
+                }
                 this.allChangingObjects.push(new ChangeRecommendationUnifiedChange(change));
             });
         }
