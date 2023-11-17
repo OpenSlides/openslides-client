@@ -51,18 +51,18 @@ export const HEAD_BAR_HEIGHT = 50; // height of the head-bar in px.
  *     </div>
  *
  *     <!-- Menu -->
- *     <div class="menu-slot">
+ *     <ng-container class="menu-slot">
  *         <button type="button" mat-icon-button [matMenuTriggerFor]="myComponentMenu">
  *             <mat-icon>more_vert</mat-icon>
  *         </button>
- *     </div>
+ *     </ng-container>
  *     <!-- Multiselect info -->
- *     <div class="central-info-slot">
- *     <button mat-icon-button (click)="toggleMultiSelect()">
- *         <mat-icon>arrow_back</mat-icon>
- *     </button>
+ *     <ng-container class="central-info-slot">
+ *          <button mat-icon-button (click)="toggleMultiSelect()">
+ *              <mat-icon>arrow_back</mat-icon>
+ *          </button>
  *         <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
- * </div>
+ *      </ng-container>
  * </os-head-bar>
  * ```
  */

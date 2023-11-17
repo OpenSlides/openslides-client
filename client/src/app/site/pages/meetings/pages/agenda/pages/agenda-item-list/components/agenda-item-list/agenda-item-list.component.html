@@ -4,15 +4,15 @@
         <h2>{{ 'Agenda' | translate }}</h2>
     </div>
     <!-- Menu -->
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button type="button" mat-icon-button [matMenuTriggerFor]="agendaMenu"><mat-icon>more_vert</mat-icon></button>
-    </div>
+    </ng-container>
 
     <!-- Multiselect info -->
-    <div class="central-info-slot">
+    <ng-container class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
         <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
-    </div>
+    </ng-container>
 </os-head-bar>
 
 <os-projectable-list
