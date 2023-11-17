@@ -87,6 +87,10 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         this._showPreamble = value;
     }
 
+    public get showPreamble(): boolean {
+        return this.motion.showPreamble ? this._showPreamble : false;
+    }
+
     @Input()
     public lineRange: LineRange | null = null;
 
@@ -99,10 +103,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public lineLength!: number;
 
     public preamble!: string;
-
-    public get showPreamble(): boolean {
-        return this.motion.showPreamble ? this._showPreamble : false;
-    }
 
     private _showPreamble = true;
 
