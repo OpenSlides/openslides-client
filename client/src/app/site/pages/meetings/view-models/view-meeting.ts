@@ -138,6 +138,7 @@ interface IMeetingRelations {
     motions_default_statute_amendment_workflow: ViewMotionWorkflow;
     motion_poll_default_groups: ViewGroup[];
     assignment_poll_default_groups: ViewGroup[];
+    topic_poll_default_groups: ViewGroup[];
     poll_default_groups: ViewGroup[];
     projectors: ViewProjector[];
     all_projections: ViewProjection[];
