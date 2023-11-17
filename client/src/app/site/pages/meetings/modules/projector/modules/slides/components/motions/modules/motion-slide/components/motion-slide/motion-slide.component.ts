@@ -203,7 +203,7 @@ export class MotionSlideComponent
         baseHtml = this.lineNumbering.insertLineNumbers({
             html: baseHtml,
             lineLength: this.lineLength,
-            firstLine: this.data.data.start_line_number ?? 1
+            firstLine: this.data.data.lead_motion?.start_line_number ?? this.data.data.start_line_number ?? 1
         });
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
@@ -286,7 +286,7 @@ export class MotionSlideComponent
             changes,
             lineLength: this.lineLength,
             highlightedLine: this.highlightedLine,
-            firstLine: this.data.data.start_line_number ?? 1
+            firstLine: this.data.data.lead_motion?.start_line_number ?? this.data.data.start_line_number ?? 1
         });
     }
 
@@ -393,7 +393,7 @@ export class MotionSlideComponent
         const baseHtml = this.lineNumbering.insertLineNumbers({
             html: motion.lead_motion?.text,
             lineLength: this.lineLength,
-            firstLine: motion.start_line_number
+            firstLine: motion.lead_motion?.start_line_number ?? motion.start_line_number
         });
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
@@ -461,7 +461,7 @@ export class MotionSlideComponent
         const baseHtml = this.lineNumbering.insertLineNumbers({
             html: motion.lead_motion?.text,
             lineLength: this.lineLength,
-            firstLine: motion.start_line_number
+            firstLine: motion.lead_motion?.start_line_number ?? motion.start_line_number
         });
         return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
     }
