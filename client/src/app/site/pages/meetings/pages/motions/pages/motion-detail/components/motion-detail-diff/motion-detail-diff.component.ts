@@ -189,7 +189,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         const baseHtml = this.lineNumbering.insertLineNumbers({
             html: motionHtml,
             lineLength: this.lineLength,
-            firstLine: this.motion.firstLine
+            firstLine: this.motion.lead_motion?.firstLine ?? this.motion.firstLine
         });
         return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
     }
