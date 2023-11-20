@@ -16,7 +16,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlobalSearchComponent implements OnDestroy {
-    public searchTerm = localStorage.getItem('searchTerm');
+    public searchTerm = localStorage.getItem(`searchTerm`);
     public noResults = false;
 
     public readonly availableFilters = {
@@ -72,7 +72,7 @@ export class GlobalSearchComponent implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        localStorage.setItem('searchTerm', this.searchTerm);
+        localStorage.setItem(`searchTerm`, this.searchTerm);
         this.filterChangeSubscription.unsubscribe();
     }
 
