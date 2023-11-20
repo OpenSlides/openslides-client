@@ -35,5 +35,6 @@ interface IGroupRelations {
     polls: ViewPoll[];
     used_as_motion_poll_default?: ViewMeeting;
     used_as_assignment_poll_default?: ViewMeeting;
+    used_as_topic_poll_default?: ViewMeeting;
 }
 export interface ViewGroup extends Group, IGroupRelations, HasMeeting {}

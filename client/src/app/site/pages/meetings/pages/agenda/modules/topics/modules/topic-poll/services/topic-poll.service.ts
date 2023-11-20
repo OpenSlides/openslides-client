@@ -38,7 +38,6 @@ export class TopicPollService extends PollService {
     public defaultPollMethod: PollMethod;
     public defaultPercentBase: PollPercentBase;
     public defaultGroupIds: number[];
-    public defaultPollType: PollType;
 
     public constructor(
         organizationSettingsService: OrganizationSettingsService,
@@ -64,10 +63,6 @@ export class TopicPollService extends PollService {
             .get(`poll_default_method`)
             .subscribe(method => (this.defaultPollMethod = method ?? PollMethod.Y));
 
-        this.meetingSettingsService
-            .get(`poll_default_type`)
-            .subscribe(type => (this.defaultPollType = type ?? PollType.Pseudoanonymous));
-
         this.meetingSettingsService.get(`poll_sort_poll_result_by_votes`).subscribe(sort => (this.sortByVote = sort));
     }
 
@@ -77,7 +72,7 @@ export class TopicPollService extends PollService {
             onehundred_percent_base: this.defaultPercentBase,
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             pollmethod: this.defaultPollMethod,
-            type: this.defaultPollType,
+            type: PollType.Pseudoanonymous,
             backend: PollBackendDurationType.FAST
         };
 
