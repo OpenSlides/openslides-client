@@ -18,10 +18,11 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 export class GlobalSearchComponent implements OnDestroy {
     public static searchTerm = ``;
 
-    public get searchTerm(): string{
+    public get searchTerm(): string {
         return GlobalSearchComponent.searchTerm;
     }
-    public set searchTerm(input: string){
+
+    public set searchTerm(input: string) {
         GlobalSearchComponent.searchTerm = input;
     }
 
