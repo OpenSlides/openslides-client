@@ -19,6 +19,10 @@
             {{ structure_level.name }}
         </div>
     </div>
+    <div *osScrollingTableCell="'color'; row as structure_level" class="cell-slot fill">
+        <os-detail-view-navigator [model]="structure_level"></os-detail-view-navigator>
+        <div class="fake-button-no-touch" [ngStyle]="{ background: structure_level.color }"></div>
+    </div>
 </os-list>
 
 <!-- Template for new structure level dialog -->
