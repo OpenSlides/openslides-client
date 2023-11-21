@@ -106,7 +106,7 @@
                             <div class="inner-table">
                                 <div *ngIf="!state.next_states.length">-</div>
                                 <div *ngIf="state.next_states.length">
-                                    <os-comma-separated-listing [list]="state.next_states">
+                                    <os-comma-separated-listing [list]="sortedNextStates(state)">
                                         <ng-template let-next>{{ next.name }}</ng-template>
                                     </os-comma-separated-listing>
                                 </div>
@@ -217,7 +217,7 @@
 <!-- select next states menu -->
 <mat-menu matMenuContent #nextStatesMenu="matMenu">
     <ng-template let-state="state" matMenuContent>
-        <div *ngFor="let nextState of workflow.states">
+        <div *ngFor="let nextState of getWorkflowStates()">
             <button mat-menu-item *ngIf="nextState.name !== state.name" (click)="onSetNextState(nextState, state)">
                 <mat-icon *ngIf="state.next_state_ids?.includes(nextState.id)">check</mat-icon>
                 <span>{{ nextState.name }}</span>

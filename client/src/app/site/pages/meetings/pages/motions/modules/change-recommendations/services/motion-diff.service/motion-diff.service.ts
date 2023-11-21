@@ -2038,7 +2038,7 @@ export class MotionDiffService {
         highlight?: number,
         lineRange?: LineRange
     ): string {
-        let maxLine = 0;
+        let maxLine = lineRange?.from || 0;
         changes.forEach((change: ViewUnifiedChange) => {
             if (change.getLineTo() > maxLine) {
                 maxLine = change.getLineTo();

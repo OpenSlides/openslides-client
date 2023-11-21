@@ -76,7 +76,7 @@ export class AssignmentPollService extends PollService {
         const poll: Partial<Poll> = {
             title: this.translate.instant(`Ballot`),
             onehundred_percent_base: this.defaultPercentBase,
-            entitled_group_ids: this.defaultGroupIds,
+            entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             pollmethod: this.defaultPollMethod,
             type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog
         };

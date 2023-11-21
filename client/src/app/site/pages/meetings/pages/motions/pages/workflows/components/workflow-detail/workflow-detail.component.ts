@@ -534,6 +534,10 @@ Note: Does not affect the visibility of change recommendations.`
         return (<any>state)[perm.selector];
     }
 
+    public sortedNextStates(state: ViewMotionState): ViewMotionState[] {
+        return state.next_states.sort((a, b) => a.weight - b.weight);
+    }
+
     private async deleteWorkflowState(state: ViewMotionState): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this state?`);
         const content = `${state.name}`;

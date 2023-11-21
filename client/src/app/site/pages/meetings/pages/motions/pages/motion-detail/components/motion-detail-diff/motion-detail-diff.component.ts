@@ -87,6 +87,10 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         this._showPreamble = value;
     }
 
+    public get showPreamble(): boolean {
+        return this.motion.showPreamble ? this._showPreamble : false;
+    }
+
     @Input()
     public lineRange: LineRange | null = null;
 
@@ -99,10 +103,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public lineLength!: number;
 
     public preamble!: string;
-
-    public get showPreamble(): boolean {
-        return this.motion.showPreamble ? this._showPreamble : false;
-    }
 
     private _showPreamble = true;
 
@@ -189,7 +189,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         const baseHtml = this.lineNumbering.insertLineNumbers({
             html: motionHtml,
             lineLength: this.lineLength,
-            firstLine: this.motion.firstLine
+            firstLine: this.motion.lead_motion?.firstLine ?? this.motion.firstLine
         });
         return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
     }

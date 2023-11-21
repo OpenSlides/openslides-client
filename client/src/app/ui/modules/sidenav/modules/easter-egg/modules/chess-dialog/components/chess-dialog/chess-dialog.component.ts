@@ -78,7 +78,7 @@ export class ChessDialogComponent extends BaseGameDialogComponent implements OnI
         if (this.config?.userId) {
             this.state = `waitForResponse`;
             this.notifyService.sendToUsers(`chess_challenge`, { name: this.getPlayerName() }, this.config.userId);
-            this.caption = this.translate.instant(`Waiting for response...`);
+            this.caption = this.translate.instant(`Waiting for response ...`);
             const handle = this.SM.waitForResponse.receivedACK.handle;
             this.SM.waitForResponse.receivedACK.handle = (notify: NotifyResponse<{ name: string }>) => {
                 if (notify.sender_user_id === this.config.userId) {

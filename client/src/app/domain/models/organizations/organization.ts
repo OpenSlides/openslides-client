@@ -33,6 +33,7 @@ export class OrganizationSetting {
     public saml_metadata_idp!: string;
     public saml_metadata_sp!: string;
     public saml_private_key!: string;
+    public genders!: string[];
 }
 
 export class Organization extends BaseModel<Organization> {
@@ -87,7 +88,8 @@ export class Organization extends BaseModel<Organization> {
         `users_email_replyto`,
         `users_email_subject`,
         `users_email_body`,
-        `url`
+        `url`,
+        `genders`
     ];
 }
 
