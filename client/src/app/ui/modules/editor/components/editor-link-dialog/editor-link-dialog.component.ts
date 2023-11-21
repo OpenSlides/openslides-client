@@ -29,6 +29,9 @@ export class EditorLinkDialogComponent {
     ) {
         this.link = data.link;
         this.isUpdate = !!data.link;
+        if (!this.link.target) {
+            this.link.target = `_self`;
+        }
     }
 
     public removeLink() {

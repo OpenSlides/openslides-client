@@ -13,6 +13,16 @@
             <input matInput [(ngModel)]="text" />
         </mat-form-field>
     </div>
+
+    <div>
+        <mat-form-field>
+            <mat-label>Open link in</mat-label>
+            <select matNativeControl [(ngModel)]="link.target">
+                <option value="_self" translate>Current window</option>
+                <option value="_blank" translate>New window</option>
+            </select>
+        </mat-form-field>
+    </div>
 </div>
 <div mat-dialog-actions>
     <button *ngIf="isUpdate" mat-button (click)="removeLink()" translate>Remove link</button>
