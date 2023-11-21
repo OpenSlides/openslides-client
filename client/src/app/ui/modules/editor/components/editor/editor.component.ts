@@ -41,6 +41,10 @@ import Underline from '@tiptap/extension-underline';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 
 import { EditorHtmlDialogComponent, EditorHtmlDialogOutput } from '../editor-html-dialog/editor-html-dialog.component';
+import {
+    EditorImageDialogComponent,
+    EditorImageDialogOutput
+} from '../editor-image-dialog/editor-image-dialog.component';
 import { EditorLinkDialogComponent, EditorLinkDialogOutput } from '../editor-link-dialog/editor-link-dialog.component';
 
 @Component({
@@ -174,7 +178,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             .run();
     }
 
-    public async setLinkDialog() {
+    public async setLinkDialog(): Promise<void> {
         this.dialog
             .open(EditorLinkDialogComponent, {
                 data: {
@@ -212,6 +216,29 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             });
     }
 
+    public async setImageDialog(): Promise<void> {
+        this.dialog
+            .open(EditorImageDialogComponent, {
+                data: {
+                    image: {
+                        src: this.editor.getAttributes(`image`)[`src`],
+                        alt: this.editor.getAttributes(`image`)[`alt`],
+                        title: this.editor.getAttributes(`image`)[`title`]
+                    }
+                }
+            })
+            .afterClosed()
+            .subscribe((result?: EditorImageDialogOutput) => {
+                if (result?.action === `set-image`) {
+                    this.editor.commands.setImage({
+                        src: result.image.src,
+                        title: result.image.title,
+                        alt: result.image.alt
+                    });
+                }
+            });
+    }
+
     public editCode() {
         this.dialog
             .open(EditorHtmlDialogComponent, {
@@ -223,10 +250,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                     this.editor.commands.setContent(result.html, true);
                 }
             });
-    }
-
-    public todo() {
-        alert(`Not implemented`);
     }
 
     protected createForm(): UntypedFormControl {

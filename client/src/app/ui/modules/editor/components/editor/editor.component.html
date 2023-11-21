@@ -154,7 +154,7 @@
             <mat-icon>link</mat-icon>
         </button>
 
-        <button mat-ripple (click)="todo()">
+        <button mat-ripple [ngClass]="{ active: editor.isActive('image') }" (click)="setImageDialog()">
             <mat-icon>image</mat-icon>
         </button>
 

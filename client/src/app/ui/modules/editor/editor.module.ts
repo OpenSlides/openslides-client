@@ -10,9 +10,15 @@ import { MatInputModule } from '@angular/material/input';
 
 import { EditorComponent } from './components/editor/editor.component';
 import { EditorHtmlDialogComponent } from './components/editor-html-dialog/editor-html-dialog.component';
+import { EditorImageDialogComponent } from './components/editor-image-dialog/editor-image-dialog.component';
 import { EditorLinkDialogComponent } from './components/editor-link-dialog/editor-link-dialog.component';
 
-const DECLARATIONS = [EditorComponent, EditorLinkDialogComponent, EditorHtmlDialogComponent];
+const DECLARATIONS = [
+    EditorComponent,
+    EditorImageDialogComponent,
+    EditorLinkDialogComponent,
+    EditorHtmlDialogComponent
+];
 
 @NgModule({
     declarations: DECLARATIONS,
