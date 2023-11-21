@@ -1,14 +1,15 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
+import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { StructureLevelControllerService } from '../../services/structure-level-controller.service';
 
 @Component({
@@ -17,15 +18,15 @@ import { StructureLevelControllerService } from '../../services/structure-level-
     styleUrls: [`./structure-level-list.component.scss`]
 })
 export class StructureLevelListComponent extends BaseMeetingListViewComponent<ViewStructureLevel> {
-    @ViewChild(`newStructureLevelDialog`, { static: true })
-    private newStructureLevelDialog: TemplateRef<string> | null = null;
+    @ViewChild(`structureLevelDialog`, { static: true })
+    private structureLevelDialog: TemplateRef<string> | null = null;
 
     private dialogRef: MatDialogRef<any> | null = null;
 
     /**
      * Holds the create form
      */
-    public createForm: UntypedFormGroup;
+    public structureLevelForm: UntypedFormGroup;
 
     /**
      * helper for permission checks
@@ -36,17 +37,24 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
         return this.operator.hasPerms(Permission.userCanManage);
     }
 
+    /**
+     * Holds the structureLevel that is currently be edit or null
+     */
+    public currentStructureLevel: ViewStructureLevel | null = null;
+
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: StructureLevelControllerService,
         private formBuilder: UntypedFormBuilder,
         private dialog: MatDialog,
+        private promptService: PromptService,
+        private cd: ChangeDetectorRef,
         private operator: OperatorService
     ) {
         super(componentServiceCollector, translate);
         super.setTitle(`Structure Levels`);
-        this.createForm = this.formBuilder.group({
+        this.structureLevelForm = this.formBuilder.group({
             name: [``, Validators.required],
             color: [``, Validators.pattern(/^#[0-9a-fA-F]{6}$/)],
             allow_additional_time: [``]
@@ -56,14 +64,29 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
     /**
      * Click handler for the plus button
      */
-    public onPlusButton(): void {
-        this.createForm.reset();
-        this.dialogRef = this.dialog.open(this.newStructureLevelDialog!, infoDialogSettings);
+    public openStructureLevelDialog(structureLevel: ViewStructureLevel | null= null): void {
+        this.currentStructureLevel = structureLevel;
+        this.reset();
+        this.structureLevelForm.get(`name`)!.setValue(this.currentStructureLevel ? this.currentStructureLevel.name: ``);
+        this.structureLevelForm.get(`color`)!.setValue(this.currentStructureLevel ? this.currentStructureLevel.color: ``);
+        this.structureLevelForm.get(`allow_additional_time`)!.setValue(this.currentStructureLevel ? this.currentStructureLevel.allow_additional_time: false);
+        this.dialogRef = this.dialog.open(this.structureLevelDialog!, infoDialogSettings);
         this.dialogRef.afterClosed().subscribe(res => {
             if (res) {
                 this.save();
             }
         });
+    }
+
+    /**
+     * Deletes the given StructureLevel after a successful confirmation.
+     */
+    public async onDeleteButton(tag: ViewStructureLevel): Promise<void> {
+        const title = this.translate.instant(`Are you sure you want to delete this structure level?`);
+        const content = tag.name;
+        if (await this.promptService.open(title, content)) {
+            this.deleteStructureLevel(tag);
+        }
     }
 
     /**
@@ -83,11 +106,38 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
     }
 
     /**
-     * Sends the structure level to create to the repository.
+     * Submit the form and create or update a structure level.
      */
     private save(): void {
-        if (this.createForm.valid) {
-            this.repo.create(this.createForm.value);
+        if (!this.structureLevelForm.value || !this.structureLevelForm.valid) {
+            return;
         }
+        if (this.currentStructureLevel) {
+            this.updateStructureLevel();
+        } else {
+            this.createStructureLevel();
+        }
+        this.reset();
+    }
+
+    private updateStructureLevel(): void {
+        if (this.currentStructureLevel) {
+            this.repo.update(this.structureLevelForm.value, this.currentStructureLevel.id).catch(this.raiseError);
+        }
+    }
+
+    private createStructureLevel(): void {
+        this.repo.create(this.structureLevelForm.value).catch(this.raiseError);
+    }
+
+    private deleteStructureLevel(structureLevel: ViewStructureLevel): void {
+        this.repo
+            .delete(structureLevel.id)
+            .then(() => this.cd.detectChanges())
+            .catch(this.raiseError);
+    }
+
+    private reset(): void {
+        this.structureLevelForm.reset();
     }
 }

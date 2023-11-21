@@ -1,4 +1,4 @@
-<os-head-bar [hasMainButton]="canEdit" [nav]="false" (mainEvent)="onPlusButton()" [multiSelectMode]="false">
+<os-head-bar [hasMainButton]="canEdit" [nav]="false" (mainEvent)="openStructureLevelDialog()" [multiSelectMode]="false">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Structure Levels' | translate }}</h2>
@@ -11,25 +11,61 @@
     listStorageKey="structure_levels"
     [vScrollFixed]="60"
     [filterProps]="['name']"
-    [hiddenInMobile]="['info', 'menu']"
+    [hiddenInMobile]="['info']"
+    [alwaysShowMenu]="canEdit"
+    [showMenu]="canEdit"
 >
+    <!-- Name -->
     <div *osScrollingTableCell="'name'; row as structure_level" class="cell-slot fill">
         <div>
             {{ structure_level.name }}
         </div>
     </div>
+
+    <!-- Color -->
     <div *osScrollingTableCell="'color'; row as structure_level" class="cell-slot fill">
         <div class="fake-button-no-touch" [ngStyle]="{ background: structure_level.color }"></div>
     </div>
+
+    <!-- Menu -->
+    <div
+        *osScrollingTableCell="'menu'; row as item; config: { width: 40, position: END_POSITION }"
+        class="cell-slot fill"
+    >
+        <button
+            mat-icon-button
+            [matMenuTriggerFor]="singleItemMenu"
+            (click)="$event.stopPropagation()"
+            [matMenuTriggerData]="{ item: item }"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
 </os-list>
 
+<mat-menu #singleItemMenu="matMenu">
+    <ng-template matMenuContent let-item="item">
+        <!-- edit item -->
+        <button mat-menu-item (click)="openStructureLevelDialog(item)">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'Edit' | translate }}</span>
+        </button>
+        <!-- delete item -->
+        <button mat-menu-item class="red-warning-text" (click)="onDeleteButton(item)">
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </ng-template>
+</mat-menu>
+
 <!-- Template for new structure level dialog -->
-<ng-template #newStructureLevelDialog>
+<ng-template #structureLevelDialog>
     <h1 mat-dialog-title>
-        <span>{{ 'New structure level' | translate }}</span>
+        <span *ngIf="currentStructureLevel">{{ 'Edit structuce level' | translate }}</span>
+        <span *ngIf="!currentStructureLevel">{{ 'New structure level' | translate }}</span>
     </h1>
     <div class="os-form-card-mobile" mat-dialog-content>
-        <form [formGroup]="createForm" (keydown)="onKeyDown($event)">
+        <form [formGroup]="structureLevelForm" (keydown)="onKeyDown($event)">
             <!-- Name -->
             <p>
                 <mat-form-field>
@@ -44,7 +80,12 @@
                     </mat-error>
                 </mat-form-field>
             </p>
-
+            <!-- Allow Additional Time -->
+            <p>
+                <mat-checkbox formControlName="allow_additional_time">
+                    {{ 'Allow additional time' | translate }}
+                </mat-checkbox>
+            </p>
             <!-- Color -->
             <p>
                 <mat-form-field>
@@ -55,17 +96,11 @@
                     </mat-error>
                 </mat-form-field>
             </p>
-
-            <!-- Allow Additional Time -->
-            <p>
-                <mat-checkbox formControlName="allow_additional_time">
-                    {{ 'Allow additional time' | translate }}
-                </mat-checkbox>
-            </p>
         </form>
     </div>
+
     <div mat-dialog-actions>
-        <button mat-button [disabled]="!createForm.valid" [mat-dialog-close]="true">
+        <button mat-button [disabled]="!structureLevelForm.valid" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
         <button mat-button [mat-dialog-close]="false">
