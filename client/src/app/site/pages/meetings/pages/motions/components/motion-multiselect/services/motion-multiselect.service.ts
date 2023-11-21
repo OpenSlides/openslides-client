@@ -6,7 +6,8 @@ import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { Action } from 'src/app/gateways/actions';
+import { Action, ActionService } from 'src/app/gateways/actions';
+import { ActionRequest } from 'src/app/gateways/actions/action-utils';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
@@ -57,7 +58,8 @@ export class MotionMultiselectService {
         private spinnerService: SpinnerService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private snackbar: MatSnackBar,
-        private modelRequestService: ModelRequestService
+        private modelRequestService: ModelRequestService,
+        private actionService: ActionService
     ) {}
 
     /**
@@ -314,7 +316,7 @@ export class MotionMultiselectService {
             const motionsNotInAgenda = motions.filter(motion => !motion.agenda_item_id);
             if (motionsNotInAgenda.length) {
                 const payload = { parent_id: selectedChoice.firstId, type: AgendaItemType.HIDDEN };
-                actions.push(this.agendaRepo.addToAgenda(payload, ...motions));
+                actions.push(this.agendaRepo.addToAgenda(payload, ...motionsNotInAgenda));
             }
             if (motions.length > motionsNotInAgenda.length) {
                 actions.push(
@@ -326,6 +328,10 @@ export class MotionMultiselectService {
             }
 
             if (actions.length) {
+                for (const action of actions) {
+                    action.setSendActionFn((req: ActionRequest[]) => this.actionService.sendRequests(req, true));
+                }
+
                 const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
                 this.spinnerService.show(message, {
                     hideAfterPromiseResolved: () => Action.from(...actions).resolve()
