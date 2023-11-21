@@ -16,22 +16,22 @@ import { OperatorService } from 'src/app/site/services/operator.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlobalSearchComponent implements OnDestroy {
-    public static searchTerm = ``;
+    private static _searchTerm = ``;
 
     public get searchTerm(): string {
-        return GlobalSearchComponent.searchTerm;
+        return GlobalSearchComponent._searchTerm;
     }
 
     public set searchTerm(input: string) {
-        GlobalSearchComponent.searchTerm = input;
+        GlobalSearchComponent._searchTerm = input;
     }
 
     public noResults = false;
 
-    public static filteredResults: GlobalSearchEntry[] = [];
+    private static _filteredResults: GlobalSearchEntry[] = [];
 
     public get filteredResults(): GlobalSearchEntry[] {
-        return GlobalSearchComponent.filteredResults;
+        return GlobalSearchComponent._filteredResults;
     }
 
     public readonly availableFilters = {
@@ -58,7 +58,7 @@ export class GlobalSearchComponent implements OnDestroy {
     }
 
     public get filteredResultCount(): number {
-        return GlobalSearchComponent.filteredResults.length;
+        return GlobalSearchComponent._filteredResults.length;
     }
 
     public searching: number | null = null;
@@ -79,7 +79,7 @@ export class GlobalSearchComponent implements OnDestroy {
         this.filterChangeSubscription = this.currentFilters.valueChanges
             .pipe(startWith(this.currentFilters.value), pairwise())
             .subscribe(() => {
-                if (GlobalSearchComponent.searchTerm) {
+                if (GlobalSearchComponent._searchTerm) {
                     this.searchChange();
                 }
             });
@@ -110,7 +110,7 @@ export class GlobalSearchComponent implements OnDestroy {
                     ? [`meeting`]
                     : this.selectedFilters();
             const search = await this.globalSearchService.searchChange(
-                GlobalSearchComponent.searchTerm,
+                GlobalSearchComponent._searchTerm,
                 filters,
                 this.currentlyAvailableFilters,
                 searchMeeting
@@ -215,7 +215,7 @@ export class GlobalSearchComponent implements OnDestroy {
     }
 
     private updateFilteredResults(): void {
-        GlobalSearchComponent.filteredResults = [];
+        GlobalSearchComponent._filteredResults = [];
         let allUnchecked = true;
         for (const filter of this.currentlyAvailableFilters) {
             if (this.currentFilters.get(filter) && this.currentFilters.get(filter).getRawValue()) {
@@ -227,18 +227,18 @@ export class GlobalSearchComponent implements OnDestroy {
             const collection = result.collection;
             if (this.currentFilters.get(`meetingFilter`).getRawValue() === `meetings`) {
                 if (collection === `meeting` || collection === `committee`) {
-                    GlobalSearchComponent.filteredResults.push(result);
+                    GlobalSearchComponent._filteredResults.push(result);
                 }
             } else {
                 if (
                     allUnchecked ||
                     (this.currentFilters.get(collection) && this.currentFilters.get(collection).getRawValue())
                 ) {
-                    GlobalSearchComponent.filteredResults.push(result);
+                    GlobalSearchComponent._filteredResults.push(result);
                 }
             }
         }
-        this.noResults = !Object.keys(GlobalSearchComponent.filteredResults).length;
+        this.noResults = !Object.keys(GlobalSearchComponent._filteredResults).length;
     }
 
     private updateCurrentlyAvailableFilters(): void {
