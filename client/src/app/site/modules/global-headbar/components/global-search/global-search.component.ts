@@ -16,7 +16,15 @@ import { OperatorService } from 'src/app/site/services/operator.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlobalSearchComponent implements OnDestroy {
-    public searchTerm = localStorage.getItem(`searchTerm`);
+    public static searchTerm = ``;
+
+    public get searchTerm(): string{
+        return GlobalSearchComponent.searchTerm;
+    }
+    public set searchTerm(input: string){
+        GlobalSearchComponent.searchTerm = input;
+    }
+
     public noResults = false;
 
     public readonly availableFilters = {
@@ -65,14 +73,13 @@ export class GlobalSearchComponent implements OnDestroy {
         this.filterChangeSubscription = this.currentFilters.valueChanges
             .pipe(startWith(this.currentFilters.value), pairwise())
             .subscribe(() => {
-                if (this.searchTerm) {
+                if (GlobalSearchComponent.searchTerm) {
                     this.searchChange();
                 }
             });
     }
 
     ngOnDestroy(): void {
-        localStorage.setItem(`searchTerm`, this.searchTerm);
         this.filterChangeSubscription.unsubscribe();
     }
 
@@ -97,7 +104,7 @@ export class GlobalSearchComponent implements OnDestroy {
                     ? [`meeting`]
                     : this.selectedFilters();
             const search = await this.globalSearchService.searchChange(
-                this.searchTerm,
+                GlobalSearchComponent.searchTerm,
                 filters,
                 this.currentlyAvailableFilters,
                 searchMeeting
