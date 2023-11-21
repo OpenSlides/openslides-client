@@ -28,6 +28,12 @@ export class GlobalSearchComponent implements OnDestroy {
 
     public noResults = false;
 
+    public static filteredResults: GlobalSearchEntry[] = [];
+
+    public get filteredResults(): GlobalSearchEntry[] {
+        return GlobalSearchComponent.filteredResults;
+    }
+
     public readonly availableFilters = {
         meeting: _(`Meeting`),
         committee: _(`Committee`),
@@ -45,7 +51,6 @@ export class GlobalSearchComponent implements OnDestroy {
         meetingFilter: this.activeMeeting.meetingId ? `current` : `all`
     });
 
-    public filteredResults: GlobalSearchEntry[] = [];
     public inMeeting = !!this.activeMeeting.meetingId;
 
     public get resultCount(): number {
@@ -53,13 +58,13 @@ export class GlobalSearchComponent implements OnDestroy {
     }
 
     public get filteredResultCount(): number {
-        return this.filteredResults.length;
+        return GlobalSearchComponent.filteredResults.length;
     }
 
     public searching: number | null = null;
 
     private results: GlobalSearchEntry[] = [];
-    private models: GlobalSearchResponse;
+    private static models: GlobalSearchResponse;
 
     private filterChangeSubscription: Subscription;
 
@@ -112,7 +117,7 @@ export class GlobalSearchComponent implements OnDestroy {
             );
             if (this.searching === searchId) {
                 this.results = search.resultList;
-                this.models = search.models;
+                GlobalSearchComponent.models = search.models;
                 this.updateFilteredResults();
             }
         } catch (e) {
@@ -128,7 +133,7 @@ export class GlobalSearchComponent implements OnDestroy {
     }
 
     public getModel(model: string, id: Id): any | null {
-        return this.models[`${model}/${id}`] || null;
+        return GlobalSearchComponent.models[`${model}/${id}`] || null;
     }
 
     public getNamesBySubmitters(submitters: Id[]): string[] {
@@ -210,7 +215,7 @@ export class GlobalSearchComponent implements OnDestroy {
     }
 
     private updateFilteredResults(): void {
-        this.filteredResults = [];
+        GlobalSearchComponent.filteredResults = [];
         let allUnchecked = true;
         for (const filter of this.currentlyAvailableFilters) {
             if (this.currentFilters.get(filter) && this.currentFilters.get(filter).getRawValue()) {
@@ -222,19 +227,18 @@ export class GlobalSearchComponent implements OnDestroy {
             const collection = result.collection;
             if (this.currentFilters.get(`meetingFilter`).getRawValue() === `meetings`) {
                 if (collection === `meeting` || collection === `committee`) {
-                    this.filteredResults.push(result);
+                    GlobalSearchComponent.filteredResults.push(result);
                 }
             } else {
                 if (
                     allUnchecked ||
                     (this.currentFilters.get(collection) && this.currentFilters.get(collection).getRawValue())
                 ) {
-                    this.filteredResults.push(result);
+                    GlobalSearchComponent.filteredResults.push(result);
                 }
             }
         }
-
-        this.noResults = !Object.keys(this.filteredResults).length;
+        this.noResults = !Object.keys(GlobalSearchComponent.filteredResults).length;
     }
 
     private updateCurrentlyAvailableFilters(): void {
