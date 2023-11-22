@@ -135,7 +135,18 @@ export class GlobalSearchComponent implements OnDestroy {
         return submitterNames;
     }
 
-    public getTextSnippet(text: string): string {
+    public getTextSnippet(input: string | { [key: number]: string }): string {
+        let text: string;
+        if (typeof input !== `string`) {
+            try {
+                text = Object.values(input).join(`\n`);
+            } catch (e) {
+                text = ``;
+            }
+        } else {
+            text = input;
+        }
+
         const textSnippetSize = 180;
         const removeTags = /<\/?(?!(?:mark)\b)[^/>]+>/g;
         let resultText = ``;

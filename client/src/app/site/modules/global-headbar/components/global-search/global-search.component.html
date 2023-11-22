@@ -50,9 +50,19 @@
                     </span>
                 </div>
                 <ng-container [ngSwitch]="result.collection">
-                    <a *ngSwitchCase="'mediafile'" [href]="result.url" target="blank" mat-dialog-close>
-                        <h3 *ngIf="result.title" [innerHtml]="result.title"></h3>
-                    </a>
+                    <ng-container *ngSwitchCase="'mediafile'">
+                        <a
+                            *ngIf="result.url.startsWith('/system')"
+                            [href]="result.url"
+                            target="_blank"
+                            mat-dialog-close
+                        >
+                            <h3 *ngIf="result.title" [innerHtml]="result.title"></h3>
+                        </a>
+                        <a *ngIf="!result.url.startsWith('/system')" [routerLink]="result.url" mat-dialog-close>
+                            <h3 *ngIf="result.title" [innerHtml]="result.title"></h3>
+                        </a>
+                    </ng-container>
                     <a *ngSwitchCase="'motion'" [routerLink]="result.url" mat-dialog-close>
                         <h3 *ngIf="result.title">
                             <span *ngIf="result.obj?.number" [innerHTML]="result.obj?.number + ': '"></span>
@@ -70,6 +80,11 @@
                             </span>
                         </div>
                         <p *ngIf="result.text" class="text-snippet" [innerHtml]="getTextSnippet(result.text)"></p>
+                        <p
+                            *ngIf="!result.text && result.obj?.amendment_paragraphs"
+                            class="text-snippet"
+                            [innerHtml]="getTextSnippet(result.obj.amendment_paragraphs)"
+                        ></p>
                     </a>
                     <a *ngSwitchDefault [routerLink]="result.url" mat-dialog-close>
                         <h3 *ngIf="result.title" [innerHtml]="result.title"></h3>
