@@ -31,8 +31,8 @@
 
 <mat-dialog-content class="search-results">
     <ng-container *ngIf="searching === null">
-        <section class="search-results-category alternating-list">
-            <div *ngFor="let result of filteredResults" class="search-results-entry">
+        <section class="search-results-category">
+            <div *ngFor="let result of filteredResults" class="search-results-entry divider-bottom">
                 <div class="breadcrumb">
                     <ng-container *ngIf="result.committee">
                         <span>{{ result.committee.name }}</span>
