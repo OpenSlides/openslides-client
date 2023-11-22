@@ -91,13 +91,13 @@ function overloadArrayFunctions(): void {
 
     Object.defineProperty(Array.prototype, `intersect`, {
         value<T>(other: T[] = []): T[] {
-            let a = this;
-            let b = other;
-            if (b.length < a.length) {
-                [a, b] = [b, a];
+            if (other.length < this.length) {
+                const intersect = new Set<T>(this);
+                return other.filter((element: T) => intersect.has(element));
+            } else {
+                const intersect = new Set<T>(other);
+                return this.filter((element: T) => intersect.has(element));
             }
-            const intersect = new Set<T>(b);
-            return a.filter((element: T) => intersect.has(element));
         },
         enumerable: false
     });
