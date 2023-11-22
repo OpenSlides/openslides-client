@@ -1,15 +1,15 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
+import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { StructureLevelControllerService } from '../../services/structure-level-controller.service';
 
 @Component({
@@ -64,12 +64,18 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
     /**
      * Click handler for the plus button
      */
-    public openStructureLevelDialog(structureLevel: ViewStructureLevel | null= null): void {
+    public openStructureLevelDialog(structureLevel: ViewStructureLevel | null = null): void {
         this.currentStructureLevel = structureLevel;
         this.reset();
-        this.structureLevelForm.get(`name`)!.setValue(this.currentStructureLevel ? this.currentStructureLevel.name: ``);
-        this.structureLevelForm.get(`color`)!.setValue(this.currentStructureLevel ? this.currentStructureLevel.color: ``);
-        this.structureLevelForm.get(`allow_additional_time`)!.setValue(this.currentStructureLevel ? this.currentStructureLevel.allow_additional_time: false);
+        this.structureLevelForm
+            .get(`name`)!
+            .setValue(this.currentStructureLevel ? this.currentStructureLevel.name : ``);
+        this.structureLevelForm
+            .get(`color`)!
+            .setValue(this.currentStructureLevel ? this.currentStructureLevel.color : ``);
+        this.structureLevelForm
+            .get(`allow_additional_time`)!
+            .setValue(this.currentStructureLevel ? this.currentStructureLevel.allow_additional_time : false);
         this.dialogRef = this.dialog.open(this.structureLevelDialog!, infoDialogSettings);
         this.dialogRef.afterClosed().subscribe(res => {
             if (res) {

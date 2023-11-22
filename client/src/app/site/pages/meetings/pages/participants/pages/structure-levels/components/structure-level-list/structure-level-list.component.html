@@ -23,15 +23,28 @@
     </div>
 
     <!-- Allow additional time -->
-    <div *osScrollingTableCell="'allow_additional_time'; row as structure_level; config: { width: 40, position: END_POSITION }" class="cell-slot fill">
+    <div
+        *osScrollingTableCell="
+            'allow_additional_time';
+            row as structure_level;
+            config: { width: 40, position: END_POSITION }
+        "
+        class="cell-slot fill"
+    >
         <div class="fake-button-no-touch" *ngIf="structure_level.allow_additional_time">
             <mat-icon>add_time</mat-icon>
         </div>
     </div>
 
     <!-- Color -->
-    <div *osScrollingTableCell="'color'; row as structure_level; config: { width: 40, position: END_POSITION }" class="cell-slot fill">
-        <div class="fake-button-no-touch" [ngStyle]="{ background: structure_level.color, width: '20px', height: '20px' }"></div>
+    <div
+        *osScrollingTableCell="'color'; row as structure_level; config: { width: 40, position: END_POSITION }"
+        class="cell-slot fill"
+    >
+        <div
+            class="fake-button-no-touch"
+            [ngStyle]="{ background: structure_level.color, width: '20px', height: '20px' }"
+        ></div>
     </div>
 
     <!-- Menu -->
@@ -76,12 +89,8 @@
             <!-- Name -->
             <p>
                 <mat-form-field>
-                    <input
-                        formControlName="name"
-                        matInput
-                        placeholder="{{ 'Name of the new structure level' | translate }}"
-                        required
-                    />
+                    <mat-label>{{ 'Name of the new structure level' | translate }}</mat-label>
+                    <input formControlName="name" matInput required />
                     <mat-error>
                         {{ 'A name is required' | translate }}
                     </mat-error>
