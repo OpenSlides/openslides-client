@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ChangeRecoMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { CsvColumnDefinitionMap, CsvColumnDefinitionProperty } from 'src/app/gateways/export/csv-export.service';
 import { reconvertChars, stripHtmlTags } from 'src/app/infrastructure/utils';
-import { MeetingCsvExportService } from 'src/app/site/pages/meetings/services/export';
+import { MeetingCsvExportForBackendService } from 'src/app/site/pages/meetings/services/export/meeting-csv-export-for-backend.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { LineNumberingService } from '../../../modules/change-recommendations/services';
@@ -16,14 +16,17 @@ import { MotionsExportModule } from '../motions-export.module';
 
 interface MotionCsvExport {
     number?: string;
-    submitters?: string;
+    submitters_verbose?: string;
+    submitters_username?: string;
     title: string;
     text: string;
     reason?: string;
     category?: string;
     motion_block?: string;
-    supporters?: string;
+    supporters_verbose?: string;
+    supporters_username?: string;
     tags?: string;
+    motion_amendment?: boolean;
 }
 
 const MotionCsvExportExample: MotionCsvExport[] = [
@@ -33,7 +36,7 @@ const MotionCsvExportExample: MotionCsvExport[] = [
         text: `Text 1`,
         motion_block: `Block A`,
         category: `Category A`,
-        submitters: `Submitter a`,
+        submitters_verbose: `Submitter a`,
         reason: `Because it is so`
     },
     {
@@ -42,7 +45,7 @@ const MotionCsvExportExample: MotionCsvExport[] = [
         text: `Text 2`,
         motion_block: `Block B`,
         category: `A - Category`,
-        submitters: `Submitter A`,
+        submitters_verbose: `Submitter A`,
         reason: `Penguins can fly`
     },
     {
@@ -57,7 +60,7 @@ const MotionCsvExportExample: MotionCsvExport[] = [
 })
 export class MotionCsvExportService {
     public constructor(
-        private csvExport: MeetingCsvExportService,
+        private csvExport: MeetingCsvExportForBackendService,
         private translate: TranslateService,
         private meetingSettingsService: MeetingSettingsService,
         private linenumberingService: LineNumberingService,
@@ -114,12 +117,12 @@ export class MotionCsvExportService {
                     };
                 } else if (option === `text`) {
                     return {
-                        label: `Text`,
+                        label: `text`,
                         map: motion => this.createText(motion, crMode!)
                     };
                 } else if (option === `block`) {
                     return {
-                        label: `Motion block`,
+                        label: `block`,
                         map: motion => (motion.block ? motion.block.getTitle() : ``)
                     };
                 } else {

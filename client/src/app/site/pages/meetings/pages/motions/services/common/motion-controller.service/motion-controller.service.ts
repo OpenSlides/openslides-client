@@ -12,6 +12,7 @@ import { NullablePartial } from 'src/app/infrastructure/utils';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { DiffLinesInParagraph } from '../../../definitions';
 import { MotionLineNumberingService } from '../motion-line-numbering.service/motion-line-numbering.service';
@@ -99,6 +100,14 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
 
     public getNumberOrTitle(motion: ViewMotion): string {
         return this.repo.getNumberOrTitle(motion);
+    }
+
+    public jsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+        return this.repo.jsonUpload(payload);
+    }
+
+    public import(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
+        return this.repo.import(payload);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

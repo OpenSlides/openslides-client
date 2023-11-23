@@ -496,7 +496,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
             this._summary = undefined;
             this._rows = undefined;
         } else {
-            this._previewColumns = previews[0].headers ?? this._previewColumns;
+            this._previewColumns = (previews[0].headers ?? this._previewColumns).filter(header => !header[`is_hidden`]);
             this._summary = previews.some(preview => preview.statistics)
                 ? previews.flatMap(preview => preview.statistics).filter(point => point?.value)
                 : [];

@@ -7,6 +7,7 @@ import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { NullablePartial } from 'src/app/infrastructure/utils';
 import { AgendaListTitle } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { Motion } from '../../../../domain/models/motions/motion';
@@ -105,6 +106,14 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     public delete(...viewMotions: Identifiable[]): Promise<void> {
         const payload: Identifiable[] = viewMotions.map(motion => ({ id: motion.id }));
         return this.sendBulkActionToBackend(MotionAction.DELETE, payload);
+    }
+
+    public jsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+        return this.createAction<BackendImportRawPreview>(MotionAction.JSON_UPLOAD, payload);
+    }
+
+    public import(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
+        return this.createAction<BackendImportRawPreview | void>(MotionAction.IMPORT, payload);
     }
 
     /**

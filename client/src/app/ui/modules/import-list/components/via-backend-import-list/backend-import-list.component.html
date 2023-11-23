@@ -161,14 +161,14 @@
 </ng-template>
 
 <ng-template #entryTemplate let-entry="entry" let-def="def" let-row="row" let-type="type">
-    <div *ngIf="entry[def] || type === 'boolean'" class="flex-vertical-center">
+    <div *ngIf="entry && (entry[def] || type === 'boolean')" class="flex-vertical-center">
         <ng-container *ngIf="getHeader(def).is_list">
             <ng-container
-                *ngIf="entry[def][0]"
+                *ngIf="entry[def] && entry[def][0]"
                 [ngTemplateOutlet]="entryContentTemplate"
                 [ngTemplateOutletContext]="{ entry: entry[def][0], def: def }"
             ></ng-container>
-            <ng-container *ngIf="entry[def].length > 1">
+            <ng-container *ngIf="entry[def]?.length > 1">
                 <div class="fake-button-no-touch">+{{ entry[def].length - 1 }}</div>
             </ng-container>
         </ng-container>

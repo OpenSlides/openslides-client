@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButtonToggle, MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
@@ -70,7 +70,16 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
             MOTION_PDF_OPTIONS.Page,
             MOTION_PDF_OPTIONS.AddBreaks
         ],
-        metaInfo: [`submitters`, `state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`]
+        metaInfo: [
+            `submitters_verbose`,
+            `state`,
+            `recommendation`,
+            `category`,
+            `tags`,
+            `block`,
+            `polls`,
+            `referring_motions`
+        ]
     };
 
     /**
@@ -120,6 +129,21 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
 
     @ViewChild(MOTION_PDF_OPTIONS.ContinuousText)
     public continuousTextButton!: MatButtonToggle;
+
+    @ViewChildren(`metaInfoButtons`)
+    public metaInfoButtons!: QueryList<MatButtonToggle>;
+
+    public get submittersUsernameButton(): MatButtonToggle {
+        return this.metaInfoButtons.find(button => button.value == `submitters_username`);
+    }
+
+    public get supportersUsernameButton(): MatButtonToggle {
+        return this.metaInfoButtons.find(button => button.value == `supporters_username`);
+    }
+
+    public get motionAmendmentButton(): MatButtonToggle {
+        return this.metaInfoButtons.find(button => button.value == `motion_amendment`);
+    }
 
     /**
      * Constructor
@@ -178,11 +202,26 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
             this.changeStateOfButton(this.speakersButton, true);
         }
 
+        if (format === ExportFileFormat.CSV) {
+            const fieldsToEnable = [`submitters_username`, `motion_amendment`];
+            if (this.exportForm.value[`metaInfo`]?.includes(`supporters_verbose`)) {
+                fieldsToEnable.push(`supporters_username`);
+            }
+            this.enableMetaInfoControl(...fieldsToEnable);
+            this.changeStateOfButton(this.submittersUsernameButton, false);
+            this.changeStateOfButton(this.supportersUsernameButton, false);
+            this.changeStateOfButton(this.motionAmendmentButton, false);
+        } else {
+            this.disableMetaInfoControl(`submitters_username`, `supporters_username`, `motion_amendment`);
+            this.changeStateOfButton(this.submittersUsernameButton, true);
+            this.changeStateOfButton(this.supportersUsernameButton, true);
+            this.changeStateOfButton(this.motionAmendmentButton, true);
+        }
+
         if (format === ExportFileFormat.CSV || format === ExportFileFormat.XLSX) {
             this.disableControl(`lnMode`);
             this.disableControl(`crMode`);
             this.disableControl(`pdfOptions`);
-
             // remove the selection of "votingResult"
             if (format === ExportFileFormat.CSV) {
                 this.disableMetaInfoControl(`polls`, `speakers`);
@@ -266,6 +305,19 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
         let metaInfoVal: string[] = this.exportForm.get(`metaInfo`)!.value;
         if (metaInfoVal) {
             metaInfoVal = metaInfoVal.filter(info => !fields.includes(info));
+            this.exportForm.get(`metaInfo`)!.setValue(metaInfoVal);
+        }
+    }
+
+    /**
+     * Function to deactivate at least one field of the meta-info.
+     *
+     * @param fields All fields to deactivate.
+     */
+    private enableMetaInfoControl(...fields: string[]): void {
+        let metaInfoVal: string[] = this.exportForm.get(`metaInfo`)!.value;
+        if (metaInfoVal) {
+            metaInfoVal = Array.from(new Set(metaInfoVal.concat(fields)).values());
             this.exportForm.get(`metaInfo`)!.setValue(metaInfoVal);
         }
     }
