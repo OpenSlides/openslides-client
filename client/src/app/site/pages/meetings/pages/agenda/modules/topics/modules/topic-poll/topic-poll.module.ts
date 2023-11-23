@@ -10,8 +10,8 @@ import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-c
 import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ProjectorButtonModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projector-button/projector-button.module';
 import { PollModule } from 'src/app/site/pages/meetings/modules/poll';

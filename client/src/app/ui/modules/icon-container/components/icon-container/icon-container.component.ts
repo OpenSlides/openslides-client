@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
-import { LegacyTooltipPosition as TooltipPosition } from '@angular/material/legacy-tooltip';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 @Component({
     selector: `os-icon-container`,

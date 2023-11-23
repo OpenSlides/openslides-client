@@ -8,8 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 // time picker because angular still doesnt offer one!!
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';

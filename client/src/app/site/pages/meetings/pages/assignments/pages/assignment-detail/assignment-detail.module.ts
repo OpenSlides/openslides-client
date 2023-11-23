@@ -8,7 +8,7 @@ import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/
 import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
 import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ChipSelectModule } from 'src/app/site/modules/chip-select/chip-select.module';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { AttachmentControlModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/attachment-control';

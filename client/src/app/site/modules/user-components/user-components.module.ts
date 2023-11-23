@@ -11,8 +11,8 @@ import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-c
 import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 
 import { OpenSlidesTranslationModule } from '../../../site/modules/translations/openslides-translation.module';

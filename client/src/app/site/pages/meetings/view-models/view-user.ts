@@ -198,7 +198,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public vote_weight(meetingId?: Id): number {
-        return this.getMeetingUser(meetingId)?.vote_weight || this.default_vote_weight;
+        return this.getMeetingUser(meetingId)?.vote_weight ?? this.default_vote_weight;
     }
 
     public number(meetingId?: Id): string {
