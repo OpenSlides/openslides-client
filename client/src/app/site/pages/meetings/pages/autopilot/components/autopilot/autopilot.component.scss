@@ -5,3 +5,7 @@
 .content-container {
     min-height: calc(100vh - 77px);
 }
+
+::ng-deep .mat-card {
+    max-width: 738px;
+}

@@ -6,11 +6,13 @@
 <div class="content-container">
     <!-- Title Card -->
     <mat-card class="os-card" *ngIf="!!title">
-        <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
-            <h1 class="line-and-icon">
-                {{ title | translate }}
-            </h1>
-        </a>
+        <mat-card-content>
+            <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
+                <h1 class="line-and-icon">
+                    {{ title | translate }}
+                </h1>
+            </a>
+        </mat-card-content>
     </mat-card>
 
     <!-- List of speakers -->
@@ -76,14 +78,16 @@
 
     <!-- Projector -->
     <mat-card class="os-card spacer-bottom-60">
-        <a [routerLink]="projectorUrl" [target]="projectionTarget" [state]="{ back: 'true' }">
-            <p class="subtitle-text">{{ projectorTitle | translate }}</p>
-        </a>
+        <mat-card-content>
+            <a [routerLink]="projectorUrl" [target]="projectionTarget" [state]="{ back: 'true' }">
+                <p class="subtitle-text">{{ projectorTitle | translate }}</p>
+            </a>
 
-        <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
-            <div class="projector">
-                <os-projector *ngIf="projector" [projector]="projector"></os-projector>
-            </div>
-        </a>
+            <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
+                <div class="projector">
+                    <os-projector *ngIf="projector" [projector]="projector"></os-projector>
+                </div>
+            </a>
+        </mat-card-content>
     </mat-card>
 </div>

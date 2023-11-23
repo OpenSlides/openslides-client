@@ -77,6 +77,10 @@
     @extend .regular-shadow;
 }
 
+.mat-mdc-card-content > :first-of-type {
+    margin-top: 0;
+}
+
 .projector-card .mat-form-field-infix {
     width: 290px;
 }
