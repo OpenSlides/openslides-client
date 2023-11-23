@@ -32,7 +32,7 @@
         class="cell-slot fill"
     >
         <div class="fake-button-no-touch" *ngIf="structure_level.allow_additional_time">
-            <mat-icon>add_time</mat-icon>
+            <mat-icon>more_time</mat-icon>
         </div>
     </div>
 
@@ -80,38 +80,30 @@
 
 <!-- Template for new structure level dialog -->
 <ng-template #structureLevelDialog>
-    <h1 mat-dialog-title>
-        <span *ngIf="currentStructureLevel">{{ 'Edit structuce level' | translate }}</span>
-        <span *ngIf="!currentStructureLevel">{{ 'New structure level' | translate }}</span>
-    </h1>
     <div class="os-form-card-mobile" mat-dialog-content>
         <form [formGroup]="structureLevelForm" (keydown)="onKeyDown($event)">
             <!-- Name -->
-            <p>
-                <mat-form-field>
-                    <mat-label>{{ 'Name of the new structure level' | translate }}</mat-label>
-                    <input formControlName="name" matInput required />
-                    <mat-error>
-                        {{ 'A name is required' | translate }}
-                    </mat-error>
-                </mat-form-field>
-            </p>
+            <mat-form-field class="os-dialog-large">
+                <label>{{ 'Name of the structure level' | translate }}</label>
+                <input formControlName="name" matInput required />
+                <mat-error>
+                    {{ 'A name is required' | translate }}
+                </mat-error>
+            </mat-form-field>
             <!-- Allow Additional Time -->
-            <p>
+            <div class="os-dialog-large">
                 <mat-checkbox formControlName="allow_additional_time">
                     {{ 'Allow additional time' | translate }}
                 </mat-checkbox>
-            </p>
+            </div>
             <!-- Color -->
-            <p>
-                <mat-form-field>
-                    <mat-label>{{ 'Color' | translate }}</mat-label>
-                    <input formControlName="color" type="color" matInput />
-                    <mat-error>
-                        {{ 'A color is required' | translate }}
-                    </mat-error>
-                </mat-form-field>
-            </p>
+            <mat-form-field class="os-dialog-large">
+                <label>{{ 'Color' | translate }}</label>
+                <input formControlName="color" type="color" matInput />
+                <mat-error>
+                    {{ 'A color is required' | translate }}
+                </mat-error>
+            </mat-form-field>
         </form>
     </div>
 
