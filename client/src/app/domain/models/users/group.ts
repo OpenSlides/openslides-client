@@ -28,6 +28,7 @@ export class Group extends BaseModel<Group> {
     public assignment_poll_ids!: Id[]; // (assignment_poll/entitled_group_ids)[];
     public used_as_motion_poll_default_id!: Id; // meeting/motion_poll_default_group_ids;
     public used_as_assignment_poll_default_id!: Id; // meeting/assignment_poll_default_group_ids;
+    public used_as_topic_poll_default_id!: Id; // meeting/topic_poll_default_group_ids;
 
     public get isAdminGroup(): boolean {
         return !!this.admin_group_for_meeting_id;
@@ -58,6 +59,7 @@ export class Group extends BaseModel<Group> {
         `write_chat_group_ids`,
         `used_as_motion_poll_default_id`,
         `used_as_assignment_poll_default_id`,
+        `used_as_topic_poll_default_id`,
         `meeting_id`
     ];
 }
