@@ -76,44 +76,4 @@ export class MotionImportService extends BaseBackendImportService {
     protected async jsonUpload(payload: { [key: string]: any }): Promise<void | BackendImportRawPreview[]> {
         return await this.repo.jsonUpload(payload).resolve();
     }
-
-    // protected getConfig(): ImportConfig<ViewMotion> {
-    //     return {
-    //         modelHeadersAndVerboseNames: getMotionExportHeadersAndVerboseNames(),
-    //         verboseNameFn: plural => this.repo.getVerboseName(plural),
-    //         getDuplicatesFn: (entry: Partial<Motion>) =>
-    //             this.repo.getViewModelList().filter(motion => motion.number === entry.number),
-    //         createFn: (entries: Motion[]) => this.repo.create(...entries)
-    //     };
-    // }
-
-    // protected override getBeforeImportHelpers(): { [key: string]: BeforeImportHandler<ViewMotion> } {
-    //     return {
-    //         [MOTION_BLOCK_PROPERTY]: new MotionBlockImportHelper(this.motionBlockRepo, this.translate),
-    //         [CATEGORY_PROPERTY]: new CategoryImportHelper(this.categoryRepo, this.translate),
-    //         [TAG_PROPERTY]: new TagImportHelper(this.tagRepo),
-    //         [SUBMITTER_PROPERTY]: new UserImportHelper({
-    //             repo: this.userRepo,
-    //             verboseName: `Submitters`,
-    //             property: `submitter_ids`,
-    //             importedAs: SUBMITTER_PROPERTY
-    //         }),
-    //         [SUPPORTER_PROPERTY]: new UserImportHelper({
-    //             repo: this.userRepo,
-    //             verboseName: `Supporters`,
-    //             property: `supporter_user_ids`,
-    //             importedAs: SUPPORTER_PROPERTY
-    //         })
-    //     };
-    // }
-
-    // protected override pipeParseValue(value: string, header: keyof ViewMotion): any {
-    //     if (header === TEXT_PROPERTY && value) {
-    //         const isSurroundedByHTMLTags = /^<\w+[^>]*>[\w\W]*?<\/\w>$/.test(value);
-
-    //         if (!isSurroundedByHTMLTags) {
-    //             return `<p>${value.replace(/\n([ \t]*\n)+/g, `</p><p>`).replace(/\n/g, `<br />`)}</p>`;
-    //         }
-    //     }
-    // }
 }
