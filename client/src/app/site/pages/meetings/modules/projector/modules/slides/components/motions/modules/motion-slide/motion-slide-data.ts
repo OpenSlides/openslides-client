@@ -12,6 +12,7 @@ export interface LeadMotionData {
     number: string;
     title: string;
     text: string;
+    start_line_number: number;
 }
 
 /**
