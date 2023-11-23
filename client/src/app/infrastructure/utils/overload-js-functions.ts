@@ -94,10 +94,9 @@ function overloadArrayFunctions(): void {
             if (other.length < this.length) {
                 const intersect = new Set<T>(this);
                 return other.filter((element: T) => intersect.has(element));
-            } else {
-                const intersect = new Set<T>(other);
-                return this.filter((element: T) => intersect.has(element));
             }
+            const intersect = new Set<T>(other);
+            return this.filter((element: T) => intersect.has(element));
         },
         enumerable: false
     });
