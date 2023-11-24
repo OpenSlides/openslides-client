@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
+import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -35,6 +36,15 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
             return this._currentProjection.getTitle();
         } else {
             return ``;
+        }
+    }
+
+    public get moderationNotes(): string {
+        if (this._currentProjection.content?.collection === Topic.COLLECTION) {
+            // @ts-ignore
+            return (<Topic>this._currentProjection.content).moderator_notes;
+        } else {
+            return null;
         }
     }
 

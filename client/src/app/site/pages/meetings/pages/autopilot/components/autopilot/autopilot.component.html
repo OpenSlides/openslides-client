@@ -74,6 +74,13 @@
             </ng-template>
         </os-list-of-speakers-content>
 
+        <mat-card *ngIf="moderationNotes" class="os-card spacer-bottom-60">
+            <mat-card-content>
+                <p class="subtitle-text" translate>Moderation note</p>
+                <p>{{ moderationNotes }}</p>
+            </mat-card-content>
+        </mat-card>
+
         <!-- Poll-Collection -->
         <os-poll-collection *ngIf="showPollCollection" [currentProjection]="projectedViewModel"></os-poll-collection>
 
