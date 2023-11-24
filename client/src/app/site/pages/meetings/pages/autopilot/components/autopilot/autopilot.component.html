@@ -4,44 +4,34 @@
     </div>
 </os-head-bar>
 <div class="content-container">
-    <!-- Title Card -->
-    <mat-card class="os-card" *ngIf="!!title">
-        <mat-card-content>
-            <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
-                <h1 class="line-and-icon">
-                    {{ title | translate }}
-                </h1>
-            </a>
-        </mat-card-content>
-    </mat-card>
-
-    <!-- List of speakers -->
-    <os-list-of-speakers-content
-        *osPerms="[permission.listOfSpeakersCanSee, permission.listOfSpeakersCanBeSpeaker]; and: !!listOfSpeakers"
-        [listOfSpeakers]="listOfSpeakers!"
-        (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
-    >
-        <ng-template osListOfSpeakersContentTitle>
-            <p class="line-and-icon subtitle-text">
-                <a [routerLink]="closUrl" *ngIf="closUrl">
-                    {{ 'List of speakers' | translate }}
+    <div class="col-main">
+        <!-- Title Card -->
+        <mat-card class="os-card" *ngIf="!!title">
+            <mat-card-content>
+                <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
+                    <h1 class="line-and-icon">
+                        {{ title | translate }}
+                    </h1>
                 </a>
-                <span *ngIf="!closUrl">
-                    {{ 'List of speakers' | translate }}
-                </span>
+            </mat-card-content>
+        </mat-card>
 
-                <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
-                    <mat-icon
-                        *ngIf="isLosClosed"
-                        matTooltip="{{ 'The list of speakers is closed.' | translate }}"
-                        matTooltipPosition="above"
-                    >
-                        lock
-                    </mat-icon>
-                </ng-container>
+        <!-- List of speakers -->
+        <os-list-of-speakers-content
+            *osPerms="[permission.listOfSpeakersCanSee, permission.listOfSpeakersCanBeSpeaker]; and: !!listOfSpeakers"
+            [listOfSpeakers]="listOfSpeakers!"
+            (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
+        >
+            <ng-template osListOfSpeakersContentTitle>
+                <p class="line-and-icon subtitle-text">
+                    <a [routerLink]="closUrl" *ngIf="closUrl">
+                        {{ 'List of speakers' | translate }}
+                    </a>
+                    <span *ngIf="!closUrl">
+                        {{ 'List of speakers' | translate }}
+                    </span>
 
-                <ng-container *osPerms="permission.listOfSpeakersCanManage">
-                    <button mat-icon-button (click)="toggleListOfSpeakersOpen()">
+                    <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
                         <mat-icon
                             *ngIf="isLosClosed"
                             matTooltip="{{ 'The list of speakers is closed.' | translate }}"
@@ -49,45 +39,126 @@
                         >
                             lock
                         </mat-icon>
+                    </ng-container>
 
-                        <mat-icon
-                            *ngIf="!isLosClosed"
-                            matTooltip="{{ 'The list of speakers is open.' | translate }}"
+                    <ng-container *osPerms="permission.listOfSpeakersCanManage">
+                        <button mat-icon-button (click)="toggleListOfSpeakersOpen()">
+                            <mat-icon
+                                *ngIf="isLosClosed"
+                                matTooltip="{{ 'The list of speakers is closed.' | translate }}"
+                                matTooltipPosition="above"
+                            >
+                                lock
+                            </mat-icon>
+
+                            <mat-icon
+                                *ngIf="!isLosClosed"
+                                matTooltip="{{ 'The list of speakers is open.' | translate }}"
+                                matTooltipPosition="above"
+                            >
+                                lock_open
+                            </mat-icon>
+                        </button>
+
+                        <button
+                            mat-icon-button
+                            (click)="readdLastSpeaker()"
+                            matTooltip="{{ 'Re-add last speaker' | translate }}"
                             matTooltipPosition="above"
+                            [disabled]="!canReaddLastSpeaker"
                         >
-                            lock_open
-                        </mat-icon>
-                    </button>
+                            <mat-icon>undo</mat-icon>
+                        </button>
+                    </ng-container>
+                </p>
+            </ng-template>
+        </os-list-of-speakers-content>
 
-                    <button
-                        mat-icon-button
-                        (click)="readdLastSpeaker()"
-                        matTooltip="{{ 'Re-add last speaker' | translate }}"
-                        matTooltipPosition="above"
-                        [disabled]="!canReaddLastSpeaker"
-                    >
-                        <mat-icon>undo</mat-icon>
-                    </button>
-                </ng-container>
-            </p>
-        </ng-template>
-    </os-list-of-speakers-content>
+        <!-- Poll-Collection -->
+        <os-poll-collection *ngIf="showPollCollection" [currentProjection]="projectedViewModel"></os-poll-collection>
 
-    <!-- Poll-Collection -->
-    <os-poll-collection *ngIf="showPollCollection" [currentProjection]="projectedViewModel"></os-poll-collection>
+        <!-- Projector -->
+        <mat-card class="os-card spacer-bottom-60">
+            <mat-card-content>
+                <a [routerLink]="projectorUrl" [target]="projectionTarget" [state]="{ back: 'true' }">
+                    <p class="subtitle-text">{{ projectorTitle | translate }}</p>
+                </a>
 
-    <!-- Projector -->
-    <mat-card class="os-card spacer-bottom-60">
-        <mat-card-content>
-            <a [routerLink]="projectorUrl" [target]="projectionTarget" [state]="{ back: 'true' }">
-                <p class="subtitle-text">{{ projectorTitle | translate }}</p>
-            </a>
+                <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
+                    <div class="projector">
+                        <os-projector *ngIf="projector" [projector]="projector"></os-projector>
+                    </div>
+                </a>
+            </mat-card-content>
+        </mat-card>
+    </div>
 
-            <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
-                <div class="projector">
-                    <os-projector *ngIf="projector" [projector]="projector"></os-projector>
-                </div>
-            </a>
-        </mat-card-content>
-    </mat-card>
+    <div class="col-right">
+        <mat-card class="os-card spacer-bottom-60">
+            <mat-card-content>
+                <p class="subtitle-text" translate>Speaking times</p>
+                <mat-tab-group>
+                    <mat-tab [label]="'Total' | translate">
+                        <div class="structure-level-list">
+                            <div class="structure-level">
+                                <div class="structure-level-color" style="background-color: rgb(237, 28, 36)"></div>
+                                <div class="structure-level-time">20:00</div>
+                                <div class="structure-level-name">SPD</div>
+                            </div>
+                            <div class="structure-level">
+                                <div class="structure-level-color" style="background-color: #010101"></div>
+                                <div class="structure-level-time">20:00</div>
+                                <div class="structure-level-name">CDU</div>
+                            </div>
+                            <div class="structure-level">
+                                <div class="structure-level-time">20:00</div>
+                                <div class="structure-level-name">Koalition</div>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab [label]="'Speakers' | translate">
+                        <div class="speakers-card">
+                            <div class="speaker">
+                                <div class="speaker-info">
+                                    <span class="speaker-name">Eva Richter</span>
+                                    <span class="speaker-structure-level">SPD</span>
+                                </div>
+                                <div class="speaker-progress">
+                                    <div class="speaker-time">01:26</div>
+                                    <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+                                    <div class="speaker-time">18:34</div>
+                                </div>
+                                <div class="speaker-actions">
+                                    <button mat-icon-button>
+                                        <mat-icon>pause</mat-icon>
+                                    </button>
+                                    <button mat-icon-button>
+                                        <mat-icon>stop</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="speaker interposed">
+                                <div class="speaker-type" translate>Interposed question</div>
+                                <div class="speaker-info">
+                                    <span class="speaker-name">Eva Richter</span>
+                                    <span class="speaker-structure-level">SPD</span>
+                                </div>
+                                <div class="speaker-progress">
+                                    <div class="speaker-time">01:26</div>
+                                    <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+                                    <div class="speaker-time">18:34</div>
+                                </div>
+                                <div class="speaker-actions">
+                                    <button mat-icon-button>
+                                        <mat-icon>play_arrow</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>
