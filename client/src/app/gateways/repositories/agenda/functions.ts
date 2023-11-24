@@ -5,7 +5,7 @@
  *
  * @returns Given information of the creation of an agenda-item for the given model.
  */
-export function createAgendaItem(model: any): any {
+export function createAgendaItem(model: any, setTag: boolean = true): any {
     return {
         agenda_comment: model.agenda_comment,
         agenda_create: model.agenda_create,
@@ -13,6 +13,6 @@ export function createAgendaItem(model: any): any {
         agenda_parent_id: model.agenda_parent_id,
         agenda_type: model.agenda_type,
         agenda_weight: model.agenda_weight,
-        agenda_tag_ids: model.tag_ids
+        agenda_tag_ids: setTag ? model.tag_ids : undefined
     };
 }
