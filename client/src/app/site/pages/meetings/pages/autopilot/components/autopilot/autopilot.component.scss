@@ -18,6 +18,25 @@
     max-width: 738px;
 }
 
+.structure-level-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-top: 8px;
+    .structure-level {
+        width: 33%;
+    }
+    .structure-level-time {
+        border-top-color: transparent;
+        border-top-width: 3px;
+        border-top-style: solid;
+        font-size: 35px;
+    }
+    .structure-level-name {
+        line-height: 1;
+    }
+}
+
 .speakers-card {
     .speaker {
         text-align: center;
