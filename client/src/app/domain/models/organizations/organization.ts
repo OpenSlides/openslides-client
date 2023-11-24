@@ -29,7 +29,7 @@ export class OrganizationSetting {
 
     public saml_enabled!: boolean; // default: false
     public saml_login_button_text!: string;
-    public saml_attr_mapping!: Object;
+    public saml_attr_mapping!: unknown;
     public saml_metadata_idp!: string;
     public saml_metadata_sp!: string;
     public saml_private_key!: string;
