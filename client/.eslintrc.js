@@ -62,6 +62,9 @@ module.exports = {
                     'message': 'Please use a typecast or explicitly instantiate a new Observable.'
                 }],
                 'lines-between-class-members': ['error', 'always', { 'exceptAfterSingleLine': true }],
+                '@typescript-eslint/no-unnecessary-type-constraint': ['error'],
+                '@typescript-eslint/no-this-alias': ['error'],
+                '@typescript-eslint/adjacent-overload-signatures': ['error'],
 
                 'jsdoc/require-example': ['off'],
                 'jsdoc/newline-after-description': ['off'],
@@ -71,10 +74,7 @@ module.exports = {
                 'rxjs/no-async-subscribe': ['off'],
 
                 // Should be switched to error ordered by priority
-                '@typescript-eslint/no-unnecessary-type-constraint': ['warn'],
-                '@typescript-eslint/no-this-alias': ['warn'],
                 '@typescript-eslint/ban-types': ['warn'],
-                '@typescript-eslint/adjacent-overload-signatures': ['warn'],
                 '@typescript-eslint/ban-ts-comment': ['warn'],
                 '@typescript-eslint/no-explicit-any': ['off'],
                 '@typescript-eslint/no-non-null-assertion': ['off'],
