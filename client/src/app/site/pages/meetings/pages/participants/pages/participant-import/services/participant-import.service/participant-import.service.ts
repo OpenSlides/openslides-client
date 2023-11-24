@@ -1,49 +1,27 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { map } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
-import { SearchUsersPresenterService } from 'src/app/gateways/presenter/search-users-presenter.service';
-import { GeneralUser } from 'src/app/gateways/repositories/users';
-import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
-import { ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
-import { ImportConfig, RawImportModel } from 'src/app/infrastructure/utils/import/import-utils';
-import { copy } from 'src/app/infrastructure/utils/transform-functions';
-import { BaseUserImportService, UserMap } from 'src/app/site/base/base-user-import.service';
+import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service/participant-csv-export.service';
-import { GroupControllerService } from '../../../../modules';
-import { participantHeadersAndVerboseNames } from '../../definitions';
 import { ParticipantImportServiceModule } from '../participant-import-service.module';
-
-const GROUP_PROPERTY = `group_ids`;
-
-const MEETING_USER_PROPERTIES: (keyof MeetingUser)[] = [
-    `about_me`,
-    `comment`,
-    `structure_level`,
-    `number`,
-    `vote_weight`,
-    `vote_delegated_to_id`,
-    `vote_delegations_from_ids`,
-    `group_ids`
-];
-
-const MEETING_SPECIFIC_USER_PROPERTIES: (keyof GeneralUser)[] = MEETING_USER_PROPERTIES;
 
 @Injectable({
     providedIn: ParticipantImportServiceModule
 })
-export class ParticipantImportService extends BaseUserImportService {
+export class ParticipantImportService extends BaseBackendImportService {
+    /**
+     * The minimimal number of header entries needed to successfully create an entry
+     */
+    public override requiredHeaderLength = 1;
+
     /**
      * List of possible errors and their verbose explanation
      */
-    public override errorList = {
+    public errorList = {
         Group: `Group cannot be resolved`,
         Duplicates: `This user already exists in this meeting`,
         NoName: `Entry has no valid name`,
@@ -53,51 +31,22 @@ export class ParticipantImportService extends BaseUserImportService {
         vote_weight: `The vote weight has too many decimal places (max.: 6).`
     };
 
-    private get activeMeetingId(): Id {
-        return this.activeMeetingIdService.meetingId!;
-    }
-
-    private _existingUsers: UserMap = {};
+    public override readonly verboseSummaryTitles: { [title: string]: string } = {
+        total: _(`Total participants`),
+        created: _(`Participants created`),
+        updated: _(`Participants updated`),
+        omitted: _(`Participants skipped`),
+        warning: _(`Participants with warnings (will be skipped)`),
+        error: _(`Participants with errors`)
+    };
 
     public constructor(
         importServiceCollector: ImportServiceCollectorService,
         private repo: ParticipantControllerService,
-        private groupRepo: GroupControllerService,
         private activeMeetingIdService: ActiveMeetingIdService,
-        private activeMeetingService: ActiveMeetingService,
-        private exporter: ParticipantCsvExportService,
-        private presenter: SearchUsersPresenterService
+        private exporter: ParticipantCsvExportService
     ) {
         super(importServiceCollector);
-
-        this.registerMainImportHandler({
-            shouldCreateModelFn: model => model.status === `merge`,
-            labelFn: (phase, plural) => {
-                const verboseName = this.repo.getVerboseName(plural);
-                let description = ``;
-                switch (phase) {
-                    case ImportStepPhase.FINISHED:
-                        description = this.translate.instant(`have been referenced`);
-                        break;
-                    case ImportStepPhase.ERROR:
-                        description = this.translate.instant(`could not be referenced`);
-                        break;
-                    default:
-                        description = this.translate.instant(`will be referenced`);
-                }
-                return `${verboseName} ${_(description)}`;
-            },
-            createFn: async () => [],
-            updateFn: models => this.updateUsers(models)
-        });
-        this.registerBeforeImportHandler(GROUP_PROPERTY, {
-            idProperty: GROUP_PROPERTY,
-            repo: this.groupRepo as any,
-            useDefault: [activeMeetingService.meeting.default_group_id],
-            useDefaultObservable: this.activeMeetingService.meetingObservable.pipe(
-                map(meeting => (meeting?.default_group_id ? [meeting.default_group_id] : undefined))
-            )
-        });
     }
 
     /**
@@ -107,49 +56,20 @@ export class ParticipantImportService extends BaseUserImportService {
         this.exporter.exportCsvExample();
     }
 
-    protected getConfig(): ImportConfig<GeneralUser> {
-        return {
-            modelHeadersAndVerboseNames: participantHeadersAndVerboseNames,
-            verboseNameFn: plural => this.repo.getVerboseName(plural),
-            createFn: (entries: any[]) => this.createUsers(entries),
-            shouldCreateModelFn: user => user.status === `new`
-        };
+    protected override calculateJsonUploadPayload(): any {
+        const payload = super.calculateJsonUploadPayload();
+        payload[`meeting_id`] = this.activeMeetingIdService.meetingId;
+        return payload;
     }
 
-    protected override async onBeforeCreatingImportModels(_entries: RawImportModel<GeneralUser>[]): Promise<void> {
-        const results = await this.presenter.callForUsers({
-            permissionRelatedId: this.activeMeetingId,
-            users: _entries.map(entry => entry.model)
-        });
-        this._existingUsers = {};
-        for (const i in _entries) {
-            this._existingUsers[_entries[i].id] = <Partial<GeneralUser>[]>results[i];
-        }
+    protected async import(
+        actionWorkerIds: number[],
+        abort = false
+    ): Promise<void | (BackendImportRawPreview | void)[]> {
+        return await this.repo.import(actionWorkerIds.map(id => ({ id, import: !abort }))).resolve();
     }
 
-    protected override async onCreateImportModel({
-        model,
-        id
-    }: RawImportModel<GeneralUser>): Promise<ImportModel<GeneralUser>> {
-        const duplicates = this._existingUsers[id];
-        const newEntry = duplicates.length === 1 ? { ...duplicates[0], ...model } : model;
-
-        const hasDuplicates =
-            duplicates.length > 1 ||
-            !!this.repo.getViewModelList().find(existingUser => existingUser.username === model.username);
-        const status = !hasDuplicates && duplicates.length === 1 ? `merge` : `new`;
-        return new ImportModel<GeneralUser>({ model: newEntry as GeneralUser, id, duplicates, hasDuplicates, status });
-    }
-
-    private createUsers(users: any[]): Promise<Identifiable[]> {
-        for (const user of users) {
-            user.is_present_in_meeting_ids = user.is_present_in_meeting_ids === `1` ? [this.activeMeetingId] : [];
-        }
-        return this.repo.create(...users);
-    }
-
-    private async updateUsers(users: any[]): Promise<void> {
-        const updates = users.map(user => copy(user, MEETING_SPECIFIC_USER_PROPERTIES.concat(`id`)));
-        await this.repo.update((user: GeneralUser) => user, ...updates).resolve();
+    protected async jsonUpload(payload: { [key: string]: any }): Promise<void | BackendImportRawPreview[]> {
+        return await this.repo.jsonUpload(payload).resolve();
     }
 }

@@ -16,4 +16,6 @@ export class UserAction {
     public static readonly MERGE_TOGETHER = `user.merge_together`;
     public static readonly ACCOUNT_JSON_UPLOAD = `account.json_upload`;
     public static readonly ACCOUNT_IMPORT = `account.import`;
+    public static readonly PARTICIPANT_JSON_UPLOAD = `participant.json_upload`;
+    public static readonly PARTICIPANT_IMPORT = `participant.import`;
 }
