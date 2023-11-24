@@ -342,7 +342,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             tag_ids: partialMotion.tag_ids === null ? [] : partialMotion.tag_ids,
             supporter_meeting_user_ids:
                 partialMotion.supporter_meeting_user_ids === null ? [] : partialMotion.supporter_meeting_user_ids,
-            ...createAgendaItem(partialMotion,false)
+            ...createAgendaItem(partialMotion, false)
         };
     }
 
