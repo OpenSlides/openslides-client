@@ -21,7 +21,8 @@ interface MotionCsvExport {
     title: string;
     text: string;
     reason?: string;
-    category?: string;
+    category_name?: string;
+    category_prefix?: string;
     motion_block?: string;
     supporters_verbose?: string;
     supporters_username?: string;
@@ -35,7 +36,7 @@ const MotionCsvExportExample: MotionCsvExport[] = [
         title: `Title 1`,
         text: `Text 1`,
         motion_block: `Block A`,
-        category: `Category A`,
+        category_name: `Category A`,
         submitters_verbose: `Submitter a`,
         reason: `Because it is so`
     },
@@ -44,7 +45,8 @@ const MotionCsvExportExample: MotionCsvExport[] = [
         title: `Title 2`,
         text: `Text 2`,
         motion_block: `Block B`,
-        category: `A - Category`,
+        category_prefix: `A`,
+        category_name: `Category`,
         submitters_verbose: `Submitter A`,
         reason: `Penguins can fly`
     },

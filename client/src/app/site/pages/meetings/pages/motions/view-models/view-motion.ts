@@ -242,6 +242,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return !!this.lead_motion_id;
     }
 
+    public get category_prefix(): string {
+        return this.category?.prefix;
+    }
+
+    public get category_name(): string {
+        return this.category?.name;
+    }
+
     private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
     private _affectedAmendmentLines: DiffLinesInParagraph[] | null = null;
 

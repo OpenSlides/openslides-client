@@ -36,7 +36,7 @@ export class MotionImportService extends BaseBackendImportService {
         created: _(`Motions created`),
         updated: _(`Motions updated`),
         omitted: _(`Motions skipped`),
-        warning: _(`Motions with warnings (will be skipped)`),
+        warning: _(`Motions with warnings: affected cells will be skipped`),
         error: _(`Motions with errors`)
     };
 

@@ -347,7 +347,10 @@ export class MotionPdfService {
         }
 
         // category
-        if (motion.category && (!infoToExport || infoToExport.includes(`category`))) {
+        if (
+            motion.category &&
+            (!infoToExport || infoToExport.includes(`category_name`) || infoToExport.includes(`category_prefix`))
+        ) {
             let categoryText = ``;
             if (motion.category.parent) {
                 categoryText = `${motion.category.parent.toString()}\n${this.translate.instant(
@@ -849,7 +852,8 @@ export class MotionPdfService {
         const metaInfo = this.createMetaInfoTable(motion, lineLength, crMode, [
             `submitters_verbose`,
             `state`,
-            `category`
+            `category_name`,
+            `category_prefix`
         ]);
         const noteContent = this.htmlToPdfService.convertHtml({ htmlText: note, lnMode: LineNumberingMode.None });
 

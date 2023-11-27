@@ -5,7 +5,8 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 export type InfoToExport =
     | 'state'
     | 'recommendation'
-    | 'category'
+    | 'category_name'
+    | 'category_prefix'
     | 'block'
     | 'tags'
     | 'polls'
@@ -41,7 +42,8 @@ const motionHeadersAndVerboseNames: { [key in keyof ViewMotion]?: any } = {
     title: `Title`,
     text: `Text`,
     reason: `Reason`,
-    category: `Category`,
+    category_name: `Category name`,
+    category_prefix: `Category_prefix`,
     tags: `Tags`,
     block: `Motion block`,
     recommendation: `Recommendation`,
