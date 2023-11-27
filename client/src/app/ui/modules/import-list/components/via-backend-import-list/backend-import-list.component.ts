@@ -360,7 +360,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     }
 
     public getEntryIcon(item: BackendImportEntryObject): string {
-        if (item.info === BackendImportState.Done) {
+        if (item.info === BackendImportState.Done || !item) {
             return undefined;
         }
         return this.getActionIcon(item);

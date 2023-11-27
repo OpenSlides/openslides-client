@@ -162,16 +162,13 @@
 
 <ng-template #entryTemplate let-entry="entry" let-def="def" let-row="row" let-type="type">
     <div *ngIf="entry && (entry[def] || type === 'boolean')" class="flex-vertical-center">
-        <ng-container *ngIf="getHeader(def).is_list">
+        <div *ngIf="getHeader(def).is_list && entry[def]">
             <ng-container
-                *ngIf="entry[def] && entry[def][0]"
+                *ngFor="let item of entry[def]"
                 [ngTemplateOutlet]="entryContentTemplate"
-                [ngTemplateOutletContext]="{ entry: entry[def][0], def: def }"
+                [ngTemplateOutletContext]="{ entry: item, def: def }"
             ></ng-container>
-            <ng-container *ngIf="entry[def]?.length > 1">
-                <div class="fake-button-no-touch">+{{ entry[def].length - 1 }}</div>
-            </ng-container>
-        </ng-container>
+        </div>
         <ng-container
             *ngIf="!getHeader(def).is_list && entry[def] !== undefined"
             [ngTemplateOutlet]="entryContentTemplate"
@@ -186,7 +183,7 @@
             [ngTemplateOutlet]="nonObjectEntryTemplate"
             [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
         ></ng-container>
-        <mat-icon class="newBadge" color="accent" inline *ngIf="getActionIcon(entry.info)">
+        <mat-icon class="newBadge" color="accent" inline *ngIf="getActionIcon(entry)">
             {{ getEntryIcon(entry) }}
         </mat-icon>
     </ng-container>

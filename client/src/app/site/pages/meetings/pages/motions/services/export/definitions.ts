@@ -43,7 +43,7 @@ const motionHeadersAndVerboseNames: { [key in keyof ViewMotion]?: any } = {
     text: `Text`,
     reason: `Reason`,
     category_name: `Category name`,
-    category_prefix: `Category_prefix`,
+    category_prefix: `Category prefix`,
     tags: `Tags`,
     block: `Motion block`,
     recommendation: `Recommendation`,
