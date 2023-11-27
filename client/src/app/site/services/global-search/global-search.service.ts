@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
+import { Meeting } from 'src/app/domain/models/meetings/meeting';
+import { Motion } from 'src/app/domain/models/motions';
 import { HttpService } from 'src/app/gateways/http.service';
-import { collectionFromFqid, idFromFqid } from 'src/app/infrastructure/utils/transform-functions';
+import {
+    collectionFromFqid,
+    collectionIdFromFqid,
+    fqidFromCollectionAndId,
+    idFromFqid
+} from 'src/app/infrastructure/utils/transform-functions';
 
 import { ActiveMeetingService } from '../../pages/meetings/services/active-meeting.service';
-import { GlobalSearchEntry, GlobalSearchResponse } from './definitions';
+import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchResponseEntry } from './definitions';
 
 @Injectable({
     providedIn: `root`
@@ -33,7 +40,7 @@ export class GlobalSearchService {
         const rawResults: GlobalSearchResponse = await this.http.get(`/system/search`, null, params);
 
         this.updateScores(rawResults);
-        this.parseFragments(rawResults);
+        this.parseFragments(rawResults, searchTerm);
 
         return {
             resultList: Object.keys(rawResults)
@@ -63,17 +70,38 @@ export class GlobalSearchService {
     /**
      * Searches the content for search matches and replaces them with markers
      */
-    private parseFragments(results: GlobalSearchResponse): void {
+    private parseFragments(results: GlobalSearchResponse, originalSearchTerm: string): void {
         for (const fqid of Object.keys(results)) {
             const result = results[fqid];
             if (result.matched_by) {
                 for (const field of Object.keys(result.matched_by)) {
-                    if (result.content[field] && !this.isTitleField(collectionFromFqid(fqid), field)) {
+                    if (
+                        result.content[field] &&
+                        !this.isTitleField(collectionFromFqid(fqid), field) &&
+                        !this.isIdField(field)
+                    ) {
                         for (const word of result.matched_by[field]) {
-                            result.content[field] = `${result.content[field]}`.replace(
-                                new RegExp(word, `gi`),
-                                match => `<mark>${match}</mark>`
-                            );
+                            if (result.content[field] instanceof String) {
+                                result.content[field] = result.content[field]
+                                    .replace(
+                                        new RegExp(originalSearchTerm, `gi`),
+                                        (match: string) => `<mark>${match}</mark>`
+                                    )
+                                    .replace(new RegExp(word, `gi`), (match: string) => `<mark>${match}</mark>`);
+                            } else {
+                                // Generic way to parse matches in amendments. This might needs
+                                // improvement
+                                try {
+                                    result.content[field] = JSON.parse(
+                                        JSON.stringify(result.content[field])
+                                            .replace(
+                                                new RegExp(originalSearchTerm, `gi`),
+                                                (match: string) => `<mark>${match}</mark>`
+                                            )
+                                            .replace(new RegExp(word, `gi`), match => `<mark>${match}</mark>`)
+                                    );
+                                } catch (e) {}
+                            }
                         }
                     }
                 }
@@ -87,6 +115,10 @@ export class GlobalSearchService {
         } else {
             return [`name`, `title`].includes(field);
         }
+    }
+
+    private isIdField(field: string): boolean {
+        return [`owner_id`, `content_object_id`].indexOf(field) !== -1;
     }
 
     private updateScores(results: GlobalSearchResponse): void {
@@ -107,7 +139,7 @@ export class GlobalSearchService {
                 results[taggedFqid].score = Math.max(results[taggedFqid].score || 0, addScore);
                 this.updateScore(taggedFqid, results[taggedFqid].score, results);
             }
-        } else if (collection === `agenda_item` && result.content?.content_object_id) {
+        } else if ([`agenda_item`, `poll`].indexOf(collection) !== -1 && result.content?.content_object_id) {
             results[result.content.content_object_id].score = Math.max(
                 results[result.content.content_object_id].score || 0,
                 addScore
@@ -118,6 +150,10 @@ export class GlobalSearchService {
                 results[result.content.content_object_id].score,
                 results
             );
+        } else if (collection === `motion_change_recommendation` && results[fqid].content?.motion_id) {
+            const motionFqid = fqidFromCollectionAndId(Motion.COLLECTION, results[fqid].content?.motion_id);
+            results[motionFqid].score = Math.max(results[motionFqid].score || 0, addScore);
+            this.updateScore(motionFqid, results[motionFqid].score, results);
         }
     }
 
@@ -134,7 +170,7 @@ export class GlobalSearchService {
 
         return {
             title: this.getTitle(collection, content),
-            text: content.text || content.description,
+            text: this.getText(collection, results[fqid]),
             obj: content,
             fqid,
             collection,
@@ -143,6 +179,20 @@ export class GlobalSearchService {
             committee: results[`committee/${content.committee_id}`]?.content,
             score: results[fqid].score || 0
         };
+    }
+
+    private getText(collection: string, result: GlobalSearchResponseEntry) {
+        const content = result.content;
+        if (
+            collection === Motion.COLLECTION &&
+            result.matched_by &&
+            !result.matched_by[`text`] &&
+            result.matched_by[`reason`]
+        ) {
+            return content.reason;
+        }
+
+        return content.text || content.description;
     }
 
     private getUrl(collection: string, id: Id, content: any): string {
@@ -158,6 +208,13 @@ export class GlobalSearchService {
             case `topic`:
                 return `/${content.meeting_id}/agenda/topics/${id}`;
             case `mediafile`:
+                if (content?.is_directory) {
+                    const [coll, mid] = collectionIdFromFqid(content.owner_id);
+                    if (coll === Meeting.COLLECTION) {
+                        return `/${mid}/mediafiles/${id}`;
+                    }
+                    return `/mediafiles/${id}`;
+                }
                 return `/system/media/get/${id}`;
             case `user`:
                 if (this.activeMeeting.meetingId && content.meeting_ids?.includes(this.activeMeeting.meetingId)) {

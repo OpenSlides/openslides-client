@@ -208,7 +208,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
         };
 
         // TODO: Including via rtmp streams is deprecated.
-        if (!this.videoUrl.includes(`bintu`)) {
+        if (!this.videoUrl.includes(`playout`)) {
             entry = {
                 h5live: {
                     rtmp: {
@@ -288,7 +288,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     private determinePlayer(videoUrl: string): Player {
         if (videoUrl.includes(`youtu.be`) || videoUrl.includes(`youtube.`)) {
             return Player.youtube;
-        } else if (videoUrl.includes(`nanocosmos.de`)) {
+        } else if (videoUrl.includes(`nanostream.cloud`) || videoUrl.includes(`nanocosmos.de`)) {
             return Player.nanocosmos;
         } else {
             return Player.vjs;
@@ -305,7 +305,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     private getNanocosmosVideoId(url: string): string {
-        if (!url.includes(`bintu`)) {
+        if (!url.includes(`playout`)) {
             const urlParts: string[] = url.split(`=`);
             if (urlParts?.length && typeof urlParts[1] === `string`) {
                 return urlParts[1];

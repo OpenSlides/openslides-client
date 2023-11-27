@@ -29,7 +29,7 @@ export class TileComponent implements OnInit {
      * Optional data, that can be passed to the component.
      */
     @Input()
-    public data: Object | null = null;
+    public data: any | null = null;
 
     /**
      * Optional input to define the preferred size of the tile.

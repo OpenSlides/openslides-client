@@ -16,8 +16,23 @@ import { OperatorService } from 'src/app/site/services/operator.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlobalSearchComponent implements OnDestroy {
-    public searchTerm = ``;
+    private static _searchTerm = ``;
+
+    public get searchTerm(): string {
+        return GlobalSearchComponent._searchTerm;
+    }
+
+    public set searchTerm(input: string) {
+        GlobalSearchComponent._searchTerm = input;
+    }
+
     public noResults = false;
+
+    private static _filteredResults: GlobalSearchEntry[] = [];
+
+    public get filteredResults(): GlobalSearchEntry[] {
+        return GlobalSearchComponent._filteredResults;
+    }
 
     public readonly availableFilters = {
         meeting: _(`Meeting`),
@@ -36,7 +51,6 @@ export class GlobalSearchComponent implements OnDestroy {
         meetingFilter: this.activeMeeting.meetingId ? `current` : `all`
     });
 
-    public filteredResults: GlobalSearchEntry[] = [];
     public inMeeting = !!this.activeMeeting.meetingId;
 
     public get resultCount(): number {
@@ -44,13 +58,13 @@ export class GlobalSearchComponent implements OnDestroy {
     }
 
     public get filteredResultCount(): number {
-        return this.filteredResults.length;
+        return GlobalSearchComponent._filteredResults.length;
     }
 
     public searching: number | null = null;
 
     private results: GlobalSearchEntry[] = [];
-    private models: GlobalSearchResponse;
+    private static models: GlobalSearchResponse;
 
     private filterChangeSubscription: Subscription;
 
@@ -65,7 +79,7 @@ export class GlobalSearchComponent implements OnDestroy {
         this.filterChangeSubscription = this.currentFilters.valueChanges
             .pipe(startWith(this.currentFilters.value), pairwise())
             .subscribe(() => {
-                if (this.searchTerm) {
+                if (GlobalSearchComponent._searchTerm) {
                     this.searchChange();
                 }
             });
@@ -96,14 +110,14 @@ export class GlobalSearchComponent implements OnDestroy {
                     ? [`meeting`]
                     : this.selectedFilters();
             const search = await this.globalSearchService.searchChange(
-                this.searchTerm,
+                GlobalSearchComponent._searchTerm,
                 filters,
                 this.currentlyAvailableFilters,
                 searchMeeting
             );
             if (this.searching === searchId) {
                 this.results = search.resultList;
-                this.models = search.models;
+                GlobalSearchComponent.models = search.models;
                 this.updateFilteredResults();
             }
         } catch (e) {
@@ -119,7 +133,7 @@ export class GlobalSearchComponent implements OnDestroy {
     }
 
     public getModel(model: string, id: Id): any | null {
-        return this.models[`${model}/${id}`] || null;
+        return GlobalSearchComponent.models[`${model}/${id}`] || null;
     }
 
     public getNamesBySubmitters(submitters: Id[]): string[] {
@@ -135,7 +149,18 @@ export class GlobalSearchComponent implements OnDestroy {
         return submitterNames;
     }
 
-    public getTextSnippet(text: string): string {
+    public getTextSnippet(input: string | { [key: number]: string }): string {
+        let text: string;
+        if (typeof input !== `string`) {
+            try {
+                text = Object.values(input).join(`\n`);
+            } catch (e) {
+                text = ``;
+            }
+        } else {
+            text = input;
+        }
+
         const textSnippetSize = 180;
         const removeTags = /<\/?(?!(?:mark)\b)[^/>]+>/g;
         let resultText = ``;
@@ -201,7 +226,7 @@ export class GlobalSearchComponent implements OnDestroy {
     }
 
     private updateFilteredResults(): void {
-        this.filteredResults = [];
+        GlobalSearchComponent._filteredResults = [];
         let allUnchecked = true;
         for (const filter of this.currentlyAvailableFilters) {
             if (this.currentFilters.get(filter) && this.currentFilters.get(filter).getRawValue()) {
@@ -213,19 +238,18 @@ export class GlobalSearchComponent implements OnDestroy {
             const collection = result.collection;
             if (this.currentFilters.get(`meetingFilter`).getRawValue() === `meetings`) {
                 if (collection === `meeting` || collection === `committee`) {
-                    this.filteredResults.push(result);
+                    GlobalSearchComponent._filteredResults.push(result);
                 }
             } else {
                 if (
                     allUnchecked ||
                     (this.currentFilters.get(collection) && this.currentFilters.get(collection).getRawValue())
                 ) {
-                    this.filteredResults.push(result);
+                    GlobalSearchComponent._filteredResults.push(result);
                 }
             }
         }
-
-        this.noResults = !Object.keys(this.filteredResults).length;
+        this.noResults = !Object.keys(GlobalSearchComponent._filteredResults).length;
     }
 
     private updateCurrentlyAvailableFilters(): void {

@@ -29,12 +29,12 @@ export class ImportContext<ToImport> {
         return this._importStepPhaseSubject.value;
     }
 
-    public get phaseObservable(): Observable<ImportStepPhase> {
-        return this._importStepPhaseSubject;
-    }
-
     public set phase(value: ImportStepPhase) {
         this._importStepPhaseSubject.next(value);
+    }
+
+    public get phaseObservable(): Observable<ImportStepPhase> {
+        return this._importStepPhaseSubject;
     }
 
     private _data: { [key: string]: any } = {};
