@@ -99,7 +99,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                             ...this.parent(),
                             {
                                 tag: `span`,
-                                getAttrs: node => (node as HTMLElement).style.backgroundColor && null
+                                getAttrs: node => !!(node as HTMLElement).style?.backgroundColor && null
                             }
                         ];
                     }
