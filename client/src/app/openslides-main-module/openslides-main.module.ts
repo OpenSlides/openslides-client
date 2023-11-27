@@ -1,5 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -43,6 +44,7 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: AppLoaderFactory, deps: [AppLoadService], multi: true },
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: `outline` } },
         httpInterceptorProviders
     ],
     bootstrap: [OpenSlidesMainComponent]
