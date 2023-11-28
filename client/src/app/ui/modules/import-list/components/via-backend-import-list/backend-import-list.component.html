@@ -179,13 +179,15 @@
 
 <ng-template #entryContentTemplate let-entry="entry" let-def="def">
     <ng-container *ngIf="getHeader(def).is_object">
-        <ng-container
-            [ngTemplateOutlet]="nonObjectEntryTemplate"
-            [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
-        ></ng-container>
-        <mat-icon class="newBadge" color="accent" inline *ngIf="getActionIcon(entry)">
-            {{ getEntryIcon(entry) }}
-        </mat-icon>
+        <div style="display: inline-flex">
+            <ng-container
+                [ngTemplateOutlet]="nonObjectEntryTemplate"
+                [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
+            ></ng-container>
+            <mat-icon color="accent" inline *ngIf="getActionIcon(entry)">
+                {{ getEntryIcon(entry) }}
+            </mat-icon>
+        </div>
     </ng-container>
     <ng-container
         *ngIf="!getHeader(def).is_object"
@@ -195,7 +197,7 @@
 </ng-template>
 
 <ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
-    <ng-container *ngIf="type === 'string'">{{ entry | translate }}</ng-container>
+    <ng-container *ngIf="type === 'string'">{{ entry }}</ng-container>
     <ng-container *ngIf="type === 'number' || type === 'integer'">{{ entry }}</ng-container>
     <ng-container *ngIf="type === 'decimal'">{{ getShortenedDecimal(entry) }}</ng-container>
     <ng-container *ngIf="type === 'date'">{{ entry }}</ng-container>
