@@ -80,20 +80,32 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
         }
 
         try {
+            // TODO: Part of workaround
+            if (this.matSnackBar._openedSnackBarRef) {
+                this.matSnackBar._openedSnackBarRef.dismiss();
+            }
+
             await this.userRepo.forgetPasswordConfirm({
                 user_id: this.user_id,
                 authorization_token: this.token,
                 new_password: this.newPasswordForm.get(`password`)!.value
             });
-            // TODO: Does we get a response for displaying?
-            this.matSnackBar.open(
-                this.translate.instant(`Your password has been reset successfully!`),
-                this.translate.instant(`OK`),
-                {
-                    duration: 0
-                }
-            );
-            this.router.navigate([`/login`]);
+
+            // TODO: Workaround
+            // Checks if a snackbar was opened. Snackbars openend while forgetPasswordConfirm
+            // was called are very likely to contain an error message caused
+            // by the forgetPasswordConfirm call wich would be overwritten by
+            // the following code.
+            if (!this.matSnackBar._openedSnackBarRef) {
+                this.matSnackBar.open(
+                    this.translate.instant(`Your password has been reset successfully!`),
+                    this.translate.instant(`OK`),
+                    {
+                        duration: 0
+                    }
+                );
+                this.router.navigate([`/login`]);
+            }
         } catch (e) {
             console.log(`error`, e);
         }
