@@ -22,7 +22,7 @@
         display: table-cell;
 
         #inner-name {
-            font-family: $font-chyronname;
+            font-family: customChyronNameFont, $font-chyronname;
         }
 
         #inner-level {

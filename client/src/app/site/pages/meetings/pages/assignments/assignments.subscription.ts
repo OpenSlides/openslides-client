@@ -1,4 +1,5 @@
 import { Id } from 'src/app/domain/definitions/key-types';
+import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
@@ -21,7 +22,18 @@ export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id:
             },
             {
                 idField: `assignment_candidate_ids`,
-                follow: [`user_id`]
+                follow: [
+                    {
+                        idField: `meeting_user_id`,
+                        follow: [
+                            {
+                                idField: `user_id`,
+                                fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                            }
+                        ],
+                        ...MeetingUserFieldsets.FullNameSubscription
+                    }
+                ]
             }
         ]
     },

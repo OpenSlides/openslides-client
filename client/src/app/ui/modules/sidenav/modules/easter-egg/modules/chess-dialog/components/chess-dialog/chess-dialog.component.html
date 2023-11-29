@@ -1,0 +1,18 @@
+<div mat-dialog-content>
+    <div class="flex-container">
+        <h2 mat-dialog-title class="left-align no-margin">{{ caption | translate }}</h2>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div *ngIf="opponentName" class="center spacer-top-5">{{ 'Playing against' | translate }} {{ opponentName }}</div>
+    <div #chessboard class="spacer-top-5"></div>
+    <div *ngIf="inMeeting && state === 'start'" class="center spacer-top-5">
+        <button (click)="handleEvent('searchClicked')" mat-raised-button color="accent">
+            {{ 'Search player' | translate }}
+        </button>
+    </div>
+    <div *ngIf="!inMeeting">
+        {{ 'Open a meeting to play chess' | translate }}
+    </div>
+</div>

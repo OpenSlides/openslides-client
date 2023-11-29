@@ -10,7 +10,7 @@ import {
     OnInit,
     Output
 } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -46,10 +46,10 @@ export class CallComponent extends BaseMeetingComponent implements OnInit, After
     public showParticles: Observable<boolean> = this.applauseService.showParticles;
     public hasLiveStreamUrl: Observable<boolean> = this.streamService.hasLiveStreamUrlObservable;
 
-    public isJitsiActive: boolean = false;
-    public isJoined: boolean = false;
+    public isJitsiActive = false;
+    public isJoined = false;
 
-    private autoConnect: boolean = false;
+    private autoConnect = false;
     private dominantSpeaker: string | undefined;
 
     public get showHangUp(): boolean {
@@ -120,8 +120,8 @@ export class CallComponent extends BaseMeetingComponent implements OnInit, After
 
     // closing the tab should also try to stop jitsi.
     // this will usually not be caught by ngOnDestroy
-    @HostListener(`window:beforeunload`, [`$event`])
-    public beforeunload($event: any): void {
+    @HostListener(`window:unload`)
+    public beforeunload(): void {
         this.rtcService.stopJitsi();
     }
 

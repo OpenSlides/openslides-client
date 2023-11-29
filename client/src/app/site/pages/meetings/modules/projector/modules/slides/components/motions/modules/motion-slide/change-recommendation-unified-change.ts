@@ -20,9 +20,11 @@ export class ChangeRecommendationUnifiedChange implements ChangeRecommendationDa
     public constructor(data: ChangeRecommendationData) {
         Object.assign(this, data);
     }
+
     public getTitle(): string {
         return `Recommendation`;
     }
+
     public getModificationType(): ModificationType {
         throw new Error(`Method not implemented.`);
     }

@@ -33,6 +33,10 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
 
     private connectionClosingFn: (() => void) | undefined;
 
+    private get iccEndpointName(): string {
+        return ICC_ENDPOINT + `_` + this.serviceDescription;
+    }
+
     /**
      * Constructor to create the Service.
      * Subclasses can call {@link setupConnections} after the super call to initialize automatic meeting-based connection handling.
@@ -73,9 +77,9 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
         this.disconnect();
 
         const iccMeeting = `${ICC_PATH}${this.receivePath}?meeting_id=${meetingId}`;
-        this.httpEndpointService.registerEndpoint(ICC_ENDPOINT, iccMeeting, this.healthPath, HttpMethod.GET);
+        this.httpEndpointService.registerEndpoint(this.iccEndpointName, iccMeeting, this.healthPath, HttpMethod.GET);
         const buildStreamFn = () =>
-            this.httpStreamService.create<ICCResponseType>(ICC_ENDPOINT, {
+            this.httpStreamService.create<ICCResponseType>(this.iccEndpointName, {
                 onMessage: (response: ICCResponseType) => this.onMessage(response),
                 description: this.serviceDescription
             });
@@ -96,14 +100,14 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
 
     /**
      * Define what happens when a message is received from the ICC service.
-     * @param response The message that was received.
+     * @param message The message that was received.
      */
     protected abstract onMessage(message: ICCResponseType): void;
 
     /**
      * General send function for messages. Subclasses should call this to build their own more specific send functions.
      */
-    protected async send<T>(data?: any): Promise<void> {
+    protected async send(data?: any): Promise<void> {
         if (!this.sendPath) {
             throw new Error(`Cannot send to ICC, no path was provided`);
         }

@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -59,7 +59,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     /**
      * Indicates if the highlight line form was opened
      */
-    public highlightedLineOpened: boolean = false;
+    public highlightedLineOpened = false;
 
     /**
      * Holds the model for the typed line number
@@ -115,11 +115,10 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     public ngOnInit(): void {
-        const self = this;
+        const maxLineNumber = this.motionLineNumbering.getLastLineNumber(this.motion, this.lineLength);
         this.highlightedLineMatcher = new (class implements ErrorStateMatcher {
             public isErrorState(control: UntypedFormControl): boolean {
                 const value: string = control && control.value ? control.value + `` : ``;
-                const maxLineNumber = self.motionLineNumbering.getLastLineNumber(self.motion, self.lineLength);
                 return value.match(/[^\d]/) !== null || parseInt(value, 10) >= maxLineNumber;
             }
         })();
@@ -154,7 +153,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
             let target: Element | null;
             // to make the selected line not stick at the very top of the screen, and to prevent it from being
             // conceiled from the header, we actually scroll to a element a little bit above.
-            if (line > 4) {
+            if ((line as number) > 4) {
                 target = element.querySelector(`.os-line-number.line-number-` + ((line as number) - 4).toString(10));
             } else {
                 target = element.querySelector(`.title-line`);
@@ -264,6 +263,15 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
 
     protected override onAfterInit(): void {
         this.startLineNumber = this.motion?.start_line_number || 1;
+    }
+
+    protected override onAfterSetMotion(previous: ViewMotion, current: ViewMotion): void {
+        if (!previous?.amendment_paragraphs && !!current?.amendment_paragraphs) {
+            const recoMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
+            if (recoMode) {
+                this.setChangeRecoMode(this.determineCrMode(recoMode as ChangeRecoMode));
+            }
+        }
     }
 
     /**

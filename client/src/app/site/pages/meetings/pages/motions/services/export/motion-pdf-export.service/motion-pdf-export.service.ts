@@ -48,7 +48,7 @@ export class MotionPdfExportService {
      */
     public exportMotionCatalog(motions: ViewMotion[], exportInfo: MotionExportInfo): void {
         const docDefinition = this.pdfCatalogService.motionListToDocDef(motions, exportInfo);
-        const filename = this.meetingSettingsService.instant(`motions_export_title`) as string;
+        const filename = this.translate.instant(`Motions`);
         const metadata = {
             title: filename
         };

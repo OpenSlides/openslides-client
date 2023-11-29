@@ -17,7 +17,7 @@ export class OrganizationControllerService extends BaseController<ViewOrganizati
         super(repositoryServiceCollector, Organization, repo);
     }
 
-    public getTitle = (viewModel: ViewOrganization) => ``;
+    public getTitle = (_viewModel: ViewOrganization) => ``;
 
     public update(update: Partial<Organization>): Promise<void> {
         return this.repo.update(update);

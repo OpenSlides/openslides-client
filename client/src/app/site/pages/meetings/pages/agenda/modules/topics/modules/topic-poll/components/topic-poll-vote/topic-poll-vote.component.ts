@@ -245,7 +245,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         this.handleVotingMethodYOrN(maxVotesAmount, tmpVoteRequest, user);
     }
 
-    public handleVotingMethodYOrN(maxVotesAmount: number, tmpVoteRequest: {}, user: ViewUser = this.user) {
+    public handleVotingMethodYOrN(maxVotesAmount: number, tmpVoteRequest: any, user: ViewUser = this.user) {
         // check if you can still vote
         const countedVotes = Object.keys(tmpVoteRequest).filter(key => tmpVoteRequest[key]).length;
         if (countedVotes <= maxVotesAmount) {
@@ -262,7 +262,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         }
     }
 
-    private getTMPVoteRequestYOrN(maxVotesAmount: number, optionId: number, user: ViewUser = this.user): {} {
+    private getTMPVoteRequestYOrN(maxVotesAmount: number, optionId: number, user: ViewUser = this.user): any {
         return this.poll.options
             .map(option => option.id)
             .reduce((o, n) => {

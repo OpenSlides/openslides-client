@@ -6,11 +6,6 @@ import { HasListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 import { BaseMeetingRelatedRepository } from './base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';
 
-function isListOfSpeakersContentObjectRepository(obj: any): obj is BaseListOfSpeakersContentObjectRepository<any, any> {
-    const repo = obj as BaseListOfSpeakersContentObjectRepository<any, any>;
-    return !!obj && repo.getListOfSpeakersTitle !== undefined && repo.getListOfSpeakersSlideTitle !== undefined;
-}
-
 /**
  * Describes a base repository which objects have a list of speakers assigned.
  */

@@ -44,6 +44,7 @@
     [editFolderTemplate]="fileEditDialog"
     [fileMenuTemplate]="fileMenuTemplate"
     [shouldShowFileMenuFn]="shouldShowFileMenuFn"
+    [addBottomSpacer]="hasInteractionState | async"
     (directoryChanged)="changeDirectory($event.directoryId)"
     (beforeEditing)="onEditFile($event.file)"
     (saved)="onSaveFile($event.update)"
@@ -56,11 +57,9 @@
         (click)="onEditFile(mediafile)"
     >
         <os-icon-container *ngIf="mediafile.access_groups.length" icon="group">
-            <span *ngFor="let group of mediafile.access_groups | slice : 0 : 3; let last = last">
-                <span>{{ group.getTitle() | translate }}</span>
-                <span *ngIf="!last">,&nbsp;</span>
-                <span *ngIf="last && mediafile.access_groups.length > 3">...</span>
-            </span>
+            <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
+                <ng-template let-group>{{ $any(group).getTitle() | translate }}</ng-template>
+            </os-comma-separated-listing>
         </os-icon-container>
     </div>
 </os-file-list>
@@ -70,11 +69,9 @@
     <span class="visibility" *ngIf="canEdit && directory && directory.has_inherited_access_groups">
         <button class="visible-for" mat-button (click)="onEditFile(directory)">
             <os-icon-container icon="group" matTooltip="{{ 'Allowed access groups for this directory' | translate }}">
-                <span *ngFor="let group of directory.inherited_access_groups | slice : 0 : 3; let last = last">
-                    <span>{{ group.getTitle() | translate }}</span>
-                    <span *ngIf="!last">,</span>
-                    <span *ngIf="last && directory.inherited_access_groups.length > 3">...</span>
-                </span>
+                <os-comma-separated-listing [list]="directory.inherited_access_groups" [showElementsAmount]="3">
+                    <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                </os-comma-separated-listing>
             </os-icon-container>
         </button>
     </span>

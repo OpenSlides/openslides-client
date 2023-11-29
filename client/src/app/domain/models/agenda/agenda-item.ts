@@ -1,4 +1,4 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 import { Fqid, Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
@@ -36,7 +36,7 @@ export class AgendaItem extends BaseModel<AgendaItem> {
     public type!: AgendaItemType;
     public is_hidden!: boolean;
     public is_internal!: boolean;
-    public duration!: number; // in seconds
+    public duration!: number; // in minutes
     public weight!: number;
     /**
      * Client-calculated field: The level indicates the indentation of an agenda-item.
@@ -55,7 +55,7 @@ export class AgendaItem extends BaseModel<AgendaItem> {
         super(AgendaItem.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof AgendaItem | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof AgendaItem)[] = [
         `id`,
         `item_number`,
         `comment`,

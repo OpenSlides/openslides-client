@@ -1,6 +1,9 @@
 import { Directive, Inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+    MatLegacyDialogRef as MatDialogRef
+} from '@angular/material/legacy-dialog';
 import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -47,7 +50,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
      */
     public dialogVoteFormOptionKeysSubject = new BehaviorSubject<string[]>([]);
 
-    public publishImmediately: boolean = false;
+    public publishImmediately = false;
 
     /**
      * If the options of the finished poll should hold text instead of content_object_id,
@@ -220,7 +223,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
      * replaced with VOTE_UNDOCUMENTED
      * @param voteData the (partial) data
      */
-    private replaceEmptyValues(voteData: any, undo: boolean = false): object {
+    private replaceEmptyValues(voteData: any, undo = false): object {
         const result: any = {};
         for (const key of Object.keys(voteData)) {
             if (typeof voteData[key] === `object` && voteData[key]) {

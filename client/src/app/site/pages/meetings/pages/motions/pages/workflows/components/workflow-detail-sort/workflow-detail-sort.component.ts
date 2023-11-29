@@ -35,6 +35,11 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
         return this._hasChanges;
     }
 
+    private set previousStates(newStates: MotionState[]) {
+        this._previousStates = newStates;
+        this.compareStates();
+    }
+
     private get previousStates(): MotionState[] {
         return this._previousStates;
     }
@@ -43,11 +48,6 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
     private _workflowStatesSubscription: Subscription | null = null;
     private _previousStates: MotionState[] = [];
     private _hasChanges = false;
-
-    private set previousStates(newStates: MotionState[]) {
-        this._previousStates = newStates;
-        this.compareStates();
-    }
 
     private _workflowId: Id | null = null;
 

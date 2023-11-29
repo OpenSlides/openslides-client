@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ActionWorkerRepositoryService } from 'src/app/gateways/repositories/action-worker/action-worker-repository.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { titleVerbose, WaitForActionData, WaitForActionReason, waitForActionReason } from '../../definitions';
@@ -36,14 +35,14 @@ export class WaitForActionBannerComponent extends BaseUiComponent {
 
     private _currentData: Map<WaitForActionReason, WaitForActionData[]>;
 
-    public constructor(private waitService: WaitForActionDialogService, private repo: ActionWorkerRepositoryService) {
+    public constructor(private waitService: WaitForActionDialogService) {
         super();
         this.subscriptions.push(
             this.waitService.dataObservable.subscribe(data => {
                 this._currentData = data;
                 this.nextDataArray();
             }),
-            this.waitService.currentReasonObservable.subscribe(reason => this.nextDataArray())
+            this.waitService.currentReasonObservable.subscribe(() => this.nextDataArray())
         );
     }
 

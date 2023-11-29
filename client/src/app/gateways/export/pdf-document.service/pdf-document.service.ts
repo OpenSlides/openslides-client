@@ -1,6 +1,20 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
+import {
+    Alignment,
+    Content,
+    ContentColumns,
+    ContentImage,
+    ContentTable,
+    ContentText,
+    Margins,
+    PageOrientation,
+    PageSize,
+    StyleDictionary,
+    TableCell,
+    TDocumentDefinitions
+} from 'pdfmake/interfaces';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
 import { Functionable } from 'src/app/infrastructure/utils';
@@ -63,13 +77,13 @@ export interface TocLineDefinition {
 }
 
 export interface TocTableDefinition {
-    tocBody: object[];
+    tocBody: TableCell[][];
     style?: StyleType;
     borderStyle?: BorderType;
 }
 
 interface PaperConfig {
-    documentContent: object;
+    documentContent: Content;
     fontSize: number;
     metadata?: object;
     exportInfo?: object;
@@ -81,12 +95,12 @@ interface PaperConfig {
     /**
      * Defaults to `A4`
      */
-    pageSize?: string;
+    pageSize?: PageSize;
     imageUrls?: string[];
 }
 
 export interface DownloadConfig {
-    docDefinition: object;
+    docDefinition: Content;
     fontSize: number;
     filename: string;
     loadFonts: Functionable<PdfFontDescription>;
@@ -136,7 +150,7 @@ export interface PdfFontDescription {
 const additionalPdfSettingsKeys: (keyof Settings)[] = [`export_pdf_pagenumber_alignment`];
 
 interface PdfCreatorConfig {
-    document: object;
+    document: TDocumentDefinitions;
     filename: string;
     progressService: ProgressSnackBarControlService;
     progressSnackBarService: ProgressSnackBarService;
@@ -147,7 +161,7 @@ interface PdfCreatorConfig {
 }
 
 class PdfCreator {
-    private readonly _document: object;
+    private readonly _document: TDocumentDefinitions;
     private readonly _filename: string;
     private readonly _loadFonts: Functionable<PdfFontDescription>;
     private readonly _loadImages: Functionable<PdfImageDescription>;
@@ -223,7 +237,7 @@ class PdfCreator {
     }
 
     private replaceSvgImages(doc: any, images: object): any {
-        for (let url of Object.keys(images)) {
+        for (const url of Object.keys(images)) {
             doc = this.replaceSvgRecursive(doc, url, images[url]);
         }
 
@@ -236,7 +250,7 @@ class PdfCreator {
                 return this.replaceSvgRecursive(el, url, image);
             });
         } else if (doc && typeof doc === `object`) {
-            for (let key of Object.keys(doc)) {
+            for (const key of Object.keys(doc)) {
                 if (key === `image` && (doc[key] === url || doc[key] === `/` + url)) {
                     delete doc[key];
                     doc.svg = image;
@@ -318,7 +332,7 @@ export class PdfDocumentService {
      * @returns Url without leading slash
      */
 
-    private removeLeadingSlash(url: string) {
+    private removeLeadingSlash(url: string): string {
         if (url.indexOf(`/`) === 0) {
             url = url.substr(1); // remove leading `/`
         }
@@ -330,7 +344,7 @@ export class PdfDocumentService {
      *
      * @returns The list title for the PDF document
      */
-    public createTitle(title: string): object {
+    public createTitle(title: string): ContentText {
         return {
             text: title,
             style: `title`
@@ -342,25 +356,25 @@ export class PdfDocumentService {
      *
      * @returns The list preamble for the PDF document
      */
-    public createPreamble(preamble: string | null): object {
+    public createPreamble(preamble: string | null): Content {
         if (preamble) {
             return {
                 text: preamble,
                 style: `preamble`
             };
         } else {
-            return {};
+            return [];
         }
     }
 
-    public getPageBreak(): Object {
+    public getPageBreak(): ContentText {
         return {
             text: ``,
             pageBreak: `after`
         };
     }
 
-    public getSpacer(): Object {
+    public getSpacer(): ContentText {
         return {
             text: ``,
             margin: [0, 5]
@@ -374,8 +388,8 @@ export class PdfDocumentService {
      */
     public createTocTableDef(
         { tocBody, style = StyleType.DEFAULT, borderStyle = BorderType.DEFAULT }: TocTableDefinition,
-        ...header: object[]
-    ): object {
+        ...header: TableCell[][]
+    ): ContentTable {
         return {
             table: {
                 headerRows: header[0] ? header.length : 0,
@@ -396,8 +410,8 @@ export class PdfDocumentService {
      */
     public createTocLine(
         { identifier, title, pageReference, style = StyleType.DEFAULT }: TocLineDefinition,
-        ...subTitle: object[]
-    ): Object[] {
+        ...subTitle: Content[]
+    ): Content[] {
         return [
             {
                 text: identifier,
@@ -421,9 +435,9 @@ export class PdfDocumentService {
      * @param text The text for the line.
      * @param italics Optional boolean, if the text should be italic - defaults to `false`.
      *
-     * @returns {Object} An object for `DocDefinition` for `pdf-make`.
+     * @returns {Content} An object for `DocDefinition` for `pdf-make`.
      */
-    public createTocLineInline(text: string, italics: boolean = false): Object {
+    public createTocLineInline(text: string, italics = false): Content {
         return {
             text: `\n` + text,
             style: StyleType.SUB_ENTRY,
@@ -458,7 +472,7 @@ export class PdfDocumentService {
         docDefinition,
         filename: filetitle,
         ...config
-    }: DownloadConfig & { pageMargins: [number, number, number, number] }): void {
+    }: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }): void {
         this.showProgress();
         const imageUrls = this.pdfImagesService.getImageUrls();
         this.pdfImagesService.clearImageUrls();
@@ -468,6 +482,7 @@ export class PdfDocumentService {
                 ...config,
                 documentContent: docDefinition,
                 pageMargins: config.pageMargins,
+                pageSize: config.pageSize,
                 landscape: false,
                 imageUrls: imageUrls
             }),
@@ -502,13 +517,13 @@ export class PdfDocumentService {
 
     public downloadWaitableDoc(
         filetitle: string,
-        buildDocFn: () => Promise<object>,
+        buildDocFn: () => Promise<TDocumentDefinitions>,
         loadFonts: () => Promise<PdfFontDescription>,
         createVfs: () => Promise<PdfVirtualFileSystem>
     ): void {
         this.showProgress();
 
-        var logoBallotPaperUrl = this.mediaManageService.getLogoUrl(`pdf_ballot_paper`);
+        let logoBallotPaperUrl = this.mediaManageService.getLogoUrl(`pdf_ballot_paper`);
         if (logoBallotPaperUrl) {
             logoBallotPaperUrl = this.removeLeadingSlash(logoBallotPaperUrl);
             this.imageUrls.push(logoBallotPaperUrl);
@@ -542,11 +557,12 @@ export class PdfDocumentService {
         pageSize = `A4`,
         fontSize,
         imageUrls
-    }: PaperConfig): object {
+    }: PaperConfig): TDocumentDefinitions {
         this.imageUrls = imageUrls ? imageUrls : [];
+        const pageOrientation: PageOrientation = landscape ? `landscape` : `portrait`;
         const result = {
             pageSize,
-            pageOrientation: landscape ? `landscape` : `portrait`,
+            pageOrientation,
             pageMargins,
             defaultStyle: {
                 font: `PdfFont`,
@@ -571,11 +587,11 @@ export class PdfDocumentService {
      * @param lrMargin optional margin overrides
      * @returns an object that contains the necessary header definition
      */
-    private getHeader({ exportInfo, lrMargin }: PdfDocumentHeaderConfig): object {
+    private getHeader({ exportInfo, lrMargin }: PdfDocumentHeaderConfig): ContentColumns {
         let text: string;
-        const columns = [];
-        let logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_l`);
-        let logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_r`);
+        const columns: Content = [];
+        const logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_l`);
+        const logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_r`);
         const header =
             exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Header) : true;
 
@@ -625,7 +641,7 @@ export class PdfDocumentService {
                 })
             );
         }
-        const margin = [lrMargin ? lrMargin[0] : 75, 30, lrMargin ? lrMargin[0] : 75, 10];
+        const margin: Margins = [lrMargin ? lrMargin[0] : 75, 30, lrMargin ? lrMargin[0] : 75, 10];
         // pdfmake order: [left, top, right, bottom]
 
         return {
@@ -650,9 +666,9 @@ export class PdfDocumentService {
         const showDate = exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes(`date`) : false;
         let logoContainerWidth: string;
         let pageNumberPosition: string;
-        let logoContainerSize: number[];
-        let logoFooterLeftUrl = this.mediaManageService.getLogoUrl(`pdf_footer_l`);
-        let logoFooterRightUrl = this.mediaManageService.getLogoUrl(`pdf_footer_r`);
+        let logoContainerSize: [number, number];
+        const logoFooterLeftUrl = this.mediaManageService.getLogoUrl(`pdf_footer_l`);
+        const logoFooterRightUrl = this.mediaManageService.getLogoUrl(`pdf_footer_r`);
 
         let footerPageNumber = ``;
         if (showPageNr) {
@@ -730,7 +746,12 @@ export class PdfDocumentService {
         };
     }
 
-    private getImage(data: { image: string; fit?: number[]; width?: string; alignment?: string }): object {
+    private getImage(data: {
+        image: string;
+        fit?: [number, number];
+        width?: any;
+        alignment?: Alignment;
+    }): ContentImage {
         this.imageUrls.push(data.image);
         return {
             image: this.removeLeadingSlash(data.image),
@@ -774,7 +795,7 @@ export class PdfDocumentService {
      *
      * @returns an object that contains all pdf styles
      */
-    private getStandardPaperStyles(pageSize: string): object {
+    private getStandardPaperStyles(pageSize: PageSize): StyleDictionary {
         return {
             title: {
                 fontSize: pageSize === `A5` ? 14 : 16,

@@ -4,6 +4,7 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     ViewChild,
@@ -23,7 +24,7 @@ import { FilterListService, SearchService, SortListService } from '../../definit
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class ViewListComponent<V extends Identifiable> implements OnInit {
+export class ViewListComponent<V extends Identifiable> implements OnInit, OnDestroy {
     @ViewChild(ScrollingTableComponent, { static: true })
     private readonly _scrollingTableComponent: ScrollingTableComponent<V> | undefined;
 
@@ -119,6 +120,9 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
     @Input()
     public searchFieldValue = ``;
 
+    @Input()
+    public addBottomSpacer = false;
+
     /**
      * Double binding the selected rows
      */
@@ -154,25 +158,47 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
         this.initDataListObservable();
     }
 
+    public ngOnDestroy(): void {
+        if (this.filterService) {
+            this.filterService.exitFilterService();
+        }
+
+        if (
+            this.sortService &&
+            !this.listObservableProvider &&
+            this.listObservableProvider.getSortedViewModelListObservable()
+        ) {
+            this.sortService.exitSortService();
+        }
+
+        if (this.searchService) {
+            this.searchService.exitSearchService();
+        }
+    }
+
     /**
      * Determines and sets the raw data as observable lists according
      * to the used search and filter services
      */
     private initDataListObservable(): void {
         if (this.listObservableProvider || this.listObservable) {
-            this._source = this.listObservableProvider
+            if (this.sortService) {
+                this.sortService.initSorting();
+            }
+            this._source = this.sortService
+                ? this.listObservableProvider?.getSortedViewModelListObservable
+                    ? this.listObservableProvider.getSortedViewModelListObservable(
+                          this.sortService.repositorySortingKey
+                      )
+                    : this.sortService.getSortedViewModelListObservable()
+                : this.listObservableProvider
                 ? this.listObservableProvider.getViewModelListObservable()
                 : this.listObservable;
-
             let dataListObservable: Observable<V[]> = this._source!;
             if (this.filterService) {
                 this._source = this.filterService.getViewModelListObservable();
                 this.filterService.initFilters(dataListObservable);
                 dataListObservable = this.filterService.outputObservable;
-            }
-            if (this.sortService) {
-                this.sortService.initSorting(dataListObservable);
-                dataListObservable = this.sortService.outputObservable;
             }
             if (this.searchService) {
                 this.searchService.initSearchService(dataListObservable);
@@ -188,7 +214,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
             this._scrollingTableComponent.hasDataObservable
                 .pipe(find(hasData => hasData))
                 .pipe(delay(10))
-                .subscribe(_ => {
+                .subscribe(() => {
                     this.scrollTo(offset);
                 });
 

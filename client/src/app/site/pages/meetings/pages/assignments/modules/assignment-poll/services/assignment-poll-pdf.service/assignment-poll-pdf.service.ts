@@ -5,7 +5,7 @@ import {
     AbstractPollData,
     BasePollPdfService
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
-import { PollKeyVerbosePipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
+import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -31,7 +31,8 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         protected override translate: TranslateService,
         private assignmentRepo: AssignmentControllerService,
         pollService: AssignmentPollService,
-        pollKeyVerbose: PollKeyVerbosePipe
+        pollKeyVerbose: PollKeyVerbosePipe,
+        pollParseNumber: PollParseNumberPipe
     ) {
         super(
             meetingSettingsService,
@@ -41,7 +42,8 @@ export class AssignmentPollPdfService extends BasePollPdfService {
             pdfService,
             translate,
             pollService,
-            pollKeyVerbose
+            pollKeyVerbose,
+            pollParseNumber
         );
         meetingSettingsService
             .get(`assignment_poll_ballot_paper_number`)
@@ -74,7 +76,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         if (subtitle.length > 90) {
             subtitle = subtitle.substring(0, 90) + `...`;
         }
-        let rowsPerPage = this.getRowsPerPage(poll);
+        const rowsPerPage = this.getRowsPerPage(poll);
         const sheetEnd = Math.floor(417 / rowsPerPage);
         this.downloadWithBallotPaper(
             this.getPages(rowsPerPage, { sheetend: sheetEnd, title, subtitle, poll }),

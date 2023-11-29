@@ -80,8 +80,8 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
 
     protected onBeforeModelRequests(): void | Promise<void> {}
     protected onShouldCreateModelRequests(): void {}
-    protected onNextMeetingId(id: Id | null): void {}
-    protected onParamsChanged(params: any, oldParams?: any): void {}
+    protected onNextMeetingId(_id: Id | null): void {}
+    protected onParamsChanged(_params: any, _oldParams?: any): void {}
 
     protected async subscribeTo(
         config: ModelRequestConfig | ModelRequestConfig[],
@@ -132,7 +132,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
         { hideWhen, hideWhenDestroyed, hideWhenMeetingChanged, hideWhenUnauthenticated }: HidingConfig,
         ...additional: Observable<boolean>[]
     ): Observable<boolean> | null {
-        let observables: Observable<boolean>[] = [];
+        const observables: Observable<boolean>[] = [];
 
         additional = additional.filter(e => !!e);
         if (additional && additional.length) {

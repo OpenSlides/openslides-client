@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ChipSelectModule } from 'src/app/site/modules/chip-select/chip-select.module';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
@@ -16,6 +16,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { ChessDialogModule } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules/sorting-list/sorting-list.module';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
@@ -60,7 +61,8 @@ import { AssignmentDetailServiceModule } from './services/assignment-detail-serv
         OpenSlidesTranslationModule.forChild(),
         ParticipantSearchSelectorModule,
         AgendaItemCommonServiceModule,
-        ChipSelectModule
+        ChipSelectModule,
+        ChessDialogModule
     ]
 })
 export class AssignmentDetailModule {}

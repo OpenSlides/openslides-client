@@ -23,10 +23,12 @@ import { ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/c
 import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 
+import { ViewTopic } from '../../../view-models';
 import { TopicPollServiceModule } from './topic-poll-service.module';
 
 @Injectable({
@@ -36,20 +38,21 @@ export class TopicPollService extends PollService {
     public defaultPollMethod: PollMethod;
     public defaultPercentBase: PollPercentBase;
     public defaultGroupIds: number[];
-    public defaultPollType: PollType;
 
     public constructor(
         organizationSettingsService: OrganizationSettingsService,
         pollKeyVerbose: PollKeyVerbosePipe,
         parsePollNumber: PollParseNumberPipe,
+        pollServiceMapper: PollServiceMapperService,
         translate: TranslateService,
         private pollRepo: PollControllerService,
         private meetingSettingsService: MeetingSettingsService,
         themeService: ThemeService
     ) {
         super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
+        pollServiceMapper.registerService(ViewTopic.COLLECTION, this);
         this.meetingSettingsService
-            .get(`topic_poll_default_onehundred_percent_base`)
+            .get(`poll_default_onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base ?? PollPercentBase.Y));
 
         this.meetingSettingsService
@@ -57,29 +60,19 @@ export class TopicPollService extends PollService {
             .subscribe(ids => (this.defaultGroupIds = ids ?? []));
 
         this.meetingSettingsService
-            .get(`topic_poll_default_method`)
+            .get(`poll_default_method`)
             .subscribe(method => (this.defaultPollMethod = method ?? PollMethod.Y));
 
-        this.meetingSettingsService
-            .get(`topic_poll_default_type`)
-            .subscribe(type => (this.defaultPollType = type ?? PollType.Pseudoanonymous));
-
-        this.meetingSettingsService
-            .get(`topic_poll_sort_poll_result_by_votes`)
-            .subscribe(sort => (this.sortByVote = sort));
-
-        this.meetingSettingsService
-            .get(`topic_poll_enable_max_votes_per_option`)
-            .subscribe(enable_max_votes_per_option => (this.enableMaxVotesPerOption = enable_max_votes_per_option));
+        this.meetingSettingsService.get(`poll_sort_poll_result_by_votes`).subscribe(sort => (this.sortByVote = sort));
     }
 
     public getDefaultPollData(contentObject?: Topic): Partial<Poll> {
         const poll: Partial<Poll> = {
             title: this.translate.instant(`Vote`),
             onehundred_percent_base: this.defaultPercentBase,
-            entitled_group_ids: this.defaultGroupIds,
+            entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             pollmethod: this.defaultPollMethod,
-            type: this.defaultPollType,
+            type: PollType.Pseudoanonymous,
             backend: PollBackendDurationType.FAST
         };
 

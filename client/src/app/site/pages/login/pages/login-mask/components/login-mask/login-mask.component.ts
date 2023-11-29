@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Observable, Subscription } from 'rxjs';
 import { fadeInAnim } from 'src/app/infrastructure/animations';
@@ -45,14 +45,16 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     /**
      * Show or hide password and change the indicator accordingly
      */
-    public hide: boolean = false;
+    public hide = false;
+
+    public loginAreaExpanded = false;
 
     private checkBrowser = true;
 
     /**
      * Reference to the SnackBarEntry for the installation notice send by the server.
      */
-    public installationNotice: string = ``;
+    public installationNotice = ``;
 
     /**
      * Login Error Message if any
@@ -73,9 +75,13 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public samlLoginButtonText: string | null = null;
 
+    public samlEnabled = true;
+
     public guestsEnabled = false;
 
     public isWaitingOnLogin = false;
+
+    public loading = true;
 
     /**
      * The message, that should appear, when the user logs in.
@@ -130,6 +136,17 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
             this.checkDevice();
         }
 
+        // check if global saml auth is enabled
+        this.subscriptions.push(
+            this.orgaSettings.getSafe(`saml_enabled`).subscribe(enabled => {
+                this.samlEnabled = enabled;
+                this.loading = false;
+            }),
+            this.orgaSettings.get(`saml_login_button_text`).subscribe(text => {
+                this.samlLoginButtonText = text;
+            })
+        );
+
         this.checkForUnsecureConnection();
     }
 
@@ -164,11 +181,24 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         this.router.navigate([`${this.currentMeetingId}/`]);
     }
 
+    public async samlLogin(): Promise<void> {
+        const redirectUrl = await this.authService.startSamlLogin();
+        location.replace(redirectUrl);
+    }
+
     /**
      * Go to the reset password view
      */
     public resetPassword(): void {
         this.router.navigate([`./forget-password`], { relativeTo: this.route });
+    }
+
+    public toggleLoginAreaExpansion(): void {
+        this.loginAreaExpanded = !this.loginAreaExpanded;
+    }
+
+    public setLoginAreaExpansion(expanded: boolean): void {
+        this.loginAreaExpanded = expanded;
     }
 
     private formatLoginInputValues(info: LoginValues): LoginValues {

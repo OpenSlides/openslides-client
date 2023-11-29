@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Action } from 'src/app/gateways/actions';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
@@ -134,7 +134,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         });
 
         if (selectedChoice) {
-            let requestData: Promise<void>[] = [];
+            const requestData: Promise<void>[] = [];
             if (selectedChoice.action === ADD) {
                 this.addTags(committees, selectedChoice);
             } else if (selectedChoice.action === REMOVE) {
@@ -146,7 +146,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
             const message = `${committees.length} ` + this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: async () => {
-                    for (let request of requestData) {
+                    for (const request of requestData) {
                         await request;
                     }
                 }

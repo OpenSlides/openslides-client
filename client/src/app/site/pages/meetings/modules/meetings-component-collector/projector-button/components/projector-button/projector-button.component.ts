@@ -34,6 +34,7 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         } else {
             this._object = null;
         }
+        this.updateIsProjected();
     }
 
     @Input()
@@ -51,6 +52,9 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     @Input()
     public blendIn = false;
 
+    @Input()
+    public disabled = false;
+
     /**
      * If this is re-defined, it will replace the usual click functionality.
      */
@@ -67,6 +71,12 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
             this.projectionDialogService.openProjectDialogFor(descriptor);
         }
     };
+
+    private _isProjected = false;
+
+    public get isProjected(): boolean {
+        return this._isProjected;
+    }
 
     private projectorRepoSub: Subscription | null = null;
 
@@ -87,6 +97,7 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
             .pipe(distinctUntilChanged())
             .subscribe(() => {
                 this.changeEvent.next();
+                this.updateIsProjected();
             });
     }
 
@@ -116,12 +127,12 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
      *
      * @returns true, if the object is projected on one projector.
      */
-    public isProjected(): boolean {
+    public updateIsProjected(): void {
         if (!this.object) {
-            return false;
+            this._isProjected = false;
         }
 
-        return this.projector
+        this._isProjected = this.projector
             ? this.projectorService.isProjectedOn(this.object, this.projector)
             : this.projectorService.isProjected(this.object);
     }

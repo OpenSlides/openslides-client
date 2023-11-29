@@ -18,6 +18,12 @@ export class ActionService {
 
     public constructor(private http: HttpService) {}
 
+    /**
+     * Registers a boolean function that will be used to check if actions should currently be allowed to be sent.
+     * If any of the registered functions returns true, no actions will be sent.
+     *
+     * @returns the index under which the function is registered. Can be used to remove it later.
+     */
     public addBeforeActionFn(fn: () => boolean): number {
         this._beforeActionFnMap[++uniqueFnId] = fn;
         return uniqueFnId;
@@ -54,11 +60,11 @@ export class ActionService {
      * @deprecated this does not offer the handle_separately route option, which is vital for certain types of bulk requests, it's better to use `createFromArray` instead.
      */
     public create<T>(...requests: ActionRequest[]): Action<T> {
-        return new Action<T>(r => this.sendRequests<T>(r) as any, ...requests);
+        return new Action<T>(r => this.sendRequests<T>(r), requests);
     }
 
     public createFromArray<T>(requests: ActionRequest[], handle_separately = false): Action<T> {
-        return new Action<T>(r => this.sendRequests<T>(r, handle_separately) as any, ...requests);
+        return new Action<T>(r => this.sendRequests<T>(r, handle_separately), requests);
     }
 
     private isAllowed(): boolean {
@@ -66,41 +72,6 @@ export class ActionService {
         if (!functions.length) {
             return true;
         }
-        return functions.some(fn => !fn());
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////// The following methods will be removed ///////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * @deprecated This will be removed pretty soon, use `create` instead!
-     * @param action
-     * @param data
-     * @returns
-     */
-    public async sendRequest<T>(action: string, data: any): Promise<T | void> {
-        const results = await this.sendRequests<T>([{ action, data: [data] }]);
-        if (!results) {
-            return;
-        }
-        if (results.length !== 1) {
-            throw new Error(`The action service did not respond with exactly one response for one request.`);
-        }
-        return results[0];
-    }
-
-    /**
-     * @deprecated This will be removed pretty soon, use `createFromArray` instead!
-     * @param action
-     * @param data
-     * @returns
-     */
-    public async sendBulkRequest<T>(action: string, data: any[]): Promise<T[] | null> {
-        const results = await this.sendRequests<T>([{ action, data }]);
-        if (results && results.length !== data.length) {
-            throw new Error(`Inner resultlength is not ${data.length} from the action service`);
-        }
-        return results;
+        return functions.every(fn => !fn());
     }
 }

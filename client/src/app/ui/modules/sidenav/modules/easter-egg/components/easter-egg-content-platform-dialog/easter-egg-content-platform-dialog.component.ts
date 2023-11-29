@@ -1,7 +1,8 @@
 import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
 import { Component } from '@angular/core';
 
-import { C4DialogModule } from '../../modules/c4-dialog/c4-dialog.module';
+import { C4DialogModule } from '../../modules/c4-dialog';
+import { ChessDialogModule } from '../../modules/chess-dialog';
 
 interface EasterEggModuleDescription {
     label: string;
@@ -14,12 +15,11 @@ interface EasterEggModuleDescription {
     styleUrls: [`./easter-egg-content-platform-dialog.component.scss`]
 })
 export class EasterEggContentPlatformDialogComponent {
-    public readonly choosableModules: EasterEggModuleDescription[] = [C4DialogModule];
+    public readonly choosableModules: EasterEggModuleDescription[] = [C4DialogModule, ChessDialogModule];
 
     public selectedModule: ComponentPortal<any> | null = new ComponentPortal(C4DialogModule.getComponent());
 
     public selectModule(component: ComponentType<any>): void {
-        console.log(`selectedModule`, component);
         this.selectedModule = new ComponentPortal(component);
     }
 }

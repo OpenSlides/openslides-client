@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, Input, ViewEncapsulation } from '@angular/core';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { HEAD_BAR_HEIGHT } from 'src/app/ui/modules/head-bar/components/head-bar/head-bar.component';
 
 import { getRecommendationTypeName } from '../../../../definitions/recommendation-type-names';
 import { ViewUnifiedChangeType } from '../../../../modules/change-recommendations/definitions/index';
@@ -34,8 +33,10 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
 
     @Input()
     public changes: ViewUnifiedChange[] = [];
+
     @Input()
     public scrollToChange: ViewUnifiedChange | null = null;
+
     @Input()
     public elContainer: any;
 
@@ -81,11 +82,7 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
 
         const element = <HTMLElement>this.elContainer;
         const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
-        const containerElement = document.querySelector(`mat-sidenav-content`);
-        containerElement!.scrollTo({
-            top: target!.getBoundingClientRect().top - HEAD_BAR_HEIGHT,
-            behavior: `smooth`
-        });
+        target.scrollIntoView({ behavior: `smooth`, block: `center` });
     }
 
     public scrollToChangeClicked(change: ViewUnifiedChange, $event: MouseEvent): void {

@@ -11,7 +11,6 @@ import { ViewMeeting } from '../../site/pages/meetings/view-models/view-meeting'
 import { ViewUser } from '../../site/pages/meetings/view-models/view-user';
 import { Fieldsets } from '../../site/services/model-request-builder';
 import { TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
-import { ActionRequest } from '../actions/action-utils';
 import { BaseRepository } from './base-repository';
 import { MeetingAction } from './meetings';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
@@ -20,7 +19,8 @@ import { UserAction } from './users/user-action';
 export enum MeetingProjectionType {
     CurrentListOfSpeakers = `current_list_of_speakers`,
     CurrentSpeakerChyron = `current_speaker_chyron`,
-    AgendaItemList = `agenda_item_list`
+    AgendaItemList = `agenda_item_list`,
+    WiFiAccess = `wifi_access_data`
 }
 
 export interface ImportMeeting {
@@ -49,15 +49,16 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         // This field is used to determine, if a user can access a meeting: It is restricted for non-authorized users
         // but always present, if the user is allowed to access the meeting. We have to always query this fields to
         // decide about the accessibility.
-        const accessField: TypedFieldset<Meeting> = [ViewMeeting.ACCESSIBILITY_FIELD];
+        const accessField: TypedFieldset<Meeting> = [];
 
         const sharedFields: TypedFieldset<Meeting> = accessField.concat([
             `name`,
+            `description`,
             `start_time`,
             `end_time`,
             `is_active_in_organization_id`,
-            `is_archived_organization_id`,
             `template_for_organization_id`,
+            `meeting_user_ids`,
             `user_ids`,
             `description`,
             `location`,
@@ -72,7 +73,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `language`
         ]);
         const detailEditFields: TypedFieldset<Meeting> = [
-            `is_template`,
             `default_meeting_for_committee_id`,
             `jitsi_domain`,
             `jitsi_room_name`,
@@ -92,7 +92,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
 
     public getTitle = (viewMeeting: ViewMeeting) => viewMeeting.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Meetings` : `Meeting`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Meetings` : `Meeting`);
 
     public getProjectorTitle = (_: ViewMeeting, projection: Projection) => {
         let title: string;
@@ -106,6 +106,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
                 break;
             case MeetingProjectionType.AgendaItemList:
                 title = this.translate.instant(`Agenda`);
+                break;
+            case MeetingProjectionType.WiFiAccess:
+                title = this.translate.instant(`Wifi access data`);
                 break;
             default:
                 console.warn(`Unknown slide type for meeting:`, projection.type);
@@ -129,24 +132,28 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return this.sendActionToBackend(MeetingAction.IMPORT, payload);
     }
 
-    public async update(update: any, meeting?: ViewMeeting, options: MeetingUserModifiedFields = {}): Promise<void> {
-        update.start_time = this.anyDateToUnix(update.start_time);
-        update.end_time = this.anyDateToUnix(update.end_time);
+    public update(update: any, meeting?: ViewMeeting, options: MeetingUserModifiedFields = {}): Action<void> {
+        if (update.start_time !== undefined || update.end_time !== undefined) {
+            update.start_time = this.anyDateToUnix(update.start_time);
+            update.end_time = this.anyDateToUnix(update.end_time);
+        }
+        if (meeting && meeting.start_time === undefined && update.start_time === null) {
+            delete update.start_time;
+        }
+        if (meeting && meeting.end_time === undefined && update.end_time === null) {
+            delete update.end_time;
+        }
+
         if (update.organization_tag_ids === null) {
             update.organization_tag_ids = [];
         }
         if (!update.id && !meeting) {
             throw new Error(`Either a meeting or an update.id has to be given`);
         }
-        const actions: ActionRequest[] = [
+        const actions: any[] = [
             {
-                action: MeetingAction.UPDATE,
-                data: [
-                    {
-                        ...update,
-                        id: update.id || meeting!.id
-                    }
-                ]
+                ...update,
+                id: update.id || meeting!.id
             }
         ];
         /**
@@ -168,16 +175,26 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             this.getNewGroupsForUsers(userUpdate, addedAdmins, meeting.id, meeting.admin_group_id);
             this.getNewGroupsForUsers(userUpdate, removedAdmins, meeting.id, meeting.admin_group_id);
         }
+        const userActions: any[] = [];
         if (Object.keys(userUpdate).length) {
-            actions.push({
-                action: UserAction.UPDATE,
-                data: Object.keys(userUpdate).map(userId => ({
+            userActions.push(
+                ...Object.keys(userUpdate).map(userId => ({
                     id: parseInt(userId, 10),
-                    group_$_ids: { [meeting!.id]: userUpdate[parseInt(userId, 10)] }
+                    meeting_id: meeting!.id,
+                    group_ids: userUpdate[parseInt(userId, 10)]
                 }))
-            });
+            );
         }
-        return this.sendActionsToBackend(actions);
+        const payload = [
+            { actionName: MeetingAction.UPDATE, data: actions },
+            { actionName: UserAction.UPDATE, data: userActions }
+        ]
+            .map(({ actionName, data }) => ({
+                actionName,
+                data: data.filter(action => Object.keys(action).length > 1)
+            }))
+            .filter(action => action.data.length);
+        return Action.from(...payload.map(data => this.createAction(data.actionName, data.data)));
     }
 
     public async delete(...meetings: Identifiable[]): Promise<void> {

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PasswordForm, PasswordFormComponent } from 'src/app/site/modules/user-components';
@@ -23,8 +23,6 @@ enum MenuItems {
     SHOW_MEETINGS = `My meetings`
 }
 
-const PERSONAL_PERMISSIONS = [`seePersonal`, `seeName`, `changePersonal`];
-
 @Component({
     selector: `os-account-dialog`,
     templateUrl: `./account-dialog.component.html`,
@@ -34,7 +32,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     @ViewChild(`changePasswordComponent`, { static: false })
     public changePasswordComponent!: PasswordFormComponent;
 
-    public readonly menuItems: MenuItem[] = [
+    private readonly menuItems: MenuItem[] = [
         {
             name: MenuItems.SHOW_PROFILE
         },
@@ -45,6 +43,13 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
             name: MenuItems.CHANGE_PASSWORD
         }
     ];
+
+    public get filteredMenuItems(): MenuItem[] {
+        if (!this.operator.user.saml_id) {
+            return this.menuItems;
+        }
+        return this.menuItems.filter(item => item.name !== MenuItems.CHANGE_PASSWORD);
+    }
 
     public readonly menuItemsRef = MenuItems;
 
@@ -85,7 +90,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     public userPasswordForm!: PasswordForm;
 
     private _self: ViewUser | null = null;
-    private _isUserInScope: boolean = false;
+    private _isUserInScope = false;
     private _isEditing = false;
 
     public constructor(
@@ -133,7 +138,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         if (!this.self) {
             return [];
         }
-        const meetingIds = this.self.group_$_ids.map(groupId => parseInt(groupId, 10));
+        const meetingIds = this.self.ensuredMeetingIds;
         return meetingIds
             .map(id => this.meetingRepo.getViewModel(id) as ViewMeeting)
             .sort((meetingA, meetingB) => meetingA.name.localeCompare(meetingB.name));

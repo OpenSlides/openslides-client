@@ -22,6 +22,14 @@
         color: mat.get-color-from-palette(if($is-dark-theme, $accent, $primary));
     }
 
+    .underlined-links a {
+        text-decoration: solid underline mat.get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.15em;
+
+        &:hover {
+            text-decoration: solid underline mat.get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.175em;
+        }
+    }
+
     .anchor-button {
         color: mat.get-color-from-palette($foreground, text) !important;
     }
@@ -63,39 +71,6 @@
         }
     }
 
-    .fake-button-no-touch {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        user-select: none;
-        border-radius: 4px;
-    }
-
-    .fake-button {
-        @extend .fake-button-no-touch;
-        cursor: pointer;
-    }
-
-    .background-default[disabled] {
-        @extend .fake-disabled;
-    }
-
-    .dialog-title {
-        font-size: 20px;
-        font-weight: 500;
-        margin: 0;
-        padding: 0;
-    }
-
-    /* Custom hint and error classes. Same values as .mat-hint and -mat-error */
-    .hint,
-    .error {
-        font-size: 75%;
-        display: block;
-    }
-
     .error,
     .warn {
         color: mat.get-color-from-palette($warn);
@@ -118,9 +93,6 @@
     }
 
     .subtitle-text {
-        font-size: 125%;
-        margin-top: 0;
-        margin-bottom: 15px;
         color: mat.get-color-from-palette(if($is-dark-theme, $accent, $primary));
     }
 
@@ -130,11 +102,6 @@
 
     .submitters-line {
         color: mat.get-color-from-palette($foreground, secondary-text);
-    }
-
-    .subtitle-nocolor {
-        font-size: 12px;
-        font-weight: 400;
     }
 
     .subtitle {
@@ -171,62 +138,8 @@
         color: mat.get-color-from-palette($foreground, text) !important;
     }
 
-    input[readonly] {
-        cursor: default;
-    }
-
-    .stretch-to-fill-parent {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-    }
-
     .icon {
         color: mat.get-color-from-palette($foreground, icon);
-    }
-
-    .small-text {
-        font-size: 12px;
-    }
-
-    .italic {
-        font-style: italic;
-    }
-
-    .white-divider {
-        border-top-color: white;
-    }
-
-    /**
-    * This primarily used to align a title and an icon in one line. The title will use the whole width subtracting
-    * the icon's width. So, the icon will be shown at the right edge.
-    */
-    .action-title {
-        display: flex;
-        align-items: center;
-
-        * {
-            padding: 0;
-            margin: 0;
-        }
-
-        > :first-child {
-            flex: 1;
-        }
-    }
-
-    .full-width {
-        width: 100%;
-    }
-
-    .full-height {
-        height: 100%;
-    }
-
-    .no-margin {
-        margin: 0;
     }
 
     /** Custom themes for NGrid. Could be an own file if it gets more */
@@ -236,28 +149,6 @@
 
     .pbl-ngrid-no-data {
         color: mat.get-color-from-palette($foreground, secondary-text);
-    }
-
-    .pbl-ngrid-row:hover {
-        background-color: rgba(0, 0, 0, 0.025);
-    }
-
-    .pbl-ngrid-header-row,
-    .pbl-ngrid-row {
-        align-items: stretch;
-    }
-
-    /**
-    * Background styles used for the global theme
-    */
-    .background-dark {
-        background: #4f4f4f;
-        color: white;
-    }
-
-    .background-dark-brighter {
-        background: #6f6f6f;
-        color: white;
     }
 
     /**
@@ -309,6 +200,10 @@
     .background-accent {
         background: mat.get-color-from-palette($accent) !important;
         color: mat.get-color-from-palette($accent, default-contrast) !important;
+
+        a {
+            color: mat.get-color-from-palette($accent, default-contrast) !important;
+        }
     }
 
     .background-warn {
@@ -380,10 +275,6 @@
 
     .text {
         color: mat.get-color-from-palette($foreground, text);
-
-        &-center {
-            text-align: center;
-        }
     }
 
     .hint {
@@ -420,16 +311,6 @@
         tr {
             border-bottom: 1px solid mat.get-color-from-palette($background, focused-button);
         }
-    }
-
-    /** remove unwanted spaces from group displays */
-    .inline-flex {
-        display: inline-flex;
-    }
-
-    .background-headbar {
-        background: var(--theme-headbar);
-        color: var(--theme-headbar-contrast) !important;
     }
 
     .sidenav-background {

@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatMenuTrigger } from '@angular/material/menu';
+import {
+    MatLegacyDialog as MatDialog,
+    MatLegacyDialogConfig as MatDialogConfig
+} from '@angular/material/legacy-dialog';
+import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
@@ -8,6 +11,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -16,6 +20,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { ChessDialogComponent } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
+import { ChessChallengeService } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
 
 import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 
@@ -66,6 +72,8 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private _userSubscription: Subscription | null = null;
     private _isAllowedSelfSetPresent = false;
     private _languageTrigger: MatMenuTrigger | undefined = undefined;
+    private clickCounter = 0;
+    private clickTimeout: number | null = null;
 
     public constructor(
         private translate: TranslateService,
@@ -77,9 +85,11 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         private theme: ThemeService,
         private meetingSettingsService: MeetingSettingsService,
         private activeMeetingIdService: ActiveMeetingIdService,
-        private controller: UserControllerService
+        private controller: UserControllerService,
+        chessChallengeService: ChessChallengeService
     ) {
         super();
+        chessChallengeService.startListening();
     }
 
     public ngOnInit(): void {
@@ -147,6 +157,25 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         buttonEvent.preventDefault();
         buttonEvent.stopPropagation();
         this.theme.toggleDarkMode();
+
+        this.clickCounter++;
+        if (this.clickTimeout) {
+            clearTimeout(<any>this.clickTimeout);
+        }
+
+        if (this.clickCounter === 4) {
+            this.clickCounter = 0;
+            const config: MatDialogConfig = mediumDialogSettings;
+            const match = this.router.url.match(/.*\/participants\/(\d+)\/?$/);
+            if (match) {
+                config.data = { userId: +match[1] };
+            }
+            this.dialog.open(ChessDialogComponent, config);
+        } else {
+            this.clickTimeout = <any>setTimeout(() => {
+                this.clickCounter = 0;
+            }, 200);
+        }
     }
 
     public getStructureLevel(): string {

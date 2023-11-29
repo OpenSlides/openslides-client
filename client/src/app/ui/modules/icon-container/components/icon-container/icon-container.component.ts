@@ -19,7 +19,7 @@ export class IconContainerComponent {
      * Input for the used icon.
      */
     @Input()
-    public icon: string = ``;
+    public icon = ``;
 
     /**
      * Optional size property. Can be large, if needed.
@@ -40,7 +40,7 @@ export class IconContainerComponent {
      * Defines a rotation of an icon in the range of 0° up to 359°.
      */
     @Input()
-    public rotation: number = 0;
+    public rotation = 0;
 
     /**
      * Reverse text and icon.
@@ -59,7 +59,7 @@ export class IconContainerComponent {
      * Optional string as tooltip for icon.
      */
     @Input()
-    public iconTooltip: string = ``;
+    public iconTooltip = ``;
 
     /**
      * Optional string as tooltip for icon.
@@ -75,6 +75,13 @@ export class IconContainerComponent {
 
     @Input()
     public color: string | undefined;
+
+    /**
+     * Will cause the content not to fill the parent element space.
+     * If swap is true this effectively causes the icon to always be right next to the content.
+     */
+    @Input()
+    public noFill = false;
 
     /**
      * Optional action for clicking on the icon.

@@ -1,22 +1,17 @@
-import { Id } from '../../definitions/key-types';
+import { Id, Ids } from '../../definitions/key-types';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
+import { HasProperties } from '../../interfaces/has-properties';
 import { AgendaItemCreation, AgendaItemType } from '../agenda/agenda-item';
 import { BaseModel } from '../base/base-model';
 import { ChangeRecoMode, LineNumberingMode } from '../motions/motions.constants';
 import { PollBackendDurationType, PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
 import { ApplauseType } from './applause';
-
-export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
-
-/**
- * Server side ballot choice definitions.
- * Server-defined methods to determine the number of ballots to print
- * Options are:
- * - NUMBER_OF_DELEGATES Amount of users belonging to the predefined 'delegates' group (group id 2)
- * - NUMBER_OF_ALL_PARTICIPANTS The amount of all registered users
- * - CUSTOM_NUMBER a given number of ballots
- */
-export type BallotPaperSelection = 'NUMBER_OF_DELEGATES' | 'NUMBER_OF_ALL_PARTICIPANTS' | 'CUSTOM_NUMBER';
+import {
+    BallotPaperSelection,
+    ExportCsvEncoding,
+    MeetingDefaultProjectorIdsKey,
+    MeetingMediafileUsageIdKey
+} from './meeting.constants';
 
 export class Settings {
     // Old "general_*" configs
@@ -32,9 +27,10 @@ export class Settings {
         [original: string]: string;
     };
 
+    public point_of_order_category_ids!: Ids;
+
     // TODO: Move to meeting. these are not settings anymore, if the meeting-detail-view
     // in the committee-list-view is finished.
-    public is_template!: boolean; // Unique within a committee
     public enable_anonymous!: boolean;
     public language!: boolean;
 
@@ -42,9 +38,6 @@ export class Settings {
     public jitsi_domain!: string;
     public jitsi_room_name!: string;
     public jitsi_room_password!: string;
-
-    // Chat
-    public enable_chat!: boolean;
 
     public conference_show!: boolean;
     public conference_auto_connect!: boolean;
@@ -97,11 +90,13 @@ export class Settings {
     public list_of_speakers_show_amount_of_speakers_on_slide!: boolean;
     public list_of_speakers_present_users_only!: boolean;
     public list_of_speakers_show_first_contribution!: boolean;
+    public list_of_speakers_enable_point_of_order_categories!: boolean;
     public list_of_speakers_enable_point_of_order_speakers!: boolean;
     public list_of_speakers_initially_closed!: boolean;
     public list_of_speakers_enable_pro_contra_speech!: boolean;
     public list_of_speakers_can_set_contribution_self!: boolean;
     public list_of_speakers_speaker_note_for_everyone!: boolean;
+    public list_of_speakers_closing_disables_point_of_order!: boolean;
 
     // Motions
     public motions_default_workflow_id!: Id; // workflow/default_workflow_meeting_id;
@@ -176,32 +171,25 @@ export class Settings {
     public assignment_poll_default_backend!: PollBackendDurationType;
 
     //topic poll
-    topic_poll_ballot_paper_selection: BallotPaperSelection;
-    topic_poll_ballot_paper_number: number;
-    topic_poll_add_candidates_to_list_of_speakers: boolean;
-    topic_poll_enable_max_votes_per_option: boolean;
-    topic_poll_sort_poll_result_by_votes: boolean;
-    topic_poll_default_type: PollType;
-    topic_poll_default_method: PollMethod;
-    topic_poll_default_onehundred_percent_base: PollPercentBase;
     topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
-    topic_poll_default_backend: PollBackendDurationType;
 
     //default poll
     poll_ballot_paper_selection: BallotPaperSelection;
     poll_ballot_paper_number: number;
-    poll_add_candidates_to_list_of_speakers: boolean;
-    poll_enable_max_votes_per_option: boolean;
     poll_sort_poll_result_by_votes: boolean;
     poll_default_type: PollType;
     poll_default_method: PollMethod;
     poll_default_onehundred_percent_base: PollPercentBase;
     poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
     poll_default_backend: PollBackendDurationType;
+
+    //SSO
+    public external_id!: string;
 }
 
 export class Meeting extends BaseModel<Meeting> {
     public static COLLECTION = `meeting`;
+    public static ACCESSIBILITY_FIELD: keyof Meeting = `projector_countdown_default_time`;
 
     public imported_at!: number;
 
@@ -237,16 +225,12 @@ export class Meeting extends BaseModel<Meeting> {
     public chat_message_ids!: Id[]; // (chat_message/meeting_id)[];
     public poll_candidate_list_ids!: Id[]; // (poll_candidate_list/meeting_id)[];
     public poll_candidate_ids!: Id[]; // (poll_candidate/meeting_id)[];
-
-    // Logos and Fonts
-    public logo_$_id!: string[]; // mediafile/used_as_logo_$<place>_in_meeting_id;
-    public font_$_id!: string[]; // mediafile/used_as_font_$<place>_in_mmeting_id;
+    public user_ids!: Id[];
 
     // Other relations
     public present_user_ids!: Id[]; // (user/is_present_in_meeting_ids)[];
-    public user_ids!: Id[]; // Calculated: All ids all users assigned to groups.
+    public meeting_user_ids!: Id[]; // Calculated: All ids all users assigned to groups.
     public reference_projector_id!: Id; // projector/used_as_reference_projector_meeting_id;
-    public default_projector_$_ids!: string[]; // projector/used_as_default_$_in_meeting_id;
 
     public default_group_id!: Id; // group/default_group_for_meeting_id;
     public admin_group_id!: Id; // group/admin_group_for_meeting_id;
@@ -259,7 +243,7 @@ export class Meeting extends BaseModel<Meeting> {
 
     public organization_tag_ids!: Id[]; // (organization_tag/meeting_ids)[];
     public is_active_in_organization_id!: Id; // (organization/active_meeting_ids)[];
-    public is_archived_organization_id!: Id; // (organization/archived_meeting_ids)[];
+    public is_archived_in_organization_id!: Id; // (organization/archived_meeting_ids)[];
     public template_for_organization_id!: Id; // (organization/template_meeting_ids)[];
 
     public constructor(input?: any) {
@@ -267,23 +251,25 @@ export class Meeting extends BaseModel<Meeting> {
     }
 
     public logo_id(place: string): Id | null {
-        return (this[`logo_$${place}_id` as keyof Meeting] as Id) || null;
+        return (this[`logo_${place}_id` as keyof Meeting] as Id) || null;
     }
 
     public font_id(place: string): Id | null {
-        return (this[`font_$${place}_id` as keyof Meeting] as Id) || null;
+        return (this[`font_${place}_id` as keyof Meeting] as Id) || null;
     }
 
     public default_projector_ids(place: string): Id[] | null {
-        return (this[`default_projector_$${place}_ids` as keyof Meeting] as Id[]) || [];
+        return (this[`default_projector_${place}_ids` as keyof Meeting] as Id[]) || [];
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Meeting | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Meeting)[] = [
         `id`,
+        `external_id`,
         `welcome_title`,
         `welcome_text`,
         `name`,
         `is_active_in_organization_id`,
+        `is_archived_in_organization_id`,
         `description`,
         `location`,
         `start_time`,
@@ -338,6 +324,8 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_present_users_only`,
         `list_of_speakers_show_first_contribution`,
         `list_of_speakers_enable_point_of_order_speakers`,
+        `list_of_speakers_enable_point_of_order_categories`,
+        `list_of_speakers_closing_disables_point_of_order`,
         `list_of_speakers_enable_pro_contra_speech`,
         `list_of_speakers_can_set_contribution_self`,
         `list_of_speakers_speaker_note_for_everyone`,
@@ -383,6 +371,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_poll_default_backend`,
         `poll_candidate_list_ids`,
         `poll_candidate_ids`,
+        `meeting_user_ids`,
+        `user_ids`,
         `users_enable_presence_view`,
         `users_enable_vote_weight`,
         `users_allow_self_set_present`,
@@ -424,6 +414,7 @@ export class Meeting extends BaseModel<Meeting> {
         `tag_ids`,
         `agenda_item_ids`,
         `list_of_speakers_ids`,
+        `point_of_order_category_ids`,
         `speaker_ids`,
         `topic_ids`,
         `group_ids`,
@@ -447,20 +438,50 @@ export class Meeting extends BaseModel<Meeting> {
         `personal_note_ids`,
         `chat_group_ids`,
         `chat_message_ids`,
-        { templateField: `logo_$_id` },
-        { templateField: `font_$_id` },
+        `logo_projector_main_id`,
+        `logo_projector_header_id`,
+        `logo_web_header_id`,
+        `logo_pdf_header_l_id`,
+        `logo_pdf_header_r_id`,
+        `logo_pdf_footer_l_id`,
+        `logo_pdf_footer_r_id`,
+        `logo_pdf_ballot_paper_id`,
+        `font_regular_id`,
+        `font_italic_id`,
+        `font_bold_id`,
+        `font_bold_italic_id`,
+        `font_monospace_id`,
+        `font_chyron_speaker_name_id`,
+        `font_projector_h1_id`,
+        `font_projector_h2_id`,
         `committee_id`,
         `default_meeting_for_committee_id`,
         `organization_tag_ids`,
         `present_user_ids`,
-        `user_ids`,
         `reference_projector_id`,
         `list_of_speakers_countdown_id`,
         `poll_countdown_id`,
-        { templateField: `default_projector_$_ids` },
         `projection_ids`,
+        `default_projector_agenda_item_list_ids`,
+        `default_projector_topic_ids`,
+        `default_projector_list_of_speakers_ids`,
+        `default_projector_current_list_of_speakers_ids`,
+        `default_projector_motion_ids`,
+        `default_projector_amendment_ids`,
+        `default_projector_motion_block_ids`,
+        `default_projector_assignment_ids`,
+        `default_projector_mediafile_ids`,
+        `default_projector_message_ids`,
+        `default_projector_countdown_ids`,
+        `default_projector_assignment_poll_ids`,
+        `default_projector_motion_poll_ids`,
+        `default_projector_poll_ids`,
         `default_group_id`,
         `admin_group_id`
     ];
 }
-export interface Meeting extends Settings, HasProjectionIds {}
+export interface Meeting
+    extends Settings,
+        HasProjectionIds,
+        HasProperties<MeetingMediafileUsageIdKey, number>,
+        HasProperties<MeetingDefaultProjectorIdsKey, number[]> {}

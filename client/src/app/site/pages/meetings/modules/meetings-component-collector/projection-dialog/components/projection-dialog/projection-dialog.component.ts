@@ -1,5 +1,8 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+    MatLegacyDialogRef as MatDialogRef
+} from '@angular/material/legacy-dialog';
 import { Subscription } from 'rxjs';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import {
@@ -54,7 +57,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
                         this.descriptor.projectionDefault
                     );
 
-                    for (let defaultProjector of defaultProjectors) {
+                    for (const defaultProjector of defaultProjectors) {
                         if (!this.selectedProjectors.includes(defaultProjector)) {
                             this.selectedProjectors.push(defaultProjector);
                         }

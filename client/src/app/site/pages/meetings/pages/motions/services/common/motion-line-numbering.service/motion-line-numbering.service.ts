@@ -157,7 +157,7 @@ export class MotionLineNumberingService {
         return this.getTextParagraphs(parent!, true, lineLength).map((paragraph: string, index: number) => {
             let localParagraph: string;
             if (motion.hasLeadMotion) {
-                localParagraph = motion.amendment_paragraph(index) ?? paragraph;
+                localParagraph = motion.amendment_paragraph_text(index) ?? paragraph;
             } else {
                 localParagraph = paragraph;
             }
@@ -179,7 +179,7 @@ export class MotionLineNumberingService {
     }
 
     /**
-     * Returns the amended paragraphs by an amendment. Correlates to the amendment_paragraph field,
+     * Returns the amended paragraphs by an amendment. Correlates to the amendment_paragraphs field,
      * but also considers relevant change recommendations.
      * The returned array includes "null" values for paragraphs that have not been changed.
      *
@@ -214,10 +214,10 @@ export class MotionLineNumberingService {
                 return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
             }
 
-            if (typeof amendment.amendment_paragraph(paraNo) === `string`) {
+            if (typeof amendment.amendment_paragraph_text(paraNo) === `string`) {
                 // Add line numbers to newText, relative to the baseParagraph, by creating a diff
                 // to the line numbered base version any applying it right away
-                const diff = this.diffService.diff(paragraph, amendment.amendment_paragraph(paraNo)!);
+                const diff = this.diffService.diff(paragraph, amendment.amendment_paragraph_text(paraNo)!);
                 paragraph = this.diffService.diffHtmlToFinalText(diff);
                 paragraphHasChanges = true;
             }
@@ -270,7 +270,7 @@ export class MotionLineNumberingService {
         let amendmentParagraphs: string[] = [];
         if (crMode === ChangeRecoMode.Original) {
             amendmentParagraphs = baseParagraphs.map(
-                (_: string, paraNo: number) => amendment.amendment_paragraph(paraNo) as string
+                (_: string, paraNo: number) => amendment.amendment_paragraph_text(paraNo) as string
             );
         } else {
             amendmentParagraphs = this.applyChangesToAmendment(
@@ -390,7 +390,7 @@ export class MotionLineNumberingService {
 
     /**
      * For unchanged paragraphs, this returns the original motion paragraph, including line numbers.
-     * For changed paragraphs, this returns the content of the amendment_paragraph-field,
+     * For changed paragraphs, this returns the content of the amendment_paragraphs-field,
      *     but including line numbers relative to the original motion line numbers,
      *     so they can be used for the amendment change recommendations
      *
@@ -412,8 +412,8 @@ export class MotionLineNumberingService {
                 throw new Error(`Inconsistent data. An amendment is probably referring to a non-existent line number.`);
             }
 
-            const newText = amendment.amendment_paragraph(paraNo);
-            if (!newText) {
+            const newText = amendment.amendment_paragraph_text(paraNo);
+            if (newText === null) {
                 return origText;
             }
 
@@ -436,8 +436,8 @@ export class MotionLineNumberingService {
             const parent = amendment.lead_motion as ViewMotion;
 
             return this.getTextParagraphs(parent, true, lineLength).map((paragraph: string, index: number) => {
-                const diffedParagraph = amendment.amendment_paragraph(index)
-                    ? this.diffService.diff(paragraph, amendment.amendment_paragraph(index) as string, lineLength)
+                const diffedParagraph = amendment.amendment_paragraph_text(index)
+                    ? this.diffService.diff(paragraph, amendment.amendment_paragraph_text(index) as string, lineLength)
                     : paragraph;
                 return this.extractAffectedParagraphs(diffedParagraph, index);
             });

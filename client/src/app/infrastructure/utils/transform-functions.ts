@@ -1,7 +1,6 @@
 import { Collection, Field, Fqfield, Fqid, Id } from '../../domain/definitions/key-types';
 
 const KEYSEPERATOR = `/`;
-const TEMPLATE_FIELD_INDICATOR = `$`;
 
 export function copy<T>(model: T, modelHeaders: (keyof T)[] = []): T {
     if (!modelHeaders.length) {
@@ -12,15 +11,19 @@ export function copy<T>(model: T, modelHeaders: (keyof T)[] = []): T {
 }
 
 export function deepCopy<T>(model: T): T {
-    let tmp: any;
     if (!model) {
         return model;
     }
+    let tmp: any;
     if (Array.isArray(model)) {
         tmp = [];
         model.forEach((entry, index) => (tmp[index] = deepCopy(entry)));
     } else if (model instanceof Map) {
-        throw new Error(`Currently not supported!`);
+        return new Map(
+            Array.from(model.entries()).map(entry => [deepCopy(entry[0]), deepCopy(entry[1])])
+        ) as typeof model;
+    } else if (model instanceof Date) {
+        tmp = new Date(model);
     } else if (model instanceof Object) {
         tmp = {};
         Object.keys(model).forEach(key => (tmp[key] = deepCopy(model[key as keyof T])));
@@ -69,13 +72,4 @@ export function collectionFromFqid(fqid: Fqid): Collection {
 
 export function isFqid(field: string): boolean {
     return new RegExp(`^[a-z_]+${KEYSEPERATOR}[1-9][0-9]*$`).test(field);
-}
-
-export function isTemplateField(field: string): boolean {
-    return new RegExp(`.*${TEMPLATE_FIELD_INDICATOR}.*`).test(field);
-}
-
-// E.g. (group_$_ids, 4) -> group_$4_ids
-export function fillTemplateValueInTemplateField(field: string, value: any): Field {
-    return field.replace(TEMPLATE_FIELD_INDICATOR, TEMPLATE_FIELD_INDICATOR + value);
 }

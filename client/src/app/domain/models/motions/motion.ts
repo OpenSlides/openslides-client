@@ -50,10 +50,11 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
      */
     public tree_weight!: number;
     public created!: number;
+    public workflow_timestamp!: number;
     public forwarded!: number; // It's a timestamp
     public last_modified!: number;
     public start_line_number!: number;
-    public amendment_paragraph_$!: number[];
+    public amendment_paragraphs!: { [key: number]: string };
 
     public lead_motion_id!: Id; // motion/amendment_ids;
     public amendment_ids!: Id[]; // (motion/lead_motion_id)[];
@@ -73,7 +74,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public category_id!: Id; // category/motion_ids;
     public block_id!: Id; // block/motion_ids;
     public submitter_ids!: Id[]; // (motion_submitter/motion_id)[];
-    public supporter_ids!: Id[]; // (user/supported_motion_$<meeting_id>_ids)[];
+    public supporter_meeting_user_ids!: Id[]; // (_meeting_user/supported_motion_ids)[];
     public poll_ids!: Id[]; // (motion_poll/motion_id)[];
     public change_recommendation_ids!: Id[]; // (motion_change_recommendation/motion_id)[];
     public statute_paragraph_id!: Id; // motion_statute_paragraph/motion_ids;
@@ -83,21 +84,25 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         return this.start_line_number || 1;
     }
 
+    public get amendment_paragraph_numbers(): number[] {
+        return this.amendment_paragraphs ? Object.keys(this.amendment_paragraphs).map(key => Number(key)) : [];
+    }
+
     public constructor(input?: any) {
         super(Motion.COLLECTION, input);
     }
 
-    public amendment_paragraph(paragraphNumber: number): string | null {
-        return ((this as any)[`amendment_paragraph_$${paragraphNumber}`] as string) ?? null;
+    public amendment_paragraph_text(paragraphNumber: number): string | null {
+        return this.amendment_paragraphs[paragraphNumber] ?? null;
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Motion | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Motion)[] = [
         `id`,
         `number`,
         `sequential_number`,
         `title`,
         `text`,
-        { templateField: `amendment_paragraph_$` },
+        `amendment_paragraphs`,
         `modified_final_version`,
         `reason`,
         `category_weight`,
@@ -106,6 +111,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `sort_weight`,
         `created`,
         `last_modified`,
+        `workflow_timestamp`,
         `start_line_number`,
         `forwarded`,
         `lead_motion_id`,
@@ -126,7 +132,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `category_id`,
         `block_id`,
         `submitter_ids`,
-        `supporter_ids`,
+        `supporter_meeting_user_ids`,
         `poll_ids`,
         `change_recommendation_ids`,
         `statute_paragraph_id`,

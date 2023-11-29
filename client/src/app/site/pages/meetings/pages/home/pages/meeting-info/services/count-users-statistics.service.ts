@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpService } from 'src/app/gateways/http.service';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-
-import { CountUsersService } from './count-users.service';
+import { AUTOUPDATE_DEFAULT_ENDPOINT } from 'src/app/site/services/autoupdate';
 
 /**
  * The format of the count statistic
@@ -19,6 +18,7 @@ export interface CountUserStatistics {
                 [id: number]: number;
             };
             userHandleCount: number;
+            meeting_id?: number;
         };
     };
 }
@@ -29,13 +29,20 @@ export const DEFAULT_COUNT_USERS_OBJECT: CountUserStatistics = {
     groups: {}
 };
 
+const CONNECTION_COUNT_PATH = `/system/${AUTOUPDATE_DEFAULT_ENDPOINT}/connection_count`;
+
 @Injectable({
     providedIn: `root`
 })
 export class CountUsersStatisticsService {
-    private runningCounts: { [token: string]: BehaviorSubject<CountUserStatistics> } = {};
+    public get lastUpdated(): number {
+        return this._lastUpdated;
+    }
 
-    public constructor(private countUserService: CountUsersService, private userRepo: UserRepositoryService) {}
+    private currentCount: CountUserStatistics;
+    private _lastUpdated: number;
+
+    public constructor(private http: HttpService, private userRepo: UserRepositoryService) {}
 
     /**
      * Starts counting users.
@@ -43,59 +50,42 @@ export class CountUsersStatisticsService {
      * @returns a 2-tuple: A token to stop the counting with `stopCounting` and
      * an observable where the statistics are published.
      */
-    public countUsers(): [string, Observable<CountUserStatistics>] {
-        // Start counting
-        // TODO: maybe we shold bet the observable bofore the actual countig was
-        // started. We might miss some user ids.
-        const [token, userDataObservable] = this.countUserService.countUsers();
-        this.runningCounts[token] = new BehaviorSubject<CountUserStatistics>({
-            activeUserHandles: 0,
-            activeUsers: {},
+    public async countUsers(): Promise<CountUserStatistics> {
+        const raw = await this.http.get<{ [key: string]: number }>(CONNECTION_COUNT_PATH);
+        this._lastUpdated = Date.now();
+        const entries = Object.entries(raw).filter(
+            entry => entry[1] > 0 && this.userRepo.getViewModel(+entry[0])?.getMeetingUser()
+        );
+        const users = Object.fromEntries(entries);
+        const result = {
+            activeUserHandles: entries
+                .map(entry => entry[1])
+                .reduce((previousValue, currentValue) => (previousValue ?? 0) + currentValue),
+            activeUsers: users,
             groups: {}
-        });
+        };
+        entries.forEach(entry => {
+            const userId = !!entry[0] ? +entry[0] : 0;
 
-        // subscribe to responses
-        userDataObservable.subscribe(data => {
-            const userId = !!data.userId ? data.userId : 0;
-
-            const stats = this.runningCounts[token].getValue();
             const user = this.userRepo.getViewModel(userId);
-
-            // Add to user stats
-            stats.activeUserHandles++;
-            if (!stats.activeUsers[userId]) {
-                stats.activeUsers[userId] = 0;
-            }
-            stats.activeUsers[userId]++;
 
             // Add to group stats
             const groups = user ? user.groups() : [];
             groups.forEach(group => {
-                if (!stats.groups[group.id]) {
-                    stats.groups[group.id] = {
+                if (!result.groups[group.id]) {
+                    result.groups[group.id] = {
                         name: group.name,
                         users: {},
-                        userHandleCount: 0
+                        userHandleCount: 0,
+                        meeting_id: group.meeting_id
                     };
                 }
-                stats.groups[group.id].userHandleCount++;
-                stats.groups[group.id].users[userId] = stats.activeUsers[userId];
+                result.groups[group.id].userHandleCount += entry[1];
+                result.groups[group.id].users[userId] = result.activeUsers[userId];
             });
-            this.runningCounts[token].next(stats);
         });
 
-        return [token, this.runningCounts[token]];
-    }
-
-    /**
-     * Stop an active count.
-     *
-     * @param token The token to identify the current count
-     */
-    public stopCounting(token: string): void {
-        if (this.runningCounts[token]) {
-            this.runningCounts[token].complete();
-            delete this.runningCounts[token];
-        }
+        this.currentCount = result;
+        return this.currentCount;
     }
 }

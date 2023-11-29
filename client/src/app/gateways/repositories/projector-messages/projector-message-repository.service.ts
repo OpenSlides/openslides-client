@@ -17,9 +17,10 @@ export class ProjectorMessageRepositoryService extends BaseMeetingRelatedReposit
     public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, ProjectorMessage);
     }
-    public getTitle = (viewProjectorMessage: ViewProjectorMessage) => this.getVerboseName();
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Messages` : `Message`);
+    public getTitle = () => this.getVerboseName();
+
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Messages` : `Message`);
 
     public async create(payload: any): Promise<Identifiable> {
         return await this.sendActionToBackend(ProjectorMessageAction.CREATE, payload);

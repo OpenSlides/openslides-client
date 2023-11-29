@@ -1,4 +1,4 @@
-<div class="filter-menu-content-wrapper">
+<div [ngClass]="{ 'filter-menu-content-wrapper': true, 'spacer-bottom-60': showSpacer }">
     <mat-accordion (keyup)="checkKeyEvent($event)">
         <mat-expansion-panel *ngFor="let filter of service.filterDefinitionsObservable | async">
             <mat-expansion-panel-header *ngIf="filter && filter.options && filter.options.length">

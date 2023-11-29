@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
@@ -23,7 +23,16 @@ export class UserMultiselectActionsComponent extends BaseComponent {
     public canManage = true;
 
     @Input()
-    public selectedUsers: ViewUser[] = [];
+    public set selectedUsers(users: ViewUser[]) {
+        if (users.length !== this._selectedUsers.length) {
+            this.calculateMetaData(users);
+        }
+        this._selectedUsers = users;
+    }
+
+    public get selectedUsers(): ViewUser[] {
+        return this._selectedUsers;
+    }
 
     @Output()
     public deleting = new EventEmitter<void>();
@@ -36,6 +45,10 @@ export class UserMultiselectActionsComponent extends BaseComponent {
 
     @Output()
     public selectedUsersChange = new EventEmitter<ViewUser[]>();
+
+    public hasSelectedNonSamlUsers = false;
+
+    private _selectedUsers: ViewUser[] = [];
 
     public constructor(
         private operator: OperatorService,
@@ -110,5 +123,9 @@ export class UserMultiselectActionsComponent extends BaseComponent {
      */
     public deleteSelected(): void {
         this.deleting.emit();
+    }
+
+    private calculateMetaData(users: ViewUser[]): void {
+        this.hasSelectedNonSamlUsers = users.some(user => !user.saml_id);
     }
 }

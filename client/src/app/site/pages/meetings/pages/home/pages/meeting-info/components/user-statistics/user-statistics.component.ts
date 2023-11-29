@@ -70,7 +70,7 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.speakerListRepo.getViewModelListObservable().subscribe(value => {
+            this.speakerListRepo.getViewModelListObservable().subscribe(() => {
                 this.updateRelationSpeakingTimeStructureLevelSubject();
             })
         );
@@ -91,7 +91,7 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
     /**
      * Creates a string from a given `TimeObject`.
      */
-    public parseDuration(time: number | null, withHours: boolean = false): string {
+    public parseDuration(time: number | null, withHours = false): string {
         if (!time) {
             return ``;
         }

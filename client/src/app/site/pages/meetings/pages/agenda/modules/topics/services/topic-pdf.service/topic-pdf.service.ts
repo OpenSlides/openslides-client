@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Content, ContentText } from 'pdfmake/interfaces';
 import { PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
 import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 import {
@@ -51,7 +52,7 @@ export class TopicPdfService {
      * @param topic the ViewTopic to create the document for
      * @returns a pdfmake compatible document as document
      */
-    private topicToDocDef(topic: ViewTopic): object {
+    private topicToDocDef(topic: ViewTopic): Content[] {
         const title = this.createTitle(topic);
         const text = this.createTextContent(topic);
         const pollResult = this.createPollResultTable(topic.polls);
@@ -66,9 +67,9 @@ export class TopicPdfService {
      * @param topic the ViewTopic to create the document for
      * @returns the title part of the document
      */
-    private createTitle(topic: ViewTopic): object {
+    private createTitle(topic: ViewTopic): ContentText {
         return {
-            text: topic.title,
+            text: topic.getListTitle(),
             style: `title`
         };
     }
@@ -79,11 +80,11 @@ export class TopicPdfService {
      * @param topic the ViewTopic to create the document for
      * @returns the description of the topic
      */
-    private createTextContent(topic: ViewTopic): object {
+    private createTextContent(topic: ViewTopic): Content {
         if (topic.text) {
             return this.htmlToPdfService.addPlainText(topic.text);
         } else {
-            return {};
+            return [];
         }
     }
 
@@ -94,7 +95,7 @@ export class TopicPdfService {
      * @param polls the ViewPoll objects to create the document for
      * @returns the table as pdfmake object
      */
-    private createPollResultTable(polls: ViewPoll[]): object {
+    private createPollResultTable(polls: ViewPoll[]): Content[] {
         const resultBody = [];
         for (const poll of polls) {
             if (poll.isPublished) {

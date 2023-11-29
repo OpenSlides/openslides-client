@@ -13,6 +13,7 @@ import { MotionBlockControllerService } from '../../../modules/motion-blocks/ser
 import { TagControllerService } from '../../../modules/tags/services';
 import { getMotionExportHeadersAndVerboseNames } from '../../../services/export/definitions';
 import { MotionCsvExportService } from '../../../services/export/motion-csv-export.service';
+import { ViewMotion } from '../../../view-models';
 import { CategoryImportHelper } from '../import/category-import-helper';
 import { MotionBlockImportHelper } from '../import/motion-block-import-helper';
 import { TagImportHelper } from '../import/tag-import-helper';
@@ -28,7 +29,7 @@ const SUPPORTER_PROPERTY = `supporters`;
 @Injectable({
     providedIn: MotionsImportServiceModule
 })
-export class MotionImportService extends BaseImportService<Motion> {
+export class MotionImportService extends BaseImportService<ViewMotion> {
     /**
      * List of possible errors and their verbose explanation
      */
@@ -70,7 +71,7 @@ export class MotionImportService extends BaseImportService<Motion> {
         this.exporter.exportDummyMotion();
     }
 
-    protected getConfig(): ImportConfig<Motion> {
+    protected getConfig(): ImportConfig<ViewMotion> {
         return {
             modelHeadersAndVerboseNames: getMotionExportHeadersAndVerboseNames(),
             verboseNameFn: plural => this.repo.getVerboseName(plural),
@@ -80,7 +81,7 @@ export class MotionImportService extends BaseImportService<Motion> {
         };
     }
 
-    protected override getBeforeImportHelpers(): { [key: string]: BeforeImportHandler<Motion> } {
+    protected override getBeforeImportHelpers(): { [key: string]: BeforeImportHandler<ViewMotion> } {
         return {
             [MOTION_BLOCK_PROPERTY]: new MotionBlockImportHelper(this.motionBlockRepo, this.translate),
             [CATEGORY_PROPERTY]: new CategoryImportHelper(this.categoryRepo, this.translate),
@@ -94,13 +95,13 @@ export class MotionImportService extends BaseImportService<Motion> {
             [SUPPORTER_PROPERTY]: new UserImportHelper({
                 repo: this.userRepo,
                 verboseName: `Supporters`,
-                property: `supporter_ids`,
+                property: `supporter_user_ids`,
                 importedAs: SUPPORTER_PROPERTY
             })
         };
     }
 
-    protected override pipeParseValue(value: string, header: keyof Motion): any {
+    protected override pipeParseValue(value: string, header: keyof ViewMotion): any {
         if (header === TEXT_PROPERTY && value) {
             const isSurroundedByHTMLTags = /^<\w+[^>]*>[\w\W]*?<\/\w>$/.test(value);
 

@@ -14,7 +14,6 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { SidenavComponent } from 'src/app/ui/modules/sidenav/components/sidenav/sidenav.component';
 
 import { ChatNotificationService, ChatService } from '../../../../pages/chat';
-import { CountUsersService } from '../../../../pages/home/pages/meeting-info/services/count-users.service';
 import { LoadFontService } from '../../../../services/load-font.service';
 
 @Component({
@@ -33,7 +32,7 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
     /**
      * is the user logged in, or the anonymous is active.
      */
-    public isLoggedIn: boolean = false;
+    public isLoggedIn = false;
 
     public get mainMenuEntries(): MainMenuEntry[] {
         return this.mainMenuService.entries;
@@ -62,7 +61,6 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
         componentServiceCollector: MeetingComponentServiceCollectorService,
         _loadFontService: LoadFontService, // just to initialize this service
         _notifyService: NotifyService, // just to initialize this service
-        _countUsersService: CountUsersService, // just to initialize this service
         protected override translate: TranslateService,
         private vp: ViewPortService,
         private mainMenuService: MainMenuService,

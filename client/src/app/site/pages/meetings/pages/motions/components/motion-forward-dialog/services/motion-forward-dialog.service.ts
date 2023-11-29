@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
@@ -32,7 +32,7 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
     private _forwardingCommitteesSubject = new BehaviorSubject<(Partial<ViewCommittee> & Selectable)[]>([]);
 
     private _forwardingMeetings: GetForwardingMeetingsPresenter[] = [];
-    private _forwardingMeetingsUpdateRequired: boolean = true;
+    private _forwardingMeetingsUpdateRequired = true;
 
     public constructor(
         dialog: MatDialog,

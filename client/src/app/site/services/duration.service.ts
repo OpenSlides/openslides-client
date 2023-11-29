@@ -46,7 +46,7 @@ export class DurationService {
      * from the duration text.
      * @returns time in minutes or seconds or 0 if values are below 0 or no parsable numbers
      */
-    public stringToDuration(durationText: string = ``, suffix: 'h' | 'm' = `h`): number {
+    public stringToDuration(durationText = ``, suffix: 'h' | 'm' = `h`): number {
         const splitDuration = durationText.replace(suffix, ``).split(`:`);
         let time: number | null = null;
         if (splitDuration.length > 1 && !isNaN(+splitDuration[0]) && !isNaN(+splitDuration[1])) {
@@ -63,18 +63,22 @@ export class DurationService {
     }
 
     /**
-     * Calculates a given time to a readable string, that contains hours, minutes and seconds.
+     * Calculates a given time to a readable string, that contains hours and minutes.
      *
      * @param duration The time as number (in seconds).
      *
      * @returns A readable time-string.
      */
     public durationToStringWithHours(duration: number): string {
+        let prefix = ``;
+        if (duration < 0) {
+            prefix = `-`;
+            duration *= -1;
+        }
         const hours = Math.floor(duration / 3600);
         const minutes = `0${Math.floor((duration % 3600) / 60)}`.slice(-2);
-        const seconds = `0${Math.floor(duration % 60)}`.slice(-2);
-        if (!isNaN(+minutes) && !isNaN(+seconds)) {
-            return `${hours}:${minutes}:${seconds} h`;
+        if (!isNaN(+minutes)) {
+            return `${prefix}${hours}:${minutes} h`;
         } else {
             return ``;
         }

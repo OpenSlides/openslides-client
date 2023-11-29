@@ -33,6 +33,8 @@ export class ActionWorkerWatchService {
 
     private _waitingForDeletion: number[] = [];
 
+    private _confirmationToWaitTimestamps: { [id: number]: number } = {};
+
     public constructor(
         private actionWorkerRepo: ActionWorkerRepositoryService,
         private modelRequestService: ModelRequestService,
@@ -45,7 +47,7 @@ export class ActionWorkerWatchService {
             );
     }
 
-    public async watch<T>(originalResponse: HttpResponse<T>, watchActivity: boolean): Promise<HttpResponse<T>> {
+    public async watch<T>(originalResponse: HttpResponse<T>, watchActivity: boolean): Promise<HttpResponse<any>> {
         const actionName = originalResponse.body[`results`][0][0][`name`];
         const fqid: string = originalResponse.body[`results`][0][0][`fqid`];
         const id = idFromFqid(fqid);
@@ -67,7 +69,8 @@ export class ActionWorkerWatchService {
         try {
             worker = await this.getFinishedWorker(id, watchActivity, true);
         } catch (e) {
-            throw new Error(`Client has stopped watching worker: ` + actionName + ` (${e.message})`);
+            this.unsubscribeFromWorker(id);
+            throw new Error(`Client has stopped watching worker "` + actionName + `": ${e.message}`);
         }
         this.dialogService.removeAllDates(id);
         this.unsubscribeFromWorker(id);
@@ -80,7 +83,7 @@ export class ActionWorkerWatchService {
                     statusText: worker.result?.message
                 });
             } else {
-                return new HttpResponse<T>({
+                return new HttpResponse<{ status_code: number; success: boolean; message: string; results: any }>({
                     body: worker.result,
                     headers: originalResponse.headers,
                     status: worker.result?.status_code,
@@ -139,7 +142,11 @@ export class ActionWorkerWatchService {
     public async unsubscribeFromAllWorkers(): Promise<void> {
         const ids = this._currentWorkerIds || [];
         this._currentWorkerIds = [];
-        await this.refreshAutoupdateSubscription(ids);
+        await this.markForWorkerDeletion(ids);
+    }
+
+    public setWaitingConfirmed(workerId: number): void {
+        this._confirmationToWaitTimestamps[workerId] = Date.now();
     }
 
     private async markForWorkerDeletion(workerIds: number[]): Promise<void> {
@@ -186,7 +193,7 @@ export class ActionWorkerWatchService {
             this.modelRequestService.closeSubscription(ACTION_WORKER_SUBSCRIPTION);
         }
         if (oldIds) {
-            this._toBeDeleted.concat(
+            this._toBeDeleted = this._toBeDeleted.concat(
                 oldIds.map(id => {
                     return { workerId: id, timestamp: Date.now() };
                 })
@@ -206,6 +213,7 @@ export class ActionWorkerWatchService {
         let hasReportedInactivity = false;
         let hasReportedSlowness = false;
         let lastRefreshedInactivityReport = 0;
+        let dataLoaded = false;
         const actionWorker = (
             await firstValueFrom(
                 combineLatest([this._workerObservable, timer(0, 2000)]).pipe(
@@ -213,35 +221,42 @@ export class ActionWorkerWatchService {
                     map(data => data[0]),
                     filter(data => {
                         const date = data.find(worker => worker.id === id);
-                        if (date && watchActivity && !date.hasPassedDeathThreshold) {
-                            let reason: WaitForActionReason;
-                            if (!hasReportedSlowness && date.isSlow) {
-                                hasReportedSlowness = true;
-                                reason = waitForActionReason.slow;
+                        if (date) {
+                            dataLoaded = true;
+                            if (watchActivity && !date.hasPassedDeathThreshold) {
+                                let reason: WaitForActionReason;
+                                if (!hasReportedSlowness && date.isSlow) {
+                                    hasReportedSlowness = true;
+                                    reason = waitForActionReason.slow;
+                                }
+                                if (
+                                    hasReportedInactivity &&
+                                    this._confirmationToWaitTimestamps[date.id] &&
+                                    this._confirmationToWaitTimestamps[date.id] > lastRefreshedInactivityReport &&
+                                    this._confirmationToWaitTimestamps[date.id] < Date.now() - 1000 * 60 * 5
+                                ) {
+                                    // Resend inactivity dialog at least 5 minutes after last confirmation
+                                    hasReportedInactivity = false;
+                                    lastRefreshedInactivityReport = Date.now();
+                                }
+                                if (!hasReportedInactivity && date.hasPassedInactivityThreshold) {
+                                    hasReportedInactivity = true;
+                                    reason = waitForActionReason.inactive;
+                                }
+                                if (reason) {
+                                    this.openWaitingPrompt(id, reason, date.name);
+                                }
                             }
-                            if (
-                                hasReportedInactivity &&
-                                date.lastConfirmationToWaitTimestamp &&
-                                date.lastConfirmationToWaitTimestamp > lastRefreshedInactivityReport &&
-                                date.lastConfirmationToWaitTimestamp < Date.now() - 1000 * 60 * 5
-                            ) {
-                                // Resend inactivity dialog at least 5 minutes after last confirmation
-                                hasReportedInactivity = false;
-                                lastRefreshedInactivityReport = Date.now();
+                            if (date.hasPassedDeathThreshold) {
+                                this.showClosingPrompt(date);
+                                throw new Error(`Process has been assumed to be dead`);
                             }
-                            if (!hasReportedInactivity && date.hasPassedInactivityThreshold) {
-                                hasReportedInactivity = true;
-                                reason = waitForActionReason.inactive;
-                            }
-                            if (reason) {
-                                this.openWaitingPrompt(id, reason, date.name);
-                            }
+                            return date.state !== ActionWorkerState.running;
+                        } else if (dataLoaded) {
+                            throw new Error(`Stopped listening`);
+                        } else {
+                            return false;
                         }
-                        if (date && date.hasPassedDeathThreshold) {
-                            this.showClosingPrompt(date);
-                            throw new Error(`Process has been assumed to be dead`);
-                        }
-                        return date && date.state !== ActionWorkerState.running;
                     })
                 )
             )

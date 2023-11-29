@@ -30,7 +30,7 @@ export class SidenavComponent {
     }
 
     public get isOpen(): boolean {
-        return this.isMobile ? this.sideNav?.opened : this.desktopOpen;
+        return this.isMobile ? this.sideNav?.opened ?? false : this.desktopOpen;
     }
 
     public constructor(private vp: ViewPortService) {}

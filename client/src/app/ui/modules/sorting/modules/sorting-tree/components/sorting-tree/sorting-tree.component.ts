@@ -5,6 +5,7 @@ import { Component, ContentChild, EventEmitter, Input, OnDestroy, Output, Templa
 import { auditTime, Observable, Subscription } from 'rxjs';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
 import { FlatNode, TreeIdNode } from 'src/app/infrastructure/definitions/tree';
+import { findIndexInSortedArray } from 'src/app/infrastructure/utils';
 import { SortDefinition } from 'src/app/site/base/base-sort.service';
 
 import { TreeService, TreeSortService } from '../../services';
@@ -43,7 +44,7 @@ interface DragEvent {
 class Movement {
     public verticalMove: Direction.DOWNWARDS | Direction.UPWARDS | Direction.NOWAY = Direction.NOWAY;
     public horizontalMove: Direction.LEFT | Direction.NOWAY | Direction.RIGHT = Direction.NOWAY;
-    public steps: number = 0;
+    public steps = 0;
 }
 
 @Component({
@@ -101,7 +102,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
     /**
      * Number, that holds the current visible nodes.
      */
-    private seenNodes: number = 0;
+    private seenNodes = 0;
 
     /**
      * Function that will be used for filtering the nodes.
@@ -154,7 +155,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
      * @param nextState Is an event emitter that emits a boolean whether the nodes should expand or not.
      */
     @Input()
-    public set stateChange(nextState: EventEmitter<Boolean>) {
+    public set stateChange(nextState: EventEmitter<boolean>) {
         nextState.subscribe((state: boolean) => {
             if (state) {
                 this.expandAll();
@@ -881,6 +882,8 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
         }
     }
 
+    private changedIds: { newIds: number[]; deletedIds: number[] } = { newIds: [], deletedIds: [] };
+
     /**
      * Function to (re-) set the subscription to recognize changes.
      */
@@ -888,7 +891,21 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
         this.removeSubscription();
         this.madeChanges(false);
         this.modelSubscription = this._model!.pipe(auditTime(10)).subscribe(values => {
-            this.osTreeData = this.treeService.makeFlatTree(values, this.weightKey, this.parentKey);
+            if (!this.osTreeData.length) {
+                this.osTreeData = this.treeService.makeFlatTree(values, this.weightKey, this.parentKey);
+            } else {
+                const deleteSet = new Set<number>(this.osTreeData.map(val => val.item?.id ?? val.id));
+                const newSet = new Set<number>(values.map(val => val.id));
+                values.forEach(val => deleteSet.delete(val.id));
+                this.osTreeData.forEach(val => newSet.delete(val.item?.id ?? val.id));
+                this.osTreeData = this.treeService.removeNodesFromFlatTreeByItemId(
+                    this.osTreeData,
+                    Array.from(deleteSet)
+                );
+                const newIds = Array.from(newSet).sort((a, b) => a - b);
+                const items = values.filter(val => findIndexInSortedArray(newIds, val.id, (a, b) => a - b) !== -1);
+                this.osTreeData = this.treeService.concatNewNodesFromItems(this.osTreeData, items);
+            }
             this.checkActiveFilters();
             this.dataSource = new ArrayDataSource(this.osTreeData);
         });

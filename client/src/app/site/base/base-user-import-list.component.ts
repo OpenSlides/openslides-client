@@ -1,8 +1,8 @@
 import { Directive } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { GeneralUser } from 'src/app/gateways/repositories/users';
 
-import { User } from '../../domain/models/users/user';
 import { ImportModel } from '../../infrastructure/utils/import/import-model';
 import { ImportListHeaderDefinition } from '../../ui/modules/import-list/definitions/import-list-header-definition';
 import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
@@ -10,7 +10,7 @@ import { BaseImportListComponent } from './base-import-list.component';
 import { BaseUserImportService } from './base-user-import.service';
 
 @Directive()
-export abstract class BaseUserImportListComponent extends BaseImportListComponent<User> {
+export abstract class BaseUserImportListComponent extends BaseImportListComponent<GeneralUser> {
     public textAreaForm: UntypedFormControl;
 
     public possibleFields = Object.values(this.modelHeadersAndVerboseNames);
@@ -20,7 +20,7 @@ export abstract class BaseUserImportListComponent extends BaseImportListComponen
             const singleColumnDef: ImportListHeaderDefinition = {
                 label: this.translate.instant(this.modelHeadersAndVerboseNames[property]),
                 property: `newEntry.${property}`,
-                type: this.guessType(property as keyof User),
+                type: this.guessType(property as keyof GeneralUser),
                 isTableColumn: true
             };
 
@@ -28,8 +28,8 @@ export abstract class BaseUserImportListComponent extends BaseImportListComponen
         });
     }
 
-    private get modelHeaders(): (keyof User)[] {
-        return Object.keys(this.modelHeadersAndVerboseNames) as (keyof User)[];
+    private get modelHeaders(): (keyof GeneralUser)[] {
+        return Object.keys(this.modelHeadersAndVerboseNames) as (keyof GeneralUser)[];
     }
 
     public constructor(
@@ -49,7 +49,7 @@ export abstract class BaseUserImportListComponent extends BaseImportListComponen
      * @param row
      * @returns an error string similar to getVerboseError
      */
-    public nameErrors(row: ImportModel<User>): string {
+    public nameErrors(row: ImportModel<GeneralUser>): string {
         for (const name of [`NoName`, `Duplicates`, `DuplicateImport`]) {
             if (this.importer.hasError(row, name)) {
                 return this.importer.verbose(name);
@@ -58,5 +58,5 @@ export abstract class BaseUserImportListComponent extends BaseImportListComponen
         return ``;
     }
 
-    protected abstract guessType(property: keyof User): 'string' | 'number' | 'boolean';
+    protected abstract guessType(property: keyof GeneralUser): 'string' | 'number' | 'boolean';
 }

@@ -1,7 +1,7 @@
 import { ProjectorTitle } from '../../../../domain/interfaces/has-projector-title';
 import { BaseModel } from '../../../../domain/models/base/base-model';
 import { Projection } from '../../../../domain/models/projector/projection';
-import { Projectiondefault } from '../../../../domain/models/projector/projection-default';
+import { ProjectiondefaultValue } from '../../../../domain/models/projector/projection-default';
 import { BaseViewModel } from '../../../base/base-view-model';
 import { MeetingSettingsService } from '../services/meeting-settings.service';
 import { Projectable } from './projectable';
@@ -11,7 +11,7 @@ import { ProjectionBuildDescriptor } from './projection-build-descriptor';
  */
 export abstract class BaseProjectableViewModel<M extends BaseModel = any> extends BaseViewModel<M> {
     public getProjectionBuildDescriptor(
-        meetingSettingsService?: MeetingSettingsService
+        _meetingSettingsService?: MeetingSettingsService
     ): ProjectionBuildDescriptor | null {
         return {
             content_object_id: this.fqid,
@@ -20,13 +20,13 @@ export abstract class BaseProjectableViewModel<M extends BaseModel = any> extend
         };
     }
 
-    public abstract getProjectiondefault(): Projectiondefault | null;
+    public abstract getProjectiondefault(): ProjectiondefaultValue | null;
 
     /**
      * @returns the projector title used for managing projector elements.
      */
-    public getProjectorTitle(projection: Projection): ProjectorTitle {
+    public getProjectorTitle(_projection: Projection): ProjectorTitle {
         return { title: this.getTitle() };
     }
 }
-export interface BaseProjectableViewModel<M extends BaseModel = any> extends Projectable {}
+export interface BaseProjectableViewModel extends Projectable {}

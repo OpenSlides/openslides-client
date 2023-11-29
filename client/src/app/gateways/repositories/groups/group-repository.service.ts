@@ -28,7 +28,7 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
 
     public getTitle = (viewGroup: ViewGroup) => viewGroup.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Groups` : `Group`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Groups` : `Group`);
 
     public getNameForIds(...ids: number[]): string {
         return this.getSortedViewModelList()
@@ -45,7 +45,8 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
     public update(update: Partial<Group>, group: Identifiable): Promise<void> {
         const payload = {
             id: group.id,
-            name: update.name
+            name: update.name,
+            external_id: update.external_id
         };
         return this.sendActionToBackend(GroupAction.UPDATE, payload);
     }
@@ -62,6 +63,7 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
         return {
             meeting_id: this.activeMeetingId!,
             name: partialGroup.name,
+            external_id: partialGroup.external_id,
             permissions: partialGroup.permissions
         };
     }

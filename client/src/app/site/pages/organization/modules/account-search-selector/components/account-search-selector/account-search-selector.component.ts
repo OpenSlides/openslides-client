@@ -1,8 +1,8 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
-import { MatOptionSelectionChange } from '@angular/material/core';
-import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatLegacyOptionSelectionChange as MatOptionSelectionChange } from '@angular/material/legacy-core';
+import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
 import { distinctUntilChanged } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
@@ -15,6 +15,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserScope } from 'src/app/site/services/user.service';
 import { BaseSearchSelectorComponent } from 'src/app/ui/modules/search-selector/components/base-search-selector/base-search-selector.component';
 
+import { AccountSortService } from '../../../../pages/accounts/pages/account-list/services/account-list-sort.service/account-sort.service';
+
 @Component({
     selector: `os-account-search-selector`,
     templateUrl: `../../../../../../../ui/modules/search-selector/components/base-search-selector/base-search-selector.component.html`,
@@ -24,13 +26,13 @@ import { BaseSearchSelectorComponent } from 'src/app/ui/modules/search-selector/
     ],
     providers: [{ provide: MatFormFieldControl, useExisting: AccountSearchSelectorComponent }]
 })
-export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent implements OnInit {
+export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent implements OnInit, OnDestroy {
     @Input()
     public set accounts(users: ViewUser[]) {
         if (!this.selectableItems?.length) {
             this.selectableItems = [...users];
         } else {
-            for (let user of users) {
+            for (const user of users) {
                 this.addSelectableItem(user);
             }
         }
@@ -47,16 +49,23 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
         ngControl: NgControl,
         private operator: OperatorService,
         private presenter: SearchUsersPresenterService,
-        private userRepo: UserRepositoryService
+        private userRepo: UserRepositoryService,
+        private userSortService: AccountSortService
     ) {
         super(fb, fm, element, ngControl);
     }
 
     public override ngOnInit(): void {
         super.ngOnInit();
+        this.userSortService.initSorting();
         if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
             this.initItems();
         }
+    }
+
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
+        this.userSortService.exitSortService();
     }
 
     public override onSelectionChange(value: Selectable, change: MatOptionSelectionChange<any>): void {
@@ -75,7 +84,7 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
     }
 
     private initItems(): void {
-        const observer = this.userRepo.getViewModelListObservable();
+        const observer = this.userRepo.getSortedViewModelListObservable(this.userSortService.repositorySortingKey);
         this.subscriptions.push(
             observer.pipe(distinctUntilChanged((c, o) => c.length === o.length)).subscribe(items => {
                 this.selectableItems = items || [];

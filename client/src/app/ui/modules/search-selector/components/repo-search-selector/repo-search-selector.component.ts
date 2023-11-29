@@ -1,13 +1,14 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
-import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
 import { map, OperatorFunction } from 'rxjs';
 import { ModelRequestService, SubscribeToConfig } from 'src/app/site/services/model-request.service';
 
 import { Settings } from '../../../../../domain/models/meetings/meeting';
 import { MeetingSettingsService } from '../../../../../site/pages/meetings/services/meeting-settings.service';
 import { ViewModelListProvider } from '../../../../base/view-model-list-provider';
+import { SortListService } from '../../../list';
 import { BaseSearchSelectorComponent } from '../base-search-selector/base-search-selector.component';
 
 @Component({
@@ -38,6 +39,9 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
     @Input()
     public defaultDataConfigKey: keyof Settings | undefined;
 
+    @Input()
+    public sortService: SortListService<any> | undefined;
+
     public get controlType(): string {
         return `repo-search-selector`;
     }
@@ -60,11 +64,20 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
 
     public override ngOnInit(): void {
         super.ngOnInit();
+        if (this.sortService) {
+            this.sortFn = false;
+            this.sortService.initSorting();
+        }
         this.init();
     }
 
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
+
+        if (this.sortService) {
+            this.sortService.exitSortService();
+        }
+
         if (this.subscriptionName) {
             this.modelRequestService.closeSubscription(this.subscriptionName);
         }
@@ -92,7 +105,9 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
             });
         }
 
-        const observer = this._repo!.getViewModelListObservable();
+        const observer = this.sortService
+            ? this._repo!.getSortedViewModelListObservable(this.sortService.repositorySortingKey)
+            : this._repo!.getViewModelListObservable();
         this.subscriptions.push(
             observer.pipe(this.pipeFn).subscribe(items => {
                 this.selectableItems = items || [];

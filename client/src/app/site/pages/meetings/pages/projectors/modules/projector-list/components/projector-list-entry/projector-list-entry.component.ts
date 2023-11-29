@@ -1,5 +1,5 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -105,7 +105,8 @@ export class ProjectorListEntryComponent {
      */
     public async onDeleteButton(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this projector?`);
-        if (await this.promptService.open(title, this.projector.name)) {
+        const content = this.projector.name;
+        if (await this.promptService.open(title, content)) {
             this.repo.delete(this.projector);
         }
     }

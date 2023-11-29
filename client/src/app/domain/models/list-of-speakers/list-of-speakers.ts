@@ -20,7 +20,7 @@ export class ListOfSpeakers extends BaseModel<ListOfSpeakers> {
         super(ListOfSpeakers.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof ListOfSpeakers | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof ListOfSpeakers)[] = [
         `id`,
         `closed`,
         `sequential_number`,

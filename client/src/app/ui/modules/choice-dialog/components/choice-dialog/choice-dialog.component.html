@@ -1,6 +1,6 @@
 <!-- Title -->
 <h2 mat-dialog-title *ngIf="data">{{ data.title | translate }}</h2>
-<div class="choice-dialog-content" mat-dialog-content>{{ data.content }}</div>
+<div class="choice-dialog-content" mat-dialog-content>{{ data.content | translate }}</div>
 
 <form [formGroup]="selectForm" *ngIf="data">
     <!-- Content -->
@@ -44,7 +44,7 @@
 
         <!-- Clear choice button -->
         <button mat-button *ngIf="data.clearChoiceOption" (click)="closeDialog(true, data.clearChoiceOption)">
-            <span>{{ data.clearChoiceOption }}</span>
+            <span>{{ data.clearChoiceOption | translate }}</span>
         </button>
 
         <!-- Cancel -->

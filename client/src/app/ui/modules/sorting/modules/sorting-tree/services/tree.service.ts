@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
 import { FlatNode, OSTreeNode, TreeIdNode, TreeNodeWithoutItem } from 'src/app/infrastructure/definitions/tree';
+import { findIndexInSortedArray } from 'src/app/infrastructure/utils';
 
 @Injectable({
     providedIn: `root`
@@ -30,7 +31,10 @@ export class TreeService {
             name: item.getTitle(),
             id: item.id,
             item,
-            children
+            children,
+            toString: function () {
+                return this.item.toString();
+            }
         };
     }
 
@@ -57,7 +61,7 @@ export class TreeService {
         }
 
         let tree_weight = 1;
-        const inject = (nodes: T[], level: number = 0) => {
+        const inject = (nodes: T[], level = 0) => {
             nodes.sort((nodeA, nodeB) => (nodeA[weightKey] as any) - (nodeB[weightKey] as any));
             for (const node of nodes) {
                 node.tree_weight = tree_weight++;
@@ -173,6 +177,7 @@ export class TreeService {
 
     /**
      * Removes the `item`-property from any node in the given tree.
+     * Deletes empty children-arrays.
      *
      * @param tree The tree with items
      * @returns The tree without items
@@ -184,7 +189,7 @@ export class TreeService {
                 id: node.id
             };
             if (node.children) {
-                nodeWithoutItem.children = this.stripTree(node.children);
+                nodeWithoutItem.children = node.children.length ? this.stripTree(node.children) : undefined;
             }
             return nodeWithoutItem;
         });
@@ -282,6 +287,84 @@ export class TreeService {
     }
 
     /**
+     * Returns an array of FlatNodes where all nodes whose ids are contained in the delete array are removed.
+     * Array is sorted by position as far as possible
+     *
+     * Doesn't change the original array.
+     *
+     * @param tree the array of FlatNodes from which the Nodes should be removed
+     * @param deleteIds the ids of the deleted nodes
+     * @param byItemId whether the id comparison should happen by item id, or by node id. True by default.
+     * @returns an array that is like tree but without the items that had the ids.
+     */
+    public removeNodesFromFlatTreeByItemId<T extends Identifiable>(
+        tree: FlatNode<T>[],
+        deleteIds: number[],
+        byItemId = true
+    ): FlatNode<T>[] {
+        if (!deleteIds.length) {
+            return tree;
+        }
+        deleteIds = deleteIds.sort((a, b) => a - b);
+        tree = tree.sort((a, b) =>
+            a.position != null && b.position != null ? a.position - b.position : b != null ? -1 : 0
+        );
+        for (let i = 0; i < tree.length; ) {
+            const node = tree[i];
+            if (findIndexInSortedArray(deleteIds, byItemId ? node.item.id : node.id, (a, b) => a - b) !== -1) {
+                tree = [tree.slice(0, i), i + 1 < tree.length ? tree.slice(i + 1) : []].flatMap(
+                    val => val as FlatNode<T>[]
+                );
+                let removeLevels = true;
+                for (let j = i; j < tree.length; ++j) {
+                    if (tree[j].position >= 0) {
+                        tree[j].position--;
+                    }
+                    if (removeLevels && tree[j].level >= node.level + 1) {
+                        tree[j].level--;
+                        if (tree[j].level === node.level) {
+                            tree[j].isExpanded = tree[j].expandable ? node.isExpanded : tree[j].isExpanded;
+                            tree[j].isSeen = node.isSeen;
+                        }
+                    } else {
+                        removeLevels = false;
+                    }
+                }
+                continue; // without incrementing i!
+            }
+            i++;
+        }
+        return tree;
+    }
+
+    /**
+     * Returns an array of FlatNodes where all nodes whose ids are contained in the delete array are removed.
+     *
+     * Doesn't change the original array.
+     *
+     * @param tree the array of FlatNodes from which the Nodes should be removed
+     * @param deleteIds the ids of the deleted nodes
+     * @param byItemId whether the id comparison should happen by item id, or by node id. True by default.
+     * @returns an array that is like tree but without the items that had the ids.
+     */
+    public concatNewNodesFromItems<T extends Identifiable>(tree: FlatNode<T>[], newItems: T[]): FlatNode<T>[] {
+        const oldMaxPosition = Math.max(...tree.map(node => node.position), tree.length - 1);
+        const items = newItems.map((item, index) => ({
+            ...item,
+            item,
+            level: 0,
+            isSeen: true,
+            expandable: false,
+            id: item.id,
+            position: index + oldMaxPosition + 1,
+            toString: function () {
+                return this.item.toString();
+            }
+        }));
+        return tree.concat(items);
+    }
+
+    /**
      * Return the part of a tree not including or being hierarchically dependant
      * on the items in the input arrray
      *
@@ -330,7 +413,10 @@ export class TreeService {
             expandable: !!children,
             isExpanded: !!children,
             level,
-            isSeen: true
+            isSeen: true,
+            toString: function () {
+                return this.item.toString();
+            }
         };
         return new Proxy(node, {
             get: (target: FlatNode<T>, property: keyof Identifiable & Displayable & T) => {

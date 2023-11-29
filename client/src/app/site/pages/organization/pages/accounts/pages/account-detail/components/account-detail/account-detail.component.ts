@@ -1,9 +1,11 @@
 import { KeyValue } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { CML, getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
+import { getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -14,6 +16,8 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewCommittee } from '../../../../../committees';
+import { getCommitteeListMinimalSubscriptionConfig } from '../../../../../committees/committees.subscription';
+import { CommitteeSortService } from '../../../../../committees/pages/committee-list/services/committee-list-sort.service/committee-sort.service';
 import { CommitteeControllerService } from '../../../../../committees/services/committee-controller.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 
@@ -34,7 +38,20 @@ type ParticipationTableMeetingDataRow = { meeting_name: string; group_names: str
 })
 export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get organizationManagementLevels(): string[] {
-        return Object.values(OML).filter((level: OML) => this.operator.hasOrganizationPermissions(level));
+        return Object.values(OML).filter(
+            (level: OML) =>
+                this.operator.hasOrganizationPermissions(level) &&
+                !(this.orgaManagementLevelChangeDisabled && level !== this.user.organization_management_level)
+        );
+    }
+
+    public get operatorHasEqualOrHigherOML(): boolean {
+        const userOML = this.user?.organization_management_level;
+        return userOML ? this.operator.hasOrganizationPermissions(userOML as OML) : true;
+    }
+
+    public get orgaManagementLevelChangeDisabled(): boolean {
+        return this.user?.id === this.operator.operatorId && this.operator.isSuperAdmin;
     }
 
     @ViewChild(UserDetailViewComponent, { static: false })
@@ -45,9 +62,9 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public readonly additionalFormControls = {
         default_structure_level: [``],
         default_number: [``],
-        default_vote_weight: [``],
+        default_vote_weight: [``, Validators.min(0.000001)],
         organization_management_level: [],
-        committee_$_management_level: []
+        committee_management_ids: []
     };
 
     public isFormValid = false;
@@ -57,6 +74,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public isEditingUser = false;
     public user: ViewUser | null = null;
     public isNewUser = false;
+    public committeeSubscriptionConfig = getCommitteeListMinimalSubscriptionConfig();
 
     public get tableData(): ParticipationTableData {
         return this._tableData;
@@ -73,7 +91,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return Object.values(this._tableData).filter(row => row[`is_manager`] === true).length;
     }
 
-    public tableDataAscOrderCompare = <T extends unknown>(a: KeyValue<string, T>, b: KeyValue<string, T>) => {
+    public tableDataAscOrderCompare = <T>(a: KeyValue<string, T>, b: KeyValue<string, T>) => {
         const aName = a.value[`committee_name`] ?? a.value[`meeting_name`] ?? ``;
         const bName = b.value[`committee_name`] ?? b.value[`meeting_name`] ?? ``;
         return aName.localeCompare(bName);
@@ -88,6 +106,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         private osRouter: OpenSlidesRouterService,
         private operator: OperatorService,
         public readonly committeeController: CommitteeControllerService,
+        public readonly committeeSortService: CommitteeSortService,
         private accountController: AccountControllerService,
         private userController: UserControllerService,
         private promptService: PromptService
@@ -100,11 +119,11 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public getTransformSetFn(): (value?: string[]) => Id[] {
-        return () => (this.user ? this.user.committee_management_level_ids(CML.can_manage) : []);
+        return () => (this.user ? this.user.committee_management_ids : []);
     }
 
     public getTransformPropagateFn(): (value?: Id[]) => any {
-        return value => ({ [CML.can_manage]: value });
+        return value => value;
     }
 
     public getSaveAction(): () => Promise<void> {
@@ -128,6 +147,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             this.isEditingUser = false;
         }
     }
+
     /**
      * (Re)- send an invitation email for this user after confirmation
      */
@@ -164,9 +184,9 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public getUserCommitteeManagementLevels(): ViewCommittee[] {
-        const committeesToManage: (ViewCommittee | null)[] = this.user!.committee_management_level_ids(
-            CML.can_manage
-        ).map(committeeId => this.committeeController.getViewModel(committeeId));
+        const committeesToManage: (ViewCommittee | null)[] = this.user!.committee_management_ids.map(committeeId =>
+            this.committeeController.getViewModel(committeeId)
+        );
         return committeesToManage.filter(committee => !!committee) as ViewCommittee[];
     }
 
@@ -182,6 +202,10 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     public getNumberOfKeys(item: { [key: string]: any }): number {
         return Object.keys(item).length;
+    }
+
+    public get isDefaultVoteWeightError(): boolean {
+        return this.personalInfoFormValue.default_vote_weight < 0.000001;
     }
 
     private generateParticipationTableData(): void {
@@ -266,14 +290,27 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     private async updateUser(): Promise<void> {
         const payload = this.getPartialUserPayload();
-        await this.userController.update(payload, this.user!).resolve();
-        this.router.navigate([`..`], { relativeTo: this.route });
+        if (
+            !(
+                this.user.id === this.operator.operatorId &&
+                this.operator.user.organization_management_level !== payload.organization_management_level
+            ) ||
+            (await this.promptService.open(
+                _(`This action will diminish your organization management level`),
+                _(
+                    `This will diminish your ability to do things on the organization level and you will not be able to revert this yourself.`
+                )
+            ))
+        ) {
+            await this.userController.update(payload, this.user!).resolve();
+            this.router.navigate([`..`], { relativeTo: this.route });
+        }
     }
 
     private getPartialUserPayload(): any {
         const payload = this.personalInfoFormValue;
         if (!this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
-            payload[`committee_$_management_level`] = { [CML.can_manage]: [] };
+            payload[`committee_management_ids`] = undefined;
         }
         return payload;
     }

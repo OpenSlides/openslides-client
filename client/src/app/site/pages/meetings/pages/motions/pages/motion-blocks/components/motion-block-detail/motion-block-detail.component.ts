@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
@@ -52,7 +52,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
     /**
      * Value of the config variable `motions_show_sequential_numbers`
      */
-    public showSequential: boolean = false;
+    public showSequential = false;
 
     /**
      * The form to edit blocks
@@ -63,7 +63,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
     /**
      * Holds the block ID
      */
-    private _blockId: number = 0;
+    private _blockId = 0;
     private _dialogRef: MatDialogRef<MotionBlockEditDialogComponent, MotionBlock> | null = null;
 
     /**

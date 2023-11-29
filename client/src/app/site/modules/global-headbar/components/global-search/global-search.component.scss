@@ -1,0 +1,114 @@
+.search-form-container {
+    width: 800px;
+    max-width: 100%;
+    padding-bottom: 24px;
+}
+
+.search-hint {
+    padding: 4px 25px;
+}
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+}
+
+.search-results {
+    width: 848px;
+    max-width: calc(100% + 48px);
+    margin: 0 -24px -24px -24px;
+    padding: 0;
+
+    .info {
+        > span:not(:last-of-type):after {
+            content: '\2022';
+            display: inline-block;
+            padding: 0 4px;
+        }
+    }
+
+    .search-no-results {
+        padding: 0 24px 24px;
+    }
+
+    .search-results-category h2 {
+        padding: 0 24px;
+        margin-top: 1em;
+        margin-bottom: 8px;
+    }
+
+    .search-results-entry {
+        padding: 1em 24px;
+        > a {
+            display: block;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            > :first-of-type {
+                margin-top: 0;
+            }
+
+            > :last-of-type {
+                margin-bottom: 0;
+            }
+            > div,
+            > p {
+                font-size: 10px;
+            }
+        }
+
+        h3 {
+            font-weight: 400;
+            color: var(--theme-accent-500);
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        ::ng-deep mark {
+            color: inherit;
+            background: none;
+            font-weight: bolder;
+        }
+
+        ::ng-deep :not(h3, h3 > span) > mark {
+            font-weight: 500;
+        }
+
+        .breadcrumb {
+            font-size: 10px;
+            + a h3 {
+                margin-top: 0;
+            }
+            .sep {
+                padding: 0 4px;
+            }
+        }
+
+        .text-snippet {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+.filters {
+    padding-top: 10px;
+}
+
+.filter-section {
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    padding: 0 50px;
+    justify-content: space-between;
+    .filter {
+        padding-right: 24px;
+        &:last-of-type {
+            padding-right: 0;
+        }
+    }
+}

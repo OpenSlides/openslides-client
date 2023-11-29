@@ -501,7 +501,11 @@ export class LineNumberingService {
                 }
                 out.push(this.createLineBreak());
                 if (this.currentLineNumber !== null) {
-                    out.push(this.createLineNumber());
+                    if (this.ignoreNextRegularLineNumber) {
+                        this.ignoreNextRegularLineNumber = false;
+                    } else {
+                        out.push(this.createLineNumber());
+                    }
                 }
             }
             out.push(lineNode);
@@ -784,12 +788,7 @@ export class LineNumberingService {
      * @param {number|null} highlight - optional
      * @param {number|null} firstLine
      */
-    public insertLineNumbersNode(
-        html: string,
-        lineLength: number,
-        highlight: number | null,
-        firstLine: number = 1
-    ): Element {
+    public insertLineNumbersNode(html: string, lineLength: number, highlight: number | null, firstLine = 1): Element {
         // Removing newlines after BRs, as they lead to problems like #3410
         if (html) {
             html = html.replace(/(<br[^>]*>)[\n\r]+/gi, `$1`);
@@ -848,7 +847,7 @@ export class LineNumberingService {
      * @param {boolean} countInserted
      * @returns {string}
      */
-    public insertLineBreaksWithoutNumbers(html: string, lineLength: number, countInserted: boolean = false): string {
+    public insertLineBreaksWithoutNumbers(html: string, lineLength: number, countInserted = false): string {
         const root = document.createElement(`div`);
         root.innerHTML = html;
 

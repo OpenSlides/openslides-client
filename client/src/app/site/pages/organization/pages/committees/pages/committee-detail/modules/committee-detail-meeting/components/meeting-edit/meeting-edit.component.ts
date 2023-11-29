@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -95,7 +95,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public addMeetingLabel = ADD_MEETING_LABEL;
     public editMeetingLabel = EDIT_MEETING_LABEL;
 
-    public isCreateView: boolean = false;
+    public isCreateView = false;
 
     public meetingForm!: UntypedFormGroup;
     public theDuplicateFromId: Id | null = null;
@@ -107,7 +107,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public committee!: ViewCommittee;
 
     public get meetingUsers(): ViewUser[] {
-        return this.editMeeting?.users || [];
+        const users = this.editMeeting?.calculated_users;
+        if (users && !users.some(u => u.id === this.operator.operatorId)) {
+            users.push(this.operator.user);
+        }
+
+        return users || [];
     }
 
     private meetingId: Id | null = null;
@@ -149,6 +154,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             super.setTitle(ADD_MEETING_LABEL);
         } else {
             super.setTitle(EDIT_MEETING_LABEL);
+            this.meetingForm.get(`language`)?.disable();
         }
 
         this.availableUsers = userRepo.getViewModelListObservable();
@@ -208,6 +214,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         this.theDuplicateFromId = id;
         if (id) {
             this.meetingForm.get(`language`)?.setValue(this.meetingRepo.getViewModel(id).language);
+            this.meetingForm.get(`language`)?.disable();
+        } else {
+            this.meetingForm.get(`language`)?.enable();
         }
     }
 
@@ -263,12 +272,15 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const rawForm: { [key: string]: any } = {
             name: [``, Validators.required],
             location: [``],
-            daterange: {
-                start: [currentDate],
-                end: [currentDate]
-            },
+            daterange: [
+                {
+                    start: null,
+                    end: null
+                }
+            ],
             admin_ids: [[], Validators.minLength(1)],
-            organization_tag_ids: [[]]
+            organization_tag_ids: [[]],
+            external_id: [``]
         };
 
         rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
@@ -306,7 +318,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         }: any = meeting.getUpdatedModelData({
             start_time: start_time,
             end_time: end_time,
-            admin_ids: [...(meeting.admin_group?.user_ids || [])]
+            admin_ids: [...(meeting.admin_group?.calculated_user_ids || [])]
         } as any);
         const patchDaterange = {
             start,
@@ -370,7 +382,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
      */
     private getUsersToUpdateForMeetingObject(): MeetingUserModifiedFields {
         const nextAdminIds = this.meetingForm.value.admin_ids as Id[];
-        const previousAdminIds = this.editMeeting!.admin_group.user_ids || [];
+        const previousAdminIds = this.editMeeting!.admin_group.calculated_user_ids || [];
         const addedAdminIds = (nextAdminIds || []).difference(previousAdminIds);
         const removedAdminIds = previousAdminIds.difference(nextAdminIds);
 

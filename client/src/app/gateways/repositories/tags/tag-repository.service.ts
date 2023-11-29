@@ -33,7 +33,7 @@ export class TagRepositoryService extends BaseMeetingRelatedRepository<ViewTag, 
 
     public getTitle = (viewTag: ViewTag) => viewTag.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Tags` : `Tag`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Tags` : `Tag`);
 
     /**
      * Sets the default sorting (e.g. in dropdowns and for new users) to 'name'

@@ -22,8 +22,8 @@ export class AssignmentCandidateControllerService extends BaseMeetingControllerS
         super(controllerServiceCollector, AssignmentCandidate, repo);
     }
 
-    public create(assignment: Identifiable, userId: Id): Promise<Identifiable> {
-        return this.repo.create(assignment, userId);
+    public create(assignment: Identifiable, meetingUserId: Id): Promise<Identifiable> {
+        return this.repo.create(assignment, meetingUserId);
     }
 
     public delete(...candidates: Identifiable[]): Promise<void> {

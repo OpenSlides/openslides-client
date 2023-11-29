@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { CML } from 'src/app/domain/definitions/organization-permission';
 import {
     GetUserRelatedModelsCommittee,
@@ -14,9 +13,6 @@ interface UserDeleteDialogConfig {
     toDelete: GetUserRelatedModelsPresenterResult;
 }
 
-const TO_REMOVE_LABEL = _(`These accounts will be removed from the meeting:`);
-const TO_DELETE_LABEL = _(`These accounts will be deleted:`);
-
 @Component({
     selector: `os-user-delete-dialog`,
     templateUrl: `./user-delete-dialog.component.html`,
@@ -24,42 +20,40 @@ const TO_DELETE_LABEL = _(`These accounts will be deleted:`);
     encapsulation: ViewEncapsulation.None
 })
 export class UserDeleteDialogComponent implements OnInit {
-    public get users(): any[] {
-        return this._users;
-    }
-
     public get isOneUser(): boolean {
         return this.toDeleteUsers.length + this.toRemoveUsers.length === 1;
     }
 
-    public set selectedUser(user: GetUserRelatedModelsUser | null) {
-        if (this._selectedUser === user) {
-            this._selectedUser = null;
-        } else {
-            this._selectedUser = user;
-        }
+    public get isOneUserToDelete(): boolean {
+        return this.toDeleteUsers.length === 1 && this.toRemoveUsers.length === 0;
     }
 
-    public get selectedUser(): GetUserRelatedModelsUser | null {
-        return this._selectedUser;
+    public get isOneUserToRemove(): boolean {
+        return this.toDeleteUsers.length === 0 && this.toRemoveUsers.length === 1;
     }
 
-    private get toDeleteUsers(): GetUserRelatedModelsUser[] {
+    public get hasUsersToDelete(): boolean {
+        return this.toDeleteUsers.length > 0;
+    }
+
+    public get hasUsersToRemove(): boolean {
+        return this.toRemoveUsers.length > 0;
+    }
+
+    public get toDeleteUsers(): GetUserRelatedModelsUser[] {
         return Object.values(this.data.toDelete);
     }
 
-    private get toRemoveUsers(): ViewUser[] {
+    public get toRemoveUsers(): ViewUser[] {
         return this.data.toRemove;
     }
 
-    private _selectedUser: GetUserRelatedModelsUser | null = null;
-    private _users: any[] = [];
+    public selectedUser: GetUserRelatedModelsUser | ViewUser = null;
 
     public constructor(@Inject(MAT_DIALOG_DATA) private data: UserDeleteDialogConfig) {}
 
     public ngOnInit(): void {
-        this._users = this.getUsers();
-        this.selectedUser = this._users[1]; // At index 0 is only a label
+        this.selectedUser = this.toDeleteUsers[0] || this.toRemoveUsers[0];
     }
 
     public willBeRemoved(user: ViewUser | GetUserRelatedModelsUser): boolean {
@@ -70,22 +64,7 @@ export class UserDeleteDialogComponent implements OnInit {
         return (user.meetings || []).length > 0 || this.getManagedCommittees(user).length > 0;
     }
 
-    public isSectionTitle(value: unknown): boolean {
-        return typeof value === `string`;
-    }
-
     public getManagedCommittees(user: GetUserRelatedModelsUser): GetUserRelatedModelsCommittee[] {
         return (user.committees || []).filter(committee => committee.cml === CML.can_manage);
-    }
-
-    private getUsers(): any[] {
-        let user: unknown[] = [];
-        if (this.toRemoveUsers.length > 0) {
-            user = user.concat(TO_REMOVE_LABEL, this.toRemoveUsers);
-        }
-        if (this.toDeleteUsers.length > 0) {
-            user = user.concat(TO_DELETE_LABEL, this.toDeleteUsers);
-        }
-        return user;
     }
 }

@@ -1,6 +1,6 @@
 import { Id } from '../definitions/key-types';
 
-export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor;
+export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor;
 
 export interface Fields {
     [field: string]: FieldDescriptor | null;
@@ -22,9 +22,4 @@ export interface GenericRelationFieldDecriptor extends HasFields {
 export interface RelationFieldDescriptor extends HasFields {
     type: 'relation-list' | 'relation';
     collection: string;
-}
-
-export interface StructuredFieldDecriptor {
-    type: 'template';
-    values?: RelationFieldDescriptor | GenericRelationFieldDecriptor;
 }

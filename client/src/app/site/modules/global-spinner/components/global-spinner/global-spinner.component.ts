@@ -17,7 +17,7 @@ export class GlobalSpinnerComponent extends SpinnerComponent {
     public isOperatorReady = false;
 
     public get spinnerText(): string {
-        let errorText = [];
+        const errorText = [];
         if (this.displayDetailedInformation) {
             if (this.connectionStatusService.isOffline()) {
                 errorText.push(

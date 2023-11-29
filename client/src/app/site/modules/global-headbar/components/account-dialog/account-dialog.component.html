@@ -9,7 +9,7 @@
     <div mat-dialog-content class="account-dialog-container">
         <div class="account-dialog-menu-items">
             <mat-selection-list [multiple]="false">
-                <ng-container *ngFor="let item of menuItems">
+                <ng-container *ngFor="let item of filteredMenuItems">
                     <mat-list-option
                         [value]="item"
                         [selected]="activeMenuItem === item.name"
@@ -74,13 +74,9 @@
                 <div class="meeting-group-block">
                     <a (click)="closeDialog()" [routerLink]="[meeting.id]">{{ meeting.name }}</a>
                     <div class="flex-vertical-center">
-                        <span
-                            class="flex-vertical-center"
-                            *ngFor="let group of getGroupsForMeeting(meeting); let last = last"
-                        >
-                            {{ group.name }}
-                            <span *ngIf="!last">,&nbsp;</span>
-                        </span>
+                        <os-comma-separated-listing [list]="getGroupsForMeeting(meeting)">
+                            <ng-template let-group>{{ group.name }}</ng-template>
+                        </os-comma-separated-listing>
                     </div>
                 </div>
             </ng-container>

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { Selectable } from 'src/app/domain/interfaces';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import {
     GetUserRelatedModelsPresenterResult,
     GetUserRelatedModelsPresenterService
@@ -15,7 +14,8 @@ import { UserComponentsModule } from '../user-components.module';
 
 interface UserDeleteDialogOpenConfig {
     toRemove: ViewUser[];
-    toDelete: Selectable[];
+    toDelete: ViewUser[];
+    relatedModelsResult?: GetUserRelatedModelsPresenterResult;
 }
 
 @Injectable({
@@ -31,30 +31,35 @@ export class UserDeleteDialogService extends BaseDialogService<
     }
 
     public async open(data: UserDeleteDialogOpenConfig): Promise<MatDialogRef<UserDeleteDialogComponent, boolean>> {
-        let toDelete: GetUserRelatedModelsPresenterResult;
-        try {
-            toDelete = await this.userRelatedModelsPresenter.call({
-                user_ids: data.toDelete.map(user => user.id)
-            });
-        } catch (e) {
-            toDelete = data.toDelete.mapToObject(user => {
-                return {
-                    [user.id]: {
-                        name: user.getTitle(),
-                        error: _(`Relevant information could not be accessed`)
-                    }
-                };
-            });
+        let result: GetUserRelatedModelsPresenterResult = {};
+        if (data.relatedModelsResult !== undefined) {
+            result = data.relatedModelsResult;
+        } else if (data.toDelete.length > 0) {
+            try {
+                result = await this.userRelatedModelsPresenter.call({
+                    user_ids: data.toDelete.map(user => user.id)
+                });
+            } catch (e) {
+                result = data.toDelete.mapToObject(user => {
+                    return {
+                        [user.id]: {
+                            name: user.getTitle(),
+                            error: _(`Relevant information could not be accessed`)
+                        }
+                    };
+                });
+            }
         }
-        for (const user of data.toDelete) {
-            toDelete[user.id].name = user.getTitle();
-        }
+        const toDelete = data.toDelete.map(user => ({
+            ...result[user.id],
+            name: user.getTitle()
+        }));
 
         const module = await import(`../user-components.module`).then(m => m.UserComponentsModule);
 
         return this.dialog.open(module.getComponent(), {
             ...mediumDialogSettings,
-            data: { toDelete, toRemove: data.toRemove }
+            data: { toDelete: toDelete, toRemove: data.toRemove }
         });
     }
 }

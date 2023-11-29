@@ -1,20 +1,15 @@
-import { CML } from 'src/app/domain/definitions/organization-permission';
 import { User } from 'src/app/domain/models/users/user';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { Id } from '../../../../domain/definitions/key-types';
 import { ViewCommittee } from '../../organization/pages/committees';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
-import { ViewSpeaker } from '../pages/agenda';
-import { ViewAssignmentCandidate } from '../pages/assignments';
-import { ViewChatMessage } from '../pages/chat/view-models/view-chat-message';
-import { ViewMotion, ViewMotionSubmitter } from '../pages/motions';
-import { ViewPersonalNote } from '../pages/motions/modules/personal-notes/view-models/view-personal-note';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { DelegationType } from './delegation-type';
 import { ViewMeeting } from './view-meeting';
+import { ViewMeetingUser } from './view-meeting-user';
 
 export enum DuplicateStatus {
     None,
@@ -48,7 +43,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get isCommitteeManager(): boolean {
-        return !!this.committee_management_levels(CML.can_manage).length;
+        return !!this.committee_managements.length;
     }
 
     public get numberOfMeetings(): number {
@@ -100,11 +95,16 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.meetings.some(meeting => meeting.isArchived);
     }
 
+    public get hasSamlId(): boolean {
+        return this.saml_id !== null && this.saml_id !== undefined;
+    }
+
     // Will be set by the repository
     public getName!: () => string;
     public getShortName!: () => string;
     public getFullName!: () => string;
     public getLevelAndNumber!: () => string;
+    public getMeetingUser!: (meetingId?: Id) => ViewMeetingUser;
 
     /**
      * A function which will return the id of the currently active meeting, if one is chosen.
@@ -142,6 +142,13 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         }
     }
 
+    /**
+     * Returns all meetings that the user actually has group memberships for.
+     */
+    public get ensuredMeetingIds(): number[] {
+        return this.meeting_users.filter(mUser => mUser.group_ids?.length).map(mUser => mUser.meeting_id) || [];
+    }
+
     public hasVoteRightFromOthers(meetingId?: Id): boolean {
         return this.vote_delegations_from_ids(meetingId || this.getEnsuredActiveMeetingId())?.length > 0;
     }
@@ -150,97 +157,80 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.vote_delegated_to(meetingId || this.getEnsuredActiveMeetingId())?.getFullName();
     }
 
-    // ### In this block there is access to structured fields with the active meeting id as a default.
-    public group_ids(meetingId?: Id): Id[] {
-        return this.user.group_ids(meetingId || this.getEnsuredActiveMeetingId());
-    }
-
     public speaker_ids(meetingId?: Id): Id[] {
-        return this.user.speaker_ids(meetingId || this.getEnsuredActiveMeetingId());
+        return this.getMeetingUser(meetingId)?.speaker_ids;
     }
 
     public personal_note_ids(meetingId?: Id): Id[] {
-        return this.user.personal_note_ids(meetingId || this.getEnsuredActiveMeetingId());
+        return this.getMeetingUser(meetingId)?.personal_note_ids;
     }
 
     public supported_motion_ids(meetingId?: Id): Id[] {
-        return this.user.supported_motion_ids(meetingId || this.getEnsuredActiveMeetingId());
+        return this.getMeetingUser(meetingId)?.supported_motion_ids;
     }
 
     public submitted_motion_ids(meetingId?: Id): Id[] {
-        return this.user.submitted_motion_ids(meetingId || this.getEnsuredActiveMeetingId());
-    }
-
-    public motion_poll_voted_ids(meetingId?: Id): Id[] {
-        return this.user.motion_poll_voted_ids(meetingId || this.getEnsuredActiveMeetingId());
-    }
-
-    public motion_vote_ids(meetingId?: Id): Id[] {
-        return this.user.motion_vote_ids(meetingId || this.getEnsuredActiveMeetingId());
-    }
-
-    public motion_delegated_vote_ids(meetingId?: Id): Id[] {
-        return this.user.motion_vote_ids(meetingId || this.getEnsuredActiveMeetingId());
+        return this.getMeetingUser(meetingId)?.submitted_motion_ids;
     }
 
     public assignment_candidate_ids(meetingId?: Id): Id[] {
-        return this.user.assignment_candidate_ids(meetingId || this.getEnsuredActiveMeetingId());
+        return this.getMeetingUser(meetingId)?.assignment_candidate_ids;
     }
 
     public chat_message_ids(meetingId?: Id): Id[] {
-        return this.user.chat_message_ids(meetingId || this.getEnsuredActiveMeetingId());
-    }
-
-    public assignment_poll_voted_ids(meetingId?: Id): Id[] {
-        return this.user.assignment_poll_voted_ids(meetingId || this.getEnsuredActiveMeetingId());
-    }
-
-    public assignment_option_ids(meetingId?: Id): Id[] {
-        return this.user.assignment_option_ids(meetingId || this.getEnsuredActiveMeetingId());
-    }
-
-    public assignment_vote_ids(meetingId?: Id): Id[] {
-        return this.user.assignment_vote_ids(meetingId || this.getEnsuredActiveMeetingId());
-    }
-
-    public assignment_delegated_vote_ids(meetingId?: Id): Id[] {
-        return this.user.assignment_delegated_vote_ids(meetingId || this.getEnsuredActiveMeetingId());
+        return this.getMeetingUser(meetingId)?.chat_message_ids;
     }
 
     public vote_delegated_to_id(meetingId?: Id): Id {
-        return this.user.vote_delegated_to_id(meetingId || this.getEnsuredActiveMeetingId());
+        return this.getMeetingUser(meetingId)?.vote_delegated_to?.user_id;
+    }
+
+    public vote_delegated_to_meeting_user_id(meetingId?: Id): Id {
+        return this.getMeetingUser(meetingId)?.vote_delegated_to_id;
     }
 
     public vote_delegations_from_ids(meetingId?: Id): Id[] {
-        return this.user.vote_delegations_from_ids(meetingId || this.getEnsuredActiveMeetingId());
+        return this.getMeetingUser(meetingId)?.vote_delegations_from?.map(meeting_user => meeting_user?.user_id);
+    }
+
+    public vote_delegations_from_meeting_user_ids(meetingId?: Id): Id[] {
+        return this.getMeetingUser(meetingId)?.vote_delegations_from_ids;
     }
 
     public vote_weight(meetingId?: Id): number {
-        return this.user.vote_weight(meetingId || this.getEnsuredActiveMeetingId());
+        return this.getMeetingUser(meetingId)?.vote_weight ?? this.default_vote_weight;
     }
 
     public number(meetingId?: Id): string {
         try {
-            return this.user.number(meetingId || this.getEnsuredActiveMeetingId());
+            return this.getMeetingUser(meetingId)?.number || this.default_number;
         } catch (e) {
             return this.user.default_number;
         }
     }
 
-    public structure_level(meeting_id?: Id): string {
+    public structure_level(meetingId?: Id): string {
         try {
-            return this.user.structure_level(meeting_id || this.getEnsuredActiveMeetingId());
+            return this.getMeetingUser(meetingId)?.structure_level || this.default_structure_level;
         } catch (e) {
             return this.user.default_structure_level;
         }
     }
 
     public comment(meetingId?: Id): string {
-        return this.user.comment(meetingId || this.getEnsuredActiveMeetingId());
+        return this.getMeetingUser(meetingId)?.comment;
     }
 
     public about_me(meetingId?: Id): string {
-        return this.user.about_me(meetingId || this.getEnsuredActiveMeetingId());
+        return this.getMeetingUser(meetingId)?.about_me;
+    }
+
+    public groups(meetingId?: Id): ViewGroup[] {
+        return this.getMeetingUser(meetingId)?.groups ?? [];
+    }
+
+    public group_ids(meetingId?: Id): number[] {
+        return this.getMeetingUser(meetingId)?.group_ids ?? [];
     }
 
     public get isVoteWeightOne(): boolean {
@@ -264,19 +254,12 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
     // ### block end.
 
-    public getIsVoteCountable(presentUserIds?: number[]) {
-        if (!presentUserIds) {
-            return this.isVoteCountable;
-        }
-        const delegateId = this.vote_delegated_to_id();
-        if (delegateId) {
-            return presentUserIds.includes(delegateId);
-        }
-        return this.isPresentInMeeting();
-    }
-
     public override getDetailStateUrl(): string {
-        return `/${this.getActiveMeetingId()}/users/${this.id}`;
+        if (this.getEnsuredActiveMeetingId && this.getEnsuredActiveMeetingId()) {
+            return `/${this.getEnsuredActiveMeetingId()}/participants/${this.id}`;
+        }
+
+        return `/accounts/${this.id}`;
     }
 
     public canVoteFor(user: ViewUser | null): boolean {
@@ -284,6 +267,32 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
             return false;
         }
         return this.vote_delegations_from_ids().includes(user.id);
+    }
+
+    public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser {
+        return this.getMeetingUser(meetingId)?.vote_delegated_to;
+    }
+
+    public vote_delegated_to(meetingId?: number): ViewUser {
+        return this.vote_delegated_to_meeting_user(meetingId)?.user;
+    }
+
+    public vote_delegations_from_meeting_users(meetingId?: number): ViewMeetingUser[] {
+        return this.getMeetingUser(meetingId)?.vote_delegations_from;
+    }
+
+    public vote_delegations_from(meetingId?: number): ViewUser[] {
+        return this.vote_delegations_from_meeting_users(meetingId)?.map(meeting_user => meeting_user.user) || [];
+    }
+
+    /**
+     * Returns all votes given by the user in a given meeting.
+     */
+    public getAllVotes(meetingId?: number): ViewVote[] {
+        const meetingID = meetingId ?? this.getEnsuredActiveMeetingId();
+        return this.votes
+            .filter(vote => vote.meeting_id === meetingID)
+            .concat(this.getMeetingUser(meetingId)?.vote_delegated_votes ?? []);
     }
 
     public getDuplicateStatusInMap(data: { name: Map<string, Id[]>; email: Map<string, Id[]> }): DuplicateStatus {
@@ -299,25 +308,17 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return status;
     }
 }
-type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     committees: ViewCommittee[];
     meetings: ViewMeeting[];
     organization: ViewOrganization;
+    meeting_users: ViewMeetingUser[];
+    poll_voted: ViewPoll[];
+    committee_managements: ViewCommittee[];
+    options: ViewOption[];
+    votes: ViewVote[];
     poll_candidates: ViewPollCandidate[];
-    committee_management_levels: (arg?: CML) => ViewCommittee[];
-    groups: UserManyStructuredRelation<ViewGroup>;
-    speakers: UserManyStructuredRelation<ViewSpeaker>;
-    personal_notes: UserManyStructuredRelation<ViewPersonalNote>;
-    supported_motions: UserManyStructuredRelation<ViewMotion>;
-    submitted_motions: UserManyStructuredRelation<ViewMotionSubmitter>;
-    assignment_candidates: UserManyStructuredRelation<ViewAssignmentCandidate>;
-    chat_messages: UserManyStructuredRelation<ViewChatMessage>;
-    poll_voted: UserManyStructuredRelation<ViewPoll>;
-    options: UserManyStructuredRelation<ViewOption>;
-    votes: UserManyStructuredRelation<ViewVote>;
-    vote_delegated_to: (arg?: Id) => ViewUser;
-    vote_delegations_from: UserManyStructuredRelation<ViewUser>;
 }
+
 export interface ViewUser extends User, IUserRelations {}

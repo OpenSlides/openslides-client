@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { firstValueFrom } from 'rxjs';
 import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 
 import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
@@ -6,8 +8,11 @@ import { HttpStreamEndpointService } from '../../../gateways/http-stream';
 import { EndpointConfiguration } from '../../../gateways/http-stream/endpoint-configuration';
 import { HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
 import { Mutex } from '../../../infrastructure/utils/promises';
+import { BannerDefinition, BannerService } from '../../modules/site-wrapper/services/banner.service';
+import { LifecycleService } from '../lifecycle.service';
 import { ModelRequestObject } from '../model-request-builder';
 import { ViewModelStoreUpdateService } from '../view-model-store-update.service';
+import { WindowVisibilityService } from '../window-visibility.service';
 import { AutoupdateCommunicationService } from './autoupdate-communication.service';
 import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './utils';
 
@@ -17,7 +22,7 @@ export interface ModelSubscription {
     close: () => void;
 }
 
-const AUTOUPDATE_DEFAULT_ENDPOINT = `autoupdate`;
+export const AUTOUPDATE_DEFAULT_ENDPOINT = `autoupdate`;
 
 interface AutoupdateConnectConfig {
     /**
@@ -58,6 +63,13 @@ const COLLECTION_INDEX = 0;
 const ID_INDEX = 1;
 const FIELD_INDEX = 2;
 
+export const OUT_OF_SYNC_BANNER: BannerDefinition = {
+    text: _(`Out of sync`),
+    icon: `sync_disabled`
+};
+
+const PAUSE_ON_INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 Minutes
+
 @Injectable({
     providedIn: `root`
 })
@@ -70,7 +82,10 @@ export class AutoupdateService {
     public constructor(
         private httpEndpointService: HttpStreamEndpointService,
         private viewmodelStoreUpdate: ViewModelStoreUpdateService,
-        private communication: AutoupdateCommunicationService
+        private communication: AutoupdateCommunicationService,
+        private bannerService: BannerService,
+        private visibilityService: WindowVisibilityService,
+        private lifecycle: LifecycleService
     ) {
         this.setAutoupdateConfig(null);
         this.httpEndpointService.registerEndpoint(
@@ -82,13 +97,61 @@ export class AutoupdateService {
         this.communication.listen().subscribe(data => {
             this.handleAutoupdate({ autoupdateData: data.data, id: data.streamId, description: data.description });
         });
+        this.communication.listenShouldReconnect().subscribe(() => {
+            this.pauseUntilVisible();
+        });
 
-        window.addEventListener(`beforeunload`, () => {
+        firstValueFrom(this.lifecycle.appLoaded).then(() =>
+            this.visibilityService.hiddenFor(PAUSE_ON_INACTIVITY_TIMEOUT).subscribe(() => {
+                this.pauseUntilVisible();
+            })
+        );
+
+        window.addEventListener(`unload`, () => {
             for (const id of Object.keys(this._activeRequestObjects)) {
                 const streamId = Number(id);
                 const { modelSubscription } = this._activeRequestObjects[streamId];
                 modelSubscription.close();
             }
+        });
+    }
+
+    public async pauseUntilVisible(): Promise<void> {
+        const showBannerTimeout = setTimeout(() => {
+            this.bannerService.addBanner(OUT_OF_SYNC_BANNER);
+        }, 2000);
+        const pausedRequests: { start: () => Promise<any>; info: any }[] = [];
+        for (const id of Object.keys(this._activeRequestObjects)) {
+            const streamId = Number(id);
+            const { modelSubscription, modelRequest, description } = this._activeRequestObjects[streamId];
+            pausedRequests.push({
+                start: () => this.request(modelRequest.getModelRequest(), description, streamId),
+                info: this._activeRequestObjects[streamId]
+            });
+            console.debug(`[autoupdate] pause request:`, description);
+            modelSubscription.close();
+        }
+
+        await this.visibilityService.waitUntilVisible();
+
+        const openRequests = [];
+        for (const reqData of pausedRequests) {
+            const { modelRequest, description } = reqData.info;
+            const req = reqData.start();
+            openRequests.push(req);
+            req.then(nextModelSubscription => {
+                console.debug(`[autoupdate] resume request:`, description, [modelRequest]);
+                this._activeRequestObjects[nextModelSubscription.id] = {
+                    modelSubscription: nextModelSubscription,
+                    modelRequest,
+                    description
+                };
+            });
+        }
+
+        Promise.all(openRequests).then(() => {
+            clearTimeout(showBannerTimeout);
+            this.bannerService.removeBanner(OUT_OF_SYNC_BANNER);
         });
     }
 
@@ -99,6 +162,7 @@ export class AutoupdateService {
             const { modelSubscription, modelRequest, description } = this._activeRequestObjects[streamId];
             modelSubscription.close();
             this.request(modelRequest.getModelRequest(), description, streamId).then(nextModelSubscription => {
+                console.debug(`[autoupdate] reconnect request:`, description, [modelRequest]);
                 this._activeRequestObjects[nextModelSubscription.id] = {
                     modelSubscription: nextModelSubscription,
                     modelRequest,
@@ -236,7 +300,9 @@ export class AutoupdateService {
                 changedFullListModels: fullListUpdateCollections,
                 deletedModels: {}
             })
-            .then(() => {
+            .then(deletedModels => {
+                this.communication.cleanupCollections(requestId, deletedModels);
+
                 if (this._resolveDataReceived[requestId]) {
                     this._resolveDataReceived[requestId](modelData);
                     delete this._resolveDataReceived[requestId];

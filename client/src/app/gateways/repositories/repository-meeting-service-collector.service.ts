@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ActiveMeetingService } from '../../site/pages/meetings/services/active-meeting.service';
 import { ActiveMeetingIdService } from '../../site/pages/meetings/services/active-meeting-id.service';
@@ -39,10 +40,33 @@ export class RepositoryMeetingServiceCollectorService {
         return this.repositoryServiceCollector.relationManager;
     }
 
+    public get collectionToKeyUpdatesObservableMap(): { [collection: string]: BehaviorSubject<string[]> } {
+        return this.repositoryServiceCollector.collectionToKeyUpdatesObservableMap;
+    }
+
     public constructor(
         private repositoryServiceCollector: RepositoryServiceCollectorService,
         public activeMeetingIdService: ActiveMeetingIdService,
         public activeMeetingService: ActiveMeetingService,
         public meetingSettingsService: MeetingSettingsService
     ) {}
+
+    /**
+     * Allows repositories to register if there have been updates on a certain key of their model,
+     * so other repositories can check them for the sake of their resorting logic
+     * @param collection the calling repositories own collection
+     * @param newKeys the keys that were updated in the repository
+     */
+    public registerNewKeyUpdates(collection: string, newKeys: string[]): void {
+        this.repositoryServiceCollector.registerNewKeyUpdates(collection, newKeys);
+    }
+
+    /**
+     * Returns an observable that allows repositories to be notified when there are key updates on other model types
+     * @param collection the collection of the other model type.
+     * @returns an observable with the changed keys
+     */
+    public getNewKeyUpdatesObservable(collection: string): Observable<string[]> {
+        return this.repositoryServiceCollector.getNewKeyUpdatesObservable(collection);
+    }
 }

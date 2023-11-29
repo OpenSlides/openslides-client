@@ -15,6 +15,7 @@ import { Deferred } from '../../infrastructure/utils/promises';
 import { GroupControllerService } from '../pages/meetings/pages/participants';
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 import { NoActiveMeetingError } from '../pages/meetings/services/active-meeting-id.service';
+import { MeetingControllerService } from '../pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
 import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate';
@@ -25,18 +26,13 @@ import { SimplifiedModelRequest } from './model-request-builder/model-request-bu
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
 function getUserCML(user: ViewUser): { [id: number]: string } | null {
-    if (!user.committee_$_management_level) {
+    if (!user.committee_management_ids) {
         return null; // Explicit null to distinguish from undefined
     }
 
     const committeeManagementLevel: { [committeeId: number]: CML } = {};
-    for (const replacement of user.committee_$_management_level) {
-        if (!user.committee_management_level_ids(replacement)) {
-            continue;
-        }
-        for (const committeeId of user.committee_management_level_ids(replacement)) {
-            committeeManagementLevel[+committeeId] = replacement;
-        }
+    for (const id of user.committee_management_ids) {
+        committeeManagementLevel[id] = CML.can_manage;
     }
     return committeeManagementLevel;
 }
@@ -62,8 +58,8 @@ export class OperatorService {
     }
 
     public get isMeetingAdmin(): boolean {
-        if (this.defaultGroupId) {
-            return this.isInGroupIdsNonAdminCheck(this.defaultGroupId);
+        if (this.adminGroupId) {
+            return this.isInGroupIdsNonAdminCheck(this.adminGroupId);
         } else {
             throw new NoActiveMeetingError();
         }
@@ -78,7 +74,7 @@ export class OperatorService {
     }
 
     private get isCommitteeManager(): boolean {
-        return (this.user.committee_$_management_level || []).includes(CML.can_manage);
+        return !!(this.user.committee_management_ids || []).length;
     }
 
     public get isAnyManager(): boolean {
@@ -152,16 +148,20 @@ export class OperatorService {
     private get activeMeetingId(): number | null {
         return this.activeMeetingService.meetingId;
     }
+
     private get activeMeeting(): ViewMeeting | null {
         return this.activeMeetingService.meeting;
     }
+
     private get anonymousEnabled(): boolean {
         return this.activeMeetingService.guestsEnabled;
     }
+
     private get defaultGroupId(): number | null {
         const activeMeeting = this.activeMeetingService.meeting;
         return activeMeeting ? activeMeeting.default_group_id : null;
     }
+
     private get adminGroupId(): number | null {
         const activeMeeting = this.activeMeetingService.meeting;
         return activeMeeting ? activeMeeting.admin_group_id : null;
@@ -175,6 +175,7 @@ export class OperatorService {
     private readonly _operatorShortNameSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(
         null
     );
+
     private readonly _userSubject = new BehaviorSubject<ViewUser | null>(null);
     private readonly _operatorReadySubject = new BehaviorSubject<boolean>(false);
 
@@ -199,6 +200,7 @@ export class OperatorService {
     private set _permissions(perms: Permission[] | undefined) {
         this._permissionsSubject.next(perms);
     }
+
     private get _permissions(): Permission[] | undefined {
         return this._permissionsSubject.value;
     }
@@ -218,7 +220,8 @@ export class OperatorService {
         private userRepo: UserRepositoryService,
         private groupRepo: GroupControllerService,
         private autoupdateService: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService
+        private modelRequestBuilder: ModelRequestBuilderService,
+        private meetingRepo: MeetingControllerService
     ) {
         this.setNotReady();
         // General environment in which the operator moves
@@ -308,7 +311,7 @@ export class OperatorService {
         });
         this.DS.getChangeObservable(Group)
             .pipe(debounceTime(50))
-            .subscribe(changes => {
+            .subscribe(() => {
                 if (!this._groupsLoaded) {
                     console.log(`operator: group permissions loaded`);
                     this._groupsLoaded = true;
@@ -330,7 +333,7 @@ export class OperatorService {
         if (user.organization_management_level !== undefined || this._OML === undefined) {
             this._OML = user.organization_management_level || null;
         }
-        this._meetingIds = (user.group_$_ids || []).map(idString => parseInt(idString, 10));
+        this._meetingIds = user.ensuredMeetingIds;
         this._CML = getUserCML(user);
     }
 
@@ -499,15 +502,39 @@ export class OperatorService {
             return true;
         }
 
-        let result: boolean;
         if (!this._groupIds) {
-            result = false;
+            return false;
         } else if (this.isAuthenticated && this._groupIds.find(id => id === this.adminGroupId)) {
-            result = true;
-        } else {
-            result = checkPerms.some(permission => this._permissions?.includes(permission));
+            return true;
         }
-        return result;
+        return checkPerms.some(permission => this._permissions?.includes(permission));
+    }
+
+    /**
+     * Checks, if the operator has at least one of the given permissions for the given meetingId.
+     * @param checkPerms The permissions to check, if at least one matches.
+     */
+    public hasPermsInMeeting(meetingId: number, ...checkPerms: Permission[]): boolean {
+        if (meetingId === this.activeMeetingId) {
+            return this.hasPerms(...checkPerms);
+        }
+        if (!this._ready) {
+            // console.warn(`has perms: Operator is not ready!`);
+            return false;
+        }
+        if (this.isSuperAdmin) {
+            return true;
+        }
+        const groups = this.user.groups(meetingId);
+        if (!groups || !groups.length) {
+            return false;
+        } else if (
+            this.isAuthenticated &&
+            groups.find(group => group.id === this.meetingRepo.getViewModel(meetingId)?.admin_group_id)
+        ) {
+            return true;
+        }
+        return checkPerms.some(permission => groups.some(group => group.hasPermission(permission)));
     }
 
     /**
@@ -665,8 +692,20 @@ export class OperatorService {
                 fieldset: `all`,
                 follow: [
                     {
-                        idField: { templateIdField: `vote_delegations_$_from_ids`, templateValue: `` },
-                        fieldset: [{ templateField: `group_$_ids` }, ...UserFieldsets.FullNameSubscription.fieldset]
+                        idField: `meeting_user_ids`,
+                        fieldset: `all`,
+                        follow: [
+                            {
+                                idField: `vote_delegations_from_ids`,
+                                fieldset: [`meeting_id`, `group_ids`],
+                                follow: [
+                                    {
+                                        idField: `user_id`,
+                                        fieldset: UserFieldsets.FullNameSubscription.fieldset.concat(`meeting_user_ids`)
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             };

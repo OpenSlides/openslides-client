@@ -20,6 +20,7 @@ export class SlideContainerComponent {
 
     @ViewChild(`slide`, { read: ViewContainerRef, static: true })
     private slide: ViewContainerRef | null = null;
+
     private slideRef!: ComponentRef<BaseSlideComponent<object>>;
 
     /**
@@ -145,7 +146,7 @@ export class SlideContainerComponent {
      */
     private updateScroll(): void {
         if (this.slideOptions.scrollable && !this.slideIsAutonomic) {
-            let value = this.scroll;
+            let value = this.scroll ?? 0;
             value *= -25;
             if (this.projector && this.projector.show_header_footer) {
                 value += 50; // Default offset for the header
@@ -165,7 +166,7 @@ export class SlideContainerComponent {
      */
     private updateScale(): void {
         if (this.slideOptions.scaleable && !this.slideIsAutonomic) {
-            let scale = this.scale;
+            let scale = this.scale ?? 0;
             scale *= 10;
             scale += 100;
             this.slideStyle[`font-size`] = `${scale}%`;

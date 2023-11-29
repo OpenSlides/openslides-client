@@ -56,7 +56,7 @@ export class LoadFontService {
 
         this.mediaManageService.getFontUrlObservable(`chyron_speaker_name`).subscribe(chyronFont => {
             if (chyronFont) {
-                this.setNewFontFace(`OSFont ChyronName`, chyronFont);
+                this.setNewFontFace(`customChyronNameFont`, chyronFont);
             }
         });
 
@@ -87,7 +87,7 @@ export class LoadFontService {
         this.setNewFontFace(`customProjectorFont`, fonturl, weight);
     }
 
-    private setNewFontFace(fontName: string, fontPath: string, weight: number = 400): void {
+    private setNewFontFace(fontName: string, fontPath: string, weight = 400): void {
         const customFont = new FontFace(fontName, `url(${fontPath})`, { weight });
         customFont
             .load()

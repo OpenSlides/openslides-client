@@ -30,7 +30,11 @@
     </div>
 
     <mat-menu #userExtraMenu="matMenu">
-        <button mat-menu-item *ngIf="isAllowed('changePassword')" (click)="changePassword()">
+        <button
+            mat-menu-item
+            *ngIf="!user?.saml_id && isAllowed('changePassword') && operatorHasEqualOrHigherOML"
+            (click)="changePassword()"
+        >
             <mat-icon>security</mat-icon>
             <span>{{ 'Change password' | translate }}</span>
         </button>
@@ -150,6 +154,7 @@
                     <os-repo-search-selector
                         formControlName="vote_delegations_from_ids"
                         [repo]="repo"
+                        [sortService]="sortService"
                         [multiple]="true"
                         [subscriptionConfig]="participantSubscriptionConfig"
                         placeholder="{{ 'Voting right received from (principals)' | translate }}"
@@ -161,6 +166,7 @@
                     <os-repo-search-selector
                         formControlName="vote_delegated_to_id"
                         [repo]="repo"
+                        [sortService]="sortService"
                         [multiple]="false"
                         [includeNone]="true"
                         [subscriptionConfig]="participantSubscriptionConfig"
@@ -217,10 +223,9 @@
         <!-- Groups -->
         <div *ngIf="usersGroups && usersGroups.length > 0">
             <h4>{{ 'Groups' | translate }}</h4>
-            <span *ngFor="let group of usersGroups; let last = last" class="inline-flex">
-                {{ group.getTitle() | translate }}
-                <span *ngIf="!last">,&nbsp;</span>
-            </span>
+            <os-comma-separated-listing [list]="usersGroups">
+                <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+            </os-comma-separated-listing>
         </div>
 
         <div *ngIf="!usersGroups || usersGroups?.length === 0">
@@ -252,7 +257,7 @@
             <!-- About me -->
             <div *ngIf="user?.about_me()">
                 <h4>{{ 'About me' | translate }}</h4>
-                <div [innerHTML]="user!.about_me() | trust : 'html'"></div>
+                <div class="underlined-links" [innerHTML]="user!.about_me() | trust : 'html'"></div>
             </div>
         </div>
 

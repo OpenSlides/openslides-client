@@ -48,7 +48,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     /**
      * determine if we are in the amendment of amendment mode
      */
-    private isAmendmentOfAmendment: boolean = false;
+    private isAmendmentOfAmendment = false;
 
     /**
      * Change recommendation content.
@@ -63,12 +63,12 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     /**
      * Determine, from the config service, if a reason is required
      */
-    public reasonRequired: boolean = false;
+    public reasonRequired = false;
 
     /**
      * Indicates if an amendment can change multiple paragraphs or only one
      */
-    public multipleParagraphsAllowed: boolean = false;
+    public multipleParagraphsAllowed = false;
 
     public tinyMceConfig = MotionTinyMceConfig;
 
@@ -176,12 +176,15 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
             tag_ids: this.motion.tag_ids,
             motion_block_id: this.motion.block_id,
             lead_motion_id: this.motion.id,
-            amendment_paragraph_$: amendmentParagraphs,
+            amendment_paragraphs: amendmentParagraphs,
             workflow_id: this.meetingSettingsService.instant(`motions_default_amendment_workflow_id`)
         };
 
         const { sequential_number } = await this.repo.createParagraphBased(motionCreate);
-        this.router.navigate([this.activeMeetingId, `motions`, sequential_number]);
+        this.router.navigate([this.activeMeetingId, `motions`, sequential_number], {
+            replaceUrl: true,
+            state: { canGoBack: true }
+        });
     }
 
     /**

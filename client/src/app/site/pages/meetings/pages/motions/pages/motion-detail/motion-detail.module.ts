@@ -3,18 +3,18 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { MatRadioModule } from '@angular/material/radio';
-import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
@@ -24,6 +24,7 @@ import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/mo
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ActionCardModule } from 'src/app/ui/modules/action-card';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
+import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
@@ -89,6 +90,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
     ],
     imports: [
         CommonModule,
+        CommaSeparatedListingModule,
         MotionDetailRoutingModule,
         MotionChangeRecommendationDialogModule,
         MotionPollModule,

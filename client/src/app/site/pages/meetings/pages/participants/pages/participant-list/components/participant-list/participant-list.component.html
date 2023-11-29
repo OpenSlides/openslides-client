@@ -24,6 +24,7 @@
     [filterProps]="filterProps"
     [multiSelect]="isMultiSelect"
     [hiddenInMobile]="['group', 'presence']"
+    [addBottomSpacer]="hasInteractionState | async"
     [(selectedRows)]="selectedRows"
 >
     <!-- extra content in the filter bar -->
@@ -55,6 +56,9 @@
                 <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canManage">
                     block
                 </mat-icon>
+                <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}" *ngIf="user.hasSamlId && canManage">
+                    fingerprint
+                </mat-icon>
             </div>
         </div>
     </div>
@@ -69,10 +73,9 @@
         <div class="groupsCell">
             <div *ngIf="user.groups()?.length">
                 <os-icon-container icon="people" [noWrap]="true">
-                    <span *ngFor="let group of user.groups(); let last = last" class="inline-flex">
-                        {{ group.getTitle() | translate }}
-                        <span *ngIf="!last">,&nbsp;</span>
-                    </span>
+                    <os-comma-separated-listing [list]="user.groups()">
+                        <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                    </os-comma-separated-listing>
                 </os-icon-container>
             </div>
             <div *ngIf="user.structure_level()" class="spacer-top-5">
@@ -155,13 +158,11 @@
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
     <ng-template matMenuContent let-user="user">
-        <os-projector-button [object]="user" [menuItem]="true"></os-projector-button>
-
         <!-- Presence -->
         <mat-checkbox
             class="mat-menu-item"
             (change)="setPresent(user)"
-            [checked]="user.is_present"
+            [checked]="isUserPresent(user)"
             [disabled]="isPresentToggleDisabled(user)"
         >
             <span>{{ 'Present' | translate }}</span>

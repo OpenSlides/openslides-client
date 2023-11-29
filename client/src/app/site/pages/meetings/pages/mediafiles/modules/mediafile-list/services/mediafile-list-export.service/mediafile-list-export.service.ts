@@ -21,6 +21,9 @@ export class MediafileListExportService {
             if (!mediafile.is_directory) {
                 const download = await this.http.downloadAsBase64(mediafile.url);
                 zip.file(mediafile.title, download.data, { base64: true });
+            } else {
+                const folder = zip.folder(mediafile.title);
+                await this.addFileToZip(mediafile.children, folder);
             }
         }
     }

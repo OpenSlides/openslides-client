@@ -42,8 +42,7 @@
         </div>
     </form>
 </ng-template>
-
-<div id="card-wrapper">
+<div id="card-wrapper" class="spacer-bottom-60">
     <div class="projector-card" *ngFor="let projector of projectors | async; trackBy: trackByIndex">
         <os-projector-list-entry [projector]="projector"></os-projector-list-entry>
     </div>

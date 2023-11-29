@@ -31,20 +31,26 @@ export class UpdateService {
     /**
      * Manually applies the update if one was found
      */
-    public applyUpdate(): void {
-        this.swUpdate.activateUpdate().then(() => {
+    public async applyUpdate(): Promise<void> {
+        if (await this.swUpdate.activateUpdate()) {
             document.location.reload();
             this.store.clear();
-        });
+        }
     }
 
     /**
      * Trigger that to manually check for updates
      */
-    public checkForUpdate(): void {
+    public async checkForUpdate(): Promise<boolean> {
         if (this.swUpdate.isEnabled) {
-            this.swUpdate.checkForUpdate();
+            try {
+                return await this.swUpdate.checkForUpdate();
+            } catch (e) {
+                return false;
+            }
         }
+
+        return false;
     }
 
     private checkVersion(version: VersionReadyEvent): void {

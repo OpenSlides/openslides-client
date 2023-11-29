@@ -1,7 +1,7 @@
 @import 'src/assets/styles/variables.scss';
 
 .los-title {
-    margin-left: 25px;
+    margin: 0 25px;
     display: block;
 }
 
@@ -106,4 +106,8 @@
 .search-new-speaker-form {
     padding: 15px 25px 0 25px;
     width: auto;
+}
+
+.centered-text {
+    text-align: center;
 }

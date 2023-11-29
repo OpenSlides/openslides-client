@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import {
@@ -20,12 +20,12 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
 
+import { InteractionService } from '../../../../../interaction/services/interaction.service';
 import { ViewGroup } from '../../../../../participants/modules/groups/view-models/view-group';
 import { MEDIAFILES_SUBSCRIPTION } from '../../../../mediafiles.subscription';
 import { MediafileCommonService } from '../../../../services/mediafile-common.service';
 import { MediafileListExportService } from '../../services/mediafile-list-export.service/mediafile-list-export.service';
 import { MediafileListGroupService } from '../../services/mediafile-list-group.service';
-import { MediafileListSortService } from '../../services/mediafile-list-sort.service';
 
 @Component({
     selector: `os-mediafile-list`,
@@ -77,6 +77,10 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      */
     public fileEditForm: UntypedFormGroup | null = null;
 
+    public get hasInteractionState(): Observable<boolean> {
+        return this.interactionService.isConfStateNone.pipe(map(isNone => !isNone));
+    }
+
     private folderSubscription: Subscription | null = null;
     private directorySubscription: Subscription | null = null;
     public directory: ViewMediafile | null = null;
@@ -93,12 +97,12 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         private exporter: MediafileListExportService,
         private mediaManage: MediaManageService,
         public vp: ViewPortService,
-        public sortService: MediafileListSortService,
         private operator: OperatorService,
         private formBuilder: UntypedFormBuilder,
         private groupRepo: MediafileListGroupService,
         private cd: ChangeDetectorRef,
-        private commonService: MediafileCommonService
+        private commonService: MediafileCommonService,
+        private interactionService: InteractionService
     ) {
         super(componentServiceCollector, translate);
         this.canMultiSelect = true;
@@ -164,10 +168,10 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     public isMediafileUsed(file: ViewMediafile, place: string): boolean {
         const mediafile = this.repo.getViewModel(file.id)!;
         if (mediafile.isFont()) {
-            return mediafile.used_as_font_in_meeting_id(place) === this.activeMeetingId;
+            return mediafile.used_as_font_in_meeting_id(place as FontPlace) === this.activeMeetingId;
         }
         if (mediafile.isImage()) {
-            return mediafile.used_as_logo_in_meeting_id(place) === this.activeMeetingId;
+            return mediafile.used_as_logo_in_meeting_id(place as LogoPlace) === this.activeMeetingId;
         }
         return false;
     }

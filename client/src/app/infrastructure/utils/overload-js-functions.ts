@@ -1,3 +1,5 @@
+type KeysMatching<T, V> = { [K in keyof T]-?: T[K] extends V ? K : never }[keyof T];
+
 declare global {
     /**
      * Enhance array with own functions
@@ -32,7 +34,8 @@ declare global {
          * @param callbackFn A function that receives the whole array and has to return nothing.
          */
         tap(callbackFn: (self: T[]) => void): T[];
-        mapToObject(f: (item: T, index: number) => { [key: string]: any }): { [key: string]: any };
+        naturalSort(currentLang: string, compareBy?: KeysMatching<T, string>[]): T[];
+        mapToObject<V = any>(f: (item: T, index: number) => { [key: string]: V }): { [key: string]: V };
         /**
          * TODO: Remove this, when ES2022 is the target for our tsconfig
          *
@@ -88,21 +91,21 @@ function overloadArrayFunctions(): void {
 
     Object.defineProperty(Array.prototype, `intersect`, {
         value<T>(other: T[] = []): T[] {
-            let a = this;
-            let b = other;
-            if (b.length < a.length) {
-                [a, b] = [b, a];
+            if (other.length < this.length) {
+                const intersect = new Set<T>(this);
+                return other.filter((element: T) => intersect.has(element));
             }
-            const intersect = new Set<T>(b);
-            return a.filter((element: T) => intersect.has(element));
+            const intersect = new Set<T>(other);
+            return this.filter((element: T) => intersect.has(element));
         },
         enumerable: false
     });
 
     Object.defineProperty(Array.prototype, `difference`, {
-        value<T>(other: T[], symmetric: boolean = false): T[] {
+        value<T>(other: T[], symmetric = false): T[] {
             const difference = new Set<T>(this);
-            for (const entry of other ?? []) {
+            const otherSet = new Set<T>(other ?? []);
+            for (const entry of Array.from(otherSet)) {
                 if (difference.has(entry)) {
                     difference.delete(entry);
                 } else if (symmetric) {
@@ -122,7 +125,7 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, `mapToObject`, {
-        value<T, U extends object>(f: (item: T, index: number) => U): U {
+        value<T, U extends { [key: string]: V }, V = any>(f: (item: T, index: number) => U): U {
             return this.reduce((aggr: U, item: T, index: number) => {
                 const res = f(item, index);
                 for (const key in res) {
@@ -132,6 +135,35 @@ function overloadArrayFunctions(): void {
                 }
                 return aggr;
             }, {});
+        },
+        enumerable: false
+    });
+
+    Object.defineProperty(Array.prototype, `naturalSort`, {
+        value<T>(currentLang: string, compareBy?: KeysMatching<T, string>[]): T[] {
+            const intl = new Intl.Collator(currentLang, {
+                numeric: true,
+                ignorePunctuation: true,
+                sensitivity: `base`
+            });
+            return this.sort((a: T, b: T) => {
+                if (!compareBy || compareBy.length === 0) {
+                    return intl.compare(JSON.stringify(a), JSON.stringify(b));
+                }
+                for (const property of compareBy) {
+                    if (a[property] === b[property] || !(a[property] || b[property])) {
+                        continue;
+                    }
+                    if (!a[property] || !b[property]) {
+                        return !a[property] ? 1 : -1;
+                    }
+                    const value = intl.compare(a[property] as unknown as string, b[property] as unknown as string);
+                    if (value) {
+                        return value;
+                    }
+                }
+                return 0;
+            });
         },
         enumerable: false
     });

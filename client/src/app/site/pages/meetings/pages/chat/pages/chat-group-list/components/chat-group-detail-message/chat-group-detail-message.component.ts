@@ -30,7 +30,7 @@ export class ChatGroupDetailMessageComponent {
 
     public get author(): string {
         if (this.user) {
-            return `${this.user.first_name} ${this.user.last_name}`;
+            return `${this.user.first_name ?? ``} ${this.user.last_name ?? ``}`.trim();
         }
         return ``;
     }

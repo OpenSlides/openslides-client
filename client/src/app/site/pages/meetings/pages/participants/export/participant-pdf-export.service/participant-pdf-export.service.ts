@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Content } from 'pdfmake/interfaces';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export/meeting-pdf-export.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
@@ -38,10 +39,9 @@ export class ParticipantPdfExportService {
      * Export a PDF document containing access information for participants
      */
     public exportAccessDocuments(...participants: ViewUser[]): void {
-        const doc: object[] = [];
+        const doc: Content[] = [];
         participants.forEach(participant => {
             doc.push(this.userPdfService.userAccessToDocDef(participant));
-            doc.push({ text: ``, pageBreak: `after` });
         });
         const filename = this.getPdfFilenameForAccessDocuments(participants);
         const metadata = {

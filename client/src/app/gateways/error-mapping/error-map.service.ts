@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { DefaultErrorMap, ErrorMap, UrlFragmentToHttpErrorMap } from './error-map-utils';
+import { DefaultErrorMap, ErrorMap, isMapError, UrlFragmentToHttpErrorMap } from './error-map-utils';
 
 /**
  * Options that enable the ErrorMapService to find the wanted ErrorMap (specifically in the case of http errors).
@@ -26,7 +26,7 @@ export class ErrorMapService {
      */
     public getCleanErrorMessage(errorMessage: string, options: GetHttpErrorMapOptions): string | Error {
         let errorMsg = errorMessage;
-        let errorMap = options ? this.getHttpErrorMap(options) : DefaultErrorMap;
+        const errorMap = options ? this.getHttpErrorMap(options) : DefaultErrorMap;
         const fittingExpressions = errorMap ? Array.from(errorMap.keys()).filter(exp => exp.test(errorMessage)) : [];
         if (fittingExpressions.length) {
             if (fittingExpressions.length > 1) {
@@ -36,8 +36,8 @@ export class ErrorMapService {
             if (typeof mappedValue === `function`) {
                 mappedValue = mappedValue(errorMessage);
             }
-            if (typeof mappedValue === `object`) {
-                return mappedValue;
+            if (isMapError(mappedValue)) {
+                return mappedValue.getError();
             }
             errorMsg = this.translate.instant(mappedValue);
         } else {
@@ -49,11 +49,11 @@ export class ErrorMapService {
     private getHttpErrorMap(options: GetHttpErrorMapOptions): ErrorMap | null {
         let urlFragments = options.url.split(/[\/?]+/);
         if (/http/.test(urlFragments[0])) {
-            urlFragments = urlFragments.slice(3);
+            urlFragments = urlFragments.slice(2);
         }
         for (let i = 0; i < urlFragments.length; i++) {
-            if (UrlFragmentToHttpErrorMap.get(urlFragments[i])) {
-                let map = UrlFragmentToHttpErrorMap.get(urlFragments[i]);
+            let map = UrlFragmentToHttpErrorMap.get(urlFragments[i]);
+            if (map) {
                 if (typeof map === `function`) {
                     map = map(options?.data);
                 }

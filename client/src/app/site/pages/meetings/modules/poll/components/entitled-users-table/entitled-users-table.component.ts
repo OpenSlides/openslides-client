@@ -13,7 +13,7 @@ import { EntitledUsersTableEntry } from '../../definitions/entitled-users-table-
     encapsulation: ViewEncapsulation.None
 })
 export class EntitledUsersTableComponent {
-    private _isViewingThis: boolean = true;
+    private _isViewingThis = true;
 
     @Input()
     public set entitledUsersObservable(observable: Observable<EntitledUsersTableEntry[]>) {
@@ -25,6 +25,12 @@ export class EntitledUsersTableComponent {
             )
         );
     }
+
+    public get entitledUsersObservable(): Observable<EntitledUsersTableEntry[]> {
+        return this._entitledUsersObservable;
+    }
+
+    private _entitledUsersObservable!: Observable<EntitledUsersTableEntry[]>;
 
     @Input()
     public set isViewingThis(value: boolean) {
@@ -38,13 +44,6 @@ export class EntitledUsersTableComponent {
     public readonly permission = Permission;
 
     public filterPropsEntitledUsersTable = [`user.full_name`, `vote_delegated_to.full_name`, `voted_verbose`];
-
-    public get entitledUsersObservable(): Observable<EntitledUsersTableEntry[]> {
-        return this._entitledUsersObservable;
-    }
-
-    private _entitledUsersObservable!: Observable<EntitledUsersTableEntry[]>;
-
     constructor(private controller: ParticipantControllerService) {}
 
     private getNameFromEntry(entry: EntitledUsersTableEntry): string {

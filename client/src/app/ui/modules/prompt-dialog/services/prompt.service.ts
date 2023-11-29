@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -19,7 +19,7 @@ export class PromptService {
      * @param title The title to display in the dialog
      * @param content The content in the dialog
      */
-    public async open(title: string, content: string = ``): Promise<any> {
+    public async open(title: string, content = ``): Promise<any> {
         this.dialogRef = this.dialog.open(PromptDialogComponent, {
             width: `290px`,
             data: { title, content }

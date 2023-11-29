@@ -167,10 +167,9 @@
                 <!-- Tags -->
                 <div class="ellipsis-overflow spacer-top-5" *ngIf="motion.tags && motion.tags.length">
                     <os-icon-container icon="local_offer">
-                        <span *ngFor="let tag of motion.tags; let last = last">
-                            {{ tag.getTitle() }}
-                            <span *ngIf="!last">,&nbsp;</span>
-                        </span>
+                        <os-comma-separated-listing [list]="motion.tags">
+                            <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
+                        </os-comma-separated-listing>
                     </os-icon-container>
                 </div>
             </div>
@@ -200,37 +199,39 @@
 </mat-menu>
 
 <ng-template #tiles>
-    <os-grid rowHeight="50%">
-        <os-tile *ngFor="let tile of listTiles" [data]="tile" (clicked)="changeToViewWithTileCategory(tile)">
-            <div class="motion-tile-card" [osPaper]="2" [osPaperRaise]="true">
-                <div class="full-height">
-                    <div class="flex-center background-selected">
-                        <span
-                            class="tile-content-prefix"
-                            [matBadge]="tile.amountOfMotions"
-                            [matBadgeColor]="'accent'"
-                            [ngSwitch]="tile.name"
-                        >
-                            <span *ngSwitchCase="'Favorites'"><mat-icon>star</mat-icon></span>
-                            <span *ngSwitchCase="'No category'"><mat-icon>block</mat-icon></span>
-                            <span *ngSwitchCase="'Personal notes'"><mat-icon>speaker_notes</mat-icon></span>
-                            <span *ngSwitchDefault>
-                                <span *ngIf="tile.prefix">
-                                    {{ tile.prefix }}
-                                </span>
-                                <span *ngIf="!tile.prefix">
-                                    <mat-icon>category</mat-icon>
+    <div class="spacer-bottom-60">
+        <os-grid rowHeight="50%">
+            <os-tile *ngFor="let tile of listTiles" [data]="tile" (clicked)="changeToViewWithTileCategory(tile)">
+                <div class="motion-tile-card" [osPaper]="2" [osPaperRaise]="true">
+                    <div class="full-height">
+                        <div class="flex-center background-selected">
+                            <span
+                                class="tile-content-prefix"
+                                [matBadge]="tile.amountOfMotions"
+                                [matBadgeColor]="'accent'"
+                                [ngSwitch]="tile.name"
+                            >
+                                <span *ngSwitchCase="'Favorites'"><mat-icon>star</mat-icon></span>
+                                <span *ngSwitchCase="'No category'"><mat-icon>block</mat-icon></span>
+                                <span *ngSwitchCase="'Personal notes'"><mat-icon>speaker_notes</mat-icon></span>
+                                <span *ngSwitchDefault>
+                                    <span *ngIf="tile.prefix">
+                                        {{ tile.prefix }}
+                                    </span>
+                                    <span *ngIf="!tile.prefix">
+                                        <mat-icon>category</mat-icon>
+                                    </span>
                                 </span>
                             </span>
-                        </span>
-                    </div>
-                    <div class="tile-content-name background-card">
-                        {{ tile.name | translate }}
+                        </div>
+                        <div class="tile-content-name background-card">
+                            {{ tile.name | translate }}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </os-tile>
-    </os-grid>
+            </os-tile>
+        </os-grid>
+    </div>
 </ng-template>
 
 <mat-menu #motionListMenu="matMenu">
@@ -245,7 +246,7 @@
         </div>
 
         <!-- Amendments -->
-        <div *ngIf="amendmentsEnabled && (perms.isAllowed('manage') || hasAmendments())">
+        <div *ngIf="amendmentsEnabled && (perms.isAllowed('manage') || hasAmendments)">
             <button mat-menu-item routerLink="amendments">
                 <!-- color_lens -->
                 <!-- format_paint -->
@@ -272,7 +273,7 @@
 
         <mat-divider
             *ngIf="
-                (hasCategories || hasMotionBlocks || hasAmendments() || perms.isAllowed('manage')) &&
+                (hasCategories || hasMotionBlocks || hasAmendments || perms.isAllowed('manage')) &&
                 (perms.isAllowed('manage') || selectedView === 'list' || perms.isAllowed('can_manage_config'))
             "
         ></mat-divider>

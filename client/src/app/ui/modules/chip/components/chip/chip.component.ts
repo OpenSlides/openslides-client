@@ -14,6 +14,7 @@ export class ChipComponent {
     @Input()
     public set color(color: HtmlColor | string) {
         if (/^(#?)[0-9a-fA-F]{6}$/.test(color)) {
+            this.cssClass = ``;
             this._color = this.colorService.parseHtmlColorToColor(color);
             this.recalcForegroundColor();
         } else {
@@ -21,7 +22,7 @@ export class ChipComponent {
         }
     }
 
-    public cssClass: string = ``;
+    public cssClass = ``;
 
     private _color: Color | null = null;
     private _threshold = `0.5`;

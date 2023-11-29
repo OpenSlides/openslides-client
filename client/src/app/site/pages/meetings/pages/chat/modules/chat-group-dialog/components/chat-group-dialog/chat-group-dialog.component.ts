@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
 import { ChatGroupDialogData } from '../../services/chat-group-dialog.service';
@@ -19,8 +19,10 @@ export class ChatGroupDialogComponent implements OnInit {
 
     public readonly previousChatGroupName!: string;
 
+    public readonly groupsObservable = this.groupsRepo.getViewModelListObservable();
+
     public constructor(
-        public readonly groupsRepo: GroupControllerService,
+        private groupsRepo: GroupControllerService,
         private fb: UntypedFormBuilder,
         @Inject(MAT_DIALOG_DATA) private readonly data?: ChatGroupDialogData
     ) {

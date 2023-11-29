@@ -155,7 +155,14 @@
                 <os-motion-manage-title [motion]="motion"></os-motion-manage-title>
             </div>
 
-            <ng-container *ngIf="vp.isMobile; then mobileView; else desktopView"></ng-container>
+            <div *ngIf="editMotion">
+                <mat-card [ngClass]="vp.isMobile ? 'os-form-card-mobile' : 'os-form-card'">
+                    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                </mat-card>
+            </div>
+            <ng-container *ngIf="!editMotion">
+                <ng-container *ngIf="vp.isMobile; then mobileView; else desktopView"></ng-container>
+            </ng-container>
         </div>
     </ng-container>
 </os-detail-view>
@@ -163,43 +170,37 @@
 <ng-template #mobileView>
     <div class="mobile-view">
         <!-- Meta info -->
-        <div *ngIf="!newMotion && !editMotion">
+        <div *ngIf="!newMotion">
             <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
         </div>
 
         <!-- Content -->
-        <mat-card [ngClass]="editMotion ? 'os-form-card-mobile' : 'os-card'">
+        <mat-card class="os-card">
             <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
         </mat-card>
 
         <!-- Comments -->
-        <os-motion-comments *ngIf="!editMotion" [motion]="motion"></os-motion-comments>
+        <os-motion-comments [motion]="motion"></os-motion-comments>
 
         <!-- Personal note -->
-        <os-motion-personal-note
-            *ngIf="!editMotion && !operator.isAnonymous"
-            [motion]="motion"
-        ></os-motion-personal-note>
+        <os-motion-personal-note *ngIf="!operator.isAnonymous" [motion]="motion"></os-motion-personal-note>
     </div>
 </ng-template>
 
 <ng-template #desktopView>
     <div class="desktop-view" *ngIf="motion || newMotion">
-        <div class="desktop-left">
+        <div class="desktop-left" [ngClass]="{ 'spacer-bottom-60': !editMotion }">
             <!-- Meta Info -->
-            <div *ngIf="!newMotion && !editMotion">
+            <div *ngIf="!newMotion">
                 <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
             </div>
 
-            <os-motion-comments *ngIf="!editMotion" [motion]="motion"></os-motion-comments>
-            <os-motion-personal-note
-                *ngIf="!editMotion && !operator.isAnonymous"
-                [motion]="motion"
-            ></os-motion-personal-note>
+            <os-motion-comments [motion]="motion"></os-motion-comments>
+            <os-motion-personal-note *ngIf="!operator.isAnonymous" [motion]="motion"></os-motion-personal-note>
         </div>
         <div class="desktop-right">
             <!-- Content -->
-            <mat-card [ngClass]="editMotion ? 'os-form-card' : 'os-card'">
+            <mat-card class="os-card">
                 <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
             </mat-card>
         </div>

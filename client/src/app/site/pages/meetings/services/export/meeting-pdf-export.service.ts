@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Content, PageSize, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { FontPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import {
     PdfDocumentService,
@@ -12,10 +13,10 @@ import { mmToPoints } from 'src/app/infrastructure/utils';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
-import { MeetingPdfExportModule } from './meeting-pdf-export.module';
+import { MeetingExportModule } from './meeting-export.module';
 
 interface MeetingDownloadLandscapeConfig {
-    docDefinition: object;
+    docDefinition: Content;
     filename: string;
     metadata?: object;
 }
@@ -25,7 +26,7 @@ interface MeetingDownloadConfig extends MeetingDownloadLandscapeConfig {
 }
 
 @Injectable({
-    providedIn: MeetingPdfExportModule
+    providedIn: MeetingExportModule
 })
 export class MeetingPdfExportService {
     private get fontSize(): number | null {
@@ -73,7 +74,7 @@ export class MeetingPdfExportService {
         this.pdfExportService.downloadLandscape({ ...config, ...this.createDownloadConfig() });
     }
 
-    public downloadWaitableDoc(filename: string, buildDocFn: () => Promise<object>): void {
+    public downloadWaitableDoc(filename: string, buildDocFn: () => Promise<TDocumentDefinitions>): void {
         const config = this.createDownloadConfig();
         this.pdfExportService.downloadWaitableDoc(
             filename,
@@ -107,7 +108,7 @@ export class MeetingPdfExportService {
         return this.pdfExportService.createTocLine(definition, ...subTitles);
     }
 
-    public createTocLineInline(text: string, italics: boolean = false): any {
+    public createTocLineInline(text: string, italics = false): any {
         return this.pdfExportService.createTocLineInline(text, italics);
     }
 
@@ -159,11 +160,13 @@ export class MeetingPdfExportService {
         fontSize: number;
         loadFonts: () => PdfFontDescription;
         createVfs: () => Promise<PdfVirtualFileSystem>;
+        pageSize: PageSize;
     } {
         return {
             fontSize: this.fontSize!,
             loadFonts: () => this.getFonts(),
-            createVfs: () => this.createVirtualFileSystem()
+            createVfs: () => this.createVirtualFileSystem(),
+            pageSize: <PageSize>this.meetingSettingsService.instant(`export_pdf_pagesize`) ?? `A4`
         };
     }
 }

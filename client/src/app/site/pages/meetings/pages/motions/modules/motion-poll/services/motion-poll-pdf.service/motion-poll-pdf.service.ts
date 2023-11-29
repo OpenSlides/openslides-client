@@ -4,7 +4,7 @@ import {
     AbstractPollData,
     BasePollPdfService
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
-import { PollKeyVerbosePipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
+import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -30,7 +30,8 @@ export class MotionPollPdfService extends BasePollPdfService {
         protected override translate: TranslateService,
         private motionRepo: MotionControllerService,
         pollService: MotionPollService,
-        pollKeyVerbose: PollKeyVerbosePipe
+        pollKeyVerbose: PollKeyVerbosePipe,
+        pollParseNumber: PollParseNumberPipe
     ) {
         super(
             meetingSettingsService,
@@ -40,7 +41,8 @@ export class MotionPollPdfService extends BasePollPdfService {
             pdfService,
             translate,
             pollService,
-            pollKeyVerbose
+            pollKeyVerbose,
+            pollParseNumber
         );
         this.meetingSettingsService
             .get(`motion_poll_ballot_paper_number`)

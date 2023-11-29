@@ -1,5 +1,9 @@
 import { Directive, OnDestroy } from '@angular/core';
-import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
+import {
+    LegacySimpleSnackBar as SimpleSnackBar,
+    MatLegacySnackBar as MatSnackBar,
+    MatLegacySnackBarRef as MatSnackBarRef
+} from '@angular/material/legacy-snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -158,7 +162,7 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
      * To catch swipe gestures.
      * Should be overwritten by children which need swipe gestures
      */
-    protected swipe(e: TouchEvent, when: string): void {}
+    protected swipe(_e: TouchEvent, _when: string): void {}
 
     /**
      * TinyMCE Init callback. Used for certain mobile editors
@@ -172,7 +176,7 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
         }
     }
 
-    public onLeaveTinyMce(event: any): void {
+    public onLeaveTinyMce(_event: any): void {
         this.saveHint = false;
     }
 }

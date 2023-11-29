@@ -50,14 +50,14 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
         return this.viewListOfSpeakers && this.viewListOfSpeakers.closed;
     }
 
-    public isMobile: boolean = false;
+    public isMobile = false;
 
     public manualSortMode = false;
 
     /**
      * filled by child component
      */
-    public isListOfSpeakersEmpty: boolean = false;
+    public isListOfSpeakersEmpty = false;
 
     public get isNextListOfSpeakersEmpty(): boolean {
         return !this.viewListOfSpeakers?.waitingSpeakers?.length;
@@ -70,7 +70,7 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
     /**
      * filled by child component
      */
-    public canReaddLastSpeaker: boolean = false;
+    public canReaddLastSpeaker = false;
 
     private _losSubscription: Subscription | null = null;
     private _losId!: Id;

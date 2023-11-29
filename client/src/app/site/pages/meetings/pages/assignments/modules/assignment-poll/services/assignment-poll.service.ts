@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { PollPercentBaseVerboseKey, PollTypeVerboseKey } from 'src/app/domain/models/poll';
@@ -76,7 +76,7 @@ export class AssignmentPollService extends PollService {
         const poll: Partial<Poll> = {
             title: this.translate.instant(`Ballot`),
             onehundred_percent_base: this.defaultPercentBase,
-            entitled_group_ids: this.defaultGroupIds,
+            entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             pollmethod: this.defaultPollMethod,
             type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog
         };

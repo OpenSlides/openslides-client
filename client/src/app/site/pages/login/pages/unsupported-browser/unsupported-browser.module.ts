@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
 import { UnsupportedBrowserComponent } from './components/unsupported-browser/unsupported-browser.component';

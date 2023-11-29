@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Committee } from 'src/app/domain/models/comittees/committee';
 import {
@@ -84,7 +84,7 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
     }
 
     private _currentImportPhase: ImportStepPhase = ImportStepPhase.ENQUEUED;
-    private _isImportValid: boolean = false;
+    private _isImportValid = false;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,

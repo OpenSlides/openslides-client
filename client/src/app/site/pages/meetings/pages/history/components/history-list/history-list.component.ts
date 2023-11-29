@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
@@ -14,7 +14,6 @@ import { SearchDeletedModelsPresenterService } from 'src/app/gateways/presenter/
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import {
     collectionIdFromFqid,
     fqidFromCollectionAndId,
@@ -29,6 +28,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
 import { ViewMotionState } from '../../../motions';
+import { ParticipantControllerService } from '../../../participants/services/common/participant-controller.service';
 import { Position } from '../../definitions';
 import { HistoryService } from '../../services/history.service';
 
@@ -51,8 +51,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     public customTimestampChanged: Subject<number> = new Subject<number>();
 
     public dataSource: MatTableDataSource<HistoryPosition> = new MatTableDataSource<HistoryPosition>();
-
-    public pageSizes = [50, 100, 150, 200, 250];
 
     /**
      * The form for the selection of the model
@@ -82,7 +80,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
 
     public get modelsRepoMap(): { [collection: Collection]: BaseRepository<BaseViewModel, BaseModel> } {
         // add repos to this array to extend the selection for history models
-        const historyRepos: BaseRepository<BaseViewModel, BaseModel>[] = [this.motionRepo, this.assignmentRepo];
+        const historyRepos: any[] = [this.motionRepo, this.assignmentRepo];
         if (this.operator.isOrgaManager) {
             historyRepos.push(this.userRepo);
         }
@@ -93,7 +91,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
 
     public get modelPlaceholder(): string {
         const value = this.modelSelectForm.controls[`collection`].value;
-        if (!value) {
+        if (!value || !this.modelsRepoMap[value]) {
             return `-`;
         } else {
             return this.modelsRepoMap[value].getVerboseName();
@@ -116,7 +114,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         private historyService: HistoryService,
         private motionRepo: MotionRepositoryService,
         private assignmentRepo: AssignmentRepositoryService,
-        private userRepo: UserRepositoryService,
+        private userRepo: ParticipantControllerService,
         private collectionMapperService: CollectionMapperService
     ) {
         super(componentServiceCollector, translate);
@@ -205,7 +203,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     private filterHistoryData(positions: HistoryPosition[], fqid: Fqid): HistoryPosition[] {
         return positions.filter(position => {
             const newInformation = [];
-            if (!Array.isArray(position.information)) {
+            if (position.information && !Array.isArray(position.information)) {
                 position.information = position.information[fqid];
             }
             if (!position.information) {
@@ -256,7 +254,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
      * Serves as an entry point for the time travel routine
      */
     public async onClickRow(position: Position): Promise<void> {
-        console.log(`click on row`, position, this.operator.hasOrganizationPermissions(OML.superadmin));
         if (!this.operator.hasOrganizationPermissions(OML.superadmin)) {
             return;
         }
@@ -264,7 +261,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         await this.historyService.enterHistoryMode(this.currentFqid, position);
         const [collection, id] = collectionIdFromFqid(this.currentFqid);
         const element = this.viewModelStore.get(collection, id);
-        console.log(`go to element:`, element);
         if (element && isDetailNavigable(element)) {
             this.router.navigate([element.getDetailStateUrl()]);
         } else {

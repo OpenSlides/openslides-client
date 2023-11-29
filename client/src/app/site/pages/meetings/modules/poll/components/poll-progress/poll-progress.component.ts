@@ -24,7 +24,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
     @Input()
     public canManagePoll = false;
 
-    public max: number = 1;
+    public max = 1;
 
     public get votescast(): number {
         return this.poll?.vote_count || 0;
@@ -70,7 +70,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
                              * They are in one of the voting groups
                              */
                             return users.filter(user => {
-                                const countable = user.getIsVoteCountable(this.activeMeeting.meeting.present_user_ids);
+                                const countable = user.isVoteCountable;
                                 const inVoteGroup = this.poll.entitled_group_ids.intersect(user.group_ids()).length;
 
                                 return countable && inVoteGroup;

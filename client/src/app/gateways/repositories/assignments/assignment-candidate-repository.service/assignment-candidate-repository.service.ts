@@ -24,12 +24,12 @@ export class AssignmentCandidateRepositoryService extends BaseMeetingRelatedRepo
     public getTitle = (viewAssignmentCandidate: ViewAssignmentCandidate) =>
         viewAssignmentCandidate.user?.getTitle() ?? UnknownUserLabel;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Candidates` : `Candidate`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Candidates` : `Candidate`);
 
-    public async create(assignment: Identifiable, userId: Id): Promise<Identifiable> {
+    public async create(assignment: Identifiable, meetingUserId: Id): Promise<Identifiable> {
         const payload = {
             assignment_id: assignment.id,
-            user_id: userId
+            meeting_user_id: meetingUserId
         };
         return this.sendActionToBackend(AssignmentCandidateAction.CREATE, payload);
     }

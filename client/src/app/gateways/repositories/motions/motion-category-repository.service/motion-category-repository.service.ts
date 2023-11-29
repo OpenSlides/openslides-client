@@ -57,7 +57,7 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
             ? viewMotionCategory.prefix + ` - ` + viewMotionCategory.name
             : viewMotionCategory.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Categories` : `Category`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Categories` : `Category`);
 
     /**
      * Updates a categories numbering.
@@ -65,7 +65,7 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
      * @param viewMotionCategory the category it should be updated in
      */
     public async numberMotionsInCategory(viewMotionCategory: Identifiable): Promise<void> {
-        return this.actions.sendRequest(MotionCategoryAction.NUMBER_MOTIONS, { id: viewMotionCategory.id });
+        await this.createAction(MotionCategoryAction.NUMBER_MOTIONS, { id: viewMotionCategory.id }).resolve();
     }
 
     /**
@@ -79,7 +79,7 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
             id: category.id,
             motion_ids: motionIds
         };
-        return this.actions.sendRequest(MotionCategoryAction.SORT_MOTIONS_IN_CATEGORY, payload);
+        await this.createAction(MotionCategoryAction.SORT_MOTIONS_IN_CATEGORY, payload).resolve();
     }
 
     /**
@@ -92,7 +92,7 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
             meeting_id: this.activeMeetingId,
             tree: data
         };
-        return this.actions.sendRequest(MotionCategoryAction.SORT, payload);
+        await this.createAction(MotionCategoryAction.SORT, payload).resolve();
     }
 
     private getCreatePayload(partialCategory: Partial<MotionCategory>): any {

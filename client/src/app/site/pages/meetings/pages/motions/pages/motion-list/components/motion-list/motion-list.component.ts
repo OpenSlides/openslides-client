@@ -62,19 +62,19 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
      * Value of the configuration variable `motions_statutes_enabled` - are statutes enabled?
      * @TODO replace by direct access to config variable, once it's available from the templates
      */
-    public statutesEnabled: boolean = false;
+    public statutesEnabled = false;
 
     /**
      * Value of the configuration variable `motions_amendments_enabled` - are amendments enabled?
      */
-    public amendmentsEnabled: boolean = false;
+    public amendmentsEnabled = false;
 
     /**
      * Value of the config variable `motions_show_sequential_numbers`
      */
-    public showSequential: boolean = false;
+    public showSequential = false;
 
-    public recommendationEnabled: boolean = false;
+    public recommendationEnabled = false;
 
     /**
      * Define extra filter properties
@@ -102,12 +102,12 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
 
     private categoryTiles: TileCategoryInformation[] = [];
 
-    private _forwardingAvailable: boolean = false;
+    private _forwardingAvailable = false;
 
     /**
      * The verbose name for the motions.
      */
-    public motionsVerboseName: string = ``;
+    public motionsVerboseName = ``;
 
     protected get hasCategories(): boolean {
         return this._hasCategories;
@@ -117,12 +117,17 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         return this._hasMotionBlocks;
     }
 
+    protected get hasAmendments(): boolean {
+        return this._hasAmendments;
+    }
+
     /**
      * The recommender of the current meeting.
      */
     private _recommender?: string;
     private _hasCategories = false;
     private _hasMotionBlocks = false;
+    private _hasAmendments = false;
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
@@ -188,6 +193,9 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
                 if (motions && motions.length) {
                     this.createMotionTiles(motions);
                 }
+            }),
+            this.amendmentController.getViewModelListObservable().subscribe(amendments => {
+                this._hasAmendments = !!amendments.length;
             })
         );
     }
@@ -273,7 +281,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     /**
      * @returns true if the motion has the given prop
      */
-    private motionHasProp(motion: ViewMotion, property: keyof ViewMotion, positive: boolean = true): boolean {
+    private motionHasProp(motion: ViewMotion, property: keyof ViewMotion, positive = true): boolean {
         return !!motion[property] === positive ? true : false;
     }
 
@@ -366,19 +374,14 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
             delete result.title; // Do not update the title!
             await this.motionRepo
                 .update(result.update, motion)
-                .concat(this.motionRepo.setState(result.state_id!, motion))
-                .concat(this.motionRepo.setRecommendation(result.recommendation_id!, motion))
+                .concat(
+                    this.motionRepo.setState(result.state_id!, motion),
+                    this.motionRepo.setRecommendation(result.recommendation_id!, motion)
+                )
                 .resolve();
         }
 
         this.selectedMotion = null;
-    }
-
-    /**
-     * @returns if there are amendments or not
-     */
-    public hasAmendments(): boolean {
-        return !!this.amendmentController.getViewModelList().length;
     }
 
     private setupListView(isAvailable: boolean): void {

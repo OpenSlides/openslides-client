@@ -4,7 +4,13 @@ import { ModificationType } from 'src/app/domain/models/motions/motions.constant
 import { djb2hash, splitStringKeepSeperator } from 'src/app/infrastructure/utils';
 import * as DomHelpers from 'src/app/infrastructure/utils/dom-helpers';
 
-import { DiffCache, DiffLinesInParagraph, LineRange } from '../../../../definitions';
+import {
+    CommonAncestorData,
+    DiffCache,
+    DiffLinesInParagraph,
+    ExtractedContent,
+    LineRange
+} from '../../../../definitions';
 import { ViewUnifiedChangeType } from '../../definitions';
 import { ViewUnifiedChange } from '../../view-models';
 import { LineNumberedString, LineNumberingService, LineNumberRange } from '../line-numbering.service';
@@ -12,83 +18,6 @@ import { LineNumberedString, LineNumberingService, LineNumberRange } from '../li
 const ELEMENT_NODE = Node.ELEMENT_NODE;
 const TEXT_NODE = Node.TEXT_NODE;
 const DOCUMENT_FRAGMENT_NODE = Node.DOCUMENT_FRAGMENT_NODE;
-
-/**
- * This data structure is used when determining the most specific common ancestor of two HTML node
- * (`node1` and `node2`)
- * within the same Document Fragment.
- */
-interface CommonAncestorData {
-    /**
-     * The most specific common ancestor node.
-     */
-    commonAncestor: Node;
-    /**
-     * The nodes inbetween `commonAncestor` and the `node1` in the DOM hierarchy.
-     * Empty, if node1 is a direct descendant.
-     */
-    trace1: Node[];
-    /**
-     * The nodes inbetween `commonAncestor` and the `node2` in the DOM hierarchy.
-     * Empty, if node2 is a direct descendant.
-     */
-    trace2: Node[];
-    /**
-     * Starting the root node, this indicates the depth level of the `commonAncestor`.
-     */
-    index: number;
-}
-
-/**
- * An object produced by `extractRangeByLineNumbers``. It contains both the extracted lines as well as
- * information about the context in which these lines occur.
- * This additional information is meant to render the snippet correctly without producing broken HTML
- */
-interface ExtractedContent {
-    /**
-     * The HTML between the two line numbers. Line numbers and automatically set line breaks are stripped.
-     * All HTML tags are converted to uppercase
-     * (e.g. Line 2</LI><LI>Line3</LI><LI>Line 4 <br>)
-     */
-    html: string;
-    /**
-     * The most specific DOM element that contains the HTML snippet (e.g. a UL, if several LIs are selected)
-     */
-    ancestor: Node;
-    /**
-     * An HTML string that opens all necessary tags to get the browser into the rendering mode
-     * of the ancestor element (e.g. <DIV><UL> in the case of the multiple LIs)
-     */
-    outerContextStart: string;
-    /**
-     * An HTML string that closes all necessary tags from the ancestor element (e.g. </UL></DIV>
-     */
-    outerContextEnd: string;
-    /**
-     * A string that opens all necessary tags between the ancestor and the beginning of the selection (e.g. <LI>)
-     */
-    innerContextStart: string;
-    /**
-     * A string that closes all tags after the end of the selection to the ancestor (e.g. </LI>)
-     */
-    innerContextEnd: string;
-    /**
-     * The HTML before the selected area begins (including line numbers)
-     */
-    previousHtml: string;
-    /**
-     * A HTML snippet that closes all open tags from previousHtml
-     */
-    previousHtmlEndSnippet: string;
-    /**
-     * The HTML after the selected area
-     */
-    followingHtml: string;
-    /**
-     * A HTML snippet that opens all HTML tags necessary to render "followingHtml"
-     */
-    followingHtmlStartSnippet: string;
-}
 
 /**
  * Functionality regarding diffing, merging and extracting line ranges.
@@ -345,7 +274,7 @@ export class MotionDiffService {
             return ModificationType.TYPE_REPLACEMENT;
         }
 
-        let firstDiffIndex = Array.from(htmlOld).findIndex((v, i) => v !== htmlNew[i]);
+        const firstDiffIndex = Array.from(htmlOld).findIndex((v, i) => v !== htmlNew[i]);
 
         const remainderOld = htmlOld.substr(firstDiffIndex);
         const remainderNew = htmlNew.substr(firstDiffIndex);
@@ -389,7 +318,7 @@ export class MotionDiffService {
             os[oldArr[i]].rows.push(i);
         }
 
-        for (let i in ns) {
+        for (const i in ns) {
             if (ns[i].rows.length === 1 && typeof os[i] !== `undefined` && os[i].rows.length === 1) {
                 newArr[ns[i].rows[0]] = { text: newArr[ns[i].rows[0]], row: os[i].rows[0] };
                 oldArr[os[i].rows[0]] = { text: oldArr[os[i].rows[0]], row: ns[i].rows[0] };
@@ -454,7 +383,7 @@ export class MotionDiffService {
      */
     private tokenizeHtml(str: string): string[] {
         let res = [str];
-        for (let splitConf of [
+        for (const splitConf of [
             { by: `<`, type: `prepend` },
             { by: `>`, type: `append` },
             { by: ` ` },
@@ -2109,7 +2038,7 @@ export class MotionDiffService {
         highlight?: number,
         lineRange?: LineRange
     ): string {
-        let maxLine = 0;
+        let maxLine = lineRange?.from || 0;
         changes.forEach((change: ViewUnifiedChange) => {
             if (change.getLineTo() > maxLine) {
                 maxLine = change.getLineTo();

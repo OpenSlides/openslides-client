@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { of } from 'rxjs';
 import { OptionData, OptionTitle, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { PollClassType, PollState } from 'src/app/domain/models/poll/poll-constants';
@@ -116,7 +116,7 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
         return poll;
     }
 
-    private createOptionData(data: SlidePollOption, weight: number = 1): OptionData {
+    private createOptionData(data: SlidePollOption, weight = 1): OptionData {
         const getOptionTitle: () => OptionTitle = () => {
             if (data.text) {
                 return { title: data.text };

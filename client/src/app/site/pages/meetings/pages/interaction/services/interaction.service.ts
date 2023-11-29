@@ -45,6 +45,7 @@ export class InteractionService {
     private get conferenceState(): ConferenceState {
         return this.interactionReceive.conferenceState;
     }
+
     private set conferenceState(state: ConferenceState) {
         this.interactionReceive.conferenceState = state;
     }

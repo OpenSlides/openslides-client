@@ -84,6 +84,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     protected createForm(): UntypedFormControl {
         return this.fb.control([``]);
     }
+
     protected updateForm(value: string | null): void {
         this.contentForm.setValue(value);
     }

@@ -1,6 +1,7 @@
 import { ApplicationRef, Component, OnInit, ViewContainerRef } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { DateFnsConfigurationService } from 'ngx-date-fns';
 import { first, firstValueFrom, tap } from 'rxjs';
@@ -9,6 +10,7 @@ import { StorageService } from 'src/app/gateways/storage.service';
 import { langToTimeLocale } from 'src/app/infrastructure/utils';
 import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
@@ -35,7 +37,9 @@ export class OpenSlidesMainComponent implements OnInit {
         private matIconRegistry: MatIconRegistry,
         private translate: TranslateService,
         private storageService: StorageService,
-        private config: DateFnsConfigurationService
+        private config: DateFnsConfigurationService,
+        private updateService: UpdateService,
+        private router: Router
     ) {
         overloadJsFunctions();
         this.waitForAppLoaded();
@@ -92,7 +96,25 @@ export class OpenSlidesMainComponent implements OnInit {
                 })
             )
         );
+
+        this.router.initialNavigation();
         await this.onInitDone;
+
+        try {
+            if ((await navigator.serviceWorker?.getRegistrations())?.length) {
+                if (
+                    await Promise.race([
+                        this.updateService.checkForUpdate(),
+                        new Promise((_, reject) => setTimeout(() => reject(), 3000))
+                    ])
+                ) {
+                    await this.updateService.applyUpdate();
+                    return;
+                }
+            } else {
+                this.updateService.checkForUpdate();
+            }
+        } catch (_) {}
 
         setTimeout(() => {
             this.lifecycleService.appLoaded.next();

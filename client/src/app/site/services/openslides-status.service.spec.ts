@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
 
 import { OpenSlidesStatusService } from './openslides-status.service';
 
-xdescribe(`OpenSlidesStatusService`, () => {
+describe(`OpenSlidesStatusService`, () => {
     let service: OpenSlidesStatusService;
 
     beforeEach(() => {
@@ -12,5 +13,21 @@ xdescribe(`OpenSlidesStatusService`, () => {
 
     it(`should be created`, () => {
         expect(service).toBeTruthy();
+    });
+
+    it(`check stable`, () => {
+        expect((service.stable as Deferred).wasResolved).toBe(false);
+        service.setStable();
+        expect((service.stable as Deferred).wasResolved).toBe(true);
+    });
+
+    it(`observe stableSubject`, () => {
+        let actualValue: boolean | undefined;
+        service.isStableObservable.subscribe(value => {
+            actualValue = value;
+        });
+        expect(actualValue).toBe(false);
+        service.setStable();
+        expect(actualValue).toBe(true);
     });
 });

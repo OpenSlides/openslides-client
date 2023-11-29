@@ -16,7 +16,7 @@
         </ng-container>
     </mat-select-trigger>
 
-    <div class="os-search-selector--input-wrapper" *ngIf="matSelect.panelOpen">
+    <div #searchSelectorInput class="os-search-selector--input-wrapper" *ngIf="matSelect.panelOpen">
         <input
             matInput
             osAutofocus
@@ -54,7 +54,13 @@
             <ng-container *ngTemplateOutlet="notFoundTemplate"></ng-container>
         </button>
     </ng-container>
-    <div #scrollViewport [ngStyle]="{ height: panelHeight + 'px' }" class="vscroll-viewport">
+    <cdk-virtual-scroll-viewport
+        [ngStyle]="{ height: panelHeight + 'px' }"
+        class="vscroll-viewport"
+        minBufferPx="400"
+        maxBufferPx="600"
+        [itemSize]="50"
+    >
         <mat-option
             *ngIf="(filteredItemsObservable | async)?.length === 0"
             class="os-search-selector--no-options"
@@ -62,9 +68,10 @@
         >
             {{ noOptionsFoundLabel | translate }}
         </mat-option>
+        <mat-option *ngIf="addClearSelection">-</mat-option>
         <mat-option
             #currentOption
-            *ngFor="let selectableItem of filteredItemsObservable | async"
+            *cdkVirtualFor="let selectableItem of filteredItemsObservable | async"
             [value]="selectableItem.id"
             [disabled]="disableOptionWhenFn(selectableItem) || selectableItem.disabled"
             [matTooltip]="tooltipFn(selectableItem, currentOption)"
@@ -72,7 +79,25 @@
             (onSelectionChange)="onSelectionChange(selectableItem, $event)"
             (click)="keepOpen ? matSelect.open() : null"
         >
-            {{ selectableItem.getTitle() | translate }} {{ getItemAdditionalInfoFn(selectableItem) }}
+            <ng-container *ngTemplateOutlet="optionContent; context: { item: selectableItem }"></ng-container>
         </mat-option>
-    </div>
+    </cdk-virtual-scroll-viewport>
+
+    <!-- Ensure that selected options are always loaded, so that the mat-trigger is shown-->
+    <ng-container *ngIf="multiple">
+        <mat-option class="selected-options-hidden" *ngIf="selectedItems.length" [value]="selectedItems[0].id" disabled>
+            <ng-container *ngTemplateOutlet="optionContent; context: { item: selectedItems[0] }"></ng-container>
+        </mat-option>
+    </ng-container>
+    <ng-container *ngIf="!multiple">
+        <mat-option class="selected-options-hidden" *ngIf="contentForm.value" [value]="contentForm.value" disabled>
+            <ng-container
+                *ngTemplateOutlet="optionContent; context: { item: getItemById(contentForm.value) }"
+            ></ng-container>
+        </mat-option>
+    </ng-container>
 </mat-select>
+
+<ng-template #optionContent let-item="item">
+    <ng-container *ngIf="item">{{ item.getTitle() | translate }} {{ getItemAdditionalInfoFn(item) }}</ng-container>
+</ng-template>

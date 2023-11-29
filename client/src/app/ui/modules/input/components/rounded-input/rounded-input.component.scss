@@ -19,6 +19,13 @@
         &.input-suffix {
             right: 8px;
         }
+        &.input-suffix-clear {
+            right: 48px;
+        }
+    }
+
+    &.has-submit .rounded-input {
+        padding: 8px 78px 8px 25px;
     }
 
     .rounded-input {

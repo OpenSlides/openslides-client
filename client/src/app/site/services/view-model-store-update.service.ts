@@ -8,7 +8,7 @@ import { DataStoreUpdateManagerService } from 'src/app/site/services/data-store-
 interface DeletedModels {
     [collection: string]: number[];
 }
-interface ChangedModels {
+export interface ChangedModels {
     [collection: string]: BaseModel[];
 }
 
@@ -56,7 +56,7 @@ export class ViewModelStoreUpdateService {
         changedFullListModels,
         deletedModels,
         patch
-    }: UpdatePatch): Promise<void> {
+    }: UpdatePatch): Promise<DeletedModels> {
         const _deletedModels: DeletedModels = {};
         const _changedModels: ChangedModels = {};
 
@@ -65,10 +65,11 @@ export class ViewModelStoreUpdateService {
         }
 
         for (const collection of Object.keys(changedModels)) {
-            const modelIds =
-                this.DS.get(changedModels[collection].parentCollection, changedModels[collection].parentId)[
-                    changedModels[collection].parentField
-                ] || [];
+            const parentModel = this.DS.get(
+                changedModels[collection].parentCollection,
+                changedModels[collection].parentId
+            );
+            const modelIds = (parentModel && parentModel[changedModels[collection].parentField]) || [];
             const ids = modelIds.difference(changedModels[collection].ids);
             _deletedModels[collection] = (_deletedModels[collection] || []).concat(ids);
         }
@@ -86,6 +87,7 @@ export class ViewModelStoreUpdateService {
         }
 
         await this.doCollectionUpdates(_changedModels, _deletedModels);
+        return _deletedModels;
     }
 
     private createCollectionUpdate(
@@ -123,7 +125,7 @@ export class ViewModelStoreUpdateService {
             await this.DS.addOrUpdate(changedModels[collection]);
         }
 
-        this.DSUpdateService.commit(updateSlot);
+        await this.DSUpdateService.commit(updateSlot, changedModels);
     }
 
     /**

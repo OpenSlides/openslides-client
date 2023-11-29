@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Column, Content, ContentColumns, ContentTable, TableCell } from 'pdfmake/interfaces';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
@@ -35,7 +36,7 @@ export class ParticipantPdfService {
      *
      * @returns doc def for the user
      */
-    public userAccessToDocDef(user: ViewUser): object {
+    public userAccessToDocDef(user: ViewUser): Content {
         const userHeadline = [
             {
                 text: user.short_name,
@@ -57,7 +58,7 @@ export class ParticipantPdfService {
      * @param users An array of users
      * @returns pdfMake definitions for a table including name, structure level and groups for each user
      */
-    public createUserListDocDef(users: ViewUser[]): object {
+    public createUserListDocDef(users: ViewUser[]): Content {
         const title = {
             text: this.translate.instant(`List of participants`),
             style: `title`
@@ -71,77 +72,11 @@ export class ParticipantPdfService {
      * @param user
      * @returns
      */
-    private createAccessDataContent(user: ViewUser): object {
+    private createAccessDataContent(user: ViewUser): ContentColumns {
         return {
-            columns: [this.createWifiAccessContent(), this.createUserAccessContent(user)],
+            columns: [this.createUserAccessContent(user)],
             margin: [0, 20]
         };
-    }
-
-    /**
-     * Creates the wifi access data, including qr code, for the configured event wlan parameters
-     *
-     * @returns pdfMake definitions
-     */
-    private createWifiAccessContent(): object {
-        const wifiColumn: object[] = [
-            {
-                text: this.translate.instant(`WLAN access data`),
-                style: `userDataHeading`
-            },
-            {
-                text: this.translate.instant(`WLAN name (SSID)`) + `:`,
-                style: `userDataTopic`
-            },
-            {
-                text: this.meetingSettingsService.instant(`users_pdf_wlan_ssid`) || `-`,
-                style: `userDataValue`
-            },
-            {
-                text: this.translate.instant(`WLAN password`) + `:`,
-                style: `userDataTopic`
-            },
-            {
-                text: this.meetingSettingsService.instant(`users_pdf_wlan_password`) || `-`,
-                style: `userDataValue`
-            },
-            {
-                text: this.translate.instant(`WLAN encryption`) + `:`,
-                style: `userDataTopic`
-            },
-            {
-                text: this.meetingSettingsService.instant(`users_pdf_wlan_encryption`) || `-`,
-                style: `userDataValue`
-            },
-            {
-                text: `\n`
-            }
-        ];
-        if (
-            this.meetingSettingsService.instant(`users_pdf_wlan_ssid`) &&
-            this.meetingSettingsService.instant(`users_pdf_wlan_encryption`)
-        ) {
-            const wifiQrCode =
-                `WIFI:S:` +
-                this.meetingSettingsService.instant(`users_pdf_wlan_ssid`) +
-                `;T:` +
-                this.meetingSettingsService.instant(`users_pdf_wlan_encryption`) +
-                `;P:` +
-                this.meetingSettingsService.instant(`users_pdf_wlan_password`) +
-                `;;`;
-            wifiColumn.push(
-                {
-                    qr: wifiQrCode,
-                    fit: 120,
-                    margin: [0, 0, 0, 8]
-                },
-                {
-                    text: this.translate.instant(`Scan this QR code to connect to WLAN.`),
-                    style: `small`
-                }
-            );
-        }
-        return wifiColumn;
     }
 
     /**
@@ -151,8 +86,8 @@ export class ParticipantPdfService {
      * @param user
      * @returns pdfMake definitions
      */
-    private createUserAccessContent(user: ViewUser): object {
-        const columnOpenSlides: object[] = [
+    private createUserAccessContent(user: ViewUser): Column[] {
+        const columnOpenSlides: Column[] = [
             {
                 text: this.translate.instant(`OpenSlides access data`),
                 style: `userDataHeading`
@@ -208,7 +143,7 @@ export class ParticipantPdfService {
      *
      * @returns pdfMake definitions
      */
-    private createWelcomeText(): object {
+    private createWelcomeText(): Content {
         const users_pdf_welcometitle = this.meetingSettingsService.instant(`users_pdf_welcometitle`)!;
         const users_pdf_welcometext = this.meetingSettingsService.instant(`users_pdf_welcometext`)!;
         return [
@@ -229,8 +164,8 @@ export class ParticipantPdfService {
      * @param users: passed through to getListUsers
      * @returns a pdfMake table definition ready to be put into a page
      */
-    private createUserList(users: ViewUser[]): object {
-        const userTableBody: object[] = [
+    private createUserList(users: ViewUser[]): ContentTable {
+        const userTableBody: TableCell[][] = [
             [
                 {
                     text: `#`,
@@ -263,8 +198,8 @@ export class ParticipantPdfService {
      * @returns column definitions with odd and even entries styled differently,
      * short name, structure level and group name columns
      */
-    private getListUsers(users: ViewUser[]): object[] {
-        const result: any[] = [];
+    private getListUsers(users: ViewUser[]): Column[] {
+        const result: Column[] = [];
         let counter = 1;
         users.forEach(user => {
             const groupList = user.groups().map(grp => grp.name);

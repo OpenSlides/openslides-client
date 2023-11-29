@@ -95,7 +95,12 @@
     <div *osScrollingTableCell="'summary'; row as motion" class="cell-slot fill">
         <os-detail-view-navigator *ngIf="!isMultiSelect" [model]="motion"></os-detail-view-navigator>
         <div class="innerTable">
-            <div class="motion-text" [innerHtml]="getAmendmentSummary(motion) | trust : 'html'"></div>
+            <div
+                class="motion-text underlined-links"
+                *ngIf="getAmendmentSummary(motion)"
+                [innerHtml]="getAmendmentSummary(motion) | trust : 'html'"
+            ></div>
+            <i *ngIf="!getAmendmentSummary(motion)">{{ 'No changes at the text.' | translate }}</i>
         </div>
     </div>
 
@@ -150,7 +155,10 @@
 
         <ng-container *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]">
             <mat-divider></mat-divider>
-            <os-motion-multiselect-actions [selectedMotions]="selectedRows"></os-motion-multiselect-actions>
+            <os-motion-multiselect-actions
+                [selectedMotions]="selectedRows"
+                [sortService]="amendmentSortService"
+            ></os-motion-multiselect-actions>
         </ng-container>
     </div>
 </mat-menu>

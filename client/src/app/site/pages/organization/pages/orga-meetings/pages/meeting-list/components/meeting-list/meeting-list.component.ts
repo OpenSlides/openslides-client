@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
@@ -23,8 +22,6 @@ const MEETING_LIST_STORAGE_INDEX = `committee_list`;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
-    public meetingsObservable: Observable<ViewMeeting[]>;
-
     public restrictedColumns: ColumnRestriction<OML>[] = [
         {
             columnName: `menu`,
@@ -48,16 +45,6 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         super.setTitle(`Meetings`);
         this.canMultiSelect = true;
         this.listStorageIndex = MEETING_LIST_STORAGE_INDEX;
-
-        this.meetingsObservable = this.meetingController
-            .getViewModelListObservable()
-            .pipe(
-                map(meetings =>
-                    this.operator.isSuperAdmin
-                        ? meetings
-                        : meetings.filter(meeting => this.operator.isInMeeting(meeting.id))
-                )
-            );
     }
 
     public editSingle(meeting: ViewMeeting): void {

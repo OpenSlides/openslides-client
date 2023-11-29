@@ -12,7 +12,7 @@ export class ActionCardComponent {
      * Indicates, whether the action-row should be shown.
      */
     @Input()
-    public showActionRow: boolean = false;
+    public showActionRow = false;
 
     /**
      * Indicates, whether the content should be expandable or always expanded.

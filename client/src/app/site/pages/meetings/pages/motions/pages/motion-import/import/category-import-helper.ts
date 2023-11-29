@@ -1,11 +1,12 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Motion, MotionCategory } from 'src/app/domain/models/motions';
+import { MotionCategory } from 'src/app/domain/models/motions';
 import { BaseBeforeImportHandler } from 'src/app/infrastructure/utils/import/base-before-import-handler';
 import { CsvMapping, ImportResolveInformation } from 'src/app/infrastructure/utils/import/import-utils';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
+import { ViewMotion } from '../../../view-models';
 
-export class CategoryImportHelper extends BaseBeforeImportHandler<Motion, MotionCategory> {
+export class CategoryImportHelper extends BaseBeforeImportHandler<ViewMotion, MotionCategory> {
     public constructor(private repo: MotionCategoryControllerService, private translate: TranslateService) {
         super({
             idProperty: `category_id`,
@@ -41,7 +42,7 @@ export class CategoryImportHelper extends BaseBeforeImportHandler<Motion, Motion
         }
     }
 
-    public doResolve(item: Motion, propertyName: string): ImportResolveInformation<Motion> {
+    public doResolve(item: ViewMotion, propertyName: string): ImportResolveInformation<ViewMotion> {
         let property = item[propertyName];
         const result = {
             model: item,

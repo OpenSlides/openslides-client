@@ -7,7 +7,7 @@ export * from './recommendation-type-names';
  * (`node1` and `node2`)
  * within the same Document Fragment.
  */
-interface CommonAncestorData {
+export interface CommonAncestorData {
     /**
      * The most specific common ancestor node.
      */
@@ -33,7 +33,7 @@ interface CommonAncestorData {
  * information about the context in which these lines occur.
  * This additional information is meant to render the snippet correctly without producing broken HTML
  */
-interface ExtractedContent {
+export interface ExtractedContent {
     /**
      * The HTML between the two line numbers. Line numbers and automatically set line breaks are stripped.
      * All HTML tags are converted to uppercase

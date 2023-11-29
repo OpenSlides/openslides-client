@@ -25,7 +25,7 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
         this.setSortFunction((a, b) => a.tree_weight - b.tree_weight); // leave the sorting as it is
     }
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Items` : `Item`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Items` : `Item`);
 
     private getAgendaTitle(viewAgendaItem: ViewAgendaItem): AgendaListTitle {
         if (viewAgendaItem.content_object) {
@@ -51,7 +51,7 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
      */
     public async autoNumbering(): Promise<void> {
         const payload = { meeting_id: this.activeMeetingId };
-        await this.actions.sendRequest(AgendaItemAction.NUMBERING, payload);
+        await this.createAction(AgendaItemAction.NUMBERING, payload).resolve();
     }
 
     /**
@@ -66,7 +66,7 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
             id: viewModel.id,
             ...this.getOptionalPayload(update)
         };
-        await this.actions.sendRequest(AgendaItemAction.UPDATE, payload);
+        await this.createAction(AgendaItemAction.UPDATE, payload).resolve();
     }
 
     public assignToParents(content: any, meetingId: Id = this.activeMeetingId!): Action<void> {
@@ -93,7 +93,7 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
         } else {
             payload = items.map(item => ({ id: (item as Identifiable).id }));
         }
-        await this.actions.sendBulkRequest(AgendaItemAction.DELETE, payload);
+        await this.actions.createFromArray([{ action: AgendaItemAction.DELETE, data: payload }]).resolve();
     }
 
     /**
@@ -103,7 +103,7 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
      */
     public async sortItems(data: TreeIdNode[]): Promise<void> {
         const payload = { meeting_id: this.activeMeetingId, tree: data };
-        await this.actions.sendRequest(AgendaItemAction.SORT, payload);
+        await this.createAction(AgendaItemAction.SORT, payload).resolve();
     }
 
     public bulkOpenItems(items: ViewAgendaItem[]): Promise<void> {

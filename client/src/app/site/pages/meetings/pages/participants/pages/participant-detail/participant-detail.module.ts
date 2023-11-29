@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { UserComponentsModule } from 'src/app/site/modules/user-components';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
@@ -25,6 +26,7 @@ import { ParticipantDetailRoutingModule } from './participant-detail-routing.mod
     declarations: [ParticipantDetailComponent, ParticipantDetailViewComponent],
     imports: [
         CommonModule,
+        CommaSeparatedListingModule,
         ParticipantDetailRoutingModule,
         ParticipantExportModule,
         RouterModule,

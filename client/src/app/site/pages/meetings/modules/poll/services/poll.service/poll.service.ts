@@ -119,7 +119,7 @@ export abstract class PollService {
         return tableData;
     }
 
-    public getChartLabels(poll: PollData, excludeYNALabels: boolean = false): string[] {
+    public getChartLabels(poll: PollData, excludeYNALabels = false): string[] {
         const fields = this.getPollDataFields(poll);
         return poll.options.map(option => {
             const votingResults = fields.map(field => {
@@ -193,7 +193,7 @@ export abstract class PollService {
      */
     protected getPercentBase(poll: PollData, row?: OptionData): number {
         const base: PollPercentBase = poll.onehundred_percent_base as PollPercentBase;
-        let totalByBase: number = 0;
+        let totalByBase = 0;
         const option = row ?? poll.options[0]; // Assuming that its a motion poll and the first option contains every vote.
         switch (base) {
             case PollPercentBase.YN:

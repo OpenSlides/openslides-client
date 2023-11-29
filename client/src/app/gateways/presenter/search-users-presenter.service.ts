@@ -12,6 +12,7 @@ interface SearchCriteria {
     first_name?: string;
     last_name?: string;
     email?: string;
+    saml_id?: string;
 }
 
 interface PresenterData {
@@ -73,7 +74,8 @@ export class SearchUsersPresenterService {
                     username: entry.username,
                     first_name: entry.first_name,
                     last_name: entry.last_name,
-                    email: entry.email
+                    email: entry.email,
+                    saml_id: entry.saml_id
                 }))
             },
             minimizePayload
@@ -88,8 +90,9 @@ export class SearchUsersPresenterService {
                     date =>
                         date.username === criteria.username &&
                         date.first_name === criteria.first_name &&
-                        date.last_name == criteria.last_name &&
-                        date.email === criteria.email
+                        date.last_name === criteria.last_name &&
+                        date.email === criteria.email &&
+                        date.saml_id === criteria.saml_id
                 )
             ) {
                 data.push(criteria);

@@ -3,13 +3,12 @@ import {
     Component,
     EventEmitter,
     Input,
-    OnDestroy,
     OnInit,
     Output,
     ViewEncapsulation
 } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { MatLegacyCheckbox as MatCheckbox } from '@angular/material/legacy-checkbox';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { OsFilterOption, OsFilterOptions } from 'src/app/site/base/base-filter.service';
 
@@ -35,7 +34,7 @@ const MAX_CHECKBOX_WIDTH = 290; // Maximum width of a checkbox (in px).
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterMenuComponent<V extends Identifiable> implements OnInit, OnDestroy {
+export class FilterMenuComponent<V extends Identifiable> implements OnInit {
     /**
      * The height of one row in an action list
      */
@@ -55,6 +54,9 @@ export class FilterMenuComponent<V extends Identifiable> implements OnInit, OnDe
     @Input()
     public service!: FilterListService<V>;
 
+    @Input()
+    public showSpacer = false;
+
     public constructor(private cd: ChangeDetectorRef) {}
 
     /**
@@ -67,13 +69,6 @@ export class FilterMenuComponent<V extends Identifiable> implements OnInit, OnDe
         this.service.outputObservable.subscribe(() => {
             this.cd.markForCheck();
         });
-    }
-
-    /**
-     *
-     */
-    public ngOnDestroy(): void {
-        this.dismissed.unsubscribe();
     }
 
     /**

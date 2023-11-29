@@ -13,8 +13,9 @@ export class Group extends BaseModel<Group> {
     public name!: string;
     public permissions!: Permission[];
     public weight!: number;
+    public external_id!: string;
 
-    public user_ids!: Id[]; // (user/group_$<meeting_id>_ids)[];
+    public meeting_user_ids!: Id[]; // (meeting_user/group_ids)[];
     public default_group_for_meeting_id!: Id; // meeting/default_group_id;
     public admin_group_for_meeting_id!: Id; // meeting/admin_group_id;
     public mediafile_access_group_ids!: Id[]; // (mediafile/access_group_ids)[];
@@ -27,6 +28,7 @@ export class Group extends BaseModel<Group> {
     public assignment_poll_ids!: Id[]; // (assignment_poll/entitled_group_ids)[];
     public used_as_motion_poll_default_id!: Id; // meeting/motion_poll_default_group_ids;
     public used_as_assignment_poll_default_id!: Id; // meeting/assignment_poll_default_group_ids;
+    public used_as_topic_poll_default_id!: Id; // meeting/topic_poll_default_group_ids;
 
     public get isAdminGroup(): boolean {
         return !!this.admin_group_for_meeting_id;
@@ -40,12 +42,13 @@ export class Group extends BaseModel<Group> {
         super(Group.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Group | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Group)[] = [
         `id`,
+        `external_id`,
         `name`,
         `permissions`,
         `weight`,
-        `user_ids`,
+        `meeting_user_ids`,
         `default_group_for_meeting_id`,
         `admin_group_for_meeting_id`,
         `mediafile_access_group_ids`,
@@ -56,6 +59,7 @@ export class Group extends BaseModel<Group> {
         `write_chat_group_ids`,
         `used_as_motion_poll_default_id`,
         `used_as_assignment_poll_default_id`,
+        `used_as_topic_poll_default_id`,
         `meeting_id`
     ];
 }

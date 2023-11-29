@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Content, ContentColumns, ContentText } from 'pdfmake/interfaces';
 import { AssignmentPhase } from 'src/app/domain/models/assignments/assignment-phase';
 import { PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll/poll-constants';
 import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
@@ -31,7 +32,7 @@ export class AssignmentPdfService {
      * @param assignment the ViewAssignment to create the document for
      * @returns a pdfmake compatible document as document
      */
-    public assignmentToDocDef(assignment: ViewAssignment): object {
+    public assignmentToDocDef(assignment: ViewAssignment): Content[] {
         const title = this.createTitle(assignment);
         const preamble = this.createPreamble(assignment);
         const description = this.createDescription(assignment);
@@ -48,7 +49,7 @@ export class AssignmentPdfService {
      * @param assignment the ViewAssignment to create the document for
      * @returns the title part of the document
      */
-    private createTitle(assignment: ViewAssignment): object {
+    private createTitle(assignment: ViewAssignment): ContentText {
         return {
             text: assignment.title,
             style: `title`
@@ -61,7 +62,7 @@ export class AssignmentPdfService {
      * @param assignment the ViewAssignment to create the document for
      * @returns the preamble part of the pdf document
      */
-    private createPreamble(assignment: ViewAssignment): object {
+    private createPreamble(assignment: ViewAssignment): Content {
         if (assignment.open_posts) {
             const preambleText = `${this.translate.instant(`Number of persons to be elected`)}: `;
             const memberNumber = `` + assignment.open_posts;
@@ -80,7 +81,7 @@ export class AssignmentPdfService {
             };
             return preamble;
         }
-        return {};
+        return [];
     }
 
     /**
@@ -89,7 +90,7 @@ export class AssignmentPdfService {
      * @param assignment the ViewAssignment to create the document for
      * @returns the description of the assignment
      */
-    private createDescription(assignment: ViewAssignment): object {
+    private createDescription(assignment: ViewAssignment): Content {
         if (assignment.description) {
             const descriptionDocDef = this.htmlToPdfService.addPlainText(assignment.description);
 
@@ -104,7 +105,7 @@ export class AssignmentPdfService {
             ];
             return description;
         } else {
-            return {};
+            return [];
         }
     }
 
@@ -114,14 +115,14 @@ export class AssignmentPdfService {
      * @param assignment the ViewAssignment to create the document for
      * @returns the assignment list as PDF document
      */
-    private createCandidateList(assignment: ViewAssignment): object {
+    private createCandidateList(assignment: ViewAssignment): ContentColumns | Content[] {
         if (assignment.phase !== AssignmentPhase.Finished) {
             const candidatesText = `${this.translate.instant(`Candidates`)}: `;
-            const userList = assignment.candidates.map(candidate => ({
+            const userList: Content[] = assignment.candidates.map(candidate => ({
                 text: candidate.user?.full_name || UnknownUserLabel,
                 margin: [0, 0, 0, 10]
             }));
-            const listType = assignment.number_poll_candidates ? `ol` : `ul`;
+            const listType: Content = assignment.number_poll_candidates ? { ol: userList } : { ul: userList };
 
             return {
                 columns: [
@@ -132,13 +133,13 @@ export class AssignmentPdfService {
                         style: `textItem`
                     },
                     {
-                        [listType]: userList,
+                        ...listType,
                         style: `textItem`
                     }
                 ]
             };
         } else {
-            return {};
+            return [];
         }
     }
 
@@ -149,7 +150,7 @@ export class AssignmentPdfService {
      * @param polls the ViewPoll objects to create the document for
      * @returns the table as pdfmake object
      */
-    private createPollResultTable(polls: ViewPoll[]): object {
+    private createPollResultTable(polls: ViewPoll[]): Content {
         const resultBody = [];
         for (const poll of polls) {
             if (poll.isPublished) {

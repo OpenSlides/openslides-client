@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -37,7 +37,7 @@ const VotingProhibitionVerbose = {
 })
 export class VotingService {
     private _currentUser: ViewUser | null = null;
-    private _voteDelegationEnabled: boolean = false;
+    private _voteDelegationEnabled = false;
 
     public constructor(
         private activeMeetingService: ActiveMeetingService,

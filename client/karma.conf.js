@@ -1,13 +1,13 @@
+process.env.TZ = 'UTC';
+
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
-
-module.exports = function (config) {
+module.exports = function(config) {
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
-      require('karma-jsdom-launcher'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
@@ -34,12 +34,21 @@ module.exports = function (config) {
       ]
     },
     reporters: ['progress', 'kjhtml'],
+    hostname: 'localhost',
+    listenAddress: 'localhost',
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['jsdom'],
+    browsers: ['ChromiumHeadless'],
+    customLaunchers: {
+      ChromiumHeadlessNoSandbox: {
+        base: 'ChromiumHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
     singleRun: false,
-    restartOnFileChange: true
+    restartOnFileChange: true,
+    browserNoActivityTimeout: 400000
   });
 };

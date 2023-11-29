@@ -6,7 +6,7 @@
     </span>
     <div
         *ngIf="changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit"
-        class="motion-text"
+        class="motion-text underlined-links"
         [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
         [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
         [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
@@ -66,6 +66,7 @@
                     [multiple]="true"
                     placeholder="{{ 'Submitters' | translate }}"
                     [repo]="participantRepo"
+                    [sortService]="participantSortService"
                     [subscriptionConfig]="participantSubscriptionConfig"
                     (clickNotFound)="createNewSubmitter($event)"
                 >
@@ -98,7 +99,7 @@
 
     <!-- formatted statute amendment -->
     <div
-        class="motion-text line-numbers-none"
+        class="motion-text line-numbers-none underlined-links"
         *ngIf="!editMotion && motion?.isStatuteAmendment()"
         [innerHTML]="getFormattedStatuteAmendment() | trust : 'html'"
     ></div>
@@ -149,7 +150,11 @@
             &nbsp;
             <span *ngIf="reasonRequired && editMotion">*</span>
         </h3>
-        <div class="motion-text" *ngIf="!editMotion" [innerHtml]="motion?.reason | trust : 'html'"></div>
+        <div
+            class="motion-text underlined-links"
+            *ngIf="!editMotion"
+            [innerHtml]="motion?.reason | trust : 'html'"
+        ></div>
 
         <!-- The HTML Editor -->
         <os-editor
@@ -177,6 +182,8 @@
                 formControlName="category_id"
                 placeholder="{{ 'Category' | translate }}"
                 [repo]="categoryRepo"
+                [excludeIds]="true"
+                [addClearSelection]="true"
             ></os-repo-search-selector>
         </mat-form-field>
     </div>
@@ -212,10 +219,11 @@
             <div class="content-field" *ngIf="editMotion && minSupporters">
                 <mat-form-field>
                     <os-repo-search-selector
-                        formControlName="supporter_ids"
+                        formControlName="supporter_user_ids"
                         [multiple]="true"
                         placeholder="{{ 'Supporters' | translate }}"
                         [repo]="participantRepo"
+                        [sortService]="participantSortService"
                         [subscriptionConfig]="participantSubscriptionConfig"
                         (clickNotFound)="createNewSupporter($event)"
                     >

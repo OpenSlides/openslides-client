@@ -25,8 +25,8 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
 
     public currentCommitteeObservable: Observable<ViewCommittee | null> | null = null;
 
-    public receiveExpanded: boolean = false;
-    public forwardingExpanded: boolean = false;
+    public receiveExpanded = false;
+    public forwardingExpanded = false;
 
     public get canManageMeetingsInCommittee(): boolean {
         return this.operator.hasCommitteePermissionsNonAdminCheck(this.committeeId, CML.can_manage);
@@ -34,10 +34,6 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
 
     public get canManageCommittee(): boolean {
         return this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage);
-    }
-
-    public get canManageUsers(): boolean {
-        return this.operator.hasOrganizationPermissions(OML.can_manage_users);
     }
 
     public constructor(
@@ -83,10 +79,6 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
             this.operator.hasCommitteePermissions(committee.id, CML.can_manage) ||
             this.operator.isInCommittees(committee)
         );
-    }
-
-    public getMemberAmount(committee: ViewCommittee): number {
-        return committee.user_ids?.length || 0;
     }
 
     public getMeetingsSorted(committee: ViewCommittee): ViewMeeting[] {

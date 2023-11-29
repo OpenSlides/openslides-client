@@ -28,8 +28,7 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
 
     public getTitle = (viewMotionCommentSection: ViewMotionCommentSection) => viewMotionCommentSection.name;
 
-    public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? `Comment sections` : `Comment section`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Comment sections` : `Comment section`);
 
     public async create(partialModel: Partial<MotionCommentSection>): Promise<Identifiable> {
         const payload = {
@@ -65,6 +64,6 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
             meeting_id: this.activeMeetingId,
             motion_comment_section_ids: sections.map(section => section.id)
         };
-        return this.actions.sendRequest(MotionCommentSectionAction.SORT, payload);
+        await this.createAction(MotionCommentSectionAction.SORT, payload).resolve();
     }
 }

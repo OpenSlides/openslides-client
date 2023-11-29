@@ -55,10 +55,15 @@
                             *ngIf="!user.is_active"
                             matTooltip="{{ 'Inactive' | translate }}"
                         ></os-icon-container>
+                        <os-icon-container
+                            icon="fingerprint"
+                            *ngIf="user.hasSamlId"
+                            matTooltip="{{ 'Has SSO identification' | translate }}"
+                        ></os-icon-container>
                     </div>
                 </div>
                 <div class="meta-info user-subtitle ellipsis-overflow">
-                    {{ user.username }}
+                    {{ user.saml_id || user.username }}
                     <ng-container *ngIf="user.email">· {{ user.email }}</ng-container>
                 </div>
             </div>
@@ -155,6 +160,10 @@
             (deselectAll)="deselectAll()"
             (deleting)="deleteUsers()"
         >
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="csvExportMemberList(selectedRows)">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export as CSV' | translate }}</span>
+            </button>
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignMeetingToUsers()">
                 <mat-icon>event_available</mat-icon>
                 <span>{{ 'Set/remove meeting' | translate }} ...</span>

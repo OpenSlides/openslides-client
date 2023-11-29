@@ -1,4 +1,4 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 import { OptionDataKey, PollDataKey } from './generic-poll';
 
@@ -99,7 +99,7 @@ export enum PollPercentBase {
 export interface EntitledUsersEntry {
     user_id: number;
     voted: boolean;
-    vote_delegated_to_id?: number;
+    vote_delegated_to_user_id?: number;
 }
 
 export const VOTE_MAJORITY = -1;

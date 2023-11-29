@@ -20,6 +20,7 @@ import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service';
@@ -88,6 +89,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public set assignment(assignment: ViewAssignment) {
         this._assignment = assignment;
+        this._assignmentCandidates = assignment.candidates;
         this.updateCandidatesArray();
     }
 
@@ -96,6 +98,13 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public get assignment(): ViewAssignment {
         return this._assignment!;
+    }
+
+    /**
+     * Returns the target assignment candidates.
+     */
+    public get assignmentCandidates(): ViewAssignmentCandidate[] {
+        return this._assignmentCandidates;
     }
 
     /**
@@ -120,6 +129,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * Current instance of ViewAssignment. Accessed via getter and setter.
      */
     private _assignment: ViewAssignment | null = null;
+    private _assignmentCandidates: ViewAssignmentCandidate[] = [];
 
     /**
      * Used to detect changes in the URL
@@ -148,7 +158,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         private pdfService: AssignmentExportService,
         private pollDialog: AssignmentPollDialogService,
         private assignmentPollService: AssignmentPollService,
-        private pollController: PollControllerService
+        private pollController: PollControllerService,
+        private userRepo: UserControllerService
     ) {
         super(componentServiceCollector, translate);
         this.assignmentForm = formBuilder.group({
@@ -320,7 +331,12 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public async addCandidate(data: UserSelectionData): Promise<void> {
         if (data.userId && typeof data.userId === `number`) {
-            await this.assignmentCandidateRepo.create(this.assignment, data.userId);
+            const meetingUserId =
+                data.user?.meeting_user_id ?? this.userRepo.getViewModel(data.userId)?.getMeetingUser()?.id;
+            if (!meetingUserId) {
+                throw new Error(`Failed to add candidate: Couldn't find meeting user id`);
+            }
+            await this.assignmentCandidateRepo.create(this.assignment, meetingUserId);
             this.updateCandidatesArray();
         }
     }
@@ -368,7 +384,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public async onDeleteAssignmentButton(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this election?`);
-        if (await this.promptService.open(title, this.assignment.getTitle())) {
+        const content = this.assignment.getTitle();
+        if (await this.promptService.open(title, content)) {
             this.assignmentRepo
                 .delete(this.assignment)
                 .then(() => this.router.navigate([this.activeMeetingId, `assignments`]));

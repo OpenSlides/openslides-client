@@ -13,4 +13,7 @@ export class UserAction {
     public static readonly FORGET_PASSWORD = `user.forget_password`;
     public static readonly FORGET_PASSWORD_CONFIRM = `user.forget_password_confirm`;
     public static readonly ASSIGN_MEETINGS = `user.assign_meetings`;
+    public static readonly MERGE_TOGETHER = `user.merge_together`;
+    public static readonly ACCOUNT_JSON_UPLOAD = `account.json_upload`;
+    public static readonly ACCOUNT_IMPORT = `account.import`;
 }

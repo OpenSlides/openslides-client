@@ -16,10 +16,12 @@ export interface TreeNodeWithoutItem extends TreeIdNode {
 
 /**
  * A representation of nodes with the item atached.
+ * The id of the item should be the id of the node.
  */
 export interface OSTreeNode<T> extends TreeNodeWithoutItem {
     item: T;
     children?: OSTreeNode<T>[];
+    toString: () => string;
 }
 
 /**
@@ -33,7 +35,7 @@ export interface OSTreeNode<T> extends TreeNodeWithoutItem {
  * @param position: The position in the array of the node.
  * @param isExpanded: Boolean if the node is expanded.
  * @param expandable: Boolean if the node is expandable.
- * @param id: The id of the node.
+ * @param id: The id of the node, same as the id of the item if there is an id.
  * @param filtered: Optional boolean to check, if the node is filtered.
  */
 export type FlatNode<T> = T & {
@@ -45,4 +47,28 @@ export type FlatNode<T> = T & {
     expandable: boolean;
     id: number;
     filtered?: boolean;
+    toString: () => string;
 };
+
+function isIdentifiedItemNode(obj: any): boolean {
+    return obj && obj.id && obj.item && obj.item?.id === obj.id;
+}
+
+export function isFlatNode<T>(obj: any): obj is FlatNode<T> {
+    return (
+        isIdentifiedItemNode(obj) &&
+        Number.isInteger(obj.level) &&
+        obj.isSeen !== undefined &&
+        obj.expandable !== undefined
+    );
+}
+
+export function isOSTreeNode<T>(obj: any): obj is OSTreeNode<T> {
+    if (!obj) {
+        return false;
+    }
+    const correctChildrenType = obj.children
+        ? Array.isArray(obj.children) && (obj.children as any[]).every(child => isOSTreeNode(child))
+        : true;
+    return isIdentifiedItemNode(obj) && correctChildrenType && obj.name?.length;
+}

@@ -3,18 +3,18 @@ export interface ActionRequest {
     data: any[];
 }
 
-interface ActionResponse<T extends {}> {
+export interface ActionResponse<T> {
     success: true;
     message: string;
     results?: ((T | null)[] | null)[];
 }
 
-export function isActionResponse<T extends {}>(obj: any): obj is ActionResponse<T> {
+export function isActionResponse<T>(obj: any): obj is ActionResponse<T> {
     const response = obj as ActionResponse<T>;
     return !!obj && response.success === true && !!response.message;
 }
 
-interface ActionError {
+export interface ActionError {
     success: false;
     message: string;
     error_index?: number;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Workbook } from 'exceljs';
 import { Ids } from 'src/app/domain/definitions/key-types';
@@ -151,11 +151,11 @@ export class MotionXlsxExportService {
             data.push(
                 ...properties.map(property => {
                     const motionProp = motion[property as keyof ViewMotion];
-                    /*if (property === 'speakers') {
-                        return motion.listOfSpeakers && motion.listOfSpeakers.waitingSpeakerAmount > 0
-                            ? motion.listOfSpeakers.waitingSpeakerAmount
-                            : '';
-                    }*/
+                    if (property === `speakers`) {
+                        return motion.list_of_speakers && motion.list_of_speakers.waitingSpeakerAmount > 0
+                            ? motion.list_of_speakers.waitingSpeakerAmount
+                            : ``;
+                    }
                     if (!motionProp) {
                         return ``;
                     }

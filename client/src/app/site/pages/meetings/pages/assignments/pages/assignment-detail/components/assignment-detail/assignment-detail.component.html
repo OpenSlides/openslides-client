@@ -90,7 +90,10 @@
                 </ng-container>
 
                 <!-- New Ballot button -->
-                <div class="new-ballot-button" *ngIf="assignment && hasPerms('createPoll')">
+                <div
+                    class="new-ballot-button"
+                    *ngIf="assignment && assignment.candidatesAsUsers.length && hasPerms('createPoll')"
+                >
                     <button mat-stroked-button (click)="openDialog()">
                         <mat-icon>add</mat-icon>
                         <span>{{ 'New ballot' | translate }}</span>
@@ -109,6 +112,7 @@
         <os-projectable-title *ngIf="!isEditing && assignment.getTitle" [model]="assignment"></os-projectable-title>
         <div *ngIf="assignment">
             <div
+                class="underlined-links"
                 *ngIf="assignment.assignment.description"
                 [innerHTML]="assignment.assignment.description | trust : 'html'"
             ></div>
@@ -154,7 +158,7 @@
             <div>
                 <div class="candidates-list" *ngIf="assignment?.candidates?.length">
                     <os-sorting-list
-                        [input]="assignment.candidates"
+                        [input]="assignmentCandidates"
                         [live]="true"
                         [count]="assignment.number_poll_candidates"
                         [enable]="hasPerms('manage')"
@@ -162,7 +166,7 @@
                     >
                         <!-- implicit item references into the component using ng-template slot -->
                         <ng-template let-item>
-                            <div class="single-candidate-line">
+                            <div [ngClass]="{ 'single-candidate-line': true, 'deleted-candidate': !item.user }">
                                 <span>{{ item.getTitle() }}</span>
                                 <span *ngIf="hasPerms('manage')">
                                     <button

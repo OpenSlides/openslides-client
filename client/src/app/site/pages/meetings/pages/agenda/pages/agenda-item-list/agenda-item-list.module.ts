@@ -2,15 +2,16 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatSelectModule } from '@angular/material/select';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
+import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-container.module';
 import { ListModule } from 'src/app/ui/modules/list';
@@ -32,6 +33,7 @@ const NG_MODULES = [
     MatInputModule
 ];
 const OS_MODULES = [
+    CommaSeparatedListingModule,
     HeadBarModule,
     ListModule,
     MeetingsComponentCollectorModule,

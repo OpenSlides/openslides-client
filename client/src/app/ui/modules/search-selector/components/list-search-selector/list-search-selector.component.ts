@@ -9,7 +9,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
-import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
 import { auditTime, distinctUntilChanged, Observable } from 'rxjs';
 
 import { Selectable } from '../../../../../domain/interfaces/selectable';
@@ -40,7 +40,7 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
                 value.pipe(auditTime(10), distinctUntilChanged()).subscribe(items => {
                     this.selectableItems = items;
                     if (this.contentForm) {
-                        this.disabled = !items || (!!items && !items.length);
+                        this.disabled = (!items || (!!items && !items.length)) && !this.clickNotFound.observed;
                     }
                 })
             );

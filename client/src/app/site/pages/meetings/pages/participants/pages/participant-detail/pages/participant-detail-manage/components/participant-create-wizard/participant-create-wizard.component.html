@@ -36,7 +36,7 @@
         <mat-step>
             <ng-template matStepLabel>{{ 'Enter' | translate }}</ng-template>
             <ng-template matStepContent>
-                <mat-card class="os-card">
+                <mat-card class="os-card spacer-bottom-60">
                     <div>
                         <h2>{{ 'Personal information' | translate }}</h2>
                         <div class="full-width first-line">
@@ -71,7 +71,7 @@
                                 name="email"
                                 formControlName="email"
                             />
-                            <mat-error>{{ 'Please enter a valid email address' | translate }}</mat-error>
+                            <mat-error>{{ 'Please enter a valid email address!' | translate }}</mat-error>
                         </mat-form-field>
                         <!-- username -->
                         <mat-form-field class="full-width">
@@ -101,7 +101,7 @@
             <ng-template matStepContent>
                 <ng-container *ngIf="suitableAccountList.length">
                     <h3>{{ 'Suitable accounts found' | translate }}</h3>
-                    <mat-list>
+                    <mat-list class="spacer-bottom-60">
                         <ng-container *ngFor="let user of suitableAccountList; let last = last">
                             <mat-list-item>
                                 <div class="action-title full-width">
@@ -124,7 +124,7 @@
             <ng-template matStepLabel>{{ 'Creation' | translate }}</ng-template>
             <ng-template matStepContent>
                 <os-user-detail-view
-                    [user]="createUserForm.value"
+                    [user]="user"
                     [isNewUser]="isNewUser"
                     [isEditing]="true"
                     [additionalFormControls]="additionalFormControls"
@@ -137,7 +137,7 @@
                     (errorEvent)="formErrors = $event"
                 >
                     <ng-template #editView let-form="form">
-                        <div [formGroup]="form">
+                        <div [formGroup]="form" *ngIf="(flicker | async) === false">
                             <h2>{{ 'Meeting specific information' | translate }}</h2>
                             <!-- Present? -->
                             <div [formGroup]="form">
@@ -210,6 +210,7 @@
                                     <os-repo-search-selector
                                         formControlName="vote_delegations_from_ids"
                                         [repo]="repo"
+                                        [sortService]="sortService"
                                         [multiple]="true"
                                         [subscriptionConfig]="participantSubscriptionConfig"
                                         placeholder="{{ 'Voting right received from (principals)' | translate }}"
@@ -221,6 +222,7 @@
                                     <os-repo-search-selector
                                         formControlName="vote_delegated_to_id"
                                         [repo]="repo"
+                                        [sortService]="sortService"
                                         [multiple]="false"
                                         [includeNone]="true"
                                         [subscriptionConfig]="participantSubscriptionConfig"

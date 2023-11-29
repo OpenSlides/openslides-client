@@ -63,22 +63,34 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
     @Input()
     public motion!: ViewMotion;
+
     @Input()
     public changes: ViewUnifiedChange[] = [];
+
     @Input()
     public scrollToChange: ViewUnifiedChange | null = null;
+
     @Input()
     public highlightedLine!: number;
+
     @Input()
     public lineNumberingMode!: LineNumberingMode;
+
     @Input()
-    public showAllAmendments: boolean = false;
+    public showAllAmendments = false;
+
     @Input()
-    public showSummary: boolean = true;
+    public showSummary = true;
+
     @Input()
     public set showPreamble(value: boolean) {
         this._showPreamble = value;
     }
+
+    public get showPreamble(): boolean {
+        return this.motion.showPreamble ? this._showPreamble : false;
+    }
+
     @Input()
     public lineRange: LineRange | null = null;
 
@@ -92,10 +104,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
     public preamble!: string;
 
-    public get showPreamble(): boolean {
-        return this.motion.showPreamble ? this._showPreamble : false;
-    }
-    private _showPreamble: boolean = true;
+    private _showPreamble = true;
 
     public get nativeElement(): any {
         return this.el.nativeElement;
@@ -180,7 +189,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         const baseHtml = this.lineNumbering.insertLineNumbers({
             html: motionHtml,
             lineLength: this.lineLength,
-            firstLine: this.motion.firstLine
+            firstLine: this.motion.lead_motion?.firstLine ?? this.motion.firstLine
         });
         return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
     }

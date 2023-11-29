@@ -6,20 +6,20 @@
         </button>
     </div>
     <ng-container *ngIf="inMeeting">
-        <ng-container *ngIf="partnerName">
+        <ng-container *ngIf="opponentName">
             <div class="space">
                 <div class="coin info-coin thisPlayer"></div>
                 <span>{{ getPlayerName() }}</span>
             </div>
             <div>
-                <div class="coin info-coin partner"></div>
-                <span>{{ partnerName }}</span>
+                <div class="coin info-coin opponent"></div>
+                <span>{{ opponentName }}</span>
             </div>
         </ng-container>
         <table [class]="disableBoard ? 'disabled' : ''" id="c4">
             <tr *ngFor="let row of [5, 4, 3, 2, 1, 0]">
                 <td *ngFor="let col of [0, 1, 2, 3, 4, 5, 6]">
-                    <div [class]="getCoinClass(row, col)" (click)="clickField(row, col)"></div>
+                    <div [class]="getCoinClass(row, col)" (click)="clickField(col)"></div>
                 </td>
             </tr>
         </table>

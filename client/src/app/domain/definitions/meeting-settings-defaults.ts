@@ -1,6 +1,6 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT CHANGE IT MANUALLY.
 
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 export const meetingSettingsDefaults: { [key: string]: any } = {
     enable_anonymous: false,
@@ -81,6 +81,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     users_enable_vote_delegations: false,
     users_pdf_welcometitle: _(`Welcome to OpenSlides`),
     users_pdf_welcometext: _(`[Place for your welcome and help text.]`),
+    users_pdf_wlan_encryption: `WPA`,
     users_pdf_url: `https://example.com`,
     users_email_sender: `OpenSlides`,
     users_email_subject: _(`OpenSlides access data`),

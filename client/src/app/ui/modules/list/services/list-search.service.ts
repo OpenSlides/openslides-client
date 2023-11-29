@@ -11,7 +11,7 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
     private _source: V[] = [];
     private _sourceObservable: Observable<V[]> | null = null;
     private _sourceSubscription: Subscription | null = null;
-    private _currentSearchFilter: string = ``;
+    private _currentSearchFilter = ``;
     private _filterPropsMap: { [filterProps: string]: string[] } = {};
 
     private readonly _outputSubject = new BehaviorSubject<V[]>([]);
@@ -25,6 +25,13 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
         this.refreshSubscription();
     }
 
+    public exitSearchService(): void {
+        if (this._sourceSubscription) {
+            this._sourceSubscription.unsubscribe();
+            this._sourceSubscription = null;
+        }
+    }
+
     public search(input: string): void {
         this._currentSearchFilter = input?.toLowerCase();
         this.filter();
@@ -35,10 +42,7 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
     }
 
     private refreshSubscription(): void {
-        if (this._sourceSubscription) {
-            this._sourceSubscription.unsubscribe();
-            this._sourceSubscription = null;
-        }
+        this.exitSearchService();
         if (this._sourceObservable) {
             this._sourceSubscription = this._sourceObservable.subscribe(items => {
                 this._source = items;

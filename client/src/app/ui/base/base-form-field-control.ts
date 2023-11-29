@@ -8,7 +8,7 @@ import {
     UntypedFormControl,
     UntypedFormGroup
 } from '@angular/forms';
-import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
 import { distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
 /**
@@ -100,7 +100,7 @@ export abstract class BaseFormFieldControlComponent<T>
 
     public focused = false;
 
-    private _placeholder: string = ``;
+    private _placeholder = ``;
 
     private _required = false;
 
@@ -148,18 +148,21 @@ export abstract class BaseFormFieldControlComponent<T>
     public writeValue(value: T): void {
         this.value = value;
     }
+
     public registerOnChange(fn: any): void {
         this._onChange = fn;
         if (this.shouldPropagateOnRegistering) {
             this.push(this.value);
         }
     }
+
     public registerOnTouched(fn: any): void {
         this._onTouched = fn;
         if (this.shouldPropagateOnRegistering) {
             this.push(this.value);
         }
     }
+
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }

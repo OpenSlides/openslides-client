@@ -114,10 +114,10 @@ export class RtcService {
         return !!this.api;
     }
 
-    private options!: Object;
+    private options!: unknown;
     private jitsiNode!: ElementRef;
 
-    private actualRoomName: string = ``;
+    private actualRoomName = ``;
 
     public isSupportEnabled: Observable<boolean>;
     private connectedToHelpDeskSubject = new BehaviorSubject<boolean>(false);
@@ -149,7 +149,7 @@ export class RtcService {
     private isMutedSubject = new BehaviorSubject<boolean>(false);
     public isMuted = this.isMutedSubject as Observable<boolean>;
 
-    private canEnterCall: boolean = false;
+    private canEnterCall = false;
 
     private showCallDialogSubject = new BehaviorSubject<boolean>(false);
     public showCallDialogObservable = this.showCallDialogSubject as Observable<boolean>;

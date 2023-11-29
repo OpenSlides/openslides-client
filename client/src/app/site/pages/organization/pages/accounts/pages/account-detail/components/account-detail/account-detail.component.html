@@ -76,6 +76,9 @@
                     placeholder="{{ 'Default vote weight' | translate }}"
                     formControlName="default_vote_weight"
                 />
+                <mat-error *ngIf="isDefaultVoteWeightError" translate>
+                    Please select a vote weight bigger than zero.
+                </mat-error>
             </mat-form-field>
         </div>
 
@@ -84,8 +87,12 @@
                 <mat-form-field>
                     <mat-label>{{ 'Administration roles (at organization level)' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">
-                        <mat-option [value]="null">-</mat-option>
-                        <mat-option *ngFor="let level of organizationManagementLevels" [value]="level">
+                        <mat-option [value]="null" *ngIf="!orgaManagementLevelChangeDisabled">-</mat-option>
+                        <mat-option
+                            *ngFor="let level of organizationManagementLevels"
+                            [value]="level"
+                            [disabled]="orgaManagementLevelChangeDisabled"
+                        >
                             {{ getOmlVerboseName(level) | translate }}
                         </mat-option>
                     </mat-select>
@@ -94,10 +101,12 @@
             <div *osOmlPerms="OML.can_manage_organization">
                 <mat-form-field>
                     <os-repo-search-selector
-                        formControlName="committee_$_management_level"
+                        formControlName="committee_management_ids"
                         [multiple]="true"
                         placeholder="{{ 'Committee admin' | translate }}"
+                        [subscriptionConfig]="committeeSubscriptionConfig"
                         [repo]="committeeController"
+                        [sortService]="committeeSortService"
                         [transformPropagateFn]="getTransformPropagateFn()"
                         [transformSetFn]="getTransformSetFn()"
                     ></os-repo-search-selector>
@@ -239,7 +248,11 @@
 </ng-template>
 
 <mat-menu #userExtraMenu="matMenu">
-    <button mat-menu-item [routerLink]="['/', 'accounts', user?.id, 'password']">
+    <button
+        *ngIf="user && !user.saml_id && operatorHasEqualOrHigherOML"
+        mat-menu-item
+        [routerLink]="['/', 'accounts', user.id, 'password']"
+    >
         <mat-icon>security</mat-icon>
         <span>{{ 'Change password' | translate }}</span>
     </button>

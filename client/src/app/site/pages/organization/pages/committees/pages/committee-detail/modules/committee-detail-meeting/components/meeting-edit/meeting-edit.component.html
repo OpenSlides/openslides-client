@@ -36,7 +36,7 @@
 
         <mat-form-field>
             <mat-label>{{ 'Language' | translate }}</mat-label>
-            <mat-select formControlName="language" [disabled]="!isCreateView || !!theDuplicateFromId">
+            <mat-select formControlName="language">
                 <mat-option *ngFor="let choice of translations | keyvalue" [value]="choice.key">
                     {{ choice.value }}
                 </mat-option>
@@ -73,6 +73,11 @@
                     {{ 'Create new tag' | translate }}
                 </ng-template>
             </os-repo-search-selector>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'External ID' | translate }}</mat-label>
+            <input matInput formControlName="external_id" />
         </mat-form-field>
     </mat-card>
 

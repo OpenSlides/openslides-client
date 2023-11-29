@@ -1,8 +1,9 @@
 import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Content, ContentText, StyleDictionary, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting';
-import { PollMethod, PollTableData, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
+import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting.constants';
+import { PollMethod, PollTableData, PollType, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewOption, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -14,7 +15,7 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { ViewAssignment } from '../../../pages/assignments';
 import { ViewUser } from '../../../view-models/view-user';
 import { EntitledUsersTableEntry } from '../definitions';
-import { PollKeyVerbosePipe } from '../pipes';
+import { PollKeyVerbosePipe, PollParseNumberPipe } from '../pipes';
 import { PollService } from '../services/poll.service';
 import { BaseVoteData } from './base-poll-detail.component';
 
@@ -43,17 +44,17 @@ export abstract class BasePollPdfService {
      * An arbitrary number of ballots to print, if {@link ballotCountSelection} is set
      * to CUSTOM_NUMBER. Value is expected to be fetched from the configuration`
      */
-    protected ballotCustomCount: number = 0;
+    protected ballotCustomCount = 0;
 
     /**
      * The event name
      */
-    protected eventName: string = ``;
+    protected eventName = ``;
 
     /**
      * The url of the logo to be printed
      */
-    protected logoUrl: string = ``;
+    protected logoUrl = ``;
 
     private get activeMeeting(): ViewMeeting {
         return this.activeMeetingService.meeting!;
@@ -71,7 +72,8 @@ export abstract class BasePollPdfService {
         protected pdfExport: MeetingPdfExportService,
         protected translate: TranslateService,
         protected pollService: PollService,
-        private pollKeyVerbose: PollKeyVerbosePipe
+        private pollKeyVerbose: PollKeyVerbosePipe,
+        private pollParseNumber: PollParseNumberPipe
     ) {
         this.meetingSettingsService.get(`name`).subscribe(name => (this.eventName = name));
         this.mediaManageService.getLogoUrlObservable(`pdf_ballot_paper`).subscribe(url => (this.logoUrl = url));
@@ -159,11 +161,11 @@ export abstract class BasePollPdfService {
      * @param data predefined data to be used
      * @returns pdfmake definitions
      */
-    protected getPages(rowsPerPage: number, data: AbstractPollData): object {
+    protected getPages(rowsPerPage: number, data: AbstractPollData): Content[] {
         const amount = this.getBallotCount();
         const fullpages = Math.floor(amount / (rowsPerPage * 2));
         let partialpageEntries = amount % (rowsPerPage * 2);
-        const content: object[] = [];
+        const content: Content[] = [];
         for (let i = 0; i < fullpages; i++) {
             const body = [];
             for (let j = 0; j < rowsPerPage; j++) {
@@ -173,10 +175,9 @@ export abstract class BasePollPdfService {
                 table: {
                     headerRows: 1,
                     widths: [`*`, `*`],
-                    body,
-                    pageBreak: `after`
+                    body
                 },
-                rowsperpage: rowsPerPage
+                pageBreak: `after`
             });
         }
         if (partialpageEntries) {
@@ -193,8 +194,7 @@ export abstract class BasePollPdfService {
                     headerRows: 1,
                     widths: [`50%`, `50%`],
                     body: partialPageBody
-                },
-                rowsperpage: rowsPerPage
+                }
             });
         }
         return content;
@@ -205,8 +205,8 @@ export abstract class BasePollPdfService {
      *
      * @returns pdfMake definitions
      */
-    protected getHeader(): object {
-        const columns: object[] = [];
+    protected getHeader(): any {
+        const columns: any[] = [];
         columns.push({
             text: this.eventName,
             fontSize: 8,
@@ -237,7 +237,7 @@ export abstract class BasePollPdfService {
      * @param title
      * @returns pdfmake definition
      */
-    protected getTitle(title: string): object {
+    protected getTitle(title: string): ContentText {
         return {
             text: title,
             style: `title`
@@ -250,7 +250,7 @@ export abstract class BasePollPdfService {
      * @param subtitle
      * @returns pdfmake definition
      */
-    protected getSubtitle(subtitle?: string): object {
+    protected getSubtitle(subtitle?: string): ContentText {
         return {
             text: subtitle,
             style: `description`
@@ -265,7 +265,7 @@ export abstract class BasePollPdfService {
      * @param docDefinition the structure of the PDF document
      * @param filename the name of the file to use
      */
-    public downloadWithBallotPaper(docDefinition: object, filename: string): void {
+    public downloadWithBallotPaper(docDefinition: Content, filename: string): void {
         this.pdfExport.downloadWaitableDoc(filename, () => this.getBallotPaper(docDefinition));
     }
 
@@ -276,8 +276,8 @@ export abstract class BasePollPdfService {
      * @param documentContent the content of the pdf as object
      * @returns the pdf document definition ready to export
      */
-    private async getBallotPaper(documentContent: object): Promise<object> {
-        const result = {
+    private async getBallotPaper(documentContent: Content): Promise<TDocumentDefinitions> {
+        return {
             pageSize: `A4`,
             pageMargins: [0, 0, 0, 0],
             defaultStyle: {
@@ -287,7 +287,6 @@ export abstract class BasePollPdfService {
             content: documentContent,
             styles: this.getBlankPaperStyles()
         };
-        return result;
     }
 
     protected getRowsPerPage(poll: ViewPoll): number {
@@ -346,7 +345,7 @@ export abstract class BasePollPdfService {
             votesData?: BaseVoteData[];
             entitledUsersData?: EntitledUsersTableEntry[];
         }
-    ): object {
+    ): Content[] {
         let pollResultPdfContent: any[] = [];
         const title = this.getTitle(`${poll.content_object?.getTitle()} · ${poll.getTitle()}`);
 
@@ -378,7 +377,7 @@ export abstract class BasePollPdfService {
             pollResultPdfContent.push(resultsData);
         }
 
-        if (exportInfo.votesData?.length) {
+        if (exportInfo.votesData?.length && poll.type !== PollType.Analog) {
             pollResultPdfContent.push({
                 text: this.translate.instant(`Single votes`),
                 margin: [0, 20, 0, 5],
@@ -499,6 +498,11 @@ export abstract class BasePollPdfService {
             ]
         ];
 
+        const showPercent = !resultsTable.some(date =>
+            date.value.some(
+                val => [`yes`, `no`, `abstain`].includes(val.vote ?? date.votingOption) && val.amount && val.amount < 0
+            )
+        );
         let i = 0;
         for (const date of resultsTable) {
             const tableLine = [
@@ -513,8 +517,9 @@ export abstract class BasePollPdfService {
                             : undefined;
                         return hasValue
                             ? {
-                                  text: `${currentValue.amount}${
-                                      [`yes`, `no`, `abstain`].includes(currentValue.vote ?? date.votingOption)
+                                  text: `${this.pollParseNumber.transform(currentValue.amount)}${
+                                      [`yes`, `no`, `abstain`].includes(currentValue.vote ?? date.votingOption) &&
+                                      showPercent
                                           ? ` (${this.pollService.getVoteValueInPercent(
                                                 currentValue.amount,
                                                 currentValue.vote ? { poll, row: resultsTableData[i] } : { poll }
@@ -683,7 +688,7 @@ export abstract class BasePollPdfService {
      * @returns an object that contains a limited set of pdf styles
      *  used for ballots
      */
-    private getBlankPaperStyles(): object {
+    private getBlankPaperStyles(): StyleDictionary {
         return {
             title: {
                 fontSize: 14,

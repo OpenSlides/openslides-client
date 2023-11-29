@@ -4,7 +4,7 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
  */
 export type InfoToExport =
     | 'submitters'
-    | 'supporters'
+    | 'supporter_users'
     | 'state'
     | 'recommendation'
     | 'category'
@@ -14,6 +14,7 @@ export type InfoToExport =
     | 'speakers'
     | 'id'
     | 'sequential_number'
+    | 'referring_motions'
     | 'allcomments';
 
 /**
@@ -31,7 +32,7 @@ export enum ExportFileFormat {
 const motionHeadersAndVerboseNames: { [key in keyof ViewMotion]?: any } = {
     number: `Number`,
     submitters: `Submitters`,
-    supporters: `Supporters`,
+    supporter_users: `Supporters`,
     title: `Title`,
     text: `Text`,
     reason: `Reason`,

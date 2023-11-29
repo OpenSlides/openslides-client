@@ -4,26 +4,35 @@ export class Action<T = void> {
     private _actions: ActionRequest[];
     private _sendActionFn: (requests: ActionRequest[]) => Promise<T[]>;
 
-    public constructor(sendActionFn: (requests: ActionRequest[]) => Promise<T[]>, ...actions: ActionRequest[]) {
-        this._actions = actions.filter(action => !!action.data?.length);
+    public setSendActionFn(sendActionFn: (requests: ActionRequest[]) => Promise<T[]>): void {
+        this._sendActionFn = sendActionFn;
+    }
+
+    public constructor(sendActionFn: (requests: ActionRequest[]) => Promise<T[]>, actions: ActionRequest[] = []) {
+        this._actions = actions.filter(action => !!action?.data?.length);
         this._sendActionFn = sendActionFn;
     }
 
     public concat(...actions: (Action<any | any[]> | ActionRequest | null)[]): Action<T> {
+        actions = actions.filter(action => !!action && (action[`data`]?.length || action[`_actions`]?.length));
         if (actions.length === 0) {
             return this;
         }
-        const concatedActions = actions
-            .filter(action => action !== null)
-            .flatMap(action => {
-                if (action instanceof Action) {
-                    return action._actions;
-                } else {
-                    return [action];
-                }
-            })
-            .concat(this._actions);
-        return new Action(this._sendActionFn, ...concatedActions);
+        const concatedActions = this._actions.concat(
+            actions
+                .filter(action => action !== null)
+                .flatMap(action => {
+                    if (action instanceof Action) {
+                        return action._actions;
+                    } else {
+                        return [action];
+                    }
+                })
+        );
+        return new Action(
+            this._sendActionFn ?? (actions.find(action => action instanceof Action) as Action<T>)?._sendActionFn,
+            concatedActions
+        );
     }
 
     public async resolve(): Promise<T[] | void> {

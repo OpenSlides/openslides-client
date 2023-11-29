@@ -13,6 +13,7 @@ export class Projection extends BaseModel<Projection> {
     public options!: {
         [key: string]: any;
     };
+
     public weight!: number;
 
     // Calculated field
@@ -27,7 +28,7 @@ export class Projection extends BaseModel<Projection> {
         super(Projection.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Projection | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Projection)[] = [
         `id`,
         `options`,
         `stable`,

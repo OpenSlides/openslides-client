@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -41,6 +41,7 @@ interface DialogResult {
  */
 interface StatePerm {
     name: string;
+    help_text?: string;
     selector: keyof MotionState;
     type: `input` | `check` | `restrictions` | `color` | `amendment` | `state`;
     reference?: string;
@@ -77,6 +78,12 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      * Holds the dialog data
      */
     public dialogData!: DialogData;
+
+    private set workflow(workflow: ViewMotionWorkflow) {
+        this._workflow = workflow;
+        this.updateRowDef();
+        this.cd.markForCheck();
+    }
 
     /**
      * Holds the current workflow
@@ -119,12 +126,6 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         { merge: MergeAmendment.YES, label: `Yes` }
     ] as AmendmentIntoFinal[];
 
-    private set workflow(workflow: ViewMotionWorkflow) {
-        this._workflow = workflow;
-        this.updateRowDef();
-        this.cd.markForCheck();
-    }
-
     private _workflow!: ViewMotionWorkflow;
     private _workflowId!: Id;
 
@@ -138,25 +139,127 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      * Holds state permissions
      */
     private readonly _statePermissionsList = [
-        { name: _(`Recommendation label`), selector: `recommendation_label`, type: `input` },
-        { name: _(`Allow support`), selector: `allow_support`, type: `check` },
-        { name: _(`Allow create poll`), selector: `allow_create_poll`, type: `check` },
-        { name: _(`Allow submitter edit`), selector: `allow_submitter_edit`, type: `check` },
-        { name: _(`Allow forwarding of motions`), selector: `allow_motion_forwarding`, type: `check` },
-        { name: _(`Set number`), selector: `set_number`, type: `check` },
-        { name: _(`Set timestamp of creation`), selector: `set_created_timestamp`, type: `check` },
-        { name: _(`Show state extension field`), selector: `show_state_extension_field`, type: `check` },
+        {
+            name: _(`Recommendation label`),
+            help_text: _(
+                `Defines the wording of the recommendation that belongs to this state.
+Example: State = Accepted / Recommendation = Acceptance. 
+
+To activate the recommendation system, a recommender (for example, a motion committee) must be defined under > [Settings] > [Motions] > [Name of recommender].
+Example recommender: motion committee
+
+Additional information:
+In combination with motion blocks, the recommendation of multiple motions can be followed simultaneously.`
+            ),
+            selector: `recommendation_label`,
+            type: `input`
+        },
+        {
+            name: _(`Allow support`),
+            help_text: _(
+                `Enables the support function for motions in the selected state. The support function must be activated under > [Settings] > [Motions] as well as the corresponding group permission in > [Participants] > [Groups] > [Motions] > [Can support motions].`
+            ),
+            selector: `allow_support`,
+            type: `check`
+        },
+        {
+            name: _(`Allow create poll`),
+            help_text: _(`Enables the ability to create votings for motions in this state.`),
+            selector: `allow_create_poll`,
+            type: `check`
+        },
+        {
+            name: _(`Allow submitter edit`),
+            help_text: _(
+                `Enables the editing of the motion text and reason by submitters in the selected state after the motion has been created.`
+            ),
+            selector: `allow_submitter_edit`,
+            type: `check`
+        },
+        {
+            name: _(`Allow forwarding of motions`),
+            help_text: _(
+                `Enables the forwarding of motions to other meetings within the OpenSlides instance in the selected state. 
+
+Prerequisites:
+1. forwarding hierarchy must be set at the organizational level in the committee. 
+2. target meeting must be created.
+3. user must have group permission for forwarding.`
+            ),
+            selector: `allow_motion_forwarding`,
+            type: `check`
+        },
+        {
+            name: _(`Set identifier`),
+            help_text: _(
+                `Activates the automatic setting of a number for motions that reach this state. The scheme for numbering can be customized under > [Settings] > [Motions].`
+            ),
+            selector: `set_number`,
+            type: `check`
+        },
+        {
+            name: _(`Set submission timestamp`),
+            help_text: _(
+                `Activates the automatic logging of the date and time when this state was first reached. A set time stamp cannot be removed.`
+            ),
+            selector: `set_workflow_timestamp`,
+            type: `check`
+        },
+        {
+            name: _(`Show state extension field`),
+            help_text: _(
+                `Activates the extension field for the selected state, which can be filled with free text as desired.
+
+Example: When activated, the state "in progress" can be expanded to e.g. "in progress by the motion committee".`
+            ),
+            selector: `show_state_extension_field`,
+            type: `check`
+        },
         {
             name: _(`Show recommendation extension field`),
+            help_text: _(
+                `Activates the extension field of the recommendation in this state, which can be filled with free text or extended with references to other motions or committees as desired.`
+            ),
             selector: `show_recommendation_extension_field`,
             type: `check`
         },
-        { name: _(`Show amendment in parent motion`), selector: `merge_amendment_into_final`, type: `amendment` },
-        { name: _(`Restrictions`), selector: `restrictions`, type: `restrictions` },
-        { name: _(`Label color`), selector: `css_class`, type: `color` },
-        { name: _(`Next states`), selector: `next_states_id`, type: `state` },
+        {
+            name: _(`Show amendment in parent motion`),
+            help_text: _(
+                `Enables the visibility of amendments directly in the corresponding main motion. The text of amendments is embedded within the text of the motion.
+
+Note: Does not affect the visibility of change recommendations.`
+            ),
+            selector: `merge_amendment_into_final`,
+            type: `amendment`
+        },
+        {
+            name: _(`Restrictions`),
+            help_text: _(
+                `Defines for the selected state which groups have access:
+- If no option is selected, the motions in the selected state are visible to all; The prerequisite for this is group permission: [Can see motions].
+- Selecting one or more options restricts access to those groups for which the selected authorization option is defined under > [Participants] > [Groups].`
+            ),
+            selector: `restrictions`,
+            type: `restrictions`
+        },
+        {
+            name: _(`Label color`),
+            help_text: _(`Defines the colour for the state button.`),
+            selector: `css_class`,
+            type: `color`
+        },
+        {
+            name: _(`Next states`),
+            help_text: _(`Defines which states can be selected next in the workflow.`),
+            selector: `next_states_id`,
+            type: `state`
+        },
         {
             name: _(`Submitter may set state to`),
+            help_text: _(
+                `Enables for the selected state the possibility for submitters to change the state of the motion. Other administrative functions are excluded.`
+            ),
             selector: `submitter_withdraw_state_id`,
             type: `submitter_withdraw_state`
         }
@@ -431,14 +534,17 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         return (<any>state)[perm.selector];
     }
 
-    private deleteWorkflowState(state: ViewMotionState): void {
-        const content = this.translate.instant(`Delete`) + ` ${state.name}?`;
+    public sortedNextStates(state: ViewMotionState): ViewMotionState[] {
+        return state.next_states.sort((a, b) => a.weight - b.weight);
+    }
 
-        this.promptService.open(`Are you sure`, content).then(promptResult => {
-            if (promptResult) {
-                this.handleRequest(this.stateRepo.delete(state));
-            }
-        });
+    private async deleteWorkflowState(state: ViewMotionState): Promise<void> {
+        const title = this.translate.instant(`Are you sure you want to delete this state?`);
+        const content = `${state.name}`;
+
+        if (await this.promptService.open(title, content)) {
+            this.handleRequest(this.stateRepo.delete(state));
+        }
     }
 
     private updateWorkflowStateName(name: string, state: ViewMotionState): void {

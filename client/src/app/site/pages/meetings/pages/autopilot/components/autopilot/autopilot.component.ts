@@ -28,7 +28,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     /**
      * filled by child component
      */
-    public canReaddLastSpeaker: boolean = false;
+    public canReaddLastSpeaker = false;
 
     public get title(): string {
         if (this._currentProjection) {
@@ -36,6 +36,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         } else {
             return ``;
         }
+    }
+
+    public get showPollCollection(): boolean {
+        return this._currentProjection?.type !== `agenda_item_list`;
     }
 
     public get projectorTitle(): string {

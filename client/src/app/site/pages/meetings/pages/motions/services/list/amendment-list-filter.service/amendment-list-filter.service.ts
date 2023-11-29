@@ -27,7 +27,7 @@ export class AmendmentListFilterService extends MotionListFilterService {
     /**
      * set the storage key nae
      */
-    protected override storageKey: string = ``;
+    protected override storageKey = ``;
 
     /**
      * The sorage key prefix to identify the parent id
