@@ -173,8 +173,6 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
             title: this.translate.instant(`Amendment to`) + ` ` + this.motion.getNumberOrTitle(),
             parent_id: this.motion.id,
             category_id: this.operator.hasPerms(Permission.motionCanManage) ? this.motion.category_id : undefined,
-            tag_ids: this.motion.tag_ids,
-            block_id: this.motion.block_id,
             lead_motion_id: this.motion.id,
             amendment_paragraphs: amendmentParagraphs,
             workflow_id: this.meetingSettingsService.instant(`motions_default_amendment_workflow_id`)
