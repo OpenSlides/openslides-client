@@ -77,7 +77,6 @@ export class User extends BaseDecimalModel<User> {
         `gender`,
         `email`,
         `default_number`,
-        `default_structure_level`,
         `default_vote_weight`,
         `last_email_sent`,
         `is_demo_user`,

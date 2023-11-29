@@ -1,3 +1,4 @@
+import { Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { BaseModel } from '../base/base-model';
 
@@ -8,9 +9,14 @@ import { BaseModel } from '../base/base-model';
 export class StructureLevel extends BaseModel<StructureLevel> {
     public static COLLECTION = `structure_level`;
 
-    public name: string;
-    public color: string;
-    public allow_additional_time: boolean;
+    public readonly name!: string;
+    public readonly color: string;
+    public readonly default_time: number;
+
+    // Relations
+    public meeting_id!: Id;
+    public meeting_user_ids!: Id[];
+    public structure_level_list_of_speakers_ids: Id[];
 
     public constructor(input?: Partial<StructureLevel>) {
         super(StructureLevel.COLLECTION, input);
@@ -20,7 +26,9 @@ export class StructureLevel extends BaseModel<StructureLevel> {
         `id`,
         `name`,
         `color`,
-        `allow_additional_time`,
+        `default_time`,
+        `meeting_user_ids`,
+        `structure_level_list_of_speakers_ids`,
         `meeting_id`
     ];
 }
