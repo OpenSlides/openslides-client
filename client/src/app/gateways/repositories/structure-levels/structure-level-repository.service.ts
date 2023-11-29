@@ -27,7 +27,6 @@ export class StructureLevelRepositoryService extends BaseMeetingRelatedRepositor
             meeting_id: model.meeting_id || meeting_id,
             name: model.name,
             color: model.color,
-            allow_additional_time: model.allow_additional_time
         }));
         return this.createAction(StructureLevelAction.CREATE, payload);
     }
@@ -38,7 +37,6 @@ export class StructureLevelRepositoryService extends BaseMeetingRelatedRepositor
             id: model.id ?? id,
             name: model.name,
             color: model.color,
-            allow_additional_time: model.allow_additional_time
         }));
         return this.createAction(StructureLevelAction.UPDATE, payload);
     }

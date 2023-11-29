@@ -22,20 +22,6 @@
         </div>
     </div>
 
-    <!-- Allow additional time -->
-    <div
-        *osScrollingTableCell="
-            'allow_additional_time';
-            row as structure_level;
-            config: { width: 40, position: END_POSITION }
-        "
-        class="cell-slot fill"
-    >
-        <div class="fake-button-no-touch" *ngIf="structure_level.allow_additional_time">
-            <mat-icon>more_time</mat-icon>
-        </div>
-    </div>
-
     <!-- Color -->
     <div
         *osScrollingTableCell="'color'; row as structure_level; config: { width: 40, position: END_POSITION }"
@@ -90,12 +76,6 @@
                     {{ 'A name is required' | translate }}
                 </mat-error>
             </mat-form-field>
-            <!-- Allow Additional Time -->
-            <div class="os-dialog-large">
-                <mat-checkbox formControlName="allow_additional_time">
-                    {{ 'Allow additional time' | translate }}
-                </mat-checkbox>
-            </div>
             <!-- Color -->
             <mat-form-field class="os-dialog-large">
                 <label>{{ 'Color' | translate }}</label>

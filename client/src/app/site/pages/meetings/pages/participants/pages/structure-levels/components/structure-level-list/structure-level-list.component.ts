@@ -56,8 +56,7 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
         super.setTitle(`Structure Levels`);
         this.structureLevelForm = this.formBuilder.group({
             name: [``, Validators.required],
-            color: [``, Validators.pattern(/^#[0-9a-fA-F]{6}$/)],
-            allow_additional_time: [``]
+            color: [``, Validators.pattern(/^#[0-9a-fA-F]{6}$/)]
         });
     }
 
@@ -73,9 +72,6 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
         this.structureLevelForm
             .get(`color`)!
             .setValue(this.currentStructureLevel ? this.currentStructureLevel.color : ``);
-        this.structureLevelForm
-            .get(`allow_additional_time`)!
-            .setValue(this.currentStructureLevel ? this.currentStructureLevel.allow_additional_time : false);
         this.dialogRef = this.dialog.open(this.structureLevelDialog!, infoDialogSettings);
         this.dialogRef.afterClosed().subscribe(res => {
             if (res) {
