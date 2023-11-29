@@ -1,4 +1,9 @@
-<os-head-bar [hasMainButton]="perms.isAllowed('create')" (mainEvent)="onPlusButton()" [multiSelectMode]="isMultiSelect">
+<os-head-bar
+    [hasMainButton]="perms.isAllowed('create')"
+    [mainActionTooltip]="'Create new motion' | translate"
+    (mainEvent)="onPlusButton()"
+    [multiSelectMode]="isMultiSelect"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Motions' | translate }}</h2>

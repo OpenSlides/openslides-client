@@ -1,4 +1,9 @@
-<os-head-bar [hasMainButton]="true" (mainEvent)="createOrganizationTag()" [multiSelectMode]="isMultiSelect">
+<os-head-bar
+    [hasMainButton]="true"
+    [mainActionTooltip]="'Create new tag' | translate"
+    (mainEvent)="createOrganizationTag()"
+    [multiSelectMode]="isMultiSelect"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Tags' | translate }}</h2>

@@ -1,4 +1,9 @@
-<os-head-bar [hasMainButton]="canManage" (mainEvent)="onPlusButton()" [multiSelectMode]="isMultiSelect">
+<os-head-bar
+    [hasMainButton]="canManage"
+    [mainActionTooltip]="'Create new topic' | translate"
+    (mainEvent)="onPlusButton()"
+    [multiSelectMode]="isMultiSelect"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Agenda' | translate }}</h2>

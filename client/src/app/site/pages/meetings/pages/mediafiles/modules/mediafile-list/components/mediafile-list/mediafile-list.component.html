@@ -1,4 +1,9 @@
-<os-head-bar [hasMainButton]="canEdit" [multiSelectMode]="isMultiSelect" (mainEvent)="onMainEvent()">
+<os-head-bar
+    [hasMainButton]="canEdit"
+    [mainActionTooltip]="'Upload files' | translate"
+    [multiSelectMode]="isMultiSelect"
+    (mainEvent)="onMainEvent()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Files' | translate }}</h2>
@@ -9,6 +14,7 @@
         <button
             type="button"
             mat-icon-button
+            [matTooltip]="'Create new folder' | translate"
             (click)="createNewFolder(newFolderDialog)"
             *osPerms="permission.mediafileCanManage; and: !isMultiSelect"
         >
