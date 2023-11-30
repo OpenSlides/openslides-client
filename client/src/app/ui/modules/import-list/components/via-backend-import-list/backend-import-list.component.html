@@ -179,7 +179,7 @@
 
 <ng-template #entryContentTemplate let-entry="entry" let-def="def">
     <ng-container *ngIf="getHeader(def).is_object">
-        <div style="display: inline-flex">
+        <div class="list-field-entry">
             <ng-container
                 [ngTemplateOutlet]="nonObjectEntryTemplate"
                 [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
