@@ -330,6 +330,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             attachment_ids: partialMotion.attachment_ids === null ? [] : partialMotion.attachment_ids,
             reason: partialMotion.reason,
             number: partialMotion.number,
+            block_id: partialMotion.block_id,
+            tag_ids: partialMotion.tag_ids === null ? [] : partialMotion.tag_ids,
             state_extension: partialMotion.state_extension,
             sort_parent_id: partialMotion.sort_parent_id,
             supporter_meeting_user_ids:
