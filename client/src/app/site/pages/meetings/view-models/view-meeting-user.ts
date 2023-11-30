@@ -9,6 +9,7 @@ import { ViewGroup } from '../pages/participants';
 import { ViewVote } from '../pages/polls';
 import { ViewMeeting } from './view-meeting';
 import { ViewUser } from './view-user';
+import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
 
 export class ViewMeetingUser extends BaseViewModel<MeetingUser> {
     public static COLLECTION = MeetingUser.COLLECTION;
@@ -30,5 +31,6 @@ interface IMeetingUserRelations {
     vote_delegated_to: ViewMeetingUser;
     vote_delegations_from: ViewMeetingUser[];
     vote_delegated_votes: ViewVote[];
+    structure_levels: ViewStructureLevel[];
 }
 export interface ViewMeetingUser extends MeetingUser, IMeetingUserRelations {}

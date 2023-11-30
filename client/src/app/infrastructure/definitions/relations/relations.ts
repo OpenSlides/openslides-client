@@ -15,6 +15,7 @@ import { ViewPollCandidate } from 'src/app/site/pages/meetings/pages/polls/view-
 import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewResource } from 'src/app/site/pages/organization/pages/resources';
+import { ViewStructureLevel, ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 
 import { BaseViewModel, ViewModelConstructor } from '../../../site/base/base-view-model';
 import {
@@ -249,6 +250,12 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewMeetingUser,
         MField: `meeting_user`,
         OField: `submitted_motions`
+    }),
+    ...makeM2M({
+        AViewModel: ViewStructureLevel,
+        BViewModel: ViewMeetingUser,
+        AField: `meeting_users`,
+        BField: `structure_levels`
     }),
     // Vote delegations
     // vote_delegated_to_id -> vote_delegations_from_ids
@@ -623,6 +630,14 @@ export const RELATIONS: Relation[] = [
             }))
         ]
     }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewStructureLevel,
+        OField: `structure_levels`,
+        MField: `meeting`,
+        isFullList: true
+    }),
+
     // meeting/user_ids -> user
     {
         ownViewModels: [ViewMeeting],
@@ -683,6 +698,19 @@ export const RELATIONS: Relation[] = [
         MField: `list_of_speakers`,
         OField: `speakers`
     }),
+    ...makeM2O({
+        MViewModel: ViewStructureLevelListOfSpeakers,
+        OViewModel: ViewListOfSpeakers,
+        MField: `list_of_speakers`,
+        OField: `structure_level_list_of_speakers`
+    }),
+    ...makeM2O({
+        MViewModel: ViewSpeaker,
+        OViewModel: ViewStructureLevelListOfSpeakers,
+        MField: `structure_level_list_of_speakers`,
+        OField: `speakers`
+    }),
+
     // ########## Motions
     ...makeM2O({
         MViewModel: ViewMotion,
@@ -999,5 +1027,12 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewPollCandidate,
         OField: `poll_candidates`,
         MField: `poll_candidate_list`
+    }),
+    // ########## StructureLevel
+    ...makeM2O({
+        OViewModel: ViewStructureLevelListOfSpeakers,
+        MViewModel: ViewStructureLevel,
+        OField: `structure_level`,
+        MField: `structure_level_list_of_speakers`
     })
 ];

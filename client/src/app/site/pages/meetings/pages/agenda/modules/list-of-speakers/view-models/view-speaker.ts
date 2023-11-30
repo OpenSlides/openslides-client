@@ -6,6 +6,7 @@ import { SpeakerState } from '../../../../../../../../domain/models/speakers/spe
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 import { ViewPointOfOrderCategory } from './view-point-of-order-category';
+import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 /**
  * Provides "safe" access to a speaker with all it's components
  */
@@ -60,5 +61,6 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
 interface ISpeakerRelations {
     list_of_speakers: ViewListOfSpeakers;
     point_of_order_category: ViewPointOfOrderCategory;
+    structure_level_list_of_speakers: ViewStructureLevelListOfSpeakers[];
 }
 export interface ViewSpeaker extends Speaker, ISpeakerRelations, HasMeeting {}
