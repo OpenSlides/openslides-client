@@ -2,6 +2,7 @@
     <os-rounded-input
         [(ngModel)]="searchTerm"
         (clickSubmit)="searchChange()"
+        (inputCleared)="searchCleared()"
         placeholder="{{ 'Search' | translate }}"
         [hasSubmit]="true"
         [autofocus]="true"

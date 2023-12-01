@@ -93,6 +93,12 @@ export class GlobalSearchComponent implements OnDestroy {
         return !this.activeMeeting.meetingId || this.operator.hasPerms(this.getPermissionByFilter(filter));
     }
 
+    public searchCleared(): void {
+        this.results = [];
+        GlobalSearchComponent._filteredResults = [];
+        this.cd.markForCheck();
+    }
+
     public async searchChange(): Promise<void> {
         let searchMeeting = null;
         this.updateCurrentlyAvailableFilters();
