@@ -1,4 +1,3 @@
-import { ViewportScroller } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';

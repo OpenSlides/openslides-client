@@ -104,7 +104,7 @@
         <h3 *ngIf="noResults" class="search-no-results">{{ 'No results found' | translate }}</h3>
     </ng-container>
     <ng-container *ngIf="searching !== null">
-        <div class="spinner-container" [ngClass]="{'overlay-spinner': filteredResults.length > 0}">
+        <div class="spinner-container" [ngClass]="{ 'overlay-spinner': filteredResults.length > 0 }">
             <mat-spinner></mat-spinner>
         </div>
     </ng-container>
