@@ -1,3 +1,4 @@
+import { ViewportScroller } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
@@ -8,6 +9,7 @@ import { splitStringKeepSeperator } from 'src/app/infrastructure/utils';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchService } from 'src/app/site/services/global-search';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
 
 @Component({
     selector: `os-global-search`,
@@ -63,16 +65,23 @@ export class GlobalSearchComponent implements OnDestroy {
 
     public searching: number | null = null;
 
+    public filterOpen = false;
+    public get isMobile(): boolean {
+        return this.viewport.isMobile;
+    }
+
     private results: GlobalSearchEntry[] = [];
     private static models: GlobalSearchResponse;
 
     private filterChangeSubscription: Subscription;
+    private viewportSubscription: Subscription;
 
     public constructor(
         private activeMeeting: ActiveMeetingService,
         public operator: OperatorService,
         private globalSearchService: GlobalSearchService,
         private formBuilder: FormBuilder,
+        private viewport: ViewPortService,
         private cd: ChangeDetectorRef
     ) {
         this.updateCurrentlyAvailableFilters();
@@ -83,10 +92,14 @@ export class GlobalSearchComponent implements OnDestroy {
                     this.searchChange();
                 }
             });
+        this.viewportSubscription = this.viewport.isMobileSubject.subscribe(() => {
+            this.cd.markForCheck();
+        });
     }
 
     ngOnDestroy(): void {
         this.filterChangeSubscription.unsubscribe();
+        this.viewportSubscription.unsubscribe();
     }
 
     public hasFilterPermission(filter: string): boolean {

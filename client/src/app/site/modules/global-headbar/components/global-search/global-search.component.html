@@ -1,17 +1,24 @@
-<div class="search-form-container">
-    <os-rounded-input
-        [(ngModel)]="searchTerm"
-        (clickSubmit)="searchChange()"
-        (inputCleared)="searchCleared()"
-        placeholder="{{ 'Search' | translate }}"
-        [hasSubmit]="true"
-        [autofocus]="true"
-    ></os-rounded-input>
+<div matDialogTitle class="search-form-container">
+    <div class="search-top-form">
+        <div class="search-input-container">
+            <os-rounded-input
+                [(ngModel)]="searchTerm"
+                (clickSubmit)="searchChange()"
+                (inputCleared)="searchCleared()"
+                placeholder="{{ 'Search' | translate }}"
+                [hasSubmit]="true"
+                [autofocus]="true"
+            ></os-rounded-input>
+        </div>
+        <div *ngIf="isMobile" class="search-filter-toggle">
+            <button mat-icon-button (click)="filterOpen = !filterOpen"><mat-icon>filter_list</mat-icon></button>
+        </div>
+    </div>
     <div class="search-hint">
         <mat-hint>{{ 'To start your search press Enter or the search icon' | translate }}</mat-hint>
     </div>
 
-    <section class="filters" [formGroup]="currentFilters">
+    <section *ngIf="filterOpen || !isMobile" class="filters" [formGroup]="currentFilters">
         <mat-radio-group *ngIf="operator.knowsMultipleMeetings" class="filter-section" formControlName="meetingFilter">
             <mat-radio-button *ngIf="inMeeting" class="filter" value="current">
                 {{ 'This meeting' | translate }}
