@@ -75,11 +75,7 @@ export class GlobalSearchService {
             const result = results[fqid];
             if (result.matched_by) {
                 for (const field of Object.keys(result.matched_by)) {
-                    if (
-                        result.content[field] &&
-                        !this.isTitleField(collectionFromFqid(fqid), field) &&
-                        !this.isIdField(field)
-                    ) {
+                    if (result.content[field] && !this.isIdField(field)) {
                         for (const word of result.matched_by[field]) {
                             if (result.content[field] instanceof String) {
                                 result.content[field] = result.content[field]
