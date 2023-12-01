@@ -1,6 +1,6 @@
 import { KeyValue } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -75,6 +75,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public user: ViewUser | null = null;
     public isNewUser = false;
     public committeeSubscriptionConfig = getCommitteeListMinimalSubscriptionConfig();
+    public form: UntypedFormGroup;
 
     public get tableData(): ParticipationTableData {
         return this._tableData;
