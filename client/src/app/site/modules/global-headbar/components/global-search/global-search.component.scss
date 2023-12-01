@@ -12,9 +12,19 @@
     display: flex;
     justify-content: center;
     padding: 15px;
+    &.overlay-spinner {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        background: rgba(0,0,0,0.2);
+        padding: 80px 0;
+    }
 }
 
 .search-results {
+    position: relative;
     width: 848px;
     max-width: calc(100% + 48px);
     margin: 0 -24px -24px -24px;

@@ -30,7 +30,7 @@
 </div>
 
 <mat-dialog-content class="search-results">
-    <ng-container *ngIf="searching === null">
+    <ng-container>
         <section class="search-results-category">
             <div *ngFor="let result of filteredResults" class="search-results-entry divider-bottom">
                 <div class="breadcrumb">
@@ -96,7 +96,7 @@
         <h3 *ngIf="noResults" class="search-no-results">{{ 'No results found' | translate }}</h3>
     </ng-container>
     <ng-container *ngIf="searching !== null">
-        <div class="spinner-container">
+        <div class="spinner-container" [ngClass]="{'overlay-spinner': filteredResults.length > 0}">
             <mat-spinner></mat-spinner>
         </div>
     </ng-container>
