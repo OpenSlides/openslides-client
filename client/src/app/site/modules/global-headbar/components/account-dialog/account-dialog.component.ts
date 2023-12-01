@@ -151,22 +151,21 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     public async changePassword(): Promise<void> {
         const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
 
-        // TODO: Part of workaround
-        if (this.snackbar._openedSnackBarRef) {
-            this.snackbar._openedSnackBarRef.dismiss();
-        }
-
-        this.repo.setPasswordSelf(this.self!, oldPassword, newPassword).then(() => {
-            // TODO: Workaround
-            // Checks if a snackbar was opened. Snackbars openend while set
-            // password was called are very likely to contain an error message
-            // caused by the setPasswordSelf call wich would be overwritten by
-            // the following code.
-            if (!this.snackbar._openedSnackBarRef) {
+        this.repo
+            .setPasswordSelf(this.self!, oldPassword, newPassword)
+            .then(() => {
                 this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
                 this.changePasswordComponent.reset();
-            }
-        });
+            })
+            .catch(e => {
+                if (e?.message) {
+                    this.snackbar.open(this.translate.instant(e.message), this.translate.instant(`OK`), {
+                        duration: 0
+                    });
+                }
+
+                console.log(e);
+            });
     }
 
     public async saveUserChanges(): Promise<void> {

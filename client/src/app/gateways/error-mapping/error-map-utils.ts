@@ -2,6 +2,7 @@ import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 import { MeetingAction } from '../repositories/meetings';
 import { MotionAction } from '../repositories/motions';
+import { UserAction } from '../repositories/users/user-action';
 
 export class MapError {
     public constructor(private message: string) {}
@@ -39,7 +40,7 @@ const VoteServiceErrorMap: ErrorMap = new ErrorMap([
     [/is not allowed to vote/, _(`You do not have the permission to vote.`)]
 ]);
 
-const MotionCreateForwardErrorMap: ErrorMap = new ErrorMap([[/(.*)/, input => new MapError(input)]]);
+const MatchAllErrorMap: ErrorMap = new ErrorMap([[/(.*)/, input => new MapError(input)]]);
 const MeetingCreateErrorMap: ErrorMap = new ErrorMap([
     [
         /Only one of start_time and end_time is not allowed./,
@@ -57,7 +58,9 @@ const getActionErrorMap: (data: any) => ErrorMap | null = data => {
         case MeetingAction.CREATE:
             return MeetingCreateErrorMap;
         case MotionAction.CREATE_FORWARDED:
-            return MotionCreateForwardErrorMap;
+        case UserAction.FORGET_PASSWORD_CONFIRM:
+        case UserAction.SET_PASSWORD_SELF:
+            return MatchAllErrorMap;
         default:
             return null;
     }
