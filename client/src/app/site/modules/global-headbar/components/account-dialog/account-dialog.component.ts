@@ -150,10 +150,22 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
 
     public async changePassword(): Promise<void> {
         const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
-        this.repo.setPasswordSelf(this.self!, oldPassword, newPassword).then(() => {
-            this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
-            this.changePasswordComponent.reset();
-        });
+
+        this.repo
+            .setPasswordSelf(this.self!, oldPassword, newPassword)
+            .then(() => {
+                this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
+                this.changePasswordComponent.reset();
+            })
+            .catch(e => {
+                if (e?.message) {
+                    this.snackbar.open(this.translate.instant(e.message), this.translate.instant(`OK`), {
+                        duration: 0
+                    });
+                }
+
+                console.log(e);
+            });
     }
 
     public async saveUserChanges(): Promise<void> {
