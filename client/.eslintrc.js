@@ -17,7 +17,7 @@ module.exports = {
                 'plugin:rxjs/recommended',
                 'plugin:@angular-eslint/recommended',
                 'plugin:@angular-eslint/template/process-inline-templates',
-                'plugin:prettier/recommended'
+                'plugin:prettier/recommended',
             ],
             rules: {
                 '@angular-eslint/component-selector': [
@@ -89,15 +89,24 @@ module.exports = {
         },
         {
             files: ['*.html'],
-            extends: ['plugin:@angular-eslint/template/recommended'],
-            rules: {}
+            extends: [
+                'plugin:@angular-eslint/template/recommended',
+                'plugin:@angular-eslint/template/accessibility'
+            ],
+            rules: {
+                // Should be switched to error
+                '@angular-eslint/template/click-events-have-key-events': ['warn'],
+                '@angular-eslint/template/interactive-supports-focus': ['warn'],
+                '@angular-eslint/template/elements-content': ['warn'],
+                '@angular-eslint/template/alt-text': ['warn']
+            }
         },
         {
             files: ['*.html'],
             excludedFiles: ['*inline-template-*.component.html'],
             extends: ['plugin:prettier/recommended'],
             rules: {
-                "prettier/prettier": ["error", { "parser": "angular" }]
+                'prettier/prettier': ['error', { 'parser': 'angular' }]
             }
         }
     ]
