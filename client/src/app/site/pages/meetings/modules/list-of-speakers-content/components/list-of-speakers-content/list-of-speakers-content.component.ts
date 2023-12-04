@@ -65,6 +65,13 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public isMobile = false;
 
+    public myDataSource = [
+        {structure_level: "SPD", total_time: "2:00", overhang_time: "0:00", color: "#ee0000"},
+        {structure_level: "Vorstand", total_time: '3:00', overhang_time: '0:00', color: "#000000"},
+        {structure_level: "Grüne", total_time: '2:00', overhang_time: '0:00', color: "#00ff00"}
+    ];
+    public displayedColumns = ["structure_level", "total_time", "overhang_time"];
+
     public get showFirstContributionHintObservable(): Observable<boolean> {
         return this.meetingSettingsService.get(`list_of_speakers_show_first_contribution`);
     }
@@ -357,6 +364,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public inviteToVoice(speaker: ViewSpeaker): void {
         this.interactionService.inviteToCall(speaker.userId);
+    }
+
+    public clickEdit(): void {
+        console.log("Click on edit button");
     }
 
     private updateSpeakers(): void {

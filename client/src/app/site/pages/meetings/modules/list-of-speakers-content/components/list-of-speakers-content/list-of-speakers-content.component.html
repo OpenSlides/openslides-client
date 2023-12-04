@@ -286,6 +286,37 @@
         </button>
     </div>
 </mat-card>
+<!-- special los part for structure level -->
+<mat-card class="os-card" [ngClass]="{ 'spacer-bottom-60': addBottomSpacer }">
+    <mat-card-title>Redelisten Zeitmanagement <mat-icon (click)="clickEdit()">edit</mat-icon></mat-card-title>
+    <mat-card-content>
+    <mat-table [dataSource]="myDataSource" class="mat-elevation-z8 demo-table">
+      <!-- Position Column -->
+      <ng-container matColumnDef="structure_level">
+          <mat-header-cell *matHeaderCellDef><mat-icon class="margin-right-icon">flag</mat-icon> Structure Level </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <div
+                class="fake-button-no-touch"
+                [ngStyle]="{ background: element.color, width: '20px', height: '20px', 'margin-right': '4px' }"
+            ></div>{{element.structure_level}} </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="total_time">
+          <mat-header-cell *matHeaderCellDef><mat-icon class="margin-right-icon">schedule</mat-icon> Total time</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.total_time}} </mat-cell>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="overhang_time">
+          <mat-header-cell *matHeaderCellDef><mat-icon class="margin-right-icon">more_time</mat-icon> Overhang Time </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.overhang_time}} </mat-cell>
+      </ng-container>
+      <mat-header-row class="my-border-bottom" *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    </mat-card-content>
+</mat-card>
 
 <!-- admin menu for managing single speakers -->
 <mat-menu #manageSpeakerMenu>

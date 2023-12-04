@@ -9,6 +9,7 @@ import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/materia
 import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatTableModule } from '@angular/material/table';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules/sorting-list/sorting-list.module';
@@ -36,6 +37,7 @@ const DECLARATIONS = [ListOfSpeakersContentComponent, ListOfSpeakersContentTitle
         MatMenuModule,
         MatFormFieldModule,
         MatButtonModule,
+        MatTableModule,
         ReactiveFormsModule,
         SortingListModule,
         ParticipantSearchSelectorModule,
