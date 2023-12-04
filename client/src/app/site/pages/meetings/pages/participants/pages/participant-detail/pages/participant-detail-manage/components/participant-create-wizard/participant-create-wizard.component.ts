@@ -1,6 +1,6 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, Observable } from 'rxjs';
@@ -41,9 +41,17 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
-    public readonly additionalFormControls = MEETING_RELATED_FORM_CONTROLS.mapToObject(controlName => ({
-        [controlName]: [``]
-    }));
+    public readonly additionalFormControls = {
+        structure_level: [``],
+        number: [``],
+        vote_weight: [``, Validators.min(0.000001)],
+        about_me: [``],
+        comment: [``],
+        group_ids: [``],
+        vote_delegations_from_ids: [``],
+        vote_delegated_to_id: [``],
+        is_present: [``]
+    };
 
     public get randomPasswordFn(): (() => string) | null {
         return this._accountId ? null : () => this.repo.getRandomPassword();
@@ -92,6 +100,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public personalInfoFormValue: any = {};
     public formErrors: { [name: string]: boolean } | null = null;
     public groupsObservable: Observable<ViewGroup[]> | null = null;
+    public form: UntypedFormGroup;
 
     public get currentStepIndexObservable(): Observable<number> {
         return this._currentStepIndexSubject;
@@ -120,6 +129,11 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public get flicker(): Observable<boolean> {
         return this.flickerSubject;
+    }
+
+    public get isVoteWeightError(): boolean {
+        console.log('hi')
+        return this.personalInfoFormValue.vote_weight < 0.000001;
     }
 
     public flickerSubject = new BehaviorSubject<boolean>(false);
