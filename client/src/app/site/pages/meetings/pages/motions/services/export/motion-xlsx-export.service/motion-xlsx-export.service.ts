@@ -165,7 +165,7 @@ export class MotionXlsxExportService {
                         case `recommendation`:
                             return this.motionService.getExtendedRecommendationLabel(motion);
                         default:
-                            return this.translate.instant(motionProp.toString());
+                            return motionProp.toString();
                     }
                 })
             );
