@@ -191,7 +191,10 @@
                                         placeholder="{{ 'Vote weight' | translate }}"
                                         formControlName="vote_weight"
                                     />
-                                    <mat-error *ngIf="isVoteWeightError && form.controls['vote_weight'].value > 0" translate>
+                                    <mat-error
+                                        *ngIf="isVoteWeightError && form.controls['vote_weight'].value > 0"
+                                        translate
+                                    >
                                         Please select a vote weight greater than 0.000001
                                     </mat-error>
                                     <mat-error

@@ -132,7 +132,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     public get isVoteWeightError(): boolean {
-        console.log('hi')
         return this.personalInfoFormValue.vote_weight < 0.000001;
     }
 
