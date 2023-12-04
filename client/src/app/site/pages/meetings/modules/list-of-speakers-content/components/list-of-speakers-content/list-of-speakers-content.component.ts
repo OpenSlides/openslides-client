@@ -66,9 +66,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public isMobile = false;
 
     public myDataSource = [
-        {structure_level: "SPD", total_time: "2:00", overhang_time: "0:00", color: "#ee0000"},
-        {structure_level: "Vorstand", total_time: '3:00', overhang_time: '0:00', color: "#000000"},
-        {structure_level: "Grüne", total_time: '2:00', overhang_time: '0:00', color: "#00ff00"}
+        {structure_level: "SPD", total_time: 120, overhang_time: 0, color: "#ee0000"},
+        {structure_level: "Vorstand", total_time: 180, overhang_time: 0, color: "#000000"},
+        {structure_level: "Grüne", total_time: 120, overhang_time: 0, color: "#00ff00"}
     ];
     public displayedColumns = ["structure_level", "total_time", "overhang_time"];
 
@@ -368,6 +368,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public clickEdit(): void {
         console.log("Click on edit button");
+    }
+
+    public duration(value: number): string {
+        return this.durationService.durationToString(value, 'm').slice(0,-2);
     }
 
     private updateSpeakers(): void {
