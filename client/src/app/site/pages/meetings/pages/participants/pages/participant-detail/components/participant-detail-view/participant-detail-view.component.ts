@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -37,8 +36,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
     public readonly additionalFormControls = MEETING_RELATED_FORM_CONTROLS.mapToObject(controlName => ({
-        [controlName]: [``],
-        vote_weight: [``, Validators.min(0.000001)]
+        [controlName]: [``]
     }));
 
     public get randomPasswordFn(): () => string {
@@ -120,10 +118,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
     public get showVoteDelegations(): boolean {
         return this._isVoteDelegationEnabled;
-    }
-
-    public get isDefaultVoteWeightError(): boolean {
-        return this.personalInfoFormValue.vote_weight < 0.000001;
     }
 
     private _userId: Id | undefined = undefined; // Not initialized
