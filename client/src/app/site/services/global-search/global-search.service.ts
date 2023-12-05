@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
+import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
 import { HttpService } from 'src/app/gateways/http.service';
 import {
     collectionFromFqid,
@@ -133,6 +134,8 @@ export class GlobalSearchService {
         if (collection === `tag` && results[fqid].content?.tagged_ids) {
             for (const taggedFqid of results[fqid].content?.tagged_ids) {
                 results[taggedFqid].score = Math.max(results[taggedFqid].score || 0, addScore);
+
+                this.updateMatchedByFqids(fqid, taggedFqid, results);
                 this.updateScore(taggedFqid, results[taggedFqid].score, results);
             }
         } else if ([`agenda_item`, `poll`].indexOf(collection) !== -1 && result.content?.content_object_id) {
@@ -141,6 +144,7 @@ export class GlobalSearchService {
                 addScore
             );
 
+            this.updateMatchedByFqids(fqid, result.content.content_object_id, results);
             this.updateScore(
                 result.content.content_object_id,
                 results[result.content.content_object_id].score,
@@ -149,8 +153,17 @@ export class GlobalSearchService {
         } else if (collection === `motion_change_recommendation` && results[fqid].content?.motion_id) {
             const motionFqid = fqidFromCollectionAndId(Motion.COLLECTION, results[fqid].content?.motion_id);
             results[motionFqid].score = Math.max(results[motionFqid].score || 0, addScore);
+
+            this.updateMatchedByFqids(fqid, motionFqid, results);
             this.updateScore(motionFqid, results[motionFqid].score, results);
         }
+    }
+
+    private updateMatchedByFqids(fqid: string, addToFqid: string, results: GlobalSearchResponse): void {
+        if (!results[addToFqid].matched_by_fqids) {
+            results[addToFqid].matched_by_fqids = [];
+        }
+        results[addToFqid].matched_by_fqids.push(fqid);
     }
 
     private getResult(fqid: Fqid, results: GlobalSearchResponse) {
@@ -166,7 +179,7 @@ export class GlobalSearchService {
 
         return {
             title: this.getTitle(collection, content),
-            text: this.getText(collection, results[fqid]),
+            text: this.getText(collection, results[fqid], results),
             obj: content,
             fqid,
             collection,
@@ -177,7 +190,7 @@ export class GlobalSearchService {
         };
     }
 
-    private getText(collection: string, result: GlobalSearchResponseEntry) {
+    private getText(collection: string, result: GlobalSearchResponseEntry, results: GlobalSearchResponse) {
         const content = result.content;
         if (
             collection === Motion.COLLECTION &&
@@ -186,6 +199,16 @@ export class GlobalSearchService {
             result.matched_by[`reason`]
         ) {
             return content.reason;
+        } else if (result.matched_by_fqids && (!result.matched_by || !Object.keys(result.matched_by).length)) {
+            for (const fqid of result.matched_by_fqids) {
+                const mColl = collectionFromFqid(fqid);
+                if (mColl === MotionChangeRecommendation.COLLECTION) {
+                    const text = this.getText(mColl, results[fqid], results);
+                    if (text) {
+                        return text;
+                    }
+                }
+            }
         }
 
         return content.text || content.description;
