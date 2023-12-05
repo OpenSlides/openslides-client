@@ -1,8 +1,8 @@
 <mat-card class="os-card">
     <mat-card-title>
         Redelisten Zeitmanagement
-        <mat-icon (click)="toggleEdit()" *ngIf="!speakerTimeManagementEdit">edit</mat-icon>
-        <mat-icon (click)="toggleEdit()" *ngIf="speakerTimeManagementEdit">close</mat-icon>
+        <mat-icon (click)="toggleEdit()" *ngIf="!timeEdit">edit</mat-icon>
+        <mat-icon (click)="toggleEdit()" *ngIf="timeEdit">close</mat-icon>
     </mat-card-title>
     <mat-card-content>
         <mat-table [dataSource]="myDataSource" class="mat-elevation-z8 demo-table">
@@ -27,7 +27,10 @@
                     <mat-icon class="margin-right-icon">schedule</mat-icon>
                     Total time
                 </mat-header-cell>
-                <mat-cell *matCellDef="let element">{{ duration(element.total_time) }}</mat-cell>
+                <mat-cell *matCellDef="let element">
+                    <input matInput type="number" *ngIf="timeEdit" [formControl]="timeTestFormControls[element.id]" />
+                    <span *ngIf="!timeEdit">{{ duration(element.total_time) }}</span>
+                </mat-cell>
             </ng-container>
 
             <!-- Weight Column -->
@@ -41,5 +44,6 @@
             <mat-header-row class="my-border-bottom" *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
         </mat-table>
+        <button mat-button *ngIf="timeEdit" (click)="saveTimes()">Save</button>
     </mat-card-content>
 </mat-card>
