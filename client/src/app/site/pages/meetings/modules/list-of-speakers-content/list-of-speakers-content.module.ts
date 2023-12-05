@@ -11,6 +11,7 @@ import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-m
 import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { MatTableModule } from '@angular/material/table';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { SpeakersTimeManagementComponent } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/components/speakers-time-management/speakers-time-management.component';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules/sorting-list/sorting-list.module';
 
@@ -21,7 +22,11 @@ import { ListOfSpeakersContentComponent } from './components/list-of-speakers-co
 import { ListOfSpeakersContentTitleDirective } from './directives/list-of-speakers-content-title.directive';
 import { PointOfOrderDialogModule } from './modules/point-of-order-dialog/point-of-order-dialog.module';
 
-const DECLARATIONS = [ListOfSpeakersContentComponent, ListOfSpeakersContentTitleDirective];
+const DECLARATIONS = [
+    ListOfSpeakersContentComponent,
+    ListOfSpeakersContentTitleDirective,
+    SpeakersTimeManagementComponent
+];
 
 @NgModule({
     exports: DECLARATIONS,
