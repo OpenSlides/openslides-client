@@ -100,7 +100,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public personalInfoFormValue: any = {};
     public formErrors: { [name: string]: boolean } | null = null;
     public groupsObservable: Observable<ViewGroup[]> | null = null;
-    public form: UntypedFormGroup;
 
     public get currentStepIndexObservable(): Observable<number> {
         return this._currentStepIndexSubject;
