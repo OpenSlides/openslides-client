@@ -51,7 +51,7 @@ export class DurationService {
         const splitDuration = durationText.replace(suffix, ``).split(`:`);
         let time: number | null = null;
         if (splitDuration.length > 1 && !isNaN(+splitDuration[0]) && !isNaN(+splitDuration[1])) {
-            if (neg && +splitDuration[0] < 0) {
+            if (neg && splitDuration[0].startsWith("-")) {
                 time = +splitDuration[0] * 60 - +splitDuration[1];
             } else {
                 time = +splitDuration[0] * 60 + +splitDuration[1];
