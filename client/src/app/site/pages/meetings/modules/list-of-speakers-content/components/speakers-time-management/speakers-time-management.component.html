@@ -6,7 +6,7 @@
     </mat-card-title>
     <mat-card-content>
         <mat-table [dataSource]="myDataSource" class="mat-elevation-z8 demo-table">
-            <!-- Position Column -->
+            <!-- Structure Level Column -->
             <ng-container matColumnDef="structure_level">
                 <mat-header-cell *matHeaderCellDef>
                     <mat-icon class="margin-right-icon">flag</mat-icon>
@@ -21,19 +21,19 @@
                 </mat-cell>
             </ng-container>
 
-            <!-- Name Column -->
+            <!-- Total time Column -->
             <ng-container matColumnDef="total_time">
                 <mat-header-cell *matHeaderCellDef>
                     <mat-icon class="margin-right-icon">schedule</mat-icon>
                     Total time
                 </mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                    <input matInput type="number" *ngIf="timeEdit" [formControl]="timeTestFormControls[element.id]" />
+                    <input matInput type="text" *ngIf="timeEdit" [formControl]="timeTestFormControls[element.id]" />
                     <span *ngIf="!timeEdit">{{ duration(element.total_time) }}</span>
                 </mat-cell>
             </ng-container>
 
-            <!-- Weight Column -->
+            <!-- Overhang time Column -->
             <ng-container matColumnDef="overhang_time">
                 <mat-header-cell *matHeaderCellDef>
                     <mat-icon class="margin-right-icon">more_time</mat-icon>
@@ -44,6 +44,6 @@
             <mat-header-row class="my-border-bottom" *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
         </mat-table>
-        <button mat-button *ngIf="timeEdit" (click)="saveTimes()">Save</button>
+        <button mat-button *ngIf="timeEdit" (click)="saveTimes()" [disabled]="!ownValid">Save</button>
     </mat-card-content>
 </mat-card>

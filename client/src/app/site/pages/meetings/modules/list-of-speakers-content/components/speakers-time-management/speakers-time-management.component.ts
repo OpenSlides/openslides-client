@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -20,7 +20,11 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
     public displayedColumns = [`structure_level`, `total_time`, `overhang_time`];
     public enableProContraSpeech = false;
     public timeEdit = false;
-    public timeTestFormControls = { '1': new FormControl(``), '3': new FormControl(``), '5': new FormControl(``) };
+    public timeTestFormControls = {
+        '1': new FormControl(``, Validators.compose([Validators.required, Validators.pattern(/^-?\d+:\d{2}$/)])),
+        '3': new FormControl(``, Validators.compose([Validators.required, Validators.pattern(/^-?\d+:\d{2}$/)])),
+        '5': new FormControl(``, Validators.compose([Validators.required, Validators.pattern(/^-?\d+:\d{2}$/)]))
+    };
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
@@ -43,15 +47,27 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
 
     public saveTimes(): void {
         for (const entry of this.myDataSource) {
-            entry.total_time = this.timeTestFormControls[entry.id].getRawValue();
+            entry.total_time = this.durationService.stringToDuration(
+                this.timeTestFormControls[entry.id].getRawValue(),
+                `m`,
+                true
+            );
         }
         this.timeEdit = false;
     }
 
+    public get ownValid(): boolean {
+        for (const entry of this.myDataSource) {
+            if (!this.timeTestFormControls[entry.id].valid) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private setFormControls(): void {
         for (const entry of this.myDataSource) {
-            const id = entry.id;
-            this.timeTestFormControls[id].setValue(entry[`total_time`]);
+            this.timeTestFormControls[entry.id].setValue(this.duration(entry[`total_time`]));
         }
     }
 }
