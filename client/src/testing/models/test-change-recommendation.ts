@@ -11,7 +11,7 @@ export class TestChangeRecommendation implements ViewUnifiedChange {
     public type!: ModificationType;
     public creation_time!: number;
 
-    public constructor(data: Object) {
+    public constructor(data: unknown) {
         Object.assign(this, data);
     }
 

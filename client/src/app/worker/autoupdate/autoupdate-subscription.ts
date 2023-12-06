@@ -49,7 +49,7 @@ export class AutoupdateSubscription {
      *
      * @param data The data to be processed
      */
-    public updateData(data: Object): void {
+    public updateData(data: any): void {
         for (const port of this.ports) {
             port.postMessage({
                 sender: `autoupdate`,
@@ -68,7 +68,7 @@ export class AutoupdateSubscription {
      *
      * @param data The error data
      */
-    public sendError(data: Object): void {
+    public sendError(data: any): void {
         for (const port of this.ports) {
             port.postMessage({
                 sender: `autoupdate`,

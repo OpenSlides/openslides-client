@@ -79,6 +79,12 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      */
     public dialogData!: DialogData;
 
+    private set workflow(workflow: ViewMotionWorkflow) {
+        this._workflow = workflow;
+        this.updateRowDef();
+        this.cd.markForCheck();
+    }
+
     /**
      * Holds the current workflow
      */
@@ -119,12 +125,6 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         { merge: MergeAmendment.UNDEFINED, label: `-` },
         { merge: MergeAmendment.YES, label: `Yes` }
     ] as AmendmentIntoFinal[];
-
-    private set workflow(workflow: ViewMotionWorkflow) {
-        this._workflow = workflow;
-        this.updateRowDef();
-        this.cd.markForCheck();
-    }
 
     private _workflow!: ViewMotionWorkflow;
     private _workflowId!: Id;

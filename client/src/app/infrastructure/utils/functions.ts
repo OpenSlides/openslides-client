@@ -381,7 +381,7 @@ export function isValidId(id: number): boolean {
  * Returns a version of the given object that lacks all key-value pairs that don't fulfill the condition.
  * Doesn't change the original object.
  */
-export function filterObject(obj: Object, callbackFn: (keyValue: { key: string; value: any }) => boolean): Object {
+export function filterObject(obj: unknown, callbackFn: (keyValue: { key: string; value: any }) => boolean): unknown {
     if (!obj) {
         return obj;
     }
@@ -437,7 +437,7 @@ export function replaceObjectKeys(
     object: { [key: string]: any },
     config: ObjectReplaceKeysConfig,
     reverse?: boolean
-): Object {
+): { [key: string]: any } {
     if (reverse) {
         return replaceObjectKeys(
             object,
