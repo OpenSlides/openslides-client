@@ -48,21 +48,12 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
     public saveTimes(): void {
         for (const entry of this.myDataSource) {
             entry.total_time = this.durationService.stringToDuration(
-                this.timeFormControls.controls[entry.id].getRawValue(),
+                this.timeFormControls.get(entry.id).value,
                 `m`,
                 true
             );
         }
         this.timeEdit = false;
-    }
-
-    public get ownValid(): boolean {
-        for (const entry of this.myDataSource) {
-            if (!this.timeFormControls.controls[entry.id].valid) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private setFormControls(): void {
