@@ -4,7 +4,7 @@
             <mat-progress-spinner mode="determinate" [value]="progress" [diameter]="50"></mat-progress-spinner>
         </ng-container>
         <ng-container *ngIf="loaded">
-            <img [src]="resource | trust : 'url'" alt="Logo" />
+            <img [src]="resource | trust : 'url'" />
         </ng-container>
     </div>
 </ng-container>

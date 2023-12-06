@@ -6,7 +6,7 @@
         <div id="header" class="headerFooter" *ngIf="projector && projector.show_header_footer">
             <!-- projector logo -->
             <ng-container *ngIf="projectorLogoObservable | async as projectorLogo">
-                <img *ngIf="projector.show_logo" src="{{ projectorLogo }}" class="projector-logo-main" alt="Projector Logo"/>
+                <img *ngIf="projector.show_logo" src="{{ projectorLogo }}" class="projector-logo-main" />
             </ng-container>
 
             <div *ngIf="projector.show_title" id="eventdata">
