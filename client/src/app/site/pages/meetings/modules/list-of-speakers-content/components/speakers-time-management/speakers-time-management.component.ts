@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -20,11 +20,11 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
     public displayedColumns = [`structure_level`, `total_time`, `overhang_time`];
     public enableProContraSpeech = false;
     public timeEdit = false;
-    public timeTestFormControls = {
+    public timeFormControls = new FormGroup({
         '1': new FormControl(``, Validators.compose([Validators.required, Validators.pattern(/^-?\d+:\d{2}$/)])),
         '3': new FormControl(``, Validators.compose([Validators.required, Validators.pattern(/^-?\d+:\d{2}$/)])),
         '5': new FormControl(``, Validators.compose([Validators.required, Validators.pattern(/^-?\d+:\d{2}$/)]))
-    };
+    });
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
@@ -48,7 +48,7 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
     public saveTimes(): void {
         for (const entry of this.myDataSource) {
             entry.total_time = this.durationService.stringToDuration(
-                this.timeTestFormControls[entry.id].getRawValue(),
+                this.timeFormControls.controls[entry.id].getRawValue(),
                 `m`,
                 true
             );
@@ -58,7 +58,7 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
 
     public get ownValid(): boolean {
         for (const entry of this.myDataSource) {
-            if (!this.timeTestFormControls[entry.id].valid) {
+            if (!this.timeFormControls.controls[entry.id].valid) {
                 return false;
             }
         }
@@ -66,8 +66,10 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
     }
 
     private setFormControls(): void {
+        const values: any = {};
         for (const entry of this.myDataSource) {
-            this.timeTestFormControls[entry.id].setValue(this.duration(entry[`total_time`]));
+            values[entry.id] = this.duration(entry[`total_time`]);
         }
+        this.timeFormControls.setValue(values);
     }
 }

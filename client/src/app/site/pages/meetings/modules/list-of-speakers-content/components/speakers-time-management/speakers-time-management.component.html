@@ -28,7 +28,12 @@
                     Total time
                 </mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                    <input matInput type="text" *ngIf="timeEdit" [formControl]="timeTestFormControls[element.id]" />
+                    <input
+                        matInput
+                        type="text"
+                        *ngIf="timeEdit"
+                        [formControl]="timeFormControls.controls[element.id]"
+                    />
                     <span *ngIf="!timeEdit">{{ duration(element.total_time) }}</span>
                 </mat-cell>
             </ng-container>
