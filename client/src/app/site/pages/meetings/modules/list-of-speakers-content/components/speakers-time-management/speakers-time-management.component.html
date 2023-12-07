@@ -44,7 +44,16 @@
                     <mat-icon class="margin-right-icon">more_time</mat-icon>
                     {{ 'Overhang time' | translate }}
                 </mat-header-cell>
-                <mat-cell *matCellDef="let element">{{ duration(element.overhang_time) }}</mat-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ duration(element.overhang_time) }}
+                    <button
+                        mat-stroked-button
+                        (click)="addOverhangTime(element.overhang_time)"
+                        *ngIf="element.overhang_time > 0"
+                    >
+                        {{ 'Distribute among all' | translate }}
+                    </button>
+                </mat-cell>
             </ng-container>
             <mat-header-row class="my-border-bottom" *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>

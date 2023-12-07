@@ -52,6 +52,9 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
                 `m`,
                 true
             );
+            if (entry.total_time < 0) {
+                entry.overhang_time = Math.abs(entry.total_time);
+            }
         }
         this.timeEdit = false;
     }
@@ -62,5 +65,16 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
             values[entry.id] = this.duration(entry[`total_time`]);
         }
         this.timeFormControls.setValue(values);
+    }
+
+    public addOverhangTime(added: number): void {
+        for (const entry of this.myDataSource) {
+            entry.total_time += added;
+            if (entry.total_time < 0) {
+                entry.overhang_time = Math.abs(entry.total_time);
+            } else {
+                entry.overhang_time = 0;
+            }
+        }
     }
 }
