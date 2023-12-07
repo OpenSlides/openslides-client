@@ -43,15 +43,15 @@ export class DurationService {
      *
      * @param durationText the text to be transformed into a duration
      * @param suffix may be 'h' or 'm' for hour or minute. This character will be removed
-     * @param neg allow negative numbers as result.
+     * @param allow_negativ allows negative number as result.
      * from the duration text.
-     * @returns time in minutes or seconds or 0 if values are below 0 or no parsable numbers
+     * @returns time in minutes or seconds or 0 if values are below 0 and not allow_negaitve or no parsable numbers
      */
-    public stringToDuration(durationText = ``, suffix: 'h' | 'm' = `h`, neg = false): number {
+    public stringToDuration(durationText = ``, suffix: 'h' | 'm' = `h`, allow_negativ = false): number {
         const splitDuration = durationText.replace(suffix, ``).split(`:`);
         let time: number | null = null;
         if (splitDuration.length > 1 && !isNaN(+splitDuration[0]) && !isNaN(+splitDuration[1])) {
-            if (neg && splitDuration[0].startsWith(`-`)) {
+            if (allow_negativ && splitDuration[0].startsWith(`-`)) {
                 time = +splitDuration[0] * 60 - +splitDuration[1];
             } else {
                 time = +splitDuration[0] * 60 + +splitDuration[1];
@@ -59,7 +59,7 @@ export class DurationService {
         } else if (splitDuration.length === 1 && !isNaN(+splitDuration[0])) {
             time = +splitDuration[0];
         }
-        if (!time || (!neg && time < 0)) {
+        if (!time || (!allow_negativ && time < 0)) {
             time = 0;
         }
         return time;
