@@ -30,7 +30,7 @@ export class AutoupdateStreamPool {
 
     private _waitEndpointHealthyPromise: Promise<void> | null = null;
     private _authTokenRefreshTimeout: any | null = null;
-    private _updateAuthPromise: Promise<void> | undefined;
+    private _updateAuthPromise: Promise<boolean> | undefined;
     private _waitingForUpdateAuthPromise = false;
     private _disableCompression = false;
 
@@ -182,12 +182,11 @@ export class AutoupdateStreamPool {
     /**
      * Updates the auth token
      */
-    public async updateAuthentication(): Promise<void> {
+    public async updateAuthentication(): Promise<boolean> {
         const currentPromise = this._updateAuthPromise;
 
         if (this._waitingForUpdateAuthPromise) {
-            await this._updateAuthPromise;
-            return;
+            return await this._updateAuthPromise;
         }
 
         this._updateAuthPromise = new Promise(async resolve => {
@@ -210,12 +209,14 @@ export class AutoupdateStreamPool {
                     this.setAuthToken(res.headers.get(`authentication`) || null);
                 } else if (!res.ok && json?.message === `Not signed in`) {
                     this.setAuthToken(null);
+                    resolve(false);
+                    return;
                 }
-                resolve();
+                resolve(true);
             } catch (e) {}
         });
 
-        await this._updateAuthPromise;
+        return await this._updateAuthPromise;
     }
 
     public async disableCompression(): Promise<void> {
@@ -362,8 +363,14 @@ export class AutoupdateStreamPool {
         }
 
         if (stream.failedConnects <= POOL_CONFIG.RETRY_AMOUNT && error?.type !== ErrorType.CLIENT) {
-            if (error?.error.content?.type === `auth`) {
-                await this.updateAuthentication();
+            if (error?.error.content?.type === `auth` && !(await this.updateAuthentication())) {
+                for (const subscription of stream.subscriptions) {
+                    subscription.sendError({
+                        reason: `Logout`,
+                        terminate: true
+                    });
+                }
+                return;
             }
 
             await this.connectStream(stream);
