@@ -250,7 +250,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private getFormValuePatch(controlName: keyof ViewUser): any {
         let patchValue = this.patchFormValueFn(controlName, this.user!);
         if (!patchValue) {
-            const userValue = this.user![controlName] as Function | string;
+            const userValue = this.user![controlName] as () => unknown | string;
             patchValue = typeof userValue === `function` ? userValue.call(this.user) : userValue;
         }
         return patchValue;
