@@ -104,69 +104,14 @@
         <mat-card class="os-card spacer-bottom-60">
             <mat-card-content>
                 <p class="subtitle-text" translate>Speaking times</p>
-                <mat-tab-group>
-                    <mat-tab [label]="'Total' | translate">
-                        <div class="structure-level-list">
-                            <div class="structure-level">
-                                <span class="structure-level-time" style="border-top-color: rgb(237, 28, 36)">20:00</span>
-                                <div class="structure-level-name">SPD</div>
-                            </div>
-                            <div class="structure-level">
-                                <span class="structure-level-time" style="border-top-color: #010101">20:00</span>
-                                <div class="structure-level-name">CDU</div>
-                            </div>
-                            <div class="structure-level">
-                                <span class="structure-level-time">20:00</span>
-                                <div class="structure-level-name">Koalition</div>
-                            </div>
-                            <div class="structure-level">
-                                <span class="structure-level-time">20:00</span>
-                                <div class="structure-level-name">Koalition</div>
-                            </div>
-                        </div>
-                    </mat-tab>
-                    <mat-tab [label]="'Speakers' | translate">
-                        <div class="speakers-card">
-                            <div class="speaker">
-                                <div class="speaker-info">
-                                    <span class="speaker-name">Eva Richter</span>
-                                    <span class="speaker-structure-level">SPD</span>
-                                </div>
-                                <div class="speaker-progress">
-                                    <div class="speaker-time">01:26</div>
-                                    <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
-                                    <div class="speaker-time">18:34</div>
-                                </div>
-                                <div class="speaker-actions">
-                                    <button mat-icon-button>
-                                        <mat-icon>pause</mat-icon>
-                                    </button>
-                                    <button mat-icon-button>
-                                        <mat-icon>stop</mat-icon>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="speaker interposed">
-                                <div class="speaker-type" translate>Interposed question</div>
-                                <div class="speaker-info">
-                                    <span class="speaker-name">Eva Richter</span>
-                                    <span class="speaker-structure-level">SPD</span>
-                                </div>
-                                <div class="speaker-progress">
-                                    <div class="speaker-time">01:26</div>
-                                    <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
-                                    <div class="speaker-time">18:34</div>
-                                </div>
-                                <div class="speaker-actions">
-                                    <button mat-icon-button>
-                                        <mat-icon>play_arrow</mat-icon>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </mat-tab>
-                </mat-tab-group>
+                <div class="structure-level-list">
+                    <div class="structure-level" *ngFor="let structure_level of getStructureLevels()">
+                        <span class="structure-level-time" [ngStyle]="{ 'border-top-color': structure_level.color }">
+                            {{ duration(structure_level.time) }}
+                        </span>
+                        <div class="structure-level-name">{{ structure_level.name }}</div>
+                    </div>
+                </div>
             </mat-card-content>
         </mat-card>
     </div>
