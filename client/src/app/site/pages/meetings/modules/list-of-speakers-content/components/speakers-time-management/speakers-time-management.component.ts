@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { DurationService } from 'src/app/site/services/duration.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 @Component({
     selector: `os-speakers-time-management`,
@@ -29,7 +30,9 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        private durationService: DurationService
+        private durationService: DurationService,
+        private promptService: PromptService,
+        private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector, translate);
     }
@@ -67,7 +70,16 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
         this.timeFormControls.setValue(values);
     }
 
-    public addOverhangTime(added: number): void {
+    public async promptAddOverhangTime(added: number): Promise<void> {
+        const title = this.translate.instant(`Are you sure you want to distribute the Overhang time onto all groups?`);
+        const add_time = this.duration(added);
+        const content = this.translate.instant(`All total timers will have an additional`) + ` ${add_time}min.`;
+        if (await this.promptService.open(title, content)) {
+            this.addOverhangTime(added);
+        }
+    }
+
+    private addOverhangTime(added: number): void {
         for (const entry of this.myDataSource) {
             entry.total_time += added;
             if (entry.total_time < 0) {
@@ -76,5 +88,6 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
                 entry.overhang_time = 0;
             }
         }
+        this.cd.detectChanges();
     }
 }

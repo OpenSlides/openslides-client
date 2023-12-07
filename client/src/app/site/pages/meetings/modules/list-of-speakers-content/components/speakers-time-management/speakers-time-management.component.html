@@ -48,7 +48,7 @@
                     {{ duration(element.overhang_time) }}
                     <button
                         mat-stroked-button
-                        (click)="addOverhangTime(element.overhang_time)"
+                        (click)="promptAddOverhangTime(element.overhang_time)"
                         *ngIf="element.overhang_time > 0"
                     >
                         {{ 'Distribute among all' | translate }}
