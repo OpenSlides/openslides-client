@@ -9,6 +9,7 @@ import * as fzstd from 'fzstd';
 import { firstValueFrom, Observable, Subscription } from 'rxjs';
 
 import { EndpointConfiguration } from './endpoint-configuration';
+import { PossibleStreamError } from './http-stream.service';
 import {
     CommunicationError,
     CommunicationErrorWrapper,
@@ -327,10 +328,10 @@ export class HttpStream<T> {
     }
 
     private async handleStreamError(error: unknown): Promise<void> {
+        console.log(error);
         if (error instanceof HttpErrorResponse) {
-            error = error.error;
             try {
-                error = this.parseCommunicationError(error as any);
+                error = this.parseCommunicationError(error.error as any, error);
             } catch (e) {}
         }
         this.handleError(error);
@@ -402,7 +403,7 @@ export class HttpStream<T> {
         }
     }
 
-    private parseCommunicationError(text: string): CommunicationError {
+    private parseCommunicationError(text: string, error?: HttpErrorResponse): CommunicationError {
         try {
             const errorBody = JSON.parse(text) as CommunicationError | CommunicationErrorWrapper;
             if (isCommunicationError(errorBody)) {
@@ -410,6 +411,9 @@ export class HttpStream<T> {
             }
             if (isCommunicationErrorWrapper(errorBody)) {
                 return errorBody.error;
+            }
+            if (error.status === 401) {
+                return { msg: `Unauthorized`, type: PossibleStreamError.AUTH };
             }
         } catch (e) {
             return {
