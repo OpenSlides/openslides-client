@@ -363,17 +363,22 @@ export class AutoupdateStreamPool {
         }
 
         if (stream.failedConnects <= POOL_CONFIG.RETRY_AMOUNT && error?.type !== ErrorType.CLIENT) {
-            if (error?.error.content?.type === `auth` && !(await this.updateAuthentication())) {
+            if (error?.error.content?.type === `auth`) {
+                await this.updateAuthentication();
+            }
+
+            await this.connectStream(stream);
+        } else if (stream.failedConnects <= POOL_CONFIG.RETRY_AMOUNT && error?.error.content?.type === `auth`) {
+            if (await this.updateAuthentication()) {
+                await this.connectStream(stream);
+            } else {
                 for (const subscription of stream.subscriptions) {
                     subscription.sendError({
                         reason: `Logout`,
                         terminate: true
                     });
                 }
-                return;
             }
-
-            await this.connectStream(stream);
         } else if (
             stream.failedConnects === POOL_CONFIG.RETRY_AMOUNT + 1 &&
             !(error instanceof ErrorDescription) &&
