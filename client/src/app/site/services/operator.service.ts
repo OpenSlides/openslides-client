@@ -450,7 +450,7 @@ export class OperatorService {
                 );
                 this._currentOperatorDataSubscription = await this.autoupdateService.subscribe(
                     await this.modelRequestBuilder.build(operatorRequest),
-                    `operator_${this.operatorId || 0}:subscription`
+                    `operator:subscription`
                 );
             })();
         }
