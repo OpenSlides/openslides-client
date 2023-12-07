@@ -328,7 +328,6 @@ export class HttpStream<T> {
     }
 
     private async handleStreamError(error: unknown): Promise<void> {
-        console.log(error);
         if (error instanceof HttpErrorResponse) {
             try {
                 error = this.parseCommunicationError(error.error as any, error);
