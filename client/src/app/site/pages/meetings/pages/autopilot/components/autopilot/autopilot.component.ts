@@ -5,6 +5,7 @@ import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/de
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
@@ -112,7 +113,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         private operator: OperatorService,
         projectorRepo: ProjectorControllerService,
         closService: CurrentListOfSpeakersService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService
+        private listOfSpeakersRepo: ListOfSpeakersControllerService,
+        private durationService: DurationService
     ) {
         super(componentServiceCollector, translate);
 
@@ -141,5 +143,18 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public async readdLastSpeaker(): Promise<void> {
         await this.listOfSpeakersRepo.readdLastSpeaker(this.listOfSpeakers!).catch(this.raiseError);
+    }
+
+    public getStructureLevels(): any {
+        return [
+            { name: `SPD`, color: `#ff2836`, time: 1500 },
+            { name: `CDU`, color: `#010101`, time: 1500 },
+            { name: `Die Grünen`, color: `#00ff00`, time: 1200 },
+            { name: `Koalition`, color: `#0000dd`, time: 600 }
+        ];
+    }
+
+    public duration(duration_time: number): string {
+        return this.durationService.durationToString(duration_time, `m`).slice(0, -2);
     }
 }
