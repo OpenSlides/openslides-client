@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -25,7 +26,6 @@ import { GroupControllerService } from '../../../../modules';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
 import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
 import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort.service/participant-list-sort.service';
-import { Validators } from '@angular/forms';
 
 @Component({
     selector: `os-participant-detail-view`,
