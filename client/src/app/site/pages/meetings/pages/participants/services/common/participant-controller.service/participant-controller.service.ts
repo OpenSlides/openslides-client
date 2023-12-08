@@ -38,6 +38,7 @@ import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-me
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 
@@ -195,6 +196,14 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public setPasswordSelf(user: Identifiable, newPassword: string, oldPassword: string): Promise<void> {
         return this.repo.setPasswordSelf(user, oldPassword, newPassword);
+    }
+
+    public jsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+        return this.repo.participantJsonUpload(payload);
+    }
+
+    public import(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
+        return this.repo.participantImport(payload);
     }
 
     /**

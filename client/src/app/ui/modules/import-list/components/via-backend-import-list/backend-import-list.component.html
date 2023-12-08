@@ -173,7 +173,7 @@
             </ng-container>
         </ng-container>
         <ng-container
-            *ngIf="!getHeader(def).is_list"
+            *ngIf="!getHeader(def).is_list && entry[def] !== undefined"
             [ngTemplateOutlet]="entryContentTemplate"
             [ngTemplateOutletContext]="{ entry: entry[def], def: def }"
         ></ng-container>
