@@ -11,18 +11,17 @@
 
     <!-- Menu -->
     <!-- Only organization managers can do something -->
-    <div class="menu-slot" *osOmlPerms="OML.can_manage_organization">
+    <ng-container class="menu-slot" *osOmlPerms="OML.can_manage_organization">
         <button type="button" mat-icon-button [matMenuTriggerFor]="committeeMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 
     <!-- Multiselect info -->
-    <div class="central-info-slot">
+    <ng-container class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span>
-        <span>{{ 'selected' | translate }}</span>
-    </div>
+        <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
+    </ng-container>
 </os-head-bar>
 
 <os-list

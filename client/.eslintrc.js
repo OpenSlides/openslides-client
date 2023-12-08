@@ -65,6 +65,7 @@ module.exports = {
                 '@typescript-eslint/no-unnecessary-type-constraint': ['error'],
                 '@typescript-eslint/no-this-alias': ['error'],
                 '@typescript-eslint/adjacent-overload-signatures': ['error'],
+                '@typescript-eslint/ban-types': ['error'],
 
                 'jsdoc/require-example': ['off'],
                 'jsdoc/newline-after-description': ['off'],
@@ -74,7 +75,6 @@ module.exports = {
                 'rxjs/no-async-subscribe': ['off'],
 
                 // Should be switched to error ordered by priority
-                '@typescript-eslint/ban-types': ['warn'],
                 '@typescript-eslint/ban-ts-comment': ['warn'],
                 '@typescript-eslint/no-explicit-any': ['off'],
                 '@typescript-eslint/no-non-null-assertion': ['off'],
@@ -89,15 +89,24 @@ module.exports = {
         },
         {
             files: ['*.html'],
-            extends: ['plugin:@angular-eslint/template/recommended'],
-            rules: {}
+            extends: [
+                'plugin:@angular-eslint/template/recommended',
+                'plugin:@angular-eslint/template/accessibility'
+            ],
+            rules: {
+                // Should be switched to error
+                '@angular-eslint/template/click-events-have-key-events': ['warn'],
+                '@angular-eslint/template/interactive-supports-focus': ['warn'],
+                '@angular-eslint/template/elements-content': ['warn'],
+                '@angular-eslint/template/alt-text': ['warn']
+            }
         },
         {
             files: ['*.html'],
             excludedFiles: ['*inline-template-*.component.html'],
             extends: ['plugin:prettier/recommended'],
             rules: {
-                "prettier/prettier": ["error", { "parser": "angular" }]
+                'prettier/prettier': ['error', { 'parser': 'angular' }]
             }
         }
     ]
