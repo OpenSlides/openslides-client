@@ -41,6 +41,7 @@ import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMes
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
+export const MEETING_CREATE_SUBSCRIPTION = `meeting_create`;
 
 export enum RelatedTime {
     Future = 1,
@@ -137,6 +138,7 @@ interface IMeetingRelations {
     motions_default_statute_amendment_workflow: ViewMotionWorkflow;
     motion_poll_default_groups: ViewGroup[];
     assignment_poll_default_groups: ViewGroup[];
+    topic_poll_default_groups: ViewGroup[];
     poll_default_groups: ViewGroup[];
     projectors: ViewProjector[];
     all_projections: ViewProjection[];

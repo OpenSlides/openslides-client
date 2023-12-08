@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
-import { MatLegacyTab as MatTab, MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs';
+import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
@@ -381,7 +381,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
                     _(`There is an unspecified error in this line, which prevents the import.`)
                 );
             case BackendImportState.Warning:
-                return this.getErrorDescription(row) ?? _(`This row will not be imported, due to an unknown reason.`);
+                return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
             case BackendImportState.New:
                 return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`will be imported`);
             case BackendImportState.Done: // item will be updated / has been imported
@@ -394,6 +394,18 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
                 );
             default:
                 return undefined;
+        }
+    }
+
+    public getWarningRowTooltip(row: BackendImportIdentifiedRow): string {
+        switch (row.state) {
+            case BackendImportState.Error: // no import possible
+                return (
+                    this.getErrorDescription(row) ??
+                    _(`There is an unspecified error in this line, which prevents the import.`)
+                );
+            default:
+                return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
         }
     }
 
@@ -453,6 +465,17 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         return this._importer.getVerboseSummaryPointTitle(title);
     }
 
+    public getShortenedDecimal(decimalString: string): string {
+        while (decimalString.length && [`0`, `.`].includes(decimalString.charAt(decimalString.length - 1))) {
+            decimalString = decimalString.substring(0, decimalString.length - 1);
+        }
+        return decimalString;
+    }
+
+    public isString(value: any): value is string {
+        return typeof value === `string`;
+    }
+
     private setHeaders(data: { default?: ImportListHeaderDefinition[]; preview?: BackendImportHeader[] }): void {
         for (const key of Object.keys(data)) {
             for (const header of data[key] ?? []) {
@@ -466,7 +489,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     }
 
     private getErrorDescription(entry: BackendImportIdentifiedRow): string {
-        return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`,\n `);
+        return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`\n `);
     }
 
     private fillPreviewData(previews: BackendImportPreview[]) {

@@ -6,8 +6,9 @@ import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/
 import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar';
-import { MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy-radio';
 import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgChartsModule } from 'ng2-charts';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -49,6 +50,7 @@ const COMPONENTS = [
         MatCheckboxModule,
         MatRadioModule,
         ReactiveFormsModule,
+        MatTooltipModule,
         IconContainerModule,
         FormsModule,
         VotingPrivacyDialogModule,

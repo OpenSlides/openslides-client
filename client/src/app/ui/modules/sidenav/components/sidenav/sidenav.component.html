@@ -36,6 +36,7 @@
             mat-raised-button
             (click)="toggle()"
             class="nav-toggle-button"
+            [matTooltip]="(isOpen ? 'Hide main menu' : 'Show main menu') | translate"
             [ngClass]="{ left: isOpen, right: !isOpen }"
         >
             <mat-icon>{{ isOpen ? 'arrow_back_ios' : 'arrow_forward_ios' }}</mat-icon>

@@ -79,6 +79,12 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      */
     public dialogData!: DialogData;
 
+    private set workflow(workflow: ViewMotionWorkflow) {
+        this._workflow = workflow;
+        this.updateRowDef();
+        this.cd.markForCheck();
+    }
+
     /**
      * Holds the current workflow
      */
@@ -119,12 +125,6 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         { merge: MergeAmendment.UNDEFINED, label: `-` },
         { merge: MergeAmendment.YES, label: `Yes` }
     ] as AmendmentIntoFinal[];
-
-    private set workflow(workflow: ViewMotionWorkflow) {
-        this._workflow = workflow;
-        this.updateRowDef();
-        this.cd.markForCheck();
-    }
 
     private _workflow!: ViewMotionWorkflow;
     private _workflowId!: Id;
@@ -532,6 +532,10 @@ Note: Does not affect the visibility of change recommendations.`
 
     public getValueOfState(state: ViewMotionState, perm: StatePerm): any {
         return (<any>state)[perm.selector];
+    }
+
+    public sortedNextStates(state: ViewMotionState): ViewMotionState[] {
+        return state.next_states.sort((a, b) => a.weight - b.weight);
     }
 
     private async deleteWorkflowState(state: ViewMotionState): Promise<void> {

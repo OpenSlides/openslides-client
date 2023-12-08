@@ -1,6 +1,7 @@
 <os-head-bar
     [hasMainButton]="true"
     mainButtonIcon="edit"
+    [mainActionTooltip]="'Edit account' | translate"
     (mainEvent)="editMember()"
     [goBack]="false"
     [nav]="false"
@@ -75,6 +76,9 @@
                     placeholder="{{ 'Default vote weight' | translate }}"
                     formControlName="default_vote_weight"
                 />
+                <mat-error *ngIf="isDefaultVoteWeightError" translate>
+                    Please select a vote weight bigger than zero.
+                </mat-error>
             </mat-form-field>
         </div>
 

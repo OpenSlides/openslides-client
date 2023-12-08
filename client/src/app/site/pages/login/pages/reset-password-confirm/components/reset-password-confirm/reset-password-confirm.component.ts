@@ -85,9 +85,9 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
                 authorization_token: this.token,
                 new_password: this.newPasswordForm.get(`password`)!.value
             });
-            // TODO: Does we get a response for displaying?
+
             this.matSnackBar.open(
-                this.translate.instant(`Your password was resetted successfully!`),
+                this.translate.instant(`Your password has been reset successfully!`),
                 this.translate.instant(`OK`),
                 {
                     duration: 0
@@ -95,6 +95,12 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
             );
             this.router.navigate([`/login`]);
         } catch (e) {
+            if (e?.message) {
+                this.matSnackBar.open(this.translate.instant(e.message), this.translate.instant(`OK`), {
+                    duration: 0
+                });
+            }
+
             console.log(`error`, e);
         }
     }

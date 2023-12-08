@@ -111,7 +111,7 @@ export abstract class BaseGameDialogComponent implements OnInit, OnDestroy {
         },
         waitForResponse: {
             receivedACK: {
-                handle: (notify: NotifyResponse<{}>) => {
+                handle: (notify: NotifyResponse<{ name: string }>) => {
                     if (notify.sender_channel_id !== this.replyChannel) {
                         return null;
                     }
@@ -123,7 +123,7 @@ export abstract class BaseGameDialogComponent implements OnInit, OnDestroy {
                 handle: () => `search`
             },
             receivedRagequit: {
-                handle: (notify: NotifyResponse<{}>) =>
+                handle: (notify: NotifyResponse<{ name: string }>) =>
                     notify.sender_channel_id === this.replyChannel ? `search` : null
             }
         },

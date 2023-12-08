@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -33,7 +34,7 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
     ) {
         super(componentServiceCollector, translate);
         this.resetPasswordForm = formBuilder.group({
-            email: [``, [Validators.required, Validators.email]]
+            email: [``, [Validators.required, createEmailValidator()]]
         });
     }
 
@@ -57,7 +58,7 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
             await this.userRepo.forgetPassword(this.resetPasswordForm.get(`email`)!.value);
             this._isWaiting = false;
             this.matSnackBar.open(
-                this.translate.instant(`An email with a password reset link was send!`),
+                this.translate.instant(`An email with a password reset link has been sent.`),
                 this.translate.instant(`OK`),
                 {
                     duration: 0

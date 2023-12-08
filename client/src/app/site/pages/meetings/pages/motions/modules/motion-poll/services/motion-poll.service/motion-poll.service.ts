@@ -65,7 +65,7 @@ export class MotionPollService extends PollService {
         const poll: Partial<Poll> = {
             title: this.translate.instant(`Vote`),
             onehundred_percent_base: this.defaultPercentBase,
-            entitled_group_ids: this.defaultGroupIds,
+            entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog,
             pollmethod: PollMethod.YNA
         };

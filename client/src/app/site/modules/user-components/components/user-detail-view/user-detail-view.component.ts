@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
@@ -249,7 +250,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private getFormValuePatch(controlName: keyof ViewUser): any {
         let patchValue = this.patchFormValueFn(controlName, this.user!);
         if (!patchValue) {
-            const userValue = this.user![controlName] as Function | string;
+            const userValue = this.user![controlName] as () => unknown | string;
             patchValue = typeof userValue === `function` ? userValue.call(this.user) : userValue;
         }
         return patchValue;
@@ -294,7 +295,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             first_name: [``],
             last_name: [``],
             gender: [``],
-            email: [``],
+            email: [``, [createEmailValidator()]],
             last_email_sent: [``],
             default_password: [``],
             is_active: [true],

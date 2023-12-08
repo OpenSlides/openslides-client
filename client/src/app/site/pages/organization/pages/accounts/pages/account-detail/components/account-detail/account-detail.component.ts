@@ -1,5 +1,6 @@
 import { KeyValue } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -61,7 +62,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public readonly additionalFormControls = {
         default_structure_level: [``],
         default_number: [``],
-        default_vote_weight: [``],
+        default_vote_weight: [``, Validators.min(0.000001)],
         organization_management_level: [],
         committee_management_ids: []
     };
@@ -90,7 +91,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return Object.values(this._tableData).filter(row => row[`is_manager`] === true).length;
     }
 
-    public tableDataAscOrderCompare = <T extends unknown>(a: KeyValue<string, T>, b: KeyValue<string, T>) => {
+    public tableDataAscOrderCompare = <T>(a: KeyValue<string, T>, b: KeyValue<string, T>) => {
         const aName = a.value[`committee_name`] ?? a.value[`meeting_name`] ?? ``;
         const bName = b.value[`committee_name`] ?? b.value[`meeting_name`] ?? ``;
         return aName.localeCompare(bName);
@@ -201,6 +202,10 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     public getNumberOfKeys(item: { [key: string]: any }): number {
         return Object.keys(item).length;
+    }
+
+    public get isDefaultVoteWeightError(): boolean {
+        return this.personalInfoFormValue.default_vote_weight < 0.000001;
     }
 
     private generateParticipationTableData(): void {
