@@ -195,7 +195,7 @@
                                         *ngIf="isVoteWeightError && form.controls['vote_weight'].value > 0"
                                         translate
                                     >
-                                        Please select a vote weight greater than 0.000001
+                                        Please select a vote weight greater than or equal to 0.000001
                                     </mat-error>
                                     <mat-error
                                         *ngIf="isVoteWeightError && form.controls['vote_weight'].value <= 0"
