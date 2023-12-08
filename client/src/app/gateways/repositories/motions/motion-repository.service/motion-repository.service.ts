@@ -203,11 +203,10 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             attachment_ids: partialMotion.attachment_ids,
             reason: partialMotion.reason,
             number: partialMotion.number,
-            block_id: partialMotion.block_id,
             state_extension: partialMotion.state_extension,
             sort_parent_id: partialMotion.sort_parent_id,
             supporter_meeting_user_ids: partialMotion.supporter_meeting_user_ids,
-            ...createAgendaItem(partialMotion)
+            ...createAgendaItem(partialMotion, false)
         };
         return this.createAction(AmendmentAction.CREATE_TEXTBASED_AMENDMENT, payload);
     }
@@ -224,13 +223,12 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             attachment_ids: partialMotion.attachment_ids === null ? [] : partialMotion.attachment_ids,
             reason: partialMotion.reason,
             number: partialMotion.number,
-            block_id: partialMotion.block_id,
             state_extension: partialMotion.state_extension,
             amendment_paragraphs: partialMotion.amendment_paragraphs,
             sort_parent_id: partialMotion.sort_parent_id,
             supporter_meeting_user_ids:
                 partialMotion.supporter_meeting_user_ids === null ? [] : partialMotion.supporter_meeting_user_ids,
-            ...createAgendaItem(partialMotion)
+            ...createAgendaItem(partialMotion, false)
         };
         return this.createAction(AmendmentAction.CREATE_PARAGRAPHBASED_AMENDMENT, payload);
     }
@@ -247,12 +245,11 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             attachment_ids: partialMotion.attachment_ids,
             reason: partialMotion.reason,
             number: partialMotion.number,
-            block_id: partialMotion.block_id,
             state_extension: partialMotion.state_extension,
             statute_paragraph_id: partialMotion.statute_paragraph_id,
             sort_parent_id: partialMotion.sort_parent_id,
             supporter_meeting_user_ids: partialMotion.supporter_meeting_user_ids,
-            ...createAgendaItem(partialMotion)
+            ...createAgendaItem(partialMotion, false)
         };
         return this.createAction(AmendmentAction.CREATE_STATUTEBASED_AMENDMENT, payload);
     }
@@ -334,12 +331,12 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             reason: partialMotion.reason,
             number: partialMotion.number,
             block_id: partialMotion.block_id,
+            tag_ids: partialMotion.tag_ids === null ? [] : partialMotion.tag_ids,
             state_extension: partialMotion.state_extension,
             sort_parent_id: partialMotion.sort_parent_id,
-            tag_ids: partialMotion.tag_ids === null ? [] : partialMotion.tag_ids,
             supporter_meeting_user_ids:
                 partialMotion.supporter_meeting_user_ids === null ? [] : partialMotion.supporter_meeting_user_ids,
-            ...createAgendaItem(partialMotion)
+            ...createAgendaItem(partialMotion, false)
         };
     }
 
