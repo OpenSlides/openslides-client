@@ -17,8 +17,8 @@
 
                 <!-- required for all kinds of input -->
                 <mat-label>{{ setting.label | translate }}</mat-label>
-                <span matSuffix>
-                    <mat-icon pull="right" class="red-warning-text" *ngIf="error">error</mat-icon>
+                <span *ngIf="error" matSuffix>
+                    <mat-icon pull="right" class="red-warning-text">error</mat-icon>
                 </span>
                 <mat-error *ngIf="error">{{ error }}</mat-error>
 
