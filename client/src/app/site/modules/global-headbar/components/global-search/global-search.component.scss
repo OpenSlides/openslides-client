@@ -137,3 +137,13 @@
     font-size: inherit;
     font-weight: inherit;
 }
+
+.mat-dialog-content {
+    max-height: calc(75vh - 193px);
+}
+
+@media (max-width: 959.99px) {
+    .mat-dialog-content {
+        max-height: calc(75vh - 120px);
+    }
+}
