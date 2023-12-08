@@ -46,7 +46,7 @@ test.describe('Testing accounts', () => {
         await page.goto('/accounts');
         await page.locator('[data-cy=headbarMainButton]').click();
         await expect(page).toHaveURL(`/accounts/create`);
-        const username = `Create-User ${Date.now().toString()}`;
+        const username = `Create-User_${Date.now().toString()}`;
         await page.locator('[formcontrolname=username]').fill(username);
 
         await page.locator('[data-cy=headbarSaveButton]').click();
