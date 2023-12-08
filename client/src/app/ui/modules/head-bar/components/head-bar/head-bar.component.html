@@ -38,9 +38,8 @@
 
         <!-- centered information slot -->
         <div *ngIf="!multiSelectMode" class="spacer"></div>
-        <div class="toolbar-centered" *ngIf="multiSelectMode">
-            <ng-content select=".central-info-slot"></ng-content>
-        </div>
+
+        <ng-content *ngIf="multiSelectMode" select=".central-info-slot"></ng-content>
         <div class="spacer"></div>
 
         <div class="toolbar-right">
