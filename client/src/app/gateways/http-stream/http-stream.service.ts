@@ -25,7 +25,7 @@ interface RequestOptions {
     paramsFn?: HttpParamsGetter;
 }
 
-enum PossibleStreamError {
+export enum PossibleStreamError {
     AUTH = `auth`
 }
 
@@ -93,7 +93,7 @@ export class HttpStreamService {
     }
 
     private shouldReconnect({ error }: ShouldReconnectContext): boolean | Promise<boolean> {
-        if (error.error?.type === PossibleStreamError.AUTH) {
+        if (error.error?.type === PossibleStreamError.AUTH || error?.type === PossibleStreamError.AUTH) {
             this.authService.logout();
             return false;
         }
