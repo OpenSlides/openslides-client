@@ -52,7 +52,7 @@ export async function os4request(context: BrowserContext, osAction: string, body
 
 export async function createAccount(
     context: BrowserContext,
-    name: string = `TestUser ${Date.now().toString()}`
+    name: string = `TestUser_${Date.now().toString()}`
 ): Promise<{ id: number; name: string }> {
     const accountData = {
         username: name,
