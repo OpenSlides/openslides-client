@@ -46,7 +46,7 @@ export class OpenSlidesTranslationService extends TranslateService {
      *
      * @override
      */
-    public override get(key: string | string[], interpolateParams?: Object): Observable<string | any> {
+    public override get(key: string | string[], interpolateParams?: unknown): Observable<string | any> {
         try {
             return super.get(key, interpolateParams);
         } catch {
@@ -59,7 +59,7 @@ export class OpenSlidesTranslationService extends TranslateService {
      *
      * @override
      */
-    public override stream(key: string | string[], interpolateParams?: Object): Observable<string | any> {
+    public override stream(key: string | string[], interpolateParams?: unknown): Observable<string | any> {
         try {
             return super.stream(key, interpolateParams);
         } catch {
@@ -72,7 +72,7 @@ export class OpenSlidesTranslationService extends TranslateService {
      *
      * @override
      */
-    public override instant(key: string | string[], interpolateParams?: Object): string | any {
+    public override instant(key: string | string[], interpolateParams?: unknown): string | any {
         try {
             return super.instant(key, interpolateParams);
         } catch {

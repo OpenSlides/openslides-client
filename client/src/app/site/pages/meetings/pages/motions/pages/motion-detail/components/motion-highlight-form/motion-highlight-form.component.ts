@@ -115,11 +115,10 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     public ngOnInit(): void {
-        const self = this;
+        const maxLineNumber = this.motionLineNumbering.getLastLineNumber(this.motion, this.lineLength);
         this.highlightedLineMatcher = new (class implements ErrorStateMatcher {
             public isErrorState(control: UntypedFormControl): boolean {
                 const value: string = control && control.value ? control.value + `` : ``;
-                const maxLineNumber = self.motionLineNumbering.getLastLineNumber(self.motion, self.lineLength);
                 return value.match(/[^\d]/) !== null || parseInt(value, 10) >= maxLineNumber;
             }
         })();

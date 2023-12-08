@@ -1,4 +1,9 @@
-<os-head-bar [nav]="true" [hasMainButton]="canManage" (mainEvent)="createNewProjector(projectorDialog)">
+<os-head-bar
+    [nav]="true"
+    [hasMainButton]="canManage"
+    [mainActionTooltip]="'Create new projector' | translate"
+    (mainEvent)="createNewProjector(projectorDialog)"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Projectors' | translate }}</h2>

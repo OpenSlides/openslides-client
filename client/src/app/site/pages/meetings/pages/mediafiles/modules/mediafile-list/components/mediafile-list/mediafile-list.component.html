@@ -1,14 +1,20 @@
-<os-head-bar [hasMainButton]="canEdit" [multiSelectMode]="isMultiSelect" (mainEvent)="onMainEvent()">
+<os-head-bar
+    [hasMainButton]="canEdit"
+    [mainActionTooltip]="'Upload files' | translate"
+    [multiSelectMode]="isMultiSelect"
+    (mainEvent)="onMainEvent()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Files' | translate }}</h2>
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button
             type="button"
             mat-icon-button
+            [matTooltip]="'Create new folder' | translate"
             (click)="createNewFolder(newFolderDialog)"
             *osPerms="permission.mediafileCanManage; and: !isMultiSelect"
         >
@@ -17,14 +23,13 @@
         <button type="button" mat-icon-button [matMenuTriggerFor]="mediafilesMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 
     <!-- Multiselect info -->
-    <div *ngIf="isMultiSelect" class="central-info-slot">
+    <ng-container class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span>
-        <span>{{ 'selected' | translate }}</span>
-    </div>
+        <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
+    </ng-container>
 </os-head-bar>
 
 <!-- the actual file manager -->

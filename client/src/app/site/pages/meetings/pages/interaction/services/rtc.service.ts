@@ -114,7 +114,7 @@ export class RtcService {
         return !!this.api;
     }
 
-    private options!: Object;
+    private options!: unknown;
     private jitsiNode!: ElementRef;
 
     private actualRoomName = ``;
