@@ -34,7 +34,7 @@
     >
         <div *osScrollingTableCell="'access_groups'; row as file" class="cell-slot">
             <form [formGroup]="file.form">
-                <mat-form-field>
+                <mat-form-field subscriptSizing="dynamic">
                     <mat-label>{{ 'Access groups' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="access_group_ids"

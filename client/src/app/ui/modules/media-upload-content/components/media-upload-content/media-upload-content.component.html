@@ -22,7 +22,7 @@
 
     <div *osScrollingTableCell="'title'; row as file" class="cell-slot">
         <div *osScrollingTableCellLabel>{{ 'Title' | translate }}</div>
-        <mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
             <input matInput [(ngModel)]="file.title" />
         </mat-form-field>
     </div>
