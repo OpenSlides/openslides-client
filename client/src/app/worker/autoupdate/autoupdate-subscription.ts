@@ -33,12 +33,13 @@ export class AutoupdateSubscription {
      *
      * @param port The MessagePort the id should be send to
      */
-    public publishSubscriptionId(port: MessagePort): void {
+    public publishSubscriptionId(port: MessagePort, requestHash?: string): void {
         port.postMessage({
             sender: `autoupdate`,
             action: `set-streamid`,
             content: {
-                requestHash: this.requestHash,
+                description: this.description,
+                requestHash: requestHash || this.requestHash,
                 streamId: this.id
             }
         } as AutoupdateSetStreamId);
@@ -88,9 +89,9 @@ export class AutoupdateSubscription {
      *
      * @param port The port to be registered
      */
-    public addPort(port: MessagePort): void {
+    public addPort(port: MessagePort, requestHash?: string): void {
         this.ports.push(port);
-        this.publishSubscriptionId(port);
+        this.publishSubscriptionId(port, requestHash);
         this.resendTo(port);
 
         this.stream?.notifySubscriptionUsed(this);
