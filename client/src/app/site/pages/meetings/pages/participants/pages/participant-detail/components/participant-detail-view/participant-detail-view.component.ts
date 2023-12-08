@@ -25,6 +25,7 @@ import { GroupControllerService } from '../../../../modules';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
 import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
 import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort.service/participant-list-sort.service';
+import { Validators } from '@angular/forms';
 
 @Component({
     selector: `os-participant-detail-view`,
@@ -35,9 +36,17 @@ import { ParticipantListSortService } from '../../../participant-list/services/p
 export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
-    public readonly additionalFormControls = MEETING_RELATED_FORM_CONTROLS.mapToObject(controlName => ({
-        [controlName]: [``]
-    }));
+    public readonly additionalFormControls = {
+        structure_level: [``],
+        number: [``],
+        vote_weight: [``, Validators.min(0.000001)],
+        about_me: [``],
+        comment: [``],
+        group_ids: [``],
+        vote_delegations_from_ids: [``],
+        vote_delegated_to_id: [``],
+        is_present: [``]
+    };
 
     public get randomPasswordFn(): () => string {
         return () => this.getRandomPassword();
@@ -68,6 +77,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 return PERSONAL_FORM_CONTROLS.includes(controlName);
             }
         };
+    }
+
+    public get isVoteWeightError(): boolean {
+        return this.personalInfoFormValue.vote_weight < 0.000001;
     }
 
     public get operatorHasEqualOrHigherOML(): boolean {
