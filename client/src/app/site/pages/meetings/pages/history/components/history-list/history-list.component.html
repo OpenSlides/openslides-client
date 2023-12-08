@@ -7,7 +7,7 @@
     <div class="history-table-header">
         <div>
             <span [formGroup]="modelSelectForm">
-                <mat-form-field>
+                <mat-form-field class="history-module-form-field">
                     <mat-label>{{ 'Module' | translate }}</mat-label>
                     <mat-select formControlName="collection">
                         <mat-option *ngFor="let item of modelsRepoMap | keyvalue" [value]="item.key">
