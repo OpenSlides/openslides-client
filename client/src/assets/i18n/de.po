@@ -112,15 +112,19 @@ msgstr "Account erfolgreich zugewiesen"
 msgid "Accounts"
 msgstr "Accounts"
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/services/account-import.service/account-import.service.ts
 msgid "Accounts created"
 msgstr "Accounts erstellt"
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/services/account-import.service/account-import.service.ts
 msgid "Accounts updated"
 msgstr "Accounts aktualisiert"
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/services/account-import.service/account-import.service.ts
 msgid "Accounts with errors"
 msgstr "Accounts mit Fehlern"
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/services/account-import.service/account-import.service.ts
 msgid "Accounts with warnings: affected cells will be skipped"
 msgstr "Accounts mit Warnungen: Die betroffenen Zellen werden übersprungen."
 
@@ -130,6 +134,7 @@ msgstr "Aktivieren"
 msgid "Activate amendments"
 msgstr "Änderungsanträge aktivieren"
 
+#: /app/src/app/site/pages/organization/pages/designs/pages/theme-list/components/theme-list/theme-list.component.html
 msgid "Activate design"
 msgstr "Design aktivieren"
 
@@ -378,6 +383,7 @@ msgstr "Anzahl der Veranstaltungen"
 msgid "Amount of votes"
 msgstr "Anzahl der Stimmen"
 
+#: /app/src/app/site/pages/login/pages/reset-password/components/reset-password/reset-password.component.ts
 msgid "An email with a password reset link has been sent."
 msgstr "Es wurde eine E-Mail mit Link zum Passwort-Zurücksetzen gesendet."
 
@@ -992,6 +998,7 @@ msgstr "Darf alle Redelisten sehen."
 msgid "Can see elections"
 msgstr "Darf Wahlen sehen"
 
+#: /app/src/app/domain/definitions/permission.config.ts
 msgid "Can see files"
 msgstr "Darf Dateien sehen"
 
@@ -1231,12 +1238,15 @@ msgid "Check in or check out participants based on their participant numbers:"
 msgstr ""
 "An- oder Abmeldung von Teilnehmenden basierend auf ihren Teilnehmernummern:"
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
 msgid "Checkmate! You lost!"
 msgstr "Schachmatt! Du hast verloren!"
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
 msgid "Checkmate! You won!"
 msgstr "Schachmatt! Du hast gewonnen!"
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
 msgid "Chess"
 msgstr "Schach"
 
@@ -1267,6 +1277,7 @@ msgstr "Alle Filter entfernen"
 msgid "Clear all list of speakers"
 msgstr "Alle Redelisten bereinigen"
 
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
 msgid "Clear current projection"
 msgstr "Aktuelle Projektion löschen"
 
@@ -1288,6 +1299,8 @@ msgstr "Zur Stimmabgabe hier klicken!"
 msgid "Close"
 msgstr "Schließen"
 
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
 msgid "Close edit mode"
 msgstr "Bearbeitungsmodus beenden"
 
@@ -1563,6 +1576,7 @@ msgstr "Standardprojektor"
 msgid "Default structure level"
 msgstr "Standard-Gliederungsebene"
 
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
 msgid ""
 "Default text version for change recommendations and projection of motions"
 msgstr ""
@@ -1701,6 +1715,7 @@ msgstr "Nicht entscheiden"
 msgid "Do not forget to save your changes!"
 msgstr "Vergessen Sie nicht Ihre Änderungen zu speichern!"
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service.ts
 msgid "Do you accept?"
 msgstr "Bist Du einverstanden?"
 
@@ -1784,6 +1799,7 @@ msgstr ""
 msgid "Edit"
 msgstr "Bearbeiten"
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-detail/account-detail.component.html
 msgid "Edit account"
 msgstr "Account bearbeiten"
 
@@ -1802,6 +1818,7 @@ msgstr "Details bearbeiten für"
 msgid "Edit editorial final version"
 msgstr "Redaktionelle Beschlussfassung bearbeiten"
 
+#: /app/src/app/site/pages/meetings/pages/participants/modules/groups/components/group-list/group-list.component.html
 msgid "Edit group"
 msgstr "Gruppe bearbeiten"
 
@@ -1811,9 +1828,12 @@ msgstr "Veranstaltung bearbeiten"
 msgid "Edit projector"
 msgstr "Projektor bearbeiten"
 
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
 msgid "Edit queue"
 msgstr "Warteschlange bearbeiten"
 
+#: /app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
 msgid "Edit state"
 msgstr "Status bearbeiten"
 
@@ -1832,6 +1852,7 @@ msgstr "Bearbeiten, um Stimmen einzugeben."
 msgid "Edit topic"
 msgstr "Thema bearbeiten"
 
+#: /app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
 msgid "Edit workflow"
 msgstr "Arbeitsablauf bearbeiten"
 
@@ -2095,6 +2116,10 @@ msgstr "Favoriten"
 msgid "File"
 msgstr "Datei"
 
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.html
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.html
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.html
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.html
 msgid "File is being used"
 msgstr "Die Datei wird verwendet"
 
@@ -2359,6 +2384,7 @@ msgstr "Hilfetext für das Zugangsdaten- und Willkommens-PDF"
 msgid "Hidden item"
 msgstr "Versteckter Eintrag"
 
+#: /app/src/app/ui/modules/sidenav/components/sidenav/sidenav.component.html
 msgid "Hide main menu"
 msgstr "Hauptmenü ausblenden"
 
@@ -2435,6 +2461,8 @@ msgstr "Satzung importieren"
 msgid "Import successful"
 msgstr "Import erfolgreich"
 
+#: /app/src/app/site/pages/meetings/pages/agenda/modules/topics/pages/topic-import/components/topic-import/topic-import.component.html
+#: /app/src/app/site/pages/meetings/pages/agenda/modules/topics/pages/topic-import/components/topic-import/topic-import.component.html
 msgid "Import successful with some warnings"
 msgstr "Import erfolgreich mit einigen Warnungen"
 
@@ -2483,6 +2511,7 @@ msgstr "Themen hier importieren"
 msgid "Insertion"
 msgstr "Ergänzung"
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
 msgid "Insufficient material! It's a draw!"
 msgstr "Zu wenig Material! Es ist ein Unentschieden!"
 
@@ -2602,9 +2631,11 @@ msgstr ""
 "Countdowns, die für Redelisten oder elektronische Stimmabgaben verwendet "
 "werden, dürfen nicht gelöscht werden."
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
 msgid "It's a draw!"
 msgstr "Es ist ein Unentschieden!"
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/components/base-game-dialog/base-game-dialog.ts
 msgid "It's your opponent's turn"
 msgstr "Dein Gegner ist am Zug"
 
@@ -2851,6 +2882,7 @@ msgstr "Minimale Stimmenanzahl"
 msgid "Minimum number of digits for motion identifier"
 msgstr "Minimale Anzahl an Ziffern im Antragsbezeichner"
 
+#: /app/src/app/site/pages/organization/pages/designs/pages/theme-list/components/theme-list/theme-list.component.html
 msgid "Modify design"
 msgstr "Design ändern"
 
@@ -2998,6 +3030,7 @@ msgstr "Neues Sachgebiet"
 msgid "New change recommendation"
 msgstr "Neue Änderungsempfehlung"
 
+#: /app/src/app/site/pages/meetings/pages/chat/pages/chat-group-list/components/chat-group-list/chat-group-list.component.html
 msgid "New chat group"
 msgstr "Neue Chatgruppe"
 
@@ -3007,6 +3040,7 @@ msgstr "Neues Kommentarfeld"
 msgid "New committee"
 msgstr "Neues Gremium"
 
+#: /app/src/app/site/pages/organization/pages/designs/pages/theme-list/components/theme-list/theme-list.component.html
 msgid "New design"
 msgstr "Neues Design"
 
@@ -3016,15 +3050,20 @@ msgstr "Neues Verzeichnis"
 msgid "New election"
 msgstr "Neue Wahl"
 
+#: /app/src/app/site/pages/organization/pages/mediafiles/modules/organization-mediafile-upload/components/organization-mediafile-upload/organization-mediafile-upload.component.html
 msgid "New file"
 msgstr "Neue Datei"
 
 msgid "New file name"
 msgstr "Neuer Dateiname"
 
+#: /app/src/app/site/pages/organization/pages/mediafiles/modules/organization-mediafile-list/components/organization-mediafile-list/organization-mediafile-list.component.html
+#: /app/src/app/site/pages/organization/pages/mediafiles/modules/organization-mediafile-list/components/organization-mediafile-list/organization-mediafile-list.component.html
 msgid "New folder"
 msgstr "Neues Verzeichnis"
 
+#: /app/src/app/site/pages/meetings/pages/participants/modules/groups/components/group-list/group-list.component.html
+#: /app/src/app/site/pages/meetings/pages/participants/modules/groups/components/group-list/group-list.component.html
 msgid "New group"
 msgstr "Neue Gruppe"
 
@@ -3046,6 +3085,8 @@ msgstr "Neue*r Teilnehmer*in"
 msgid "New password"
 msgstr "Neues Passwort"
 
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-list/components/projector-list/projector-list.component.html
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-list/components/projector-list/projector-list.component.html
 msgid "New projector"
 msgstr "Neuer Projektor"
 
@@ -3302,6 +3343,7 @@ msgstr "Jitsi im neuen Tab öffnen"
 msgid "Open a meeting to play \"Connect 4\""
 msgstr "Öffnen Sie eine Veranstaltung um \"Vier gewinnt\" zu spielen."
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.html
 msgid "Open a meeting to play chess"
 msgstr "Öffnen Sie eine Veranstaltung um Schach zu spielen."
 
@@ -3494,18 +3536,23 @@ msgstr ""
 "Teilnehmende und Administratoren werden vollständig kopiert und lassen sich "
 "hier nicht bearbeitet."
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
 msgid "Participants created"
 msgstr "Teilnehmende erstellt"
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
 msgid "Participants skipped"
 msgstr "Teilnehmende übersprungen"
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
 msgid "Participants updated"
 msgstr "Teilnehmende aktualisiert"
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
 msgid "Participants with errors"
 msgstr "Teilnehmende mit Fehlern"
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
 msgid "Participants with warnings: affected cells will be skipped"
 msgstr ""
 "Teilnehmende mit Warnungen: Die betroffenen Zellen werden übersprungen."
@@ -3553,6 +3600,7 @@ msgstr "Persönliche Notizen"
 msgid "Phase"
 msgstr "Phase"
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.html
 msgid "Playing against"
 msgstr "Spiel gegen"
 
@@ -3574,8 +3622,13 @@ msgstr "Bitte geben Sie Ihr neues Passwort ein"
 msgid "Please join the conference room now!"
 msgstr "Bitte kommen Sie jetzt in den Konferenzraum!"
 
-msgid "Please select a vote weight bigger than zero."
-msgstr "Bitte wählen Sie ein Stimmgewicht größer als Null."
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-detail/account-detail.component.html
+msgid "Please select a vote weight greater than or equal to 0.000001"
+msgstr "Bitte ein Stimmgewicht größer oder gleich 0,000001 wählen."
+
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-detail/account-detail.component.html
+msgid "Please select a vote weight greater than zero."
+msgstr "Bitte wählen Sie ein Stimmgewicht größer 0."
 
 msgid "Please select the directory:"
 msgstr "Bitte wählen Sie das Verzeichnis aus:"
@@ -3598,6 +3651,7 @@ msgstr "GO-Antrag"
 msgid "Polls"
 msgstr "Umfragen"
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/components/account-import-list/account-import-list.component.ts
 msgid "Possible options"
 msgstr "Mögliche Optionen"
 
@@ -3627,9 +3681,6 @@ msgstr "Anwesenheit"
 
 msgid "Present"
 msgstr "Anwesend"
-
-msgid "Presentation and assembly system"
-msgstr "Präsentations- und Versammlungssystem"
 
 msgid "Preview"
 msgstr "Vorschau"
@@ -3879,9 +3930,6 @@ msgstr "Status zurücksetzen"
 msgid "Reset to default settings"
 msgstr "Auf Werkseinstellungen zurücksetzen"
 
-msgid "Reset your OpenSlides password"
-msgstr "Zurücksetzen Ihres OpenSlides-Passworts"
-
 msgid "Resolution and size"
 msgstr "Auflösung und Größe"
 
@@ -3906,6 +3954,7 @@ msgstr "Rechts"
 msgid "Roman"
 msgstr "Römisch"
 
+#: /app/src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component.html
 msgid "Rows with warnings"
 msgstr "Zeilen mit Warnungen"
 
@@ -3915,6 +3964,7 @@ msgstr "SSO"
 msgid "SSO Identification"
 msgstr "SSO-Kennung"
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/definitions/index.ts
 msgid "SSO identification"
 msgstr "SSO-Kennung"
 
@@ -4162,6 +4212,7 @@ msgstr "Livekonferenz-Fenster anzeigen"
 msgid "Show logo"
 msgstr "Logo anzeigen"
 
+#: /app/src/app/ui/modules/sidenav/components/sidenav/sidenav.component.html
 msgid "Show main menu"
 msgstr "Hauptmenü einblenden"
 
@@ -4288,9 +4339,6 @@ msgstr "Anträge sortieren nach"
 msgid "Sort workflow"
 msgstr "Arbeitsablauf sortieren"
 
-msgid "Space for your welcome text."
-msgstr "Platz für Ihren Begrüßungstext."
-
 msgid "Speaker"
 msgstr "Redner*in"
 
@@ -4303,6 +4351,7 @@ msgstr "Redezeit"
 msgid "Staff"
 msgstr "Mitarbeitende"
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
 msgid "Stalemate! It's a draw!"
 msgstr "Unentschieden! Es ist ein Unentschieden!"
 
@@ -4462,6 +4511,7 @@ msgstr "Texttrenner"
 msgid "The account is deactivated."
 msgstr "Der Account ist inaktiv."
 
+#: /app/src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component.ts
 msgid "The affected columns will not be imported."
 msgstr "Die betroffenen Spalten werden nicht importiert."
 
@@ -4500,6 +4550,7 @@ msgstr ""
 msgid "The import is in progress, please wait ..."
 msgstr "Der Import läuft, bitte warten ..."
 
+#: /app/src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component.html
 msgid ""
 "The import returned warnings. This does not mean that it failed, but some "
 "data may have been imported differently. Usually the warnings will be the "
@@ -4774,6 +4825,7 @@ msgstr "Folgender Arbeitsablauf wird für alle ausgewählten Anträge gesetzt:"
 msgid "Thoroughly check datastore (unsafe)"
 msgstr "Gründliche Überprüfung des Datastores (unsicher)"
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
 msgid "Threefold repetition! It's a draw!"
 msgstr "Dreimalige Wiederholung! Es ist ein Unentschieden!"
 
@@ -4828,9 +4880,11 @@ msgstr "Themen aktualisiert"
 msgid "Topics with warnings (will be skipped)"
 msgstr "Themen mit Warnungen (werden übersprungen)"
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/services/account-import.service/account-import.service.ts
 msgid "Total accounts"
 msgstr "Accounts insgesamt"
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
 msgid "Total participants"
 msgstr "Teilnehmende insgesamt"
 
@@ -4945,6 +4999,8 @@ msgstr "Sichtbarkeit in der Tagesordnung"
 msgid "Vote"
 msgstr "Abstimmung"
 
+#: /app/src/app/site/pages/meetings/modules/poll/components/entitled-users-table/entitled-users-table.component.html
+#: /app/src/app/site/pages/meetings/modules/poll/components/entitled-users-table/entitled-users-table.component.html
 msgid "Vote submitted"
 msgstr "Stimme abgegeben"
 
@@ -5045,6 +5101,7 @@ msgstr "Warten"
 msgid "Wait for response ..."
 msgstr "Warten auf Antwort ..."
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
 msgid "Waiting for response ..."
 msgstr "Auf Antwort wartend ..."
 
@@ -5157,21 +5214,6 @@ msgid "You are not supposed to be here..."
 msgstr "Sie sollten nicht hier sein ..."
 
 msgid ""
-"You are receiving this email because you have requested a new password for your OpenSlides account.\n"
-"\n"
-"Please open the following link and choose a new password:\n"
-"{url}/login/forget-password-confirm?user_id={user_id}&token={token}\n"
-"\n"
-"The link will be valid for 10 minutes."
-msgstr ""
-"Sie erhalten diese E-Mail, da Sie ein neues Passwort für Ihren OpenSlides-Account angefordert haben.\n"
-"\n"
-"Bitte öffnen Sie den folgenden Link und wählen Sie ein neues Passwort:\n"
-"{url}/login/forget-password-confirm?user_id={user_id}&token={token}\n"
-"\n"
-"Der Link wird 10 Minuten lang gültig sein."
-
-msgid ""
 "You are using the history mode of OpenSlides. Changes will not be saved."
 msgstr "Der Chronik-Modus ist aktiv. Änderungen werden nicht gespeichert."
 
@@ -5254,6 +5296,7 @@ msgstr "Sie haben bereits Ihre Stimme abgegeben."
 msgid "You have to be logged in to be able to vote."
 msgstr "Sie müssen sich anmelden um Ihre Stimme abgeben zu können."
 
+#: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-content/list-of-speakers-content.component.html
 msgid "You have to be present to add yourself."
 msgstr "Sie müssen anwesend sein, um sich selbst hinzuzufügen."
 
@@ -5300,12 +5343,15 @@ msgstr "Es wurde kein Mikrofon an ihrem Gerät gefunden."
 msgid "Your input does not match the following structure: \"hh:mm\""
 msgstr "Ihre Eingabe entspricht nicht der folgenden Struktur: \"hh:mm\""
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/components/base-game-dialog/base-game-dialog.ts
 msgid "Your opponent couldn't stand it anymore... You are the winner!"
 msgstr "Dein Partner konnte es nicht mehr aushalten... Du bist der Gewinner!"
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/c4-dialog/components/c4-dialog/c4-dialog.component.ts
 msgid "Your opponent has won!"
 msgstr "Dein Gegner hat gewonnen!"
 
+#: /app/src/app/site/pages/login/pages/reset-password-confirm/components/reset-password-confirm/reset-password-confirm.component.ts
 msgid "Your password has been reset successfully!"
 msgstr "Ihr Passwort wurde erfolgreich zurückgesetzt!"
 
@@ -5370,6 +5416,7 @@ msgstr "stimmzettel"
 msgid "by"
 msgstr "von"
 
+#: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service.ts
 msgid "challenged you to a chess match!"
 msgstr "hat dich zu einem Schachspiel herausgefordert!"
 
@@ -5520,9 +5567,6 @@ msgstr "Anträge"
 msgid "move ..."
 msgstr "verschieben ..."
 
-msgid "name"
-msgstr "Name"
-
 msgid "natural person"
 msgstr "natürliche Person"
 
@@ -5661,6 +5705,7 @@ msgstr "werden importiert"
 msgid "will be referenced"
 msgstr "werden referenziert"
 
+#: /app/src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component.ts
 msgid "will be updated"
 msgstr "werden aktualisiert"
 
