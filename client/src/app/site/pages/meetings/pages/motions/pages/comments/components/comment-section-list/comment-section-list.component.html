@@ -1,4 +1,9 @@
-<os-head-bar [nav]="false" [hasMainButton]="true" (mainEvent)="openDialog()">
+<os-head-bar
+    [nav]="false"
+    [hasMainButton]="true"
+    [mainActionTooltip]="'New comment field' | translate"
+    (mainEvent)="openDialog()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Comment fields' | translate }}</h2>

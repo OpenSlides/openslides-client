@@ -109,13 +109,17 @@ msgid "Accounts with errors"
 msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/services/account-import.service/account-import.service.ts
-msgid "Accounts with warnings (will be skipped)"
+msgid "Accounts with warnings: affected cells will be skipped"
 msgstr ""
 
 msgid "Activate"
 msgstr ""
 
 msgid "Activate amendments"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/designs/pages/theme-list/components/theme-list/theme-list.component.html
+msgid "Activate design"
 msgstr ""
 
 msgid "Activate statute amendments"
@@ -1143,6 +1147,10 @@ msgstr ""
 msgid "Clear all list of speakers"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+msgid "Clear current projection"
+msgstr ""
+
 msgid "Clear list"
 msgstr ""
 
@@ -1159,6 +1167,11 @@ msgid "Click here to vote!"
 msgstr ""
 
 msgid "Close"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+msgid "Close edit mode"
 msgstr ""
 
 msgid "Close list of speakers"
@@ -1312,12 +1325,6 @@ msgid "Create"
 msgstr ""
 
 msgid "Create editorial final version"
-msgstr ""
-
-msgid "Create new chat group"
-msgstr ""
-
-msgid "Create new tag"
 msgstr ""
 
 msgid "Create subitem"
@@ -1626,6 +1633,10 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-detail/account-detail.component.html
+msgid "Edit account"
+msgstr ""
+
 msgid "Edit comment field"
 msgstr ""
 
@@ -1641,13 +1652,23 @@ msgstr ""
 msgid "Edit editorial final version"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/modules/groups/components/group-list/group-list.component.html
+msgid "Edit group"
+msgstr ""
+
 msgid "Edit meeting"
 msgstr ""
 
-msgid "Edit name"
+msgid "Edit projector"
 msgstr ""
 
-msgid "Edit projector"
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+msgid "Edit queue"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid "Edit state"
 msgstr ""
 
 msgid "Edit statute paragraph"
@@ -1663,6 +1684,10 @@ msgid "Edit to enter votes."
 msgstr ""
 
 msgid "Edit topic"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid "Edit workflow"
 msgstr ""
 
 msgid "Editorial final version"
@@ -2160,6 +2185,10 @@ msgstr ""
 msgid "Hidden item"
 msgstr ""
 
+#: /app/src/app/ui/modules/sidenav/components/sidenav/sidenav.component.html
+msgid "Hide main menu"
+msgstr ""
+
 msgid "Hide more text"
 msgstr ""
 
@@ -2638,6 +2667,10 @@ msgstr ""
 msgid "Minimum number of digits for motion identifier"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/designs/pages/theme-list/components/theme-list/theme-list.component.html
+msgid "Modify design"
+msgstr ""
+
 msgid "Module"
 msgstr ""
 
@@ -2767,9 +2800,6 @@ msgstr ""
 msgid "Never"
 msgstr ""
 
-msgid "New Projector"
-msgstr ""
-
 msgid "New account"
 msgstr ""
 
@@ -2785,10 +2815,18 @@ msgstr ""
 msgid "New change recommendation"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/chat/pages/chat-group-list/components/chat-group-list/chat-group-list.component.html
+msgid "New chat group"
+msgstr ""
+
 msgid "New comment field"
 msgstr ""
 
 msgid "New committee"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/designs/pages/theme-list/components/theme-list/theme-list.component.html
+msgid "New design"
 msgstr ""
 
 msgid "New directory"
@@ -2797,10 +2835,21 @@ msgstr ""
 msgid "New election"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/mediafiles/modules/organization-mediafile-upload/components/organization-mediafile-upload/organization-mediafile-upload.component.html
+msgid "New file"
+msgstr ""
+
 msgid "New file name"
 msgstr ""
 
-msgid "New group name"
+#: /app/src/app/site/pages/organization/pages/mediafiles/modules/organization-mediafile-list/components/organization-mediafile-list/organization-mediafile-list.component.html
+#: /app/src/app/site/pages/organization/pages/mediafiles/modules/organization-mediafile-list/components/organization-mediafile-list/organization-mediafile-list.component.html
+msgid "New folder"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/modules/groups/components/group-list/group-list.component.html
+#: /app/src/app/site/pages/meetings/pages/participants/modules/groups/components/group-list/group-list.component.html
+msgid "New group"
 msgstr ""
 
 msgid "New meeting"
@@ -2819,6 +2868,11 @@ msgid "New participant"
 msgstr ""
 
 msgid "New password"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-list/components/projector-list/projector-list.component.html
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-list/components/projector-list/projector-list.component.html
+msgid "New projector"
 msgstr ""
 
 msgid "New state"
@@ -3255,6 +3309,26 @@ msgid ""
 "here."
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
+msgid "Participants created"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
+msgid "Participants skipped"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
+msgid "Participants updated"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
+msgid "Participants with errors"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
+msgid "Participants with warnings: affected cells will be skipped"
+msgstr ""
+
 msgid "Particles"
 msgstr ""
 
@@ -3310,9 +3384,6 @@ msgstr ""
 msgid "Please enter a name for the new workflow:"
 msgstr ""
 
-msgid "Please enter a new workflow name:"
-msgstr ""
-
 msgid "Please enter a valid email address!"
 msgstr ""
 
@@ -3341,6 +3412,10 @@ msgid "Point of order"
 msgstr ""
 
 msgid "Polls"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/components/account-import-list/account-import-list.component.ts
+msgid "Possible options"
 msgstr ""
 
 msgid "Possible points of order"
@@ -3562,9 +3637,6 @@ msgid "Remove me"
 msgstr ""
 
 msgid "Remove option"
-msgstr ""
-
-msgid "Rename state"
 msgstr ""
 
 msgid "Reopen"
@@ -3898,6 +3970,10 @@ msgstr ""
 msgid "Show logo"
 msgstr ""
 
+#: /app/src/app/ui/modules/sidenav/components/sidenav/sidenav.component.html
+msgid "Show main menu"
+msgstr ""
+
 msgid "Show meta information box beside the title on projector"
 msgstr ""
 
@@ -4180,6 +4256,10 @@ msgstr ""
 msgid "The account is deactivated."
 msgstr ""
 
+#: /app/src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component.ts
+msgid "The affected columns will not be imported."
+msgstr ""
+
 msgid "The assembly may decide:"
 msgstr ""
 
@@ -4377,9 +4457,6 @@ msgid ""
 "want to do this?"
 msgstr ""
 
-msgid "This row will not be imported, due to an unknown reason."
-msgstr ""
-
 msgid "This will add or remove the following groups for all selected participants:"
 msgstr ""
 
@@ -4491,6 +4568,10 @@ msgstr ""
 msgid "Total accounts"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
+msgid "Total participants"
+msgstr ""
+
 msgid "Total topics"
 msgstr ""
 
@@ -4531,9 +4612,6 @@ msgid "Unsupport"
 msgstr ""
 
 msgid "Upload"
-msgstr ""
-
-msgid "Upload files"
 msgstr ""
 
 msgid "Upload to"
@@ -4591,6 +4669,11 @@ msgid "Visibility on agenda"
 msgstr ""
 
 msgid "Vote"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/modules/poll/components/entitled-users-table/entitled-users-table.component.html
+#: /app/src/app/site/pages/meetings/modules/poll/components/entitled-users-table/entitled-users-table.component.html
+msgid "Vote submitted"
 msgstr ""
 
 msgid "Vote weight"
@@ -4989,9 +5072,6 @@ msgstr ""
 msgid "could not be defined"
 msgstr ""
 
-msgid "could not be referenced"
-msgstr ""
-
 msgid "created"
 msgstr ""
 
@@ -5056,9 +5136,6 @@ msgid "has saved his work on this motion."
 msgstr ""
 
 msgid "have been created"
-msgstr ""
-
-msgid "have been referenced"
 msgstr ""
 
 msgid "hidden"

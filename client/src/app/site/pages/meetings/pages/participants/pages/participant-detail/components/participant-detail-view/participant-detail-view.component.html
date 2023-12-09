@@ -1,7 +1,7 @@
 <os-head-bar
     [hasMainButton]="isAllowed('changePersonal') && !!user"
     mainButtonIcon="edit"
-    [mainActionTooltip]="'Edit participant' | translate"
+    [mainActionTooltip]="'Edit' | translate"
     [nav]="false"
     [goBack]="!isAllowed('seeOtherUsers')"
     [editMode]="isEditingSubject.value"

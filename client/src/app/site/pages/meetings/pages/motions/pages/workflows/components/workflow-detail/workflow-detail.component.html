@@ -1,17 +1,15 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
-    <os-head-bar [nav]="false" [hasMainButton]="true" (mainEvent)="onNewStateButton()">
+    <os-head-bar
+        [nav]="false"
+        [hasMainButton]="true"
+        [mainActionTooltip]="'New state' | translate"
+        (mainEvent)="onNewStateButton()"
+>
         <!-- Title -->
         <div class="title-slot">
             <h2 *ngIf="workflow">
                 {{ workflow.name }}
             </h2>
-        </div>
-
-        <!-- Edit button -->
-        <div class="extra-controls-slot">
-            <button mat-icon-button (click)="onEditWorkflowButton()">
-                <mat-icon>edit</mat-icon>
-            </button>
         </div>
 
         <!-- Menu button -->
@@ -265,6 +263,12 @@
             <button mat-menu-item (click)="exportCurrentWorkflow()">
                 <mat-icon>archive</mat-icon>
                 <span>{{ 'Export' | translate }}</span>
+            </button>
+        </div>
+        <div>
+            <button mat-menu-item (click)="onEditWorkflowButton()">
+                <mat-icon>edit</mat-icon>
+                <span>{{ 'Edit' | translate }}</span>
             </button>
         </div>
     </ng-template>
