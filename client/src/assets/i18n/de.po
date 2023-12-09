@@ -233,9 +233,6 @@ msgstr ""
 "Es könnten zusätzliche Spalten nach den erforderlichen Spalten vorhanden "
 "sein. Diese haben jedoch keinen Einfluss auf den Import."
 
-msgid "Adjourn"
-msgstr "Vertagen"
-
 msgid "Adjournment"
 msgstr "Vertagung"
 
@@ -247,9 +244,6 @@ msgstr "Administrationsrollen"
 
 msgid "Administration roles (at organization level)"
 msgstr "Administrationsrollen (auf Organisationsebene)"
-
-msgid "Administrator"
-msgstr "Administrator"
 
 msgid "Administrators"
 msgstr "Administratoren"
@@ -1692,12 +1686,6 @@ msgstr "Div"
 msgid "Divergent:"
 msgstr "abweichend:"
 
-msgid "Do not concern"
-msgstr "Nicht befassen"
-
-msgid "Do not decide"
-msgstr "Nicht entscheiden"
-
 msgid "Do not forget to save your changes!"
 msgstr "Vergessen Sie nicht Ihre Änderungen zu speichern!"
 
@@ -2188,9 +2176,6 @@ msgstr "Weiterleitung von Antrag"
 
 msgid "Forwardings"
 msgstr "Weiterleitungen"
-
-msgid "Front page text"
-msgstr "Text der Startseite"
 
 msgid "Front page title"
 msgstr "Titel der Startseite"
@@ -2722,11 +2707,6 @@ msgstr "Redelisten"
 msgid "Live conference"
 msgstr "Livekonferenz"
 
-msgid "Live conference has to be active. Choose 0 to disable auto connect."
-msgstr ""
-"Die Livekonferenz muss aktiv sein. Wählen Sie 0 um den automatischen "
-"Verbindungsaufbau zu deaktivieren."
-
 msgid "Livestream"
 msgstr "Livestream"
 
@@ -2972,9 +2952,6 @@ msgstr "Name des neuen Sachgebiets"
 
 msgid "Natural person"
 msgstr "natürliche Person"
-
-msgid "Needs review"
-msgstr "Benötigt Review"
 
 msgid "Negative votes are not allowed."
 msgstr "Negative Stimmen sind nicht zulässig."
@@ -3528,14 +3505,8 @@ msgid "Paste/write your topics in this textbox."
 msgstr ""
 "Kopieren oder schreiben Sie die Titel Ihrer Themenpunkte in diese Textbox."
 
-msgid "Permission"
-msgstr "Zulassung"
-
 msgid "Permissions"
 msgstr "Berechtigungen"
-
-msgid "Permit"
-msgstr "Zulassen"
 
 msgid "Personal data changed"
 msgstr "Persönliche Stammdaten geändert"
@@ -3759,14 +3730,8 @@ msgstr "Empfehlung gesetzt auf {}"
 msgid "Reenter to conference room"
 msgstr "Konferenzraum erneut beitreten"
 
-msgid "Refer to committee"
-msgstr "In Ausschuss verweisen"
-
 msgid "Referral to"
 msgstr "Überweisung an"
-
-msgid "Referral to committee"
-msgstr "Verweisung in Ausschuss"
 
 msgid "Referring motions"
 msgstr "Auf diesen Antrag verweisende Anträge"
@@ -3777,17 +3742,11 @@ msgstr "Aktualisieren"
 msgid "Reject"
 msgstr "Ablehnen"
 
-msgid "Reject (not authorized)"
-msgstr "Verwerfen (nicht zulässig)"
-
 msgid "Rejected"
 msgstr "Abgelehnt"
 
 msgid "Rejection"
 msgstr "Ablehnung"
-
-msgid "Rejection (not authorized)"
-msgstr "Verwerfung (nicht berechtigt)"
 
 msgid "Relevant information could not be accessed"
 msgstr "Relevante Informationen konnten nicht abgerufen werden."
@@ -5333,9 +5292,6 @@ msgstr ""
 msgid "[Place for your welcome and help text.]"
 msgstr "[Platz für Ihren Begrüßungs- und Hilfetext.]"
 
-msgid "[Place for your welcome text.]"
-msgstr "[Platz für Ihren Begrüßungstext.]"
-
 msgid "absent"
 msgstr "abwesend"
 
@@ -5531,9 +5487,6 @@ msgstr "Name"
 msgid "natural person"
 msgstr "natürliche Person"
 
-msgid "needs review"
-msgstr "benötigt Überprüfung"
-
 msgid "no natural person"
 msgstr "keine natürliche Person"
 
@@ -5554,6 +5507,9 @@ msgstr "nicht befasst"
 
 msgid "not decided"
 msgstr "nicht entschieden"
+
+msgid "not permitted"
+msgstr "nicht zugelassen"
 
 msgid "of"
 msgstr "von"
@@ -5594,14 +5550,8 @@ msgstr "rot"
 msgid "referred to"
 msgstr "überwiesen an"
 
-msgid "referred to committee"
-msgstr "in Ausschuss verwiesen"
-
 msgid "rejected"
 msgstr "abgelehnt"
-
-msgid "rejected (not authorized)"
-msgstr "verworfen (nicht zulässig)"
 
 msgid "remove"
 msgstr "entfernen"

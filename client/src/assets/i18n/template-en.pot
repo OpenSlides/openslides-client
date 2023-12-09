@@ -72,9 +72,6 @@ msgstr ""
 msgid "Accept"
 msgstr ""
 
-msgid "Acceptance"
-msgstr ""
-
 msgid "Access data (PDF)"
 msgstr ""
 
@@ -209,22 +206,10 @@ msgid ""
 "affect the import."
 msgstr ""
 
-msgid "Adjourn"
-msgstr ""
-
-msgid "Adjournment"
-msgstr ""
-
-msgid "Admin"
-msgstr ""
-
 msgid "Administration roles"
 msgstr ""
 
 msgid "Administration roles (at organization level)"
-msgstr ""
-
-msgid "Administrator"
 msgstr ""
 
 msgid "Administrators"
@@ -1249,9 +1234,6 @@ msgstr ""
 msgid "Committees and meetings"
 msgstr ""
 
-msgid "Complex Workflow"
-msgstr ""
-
 msgid "Conference room"
 msgstr ""
 
@@ -1384,19 +1366,6 @@ msgstr ""
 msgid "Datastore is ok!"
 msgstr ""
 
-msgid ""
-"Dear {name},\n"
-"\n"
-"this is your personal OpenSlides login:\n"
-"\n"
-"{url}\n"
-"Username: {username}\n"
-"Password: {password}\n"
-"\n"
-"\n"
-"This email was generated automatically."
-msgstr ""
-
 msgid "Decision"
 msgstr ""
 
@@ -1428,9 +1397,6 @@ msgid "Default number"
 msgstr ""
 
 msgid "Default participant number"
-msgstr ""
-
-msgid "Default projector"
 msgstr ""
 
 msgid "Default structure level"
@@ -1492,9 +1458,6 @@ msgstr ""
 msgid "Defines which states can be selected next in the workflow."
 msgstr ""
 
-msgid "Delegates"
-msgstr ""
-
 msgid "Delegation of vote"
 msgstr ""
 
@@ -1550,12 +1513,6 @@ msgid "Div"
 msgstr ""
 
 msgid "Divergent:"
-msgstr ""
-
-msgid "Do not concern"
-msgstr ""
-
-msgid "Do not decide"
 msgstr ""
 
 msgid "Do not forget to save your changes!"
@@ -2015,9 +1972,6 @@ msgid "Forwarding of motion"
 msgstr ""
 
 msgid "Forwardings"
-msgstr ""
-
-msgid "Front page text"
 msgstr ""
 
 msgid "Front page title"
@@ -2545,9 +2499,6 @@ msgstr ""
 msgid "Live conference"
 msgstr ""
 
-msgid "Live conference has to be active. Choose 0 to disable auto connect."
-msgstr ""
-
 msgid "Livestream"
 msgstr ""
 
@@ -2791,9 +2742,6 @@ msgstr ""
 msgid "Natural person"
 msgstr ""
 
-msgid "Needs review"
-msgstr ""
-
 msgid "Negative votes are not allowed."
 msgstr ""
 
@@ -2926,13 +2874,7 @@ msgstr ""
 msgid "No committee admin"
 msgstr ""
 
-msgid "No concernment"
-msgstr ""
-
 msgid "No data"
-msgstr ""
-
-msgid "No decision"
 msgstr ""
 
 msgid "No delegation of vote"
@@ -3347,13 +3289,7 @@ msgstr ""
 msgid "Paste/write your topics in this textbox."
 msgstr ""
 
-msgid "Permission"
-msgstr ""
-
 msgid "Permissions"
-msgstr ""
-
-msgid "Permit"
 msgstr ""
 
 msgid "Personal data changed"
@@ -3575,12 +3511,6 @@ msgstr ""
 msgid "Reenter to conference room"
 msgstr ""
 
-msgid "Refer to committee"
-msgstr ""
-
-msgid "Referral to committee"
-msgstr ""
-
 msgid "Referring motions"
 msgstr ""
 
@@ -3590,16 +3520,7 @@ msgstr ""
 msgid "Reject"
 msgstr ""
 
-msgid "Reject (not authorized)"
-msgstr ""
-
 msgid "Rejected"
-msgstr ""
-
-msgid "Rejection"
-msgstr ""
-
-msgid "Rejection (not authorized)"
 msgstr ""
 
 msgid "Relevant information could not be accessed"
@@ -4041,9 +3962,6 @@ msgid ""
 "24x24px, PNG, JPG or SVG"
 msgstr ""
 
-msgid "Simple Workflow"
-msgstr ""
-
 msgid "Single Sign-On settings"
 msgstr ""
 
@@ -4092,12 +4010,6 @@ msgid "Speaker"
 msgstr ""
 
 msgid "Speakers"
-msgstr ""
-
-msgid "Speaking time"
-msgstr ""
-
-msgid "Staff"
 msgstr ""
 
 #: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
@@ -4689,9 +4601,6 @@ msgstr ""
 msgid "Votes"
 msgstr ""
 
-msgid "Voting"
-msgstr ""
-
 msgid "Voting and ballot papers"
 msgstr ""
 
@@ -5012,13 +4921,7 @@ msgstr ""
 msgid "[Place for your welcome and help text.]"
 msgstr ""
 
-msgid "[Place for your welcome text.]"
-msgstr ""
-
 msgid "absent"
-msgstr ""
-
-msgid "accepted"
 msgstr ""
 
 msgid "account-example"
@@ -5028,9 +4931,6 @@ msgid "active"
 msgstr ""
 
 msgid "add group(s)"
-msgstr ""
-
-msgid "adjourned"
 msgstr ""
 
 msgid "already exists"
@@ -5145,9 +5045,6 @@ msgstr ""
 msgid "hidden"
 msgstr ""
 
-msgid "in progress"
-msgstr ""
-
 msgid "inactive"
 msgstr ""
 
@@ -5208,9 +5105,6 @@ msgstr ""
 msgid "natural person"
 msgstr ""
 
-msgid "needs review"
-msgstr ""
-
 msgid "no natural person"
 msgstr ""
 
@@ -5224,12 +5118,6 @@ msgid "non-nominal"
 msgstr ""
 
 msgid "none"
-msgstr ""
-
-msgid "not concerned"
-msgstr ""
-
-msgid "not decided"
 msgstr ""
 
 msgid "of"
@@ -5253,9 +5141,6 @@ msgstr ""
 msgid "participants-example"
 msgstr ""
 
-msgid "permitted"
-msgstr ""
-
 msgid "present"
 msgstr ""
 
@@ -5266,15 +5151,6 @@ msgid "published"
 msgstr ""
 
 msgid "red"
-msgstr ""
-
-msgid "referred to committee"
-msgstr ""
-
-msgid "rejected"
-msgstr ""
-
-msgid "rejected (not authorized)"
 msgstr ""
 
 msgid "remove"
@@ -5299,9 +5175,6 @@ msgid "started"
 msgstr ""
 
 msgid "stopped"
-msgstr ""
-
-msgid "submitted"
 msgstr ""
 
 msgid "successfully forwarded"
@@ -5345,9 +5218,6 @@ msgstr ""
 
 #: /app/src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component.ts
 msgid "will be updated"
-msgstr ""
-
-msgid "withdrawn"
 msgstr ""
 
 msgid "yellow"
