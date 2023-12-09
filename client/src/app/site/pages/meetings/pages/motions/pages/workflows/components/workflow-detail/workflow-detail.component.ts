@@ -326,10 +326,7 @@ Note: Does not affect the visibility of change recommendations.`
      * Opens a dialog to rename the workflow
      */
     public onEditWorkflowButton(): void {
-        this.openEditDialog(
-            this.workflow.name,
-            this.translate.instant(`Edit workflow`),
-        ).subscribe(result => {
+        this.openEditDialog(this.workflow.name, this.translate.instant(`Edit workflow`)).subscribe(result => {
             if (result && result.action === `update`) {
                 this.handleRequest(this.workflowRepo.update({ name: result.value! }, this.workflow).resolve());
             }
