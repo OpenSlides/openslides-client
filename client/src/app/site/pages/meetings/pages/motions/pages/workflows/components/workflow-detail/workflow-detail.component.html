@@ -70,7 +70,7 @@
                         </div>
                         <div *ngIf="perm.type === 'input'">
                             <div class="inner-table">
-                                {{ (getValueOfState(state, perm) | translate) || '–' }}
+                                {{ getValueOfState(state, perm) || '–' }}
                             </div>
                             <div
                                 class="clickable-cell stretch-to-fill-parent"

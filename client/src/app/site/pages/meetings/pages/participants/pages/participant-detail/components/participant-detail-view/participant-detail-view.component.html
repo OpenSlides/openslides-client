@@ -224,7 +224,7 @@
         <div *ngIf="usersGroups && usersGroups.length > 0">
             <h4>{{ 'Groups' | translate }}</h4>
             <os-comma-separated-listing [list]="usersGroups">
-                <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                <ng-template let-group>{{ group.getTitle() }}</ng-template>
             </os-comma-separated-listing>
         </div>
 

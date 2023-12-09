@@ -57,7 +57,7 @@
     >
         <os-icon-container *ngIf="mediafile.access_groups.length" icon="group">
             <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
-                <ng-template let-group>{{ $any(group).getTitle() | translate }}</ng-template>
+                <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
             </os-comma-separated-listing>
         </os-icon-container>
     </div>
@@ -69,7 +69,7 @@
         <button class="visible-for" mat-button (click)="onEditFile(directory)">
             <os-icon-container icon="group" matTooltip="{{ 'Allowed access groups for this directory' | translate }}">
                 <os-comma-separated-listing [list]="directory.inherited_access_groups" [showElementsAmount]="3">
-                    <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                    <ng-template let-group>{{ group.getTitle() }}</ng-template>
                 </os-comma-separated-listing>
             </os-icon-container>
         </button>
