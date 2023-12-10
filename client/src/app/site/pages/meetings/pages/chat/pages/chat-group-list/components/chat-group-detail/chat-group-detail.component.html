@@ -15,7 +15,7 @@
                 matTooltip="{{ 'Groups with write permissions' | translate }}"
             >
                 <os-comma-separated-listing [list]="group.write_groups" [showElementsAmount]="3">
-                    <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                    <ng-template let-group>{{ group.getTitle() }}</ng-template>
                 </os-comma-separated-listing>
             </os-icon-container>
         </div>
@@ -27,7 +27,7 @@
                 matTooltip="{{ 'Groups with read permissions' | translate }}"
             >
                 <os-comma-separated-listing [list]="getReadonlyGroups(group)" [showElementsAmount]="3">
-                    <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                    <ng-template let-group>{{ group.getTitle() }}</ng-template>
                 </os-comma-separated-listing>
             </os-icon-container>
         </div>

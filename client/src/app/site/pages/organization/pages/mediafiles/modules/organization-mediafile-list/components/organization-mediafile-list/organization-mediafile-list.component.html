@@ -1,6 +1,6 @@
 <os-head-bar
     [hasMainButton]="canEdit"
-    [mainActionTooltip]="'Upload files' | translate"
+    [mainActionTooltip]="'New file' | translate"
     [multiSelectMode]="isMultiSelect"
     (mainEvent)="onMainEvent()"
 >
@@ -14,7 +14,7 @@
         <button
             type="button"
             mat-icon-button
-            [matTooltip]="'Create new folder' | translate"
+            [matTooltip]="'New folder' | translate"
             (click)="createNewFolder(newFolderDialog)"
             *osOmlPerms="OML.can_manage_organization; and: !isMultiSelect"
         >

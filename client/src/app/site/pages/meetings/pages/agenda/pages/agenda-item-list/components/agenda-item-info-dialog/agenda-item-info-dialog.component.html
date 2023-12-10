@@ -5,7 +5,7 @@
         <mat-form-field *ngIf="isTagAvailable()">
             <mat-select formControlName="tag_ids" multiple placeholder="{{ 'Tags' | translate }}">
                 <mat-option *ngFor="let tag of tags" [value]="tag.id">
-                    {{ tag.getTitle() | translate }}
+                    {{ tag.getTitle() }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
