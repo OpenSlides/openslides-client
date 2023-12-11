@@ -229,7 +229,7 @@
                         </td>
                         <td [ngClass]="getCellClass(false, isLast, lastLine)">
                             <span *ngFor="let group of meeting_row.value.group_names; last as lastGroup">
-                                {{ group | translate }}{{ !lastGroup ? ', ' : '' }}
+                                {{ group }}{{ !lastGroup ? ', ' : '' }}
                             </span>
                         </td>
                     </tr>

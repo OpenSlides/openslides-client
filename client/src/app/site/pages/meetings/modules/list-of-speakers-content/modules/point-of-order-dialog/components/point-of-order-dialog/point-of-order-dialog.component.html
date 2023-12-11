@@ -8,7 +8,7 @@
             <mat-label>{{ 'Possible points of order' | translate }}</mat-label>
             <mat-select osAutofocus formControlName="category">
                 <mat-option *ngFor="let category of categoriesSubject | async" [value]="category.id">
-                    {{ category.getTitle() | translate }}
+                    {{ category.getTitle() }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
