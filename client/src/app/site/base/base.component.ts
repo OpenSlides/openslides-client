@@ -135,9 +135,13 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
         } else {
             errorNotification = message;
         }
-        this.messageSnackBar = this.matSnackBar.open(this.translate.instant(errorNotification), this.translate.instant(`OK`), {
-            duration: 0
-        });
+        this.messageSnackBar = this.matSnackBar.open(
+            this.translate.instant(errorNotification),
+            this.translate.instant(`OK`),
+            {
+                duration: 0
+            }
+        );
     };
 
     /**
