@@ -8,6 +8,7 @@ import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { AuthService } from 'src/app/site/services/auth.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -100,6 +101,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         private meetingRepo: MeetingControllerService,
         private userService: UserService,
         private snackbar: MatSnackBar,
+        private authService: AuthService,
         private translate: TranslateService
     ) {
         super();
@@ -151,11 +153,12 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     public async changePassword(): Promise<void> {
         const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
 
-        this.repo
-            .setPasswordSelf(this.self!, oldPassword, newPassword)
+        this.authService
+            .invalidateSessionAfter(() => this.repo.setPasswordSelf(this.self!, oldPassword, newPassword))
             .then(() => {
                 this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
                 this.changePasswordComponent.reset();
+                this.dialogRef.close();
             })
             .catch(e => {
                 if (e?.message) {
