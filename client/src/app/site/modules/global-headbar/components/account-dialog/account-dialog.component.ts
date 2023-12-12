@@ -184,6 +184,8 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     }
 
     private async updateIsUserInScope(): Promise<void> {
-        this._isUserInScope = await this.userService.hasScopeManagePerms(this.operator.operatorId);
+        if (this.operator.operatorId !== null) {
+            this._isUserInScope = await this.userService.hasScopeManagePerms(this.operator.operatorId);
+        }
     }
 }
