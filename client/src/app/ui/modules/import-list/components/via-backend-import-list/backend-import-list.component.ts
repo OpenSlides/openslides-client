@@ -356,6 +356,8 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
                 return this._state !== BackendImportPhase.FINISHED ? `merge` : `done`;
             case BackendImportState.Generated:
                 return `autorenew`;
+            case BackendImportState.Remove:
+                return `remove`;
             default:
                 return `block`; // fallback: Error
         }

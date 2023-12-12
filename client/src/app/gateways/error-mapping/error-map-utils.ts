@@ -62,6 +62,9 @@ const getActionErrorMap: (data: any) => ErrorMap | null = data => {
         case UserAction.SET_PASSWORD_SELF:
             return MatchAllErrorMap;
         default:
+            if (typeof actionName === `string` && actionName.endsWith(`.import`)) {
+                return MatchAllErrorMap;
+            }
             return null;
     }
 };
