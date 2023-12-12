@@ -5,7 +5,8 @@ export enum BackendImportState {
     Warning = `warning`,
     New = `new`,
     Done = `done`,
-    Generated = `generated`
+    Generated = `generated`,
+    Remove = `remove`
     // could be expanded later
 }
 
