@@ -1,7 +1,7 @@
 <os-head-bar
     [nav]="true"
     [hasMainButton]="canManage"
-    [mainActionTooltip]="'Create new projector' | translate"
+    [mainActionTooltip]="'New projector' | translate"
     (mainEvent)="createNewProjector(projectorDialog)"
 >
     <!-- Title -->
@@ -13,7 +13,7 @@
 <!-- Create projector dialog -->
 <ng-template #projectorDialog>
     <h1 mat-dialog-title>
-        <span>{{ 'New Projector' | translate }}</span>
+        <span>{{ 'New projector' | translate }}</span>
     </h1>
 
     <form [formGroup]="createForm">

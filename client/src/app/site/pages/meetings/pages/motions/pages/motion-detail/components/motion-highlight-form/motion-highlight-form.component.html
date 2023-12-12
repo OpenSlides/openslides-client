@@ -152,7 +152,7 @@
                 (click)="$event.stopPropagation()"
             >
                 <mat-form-field>
-                    <mat-label>{{ 'Linenumber' | translate }}</mat-label>
+                    <mat-label>{{ 'Start line number' | translate }}</mat-label>
                     <input matInput type="number" min="1" [(ngModel)]="startLineNumber" />
                     <button mat-icon-button matSuffix (click)="updateStartLineNumber()">
                         <mat-icon>check</mat-icon>

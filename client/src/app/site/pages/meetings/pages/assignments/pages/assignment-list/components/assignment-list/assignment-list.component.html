@@ -1,4 +1,9 @@
-<os-head-bar [hasMainButton]="canManageAssignments" (mainEvent)="onPlusButton()" [multiSelectMode]="isMultiSelect">
+<os-head-bar
+    [hasMainButton]="canManageAssignments"
+    [mainActionTooltip]="'New election' | translate"
+    (mainEvent)="onPlusButton()"
+    [multiSelectMode]="isMultiSelect"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Elections' | translate }}</h2>

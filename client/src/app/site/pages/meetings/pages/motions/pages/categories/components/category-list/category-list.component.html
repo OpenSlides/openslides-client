@@ -1,4 +1,9 @@
-<os-head-bar [nav]="false" [hasMainButton]="canEdit" (mainEvent)="onPlusButton()">
+<os-head-bar
+    [nav]="false"
+    [hasMainButton]="canEdit"
+    [mainActionTooltip]="'New category' | translate"
+    (mainEvent)="onPlusButton()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Categories' | translate }}</h2>

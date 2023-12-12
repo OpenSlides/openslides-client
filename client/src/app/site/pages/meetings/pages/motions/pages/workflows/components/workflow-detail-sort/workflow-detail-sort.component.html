@@ -9,7 +9,7 @@
         <os-sorting-list [input]="workflowStatesObservable" (sortEvent)="onSorting($event)" #sorter>
             <ng-template let-state let-index="index">
                 <div class="action-title">
-                    <div>{{ state.name | translate }}</div>
+                    <div>{{ state.name }}</div>
                     <div *ngIf="index === 0">{{ 'First state' | translate }}</div>
                 </div>
             </ng-template>

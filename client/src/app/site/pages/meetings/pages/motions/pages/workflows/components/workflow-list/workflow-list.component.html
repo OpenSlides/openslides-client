@@ -2,6 +2,7 @@
     [nav]="false"
     [hasMainButton]="true"
     (mainEvent)="onNewButton(newWorkflowDialog)"
+    [mainActionTooltip]="'New category' | translate"
     [multiSelectMode]="isMultiSelect"
 >
     <!-- Title -->
@@ -37,7 +38,7 @@
         class="cell-slot fill"
     >
         <os-detail-view-navigator [model]="workflow"></os-detail-view-navigator>
-        <div>{{ name | translate }}</div>
+        <div>{{ name }}</div>
     </div>
 
     <!-- Delete column -->
@@ -45,7 +46,12 @@
         *osScrollingTableCell="'delete'; row as workflow; config: { width: 40, position: END_POSITION }"
         class="cell-slot fill"
     >
-        <button type="button" mat-icon-button (click)="onDeleteWorkflow(workflow)">
+        <button
+            type="button"
+            mat-icon-button
+            (click)="onDeleteWorkflow(workflow)"
+            matTooltip="{{ 'Delete' | translate }}"
+        >
             <mat-icon color="warn">delete</mat-icon>
         </button>
     </div>

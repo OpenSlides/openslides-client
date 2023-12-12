@@ -146,7 +146,7 @@
                     mat-menu-item
                     (click)="setAmendmentState(change, state.id)"
                 >
-                    {{ state.name | translate }}
+                    {{ state.name }}
                     <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                 </button>
                 <mat-divider *ngIf="change.amendment.state.next_states.length > 0"></mat-divider>
@@ -156,7 +156,7 @@
                     (click)="setAmendmentState(change, state.id)"
                 >
                     <mat-icon>arrow_back</mat-icon>
-                    {{ state.name | translate }}
+                    {{ state.name }}
                     <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                 </button>
                 <button mat-menu-item (click)="resetAmendmentState(change)">

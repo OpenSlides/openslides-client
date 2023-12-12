@@ -1,7 +1,7 @@
 <os-head-bar
     [hasMainButton]="operator.hasOrganizationPermissions(OML.can_manage_organization)"
     [multiSelectMode]="isMultiSelect"
-    [mainActionTooltip]="'Create new committee' | translate"
+    [mainActionTooltip]="'New committee' | translate"
     (mainEvent)="createNewCommittee()"
 >
     <!-- Title -->

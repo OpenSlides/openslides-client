@@ -1,6 +1,6 @@
 <os-head-bar
     [hasMainButton]="perms.isAllowed('create')"
-    [mainActionTooltip]="'Create new motion' | translate"
+    [mainActionTooltip]="'New motion' | translate"
     (mainEvent)="onPlusButton()"
     [multiSelectMode]="isMultiSelect"
 >
@@ -29,7 +29,6 @@
                 *ngIf="selectedView === 'list'"
                 (click)="onChangeView('tiles')"
                 matTooltip="{{ 'Tile view' | translate }}"
-                matTooltipPosition="left"
             >
                 <mat-icon>view_module</mat-icon>
             </button>
@@ -39,7 +38,6 @@
                 *ngIf="selectedView === 'tiles'"
                 (click)="onChangeView('list')"
                 matTooltip="{{ 'List view' | translate }}"
-                matTooltipPosition="left"
             >
                 <mat-icon>view_headline</mat-icon>
             </button>
