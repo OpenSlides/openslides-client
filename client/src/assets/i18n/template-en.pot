@@ -2472,9 +2472,6 @@ msgstr ""
 msgid "Line spacing"
 msgstr ""
 
-msgid "Linenumber"
-msgstr ""
-
 msgid "List of electronic votes"
 msgstr ""
 
@@ -3330,11 +3327,7 @@ msgid "Please join the conference room now!"
 msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-detail/account-detail.component.html
-msgid "Please select a vote weight greater than or equal to 0.000001"
-msgstr ""
-
-#: /app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-detail/account-detail.component.html
-msgid "Please select a vote weight greater than zero."
+msgid "Please select a vote weight bigger than zero."
 msgstr ""
 
 msgid "Please select the directory:"
@@ -4020,6 +4013,10 @@ msgid "Start and end time must either both be set or both be empty"
 msgstr ""
 
 msgid "Start date"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/components/motion-highlight-form/motion-highlight-form.component.html
+msgid "Start line number"
 msgstr ""
 
 msgid "Start time"
