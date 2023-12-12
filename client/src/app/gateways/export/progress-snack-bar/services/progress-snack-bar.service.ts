@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
-    MatLegacySnackBar as MatSnackBar,
-    MatLegacySnackBarConfig as MatSnackBarConfig,
-    MatLegacySnackBarRef as MatSnackBarRef
-} from '@angular/material/legacy-snack-bar';
+    MatSnackBar,
+    MatSnackBarConfig,
+    MatSnackBarRef
+} from '@angular/material/snack-bar';
 
 import { ProgressSnackBarComponent } from '../components/progress-snack-bar/progress-snack-bar.component';
 import { ProgressSnackBarServiceModule } from './progress-snack-bar-service.module';

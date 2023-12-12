@@ -7,7 +7,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { LegacyProgressBarMode as ProgressBarMode } from '@angular/material/legacy-progress-bar';
-import { MatLegacySnackBarRef as MatSnackBarRef } from '@angular/material/legacy-snack-bar';
+import { MatSnackBarRef } from '@angular/material/snack-bar';
 import { distinctUntilChanged, Subscription } from 'rxjs';
 
 import { ProgressSnackBarControlService } from '../../services/progress-snack-bar-control.service';

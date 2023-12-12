@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
