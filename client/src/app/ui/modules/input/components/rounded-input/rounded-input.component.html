@@ -9,7 +9,6 @@
         [ngClass]="[size, borderRadius, hasChildren ? 'children-bottom' : '']"
         [formControl]="dedicatedContentForm"
         (keyup)="keyPressed($event)"
-        (keyup.enter)="send()"
         (blur)="blur()"
     />
     <div

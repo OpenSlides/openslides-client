@@ -182,6 +182,9 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
         if (this.clearOnEscape && event.key === `Escape`) {
             this.clear();
         }
+        if (this.clearOnEscape && event.key === `Enter`) {
+            this.send();
+        }
     }
 
     protected createForm(): UntypedFormControl {
