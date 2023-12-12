@@ -54,9 +54,6 @@ const MeetingCreateErrorMap: ErrorMap = new ErrorMap([
  */
 const getActionErrorMap: (data: any) => ErrorMap | null = data => {
     const actionName = Array.isArray(data) && typeof data[0] === `object` ? data[0][`action`] : null;
-    if (typeof actionName === `string` && actionName.endsWith(`.import`)) {
-        return MatchAllErrorMap;
-    }
     switch (actionName) {
         case MeetingAction.CREATE:
             return MeetingCreateErrorMap;
@@ -65,6 +62,9 @@ const getActionErrorMap: (data: any) => ErrorMap | null = data => {
         case UserAction.SET_PASSWORD_SELF:
             return MatchAllErrorMap;
         default:
+            if (typeof actionName === `string` && actionName.endsWith(`.import`)) {
+                return MatchAllErrorMap;
+            }
             return null;
     }
 };
