@@ -26,7 +26,6 @@ const GROUP_PROPERTY = `group_ids`;
 const MEETING_USER_PROPERTIES: (keyof MeetingUser)[] = [
     `about_me`,
     `comment`,
-    `structure_level`,
     `number`,
     `vote_weight`,
     `vote_delegated_to_id`,

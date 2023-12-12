@@ -10,7 +10,6 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
     public readonly comment!: string;
     public readonly number!: string;
     public readonly about_me!: string;
-    public readonly structure_level!: string;
     public readonly vote_weight!: number;
 
     public user_id!: Id;

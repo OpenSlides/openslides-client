@@ -1,4 +1,5 @@
 import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 
 import { Id } from '../../../../../../../../domain/definitions/key-types';
 import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';
@@ -6,7 +7,6 @@ import { SpeakerState } from '../../../../../../../../domain/models/speakers/spe
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 import { ViewPointOfOrderCategory } from './view-point-of-order-category';
-import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 /**
  * Provides "safe" access to a speaker with all it's components
  */

@@ -152,7 +152,6 @@ export class UserControllerService extends BaseController<ViewUser, User> {
     public parseStringIntoUser(inputUser: string, schema: StringNamingSchema = `firstSpaceLast`): FullNameInformation {
         const newUser: FullNameInformation = {
             username: ``,
-            structure_level: () => ``,
             number: () => ``,
             first_name: ``,
             last_name: ``

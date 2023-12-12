@@ -26,7 +26,7 @@ export class StructureLevelRepositoryService extends BaseMeetingRelatedRepositor
         const payload: any[] = models.map(model => ({
             meeting_id: model.meeting_id || meeting_id,
             name: model.name,
-            color: model.color,
+            color: model.color
         }));
         return this.createAction(StructureLevelAction.CREATE, payload);
     }
@@ -36,7 +36,7 @@ export class StructureLevelRepositoryService extends BaseMeetingRelatedRepositor
         const payload: any[] = models.map(model => ({
             id: model.id ?? id,
             name: model.name,
-            color: model.color,
+            color: model.color
         }));
         return this.createAction(StructureLevelAction.UPDATE, payload);
     }

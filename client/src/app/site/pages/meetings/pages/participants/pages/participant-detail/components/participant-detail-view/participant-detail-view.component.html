@@ -93,22 +93,6 @@
                 </mat-checkbox>
             </div>
             <div>
-                <!-- Strucuture Level -->
-                <mat-form-field
-                    class="distance"
-                    [ngClass]="{
-                        form37: showVoteWeight,
-                        form70: !showVoteWeight
-                    }"
-                >
-                    <input
-                        type="text"
-                        matInput
-                        placeholder="{{ 'Structure level' | translate }}"
-                        formControlName="structure_level"
-                    />
-                </mat-form-field>
-
                 <!-- Participant Number -->
                 <mat-form-field
                     [ngClass]="{
@@ -205,12 +189,6 @@
                 <h4>{{ 'Last login' | translate }}</h4>
                 <span>{{ user.last_login | localizedDate }}</span>
             </div>
-        </div>
-
-        <!-- Structure Level -->
-        <div *ngIf="user?.structure_level()">
-            <h4>{{ 'Structure level' | translate }}</h4>
-            <span>{{ user!.structure_level() }}</span>
         </div>
 
         <!-- Participant number -->

@@ -11,11 +11,14 @@ import {
 import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
 import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/projector.constants';
 import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
+import {
+    ViewStructureLevel,
+    ViewStructureLevelListOfSpeakers
+} from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { ViewPollCandidate } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewResource } from 'src/app/site/pages/organization/pages/resources';
-import { ViewStructureLevel, ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 
 import { BaseViewModel, ViewModelConstructor } from '../../../site/base/base-view-model';
 import {

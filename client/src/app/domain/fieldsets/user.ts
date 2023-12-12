@@ -10,7 +10,6 @@ export class UserFieldsets {
             `username`,
             `gender`,
             `default_number`,
-            `default_structure_level`,
             `default_vote_weight`
         ]
     };

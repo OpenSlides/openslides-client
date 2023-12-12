@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
 import { getParticipantListSubscriptionConfig } from '../../participants.subscription';
+import { getStructureLevelListSubscriptionConfig } from '../../participants.subscription';
 
 @Component({
     selector: `os-participant-main`,
@@ -11,7 +12,9 @@ import { getParticipantListSubscriptionConfig } from '../../participants.subscri
 export class ParticipantMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(getParticipantListSubscriptionConfig(id), { hideWhenMeetingChanged: true });
+            this.subscribeTo([getParticipantListSubscriptionConfig(id), getStructureLevelListSubscriptionConfig(id)], {
+                hideWhenMeetingChanged: true
+            });
         }
     }
 }

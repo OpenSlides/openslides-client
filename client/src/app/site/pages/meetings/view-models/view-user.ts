@@ -209,14 +209,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         }
     }
 
-    public structure_level(meetingId?: Id): string {
-        try {
-            return this.getMeetingUser(meetingId)?.structure_level || this.default_structure_level;
-        } catch (e) {
-            return this.user.default_structure_level;
-        }
-    }
-
     public comment(meetingId?: Id): string {
         return this.getMeetingUser(meetingId)?.comment;
     }
