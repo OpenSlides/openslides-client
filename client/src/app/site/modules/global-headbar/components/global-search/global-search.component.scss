@@ -1,7 +1,6 @@
 .search-form-container {
     width: 800px;
     max-width: 100%;
-    padding-bottom: 24px;
     .search-top-form {
         display: flex;
         .search-input-container {
@@ -88,7 +87,7 @@
         ::ng-deep mark {
             color: inherit;
             background: none;
-            font-weight: bolder;
+            font-weight: 500;
         }
 
         ::ng-deep :not(h3, h3 > span) > mark {
@@ -140,6 +139,16 @@
 
 .mat-dialog-content {
     max-height: calc(75vh - 193px);
+}
+
+.close-button-container {
+    position: relative;
+    height: 25px;
+    > button {
+        position: absolute;
+        top: -15px;
+        right: -15px;
+    }
 }
 
 @media (max-width: 959.99px) {
