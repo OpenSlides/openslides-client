@@ -299,8 +299,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             username: [
                 ``,
                 this.isNewUser
-                    ? [this.createUsernameWithoutSpace()]
-                    : [Validators.required, this.createUsernameWithoutSpace()]
+                    ? [this.noSpaceValidator()]
+                    : [Validators.required, this.noSpaceValidator()]
             ],
             pronoun: [``, Validators.maxLength(32)],
             title: [``],
@@ -325,7 +325,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         });
     }
 
-    private createUsernameWithoutSpace(): ValidationErrors | null {
+    private noSpaceValidator(): ValidationErrors | null {
         return (control: AbstractControl): ValidationErrors | null => {
             const value = control.value;
 
