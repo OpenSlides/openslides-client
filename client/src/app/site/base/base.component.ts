@@ -1,9 +1,5 @@
 import { Directive, OnDestroy } from '@angular/core';
-import {
-    SimpleSnackBar,
-    MatSnackBar,
-    MatSnackBarRef
-} from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
