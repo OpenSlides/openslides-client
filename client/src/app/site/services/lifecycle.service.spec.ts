@@ -23,10 +23,6 @@ describe(`LifecycleService`, () => {
         expect(service.isBooted).toBe(false);
         service.bootup();
         expect(service.isBooted).toBe(true);
-        service.reboot();
-        expect(service.isBooted).toBe(true);
-        await service.reset();
-        expect(service.isBooted).toBe(true);
         service.shutdown();
         expect(service.isBooted).toBe(false);
     });
@@ -35,7 +31,6 @@ describe(`LifecycleService`, () => {
         let booted = false;
         service.openslidesBooted.subscribe(() => (booted = true));
         expect(service.isBooted).toBe(false);
-        expect(booted).toBe(false);
         service.bootup();
         expect(service.isBooted).toBe(true);
         expect(booted).toBe(true);
@@ -50,10 +45,29 @@ describe(`LifecycleService`, () => {
         service.shutdown();
         expect(service.isBooted).toBe(false);
         expect(shutdowned).toBe(true);
-        shutdowned = false;
-        service.bootup();
+    });
+
+    it(`check reboot()`, () => {
+        let booted = false;
+        let shutdowned = false;
+        service.openslidesBooted.subscribe(() => (booted = true));
+        service.openslidesShutdowned.subscribe(() => (shutdowned = true));
+        expect(service.isBooted).toBe(false);
         service.reboot();
         expect(service.isBooted).toBe(true);
         expect(shutdowned).toBe(true);
+        expect(booted).toBe(true);
+    });
+
+    it(`check reset()`, async () => {
+        let booted = false;
+        let shutdowned = false;
+        service.openslidesBooted.subscribe(() => (booted = true));
+        service.openslidesShutdowned.subscribe(() => (shutdowned = true));
+        expect(service.isBooted).toBe(false);
+        await service.reset();
+        expect(service.isBooted).toBe(true);
+        expect(shutdowned).toBe(true);
+        expect(booted).toBe(true);
     });
 });
