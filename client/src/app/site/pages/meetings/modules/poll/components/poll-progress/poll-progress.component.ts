@@ -96,6 +96,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
     }
 
     public get valueInPercent(): number {
+        console.log(this.votescast, this.max, (this.votescast / this.max) * 100);
         return (this.votescast / this.max) * 100;
     }
 }

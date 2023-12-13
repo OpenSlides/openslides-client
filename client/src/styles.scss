@@ -54,6 +54,10 @@
 @import 'assets/styles/material/icon.scss';
 @import 'assets/styles/pbl.scss';
 
+.mat-mdc-progress-bar {
+    --mdc-linear-progress-track-color: var(--theme-primary-100);
+}
+
 /**
 * Must be cleaned up
 */
