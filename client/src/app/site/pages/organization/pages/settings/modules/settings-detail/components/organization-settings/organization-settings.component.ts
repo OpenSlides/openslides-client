@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
@@ -23,13 +23,23 @@ export class OrganizationSettingsComponent extends BaseComponent {
     public readonly translations = availableTranslations;
 
     public orgaSettingsForm: UntypedFormGroup | null = null;
+    public newGenderForm: UntypedFormControl | null = null;
+
+    private areGendersEdited = false;
 
     public get hasEdits(): boolean {
-        return this.orgaSettingsForm?.dirty || false;
+        return this.orgaSettingsForm?.dirty || this.areGendersEdited || false;
     }
 
     public get ssoConfigRows(): number {
         return this._ssoConfigRows;
+    }
+
+    public genders: string[] = [];
+
+    public get is_new_gender_legal(): boolean {
+        const new_gender = this.newGenderForm.value;
+        return new_gender && !this.genders.includes(new_gender);
     }
 
     private _ssoConfigRows = 3;
@@ -76,6 +86,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 users_email_subject: [this._currentOrgaSettings.users_email_subject],
                 default_language: [this._currentOrgaSettings.default_language]
             };
+            this.newGenderForm = this.formBuilder.control([``]);
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {
                     ...rawSettingsForm,
@@ -98,6 +109,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                     saml_private_key: [this._currentOrgaSettings.saml_private_key]
                 };
             }
+            this.genders = [...(this._currentOrgaSettings.genders ?? [])];
         } else {
             console.warn(`no Organization loaded`);
         }
@@ -111,6 +123,19 @@ export class OrganizationSettingsComponent extends BaseComponent {
         }
     }
 
+    public addGender(): void {
+        if (this.is_new_gender_legal) {
+            this.genders.push(this.newGenderForm.value);
+            this.newGenderForm.setValue(``);
+            this.areGendersEdited = true;
+        }
+    }
+
+    public removeGender(toRemove: string): void {
+        this.genders = this.genders.filter(gender => gender != toRemove);
+        this.areGendersEdited = true;
+    }
+
     private markFormAsClean(): void {
         if (this.orgaSettingsForm) {
             this.orgaSettingsForm.markAsUntouched();
@@ -122,13 +147,15 @@ export class OrganizationSettingsComponent extends BaseComponent {
         if (!this.orgaSettingsForm) {
             this.orgaSettingsForm = this.createForm();
         }
-        const patchMeeting: any = viewOrganization.organization;
-        if (patchMeeting.saml_attr_mapping) {
-            const attrMapping = objectToFormattedString(patchMeeting.saml_attr_mapping);
-            patchMeeting.saml_attr_mapping = attrMapping;
+        const patchOrga: any = viewOrganization.organization;
+        if (patchOrga.saml_attr_mapping) {
+            const attrMapping = objectToFormattedString(patchOrga.saml_attr_mapping);
+            patchOrga.saml_attr_mapping = attrMapping;
             this._ssoConfigRows = attrMapping.split(`\n`).length;
         }
-        this.orgaSettingsForm!.patchValue(patchMeeting);
+        this.genders = [...(patchOrga.genders ?? [])];
+        this.areGendersEdited = false;
+        this.orgaSettingsForm!.patchValue(patchOrga);
     }
 
     public onSubmit(): void {
@@ -143,6 +170,10 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 delete payload[key];
             }
         }
+        if (this.genders.difference(this._currentOrgaSettings.genders ?? [], true).length) {
+            payload[`genders`] = this.genders;
+        }
+        this.areGendersEdited = false;
         this.controller
             .update(payload)
             .then(() => this.markFormAsClean())

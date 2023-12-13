@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
@@ -26,6 +27,7 @@ import { SettingsDetailRoutingModule } from './settings-detail-routing.module';
         MatSelectModule,
         MatCardModule,
         MatCheckboxModule,
+        MatIconModule,
         OpenSlidesTranslationModule.forChild(),
         DirectivesModule
     ]

@@ -65,6 +65,37 @@
         </div>
     </mat-card>
 
+    <mat-card class="os-card spacer-bottom-60">
+        <div class="orga-settings-form">
+            <h2>{{ 'Genders' | translate }}</h2>
+            <table>
+                <ng-container *ngFor="let gender of genders">
+                    <tr>
+                        <td>{{ gender }}</td>
+                        <td>
+                            <button mat-icon-button type="button" (click)="removeGender(gender)">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-container>
+                <tr>
+                    <td>
+                        <mat-form-field style="width: 100%">
+                            <mat-label>{{ 'Add gender' | translate }}</mat-label>
+                            <input matInput [formControl]="newGenderForm" />
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <button mat-icon-button type="button" (click)="addGender()">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </mat-card>
+
     <mat-card class="os-card margin-bottom-60" *osOmlPerms="OML.superadmin">
         <div class="superadmin-place">
             <h2>{{ 'Superadmin settings' | translate }}</h2>
