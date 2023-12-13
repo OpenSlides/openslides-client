@@ -20,10 +20,10 @@ import {
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { GENDERS } from '../../../../../domain/models/users/user';
 import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
 import { OneOfValidator } from '../../validators';
 
@@ -119,7 +119,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     public personalInfoForm!: UntypedFormGroup;
 
-    public genders = GENDERS;
+    public genders = [];
 
     public get isSelf(): boolean {
         return this.operator.operatorId === this._user?.id;
@@ -146,8 +146,14 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private selfUpdateEnabled = false;
 
-    public constructor(private fb: UntypedFormBuilder, private operator: OperatorService) {
+    public constructor(
+        private fb: UntypedFormBuilder,
+        private operator: OperatorService,
+        orgaSettings: OrganizationSettingsService
+    ) {
         super();
+
+        this.subscriptions.push(orgaSettings.get(`genders`).subscribe(genders => (this.genders = genders)));
     }
 
     public ngOnInit(): void {
@@ -348,6 +354,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             });
             if (this.user.saml_id && newData[`default_password`]) {
                 delete newData[`default_password`];
+            }
+            if (!this.genders.includes(newData[`genders`])) {
+                delete newData[`genders`];
             }
             return newData;
         }

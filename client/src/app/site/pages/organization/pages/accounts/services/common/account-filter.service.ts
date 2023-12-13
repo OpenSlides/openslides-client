@@ -8,6 +8,8 @@ import { ActiveFiltersService } from 'src/app/site/services/active-filters.servi
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
+import { OrganizationSettingsService } from '../../../../services/organization-settings.service';
+
 type Email = string;
 type Name = string;
 
@@ -24,7 +26,8 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
         store: ActiveFiltersService,
         private translate: TranslateService,
         private operator: OperatorService,
-        private controller: UserControllerService
+        private controller: UserControllerService,
+        private orgaSettings: OrganizationSettingsService
     ) {
         super(store);
 
@@ -86,10 +89,10 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 property: `gender`,
                 label: this.translate.instant(`Gender`),
                 options: [
-                    { condition: `female`, label: this.translate.instant(`female`) },
-                    { condition: `male`, label: this.translate.instant(`male`) },
-                    { condition: `diverse`, label: this.translate.instant(`diverse`) },
-                    { condition: `non-binary`, label: this.translate.instant(`non-binary`) },
+                    ...(this.orgaSettings.instant(`genders`) ?? []).map(gender => ({
+                        condition: gender,
+                        label: this.translate.instant(gender)
+                    })),
                     { condition: null, label: this.translate.instant(`unknown`) }
                 ]
             },

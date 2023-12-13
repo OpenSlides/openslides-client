@@ -1,13 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { GENDERS } from 'src/app/domain/models/users/user';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { UserService } from 'src/app/site/services/user.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
@@ -19,7 +19,7 @@ import { InfoDialog } from '../../services/participant-list-info-dialog.service'
     styleUrls: [`./participant-list-info-dialog.component.scss`]
 })
 export class ParticipantListInfoDialogComponent extends BaseUiComponent implements OnInit {
-    public readonly genders = GENDERS;
+    public genders: string[] = [];
 
     public get groupsObservable(): Observable<ViewGroup[]> {
         return this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
@@ -47,9 +47,12 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         private participantRepo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
         private userService: UserService,
-        private meetingSettings: MeetingSettingsService
+        private meetingSettings: MeetingSettingsService,
+        orgaSettings: OrganizationSettingsService
     ) {
         super();
+
+        this.subscriptions.push(orgaSettings.get(`genders`).subscribe(genders => (this.genders = genders)));
     }
 
     public ngOnInit(): void {

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
 import { OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
 import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import { ParticipantListServiceModule } from '../participant-list-service.module';
@@ -33,7 +33,8 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         store: MeetingActiveFiltersService,
         groupRepo: GroupControllerService,
         private translate: TranslateService,
-        private meetingSettings: MeetingSettingsService
+        private meetingSettings: MeetingSettingsService,
+        private orgaSettings: OrganizationSettingsService
     ) {
         super(store);
         this.updateFilterForRepo({
@@ -103,10 +104,10 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 property: `gender`,
                 label: this.translate.instant(`Gender`),
                 options: [
-                    { condition: GENDER_FITLERABLE[0], label: this.translate.instant(GENDERS[0]) },
-                    { condition: GENDER_FITLERABLE[1], label: this.translate.instant(GENDERS[1]) },
-                    { condition: GENDER_FITLERABLE[2], label: this.translate.instant(GENDERS[2]) },
-                    { condition: GENDER_FITLERABLE[3], label: this.translate.instant(GENDERS[3]) },
+                    ...(this.orgaSettings.instant(`genders`) ?? []).map(gender => ({
+                        condition: gender,
+                        label: this.translate.instant(gender)
+                    })),
                     { condition: null, label: this.translate.instant(`unknown`) }
                 ]
             },

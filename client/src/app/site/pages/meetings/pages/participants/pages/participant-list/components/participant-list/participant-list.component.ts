@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { GENDERS } from 'src/app/domain/models/users/user';
 import { UserStateField } from 'src/app/gateways/repositories/users';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
@@ -50,7 +49,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     /**
      * The list of all genders.
      */
-    public genderList = GENDERS;
+    public genderList: string[] = [];
 
     /**
      * Stores the observed configuration if the presence view is available to administrators
@@ -128,7 +127,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         private organizationSettingsService: OrganizationSettingsService,
         private route: ActivatedRoute,
         private prompt: PromptService,
-        private interactionService: InteractionService
+        private interactionService: InteractionService,
+        orgaSettings: OrganizationSettingsService
     ) {
         super(componentServiceCollector, translate);
 
@@ -151,7 +151,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 .subscribe(enabled => (this.voteDelegationEnabled = enabled)),
             this.meetingSettingsService
                 .get(`users_allow_self_set_present`)
-                .subscribe(allowed => (this._allowSelfSetPresent = allowed))
+                .subscribe(allowed => (this._allowSelfSetPresent = allowed)),
+            orgaSettings.get(`genders`).subscribe(genders => (this.genderList = genders))
         );
     }
 
