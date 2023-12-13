@@ -26,6 +26,12 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         options: []
     };
 
+    private userGenderFilterOptions: OsFilter<ViewUser> = {
+        property: `gender`,
+        label: this.translate.instant(`Gender`),
+        options: []
+    };
+
     private _voteWeightEnabled: boolean;
     private _voteDelegationEnabled: boolean;
 
@@ -45,6 +51,16 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         this.meetingSettings
             .get(`users_enable_vote_delegations`)
             .subscribe(value => (this._voteDelegationEnabled = value));
+        this.orgaSettings.get(`genders`).subscribe(genders => {
+            this.userGenderFilterOptions.options = [
+                ...(genders ?? []).map(gender => ({
+                    condition: gender,
+                    label: this.translate.instant(gender)
+                })),
+                { condition: null, label: this.translate.instant(`unknown`) }
+            ];
+            this.updateFilterDefinitions();
+        });
     }
 
     /**
@@ -101,17 +117,6 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 ]
             },
             {
-                property: `gender`,
-                label: this.translate.instant(`Gender`),
-                options: [
-                    ...(this.orgaSettings.instant(`genders`) ?? []).map(gender => ({
-                        condition: gender,
-                        label: this.translate.instant(gender)
-                    })),
-                    { condition: null, label: this.translate.instant(`unknown`) }
-                ]
-            },
-            {
                 property: `hasSamlId`,
                 label: this.translate.instant(`SSO`),
                 options: [
@@ -138,7 +143,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 ]
             }
         ];
-        return staticFilterOptions.concat(this.userGroupFilterOptions);
+        return staticFilterOptions.concat(this.userGroupFilterOptions, this.userGenderFilterOptions);
     }
 
     protected override getHideFilterSettings(): OsHideFilterSetting<ViewUser>[] {

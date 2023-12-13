@@ -22,6 +22,12 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
     private userEmailMap = new Map<Email, Id[]>();
     private userNameMap = new Map<Name, Id[]>();
 
+    private userGenderFilterOptions: OsFilter<ViewUser> = {
+        property: `gender`,
+        label: this.translate.instant(`Gender`),
+        options: []
+    };
+
     public constructor(
         store: ActiveFiltersService,
         private translate: TranslateService,
@@ -33,6 +39,16 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
 
         this.controller.getViewModelListObservable().subscribe(users => {
             this.updateUserMaps(users);
+        });
+        this.orgaSettings.get(`genders`).subscribe(genders => {
+            this.userGenderFilterOptions.options = [
+                ...(genders ?? []).map(gender => ({
+                    condition: gender,
+                    label: this.translate.instant(gender)
+                })),
+                { condition: null, label: this.translate.instant(`unknown`) }
+            ];
+            this.updateFilterDefinitions();
         });
     }
 
@@ -83,17 +99,6 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 options: [
                     { condition: true, label: this.translate.instant(`Is a natural person`) },
                     { condition: [false, null], label: this.translate.instant(`Is no natural person`) }
-                ]
-            },
-            {
-                property: `gender`,
-                label: this.translate.instant(`Gender`),
-                options: [
-                    ...(this.orgaSettings.instant(`genders`) ?? []).map(gender => ({
-                        condition: gender,
-                        label: this.translate.instant(gender)
-                    })),
-                    { condition: null, label: this.translate.instant(`unknown`) }
                 ]
             },
             {
@@ -169,7 +174,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 ]
             }
         ];
-        return staticFilterDefinitions.concat(nonStaticFilterDefinitions);
+        return staticFilterDefinitions.concat(...nonStaticFilterDefinitions, this.userGenderFilterOptions);
     }
 
     protected override getFilterPropertyFunctionArguments(property: keyof ViewUser): any[] {
