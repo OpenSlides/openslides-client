@@ -11,6 +11,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { StructureLevelControllerService } from '../../services/structure-level-controller.service';
+import { StructureLevelSortService } from '../../services/structure-level-sort.service';
 
 @Component({
     selector: `os-structure-level-list`,
@@ -50,7 +51,8 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
         private dialog: MatDialog,
         private promptService: PromptService,
         private cd: ChangeDetectorRef,
-        private operator: OperatorService
+        private operator: OperatorService,
+        public sortService: StructureLevelSortService
     ) {
         super(componentServiceCollector, translate);
         super.setTitle(`Structure Levels`);
