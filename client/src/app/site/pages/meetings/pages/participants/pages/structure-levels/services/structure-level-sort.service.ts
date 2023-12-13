@@ -17,9 +17,7 @@ export class StructureLevelSortService extends BaseSortListService<ViewStructure
 
     protected repositoryToken: ProviderToken<BaseRepository<any, any>> = StructureLevelRepositoryService;
 
-    private StructureLevelSortOptions: OsSortingOption<ViewStructureLevel>[] = [
-        { property: `name` },
-    ];
+    private StructureLevelSortOptions: OsSortingOption<ViewStructureLevel>[] = [{ property: `name` }];
 
     public constructor(translate: TranslateService, store: StorageService, injector: Injector) {
         super(translate, store, injector, {

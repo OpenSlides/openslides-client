@@ -73,7 +73,7 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
             .setValue(this.currentStructureLevel ? this.currentStructureLevel.name : ``);
         this.structureLevelForm
             .get(`color`)!
-            .setValue(this.currentStructureLevel ? this.currentStructureLevel.color : ``);
+            .setValue(this.currentStructureLevel ? this.currentStructureLevel.color : `#000000`);
         this.dialogRef = this.dialog.open(this.structureLevelDialog!, infoDialogSettings);
         this.dialogRef.afterClosed().subscribe(res => {
             if (res) {
