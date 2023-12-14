@@ -135,9 +135,13 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
         } else {
             errorNotification = message;
         }
-        this.messageSnackBar = this.matSnackBar.open(errorNotification, this.translate.instant(`OK`), {
-            duration: 0
-        });
+        this.messageSnackBar = this.matSnackBar.open(
+            this.translate.instant(errorNotification),
+            this.translate.instant(`OK`),
+            {
+                duration: 0
+            }
+        );
     };
 
     /**
@@ -145,7 +149,7 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
      * This snack bar will only dismiss if the user clicks the 'OK'-button.
      */
     protected raiseWarning = (message: string): void => {
-        this.messageSnackBar = this.matSnackBar.open(message, this.translate.instant(`OK`));
+        this.messageSnackBar = this.matSnackBar.open(this.translate.instant(message), this.translate.instant(`OK`));
     };
 
     /**

@@ -1,7 +1,7 @@
 <os-head-bar
     [hasMainButton]="isAllowed('changePersonal') && !!user"
     mainButtonIcon="edit"
-    [mainActionTooltip]="'Edit participant' | translate"
+    [mainActionTooltip]="'Edit' | translate"
     [nav]="false"
     [goBack]="!isAllowed('seeOtherUsers')"
     [editMode]="isEditingSubject.value"
@@ -135,6 +135,12 @@
                         placeholder="{{ 'Vote weight' | translate }}"
                         formControlName="vote_weight"
                     />
+                    <mat-error *ngIf="isVoteWeightError && form.controls['vote_weight'].value > 0" translate>
+                        Please select a vote weight greater than or equal to 0.000001
+                    </mat-error>
+                    <mat-error *ngIf="isVoteWeightError && form.controls['vote_weight'].value <= 0" translate>
+                        Please select a vote weight greater than zero.
+                    </mat-error>
                 </mat-form-field>
             </div>
 
@@ -224,7 +230,7 @@
         <div *ngIf="usersGroups && usersGroups.length > 0">
             <h4>{{ 'Groups' | translate }}</h4>
             <os-comma-separated-listing [list]="usersGroups">
-                <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                <ng-template let-group>{{ group.getTitle() }}</ng-template>
             </os-comma-separated-listing>
         </div>
 

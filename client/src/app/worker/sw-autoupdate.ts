@@ -98,7 +98,7 @@ function openConnection(
     for (const queue of Object.keys(subscriptionQueues)) {
         const fulfillingSubscription = subscriptionQueues[queue].find(s => s.fulfills(queryParams, request));
         if (fulfillingSubscription) {
-            fulfillingSubscription.addPort(ctx);
+            fulfillingSubscription.addPort(ctx, requestHash);
             return;
         }
     }
@@ -112,10 +112,10 @@ function openConnection(
             autoupdatePool.addSubscription(subscription, existingSubscription.stream);
             subscription.resendTo(ctx);
         } else {
-            existingSubscription.addPort(ctx);
+            existingSubscription.addPort(ctx, requestHash);
         }
 
-        if (!existingSubscription.stream.active) {
+        if (!existingSubscription.stream?.active) {
             autoupdatePool.reconnect(existingSubscription.stream, false);
         }
         return;

@@ -292,7 +292,7 @@ Note: Does not affect the visibility of change recommendations.`
      * @param state the selected workflow state
      */
     public onClickStateName(state: ViewMotionState): void {
-        this.openEditDialog(state.name, this.translate.instant(`Rename state`), ``, true).subscribe(result => {
+        this.openEditDialog(state.name, this.translate.instant(`Edit state`), ``, true).subscribe(result => {
             if (result) {
                 if (result.action === `update`) {
                     this.updateWorkflowStateName(result.value!, state);
@@ -326,11 +326,7 @@ Note: Does not affect the visibility of change recommendations.`
      * Opens a dialog to rename the workflow
      */
     public onEditWorkflowButton(): void {
-        this.openEditDialog(
-            this.workflow.name,
-            this.translate.instant(`Edit name`),
-            this.translate.instant(`Please enter a new workflow name:`)
-        ).subscribe(result => {
+        this.openEditDialog(this.workflow.name, this.translate.instant(`Edit workflow`)).subscribe(result => {
             if (result && result.action === `update`) {
                 this.handleRequest(this.workflowRepo.update({ name: result.value! }, this.workflow).resolve());
             }
@@ -345,7 +341,7 @@ Note: Does not affect the visibility of change recommendations.`
      * @param state The selected workflow state
      */
     public onClickInputPerm(perm: StatePerm, state: ViewMotionState): void {
-        this.openEditDialog((<any>state)[perm.selector], `Edit`, perm.name, false, true).subscribe(result => {
+        this.openEditDialog((<any>state)[perm.selector], `Edit state`, perm.name, false, true).subscribe(result => {
             if (!result) {
                 return;
             }
