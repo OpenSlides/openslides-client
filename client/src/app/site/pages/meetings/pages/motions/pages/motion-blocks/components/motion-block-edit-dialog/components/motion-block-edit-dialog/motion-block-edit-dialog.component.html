@@ -4,7 +4,8 @@
 <div class="os-form-card-mobile" mat-dialog-content>
     <form class="edit-form" [formGroup]="blockEditForm" (ngSubmit)="saveBlock()" (keydown)="onKeyDown($event)">
         <mat-form-field>
-            <input matInput osAutofocus placeholder="{{ 'Title' | translate }}" formControlName="title" required />
+            <mat-label>{{ 'Title' | translate }}</mat-label>
+            <input matInput osAutofocus formControlName="title" required />
         </mat-form-field>
         <mat-checkbox formControlName="internal">Internal</mat-checkbox>
     </form>

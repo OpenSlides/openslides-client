@@ -1,11 +1,11 @@
 <div class="motion-text-toolbar-wrapper" *ngIf="!isStatuteAmendment">
     <div class="motion-text-controls">
         <mat-form-field class="motion-goto-line" *ngIf="highlightedLineOpened">
+            <mat-label>{{ 'Go to line' | translate }}</mat-label>
             <input
                 type="number"
                 min="1"
                 matInput
-                placeholder="{{ 'Go to line' | translate }}"
                 osAutofocus
                 [osOnlyNumber]="true"
                 (keydown)="onKeyDown($event)"
@@ -152,13 +152,8 @@
                 (click)="$event.stopPropagation()"
             >
                 <mat-form-field>
-                    <input
-                        matInput
-                        type="number"
-                        min="1"
-                        placeholder="{{ 'Start line number' | translate }}"
-                        [(ngModel)]="startLineNumber"
-                    />
+                    <mat-label>{{ 'Start line number' | translate }}</mat-label>
+                    <input matInput type="number" min="1" [(ngModel)]="startLineNumber" />
                     <button mat-icon-button matSuffix (click)="updateStartLineNumber()">
                         <mat-icon>check</mat-icon>
                     </button>

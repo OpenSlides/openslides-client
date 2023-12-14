@@ -50,36 +50,27 @@
         <div class="personal-info-area">
             <!-- Title -->
             <mat-form-field class="form16 force-min-width">
-                <input type="text" matInput placeholder="{{ 'Title' | translate }}" formControlName="title" />
+                <mat-label>{{ 'Title' | translate }}</mat-label>
+                <input type="text" matInput formControlName="title" />
             </mat-form-field>
             <!-- First name -->
             <mat-form-field class="form37 force-min-width">
-                <input
-                    type="text"
-                    osAutofocus
-                    matInput
-                    placeholder="{{ 'Given name' | translate }}"
-                    formControlName="first_name"
-                />
+                <mat-label>{{ 'Given name' | translate }}</mat-label>
+                <input type="text" osAutofocus matInput formControlName="first_name" />
             </mat-form-field>
 
             <!-- Last name -->
             <mat-form-field class="form37 force-min-width">
-                <input type="text" matInput placeholder="{{ 'Surname' | translate }}" formControlName="last_name" />
+                <mat-label>{{ 'Surname' | translate }}</mat-label>
+                <input type="text" matInput formControlName="last_name" />
             </mat-form-field>
         </div>
 
         <div class="personal-info-area">
             <!-- E-Mail -->
             <mat-form-field class="width-58p force-min-width">
-                <input
-                    type="email"
-                    matInput
-                    autocomplete="off"
-                    placeholder="{{ 'Email' | translate }}"
-                    name="email"
-                    formControlName="email"
-                />
+                <mat-label>{{ 'Email' | translate }}</mat-label>
+                <input type="email" matInput autocomplete="off" name="email" formControlName="email" />
                 <mat-error *ngIf="personalInfoForm.get('email')?.hasError('email')">
                     {{ 'Please enter a valid email address!' | translate }}
                 </mat-error>
@@ -87,13 +78,15 @@
 
             <!-- Pronoun -->
             <mat-form-field class="width-16p force-min-width">
-                <input type="text" matInput placeholder="{{ 'Pronoun' | translate }}" formControlName="pronoun" />
+                <mat-label>{{ 'Pronoun' | translate }}</mat-label>
+                <input type="text" matInput formControlName="pronoun" />
                 <mat-error>{{ 'max. 32 characters allowed' | translate }}</mat-error>
             </mat-form-field>
 
             <!-- Gender -->
             <mat-form-field class="width-16p force-min-width">
-                <mat-select placeholder="{{ 'Gender' | translate }}" formControlName="gender">
+                <mat-label>{{ 'Gender' | translate }}</mat-label>
+                <mat-select formControlName="gender">
                     <mat-option [value]="null">-</mat-option>
                     <mat-option *ngFor="let gender of genders" [value]="gender">
                         {{ gender | translate }}
@@ -105,7 +98,8 @@
         <!-- username -->
         <div *ngIf="isAllowed('seePersonal')">
             <mat-form-field class="full-width">
-                <input type="text" matInput placeholder="{{ 'Username' | translate }}" formControlName="username" />
+                <mat-label>{{ 'Username' | translate }}</mat-label>
+                <input type="text" matInput formControlName="username" />
                 <button
                     *ngIf="isNewUser"
                     matSuffix
@@ -117,19 +111,20 @@
                 >
                     <mat-icon>help</mat-icon>
                 </button>
-                <mat-error>{{ 'You have to enter at least one character' | translate }}</mat-error>
+                <mat-error *ngIf="personalInfoForm.controls['username'].errors?.['required']" translate>
+                    You have to enter at least one character
+                </mat-error>
+                <mat-error *ngIf="personalInfoForm.controls['username'].errors?.['noSpace']" translate>
+                    Username may not contain spaces
+                </mat-error>
             </mat-form-field>
         </div>
 
         <div *ngIf="isAllowed('manage') && !user?.saml_id">
             <!-- Initial Password -->
             <mat-form-field class="full-width">
-                <input
-                    matInput
-                    autocomplete="off"
-                    placeholder="{{ 'Initial password' | translate }}"
-                    formControlName="default_password"
-                />
+                <mat-label>{{ 'Initial password' | translate }}</mat-label>
+                <input matInput autocomplete="off" formControlName="default_password" />
                 <button
                     *ngIf="isNewUser && generatePasswordFn"
                     matSuffix
