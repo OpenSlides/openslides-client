@@ -24,10 +24,10 @@
             <div class="assign-meetings-form form-wrapper">
                 <div class="long-child">
                     <mat-form-field class="form-element">
+                        <mat-label>{{ 'Select meetings ...' | translate }}</mat-label>
                         <os-list-search-selector
                             formControlName="meeting_ids"
                             [multiple]="true"
-                            placeholder="{{ 'Select meetings ...' | translate }}"
                             [showChips]="false"
                             [inputListValues]="meetingsObservable"
                             [getItemAdditionalInfoFn]="getMeetingAdditionalInfoFn"
@@ -38,7 +38,8 @@
                 </div>
                 <div class="grid-child">
                     <mat-form-field class="form-element">
-                        <input formControlName="group_name" matInput placeholder="{{ 'Group name' | translate }}" />
+                        <mat-label>{{ 'Group name' | translate }}</mat-label>
+                        <input formControlName="group_name" matInput />
                     </mat-form-field>
                 </div>
                 <div class="grid-child">

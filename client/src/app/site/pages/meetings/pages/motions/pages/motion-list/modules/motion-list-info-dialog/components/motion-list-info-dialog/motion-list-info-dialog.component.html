@@ -6,7 +6,8 @@
     <!-- Category -->
     <ng-container *ngIf="categoriesObservable | async as categories">
         <mat-form-field *ngIf="categories.length > 0">
-            <mat-select placeholder="{{ 'Category' | translate }}" [(ngModel)]="infoDialog.update.category_id">
+            <mat-label>{{ 'Category' | translate }}</mat-label>
+            <mat-select [(ngModel)]="infoDialog.update.category_id">
                 <mat-option [value]="null">-</mat-option>
                 <mat-option *ngFor="let category of categories" [value]="category.id">
                     {{ category.getTitle() }}
@@ -17,7 +18,8 @@
     <!-- Motion block -->
     <ng-container *ngIf="motionBlocksObservable | async as motionBlocks">
         <mat-form-field *ngIf="motionBlocks.length > 0">
-            <mat-select placeholder="{{ 'Motion block' | translate }}" [(ngModel)]="infoDialog.update.block_id">
+            <mat-label>{{ 'Motion block' | translate }}</mat-label>
+            <mat-select [(ngModel)]="infoDialog.update.block_id">
                 <mat-option [value]="null">-</mat-option>
                 <mat-option *ngFor="let block of motionBlocks" [value]="block.id">
                     {{ block.getTitle() }}
@@ -28,7 +30,8 @@
     <!-- Tag -->
     <ng-container *ngIf="tagsObservable | async as tags">
         <mat-form-field *ngIf="tags.length > 0">
-            <mat-select multiple placeholder="{{ 'Tags' | translate }}" [(ngModel)]="infoDialog.update.tag_ids">
+            <mat-label>{{ 'Tags' | translate }}</mat-label>
+            <mat-select multiple [(ngModel)]="infoDialog.update.tag_ids">
                 <mat-option *ngFor="let tag of tags" [value]="tag.id">
                     {{ tag.getTitle() }}
                 </mat-option>
@@ -38,7 +41,8 @@
 
     <!-- State -->
     <mat-form-field *ngIf="isAllowed('change_state')">
-        <mat-select placeholder="{{ 'State' | translate }}" [(ngModel)]="infoDialog.state_id">
+        <mat-label>{{ 'State' | translate }}</mat-label>
+        <mat-select [(ngModel)]="infoDialog.state_id">
             <mat-option *ngFor="let state of selectedMotion.state!.next_states" [value]="state.id">
                 {{ state.getTitle() }}
             </mat-option>
@@ -47,7 +51,8 @@
 
     <!-- Recommendation -->
     <mat-form-field *osMeetingSetting="'motions_recommendations_by'; and: hasRecommendations()">
-        <mat-select placeholder="{{ 'Recommendation' | translate }}" [(ngModel)]="infoDialog.recommendation_id">
+        <mat-label>{{ 'Recommendation' | translate }}</mat-label>
+        <mat-select [(ngModel)]="infoDialog.recommendation_id">
             <mat-option *ngFor="let recommendation of getPossibleRecommendations()" [value]="recommendation.id">
                 {{ recommendation.recommendation_label }}
             </mat-option>

@@ -8,7 +8,7 @@ import {
     UntypedFormControl,
     UntypedFormGroup
 } from '@angular/forms';
-import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
+import { MatFormFieldControl } from '@angular/material/form-field';
 import { distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
 /**

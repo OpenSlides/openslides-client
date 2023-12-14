@@ -6,7 +6,8 @@
     <div mat-dialog-content>
         <!-- Title -->
         <mat-form-field>
-            <input formControlName="title" matInput placeholder="{{ 'Title' | translate }}" required />
+            <mat-label>{{ 'Title' | translate }}</mat-label>
+            <input formControlName="title" matInput required />
             <mat-error *ngIf="createBlockForm.get('title')!.hasError('required')">
                 {{ 'A title is required' | translate }}
             </mat-error>
