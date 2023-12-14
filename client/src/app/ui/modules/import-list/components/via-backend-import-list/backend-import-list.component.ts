@@ -252,6 +252,9 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         this._importer.clearAll();
         this._requiredFields = this.createRequiredFields();
         this._importer.currentImportPhaseObservable.subscribe(phase => {
+            if (phase === BackendImportPhase.LOADING_PREVIEW && this.fileInput) {
+                this.fileInput.nativeElement.value = ``;
+            }
             this._state = phase;
         });
         this._importer.previewsObservable.subscribe(previews => {
@@ -291,13 +294,6 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
      */
     public onSelectFile(event: any): void {
         this._importer.onSelectFile(event);
-    }
-
-    /**
-     * Triggers the importer's import
-     */
-    public async doImport(): Promise<void> {
-        this._importer.doImport();
     }
 
     /**
