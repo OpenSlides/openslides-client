@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { PasswordForm } from 'src/app/site/modules/user-components';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { AuthService } from 'src/app/site/services/auth.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -27,7 +29,9 @@ export class AccountPasswordComponent extends BaseComponent implements OnInit, A
     public constructor(
         private operator: OperatorService,
         private userController: UserControllerService,
+        private authService: AuthService,
         private osRouter: OpenSlidesRouterService,
+        private snackbar: MatSnackBar,
         componentServiceCollector: ComponentServiceCollectorService,
         translate: TranslateService
     ) {
@@ -77,7 +81,10 @@ export class AccountPasswordComponent extends BaseComponent implements OnInit, A
                 await this.userController.setPassword(this.user, password);
             } else if (this.isOwnPage) {
                 const { oldPassword, newPassword }: PasswordForm = this.passwordForm as PasswordForm;
-                await this.userController.setPasswordSelf(this.user, oldPassword, newPassword);
+                await this.authService.invalidateSessionAfter(() =>
+                    this.userController.setPasswordSelf(this.user, oldPassword, newPassword)
+                );
+                this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
             }
             this.goBack();
         } catch (e) {

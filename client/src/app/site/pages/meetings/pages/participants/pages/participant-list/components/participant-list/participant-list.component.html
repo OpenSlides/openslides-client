@@ -1,20 +1,24 @@
-<os-head-bar [hasMainButton]="canManage" (mainEvent)="onPlusButton()" [multiSelectMode]="isMultiSelect">
+<os-head-bar
+    [hasMainButton]="canManage"
+    [mainActionTooltip]="'New participant' | translate"
+    (mainEvent)="onPlusButton()"
+    [multiSelectMode]="isMultiSelect"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Participants' | translate }}</h2>
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button type="button" mat-icon-button [matMenuTriggerFor]="userMenu"><mat-icon>more_vert</mat-icon></button>
-    </div>
+    </ng-container>
 
     <!-- Multiselect info -->
-    <div class="central-info-slot">
+    <ng-container class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span>
-        <span>{{ 'selected' | translate }}</span>
-    </div>
+        <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
+    </ng-container>
 </os-head-bar>
 
 <os-list
@@ -74,7 +78,7 @@
             <div *ngIf="user.groups()?.length">
                 <os-icon-container icon="people" [noWrap]="true">
                     <os-comma-separated-listing [list]="user.groups()">
-                        <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                        <ng-template let-group>{{ group.getTitle() }}</ng-template>
                     </os-comma-separated-listing>
                 </os-icon-container>
             </div>

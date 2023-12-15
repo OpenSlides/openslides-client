@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { combineLatestWith, map } from 'rxjs';
+import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
@@ -14,6 +14,7 @@ import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/p
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 
+import { ViewPoll } from '../../../../../polls';
 import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
@@ -134,12 +135,27 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     ) {}
 
     public ngOnInit(): void {
-        this.poll.options_as_observable
-            .pipe(
-                combineLatestWith(this.themeService.currentGeneralColorsSubject),
-                map(([options, _]) => options)
-            )
-            .subscribe(() => this.setupTableData());
+        combineLatest([
+            this.poll.options_as_observable,
+            iif(
+                () => this.poll instanceof ViewPoll,
+                (this.poll as ViewPoll).options_as_observable.pipe(
+                    map(options =>
+                        options.filter(option => !!option.content_object_id && !!option.content_object_as_observable)
+                    ),
+                    filter(options => !!options.length),
+                    switchMap(options =>
+                        combineLatest(
+                            options.map(option =>
+                                option.content_object_as_observable.pipe(filter(content_object => !!content_object))
+                            )
+                        ).pipe(auditTime(1))
+                    )
+                ),
+                NEVER
+            ).pipe(startWith(null)),
+            this.themeService.currentGeneralColorsSubject
+        ]).subscribe(() => this.setupTableData());
     }
 
     private setupTableData(): void {

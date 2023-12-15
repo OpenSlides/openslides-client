@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';

@@ -125,7 +125,7 @@ export class ViewModelStoreUpdateService {
             await this.DS.addOrUpdate(changedModels[collection]);
         }
 
-        this.DSUpdateService.commit(updateSlot, changedModels);
+        await this.DSUpdateService.commit(updateSlot, changedModels);
     }
 
     /**

@@ -344,6 +344,12 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
+        MViewModel: ViewGroup,
+        OField: `topic_poll_default_groups`,
+        MField: `used_as_topic_poll_default`
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
         MViewModel: ViewPointOfOrderCategory,
         OField: `point_of_order_categories`,
         OIdField: `point_of_order_category_ids`,

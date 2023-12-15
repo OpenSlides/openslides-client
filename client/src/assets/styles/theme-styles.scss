@@ -8,13 +8,18 @@
 /** Global component style definition */
 @import 'global-components-style.scss';
 
+@include mat.all-component-themes($openslides-light-theme);
+
 .openslides-light-theme {
+    /*TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated */
     @include mat.all-legacy-component-themes($openslides-light-theme);
     @include os-component-themes($openslides-light-theme);
 }
 
 .openslides-dark-theme {
+    /*TODO(mdc-migration): Remove all-legacy-component-colors once all legacy components are migrated */
     @include mat.all-legacy-component-colors($openslides-dark-theme);
+    @include mat.all-component-colors($openslides-dark-theme);
     @include os-component-themes($openslides-dark-theme);
 }
 

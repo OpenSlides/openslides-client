@@ -21,7 +21,7 @@ import { RepositoryServiceCollectorService } from '../repository-service-collect
 
 export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid: Fqid; meeting_user_id?: Id };
 
-export type GeneralUser = User & MeetingUser;
+export type GeneralUser = ViewUser & ViewMeetingUser;
 
 /**
  * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.
@@ -492,6 +492,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
     public accountImport(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
         return this.createAction<BackendImportRawPreview | void>(UserAction.ACCOUNT_IMPORT, payload);
+    }
+
+    public participantJsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+        return this.createAction<BackendImportRawPreview>(UserAction.PARTICIPANT_JSON_UPLOAD, payload);
+    }
+
+    public participantImport(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
+        return this.createAction<BackendImportRawPreview | void>(UserAction.PARTICIPANT_IMPORT, payload);
     }
 
     private sanitizePayload(payload: any): any {

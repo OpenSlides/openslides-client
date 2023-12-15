@@ -25,7 +25,7 @@ export class BodyPortal {
         }
     }
 
-    public attach<T>(componentType: Type<T>, data: Object = {}): void {
+    public attach<T>(componentType: Type<T>, data: unknown = {}): void {
         this._viewContainer.clear();
         this.showPane();
         const componentRef = this.createComponentRef(componentType, data);
@@ -45,7 +45,7 @@ export class BodyPortal {
         }
     }
 
-    private createComponentRef<T>(component: Type<T>, data: Object = {}): ComponentRef<T> {
+    private createComponentRef<T>(component: Type<T>, data: unknown = {}): ComponentRef<T> {
         const componentRef = this._viewContainer.createComponent(component);
         for (const key of Object.keys(data)) {
             componentRef.instance[key] = data[key];
@@ -96,7 +96,7 @@ export class DomService {
         return new BodyPortal({ viewContainer, root: this._pane! });
     }
 
-    public attachComponent<T>(componentType: Type<T>, data: Object = {}): ComponentRef<T> {
+    public attachComponent<T>(componentType: Type<T>, data: unknown = {}): ComponentRef<T> {
         this._viewContainer.clear();
         this.showPane();
         const componentRef = this.createComponentRef(componentType, data);
@@ -114,7 +114,7 @@ export class DomService {
         this.hidePane();
     }
 
-    private createComponentRef<T>(component: Type<T>, data: Object = {}): ComponentRef<T> {
+    private createComponentRef<T>(component: Type<T>, data: unknown = {}): ComponentRef<T> {
         const componentRef = this._viewContainer.createComponent(component);
         for (const key of Object.keys(data)) {
             componentRef.instance[key] = data[key];

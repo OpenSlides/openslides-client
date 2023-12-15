@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { filter, map, Observable } from 'rxjs';
+import { filter, map, merge, Observable } from 'rxjs';
 
 import { Fqid } from '../../domain/definitions/key-types';
 import { BaseModel } from '../../domain/models/base/base-model';
 import { Relation, RELATIONS } from '../../infrastructure/definitions/relations';
-import { collectionIdFromFqid } from '../../infrastructure/utils/transform-functions';
+import { collectionIdFromFqid, idFromFqid } from '../../infrastructure/utils/transform-functions';
 import { BaseViewModel } from '../base/base-view-model';
 import { CollectionMapperService } from './collection-mapper.service';
 import { ViewModelStoreService } from './view-model-store.service';
@@ -70,12 +70,17 @@ export class RelationManagerService {
     }
 
     public getObservableForRelation<M extends BaseModel>(model: M, relation: Relation<M>): Observable<any> {
+        if (relation.generic) {
+            return this.getObservableForGenericRelation(model, relation);
+        } else {
+            return this.getObservableForNormalRelation(model, relation);
+        }
+    }
+
+    private getObservableForNormalRelation<M extends BaseModel>(model: M, relation: Relation<M>): Observable<any> {
         const foreignRepo = this.collectionMapper.getRepository(relation.foreignViewModel as any);
         if (!foreignRepo) {
             throw new Error(`Could not find foreignRepo for ${relation}`);
-        }
-        if (relation.generic) {
-            throw new Error(`Generic relations are not yet implemented for detection of changing relations.`);
         }
         return foreignRepo.getViewModelMapObservable().pipe(
             map(modelMap => {
@@ -95,6 +100,56 @@ export class RelationManagerService {
             }),
             filter(hasChanges => hasChanges),
             map(() => this.handleNormalRelation(model, relation, relation.ownIdField as keyof M))
+        );
+    }
+
+    private getObservableForGenericRelation<M extends BaseModel>(model: M, relation: Relation<M>): Observable<any> {
+        if (!relation.foreignViewModelPossibilities) {
+            throw new Error(
+                `Generic relations without foreignViewModelPossibilities are not implemented for detection of changing relations.`
+            );
+        }
+        const foreignRepos = relation.foreignViewModelPossibilities.mapToObject(foreignModel => ({
+            [foreignModel.COLLECTION]: this.collectionMapper.getRepository(foreignModel as any)
+        }));
+        if (Object.values(foreignRepos).some(repo => !repo)) {
+            throw new Error(
+                `Could not find at least one of the foreignRepos for ${relation}: ${Object.keys(foreignRepos)
+                    .filter(collection => !foreignRepos[collection])
+                    .join(`, `)}`
+            );
+        }
+        const otherModelIds: { [collection: string]: string[] } = {};
+        if (relation.many) {
+            (model[relation.ownIdField as keyof BaseModel] as unknown as string[])
+                .map(data => collectionIdFromFqid(data))
+                .forEach(([collection, id]) => {
+                    if (!otherModelIds[collection]) {
+                        otherModelIds[collection] = [];
+                    }
+                    otherModelIds[collection].push(id.toString());
+                });
+        }
+        return merge(
+            ...Object.entries(foreignRepos).map(([collection, repo]) =>
+                repo.getViewModelMapObservable().pipe(
+                    map(modelMap => {
+                        if (!model[relation.ownIdField as keyof BaseModel]) {
+                            return true;
+                        }
+                        if (relation.many) {
+                            const modelIds = Object.keys(modelMap);
+                            const modelIdsFromModelMap = modelIds.map(data => data.toString());
+                            return otherModelIds[collection]?.intersect(modelIdsFromModelMap).length > 0;
+                        } else {
+                            return !!modelMap[idFromFqid(model[relation.ownIdField as keyof BaseModel] as string)];
+                        }
+                    })
+                )
+            )
+        ).pipe(
+            filter(hasChanges => hasChanges),
+            map(() => this.handleGenericRelation(model, relation))
         );
     }
 

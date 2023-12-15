@@ -62,6 +62,8 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
     @Output()
     public gotoChangeRecommendation = new EventEmitter<ViewUnifiedChange>();
 
+    private _html = ``;
+
     @Input()
     public set html(html: string) {
         this._html = html;
@@ -69,14 +71,20 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         this.cd.markForCheck();
     }
 
-    @Input()
-    public motionId: number;
-
     public get html(): string {
         return this._html;
     }
 
-    private _html = ``;
+    private _motionId: number;
+    @Input()
+    public set motionId(mid: number) {
+        this._motionId = mid;
+        this.cd.markForCheck();
+    }
+
+    public get motionId(): number {
+        return this._motionId;
+    }
 
     @Input()
     public set changeRecommendations(recos: ViewUnifiedChange[]) {

@@ -30,6 +30,10 @@ export class SingleOptionChartTableComponent {
         }
     }
 
+    public get tableData(): PollTableData[] {
+        return this._tableData;
+    }
+
     @Input()
     public set pollService(pollService: PollService) {
         this._pollService = pollService;
@@ -37,11 +41,19 @@ export class SingleOptionChartTableComponent {
         this.cd.markForCheck();
     }
 
+    public get pollService() {
+        return this._pollService || this.defaultPollService;
+    }
+
     @Input()
     public set poll(pollData: PollData) {
         this._poll = pollData;
         this.setChartData();
         this.cd.markForCheck();
+    }
+
+    public get poll(): PollData {
+        return this._poll;
     }
 
     private get method(): string | null {
@@ -54,20 +66,8 @@ export class SingleOptionChartTableComponent {
     @Input()
     public shouldShowEntitled = false;
 
-    public get pollService() {
-        return this._pollService || this.defaultPollService;
-    }
-
-    public get poll(): PollData {
-        return this._poll;
-    }
-
     public get chartData(): ChartData {
         return this._chartData;
-    }
-
-    public get tableData(): PollTableData[] {
-        return this._tableData;
     }
 
     public get isMethodY(): boolean {

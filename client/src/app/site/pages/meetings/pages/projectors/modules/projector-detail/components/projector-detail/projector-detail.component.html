@@ -3,6 +3,7 @@
         [nav]="false"
         [hasMainButton]="canManage()"
         mainButtonIcon="edit"
+        [mainActionTooltip]="'Edit' | translate"
         [goBack]="true"
         (mainEvent)="editProjector()"
     >
@@ -178,11 +179,7 @@
                             class="current-element backgroundColorAccent"
                         >
                             <div class="emelent-grid">
-                                <os-projector-button
-                                    [object]="projection.getProjectionBuildDescriptor()"
-                                    [blendIn]="true"
-                                    [projector]="projector"
-                                ></os-projector-button>
+                                <os-projector-button [blendIn]="true"></os-projector-button>
 
                                 <!-- Slide title and subtitle -->
                                 <span class="ellipsis-overflow current-element-text">
@@ -198,7 +195,12 @@
                                     </os-icon-container>
                                 </span>
 
-                                <button type="button" mat-icon-button (click)="deleteProjection(projection)">
+                                <button
+                                    type="button"
+                                    mat-icon-button
+                                    (click)="deleteProjection(projection)"
+                                    matTooltip="{{ 'Clear current projection' | translate }}"
+                                >
                                     <mat-icon>close</mat-icon>
                                 </button>
                             </div>
@@ -251,7 +253,12 @@
                                 </div>
                                 <div class="button-right" *ngIf="editQueue">
                                     <div>
-                                        <button type="button" mat-icon-button (click)="deleteProjection(projection)">
+                                        <button
+                                            type="button"
+                                            mat-icon-button
+                                            (click)="deleteProjection(projection)"
+                                            matTooltip="{{ 'Delete' | translate }}"
+                                        >
                                             <mat-icon>delete</mat-icon>
                                         </button>
                                     </div>
@@ -259,10 +266,22 @@
                             </div>
                         </div>
                         <mat-action-row>
-                            <button *ngIf="!editQueue" type="button" mat-icon-button (click)="editQueue = !editQueue">
+                            <button
+                                *ngIf="!editQueue"
+                                type="button"
+                                mat-icon-button
+                                (click)="editQueue = !editQueue"
+                                matTooltip="{{ 'Edit queue' | translate }}"
+                            >
                                 <mat-icon>edit</mat-icon>
                             </button>
-                            <button *ngIf="editQueue" type="button" mat-icon-button (click)="editQueue = !editQueue">
+                            <button
+                                *ngIf="editQueue"
+                                type="button"
+                                mat-icon-button
+                                (click)="editQueue = !editQueue"
+                                matTooltip="{{ 'Close edit mode' | translate }}"
+                            >
                                 <mat-icon>close</mat-icon>
                             </button>
                         </mat-action-row>

@@ -99,6 +99,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.saml_id !== null && this.saml_id !== undefined;
     }
 
+    public get is_present(): boolean {
+        return this.isPresentInMeeting();
+    }
+
     // Will be set by the repository
     public getName!: () => string;
     public getShortName!: () => string;
@@ -198,7 +202,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public vote_weight(meetingId?: Id): number {
-        return this.getMeetingUser(meetingId)?.vote_weight || this.default_vote_weight;
+        return this.getMeetingUser(meetingId)?.vote_weight ?? this.default_vote_weight;
     }
 
     public number(meetingId?: Id): string {

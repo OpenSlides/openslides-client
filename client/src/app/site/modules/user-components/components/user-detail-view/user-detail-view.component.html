@@ -117,7 +117,12 @@
                 >
                     <mat-icon>help</mat-icon>
                 </button>
-                <mat-error>{{ 'You have to enter at least one character' | translate }}</mat-error>
+                <mat-error *ngIf="personalInfoForm.controls['username'].errors?.['required']" translate>
+                    You have to enter at least one character
+                </mat-error>
+                <mat-error *ngIf="personalInfoForm.controls['username'].errors?.['noSpace']" translate>
+                    Username may not contain spaces
+                </mat-error>
             </mat-form-field>
         </div>
 
