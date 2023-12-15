@@ -25,9 +25,17 @@ export class VotesTableComponent {
         );
     }
 
+    public get votesDataObservable(): Observable<BaseVoteData[]> {
+        return this._votesDataObservable;
+    }
+
     @Input()
     public set isViewingThis(value: boolean) {
         this._isViewingThis = value;
+    }
+
+    public get isViewingThis(): boolean {
+        return this._isViewingThis;
     }
 
     @Input()
@@ -36,18 +44,10 @@ export class VotesTableComponent {
     @Input()
     public templateType = ``;
 
-    public get isViewingThis(): boolean {
-        return this._isViewingThis;
-    }
-
     public readonly permission = Permission;
 
     @Input()
     public filterProps = [`user.full_name`, `valueVerbose`];
-
-    public get votesDataObservable(): Observable<BaseVoteData[]> {
-        return this._votesDataObservable;
-    }
 
     private _votesDataObservable!: Observable<BaseVoteData[]>;
 

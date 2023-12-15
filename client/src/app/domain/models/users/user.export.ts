@@ -9,7 +9,6 @@ export interface UserExport {
     username?: string;
     gender?: string;
     default_number?: string | number;
-    default_structure_level?: string;
     default_vote_weight?: string | number;
     pronoun?: string;
 }

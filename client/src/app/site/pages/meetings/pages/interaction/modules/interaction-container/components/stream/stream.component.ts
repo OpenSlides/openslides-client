@@ -79,7 +79,7 @@ export class StreamComponent extends BaseMeetingComponent implements AfterViewIn
 
     // closing the tab should also try to stop jitsi.
     // this will usually not be caught by ngOnDestroy
-    @HostListener(`window:beforeunload`)
+    @HostListener(`window:unload`)
     public async beforeunload(): Promise<void> {
         this.beforeViewCloses();
     }

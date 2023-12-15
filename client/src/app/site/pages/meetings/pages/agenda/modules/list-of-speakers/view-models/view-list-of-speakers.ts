@@ -3,6 +3,7 @@ import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-s
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { Projectable } from 'src/app/site/pages/meetings/view-models';
 import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models/base-projectable-model';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
@@ -10,6 +11,7 @@ import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting'
 import { SpeakerStateOnList } from '../../../definitions/index';
 import { HasListOfSpeakers } from './has-list-of-speakers';
 import { ViewSpeaker } from './view-speaker';
+
 export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers> {
     public static COLLECTION = ListOfSpeakers.COLLECTION;
     protected _collection = ListOfSpeakers.COLLECTION;
@@ -87,5 +89,6 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
 interface IListOfSpeakersRelations {
     content_object?: BaseViewModel & HasListOfSpeakers & Projectable;
     speakers: ViewSpeaker[];
+    structure_level_list_of_speakers: ViewStructureLevelListOfSpeakers[];
 }
 export interface ViewListOfSpeakers extends ListOfSpeakers, IListOfSpeakersRelations, HasMeeting {}

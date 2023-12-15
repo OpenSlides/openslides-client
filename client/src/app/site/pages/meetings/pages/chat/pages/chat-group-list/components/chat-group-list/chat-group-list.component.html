@@ -1,4 +1,8 @@
-<os-head-bar [hasMainButton]="hasMainButton" (mainEvent)="createChatGroup()">
+<os-head-bar
+    [mainActionTooltip]="'New chat group' | translate"
+    [hasMainButton]="hasMainButton"
+    (mainEvent)="createChatGroup()"
+>
     <!-- Title -->
     <div class="title-slot">
         {{ 'Chat' | translate }}

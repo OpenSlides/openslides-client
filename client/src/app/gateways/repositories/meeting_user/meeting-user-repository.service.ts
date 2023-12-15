@@ -29,7 +29,6 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
             `vote_weight`,
             `comment`,
             `user_id`,
-            `structure_level`,
             `number`
         ]);
 
@@ -47,7 +46,6 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
         if (partialUser.meeting_id || this.activeMeetingId) {
             const partialPayload: Partial<MeetingUser> = {
                 meeting_id: partialUser.meeting_id ?? this.activeMeetingId,
-                structure_level: partialUser.structure_level,
                 number: partialUser.number,
                 about_me: partialUser.about_me,
                 vote_weight: toDecimal(partialUser.vote_weight, false) as any,

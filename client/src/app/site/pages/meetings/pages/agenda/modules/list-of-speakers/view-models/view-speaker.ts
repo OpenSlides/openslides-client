@@ -1,4 +1,5 @@
 import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 
 import { Id } from '../../../../../../../../domain/definitions/key-types';
 import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';
@@ -60,5 +61,6 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
 interface ISpeakerRelations {
     list_of_speakers: ViewListOfSpeakers;
     point_of_order_category: ViewPointOfOrderCategory;
+    structure_level_list_of_speakers: ViewStructureLevelListOfSpeakers[];
 }
 export interface ViewSpeaker extends Speaker, ISpeakerRelations, HasMeeting {}

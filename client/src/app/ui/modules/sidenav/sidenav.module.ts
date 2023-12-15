@@ -6,6 +6,7 @@ import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/lega
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
@@ -32,6 +33,7 @@ const EXPORTS = [SidenavComponent, SidenavMainContentDirective, SidenavDrawerCon
         MatDialogModule,
         MatMenuModule,
         MatButtonModule,
+        MatTooltipModule,
         EasterEggModule,
         PipesModule,
         OpenSlidesTranslationModule.forChild()
