@@ -10,7 +10,6 @@ export class UserFieldsets {
             `username`,
             `gender`,
             `default_number`,
-            `default_structure_level`,
             `default_vote_weight`
         ]
     };
@@ -18,6 +17,6 @@ export class UserFieldsets {
 
 export class MeetingUserFieldsets {
     public static readonly FullNameSubscription: BaseSimplifiedModelRequest = {
-        fieldset: [`group_ids`, `meeting_id`, `user_id`, `structure_level`, `number`]
+        fieldset: [`group_ids`, `meeting_id`, `user_id`, `number`]
     };
 }

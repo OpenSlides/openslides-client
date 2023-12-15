@@ -45,6 +45,11 @@ const routes: Routes = [
                 data: { meetingPermissions: [Permission.userCanManage] }
             },
             {
+                path: `structure-levels`,
+                loadChildren: () =>
+                    import(`./pages/structure-levels/structure-level.module`).then(m => m.StructureLevelModule)
+            },
+            {
                 path: ``,
                 loadChildren: () =>
                     import(`./pages/participant-detail/participant-detail.module`).then(m => m.ParticipantDetailModule)

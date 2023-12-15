@@ -110,3 +110,19 @@ export const getParticipantDetailSubscription: SubscriptionConfigGenerator = (id
     },
     subscriptionName: PARTICIPANT_DETAIL_SUBSCRIPTION
 });
+
+export const STRUCTURE_LEVEL_LIST_SUBSCRIPTION = `structure_level_list`;
+
+export const getStructureLevelListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        follow: [
+            {
+                idField: `structure_level_ids`,
+                fieldset: DEFAULT_FIELDSET
+            }
+        ]
+    },
+    subscriptionName: STRUCTURE_LEVEL_LIST_SUBSCRIPTION
+});

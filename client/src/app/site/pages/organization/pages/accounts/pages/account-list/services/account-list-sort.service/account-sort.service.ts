@@ -21,7 +21,6 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
         { property: [`last_name`, `first_name`], label: _(`Surname`) },
         { property: `is_active`, label: _(`Is active`) },
         { property: `default_number`, label: _(`Participant number`) },
-        { property: `default_structure_level`, label: _(`Structure level`) },
         { property: `default_vote_weight`, label: _(`Vote weight`) },
         { property: `gender`, label: _(`Gender`) },
         { property: `id`, label: _(`Sequential number`) },

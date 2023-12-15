@@ -82,9 +82,6 @@
                     </os-comma-separated-listing>
                 </os-icon-container>
             </div>
-            <div *ngIf="user.structure_level()" class="spacer-top-5">
-                <os-icon-container icon="flag">{{ user.structure_level() }}</os-icon-container>
-            </div>
             <div *ngIf="user.number()" class="spacer-top-5">
                 <os-icon-container icon="perm_identity">{{ user.number() }}</os-icon-container>
             </div>
@@ -184,6 +181,11 @@
         <button mat-menu-item *osPerms="permission.userCanManage" routerLink="groups">
             <mat-icon>people</mat-icon>
             <span>{{ 'Groups' | translate }}</span>
+        </button>
+
+        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="structure-levels">
+            <mat-icon>flag</mat-icon>
+            <span>{{ 'Structure Levels' | translate }}</span>
         </button>
 
         <div *ngIf="presenceViewConfigured">

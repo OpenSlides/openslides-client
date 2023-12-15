@@ -98,7 +98,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     /**
      * Define extra filter properties
      */
-    public filterProps = [`full_name`, `groups`, `structure_level`, `number`, `delegationName`];
+    public filterProps = [`full_name`, `groups`, `number`, `delegationName`];
 
     public get hasInteractionState(): Observable<boolean> {
         return this.interactionService.isConfStateNone.pipe(map(isNone => !isNone));
@@ -202,7 +202,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             id: user.id,
             name: user.username,
             group_ids: user.group_ids(),
-            structure_level: user.structure_level(),
             number: user.number(),
             vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
             vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
