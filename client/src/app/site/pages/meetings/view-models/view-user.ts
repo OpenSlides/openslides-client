@@ -99,6 +99,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.saml_id !== null && this.saml_id !== undefined;
     }
 
+    public get is_present(): boolean {
+        return this.isPresentInMeeting();
+    }
+
     // Will be set by the repository
     public getName!: () => string;
     public getShortName!: () => string;
@@ -198,7 +202,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public vote_weight(meetingId?: Id): number {
-        return this.getMeetingUser(meetingId)?.vote_weight || this.default_vote_weight;
+        return this.getMeetingUser(meetingId)?.vote_weight ?? this.default_vote_weight;
     }
 
     public number(meetingId?: Id): string {
@@ -206,14 +210,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
             return this.getMeetingUser(meetingId)?.number || this.default_number;
         } catch (e) {
             return this.user.default_number;
-        }
-    }
-
-    public structure_level(meetingId?: Id): string {
-        try {
-            return this.getMeetingUser(meetingId)?.structure_level || this.default_structure_level;
-        } catch (e) {
-            return this.user.default_structure_level;
         }
     }
 

@@ -316,26 +316,4 @@
     .sidenav-background {
         background: if($is-dark-theme,  darken(mat.get-color-from-palette($background, background), 0.5%), white);
     }
-
-    .alternating-list {
-        > * {
-            @if $is-dark-theme {
-                @extend .background-dark-brighter;
-            }
-            &:hover {
-                background: rgba(0, 0, 0, 0.04);
-            }
-        }
-
-        > *:nth-of-type(2n + 1) {
-            @if $is-dark-theme {
-                @extend .background-dark;
-            } @else {
-                background: rgba(0, 0, 0, 0.02);
-                &:hover {
-                    background: rgba(0, 0, 0, 0.06);
-                }
-            }
-        }
-    }
 }

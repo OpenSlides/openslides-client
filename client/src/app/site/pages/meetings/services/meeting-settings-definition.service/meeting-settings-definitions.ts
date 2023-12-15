@@ -553,7 +553,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_recommendation_text_mode`,
-                        label: _(`Default text version for change recommendations`),
+                        label: _(`Default text version for change recommendations and projection of motions`),
                         type: `choice`,
                         choices: {
                             // matches ChangeRecoMode

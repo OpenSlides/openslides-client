@@ -5,7 +5,7 @@
     <mat-form-field>
         <mat-select placeholder="{{ 'Groups' | translate }}" [(ngModel)]="infoDialog.group_ids" multiple>
             <mat-option *ngFor="let group of groupsObservable | async" [value]="group.id">
-                {{ group.getTitle() | translate }}
+                {{ group.getTitle() }}
             </mat-option>
         </mat-select>
     </mat-form-field>

@@ -60,7 +60,6 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public readonly additionalFormControls = {
-        default_structure_level: [``],
         default_number: [``],
         default_vote_weight: [``, Validators.min(0.000001)],
         organization_management_level: [],
@@ -91,7 +90,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return Object.values(this._tableData).filter(row => row[`is_manager`] === true).length;
     }
 
-    public tableDataAscOrderCompare = <T extends unknown>(a: KeyValue<string, T>, b: KeyValue<string, T>) => {
+    public tableDataAscOrderCompare = <T>(a: KeyValue<string, T>, b: KeyValue<string, T>) => {
         const aName = a.value[`committee_name`] ?? a.value[`meeting_name`] ?? ``;
         const bName = b.value[`committee_name`] ?? b.value[`meeting_name`] ?? ``;
         return aName.localeCompare(bName);

@@ -18,16 +18,16 @@ export class SpinnerComponent {
         this._height = value;
     }
 
+    public get height(): string {
+        return this._height;
+    }
+
     @Input()
     public set width(value: string | number) {
         if (typeof value === `number`) {
             value = `${value}px`;
         }
         this._width = value;
-    }
-
-    public get height(): string {
-        return this._height;
     }
 
     public get width(): string {

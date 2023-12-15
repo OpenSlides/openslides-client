@@ -1,4 +1,9 @@
-<os-head-bar [nav]="false" [hasMainButton]="canEdit" (mainEvent)="onPlusButton()">
+<os-head-bar
+    [nav]="false"
+    [hasMainButton]="canEdit"
+    [mainActionTooltip]="'New motion block' | translate"
+    (mainEvent)="onPlusButton()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Motion blocks' | translate }}</h2>

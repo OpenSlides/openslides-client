@@ -501,7 +501,11 @@ export class LineNumberingService {
                 }
                 out.push(this.createLineBreak());
                 if (this.currentLineNumber !== null) {
-                    out.push(this.createLineNumber());
+                    if (this.ignoreNextRegularLineNumber) {
+                        this.ignoreNextRegularLineNumber = false;
+                    } else {
+                        out.push(this.createLineNumber());
+                    }
                 }
             }
             out.push(lineNode);

@@ -39,7 +39,7 @@ export class MotionListBaseSortService extends BaseSortListService<ViewMotion> {
         {
             property: `submitters`,
             foreignBaseKeys: {
-                user: [`username`, `first_name`, `last_name`, `default_structure_level`],
+                user: [`username`, `first_name`, `last_name`],
                 meeting_user: [`structure_level`]
             }
         },

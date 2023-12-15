@@ -4,7 +4,7 @@ import * as yaml from 'js-yaml';
 import * as path from 'path';
 import { Project, Scope } from 'ts-morph';
 
-const SOURCE = `https://github.com/OpenSlides/openslides-backend/raw/feature/remove-template-fields/global/meta/models.yml`;
+const SOURCE = `https://github.com/OpenSlides/openslides-backend/raw/feature/los-extension/global/meta/models.yml`;
 
 const DESTINATION = path.resolve(path.join(__dirname, `../src/app/domain/models`));
 

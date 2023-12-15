@@ -58,7 +58,7 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
             await this.userRepo.forgetPassword(this.resetPasswordForm.get(`email`)!.value);
             this._isWaiting = false;
             this.matSnackBar.open(
-                this.translate.instant(`An email with a password reset link has been sent`),
+                this.translate.instant(`An email with a password reset link has been sent.`),
                 this.translate.instant(`OK`),
                 {
                     duration: 0

@@ -1,5 +1,6 @@
 <os-head-bar
     [hasMainButton]="true"
+    [mainActionTooltip]="'New group' | translate"
     (mainEvent)="setEditMode(!editGroup)"
     [nav]="false"
     [editMode]="hasChanges"
@@ -81,7 +82,8 @@
 
 <ng-template #groupEditDialog>
     <h1 mat-dialog-title>
-        <span>{{ 'New group name' | translate }}</span>
+        <span *ngIf="!groupForm.value.name">{{ 'New group' | translate }}</span>
+        <span *ngIf="groupForm.value.name">{{ 'Edit group' | translate }}</span>
     </h1>
     <div class="os-form-card-mobile" mat-dialog-content>
         <form class="edit-form" [formGroup]="groupForm!" (keydown)="keyDownFunction($event)">
@@ -91,7 +93,7 @@
                     matInput
                     osAutofocus
                     formControlName="name"
-                    placeholder="{{ 'New group name' | translate }}"
+                    placeholder="{{ 'Group name' | translate }}"
                 />
                 <mat-error *ngIf="!groupForm?.valid && !groupForm.value.name">{{ 'Required' | translate }}</mat-error>
                 <mat-error *ngIf="!groupForm?.valid && groupForm.value.name">

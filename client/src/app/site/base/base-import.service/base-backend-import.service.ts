@@ -275,33 +275,46 @@ export abstract class BaseBackendImportService implements BackendImportService {
     public async doImport(): Promise<boolean> {
         this._currentImportPhaseSubject.next(BackendImportPhase.IMPORTING);
 
-        const results = await this.import(this.previewActionIds, false);
+        const results = await this.import(this.previewActionIds, false)
+            .then(results => {
+                if (Array.isArray(results) && results.find(result => isBackendImportRawPreview(result))) {
+                    const updatedPreviews = results.filter(result =>
+                        isBackendImportRawPreview(result)
+                    ) as BackendImportRawPreview[];
+                    this.processRawPreviews(updatedPreviews);
+                    const statesSet = new Set(updatedPreviews.map(preview => preview.state));
+                    if (statesSet.has(BackendImportState.Error)) {
+                        this._currentImportPhaseSubject.next(BackendImportPhase.ERROR);
+                    } else if (statesSet.has(BackendImportState.Warning)) {
+                        this.processRawPreviews(
+                            updatedPreviews
+                                .filter(preview => preview.state === BackendImportState.Warning)
+                                .map(preview => ({
+                                    ...preview,
+                                    rows: preview.rows.filter(row => row.messages && row.messages.length)
+                                }))
+                        );
+                        this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED_WITH_WARNING);
+                    } else {
+                        this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED);
+                        this._csvLines = [];
+                        return true;
+                    }
+                }
+                return false;
+            })
+            .catch(e => e);
 
-        if (Array.isArray(results) && results.find(result => isBackendImportRawPreview(result))) {
-            const updatedPreviews = results.filter(result =>
-                isBackendImportRawPreview(result)
-            ) as BackendImportRawPreview[];
-            this.processRawPreviews(updatedPreviews);
-            const statesSet = new Set(updatedPreviews.map(preview => preview.state));
-            if (statesSet.has(BackendImportState.Error)) {
-                this._currentImportPhaseSubject.next(BackendImportPhase.ERROR);
-            } else if (statesSet.has(BackendImportState.Warning)) {
-                this.processRawPreviews(
-                    updatedPreviews
-                        .filter(preview => preview.state === BackendImportState.Warning)
-                        .map(preview => ({
-                            ...preview,
-                            rows: preview.rows.filter(row => row.messages && row.messages.length)
-                        }))
-                );
-                this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED_WITH_WARNING);
-            } else {
-                this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED);
-                this._csvLines = [];
-                return true;
-            }
+        if (typeof results !== `boolean`) {
+            this._currentImportPhaseSubject.next(BackendImportPhase.LOADING_PREVIEW);
+            this.clearAll();
+            this.matSnackbar.open(
+                this.translate.instant(results.error?.message ?? results?.message ?? results),
+                this.translate.instant(`Ok`)
+            );
+            return false;
         }
-        return false;
+        return results;
     }
 
     /**

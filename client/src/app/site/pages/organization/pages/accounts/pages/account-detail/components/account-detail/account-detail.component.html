@@ -1,6 +1,7 @@
 <os-head-bar
     [hasMainButton]="true"
     mainButtonIcon="edit"
+    [mainActionTooltip]="'Edit account' | translate"
     (mainEvent)="editMember()"
     [goBack]="false"
     [nav]="false"
@@ -75,8 +76,14 @@
                     placeholder="{{ 'Default vote weight' | translate }}"
                     formControlName="default_vote_weight"
                 />
-                <mat-error *ngIf="isDefaultVoteWeightError" translate>
-                    Please select a vote weight bigger than zero.
+                <mat-error *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0" translate>
+                    Please select a vote weight greater than or equal to 0.000001
+                </mat-error>
+                <mat-error
+                    *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value <= 0"
+                    translate
+                >
+                    Please select a vote weight greater than zero.
                 </mat-error>
             </mat-form-field>
         </div>
@@ -228,7 +235,7 @@
                         </td>
                         <td [ngClass]="getCellClass(false, isLast, lastLine)">
                             <span *ngFor="let group of meeting_row.value.group_names; last as lastGroup">
-                                {{ group | translate }}{{ !lastGroup ? ', ' : '' }}
+                                {{ group }}{{ !lastGroup ? ', ' : '' }}
                             </span>
                         </td>
                     </tr>

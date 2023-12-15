@@ -20,7 +20,8 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
 
     public getVerboseName = (plural = false) => this.translate.instant(plural ? `Speakers` : `Speaker`);
 
-    public getTitle = (viewSpeaker: ViewSpeaker) => (viewSpeaker.user ? viewSpeaker.user.getFullName() : ``);
+    public getTitle = (viewSpeaker: ViewSpeaker) =>
+        viewSpeaker.user ? viewSpeaker.user.getFullName() : this.translate.instant(`Deleted user`);
 
     public create(
         listOfSpeakers: ListOfSpeakers,

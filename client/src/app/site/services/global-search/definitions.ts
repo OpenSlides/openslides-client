@@ -12,6 +12,13 @@ export interface GlobalSearchEntry {
     score?: number;
 }
 
+export interface GlobalSearchResponseEntry {
+    content: any;
+    score: number;
+    matched_by: { [field: string]: string[] };
+    matched_by_fqids: string[];
+}
+
 export interface GlobalSearchResponse {
-    [fqid: string]: { content: any; score: number; matched_by: { [field: string]: string[] } };
+    [fqid: string]: GlobalSearchResponseEntry;
 }

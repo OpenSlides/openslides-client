@@ -34,6 +34,7 @@ import {
     ViewTag
 } from '../pages/motions';
 import { ViewGroup } from '../pages/participants';
+import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from '../pages/polls/view-models/view-poll-candidate-list';
@@ -138,6 +139,7 @@ interface IMeetingRelations {
     motions_default_statute_amendment_workflow: ViewMotionWorkflow;
     motion_poll_default_groups: ViewGroup[];
     assignment_poll_default_groups: ViewGroup[];
+    topic_poll_default_groups: ViewGroup[];
     poll_default_groups: ViewGroup[];
     projectors: ViewProjector[];
     all_projections: ViewProjection[];
@@ -186,6 +188,7 @@ interface IMeetingRelations {
     list_of_speakers_countdown: ViewProjectorCountdown;
     point_of_order_categories: ViewPointOfOrderCategory[];
     point_of_order_categories_as_observable: Observable<ViewPointOfOrderCategory[]>;
+    structure_levels: ViewStructureLevel[];
 }
 export interface ViewMeeting
     extends Meeting,
