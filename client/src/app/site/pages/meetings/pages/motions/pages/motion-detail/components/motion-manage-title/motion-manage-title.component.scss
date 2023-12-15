@@ -9,6 +9,10 @@
         margin-left: -20px;
         padding-left: 20px;
 
+        .button {
+            position: relative;
+        }
+
         .change-title {
             position: relative;
             width: 0;
@@ -29,6 +33,10 @@
         }
 
         &:hover .change-title:before {
+            display: block;
+        }
+
+        &:focus .change-title:before {
             display: block;
         }
 

@@ -46,6 +46,12 @@ export class TileComponent implements OnInit {
     public clicked: EventEmitter<GridTileClickEvent> = new EventEmitter<GridTileClickEvent>();
 
     /**
+     * EventEmitter for the `ClickEvent`.
+     */
+    @Output()
+    public enter: EventEmitter<GridTileClickEvent> = new EventEmitter<GridTileClickEvent>();
+
+    /**
      * Property, which defines the size of the tile @Mobile
      */
     public mobileSize: number | null = null;
@@ -96,6 +102,18 @@ export class TileComponent implements OnInit {
      */
     public onClick(event: MouseEvent): void {
         this.clicked.emit({
+            data: this.data,
+            source: event
+        });
+    }
+
+    /**
+     * Function, that fires when the user clicks enter on the tile.
+     *
+     * @param event The source event on keydown.enter.
+     */
+    public onEnter(event: Event): void {
+        this.enter.emit({
             data: this.data,
             source: event
         });

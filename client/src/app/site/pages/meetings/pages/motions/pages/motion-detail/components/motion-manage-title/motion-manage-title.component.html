@@ -1,17 +1,17 @@
 <div class="title" *ngIf="motion">
     <os-projectable-title [model]="motion" [getTitleFn]="getTitleFn">
-        <span class="motion-title" prepend *ngIf="titleCanBeChanged()">
-            <span
-                class="title-change-indicator"
-                *ngIf="titleChangeRecommendation"
-                (click)="gotoChangeRecommendation(titleChangeRecommendation)"
-            ></span>
-            <span
-                class="change-title"
-                *osPerms="permission.motionCanManage; and: !titleChangeRecommendation"
-                (click)="createTitleChangeRecommendation()"
-            ></span>
-        </span>
+        <button
+            prepend
+            class="motion-title change-title primary-accent-by-theme"
+            *osPerms="permission.motionCanManage; and: !titleChangeRecommendation"
+            (click)="createTitleChangeRecommendation()"
+            (keydown.enter)="createTitleChangeRecommendation()"
+            matTooltip="{{ 'Title change recommendation' | translate }}"
+            matTooltipPosition="left"
+            mat-icon-button
+        >
+            <mat-icon>add_box</mat-icon>
+        </button>
         <button
             append
             class="primary-accent-by-theme"
