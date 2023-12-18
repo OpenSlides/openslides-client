@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -26,27 +26,19 @@ import { MEDIAFILES_SUBSCRIPTION } from '../../../../mediafiles.subscription';
 import { MediafileCommonService } from '../../../../services/mediafile-common.service';
 import { MediafileListExportService } from '../../services/mediafile-list-export.service/mediafile-list-export.service';
 import { MediafileListGroupService } from '../../services/mediafile-list-group.service';
+import { BaseMediafileComponent } from '../../../../../../../base-media/mediafiles';
 
 @Component({
     selector: `os-mediafile-list`,
     templateUrl: `./mediafile-list.component.html`,
     styleUrls: [`./mediafile-list.component.scss`]
 })
-export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMediafile> implements OnInit, OnDestroy {
+export class MediafileListComponent extends BaseMediafileComponent implements OnInit, OnDestroy {
     @ViewChild(FileListComponent)
-    public readonly fileListComponent!: FileListComponent;
 
-    public logoPlaces: string[];
-    public logoDisplayNames = LogoDisplayNames;
     public fontPlaces: string[];
     public fontDisplayNames = FontDisplayNames;
 
-    /**
-     * Holds the file to edit
-     */
-    public fileToEdit!: ViewMediafile;
-
-    public newDirectoryForm: UntypedFormGroup;
     public groupsBehaviorSubject: Observable<ViewGroup[]>;
 
     /**
@@ -72,37 +64,16 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         );
     }
 
-    /**
-     * The form to edit Files
-     */
-    public fileEditForm: UntypedFormGroup | null = null;
-
     public get hasInteractionState(): Observable<boolean> {
         return this.interactionService.isConfStateNone.pipe(map(isNone => !isNone));
     }
-
-    private folderSubscription: Subscription | null = null;
-    private directorySubscription: Subscription | null = null;
-    public directory: ViewMediafile | null = null;
-    public directoryChain: ViewMediafile[] = [];
-
-    public directoryObservable: Observable<ViewMediafile[]>;
-    private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
+    private mediaManage = inject(MediaManageService);
+    private groupRepo = inject(MediafileListGroupService);
+    private interactionService = inject(InteractionService);
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private route: ActivatedRoute,
-        public repo: MediafileControllerService,
-        private exporter: MediafileListExportService,
-        private mediaManage: MediaManageService,
-        public vp: ViewPortService,
-        private operator: OperatorService,
-        private formBuilder: UntypedFormBuilder,
-        private groupRepo: MediafileListGroupService,
-        private cd: ChangeDetectorRef,
-        private commonService: MediafileCommonService,
-        private interactionService: InteractionService
+        protected override translate: TranslateService
     ) {
         super(componentServiceCollector, translate);
         this.canMultiSelect = true;
@@ -133,22 +104,6 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         super.ngOnDestroy();
         this.clearSubscriptions();
         this.cd.detach();
-    }
-
-    public override selectAll(): void {
-        this.fileListComponent.selectAll();
-    }
-
-    public override deselectAll(): void {
-        this.fileListComponent.deselectAll();
-    }
-
-    public onSelect(files: ViewMediafile[]): void {
-        this.selectedRows = files;
-    }
-
-    public onMove(files: ViewMediafile[]): void {
-        this.fileListComponent.openMoveDialog(files);
     }
 
     /**
@@ -208,33 +163,13 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         }
     }
 
-    public onMainEvent(): void {
-        this.commonService.navigateToUploadPage(this.directory?.id);
-    }
-
     /**
      * Click on the edit button in the file menu
      *
      * @param file the selected file
      */
-    public onEditFile(file: ViewMediafile): void {
-        if (!this.isMultiSelect) {
-            this.fileToEdit = file;
-
-            this.fileEditForm = this.formBuilder.group({
-                title: [file.title, Validators.required],
-                access_group_ids: [file.access_group_ids]
-            });
-        }
-    }
-
-    /**
-     * Click on the save button in edit mode
-     */
-    public async onSaveFile(value: Partial<Mediafile> | null): Promise<void> {
-        if (value) {
-            await this.repo.update(value, this.fileToEdit);
-        }
+    public override onEditFile(file: ViewMediafile): void {
+        super.onEditFile(file, true);
     }
 
     /**
@@ -244,10 +179,6 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      */
     public async onDeleteFile(file: ViewMediafile): Promise<void> {
         await this.commonService.handleDeleteFile(file, id => this.changeDirectory(id));
-    }
-
-    public async deleteSelected(): Promise<void> {
-        await this.commonService.handleDeleteSelected(this.selectedRows, () => this.deselectAll());
     }
 
     /**
@@ -282,12 +213,6 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         this.cd.markForCheck();
     }
 
-    public createNewFolder(templateRef: TemplateRef<string>): void {
-        this.commonService
-            .handleCreateNewFolder(this.newDirectoryForm, this.directory, templateRef)
-            .catch(this.raiseError);
-    }
-
     public downloadMultiple(mediafiles: ViewMediafile[] = this.directorySubject.value): void {
         const eventName = this.meetingSettingsService.instant(`name`);
         const dirName = this.directory?.title ?? this.translate.instant(`Files`);
@@ -308,17 +233,6 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
             await this.mediaManage.unsetFont(place);
         } else {
             await this.mediaManage.setFont(place, file);
-        }
-    }
-
-    private clearSubscriptions(): void {
-        if (this.folderSubscription) {
-            this.folderSubscription.unsubscribe();
-            this.folderSubscription = null;
-        }
-        if (this.directorySubscription) {
-            this.directorySubscription.unsubscribe();
-            this.directorySubscription = null;
         }
     }
 }
