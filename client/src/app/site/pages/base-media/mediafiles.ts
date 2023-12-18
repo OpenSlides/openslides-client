@@ -14,6 +14,10 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from '../../../ui/modules/file-list/components/file-list/file-list.component';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { ActiveMeetingIdService } from '../meetings/services/active-meeting-id.service';
+import { MeetingComponentServiceCollectorService } from '../meetings/services/meeting-component-service-collector.service';
+import { MeetingSettingsService } from '../meetings/services/meeting-settings.service';
 
 @Injectable({
     providedIn: `root`
@@ -22,6 +26,18 @@ import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 export abstract class BaseMediafileComponent extends BaseListViewComponent<ViewMediafile> implements OnInit, OnDestroy {
     @ViewChild(FileListComponent)
     public readonly fileListComponent!: FileListComponent;
+
+    public get activeMeetingId(): Id | null {
+        return this.activeMeetingIdService.meetingId;
+    }
+
+    protected get activeMeetingIdService(): ActiveMeetingIdService {
+        return this.componentServiceCollector.activeMeetingIdService;
+    }
+
+    protected get meetingSettingsService(): MeetingSettingsService {
+        return this.componentServiceCollector.meetingSettingsService;
+    }
 
     /**
      * Holds the file to edit
@@ -57,6 +73,7 @@ export abstract class BaseMediafileComponent extends BaseListViewComponent<ViewM
     public formBuilder = inject(UntypedFormBuilder);
     public cd = inject(ChangeDetectorRef);
     public commonService = inject(MediafileCommonService);
+    public override componentServiceCollector = inject(MeetingComponentServiceCollectorService)
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
