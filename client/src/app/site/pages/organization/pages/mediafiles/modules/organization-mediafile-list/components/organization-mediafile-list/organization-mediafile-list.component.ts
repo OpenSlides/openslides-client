@@ -1,22 +1,13 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { OML } from 'src/app/domain/definitions/organization-permission';
 import { LogoDisplayNames, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { ORGANIZATION_SUBSCRIPTION } from 'src/app/site/pages/organization/organization.subscription';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
 
-import { ORGANIZATION_MEDIAFILE_LIST_SUBSCRIPTION } from '../../../../mediafiles.subscription';
-import { BaseMediafileComponent } from '../../../../../../../base-media/mediafiles';
+import { MediafileListeComponent } from '../../../../../../../base-media/mediafiles';
 
 @Component({
     selector: `os-organization-mediafile-list`,
@@ -24,22 +15,13 @@ import { BaseMediafileComponent } from '../../../../../../../base-media/mediafil
     styleUrls: [`./organization-mediafile-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationMediafileListComponent extends BaseMediafileComponent implements OnInit, OnDestroy {
+export class OrganizationMediafileListComponent extends MediafileListeComponent implements OnInit, OnDestroy {
     @ViewChild(FileListComponent)
     public override logoPlaces: LogoPlace[] = [`web_header`];
 
     protected updatingLogoAndFontSettings = false;
 
-    /**
-     * @return true if the user can manage media files
-     */
-    public get canEdit(): boolean {
-        return this.operator.hasOrganizationPermissions(OML.can_manage_organization);
-    }
-
-    public get shouldShowFileMenuFn(): (file: ViewMediafile) => boolean {
-        return () => this.showFileMenu();
-    }
+    public readonly isOrgaLevel = true;
 
     /**
      * Determine if the file menu should generally be accessible, according to the users permission
@@ -48,9 +30,7 @@ export class OrganizationMediafileListComponent extends BaseMediafileComponent i
         return this.canEdit;
     }
 
-
-    public isUsedAsLogoFn = (file: ViewMediafile) => this.isUsedAs(file);
-        public constructor(
+    public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService
     ) {
@@ -78,14 +58,6 @@ export class OrganizationMediafileListComponent extends BaseMediafileComponent i
         super.ngOnDestroy();
         this.clearSubscriptions();
         this.cd.detach();
-    }
-
-    public isMediafileUsed(file: ViewMediafile, place: LogoPlace): boolean {
-        const mediafile = this.repo.getViewModel(file.id)!;
-        if (file.isImage() && !Object.keys(LogoDisplayNames).includes(place)) {
-            return false;
-        }
-        return mediafile.token === place;
     }
 
     public async toggleMediafileUsage(event: Event, mediafile: ViewMediafile, place: LogoPlace): Promise<void> {
@@ -116,49 +88,8 @@ export class OrganizationMediafileListComponent extends BaseMediafileComponent i
         return `${prefix} ${LogoDisplayNames[place].toLowerCase()}`;
     }
 
-    /**
-     * Determine if the given file has any extra option to show.
-     * @returns wether the extra menu should be accessible
-     */
-    public showFileMenu(): boolean {
-        return this.canEdit;
-    }
-
-    public async changeDirectory(directoryId: number | null): Promise<void> {
-        const mediafilesSubscribed = (
-            await Promise.all([
-                this.modelRequestService.subscriptionGotData(ORGANIZATION_SUBSCRIPTION),
-                this.modelRequestService.subscriptionGotData(ORGANIZATION_MEDIAFILE_LIST_SUBSCRIPTION)
-            ])
-        ).some(val => !!val);
-        if (!mediafilesSubscribed) {
-            setTimeout(() => this.changeDirectory(directoryId), 50);
-            return;
-        }
-
-        this.clearSubscriptions();
-
-        // pipe the directory observable to the directorySubject so that the actual observable which
-        // is given to the file list does not change
-        this.folderSubscription = this.repo.getDirectoryObservable(directoryId).subscribe(this.directorySubject);
-
-        if (directoryId) {
-            this.directorySubscription = this.repo.getViewModelObservable(directoryId).subscribe(newDirectory => {
-                this.directory = newDirectory;
-                this.commonService.navigateToDirectoryPage(this.directory, directoryChain => {
-                    this.directoryChain = directoryChain;
-                });
-            });
-        } else {
-            this.directory = null;
-            this.commonService.navigateToDirectoryPage(
-                this.directory,
-                directoryChain => {
-                    this.directoryChain = directoryChain;
-                },
-                true
-            );
-        }
+    public override async changeDirectory(directoryId: number | null): Promise<void> {
+        return super.changeDirectory(directoryId, this.isOrgaLevel);
     }
 
     /**
@@ -167,26 +98,6 @@ export class OrganizationMediafileListComponent extends BaseMediafileComponent i
      * @param file the selected file
      */
     public override onEditFile(file: ViewMediafile): void {
-        super.onEditFile(file);
-    }
-
-    /**
-     * Sends a delete request to the repository.
-     *
-     * @param file the file to delete
-     */
-    public async onDeleteFile(file: ViewMediafile): Promise<void> {
-        await this.commonService.handleDeleteFile(file, id => this.changeDirectory(id));
-    }
-
-    public downloadMultiple(mediafiles: ViewMediafile[] = this.directorySubject.value): void {
-        const dirName = this.directory?.title ?? this.translate.instant(`Files`);
-        const archiveName = `${dirName}`.trim();
-        this.exporter.downloadArchive(archiveName, mediafiles);
-    }
-
-    private isUsedAs(file: ViewMediafile): boolean {
-        const places = this.logoPlaces;
-        return places.some(place => this.isMediafileUsed(file, place));
+        super.onEditFile(file, this.isOrgaLevel);
     }
 }
