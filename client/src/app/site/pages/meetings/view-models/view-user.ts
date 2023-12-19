@@ -234,7 +234,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.getMeetingUser(meetingId)?.structure_level_ids;
     }
 
-    public structure_level(meetingId?: Id): ViewStructureLevel[] {
+    public structure_levels(meetingId?: Id): ViewStructureLevel[] {
         return this.getMeetingUser(meetingId)?.structure_levels;
     }
 

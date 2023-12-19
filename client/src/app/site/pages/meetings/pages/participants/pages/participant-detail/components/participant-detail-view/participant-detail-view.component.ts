@@ -125,7 +125,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         if (!this.activeMeetingId) {
             return [];
         }
-        return this.user?.structure_level() || [];
+        return this.user?.structure_levels() || [];
     }
 
     public get usersStructureLevelIds(): number[] {
