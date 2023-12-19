@@ -26,6 +26,7 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
         const participantListFieldsMinimal: TypedFieldset<MeetingUser> = groupFields.concat([
             `vote_delegated_to_id`,
             `vote_delegations_from_ids`,
+            `structure_level_ids`,
             `vote_weight`,
             `comment`,
             `user_id`,
@@ -52,6 +53,7 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
                 comment: partialUser.comment,
                 vote_delegated_to_id: partialUser.vote_delegated_to_id,
                 vote_delegations_from_ids: partialUser.vote_delegations_from_ids,
+                structure_level_ids: partialUser.structure_level_ids,
                 group_ids: partialUser.group_ids
             };
 

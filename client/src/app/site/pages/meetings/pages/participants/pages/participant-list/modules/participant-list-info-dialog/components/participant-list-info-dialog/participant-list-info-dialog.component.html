@@ -27,12 +27,13 @@
         ></os-list-search-selector>
     </mat-form-field>
     <mat-form-field>
-        <input
-            type="text"
-            matInput
+        <os-list-search-selector
+            [(ngModel)]="infoDialog.structure_level_ids"
+            [multiple]="true"
+            [includeNone]="true"
             placeholder="{{ 'Structure level' | translate }}"
-            [(ngModel)]="infoDialog.structure_level"
-        />
+            [inputListValues]="structureLevelObservable"
+        ></os-list-search-selector>
     </mat-form-field>
     <mat-form-field>
         <input
@@ -53,7 +54,7 @@
             vote_delegations_from_ids: infoDialog.vote_delegations_from_ids,
             vote_delegated_to_id: infoDialog.vote_delegated_to_id,
             number: infoDialog.number,
-            structure_level: infoDialog.structure_level
+            structure_level_ids: infoDialog.structure_level_ids
         }"
     >
         <span>{{ 'Save' | translate }}</span>

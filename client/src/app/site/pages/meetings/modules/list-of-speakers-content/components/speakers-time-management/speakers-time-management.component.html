@@ -1,0 +1,63 @@
+<mat-card class="os-card">
+    <mat-card-title>
+        {{ 'List of speakers time management' | translate }}
+        <mat-icon (click)="toggleEdit()" *ngIf="!timeEdit">edit</mat-icon>
+        <mat-icon (click)="toggleEdit()" *ngIf="timeEdit">close</mat-icon>
+    </mat-card-title>
+    <mat-card-content>
+        <mat-table [dataSource]="myDataSource" class="mat-elevation-z8 demo-table">
+            <!-- Structure Level Column -->
+            <ng-container matColumnDef="structure_level">
+                <mat-header-cell *matHeaderCellDef>
+                    <mat-icon class="margin-right-icon">flag</mat-icon>
+                    {{ 'Structure level' | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <div
+                        class="fake-button-no-touch"
+                        [ngStyle]="{ background: element.color, width: '20px', height: '20px', 'margin-right': '4px' }"
+                    ></div>
+                    {{ element.structure_level }}
+                </mat-cell>
+            </ng-container>
+
+            <!-- Total time Column -->
+            <ng-container matColumnDef="total_time">
+                <mat-header-cell *matHeaderCellDef>
+                    <mat-icon class="margin-right-icon">schedule</mat-icon>
+                    {{ 'Total time' | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <input
+                        matInput
+                        type="text"
+                        *ngIf="timeEdit"
+                        [formControl]="timeFormControls.controls[element.id]"
+                    />
+                    <span *ngIf="!timeEdit">{{ duration(element.total_time) }}</span>
+                </mat-cell>
+            </ng-container>
+
+            <!-- Overhang time Column -->
+            <ng-container matColumnDef="overhang_time">
+                <mat-header-cell *matHeaderCellDef>
+                    <mat-icon class="margin-right-icon">more_time</mat-icon>
+                    {{ 'Overhang time' | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ duration(element.overhang_time) }}
+                    <button
+                        mat-stroked-button
+                        (click)="promptAddOverhangTime(element.overhang_time)"
+                        *ngIf="element.overhang_time > 0"
+                    >
+                        {{ 'Distribute among all' | translate }}
+                    </button>
+                </mat-cell>
+            </ng-container>
+            <mat-header-row class="my-border-bottom" *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        </mat-table>
+        <button mat-button *ngIf="timeEdit" (click)="saveTimes()" [disabled]="!timeFormControls.valid">Save</button>
+    </mat-card-content>
+</mat-card>
