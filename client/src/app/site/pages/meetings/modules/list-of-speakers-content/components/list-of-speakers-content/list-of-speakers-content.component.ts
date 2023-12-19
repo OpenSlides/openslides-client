@@ -77,8 +77,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.meetingSettingsService.get(`list_of_speakers_speaker_note_for_everyone`);
     }
 
-    public enableProContraSpeech = false;
-
     public get title(): string {
         return this._listOfSpeakers?.getTitle() || ``;
     }
@@ -129,6 +127,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public restrictPointOfOrderActions = false;
 
     public isPointOfOrderFn = (speaker: ViewSpeaker) => speaker.point_of_order;
+    public enableProContraSpeech = false;
 
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
@@ -141,6 +140,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
 
     private pointOfOrderEnabled = false;
+
     private canMarkSelf = false;
 
     private get onlyPresentUsers(): boolean {
