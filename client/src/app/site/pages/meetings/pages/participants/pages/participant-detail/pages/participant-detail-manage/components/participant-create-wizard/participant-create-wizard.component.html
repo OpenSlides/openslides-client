@@ -42,45 +42,26 @@
                         <div class="full-width first-line">
                             <!-- First name -->
                             <mat-form-field>
-                                <input
-                                    type="text"
-                                    osAutofocus
-                                    matInput
-                                    placeholder="{{ 'Given name' | translate }}"
-                                    formControlName="first_name"
-                                />
+                                <mat-label>{{ 'Given name' | translate }}</mat-label>
+                                <input type="text" osAutofocus matInput formControlName="first_name" />
                             </mat-form-field>
 
                             <!-- Last name -->
                             <mat-form-field>
-                                <input
-                                    type="text"
-                                    matInput
-                                    placeholder="{{ 'Surname' | translate }}"
-                                    formControlName="last_name"
-                                />
+                                <mat-label>{{ 'Surname' | translate }}</mat-label>
+                                <input type="text" matInput formControlName="last_name" />
                             </mat-form-field>
                         </div>
                         <!-- E-Mail -->
                         <mat-form-field class="full-width">
-                            <input
-                                type="email"
-                                matInput
-                                autocomplete="off"
-                                placeholder="{{ 'Email' | translate }}"
-                                name="email"
-                                formControlName="email"
-                            />
+                            <mat-label>{{ 'Email' | translate }}</mat-label>
+                            <input type="email" matInput autocomplete="off" name="email" formControlName="email" />
                             <mat-error>{{ 'Please enter a valid email address!' | translate }}</mat-error>
                         </mat-form-field>
                         <!-- username -->
                         <mat-form-field class="full-width">
-                            <input
-                                type="text"
-                                matInput
-                                placeholder="{{ 'Username' | translate }}"
-                                formControlName="username"
-                            />
+                            <mat-label>{{ 'Username' | translate }}</mat-label>
+                            <input type="text" matInput formControlName="username" />
                             <button
                                 matSuffix
                                 type="button"
@@ -160,12 +141,8 @@
                                         form70: !showVoteWeight
                                     }"
                                 >
-                                    <input
-                                        type="text"
-                                        matInput
-                                        placeholder="{{ 'Structure level' | translate }}"
-                                        formControlName="structure_level"
-                                    />
+                                    <mat-label>{{ 'Structure level' | translate }}</mat-label>
+                                    <input type="text" matInput formControlName="structure_level" />
                                 </mat-form-field>
 
                                 <!-- Participant Number -->
@@ -176,23 +153,15 @@
                                         form25: !showVoteWeight
                                     }"
                                 >
-                                    <input
-                                        type="text"
-                                        matInput
-                                        placeholder="{{ 'Participant number' | translate }}"
-                                        formControlName="number"
-                                    />
+                                    <mat-label>{{ 'Participant number' | translate }}</mat-label>
+                                    <input type="text" matInput formControlName="number" />
                                 </mat-form-field>
 
                                 <!-- Vote weight -->
                                 <!-- TODO Input type should be number with limited decimal spaces -->
                                 <mat-form-field class="form16 force-min-with" *ngIf="showVoteWeight">
-                                    <input
-                                        type="number"
-                                        matInput
-                                        placeholder="{{ 'Vote weight' | translate }}"
-                                        formControlName="vote_weight"
-                                    />
+                                    <mat-label>{{ 'Vote weight' | translate }}</mat-label>
+                                    <input type="number" matInput formControlName="vote_weight" />
                                     <mat-error
                                         *ngIf="isVoteWeightError && form.controls['vote_weight'].value > 0"
                                         translate
@@ -211,28 +180,29 @@
                             <div *ngIf="isAllowedFn('seeName')">
                                 <!-- Groups -->
                                 <mat-form-field>
+                                    <mat-label>{{ 'Groups' | translate }}</mat-label>
                                     <os-list-search-selector
                                         formControlName="group_ids"
                                         [multiple]="true"
-                                        placeholder="{{ 'Groups' | translate }}"
                                         [inputListValues]="groupsObservable"
                                     ></os-list-search-selector>
                                 </mat-form-field>
 
                                 <!-- Delegate Vote -->
                                 <mat-form-field *ngIf="showVoteDelegations">
+                                    <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
                                     <os-repo-search-selector
                                         formControlName="vote_delegations_from_ids"
                                         [repo]="repo"
                                         [sortService]="sortService"
                                         [multiple]="true"
                                         [subscriptionConfig]="participantSubscriptionConfig"
-                                        placeholder="{{ 'Voting right received from (principals)' | translate }}"
                                     ></os-repo-search-selector>
                                 </mat-form-field>
 
                                 <!-- Delegate Vote -->
                                 <mat-form-field *ngIf="showVoteDelegations">
+                                    <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
                                     <os-repo-search-selector
                                         formControlName="vote_delegated_to_id"
                                         [repo]="repo"
@@ -240,7 +210,6 @@
                                         [multiple]="false"
                                         [includeNone]="true"
                                         [subscriptionConfig]="participantSubscriptionConfig"
-                                        placeholder="{{ 'Voting right delegated to (proxy)' | translate }}"
                                     ></os-repo-search-selector>
                                 </mat-form-field>
                             </div>
@@ -255,11 +224,8 @@
                             <div *ngIf="isAllowedFn('manage')">
                                 <!-- Comment -->
                                 <mat-form-field>
-                                    <input
-                                        matInput
-                                        placeholder="{{ 'Comment' | translate }}"
-                                        formControlName="comment"
-                                    />
+                                    <mat-label>{{ 'Comment' | translate }}</mat-label>
+                                    <input matInput formControlName="comment" />
                                     <mat-hint>{{ 'Only for internal notes.' | translate }}</mat-hint>
                                 </mat-form-field>
                             </div>

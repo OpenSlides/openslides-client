@@ -19,20 +19,22 @@
             <input matInput formControlName="name" required />
         </mat-form-field>
 
-        <mat-form-field *ngIf="isCreateView">
-            <mat-label>{{ 'Duplicate from' | translate }}</mat-label>
-            <os-list-search-selector
-                [inputListValues]="availableMeetingsObservable"
-                [includeNone]="true"
-                [ngModel]="theDuplicateFromId"
-                [ngModelOptions]="{ standalone: true }"
-                (ngModelChange)="onUpdateDuplicateFrom($event)"
-                [sortFn]="false"
-            ></os-list-search-selector>
-            <mat-hint>
-                {{ 'Participants and administrators are copied completely and cannot be edited here.' | translate }}
-            </mat-hint>
-        </mat-form-field>
+        <p class="has-hint">
+            <mat-form-field *ngIf="isCreateView">
+                <mat-label>{{ 'Duplicate from' | translate }}</mat-label>
+                <os-list-search-selector
+                    [inputListValues]="availableMeetingsObservable"
+                    [includeNone]="true"
+                    [ngModel]="theDuplicateFromId"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="onUpdateDuplicateFrom($event)"
+                    [sortFn]="false"
+                ></os-list-search-selector>
+                <mat-hint>
+                    {{ 'Participants and administrators are copied completely and cannot be edited here.' | translate }}
+                </mat-hint>
+            </mat-form-field>
+        </p>
 
         <mat-form-field>
             <mat-label>{{ 'Language' | translate }}</mat-label>
@@ -55,7 +57,6 @@
             <os-account-search-selector
                 formControlName="admin_ids"
                 [accounts]="meetingUsers"
-                placeholder="{{ 'Administrators' | translate }}"
             ></os-account-search-selector>
         </mat-form-field>
 
