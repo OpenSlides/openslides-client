@@ -229,6 +229,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.getMeetingUser(meetingId)?.group_ids ?? [];
     }
 
+    public structure_level_ids(meetingId?: Id): Id[] {
+        return this.getMeetingUser(meetingId)?.structure_level_ids;
+    }
+
     public get isVoteWeightOne(): boolean {
         return (!this.getEnsuredActiveMeetingId() ? this.default_vote_weight : this.vote_weight()) === 1;
     }
