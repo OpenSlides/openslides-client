@@ -32,7 +32,7 @@ export interface InfoDialog {
     /**
      * Structure level for one user.
      */
-    structure_level: string;
+    structure_level_ids: number[];
 
     /**
      * Transfer voting rights from
