@@ -2,7 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
+      - 'feature/**'
 
 env:
   NG_CLI_ANALYTICS: ci
