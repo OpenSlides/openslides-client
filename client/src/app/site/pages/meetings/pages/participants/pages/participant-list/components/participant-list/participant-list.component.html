@@ -82,6 +82,9 @@
                     </os-comma-separated-listing>
                 </os-icon-container>
             </div>
+            <div *ngIf="user.structure_level()" class="spacer-top-5">
+                <os-icon-container icon="flag">{{ user.structure_level() }}</os-icon-container>
+            </div>
             <div *ngIf="user.number()" class="spacer-top-5">
                 <os-icon-container icon="perm_identity">{{ user.number() }}</os-icon-container>
             </div>
