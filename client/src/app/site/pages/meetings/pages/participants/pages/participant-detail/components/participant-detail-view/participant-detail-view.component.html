@@ -94,6 +94,17 @@
                 </mat-checkbox>
             </div>
             <div>
+                <!-- Strucuture Level -->
+                <mat-form-field>
+                    <mat-label>{{ 'Structure level' | translate }}</mat-label>
+                    <os-list-search-selector
+                        formControlName="structure_level_ids"
+                        [multiple]="true"
+                        [includeNone]="true"
+                        [inputListValues]="structureLevelObservable"
+                    ></os-list-search-selector>
+                </mat-form-field>
+
                 <!-- Participant Number -->
                 <mat-form-field
                     [ngClass]="{
@@ -195,6 +206,14 @@
         <div *ngIf="user?.number()">
             <h4>{{ 'Participant number' | translate }}</h4>
             <span>{{ user!.number() }}</span>
+        </div>
+
+        <!-- Structure level -->
+        <div *ngIf="usersStructureLevels && usersStructureLevels.length > 0">
+            <h4>{{ 'Structure level' | translate }}</h4>
+            <os-comma-separated-listing [list]="usersStructureLevels">
+                <ng-template let-structureLevel>{{ structureLevel }}</ng-template>
+            </os-comma-separated-listing>
         </div>
 
         <!-- Groups -->
