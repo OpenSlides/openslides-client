@@ -2,8 +2,9 @@
     <!-- Poll Title -->
     <form [formGroup]="contentForm">
         <mat-form-field>
+            <mat-label>{{ 'Title' | translate }}</mat-label>
             <h2 class="poll-preview-title">
-                <input matInput required formControlName="title" [placeholder]="'Title' | translate" />
+                <input matInput required formControlName="title" />
             </h2>
         </mat-form-field>
     </form>
@@ -13,7 +14,8 @@
             <div class="info-grid">
                 <!-- Poll Type -->
                 <mat-form-field *ngIf="isEVotingEnabled && !hideSelects.type">
-                    <mat-select [placeholder]="PollPropertyVerbose.type | translate" formControlName="type" required>
+                    <mat-label>{{ PollPropertyVerbose.type | translate }}</mat-label>
+                    <mat-select formControlName="type" required>
                         <mat-option *ngFor="let option of pollTypes | keyvalue" [value]="option.key">
                             {{ option.value | translate }}
                         </mat-option>
@@ -31,11 +33,11 @@
 
                 <!-- Groups entitled to Vote -->
                 <mat-form-field *ngIf="isEVotingSelected && !hideSelects.entitledGroups">
+                    <mat-label>{{ PollPropertyVerbose.groups | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="entitled_group_ids"
                         [multiple]="true"
                         [showChips]="false"
-                        [placeholder]="PollPropertyVerbose.groups | translate"
                         [repo]="groupRepo"
                         [pipeFn]="groupRepo.getFilterDefaultGroupFn()"
                     ></os-repo-search-selector>
@@ -45,11 +47,8 @@
             <div class="info-grid">
                 <!-- Poll Methods -->
                 <mat-form-field *ngIf="!isCreatedList && filteredPollMethods && !hideSelects.pollMethod">
-                    <mat-select
-                        [placeholder]="PollPropertyVerbose.pollmethod | translate"
-                        formControlName="pollmethod"
-                        required
-                    >
+                    <mat-label>{{ PollPropertyVerbose.pollmethod | translate }}</mat-label>
+                    <mat-select formControlName="pollmethod" required>
                         <mat-option
                             *ngFor="let option of filteredPollMethods | keyvalue : keepEntryOrder"
                             [value]="option.key"
@@ -63,10 +62,10 @@
                 <ng-container formGroupName="votes_amount" *ngIf="isEVotingSelected">
                     <!-- Min Amount of Votes -->
                     <mat-form-field *ngIf="showMinMaxVotes(data)">
+                        <mat-label>{{ PollPropertyVerbose.min_votes_amount | translate }}</mat-label>
                         <input
                             type="number"
                             matInput
-                            placeholder="{{ PollPropertyVerbose.min_votes_amount | translate }}"
                             formControlName="min_votes_amount"
                             min="1"
                             required
@@ -82,10 +81,10 @@
 
                     <!-- Max Amount of Votes -->
                     <mat-form-field *ngIf="showMinMaxVotes(data)">
+                        <mat-label>{{ PollPropertyVerbose.max_votes_amount | translate }}</mat-label>
                         <input
                             type="number"
                             matInput
-                            placeholder="{{ PollPropertyVerbose.max_votes_amount | translate }}"
                             formControlName="max_votes_amount"
                             min="1"
                             required
@@ -102,10 +101,10 @@
                     <ng-container formGroupName="votes_amount">
                         <!-- Max Amount of Votes per Option -->
                         <mat-form-field>
+                            <mat-label>{{ PollPropertyVerbose.max_votes_per_option | translate }}</mat-label>
                             <input
                                 type="number"
                                 matInput
-                                placeholder="{{ PollPropertyVerbose.max_votes_per_option | translate }}"
                                 formControlName="max_votes_per_option"
                                 min="1"
                                 required
@@ -130,41 +129,43 @@
 
         <div class="info-grid">
             <!-- 100 Percent Base -->
-            <mat-form-field *ngIf="!hideSelects.hundredPercentBase">
-                <mat-select
-                    placeholder="{{ PollPropertyVerbose.onehundred_percent_base | translate }}"
-                    formControlName="onehundred_percent_base"
-                    required
-                >
-                    <ng-container *ngFor="let option of validPercentBases | keyvalue : keepEntryOrder">
-                        <mat-option [value]="option.key">
-                            {{
-                                (isCreatedList || pollMethod === 'yna'
-                                    ? alternativePercentBases[option.key]
-                                    : option.value
-                                ) | translate
-                            }}
-                        </mat-option>
-                    </ng-container>
-                </mat-select>
-            </mat-form-field>
-            <ng-container *ngIf="isEVotingSelected && isCreated && !hideSelects.backendDuration">
-                <mat-form-field>
-                    <mat-select placeholder="{{ 'Voting duration' | translate }}" formControlName="backend" required>
-                        <ng-container *ngFor="let option of pollBackendDurationChoices | keyvalue">
+            <div>
+                <mat-form-field *ngIf="!hideSelects.hundredPercentBase">
+                    <mat-label>{{ PollPropertyVerbose.onehundred_percent_base | translate }}</mat-label>
+                    <mat-select formControlName="onehundred_percent_base" required>
+                        <ng-container *ngFor="let option of validPercentBases | keyvalue : keepEntryOrder">
                             <mat-option [value]="option.key">
-                                {{ option.value | translate }}
+                                {{
+                                    (isCreatedList || pollMethod === 'yna'
+                                        ? alternativePercentBases[option.key]
+                                        : option.value
+                                    ) | translate
+                                }}
                             </mat-option>
                         </ng-container>
                     </mat-select>
-                    <mat-hint>
-                        {{
-                            'Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.'
-                                | translate
-                        }}
-                    </mat-hint>
                 </mat-form-field>
-            </ng-container>
+            </div>
+            <div>
+                <ng-container *ngIf="isEVotingSelected && isCreated && !hideSelects.backendDuration">
+                    <mat-form-field subscriptSizing="dynamic">
+                        <mat-label>{{ 'Voting duration' | translate }}</mat-label>
+                        <mat-select formControlName="backend" required>
+                            <ng-container *ngFor="let option of pollBackendDurationChoices | keyvalue">
+                                <mat-option [value]="option.key">
+                                    {{ option.value | translate }}
+                                </mat-option>
+                            </ng-container>
+                        </mat-select>
+                        <mat-hint
+                            [innerText]="
+                                'Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.'
+                                    | translate
+                            "
+                        ></mat-hint>
+                    </mat-form-field>
+                </ng-container>
+            </div>
         </div>
     </form>
 </div>

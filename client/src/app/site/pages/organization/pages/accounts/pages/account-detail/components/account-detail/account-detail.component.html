@@ -44,12 +44,8 @@
                     form37: true
                 }"
             >
-                <input
-                    type="text"
-                    matInput
-                    placeholder="{{ 'Default structure level' | translate }}"
-                    formControlName="default_structure_level"
-                />
+                <mat-label>{{ 'Default structure level' | translate }}</mat-label>
+                <input type="text" matInput formControlName="default_structure_level" />
             </mat-form-field>
 
             <!-- Default Participant Number -->
@@ -59,23 +55,15 @@
                     form37: true
                 }"
             >
-                <input
-                    type="text"
-                    matInput
-                    placeholder="{{ 'Default number' | translate }}"
-                    formControlName="default_number"
-                />
+                <mat-label>{{ 'Default number' | translate }}</mat-label>
+                <input type="text" matInput formControlName="default_number" />
             </mat-form-field>
 
             <!-- Default Vote weight -->
             <!-- TODO Input type should be number with limited decimal spaces -->
             <mat-form-field class="form16 force-min-with">
-                <input
-                    type="number"
-                    matInput
-                    placeholder="{{ 'Default vote weight' | translate }}"
-                    formControlName="default_vote_weight"
-                />
+                <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
+                <input type="number" matInput formControlName="default_vote_weight" />
                 <mat-error *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0" translate>
                     Please select a vote weight greater than or equal to 0.000001
                 </mat-error>
@@ -106,10 +94,10 @@
             </div>
             <div *osOmlPerms="OML.can_manage_organization">
                 <mat-form-field>
+                    <mat-label>{{ 'Committee admin' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="committee_management_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Committee admin' | translate }}"
                         [subscriptionConfig]="committeeSubscriptionConfig"
                         [repo]="committeeController"
                         [sortService]="committeeSortService"

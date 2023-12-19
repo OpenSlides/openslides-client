@@ -62,22 +62,16 @@
 <ng-template #loginform let-showExtra="showExtra">
     <form [formGroup]="loginForm" [ngClass]="{ 'login-container': showExtra }" (ngSubmit)="formLogin()">
         <mat-form-field>
-            <input
-                matInput
-                osAutofocus
-                required
-                data-cy="loginUsernameInput"
-                placeholder="{{ 'Username' | translate }}"
-                formControlName="username"
-            />
+            <mat-label>{{ 'Username' | translate }}</mat-label>
+            <input matInput osAutofocus required data-cy="loginUsernameInput" formControlName="username" />
         </mat-form-field>
         <br />
         <mat-form-field>
+            <mat-label>{{ 'Password' | translate }}</mat-label>
             <input
                 matInput
                 required
                 data-cy="loginPasswordInput"
-                placeholder="{{ 'Password' | translate }}"
                 formControlName="password"
                 [type]="!hide ? 'password' : 'text'"
             />

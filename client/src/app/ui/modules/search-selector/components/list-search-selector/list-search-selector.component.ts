@@ -9,7 +9,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
-import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
+import { MatFormFieldControl } from '@angular/material/form-field';
 import { auditTime, distinctUntilChanged, Observable } from 'rxjs';
 
 import { Selectable } from '../../../../../domain/interfaces/selectable';
