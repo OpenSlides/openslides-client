@@ -357,6 +357,23 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `list_of_speakers_show_first_contribution`,
                         label: _(`Show hint »first speech« in the list of speakers management view`),
                         type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_enable_interposed_question`,
+                        label: _(`Enable interposed questions`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_intervention_time`,
+                        label: _(`Intervention speaking time`),
+                        type: `integer`,
+                        validators: [Validators.min(0)]
+                    },
+                    {
+                        key: `list_of_speakers_default_structure_level_time`,
+                        label: _(`Default structure level speaking time`),
+                        type: `integer`,
+                        validators: [Validators.min(0)]
                     }
                 ]
             },
@@ -897,7 +914,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_email_sender`,
                         label: _(`Sender name`),
                         helpText: _(
-                            `IMPORTANT: The sender address (noreply@openslides.com) is defined in the OpenSlides server settings and cannot be changed here. 
+                            `IMPORTANT: The sender address (noreply@openslides.com) is defined in the OpenSlides server settings and cannot be changed here.
                             To receive replies you have to enter a reply address in the next field. Please test the email dispatch in case of changes!`
                         ),
                         dontTranslateDefault: true
