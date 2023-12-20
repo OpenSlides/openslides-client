@@ -22,7 +22,7 @@ jobs:
           ref: main
           submodules: true
       - name: Checkout latest commits
-        run: git submodule foreach 'git checkout main && git pull origin main'
+        run: git submodule foreach '(git fetch origin ${{ github.event.pull_request.base.ref }} && git checkout ${{ github.event.pull_request.base.ref }}) || (git checkout main && git pull origin main)'
       - name: Delete the client folder
         run: rm -r openslides-client
       - name: Clone openslides-client
