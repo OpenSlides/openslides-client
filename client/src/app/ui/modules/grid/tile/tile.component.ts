@@ -108,18 +108,6 @@ export class TileComponent implements OnInit {
     }
 
     /**
-     * Function, that fires when the user clicks enter on the tile.
-     *
-     * @param event The source event on keydown.enter.
-     */
-    public onEnter(event: Event): void {
-        this.enter.emit({
-            data: this.data,
-            source: event
-        });
-    }
-
-    /**
      * Function to set the size @Mobile
      *
      * @param size how great the tile should be
