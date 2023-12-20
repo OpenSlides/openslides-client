@@ -15,6 +15,7 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { SpeakersTimeManagementComponent } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/components/speakers-time-management/speakers-time-management.component';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules/sorting-list/sorting-list.module';
+import { PipesModule } from 'src/app/ui/pipes';
 
 import { ParticipantCommonServiceModule } from '../../pages/participants/services/common/participant-common-service.module';
 import { DetailViewModule } from '../meetings-component-collector/detail-view/detail-view.module';
@@ -51,7 +52,8 @@ const DECLARATIONS = [
         ParticipantCommonServiceModule,
         PointOfOrderDialogModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule.forChild(),
+        PipesModule
     ]
 })
 export class ListOfSpeakersContentModule {}

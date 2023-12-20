@@ -11,13 +11,15 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
+import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
+import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
@@ -47,6 +49,22 @@ import { PointOfOrderDialogService } from '../../modules/point-of-order-dialog/s
 })
 export class ListOfSpeakersContentComponent extends BaseMeetingComponent implements OnInit {
     public readonly SpeechState = SpeechState;
+
+    /**
+     * Whether the user is editing the content.
+     */
+    public isEditing = false;
+
+    /**
+     * Formular for the content.
+     */
+    public moderatorNoteForm: UntypedFormGroup;
+
+    /**
+     * Custom text to show as "save"
+     */
+    @Input()
+    public saveText = `Save`;
 
     @ViewChild(SortingListComponent)
     public listElement!: SortingListComponent;
@@ -78,6 +96,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public get title(): string {
+        return this._listOfSpeakers?.getTitle() || ``;
+    }
+
+    public get agendaItem(): ViewAgendaItem | string {
+        //TODO: get the AgendaItem -> then remove string as return
         return this._listOfSpeakers?.getTitle() || ``;
     }
 
@@ -159,7 +182,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private viewport: ViewPortService,
         private cd: ChangeDetectorRef,
         private dialog: PointOfOrderDialogService,
-        private interactionService: InteractionService
+        private interactionService: InteractionService,
+        private formBuilder: FormBuilder,
+        protected agendaItemRepo: AgendaItemRepositoryService
     ) {
         super(componentServiceCollector, translate);
 
@@ -171,6 +196,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 .get(`list_of_speakers_closing_disables_point_of_order`)
                 .subscribe(enabled => (this.restrictPointOfOrderActions = enabled))
         );
+        this.moderatorNoteForm = this.formBuilder.group({
+            moderator_notes: ``
+        });
     }
 
     public ngOnInit(): void {
@@ -493,5 +521,38 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.waitingSpeakers.find(
             speaker => speaker.user_id === this.operator.operatorId && speaker.point_of_order === pointOfOrder
         );
+    }
+
+    /**
+     * Changes to editing mode.
+     */
+    public toggleEditModeratorNote(): void {
+        // TODO: remove after agendaItem works
+        this._listOfSpeakers.COLLECTION;
+        console.log(`lalalalalalalaalalallalaalalalalalalal`);
+        console.log(this._listOfSpeakers.COLLECTION);
+        this.isEditing = !this.isEditing;
+    }
+
+    /**
+     * Saves changes and updates the content.
+     */
+    public saveChanges(): void {
+        // TODO: test after agendaItem works
+
+        // this.agendaItemRepo
+        //     .update(this.moderatorNoteForm.value, this.agendaItem
+        //     )
+        //     .then(() => {
+        //         this.isEditing = false;
+        //     })
+        //     .catch(this.raiseError);
+    }
+
+    public get moderatorNoteObservable(): Observable<string> | string {
+        // TODO: test after agendaItem works
+
+        // return this.agendaItem.moderator_notes;
+        return ``;
     }
 }

@@ -286,8 +286,46 @@
         </button>
     </div>
 </mat-card>
+
 <!-- special los part for structure level -->
 <os-speakers-time-management></os-speakers-time-management>
+
+<!-- Moderator Note-->
+<mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'">
+    <!-- Title edit/save/cancle-->
+    <h1>
+        {{ 'Moderator note' | translate }}
+        <ng-container *ngIf="isEditing">
+            <button mat-button (click)="toggleEditModeratorNote()">
+                <mat-icon>cancel</mat-icon>
+            </button>
+            <button mat-button [disabled]="!moderatorNoteForm.valid" (click)="saveChanges()">
+                <strong class="upper">{{ saveText | translate }}</strong>
+            </button>
+        </ng-container>
+        <ng-container *ngIf="!isEditing">
+            <button mat-button (click)="toggleEditModeratorNote()">
+                <mat-icon>edit</mat-icon>
+            </button>
+        </ng-container>
+    </h1>
+
+    <ng-container *ngIf="!isEditing">
+        <div class="app-content underlined-links">
+            <!--
+                <ng-container *ngIf="moderatorNoteObservable | async as moderatorNoteText">
+                    <div [innerHTML]="moderatorNoteText | trust : 'html'"></div>
+                </ng-container>
+            -->
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="isEditing">
+        <form [formGroup]="moderatorNoteForm">
+            <os-editor formControlName="moderatorNoteObservable"></os-editor>
+        </form>
+    </ng-container>
+</mat-card>
 
 <!-- admin menu for managing single speakers -->
 <mat-menu #manageSpeakerMenu>
