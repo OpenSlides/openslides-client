@@ -17,7 +17,8 @@
                 [osPaper]="2"
                 [osPaperRaise]="true"
                 [routerLink]="group.label.toLowerCase()"
-                tabindex="-1"
+                (keydown.enter)="onEnter(group.label)"
+                tabindex="0"
             >
                 <div class="flex-center background-selected">
                     <mat-icon>{{ group.icon }}</mat-icon>

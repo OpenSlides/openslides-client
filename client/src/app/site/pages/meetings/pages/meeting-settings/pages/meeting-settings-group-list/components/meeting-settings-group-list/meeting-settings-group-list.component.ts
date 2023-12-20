@@ -47,4 +47,9 @@ export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
         }
         return payload;
     }
+
+    protected onEnter(route: string): void {
+        route = this.activeMeetingId + `/settings/` + route.toLowerCase();
+        this.router.navigate([route]);
+    }
 }
