@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
@@ -420,8 +421,15 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         if (!data.userId) {
             data.userId = this.operator.operatorId;
         }
+        const user = this.userRepository.getViewModel(data.userId);
+        let structureLevelId: Id;
+        if (user.getMeetingUser().structure_level_ids.length === 1) {
+            structureLevelId = user.getMeetingUser().structure_level_ids[0];
+        }
+
         await this.speakerRepo.create(this.listOfSpeakers, data.userId!, {
-            meeting_user_id: data.user?.meeting_user_id
+            meeting_user_id: data.user?.meeting_user_id,
+            structure_level_id: structureLevelId
         });
     }
 

@@ -36,6 +36,7 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
             speechState?: SpeechState;
             point_of_order_category_id?: Id;
             meeting_user_id?: Id;
+            structure_level_id?: Id;
         }
     ): Promise<Identifiable> {
         const meetingUserId =

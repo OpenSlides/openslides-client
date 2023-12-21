@@ -61,6 +61,6 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
 interface ISpeakerRelations {
     list_of_speakers: ViewListOfSpeakers;
     point_of_order_category: ViewPointOfOrderCategory;
-    structure_level_list_of_speakers: ViewStructureLevelListOfSpeakers[];
+    structure_level_list_of_speakers: ViewStructureLevelListOfSpeakers;
 }
 export interface ViewSpeaker extends Speaker, ISpeakerRelations, HasMeeting {}

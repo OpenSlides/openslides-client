@@ -31,12 +31,14 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
             note?: UnsafeHtml;
             speechState?: SpeechState;
             point_of_order_category_id?: Id;
+            structure_level_id?: Id;
         } = {}
     ): Promise<Identifiable> {
         const payload: any = {
             list_of_speakers_id: listOfSpeakers.id,
             meeting_user_id: meetingUserId,
             speech_state: optionalInformation.speechState,
+            structure_level_id: optionalInformation.structure_level_id,
             point_of_order: optionalInformation.pointOfOrder,
             point_of_order_category_id: optionalInformation.pointOfOrder
                 ? optionalInformation.point_of_order_category_id
