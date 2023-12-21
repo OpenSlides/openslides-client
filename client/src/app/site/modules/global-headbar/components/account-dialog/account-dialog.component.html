@@ -23,7 +23,7 @@
         </div>
         <mat-divider [vertical]="true"></mat-divider>
         <div class="account-dialog-content">
-            <div class="content-wrapper" (keydown)="onKeyDown($event)">
+            <div class="content-wrapper" (keydown)="onKeyDown($event)" tabindex="-1">
                 <ng-container [ngSwitch]="activeMenuItem">
                     <ng-container
                         *ngSwitchCase="menuItemsRef.SHOW_PROFILE"
