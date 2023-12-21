@@ -312,17 +312,15 @@
 
     <ng-container *ngIf="!isEditing">
         <div class="app-content underlined-links">
-            <!--
-                <ng-container *ngIf="moderatorNoteObservable | async as moderatorNoteText">
-                    <div [innerHTML]="moderatorNoteText | trust : 'html'"></div>
-                </ng-container>
-            -->
+            <ng-container *ngIf="moderatorNoteObservable | async as moderatorNoteText">
+                <div [innerHTML]="moderatorNoteText | trust : 'html'"></div>
+            </ng-container>
         </div>
     </ng-container>
 
     <ng-container *ngIf="isEditing">
         <form [formGroup]="moderatorNoteForm">
-            <os-editor formControlName="moderatorNoteObservable"></os-editor>
+            <os-editor formControlName="moderator_note"></os-editor>
         </form>
     </ng-container>
 </mat-card>

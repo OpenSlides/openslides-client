@@ -100,9 +100,13 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public isAgendaItem(): boolean {
-        const contentObject = this._listOfSpeakers?.content_object;
-        const isOnAgenda = contentObject?.getModel().agenda_item_id;
+        const isOnAgenda = this._contentObject?.getModel().agenda_item_id;
         return isOnAgenda;
+    }
+
+    public get moderatorNotes(): Observable<string> {
+        const moderator_notes = this._contentObject?.getModel().moderator_notes;
+        return moderator_notes;
     }
 
     public get closed(): boolean {
@@ -125,6 +129,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public set listOfSpeakers(los: ViewListOfSpeakers) {
         if (los) {
             this._listOfSpeakers = los;
+            this._contentObject = this._listOfSpeakers.content_object;
             this.updateSpeakers();
         }
     }
@@ -163,6 +168,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
 
+    private _contentObject = this._listOfSpeakers?.content_object;
+
     private pointOfOrderEnabled = false;
 
     private canMarkSelf = false;
@@ -198,7 +205,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 .subscribe(enabled => (this.restrictPointOfOrderActions = enabled))
         );
         this.moderatorNoteForm = this.formBuilder.group({
-            moderator_notes: `moooderator notes`
+            moderator_note: ``
         });
     }
 
@@ -528,11 +535,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      * Changes to editing mode.
      */
     public toggleEditModeratorNote(): void {
-        // TODO: remove after agendaItem works
-        console.log(`lalalalalalalaalalallalaalalalalalalal`);
-        const a = this._listOfSpeakers.content_object;
-        a.getModel().moderator_notes
-        console.log(a.getModel().moderator_notes);
         this.isEditing = !this.isEditing;
     }
 
@@ -551,10 +553,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         //     .catch(this.raiseError);
     }
 
-    public get moderatorNoteObservable(): Observable<string> | string {
-        // TODO: test after agendaItem works
-
-        // return this.agendaItem.moderator_notes;
-        return ``;
+    public get moderatorNoteObservable(): Observable<string>{
+        return this.moderatorNotes;
     }
 }
