@@ -711,7 +711,8 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewStructureLevelListOfSpeakers,
         OViewModel: ViewListOfSpeakers,
         MField: `list_of_speakers`,
-        OField: `structure_level_list_of_speakers`
+        OField: `structure_level_list_of_speakers`,
+        OIdField: `structure_level_list_of_speakers_ids`
     }),
     ...makeM2O({
         MViewModel: ViewSpeaker,

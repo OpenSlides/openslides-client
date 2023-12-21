@@ -18,6 +18,10 @@ export class StructureLevelListOfSpeakers extends BaseModel<StructureLevelListOf
     public list_of_speakers_id!: Id; // list_of_speakers/structure_level_list_of_speakers_ids
     public speaker_ids: Id[]; // speaker/structure_level_list_of_speakers_id
 
+    public constructor(input?: any) {
+        super(StructureLevelListOfSpeakers.COLLECTION, input);
+    }
+
     public static readonly REQUESTABLE_FIELDS: (keyof StructureLevelListOfSpeakers)[] = [
         `id`,
         `structure_level_id`,
