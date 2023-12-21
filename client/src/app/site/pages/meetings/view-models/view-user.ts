@@ -5,6 +5,7 @@ import { Id } from '../../../../domain/definitions/key-types';
 import { ViewCommittee } from '../../organization/pages/committees';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
+import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { DelegationType } from './delegation-type';
@@ -231,6 +232,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public structure_level_ids(meetingId?: Id): Id[] {
         return this.getMeetingUser(meetingId)?.structure_level_ids;
+    }
+
+    public structure_levels(meetingId?: Id): ViewStructureLevel[] {
+        return this.getMeetingUser(meetingId)?.structure_levels;
     }
 
     public get isVoteWeightOne(): boolean {
