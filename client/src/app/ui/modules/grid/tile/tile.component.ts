@@ -46,12 +46,6 @@ export class TileComponent implements OnInit {
     public clicked: EventEmitter<GridTileClickEvent> = new EventEmitter<GridTileClickEvent>();
 
     /**
-     * EventEmitter for the `ClickEvent`.
-     */
-    @Output()
-    public enter: EventEmitter<GridTileClickEvent> = new EventEmitter<GridTileClickEvent>();
-
-    /**
      * Property, which defines the size of the tile @Mobile
      */
     public mobileSize: number | null = null;
