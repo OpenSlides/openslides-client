@@ -99,9 +99,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this._listOfSpeakers?.getTitle() || ``;
     }
 
-    public get agendaItem(): ViewAgendaItem | string {
-        //TODO: get the AgendaItem -> then remove string as return
-        return this._listOfSpeakers?.getTitle() || ``;
+    public isAgendaItem(): boolean {
+        const contentObject = this._listOfSpeakers?.content_object;
+        const isOnAgenda = contentObject?.getModel().agenda_item_id;
+        return isOnAgenda;
     }
 
     public get closed(): boolean {
@@ -197,7 +198,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 .subscribe(enabled => (this.restrictPointOfOrderActions = enabled))
         );
         this.moderatorNoteForm = this.formBuilder.group({
-            moderator_notes: ``
+            moderator_notes: `moooderator notes`
         });
     }
 
@@ -528,9 +529,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      */
     public toggleEditModeratorNote(): void {
         // TODO: remove after agendaItem works
-        this._listOfSpeakers.COLLECTION;
         console.log(`lalalalalalalaalalallalaalalalalalalal`);
-        console.log(this._listOfSpeakers.COLLECTION);
+        const a = this._listOfSpeakers.content_object;
+        a.getModel().moderator_notes
+        console.log(a.getModel().moderator_notes);
         this.isEditing = !this.isEditing;
     }
 

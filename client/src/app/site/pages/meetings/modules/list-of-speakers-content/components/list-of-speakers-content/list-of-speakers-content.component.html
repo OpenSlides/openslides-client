@@ -291,7 +291,7 @@
 <os-speakers-time-management></os-speakers-time-management>
 
 <!-- Moderator Note-->
-<mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'">
+<mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'" *ngIf="isAgendaItem()">
     <!-- Title edit/save/cancle-->
     <h1>
         {{ 'Moderator note' | translate }}

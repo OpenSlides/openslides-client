@@ -155,7 +155,7 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
                     {
                         idField: `meeting_user_id`,
                         follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }],
-                        fieldset: [`number`, `structure_level`, `vote_weight`]
+                        fieldset: [`number`, `vote_weight`]
                     },
                     {
                         idField: `point_of_order_category_id`,
@@ -165,7 +165,8 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
             },
             {
                 idField: `content_object_id`,
-                fieldset: [`number`, `title`, ...MEETING_ROUTING_FIELDS]
+                fieldset: [`number`, `title`, ...MEETING_ROUTING_FIELDS],
+                follow: [{ idField: `agenda_item_id`, fieldset: ['moderator_notes'] }]
             }
         ]
     },
