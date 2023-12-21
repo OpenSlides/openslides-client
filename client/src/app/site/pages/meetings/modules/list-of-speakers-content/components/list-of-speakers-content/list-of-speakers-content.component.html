@@ -324,6 +324,31 @@
                 <mat-divider></mat-divider>
             </ng-container>
 
+            <!-- star button -->
+            <button
+                *ngIf="
+                    canManage && speaker.meeting_user.structure_levels && speaker.meeting_user.structure_levels.length
+                "
+                mat-menu-item
+                [matMenuTriggerFor]="structureLevelsMenu"
+            >
+                <mat-icon>flag</mat-icon>
+                <span>{{ 'Structure level' | translate }}</span>
+            </button>
+
+            <mat-menu #structureLevelsMenu="matMenu">
+                <button *ngFor="let structureLevel of speaker.meeting_user.structure_levels" mat-menu-item>
+                    <mat-icon *ngIf="speaker.structure_level_list_of_speakers?.structure_level_id">
+                        {{
+                            speaker.structure_level_list_of_speakers?.structure_level_id === structureLevel.id
+                                ? 'check'
+                                : ''
+                        }}
+                    </mat-icon>
+                    {{ structureLevel.name }}
+                </button>
+            </mat-menu>
+
             <mat-divider></mat-divider>
             <!-- remove speaker from list -->
             <button mat-menu-item (click)="removeSpeaker(speaker)">

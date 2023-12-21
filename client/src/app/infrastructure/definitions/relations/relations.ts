@@ -718,6 +718,7 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewSpeaker,
         OViewModel: ViewStructureLevelListOfSpeakers,
         MField: `structure_level_list_of_speakers`,
+        MIdField: `structure_level_list_of_speakers_id`,
         OField: `speakers`
     }),
 
