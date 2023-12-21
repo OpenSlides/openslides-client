@@ -271,16 +271,14 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     public getAllStructureLevel(overlay: boolean): ProjectionBuildDescriptor {
         // TODO: create own thing for project all structure level
         // should project all structure levels and their times
-        return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);     
-
+        return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
     }
 
-    public isStructureLevelCountdownEnabled() : boolean{
+    public isStructureLevelCountdownEnabled(): boolean {
         const strucutreLevelTime = this.meetingSettingsService.instant(`list_of_speakers_default_structure_level_time`);
         return true;
         // TODO activate when functional in settings
         // return strucutreLevelTime;
-
     }
 
     public wifiDataBuildDesc(): ProjectionBuildDescriptor {
