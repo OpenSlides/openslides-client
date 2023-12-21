@@ -387,6 +387,28 @@
                                 <span class="spacer-left-10">{{ 'Chyron' | translate }}</span>
                             </mat-list-item>
                         </mat-list>
+
+                        <!-- Chyron -->
+                        <mat-list>
+                            <mat-list-item *ngIf="isStructureLevelCountdownEnabled()">
+                                <os-projector-button
+                                    [object]="getCurrentStructureLevel(true)"
+                                    [projector]="projector"
+                                ></os-projector-button>
+                                <span class="spacer-left-10">{{ 'Current speaker' | translate }}</span>
+                            </mat-list-item>
+                        </mat-list>
+
+                        <!-- Chyron -->
+                        <mat-list>
+                            <mat-list-item *ngIf="isStructureLevelCountdownEnabled()">
+                                <os-projector-button
+                                    [object]="getAllStructureLevel(true)"
+                                    [projector]="projector"
+                                ></os-projector-button>
+                                <span class="spacer-left-10">{{ 'All structure levels' | translate }}</span>
+                            </mat-list-item>
+                        </mat-list>
                     </mat-expansion-panel>
 
                     <!-- Current slide -->
