@@ -71,7 +71,7 @@
         <form [formGroup]="structureLevelForm" (keydown)="onKeyDown($event)">
             <!-- Name -->
             <mat-form-field class="os-dialog-large">
-                <label>{{ 'Name of the structure level' | translate }}</label>
+                <mat-label>{{ 'Name of the structure level' | translate }}</mat-label>
                 <input formControlName="name" matInput required />
                 <mat-error>
                     {{ 'A name is required' | translate }}
@@ -79,7 +79,7 @@
             </mat-form-field>
             <!-- Color -->
             <mat-form-field class="os-dialog-large">
-                <label>{{ 'Color' | translate }}</label>
+                <mat-label>{{ 'Color' | translate }}</mat-label>
                 <input formControlName="color" type="color" matInput />
                 <mat-error>
                     {{ 'A color is required' | translate }}
