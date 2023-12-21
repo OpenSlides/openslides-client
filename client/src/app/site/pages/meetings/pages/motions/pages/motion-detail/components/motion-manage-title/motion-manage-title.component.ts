@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, Subscription } from 'rxjs';
 import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
+import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { ProjectableTitleComponent } from 'src/app/site/pages/meetings/modules/meetings-component-collector/detail-view/components/projectable-title/projectable-title.component';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -52,6 +53,14 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
             changeRecommendation: this.changeRecoRepo.createTitleChangeRecommendationTemplate(this.motion)
         });
     }
+
+    public titleCanBeChanged(): boolean {
+        if (this.motion.isStatuteAmendment() || this.motion.isParagraphBasedAmendment()) {
+            return false;
+        }
+        return this.changeRecoMode === ChangeRecoMode.Original || this.changeRecoMode === ChangeRecoMode.Diff;
+    }
+
 
     public getTitleWithChanges(): string {
         return this.changeRecoRepo.getTitleWithChanges(
