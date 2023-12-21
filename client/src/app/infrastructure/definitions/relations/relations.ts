@@ -711,12 +711,14 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewStructureLevelListOfSpeakers,
         OViewModel: ViewListOfSpeakers,
         MField: `list_of_speakers`,
-        OField: `structure_level_list_of_speakers`
+        OField: `structure_level_list_of_speakers`,
+        OIdField: `structure_level_list_of_speakers_ids`
     }),
     ...makeM2O({
         MViewModel: ViewSpeaker,
         OViewModel: ViewStructureLevelListOfSpeakers,
         MField: `structure_level_list_of_speakers`,
+        MIdField: `structure_level_list_of_speakers_id`,
         OField: `speakers`
     }),
 
@@ -1039,9 +1041,10 @@ export const RELATIONS: Relation[] = [
     }),
     // ########## StructureLevel
     ...makeM2O({
-        OViewModel: ViewStructureLevelListOfSpeakers,
-        MViewModel: ViewStructureLevel,
-        OField: `structure_level`,
-        MField: `structure_level_list_of_speakers`
+        MViewModel: ViewStructureLevelListOfSpeakers,
+        OViewModel: ViewStructureLevel,
+        MField: `structure_level`,
+        OField: `structure_level_list_of_speakers`,
+        OIdField: `structure_level_list_of_speakers_ids`
     })
 ];
