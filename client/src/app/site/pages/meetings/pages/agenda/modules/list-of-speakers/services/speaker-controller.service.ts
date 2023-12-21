@@ -76,6 +76,10 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
         return this.repo.sortSpeakers(listOfSpeakers, speakerIds);
     }
 
+    public setStructureLevel(speaker: ViewSpeaker, structureLevelId: Id): Promise<void> {
+        return this.repo.setStructureLevel(structureLevelId, speaker);
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////// End of repo's functions
     ///////////////////////////////////////////////////////////////////////////////////////////////

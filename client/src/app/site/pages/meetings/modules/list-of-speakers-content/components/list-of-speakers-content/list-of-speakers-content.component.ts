@@ -433,6 +433,13 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         });
     }
 
+    public async setStructureLevel(speaker: ViewSpeaker, structureLevel: Id): Promise<void> {
+        if (structureLevel === speaker.structure_level_list_of_speakers.structure_level_id) {
+            structureLevel = null;
+        }
+        await this.speakerRepo.setStructureLevel(speaker, structureLevel);
+    }
+
     /**
      * Checks how often a speaker has already finished speaking
      *

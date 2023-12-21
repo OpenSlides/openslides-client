@@ -1041,9 +1041,10 @@ export const RELATIONS: Relation[] = [
     }),
     // ########## StructureLevel
     ...makeM2O({
-        OViewModel: ViewStructureLevelListOfSpeakers,
-        MViewModel: ViewStructureLevel,
-        OField: `structure_level`,
-        MField: `structure_level_list_of_speakers`
+        MViewModel: ViewStructureLevelListOfSpeakers,
+        OViewModel: ViewStructureLevel,
+        MField: `structure_level`,
+        OField: `structure_level_list_of_speakers`,
+        OIdField: `structure_level_list_of_speakers_ids`
     })
 ];

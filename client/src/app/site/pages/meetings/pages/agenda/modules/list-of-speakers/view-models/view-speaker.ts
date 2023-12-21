@@ -38,6 +38,10 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return this.state === SpeakerState.FINISHED;
     }
 
+    public get isWaiting(): boolean {
+        return this.state === SpeakerState.WAITING;
+    }
+
     public get name(): string {
         return this.user ? this.user.full_name : ``;
     }

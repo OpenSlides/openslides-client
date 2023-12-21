@@ -61,6 +61,14 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         return this.sendActionToBackend(SpeakerAction.DELETE, payload);
     }
 
+    public setStructureLevel(structure_level_id: Id | null, viewModel: ViewSpeaker): Promise<void> {
+        const payload: any = {
+            id: viewModel.id,
+            structure_level_id
+        };
+        return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
+    }
+
     public sortSpeakers(listOfSpeakers: ListOfSpeakers, speakerIds: Id[]): Promise<void> {
         const payload: any = {
             list_of_speakers_id: listOfSpeakers.id,

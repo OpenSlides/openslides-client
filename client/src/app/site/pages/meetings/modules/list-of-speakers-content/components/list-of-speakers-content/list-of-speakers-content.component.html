@@ -121,6 +121,12 @@
                         <!-- Speaker name -->
                         <div>
                             {{ speaker.getTitle() }}
+                            <span
+                                *ngIf="speaker.structure_level_list_of_speakers?.structure_level"
+                                class="speaker-structure-level"
+                            >
+                                {{ speaker.structure_level_list_of_speakers?.structure_level?.name }}
+                            </span>
                         </div>
                         <!-- Extra line -->
                         <ng-container
@@ -324,9 +330,7 @@
 
             <!-- star button -->
             <button
-                *ngIf="
-                    canManage && speaker.meeting_user.structure_levels && speaker.meeting_user.structure_levels.length
-                "
+                *ngIf="canManage && speaker.isWaiting && speaker.meeting_user.structure_levels?.length"
                 mat-menu-item
                 [matMenuTriggerFor]="structureLevelsMenu"
             >
@@ -335,7 +339,11 @@
             </button>
 
             <mat-menu #structureLevelsMenu="matMenu">
-                <button *ngFor="let structureLevel of speaker.meeting_user.structure_levels" mat-menu-item>
+                <button
+                    *ngFor="let structureLevel of speaker.meeting_user.structure_levels"
+                    mat-menu-item
+                    (click)="setStructureLevel(speaker, structureLevel.id)"
+                >
                     <mat-icon *ngIf="speaker.structure_level_list_of_speakers?.structure_level_id">
                         {{
                             speaker.structure_level_list_of_speakers?.structure_level_id === structureLevel.id
