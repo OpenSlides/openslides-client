@@ -19,7 +19,7 @@ import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
+import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
@@ -543,7 +543,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      */
     public saveChanges(): void {
         // TODO: test after agendaItem works
-
         // this.agendaItemRepo
         //     .update(this.moderatorNoteForm.value, this.agendaItem
         //     )
@@ -553,7 +552,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         //     .catch(this.raiseError);
     }
 
-    public get moderatorNoteObservable(): Observable<string>{
+    public get moderatorNoteObservable(): Observable<string> {
         return this.moderatorNotes;
     }
 }
