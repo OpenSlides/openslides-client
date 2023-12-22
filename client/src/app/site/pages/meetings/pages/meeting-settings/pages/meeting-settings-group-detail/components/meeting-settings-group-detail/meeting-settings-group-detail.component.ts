@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Meeting, Settings } from 'src/app/domain/models/meetings/meeting';
@@ -9,7 +9,6 @@ import { ObjectReplaceKeysConfig, partitionModelsForUpdate, replaceObjectKeys } 
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import {
@@ -56,18 +55,13 @@ export class MeetingSettingsGroupDetailComponent
     /** Provides access to all created settings fields. */
     @ViewChildren(`settingsFields`) public settingsFields!: QueryList<MeetingSettingsGroupDetailFieldComponent>;
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private cd: ChangeDetectorRef,
-        private route: ActivatedRoute,
-        private promptDialog: PromptService,
-        private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionService,
-        private repo: MeetingControllerService,
-        private collectionMapper: CollectionMapperService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    private cd = inject(ChangeDetectorRef);
+    private route = inject(ActivatedRoute);
+    private promptDialog = inject(PromptService);
+    private meetingSettingsDefinitionProvider = inject(MeetingSettingsDefinitionService);
+    private repo = inject(MeetingControllerService);
+    private collectionMapper = inject(CollectionMapperService);
 
     /**
      * Sets the title, inits the table and calls the repo

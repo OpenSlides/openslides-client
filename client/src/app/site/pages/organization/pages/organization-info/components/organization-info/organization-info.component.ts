@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
@@ -20,14 +19,9 @@ export class OrganizationInfoComponent extends BaseComponent implements OnInit {
         return this.osIsManager || this.operator.hasPerms(Permission.userCanManage);
     }
 
-    public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private orgaRepo: OrganizationControllerService,
-        private operator: OperatorService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    private orgaRepo = inject(OrganizationControllerService);
+    private operator = inject(OperatorService);
 
     public ngOnInit(): void {
         super.setTitle(`Legal notice`);

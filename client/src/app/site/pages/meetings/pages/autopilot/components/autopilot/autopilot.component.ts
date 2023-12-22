@@ -9,7 +9,6 @@ import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from '../../../../services/meeting-component-service-collector.service';
 import { ViewListOfSpeakers } from '../../../agenda';
 import { CurrentListOfSpeakersService } from '../../../agenda/modules/list-of-speakers/services/current-list-of-speakers.service';
 import { ListOfSpeakersControllerService } from '../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
@@ -108,7 +107,6 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     private _currentProjection: ViewProjection | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private operator: OperatorService,
         projectorRepo: ProjectorControllerService,
@@ -116,7 +114,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private durationService: DurationService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
             projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {

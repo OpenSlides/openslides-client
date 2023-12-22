@@ -1,13 +1,11 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { MotionDiffService } from '../../../../modules/change-recommendations/services';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 import { ModifiedFinalVersionAction } from '../../services/motion-detail-view.service';
 
 @Component({
@@ -24,15 +22,9 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
 
     public isEditMode = false;
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
-        private diffService: MotionDiffService,
-        private fb: UntypedFormBuilder
-    ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
-    }
+    protected override translate = inject(TranslateService);
+    private diffService = inject(MotionDiffService);
+    private fb = inject(UntypedFormBuilder);
 
     protected override getSubscriptions(): Subscription[] {
         return [

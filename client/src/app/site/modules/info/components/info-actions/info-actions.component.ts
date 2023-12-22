@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { CheckDatabasePresenterService } from 'src/app/gateways/presenter/check-database-presenter.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 
 @Component({
@@ -12,15 +11,10 @@ import { LifecycleService } from 'src/app/site/services/lifecycle.service';
     styleUrls: [`./info-actions.component.scss`]
 })
 export class InfoActionsComponent extends BaseComponent {
-    constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        private lifecycleService: LifecycleService,
-        private snackbar: MatSnackBar,
-        private presenter: CheckDatabasePresenterService,
-        protected override translate: TranslateService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    private lifecycleService = inject(LifecycleService);
+    private snackbar = inject(MatSnackBar);
+    private presenter = inject(CheckDatabasePresenterService);
+    protected override translate = inject(TranslateService);
 
     public resetCache(): void {
         this.lifecycleService.reset();

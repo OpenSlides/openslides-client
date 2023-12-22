@@ -1,8 +1,6 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 
 import { PasswordForm } from '../../definitions';
 import { PasswordValidator } from '../../validators';
@@ -40,13 +38,7 @@ export class PasswordFormComponent extends BaseComponent implements OnInit {
     public hideNewPassword = true;
     public hideConfirmPassword = true;
 
-    public constructor(
-        private fb: UntypedFormBuilder,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    private fb = inject(UntypedFormBuilder);
 
     public ngOnInit(): void {
         this.newPasswordForm = this.fb.control(``, Validators.required);

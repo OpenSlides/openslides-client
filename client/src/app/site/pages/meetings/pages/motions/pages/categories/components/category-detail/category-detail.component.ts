@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
@@ -9,7 +9,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion, ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -73,19 +72,14 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
     private _dialogRef!: MatDialogRef<any>;
     private _categoryId: Id = -1;
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private route: ActivatedRoute,
-        private operator: OperatorService,
-        private repo: MotionCategoryControllerService,
-        private motionService: MotionControllerService,
-        private promptService: PromptService,
-        private formBuilder: UntypedFormBuilder,
-        private dialog: MatDialog
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    private route = inject(ActivatedRoute);
+    private operator = inject(OperatorService);
+    private repo = inject(MotionCategoryControllerService);
+    private motionService = inject(MotionControllerService);
+    private promptService = inject(PromptService);
+    private formBuilder = inject(UntypedFormBuilder);
+    private dialog = inject(MatDialog);
 
     public onIdFound(id: Id | null): void {
         if (id) {

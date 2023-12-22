@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -9,7 +9,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewMotion, ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ColumnRestriction } from 'src/app/ui/modules/list';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -66,23 +65,15 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
     private _blockId = 0;
     private _dialogRef: MatDialogRef<MotionBlockEditDialogComponent, MotionBlock> | null = null;
 
-    /**
-     * Constructor for motion block details
-     */
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private route: ActivatedRoute,
-        protected repo: MotionBlockControllerService,
-        public motionRepo: MotionControllerService,
-        private promptService: PromptService,
-        private dialog: MotionBlockEditDialogService,
-        private itemRepo: AgendaItemControllerService,
-        public filterService: MotionBlockDetailFilterListService,
-        public vp: ViewPortService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    private route = inject(ActivatedRoute);
+    protected repo = inject(MotionBlockControllerService);
+    public motionRepo = inject(MotionControllerService);
+    private promptService = inject(PromptService);
+    private dialog = inject(MotionBlockEditDialogService);
+    private itemRepo = inject(AgendaItemControllerService);
+    public filterService = inject(MotionBlockDetailFilterListService);
+    public vp = inject(ViewPortService);
 
     /**
      * Init function.

@@ -1,13 +1,11 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
-import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { PasswordForm } from 'src/app/site/modules/user-components';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { AuthService } from 'src/app/site/services/auth.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -26,17 +24,11 @@ export class AccountPasswordComponent extends BaseComponent implements OnInit, A
 
     private userId: Id | null = null;
 
-    public constructor(
-        private operator: OperatorService,
-        private userController: UserControllerService,
-        private authService: AuthService,
-        private osRouter: OpenSlidesRouterService,
-        private snackbar: MatSnackBar,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    private operator = inject(OperatorService);
+    private userController = inject(UserControllerService);
+    private authService = inject(AuthService);
+    private osRouter = inject(OpenSlidesRouterService);
+    private snackbar = inject(MatSnackBar);
 
     public ngOnInit(): void {
         this.subscriptions.push(

@@ -1,16 +1,12 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
 import {
     BasePollVoteComponent,
     VoteOption
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-vote.component';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
-import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -44,14 +40,9 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
     public constructor(
         private promptService: PromptService,
         operator: OperatorService,
-        votingService: VotingService,
-        cd: ChangeDetectorRef,
-        pollRepo: PollControllerService,
-        meetingSettingsService: MeetingSettingsService,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
+        meetingSettingsService: MeetingSettingsService
     ) {
-        super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
+        super(operator, meetingSettingsService);
     }
 
     public ngOnInit(): void {

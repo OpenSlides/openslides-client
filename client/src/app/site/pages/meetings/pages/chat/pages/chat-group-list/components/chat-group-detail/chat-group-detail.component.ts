@@ -5,6 +5,7 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
+    inject,
     Input,
     OnDestroy,
     OnInit,
@@ -19,7 +20,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewChatGroup, ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -75,21 +75,16 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
     private _shouldScrollToBottom = true;
     private _hasWritePermissionsObservable: Observable<boolean> = of(false); // Not initialized
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private repo: ChatGroupControllerService,
-        private chatMessageRepo: ChatMessageControllerService,
-        private chatNotificationService: ChatNotificationService,
-        private promptService: PromptService,
-        private cd: ChangeDetectorRef,
-        private dialog: ChatGroupDialogService,
-        private fb: UntypedFormBuilder,
-        private vp: ViewPortService,
-        private operator: OperatorService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    private repo = inject(ChatGroupControllerService);
+    private chatMessageRepo = inject(ChatMessageControllerService);
+    private chatNotificationService = inject(ChatNotificationService);
+    private promptService = inject(PromptService);
+    private cd = inject(ChangeDetectorRef);
+    private dialog = inject(ChatGroupDialogService);
+    private fb = inject(UntypedFormBuilder);
+    private vp = inject(ViewPortService);
+    private operator = inject(OperatorService);
 
     public ngOnInit(): void {
         this._hasWritePermissionsObservable = this.chatGroupObservable.pipe(

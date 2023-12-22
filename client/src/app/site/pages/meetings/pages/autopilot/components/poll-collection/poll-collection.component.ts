@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -8,7 +8,6 @@ import { BaseComponent } from 'src/app/site/base/base.component';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { getPollDetailSubscriptionConfig, POLL_DETAIL_SUBSCRIPTION } from '../../../polls/polls.subscription';
@@ -61,15 +60,10 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         }
     }
 
-    public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private repo: PollControllerService,
-        private cd: ChangeDetectorRef,
-        private operator: OperatorService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    private repo = inject(PollControllerService);
+    private cd = inject(ChangeDetectorRef);
+    private operator = inject(OperatorService);
 
     public ngOnInit(): void {
         this.subscriptions.push(

@@ -1,5 +1,5 @@
 import { KeyValue } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
@@ -9,7 +9,6 @@ import { getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/o
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -98,20 +97,15 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     private _tableData: ParticipationTableData = {};
 
-    public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private route: ActivatedRoute,
-        private osRouter: OpenSlidesRouterService,
-        private operator: OperatorService,
-        public readonly committeeController: CommitteeControllerService,
-        public readonly committeeSortService: CommitteeSortService,
-        private accountController: AccountControllerService,
-        private userController: UserControllerService,
-        private promptService: PromptService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    private route = inject(ActivatedRoute);
+    private osRouter = inject(OpenSlidesRouterService);
+    private operator = inject(OperatorService);
+    public readonly committeeController = inject(CommitteeControllerService);
+    public readonly committeeSortService = inject(CommitteeSortService);
+    private accountController = inject(AccountControllerService);
+    private userController = inject(UserControllerService);
+    private promptService = inject(PromptService);
 
     public ngOnInit(): void {
         this.getUserByUrl();

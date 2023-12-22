@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
 import { participantHeadersAndVerboseNames } from '../../definitions';
@@ -21,14 +20,6 @@ export class ParticipantImportListComponent extends BaseViaBackendImportListComp
         isTableColumn: true
     }));
 
-    /**
-     * Constructor for list view bases
-     */
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        public override readonly importer: ParticipantImportService
-    ) {
-        super(componentServiceCollector, translate, importer);
-    }
+    protected override translate = inject(TranslateService);
+    public override readonly importer = inject(ParticipantImportService);
 }

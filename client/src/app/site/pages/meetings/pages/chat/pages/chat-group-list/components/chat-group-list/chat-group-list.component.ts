@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewChatGroup } from 'src/app/site/pages/meetings/pages/chat';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { VerticalTabGroupContentState } from 'src/app/ui/modules/vertical-tab-group';
@@ -34,17 +33,12 @@ export class ChatGroupListComponent extends BaseMeetingComponent {
 
     private _isChatContentOpen = false;
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private dialog: ChatGroupDialogService,
-        private chatGroupRepo: ChatGroupControllerService,
-        private vp: ViewPortService,
-        private chatNotificationService: ChatNotificationService,
-        private operator: OperatorService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    private dialog = inject(ChatGroupDialogService);
+    private chatGroupRepo = inject(ChatGroupControllerService);
+    private vp = inject(ViewPortService);
+    private chatNotificationService = inject(ChatNotificationService);
+    private operator = inject(OperatorService);
 
     public getNotificationsObservableForChatId(chatGroupId: Id): Observable<number> {
         return this.chatNotificationService.getChatGroupNotificationsEvent(chatGroupId);

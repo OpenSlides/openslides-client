@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
@@ -7,7 +7,6 @@ import { navItemAnim } from 'src/app/infrastructure/animations';
 import { getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MainMenuEntry, MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -54,22 +53,14 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
         return this.chatNotificationService.allChatGroupsNotificationsObservable;
     }
 
-    /**
-     * Constructor
-     */
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        _loadFontService: LoadFontService, // just to initialize this service
-        _notifyService: NotifyService, // just to initialize this service
-        protected override translate: TranslateService,
-        private vp: ViewPortService,
-        private mainMenuService: MainMenuService,
-        private chatNotificationService: ChatNotificationService,
-        private chatService: ChatService,
-        private operator: OperatorService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    private _loadFontService = inject(LoadFontService); // just to initialize this service
+    private _notifyService = inject(NotifyService); // just to initialize this service
+    protected override translate = inject(TranslateService);
+    private vp = inject(ViewPortService);
+    private mainMenuService = inject(MainMenuService);
+    private chatNotificationService = inject(ChatNotificationService);
+    private chatService = inject(ChatService);
+    private operator = inject(OperatorService);
 
     /**
      * Initialize the site component

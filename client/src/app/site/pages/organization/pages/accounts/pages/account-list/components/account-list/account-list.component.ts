@@ -8,7 +8,6 @@ import { BaseListViewComponent } from 'src/app/site/base/base-list-view.componen
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -34,7 +33,6 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public readonly controller: AccountControllerService,
         public readonly filterService: AccountFilterService,
@@ -48,7 +46,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         private operator: OperatorService,
         private vp: ViewPortService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Accounts`);
         this.canMultiSelect = true;
         this.listStorageIndex = ACCOUNT_LIST_STORAGE_INDEX;

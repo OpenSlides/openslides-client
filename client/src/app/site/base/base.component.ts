@@ -1,4 +1,4 @@
-import { Directive, OnDestroy, inject } from '@angular/core';
+import { Directive, inject, OnDestroy } from '@angular/core';
 import {
     LegacySimpleSnackBar as SimpleSnackBar,
     MatLegacySnackBar as MatSnackBar,

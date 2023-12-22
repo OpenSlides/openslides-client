@@ -3,7 +3,6 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
@@ -40,13 +39,12 @@ export class TopicImportComponent extends BaseViaBackendImportListComponent {
     public selectedTabIndex = 0;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public override importer: TopicImportService,
         formBuilder: UntypedFormBuilder,
         private durationService: DurationService
     ) {
-        super(componentServiceCollector, translate, importer);
+        super();
         this.textAreaForm = formBuilder.group({ inputtext: [``] });
     }
 

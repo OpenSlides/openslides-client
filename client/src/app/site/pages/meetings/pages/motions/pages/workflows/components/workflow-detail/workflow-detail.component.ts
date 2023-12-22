@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
@@ -10,7 +10,6 @@ import { MergeAmendment, MotionState, Restriction } from 'src/app/domain/models/
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotionState, ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionStateControllerService } from '../../../../modules/states/services';
@@ -265,18 +264,13 @@ Note: Does not affect the visibility of change recommendations.`
         }
     ] as StatePerm[];
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private promptService: PromptService,
-        private dialog: MatDialog,
-        private workflowRepo: MotionWorkflowControllerService,
-        private stateRepo: MotionStateControllerService,
-        private exporter: WorkflowExportService,
-        private cd: ChangeDetectorRef
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    private promptService = inject(PromptService);
+    private dialog = inject(MatDialog);
+    private workflowRepo = inject(MotionWorkflowControllerService);
+    private stateRepo = inject(MotionStateControllerService);
+    private exporter = inject(WorkflowExportService);
+    private cd = inject(ChangeDetectorRef);
 
     public onIdFound(id: Id | null): void {
         if (id) {

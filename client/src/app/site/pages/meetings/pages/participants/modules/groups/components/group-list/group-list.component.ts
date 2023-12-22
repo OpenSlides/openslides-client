@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
@@ -11,7 +11,6 @@ import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { GroupControllerService } from '../../services';
@@ -76,16 +75,11 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
         return this.updatedGroupIds.size > 0;
     }
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private dialog: MatDialog,
-        private repo: GroupControllerService,
-        private promptService: PromptService,
-        private formBuilder: UntypedFormBuilder
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    private dialog = inject(MatDialog);
+    private repo = inject(GroupControllerService);
+    private promptService = inject(PromptService);
+    private formBuilder = inject(UntypedFormBuilder);
 
     /**
      * Init function.

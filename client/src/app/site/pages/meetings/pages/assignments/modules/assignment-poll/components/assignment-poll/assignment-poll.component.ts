@@ -1,15 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.service/assignment-poll-pdf.service';
@@ -63,20 +59,12 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
         return (!this.poll.stateHasVotes && !this.votingService.canVote(this.poll)) || this.poll.isListPoll;
     }
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        promptService: PromptService,
-        choiceService: ChoiceService,
-        repo: PollControllerService,
-        private formBuilder: UntypedFormBuilder,
-        private pdfService: AssignmentPollPdfService,
-        private operator: OperatorService,
-        private votingService: VotingService,
-        private votingPrivacyDialog: VotingPrivacyWarningDialogService
-    ) {
-        super(componentServiceCollector, translate, promptService, choiceService, repo);
-    }
+    protected override translate = inject(TranslateService);
+    private formBuilder = inject(UntypedFormBuilder);
+    private pdfService = inject(AssignmentPollPdfService);
+    private operator = inject(OperatorService);
+    private votingService = inject(VotingService);
+    private votingPrivacyDialog = inject(VotingPrivacyWarningDialogService);
 
     public ngOnInit(): void {
         this.descriptionForm = this.formBuilder.group({

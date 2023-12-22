@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -6,7 +6,6 @@ import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-funct
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ListOfSpeakersContentComponent } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-content/list-of-speakers-content.component';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -75,21 +74,13 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
     private _losSubscription: Subscription | null = null;
     private _losId!: Id;
 
-    /**
-     * Constructor for speaker list component. Generates the forms.
-     */
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService,
-        private promptService: PromptService,
-        private currentListOfSpeakersService: CurrentListOfSpeakersService,
-        private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
-        private viewport: ViewPortService,
-        private collectionMapper: CollectionMapperService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    private listOfSpeakersRepo = inject(ListOfSpeakersControllerService);
+    private promptService = inject(PromptService);
+    private currentListOfSpeakersService = inject(CurrentListOfSpeakersService);
+    private currentListOfSpeakersSlideService = inject(CurrentListOfSpeakersSlideService);
+    private viewport = inject(ViewPortService);
+    private collectionMapper = inject(CollectionMapperService);
 
     public ngOnInit(): void {
         this.subscriptions.push(this.viewport.isMobileSubject.subscribe(isMobile => (this.isMobile = isMobile)));
