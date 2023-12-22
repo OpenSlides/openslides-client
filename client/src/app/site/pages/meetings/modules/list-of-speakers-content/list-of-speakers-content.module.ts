@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { SpeakersTimeManagementComponent } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/components/speakers-time-management/speakers-time-management.component';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { EditorModule } from 'src/app/ui/modules/editor';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules/sorting-list/sorting-list.module';
 import { PipesModule } from 'src/app/ui/pipes';
 
@@ -48,6 +49,7 @@ const DECLARATIONS = [
         MatInputModule,
         ReactiveFormsModule,
         SortingListModule,
+        EditorModule,
         ParticipantSearchSelectorModule,
         ParticipantCommonServiceModule,
         PointOfOrderDialogModule,
