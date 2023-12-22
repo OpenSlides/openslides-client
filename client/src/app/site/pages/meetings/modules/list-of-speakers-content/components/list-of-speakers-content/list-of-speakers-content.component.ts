@@ -127,6 +127,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public restrictPointOfOrderActions = false;
 
+    public structureLevelCountdownEnabled = false;
+
     public isPointOfOrderFn = (speaker: ViewSpeaker) => speaker.point_of_order;
     public enableProContraSpeech = false;
 
@@ -170,7 +172,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled)),
             this.meetingSettingsService
                 .get(`list_of_speakers_closing_disables_point_of_order`)
-                .subscribe(enabled => (this.restrictPointOfOrderActions = enabled))
+                .subscribe(enabled => (this.restrictPointOfOrderActions = enabled)),
+            this.meetingSettingsService
+                .get(`list_of_speakers_default_structure_level_time`)
+                .subscribe(time => (this.structureLevelCountdownEnabled = time > 0))
         );
     }
 
@@ -423,7 +428,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         }
         const user = this.userRepository.getViewModel(data.userId);
         let structureLevelId: Id;
-        if (user.getMeetingUser().structure_level_ids.length === 1) {
+        if (this.structureLevelCountdownEnabled && user.getMeetingUser().structure_level_ids.length === 1) {
             structureLevelId = user.getMeetingUser().structure_level_ids[0];
         }
 
@@ -434,9 +439,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public async setStructureLevel(speaker: ViewSpeaker, structureLevel: Id): Promise<void> {
-        if (structureLevel === speaker.structure_level_list_of_speakers.structure_level_id) {
+        if (structureLevel === speaker.structure_level_list_of_speakers?.structure_level_id) {
             structureLevel = null;
         }
+
         await this.speakerRepo.setStructureLevel(speaker, structureLevel);
     }
 

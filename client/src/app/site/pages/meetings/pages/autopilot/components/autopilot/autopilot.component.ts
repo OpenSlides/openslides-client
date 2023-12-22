@@ -105,6 +105,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         }
     }
 
+    public structureLevelCountdownEnabled = false;
+
     private _currentProjection: ViewProjection | null = null;
 
     public constructor(
@@ -129,7 +131,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
             }),
             closService.currentListOfSpeakersObservable.subscribe(clos => {
                 this.listOfSpeakers = clos;
-            })
+            }),
+            this.meetingSettingsService
+                .get(`list_of_speakers_default_structure_level_time`)
+                .subscribe(time => (this.structureLevelCountdownEnabled = time > 0))
         );
     }
 
@@ -143,18 +148,5 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public async readdLastSpeaker(): Promise<void> {
         await this.listOfSpeakersRepo.readdLastSpeaker(this.listOfSpeakers!).catch(this.raiseError);
-    }
-
-    public getStructureLevels(): any {
-        return [
-            { name: `SPD`, color: `#ff2836`, time: 1500 },
-            { name: `CDU`, color: `#010101`, time: 1500 },
-            { name: `Die Grünen`, color: `#00ff00`, time: 1200 },
-            { name: `Koalition`, color: `#0000dd`, time: 600 }
-        ];
-    }
-
-    public duration(duration_time: number): string {
-        return this.durationService.durationToString(duration_time, `m`).slice(0, -2);
     }
 }
