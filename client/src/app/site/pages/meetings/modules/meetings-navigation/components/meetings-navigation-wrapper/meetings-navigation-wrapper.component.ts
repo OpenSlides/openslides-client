@@ -53,8 +53,6 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
         return this.chatNotificationService.allChatGroupsNotificationsObservable;
     }
 
-    private _loadFontService = inject(LoadFontService); // just to initialize this service
-    private _notifyService = inject(NotifyService); // just to initialize this service
     protected override translate = inject(TranslateService);
     private vp = inject(ViewPortService);
     private mainMenuService = inject(MainMenuService);
