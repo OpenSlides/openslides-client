@@ -100,7 +100,7 @@
         </mat-card>
     </div>
 
-    <div class="col-right">
+    <div *ngIf="structureLevelCountdownEnabled" class="col-right">
         <mat-card class="os-card spacer-bottom-60">
             <mat-card-content>
                 <p class="subtitle-text" translate>Speaking times</p>

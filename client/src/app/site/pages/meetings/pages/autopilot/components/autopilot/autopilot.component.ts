@@ -105,6 +105,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         }
     }
 
+    public structureLevelCountdownEnabled = false;
+
     private _currentProjection: ViewProjection | null = null;
 
     public constructor(
@@ -129,7 +131,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
             }),
             closService.currentListOfSpeakersObservable.subscribe(clos => {
                 this.listOfSpeakers = clos;
-            })
+            }),
+            this.meetingSettingsService
+                .get(`list_of_speakers_default_structure_level_time`)
+                .subscribe(time => (this.structureLevelCountdownEnabled = time > 0))
         );
     }
 
