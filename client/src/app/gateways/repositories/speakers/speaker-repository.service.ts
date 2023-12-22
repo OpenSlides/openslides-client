@@ -31,12 +31,14 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
             note?: UnsafeHtml;
             speechState?: SpeechState;
             point_of_order_category_id?: Id;
+            structure_level_id?: Id;
         } = {}
     ): Promise<Identifiable> {
         const payload: any = {
             list_of_speakers_id: listOfSpeakers.id,
             meeting_user_id: meetingUserId,
             speech_state: optionalInformation.speechState,
+            structure_level_id: optionalInformation.structure_level_id,
             point_of_order: optionalInformation.pointOfOrder,
             point_of_order_category_id: optionalInformation.pointOfOrder
                 ? optionalInformation.point_of_order_category_id
@@ -57,6 +59,14 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
     public delete(id: Id): Promise<void> {
         const payload = { id };
         return this.sendActionToBackend(SpeakerAction.DELETE, payload);
+    }
+
+    public setStructureLevel(structure_level_id: Id | null, viewModel: ViewSpeaker): Promise<void> {
+        const payload: any = {
+            id: viewModel.id,
+            structure_level_id
+        };
+        return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
     }
 
     public sortSpeakers(listOfSpeakers: ListOfSpeakers, speakerIds: Id[]): Promise<void> {

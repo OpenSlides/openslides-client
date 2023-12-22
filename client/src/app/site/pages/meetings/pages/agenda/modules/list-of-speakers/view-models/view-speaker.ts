@@ -38,6 +38,10 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return this.state === SpeakerState.FINISHED;
     }
 
+    public get isWaiting(): boolean {
+        return this.state === SpeakerState.WAITING;
+    }
+
     public get name(): string {
         return this.user ? this.user.full_name : ``;
     }
@@ -61,6 +65,6 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
 interface ISpeakerRelations {
     list_of_speakers: ViewListOfSpeakers;
     point_of_order_category: ViewPointOfOrderCategory;
-    structure_level_list_of_speakers: ViewStructureLevelListOfSpeakers[];
+    structure_level_list_of_speakers: ViewStructureLevelListOfSpeakers;
 }
 export interface ViewSpeaker extends Speaker, ISpeakerRelations, HasMeeting {}

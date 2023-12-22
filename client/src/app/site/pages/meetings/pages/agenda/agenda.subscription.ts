@@ -154,7 +154,10 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
                 follow: [
                     {
                         idField: `meeting_user_id`,
-                        follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }],
+                        follow: [
+                            { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
+                            { idField: `structure_level_ids`, fieldset: [`name`] }
+                        ],
                         fieldset: [`number`, `vote_weight`]
                     },
                     {

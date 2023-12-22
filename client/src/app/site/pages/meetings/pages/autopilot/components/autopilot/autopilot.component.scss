@@ -4,4 +4,85 @@
 
 .content-container {
     min-height: calc(100vh - 77px);
+    display: flex;
+    .col-main {
+        flex-grow: 1;
+    }
+    .col-right {
+        padding-left: 20px;
+        width: 40%;
+    }
+}
+
+::ng-deep .mat-card {
+    max-width: 738px;
+}
+
+.structure-level-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-top: 8px;
+    .structure-level {
+        width: 33%;
+    }
+    .structure-level-time {
+        border-top-color: transparent;
+        border-top-width: 3px;
+        border-top-style: solid;
+        font-size: 35px;
+    }
+    .structure-level-name {
+        line-height: 1;
+    }
+}
+
+.speakers-card {
+    .speaker {
+        text-align: center;
+        padding: 8px 0;
+        &:not(:last-of-type) {
+            margin-bottom: 12px;
+        }
+        &.interposed {
+            .speaker-name {
+                font-size: 25px;
+            }
+            .speaker-structure-level {
+                font-size: 12px;
+            }
+            .speaker-progress {
+                padding: 0 24px;
+            }
+        }
+    }
+    .speaker-info {
+        color: var(--theme-accent-500);
+        .speaker-name {
+            font-size: 30px;
+        }
+        .speaker-structure-level {
+            font-size: 14px;
+            padding-left: 4px;
+        }
+    }
+    .speaker-progress {
+        display: flex;
+        align-items: center;
+        > :first-of-type {
+            padding-right: 8px;
+            text-align: left;
+        }
+        > :last-of-type {
+            padding-left: 8px;
+            text-align: right;
+        }
+        .speaker-time {
+            min-width: 45px;
+        }
+    }
+    .speaker-type {
+        text-align: left;
+        color: var(--theme-accent-500);
+    }
 }

@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
@@ -32,6 +34,8 @@ import { PollCollectionComponent } from './components/poll-collection/poll-colle
         ProjectorModule,
         DirectivesModule,
         MatCardModule,
+        MatProgressBarModule,
+        MatTabsModule,
         MatTooltipModule,
         MatIconModule,
         ListOfSpeakersContentModule,
