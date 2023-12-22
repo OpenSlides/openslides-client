@@ -1,4 +1,4 @@
-import { Directive, OnDestroy } from '@angular/core';
+import { Directive, OnDestroy, inject } from '@angular/core';
 import {
     LegacySimpleSnackBar as SimpleSnackBar,
     MatLegacySnackBar as MatSnackBar,
@@ -79,12 +79,8 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
         return this.componentServiceCollector.router;
     }
 
-    public constructor(
-        protected componentServiceCollector: ComponentServiceCollectorService,
-        protected translate: TranslateService
-    ) {
-        super();
-    }
+    protected componentServiceCollector = inject(ComponentServiceCollectorService);
+    protected translate = inject(TranslateService);
 
     /**
      * automatically dismisses the error snack bar and clears subscriptions
