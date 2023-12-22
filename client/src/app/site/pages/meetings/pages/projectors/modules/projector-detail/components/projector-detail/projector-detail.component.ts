@@ -276,9 +276,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     public isStructureLevelCountdownEnabled(): boolean {
         const strucutreLevelTime = this.meetingSettingsService.instant(`list_of_speakers_default_structure_level_time`);
-        return true;
-        // TODO activate when functional in settings
-        // return strucutreLevelTime;
+        return strucutreLevelTime > 0;
     }
 
     public wifiDataBuildDesc(): ProjectionBuildDescriptor {
