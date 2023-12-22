@@ -36,6 +36,7 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
             speechState?: SpeechState;
             point_of_order_category_id?: Id;
             meeting_user_id?: Id;
+            structure_level_id?: Id;
         }
     ): Promise<Identifiable> {
         const meetingUserId =
@@ -73,6 +74,10 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
 
     public sortSpeakers(listOfSpeakers: ViewListOfSpeakers, speakerIds: Id[]): Promise<void> {
         return this.repo.sortSpeakers(listOfSpeakers, speakerIds);
+    }
+
+    public setStructureLevel(speaker: ViewSpeaker, structureLevelId: Id): Promise<void> {
+        return this.repo.setStructureLevel(structureLevelId, speaker);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

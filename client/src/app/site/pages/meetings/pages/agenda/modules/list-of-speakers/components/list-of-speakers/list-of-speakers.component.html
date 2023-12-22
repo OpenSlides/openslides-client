@@ -37,6 +37,9 @@
         (isListOfSpeakersEmptyEvent)="isListOfSpeakersEmpty = $event"
         (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
     ></os-list-of-speakers-content>
+
+    <!-- special los part for structure level -->
+    <os-speakers-time-management></os-speakers-time-management>
 </os-detail-view>
 
 <mat-menu #speakerMenu="matMenu">
