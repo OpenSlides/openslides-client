@@ -100,18 +100,16 @@
         </mat-card>
     </div>
 
-    <div *ngIf="structureLevelCountdownEnabled" class="col-right">
+    <div
+        *ngIf="structureLevelCountdownEnabled && listOfSpeakers.structure_level_list_of_speakers_ids?.length"
+        class="col-right"
+    >
         <mat-card class="os-card spacer-bottom-60">
             <mat-card-content>
                 <p class="subtitle-text" translate>Speaking times</p>
-                <div class="structure-level-list">
-                    <div class="structure-level" *ngFor="let structure_level of getStructureLevels()">
-                        <span class="structure-level-time" [ngStyle]="{ 'border-top-color': structure_level.color }">
-                            {{ duration(structure_level.time) }}
-                        </span>
-                        <div class="structure-level-name">{{ structure_level.name }}</div>
-                    </div>
-                </div>
+                <os-speaking-times
+                    [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"
+                ></os-speaking-times>
             </mat-card-content>
         </mat-card>
     </div>

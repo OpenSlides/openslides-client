@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { ServerTimePresenterService } from 'src/app/gateways/presenter/server-time-presenter.service';
 
 interface CountdownData {
@@ -9,7 +9,8 @@ interface CountdownData {
 @Component({
     selector: `os-countdown-time`,
     templateUrl: `./countdown-time.component.html`,
-    styleUrls: [`./countdown-time.component.scss`]
+    styleUrls: [`./countdown-time.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CountdownTimeComponent implements OnDestroy {
     /**
@@ -23,6 +24,9 @@ export class CountdownTimeComponent implements OnDestroy {
      */
     @Input()
     public fullscreen = false;
+
+    @Input()
+    public unstyled = false;
 
     /**
      * The needed data for the countdown.
@@ -88,7 +92,7 @@ export class CountdownTimeComponent implements OnDestroy {
 
     private _countdown!: CountdownData;
 
-    public constructor(private servertimeService: ServerTimePresenterService) {}
+    public constructor(private servertimeService: ServerTimePresenterService, private cd: ChangeDetectorRef) {}
 
     /**
      * Clear all pending intervals.
@@ -124,5 +128,6 @@ export class CountdownTimeComponent implements OnDestroy {
         if (negative) {
             this.time = `-` + this.time;
         }
+        this.cd.markForCheck();
     }
 }

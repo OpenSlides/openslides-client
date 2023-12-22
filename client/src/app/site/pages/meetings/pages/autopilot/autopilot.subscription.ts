@@ -69,7 +69,7 @@ export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfi
                                             },
                                             {
                                                 idField: `structure_level_ids`,
-                                                fieldset: [`name`]
+                                                fieldset: [`name`, `color`]
                                             }
                                         ],
                                         ...MeetingUserFieldsets.FullNameSubscription

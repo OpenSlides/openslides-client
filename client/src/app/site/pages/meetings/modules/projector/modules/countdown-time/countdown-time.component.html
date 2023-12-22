@@ -1,4 +1,5 @@
 <div
+    *ngIf="!unstyled"
     class="countdown-time-wrapper"
     [ngClass]="{
         'negative-time': seconds <= 0,
@@ -23,3 +24,6 @@
         </span>
     </div>
 </div>
+<span *ngIf="unstyled" id="countdown">
+    {{ time }}
+</span>
