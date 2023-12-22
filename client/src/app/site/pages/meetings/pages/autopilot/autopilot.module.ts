@@ -15,6 +15,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
+import { CountdownTimeModule } from '../../modules/projector/modules/countdown-time/countdown-time.module';
 import { ProjectorModule } from '../../modules/projector/projector.module';
 import { TopicPollModule } from '../agenda/modules/topics/modules/topic-poll/topic-poll.module';
 import { InteractionServiceModule } from '../interaction/services/interaction-service.module';
@@ -22,9 +23,10 @@ import { AutopilotRoutingModule } from './autopilot-routing.module';
 import { AutopilotComponent } from './components/autopilot/autopilot.component';
 import { AutopilotMainComponent } from './components/autopilot-main/autopilot-main.component';
 import { PollCollectionComponent } from './components/poll-collection/poll-collection.component';
+import { SpeakingTimesComponent } from './components/speaking-times/speaking-times.component';
 
 @NgModule({
-    declarations: [AutopilotMainComponent, AutopilotComponent, PollCollectionComponent],
+    declarations: [AutopilotMainComponent, AutopilotComponent, PollCollectionComponent, SpeakingTimesComponent],
     imports: [
         CommonModule,
         RouterModule,
@@ -40,6 +42,7 @@ import { PollCollectionComponent } from './components/poll-collection/poll-colle
         MatIconModule,
         ListOfSpeakersContentModule,
         HeadBarModule,
+        CountdownTimeModule,
         OpenSlidesTranslationModule.forChild(),
         PollModule,
         MotionPollModule,

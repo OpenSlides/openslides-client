@@ -365,7 +365,12 @@
 
             <!-- star button -->
             <button
-                *ngIf="canManage && speaker.isWaiting && speaker.meeting_user.structure_levels?.length"
+                *ngIf="
+                    canManage &&
+                    structureLevelCountdownEnabled &&
+                    speaker.isWaiting &&
+                    speaker.meeting_user.structure_levels?.length
+                "
                 mat-menu-item
                 [matMenuTriggerFor]="structureLevelsMenu"
             >
