@@ -13,6 +13,17 @@ td {
     font-size: 85%;
 }
 
+.motion-wrapper {
+    display: inline-flex;
+    width: 100%;
+}
+
+.recommendation-chip-wrapper {
+    padding-right: 5px;
+    padding-left: 15px;
+    overflow: hidden;
+}
+
 .block-recommendation {
     font-size: 12px;
     min-height: 22px !important;
@@ -21,6 +32,8 @@ td {
     margin: 0;
     line-height: 2;
     display: inline-flex;
+    max-width: 100%;
+    margin-left: -10px;
 }
 
 .ellipsis-overflow {
