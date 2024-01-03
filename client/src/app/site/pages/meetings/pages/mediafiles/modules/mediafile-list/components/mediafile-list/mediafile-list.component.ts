@@ -223,7 +223,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
 
             this.fileEditForm = this.formBuilder.group({
                 title: [file.title, Validators.required],
-                access_group_ids: [file.access_group_ids]
+                access_group_ids: [[...file.access_group_ids]]
             });
         }
     }
