@@ -48,6 +48,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         is_present: [``]
     };
 
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+
     public get randomPasswordFn(): () => string {
         return () => this.getRandomPassword();
     }

@@ -118,6 +118,8 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     /** used by the groups config type */
     public groupObservable: Observable<ViewGroup[]> | null = null;
 
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+
     public get watchProperties(): (keyof Settings)[] {
         return this.setting.automaticChangesSetting?.watchProperties;
     }
