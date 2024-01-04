@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, inject } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -49,12 +49,9 @@ export class AgendaContentObjectFormComponent
     private _itemsSubject = new BehaviorSubject<ViewAgendaItem[]>([]);
     private _internalSubscription: Subscription | null = null;
 
-    public constructor(
-        private meetingSettingsService: MeetingSettingsService,
-        public itemRepo: AgendaContentObjectFormService
-    ) {
-        super();
-    }
+
+    private meetingSettingsService = inject(MeetingSettingsService);
+    public itemRepo = inject(AgendaContentObjectFormService);
 
     public ngAfterViewInit(): void {
         this.meetingSettingsService.get(`agenda_item_creation`).subscribe(value => {

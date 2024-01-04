@@ -7,6 +7,7 @@ import {
 
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import { TitleInformationWithAgendaItem } from '../../../definitions';
+import { inject } from '@angular/core';
 
 export interface MotionTitleInformation extends TitleInformationWithAgendaItem {
     title: string;
@@ -25,9 +26,9 @@ export interface ReferencedMotions {
  * replacing referenced motions (format: `[motion/<id>]`) in strings.
  */
 export class BaseMotionSlideComponent<T extends object> extends BaseSlideComponent<T> {
-    public constructor(protected translate: TranslateService, protected motionRepo: MotionControllerService) {
-        super();
-    }
+
+    protected translate = inject(TranslateService);
+    protected motionRepo = inject(MotionControllerService);
 
     public replaceReferencedMotions(text: string, referencedMotions: ReferencedMotions): string {
         return text.replace(REFERENCED_MOTION_REGEX, (_, id) => {

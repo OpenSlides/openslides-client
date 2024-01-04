@@ -8,7 +8,8 @@ import {
     OnInit,
     Output,
     QueryList,
-    TemplateRef
+    TemplateRef,
+    inject
 } from '@angular/core';
 import {
     AbstractControl,
@@ -146,9 +147,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private selfUpdateEnabled = false;
 
-    public constructor(private fb: UntypedFormBuilder, private operator: OperatorService) {
-        super();
-    }
+    private fb = inject(UntypedFormBuilder);
+    private operator = inject(OperatorService);
 
     public ngOnInit(): void {
         this.subscriptions.push(

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { isAgendaItemContentObjectRepository } from 'src/app/gateways/repositories/base-agenda-item-content-object-repository';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
@@ -13,9 +13,7 @@ import { AgendaItemListSlideData, SlideItem } from '../../agenda-item-list-slide
     styleUrls: [`./agenda-item-list-slide.component.scss`]
 })
 export class AgendaItemListSlideComponent extends BaseSlideComponent<AgendaItemListSlideData> {
-    public constructor(private collectionMapperService: CollectionMapperService) {
-        super();
-    }
+    private collectionMapperService = inject(CollectionMapperService);
 
     protected override setData(value: SlideData<AgendaItemListSlideData>): void {
         value.data.items.forEach(item => modifyAgendaItemNumber(item.title_information));

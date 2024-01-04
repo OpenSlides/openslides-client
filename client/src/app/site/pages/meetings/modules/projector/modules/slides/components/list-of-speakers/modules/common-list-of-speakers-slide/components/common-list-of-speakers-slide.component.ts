@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { isAgendaItemContentObjectRepository } from 'src/app/gateways/repositories/base-agenda-item-content-object-repository';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
@@ -25,10 +25,7 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
             return null;
         }
     }
-
-    public constructor(private collectionMapperService: CollectionMapperService) {
-        super();
-    }
+    private collectionMapperService = inject(CollectionMapperService);
 
     protected override setData(value: SlideData<CommonListOfSpeakersSlideData>): void {
         const hasData = value?.data && Object.keys(value.data).length > 0; // the CLOS slide may be empty `{}`.

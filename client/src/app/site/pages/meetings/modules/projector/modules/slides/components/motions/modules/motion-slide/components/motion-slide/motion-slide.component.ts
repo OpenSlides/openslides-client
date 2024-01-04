@@ -157,14 +157,13 @@ export class MotionSlideComponent
 
     public constructor(
         protected override translate: TranslateService,
-        motionRepo: MotionControllerService,
         private motionFormatService: MotionFormatService,
         private changeRepo: MotionChangeRecommendationControllerService,
         private lineNumbering: LineNumberingService,
         private diff: MotionDiffService,
         private meetingSettings: MeetingSettingsService
     ) {
-        super(translate, motionRepo);
+        super();
         this.meetingSettings.get(`motions_enable_text_on_projector`).subscribe(val => (this._showText = val));
     }
 
