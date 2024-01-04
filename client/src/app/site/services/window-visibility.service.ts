@@ -5,7 +5,6 @@ import { debounceTime, filter, firstValueFrom, fromEvent, map, Observable } from
     providedIn: `root`
 })
 export class WindowVisibilityService {
-    public constructor() {}
 
     public async waitUntilVisible(): Promise<void> {
         if (document.visibilityState !== `visible`) {

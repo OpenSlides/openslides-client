@@ -4,5 +4,4 @@ import { Directive } from '@angular/core';
     selector: `[osListOfSpeakersContentTitle]`
 })
 export class ListOfSpeakersContentTitleDirective {
-    constructor() {}
 }

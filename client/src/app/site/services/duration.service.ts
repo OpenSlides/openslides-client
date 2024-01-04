@@ -33,11 +33,6 @@ import { Injectable } from '@angular/core';
 })
 export class DurationService {
     /**
-     * Constructor
-     */
-    public constructor() {}
-
-    /**
      * Transform a duration string to duration in minutes or seconds. This depends on the
      * provided suffix for the input.
      *

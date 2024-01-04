@@ -4,5 +4,4 @@ import { Directive } from '@angular/core';
     selector: `[osSearchSelectorNotFoundTemplate]`
 })
 export class SearchSelectorNotFoundTemplateDirective {
-    constructor() {}
 }

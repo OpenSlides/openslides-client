@@ -8,8 +8,6 @@ import { ChipSelectChipComponent } from '../chip-select-chip/chip-select-chip.co
     styleUrls: [`./chip-select.component.scss`]
 })
 export class ChipSelectComponent implements AfterContentInit {
-    constructor() {}
-
     @Input()
     public chipClass: string | null;
 

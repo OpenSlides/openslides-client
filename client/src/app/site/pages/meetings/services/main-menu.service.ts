@@ -34,8 +34,6 @@ export class MainMenuService {
         return this._entries;
     }
 
-    public constructor() {}
-
     /**
      * Adds entries to the mainmenu.
      * @param entries The entries to add
