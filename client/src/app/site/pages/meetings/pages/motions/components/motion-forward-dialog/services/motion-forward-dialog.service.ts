@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { inject, Injectable } from '@angular/core';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
@@ -34,18 +34,17 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
     private _forwardingMeetings: GetForwardingMeetingsPresenter[] = [];
     private _forwardingMeetingsUpdateRequired = true;
 
-    public constructor(
-        dialog: MatDialog,
-        private translate: TranslateService,
-        private repo: MotionRepositoryService,
-        private formatService: MotionFormatService,
-        private snackbar: MatSnackBar,
-        private presenter: GetForwardingMeetingsPresenterService,
-        private activeMeeting: ActiveMeetingService,
-        private operator: OperatorService,
-        private modelRequest: ModelRequestService
-    ) {
-        super(dialog);
+    private translate = inject(TranslateService);
+    private repo = inject(MotionRepositoryService);
+    private formatService = inject(MotionFormatService);
+    private snackbar = inject(MatSnackBar);
+    private presenter = inject(GetForwardingMeetingsPresenterService);
+    private activeMeeting = inject(ActiveMeetingService);
+    private operator = inject(OperatorService);
+    private modelRequest = inject(ModelRequestService);
+
+    public constructor() {
+        super();
 
         this.activeMeeting.meetingIdObservable.subscribe(() => {
             this._forwardingMeetingsUpdateRequired = true;

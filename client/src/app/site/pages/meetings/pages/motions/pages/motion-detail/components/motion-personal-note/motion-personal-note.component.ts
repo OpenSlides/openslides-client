@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
@@ -33,14 +32,8 @@ export class MotionPersonalNoteComponent extends BaseMotionDetailActionCardCompo
     private readonly _personalNoteSubject = new BehaviorSubject<ViewPersonalNote | null>(null);
 
     protected override translate = inject(TranslateService);
-
-    public constructor(
-        formBuilder: UntypedFormBuilder,
-        private repo: PersonalNoteControllerService,
-        private pdfService: MotionPdfExportService
-    ) {
-        super(formBuilder);
-    }
+    private repo = inject(PersonalNoteControllerService);
+    private pdfService = inject(MotionPdfExportService);
 
     public editPersonalNote(): void {
         this.enterEditMode(this.personalNote?.note);

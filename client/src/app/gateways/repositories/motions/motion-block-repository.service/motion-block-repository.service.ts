@@ -3,7 +3,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionBlock } from '../../../../domain/models/motions/motion-block';
-import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
+import { createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionBlockAction } from './motion-block.action';
@@ -15,11 +15,8 @@ export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeaker
     ViewMotionBlock,
     MotionBlock
 > {
-    constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, MotionBlock, agendaItemRepo);
+    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+        super(repositoryServiceCollector, MotionBlock);
         this.initSorting();
     }
 

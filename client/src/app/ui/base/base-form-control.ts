@@ -1,5 +1,5 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
+import { Directive, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
@@ -57,7 +57,9 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
     private readonly _id: number;
     private _disabled = false;
 
-    public constructor(protected fb: UntypedFormBuilder) {
+    protected fb = inject(UntypedFormBuilder);
+
+    public constructor() {
         this._id = ++BaseFormControlComponent.formControlId;
         this.contentForm = this.createForm();
     }

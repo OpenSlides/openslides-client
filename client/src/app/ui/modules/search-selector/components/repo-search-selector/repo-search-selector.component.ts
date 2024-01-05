@@ -1,6 +1,5 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
-import { NgControl, UntypedFormBuilder } from '@angular/forms';
+import { Component, inject, Input, OnDestroy, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { map, OperatorFunction } from 'rxjs';
 import { ModelRequestService, SubscribeToConfig } from 'src/app/site/services/model-request.service';
@@ -50,15 +49,11 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
 
     private subscriptionName: string;
 
-    public constructor(
-        formBuilder: UntypedFormBuilder,
-        focusMonitor: FocusMonitor,
-        element: ElementRef<HTMLElement>,
-        @Optional() @Self() ngControl: NgControl,
-        private meetingSettingService: MeetingSettingsService,
-        private modelRequestService: ModelRequestService
-    ) {
-        super(formBuilder, focusMonitor, element, ngControl);
+    private meetingSettingService = inject(MeetingSettingsService);
+    private modelRequestService = inject(ModelRequestService);
+
+    public constructor(@Optional() @Self() ngControl: NgControl) {
+        super(ngControl);
         this.shouldPropagateOnRegistering = false;
     }
 

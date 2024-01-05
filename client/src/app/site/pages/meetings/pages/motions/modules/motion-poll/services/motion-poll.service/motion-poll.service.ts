@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, merge, Observable, of } from 'rxjs';
 import { Motion } from 'src/app/domain/models/motions/motion';
@@ -17,11 +17,9 @@ import {
     VotingResult,
     YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
-import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { MotionPollControllerService } from '../motion-poll-controller.service';
 import { MotionPollServiceModule } from '../motion-poll-service.module';
@@ -44,16 +42,13 @@ export class MotionPollService extends PollService {
     public defaultPollType!: PollType;
     public defaultGroupIds!: number[];
 
-    public constructor(
-        organizationSettingsService: OrganizationSettingsService,
-        pollKeyVerbose: PollKeyVerbosePipe,
-        parsePollNumber: PollParseNumberPipe,
-        protected override translate: TranslateService,
-        private repo: MotionPollControllerService,
-        private meetingSettingsService: MeetingSettingsService,
-        themeService: ThemeService
-    ) {
-        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
+    protected override translate = inject(TranslateService);
+    private repo = inject(MotionPollControllerService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor(organizationSettingsService: OrganizationSettingsService) {
+        super(organizationSettingsService);
+
         this.meetingSettingsService
             .get(`motion_poll_default_onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base));

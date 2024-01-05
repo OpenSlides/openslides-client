@@ -1,9 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import {
-    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-    MatLegacyDialogRef as MatDialogRef
-} from '@angular/material/legacy-dialog';
+import { Component, Inject, inject } from '@angular/core';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import {
@@ -48,17 +44,13 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     public readonly globalValues: GlobalOptionKey[] = [`global_yes`, `global_no`, `global_abstain`];
 
+    public readonly assignmentPollService = inject(AssignmentPollService);
     /**
      * Constructor. Retrieves necessary metadata from the pollService,
      * injects the poll itself
      */
-    public constructor(
-        formBuilder: UntypedFormBuilder,
-        dialogRef: MatDialogRef<BasePollDialogComponent>,
-        public readonly assignmentPollService: AssignmentPollService,
-        @Inject(MAT_DIALOG_DATA) pollData: ViewPoll
-    ) {
-        super(dialogRef, pollData, formBuilder);
+    public constructor(@Inject(MAT_DIALOG_DATA) pollData: ViewPoll) {
+        super(pollData);
     }
 
     public override onBeforeInit(): void {

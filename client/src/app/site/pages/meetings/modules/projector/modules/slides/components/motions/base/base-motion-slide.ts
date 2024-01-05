@@ -1,3 +1,4 @@
+import { inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { fqidFromCollectionAndId } from 'src/app/infrastructure/utils/transform-functions';
 import {
@@ -7,7 +8,6 @@ import {
 
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import { TitleInformationWithAgendaItem } from '../../../definitions';
-import { inject } from '@angular/core';
 
 export interface MotionTitleInformation extends TitleInformationWithAgendaItem {
     title: string;
@@ -26,7 +26,6 @@ export interface ReferencedMotions {
  * replacing referenced motions (format: `[motion/<id>]`) in strings.
  */
 export class BaseMotionSlideComponent<T extends object> extends BaseSlideComponent<T> {
-
     protected translate = inject(TranslateService);
     protected motionRepo = inject(MotionControllerService);
 

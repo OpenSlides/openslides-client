@@ -3,12 +3,13 @@ import {
     Component,
     EventEmitter,
     forwardRef,
+    inject,
     OnDestroy,
     OnInit,
     Output,
     TemplateRef
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { map, Observable, OperatorFunction } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -75,16 +76,11 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
 
     private dialogRef: MatDialogRef<any> | null = null;
 
-    public constructor(
-        formBuilder: UntypedFormBuilder,
-        private dialogService: MatDialog,
-        public readonly repo: MediafileControllerService,
-        private groupsRepo: GroupControllerService,
-        private modelRequestService: ModelRequestService,
-        private activeMeeting: ActiveMeetingService
-    ) {
-        super(formBuilder);
-    }
+    private dialogService = inject(MatDialog);
+    public readonly repo = inject(MediafileControllerService);
+    private groupsRepo = inject(GroupControllerService);
+    private modelRequestService = inject(ModelRequestService);
+    private activeMeeting = inject(ActiveMeetingService);
 
     public override ngOnInit(): void {
         this.subscriptions.push(

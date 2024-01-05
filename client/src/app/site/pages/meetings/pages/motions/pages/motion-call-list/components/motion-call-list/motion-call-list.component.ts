@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FlatNode } from 'src/app/infrastructure/definitions/tree';
@@ -8,7 +8,6 @@ import {
     SortTreeFilterId,
     SortTreeFilterOption
 } from 'src/app/ui/base/base-sort-tree-view-component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { TagControllerService } from '../../../../modules/tags/services';
@@ -67,16 +66,15 @@ export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotio
      */
     protected activeCatFilters = new BehaviorSubject<SortTreeFilterId[]>([]);
 
-    public constructor(
-        protected override translate: TranslateService,
-        promptService: PromptService,
-        private motionRepo: MotionControllerService,
-        private motionCsvExport: MotionCsvExportService,
-        private motionPdfExport: MotionPdfExportService,
-        private tagRepo: TagControllerService,
-        private categoryRepo: MotionCategoryControllerService
-    ) {
-        super(translate, promptService);
+    protected override translate = inject(TranslateService);
+    private motionRepo = inject(MotionControllerService);
+    private motionCsvExport = inject(MotionCsvExportService);
+    private motionPdfExport = inject(MotionPdfExportService);
+    private tagRepo = inject(TagControllerService);
+    private categoryRepo = inject(MotionCategoryControllerService);
+
+    public constructor() {
+        super();
 
         this.motionsObservable = this.motionRepo.getViewModelListObservable();
         this.motionsObservable.subscribe(motions => {

@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional, Self } from '@angular/core';
+import { Directive, ElementRef, HostBinding, inject, Input, OnDestroy, Optional, Self } from '@angular/core';
 import {
     ControlValueAccessor,
     NgControl,
@@ -108,12 +108,11 @@ export abstract class BaseFormFieldControlComponent<T>
 
     protected subscriptions: Subscription[] = [];
 
-    public constructor(
-        protected fb: UntypedFormBuilder,
-        protected fm: FocusMonitor,
-        protected element: ElementRef<HTMLElement>,
-        @Optional() @Self() public ngControl: NgControl
-    ) {
+    protected fb = inject(UntypedFormBuilder);
+    protected fm = inject(FocusMonitor);
+    protected element = inject(ElementRef<HTMLElement>);
+
+    public constructor(@Optional() @Self() public ngControl: NgControl) {
         this.contentForm = this.createForm();
         this.initializeForm();
 
@@ -122,7 +121,7 @@ export abstract class BaseFormFieldControlComponent<T>
         }
 
         this.subscriptions.push(
-            fm.monitor(element.nativeElement, true).subscribe(origin => {
+            this.fm.monitor(this.element.nativeElement, true).subscribe(origin => {
                 this.focused = origin === `mouse` || origin === `touch`;
                 this.stateChanges.next();
             }),

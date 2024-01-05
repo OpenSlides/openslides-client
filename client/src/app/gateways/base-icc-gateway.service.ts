@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 
 import { HttpMethod } from '../infrastructure/definitions/http';
 import { ActiveMeetingIdService } from '../site/pages/meetings/services/active-meeting-id.service';
@@ -42,13 +42,11 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
      * Subclasses can call {@link setupConnections} after the super call to initialize automatic meeting-based connection handling.
      * Otherwise connections need to be managed manually.
      */
-    public constructor(
-        private httpService: HttpService,
-        private httpStreamService: HttpStreamService,
-        protected activeMeetingIdService: ActiveMeetingIdService,
-        private communicationManager: CommunicationManagerService,
-        private httpEndpointService: HttpStreamEndpointService
-    ) {}
+    private httpService = inject(HttpService);
+    private httpStreamService = inject(HttpStreamService);
+    protected activeMeetingIdService = inject(ActiveMeetingIdService);
+    private communicationManager = inject(CommunicationManagerService);
+    private httpEndpointService = inject(HttpStreamEndpointService);
 
     /**
      * Can be called in the subclasses constructor after the super call.

@@ -1,9 +1,15 @@
-import { AfterViewInit, Component, ElementRef, Inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
 import {
-    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-    MatLegacyDialogRef as MatDialogRef
-} from '@angular/material/legacy-dialog';
+    AfterViewInit,
+    Component,
+    ElementRef,
+    Inject,
+    inject,
+    QueryList,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
+import { Validators } from '@angular/forms';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -83,13 +89,10 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
         return super.formsValid;
     }
 
-    constructor(
-        formBuilder: UntypedFormBuilder,
-        dialogRef: MatDialogRef<BasePollDialogComponent>,
-        public topicPollService: TopicPollService,
-        @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewTopic>
-    ) {
-        super(dialogRef, pollData, formBuilder);
+    public topicPollService = inject(TopicPollService);
+
+    constructor(@Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewTopic>) {
+        super(pollData);
         this.optionTypeText = true;
     }
 

@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { BaseMotionSlideComponent } from 'src/app/site/pages/meetings/modules/projector/modules/slides/components/motions/base/base-motion-slide';
-import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
@@ -87,9 +85,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
         return this.makeIndicesArray(this.columns);
     }
 
-    public constructor(
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    public constructor(private meetingSettingsService: MeetingSettingsService) {
         super();
         this.languageCollator = new Intl.Collator(this.translate.currentLang);
 

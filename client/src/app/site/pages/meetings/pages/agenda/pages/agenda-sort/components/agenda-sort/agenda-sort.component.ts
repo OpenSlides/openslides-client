@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import {
     MatLegacyListOption as MatListOption,
     MatLegacySelectionList as MatSelectionList
@@ -12,7 +12,6 @@ import {
     SortTreeFilterId,
     SortTreeFilterOption
 } from 'src/app/ui/base/base-sort-tree-view-component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../services/agenda-item-controller.service/agenda-item-controller.service';
 
@@ -45,12 +44,11 @@ export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaIte
      */
     protected activeFilters = new BehaviorSubject<SortTreeFilterId[]>([]);
 
-    public constructor(
-        protected override translate: TranslateService,
-        promptService: PromptService,
-        private agendaRepo: AgendaItemControllerService
-    ) {
-        super(translate, promptService);
+    protected override translate = inject(TranslateService);
+    private agendaRepo = inject(AgendaItemControllerService);
+
+    public constructor() {
+        super();
         this.itemsObservable = this.agendaRepo.getViewModelListObservable();
     }
 

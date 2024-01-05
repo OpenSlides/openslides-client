@@ -1,3 +1,4 @@
+import { inject } from '@angular/core';
 import { HasAgendaItemId, HasListOfSpeakersId } from 'src/app/domain/interfaces';
 import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -16,10 +17,11 @@ export abstract class BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     extends BaseMeetingRelatedRepository<V, M>
     implements ListOfSpeakersContentObjectRepository<V, M>, AgendaItemContentObjectRepository<V, M>
 {
+    protected agendaItemRepo = inject(AgendaItemRepositoryService);
+
     public constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        baseModelCtor: ModelConstructor<M>,
-        protected agendaItemRepo: AgendaItemRepositoryService
+        baseModelCtor: ModelConstructor<M>
     ) {
         super(repositoryServiceCollector, baseModelCtor);
     }

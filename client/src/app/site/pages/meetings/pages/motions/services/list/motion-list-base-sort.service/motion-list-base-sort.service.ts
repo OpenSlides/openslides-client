@@ -1,10 +1,9 @@
-import { Directive, inject, Injector, ProviderToken } from '@angular/core';
+import { Directive, inject, ProviderToken } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { StorageService } from 'src/app/gateways/storage.service';
 import {
     BaseSortListService,
     OsSortingDefinition,
@@ -59,22 +58,17 @@ export class MotionListBaseSortService extends BaseSortListService<ViewMotion> {
     private defaultDefinitionSubject: BehaviorSubject<OsSortingDefinition<ViewMotion>>;
 
     private meetingSettingsService = inject(MeetingSettingsService);
-
+    protected override translate = inject(TranslateService);
     /**
      * Constructor.
      *
-     * @param translate required by parent
-     * @param store required by parent
      * @param config set the default sorting according to OpenSlides configuration
      */
     public constructor(
-        protected override translate: TranslateService,
-        store: StorageService,
-        injector: Injector,
         defaultDefinition?: OsSortingDefinition<ViewMotion> | Observable<OsSortingDefinition<ViewMotion>>
     ) {
         const defaultDefinitions = new BehaviorSubject<OsSortingDefinition<ViewMotion>>(null);
-        super(translate, store, injector, defaultDefinition ?? defaultDefinitions);
+        super(defaultDefinition ?? defaultDefinitions);
         this.defaultDefinitionSubject = defaultDefinitions;
 
         this.defaultMotionSorting = `number`;

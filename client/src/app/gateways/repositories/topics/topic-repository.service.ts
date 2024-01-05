@@ -6,7 +6,6 @@ import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definiti
 
 import { Action } from '../../actions';
 import { createAgendaItem } from '../agenda';
-import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { TopicAction } from './topic.action';
@@ -15,11 +14,8 @@ import { TopicAction } from './topic.action';
     providedIn: `root`
 })
 export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<ViewTopic, Topic> {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, Topic, agendaItemRepo);
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+        super(repositoryServiceCollector, Topic);
     }
 
     public create(...topics: any[]): Promise<Identifiable[]> {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
@@ -14,12 +14,10 @@ import {
     PollType,
     YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
-import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
@@ -40,17 +38,15 @@ export class AssignmentPollService extends PollService {
     public defaultPollType: PollType | undefined;
     public defaultGroupIds: number[] = [];
 
+    protected override translate = inject(TranslateService);
+    private pollRepo = inject(PollControllerService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
     public constructor(
         organizationSettingsService: OrganizationSettingsService,
-        protected override translate: TranslateService,
-        pollKeyVerbose: PollKeyVerbosePipe,
-        parsePollNumber: PollParseNumberPipe,
-        pollServiceMapper: PollServiceMapperService,
-        private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService,
-        themeService: ThemeService
+        pollServiceMapper: PollServiceMapperService
     ) {
-        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
+        super(organizationSettingsService);
         pollServiceMapper.registerService(ViewAssignment.COLLECTION, this);
         this.meetingSettingsService
             .get(`assignment_poll_default_onehundred_percent_base`)

@@ -12,7 +12,6 @@ const ACCOUNT_LIST_SUBSCRIPTION = `account_list`;
     styleUrls: [`./account-main.component.scss`]
 })
 export class AccountMainComponent extends BaseModelRequestHandlerComponent {
-
     protected override onShouldCreateModelRequests(): void {
         this.subscribeTo(
             [

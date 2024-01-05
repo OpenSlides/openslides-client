@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -37,9 +37,8 @@ export class LogoComponent extends BaseUiComponent implements OnInit {
     private _path: string | null = null;
     private _isDarkMode = false;
 
-    public constructor(private themeService: ThemeService, private mediaManageService: MediaManageService) {
-        super();
-    }
+    private themeService = inject(ThemeService);
+    private mediaManageService = inject(MediaManageService);
 
     public ngOnInit(): void {
         this.subscriptions.push(

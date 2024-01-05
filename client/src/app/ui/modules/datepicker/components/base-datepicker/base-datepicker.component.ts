@@ -1,6 +1,5 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Directive, ElementRef, Input, Optional, Self, ViewChild } from '@angular/core';
-import { NgControl, UntypedFormBuilder } from '@angular/forms';
+import { Directive, ElementRef, inject, Input, Optional, Self, ViewChild } from '@angular/core';
+import { NgControl } from '@angular/forms';
 import { MatDatepicker, MatDateRangePicker } from '@angular/material/datepicker';
 import { distinctUntilChanged, map } from 'rxjs';
 import { BaseFormFieldControlComponent } from 'src/app/ui/base/base-form-field-control';
@@ -26,16 +25,12 @@ export abstract class BaseDatepickerComponent extends BaseFormFieldControlCompon
     @Input()
     public showUpdateSuccessIcon = false;
 
-    constructor(
-        formBuilder: UntypedFormBuilder,
-        focusMonitor: FocusMonitor,
-        element: ElementRef<HTMLElement>,
-        @Optional() @Self() ngControl: NgControl
-    ) {
-        super(formBuilder, focusMonitor, element, ngControl);
+    protected override element = inject(ElementRef<HTMLElement>);
+    constructor(@Optional() @Self() ngControl: NgControl) {
+        super(ngControl);
 
         this.fm
-            .monitor(element.nativeElement, true)
+            .monitor(this.element.nativeElement, true)
             .pipe(
                 map(origin => !!origin),
                 distinctUntilChanged()

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
@@ -41,15 +40,9 @@ export class MotionCommentComponent extends BaseMotionDetailActionCardComponent 
     }
 
     protected override translate = inject(TranslateService);
-
-    public constructor(
-        fb: UntypedFormBuilder,
-        private pdfService: MotionPdfExportService,
-        private commentRepo: MotionCommentControllerService,
-        private operator: OperatorService
-    ) {
-        super(fb);
-    }
+    private pdfService = inject(MotionPdfExportService);
+    private commentRepo = inject(MotionCommentControllerService);
+    private operator = inject(OperatorService);
 
     public editComment(): void {
         this.enterEditMode(this.comment?.comment || ``);

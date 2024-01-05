@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
-import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
@@ -18,11 +17,8 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
     ViewAssignment,
     Assignment
 > {
-    constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, Assignment, agendaItemRepo);
+    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+        super(repositoryServiceCollector, Assignment);
     }
 
     public override getFieldsets(): Fieldsets<Assignment> {

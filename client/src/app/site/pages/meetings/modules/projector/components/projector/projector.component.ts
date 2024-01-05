@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnDestroy, ViewChild } from '@angular/core';
 import {
     auditTime,
     BehaviorSubject,
@@ -123,12 +123,12 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
     public enableHeaderAndFooter = true;
     public enableTitle = true;
 
-    public constructor(
-        private offlineService: ConnectionStatusService,
-        private elementRef: ElementRef,
-        private mediaManageService: MediaManageService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    private offlineService = inject(ConnectionStatusService);
+    private elementRef = inject(ElementRef);
+    private mediaManageService = inject(MediaManageService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor() {
         super();
 
         this.projectorClass = `projector-` + Math.random().toString(36).substring(4);

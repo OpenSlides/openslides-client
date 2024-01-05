@@ -1,6 +1,5 @@
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { StorageService } from 'src/app/gateways/storage.service';
 
 import { MotionListBaseSortService } from '../motion-list-base-sort.service';
 
@@ -8,6 +7,7 @@ import { MotionListBaseSortService } from '../motion-list-base-sort.service';
     providedIn: `root`
 })
 export class MotionListSortService extends MotionListBaseSortService {
+    protected override translate = inject(TranslateService);
     /**
      * Constructor.
      *
@@ -15,7 +15,7 @@ export class MotionListSortService extends MotionListBaseSortService {
      * @param store required by parent
      * @param config set the default sorting according to OpenSlides configuration
      */
-    public constructor(protected override translate: TranslateService, store: StorageService, injector: Injector) {
-        super(translate, store, injector, null);
+    public constructor() {
+        super(null);
     }
 }

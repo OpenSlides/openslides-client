@@ -4,12 +4,12 @@ import {
     ContentChild,
     ContentChildren,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
     QueryList,
-    TemplateRef,
-    inject
+    TemplateRef
 } from '@angular/core';
 import {
     AbstractControl,

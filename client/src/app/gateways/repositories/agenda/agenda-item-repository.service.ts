@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { AgendaItem, AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
@@ -16,10 +16,9 @@ import { AgendaItemAction } from './agenda-item.action';
     providedIn: `root`
 })
 export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<ViewAgendaItem, AgendaItem> {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        private treeService: TreeService
-    ) {
+    private treeService = inject(TreeService);
+
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, AgendaItem);
 
         this.setSortFunction((a, b) => a.tree_weight - b.tree_weight); // leave the sorting as it is

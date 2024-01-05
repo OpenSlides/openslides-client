@@ -2,7 +2,6 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
-import { NotifyService } from 'src/app/gateways/notify.service';
 import { navItemAnim } from 'src/app/infrastructure/animations';
 import { getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -13,7 +12,6 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { SidenavComponent } from 'src/app/ui/modules/sidenav/components/sidenav/sidenav.component';
 
 import { ChatNotificationService, ChatService } from '../../../../pages/chat';
-import { LoadFontService } from '../../../../services/load-font.service';
 
 @Component({
     selector: `os-meetings-navigation-wrapper`,

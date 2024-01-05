@@ -25,6 +25,7 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
             return null;
         }
     }
+
     private collectionMapperService = inject(CollectionMapperService);
 
     protected override setData(value: SlideData<CommonListOfSpeakersSlideData>): void {

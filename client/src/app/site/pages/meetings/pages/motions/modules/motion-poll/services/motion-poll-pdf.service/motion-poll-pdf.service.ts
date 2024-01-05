@@ -1,49 +1,24 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
     AbstractPollData,
     BasePollPdfService
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
-import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { ViewMotion } from '../../../../view-models';
-import { MotionPollService } from '../motion-poll.service';
 import { MotionPollServiceModule } from '../motion-poll-service.module';
 
 @Injectable({
     providedIn: MotionPollServiceModule
 })
 export class MotionPollPdfService extends BasePollPdfService {
-    public constructor(
-        meetingSettingsService: MeetingSettingsService,
-        userRepo: ParticipantControllerService,
-        activeMeetingService: ActiveMeetingService,
-        mediaManageService: MediaManageService,
-        pdfService: MeetingPdfExportService,
-        protected override translate: TranslateService,
-        private motionRepo: MotionControllerService,
-        pollService: MotionPollService,
-        pollKeyVerbose: PollKeyVerbosePipe,
-        pollParseNumber: PollParseNumberPipe
-    ) {
-        super(
-            meetingSettingsService,
-            userRepo,
-            activeMeetingService,
-            mediaManageService,
-            pdfService,
-            translate,
-            pollService,
-            pollKeyVerbose,
-            pollParseNumber
-        );
+    protected override translate = inject(TranslateService);
+    private motionRepo = inject(MotionControllerService);
+
+    public constructor() {
+        super();
         this.meetingSettingsService
             .get(`motion_poll_ballot_paper_number`)
             .subscribe(count => (this.ballotCustomCount = count));
