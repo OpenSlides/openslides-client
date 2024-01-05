@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import {
     MatLegacyDialog as MatDialog,
     MatLegacyDialogConfig as MatDialogConfig
@@ -75,19 +75,18 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private clickCounter = 0;
     private clickTimeout: number | null = null;
 
-    public constructor(
-        private translate: TranslateService,
-        private operator: OperatorService,
-        private userRepo: UserControllerService,
-        private authService: AuthService,
-        private dialog: MatDialog,
-        private router: Router,
-        private theme: ThemeService,
-        private meetingSettingsService: MeetingSettingsService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private controller: UserControllerService,
-        chessChallengeService: ChessChallengeService
-    ) {
+    private translate = inject(TranslateService);
+    private operator = inject(OperatorService);
+    private userRepo = inject(UserControllerService);
+    private authService = inject(AuthService);
+    private dialog = inject(MatDialog);
+    private router = inject(Router);
+    private theme = inject(ThemeService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private controller = inject(UserControllerService);
+
+    public constructor(chessChallengeService: ChessChallengeService) {
         super();
         chessChallengeService.startListening();
     }

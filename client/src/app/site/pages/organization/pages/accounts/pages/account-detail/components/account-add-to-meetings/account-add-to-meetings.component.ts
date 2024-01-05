@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
@@ -83,15 +83,14 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
 
     public getMeetingAdditionallySearchedFn = (item: ViewMeeting) => [item.committee.getTitle()];
 
-    public constructor(
-        private operator: OperatorService,
-        private userController: UserControllerService,
-        private meetingController: MeetingControllerService,
-        private router: Router,
-        private osRouter: OpenSlidesRouterService,
-        private formBuilder: UntypedFormBuilder,
-        private translate: TranslateService
-    ) {
+    private operator = inject(OperatorService);
+    private userController = inject(UserControllerService);
+    private meetingController = inject(MeetingControllerService);
+    private router = inject(Router);
+    private osRouter = inject(OpenSlidesRouterService);
+    private translate = inject(TranslateService);
+
+    public constructor(private formBuilder: UntypedFormBuilder) {
         super();
     }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
@@ -22,14 +22,13 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
 
     private _isWaiting = false;
 
+    protected override translate = inject(TranslateService);
+    private userRepo = inject(UserControllerService);
+
     /**
      * Constructur for the reset password view. Initializes the form for the email.
      */
-    public constructor(
-        protected override translate: TranslateService,
-        formBuilder: UntypedFormBuilder,
-        private userRepo: UserControllerService
-    ) {
+    public constructor(formBuilder: UntypedFormBuilder) {
         super();
         this.resetPasswordForm = formBuilder.group({
             email: [``, [Validators.required, createEmailValidator()]]

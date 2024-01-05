@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 
 import { Identifiable } from '../../../domain/interfaces';
@@ -13,7 +13,9 @@ import { OrganizationTagAction } from './organization-tag.action';
     providedIn: `root`
 })
 export class OrganizationTagRepositoryService extends BaseRepository<ViewOrganizationTag, OrganizationTag> {
-    public constructor(serviceCollector: RepositoryServiceCollectorService, private theme: ThemeService) {
+    private theme = inject(ThemeService);
+
+    public constructor(serviceCollector: RepositoryServiceCollectorService) {
         super(serviceCollector, OrganizationTag);
     }
 

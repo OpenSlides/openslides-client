@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -14,7 +14,6 @@ import {
     MotionChangeRecommendationControllerService,
     MotionDiffService
 } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/services';
-import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { MotionFormatService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-format.service';
 import { ViewMotionAmendedParagraph } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion-amended-paragraph';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
@@ -155,14 +154,14 @@ export class MotionSlideComponent
 
     private _showText = false;
 
-    public constructor(
-        protected override translate: TranslateService,
-        private motionFormatService: MotionFormatService,
-        private changeRepo: MotionChangeRecommendationControllerService,
-        private lineNumbering: LineNumberingService,
-        private diff: MotionDiffService,
-        private meetingSettings: MeetingSettingsService
-    ) {
+    protected override translate = inject(TranslateService);
+    private motionFormatService = inject(MotionFormatService);
+    private changeRepo = inject(MotionChangeRecommendationControllerService);
+    private lineNumbering = inject(LineNumberingService);
+    private diff = inject(MotionDiffService);
+    private meetingSettings = inject(MeetingSettingsService);
+
+    public constructor() {
         super();
         this.meetingSettings.get(`motions_enable_text_on_projector`).subscribe(val => (this._showText = val));
     }

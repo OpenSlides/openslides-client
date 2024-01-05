@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Fqid } from 'src/app/domain/definitions/key-types';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
@@ -78,11 +78,10 @@ export type FullNameInformation = ShortNameInformation & LevelAndNumberInformati
     providedIn: `root`
 })
 export class UserRepositoryService extends BaseRepository<ViewUser, User> {
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollectorService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private meetingUserRepo: MeetingUserRepositoryService
-    ) {
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private meetingUserRepo = inject(MeetingUserRepositoryService);
+
+    public constructor(repositoryServiceCollector: RepositoryServiceCollectorService) {
         super(repositoryServiceCollector, User);
     }
 

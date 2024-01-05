@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { VoteValue } from 'src/app/domain/models/poll';
@@ -38,11 +38,10 @@ export class AssignmentPollDetailComponent
         return this.hasPerms() || this.poll.isPublished;
     }
 
-    public constructor(
-        pollService: AssignmentPollService,
-        protected override translate: TranslateService,
-        private pollDialog: AssignmentPollDialogService
-    ) {
+    protected override translate = inject(TranslateService);
+    private pollDialog = inject(AssignmentPollDialogService);
+
+    public constructor(pollService: AssignmentPollService) {
         super(pollService);
     }
 

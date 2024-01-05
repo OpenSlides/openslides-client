@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -35,12 +35,12 @@ export class OrganizationSettingsComponent extends BaseComponent {
 
     private _currentOrgaSettings: ViewOrganization | null = null;
 
-    public constructor(
-        protected override translate: TranslateService,
-        private controller: OrganizationControllerService,
-        private formBuilder: UntypedFormBuilder,
-        private operator: OperatorService
-    ) {
+    protected override translate = inject(TranslateService);
+    private controller = inject(OrganizationControllerService);
+    private formBuilder = inject(UntypedFormBuilder);
+    private operator = inject(OperatorService);
+
+    public constructor() {
         super();
         super.setTitle(this.pageTitle);
 

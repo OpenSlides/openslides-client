@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,19 +32,19 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         return this.translate.instant(`Agenda items are in process. Please wait ...`);
     }
 
-    public constructor(
-        protected override translate: TranslateService,
-        public committeeController: CommitteeControllerService,
-        public operator: OperatorService,
-        public filterService: CommitteeFilterService,
-        public sortService: CommitteeSortService,
-        private csvService: CommitteeExportService,
-        private route: ActivatedRoute,
-        private choiceService: ChoiceService,
-        private meetingRepo: MeetingControllerService,
-        private tagRepo: OrganizationTagControllerService,
-        private spinnerService: SpinnerService
-    ) {
+    protected override translate = inject(TranslateService);
+    public committeeController = inject(CommitteeControllerService);
+    public operator = inject(OperatorService);
+    public filterService = inject(CommitteeFilterService);
+    public sortService = inject(CommitteeSortService);
+    private csvService = inject(CommitteeExportService);
+    private route = inject(ActivatedRoute);
+    private choiceService = inject(ChoiceService);
+    private meetingRepo = inject(MeetingControllerService);
+    private tagRepo = inject(OrganizationTagControllerService);
+    private spinnerService = inject(SpinnerService);
+
+    public constructor() {
         super();
         super.setTitle(`Committees`);
         this.canMultiSelect = true;

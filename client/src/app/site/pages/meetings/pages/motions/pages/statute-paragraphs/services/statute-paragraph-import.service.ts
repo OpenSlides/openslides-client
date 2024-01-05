@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
 import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
 import { BaseImportService } from 'src/app/site/base/base-import.service';
@@ -28,11 +28,10 @@ export class StatuteParagraphImportService extends BaseImportService<MotionStatu
     /**
      * Constructor. Defines the headers expected and calls the abstract class
      */
-    public constructor(
-        private repo: MotionStatuteParagraphControllerService,
-        private exporter: StatuteParagraphCsvExportService,
-        serviceCollector: ImportServiceCollectorService
-    ) {
+    private repo = inject(MotionStatuteParagraphControllerService);
+    private exporter = inject(StatuteParagraphCsvExportService);
+
+    public constructor(serviceCollector: ImportServiceCollectorService) {
         super(serviceCollector);
     }
 

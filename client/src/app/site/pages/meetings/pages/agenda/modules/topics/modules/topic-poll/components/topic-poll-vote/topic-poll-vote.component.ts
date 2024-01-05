@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { GlobalVote, PollMethod, PollType, VoteValue } from 'src/app/domain/models/poll';
 import {
@@ -50,11 +50,9 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         return this.poll.min_votes_amount;
     }
 
-    public constructor(
-        private promptService: PromptService,
-        operator: OperatorService,
-        meetingSettingsService: MeetingSettingsService
-    ) {
+    private promptService = inject(PromptService);
+
+    public constructor(operator: OperatorService, meetingSettingsService: MeetingSettingsService) {
         super(operator, meetingSettingsService);
     }
 

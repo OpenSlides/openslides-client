@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
@@ -16,14 +16,14 @@ import { ViewOrganizationTag } from '../../../../view-models';
     styleUrls: [`./organization-tag-list.component.scss`]
 })
 export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrganizationTag> {
-    public constructor(
-        protected override translate: TranslateService,
-        public repo: OrganizationTagControllerService,
-        private promptService: PromptService,
-        private dialog: OrganizationTagDialogService,
-        private colorService: ColorService,
-        private theme: ThemeService
-    ) {
+    protected override translate = inject(TranslateService);
+    public repo = inject(OrganizationTagControllerService);
+    private promptService = inject(PromptService);
+    private dialog = inject(OrganizationTagDialogService);
+    private colorService = inject(ColorService);
+    private theme = inject(ThemeService);
+
+    public constructor() {
         super();
         super.setTitle(`Tags`);
         this.canMultiSelect = true;

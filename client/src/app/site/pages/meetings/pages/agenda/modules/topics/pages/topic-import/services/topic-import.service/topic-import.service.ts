@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
@@ -35,18 +35,15 @@ export class TopicImportService extends BaseBackendImportService {
         warning: _(`Topics with warnings (will be skipped)`)
     };
 
+    private repo = inject(TopicRepositoryService);
+    private exporter = inject(TopicExportService);
+    private activeMeetingId = inject(ActiveMeetingIdService);
     /**
      * Constructor. Calls the abstract class and sets the expected header
      *
-     * @param durationService: a service for converting time strings and numbers
      * @param repo: The Agenda repository service
      */
-    public constructor(
-        serviceCollector: ImportServiceCollectorService,
-        private repo: TopicRepositoryService,
-        private exporter: TopicExportService,
-        private activeMeetingId: ActiveMeetingIdService
-    ) {
+    public constructor(serviceCollector: ImportServiceCollectorService) {
         super(serviceCollector);
     }
 

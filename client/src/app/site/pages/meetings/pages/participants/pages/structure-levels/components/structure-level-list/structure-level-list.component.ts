@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -42,16 +42,16 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
      */
     public currentStructureLevel: ViewStructureLevel | null = null;
 
-    public constructor(
-        protected override translate: TranslateService,
-        public repo: StructureLevelControllerService,
-        private formBuilder: UntypedFormBuilder,
-        private dialog: MatDialog,
-        private promptService: PromptService,
-        private cd: ChangeDetectorRef,
-        private operator: OperatorService,
-        public sortService: StructureLevelSortService
-    ) {
+    protected override translate = inject(TranslateService);
+    public repo = inject(StructureLevelControllerService);
+    private formBuilder = inject(UntypedFormBuilder);
+    private dialog = inject(MatDialog);
+    private promptService = inject(PromptService);
+    private cd = inject(ChangeDetectorRef);
+    private operator = inject(OperatorService);
+    public sortService = inject(StructureLevelSortService);
+
+    public constructor() {
         super();
         super.setTitle(`Structure Levels`);
         this.structureLevelForm = this.formBuilder.group({

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { fadeInAnim } from 'src/app/infrastructure/animations';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -18,11 +18,9 @@ export class ApplauseBarDisplayComponent extends BaseMeetingComponent {
 
     private level = 0;
 
-    public constructor(
-        protected override translate: TranslateService,
-        cd: ChangeDetectorRef,
-        private applauseService: ApplauseService
-    ) {
+    protected override translate = inject(TranslateService);
+
+    public constructor(cd: ChangeDetectorRef, private applauseService: ApplauseService) {
         super();
         this.subscriptions.push(
             applauseService.applauseLevelObservable.subscribe(applauseLevel => {

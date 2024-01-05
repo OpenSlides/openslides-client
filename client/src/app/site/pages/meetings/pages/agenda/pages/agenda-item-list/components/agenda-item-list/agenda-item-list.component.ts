@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ActivatedRoute, NavigationExtras } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
@@ -87,24 +87,24 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      */
     public filterProps = [`item_number`, `comment`, `getListTitle`];
 
-    public constructor(
-        protected override translate: TranslateService,
-        private operator: OperatorService,
-        private route: ActivatedRoute,
-        public repo: AgendaItemControllerService,
-        private promptService: PromptService,
-        private dialog: MatDialog,
-        public vp: ViewPortService,
-        public durationService: DurationService,
-        private agendaItemExportService: AgendaItemExportService,
-        public filterService: AgendaItemFilterService,
-        private topicRepo: TopicControllerService,
-        private meetingRepo: MeetingControllerService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService,
-        private treeService: TreeService,
-        private tagRepo: TagControllerService,
-        private agendaItemMultiselectService: AgendaItemMultiselectService
-    ) {
+    protected override translate = inject(TranslateService);
+    private operator = inject(OperatorService);
+    private route = inject(ActivatedRoute);
+    public repo = inject(AgendaItemControllerService);
+    private promptService = inject(PromptService);
+    private dialog = inject(MatDialog);
+    public vp = inject(ViewPortService);
+    public durationService = inject(DurationService);
+    private agendaItemExportService = inject(AgendaItemExportService);
+    public filterService = inject(AgendaItemFilterService);
+    private topicRepo = inject(TopicControllerService);
+    private meetingRepo = inject(MeetingControllerService);
+    private listOfSpeakersRepo = inject(ListOfSpeakersControllerService);
+    private treeService = inject(TreeService);
+    private tagRepo = inject(TagControllerService);
+    private agendaItemMultiselectService = inject(AgendaItemMultiselectService);
+
+    public constructor() {
         super();
         this.canMultiSelect = true;
         this.listStorageIndex = AGENDA_ITEM_LIST_STORAGE_INDEX;

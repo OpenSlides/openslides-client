@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject } from '@angular/core';
+import { AfterViewInit, Component, Inject, inject } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import {
@@ -36,14 +36,13 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
 
     private headbarDefaultColorSubject = new BehaviorSubject<string>(``);
 
-    public constructor(
-        private dialogRef: MatDialogRef<ThemeBuilderDialogComponent>,
-        private fb: UntypedFormBuilder,
-        private colorService: ColorService,
-        private themeService: ThemeService,
-        private organizationService: OrganizationService,
-        @Inject(MAT_DIALOG_DATA) private data: ThemeBuilderDialogData
-    ) {
+    private dialogRef = inject(MatDialogRef<ThemeBuilderDialogComponent>);
+    private fb = inject(UntypedFormBuilder);
+    private colorService = inject(ColorService);
+    private themeService = inject(ThemeService);
+    private organizationService = inject(OrganizationService);
+
+    public constructor(@Inject(MAT_DIALOG_DATA) private data: ThemeBuilderDialogData) {
         super();
     }
 

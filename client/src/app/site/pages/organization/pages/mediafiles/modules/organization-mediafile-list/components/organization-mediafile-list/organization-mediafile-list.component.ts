@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    inject,
     OnDestroy,
     OnInit,
     TemplateRef,
@@ -85,17 +86,17 @@ export class OrganizationMediafileListComponent
     public directoryObservable: Observable<ViewMediafile[]>;
     private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
 
-    public constructor(
-        protected override translate: TranslateService,
-        private route: ActivatedRoute,
-        public repo: MediafileControllerService,
-        private exporter: MediafileListExportService,
-        public vp: ViewPortService,
-        private operator: OperatorService,
-        private formBuilder: UntypedFormBuilder,
-        private cd: ChangeDetectorRef,
-        private commonService: MediafileCommonService
-    ) {
+    protected override translate = inject(TranslateService);
+    private route = inject(ActivatedRoute);
+    public repo = inject(MediafileControllerService);
+    private exporter = inject(MediafileListExportService);
+    public vp = inject(ViewPortService);
+    private operator = inject(OperatorService);
+    private formBuilder = inject(UntypedFormBuilder);
+    private cd = inject(ChangeDetectorRef);
+    private commonService = inject(MediafileCommonService);
+
+    public constructor() {
         super();
         this.canMultiSelect = true;
 

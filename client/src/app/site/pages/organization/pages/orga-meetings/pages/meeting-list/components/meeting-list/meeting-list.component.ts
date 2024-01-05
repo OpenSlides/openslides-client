@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { OML } from 'src/app/domain/definitions/organization-permission';
@@ -31,14 +31,14 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
     public toRestrictFn = (restriction: ColumnRestriction<OML>) =>
         !this.operator.hasOrganizationPermissions(restriction.permission);
 
-    public constructor(
-        protected override translate: TranslateService,
-        public meetingController: MeetingControllerService,
-        public operator: OperatorService,
-        public filterService: MeetingListFilterService,
-        public sortService: MeetingListSortService,
-        private choiceService: ChoiceService
-    ) {
+    protected override translate = inject(TranslateService);
+    public meetingController = inject(MeetingControllerService);
+    public operator = inject(OperatorService);
+    public filterService = inject(MeetingListFilterService);
+    public sortService = inject(MeetingListSortService);
+    private choiceService = inject(ChoiceService);
+
+    public constructor() {
         super();
         super.setTitle(`Meetings`);
         this.canMultiSelect = true;

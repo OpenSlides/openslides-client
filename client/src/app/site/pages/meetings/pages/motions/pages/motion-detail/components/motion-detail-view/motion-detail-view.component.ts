@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     HostListener,
+    inject,
     OnDestroy,
     OnInit,
     ViewEncapsulation
@@ -138,25 +139,25 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     private _amendmentsInMainList = false;
 
-    public constructor(
-        protected override translate: TranslateService,
-        public vp: ViewPortService,
-        public operator: OperatorService,
-        public perms: MotionPermissionService,
-        private route: ActivatedRoute,
-        public repo: MotionControllerService,
-        private viewService: MotionDetailViewService,
-        private promptService: PromptService,
-        private itemRepo: AgendaItemControllerService,
-        private motionSortService: MotionListSortService,
-        private motionFilterService: MotionListFilterService,
-        private motionForwardingService: MotionForwardDialogService,
-        private amendmentRepo: AmendmentControllerService,
-        private amendmentSortService: AmendmentListSortService,
-        private amendmentFilterService: AmendmentListFilterService,
-        private cd: ChangeDetectorRef,
-        private pdfExport: MotionPdfExportService
-    ) {
+    protected override translate = inject(TranslateService);
+    public vp = inject(ViewPortService);
+    public operator = inject(OperatorService);
+    public perms = inject(MotionPermissionService);
+    private route = inject(ActivatedRoute);
+    public repo = inject(MotionControllerService);
+    private viewService = inject(MotionDetailViewService);
+    private promptService = inject(PromptService);
+    private itemRepo = inject(AgendaItemControllerService);
+    private motionSortService = inject(MotionListSortService);
+    private motionFilterService = inject(MotionListFilterService);
+    private motionForwardingService = inject(MotionForwardDialogService);
+    private amendmentRepo = inject(AmendmentControllerService);
+    private amendmentSortService = inject(AmendmentListSortService);
+    private amendmentFilterService = inject(AmendmentListFilterService);
+    private cd = inject(ChangeDetectorRef);
+    private pdfExport = inject(MotionPdfExportService);
+
+    public constructor() {
         super();
 
         this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {

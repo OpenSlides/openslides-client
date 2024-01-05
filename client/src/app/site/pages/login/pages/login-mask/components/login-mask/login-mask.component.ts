@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
@@ -82,23 +82,17 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public loading = true;
 
-    /**
-     * The message, that should appear, when the user logs in.
-     */
-    private loginMessage = `Loading data. Please wait ...`;
-
     private currentMeetingId: number | null = null;
 
-    public constructor(
-        protected override translate: TranslateService,
-        private authService: AuthService,
-        private operator: OperatorService,
-        private route: ActivatedRoute,
-        private formBuilder: UntypedFormBuilder,
-        private orgaService: OrganizationService,
-        private orgaSettings: OrganizationSettingsService,
-        private browserSupport: BrowserSupportService // private spinnerService: SpinnerService
-    ) {
+    protected override translate = inject(TranslateService);
+    private authService = inject(AuthService);
+    private operator = inject(OperatorService);
+    private route = inject(ActivatedRoute);
+    private formBuilder = inject(UntypedFormBuilder);
+    private orgaService = inject(OrganizationService);
+    private orgaSettings = inject(OrganizationSettingsService);
+    private browserSupport = inject(BrowserSupportService);
+    public constructor() {
         super();
         // Hide the spinner if the user is at `login-mask`
         this.loginForm = this.createForm();
@@ -165,12 +159,10 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         this.isWaitingOnLogin = true;
         this.loginErrorMsg = ``;
         try {
-            // this.spinnerService.show(this.loginMessage, { hideWhenStable: true });
             const { username, password } = this.formatLoginInputValues(this.loginForm.value);
             await this.authService.login(username, password, this.currentMeetingId);
         } catch (e: any) {
             this.isWaitingOnLogin = false;
-            // this.spinnerService.hide();
             this.loginErrorMsg = `${this.translate.instant(`Error`)}: ${this.translate.instant(e.message)}`;
         }
     }

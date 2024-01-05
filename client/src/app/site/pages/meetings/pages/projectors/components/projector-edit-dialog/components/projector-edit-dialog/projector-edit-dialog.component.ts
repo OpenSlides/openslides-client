@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     Inject,
+    inject,
     OnInit,
     ViewChild,
     ViewEncapsulation
@@ -13,7 +14,6 @@ import {
     MatLegacyDialogRef as MatDialogRef
 } from '@angular/material/legacy-dialog';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { auditTime } from 'rxjs';
 import {
     PROJECTIONDEFAULT,
@@ -124,13 +124,12 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
 
     private _defaultProjectors: { [key: string]: number[] } = {};
 
+    private dialogRef = inject(MatDialogRef<ProjectorEditDialogComponent>);
+    private cd = inject(ChangeDetectorRef);
+    private activeMeeting = inject(ActiveMeetingService);
     public constructor(
         formBuilder: UntypedFormBuilder,
-        private translate: TranslateService,
-        @Inject(MAT_DIALOG_DATA) private data: ProjectorEditDialogConfig,
-        private dialogRef: MatDialogRef<ProjectorEditDialogComponent>,
-        private cd: ChangeDetectorRef,
-        private activeMeeting: ActiveMeetingService
+        @Inject(MAT_DIALOG_DATA) private data: ProjectorEditDialogConfig
     ) {
         super();
 

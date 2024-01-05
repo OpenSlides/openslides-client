@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
@@ -40,12 +40,11 @@ export class ParticipantImportService extends BaseBackendImportService {
         error: _(`Participants with errors`)
     };
 
-    public constructor(
-        importServiceCollector: ImportServiceCollectorService,
-        private repo: ParticipantControllerService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private exporter: ParticipantCsvExportService
-    ) {
+    private repo = inject(ParticipantControllerService);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private exporter = inject(ParticipantCsvExportService);
+
+    public constructor(importServiceCollector: ImportServiceCollectorService) {
         super(importServiceCollector);
     }
 

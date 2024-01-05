@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -35,15 +35,14 @@ export class TagListComponent extends BaseMeetingListViewComponent<ViewTag> impl
      */
     public currentTag: ViewTag | null = null;
 
-    public constructor(
-        protected override translate: TranslateService,
-        public repo: TagControllerService,
-        private dialog: MatDialog,
-        private formBuilder: UntypedFormBuilder,
-        private promptService: PromptService,
-        private cd: ChangeDetectorRef,
-        private interactionService: InteractionService
-    ) {
+    protected override translate = inject(TranslateService);
+    public repo = inject(TagControllerService);
+    private dialog = inject(MatDialog);
+    private promptService = inject(PromptService);
+    private cd = inject(ChangeDetectorRef);
+    private interactionService = inject(InteractionService);
+
+    public constructor(private formBuilder: UntypedFormBuilder) {
         super();
     }
 

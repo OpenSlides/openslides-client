@@ -1,5 +1,5 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
@@ -154,17 +154,16 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     private _accountId: Id | null = null;
     private _suitableAccountList: Partial<User>[] = [];
 
-    public constructor(
-        protected override translate: TranslateService,
-        fb: UntypedFormBuilder,
-        public readonly repo: ParticipantControllerService,
-        public readonly sortService: ParticipantListSortService,
-        private groupRepo: GroupControllerService,
-        private userService: UserService,
-        private structureLevelRepo: StructureLevelControllerService,
-        private presenter: SearchUsersPresenterService,
-        private organizationSettingsService: OrganizationSettingsService
-    ) {
+    protected override translate = inject(TranslateService);
+    public readonly repo = inject(ParticipantControllerService);
+    public readonly sortService = inject(ParticipantListSortService);
+    private groupRepo = inject(GroupControllerService);
+    private userService = inject(UserService);
+    private structureLevelRepo = inject(StructureLevelControllerService);
+    private presenter = inject(SearchUsersPresenterService);
+    private organizationSettingsService = inject(OrganizationSettingsService);
+
+    public constructor(fb: UntypedFormBuilder) {
         super();
         this.createUserForm = fb.group(
             {

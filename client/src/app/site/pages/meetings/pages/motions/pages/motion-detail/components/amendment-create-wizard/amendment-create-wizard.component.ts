@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -73,16 +73,16 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
 
     private _parentMotionId: Id | null = null;
 
-    public constructor(
-        protected override translate: TranslateService,
-        private formBuilder: UntypedFormBuilder,
-        private repo: AmendmentControllerService,
-        private motionRepo: MotionControllerService,
-        private motionLineNumbering: MotionLineNumberingService,
-        private route: ActivatedRoute,
-        private promptService: PromptService,
-        private operator: OperatorService
-    ) {
+    protected override translate = inject(TranslateService);
+    private formBuilder = inject(UntypedFormBuilder);
+    private repo = inject(AmendmentControllerService);
+    private motionRepo = inject(MotionControllerService);
+    private motionLineNumbering = inject(MotionLineNumberingService);
+    private route = inject(ActivatedRoute);
+    private promptService = inject(PromptService);
+    private operator = inject(OperatorService);
+
+    public constructor() {
         super();
         this.createForm();
     }

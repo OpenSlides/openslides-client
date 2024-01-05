@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
@@ -35,14 +35,13 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
      */
     public statuteParagraphForm: UntypedFormGroup;
 
-    public constructor(
-        protected override translate: TranslateService,
-        private repo: MotionStatuteParagraphControllerService,
-        private formBuilder: UntypedFormBuilder,
-        private promptService: PromptService,
-        private dialog: MatDialog,
-        private csvExportService: StatuteParagraphCsvExportService
-    ) {
+    protected override translate = inject(TranslateService);
+    private repo = inject(MotionStatuteParagraphControllerService);
+    private formBuilder = inject(UntypedFormBuilder);
+    private promptService = inject(PromptService);
+    private dialog = inject(MatDialog);
+    private csvExportService = inject(StatuteParagraphCsvExportService);
+    public constructor() {
         super();
 
         const form = {

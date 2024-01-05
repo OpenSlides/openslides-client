@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
 import { OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
@@ -29,12 +29,10 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
     private _voteWeightEnabled: boolean;
     private _voteDelegationEnabled: boolean;
 
-    public constructor(
-        store: MeetingActiveFiltersService,
-        groupRepo: GroupControllerService,
-        private translate: TranslateService,
-        private meetingSettings: MeetingSettingsService
-    ) {
+    private translate = inject(TranslateService);
+    private meetingSettings = inject(MeetingSettingsService);
+
+    public constructor(store: MeetingActiveFiltersService, groupRepo: GroupControllerService) {
         super(store);
         this.updateFilterForRepo({
             repo: groupRepo,

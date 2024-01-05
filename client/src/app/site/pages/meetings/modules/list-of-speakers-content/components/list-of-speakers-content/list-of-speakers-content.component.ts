@@ -4,6 +4,7 @@ import {
     Component,
     ContentChild,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
@@ -147,19 +148,18 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.meetingSettingsService.instant(`list_of_speakers_present_users_only`) ?? false;
     }
 
-    public constructor(
-        protected override translate: TranslateService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService,
-        private speakerRepo: SpeakerControllerService,
-        private operator: OperatorService,
-        private promptService: PromptService,
-        private durationService: DurationService,
-        private userRepository: ParticipantControllerService,
-        private viewport: ViewPortService,
-        private cd: ChangeDetectorRef,
-        private dialog: PointOfOrderDialogService,
-        private interactionService: InteractionService
-    ) {
+    protected override translate = inject(TranslateService);
+    private listOfSpeakersRepo = inject(ListOfSpeakersControllerService);
+    private speakerRepo = inject(SpeakerControllerService);
+    private operator = inject(OperatorService);
+    private promptService = inject(PromptService);
+    private durationService = inject(DurationService);
+    private userRepository = inject(ParticipantControllerService);
+    private viewport = inject(ViewPortService);
+    private cd = inject(ChangeDetectorRef);
+    private dialog = inject(PointOfOrderDialogService);
+
+    public constructor(private interactionService: InteractionService) {
         super();
 
         this.subscriptions.push(

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, inject, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
     MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
@@ -31,11 +31,10 @@ export class OrganizationTagDialogComponent extends BaseUiComponent implements O
     private _isCreateView = false;
     private _lastValidColor = ``;
 
-    public constructor(
-        @Inject(MAT_DIALOG_DATA) public data: OrganizationTagDialogData,
-        private dialogRef: MatDialogRef<OrganizationTagDialogComponent>,
-        private fb: UntypedFormBuilder
-    ) {
+    private dialogRef = inject(MatDialogRef<OrganizationTagDialogComponent>);
+    private fb = inject(UntypedFormBuilder);
+
+    public constructor(@Inject(MAT_DIALOG_DATA) public data: OrganizationTagDialogData) {
         super();
     }
 

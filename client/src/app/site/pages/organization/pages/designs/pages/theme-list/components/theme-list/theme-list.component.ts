@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -16,12 +16,12 @@ import { ThemeControllerService } from '../../../../services/theme-controller.se
     styleUrls: [`./theme-list.component.scss`]
 })
 export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
-    public constructor(
-        protected override translate: TranslateService,
-        public readonly repo: ThemeControllerService,
-        private dialog: ThemeBuilderDialogService,
-        public prompt: PromptService
-    ) {
+    protected override translate = inject(TranslateService);
+    public readonly repo = inject(ThemeControllerService);
+    private dialog = inject(ThemeBuilderDialogService);
+    public prompt = inject(PromptService);
+
+    public constructor() {
         super();
         super.setTitle(`Design`);
         this.canMultiSelect = true;

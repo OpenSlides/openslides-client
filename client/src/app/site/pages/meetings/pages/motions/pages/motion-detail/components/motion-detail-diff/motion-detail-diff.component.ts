@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    EventEmitter,
+    inject,
+    Input,
+    Output,
+    ViewEncapsulation
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -109,17 +118,17 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         return this.el.nativeElement;
     }
 
-    public constructor(
-        protected override translate: TranslateService,
-        private diff: MotionDiffService,
-        private lineNumbering: LineNumberingService,
-        private recoRepo: MotionChangeRecommendationControllerService,
-        private motionRepo: MotionControllerService,
-        private motionLineNumbering: MotionLineNumberingService,
-        private el: ElementRef,
-        private promptService: PromptService,
-        private dialog: MotionChangeRecommendationDialogService
-    ) {
+    protected override translate = inject(TranslateService);
+    private diff = inject(MotionDiffService);
+    private lineNumbering = inject(LineNumberingService);
+    private recoRepo = inject(MotionChangeRecommendationControllerService);
+    private motionRepo = inject(MotionControllerService);
+    private motionLineNumbering = inject(MotionLineNumberingService);
+    private el = inject(ElementRef);
+    private promptService = inject(PromptService);
+    private dialog = inject(MotionChangeRecommendationDialogService);
+
+    public constructor() {
         super();
 
         this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => (this.lineLength = lineLength));

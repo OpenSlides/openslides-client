@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -45,13 +45,13 @@ export class DashboardComponent extends BaseComponent {
     public futureMeetings: ViewMeeting[] = [];
     public noDateMeetings: ViewMeeting[] = [];
 
-    public constructor(
-        protected override translate: TranslateService,
-        private orgaService: OrganizationService,
-        private meetingRepo: MeetingControllerService,
-        private themeService: ThemeService,
-        private operator: OperatorService
-    ) {
+    protected override translate = inject(TranslateService);
+    private orgaService = inject(OrganizationService);
+    private meetingRepo = inject(MeetingControllerService);
+    private themeService = inject(ThemeService);
+    private operator = inject(OperatorService);
+
+    public constructor() {
         super();
         super.setTitle(`Calendar`);
         this.loadMeetings();

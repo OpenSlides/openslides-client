@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -112,22 +112,21 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`
     );
 
-    public constructor(
-        protected override translate: TranslateService,
-        public repo: ParticipantControllerService,
-        private groupRepo: GroupControllerService,
-        private choiceService: ChoiceService,
-        public operator: OperatorService,
-        public filterService: ParticipantListFilterService,
-        public sortService: ParticipantListSortService,
-        private csvExport: ParticipantCsvExportService,
-        private pdfExport: ParticipantPdfExportService,
-        private infoDialog: ParticipantListInfoDialogService,
-        private organizationSettingsService: OrganizationSettingsService,
-        private route: ActivatedRoute,
-        private prompt: PromptService,
-        private interactionService: InteractionService
-    ) {
+    protected override translate = inject(TranslateService);
+    public repo = inject(ParticipantControllerService);
+    private choiceService = inject(ChoiceService);
+    public operator = inject(OperatorService);
+    public filterService = inject(ParticipantListFilterService);
+    public sortService = inject(ParticipantListSortService);
+    private csvExport = inject(ParticipantCsvExportService);
+    private pdfExport = inject(ParticipantPdfExportService);
+    private infoDialog = inject(ParticipantListInfoDialogService);
+    private organizationSettingsService = inject(OrganizationSettingsService);
+    private route = inject(ActivatedRoute);
+    private prompt = inject(PromptService);
+    private interactionService = inject(InteractionService);
+
+    public constructor(private groupRepo: GroupControllerService) {
         super();
 
         // enable multiSelect for this listView

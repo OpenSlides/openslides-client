@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, inject, OnInit } from '@angular/core';
 import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { GENDERS } from 'src/app/domain/models/users/user';
@@ -46,14 +46,13 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled = false;
 
-    constructor(
-        @Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog,
-        private participantRepo: ParticipantControllerService,
-        private groupRepo: GroupControllerService,
-        private structureLevelRepo: StructureLevelControllerService,
-        private userService: UserService,
-        private meetingSettings: MeetingSettingsService
-    ) {
+    private participantRepo = inject(ParticipantControllerService);
+    private groupRepo = inject(GroupControllerService);
+    private structureLevelRepo = inject(StructureLevelControllerService);
+    private userService = inject(UserService);
+    private meetingSettings = inject(MeetingSettingsService);
+
+    constructor(@Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog) {
         super();
     }
 

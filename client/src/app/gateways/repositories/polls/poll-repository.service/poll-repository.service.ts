@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Decimal } from 'src/app/domain/definitions/key-types';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
@@ -29,11 +29,10 @@ interface AnalogPollGlobalValues {
     providedIn: `root`
 })
 export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll, Poll> {
-    public constructor(
-        repoServiceCollector: RepositoryMeetingServiceCollectorService,
-        private voteController: VoteControllerService,
-        private voteRepo: VoteRepositoryService
-    ) {
+    private voteController = inject(VoteControllerService);
+    private voteRepo = inject(VoteRepositoryService);
+
+    public constructor(repoServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repoServiceCollector, Poll);
     }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
@@ -20,12 +20,11 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
     private userEmailMap = new Map<Email, Id[]>();
     private userNameMap = new Map<Name, Id[]>();
 
-    public constructor(
-        store: ActiveFiltersService,
-        private translate: TranslateService,
-        private operator: OperatorService,
-        private controller: UserControllerService
-    ) {
+    private translate = inject(TranslateService);
+    private operator = inject(OperatorService);
+    private controller = inject(UserControllerService);
+
+    public constructor(store: ActiveFiltersService) {
         super(store);
 
         this.controller.getViewModelListObservable().subscribe(users => {

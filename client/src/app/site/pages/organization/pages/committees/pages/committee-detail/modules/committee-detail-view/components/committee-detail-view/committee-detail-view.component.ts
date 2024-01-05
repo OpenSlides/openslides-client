@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -36,14 +36,14 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         return this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage);
     }
 
-    public constructor(
-        private translate: TranslateService,
-        private route: ActivatedRoute,
-        private router: Router,
-        private operator: OperatorService,
-        private committeeRepo: CommitteeControllerService,
-        private promptService: PromptService
-    ) {
+    private translate = inject(TranslateService);
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
+    private operator = inject(OperatorService);
+    private committeeRepo = inject(CommitteeControllerService);
+    private promptService = inject(PromptService);
+
+    public constructor() {
         super();
         this.subscriptions.push(
             this.route.params.subscribe(params => {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -55,15 +55,14 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
      */
     public motionBlocks: ViewMotionBlock[] = [];
 
-    public constructor(
-        public multiselectService: MotionMultiselectService,
-        private categoryRepo: MotionCategoryControllerService,
-        private motionBlockRepo: MotionBlockControllerService,
-        private tagRepo: TagControllerService,
-        private meetingSettingsService: MeetingSettingsService,
-        private exportDialog: MotionExportDialogService,
-        private _sortService: MotionListSortService
-    ) {
+    public multiselectService = inject(MotionMultiselectService);
+    private categoryRepo = inject(MotionCategoryControllerService);
+    private motionBlockRepo = inject(MotionBlockControllerService);
+    private tagRepo = inject(TagControllerService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private exportDialog = inject(MotionExportDialogService);
+
+    public constructor(private _sortService: MotionListSortService) {
         super();
     }
 

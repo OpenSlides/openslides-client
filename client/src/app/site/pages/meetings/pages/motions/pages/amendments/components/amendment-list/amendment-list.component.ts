@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, firstValueFrom, Observable, of, switchMap } from 'rxjs';
@@ -55,20 +55,20 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
 
     private _amendmentDiffLinesMap: { [amendmentId: number]: string } = {};
 
-    public constructor(
-        protected override translate: TranslateService,
-        private route: ActivatedRoute,
-        public amendmentRepo: AmendmentControllerService,
-        public motionService: MotionControllerService,
-        public motionSortService: MotionListSortService,
-        public motionMultiSelectService: MotionMultiselectService,
-        public amendmentSortService: AmendmentListSortService,
-        public amendmentFilterService: AmendmentListFilterService,
-        private dialog: MotionExportDialogService,
-        private motionExport: MotionExportService,
-        private linenumberingService: LineNumberingService,
-        private pdfExport: MotionPdfExportService
-    ) {
+    protected override translate = inject(TranslateService);
+    private route = inject(ActivatedRoute);
+    public amendmentRepo = inject(AmendmentControllerService);
+    public motionService = inject(MotionControllerService);
+    public motionSortService = inject(MotionListSortService);
+    public motionMultiSelectService = inject(MotionMultiselectService);
+    public amendmentSortService = inject(AmendmentListSortService);
+    public amendmentFilterService = inject(AmendmentListFilterService);
+    private dialog = inject(MotionExportDialogService);
+    private motionExport = inject(MotionExportService);
+    private linenumberingService = inject(LineNumberingService);
+    private pdfExport = inject(MotionPdfExportService);
+
+    public constructor() {
         super();
         super.setTitle(`Amendments`);
         this.canMultiSelect = true;

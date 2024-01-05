@@ -5,6 +5,7 @@ import {
     Component,
     EventEmitter,
     HostListener,
+    inject,
     OnDestroy,
     Output
 } from '@angular/core';
@@ -45,12 +46,12 @@ export class StreamComponent extends BaseMeetingComponent implements AfterViewIn
     @Output()
     public streamSubtitle: EventEmitter<string> = new EventEmitter();
 
-    public constructor(
-        protected override translate: TranslateService,
-        private streamService: StreamService,
-        private applauseService: ApplauseService,
-        private cd: ChangeDetectorRef
-    ) {
+    protected override translate = inject(TranslateService);
+    private streamService = inject(StreamService);
+    private applauseService = inject(ApplauseService);
+    private cd = inject(ChangeDetectorRef);
+
+    public constructor() {
         super();
 
         this.subscriptions.push(

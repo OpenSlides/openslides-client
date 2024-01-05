@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
@@ -27,13 +27,13 @@ export class WorkflowListComponent extends BaseMeetingListViewComponent<ViewMoti
      */
     public filterProps = [`name`, `states`];
 
-    public constructor(
-        protected override translate: TranslateService,
-        private dialog: MatDialog,
-        public workflowRepo: MotionWorkflowControllerService,
-        private promptService: PromptService,
-        private exporter: WorkflowExportService
-    ) {
+    protected override translate = inject(TranslateService);
+    private dialog = inject(MatDialog);
+    public workflowRepo = inject(MotionWorkflowControllerService);
+    private promptService = inject(PromptService);
+    private exporter = inject(WorkflowExportService);
+
+    public constructor() {
         super();
         this.canMultiSelect = true;
         this.listStorageIndex = WORKFLOW_LIST_STORAGE_INDEX;

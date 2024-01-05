@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -47,13 +47,13 @@ export class CategoryListComponent extends BaseMeetingListViewComponent<ViewMoti
         return this.operator.hasPerms(Permission.motionCanManage);
     }
 
-    public constructor(
-        protected override translate: TranslateService,
-        public repo: MotionCategoryControllerService,
-        private formBuilder: UntypedFormBuilder,
-        private dialog: MatDialog,
-        private operator: OperatorService
-    ) {
+    protected override translate = inject(TranslateService);
+    public repo = inject(MotionCategoryControllerService);
+    private formBuilder = inject(UntypedFormBuilder);
+    private dialog = inject(MatDialog);
+    private operator = inject(OperatorService);
+
+    public constructor() {
         super();
         this.listStorageIndex = CATEGORY_LIST_STORAGE_INDEX;
 

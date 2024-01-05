@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
@@ -22,11 +22,9 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
         options: []
     };
 
-    public constructor(
-        store: ActiveFiltersService,
-        private operator: OperatorService,
-        organizationTagRepo: OrganizationTagControllerService
-    ) {
+    private operator = inject(OperatorService);
+
+    public constructor(store: ActiveFiltersService, organizationTagRepo: OrganizationTagControllerService) {
         super(store);
         this.updateFilterForRepo({
             repo: organizationTagRepo,
