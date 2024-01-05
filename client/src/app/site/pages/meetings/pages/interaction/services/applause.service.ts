@@ -1,15 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, Observable, Subject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ApplauseType } from 'src/app/domain/models/meetings/applause';
 import { BaseICCGatewayService } from 'src/app/gateways/base-icc-gateway.service';
-import { HttpService } from 'src/app/gateways/http.service';
-import { HttpStreamEndpointService, HttpStreamService } from 'src/app/gateways/http-stream';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { CommunicationManagerService } from 'src/app/site/services/communication-manager.service';
 
-import { ActiveMeetingIdService } from '../../../services/active-meeting-id.service';
 import { InteractionServiceModule } from './interaction-service.module';
 
 export interface Applause {
@@ -68,16 +64,10 @@ export class ApplauseService extends BaseICCGatewayService<Applause> {
         return this.activeMeetingService.meetingId!;
     }
 
-    public constructor(
-        settingService: MeetingSettingsService,
-        httpService: HttpService,
-        private activeMeetingService: ActiveMeetingService,
-        activeMeetingIdService: ActiveMeetingIdService,
-        httpStreamService: HttpStreamService,
-        communicationManager: CommunicationManagerService,
-        httpEndpointService: HttpStreamEndpointService
-    ) {
-        super(httpService, httpStreamService, activeMeetingIdService, communicationManager, httpEndpointService);
+    private activeMeetingService = inject(ActiveMeetingService);
+
+    public constructor(settingService: MeetingSettingsService) {
+        super();
         this.setupConnections();
 
         this.showApplauseObservable = settingService.get(`applause_enable`);

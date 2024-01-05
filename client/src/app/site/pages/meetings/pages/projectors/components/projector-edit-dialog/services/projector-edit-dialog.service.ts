@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { inject, Injectable } from '@angular/core';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { Projector } from 'src/app/domain/models/projector/projector';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
@@ -15,9 +15,7 @@ export class ProjectorEditDialogService extends BaseDialogService<
     ViewProjector,
     Partial<Projector>
 > {
-    public constructor(dialog: MatDialog, private controller: ProjectorControllerService) {
-        super(dialog);
-    }
+    private controller = inject(ProjectorControllerService);
 
     public async open(
         projector: ViewProjector

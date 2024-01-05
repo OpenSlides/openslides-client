@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -170,16 +170,17 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         ]
     };
 
+    private workflowRepo = inject(MotionWorkflowControllerService);
+    protected translate = inject(TranslateService);
+    private operator = inject(OperatorService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
     public constructor(
         store: MeetingActiveFiltersService,
         categoryRepo: MotionCategoryControllerService,
         motionBlockRepo: MotionBlockControllerService,
         commentRepo: MotionCommentSectionControllerService,
-        tagRepo: TagControllerService,
-        private workflowRepo: MotionWorkflowControllerService,
-        protected translate: TranslateService,
-        private operator: OperatorService,
-        private meetingSettingsService: MeetingSettingsService
+        tagRepo: TagControllerService
     ) {
         super(store);
         this.getWorkflowConfig();
