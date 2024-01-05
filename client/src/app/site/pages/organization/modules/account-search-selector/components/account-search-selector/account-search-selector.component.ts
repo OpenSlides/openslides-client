@@ -1,6 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { NgControl, UntypedFormBuilder } from '@angular/forms';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { distinctUntilChanged } from 'rxjs';
@@ -42,18 +40,10 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
 
     public override readonly multiple = true;
 
-    public constructor(
-        fb: UntypedFormBuilder,
-        fm: FocusMonitor,
-        element: ElementRef,
-        ngControl: NgControl,
-        private operator: OperatorService,
-        private presenter: SearchUsersPresenterService,
-        private userRepo: UserRepositoryService,
-        private userSortService: AccountSortService
-    ) {
-        super(fb, fm, element, ngControl);
-    }
+    private operator = inject(OperatorService);
+    private presenter = inject(SearchUsersPresenterService);
+    private userRepo = inject(UserRepositoryService);
+    private userSortService = inject(AccountSortService);
 
     public override ngOnInit(): void {
         super.ngOnInit();
