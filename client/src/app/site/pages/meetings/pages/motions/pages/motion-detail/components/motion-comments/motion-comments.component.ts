@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
 import { ViewMotion, ViewMotionComment, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -23,13 +23,9 @@ export class MotionCommentsComponent extends BaseUiComponent implements OnInit {
     @Input()
     public motion!: ViewMotion;
 
-    public constructor(
-        private commentSectionRepo: MotionCommentSectionControllerService,
-        private operator: OperatorService,
-        private cd: ChangeDetectorRef
-    ) {
-        super();
-    }
+    private commentSectionRepo = inject(MotionCommentSectionControllerService);
+    private operator = inject(OperatorService);
+    private cd = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         this.subscriptions.push(

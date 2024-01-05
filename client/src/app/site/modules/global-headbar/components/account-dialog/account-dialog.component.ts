@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
@@ -94,18 +94,14 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     private _isUserInScope = false;
     private _isEditing = false;
 
-    public constructor(
-        public dialogRef: MatDialogRef<AccountDialogComponent>,
-        private operator: OperatorService,
-        private repo: UserControllerService,
-        private meetingRepo: MeetingControllerService,
-        private userService: UserService,
-        private snackbar: MatSnackBar,
-        private authService: AuthService,
-        private translate: TranslateService
-    ) {
-        super();
-    }
+    public dialogRef = inject(MatDialogRef<AccountDialogComponent>);
+    private operator = inject(OperatorService);
+    private repo = inject(UserControllerService);
+    private meetingRepo = inject(MeetingControllerService);
+    private userService = inject(UserService);
+    private snackbar = inject(MatSnackBar);
+    private authService = inject(AuthService);
+    private translate = inject(TranslateService);
 
     public ngOnInit(): void {
         this.subscriptions.push(

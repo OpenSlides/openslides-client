@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
@@ -14,9 +14,7 @@ import { getListOfSpeakersDetailSubscriptionConfig } from '../../../../agenda.su
 export class ListOfSpeakersMainComponent extends BaseModelRequestHandlerComponent {
     private _currentLOSId: Id | null = null;
 
-    public constructor(private sequentialNumberMapping: SequentialNumberMappingService) {
-        super();
-    }
+    private sequentialNumberMapping = inject(SequentialNumberMappingService);
 
     protected override onParamsChanged(params: any, oldParams: any): void {
         if (params[`id`] !== oldParams[`id`] || params[`meetingId`] !== oldParams[`meetingId`]) {

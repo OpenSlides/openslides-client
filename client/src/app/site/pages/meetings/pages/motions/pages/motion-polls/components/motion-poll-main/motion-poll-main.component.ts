@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
@@ -12,9 +12,7 @@ import { getPollDetailSubscriptionConfig } from '../../../../../polls/polls.subs
     styleUrls: [`./motion-poll-main.component.scss`]
 })
 export class MotionPollMainComponent extends BaseModelRequestHandlerComponent {
-    public constructor(private sequentialNumberMappingService: SequentialNumberMappingService) {
-        super();
-    }
+    private sequentialNumberMappingService = inject(SequentialNumberMappingService);
 
     protected override onParamsChanged(params: any, oldParams: any): void {
         if (params[`id`] !== oldParams[`id`]) {

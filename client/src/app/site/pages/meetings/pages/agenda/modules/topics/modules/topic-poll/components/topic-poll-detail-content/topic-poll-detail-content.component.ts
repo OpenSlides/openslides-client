@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { pollChartColors, pollChartGreys, PollData, PollState, PollTableData } from 'src/app/domain/models/poll';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
@@ -74,13 +74,9 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
         return [this.generateChartColors(this.poll.options.length)];
     }
 
-    public constructor(
-        public pollService: TopicPollService,
-        private cd: ChangeDetectorRef,
-        private operator: OperatorService
-    ) {
-        super();
-    }
+    public pollService = inject(TopicPollService);
+    private cd = inject(ChangeDetectorRef);
+    private operator = inject(OperatorService);
 
     private setupTableData(): void {
         this.updateSubscription(

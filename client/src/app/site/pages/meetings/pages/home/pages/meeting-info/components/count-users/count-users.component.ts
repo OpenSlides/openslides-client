@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { CountUsersStatisticsService, CountUserStatistics } from '../../services/count-users-statistics.service';
@@ -15,9 +15,7 @@ export class CountUsersComponent extends BaseUiComponent {
         return this.countUsersStatisticService.lastUpdated;
     }
 
-    public constructor(private countUsersStatisticService: CountUsersStatisticsService) {
-        super();
-    }
+    private countUsersStatisticService = inject(CountUsersStatisticsService);
 
     public async countUsers(): Promise<void> {
         this.stats = await this.countUsersStatisticService.countUsers();
