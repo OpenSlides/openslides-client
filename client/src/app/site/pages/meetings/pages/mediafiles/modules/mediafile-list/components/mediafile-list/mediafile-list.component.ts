@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, map, Observable, Subscription, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import {
@@ -116,14 +116,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
             title: [``, Validators.required],
             access_group_ids: []
         });
-        this.groupsBehaviorSubject = this.groupRepo.getViewModelListObservable().pipe(
-            tap(groups =>
-                console.log(
-                    `GROUPS: `,
-                    groups.map(group => group.group)
-                )
-            )
-        );
+        this.groupsBehaviorSubject = this.groupRepo.getViewModelListObservable();
         this.directoryObservable = this.directorySubject as Observable<ViewMediafile[]>;
     }
 
