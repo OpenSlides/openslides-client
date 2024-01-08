@@ -18,8 +18,15 @@
         <tr *ngFor="let i of rowsArray">
             <td *ngFor="let j of columnsArray" [ngStyle]="{ width: columnWidthInPercent }">
                 <ng-container *ngIf="getMotion(i, j)">
-                    <div class="spacer-top-5 motion-wrapper">
-                        {{ getMotionTitle(i, j) }}
+                    <div
+                        class="spacer-top-5"
+                        [ngClass]="
+                            !commonRecommendation && getMotion(i, j).recommendationLabel
+                                ? 'motion-wrapper'
+                                : 'motion-wrapper-single'
+                        "
+                    >
+                        <div class="motion-title">{{ getMotionTitle(i, j) }}</div>
                         <br *ngIf="!shortDisplayStyle" />
                         <div
                             class="white recommendation-chip-wrapper"
