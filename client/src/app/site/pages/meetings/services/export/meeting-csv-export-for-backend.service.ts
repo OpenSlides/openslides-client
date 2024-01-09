@@ -16,8 +16,8 @@ import { MeetingExportModule } from './meeting-export.module';
     providedIn: MeetingExportModule
 })
 export class MeetingCsvExportForBackendService extends CsvExportForBackendService {
-    public constructor(exporter: FileExportService, private meetingSettings: MeetingSettingsService) {
-        super(exporter);
+    public constructor(private meetingSettings: MeetingSettingsService) {
+        super();
     }
 
     /**
