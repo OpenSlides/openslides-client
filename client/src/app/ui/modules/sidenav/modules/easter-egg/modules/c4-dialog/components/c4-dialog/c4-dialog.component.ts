@@ -44,12 +44,8 @@ export class C4DialogComponent extends BaseGameDialogComponent implements OnInit
     public board: Player[][] = [];
 
     public constructor(
-        activeMeetingService: ActiveMeetingService,
-        notifyService: NotifyService,
-        op: OperatorService,
-        translate: TranslateService
     ) {
-        super(activeMeetingService, notifyService, op, translate);
+        super();
         this.reset();
     }
 

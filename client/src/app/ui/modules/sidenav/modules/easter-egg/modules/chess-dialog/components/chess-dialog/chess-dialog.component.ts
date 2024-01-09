@@ -47,13 +47,9 @@ export class ChessDialogComponent extends BaseGameDialogComponent implements OnI
     private ownColor: COLOR = COLOR.white;
 
     public constructor(
-        activeMeetingService: ActiveMeetingService,
-        notifyService: NotifyService,
-        op: OperatorService,
-        translate: TranslateService,
         @Inject(MAT_DIALOG_DATA) private config: ChessDialogConfig
     ) {
-        super(activeMeetingService, notifyService, op, translate);
+        super();
     }
 
     public override ngOnInit(): void {
