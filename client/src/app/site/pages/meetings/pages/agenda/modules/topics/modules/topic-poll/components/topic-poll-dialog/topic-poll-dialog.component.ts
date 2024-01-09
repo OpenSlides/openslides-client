@@ -84,12 +84,10 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
     }
 
     constructor(
-        formBuilder: UntypedFormBuilder,
-        dialogRef: MatDialogRef<BasePollDialogComponent>,
         public topicPollService: TopicPollService,
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewTopic>
     ) {
-        super(dialogRef, pollData, formBuilder);
+        super(pollData);
         this.optionTypeText = true;
     }
 

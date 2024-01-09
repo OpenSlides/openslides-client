@@ -53,12 +53,10 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
      * injects the poll itself
      */
     public constructor(
-        formBuilder: UntypedFormBuilder,
-        dialogRef: MatDialogRef<BasePollDialogComponent>,
         public readonly assignmentPollService: AssignmentPollService,
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll
     ) {
-        super(dialogRef, pollData, formBuilder);
+        super(pollData);
     }
 
     public override onBeforeInit(): void {

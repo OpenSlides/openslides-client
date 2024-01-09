@@ -23,11 +23,9 @@ export class MotionPollDialogComponent extends BasePollDialogComponent implement
 
     public constructor(
         public motionPollService: MotionPollService,
-        dialogRef: MatDialogRef<BasePollDialogComponent>,
-        formBuilder: UntypedFormBuilder,
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewMotion>
     ) {
-        super(dialogRef, pollData, formBuilder);
+        super(pollData);
     }
 
     public ngAfterViewInit() {
