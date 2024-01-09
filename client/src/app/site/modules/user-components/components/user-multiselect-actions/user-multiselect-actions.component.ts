@@ -1,10 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
-import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -53,11 +50,8 @@ export class UserMultiselectActionsComponent extends BaseComponent {
     public constructor(
         private operator: OperatorService,
         private promptService: PromptService,
-        private matSnackbar: MatSnackBar,
         private activeMeetingIdService: ActiveMeetingIdService,
-        public repo: UserControllerService,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
+        public repo: UserControllerService
     ) {
         super();
     }

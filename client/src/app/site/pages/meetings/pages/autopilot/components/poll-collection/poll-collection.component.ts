@@ -8,7 +8,6 @@ import { BaseComponent } from 'src/app/site/base/base.component';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { getPollDetailSubscriptionConfig, POLL_DETAIL_SUBSCRIPTION } from '../../../polls/polls.subscription';
@@ -62,7 +61,6 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private repo: PollControllerService,
         private cd: ChangeDetectorRef,

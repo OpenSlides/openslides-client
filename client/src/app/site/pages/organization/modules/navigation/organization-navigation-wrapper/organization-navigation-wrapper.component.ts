@@ -4,7 +4,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { MainMenuEntry, MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { SidenavComponent } from 'src/app/ui/modules/sidenav/components/sidenav/sidenav.component';
 
@@ -28,7 +27,6 @@ export class OrganizationNavigationWrapperComponent extends BaseComponent implem
      * Constructor
      */
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private vp: ViewPortService,
         private mainMenuService: MainMenuService

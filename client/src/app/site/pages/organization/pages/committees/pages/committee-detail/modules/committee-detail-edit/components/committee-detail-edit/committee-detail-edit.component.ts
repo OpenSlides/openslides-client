@@ -10,7 +10,6 @@ import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { OsOptionSelectionChanged } from 'src/app/ui/modules/search-selector';
 
@@ -46,7 +45,6 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     private navigatedFrom: string | undefined;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private formBuilder: UntypedFormBuilder,
         public committeeRepo: CommitteeControllerService,

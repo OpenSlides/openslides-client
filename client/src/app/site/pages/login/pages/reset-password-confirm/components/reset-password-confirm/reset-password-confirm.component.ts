@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 @Component({
@@ -32,7 +31,6 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
      * Constructur for the reset password confirm view. Initializes the form for the new password.
      */
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         formBuilder: UntypedFormBuilder,
         private activatedRoute: ActivatedRoute,

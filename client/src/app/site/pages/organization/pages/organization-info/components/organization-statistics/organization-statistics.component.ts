@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 @Component({
@@ -26,9 +24,7 @@ export class OrganizationStatisticsComponent extends BaseComponent implements On
     public constructor(
         private orgaService: OrganizationService,
         private orgaSettings: OrganizationSettingsService,
-        private userController: UserControllerService,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
+        private userController: UserControllerService
     ) {
         super();
     }
