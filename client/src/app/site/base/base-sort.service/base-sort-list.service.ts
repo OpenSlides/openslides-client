@@ -187,7 +187,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         private injector: Injector,
         defaultDefinition: OsSortingDefinition<V> | Observable<OsSortingDefinition<V>>
     ) {
-        super(translate);
+        super();
 
         this._defaultDefinitionSubject
             .pipe(distinctUntilChanged((prev, curr) => prev?.sortProperty === curr?.sortProperty))

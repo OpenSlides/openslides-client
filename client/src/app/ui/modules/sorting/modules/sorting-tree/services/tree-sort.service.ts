@@ -13,10 +13,6 @@ import { BaseSortService, OsSortProperty } from 'src/app/site/base/base-sort.ser
     providedIn: `root`
 })
 export class TreeSortService<T extends Identifiable & Displayable> extends BaseSortService<T> {
-    public constructor(translate: TranslateService) {
-        super(translate);
-    }
-
     /**
      * Function to sort the passed source of a tree
      * and resets some properties like `level`, `expandable`, `position`.
