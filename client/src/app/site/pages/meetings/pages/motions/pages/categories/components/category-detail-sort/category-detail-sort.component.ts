@@ -88,7 +88,7 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
         private motionRepo: MotionControllerService,
         private choiceService: ChoiceService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public onIdFound(id: Id | null): void {

@@ -104,7 +104,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         closService: CurrentListOfSpeakersService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
             projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {

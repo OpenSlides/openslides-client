@@ -96,7 +96,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         private topicPdfService: TopicPdfService,
         private route: ActivatedRoute
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.createForm();
 
         organizationSettingsService

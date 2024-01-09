@@ -25,7 +25,7 @@ export class ApplauseBarDisplayComponent extends BaseMeetingComponent {
         cd: ChangeDetectorRef,
         private applauseService: ApplauseService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.subscriptions.push(
             applauseService.applauseLevelObservable.subscribe(applauseLevel => {
                 this.level = applauseLevel || 0;

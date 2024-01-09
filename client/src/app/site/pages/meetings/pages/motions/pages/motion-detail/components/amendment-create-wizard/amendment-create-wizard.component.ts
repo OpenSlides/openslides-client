@@ -85,7 +85,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
         private promptService: PromptService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.createForm();
     }
 

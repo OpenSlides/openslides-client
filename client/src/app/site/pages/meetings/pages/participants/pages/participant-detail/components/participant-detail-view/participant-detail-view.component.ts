@@ -154,7 +154,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         private cd: ChangeDetectorRef,
         private organizationSettingsService: OrganizationSettingsService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.getUserByUrl();
 
         this.subscriptions.push(

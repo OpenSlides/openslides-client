@@ -66,7 +66,7 @@ export class MeetingSettingsGroupDetailComponent
         private repo: MeetingControllerService,
         private collectionMapper: CollectionMapperService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

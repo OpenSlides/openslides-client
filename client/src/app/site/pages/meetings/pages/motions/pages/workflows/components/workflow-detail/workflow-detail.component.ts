@@ -275,7 +275,7 @@ Note: Does not affect the visibility of change recommendations.`
         private exporter: WorkflowExportService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public onIdFound(id: Id | null): void {

@@ -161,7 +161,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private dialog: PointOfOrderDialogService,
         private interactionService: InteractionService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
             this.meetingSettingsService

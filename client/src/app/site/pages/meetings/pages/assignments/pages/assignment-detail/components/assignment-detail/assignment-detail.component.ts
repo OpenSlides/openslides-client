@@ -161,7 +161,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         private pollController: PollControllerService,
         private userRepo: UserControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.assignmentForm = formBuilder.group({
             phase: null,
             tag_ids: [[]],

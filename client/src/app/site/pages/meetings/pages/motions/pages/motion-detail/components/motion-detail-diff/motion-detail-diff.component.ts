@@ -122,7 +122,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         private promptService: PromptService,
         private dialog: MotionChangeRecommendationDialogService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => (this.lineLength = lineLength));
         this.meetingSettingsService.get(`motions_preamble`).subscribe(preamble => (this.preamble = preamble));
     }

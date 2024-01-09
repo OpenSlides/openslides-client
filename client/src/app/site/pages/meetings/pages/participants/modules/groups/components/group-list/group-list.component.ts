@@ -84,7 +84,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
         private promptService: PromptService,
         private formBuilder: UntypedFormBuilder
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

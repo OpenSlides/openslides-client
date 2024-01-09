@@ -53,7 +53,7 @@ export class StreamComponent extends BaseMeetingComponent implements AfterViewIn
         private applauseService: ApplauseService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
             this.streamService.liveStreamUrlObservable.subscribe(url => {

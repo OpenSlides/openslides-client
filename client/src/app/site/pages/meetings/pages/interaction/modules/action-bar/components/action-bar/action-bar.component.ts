@@ -66,7 +66,7 @@ export class ActionBarComponent extends BaseMeetingComponent {
         private rtcService: RtcService,
         private applauseService: ApplauseService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public async enterConferenceRoom(): Promise<void> {

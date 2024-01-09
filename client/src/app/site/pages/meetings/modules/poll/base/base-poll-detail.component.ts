@@ -133,7 +133,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
         private scrollTableManage: ScrollingTableManageService,
         private pollPdfService: BasePollPdfService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
             this.operator.userObservable.subscribe(currentUser => {

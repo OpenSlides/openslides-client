@@ -33,7 +33,7 @@ export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit
         private orgaRepo: OrganizationRepositoryService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         firstValueFrom(this.activeMeetingIdService.meetingIdObservable.pipe(filter(val => !!val))).then(() =>
             this.modelRequestService.subscribeTo({
                 modelRequest: {

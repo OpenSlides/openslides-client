@@ -121,7 +121,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         private operator: OperatorService,
         private meetingCollectionMapper: MeetingCollectionMapperService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
             this.countdownRepo.getViewModelListObservable().subscribe(countdowns => (this.countdowns = countdowns)),

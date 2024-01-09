@@ -40,7 +40,7 @@ export class StartComponent extends BaseMeetingComponent implements OnInit {
         private formBuilder: UntypedFormBuilder,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.startForm = this.formBuilder.group({
             welcome_title: [``, Validators.required],
             welcome_text: ``

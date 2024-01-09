@@ -88,7 +88,7 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
         private viewport: ViewPortService,
         private collectionMapper: CollectionMapperService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

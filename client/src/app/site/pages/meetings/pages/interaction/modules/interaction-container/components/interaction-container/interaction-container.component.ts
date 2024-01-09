@@ -61,7 +61,7 @@ export class InteractionContainerComponent extends BaseMeetingComponent implemen
         private applauseService: ApplauseService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.subscriptions.push(
             rtcService.showCallDialogObservable.subscribe(show => {
                 if (show) {

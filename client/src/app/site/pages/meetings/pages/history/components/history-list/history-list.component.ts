@@ -117,7 +117,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         private userRepo: ParticipantControllerService,
         private collectionMapperService: CollectionMapperService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.modelSelectForm = this.formBuilder.group({
             collection: [],

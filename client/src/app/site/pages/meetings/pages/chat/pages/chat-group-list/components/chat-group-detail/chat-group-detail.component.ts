@@ -88,7 +88,7 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
         private vp: ViewPortService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

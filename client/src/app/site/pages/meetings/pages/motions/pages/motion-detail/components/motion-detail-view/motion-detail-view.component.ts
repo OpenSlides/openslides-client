@@ -159,7 +159,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         private cd: ChangeDetectorRef,
         private pdfExport: MotionPdfExportService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
             this._forwardingAvailable = forwardingAvailable;

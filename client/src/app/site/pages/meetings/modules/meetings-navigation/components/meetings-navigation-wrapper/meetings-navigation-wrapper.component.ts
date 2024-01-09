@@ -68,7 +68,7 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
         private chatService: ChatService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

@@ -64,7 +64,7 @@ export class ProjectorListComponent extends BaseMeetingComponent implements OnIn
         private cd: ChangeDetectorRef,
         private openslidesStatus: OpenSlidesStatusService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.createForm = this.formBuilder.group({
             name: [``, Validators.required],

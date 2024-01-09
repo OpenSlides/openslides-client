@@ -55,7 +55,7 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
         protected choiceService: ChoiceService,
         protected repo: PollControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public async nextPollState(): Promise<void> {

@@ -159,7 +159,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         private presenter: SearchUsersPresenterService,
         private organizationSettingsService: OrganizationSettingsService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.createUserForm = fb.group(
             {
                 username: [``],

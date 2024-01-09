@@ -101,7 +101,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         private orgaSettings: OrganizationSettingsService,
         private browserSupport: BrowserSupportService // private spinnerService: SpinnerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         // Hide the spinner if the user is at `login-mask`
         this.loginForm = this.createForm();
     }

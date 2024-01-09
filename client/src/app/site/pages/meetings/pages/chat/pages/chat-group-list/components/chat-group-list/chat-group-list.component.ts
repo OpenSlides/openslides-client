@@ -43,7 +43,7 @@ export class ChatGroupListComponent extends BaseMeetingComponent {
         private chatNotificationService: ChatNotificationService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public getNotificationsObservableForChatId(chatGroupId: Id): Observable<number> {

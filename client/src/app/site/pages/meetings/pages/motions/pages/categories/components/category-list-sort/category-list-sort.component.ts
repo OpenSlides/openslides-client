@@ -38,7 +38,7 @@ export class CategoryListSortComponent extends BaseMeetingComponent implements C
         private categoryRepo: MotionCategoryControllerService,
         private promptService: PromptService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.categoriesObservable = this.categoryRepo.getViewModelListObservable();
     }
 

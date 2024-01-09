@@ -82,7 +82,7 @@ export class CallComponent extends BaseMeetingComponent implements OnInit, After
         private streamService: StreamService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
             this.rtcService.isJitsiActiveObservable.subscribe(active => {

@@ -84,7 +84,7 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
         private formBuilder: UntypedFormBuilder,
         private dialog: MatDialog
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public onIdFound(id: Id | null): void {

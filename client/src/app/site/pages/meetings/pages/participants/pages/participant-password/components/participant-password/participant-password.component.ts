@@ -49,7 +49,7 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
         private route: ActivatedRoute,
         private repo: ParticipantControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

@@ -34,7 +34,7 @@ export class ApplauseParticleDisplayComponent extends BaseMeetingComponent {
         private applauseService: ApplauseService,
         private osStatus: OpenSlidesStatusService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.subscriptions.push(
             applauseService.applauseLevelObservable.subscribe(applauseLevel => {
                 this.particleLevel = this.calcEmitterLevel(applauseLevel || 0);
