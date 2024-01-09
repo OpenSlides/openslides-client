@@ -43,15 +43,9 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
 
     public constructor(
         private promptService: PromptService,
-        operator: OperatorService,
-        votingService: VotingService,
-        cd: ChangeDetectorRef,
-        pollRepo: PollControllerService,
-        meetingSettingsService: MeetingSettingsService,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
+        meetingSettingsService: MeetingSettingsService
     ) {
-        super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
+        super(meetingSettingsService);
     }
 
     public ngOnInit(): void {

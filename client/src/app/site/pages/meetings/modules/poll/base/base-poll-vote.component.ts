@@ -70,19 +70,17 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     private _canVoteForSubjectMap: { [userId: number]: BehaviorSubject<boolean> } = {};
 
     private voteRepo = inject(VoteControllerService);
-
+    protected votingService = inject(VotingService);
+    protected cd = inject(ChangeDetectorRef);
+    private pollRepo = inject(PollControllerService);
+    private operator = inject(OperatorService);
+    
     public constructor(
-        operator: OperatorService,
-        protected votingService: VotingService,
-        protected cd: ChangeDetectorRef,
-        private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super();
         this.subscriptions.push(
-            operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
+            this.operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
                 if (user) {
                     this.user = user;
                     this.delegations = user.vote_delegations_from();

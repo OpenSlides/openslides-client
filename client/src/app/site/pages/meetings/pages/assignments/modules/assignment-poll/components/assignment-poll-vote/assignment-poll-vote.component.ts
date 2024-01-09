@@ -77,15 +77,9 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
     public constructor(
         private promptService: PromptService,
-        operator: OperatorService,
-        votingService: VotingService,
-        cd: ChangeDetectorRef,
-        pollRepo: PollControllerService,
-        meetingSettingsService: MeetingSettingsService,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
+        meetingSettingsService: MeetingSettingsService
     ) {
-        super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
+        super(meetingSettingsService);
     }
 
     public ngOnInit(): void {
