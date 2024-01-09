@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -48,15 +48,10 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
     protected _id!: Id;
     protected _poll!: ViewPoll<C>;
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected promptService: PromptService,
-        protected choiceService: ChoiceService,
-        protected repo: PollControllerService
-    ) {
-        super();
-    }
+    protected override translate = inject(TranslateService);
+    protected promptService = inject(PromptService);
+    protected choiceService = inject(ChoiceService);
+    protected repo = inject(PollControllerService);
 
     public async nextPollState(): Promise<void> {
         const currentState: PollState = this._poll.state;

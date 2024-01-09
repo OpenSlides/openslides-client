@@ -64,18 +64,14 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        promptService: PromptService,
-        choiceService: ChoiceService,
-        repo: PollControllerService,
         private formBuilder: UntypedFormBuilder,
         private pdfService: AssignmentPollPdfService,
         private operator: OperatorService,
         private votingService: VotingService,
         private votingPrivacyDialog: VotingPrivacyWarningDialogService
     ) {
-        super(componentServiceCollector, translate, promptService, choiceService, repo);
+        super();
     }
 
     public ngOnInit(): void {

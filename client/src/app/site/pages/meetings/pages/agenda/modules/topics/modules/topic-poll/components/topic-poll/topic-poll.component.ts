@@ -65,18 +65,13 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
-        promptService: PromptService,
-        choiceService: ChoiceService,
-        repo: PollControllerService,
         private formBuilder: UntypedFormBuilder,
         private operator: OperatorService,
         private votingService: VotingService,
         private votingPrivacyDialog: VotingPrivacyWarningDialogService,
         private pdfService: TopicPollPdfService
     ) {
-        super(componentServiceCollector, translate, promptService, choiceService, repo);
+        super();
     }
 
     public ngOnInit(): void {

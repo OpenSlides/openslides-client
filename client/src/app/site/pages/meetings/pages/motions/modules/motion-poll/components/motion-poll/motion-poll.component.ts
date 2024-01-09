@@ -58,17 +58,13 @@ export class MotionPollComponent extends BasePollComponent {
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        promptService: PromptService,
-        choiceService: ChoiceService,
-        pollRepo: PollControllerService,
         private pollService: MotionPollService,
         private pdfService: MotionPollPdfService,
         private operator: OperatorService,
         private votingPrivacyDialog: VotingPrivacyWarningDialogService
     ) {
-        super(componentServiceCollector, translate, promptService, choiceService, pollRepo);
+        super();
     }
 
     public openVotingWarning(): void {
