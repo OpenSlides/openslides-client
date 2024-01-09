@@ -24,15 +24,4 @@ export class MotionPollFormComponent extends BasePollFormComponent {
             globalOptions: true
         };
     }
-
-    constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
-        fb: UntypedFormBuilder,
-        groupRepo: GroupControllerService,
-        dialog: VotingPrivacyWarningDialogService,
-        meetingSettingService: MeetingSettingsService
-    ) {
-        super(componentServiceCollector, translate, fb, groupRepo, dialog, meetingSettingService);
-    }
 }

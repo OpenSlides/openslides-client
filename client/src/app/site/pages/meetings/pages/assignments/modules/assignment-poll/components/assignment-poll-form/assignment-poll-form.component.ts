@@ -26,17 +26,6 @@ export class AssignmentPollFormComponent extends BasePollFormComponent implement
         };
     }
 
-    constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
-        fb: UntypedFormBuilder,
-        groupRepo: GroupControllerService,
-        dialog: VotingPrivacyWarningDialogService,
-        meetingSettingService: MeetingSettingsService
-    ) {
-        super(componentServiceCollector, translate, fb, groupRepo, dialog, meetingSettingService);
-    }
-
     public override ngOnInit(): void {
         if (this.data && this.data?.isAssignmentPoll) {
             if (!!this.data.getContentObject() && !this.data.max_votes_amount) {

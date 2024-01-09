@@ -1,4 +1,4 @@
-import { Directive, Input, OnInit } from '@angular/core';
+import { Directive, Input, OnInit, inject } from '@angular/core';
 import {
     AbstractControl,
     UntypedFormBuilder,
@@ -176,17 +176,15 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return this.pollMethodControl.valueChanges.pipe(map(method => method === FormPollMethod.LIST_YNA));
     }
 
+    private fb = inject(UntypedFormBuilder);
+    public groupRepo = inject(GroupControllerService);
+    private dialog = inject(VotingPrivacyWarningDialogService);
+    protected meetingSettingService = inject(MeetingSettingsService);
     /**
      * Constructor. Retrieves necessary metadata from the pollService,
      * injects the poll itself
-     */
+    */
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
-        private fb: UntypedFormBuilder,
-        public groupRepo: GroupControllerService,
-        private dialog: VotingPrivacyWarningDialogService,
-        protected meetingSettingService: MeetingSettingsService
     ) {
         super();
         this.initContentForm();
