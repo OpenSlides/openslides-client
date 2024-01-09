@@ -26,8 +26,8 @@ export class UserDeleteDialogService extends BaseDialogService<
     UserDeleteDialogOpenConfig,
     boolean
 > {
-    public constructor(dialog: MatDialog, private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService) {
-        super(dialog);
+    public constructor(private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService) {
+        super();
     }
 
     public async open(data: UserDeleteDialogOpenConfig): Promise<MatDialogRef<UserDeleteDialogComponent, boolean>> {

@@ -24,14 +24,13 @@ export class MotionExportDialogService extends BaseDialogService<
     MotionExportInfo
 > {
     public constructor(
-        dialog: MatDialog,
         private exportService: MotionExportService,
         private modelRequestService: ModelRequestService,
         private motionRepo: MotionRepositoryService,
         private amendmentRepo: AmendmentControllerService,
         private motionLineNumbering: MotionLineNumberingService
     ) {
-        super(dialog);
+        super();
     }
 
     public async open(data: ViewMotion[]): Promise<MatDialogRef<MotionExportDialogComponent, MotionExportInfo>> {

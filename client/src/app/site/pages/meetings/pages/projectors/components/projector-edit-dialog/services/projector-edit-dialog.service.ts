@@ -15,8 +15,8 @@ export class ProjectorEditDialogService extends BaseDialogService<
     ViewProjector,
     Partial<Projector>
 > {
-    public constructor(dialog: MatDialog, private controller: ProjectorControllerService) {
-        super(dialog);
+    public constructor(private controller: ProjectorControllerService) {
+        super();
     }
 
     public async open(
