@@ -3,7 +3,6 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 

@@ -3,7 +3,6 @@ import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
 import { BaseImportListComponent } from 'src/app/site/base/base-import-list.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
 import { statuteParagraphHeadersAndVerboseNames } from '../../definitions';

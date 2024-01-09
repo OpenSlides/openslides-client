@@ -1,10 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
 import { ViewPersonalNote } from 'src/app/site/pages/meetings/pages/motions';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 
 import { PersonalNoteControllerService } from '../../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
 import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseImportListComponent } from 'src/app/site/base/base-import-list.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
 import { getVerboseNameOfMotionProperty, motionExpectedHeaders } from '../../../../services/export/definitions';
@@ -25,10 +24,7 @@ export class MotionImportListComponent extends BaseImportListComponent<ViewMotio
         }));
     }
 
-    public constructor(
-        protected override translate: TranslateService,
-        public override importer: MotionImportService
-    ) {
+    public constructor(protected override translate: TranslateService, public override importer: MotionImportService) {
         super(importer);
     }
 

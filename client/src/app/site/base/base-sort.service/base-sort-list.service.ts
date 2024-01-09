@@ -1,5 +1,4 @@
 import { Directive, inject, Injector, ProviderToken } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import {
     auditTime,
     BehaviorSubject,

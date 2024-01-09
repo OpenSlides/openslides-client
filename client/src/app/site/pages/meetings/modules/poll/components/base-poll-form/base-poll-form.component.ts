@@ -1,4 +1,4 @@
-import { Directive, Input, OnInit, inject } from '@angular/core';
+import { Directive, inject, Input, OnInit } from '@angular/core';
 import {
     AbstractControl,
     UntypedFormBuilder,
@@ -7,7 +7,6 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, Observable, startWith } from 'rxjs';
 import {
     FormPollMethod,
@@ -23,7 +22,6 @@ import {
 } from 'src/app/domain/models/poll';
 import { isNumberRange } from 'src/app/infrastructure/utils/validators';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
 import { GroupControllerService } from '../../../../pages/participants';
@@ -183,9 +181,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     /**
      * Constructor. Retrieves necessary metadata from the pollService,
      * injects the poll itself
-    */
-    public constructor(
-    ) {
+     */
+    public constructor() {
         super();
         this.initContentForm();
     }

@@ -1,9 +1,8 @@
-import { ChangeDetectorRef, Directive, Input, inject } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 
 /**
  * A wrapper component for components in the motion detail view which uses an `<action-card />`.
@@ -36,8 +35,7 @@ export abstract class BaseMotionDetailActionCardComponent extends BaseComponent 
     protected override translate = inject(TranslateService);
     protected cd = inject(ChangeDetectorRef);
     protected fb = inject(FormBuilder);
-    public constructor(
-    ) {
+    public constructor() {
         super();
         this.formGroup = this.fb.group({ text: `` });
     }

@@ -10,7 +10,6 @@ import {
 } from 'src/app/domain/models/comittees/committee.constants';
 import { ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
 import { BaseImportListComponent } from 'src/app/site/base/base-import-list.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
 import { CommitteeImportService } from '../../services/committee-import.service/committee-import.service';

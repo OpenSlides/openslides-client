@@ -1,6 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { StorageService } from 'src/app/gateways/storage.service';
+import { Injectable } from '@angular/core';
 
 import { MotionListBaseSortService } from '../motion-list-base-sort.service';
 

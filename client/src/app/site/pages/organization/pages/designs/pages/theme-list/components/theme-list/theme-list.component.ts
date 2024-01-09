@@ -5,7 +5,6 @@ import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ViewTheme } from 'src/app/site/pages/organization/pages/designs';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ThemeBuilderDialogService } from '../../../../modules/theme-builder-dialog/services/theme-builder-dialog.service';

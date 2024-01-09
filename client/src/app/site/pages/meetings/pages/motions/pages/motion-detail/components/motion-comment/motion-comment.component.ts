@@ -1,10 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
 import { ViewMotionComment, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionCommentControllerService } from '../../../../modules/comments/services/motion-comment-controller.service';

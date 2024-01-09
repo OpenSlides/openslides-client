@@ -6,7 +6,6 @@ import { Action } from 'src/app/gateways/actions';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceAnswer } from 'src/app/ui/modules/choice-dialog/definitions';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog/services/choice.service';

@@ -3,7 +3,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ColorService } from 'src/app/site/services/color.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 

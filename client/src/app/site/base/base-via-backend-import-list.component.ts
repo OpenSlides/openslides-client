@@ -1,4 +1,4 @@
-import { Directive, OnInit, ViewChild, inject } from '@angular/core';
+import { Directive, inject, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import {
@@ -7,7 +7,6 @@ import {
 } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 
 import { getLongPreview, getShortPreview } from '../../infrastructure/utils';
-import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { BaseBackendImportService } from './base-import.service/base-backend-import.service';
 
 @Directive()

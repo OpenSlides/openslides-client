@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import {
@@ -13,7 +12,6 @@ import { BaseComponent } from 'src/app/site/base/base.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
@@ -74,10 +72,8 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     protected cd = inject(ChangeDetectorRef);
     private pollRepo = inject(PollControllerService);
     private operator = inject(OperatorService);
-    
-    public constructor(
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+
+    public constructor(private meetingSettingsService: MeetingSettingsService) {
         super();
         this.subscriptions.push(
             this.operator.userObservable.pipe(debounceTime(50)).subscribe(user => {

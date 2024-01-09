@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
 import { FlatNode } from 'src/app/infrastructure/definitions/tree';
 import { BaseSortService, OsSortProperty } from 'src/app/site/base/base-sort.service';

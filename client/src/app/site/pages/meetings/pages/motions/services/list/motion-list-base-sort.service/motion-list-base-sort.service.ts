@@ -1,10 +1,8 @@
-import { Directive, inject, Injector, ProviderToken } from '@angular/core';
+import { Directive, inject, ProviderToken } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { StorageService } from 'src/app/gateways/storage.service';
 import {
     BaseSortListService,
     OsSortingDefinition,
