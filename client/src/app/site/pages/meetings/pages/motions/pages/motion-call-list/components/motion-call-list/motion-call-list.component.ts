@@ -69,14 +69,13 @@ export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotio
 
     public constructor(
         protected override translate: TranslateService,
-        promptService: PromptService,
         private motionRepo: MotionControllerService,
         private motionCsvExport: MotionCsvExportService,
         private motionPdfExport: MotionPdfExportService,
         private tagRepo: TagControllerService,
         private categoryRepo: MotionCategoryControllerService
     ) {
-        super(translate, promptService);
+        super();
 
         this.motionsObservable = this.motionRepo.getViewModelListObservable();
         this.motionsObservable.subscribe(motions => {

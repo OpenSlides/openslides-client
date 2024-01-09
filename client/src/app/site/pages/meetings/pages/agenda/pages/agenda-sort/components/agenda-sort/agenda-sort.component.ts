@@ -47,10 +47,9 @@ export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaIte
 
     public constructor(
         protected override translate: TranslateService,
-        promptService: PromptService,
         private agendaRepo: AgendaItemControllerService
     ) {
-        super(translate, promptService);
+        super();
         this.itemsObservable = this.agendaRepo.getViewModelListObservable();
     }
 
