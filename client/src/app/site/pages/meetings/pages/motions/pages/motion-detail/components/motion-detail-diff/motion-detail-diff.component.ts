@@ -111,7 +111,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private diff: MotionDiffService,
         private lineNumbering: LineNumberingService,

@@ -76,7 +76,6 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
     private _hasWritePermissionsObservable: Observable<boolean> = of(false); // Not initialized
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private repo: ChatGroupControllerService,
         private chatMessageRepo: ChatMessageControllerService,

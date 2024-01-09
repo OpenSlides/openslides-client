@@ -16,7 +16,6 @@ export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
     public groups: SettingsGroup[] = [];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private promptDialog: PromptService,
         private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionService,

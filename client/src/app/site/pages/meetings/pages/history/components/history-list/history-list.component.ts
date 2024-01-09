@@ -103,7 +103,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private viewModelStore: ViewModelStoreService,
         private formBuilder: UntypedFormBuilder,

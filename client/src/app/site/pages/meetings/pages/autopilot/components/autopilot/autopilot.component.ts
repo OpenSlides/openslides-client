@@ -97,7 +97,6 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     private _currentProjection: ViewProjection | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private operator: OperatorService,
         projectorRepo: ProjectorControllerService,

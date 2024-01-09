@@ -83,7 +83,6 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
      */
     public constructor(
         organizationSettingsService: OrganizationSettingsService,
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private formBuilder: UntypedFormBuilder,
         private repo: TopicControllerService,

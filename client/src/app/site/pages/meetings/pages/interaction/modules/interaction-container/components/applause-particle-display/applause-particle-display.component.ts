@@ -29,7 +29,6 @@ export class ApplauseParticleDisplayComponent extends BaseMeetingComponent {
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private applauseService: ApplauseService,
         private osStatus: OpenSlidesStatusService

@@ -33,7 +33,6 @@ export class CategoryListSortComponent extends BaseMeetingComponent implements C
     public hasChanged = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private categoryRepo: MotionCategoryControllerService,
         private promptService: PromptService

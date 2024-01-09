@@ -104,7 +104,6 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     private _projectorIdSubject: BehaviorSubject<number> = new BehaviorSubject(null);
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private repo: ProjectorControllerService,
         private projectionRepo: ProjectionControllerService,

@@ -35,7 +35,6 @@ export class ChatGroupListComponent extends BaseMeetingComponent {
     private _isChatContentOpen = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private dialog: ChatGroupDialogService,
         private chatGroupRepo: ChatGroupControllerService,

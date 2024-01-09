@@ -140,7 +140,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     private _amendmentsInMainList = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public vp: ViewPortService,
         public operator: OperatorService,

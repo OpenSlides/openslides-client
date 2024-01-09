@@ -147,7 +147,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * Constructor. Build forms and subscribe to needed configs and updates
      */
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private operator: OperatorService,
         formBuilder: UntypedFormBuilder,

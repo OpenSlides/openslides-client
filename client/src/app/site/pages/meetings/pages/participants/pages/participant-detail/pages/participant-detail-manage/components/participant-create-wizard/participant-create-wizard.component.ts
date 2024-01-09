@@ -149,7 +149,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     private _suitableAccountList: Partial<User>[] = [];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         fb: UntypedFormBuilder,
         public readonly repo: ParticipantControllerService,

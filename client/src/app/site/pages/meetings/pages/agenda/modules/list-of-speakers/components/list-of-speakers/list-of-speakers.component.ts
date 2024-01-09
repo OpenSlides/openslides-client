@@ -79,7 +79,6 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
      * Constructor for speaker list component. Generates the forms.
      */
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private promptService: PromptService,

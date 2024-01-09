@@ -74,7 +74,6 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
     private _categoryId: Id = -1;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         private operator: OperatorService,

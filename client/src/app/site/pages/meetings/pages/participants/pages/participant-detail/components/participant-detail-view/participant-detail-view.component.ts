@@ -140,7 +140,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     private _isUserInScope = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: ParticipantControllerService,

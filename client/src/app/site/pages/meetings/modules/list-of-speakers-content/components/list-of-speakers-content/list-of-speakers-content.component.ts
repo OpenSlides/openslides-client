@@ -148,7 +148,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private speakerRepo: SpeakerControllerService,

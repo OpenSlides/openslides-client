@@ -80,7 +80,6 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
     private _hasCategoryId = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private promptService: PromptService,
         private repo: MotionCategoryControllerService,

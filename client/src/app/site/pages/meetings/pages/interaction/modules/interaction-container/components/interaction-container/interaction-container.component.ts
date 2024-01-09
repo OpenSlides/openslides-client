@@ -53,7 +53,6 @@ export class InteractionContainerComponent extends BaseMeetingComponent implemen
     private _streamLoadedOnce = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         rtcService: RtcService,
         streamService: StreamService,

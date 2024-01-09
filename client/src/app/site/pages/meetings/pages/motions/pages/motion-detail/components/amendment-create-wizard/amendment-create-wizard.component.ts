@@ -75,7 +75,6 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     private _parentMotionId: Id | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private formBuilder: UntypedFormBuilder,
         private repo: AmendmentControllerService,

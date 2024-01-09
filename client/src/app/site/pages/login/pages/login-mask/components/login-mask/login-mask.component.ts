@@ -91,7 +91,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     private currentMeetingId: number | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private authService: AuthService,
         private operator: OperatorService,

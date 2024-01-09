@@ -47,7 +47,6 @@ export class StreamComponent extends BaseMeetingComponent implements AfterViewIn
     public streamSubtitle: EventEmitter<string> = new EventEmitter();
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private streamService: StreamService,
         private applauseService: ApplauseService,

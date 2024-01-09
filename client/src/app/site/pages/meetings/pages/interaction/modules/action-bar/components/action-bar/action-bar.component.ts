@@ -59,7 +59,6 @@ export class ActionBarComponent extends BaseMeetingComponent {
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private callRestrictionService: CallRestrictionService,
         private interactionService: InteractionService,

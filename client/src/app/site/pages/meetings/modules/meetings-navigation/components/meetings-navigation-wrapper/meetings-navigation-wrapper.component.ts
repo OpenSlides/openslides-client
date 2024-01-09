@@ -58,7 +58,6 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
      * Constructor
      */
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         _loadFontService: LoadFontService, // just to initialize this service
         _notifyService: NotifyService, // just to initialize this service
         protected override translate: TranslateService,

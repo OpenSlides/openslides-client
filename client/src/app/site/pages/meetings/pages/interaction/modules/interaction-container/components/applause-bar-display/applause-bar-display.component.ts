@@ -20,7 +20,6 @@ export class ApplauseBarDisplayComponent extends BaseMeetingComponent {
     private level = 0;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         cd: ChangeDetectorRef,
         private applauseService: ApplauseService

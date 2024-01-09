@@ -57,7 +57,6 @@ export class MeetingSettingsGroupDetailComponent
     @ViewChildren(`settingsFields`) public settingsFields!: QueryList<MeetingSettingsGroupDetailFieldComponent>;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private cd: ChangeDetectorRef,
         private route: ActivatedRoute,

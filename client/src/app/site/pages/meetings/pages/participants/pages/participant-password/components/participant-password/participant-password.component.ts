@@ -42,7 +42,6 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
     private urlUserId: number | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private operator: OperatorService,
         private openslidesRouter: OpenSlidesRouterService,

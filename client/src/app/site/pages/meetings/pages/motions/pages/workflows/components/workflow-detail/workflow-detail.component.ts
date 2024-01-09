@@ -266,7 +266,6 @@ Note: Does not affect the visibility of change recommendations.`
     ] as StatePerm[];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private promptService: PromptService,
         private dialog: MatDialog,

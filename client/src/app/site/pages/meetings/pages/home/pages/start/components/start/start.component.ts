@@ -34,7 +34,6 @@ export class StartComponent extends BaseMeetingComponent implements OnInit {
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private meetingRepositoryService: MeetingControllerService,
         private formBuilder: UntypedFormBuilder,

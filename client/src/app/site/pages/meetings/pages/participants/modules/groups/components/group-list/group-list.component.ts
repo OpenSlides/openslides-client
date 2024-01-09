@@ -77,7 +77,6 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private dialog: MatDialog,
         private repo: GroupControllerService,
