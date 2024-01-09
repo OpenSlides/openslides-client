@@ -57,6 +57,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public finishedSpeakers: ViewSpeaker[] = [];
     public waitingSpeakers: ViewSpeaker[] = [];
+    public interposedQuestions: ViewSpeaker[] = [];
     public activeSpeaker: ViewSpeaker | null = null;
 
     public users: ViewUser[] = [];
@@ -68,6 +69,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public get showFirstContributionHintObservable(): Observable<boolean> {
         return this.meetingSettingsService.get(`list_of_speakers_show_first_contribution`);
+    }
+
+    public get showInterposedQuestions(): boolean {
+        return true;
     }
 
     public get showPointOfOrders(): boolean {
@@ -266,6 +271,12 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         }
     }
 
+    public async addInterposedQuestion(): Promise<void> {
+        await this.speakerRepo.create(this.listOfSpeakers, this.canManage ? undefined : this._currentUser.id, {
+            speechState: SpeechState.INTERPOSED_QUESTION
+        });
+    }
+
     public async addPointOfOrder(): Promise<void> {
         const dialogRef = await this.dialog.open(this.listOfSpeakers);
         try {
@@ -385,6 +396,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
         const allSpeakers = this._listOfSpeakers!.speakers.sort((a, b) => a.weight - b.weight);
         this.waitingSpeakers = allSpeakers.filter(speaker => speaker.state === SpeakerState.WAITING);
+        this.interposedQuestions = allSpeakers.filter(speaker => speaker.state === SpeakerState.INTERPOSED_QUESTION);
         this.finishedSpeakers = allSpeakers.filter(speaker => speaker.state === SpeakerState.FINISHED);
 
         // convert begin time to date and sort

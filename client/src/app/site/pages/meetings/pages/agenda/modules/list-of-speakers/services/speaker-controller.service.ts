@@ -29,7 +29,7 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
 
     public create(
         listOfSpeakers: ViewListOfSpeakers,
-        userId: Id,
+        userId?: Id,
         optionalInformation?: {
             pointOfOrder?: boolean;
             note?: UnsafeHtml;
@@ -42,7 +42,7 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
         const meetingUserId =
             optionalInformation.meeting_user_id ??
             this.userRepo.getViewModel(userId)?.getMeetingUser(listOfSpeakers.meeting_id).id;
-        if (!meetingUserId) {
+        if (!meetingUserId && optionalInformation.speechState !== SpeechState.INTERPOSED_QUESTION) {
             throw new Error(`Speaker creation failed: Selected user may not be in meeting`);
         }
         return this.repo.create(listOfSpeakers, meetingUserId, optionalInformation);

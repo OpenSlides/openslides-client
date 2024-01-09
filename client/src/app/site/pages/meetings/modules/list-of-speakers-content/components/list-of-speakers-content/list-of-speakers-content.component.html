@@ -104,6 +104,36 @@
         </span>
     </div>
 
+    <div class="interposed-questions">
+        <div
+            *ngFor="let speaker of interposedQuestions; let i = index"
+            class="single-speaker-line">
+            <div class="speaker-name">
+                <ng-container *ngIf="speaker.meeting_user_id">
+                    {{ speaker.getListTitle() }}
+                </ng-container>
+                <span *ngIf="!speaker.meeting_user_id" translate>
+                    Select or search new speaker
+                </span>
+                <div class="active-speaker-subtitle">
+                    <ng-container *ngTemplateOutlet="speakerSubtitle; context: { speaker: speaker }"></ng-container>
+                </div>
+            </div>
+
+            <div class="speaker-controls one-line">
+                <!-- Extra menu with call controls -->
+                <button
+                    *ngIf="canManage"
+                    mat-icon-button
+                    [matMenuTriggerFor]="manageSpeakerMenu"
+                    [matMenuTriggerData]="{ speaker: speaker }"
+                >
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Waiting speakers -->
     <div class="waiting-list" *ngIf="waitingSpeakers?.length">
         <os-sorting-list
@@ -290,6 +320,20 @@
             <mat-icon>remove</mat-icon>
             <span translate>Withdraw point of order</span>
         </button>
+
+        <!-- Interposed question -->
+        <button
+            mat-stroked-button
+            (click)="addInterposedQuestion()"
+            *ngIf="showInterposedQuestions"
+            [disabled]="closed"
+        >
+            <mat-icon>help</mat-icon>
+            &nbsp;
+            <span>
+                {{ 'Interposed question' | translate }}
+            </span>
+        </button>
     </div>
 </mat-card>
 
@@ -334,6 +378,7 @@
                     canManage &&
                     structureLevelCountdownEnabled &&
                     speaker.isWaiting &&
+                    speaker.meeting_user_id &&
                     speaker.meeting_user.structure_levels?.length
                 "
                 mat-menu-item
@@ -344,20 +389,22 @@
             </button>
 
             <mat-menu #structureLevelsMenu="matMenu">
-                <button
-                    *ngFor="let structureLevel of speaker.meeting_user.structure_levels"
-                    mat-menu-item
-                    (click)="setStructureLevel(speaker, structureLevel.id)"
-                >
-                    <mat-icon *ngIf="speaker.structure_level_list_of_speakers?.structure_level_id">
-                        {{
-                            speaker.structure_level_list_of_speakers?.structure_level_id === structureLevel.id
-                                ? 'check'
-                                : ''
-                        }}
-                    </mat-icon>
-                    {{ structureLevel.name }}
-                </button>
+                <ng-container *ngIf="speaker.meeting_user_id">
+                    <button
+                        *ngFor="let structureLevel of speaker.meeting_user.structure_levels"
+                        mat-menu-item
+                        (click)="setStructureLevel(speaker, structureLevel.id)"
+                    >
+                        <mat-icon *ngIf="speaker.structure_level_list_of_speakers?.structure_level_id">
+                            {{
+                                speaker.structure_level_list_of_speakers?.structure_level_id === structureLevel.id
+                                    ? 'check'
+                                    : ''
+                            }}
+                        </mat-icon>
+                        {{ structureLevel.name }}
+                    </button>
+                </ng-container>
             </mat-menu>
 
             <mat-divider></mat-divider>
@@ -392,6 +439,22 @@
         <mat-icon inline class="inline-icon-text-align" [class.icon]="!!showcolor">star</mat-icon>
         <i [class.user-subtitle]="!!showcolor">
             {{ 'Contribution' | translate }}
+        </i>
+    </ng-container>
+
+    <!-- Interposed question -->
+    <ng-container *ngIf="speaker.speech_state === SpeechState.INTERPOSED_QUESTION">
+        <mat-icon inline class="inline-icon-text-align" [class.icon]="!!showcolor">help</mat-icon>
+        <i [class.user-subtitle]="!!showcolor">
+            {{ 'Interposed question' | translate }}
+        </i>
+    </ng-container>
+
+    <!-- Intervention -->
+    <ng-container *ngIf="speaker.speech_state === SpeechState.INTERVENTION">
+        <mat-icon inline class="inline-icon-text-align" [class.icon]="!!showcolor">help</mat-icon>
+        <i [class.user-subtitle]="!!showcolor">
+            {{ 'Intervention' | translate }}
         </i>
     </ng-container>
 

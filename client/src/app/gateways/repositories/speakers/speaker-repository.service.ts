@@ -25,7 +25,7 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
 
     public create(
         listOfSpeakers: ListOfSpeakers,
-        meetingUserId: Id,
+        meetingUserId?: Id,
         optionalInformation: {
             pointOfOrder?: boolean;
             note?: UnsafeHtml;
