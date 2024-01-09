@@ -70,14 +70,9 @@ export class ApplauseService extends BaseICCGatewayService<Applause> {
 
     public constructor(
         settingService: MeetingSettingsService,
-        httpService: HttpService,
-        private activeMeetingService: ActiveMeetingService,
-        activeMeetingIdService: ActiveMeetingIdService,
-        httpStreamService: HttpStreamService,
-        communicationManager: CommunicationManagerService,
-        httpEndpointService: HttpStreamEndpointService
+        private activeMeetingService: ActiveMeetingService
     ) {
-        super(httpService, httpStreamService, activeMeetingIdService, communicationManager, httpEndpointService);
+        super();
         this.setupConnections();
 
         this.showApplauseObservable = settingService.get(`applause_enable`);
