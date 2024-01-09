@@ -25,8 +25,8 @@ export class MeetingListSortService extends BaseSortListService<ViewMeeting> {
         { property: `motionsAmount`, label: _(`Number of motions`), baseKeys: [`motion_ids`] }
     ];
 
-    public constructor(translate: TranslateService, store: StorageService, injector: Injector) {
-        super(translate, store, injector, {
+    public constructor() {
+        super({
             sortProperty: `name`,
             sortAscending: true
         });

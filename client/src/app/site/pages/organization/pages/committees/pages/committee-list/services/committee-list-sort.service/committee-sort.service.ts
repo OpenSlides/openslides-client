@@ -22,8 +22,8 @@ export class CommitteeSortService extends BaseSortListService<ViewCommittee> {
         { property: `memberAmount`, label: _(`Amount of accounts`), baseKeys: [`user_ids`] }
     ];
 
-    public constructor(translate: TranslateService, store: StorageService, injector: Injector) {
-        super(translate, store, injector, {
+    public constructor() {
+        super({
             sortProperty: `name`,
             sortAscending: true
         });

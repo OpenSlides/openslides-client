@@ -30,8 +30,8 @@ export class MotionBlockSortService extends BaseSortListService<ViewMotionBlock>
         }
     ];
 
-    public constructor(translate: TranslateService, store: StorageService, injector: Injector) {
-        super(translate, store, injector, {
+    public constructor() {
+        super({
             sortProperty: `title`,
             sortAscending: true
         });

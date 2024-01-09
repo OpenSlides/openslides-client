@@ -74,7 +74,7 @@ export class MotionListBaseSortService extends BaseSortListService<ViewMotion> {
         defaultDefinition?: OsSortingDefinition<ViewMotion> | Observable<OsSortingDefinition<ViewMotion>>
     ) {
         const defaultDefinitions = new BehaviorSubject<OsSortingDefinition<ViewMotion>>(null);
-        super(translate, store, injector, defaultDefinition ?? defaultDefinitions);
+        super(defaultDefinition ?? defaultDefinitions);
         this.defaultDefinitionSubject = defaultDefinitions;
 
         this.defaultMotionSorting = `number`;

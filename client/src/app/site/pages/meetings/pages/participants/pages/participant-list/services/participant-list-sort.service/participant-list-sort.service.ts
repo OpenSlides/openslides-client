@@ -44,12 +44,9 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
     private _voteWeightEnabled: boolean;
 
     public constructor(
-        translate: TranslateService,
-        store: StorageService,
-        private meetingSettings: MeetingSettingsService,
-        injector: Injector
+        private meetingSettings: MeetingSettingsService
     ) {
-        super(translate, store, injector, {
+        super({
             sortProperty: [`first_name`, `last_name`],
             sortAscending: true
         });

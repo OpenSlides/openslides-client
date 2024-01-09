@@ -30,8 +30,8 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
         { property: `last_login`, label: _(`Last login`) }
     ];
 
-    public constructor(translate: TranslateService, store: StorageService, injector: Injector) {
-        super(translate, store, injector, {
+    public constructor() {
+        super({
             sortProperty: [`first_name`, `last_name`],
             sortAscending: true
         });

@@ -180,13 +180,10 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     private initializationCount = 0;
 
     private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private store = inject(StorageService);
+    private injector = inject(Injector);
 
-    public constructor(
-        translate: TranslateService,
-        private store: StorageService,
-        private injector: Injector,
-        defaultDefinition: OsSortingDefinition<V> | Observable<OsSortingDefinition<V>>
-    ) {
+    public constructor(defaultDefinition: OsSortingDefinition<V> | Observable<OsSortingDefinition<V>>) {
         super();
 
         this._defaultDefinitionSubject
