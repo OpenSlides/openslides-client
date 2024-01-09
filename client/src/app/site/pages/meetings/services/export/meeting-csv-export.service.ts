@@ -18,11 +18,9 @@ import { MeetingExportModule } from './meeting-export.module';
 })
 export class MeetingCsvExportService extends CsvExportService {
     public constructor(
-        exporter: FileExportService,
-        translate: TranslateService,
         private meetingSettings: MeetingSettingsService
     ) {
-        super(exporter, translate);
+        super();
     }
 
     /**

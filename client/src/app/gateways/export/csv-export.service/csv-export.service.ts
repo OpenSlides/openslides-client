@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { BaseViewModel } from '../../../site/base/base-view-model';
@@ -18,7 +18,8 @@ import {
     providedIn: ExportServiceModule
 })
 export class CsvExportService {
-    public constructor(private exporter: FileExportService, private translate: TranslateService) {}
+    private exporter = inject(FileExportService);
+     private translate = inject(TranslateService);
 
     /**
      * Saves an array of model data to a CSV.
