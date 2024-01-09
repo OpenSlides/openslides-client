@@ -28,7 +28,8 @@ td {
     width: 100%;
 
     .motion-title {
-        max-width: 90%;
+        max-width: max-content;
+        min-width: 10%;
         overflow-wrap: break-word;
     }
 
@@ -36,8 +37,8 @@ td {
         padding-right: 5px;
         padding-left: 15px;
         overflow: hidden;
-        max-width: 90%;
-        flex-shrink: 2;
+        max-width: max-content;
+        min-width: 10%;
         margin: auto 0;
 
         .block-recommendation {
