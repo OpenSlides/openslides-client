@@ -34,14 +34,11 @@ export class MotionPersonalNoteComponent extends BaseMotionDetailActionCardCompo
     private readonly _personalNoteSubject = new BehaviorSubject<ViewPersonalNote | null>(null);
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
-        cd: ChangeDetectorRef,
-        formBuilder: UntypedFormBuilder,
         private repo: PersonalNoteControllerService,
         private pdfService: MotionPdfExportService
     ) {
-        super(componentServiceCollector, translate, cd, formBuilder);
+        super();
     }
 
     public editPersonalNote(): void {

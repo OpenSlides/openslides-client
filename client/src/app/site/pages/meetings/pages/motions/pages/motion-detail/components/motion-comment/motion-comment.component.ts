@@ -42,15 +42,12 @@ export class MotionCommentComponent extends BaseMotionDetailActionCardComponent 
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
-        cd: ChangeDetectorRef,
-        fb: UntypedFormBuilder,
         private pdfService: MotionPdfExportService,
         private commentRepo: MotionCommentControllerService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate, cd, fb);
+        super();
     }
 
     public editComment(): void {

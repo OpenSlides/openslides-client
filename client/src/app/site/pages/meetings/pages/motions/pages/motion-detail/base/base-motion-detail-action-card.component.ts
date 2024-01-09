@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive, Input } from '@angular/core';
+import { ChangeDetectorRef, Directive, Input, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -33,14 +33,13 @@ export abstract class BaseMotionDetailActionCardComponent extends BaseComponent 
     private _isEditing = false;
     private _motion!: ViewMotion;
 
+    protected override translate = inject(TranslateService);
+    protected cd = inject(ChangeDetectorRef);
+    protected fb = inject(FormBuilder);
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected cd: ChangeDetectorRef,
-        protected fb: FormBuilder
     ) {
         super();
-        this.formGroup = fb.group({ text: `` });
+        this.formGroup = this.fb.group({ text: `` });
     }
 
     public async leaveEditMode(): Promise<void> {
