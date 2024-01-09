@@ -33,7 +33,7 @@ export class OrganizationNavigationWrapperComponent extends BaseComponent implem
         private vp: ViewPortService,
         private mainMenuService: MainMenuService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

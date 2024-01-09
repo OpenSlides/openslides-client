@@ -39,7 +39,7 @@ export abstract class BaseMotionDetailActionCardComponent extends BaseComponent 
         protected cd: ChangeDetectorRef,
         protected fb: FormBuilder
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.formGroup = fb.group({ text: `` });
     }
 

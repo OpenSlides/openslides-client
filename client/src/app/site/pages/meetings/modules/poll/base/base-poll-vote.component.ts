@@ -80,7 +80,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         componentServiceCollector: ComponentServiceCollectorService,
         translate: TranslateService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.subscriptions.push(
             operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
                 if (user) {

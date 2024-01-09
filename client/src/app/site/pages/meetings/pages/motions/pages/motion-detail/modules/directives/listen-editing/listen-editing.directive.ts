@@ -112,7 +112,7 @@ export class ListenEditingDirective extends BaseComponent implements OnDestroy {
         componentServiceCollector: ComponentServiceCollectorService,
         translate: TranslateService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public override ngOnDestroy(): void {

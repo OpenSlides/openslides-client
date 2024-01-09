@@ -164,7 +164,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         private mapper: CollectionMapperService,
         private orgaSettings: OrganizationSettingsService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

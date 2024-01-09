@@ -67,7 +67,7 @@ export abstract class BaseViaBackendImportListComponent extends BaseComponent im
         protected override translate: TranslateService,
         protected importer: BaseBackendImportService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

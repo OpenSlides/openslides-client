@@ -22,7 +22,7 @@ export class CommentSectionSortComponent extends BaseComponent implements OnInit
         protected override translate: TranslateService,
         private repo: MotionCommentSectionControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Sort comments`);
     }
 

@@ -45,7 +45,7 @@ export class PasswordFormComponent extends BaseComponent implements OnInit {
         componentServiceCollector: ComponentServiceCollectorService,
         translate: TranslateService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

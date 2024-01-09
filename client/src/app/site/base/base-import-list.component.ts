@@ -35,7 +35,7 @@ export abstract class BaseImportListComponent<M extends Identifiable> extends Ba
         protected override translate: TranslateService,
         protected importer: BaseImportService<M>
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

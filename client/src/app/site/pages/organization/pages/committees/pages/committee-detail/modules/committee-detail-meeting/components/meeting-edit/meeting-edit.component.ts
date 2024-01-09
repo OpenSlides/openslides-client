@@ -145,7 +145,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         private orga: OrganizationService,
         private routingState: RoutingStateService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.checkCreateView();
         this.createForm();
         this.init();

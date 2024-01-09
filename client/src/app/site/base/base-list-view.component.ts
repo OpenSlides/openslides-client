@@ -53,7 +53,7 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
     private _multiSelectMode = false;
 
     public constructor(componentServiceCollector: ComponentServiceCollectorService, translate: TranslateService) {
-        super(componentServiceCollector, translate);
+        super();
         this.selectedRows = [];
     }
 

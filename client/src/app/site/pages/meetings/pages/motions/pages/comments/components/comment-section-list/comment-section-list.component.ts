@@ -50,7 +50,7 @@ export class CommentSectionListComponent extends BaseComponent implements OnInit
         private dialog: MatDialog,
         private groupRepo: GroupControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         const form = {
             name: [``, Validators.required],

@@ -45,7 +45,7 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
         private dialog: MatDialog,
         private csvExportService: StatuteParagraphCsvExportService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         const form = {
             title: [``, Validators.required],

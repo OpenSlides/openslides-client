@@ -55,7 +55,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         private route: ActivatedRoute,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.createForm();
         this.getCommitteeByUrl();
 

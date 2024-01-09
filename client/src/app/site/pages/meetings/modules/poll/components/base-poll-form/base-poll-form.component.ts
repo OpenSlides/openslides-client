@@ -188,7 +188,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         private dialog: VotingPrivacyWarningDialogService,
         protected meetingSettingService: MeetingSettingsService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.initContentForm();
     }
 

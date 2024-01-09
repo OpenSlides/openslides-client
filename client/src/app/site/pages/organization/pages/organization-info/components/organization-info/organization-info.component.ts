@@ -26,7 +26,7 @@ export class OrganizationInfoComponent extends BaseComponent implements OnInit {
         private orgaRepo: OrganizationControllerService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

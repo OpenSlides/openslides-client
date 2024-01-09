@@ -59,7 +59,7 @@ export class UserMultiselectActionsComponent extends BaseComponent {
         componentServiceCollector: ComponentServiceCollectorService,
         translate: TranslateService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

@@ -54,7 +54,7 @@ export class DashboardComponent extends BaseComponent {
         private themeService: ThemeService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Calendar`);
         this.loadMeetings();
 

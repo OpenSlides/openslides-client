@@ -32,7 +32,7 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
         formBuilder: UntypedFormBuilder,
         private userRepo: UserControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.resetPasswordForm = formBuilder.group({
             email: [``, [Validators.required, createEmailValidator()]]
         });

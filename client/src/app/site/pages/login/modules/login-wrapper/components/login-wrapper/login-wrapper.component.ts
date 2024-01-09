@@ -10,7 +10,7 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 })
 export class LoginWrapperComponent extends BaseComponent implements OnInit {
     public constructor(componentServiceCollector: ComponentServiceCollectorService, translate: TranslateService) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

@@ -27,7 +27,7 @@ export class MeetingImportComponent extends BaseComponent implements OnInit {
         private location: Location,
         private uploadFileProcessor: UploadFileJsonProcessorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

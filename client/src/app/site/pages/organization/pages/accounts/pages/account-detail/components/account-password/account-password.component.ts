@@ -35,7 +35,7 @@ export class AccountPasswordComponent extends BaseComponent implements OnInit, A
         componentServiceCollector: ComponentServiceCollectorService,
         translate: TranslateService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

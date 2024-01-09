@@ -38,7 +38,7 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
         private activatedRoute: ActivatedRoute,
         private userRepo: UserControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.newPasswordForm = formBuilder.group({
             password: [``, [Validators.required]]
         });

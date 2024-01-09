@@ -111,7 +111,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         private userController: UserControllerService,
         private promptService: PromptService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

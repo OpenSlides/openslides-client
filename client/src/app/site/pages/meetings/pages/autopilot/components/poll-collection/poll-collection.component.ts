@@ -68,7 +68,7 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         private cd: ChangeDetectorRef,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

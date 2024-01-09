@@ -24,7 +24,7 @@ export class ProjectorMessageDialogComponent extends BaseComponent implements On
         private formBuilder: UntypedFormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: MessageDialogData
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

@@ -30,7 +30,7 @@ export class OrganizationStatisticsComponent extends BaseComponent implements On
         componentServiceCollector: ComponentServiceCollectorService,
         translate: TranslateService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

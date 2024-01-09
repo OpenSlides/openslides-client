@@ -43,7 +43,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
         private formBuilder: UntypedFormBuilder,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(this.pageTitle);
 
         this.subscriptions.push(

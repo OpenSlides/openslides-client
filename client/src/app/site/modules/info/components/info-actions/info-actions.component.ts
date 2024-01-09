@@ -19,7 +19,7 @@ export class InfoActionsComponent extends BaseComponent {
         private presenter: CheckDatabasePresenterService,
         protected override translate: TranslateService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public resetCache(): void {

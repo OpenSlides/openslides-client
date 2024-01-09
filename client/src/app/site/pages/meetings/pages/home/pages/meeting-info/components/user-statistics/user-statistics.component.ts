@@ -65,7 +65,7 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
         private speakerListRepo: ListOfSpeakersControllerService,
         private durationService: DurationService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {
