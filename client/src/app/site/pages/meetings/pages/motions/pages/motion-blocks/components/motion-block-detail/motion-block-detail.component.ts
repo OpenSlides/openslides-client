@@ -70,7 +70,6 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
      * Constructor for motion block details
      */
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         protected repo: MotionBlockControllerService,
@@ -81,7 +80,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
         public filterService: MotionBlockDetailFilterListService,
         public vp: ViewPortService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

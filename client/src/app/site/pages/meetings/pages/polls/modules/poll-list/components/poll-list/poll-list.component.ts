@@ -20,13 +20,12 @@ export class PollListComponent extends BaseMeetingListViewComponent<ViewPoll> {
     public filterProps = [`title`, `state`];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public pollRepo: PollControllerService,
         public filterService: PollListFilterService,
         public votingService: VotingService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`List of electronic votes`);
         this.listStorageIndex = POLL_LIST_STORAGE_INDEX;
     }

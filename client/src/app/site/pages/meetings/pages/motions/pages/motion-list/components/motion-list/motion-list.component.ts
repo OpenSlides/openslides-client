@@ -130,7 +130,6 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     private _hasAmendments = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public filterService: MotionListFilterService,
@@ -147,7 +146,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         public vp: ViewPortService,
         public operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
         this.listStorageIndex = MOTION_LIST_STORAGE_INDEX;
 

@@ -37,7 +37,6 @@ export class TagListComponent extends BaseMeetingListViewComponent<ViewTag> impl
     public currentTag: ViewTag | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: TagControllerService,
         private dialog: MatDialog,
@@ -46,7 +45,7 @@ export class TagListComponent extends BaseMeetingListViewComponent<ViewTag> impl
         private cd: ChangeDetectorRef,
         private interactionService: InteractionService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

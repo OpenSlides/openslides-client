@@ -38,7 +38,6 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: AssignmentControllerService,
         private promptService: PromptService,
@@ -49,7 +48,7 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
         private operator: OperatorService,
         public vp: ViewPortService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
         this.listStorageIndex = ASSIGNMENT_LIST_STORAGE_INDEX;
     }

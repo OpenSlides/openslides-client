@@ -29,14 +29,13 @@ export class WorkflowListComponent extends BaseMeetingListViewComponent<ViewMoti
     public filterProps = [`name`, `states`];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private dialog: MatDialog,
         public workflowRepo: MotionWorkflowControllerService,
         private promptService: PromptService,
         private exporter: WorkflowExportService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
         this.listStorageIndex = WORKFLOW_LIST_STORAGE_INDEX;
     }

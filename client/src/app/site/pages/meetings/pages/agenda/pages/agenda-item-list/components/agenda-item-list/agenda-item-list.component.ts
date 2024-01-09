@@ -89,7 +89,6 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     public filterProps = [`item_number`, `comment`, `getListTitle`];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private operator: OperatorService,
         private route: ActivatedRoute,
@@ -107,7 +106,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         private tagRepo: TagControllerService,
         private agendaItemMultiselectService: AgendaItemMultiselectService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
         this.listStorageIndex = AGENDA_ITEM_LIST_STORAGE_INDEX;
     }

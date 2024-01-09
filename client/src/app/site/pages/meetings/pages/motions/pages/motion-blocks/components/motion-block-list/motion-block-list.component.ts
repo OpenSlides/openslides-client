@@ -47,7 +47,6 @@ export class MotionBlockListComponent extends BaseMeetingListViewComponent<ViewM
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: MotionBlockControllerService,
         private dialog: MotionBlockCreateDialogService,
@@ -55,7 +54,7 @@ export class MotionBlockListComponent extends BaseMeetingListViewComponent<ViewM
         private operator: OperatorService,
         public sortService: MotionBlockSortService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.listStorageIndex = MOTION_BLOCK_LIST_STORAGE_INDEX;
     }
 

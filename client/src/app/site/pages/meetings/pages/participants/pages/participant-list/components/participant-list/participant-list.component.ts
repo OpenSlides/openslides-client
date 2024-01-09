@@ -114,7 +114,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     );
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
@@ -130,7 +129,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         private prompt: PromptService,
         private interactionService: InteractionService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         // enable multiSelect for this listView
         this.canMultiSelect = true;

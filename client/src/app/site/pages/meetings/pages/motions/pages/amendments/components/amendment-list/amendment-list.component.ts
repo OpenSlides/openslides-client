@@ -57,7 +57,6 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
     private _amendmentDiffLinesMap: { [amendmentId: number]: string } = {};
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public amendmentRepo: AmendmentControllerService,
@@ -71,7 +70,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         private linenumberingService: LineNumberingService,
         private pdfExport: MotionPdfExportService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Amendments`);
         this.canMultiSelect = true;
         this.listStorageIndex = AMENDMENT_LIST_STORAGE_INDEX;

@@ -49,14 +49,13 @@ export class CategoryListComponent extends BaseMeetingListViewComponent<ViewMoti
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: MotionCategoryControllerService,
         private formBuilder: UntypedFormBuilder,
         private dialog: MatDialog,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.listStorageIndex = CATEGORY_LIST_STORAGE_INDEX;
 
         this.createForm = this.formBuilder.group({

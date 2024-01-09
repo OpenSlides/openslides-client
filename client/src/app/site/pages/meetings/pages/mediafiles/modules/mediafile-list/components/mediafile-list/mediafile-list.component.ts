@@ -90,7 +90,6 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: MediafileControllerService,
@@ -104,7 +103,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         private commonService: MediafileCommonService,
         private interactionService: InteractionService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
 
         this.logoPlaces = this.mediaManage.allLogoPlaces;
