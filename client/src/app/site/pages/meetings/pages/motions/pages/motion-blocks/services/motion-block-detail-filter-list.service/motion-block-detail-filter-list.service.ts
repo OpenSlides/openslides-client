@@ -33,25 +33,9 @@ export class MotionBlockDetailFilterListService extends MotionListFilterService 
 
     public constructor(
         store: MeetingActiveFiltersService,
-        categoryRepo: MotionCategoryControllerService,
-        motionBlockRepo: MotionBlockControllerService,
-        commentRepo: MotionCommentSectionControllerService,
-        tagRepo: TagControllerService,
-        workflowRepo: MotionWorkflowControllerService,
-        protected override translate: TranslateService,
-        operator: OperatorService,
-        meetingSettingsService: MeetingSettingsService
+        protected override translate: TranslateService
     ) {
-        super(
-            store,
-            categoryRepo,
-            motionBlockRepo,
-            commentRepo,
-            tagRepo,
-            workflowRepo,
-            translate,
-            operator,
-            meetingSettingsService
+        super(store
         );
     }
 

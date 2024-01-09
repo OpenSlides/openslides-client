@@ -53,26 +53,11 @@ export class AmendmentListFilterService extends MotionListFilterService {
 
     public constructor(
         store: MeetingActiveFiltersService,
-        categoryRepo: MotionCategoryControllerService,
-        motionBlockRepo: MotionBlockControllerService,
-        commentRepo: MotionCommentSectionControllerService,
-        tagRepo: TagControllerService,
-        workflowRepo: MotionWorkflowControllerService,
         protected override translate: TranslateService,
-        operator: OperatorService,
-        meetingSettingsService: MeetingSettingsService,
         motionRepo: MotionControllerService
     ) {
         super(
-            store,
-            categoryRepo,
-            motionBlockRepo,
-            commentRepo,
-            tagRepo,
-            workflowRepo,
-            translate,
-            operator,
-            meetingSettingsService
+            store
         );
 
         this.updateFilterForRepo({
