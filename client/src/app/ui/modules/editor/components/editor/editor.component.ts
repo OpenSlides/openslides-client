@@ -55,8 +55,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         paste_preprocess: this.onPastePreprocess
     };
 
-    public constructor(fb: UntypedFormBuilder, translate: TranslateService) {
-        super(fb);
+    public constructor(translate: TranslateService) {
+        super();
         this.tinyMceSettings.language_url = `/assets/tinymce/langs/` + translate.currentLang + `.js`;
         this.tinyMceSettings.language = translate.currentLang;
     }

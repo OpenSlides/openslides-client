@@ -76,14 +76,13 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
     private dialogRef: MatDialogRef<any> | null = null;
 
     public constructor(
-        formBuilder: UntypedFormBuilder,
         private dialogService: MatDialog,
         public readonly repo: MediafileControllerService,
         private groupsRepo: GroupControllerService,
         private modelRequestService: ModelRequestService,
         private activeMeeting: ActiveMeetingService
     ) {
-        super(formBuilder);
+        super();
     }
 
     public override ngOnInit(): void {
