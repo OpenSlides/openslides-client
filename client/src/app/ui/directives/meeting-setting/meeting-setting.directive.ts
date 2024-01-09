@@ -1,4 +1,4 @@
-import { Directive, EmbeddedViewRef, inject, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, EmbeddedViewRef, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -56,10 +56,11 @@ export class MeetingSettingDirective extends BaseUiComponent {
     private _elseTemplate: TemplateRef<unknown> | null = null;
     private _elseViewRef: EmbeddedViewRef<unknown> | null = null;
 
-    private viewContainer = inject(ViewContainerRef);
-    private meetingSettingsService = inject(MeetingSettingsService);
-
-    public constructor(template: TemplateRef<any>) {
+    public constructor(
+        template: TemplateRef<any>,
+        private viewContainer: ViewContainerRef,
+        private meetingSettingsService: MeetingSettingsService
+    ) {
         super();
         this._thenTemplate = template;
     }

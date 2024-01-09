@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -32,12 +32,12 @@ export class StartComponent extends BaseMeetingComponent implements OnInit {
         return this.meetingSettingsService.get(`welcome_text`);
     }
 
-    protected override translate = inject(TranslateService);
-    private meetingRepositoryService = inject(MeetingControllerService);
-    private formBuilder = inject(UntypedFormBuilder);
-    private operator = inject(OperatorService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        private meetingRepositoryService: MeetingControllerService,
+        private formBuilder: UntypedFormBuilder,
+        private operator: OperatorService
+    ) {
         super();
         this.startForm = this.formBuilder.group({
             welcome_title: [``, Validators.required],

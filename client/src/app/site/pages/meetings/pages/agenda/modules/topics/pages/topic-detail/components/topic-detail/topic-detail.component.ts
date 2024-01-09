@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -77,22 +77,23 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     public getTitleFn = () => this.topic.getListTitle();
 
-    protected override translate = inject(TranslateService);
-    private formBuilder = inject(UntypedFormBuilder);
-    private repo = inject(TopicControllerService);
-    private promptService = inject(PromptService);
-    private operator = inject(OperatorService);
-    private itemRepo = inject(AgendaItemControllerService);
-    private pollDialog = inject(TopicPollDialogService);
-    private topicPollService = inject(TopicPollService);
-    private pollController = inject(PollControllerService);
-    private topicPdfService = inject(TopicPdfService);
-    private route = inject(ActivatedRoute);
-
     /**
      * Constructor for the topic detail page.
      */
-    public constructor(organizationSettingsService: OrganizationSettingsService) {
+    public constructor(
+        organizationSettingsService: OrganizationSettingsService,
+        protected override translate: TranslateService,
+        private formBuilder: UntypedFormBuilder,
+        private repo: TopicControllerService,
+        private promptService: PromptService,
+        private operator: OperatorService,
+        private itemRepo: AgendaItemControllerService,
+        private pollDialog: TopicPollDialogService,
+        private topicPollService: TopicPollService,
+        private pollController: PollControllerService,
+        private topicPdfService: TopicPdfService,
+        private route: ActivatedRoute
+    ) {
         super();
         this.createForm();
 

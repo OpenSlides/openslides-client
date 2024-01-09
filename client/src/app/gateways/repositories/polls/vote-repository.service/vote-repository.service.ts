@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
@@ -41,10 +41,11 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
     private _fetchVotablePollsInterval = null;
     private _fetchVotablePollsTimeout = null;
 
-    private operator = inject(OperatorService);
-    private http = inject(HttpService);
-
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(
+        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
+        private operator: OperatorService,
+        private http: HttpService
+    ) {
         super(repositoryServiceCollector, Vote);
     }
 

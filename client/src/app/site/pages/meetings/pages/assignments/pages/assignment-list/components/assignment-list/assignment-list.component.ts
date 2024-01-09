@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -36,17 +36,17 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
         return this.operator.hasPerms(Permission.assignmentCanManage);
     }
 
-    protected override translate = inject(TranslateService);
-    public repo = inject(AssignmentControllerService);
-    private promptService = inject(PromptService);
-    public filterService = inject(AssignmentFilterListService);
-    public sortService = inject(AssignmentSortListService);
-    private pdfService = inject(AssignmentExportService);
-    protected route = inject(ActivatedRoute);
-    private operator = inject(OperatorService);
-    public vp = inject(ViewPortService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        public repo: AssignmentControllerService,
+        private promptService: PromptService,
+        public filterService: AssignmentFilterListService,
+        public sortService: AssignmentSortListService,
+        private pdfService: AssignmentExportService,
+        protected route: ActivatedRoute,
+        private operator: OperatorService,
+        public vp: ViewPortService
+    ) {
         super();
         this.canMultiSelect = true;
         this.listStorageIndex = ASSIGNMENT_LIST_STORAGE_INDEX;

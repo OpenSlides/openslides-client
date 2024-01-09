@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
@@ -28,15 +28,17 @@ export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAg
         options: []
     };
 
-    private translate = inject(TranslateService);
-
     /**
      * Constructor. Also creates the dynamic filter options
      *
      * @param store
      * @param translate Translation service
      */
-    public constructor(store: MeetingActiveFiltersService, tagRepo: TagControllerService) {
+    public constructor(
+        store: MeetingActiveFiltersService,
+        private translate: TranslateService,
+        tagRepo: TagControllerService
+    ) {
         super(store);
 
         this.updateFilterForRepo({

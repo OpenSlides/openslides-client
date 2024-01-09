@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -27,13 +27,15 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
      */
     private token!: string;
 
-    private activatedRoute = inject(ActivatedRoute);
-    private userRepo = inject(UserControllerService);
-    protected override translate = inject(TranslateService);
     /**
      * Constructur for the reset password confirm view. Initializes the form for the new password.
      */
-    public constructor(formBuilder: UntypedFormBuilder) {
+    public constructor(
+        protected override translate: TranslateService,
+        formBuilder: UntypedFormBuilder,
+        private activatedRoute: ActivatedRoute,
+        private userRepo: UserControllerService
+    ) {
         super();
         this.newPasswordForm = formBuilder.group({
             password: [``, [Validators.required]]

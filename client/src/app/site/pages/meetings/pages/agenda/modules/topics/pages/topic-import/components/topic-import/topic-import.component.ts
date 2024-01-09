@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
@@ -38,11 +38,12 @@ export class TopicImportComponent extends BaseViaBackendImportListComponent {
 
     public selectedTabIndex = 0;
 
-    protected override translate = inject(TranslateService);
-    public override importer = inject(TopicImportService);
-    private durationService = inject(DurationService);
-
-    public constructor(formBuilder: UntypedFormBuilder) {
+    public constructor(
+        protected override translate: TranslateService,
+        public override importer: TopicImportService,
+        formBuilder: UntypedFormBuilder,
+        private durationService: DurationService
+    ) {
         super();
         this.textAreaForm = formBuilder.group({ inputtext: [``] });
     }

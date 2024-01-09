@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
@@ -159,21 +159,21 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     private _isElectronicVotingEnabled = false;
     private _isUserInScope = false;
 
-    protected override translate = inject(TranslateService);
-    private route = inject(ActivatedRoute);
-    public repo = inject(ParticipantControllerService);
-    public sortService = inject(ParticipantListSortService);
-    private userController = inject(UserControllerService);
-    private operator = inject(OperatorService);
-    private promptService = inject(PromptService);
-    private pdfService = inject(ParticipantPdfExportService);
-    private groupRepo = inject(GroupControllerService);
-    private structureLevelRepo = inject(StructureLevelControllerService);
-    private userService = inject(UserService);
-    private cd = inject(ChangeDetectorRef);
-    private organizationSettingsService = inject(OrganizationSettingsService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        private route: ActivatedRoute,
+        public repo: ParticipantControllerService,
+        public sortService: ParticipantListSortService,
+        private userController: UserControllerService,
+        private operator: OperatorService,
+        private promptService: PromptService,
+        private pdfService: ParticipantPdfExportService,
+        private groupRepo: GroupControllerService,
+        private structureLevelRepo: StructureLevelControllerService,
+        private userService: UserService,
+        private cd: ChangeDetectorRef,
+        private organizationSettingsService: OrganizationSettingsService
+    ) {
         super();
         this.getUserByUrl();
 

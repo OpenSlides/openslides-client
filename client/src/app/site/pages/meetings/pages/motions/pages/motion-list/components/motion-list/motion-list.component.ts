@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map } from 'rxjs';
@@ -128,23 +128,23 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     private _hasMotionBlocks = false;
     private _hasAmendments = false;
 
-    protected override translate = inject(TranslateService);
-    private route = inject(ActivatedRoute);
-    public filterService = inject(MotionListFilterService);
-    public sortService = inject(MotionListSortService);
-    private infoDialog = inject(MotionListInfoDialogService);
-    private exportDialog = inject(MotionExportDialogService);
-    private categoryController = inject(MotionCategoryControllerService);
-    private motionBlockController = inject(MotionBlockControllerService);
-    public motionRepo = inject(MotionControllerService);
-    public amendmentController = inject(AmendmentControllerService);
-    public motionService = inject(MotionForwardDialogService);
-    public multiselectService = inject(MotionMultiselectService);
-    public perms = inject(MotionPermissionService);
-    public vp = inject(ViewPortService);
-    public operator = inject(OperatorService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        private route: ActivatedRoute,
+        public filterService: MotionListFilterService,
+        public sortService: MotionListSortService,
+        private infoDialog: MotionListInfoDialogService,
+        private exportDialog: MotionExportDialogService,
+        private categoryController: MotionCategoryControllerService,
+        private motionBlockController: MotionBlockControllerService,
+        public motionRepo: MotionControllerService,
+        public amendmentController: AmendmentControllerService,
+        public motionService: MotionForwardDialogService,
+        public multiselectService: MotionMultiselectService,
+        public perms: MotionPermissionService,
+        public vp: ViewPortService,
+        public operator: OperatorService
+    ) {
         super();
         this.canMultiSelect = true;
         this.listStorageIndex = MOTION_LIST_STORAGE_INDEX;

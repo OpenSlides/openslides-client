@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
@@ -129,20 +129,20 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         return this.meetingForm?.get(`daterange`);
     }
 
-    protected override translate = inject(TranslateService);
-    private route = inject(ActivatedRoute);
-    private formBuilder = inject(UntypedFormBuilder);
-    private meetingRepo = inject(MeetingControllerService);
-    private committeeRepo = inject(CommitteeControllerService);
-    public orgaTagRepo = inject(OrganizationTagControllerService);
-    private orgaSettings = inject(OrganizationSettingsService);
-    private operator = inject(OperatorService);
-    private userRepo = inject(UserControllerService);
-    private openslidesRouter = inject(OpenSlidesRouterService);
-    private orga = inject(OrganizationService);
-    private routingState = inject(RoutingStateService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        private route: ActivatedRoute,
+        private formBuilder: UntypedFormBuilder,
+        private meetingRepo: MeetingControllerService,
+        private committeeRepo: CommitteeControllerService,
+        public orgaTagRepo: OrganizationTagControllerService,
+        private orgaSettings: OrganizationSettingsService,
+        private operator: OperatorService,
+        private userRepo: UserControllerService,
+        private openslidesRouter: OpenSlidesRouterService,
+        private orga: OrganizationService,
+        private routingState: RoutingStateService
+    ) {
         super();
         this.checkCreateView();
         this.createForm();
@@ -155,7 +155,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             this.meetingForm.get(`language`)?.disable();
         }
 
-        this.availableUsers = this.userRepo.getViewModelListObservable();
+        this.availableUsers = userRepo.getViewModelListObservable();
     }
 
     public ngOnInit(): void {

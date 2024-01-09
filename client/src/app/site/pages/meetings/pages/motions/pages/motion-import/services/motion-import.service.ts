@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { BeforeImportHandler } from 'src/app/infrastructure/utils/import/base-before-import-handler';
 import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
@@ -55,14 +55,15 @@ export class MotionImportService extends BaseImportService<ViewMotion> {
      * @param motionBlockRepo Repository to fetch pre-existing motionBlocks
      * @param userRepo Repository to query/ create users
      */
-    private repo = inject(MotionControllerService);
-    private categoryRepo = inject(MotionCategoryControllerService);
-    private motionBlockRepo = inject(MotionBlockControllerService);
-    private userRepo = inject(ParticipantControllerService);
-    private tagRepo = inject(TagControllerService);
-    private exporter = inject(MotionCsvExportService);
-
-    public constructor(serviceCollector: ImportServiceCollectorService) {
+    public constructor(
+        serviceCollector: ImportServiceCollectorService,
+        private repo: MotionControllerService,
+        private categoryRepo: MotionCategoryControllerService,
+        private motionBlockRepo: MotionBlockControllerService,
+        private userRepo: ParticipantControllerService,
+        private tagRepo: TagControllerService,
+        private exporter: MotionCsvExportService
+    ) {
         super(serviceCollector);
     }
 

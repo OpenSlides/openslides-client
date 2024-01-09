@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { TranslateDefaultParser, TranslateStore } from '@ngx-translate/core';
 
 import { CustomTranslation, CustomTranslationService } from './custom-translation.service';
@@ -13,11 +13,10 @@ export class OpenSlidesTranslateParser extends TranslateDefaultParser {
      */
     private customTranslations: CustomTranslation = {};
 
-    private translateStore = inject(TranslateStore);
     /**
      * Subscribes to the custom translations and watches for updated custom translations.
      */
-    public constructor(ctService: CustomTranslationService) {
+    public constructor(ctService: CustomTranslationService, private translateStore: TranslateStore) {
         super();
 
         ctService.customTranslationSubject.subscribe(ct => {

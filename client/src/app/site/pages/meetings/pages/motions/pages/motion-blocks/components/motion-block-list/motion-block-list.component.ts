@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -45,14 +45,14 @@ export class MotionBlockListComponent extends BaseMeetingListViewComponent<ViewM
         return this.operator.hasPerms(Permission.motionCanManage);
     }
 
-    protected override translate = inject(TranslateService);
-    public repo = inject(MotionBlockControllerService);
-    private dialog = inject(MotionBlockCreateDialogService);
-    private itemRepo = inject(AgendaItemControllerService);
-    private operator = inject(OperatorService);
-    public sortService = inject(MotionBlockSortService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        public repo: MotionBlockControllerService,
+        private dialog: MotionBlockCreateDialogService,
+        private itemRepo: AgendaItemControllerService,
+        private operator: OperatorService,
+        public sortService: MotionBlockSortService
+    ) {
         super();
         this.listStorageIndex = MOTION_BLOCK_LIST_STORAGE_INDEX;
     }

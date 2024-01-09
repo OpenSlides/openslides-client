@@ -3,7 +3,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    inject,
     OnDestroy,
     OnInit,
     TemplateRef,
@@ -54,15 +53,15 @@ export class ProjectorListComponent extends BaseMeetingComponent implements OnIn
         return this.operator.hasPerms(Permission.projectorCanManage);
     }
 
-    protected override translate = inject(TranslateService);
-    private repo = inject(ProjectorControllerService);
-    private formBuilder = inject(UntypedFormBuilder);
-    private operator = inject(OperatorService);
-    private dialogService = inject(MatDialog);
-    private cd = inject(ChangeDetectorRef);
-    private openslidesStatus = inject(OpenSlidesStatusService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        private repo: ProjectorControllerService,
+        private formBuilder: UntypedFormBuilder,
+        private operator: OperatorService,
+        private dialogService: MatDialog,
+        private cd: ChangeDetectorRef,
+        private openslidesStatus: OpenSlidesStatusService
+    ) {
         super();
 
         this.createForm = this.formBuilder.group({

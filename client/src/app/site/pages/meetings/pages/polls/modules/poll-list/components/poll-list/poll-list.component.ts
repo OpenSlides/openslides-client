@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
@@ -18,11 +18,12 @@ const POLL_LIST_STORAGE_INDEX = `polls`;
 export class PollListComponent extends BaseMeetingListViewComponent<ViewPoll> {
     public filterProps = [`title`, `state`];
 
-    protected override translate = inject(TranslateService);
-    public pollRepo = inject(PollControllerService);
-    public filterService = inject(PollListFilterService);
-    public votingService = inject(VotingService);
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        public pollRepo: PollControllerService,
+        public filterService: PollListFilterService,
+        public votingService: VotingService
+    ) {
         super();
         super.setTitle(`List of electronic votes`);
         this.listStorageIndex = POLL_LIST_STORAGE_INDEX;

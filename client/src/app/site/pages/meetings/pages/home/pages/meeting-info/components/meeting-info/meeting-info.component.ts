@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, firstValueFrom, map } from 'rxjs';
 import { OrganizationRepositoryService } from 'src/app/gateways/repositories/organization-repository.service';
@@ -26,11 +26,11 @@ export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit
         return this.operator.isMeetingAdmin;
     }
 
-    protected override translate = inject(TranslateService);
-    private orgaRepo = inject(OrganizationRepositoryService);
-    private operator = inject(OperatorService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        private orgaRepo: OrganizationRepositoryService,
+        private operator: OperatorService
+    ) {
         super();
         firstValueFrom(this.activeMeetingIdService.meetingIdObservable.pipe(filter(val => !!val))).then(() =>
             this.modelRequestService.subscribeTo({

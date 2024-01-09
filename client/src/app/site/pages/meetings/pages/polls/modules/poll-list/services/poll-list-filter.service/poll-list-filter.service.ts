@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { OsFilter } from 'src/app/site/base/base-filter.service';
@@ -17,9 +17,7 @@ export class PollListFilterService extends BaseMeetingFilterListService<ViewPoll
      */
     protected storageKey = `PollList`;
 
-    private translate = inject(TranslateService);
-
-    public constructor(store: MeetingActiveFiltersService) {
+    public constructor(store: MeetingActiveFiltersService, private translate: TranslateService) {
         super(store);
     }
 

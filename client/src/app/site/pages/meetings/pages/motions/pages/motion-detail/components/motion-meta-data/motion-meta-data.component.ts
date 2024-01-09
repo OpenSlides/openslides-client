@@ -117,13 +117,15 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     private recommenderSubscription: Subscription | null = null;
 
     protected override translate = inject(TranslateService);
-    public perms = inject(MotionPermissionService);
-    private operator = inject(OperatorService);
-    private meetingController = inject(MeetingControllerService);
 
-    public constructor(private motionForwardingService: MotionForwardDialogService) {
+    public constructor(
+        public perms: MotionPermissionService,
+        private operator: OperatorService,
+        private motionForwardingService: MotionForwardDialogService,
+        private meetingController: MeetingControllerService
+    ) {
         super();
-        if (this.operator.hasPerms(Permission.motionCanManage)) {
+        if (operator.hasPerms(Permission.motionCanManage)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
                 this._forwardingAvailable = forwardingAvailable;
             });

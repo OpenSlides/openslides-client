@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { distinctUntilChanged, map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ProjectorRepositoryService } from 'src/app/gateways/repositories/projectors/projector-repository.service';
@@ -20,10 +20,10 @@ import {
 export class AutopilotMainComponent extends BaseModelRequestHandlerComponent {
     private currentSubscriptions: Id[] = [];
 
-    private projectorRepo = inject(ProjectorRepositoryService);
-    private collectionMapper = inject(CollectionMapperService);
-
-    public constructor() {
+    public constructor(
+        private projectorRepo: ProjectorRepositoryService,
+        private collectionMapper: CollectionMapperService
+    ) {
         super();
 
         this.subscriptions.push(

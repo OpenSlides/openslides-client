@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, Observable } from 'rxjs';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -51,12 +51,14 @@ export class InteractionContainerComponent extends BaseMeetingComponent implemen
     private _streamRunning = false;
     private _streamLoadedOnce = false;
 
-    private interactionService = inject(InteractionService);
-    private applauseService = inject(ApplauseService);
-    private cd = inject(ChangeDetectorRef);
-    protected override translate = inject(TranslateService);
-
-    public constructor(rtcService: RtcService, streamService: StreamService) {
+    public constructor(
+        protected override translate: TranslateService,
+        rtcService: RtcService,
+        streamService: StreamService,
+        private interactionService: InteractionService,
+        private applauseService: ApplauseService,
+        private cd: ChangeDetectorRef
+    ) {
         super();
         this.subscriptions.push(
             rtcService.showCallDialogObservable.subscribe(show => {

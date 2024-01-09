@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -21,12 +21,11 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
     ViewMotionChangeRecommendation,
     MotionChangeRecommendation
 > {
-    private lineNumberingService = inject(LineNumberingService);
-    private diffService = inject(MotionDiffService);
-
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionChangeRecommendationRepositoryService
+        protected override repo: MotionChangeRecommendationRepositoryService,
+        private lineNumberingService: LineNumberingService,
+        private diffService: MotionDiffService
     ) {
         super(controllerServiceCollector, MotionChangeRecommendation, repo);
     }

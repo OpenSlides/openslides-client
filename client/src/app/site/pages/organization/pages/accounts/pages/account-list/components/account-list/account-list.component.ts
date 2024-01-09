@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,20 +32,20 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         return this.vp.isMobile;
     }
 
-    protected override translate = inject(TranslateService);
-    public readonly controller = inject(AccountControllerService);
-    public readonly filterService = inject(AccountFilterService);
-    public readonly sortService = inject(AccountSortService);
-    private route = inject(ActivatedRoute);
-    private exporter = inject(AccountExportService);
-    private meetingRepo = inject(MeetingControllerService);
-    private choiceService = inject(ChoiceService);
-    private userController = inject(UserControllerService);
-    public searchService = inject(AccountListSearchService);
-    private operator = inject(OperatorService);
-    private vp = inject(ViewPortService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        public readonly controller: AccountControllerService,
+        public readonly filterService: AccountFilterService,
+        public readonly sortService: AccountSortService,
+        private route: ActivatedRoute,
+        private exporter: AccountExportService,
+        private meetingRepo: MeetingControllerService,
+        private choiceService: ChoiceService,
+        private userController: UserControllerService,
+        public searchService: AccountListSearchService,
+        private operator: OperatorService,
+        private vp: ViewPortService
+    ) {
         super();
         super.setTitle(`Accounts`);
         this.canMultiSelect = true;

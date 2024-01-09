@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
@@ -44,15 +44,15 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
 
     private navigatedFrom: string | undefined;
 
-    protected override translate = inject(TranslateService);
-    private formBuilder = inject(UntypedFormBuilder);
-    public committeeRepo = inject(CommitteeControllerService);
-    public committeeSortService = inject(CommitteeSortService);
-    public orgaTagRepo = inject(OrganizationTagControllerService);
-    private route = inject(ActivatedRoute);
-    private operator = inject(OperatorService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        private formBuilder: UntypedFormBuilder,
+        public committeeRepo: CommitteeControllerService,
+        public committeeSortService: CommitteeSortService,
+        public orgaTagRepo: OrganizationTagControllerService,
+        private route: ActivatedRoute,
+        private operator: OperatorService
+    ) {
         super();
         this.createForm();
         this.getCommitteeByUrl();

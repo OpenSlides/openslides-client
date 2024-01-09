@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButtonToggle, MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
@@ -127,13 +127,13 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
      * This uses "instant" over observables to prevent on-fly-changes by auto update while
      * the dialog is open.
      */
-    public formBuilder = inject(UntypedFormBuilder);
-    public dialogRef = inject(MatDialogRef<MotionExportDialogComponent>);
-    public meetingSettingsService = inject(MeetingSettingsService);
-    public commentRepo = inject(MotionCommentSectionControllerService);
-    private store = inject(StorageService);
-
-    public constructor() {
+    public constructor(
+        public formBuilder: UntypedFormBuilder,
+        public dialogRef: MatDialogRef<MotionExportDialogComponent>,
+        public meetingSettingsService: MeetingSettingsService,
+        public commentRepo: MotionCommentSectionControllerService,
+        private store: StorageService
+    ) {
         super();
         this.defaults.lnMode = this.meetingSettingsService.instant(`motions_default_line_numbering`)!;
         this.defaults.crMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`)!;

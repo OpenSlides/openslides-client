@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { BehaviorSubject, filter, firstValueFrom, map, Observable } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -73,13 +73,13 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
 
     private _oldSubmitters = new Set<Id>([]);
 
-    private userRepository = inject(ParticipantControllerService);
-    private motionSubmitterRepository = inject(MotionSubmitterControllerService);
-    public perms = inject(MotionPermissionService);
-    private motionController = inject(MotionControllerService);
-    private actionService = inject(ActionService);
-
-    public constructor() {
+    public constructor(
+        private userRepository: ParticipantControllerService,
+        private motionSubmitterRepository: MotionSubmitterControllerService,
+        public perms: MotionPermissionService,
+        private motionController: MotionControllerService,
+        private actionService: ActionService
+    ) {
         super();
 
         this.editSubmitterObservable = this.editSubmitterSubject as Observable<Selectable[]>;

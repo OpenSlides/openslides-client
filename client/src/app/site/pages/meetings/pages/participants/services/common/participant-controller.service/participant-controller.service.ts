@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
     auditTime,
     BehaviorSubject,
@@ -64,18 +64,17 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     private _participantIdMapSubject = new BehaviorSubject<{ [id: number]: ViewUser }>({});
 
-    private meetingUserRepo = inject(MeetingUserRepositoryService);
-    public meetingController = inject(MeetingControllerService);
-    private userController = inject(UserControllerService);
-    private userDeleteDialog = inject(UserDeleteDialogService);
-    private userScopePresenter = inject(GetUserScopePresenterService);
-    private userRelatedModelsPresenter = inject(GetUserRelatedModelsPresenterService);
-    private userService = inject(UserService);
-    private actions = inject(ActionService);
-
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: UserRepositoryService
+        protected override repo: UserRepositoryService,
+        private meetingUserRepo: MeetingUserRepositoryService,
+        public meetingController: MeetingControllerService,
+        private userController: UserControllerService,
+        private userDeleteDialog: UserDeleteDialogService,
+        private userScopePresenter: GetUserScopePresenterService,
+        private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService,
+        private userService: UserService,
+        private actions: ActionService
     ) {
         super(controllerServiceCollector, User, repo);
 

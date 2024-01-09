@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
@@ -20,10 +20,11 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         return this.activeMeetingIdService.meetingId!;
     }
 
-    private activeMeetingIdService = inject(ActiveMeetingIdService);
-    private projectionRepo = inject(ProjectionRepositoryService);
-
-    public constructor(repositoryServiceCollector: RepositoryServiceCollectorService) {
+    public constructor(
+        repositoryServiceCollector: RepositoryServiceCollectorService,
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private projectionRepo: ProjectionRepositoryService
+    ) {
         super(repositoryServiceCollector, Mediafile);
 
         this.viewModelSortFn = (a: ViewMediafile, b: ViewMediafile) => this.languageCollator.compare(a.title, b.title);

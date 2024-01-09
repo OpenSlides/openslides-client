@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
@@ -16,10 +16,10 @@ export class CommentSectionSortComponent extends BaseComponent implements OnInit
      */
     public comments: ViewMotionCommentSection[];
 
-    protected override translate = inject(TranslateService);
-    private repo = inject(MotionCommentSectionControllerService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        private repo: MotionCommentSectionControllerService
+    ) {
         super();
         super.setTitle(`Sort comments`);
     }

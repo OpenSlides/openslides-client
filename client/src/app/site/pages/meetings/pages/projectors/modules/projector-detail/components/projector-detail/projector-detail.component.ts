@@ -1,5 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -102,23 +102,23 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     private _projectorIdSubject: BehaviorSubject<number> = new BehaviorSubject(null);
 
-    protected override translate = inject(TranslateService);
-    private repo = inject(ProjectorControllerService);
-    private projectionRepo = inject(ProjectionControllerService);
-    private countdownRepo = inject(ProjectorCountdownControllerService);
-    private messageRepo = inject(ProjectorMessageControllerService);
-    private currentListOfSpeakersSlideService = inject(CurrentListOfSpeakersSlideService);
-    private currentSpeakerChyronService = inject(CurrentSpeakerChyronSlideService);
-    private projectorEditDialog = inject(ProjectorEditDialogService);
-    private projectorMessageDialog = inject(ProjectorMessageDialogService);
-    private projectorCountdownDialog = inject(ProjectorCountdownDialogService);
-    private route = inject(ActivatedRoute);
-    private durationService = inject(DurationService);
-    private promptService = inject(PromptService);
-    private operator = inject(OperatorService);
-    private meetingCollectionMapper = inject(MeetingCollectionMapperService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        private repo: ProjectorControllerService,
+        private projectionRepo: ProjectionControllerService,
+        private countdownRepo: ProjectorCountdownControllerService,
+        private messageRepo: ProjectorMessageControllerService,
+        private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
+        private currentSpeakerChyronService: CurrentSpeakerChyronSlideService,
+        private projectorEditDialog: ProjectorEditDialogService,
+        private projectorMessageDialog: ProjectorMessageDialogService,
+        private projectorCountdownDialog: ProjectorCountdownDialogService,
+        private route: ActivatedRoute,
+        private durationService: DurationService,
+        private promptService: PromptService,
+        private operator: OperatorService,
+        private meetingCollectionMapper: MeetingCollectionMapperService
+    ) {
         super();
 
         this.subscriptions.push(

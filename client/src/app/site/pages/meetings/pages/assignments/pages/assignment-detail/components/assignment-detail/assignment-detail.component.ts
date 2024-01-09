@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -142,22 +142,23 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     private _navigationSubscription: Subscription | null = null;
 
-    protected override translate = inject(TranslateService);
-    private operator = inject(OperatorService);
-    public assignmentRepo = inject(AssignmentControllerService);
-    private assignmentCandidateRepo = inject(AssignmentCandidateControllerService);
-    private itemRepo = inject(AgendaItemControllerService);
-    private promptService = inject(PromptService);
-    private pdfService = inject(AssignmentExportService);
-    private pollDialog = inject(AssignmentPollDialogService);
-    private assignmentPollService = inject(AssignmentPollService);
-    private pollController = inject(PollControllerService);
-    private userRepo = inject(UserControllerService);
-
     /**
      * Constructor. Build forms and subscribe to needed configs and updates
      */
-    public constructor(formBuilder: UntypedFormBuilder) {
+    public constructor(
+        protected override translate: TranslateService,
+        private operator: OperatorService,
+        formBuilder: UntypedFormBuilder,
+        public assignmentRepo: AssignmentControllerService,
+        private assignmentCandidateRepo: AssignmentCandidateControllerService,
+        private itemRepo: AgendaItemControllerService,
+        private promptService: PromptService,
+        private pdfService: AssignmentExportService,
+        private pollDialog: AssignmentPollDialogService,
+        private assignmentPollService: AssignmentPollService,
+        private pollController: PollControllerService,
+        private userRepo: UserControllerService
+    ) {
         super();
         this.assignmentForm = formBuilder.group({
             phase: null,

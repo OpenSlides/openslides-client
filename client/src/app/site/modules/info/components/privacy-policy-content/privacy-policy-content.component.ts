@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { OML } from 'src/app/domain/definitions/organization-permission';
@@ -62,10 +62,11 @@ export class PrivacyPolicyContentComponent extends BaseUiComponent implements On
 
     private _value!: string;
 
-    protected translate = inject(TranslateService);
-    private orgaSettings = inject(OrganizationSettingsService);
-
-    public constructor(fb: UntypedFormBuilder) {
+    public constructor(
+        protected translate: TranslateService,
+        private orgaSettings: OrganizationSettingsService,
+        fb: UntypedFormBuilder
+    ) {
         super();
         this.formGroup = fb.group({
             privacyPolicy: ``

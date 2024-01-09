@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
 import { ViewProjectorCountdown } from 'src/app/site/pages/meetings/pages/projectors';
@@ -15,9 +15,10 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
     ViewProjectorCountdown,
     ProjectorCountdown
 > {
-    private serverTimePresenter = inject(ServerTimePresenterService);
-
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(
+        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
+        private serverTimePresenter: ServerTimePresenterService
+    ) {
         super(repositoryServiceCollector, ProjectorCountdown);
     }
 

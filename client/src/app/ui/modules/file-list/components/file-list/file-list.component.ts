@@ -3,7 +3,6 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
-    inject,
     Input,
     OnDestroy,
     OnInit,
@@ -197,15 +196,15 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     private readonly _directoryBehaviorSubject = new BehaviorSubject<ViewMediafile[]>([]);
 
-    private dialog = inject(MatDialog);
-    private cd = inject(ChangeDetectorRef);
-    private fb = inject(UntypedFormBuilder);
-    private translate = inject(TranslateService);
-    private repo = inject(MediafileControllerService);
-
-    public constructor() {
+    public constructor(
+        private dialog: MatDialog,
+        private cd: ChangeDetectorRef,
+        private fb: UntypedFormBuilder,
+        private translate: TranslateService,
+        private repo: MediafileControllerService
+    ) {
         super();
-        this.moveForm = this.fb.group({ directory_id: [] });
+        this.moveForm = fb.group({ directory_id: [] });
     }
 
     public ngOnInit(): void {

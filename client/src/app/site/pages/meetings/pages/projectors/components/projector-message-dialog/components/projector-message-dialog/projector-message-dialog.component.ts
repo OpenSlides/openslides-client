@@ -1,4 +1,4 @@
-import { Component, Inject, inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,10 +17,11 @@ export class ProjectorMessageDialogComponent extends BaseComponent implements On
      */
     public messageForm!: UntypedFormGroup;
 
-    protected override translate = inject(TranslateService);
-    private formBuilder = inject(UntypedFormBuilder);
-
-    public constructor(@Inject(MAT_DIALOG_DATA) public data: MessageDialogData) {
+    public constructor(
+        protected override translate: TranslateService,
+        private formBuilder: UntypedFormBuilder,
+        @Inject(MAT_DIALOG_DATA) public data: MessageDialogData
+    ) {
         super();
     }
 

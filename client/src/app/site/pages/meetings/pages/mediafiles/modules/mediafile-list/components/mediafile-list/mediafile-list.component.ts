@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -88,20 +88,20 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     public directoryObservable: Observable<ViewMediafile[]>;
     private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
 
-    protected override translate = inject(TranslateService);
-    private route = inject(ActivatedRoute);
-    public repo = inject(MediafileControllerService);
-    private exporter = inject(MediafileListExportService);
-    private mediaManage = inject(MediaManageService);
-    public vp = inject(ViewPortService);
-    private operator = inject(OperatorService);
-    private formBuilder = inject(UntypedFormBuilder);
-    private groupRepo = inject(MediafileListGroupService);
-    private cd = inject(ChangeDetectorRef);
-    private commonService = inject(MediafileCommonService);
-    private interactionService = inject(InteractionService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        private route: ActivatedRoute,
+        public repo: MediafileControllerService,
+        private exporter: MediafileListExportService,
+        private mediaManage: MediaManageService,
+        public vp: ViewPortService,
+        private operator: OperatorService,
+        private formBuilder: UntypedFormBuilder,
+        private groupRepo: MediafileListGroupService,
+        private cd: ChangeDetectorRef,
+        private commonService: MediafileCommonService,
+        private interactionService: InteractionService
+    ) {
         super();
         this.canMultiSelect = true;
 

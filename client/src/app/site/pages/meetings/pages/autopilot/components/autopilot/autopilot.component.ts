@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
@@ -106,12 +106,14 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     private _currentProjection: ViewProjection | null = null;
 
-    protected override translate = inject(TranslateService);
-    private operator = inject(OperatorService);
-    private listOfSpeakersRepo = inject(ListOfSpeakersControllerService);
-    private durationService = inject(DurationService);
-
-    public constructor(projectorRepo: ProjectorControllerService, closService: CurrentListOfSpeakersService) {
+    public constructor(
+        protected override translate: TranslateService,
+        private operator: OperatorService,
+        projectorRepo: ProjectorControllerService,
+        closService: CurrentListOfSpeakersService,
+        private listOfSpeakersRepo: ListOfSpeakersControllerService,
+        private durationService: DurationService
+    ) {
         super();
 
         this.subscriptions.push(

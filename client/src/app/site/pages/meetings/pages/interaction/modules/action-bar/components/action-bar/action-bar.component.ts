@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, Observable } from 'rxjs';
@@ -57,9 +57,8 @@ export class ActionBarComponent extends BaseMeetingComponent {
         );
     }
 
-    protected override translate = inject(TranslateService);
-
     public constructor(
+        protected override translate: TranslateService,
         private callRestrictionService: CallRestrictionService,
         private interactionService: InteractionService,
         private rtcService: RtcService,

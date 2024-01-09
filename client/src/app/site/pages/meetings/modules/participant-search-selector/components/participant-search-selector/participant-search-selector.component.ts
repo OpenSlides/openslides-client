@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -69,12 +69,13 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
 
     public usersForm: UntypedFormGroup;
 
-    private userRepo = inject(ParticipantControllerService);
-    private userSortService = inject(ParticipantListSortService);
-    private modelRequestService = inject(ModelRequestService);
-    private activeMeeting = inject(ActiveMeetingService);
-
-    public constructor(formBuilder: UntypedFormBuilder) {
+    public constructor(
+        private userRepo: ParticipantControllerService,
+        private userSortService: ParticipantListSortService,
+        private modelRequestService: ModelRequestService,
+        private activeMeeting: ActiveMeetingService,
+        formBuilder: UntypedFormBuilder
+    ) {
         super();
 
         this.usersForm = formBuilder.group({

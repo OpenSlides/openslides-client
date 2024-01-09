@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -57,11 +57,12 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
 
     private _lastStructureLevelId = Math.max(...Array.from(this._structureLevelIdMap.values())) ?? 0;
 
-    protected override translate = inject(TranslateService);
-    private speakerListRepo = inject(ListOfSpeakersControllerService);
-    private durationService = inject(DurationService);
-
-    public constructor(private speakerRepo: SpeakerControllerService) {
+    public constructor(
+        protected override translate: TranslateService,
+        private speakerRepo: SpeakerControllerService,
+        private speakerListRepo: ListOfSpeakersControllerService,
+        private durationService: DurationService
+    ) {
         super();
     }
 

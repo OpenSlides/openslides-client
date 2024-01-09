@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { ActivatedRoute } from '@angular/router';
@@ -101,20 +101,20 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         return this.operator.hasOrganizationPermissions(OML.superadmin);
     }
 
-    protected override translate = inject(TranslateService);
-    private viewModelStore = inject(ViewModelStoreService);
-    private formBuilder = inject(UntypedFormBuilder);
-    private activatedRoute = inject(ActivatedRoute);
-    private historyPresenter = inject(HistoryPresenterService);
-    private searchDeletedModelsPresenter = inject(SearchDeletedModelsPresenterService);
-    private operator = inject(OperatorService);
-    private historyService = inject(HistoryService);
-    private motionRepo = inject(MotionRepositoryService);
-    private assignmentRepo = inject(AssignmentRepositoryService);
-    private userRepo = inject(ParticipantControllerService);
-    private collectionMapperService = inject(CollectionMapperService);
-
-    public constructor() {
+    public constructor(
+        protected override translate: TranslateService,
+        private viewModelStore: ViewModelStoreService,
+        private formBuilder: UntypedFormBuilder,
+        private activatedRoute: ActivatedRoute,
+        private historyPresenter: HistoryPresenterService,
+        private searchDeletedModelsPresenter: SearchDeletedModelsPresenterService,
+        private operator: OperatorService,
+        private historyService: HistoryService,
+        private motionRepo: MotionRepositoryService,
+        private assignmentRepo: AssignmentRepositoryService,
+        private userRepo: ParticipantControllerService,
+        private collectionMapperService: CollectionMapperService
+    ) {
         super();
 
         this.modelSelectForm = this.formBuilder.group({
