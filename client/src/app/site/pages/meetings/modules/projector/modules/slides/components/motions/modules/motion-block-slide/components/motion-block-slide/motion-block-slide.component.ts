@@ -88,11 +88,9 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
     }
 
     public constructor(
-        private meetingSettingsService: MeetingSettingsService,
-        translate: TranslateService,
-        motionRepo: MotionControllerService
+        private meetingSettingsService: MeetingSettingsService
     ) {
-        super(translate, motionRepo);
+        super();
         this.languageCollator = new Intl.Collator(this.translate.currentLang);
 
         this.meetingSettingsService
