@@ -49,35 +49,12 @@ export class AssignmentPollDetailComponent
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        repo: PollControllerService,
-        route: ActivatedRoute,
-        groupRepo: GroupControllerService,
-        promptService: PromptService,
         pollService: AssignmentPollService,
-        votesRepo: VoteControllerService,
-        operator: OperatorService,
-        cd: ChangeDetectorRef,
-        participantRepo: ParticipantControllerService,
-        private pollDialog: AssignmentPollDialogService,
-        scrollTableManage: ScrollingTableManageService,
-        pollPdfService: AssignmentPollPdfService
+        private pollDialog: AssignmentPollDialogService
     ) {
         super(
-            componentServiceCollector,
-            translate,
-            repo,
-            route,
-            groupRepo,
-            promptService,
-            pollService,
-            votesRepo,
-            operator,
-            cd,
-            participantRepo,
-            scrollTableManage,
-            pollPdfService
+            pollService
         );
     }
 

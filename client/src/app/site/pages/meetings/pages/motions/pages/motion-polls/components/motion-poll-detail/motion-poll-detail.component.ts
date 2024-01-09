@@ -35,35 +35,12 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        repo: PollControllerService,
-        route: ActivatedRoute,
-        groupRepo: GroupControllerService,
-        promptService: PromptService,
         pollService: MotionPollService,
-        votesRepo: VoteControllerService,
-        operator: OperatorService,
-        cd: ChangeDetectorRef,
-        participantRepo: ParticipantControllerService,
         private pollDialog: MotionPollDialogService,
-        scrollTableManage: ScrollingTableManageService,
-        pollPdfService: MotionPollPdfService
     ) {
         super(
-            componentServiceCollector,
-            translate,
-            repo,
-            route,
-            groupRepo,
-            promptService,
-            pollService,
-            votesRepo,
-            operator,
-            cd,
-            participantRepo,
-            scrollTableManage,
-            pollPdfService
+            pollService
         );
     }
 
