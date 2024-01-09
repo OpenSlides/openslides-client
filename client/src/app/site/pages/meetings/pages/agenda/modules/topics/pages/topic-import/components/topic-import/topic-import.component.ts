@@ -40,13 +40,12 @@ export class TopicImportComponent extends BaseViaBackendImportListComponent {
     public selectedTabIndex = 0;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public override importer: TopicImportService,
         formBuilder: UntypedFormBuilder,
         private durationService: DurationService
     ) {
-        super(componentServiceCollector, translate, importer);
+        super();
         this.textAreaForm = formBuilder.group({ inputtext: [``] });
     }
 

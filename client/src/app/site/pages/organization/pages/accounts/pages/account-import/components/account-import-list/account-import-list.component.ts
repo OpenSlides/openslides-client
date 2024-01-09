@@ -25,12 +25,11 @@ export class AccountImportListComponent extends BaseViaBackendImportListComponen
     }));
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public override importer: AccountImportService,
         public orgaSettings: OrganizationSettingsService
     ) {
-        super(componentServiceCollector, translate, importer);
+        super();
     }
 
     private getTranslatedGenderInfoObservable(): Observable<string> {

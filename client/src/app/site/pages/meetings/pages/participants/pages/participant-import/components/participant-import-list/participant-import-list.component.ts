@@ -25,10 +25,9 @@ export class ParticipantImportListComponent extends BaseViaBackendImportListComp
      * Constructor for list view bases
      */
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public override readonly importer: ParticipantImportService
     ) {
-        super(componentServiceCollector, translate, importer);
+        super();
     }
 }
