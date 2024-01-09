@@ -9,7 +9,4 @@ import { MeetingActiveFiltersService } from '../services/meeting-active-filters.
  */
 @Directive()
 export abstract class BaseMeetingFilterListService<V extends BaseViewModel> extends BaseFilterListService<V> {
-    public constructor(meetingActiveFiltersService: MeetingActiveFiltersService) {
-        super(meetingActiveFiltersService);
-    }
 }
