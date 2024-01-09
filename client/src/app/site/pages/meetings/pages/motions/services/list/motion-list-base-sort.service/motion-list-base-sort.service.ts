@@ -62,15 +62,8 @@ export class MotionListBaseSortService extends BaseSortListService<ViewMotion> {
 
     /**
      * Constructor.
-     *
-     * @param translate required by parent
-     * @param store required by parent
-     * @param config set the default sorting according to OpenSlides configuration
      */
     public constructor(
-        protected override translate: TranslateService,
-        store: StorageService,
-        injector: Injector,
         defaultDefinition?: OsSortingDefinition<ViewMotion> | Observable<OsSortingDefinition<ViewMotion>>
     ) {
         const defaultDefinitions = new BehaviorSubject<OsSortingDefinition<ViewMotion>>(null);

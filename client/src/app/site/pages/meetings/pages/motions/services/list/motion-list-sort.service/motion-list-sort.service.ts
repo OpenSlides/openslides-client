@@ -10,12 +10,8 @@ import { MotionListBaseSortService } from '../motion-list-base-sort.service';
 export class MotionListSortService extends MotionListBaseSortService {
     /**
      * Constructor.
-     *
-     * @param translate required by parent
-     * @param store required by parent
-     * @param config set the default sorting according to OpenSlides configuration
      */
-    public constructor(protected override translate: TranslateService, store: StorageService, injector: Injector) {
-        super(translate, store, injector, null);
+    public constructor() {
+        super(null);
     }
 }

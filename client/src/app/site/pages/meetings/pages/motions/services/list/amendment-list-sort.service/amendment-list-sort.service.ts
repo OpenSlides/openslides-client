@@ -28,8 +28,8 @@ export class AmendmentListSortService extends MotionListBaseSortService {
         }
     ];
 
-    constructor(translate: TranslateService, store: StorageService, injector: Injector) {
-        super(translate, store, injector, {
+    constructor() {
+        super({
             sortProperty: `parentAndLineNumber`,
             sortAscending: true
         });
