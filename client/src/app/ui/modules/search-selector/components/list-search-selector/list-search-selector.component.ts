@@ -50,11 +50,8 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
     public readonly controlType = `list-search-selector`;
 
     public constructor(
-        formBuilder: UntypedFormBuilder,
-        focusMonitor: FocusMonitor,
-        element: ElementRef<HTMLElement>,
         @Optional() @Self() ngControl: NgControl
     ) {
-        super(formBuilder, focusMonitor, element, ngControl);
+        super(ngControl);
     }
 }

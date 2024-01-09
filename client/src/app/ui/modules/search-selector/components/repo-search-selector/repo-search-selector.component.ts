@@ -51,14 +51,11 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
     private subscriptionName: string;
 
     public constructor(
-        formBuilder: UntypedFormBuilder,
-        focusMonitor: FocusMonitor,
-        element: ElementRef<HTMLElement>,
         @Optional() @Self() ngControl: NgControl,
         private meetingSettingService: MeetingSettingsService,
         private modelRequestService: ModelRequestService
     ) {
-        super(formBuilder, focusMonitor, element, ngControl);
+        super(ngControl);
         this.shouldPropagateOnRegistering = false;
     }
 

@@ -43,16 +43,13 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
     public override readonly multiple = true;
 
     public constructor(
-        fb: UntypedFormBuilder,
-        fm: FocusMonitor,
-        element: ElementRef,
         ngControl: NgControl,
         private operator: OperatorService,
         private presenter: SearchUsersPresenterService,
         private userRepo: UserRepositoryService,
         private userSortService: AccountSortService
     ) {
-        super(fb, fm, element, ngControl);
+        super(ngControl);
     }
 
     public override ngOnInit(): void {

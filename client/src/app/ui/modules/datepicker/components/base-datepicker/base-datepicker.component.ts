@@ -32,7 +32,7 @@ export abstract class BaseDatepickerComponent extends BaseFormFieldControlCompon
         element: ElementRef<HTMLElement>,
         @Optional() @Self() ngControl: NgControl
     ) {
-        super(formBuilder, focusMonitor, element, ngControl);
+        super(ngControl);
 
         this.fm
             .monitor(element.nativeElement, true)
