@@ -24,26 +24,10 @@ import { AssignmentPollServiceModule } from '../assignment-poll-service.module';
 export class AssignmentPollPdfService extends BasePollPdfService {
     public constructor(
         meetingSettingsService: MeetingSettingsService,
-        userRepo: ParticipantControllerService,
-        activeMeetingService: ActiveMeetingService,
-        mediaManageService: MediaManageService,
-        pdfService: MeetingPdfExportService,
         protected override translate: TranslateService,
-        private assignmentRepo: AssignmentControllerService,
-        pollService: AssignmentPollService,
-        pollKeyVerbose: PollKeyVerbosePipe,
-        pollParseNumber: PollParseNumberPipe
+        private assignmentRepo: AssignmentControllerService
     ) {
         super(
-            meetingSettingsService,
-            userRepo,
-            activeMeetingService,
-            mediaManageService,
-            pdfService,
-            translate,
-            pollService,
-            pollKeyVerbose,
-            pollParseNumber
         );
         meetingSettingsService
             .get(`assignment_poll_ballot_paper_number`)

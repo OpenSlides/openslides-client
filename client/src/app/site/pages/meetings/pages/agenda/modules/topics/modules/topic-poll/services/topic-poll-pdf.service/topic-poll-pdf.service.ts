@@ -22,27 +22,10 @@ import { TopicPollServiceModule } from '../topic-poll-service.module';
 })
 export class TopicPollPdfService extends BasePollPdfService {
     public constructor(
-        meetingSettingsService: MeetingSettingsService,
-        userRepo: ParticipantControllerService,
-        activeMeetingService: ActiveMeetingService,
-        mediaManageService: MediaManageService,
-        pdfService: MeetingPdfExportService,
         protected override translate: TranslateService,
-        private topicRepo: TopicControllerService,
-        pollService: TopicPollService,
-        pollKeyVerbose: PollKeyVerbosePipe,
-        pollParseNumber: PollParseNumberPipe
+        private topicRepo: TopicControllerService
     ) {
         super(
-            meetingSettingsService,
-            userRepo,
-            activeMeetingService,
-            mediaManageService,
-            pdfService,
-            translate,
-            pollService,
-            pollKeyVerbose,
-            pollParseNumber
         );
         this.meetingSettingsService
             .get(`motion_poll_ballot_paper_number`)
