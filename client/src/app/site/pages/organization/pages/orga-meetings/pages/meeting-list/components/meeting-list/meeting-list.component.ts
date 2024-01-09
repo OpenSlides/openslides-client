@@ -33,7 +33,6 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         !this.operator.hasOrganizationPermissions(restriction.permission);
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public meetingController: MeetingControllerService,
         public operator: OperatorService,
@@ -41,7 +40,7 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         public sortService: MeetingListSortService,
         private choiceService: ChoiceService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Meetings`);
         this.canMultiSelect = true;
         this.listStorageIndex = MEETING_LIST_STORAGE_INDEX;

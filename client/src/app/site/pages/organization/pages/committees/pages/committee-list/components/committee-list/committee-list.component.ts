@@ -34,7 +34,6 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public committeeController: CommitteeControllerService,
         public operator: OperatorService,
@@ -47,7 +46,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         private tagRepo: OrganizationTagControllerService,
         private spinnerService: SpinnerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Committees`);
         this.canMultiSelect = true;
         this.listStorageIndex = COMMITTEE_LIST_STORAGE_INDEX;

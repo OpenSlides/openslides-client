@@ -18,13 +18,12 @@ import { ThemeControllerService } from '../../../../services/theme-controller.se
 })
 export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public readonly repo: ThemeControllerService,
         private dialog: ThemeBuilderDialogService,
         public prompt: PromptService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Design`);
         this.canMultiSelect = true;
     }

@@ -87,7 +87,6 @@ export class OrganizationMediafileListComponent
     private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: MediafileControllerService,
@@ -98,7 +97,7 @@ export class OrganizationMediafileListComponent
         private cd: ChangeDetectorRef,
         private commonService: MediafileCommonService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
 
         this.newDirectoryForm = this.formBuilder.group({

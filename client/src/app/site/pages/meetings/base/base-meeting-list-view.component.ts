@@ -43,6 +43,6 @@ export abstract class BaseMeetingListViewComponent<V extends BaseViewModel> exte
         public override componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 }

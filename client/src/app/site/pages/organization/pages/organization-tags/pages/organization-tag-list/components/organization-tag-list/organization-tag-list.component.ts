@@ -18,7 +18,6 @@ import { ViewOrganizationTag } from '../../../../view-models';
 })
 export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrganizationTag> {
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: OrganizationTagControllerService,
         private promptService: PromptService,
@@ -26,7 +25,7 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
         private colorService: ColorService,
         private theme: ThemeService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Tags`);
         this.canMultiSelect = true;
     }
