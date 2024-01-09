@@ -24,12 +24,10 @@ export class DaterangepickerComponent extends BaseDatepickerComponent {
     private currentValue: any;
 
     constructor(
-        formBuilder: UntypedFormBuilder,
-        focusMonitor: FocusMonitor,
         element: ElementRef<HTMLElement>,
         @Optional() @Self() ngControl: NgControl
     ) {
-        super(formBuilder, focusMonitor, element, ngControl);
+        super(element, ngControl);
     }
 
     protected createForm(): UntypedFormGroup {

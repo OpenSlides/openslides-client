@@ -27,8 +27,6 @@ export abstract class BaseDatepickerComponent extends BaseFormFieldControlCompon
     public showUpdateSuccessIcon = false;
 
     constructor(
-        formBuilder: UntypedFormBuilder,
-        focusMonitor: FocusMonitor,
         element: ElementRef<HTMLElement>,
         @Optional() @Self() ngControl: NgControl
     ) {

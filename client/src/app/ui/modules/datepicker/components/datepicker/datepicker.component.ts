@@ -21,12 +21,10 @@ export class DatepickerComponent extends BaseDatepickerComponent {
     public override contentForm: UntypedFormControl;
 
     constructor(
-        formBuilder: UntypedFormBuilder,
-        focusMonitor: FocusMonitor,
         element: ElementRef<HTMLElement>,
         @Optional() @Self() ngControl: NgControl
     ) {
-        super(formBuilder, focusMonitor, element, ngControl);
+        super(element, ngControl);
     }
 
     protected createForm(): UntypedFormControl {
