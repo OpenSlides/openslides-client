@@ -95,14 +95,11 @@ export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableV
     public readonly isProjectedFn = (model: BaseProjectableViewModel) => this.service.isProjected(model);
 
     public constructor(
-        vp: ViewPortService,
-        cd: ChangeDetectorRef,
-        scrollingTableManager: ScrollingTableManageService,
         private operator: OperatorService,
         private service: ProjectableListService,
         private interactionService: InteractionService
     ) {
-        super(vp, cd, scrollingTableManager);
+        super();
     }
 
     public _getSpeakerButtonObject(viewModel: V): (BaseViewModel & HasListOfSpeakers) | null {
