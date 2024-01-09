@@ -220,10 +220,11 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
      * @param motions The motions without amendments, if the according config was set
      */
     protected override preFilter(motions: ViewMotion[]): ViewMotion[] {
-        if (!this.showAmendmentsInMainTable) {
-            return motions.filter(motion => !motion.lead_motion_id);
-        }
-        return motions;
+        return motions.filter(
+            motion =>
+                motion.meeting_id === motion.getActiveMeetingId() &&
+                (this.showAmendmentsInMainTable || !motion.lead_motion_id)
+        );
     }
 
     /**
