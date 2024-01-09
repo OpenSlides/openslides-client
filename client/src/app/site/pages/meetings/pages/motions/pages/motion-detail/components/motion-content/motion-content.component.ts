@@ -161,9 +161,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     private _motionNumbersSubject = new BehaviorSubject<string[]>([]);
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private fb: UntypedFormBuilder,
         private dialog: MotionChangeRecommendationDialogService,
         private route: ActivatedRoute,
@@ -172,7 +170,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         private motionController: MotionControllerService,
         public participantSortService: ParticipantListSortService
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
         this.motionController
             .getViewModelListObservable()
             .subscribe(motions => this.updateMotionNumbersSubject(motions));

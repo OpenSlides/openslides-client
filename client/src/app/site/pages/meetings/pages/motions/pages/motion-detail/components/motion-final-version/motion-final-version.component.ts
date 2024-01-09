@@ -25,13 +25,11 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
     public isEditMode = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private diffService: MotionDiffService,
         private fb: UntypedFormBuilder
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
     }
 
     protected override getSubscriptions(): Subscription[] {

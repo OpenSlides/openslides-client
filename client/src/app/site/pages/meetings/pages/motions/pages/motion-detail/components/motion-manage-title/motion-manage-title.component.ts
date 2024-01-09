@@ -34,13 +34,11 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private personalNoteRepo: PersonalNoteControllerService,
         private dialog: MotionChangeRecommendationDialogService
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
     }
 
     /**

@@ -61,13 +61,11 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private fb: UntypedFormBuilder,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
     }
 
     /**

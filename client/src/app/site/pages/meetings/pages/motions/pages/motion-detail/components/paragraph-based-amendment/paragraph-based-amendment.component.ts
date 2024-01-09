@@ -75,14 +75,12 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private fb: UntypedFormBuilder,
         private cd: ChangeDetectorRef,
         private el: ElementRef
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
     }
 
     /**

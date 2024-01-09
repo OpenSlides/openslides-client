@@ -104,14 +104,12 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private linenumberingService: LineNumberingService,
         private promptService: PromptService,
         private vpService: ViewPortService
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
     }
 
     public ngOnInit(): void {

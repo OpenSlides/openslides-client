@@ -119,15 +119,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     private recommenderSubscription: Subscription | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         public perms: MotionPermissionService,
         private operator: OperatorService,
         private motionForwardingService: MotionForwardDialogService,
         private meetingController: MeetingControllerService
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
 
         if (operator.hasPerms(Permission.motionCanManage)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {

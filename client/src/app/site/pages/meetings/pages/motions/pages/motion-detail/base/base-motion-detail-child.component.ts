@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Subscription } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -170,13 +170,8 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     private _isEditing = false;
     private _motion: ViewMotion | null = null;
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected motionServiceCollector: MotionDetailServiceCollectorService
-    ) {
-        super();
-    }
+    protected override translate = inject(TranslateService);
+    protected motionServiceCollector = inject(MotionDetailServiceCollectorService);
 
     /**
      * In the original version, a change-recommendation-annotation has been clicked
