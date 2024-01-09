@@ -41,16 +41,12 @@ export class AssignmentPollService extends PollService {
     public defaultGroupIds: number[] = [];
 
     public constructor(
-        organizationSettingsService: OrganizationSettingsService,
-        protected override translate: TranslateService,
-        pollKeyVerbose: PollKeyVerbosePipe,
-        parsePollNumber: PollParseNumberPipe,
         pollServiceMapper: PollServiceMapperService,
+        protected override translate: TranslateService,
         private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService,
-        themeService: ThemeService
+        private meetingSettingsService: MeetingSettingsService
     ) {
-        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
+        super();
         pollServiceMapper.registerService(ViewAssignment.COLLECTION, this);
         this.meetingSettingsService
             .get(`assignment_poll_default_onehundred_percent_base`)

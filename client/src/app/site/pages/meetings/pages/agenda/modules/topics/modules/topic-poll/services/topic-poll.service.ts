@@ -40,16 +40,11 @@ export class TopicPollService extends PollService {
     public defaultGroupIds: number[];
 
     public constructor(
-        organizationSettingsService: OrganizationSettingsService,
-        pollKeyVerbose: PollKeyVerbosePipe,
-        parsePollNumber: PollParseNumberPipe,
         pollServiceMapper: PollServiceMapperService,
-        translate: TranslateService,
         private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService,
-        themeService: ThemeService
+        private meetingSettingsService: MeetingSettingsService
     ) {
-        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
+        super();
         pollServiceMapper.registerService(ViewTopic.COLLECTION, this);
         this.meetingSettingsService
             .get(`poll_default_onehundred_percent_base`)

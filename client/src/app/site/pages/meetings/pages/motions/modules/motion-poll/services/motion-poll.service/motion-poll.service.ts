@@ -45,15 +45,11 @@ export class MotionPollService extends PollService {
     public defaultGroupIds!: number[];
 
     public constructor(
-        organizationSettingsService: OrganizationSettingsService,
-        pollKeyVerbose: PollKeyVerbosePipe,
-        parsePollNumber: PollParseNumberPipe,
         protected override translate: TranslateService,
         private repo: MotionPollControllerService,
-        private meetingSettingsService: MeetingSettingsService,
-        themeService: ThemeService
+        private meetingSettingsService: MeetingSettingsService
     ) {
-        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
+        super();
         this.meetingSettingsService
             .get(`motion_poll_default_onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base));
