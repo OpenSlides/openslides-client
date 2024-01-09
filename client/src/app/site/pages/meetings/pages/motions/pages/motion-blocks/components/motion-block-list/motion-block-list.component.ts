@@ -5,7 +5,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';

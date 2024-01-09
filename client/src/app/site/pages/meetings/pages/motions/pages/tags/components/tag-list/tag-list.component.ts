@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { InteractionService } from '../../../../../interaction/services/interaction.service';

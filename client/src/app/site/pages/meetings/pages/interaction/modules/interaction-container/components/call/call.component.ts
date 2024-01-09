@@ -14,7 +14,6 @@ import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { ApplauseService } from '../../../../services/applause.service';
 import { CallRestrictionService } from '../../../../services/call-restriction.service';

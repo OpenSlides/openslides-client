@@ -12,7 +12,6 @@ import {
     SortTreeFilterId,
     SortTreeFilterOption
 } from 'src/app/ui/base/base-sort-tree-view-component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../services/agenda-item-controller.service/agenda-item-controller.service';
 

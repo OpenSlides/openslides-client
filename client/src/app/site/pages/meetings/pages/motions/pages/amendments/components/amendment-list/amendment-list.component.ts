@@ -5,7 +5,6 @@ import { distinctUntilChanged, firstValueFrom, Observable, of, switchMap } from 
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { ChangeRecoMode } from '../../../../../../../../../domain/models/motions/motions.constants';
 import { MotionExportDialogService } from '../../../../components/motion-export-dialog/services/motion-export-dialog.service';

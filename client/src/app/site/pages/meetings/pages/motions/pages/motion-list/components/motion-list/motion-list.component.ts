@@ -5,7 +5,6 @@ import { firstValueFrom, map } from 'rxjs';
 import { OsFilterOptionCondition } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewMotionCategory, ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { GridBlockTileType } from 'src/app/ui/modules/grid';

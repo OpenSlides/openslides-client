@@ -1,6 +1,5 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, ElementRef, Optional, Self, ViewEncapsulation } from '@angular/core';
-import { NgControl, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { NgControl, UntypedFormControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 
 import { BaseDatepickerComponent } from '../base-datepicker/base-datepicker.component';
@@ -20,10 +19,7 @@ export class DatepickerComponent extends BaseDatepickerComponent {
 
     public override contentForm: UntypedFormControl;
 
-    constructor(
-        element: ElementRef<HTMLElement>,
-        @Optional() @Self() ngControl: NgControl
-    ) {
+    constructor(element: ElementRef<HTMLElement>, @Optional() @Self() ngControl: NgControl) {
         super(element, ngControl);
     }
 

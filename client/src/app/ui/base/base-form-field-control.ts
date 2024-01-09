@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional, Self, inject } from '@angular/core';
+import { Directive, ElementRef, HostBinding, inject, Input, OnDestroy, Optional, Self } from '@angular/core';
 import {
     ControlValueAccessor,
     NgControl,
@@ -111,9 +111,7 @@ export abstract class BaseFormFieldControlComponent<T>
     protected fb = inject(UntypedFormBuilder);
     protected fm = inject(FocusMonitor);
     protected element = inject(ElementRef<HTMLElement>);
-    public constructor(
-        @Optional() @Self() public ngControl: NgControl
-    ) {
+    public constructor(@Optional() @Self() public ngControl: NgControl) {
         this.contentForm = this.createForm();
         this.initializeForm();
 

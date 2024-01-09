@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulatio
 import { TranslateService } from '@ngx-translate/core';
 import { fadeInAnim } from 'src/app/infrastructure/animations';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { ApplauseService } from '../../../../services/applause.service';
 

@@ -7,7 +7,6 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from '../../../../services/meeting-component-service-collector.service';
 import { ViewListOfSpeakers } from '../../../agenda';
 import { CurrentListOfSpeakersService } from '../../../agenda/modules/list-of-speakers/services/current-list-of-speakers.service';
 import { ListOfSpeakersControllerService } from '../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';

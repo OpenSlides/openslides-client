@@ -1,4 +1,4 @@
-import { Directive, Inject, OnInit, ViewChild, inject } from '@angular/core';
+import { Directive, Inject, inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
     MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
@@ -103,9 +103,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     protected formBuilder = inject(UntypedFormBuilder);
     public dialogRef = inject(MatDialogRef<BasePollDialogComponent>);
 
-    public constructor(
-        @Inject(MAT_DIALOG_DATA) public pollData: ViewPoll
-    ) {
+    public constructor(@Inject(MAT_DIALOG_DATA) public pollData: ViewPoll) {
         super();
         this.addKeyListener();
     }

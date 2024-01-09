@@ -14,7 +14,6 @@ import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/
 import { ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';

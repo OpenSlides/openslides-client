@@ -1,4 +1,14 @@
-import { ChangeDetectorRef, Directive, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Directive,
+    EventEmitter,
+    inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -202,8 +212,7 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
     protected vp = inject(ViewPortService);
     protected cd = inject(ChangeDetectorRef);
     protected scrollingTableManager = inject(ScrollingTableManageService);
-    public constructor(
-    ) {
+    public constructor() {
         this.vp.isMobileSubject.subscribe(mobile => {
             if (mobile !== this.isMobile) {
                 this.cd.markForCheck();

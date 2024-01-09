@@ -12,7 +12,6 @@ import { OneOfValidator, UserDetailViewComponent } from 'src/app/site/modules/us
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { UserService } from 'src/app/site/services/user.service';

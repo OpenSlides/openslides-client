@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, ViewChild, inject } from '@angular/core';
+import { Directive, EventEmitter, inject, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SortDefinition } from 'src/app/site/base/base-sort.service';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -63,7 +63,7 @@ export abstract class BaseSortTreeViewComponent<V extends BaseViewModel>
      */
     public seenNodes: [number, number] = [0, 0];
 
-    protected translate = inject(TranslateService); 
+    protected translate = inject(TranslateService);
     protected promptService = inject(PromptService);
 
     /**

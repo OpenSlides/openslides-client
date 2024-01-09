@@ -9,7 +9,6 @@ import { ObjectReplaceKeysConfig, partitionModelsForUpdate, replaceObjectKeys } 
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import {

@@ -14,7 +14,6 @@ import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/b
 import { hasListOfSpeakers, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';

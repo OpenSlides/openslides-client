@@ -14,12 +14,9 @@ import {
     PollType,
     YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
-import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';

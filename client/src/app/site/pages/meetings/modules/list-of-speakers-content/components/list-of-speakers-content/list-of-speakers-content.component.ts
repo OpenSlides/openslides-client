@@ -22,7 +22,6 @@ import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pag
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';

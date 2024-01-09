@@ -3,7 +3,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { filter, firstValueFrom, map } from 'rxjs';
 import { OrganizationRepositoryService } from 'src/app/gateways/repositories/organization-repository.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
 

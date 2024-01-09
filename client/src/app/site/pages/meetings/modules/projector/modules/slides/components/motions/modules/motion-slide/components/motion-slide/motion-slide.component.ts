@@ -14,7 +14,6 @@ import {
     MotionChangeRecommendationControllerService,
     MotionDiffService
 } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/services';
-import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { MotionFormatService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-format.service';
 import { ViewMotionAmendedParagraph } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion-amended-paragraph';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';

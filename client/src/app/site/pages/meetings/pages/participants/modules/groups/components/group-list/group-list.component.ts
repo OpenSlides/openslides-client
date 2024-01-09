@@ -11,7 +11,6 @@ import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { GroupControllerService } from '../../services';

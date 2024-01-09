@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { OptionDataKey } from 'src/app/domain/models/poll/generic-poll';
@@ -50,8 +50,7 @@ export abstract class PollService {
     protected pollParseNumber = inject(PollParseNumberPipe);
     protected themeService = inject(ThemeService);
 
-    public constructor(
-    ) {
+    public constructor() {
         this.organizationSettingsService
             .get(`enable_electronic_voting`)
             .subscribe(is => (this._isElectronicVotingEnabled = is));

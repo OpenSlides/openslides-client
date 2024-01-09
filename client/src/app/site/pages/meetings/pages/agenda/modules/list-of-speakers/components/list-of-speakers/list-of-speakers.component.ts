@@ -6,7 +6,6 @@ import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-funct
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ListOfSpeakersContentComponent } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-content/list-of-speakers-content.component';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';

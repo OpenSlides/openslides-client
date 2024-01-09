@@ -6,7 +6,6 @@ import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meet
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { HEAD_BAR_HEIGHT } from 'src/app/ui/modules/head-bar/components/head-bar/head-bar.component';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 

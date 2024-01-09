@@ -18,7 +18,6 @@ import { ViewAssignment, ViewAssignmentCandidate } from 'src/app/site/pages/meet
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';

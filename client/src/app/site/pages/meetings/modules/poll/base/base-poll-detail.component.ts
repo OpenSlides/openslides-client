@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -12,7 +12,6 @@ import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -130,9 +129,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     private scrollTableManage = inject(ScrollingTableManageService);
     private pollPdfService = inject(BasePollPdfService);
 
-    public constructor(
-        protected pollService: S
-    ) {
+    public constructor(protected pollService: S) {
         super();
 
         this.subscriptions.push(

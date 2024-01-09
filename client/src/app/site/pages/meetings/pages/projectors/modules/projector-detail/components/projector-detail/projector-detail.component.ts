@@ -13,7 +13,6 @@ import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meet
 import { ViewProjection } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import { MeetingCollectionMapperService } from 'src/app/site/pages/meetings/services/meeting-collection-mapper.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { Projectable, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';

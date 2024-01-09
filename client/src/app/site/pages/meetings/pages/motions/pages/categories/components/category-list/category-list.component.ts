@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ViewMotionCategory } from '../../../../modules';

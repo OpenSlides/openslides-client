@@ -15,7 +15,6 @@ import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/b
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';

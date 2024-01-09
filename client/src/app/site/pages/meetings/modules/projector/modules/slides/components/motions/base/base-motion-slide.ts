@@ -1,3 +1,4 @@
+import { inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { fqidFromCollectionAndId } from 'src/app/infrastructure/utils/transform-functions';
 import {
@@ -7,7 +8,6 @@ import {
 
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import { TitleInformationWithAgendaItem } from '../../../definitions';
-import { inject } from '@angular/core';
 
 export interface MotionTitleInformation extends TitleInformationWithAgendaItem {
     title: string;

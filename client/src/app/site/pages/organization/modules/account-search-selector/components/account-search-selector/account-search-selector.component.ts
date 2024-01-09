@@ -1,6 +1,5 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { NgControl, UntypedFormBuilder } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { NgControl } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { distinctUntilChanged } from 'rxjs';

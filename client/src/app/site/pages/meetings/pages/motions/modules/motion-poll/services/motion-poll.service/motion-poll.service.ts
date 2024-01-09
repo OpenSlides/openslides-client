@@ -17,11 +17,8 @@ import {
     VotingResult,
     YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
-import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { MotionPollControllerService } from '../motion-poll-controller.service';
 import { MotionPollServiceModule } from '../motion-poll-service.module';

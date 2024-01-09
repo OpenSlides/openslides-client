@@ -6,7 +6,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { PasswordForm } from 'src/app/site/modules/user-components';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';

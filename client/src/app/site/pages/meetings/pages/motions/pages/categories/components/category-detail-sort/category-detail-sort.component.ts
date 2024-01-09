@@ -6,7 +6,6 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion, ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';

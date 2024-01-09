@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -6,10 +6,8 @@ import { HasListOfSpeakers, hasListOfSpeakers } from 'src/app/site/pages/meeting
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
 import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models/base-projectable-model';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ColumnRestriction, ListComponent } from 'src/app/ui/modules/list';
 import { BaseListComponent } from 'src/app/ui/modules/list/base/base-list.component';
-import { ScrollingTableManageService } from 'src/app/ui/modules/scrolling-table';
 import {
     END_POSITION,
     START_POSITION

@@ -19,7 +19,7 @@ import {
 })
 export class CsvExportService {
     private exporter = inject(FileExportService);
-     private translate = inject(TranslateService);
+    private translate = inject(TranslateService);
 
     /**
      * Saves an array of model data to a CSV.

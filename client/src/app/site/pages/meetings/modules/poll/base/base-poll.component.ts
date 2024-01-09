@@ -6,7 +6,6 @@ import { PollContentObject } from 'src/app/domain/models/poll';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 

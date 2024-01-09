@@ -8,7 +8,6 @@ import {
     SortTreeFilterId,
     SortTreeFilterOption
 } from 'src/app/ui/base/base-sort-tree-view-component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { TagControllerService } from '../../../../modules/tags/services';

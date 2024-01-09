@@ -10,7 +10,6 @@ import { MergeAmendment, MotionState, Restriction } from 'src/app/domain/models/
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotionState, ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionStateControllerService } from '../../../../modules/states/services';

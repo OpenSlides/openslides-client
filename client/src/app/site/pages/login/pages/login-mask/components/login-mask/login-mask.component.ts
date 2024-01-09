@@ -14,7 +14,6 @@ import { AuthService } from 'src/app/site/services/auth.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
-import { MeetingComponentServiceCollectorService } from '../../../../../meetings/services/meeting-component-service-collector.service';
 import { BrowserSupportService } from '../../../../services/browser-support.service';
 
 const HTTP_WARNING = _(`Using OpenSlides over HTTP is not supported. Enable HTTPS to continue.`);

@@ -1,9 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import {
-    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-    MatLegacyDialogRef as MatDialogRef
-} from '@angular/material/legacy-dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import {

@@ -1,8 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { NotifyService } from 'src/app/gateways/notify.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseGameDialogComponent, State } from '../../../../components/base-game-dialog/base-game-dialog';
 
@@ -43,8 +39,7 @@ export class C4DialogComponent extends BaseGameDialogComponent implements OnInit
      */
     public board: Player[][] = [];
 
-    public constructor(
-    ) {
+    public constructor() {
         super();
         this.reset();
     }
