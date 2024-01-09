@@ -1,4 +1,4 @@
-import { Directive, OnInit } from '@angular/core';
+import { Directive, OnInit, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, distinctUntilChanged } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -30,9 +30,8 @@ export abstract class BaseImportListComponent<M extends Identifiable> extends Ba
     private _hasFile = false;
     private _modelsToCreateAmount = 0;
 
+    protected override translate = inject(TranslateService);
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
         protected importer: BaseImportService<M>
     ) {
         super();

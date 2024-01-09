@@ -87,11 +87,10 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
     private _isImportValid = false;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public override importer: CommitteeImportService
     ) {
-        super(componentServiceCollector, translate, importer);
+        super(importer);
     }
 
     public override ngOnInit(): void {

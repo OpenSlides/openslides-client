@@ -26,11 +26,10 @@ export class MotionImportListComponent extends BaseImportListComponent<ViewMotio
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public override importer: MotionImportService
     ) {
-        super(componentServiceCollector, translate, importer);
+        super(importer);
     }
 
     public getVerboseName(property: keyof ViewMotion): string {
