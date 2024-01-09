@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { combineLatestWith, map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
@@ -80,10 +80,14 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     private _tableData: PollTableData[] = [];
     private _chartData: ChartData | null = null;
 
-    private pollService = inject(MotionPollService);
-    private operator = inject(OperatorService);
-    private cd = inject(ChangeDetectorRef);
-    private themeService = inject(ThemeService);
+    public constructor(
+        private pollService: MotionPollService,
+        private operator: OperatorService,
+        private cd: ChangeDetectorRef,
+        private themeService: ThemeService
+    ) {
+        super();
+    }
 
     public ngOnInit(): void {
         this.subscriptions.push(

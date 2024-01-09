@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -53,11 +53,15 @@ export class MotionPollComponent extends BasePollComponent {
         return this.poll.state === PollState.Published;
     }
 
-    protected override translate = inject(TranslateService);
-    private pollService = inject(MotionPollService);
-    private pdfService = inject(MotionPollPdfService);
-    private operator = inject(OperatorService);
-    private votingPrivacyDialog = inject(VotingPrivacyWarningDialogService);
+    public constructor(
+        protected override translate: TranslateService,
+        private pollService: MotionPollService,
+        private pdfService: MotionPollPdfService,
+        private operator: OperatorService,
+        private votingPrivacyDialog: VotingPrivacyWarningDialogService
+    ) {
+        super();
+    }
 
     public openVotingWarning(): void {
         this.votingPrivacyDialog.open();

@@ -1,6 +1,7 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
+import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { AccountExportService } from '../../../../services/account-export.service';
@@ -33,8 +34,13 @@ export class AccountImportService extends BaseBackendImportService {
         warning: _(`Accounts with warnings: affected cells will be skipped`)
     };
 
-    private repo = inject(AccountControllerService);
-    private exporter = inject(AccountExportService);
+    public constructor(
+        importServiceCollector: ImportServiceCollectorService,
+        private repo: AccountControllerService,
+        private exporter: AccountExportService
+    ) {
+        super(importServiceCollector);
+    }
 
     public downloadCsvExample(): void {
         this.exporter.downloadCsvImportExample();

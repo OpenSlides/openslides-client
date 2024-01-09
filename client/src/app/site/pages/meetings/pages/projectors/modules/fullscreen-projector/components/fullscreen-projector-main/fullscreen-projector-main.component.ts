@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
@@ -11,7 +11,9 @@ import { ViewProjector } from '../../../../view-models';
     styleUrls: [`./fullscreen-projector-main.component.scss`]
 })
 export class FullscreenProjectorMainComponent extends BaseModelRequestHandlerComponent {
-    private sequentialNumberMappingService = inject(SequentialNumberMappingService);
+    public constructor(private sequentialNumberMappingService: SequentialNumberMappingService) {
+        super();
+    }
 
     protected override onParamsChanged(params: any, _oldParams?: any): void {
         if (params[`id`]) {

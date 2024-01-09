@@ -1,6 +1,6 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { AfterViewInit, Component, ElementRef, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ChangeDetectorRef, EventEmitter, HostListener, OnDestroy } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -143,8 +143,9 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 
     private _oldDistTop = 0;
 
-    private manageService = inject(ScrollingTableManageService);
-    private cd = inject(ChangeDetectorRef);
+    public constructor(private manageService: ScrollingTableManageService, private cd: ChangeDetectorRef) {
+        super();
+    }
 
     public ngOnInit(): void {
         this.manageService.currentScrollingTableComponent = this;

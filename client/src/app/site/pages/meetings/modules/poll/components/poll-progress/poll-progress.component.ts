@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
@@ -45,12 +45,16 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
         return this.operator.hasPerms(Permission.listOfSpeakersCanManage);
     }
 
-    private autoupdate = inject(AutoupdateService);
-    private userRepo = inject(UserControllerService);
-    private operator = inject(OperatorService);
-    private activeMeeting = inject(ActiveMeetingService);
-    private modelRequestBuilder = inject(ModelRequestBuilderService);
-    private cd = inject(ChangeDetectorRef);
+    public constructor(
+        private autoupdate: AutoupdateService,
+        private userRepo: UserControllerService,
+        private operator: OperatorService,
+        private activeMeeting: ActiveMeetingService,
+        private modelRequestBuilder: ModelRequestBuilderService,
+        private cd: ChangeDetectorRef
+    ) {
+        super();
+    }
 
     public ngOnInit(): void {
         if (this.poll) {

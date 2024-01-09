@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
@@ -19,7 +19,9 @@ import {
 export class TopicDetailMainComponent extends BaseModelRequestHandlerComponent {
     private _currentTopicId: Id | null = null;
 
-    private sequentialNumberMapping = inject(SequentialNumberMappingService);
+    public constructor(private sequentialNumberMapping: SequentialNumberMappingService) {
+        super();
+    }
 
     protected override onParamsChanged(params: any, oldParams: any): void {
         if (params[`id`] !== oldParams[`id`] || params[`meetingId`] !== oldParams[`meetingId`]) {

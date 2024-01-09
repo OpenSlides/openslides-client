@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
@@ -21,8 +21,12 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
     private _currentMotionId: Id | null = null;
     private _watchingMap: { [field in keyof Motion]?: Ids } = {};
 
-    private sequentialNumberMapping = inject(SequentialNumberMappingService);
-    private repo = inject(MotionControllerService);
+    public constructor(
+        private sequentialNumberMapping: SequentialNumberMappingService,
+        private repo: MotionControllerService
+    ) {
+        super();
+    }
 
     protected override onParamsChanged(params: any, oldParams: any): void {
         if (params[`id`] !== oldParams[`id`] || params[`meetingId`] !== oldParams[`meetingId`]) {

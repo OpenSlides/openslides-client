@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { ExportServiceModule } from '../export-service.module';
@@ -17,7 +17,7 @@ import {
     providedIn: ExportServiceModule
 })
 export class CsvExportForBackendService {
-    private exporter = inject(FileExportService);
+    public constructor(private exporter: FileExportService) {}
 
     /**
      * Saves an array of model data to a CSV.

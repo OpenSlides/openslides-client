@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { of } from 'rxjs';
 import { OptionData, OptionTitle, PollData } from 'src/app/domain/models/poll/generic-poll';
@@ -36,8 +36,9 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
 
     public polldata!: PollData;
 
-    public pollService = inject(PollService);
-    private collectionMapperService = inject(CollectionMapperService);
+    public constructor(public pollService: PollService, private collectionMapperService: CollectionMapperService) {
+        super();
+    }
 
     protected override setData(value: SlideData<PollSlideData>): void {
         super.setData(value);

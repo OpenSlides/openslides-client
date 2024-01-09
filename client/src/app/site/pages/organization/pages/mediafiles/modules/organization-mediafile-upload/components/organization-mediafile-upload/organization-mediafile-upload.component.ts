@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -28,9 +28,11 @@ export class OrganizationMediafileUploadComponent implements OnInit {
         return file => this.repo.createFile(file);
     }
 
-    private route = inject(ActivatedRoute);
-    private repo = inject(MediafileControllerService);
-    private commonService = inject(MediafileCommonService);
+    public constructor(
+        private route: ActivatedRoute,
+        private repo: MediafileControllerService,
+        private commonService: MediafileCommonService
+    ) {}
 
     public ngOnInit(): void {
         this.directoriesObservable = this.repo.getDirectoryListObservable();

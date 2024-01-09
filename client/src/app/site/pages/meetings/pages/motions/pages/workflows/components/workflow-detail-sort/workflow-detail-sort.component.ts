@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -51,10 +51,14 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
 
     private _workflowId: Id | null = null;
 
-    private workflowController = inject(MotionWorkflowControllerService);
-    private stateController = inject(MotionStateControllerService);
-    protected translate = inject(TranslateService);
-    private promptService = inject(PromptService);
+    public constructor(
+        private workflowController: MotionWorkflowControllerService,
+        private stateController: MotionStateControllerService,
+        protected translate: TranslateService,
+        private promptService: PromptService
+    ) {
+        super();
+    }
 
     public onIdFound(id: Id | null): void {
         if (id) {
