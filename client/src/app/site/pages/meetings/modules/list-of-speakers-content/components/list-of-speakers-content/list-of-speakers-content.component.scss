@@ -31,7 +31,8 @@
     }
 }
 
-.current-speaker, .interposed-questions .speaker {
+.current-speaker,
+.interposed-questions .speaker {
     display: table;
     width: -webkit-fill-available;
     height: 50px;
@@ -71,7 +72,8 @@
     }
 }
 
-.waiting-list, .interposed-questions {
+.waiting-list,
+.interposed-questions {
     padding: 10px 25px 0 25px;
 
     .single-speaker-line {

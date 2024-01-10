@@ -86,8 +86,7 @@
                 [ngTemplateOutlet]="speakerControls"
                 [ngTemplateOutletContext]="{ speaker: activeSpeaker }"
                 *ngIf="canManage"
-            >
-            </ng-container>
+            ></ng-container>
 
             <!-- Extra menu with call controls -->
             <button
@@ -102,18 +101,14 @@
     </div>
 
     <div class="interposed-questions">
-        <div
-            *ngFor="let speaker of interposedQuestions; let i = index"
-            class="speaker backgroundColorLight">
+        <div *ngFor="let speaker of interposedQuestions; let i = index" class="speaker backgroundColorLight">
             <span class="prefix"></span>
 
             <span class="name">
                 <ng-container *ngIf="speaker.meeting_user_id">
                     {{ speaker.getListTitle() }}
                 </ng-container>
-                <span *ngIf="!speaker.meeting_user_id" translate>
-                    Select or search new speaker
-                </span>
+                <span *ngIf="!speaker.meeting_user_id" translate>Select or search new speaker</span>
                 <div class="active-speaker-subtitle">
                     <ng-container *ngTemplateOutlet="speakerSubtitle; context: { speaker: speaker }"></ng-container>
                 </div>
@@ -124,8 +119,7 @@
                     [ngTemplateOutlet]="speakerControls"
                     [ngTemplateOutletContext]="{ speaker: speaker }"
                     *ngIf="canManage"
-                >
-                </ng-container>
+                ></ng-container>
 
                 <!-- Extra menu with call controls -->
                 <button
