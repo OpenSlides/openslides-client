@@ -6,7 +6,7 @@
 </os-head-bar>
 
 <os-list
-    [listObservable]="repo.getViewModelListObservable()"
+    [listObservableProvider]="repo"
     [(selectedRows)]="selectedRows"
     listStorageKey="structure_levels"
     [vScrollFixed]="60"
