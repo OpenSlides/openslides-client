@@ -70,11 +70,10 @@ export abstract class BasePollPdfService {
     protected mediaManageService = inject(MediaManageService);
     protected pdfExport = inject(MeetingPdfExportService);
     protected translate = inject(TranslateService);
-    protected pollService = inject(PollService);
     private pollKeyVerbose = inject(PollKeyVerbosePipe);
     private pollParseNumber = inject(PollParseNumberPipe);
 
-    public constructor() {
+    public constructor(protected pollService: PollService) {
         this.meetingSettingsService.get(`name`).subscribe(name => (this.eventName = name));
         this.mediaManageService.getLogoUrlObservable(`pdf_ballot_paper`).subscribe(url => (this.logoUrl = url));
     }

@@ -62,7 +62,10 @@ export abstract class BaseViaBackendImportListComponent extends BaseComponent im
     private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
 
     protected override translate = inject(TranslateService);
-    protected importer = inject(BaseBackendImportService);
+
+    public constructor(protected importer: BaseBackendImportService) {
+        super();
+    }
 
     public ngOnInit(): void {
         this.importer.currentImportPhaseObservable.subscribe(phase => {

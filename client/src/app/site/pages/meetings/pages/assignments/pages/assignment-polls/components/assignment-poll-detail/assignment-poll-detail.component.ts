@@ -16,6 +16,7 @@ import {
     UnknownUserLabel
 } from '../../../../modules/assignment-poll/services/assignment-poll.service';
 import { AssignmentPollDialogService } from '../../../../modules/assignment-poll/services/assignment-poll-dialog.service';
+import { AssignmentPollPdfService } from '../../../../modules/assignment-poll/services/assignment-poll-pdf.service/assignment-poll-pdf.service';
 
 @Component({
     selector: `os-assignment-poll-detail`,
@@ -41,9 +42,10 @@ export class AssignmentPollDetailComponent
     public constructor(
         protected override translate: TranslateService,
         pollService: AssignmentPollService,
-        private pollDialog: AssignmentPollDialogService
+        private pollDialog: AssignmentPollDialogService,
+        pollPdfService: AssignmentPollPdfService
     ) {
-        super(pollService);
+        super(pollService, pollPdfService);
     }
 
     public openDialog(poll: ViewPoll): void {

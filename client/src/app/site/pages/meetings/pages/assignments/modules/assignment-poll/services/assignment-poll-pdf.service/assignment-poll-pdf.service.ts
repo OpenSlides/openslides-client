@@ -10,6 +10,7 @@ import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/mee
 
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
 import { ViewAssignment } from '../../../../view-models';
+import { AssignmentPollService } from '../assignment-poll.service';
 import { AssignmentPollServiceModule } from '../assignment-poll-service.module';
 
 @Injectable({
@@ -19,9 +20,10 @@ export class AssignmentPollPdfService extends BasePollPdfService {
     public constructor(
         meetingSettingsService: MeetingSettingsService,
         protected override translate: TranslateService,
-        private assignmentRepo: AssignmentControllerService
+        private assignmentRepo: AssignmentControllerService,
+        pollService: AssignmentPollService
     ) {
-        super();
+        super(pollService);
         meetingSettingsService
             .get(`assignment_poll_ballot_paper_number`)
             .subscribe(count => (this.ballotCustomCount = count));

@@ -44,7 +44,7 @@ export class TopicImportComponent extends BaseViaBackendImportListComponent {
         formBuilder: UntypedFormBuilder,
         private durationService: DurationService
     ) {
-        super();
+        super(importer);
         this.textAreaForm = formBuilder.group({ inputtext: [``] });
     }
 

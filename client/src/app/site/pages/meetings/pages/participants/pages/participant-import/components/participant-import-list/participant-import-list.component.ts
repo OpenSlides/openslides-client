@@ -27,6 +27,6 @@ export class ParticipantImportListComponent extends BaseViaBackendImportListComp
         protected override translate: TranslateService,
         public override readonly importer: ParticipantImportService
     ) {
-        super();
+        super(importer);
     }
 }
