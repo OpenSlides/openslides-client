@@ -1,14 +1,5 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    Input,
-    Optional,
-    Self,
-    ViewEncapsulation
-} from '@angular/core';
-import { NgControl, UntypedFormBuilder } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Input, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { auditTime, distinctUntilChanged, Observable } from 'rxjs';
 
@@ -49,12 +40,7 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
 
     public readonly controlType = `list-search-selector`;
 
-    public constructor(
-        formBuilder: UntypedFormBuilder,
-        focusMonitor: FocusMonitor,
-        element: ElementRef<HTMLElement>,
-        @Optional() @Self() ngControl: NgControl
-    ) {
-        super(formBuilder, focusMonitor, element, ngControl);
+    public constructor(@Optional() @Self() ngControl: NgControl) {
+        super(ngControl);
     }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -12,7 +12,6 @@ import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -118,22 +117,20 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     private _currentOperator!: ViewUser;
     private _pollId!: Id;
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected repo: PollControllerService,
-        protected route: ActivatedRoute,
-        protected groupRepo: GroupControllerService,
-        protected promptService: PromptService,
-        protected pollService: S,
-        protected votesRepo: VoteControllerService,
-        protected operator: OperatorService,
-        protected cd: ChangeDetectorRef,
-        protected userRepo: ParticipantControllerService,
-        private scrollTableManage: ScrollingTableManageService,
-        private pollPdfService: BasePollPdfService
-    ) {
-        super(componentServiceCollector, translate);
+    protected override translate = inject(TranslateService);
+    protected repo = inject(PollControllerService);
+    protected route = inject(ActivatedRoute);
+    protected groupRepo = inject(GroupControllerService);
+    protected promptService = inject(PromptService);
+    protected votesRepo = inject(VoteControllerService);
+    protected operator = inject(OperatorService);
+    protected cd = inject(ChangeDetectorRef);
+    protected userRepo = inject(ParticipantControllerService);
+    private scrollTableManage = inject(ScrollingTableManageService);
+    private pollPdfService = inject(BasePollPdfService);
+
+    public constructor(protected pollService: S) {
+        super();
 
         this.subscriptions.push(
             this.operator.userObservable.subscribe(currentUser => {

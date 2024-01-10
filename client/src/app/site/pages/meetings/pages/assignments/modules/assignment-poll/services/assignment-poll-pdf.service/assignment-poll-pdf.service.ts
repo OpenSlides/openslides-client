@@ -5,17 +5,11 @@ import {
     AbstractPollData,
     BasePollPdfService
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
-import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
 import { ViewAssignment } from '../../../../view-models';
-import { AssignmentPollService } from '../assignment-poll.service';
 import { AssignmentPollServiceModule } from '../assignment-poll-service.module';
 
 @Injectable({
@@ -24,27 +18,10 @@ import { AssignmentPollServiceModule } from '../assignment-poll-service.module';
 export class AssignmentPollPdfService extends BasePollPdfService {
     public constructor(
         meetingSettingsService: MeetingSettingsService,
-        userRepo: ParticipantControllerService,
-        activeMeetingService: ActiveMeetingService,
-        mediaManageService: MediaManageService,
-        pdfService: MeetingPdfExportService,
         protected override translate: TranslateService,
-        private assignmentRepo: AssignmentControllerService,
-        pollService: AssignmentPollService,
-        pollKeyVerbose: PollKeyVerbosePipe,
-        pollParseNumber: PollParseNumberPipe
+        private assignmentRepo: AssignmentControllerService
     ) {
-        super(
-            meetingSettingsService,
-            userRepo,
-            activeMeetingService,
-            mediaManageService,
-            pdfService,
-            translate,
-            pollService,
-            pollKeyVerbose,
-            pollParseNumber
-        );
+        super();
         meetingSettingsService
             .get(`assignment_poll_ballot_paper_number`)
             .subscribe(count => (this.ballotCustomCount = count));

@@ -1,11 +1,10 @@
-import { Directive, OnInit } from '@angular/core';
+import { Directive, inject, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, distinctUntilChanged } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 
 import { Identifiable } from '../../domain/interfaces';
 import { getLongPreview, getShortPreview } from '../../infrastructure/utils';
-import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { BaseImportService } from './base-import.service';
 
 @Directive()
@@ -30,12 +29,9 @@ export abstract class BaseImportListComponent<M extends Identifiable> extends Ba
     private _hasFile = false;
     private _modelsToCreateAmount = 0;
 
-    public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected importer: BaseImportService<M>
-    ) {
-        super(componentServiceCollector, translate);
+    protected override translate = inject(TranslateService);
+    public constructor(protected importer: BaseImportService<M>) {
+        super();
     }
 
     public ngOnInit(): void {

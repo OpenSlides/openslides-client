@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { VoteValue } from 'src/app/domain/models/poll';
@@ -7,25 +6,16 @@ import {
     BasePollDetailComponent,
     BaseVoteData
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-detail.component';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { ViewOption, ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { ScrollingTableManageService } from 'src/app/ui/modules/scrolling-table';
 
-import { VoteControllerService } from '../../../../../../modules/poll/services/vote-controller.service/vote-controller.service';
-import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
 import { isSortedList, SortedList } from '../../../../../polls/view-models/sorted-list';
 import {
     AssignmentPollService,
     UnknownUserLabel
 } from '../../../../modules/assignment-poll/services/assignment-poll.service';
 import { AssignmentPollDialogService } from '../../../../modules/assignment-poll/services/assignment-poll-dialog.service';
-import { AssignmentPollPdfService } from '../../../../modules/assignment-poll/services/assignment-poll-pdf.service/assignment-poll-pdf.service';
 
 @Component({
     selector: `os-assignment-poll-detail`,
@@ -49,36 +39,11 @@ export class AssignmentPollDetailComponent
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        repo: PollControllerService,
-        route: ActivatedRoute,
-        groupRepo: GroupControllerService,
-        promptService: PromptService,
         pollService: AssignmentPollService,
-        votesRepo: VoteControllerService,
-        operator: OperatorService,
-        cd: ChangeDetectorRef,
-        participantRepo: ParticipantControllerService,
-        private pollDialog: AssignmentPollDialogService,
-        scrollTableManage: ScrollingTableManageService,
-        pollPdfService: AssignmentPollPdfService
+        private pollDialog: AssignmentPollDialogService
     ) {
-        super(
-            componentServiceCollector,
-            translate,
-            repo,
-            route,
-            groupRepo,
-            promptService,
-            pollService,
-            votesRepo,
-            operator,
-            cd,
-            participantRepo,
-            scrollTableManage,
-            pollPdfService
-        );
+        super(pollService);
     }
 
     public openDialog(poll: ViewPoll): void {
