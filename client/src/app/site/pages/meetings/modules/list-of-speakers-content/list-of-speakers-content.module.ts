@@ -22,6 +22,7 @@ import { ParticipantSearchSelectorModule } from '../participant-search-selector'
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
 import { ListOfSpeakersContentTitleDirective } from './directives/list-of-speakers-content-title.directive';
 import { PointOfOrderDialogModule } from './modules/point-of-order-dialog/point-of-order-dialog.module';
+import { SpeakerUserSelectDialogModule } from './modules/speaker-user-select-dialog/speaker-user-select-dialog.module';
 
 const DECLARATIONS = [
     ListOfSpeakersContentComponent,
@@ -50,6 +51,7 @@ const DECLARATIONS = [
         ParticipantSearchSelectorModule,
         ParticipantCommonServiceModule,
         PointOfOrderDialogModule,
+        SpeakerUserSelectDialogModule,
         DirectivesModule,
         OpenSlidesTranslationModule.forChild()
     ]

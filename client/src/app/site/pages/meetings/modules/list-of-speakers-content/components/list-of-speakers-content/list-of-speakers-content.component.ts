@@ -38,6 +38,7 @@ import {
     LOS_FIRST_CONTRIBUTION_SUBSCRIPTION
 } from '../../list-of-speakers-content.subscription';
 import { PointOfOrderDialogService } from '../../modules/point-of-order-dialog/services/point-of-order-dialog.service';
+import { SpeakerUserSelectDialogService } from '../../modules/speaker-user-select-dialog/services/speaker-user-select-dialog.service';
 
 @Component({
     selector: `os-list-of-speakers-content`,
@@ -167,6 +168,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private viewport: ViewPortService,
         private cd: ChangeDetectorRef,
         private dialog: PointOfOrderDialogService,
+        private speakerUserSelectDialog: SpeakerUserSelectDialogService,
         private interactionService: InteractionService
     ) {
         super(componentServiceCollector, translate);
@@ -268,6 +270,17 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             await this.speakerRepo.delete(speakerToDelete.id);
             this.filterNonAvailableUsers();
             this.interactionService.kickUsers([speakerToDelete.user], `Removed from the list of speakers`);
+        }
+    }
+
+    public async updateSpeakerMeetingUser(_speaker: ViewSpeaker): Promise<void> {
+        const dialogRef = await this.speakerUserSelectDialog.open(this.listOfSpeakers);
+        try {
+            // const result =
+            await firstValueFrom(dialogRef.afterClosed());
+            // TODO
+        } catch (e) {
+            this.raiseError(e);
         }
     }
 

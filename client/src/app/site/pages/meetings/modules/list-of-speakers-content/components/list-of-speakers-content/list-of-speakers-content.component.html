@@ -108,7 +108,14 @@
                 <ng-container *ngIf="speaker.meeting_user_id">
                     {{ speaker.getListTitle() }}
                 </ng-container>
-                <span *ngIf="!speaker.meeting_user_id" translate>Select or search new speaker</span>
+                <span
+                    *ngIf="!speaker.meeting_user_id && canManage"
+                    class="select-speaker-button"
+                    (click)="updateSpeakerMeetingUser(speaker)"
+                    translate
+                >
+                    Select or search new speaker
+                </span>
                 <div class="active-speaker-subtitle">
                     <ng-container *ngTemplateOutlet="speakerSubtitle; context: { speaker: speaker }"></ng-container>
                 </div>
@@ -342,14 +349,22 @@
     <ng-template let-speaker="speaker" matMenuContent>
         <ng-container *ngIf="canManage">
             <!-- pro button -->
-            <button mat-menu-item (click)="onProContraButtons(speaker, true)" *ngIf="enableProContraSpeech">
+            <button
+                mat-menu-item
+                (click)="onProContraButtons(speaker, true)"
+                *ngIf="enableProContraSpeech && speaker.speech_state !== SpeechState.INTERPOSED_QUESTION"
+            >
                 <mat-icon *ngIf="speaker.speech_state !== SpeechState.PRO">add_circle_outline</mat-icon>
                 <mat-icon class="green-text" *ngIf="speaker.speech_state === SpeechState.PRO">add_circle</mat-icon>
                 <span>{{ 'Forspeech' | translate }}</span>
             </button>
 
             <!-- contra button -->
-            <button mat-menu-item (click)="onProContraButtons(speaker, false)" *ngIf="enableProContraSpeech">
+            <button
+                mat-menu-item
+                (click)="onProContraButtons(speaker, false)"
+                *ngIf="enableProContraSpeech && speaker.speech_state !== SpeechState.INTERPOSED_QUESTION"
+            >
                 <mat-icon *ngIf="speaker.speech_state !== SpeechState.CONTRA">remove_circle_outline</mat-icon>
                 <mat-icon class="red-warning-text" *ngIf="speaker.speech_state === SpeechState.CONTRA">
                     remove_circle
@@ -358,9 +373,23 @@
             </button>
 
             <!-- star button -->
-            <button mat-menu-item (click)="onMarkButton(speaker)">
+            <button
+                *ngIf="speaker.speech_state !== SpeechState.INTERPOSED_QUESTION"
+                mat-menu-item
+                (click)="onMarkButton(speaker)"
+            >
                 <mat-icon>{{ speaker.speech_state === SpeechState.CONTRIBUTION ? 'star' : 'star_border' }}</mat-icon>
                 <span>{{ 'Contribution' | translate }}</span>
+            </button>
+
+            <!-- update user button -->
+            <button
+                *ngIf="speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id"
+                mat-menu-item
+                (click)="updateSpeakerMeetingUser(speaker)"
+            >
+                <mat-icon>person_add</mat-icon>
+                <span translate>Select speaker</span>
             </button>
 
             <!-- Call controls -->
