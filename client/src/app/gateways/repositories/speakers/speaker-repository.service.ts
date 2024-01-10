@@ -82,6 +82,16 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         return this.sendActionToBackend(SpeakerAction.START_SPEAK, payload);
     }
 
+    public pauseSpeak(speaker: ViewSpeaker): Promise<void> {
+        const payload = { id: speaker.id };
+        return this.sendActionToBackend(SpeakerAction.PAUSE_SPEAK, payload);
+    }
+
+    public unpauseSpeak(speaker: ViewSpeaker): Promise<void> {
+        const payload = { id: speaker.id };
+        return this.sendActionToBackend(SpeakerAction.UNPAUSE_SPEAK, payload);
+    }
+
     public stopToSpeak(speaker: ViewSpeaker): Promise<void> {
         const payload = { id: speaker.id };
         return this.sendActionToBackend(SpeakerAction.END_SPEAK, payload);

@@ -26,15 +26,23 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
      *  - finished if there are both begin and end time
      */
     public get state(): SpeakerState {
-        if (this.speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
+        if (this.speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !this.speaker.end_time) {
             return SpeakerState.INTERPOSED_QUESTION;
         } else if (!this.speaker.begin_time && !this.speaker.end_time) {
             return SpeakerState.WAITING;
-        } else if (this.speaker.begin_time && !this.speaker.end_time) {
+        } else if (this.speaker.begin_time && (this.speaker.pause_time || !this.speaker.end_time)) {
             return SpeakerState.CURRENT;
         } else {
             return SpeakerState.FINISHED;
         }
+    }
+
+    public get isSpeaking(): boolean {
+        return this.speaker.begin_time && !this.speaker.end_time && !this.speaker.pause_time;
+    }
+
+    public get isCurrentSpeaker(): boolean {
+        return this.speaker.begin_time && !this.speaker.end_time;
     }
 
     public get isFinished(): boolean {

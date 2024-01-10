@@ -68,6 +68,14 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
         return this.repo.startToSpeak(speaker);
     }
 
+    public unpauseSpeak(speaker: ViewSpeaker): Promise<void> {
+        return this.repo.unpauseSpeak(speaker);
+    }
+
+    public pauseSpeak(speaker: ViewSpeaker): Promise<void> {
+        return this.repo.pauseSpeak(speaker);
+    }
+
     public stopToSpeak(speaker: ViewSpeaker): Promise<void> {
         return this.repo.stopToSpeak(speaker);
     }

@@ -316,7 +316,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      */
     public async onStartButton(speaker: ViewSpeaker): Promise<void> {
         try {
-            await this.speakerRepo.startToSpeak(speaker);
+            if (speaker.pause_time) {
+                await this.speakerRepo.unpauseSpeak(speaker);
+            } else {
+                await this.speakerRepo.startToSpeak(speaker);
+            }
             this.filterNonAvailableUsers();
         } catch (e) {
             this.raiseError(e);
@@ -326,9 +330,21 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     /**
      * Click on the mic-cross button to stop the current speaker
      */
-    public async onStopButton(): Promise<void> {
+    public async onPauseButton(speaker: ViewSpeaker): Promise<void> {
         try {
-            await this.speakerRepo.stopToSpeak(this.activeSpeaker!);
+            await this.speakerRepo.pauseSpeak(speaker);
+            this.filterNonAvailableUsers();
+        } catch (e) {
+            this.raiseError(e);
+        }
+    }
+
+    /**
+     * Click on the mic-cross button to stop the current speaker
+     */
+    public async onStopButton(speaker: ViewSpeaker): Promise<void> {
+        try {
+            await this.speakerRepo.stopToSpeak(speaker);
             this.filterNonAvailableUsers();
         } catch (e) {
             this.raiseError(e);

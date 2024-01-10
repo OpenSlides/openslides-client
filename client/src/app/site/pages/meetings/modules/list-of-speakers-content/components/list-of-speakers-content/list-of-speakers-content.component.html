@@ -81,16 +81,13 @@
             >
                 <mat-icon>warning</mat-icon>
             </button>
-            <!-- Stop speaker button -->
-            <button
+
+            <ng-container
+                [ngTemplateOutlet]="speakerControls"
+                [ngTemplateOutletContext]="{ speaker: activeSpeaker }"
                 *ngIf="canManage"
-                mat-icon-button
-                matTooltip="{{ 'End speech' | translate }}"
-                matTooltipPosition="left"
-                (click)="onStopButton()"
             >
-                <mat-icon>stop</mat-icon>
-            </button>
+            </ng-container>
 
             <!-- Extra menu with call controls -->
             <button
@@ -107,8 +104,10 @@
     <div class="interposed-questions">
         <div
             *ngFor="let speaker of interposedQuestions; let i = index"
-            class="single-speaker-line">
-            <div class="speaker-name">
+            class="speaker backgroundColorLight">
+            <span class="prefix"></span>
+
+            <span class="name">
                 <ng-container *ngIf="speaker.meeting_user_id">
                     {{ speaker.getListTitle() }}
                 </ng-container>
@@ -118,9 +117,16 @@
                 <div class="active-speaker-subtitle">
                     <ng-container *ngTemplateOutlet="speakerSubtitle; context: { speaker: speaker }"></ng-container>
                 </div>
-            </div>
+            </span>
 
-            <div class="speaker-controls one-line">
+            <span class="suffix">
+                <ng-container
+                    [ngTemplateOutlet]="speakerControls"
+                    [ngTemplateOutletContext]="{ speaker: speaker }"
+                    *ngIf="canManage"
+                >
+                </ng-container>
+
                 <!-- Extra menu with call controls -->
                 <button
                     *ngIf="canManage"
@@ -130,7 +136,7 @@
                 >
                     <mat-icon>more_vert</mat-icon>
                 </button>
-            </div>
+            </span>
         </div>
     </div>
 
@@ -509,4 +515,37 @@
         <span>{{ 'Invite to conference room' | translate }}</span>
     </button>
     <ng-container></ng-container>
+</ng-template>
+
+<ng-template #speakerControls let-speaker="speaker">
+    <button
+        *ngIf="!speaker.isSpeaking"
+        mat-icon-button
+        matTooltip="{{ 'Begin speech' | translate }}"
+        matTooltipPosition="left"
+        (click)="onStartButton(speaker)"
+    >
+        <mat-icon>play_arrow</mat-icon>
+    </button>
+
+    <button
+        *ngIf="speaker.isSpeaking"
+        mat-icon-button
+        matTooltip="{{ 'Pause speech' | translate }}"
+        matTooltipPosition="left"
+        (click)="onPauseButton(speaker)"
+    >
+        <mat-icon>pause</mat-icon>
+    </button>
+
+    <!-- Stop speaker button -->
+    <button
+        *ngIf="speaker.isCurrentSpeaker"
+        mat-icon-button
+        matTooltip="{{ 'End speech' | translate }}"
+        matTooltipPosition="left"
+        (click)="onStopButton(speaker)"
+    >
+        <mat-icon>stop</mat-icon>
+    </button>
 </ng-template>
