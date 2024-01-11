@@ -38,5 +38,4 @@ export abstract class BaseMeetingComponent extends BaseComponent {
     }
 
     public override componentServiceCollector = inject(MeetingComponentServiceCollectorService);
-    // protected override translate = inject(TranslateService);
 }
