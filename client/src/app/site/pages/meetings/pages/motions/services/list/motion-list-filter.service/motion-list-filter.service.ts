@@ -170,10 +170,10 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         ]
     };
 
-    categoryRepo = inject(MotionCategoryControllerService);
-    motionBlockRepo = inject(MotionBlockControllerService);
-    commentRepo = inject(MotionCommentSectionControllerService);
-    tagRepo = inject(TagControllerService);
+    private categoryRepo = inject(MotionCategoryControllerService);
+    private motionBlockRepo = inject(MotionBlockControllerService);
+    private commentRepo = inject(MotionCommentSectionControllerService);
+    private tagRepo = inject(TagControllerService);
     private workflowRepo = inject(MotionWorkflowControllerService);
     protected translate = inject(TranslateService);
     private operator = inject(OperatorService);

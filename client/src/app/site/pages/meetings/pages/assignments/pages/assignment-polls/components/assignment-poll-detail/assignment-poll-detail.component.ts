@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { VoteValue } from 'src/app/domain/models/poll';
 import {
@@ -40,7 +39,6 @@ export class AssignmentPollDetailComponent
     }
 
     public constructor(
-        protected override translate: TranslateService,
         pollService: AssignmentPollService,
         private pollDialog: AssignmentPollDialogService,
         pollPdfService: AssignmentPollPdfService

@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Directive, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -117,7 +116,6 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     private _currentOperator!: ViewUser;
     private _pollId!: Id;
 
-    protected override translate = inject(TranslateService);
     protected repo = inject(PollControllerService);
     protected route = inject(ActivatedRoute);
     protected groupRepo = inject(GroupControllerService);
