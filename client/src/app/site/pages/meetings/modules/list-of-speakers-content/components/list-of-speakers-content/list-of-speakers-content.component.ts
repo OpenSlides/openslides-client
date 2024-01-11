@@ -72,8 +72,16 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.meetingSettingsService.get(`list_of_speakers_show_first_contribution`);
     }
 
-    public get showInterposedQuestions(): boolean {
-        return true;
+    public get showInterposedQuestions(): Observable<boolean> {
+        return this.meetingSettingService.get(`list_of_speakers_enable_interposed_question`);
+    }
+
+    public get interventionCountdownEnabled(): Observable<boolean> {
+        return this.meetingSettingService.get(`list_of_speakers_intervention_time`).pipe(map(v => v > 0));
+    }
+
+    public get structureLevelCountdownEnabled(): Observable<boolean> {
+        return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v > 0));
     }
 
     public get showPointOfOrders(): boolean {
@@ -133,8 +141,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public restrictPointOfOrderActions = false;
 
-    public structureLevelCountdownEnabled = false;
-
     public isPointOfOrderFn = (speaker: ViewSpeaker) => speaker.point_of_order;
     public enableProContraSpeech = false;
 
@@ -179,10 +185,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled)),
             this.meetingSettingsService
                 .get(`list_of_speakers_closing_disables_point_of_order`)
-                .subscribe(enabled => (this.restrictPointOfOrderActions = enabled)),
-            this.meetingSettingsService
-                .get(`list_of_speakers_default_structure_level_time`)
-                .subscribe(time => (this.structureLevelCountdownEnabled = time > 0))
+                .subscribe(enabled => (this.restrictPointOfOrderActions = enabled))
         );
     }
 
@@ -470,7 +473,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         }
         const user = this.userRepository.getViewModel(data.userId);
         let structureLevelId: Id;
-        if (this.structureLevelCountdownEnabled && user.getMeetingUser().structure_level_ids.length === 1) {
+        if (
+            (await firstValueFrom(this.structureLevelCountdownEnabled)) &&
+            user.getMeetingUser().structure_level_ids.length === 1
+        ) {
             structureLevelId = user.getMeetingUser().structure_level_ids[0];
         }
 

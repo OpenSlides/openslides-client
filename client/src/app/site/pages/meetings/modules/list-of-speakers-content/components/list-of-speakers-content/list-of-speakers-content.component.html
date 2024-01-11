@@ -73,6 +73,15 @@
         </span>
 
         <span class="suffix">
+            <!-- Speaker countdown -->
+            <ng-container
+                [ngTemplateOutlet]="speakerCountdown"
+                [ngTemplateOutletContext]="{
+                    speaker: activeSpeaker,
+                    speakingTime: activeSpeaker.structure_level_list_of_speakers
+                }"
+            ></ng-container>
+
             <!-- point of order visible for everyone -->
             <button
                 mat-icon-button
@@ -172,6 +181,15 @@
                         ></ng-container>
                     </div>
                     <div class="speaker-controls one-line">
+                        <!-- Speaker countdown -->
+                        <ng-container
+                            [ngTemplateOutlet]="speakerCountdown"
+                            [ngTemplateOutletContext]="{
+                                speaker: speaker,
+                                speakingTime: speaker.structure_level_list_of_speakers
+                            }"
+                        ></ng-container>
+
                         <!-- Extra stuff: Spoken Count, Gender, 1st Contribution -->
                         <span *ngIf="canManage && !speaker.point_of_order">
                             <!-- Speaker count -->
@@ -332,7 +350,7 @@
         <button
             mat-stroked-button
             (click)="addInterposedQuestion()"
-            *ngIf="showInterposedQuestions"
+            *ngIf="showInterposedQuestions | async"
             [disabled]="closed"
         >
             <mat-icon>help</mat-icon>
@@ -405,7 +423,7 @@
             <button
                 *ngIf="
                     canManage &&
-                    structureLevelCountdownEnabled &&
+                    (structureLevelCountdownEnabled | async) &&
                     speaker.isWaiting &&
                     speaker.meeting_user_id &&
                     speaker.meeting_user.structure_levels?.length
@@ -538,6 +556,26 @@
         <span>{{ 'Invite to conference room' | translate }}</span>
     </button>
     <ng-container></ng-container>
+</ng-template>
+
+<!-- Invite to conference room -->
+<ng-template #speakerCountdown let-speakingTime="speakingTime" let-speaker="speaker">
+    <span
+        *ngIf="(structureLevelCountdownEnabled | async) && speaker.structure_level_list_of_speakers"
+        class="countdown"
+    >
+        <os-countdown-time
+            [unstyled]="true"
+            [countdown]="{
+                running: !!speakingTime.current_start_time,
+                countdown_time: speakingTime.current_start_time
+                    ? speakingTime.current_start_time +
+                      speakingTime.remaining_time +
+                      (speakingTime.additional_time || 0)
+                    : speakingTime.remaining_time + (speakingTime.additional_time || 0)
+            }"
+        ></os-countdown-time>
+    </span>
 </ng-template>
 
 <ng-template #speakerControls let-speaker="speaker">
