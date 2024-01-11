@@ -20,7 +20,7 @@ import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
+import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
@@ -100,9 +100,14 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this._listOfSpeakers?.getTitle() || ``;
     }
 
-    public isAgendaItem(): boolean {
-        const isOnAgenda = this._contentObject?.getModel().agenda_item_id;
+    public async isAgendaItem(): Promise<boolean> {
+        //TODO: fix 
+        const isOnAgenda =  await this._contentObject?.getModel().agenda_item_id !== undefined;
         return isOnAgenda;
+    }
+
+    public get agendaItem(): ViewAgendaItem<any> {
+        return this.agendaItemRepo.getViewModel(this._contentObject?.getModel().agenda_item_id);
     }
 
     public get moderatorNotes(): Observable<string> {
@@ -563,14 +568,13 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      * Saves changes and updates the content.
      */
     public saveChanges(): void {
-        // TODO: test after agendaItem works
-        // this.agendaItemRepo
-        //     .update(this.moderatorNoteForm.value, this.agendaItem
-        //     )
-        //     .then(() => {
-        //         this.isEditing = false;
-        //     })
-        //     .catch(this.raiseError);
+        this.agendaItemRepo
+            .update(this.moderatorNoteForm.value, this.agendaItem
+            )
+            .then(() => {
+                this.isEditing = false;
+            })
+            .catch(this.raiseError);
     }
 
     public get moderatorNoteObservable(): Observable<string> {
