@@ -296,36 +296,43 @@
 <!-- Moderator Note-->
 <mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'" *ngIf="isAgendaItem()">
     <!-- Title edit/save/cancle-->
-    <h1>
-        {{ 'Moderator note' | translate }}
-        <ng-container *ngIf="isEditing">
-            <button mat-button (click)="toggleEditModeratorNote()">
-                <mat-icon>cancel</mat-icon>
-            </button>
-            <button mat-button [disabled]="!moderatorNoteForm.valid" (click)="saveChanges()">
-                <strong class="upper">{{ saveText | translate }}</strong>
-            </button>
-        </ng-container>
-        <ng-container *ngIf="!isEditing">
-            <button mat-button (click)="toggleEditModeratorNote()">
-                <mat-icon>edit</mat-icon>
-            </button>
-        </ng-container>
-    </h1>
-
-    <ng-container *ngIf="!isEditing">
-        <div class="app-content underlined-links">
-            <ng-container *ngIf="moderatorNoteObservable | async as moderatorNoteText">
-                <div [innerHTML]="moderatorNoteText | trust : 'html'"></div>
+    <div class="moderation-note-title action-title padding-bottom-10">
+        
+            <h1>
+                {{ 'Moderator note' | translate }}
+            </h1>
+        <div class="buttons">
+            <ng-container *ngIf="isEditing">
+                <button mat-button (click)="toggleEditModeratorNote()">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+                <button mat-button [disabled]="!moderatorNoteForm.valid" (click)="saveChanges()">
+                    <strong class="upper">{{ saveText | translate }}</strong>
+                </button>
+            </ng-container>
+            <ng-container *ngIf="!isEditing">
+                <button mat-button (click)="toggleEditModeratorNote()">
+                    <mat-icon>edit</mat-icon>
+                </button>
             </ng-container>
         </div>
-    </ng-container>
+    </div >
 
-    <ng-container *ngIf="isEditing">
-        <form [formGroup]="moderatorNoteForm">
-            <os-editor formControlName="moderator_note"></os-editor>
-        </form>
-    </ng-container>
+    <mat-card-content>        
+        <ng-container *ngIf="!isEditing">
+            <div class="app-content underlined-links">
+                <ng-container *ngIf="moderatorNoteObservable | async as moderatorNoteText">
+                    <div [innerHTML]="moderatorNoteText | trust : 'html'"></div>
+                </ng-container>
+            </div>
+        </ng-container>
+    
+        <ng-container *ngIf="isEditing">
+            <form [formGroup]="moderatorNoteForm">
+                <os-editor formControlName="moderator_note"></os-editor>
+            </form>
+        </ng-container>
+    </mat-card-content>
 </mat-card>
 
 <!-- admin menu for managing single speakers -->
