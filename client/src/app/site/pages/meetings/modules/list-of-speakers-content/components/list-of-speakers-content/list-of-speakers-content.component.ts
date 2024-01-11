@@ -101,8 +101,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public async isAgendaItem(): Promise<boolean> {
-        //TODO: fix 
-        const isOnAgenda =  await this._contentObject?.getModel().agenda_item_id !== undefined;
+        //TODO: fix
+        const isOnAgenda = (await this._contentObject?.getModel().agenda_item_id) !== undefined;
         return isOnAgenda;
     }
 
@@ -569,8 +569,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      */
     public saveChanges(): void {
         this.agendaItemRepo
-            .update(this.moderatorNoteForm.value, this.agendaItem
-            )
+            .update(this.moderatorNoteForm.value, this.agendaItem)
             .then(() => {
                 this.isEditing = false;
             })

@@ -297,10 +297,9 @@
 <mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'" *ngIf="isAgendaItem()">
     <!-- Title edit/save/cancle-->
     <div class="moderation-note-title action-title padding-bottom-10">
-        
-            <h1>
-                {{ 'Moderator note' | translate }}
-            </h1>
+        <h1>
+            {{ 'Moderator note' | translate }}
+        </h1>
         <div class="buttons">
             <ng-container *ngIf="isEditing">
                 <button mat-button (click)="toggleEditModeratorNote()">
@@ -316,9 +315,9 @@
                 </button>
             </ng-container>
         </div>
-    </div >
+    </div>
 
-    <mat-card-content>        
+    <mat-card-content>
         <ng-container *ngIf="!isEditing">
             <div class="app-content underlined-links">
                 <ng-container *ngIf="moderatorNoteObservable | async as moderatorNoteText">
@@ -326,7 +325,7 @@
                 </ng-container>
             </div>
         </ng-container>
-    
+
         <ng-container *ngIf="isEditing">
             <form [formGroup]="moderatorNoteForm">
                 <os-editor formControlName="moderator_note"></os-editor>
