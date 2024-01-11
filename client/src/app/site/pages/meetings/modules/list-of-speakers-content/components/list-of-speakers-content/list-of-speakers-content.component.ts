@@ -273,12 +273,13 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         }
     }
 
-    public async updateSpeakerMeetingUser(_speaker: ViewSpeaker): Promise<void> {
+    public async updateSpeakerMeetingUser(speaker: ViewSpeaker): Promise<void> {
         const dialogRef = await this.speakerUserSelectDialog.open(this.listOfSpeakers);
         try {
-            // const result =
-            await firstValueFrom(dialogRef.afterClosed());
-            // TODO
+            const result = await firstValueFrom(dialogRef.afterClosed());
+            if (result) {
+                await this.speakerRepo.setMeetingUser(speaker, result.meeting_user_id);
+            }
         } catch (e) {
             this.raiseError(e);
         }
