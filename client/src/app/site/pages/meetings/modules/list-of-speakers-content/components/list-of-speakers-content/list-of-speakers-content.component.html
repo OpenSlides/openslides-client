@@ -544,7 +544,7 @@
     <button
         *ngIf="!speaker.isSpeaking"
         mat-icon-button
-        matTooltip="{{ 'Begin speech' | translate }}"
+        matTooltip="{{ (speaker.pause_time ? 'Resume speech' : 'Begin speech') | translate }}"
         matTooltipPosition="left"
         (click)="onStartButton(speaker)"
     >
