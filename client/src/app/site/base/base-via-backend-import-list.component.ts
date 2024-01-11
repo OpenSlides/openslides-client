@@ -1,5 +1,4 @@
-import { Directive, inject, OnInit, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Directive, OnInit, ViewChild } from '@angular/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import {
     BackendImportListComponent,
@@ -61,8 +60,9 @@ export abstract class BaseViaBackendImportListComponent extends BaseComponent im
 
     private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
 
-    protected override translate = inject(TranslateService);
-    protected importer = inject(BaseBackendImportService);
+    public constructor(protected importer: BaseBackendImportService) {
+        super();
+    }
 
     public ngOnInit(): void {
         this.importer.currentImportPhaseObservable.subscribe(phase => {

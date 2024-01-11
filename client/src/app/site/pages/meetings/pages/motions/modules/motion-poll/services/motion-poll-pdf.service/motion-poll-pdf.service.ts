@@ -8,14 +8,19 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { ViewMotion } from '../../../../view-models';
+import { MotionPollService } from '../motion-poll.service';
 import { MotionPollServiceModule } from '../motion-poll-service.module';
 
 @Injectable({
     providedIn: MotionPollServiceModule
 })
 export class MotionPollPdfService extends BasePollPdfService {
-    public constructor(protected override translate: TranslateService, private motionRepo: MotionControllerService) {
-        super();
+    public constructor(
+        protected override translate: TranslateService,
+        private motionRepo: MotionControllerService,
+        pollService: MotionPollService
+    ) {
+        super(pollService);
         this.meetingSettingsService
             .get(`motion_poll_ballot_paper_number`)
             .subscribe(count => (this.ballotCustomCount = count));

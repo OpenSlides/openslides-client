@@ -28,7 +28,7 @@ export class AccountImportListComponent extends BaseViaBackendImportListComponen
         public override importer: AccountImportService,
         public orgaSettings: OrganizationSettingsService
     ) {
-        super();
+        super(importer);
     }
 
     private getTranslatedGenderInfoObservable(): Observable<string> {

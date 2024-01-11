@@ -9,6 +9,7 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionPollService } from '../../../../modules/motion-poll/services';
 import { MotionPollDialogService } from '../../../../modules/motion-poll/services/motion-poll-dialog.service';
+import { MotionPollPdfService } from '../../../../modules/motion-poll/services/motion-poll-pdf.service';
 
 @Component({
     selector: `os-motion-poll-detail`,
@@ -27,9 +28,10 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
     public constructor(
         protected override translate: TranslateService,
         pollService: MotionPollService,
-        private pollDialog: MotionPollDialogService
+        private pollDialog: MotionPollDialogService,
+        pollPdfService: MotionPollPdfService
     ) {
-        super(pollService);
+        super(pollService, pollPdfService);
     }
 
     protected createVotesData(): BaseVoteData[] {

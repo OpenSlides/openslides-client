@@ -35,7 +35,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         const option = this.sortOptions.find(option =>
             this.isSameProperty(option.property, this.sortDefinition.sortProperty)
         );
-        return option.baseKeys ?? (Array.isArray(option.property) ? option.property : [option.property]);
+        return option?.baseKeys ?? (Array.isArray(option.property) ? option.property : [option.property]);
     }
 
     /**
@@ -45,7 +45,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         const option = this.sortOptions.find(option =>
             this.isSameProperty(option.property, this.sortDefinition.sortProperty)
         );
-        return option.foreignBaseKeys ?? {};
+        return option?.foreignBaseKeys ?? {};
     }
 
     /**
