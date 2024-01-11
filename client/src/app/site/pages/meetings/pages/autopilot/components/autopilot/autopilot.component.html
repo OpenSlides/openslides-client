@@ -106,7 +106,14 @@
     >
         <mat-card class="os-card spacer-bottom-60">
             <mat-card-content>
-                <p class="subtitle-text" translate>Speaking times</p>
+                <div class="action-title">
+                    <p class="subtitle-text" translate>Speaking times</p>
+                    <ng-container *ngIf="projectorUrl">
+                        <button mat-icon-button (click)="showAllStructureLevels()">
+                            <mat-icon>videocam</mat-icon>
+                        </button>
+                    </ng-container>
+                </div>
                 <os-speaking-times
                     [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"
                 ></os-speaking-times>

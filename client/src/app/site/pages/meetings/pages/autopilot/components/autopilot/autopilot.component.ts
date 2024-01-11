@@ -149,4 +149,14 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     public async readdLastSpeaker(): Promise<void> {
         await this.listOfSpeakersRepo.readdLastSpeaker(this.listOfSpeakers!).catch(this.raiseError);
     }
+
+    public showAllStructureLevels(): void {
+        // TODO 
+        // this function still needs to do something
+    }
+    
+    public showActiveStructureLevel(): void {
+        // TODO 
+        // this function still needs to do something
+    }
 }
