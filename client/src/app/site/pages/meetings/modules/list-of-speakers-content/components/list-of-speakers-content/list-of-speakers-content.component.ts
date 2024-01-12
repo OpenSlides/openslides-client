@@ -528,6 +528,32 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.durationService.durationToString(duration, `m`);
     }
 
+    public getSpeakerCountdown(speaker: ViewSpeaker): any {
+        if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
+            const total_pause = speaker.total_pause || 0;
+            const end = speaker.pause_time || speaker.end_time || 0;
+            return {
+                running: speaker.isSpeaking,
+                default_time: 0,
+                countdown_time: speaker.isSpeaking
+                    ? speaker.begin_time + total_pause
+                    : (end - (speaker.begin_time + total_pause) || 0) * -1
+            };
+        } else if (this.structureLevelCountdownEnabled && speaker.structure_level_list_of_speakers) {
+            const speakingTime = speaker.structure_level_list_of_speakers;
+            const remaining = speakingTime.remaining_time + (speakingTime.additional_time || 0);
+            return {
+                running: !!speakingTime.current_start_time,
+                countdown_time: speakingTime.current_start_time
+                    ? speakingTime.current_start_time + remaining
+                    : remaining
+            };
+        }
+
+        return null;
+        // const remaining = speakingTime.remaining_time + (speakingTime.additional_time || 0);
+    }
+
     /**
      * returns a locale-specific version of the starting time for the given speaker item
      *

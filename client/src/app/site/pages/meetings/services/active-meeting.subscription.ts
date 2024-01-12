@@ -97,7 +97,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                                             follow: [
                                                 {
                                                     idField: `speaker_ids`,
-                                                    fieldset: [`begin_time`, `end_time`, `pause_time`, `weight`],
+                                                    fieldset: [`begin_time`, `end_time`, `weight`],
                                                     follow: [
                                                         {
                                                             idField: `meeting_user_id`,

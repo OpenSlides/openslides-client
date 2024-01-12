@@ -77,8 +77,7 @@
             <ng-container
                 [ngTemplateOutlet]="speakerCountdown"
                 [ngTemplateOutletContext]="{
-                    speaker: activeSpeaker,
-                    speakingTime: activeSpeaker.structure_level_list_of_speakers
+                    countdown: getSpeakerCountdown(activeSpeaker),
                 }"
             ></ng-container>
 
@@ -131,6 +130,14 @@
             </span>
 
             <span class="suffix">
+                <!-- Speaker countdown -->
+                <ng-container
+                    [ngTemplateOutlet]="speakerCountdown"
+                    [ngTemplateOutletContext]="{
+                        countdown: getSpeakerCountdown(speaker)
+                    }"
+                ></ng-container>
+
                 <ng-container
                     [ngTemplateOutlet]="speakerControls"
                     [ngTemplateOutletContext]="{ speaker: speaker }"
@@ -185,8 +192,7 @@
                         <ng-container
                             [ngTemplateOutlet]="speakerCountdown"
                             [ngTemplateOutletContext]="{
-                                speaker: speaker,
-                                speakingTime: speaker.structure_level_list_of_speakers
+                                countdown: getSpeakerCountdown(speaker),
                             }"
                         ></ng-container>
 
@@ -559,21 +565,14 @@
 </ng-template>
 
 <!-- Invite to conference room -->
-<ng-template #speakerCountdown let-speakingTime="speakingTime" let-speaker="speaker">
+<ng-template #speakerCountdown let-countdown="countdown">
     <span
-        *ngIf="(structureLevelCountdownEnabled | async) && speaker.structure_level_list_of_speakers"
+        *ngIf="(structureLevelCountdownEnabled | async) && countdown"
         class="countdown"
     >
         <os-countdown-time
             [unstyled]="true"
-            [countdown]="{
-                running: !!speakingTime.current_start_time,
-                countdown_time: speakingTime.current_start_time
-                    ? speakingTime.current_start_time +
-                      speakingTime.remaining_time +
-                      (speakingTime.additional_time || 0)
-                    : speakingTime.remaining_time + (speakingTime.additional_time || 0)
-            }"
+            [countdown]="countdown"
         ></os-countdown-time>
     </span>
 </ng-template>
