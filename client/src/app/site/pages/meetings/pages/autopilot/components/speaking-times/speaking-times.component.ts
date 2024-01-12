@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { StructureLevelListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/structure-level-list-of-speakers';
 import { DurationService } from 'src/app/site/services/duration.service';
 
@@ -11,6 +12,11 @@ import { DurationService } from 'src/app/site/services/duration.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpeakingTimesComponent implements OnDestroy {
+    /**
+     * To check permissions in templates using permission.[...]
+     */
+    public readonly permission = Permission;
+
     private subscribedIds: Set<Id> = new Set();
     private subscriptions: Map<Id, Subscription> = new Map();
     private structureLevels: Map<Id, any> = new Map();
@@ -67,5 +73,39 @@ export class SpeakingTimesComponent implements OnDestroy {
 
     public duration(duration_time: number): string {
         return this.durationService.durationToString(duration_time, `m`).slice(0, -2);
+    }
+
+    public setTotalTime(structure_level_id: number): void {
+        /**
+         * an dialog should open with:
+         * title: "Change total time of `structure_level_name`"
+         * input (required and required >=0) field with new time
+         * warn-text: "this will overwrite the current time"
+         * buttons: OK and Cancel
+         *
+         * the countdown the structure level with the structure_level id should
+         * be set to whatever number time was given
+         */
+    }
+
+    public distributOverhangTime(structure_level_id: number): void {
+        /**
+         * an dialog should open with:
+         * title: "Distribute overhang time"
+         * text: "Are you sure you want add `overhang time-from-structure-level` onto every structure level?"
+         * buttons: OK and Cancel
+         * the overhang time from the structure level should he added onto every structure level
+         * Example:
+         * If level A has 20 sec left and level B an overhang from -30sec
+         * the level A should have (after distributing B's overhang time) 50 sec
+         * and B should have 0 secs
+         */
+    }
+
+    public isInOvertime(structure_level_id: number): boolean {
+        /**
+         * return true if structure level is in overtime (countdown time < 0)
+         */
+        return true;
     }
 }

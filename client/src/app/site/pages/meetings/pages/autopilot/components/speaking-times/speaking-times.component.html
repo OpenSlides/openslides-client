@@ -1,8 +1,37 @@
 <div class="structure-level-list">
     <div class="structure-level" *ngFor="let structure_level of getStructureLevels()">
-        <span class="structure-level-time" [ngStyle]="{ 'border-top-color': structure_level.color }">
-            <os-countdown-time [unstyled]="true" [countdown]="structure_level.countdown"></os-countdown-time>
-        </span>
-        <div class="structure-level-name">{{ structure_level.name }}</div>
+        <div>
+            <span class="structure-level-time" [ngStyle]="{ 'border-top-color': structure_level.color }">
+                <os-countdown-time [unstyled]="true" [countdown]="structure_level.countdown"></os-countdown-time>
+            </span>
+            <div class="structure-level-name">{{ structure_level.name }}</div>
+        </div>
+        <ng-container *ngIf="permission.projectorCanManage">
+            <button
+                type="button"
+                mat-icon-button
+                [matMenuTriggerFor]="projectionMenu"
+                [matMenuTriggerData]="{ structure_level: structure_level }"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </ng-container>
     </div>
 </div>
+
+<mat-menu #projectionMenu="matMenu">
+    <ng-template let-structure_level="structure_level" matMenuContent>
+        <button mat-menu-item (click)="setTotalTime(structure_level.id)">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'Edit total time' | translate }}</span>
+        </button>
+        <button
+            mat-menu-item
+            (click)="distributOverhangTime(structure_level.id)"
+            [disabled]="isInOvertime(structure_level.id)"
+        >
+            <mat-icon>more_time</mat-icon>
+            <span>{{ 'Distribute overhang time' | translate }}</span>
+        </button>
+    </ng-template>
+</mat-menu>
