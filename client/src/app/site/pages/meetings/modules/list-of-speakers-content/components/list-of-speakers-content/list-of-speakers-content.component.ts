@@ -76,7 +76,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.meetingSettingService.get(`list_of_speakers_enable_interposed_question`);
     }
 
-    public get interventionCountdownEnabled(): Observable<boolean> {
+    public get interventionEnabled(): Observable<boolean> {
         return this.meetingSettingService.get(`list_of_speakers_intervention_time`).pipe(map(v => v > 0));
     }
 
@@ -385,6 +385,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         await this.speakerRepo.setContribution(speaker);
     }
 
+    public async onInterventionButton(speaker: ViewSpeaker): Promise<void> {
+        await this.speakerRepo.setIntervention(speaker);
+    }
+
     public async onProContraButtons(speaker: ViewSpeaker, isProSpeech: boolean): Promise<void> {
         if (isProSpeech) {
             await this.speakerRepo.setProSpeech(speaker);
@@ -548,10 +552,24 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                     ? speakingTime.current_start_time + remaining
                     : remaining
             };
+        } else if (
+            this.meetingSettingService.instant(`list_of_speakers_intervention_time`) > 0 &&
+            speaker.speech_state === SpeechState.INTERVENTION
+        ) {
+            const default_time = this.meetingSettingService.instant(`list_of_speakers_intervention_time`) || 0;
+            const total_pause = speaker.total_pause || 0;
+            const end = speaker.pause_time || speaker.end_time || 0;
+            const countdown_time = speaker.isSpeaking
+                ? speaker.begin_time + total_pause + default_time
+                : (end - (speaker.begin_time + total_pause + default_time)) * -1;
+            return {
+                running: speaker.isSpeaking,
+                default_time,
+                countdown_time: speaker.begin_time ? countdown_time : default_time
+            };
         }
 
         return null;
-        // const remaining = speakingTime.remaining_time + (speakingTime.additional_time || 0);
     }
 
     /**

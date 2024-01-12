@@ -116,6 +116,11 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         return this.updateSpeechState(speechState, speaker);
     }
 
+    public setIntervention(speaker: ViewSpeaker): Promise<void> {
+        const speechState = speaker.speech_state === SpeechState.INTERVENTION ? null : SpeechState.INTERVENTION;
+        return this.updateSpeechState(speechState, speaker);
+    }
+
     public setProSpeech(speaker: ViewSpeaker): Promise<void> {
         const speechState = speaker.speech_state === SpeechState.PRO ? null : SpeechState.PRO;
         return this.updateSpeechState(speechState, speaker);

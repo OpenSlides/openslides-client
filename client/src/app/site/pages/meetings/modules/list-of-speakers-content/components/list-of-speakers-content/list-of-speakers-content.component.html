@@ -67,6 +67,12 @@
 
         <span class="name">
             {{ activeSpeaker.getListTitle() }}
+            <span
+                *ngIf="activeSpeaker.structure_level_list_of_speakers?.structure_level"
+                class="speaker-structure-level"
+            >
+                {{ activeSpeaker.structure_level_list_of_speakers?.structure_level?.name }}
+            </span>
             <div class="active-speaker-subtitle">
                 <ng-container *ngTemplateOutlet="speakerSubtitle; context: { speaker: activeSpeaker }"></ng-container>
             </div>
@@ -372,39 +378,52 @@
 <mat-menu #manageSpeakerMenu>
     <ng-template let-speaker="speaker" matMenuContent>
         <ng-container *ngIf="canManage">
-            <!-- pro button -->
-            <button
-                mat-menu-item
-                (click)="onProContraButtons(speaker, true)"
-                *ngIf="enableProContraSpeech && speaker.speech_state !== SpeechState.INTERPOSED_QUESTION"
+            <ng-container
+                *ngIf="
+                    speaker.speech_state !== SpeechState.INTERVENTION &&
+                    speaker.speech_state !== SpeechState.INTERPOSED_QUESTION
+                "
             >
-                <mat-icon *ngIf="speaker.speech_state !== SpeechState.PRO">add_circle_outline</mat-icon>
-                <mat-icon class="green-text" *ngIf="speaker.speech_state === SpeechState.PRO">add_circle</mat-icon>
-                <span>{{ 'Forspeech' | translate }}</span>
-            </button>
+                <!-- pro button -->
+                <button
+                    mat-menu-item
+                    (click)="onProContraButtons(speaker, true)"
+                    *ngIf="enableProContraSpeech && speaker.speech_state !== SpeechState.INTERPOSED_QUESTION"
+                >
+                    <mat-icon *ngIf="speaker.speech_state !== SpeechState.PRO">add_circle_outline</mat-icon>
+                    <mat-icon class="green-text" *ngIf="speaker.speech_state === SpeechState.PRO">add_circle</mat-icon>
+                    <span>{{ 'Forspeech' | translate }}</span>
+                </button>
 
-            <!-- contra button -->
-            <button
-                mat-menu-item
-                (click)="onProContraButtons(speaker, false)"
-                *ngIf="enableProContraSpeech && speaker.speech_state !== SpeechState.INTERPOSED_QUESTION"
-            >
-                <mat-icon *ngIf="speaker.speech_state !== SpeechState.CONTRA">remove_circle_outline</mat-icon>
-                <mat-icon class="red-warning-text" *ngIf="speaker.speech_state === SpeechState.CONTRA">
-                    remove_circle
-                </mat-icon>
-                <span>{{ 'Contra speech' | translate }}</span>
-            </button>
+                <!-- contra button -->
+                <button
+                    mat-menu-item
+                    (click)="onProContraButtons(speaker, false)"
+                    *ngIf="enableProContraSpeech && speaker.speech_state !== SpeechState.INTERPOSED_QUESTION"
+                >
+                    <mat-icon *ngIf="speaker.speech_state !== SpeechState.CONTRA">remove_circle_outline</mat-icon>
+                    <mat-icon class="red-warning-text" *ngIf="speaker.speech_state === SpeechState.CONTRA">
+                        remove_circle
+                    </mat-icon>
+                    <span>{{ 'Contra speech' | translate }}</span>
+                </button>
 
-            <!-- star button -->
-            <button
-                *ngIf="speaker.speech_state !== SpeechState.INTERPOSED_QUESTION"
-                mat-menu-item
-                (click)="onMarkButton(speaker)"
-            >
-                <mat-icon>{{ speaker.speech_state === SpeechState.CONTRIBUTION ? 'star' : 'star_border' }}</mat-icon>
-                <span>{{ 'Contribution' | translate }}</span>
-            </button>
+                <!-- star button -->
+                <button mat-menu-item (click)="onMarkButton(speaker)">
+                    <mat-icon>
+                        {{ speaker.speech_state === SpeechState.CONTRIBUTION ? 'star' : 'star_border' }}
+                    </mat-icon>
+                    <span>{{ 'Contribution' | translate }}</span>
+                </button>
+
+                <!-- intervention -->
+                <button *ngIf="interventionEnabled | async" mat-menu-item (click)="onInterventionButton(speaker)">
+                    <mat-icon>
+                        {{ speaker.speech_state === SpeechState.INTERVENTION ? 'error' : 'error_outline' }}
+                    </mat-icon>
+                    <span>{{ 'Intervention' | translate }}</span>
+                </button>
+            </ng-container>
 
             <!-- update user button -->
             <button
@@ -566,14 +585,8 @@
 
 <!-- Invite to conference room -->
 <ng-template #speakerCountdown let-countdown="countdown">
-    <span
-        *ngIf="(structureLevelCountdownEnabled | async) && countdown"
-        class="countdown"
-    >
-        <os-countdown-time
-            [unstyled]="true"
-            [countdown]="countdown"
-        ></os-countdown-time>
+    <span *ngIf="(structureLevelCountdownEnabled | async) && countdown" class="countdown">
+        <os-countdown-time [unstyled]="true" [countdown]="countdown"></os-countdown-time>
     </span>
 </ng-template>
 
