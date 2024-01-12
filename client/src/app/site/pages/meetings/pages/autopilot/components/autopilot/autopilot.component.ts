@@ -115,8 +115,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         private operator: OperatorService,
         projectorRepo: ProjectorControllerService,
         closService: CurrentListOfSpeakersService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService,
-        private durationService: DurationService
+        private listOfSpeakersRepo: ListOfSpeakersControllerService
     ) {
         super(componentServiceCollector, translate);
 
@@ -151,12 +150,22 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     }
 
     public showAllStructureLevels(): void {
-        // TODO 
-        // this function still needs to do something
+        /**
+         *  TODO 
+         * - a dialog should open to select the projector 
+         *    (see election-list -> projector button for similar dialog)
+         * - every structure level/time/colour etc. should be projected onto the selected projector(s)
+         */ 
     }
     
     public showActiveStructureLevel(): void {
-        // TODO 
-        // this function still needs to do something
+        /**
+         *  TODO 
+         * - a dialog should open to select the projector 
+         *    (see election-list -> projector button for similar dialog)
+         * - only the structure level/time/colour of the currently speaking person should be projected onto the selected projector(s)
+         * - the projected structure level should be the structure level of the currently speaking person
+         */ 
     }
+
 }

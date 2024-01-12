@@ -108,11 +108,17 @@
             <mat-card-content>
                 <div class="action-title">
                     <p class="subtitle-text" translate>Speaking times</p>
-                    <ng-container *ngIf="projectorUrl">
+                    <ng-container *ngIf="permission.projectorCanManage">
                         <button mat-icon-button (click)="showAllStructureLevels()">
                             <mat-icon>videocam</mat-icon>
                         </button>
                     </ng-container>
+                    <!-- <os-projector-button
+                        *osPerms="permission.projectorCanManage"
+                        class="projector-button"
+                        [object]="viewModel"
+                        (changeEvent)="viewUpdateEvent()"
+                    ></os-projector-button> -->
                 </div>
                 <os-speaking-times
                     [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"

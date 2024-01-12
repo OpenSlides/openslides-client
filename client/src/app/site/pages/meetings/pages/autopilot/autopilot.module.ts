@@ -24,6 +24,7 @@ import { AutopilotComponent } from './components/autopilot/autopilot.component';
 import { AutopilotMainComponent } from './components/autopilot-main/autopilot-main.component';
 import { PollCollectionComponent } from './components/poll-collection/poll-collection.component';
 import { SpeakingTimesComponent } from './components/speaking-times/speaking-times.component';
+import { ProjectorButtonModule } from '../../modules/meetings-component-collector/projector-button/projector-button.module';
 
 @NgModule({
     declarations: [AutopilotMainComponent, AutopilotComponent, PollCollectionComponent, SpeakingTimesComponent],
@@ -47,7 +48,8 @@ import { SpeakingTimesComponent } from './components/speaking-times/speaking-tim
         PollModule,
         MotionPollModule,
         TopicPollModule,
-        AssignmentPollModule
+        AssignmentPollModule,
+        ProjectorButtonModule
     ]
 })
 export class AutopilotModule {}
