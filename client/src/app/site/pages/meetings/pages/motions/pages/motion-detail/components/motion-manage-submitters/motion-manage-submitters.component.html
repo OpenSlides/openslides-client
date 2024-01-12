@@ -30,7 +30,6 @@
 
 <div *ngIf="isEditMode && perms.isAllowed('change_metadata')">
     <os-sorting-list
-        *ngIf="motion.submitters?.length"
         [input]="editSubmitterObservable"
         [live]="true"
         [count]="false"

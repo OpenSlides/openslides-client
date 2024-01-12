@@ -19,7 +19,8 @@
     <form [formGroup]="createForm">
         <div mat-dialog-content>
             <mat-form-field>
-                <input formControlName="name" matInput placeholder="{{ 'Name' | translate }}" required />
+                <mat-label>{{ 'Name' | translate }}</mat-label>
+                <input formControlName="name" matInput required />
                 <mat-error>
                     <span>{{ 'Required' | translate }}</span>
                 </mat-error>

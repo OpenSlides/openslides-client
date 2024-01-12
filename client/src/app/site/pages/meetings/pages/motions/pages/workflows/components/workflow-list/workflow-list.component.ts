@@ -3,7 +3,6 @@ import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewMotionWorkflow } from '../../../../modules';
@@ -29,14 +28,13 @@ export class WorkflowListComponent extends BaseMeetingListViewComponent<ViewMoti
     public filterProps = [`name`, `states`];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private dialog: MatDialog,
         public workflowRepo: MotionWorkflowControllerService,
         private promptService: PromptService,
         private exporter: WorkflowExportService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
         this.listStorageIndex = WORKFLOW_LIST_STORAGE_INDEX;
     }

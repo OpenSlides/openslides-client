@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { firstValueFrom } from 'rxjs';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
@@ -24,14 +24,13 @@ export class MotionExportDialogService extends BaseDialogService<
     MotionExportInfo
 > {
     public constructor(
-        dialog: MatDialog,
         private exportService: MotionExportService,
         private modelRequestService: ModelRequestService,
         private motionRepo: MotionRepositoryService,
         private amendmentRepo: AmendmentControllerService,
         private motionLineNumbering: MotionLineNumberingService
     ) {
-        super(dialog);
+        super();
     }
 
     public async open(data: ViewMotion[]): Promise<MatDialogRef<MotionExportDialogComponent, MotionExportInfo>> {

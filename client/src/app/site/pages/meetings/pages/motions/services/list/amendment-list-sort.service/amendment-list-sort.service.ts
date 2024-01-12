@@ -1,6 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { StorageService } from 'src/app/gateways/storage.service';
+import { Injectable } from '@angular/core';
 import { OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
@@ -28,8 +26,8 @@ export class AmendmentListSortService extends MotionListBaseSortService {
         }
     ];
 
-    constructor(translate: TranslateService, store: StorageService, injector: Injector) {
-        super(translate, store, injector, {
+    constructor() {
+        super({
             sortProperty: `parentAndLineNumber`,
             sortAscending: true
         });
