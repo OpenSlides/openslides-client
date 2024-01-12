@@ -109,7 +109,7 @@
                 <div class="action-title">
                     <p class="subtitle-text" translate>Speaking times</p>
                     <ng-container *ngIf="permission.projectorCanManage">
-                        <button type="button" mat-icon-button [matMenuTriggerFor]="settingsMenu"><mat-icon>more_horiz</mat-icon></button>
+                        <button type="button" mat-icon-button [matMenuTriggerFor]="projectionMenu"><mat-icon>more_horiz</mat-icon></button>
                     </ng-container>
                 </div>
                 <os-speaking-times
@@ -120,7 +120,7 @@
     </div>
 </div>
 
-<mat-menu #settingsMenu="matMenu">
+<mat-menu #projectionMenu="matMenu">
     <button mat-menu-item (click)="showAllStructureLevels()">
         <mat-icon>videocam</mat-icon>
         <span>{{ 'Project all structure levels' | translate }}</span>
