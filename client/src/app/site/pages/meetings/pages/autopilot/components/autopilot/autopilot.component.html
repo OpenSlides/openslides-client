@@ -109,16 +109,8 @@
                 <div class="action-title">
                     <p class="subtitle-text" translate>Speaking times</p>
                     <ng-container *ngIf="permission.projectorCanManage">
-                        <button mat-icon-button (click)="showAllStructureLevels()">
-                            <mat-icon>videocam</mat-icon>
-                        </button>
+                        <button type="button" mat-icon-button [matMenuTriggerFor]="settingsMenu"><mat-icon>more_horiz</mat-icon></button>
                     </ng-container>
-                    <!-- <os-projector-button
-                        *osPerms="permission.projectorCanManage"
-                        class="projector-button"
-                        [object]="viewModel"
-                        (changeEvent)="viewUpdateEvent()"
-                    ></os-projector-button> -->
                 </div>
                 <os-speaking-times
                     [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"
@@ -127,3 +119,14 @@
         </mat-card>
     </div>
 </div>
+
+<mat-menu #settingsMenu="matMenu">
+    <button mat-menu-item (click)="showAllStructureLevels()">
+        <mat-icon>videocam</mat-icon>
+        <span>{{ 'Project all structure levels' | translate }}</span>
+    </button>
+    <button mat-menu-item (click)="showActiveStructureLevel()">
+        <mat-icon>videocam</mat-icon>
+        <span>{{ 'Project active structure level' | translate }}</span>
+    </button>
+</mat-menu>

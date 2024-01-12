@@ -24,7 +24,7 @@ import { AutopilotComponent } from './components/autopilot/autopilot.component';
 import { AutopilotMainComponent } from './components/autopilot-main/autopilot-main.component';
 import { PollCollectionComponent } from './components/poll-collection/poll-collection.component';
 import { SpeakingTimesComponent } from './components/speaking-times/speaking-times.component';
-import { ProjectorButtonModule } from '../../modules/meetings-component-collector/projector-button/projector-button.module';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 
 @NgModule({
     declarations: [AutopilotMainComponent, AutopilotComponent, PollCollectionComponent, SpeakingTimesComponent],
@@ -47,9 +47,9 @@ import { ProjectorButtonModule } from '../../modules/meetings-component-collecto
         OpenSlidesTranslationModule.forChild(),
         PollModule,
         MotionPollModule,
+        MatMenuModule,
         TopicPollModule,
-        AssignmentPollModule,
-        ProjectorButtonModule
+        AssignmentPollModule
     ]
 })
 export class AutopilotModule {}
