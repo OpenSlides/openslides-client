@@ -7,6 +7,7 @@ import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/b
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewStructureLevel } from '../view-models/view-structure-level';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: `root`
@@ -29,5 +30,12 @@ export class StructureLevelControllerService extends BaseMeetingControllerServic
 
     public delete(...structureLevelIds: Id[]): Promise<void | void[]> {
         return this.repo.delete(...structureLevelIds).resolve();
+    }
+
+     /**
+     * Returns an Observable for all groups except the default group.
+     */
+     public getViewModelListStructureLevelObservable(): Observable<ViewStructureLevel[]> {
+        return this.getViewModelListObservable();
     }
 }

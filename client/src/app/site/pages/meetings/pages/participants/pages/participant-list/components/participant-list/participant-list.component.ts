@@ -24,6 +24,8 @@ import { GroupControllerService, ViewGroup } from '../../../../modules';
 import { ParticipantListInfoDialogService } from '../../modules/participant-list-info-dialog';
 import { ParticipantListFilterService } from '../../services/participant-list-filter.service/participant-list-filter.service';
 import { ParticipantListSortService } from '../../services/participant-list-sort.service/participant-list-sort.service';
+import { ViewStructureLevel } from '../../../structure-levels/view-models';
+import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 
 const PARTICIPANTS_LIST_STORAGE_INDEX = `participants`;
 
@@ -32,6 +34,13 @@ export function areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[]
         oldGroupIds
             .filter(group => group !== activeMeeting.default_group_id)
             .some(id => !(newGroupIds ?? []).includes(id)) && !newGroupIds.includes(activeMeeting.admin_group_id)
+    );
+}
+
+export function areStructureLevelsDiminished(oldIds: number[], newIds: number[]): boolean {
+    return (
+        oldIds
+            .some(id => !(newIds ?? []).includes(id))
     );
 }
 
@@ -46,6 +55,11 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * All available groups, where the user can be in.
      */
     public groupsObservable: Observable<ViewGroup[]> = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
+
+    /**
+     * All available structure level, where the user can be in.
+     */
+    public structureLevelObservable: Observable<ViewStructureLevel[]> = this.structureLevelRepo.getViewModelListStructureLevelObservable();
 
     /**
      * The list of all genders.
@@ -95,6 +109,11 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return this._isUserInScope;
     }
 
+    protected get hasStructureLevels(): boolean {
+        // TODO fix that
+        return this.structureLevelRepo.getViewModelList.length > 0;
+    }
+
     /**
      * Define extra filter properties
      */
@@ -118,6 +137,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         protected override translate: TranslateService,
         public repo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
+        private structureLevelRepo: StructureLevelControllerService,
         private choiceService: ChoiceService,
         public operator: OperatorService,
         public filterService: ParticipantListFilterService,
@@ -303,6 +323,57 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                                 nextGroupIds.size === 0
                                     ? [this.activeMeeting.default_group_id]
                                     : Array.from(nextGroupIds)
+                        };
+                    }, ...this.selectedRows)
+                    .resolve();
+            }
+        }
+    }
+    
+    /**
+     * Opens a dialog and sets the structure level(s) for all selected users.
+     * SelectedRows is only filled with data in multiSelect mode
+     */
+    public async setStructureLevelSelected(): Promise<void> {
+        const content = _(`This will add or remove the following structure level for all selected participants:`);
+        const ADD = _(`add structure level(s)`);
+        const REMOVE = _(`remove structure level(s)`);
+        const choices = [ADD, REMOVE];
+        const selectedChoice = await this.choiceService.open(content, this.structureLevelObservable, true, choices);
+        if (selectedChoice && selectedChoice.ids.length) {
+            const chosenStructureLevelIds = selectedChoice.ids as Ids;
+            if (selectedChoice.action === ADD) {
+                this.repo
+                    .update(user => {
+                        const nextStructureLevelIds = user.structure_level_ids();
+                        return {
+                            id: user.id,
+                            structure_level_ids: [...new Set(nextStructureLevelIds.concat(chosenStructureLevelIds))]
+                        };
+                    }, ...this.selectedRows)
+                    .resolve();
+            } else if (
+                this.selectedRows.every(
+                    user =>
+                        !(
+                            user.id === this.operator.operatorId &&
+                            areStructureLevelsDiminished(
+                                this.operator.user.structure_level_ids(),
+                                this.operator.user.structure_level_ids().filter(id => !chosenStructureLevelIds.includes(id))
+                            )
+                        )
+                )
+            ) {
+                this.repo
+                    .update(user => {
+                        const nextStructureLevelIds = new Set(user.structure_level_ids());
+                        chosenStructureLevelIds.forEach(id => nextStructureLevelIds.delete(id));
+                        return {
+                            id: user.id,
+                            structure_level_ids:
+                                nextStructureLevelIds.size === 0
+                                    ? []
+                                    : Array.from(nextStructureLevelIds)
                         };
                     }, ...this.selectedRows)
                     .resolve();
