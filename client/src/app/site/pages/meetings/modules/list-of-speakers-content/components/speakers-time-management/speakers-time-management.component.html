@@ -5,7 +5,7 @@
         <mat-icon (click)="toggleEdit()" *ngIf="timeEdit">close</mat-icon>
     </mat-card-title>
     <mat-card-content>
-        <mat-table [dataSource]="myDataSource" class="mat-elevation-z8 demo-table">
+        <mat-table [dataSource]="myDataSource" class="mat-elevation-z8 demo-table" #stmtable>
             <!-- Structure Level Column -->
             <ng-container matColumnDef="structure_level">
                 <mat-header-cell *matHeaderCellDef>
@@ -32,7 +32,7 @@
                         matInput
                         type="text"
                         *ngIf="timeEdit"
-                        [formControl]="timeFormControls.controls[element.id]"
+                        [formControl]="timeFormControls.controls[getFormControlId(element.id)]"
                     />
                     <span *ngIf="!timeEdit">{{ duration(element.total_time) }}</span>
                 </mat-cell>

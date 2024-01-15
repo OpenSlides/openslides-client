@@ -39,7 +39,11 @@
     ></os-list-of-speakers-content>
 
     <!-- special los part for structure level -->
-    <os-speakers-time-management></os-speakers-time-management>
+    <div *ngIf="viewListOfSpeakers && viewListOfSpeakers.structure_level_list_of_speakers_ids?.length">
+        <os-speakers-time-management
+            [currentSpeakingTimes]="viewListOfSpeakers.structure_level_list_of_speakers_ids"
+        ></os-speakers-time-management>
+    </div>
 </os-detail-view>
 
 <mat-menu #speakerMenu="matMenu">
