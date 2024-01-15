@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { InteractionService } from '../../../../../interaction/services/interaction.service';
@@ -37,7 +36,6 @@ export class TagListComponent extends BaseMeetingListViewComponent<ViewTag> impl
     public currentTag: ViewTag | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: TagControllerService,
         private dialog: MatDialog,
@@ -46,7 +44,7 @@ export class TagListComponent extends BaseMeetingListViewComponent<ViewTag> impl
         private cd: ChangeDetectorRef,
         private interactionService: InteractionService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

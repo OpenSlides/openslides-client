@@ -1,9 +1,7 @@
-import { Injectable, Injector, ProviderToken } from '@angular/core';
+import { Injectable, ProviderToken } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
@@ -29,8 +27,8 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
         { property: `last_login`, label: _(`Last login`) }
     ];
 
-    public constructor(translate: TranslateService, store: StorageService, injector: Injector) {
-        super(translate, store, injector, {
+    public constructor() {
+        super({
             sortProperty: [`first_name`, `last_name`],
             sortAscending: true
         });
