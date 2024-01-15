@@ -10,6 +10,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import { ParticipantListServiceModule } from '../participant-list-service.module';
+import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 
 @Injectable({
     providedIn: ParticipantListServiceModule
@@ -26,12 +27,19 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         options: []
     };
 
+    private userStructureLevelFilterOptions: OsFilter<ViewUser> = {
+        property: `structure_level_ids`,
+        label: `Structure Level`,
+        options: []
+    };
+
     private _voteWeightEnabled: boolean;
     private _voteDelegationEnabled: boolean;
 
     public constructor(
         store: MeetingActiveFiltersService,
         groupRepo: GroupControllerService,
+        structureRepo: StructureLevelControllerService,
         private translate: TranslateService,
         private meetingSettings: MeetingSettingsService
     ) {
@@ -39,6 +47,10 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         this.updateFilterForRepo({
             repo: groupRepo,
             filter: this.userGroupFilterOptions
+        });
+        this.updateFilterForRepo({
+            repo: structureRepo,
+            filter: this.userStructureLevelFilterOptions
         });
         this.meetingSettings.get(`users_enable_vote_weight`).subscribe(value => (this._voteWeightEnabled = value));
         this.meetingSettings
@@ -137,7 +149,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 ]
             }
         ];
-        return staticFilterOptions.concat(this.userGroupFilterOptions);
+        return staticFilterOptions.concat(this.userGroupFilterOptions, this.userStructureLevelFilterOptions);
     }
 
     protected override getHideFilterSettings(): OsHideFilterSetting<ViewUser>[] {
