@@ -135,6 +135,8 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public flickerSubject = new BehaviorSubject<boolean>(false);
 
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+
     private readonly _currentStepIndexSubject = new BehaviorSubject<number>(0);
 
     private _isNewUser = false;

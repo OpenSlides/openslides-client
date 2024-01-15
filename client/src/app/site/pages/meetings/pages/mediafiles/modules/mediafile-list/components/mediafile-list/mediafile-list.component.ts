@@ -48,6 +48,8 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     public newDirectoryForm: UntypedFormGroup;
     public groupsBehaviorSubject: Observable<ViewGroup[]>;
 
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+
     /**
      * @return true if the user can manage media files
      */
