@@ -159,4 +159,19 @@ span {
 .motion-detail-nav-button {
     min-width: 110px;
     max-width: 20vw;
+
+    span {
+        white-space: nowrap !important;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        @supports (-webkit-line-clamp: 3) {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: initial !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+    }
 }
