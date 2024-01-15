@@ -48,17 +48,6 @@
                 <input type="text" matInput formControlName="default_structure_level" />
             </mat-form-field>
 
-            <!-- Default Participant Number -->
-            <mat-form-field
-                [ngClass]="{
-                    distance: true,
-                    form37: true
-                }"
-            >
-                <mat-label>{{ 'Default number' | translate }}</mat-label>
-                <input type="text" matInput formControlName="default_number" />
-            </mat-form-field>
-
             <!-- Default Vote weight -->
             <!-- TODO Input type should be number with limited decimal spaces -->
             <mat-form-field class="form16 force-min-with">
@@ -115,12 +104,6 @@
         <div *ngIf="user.default_structure_level">
             <h4>{{ 'Default structure level' | translate }}</h4>
             <span>{{ user.default_structure_level }}</span>
-        </div>
-
-        <!-- Participant number -->
-        <div *ngIf="user.default_number">
-            <h4>{{ 'Default participant number' | translate }}</h4>
-            <span>{{ user.default_number }}</span>
         </div>
 
         <div *ngIf="user.default_vote_weight || user.default_vote_weight === 0">
