@@ -106,9 +106,7 @@
     <!-- The HTML Editor for motions and traditional amendments -->
     <ng-container *ngIf="editMotion && !isParagraphBasedAmendment">
         <h3>
-            <span>{{ preamble | translate }}</span>
-            &nbsp;
-            <span *ngIf="reasonRequired && editMotion">*</span>
+            <span>{{ preamble }}</span>
         </h3>
         <os-editor
             formControlName="text"
