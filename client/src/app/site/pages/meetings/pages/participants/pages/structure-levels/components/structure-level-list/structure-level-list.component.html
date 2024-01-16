@@ -6,7 +6,7 @@
 </os-head-bar>
 
 <os-list
-    [listObservable]="repo.getViewModelListObservable()"
+    [listObservableProvider]="repo"
     [(selectedRows)]="selectedRows"
     listStorageKey="structure_levels"
     [vScrollFixed]="60"
@@ -78,6 +78,9 @@
                 </mat-error>
             </mat-form-field>
             <!-- Colour -->
+            <mat-checkbox formControlName="color_check" (change)="onColorCheckChanged()">
+                {{ 'Use color' | translate }}
+            </mat-checkbox>
             <mat-form-field class="os-dialog-large">
                 <mat-label>{{ 'Color' | translate }}</mat-label>
                 <input formControlName="color" type="color" matInput />
