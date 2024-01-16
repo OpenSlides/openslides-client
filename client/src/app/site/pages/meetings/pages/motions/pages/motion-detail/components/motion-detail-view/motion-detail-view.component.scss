@@ -166,8 +166,6 @@ span {
         overflow: hidden;
 
         @supports (-webkit-line-clamp: 3) {
-            overflow: hidden;
-            text-overflow: ellipsis;
             white-space: initial !important;
             display: -webkit-box !important;
             -webkit-line-clamp: 3;
