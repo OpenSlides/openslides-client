@@ -37,7 +37,6 @@ export function areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[]
     );
 }
 
-
 @Component({
     selector: `os-participant-list`,
     templateUrl: `./participant-list.component.html`,
