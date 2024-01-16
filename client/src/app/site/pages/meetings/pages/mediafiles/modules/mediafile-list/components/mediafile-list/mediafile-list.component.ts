@@ -35,6 +35,12 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     @ViewChild(FileListComponent)
     public readonly fileListComponent!: FileListComponent;
 
+    /**
+     * Reference to the template for edit-dialog
+     */
+    @ViewChild(`fileEditDialog`, { static: true })
+    private readonly _fileEditDialog: TemplateRef<string> | null = null;
+
     public logoPlaces: string[];
     public logoDisplayNames = LogoDisplayNames;
     public fontPlaces: string[];
@@ -210,6 +216,10 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
 
     public onMainEvent(): void {
         this.commonService.navigateToUploadPage(this.directory?.id);
+    }
+
+    public triggerEdit(file: ViewMediafile): void {
+        this.fileListComponent.onEditFile(file, this._fileEditDialog);
     }
 
     /**

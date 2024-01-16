@@ -53,7 +53,7 @@
     <div
         *osScrollingTableCell="'info'; row as mediafile; config: { width: 200 }"
         class="fill clickable"
-        (click)="onEditFile(mediafile)"
+        (click)="triggerEdit(mediafile)"
     >
         <os-icon-container *ngIf="mediafile.access_groups.length" icon="group">
             <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
