@@ -84,6 +84,7 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent implem
     }
 
     public saveTimes(): void {
+        let payload = [];
         for (const entry of this.myDataSource) {
             entry.total_time = this.durationService.stringToDuration(
                 this.timeFormControls.get(this.getFormControlId(entry.id)).value,
@@ -93,8 +94,11 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent implem
             if (entry.total_time < 0) {
                 entry.overhang_time = Math.abs(entry.total_time);
             }
+            // TODO: use remaining time here, or?
+            payload.push({id: entry.id, initial_time: entry.total_time});
         }
         this.timeEdit = false;
+        this.speakingTimesRepo.update(payload);
     }
 
     public getFormControlId(id: number) {
