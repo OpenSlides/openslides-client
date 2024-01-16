@@ -33,9 +33,13 @@ export class StructureLevelControllerService extends BaseMeetingControllerServic
     }
 
      /**
-     * Returns an Observable for all groups except the default group.
+     * Returns an Observable for all structure levels.
      */
-     public getViewModelListStructureLevelObservable(): Observable<ViewStructureLevel[]> {
+    public getViewModelListStructureLevelObservable(): Observable<ViewStructureLevel[]> {
         return this.getViewModelListObservable();
+    }
+
+    public getViewModelListStructureLevel(): ViewStructureLevel[] {
+        return this.getViewModelList();
     }
 }

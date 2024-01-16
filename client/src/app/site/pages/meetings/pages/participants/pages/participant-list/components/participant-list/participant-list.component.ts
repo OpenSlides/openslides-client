@@ -110,8 +110,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     protected get hasStructureLevels(): boolean {
-        // TODO fix that
-        return this.structureLevelRepo.getViewModelList.length > 0;
+        return this.structureLevelRepo.getViewModelListStructureLevel().length > 0;
     }
 
     /**
@@ -352,28 +351,14 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                         };
                     }, ...this.selectedRows)
                     .resolve();
-            } else if (
-                this.selectedRows.every(
-                    user =>
-                        !(
-                            user.id === this.operator.operatorId &&
-                            areStructureLevelsDiminished(
-                                this.operator.user.structure_level_ids(),
-                                this.operator.user.structure_level_ids().filter(id => !chosenStructureLevelIds.includes(id))
-                            )
-                        )
-                )
-            ) {
+            } else {
                 this.repo
                     .update(user => {
                         const nextStructureLevelIds = new Set(user.structure_level_ids());
                         chosenStructureLevelIds.forEach(id => nextStructureLevelIds.delete(id));
                         return {
                             id: user.id,
-                            structure_level_ids:
-                                nextStructureLevelIds.size === 0
-                                    ? []
-                                    : Array.from(nextStructureLevelIds)
+                            structure_level_ids: Array.from(nextStructureLevelIds)
                         };
                     }, ...this.selectedRows)
                     .resolve();
