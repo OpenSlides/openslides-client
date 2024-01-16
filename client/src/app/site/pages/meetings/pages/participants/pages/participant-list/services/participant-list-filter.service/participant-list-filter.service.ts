@@ -9,8 +9,8 @@ import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegati
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
-import { ParticipantListServiceModule } from '../participant-list-service.module';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
+import { ParticipantListServiceModule } from '../participant-list-service.module';
 
 @Injectable({
     providedIn: ParticipantListServiceModule

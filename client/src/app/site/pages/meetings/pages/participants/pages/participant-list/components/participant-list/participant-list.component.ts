@@ -21,11 +21,11 @@ import { InteractionService } from '../../../../../interaction/services/interact
 import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service';
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
 import { GroupControllerService, ViewGroup } from '../../../../modules';
+import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
+import { ViewStructureLevel } from '../../../structure-levels/view-models';
 import { ParticipantListInfoDialogService } from '../../modules/participant-list-info-dialog';
 import { ParticipantListFilterService } from '../../services/participant-list-filter.service/participant-list-filter.service';
 import { ParticipantListSortService } from '../../services/participant-list-sort.service/participant-list-sort.service';
-import { ViewStructureLevel } from '../../../structure-levels/view-models';
-import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 
 const PARTICIPANTS_LIST_STORAGE_INDEX = `participants`;
 
@@ -37,12 +37,6 @@ export function areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[]
     );
 }
 
-export function areStructureLevelsDiminished(oldIds: number[], newIds: number[]): boolean {
-    return (
-        oldIds
-            .some(id => !(newIds ?? []).includes(id))
-    );
-}
 
 @Component({
     selector: `os-participant-list`,
@@ -59,7 +53,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     /**
      * All available structure level, where the user can be in.
      */
-    public structureLevelObservable: Observable<ViewStructureLevel[]> = this.structureLevelRepo.getViewModelListStructureLevelObservable();
+    public structureLevelObservable: Observable<ViewStructureLevel[]> =
+        this.structureLevelRepo.getViewModelListStructureLevelObservable();
 
     /**
      * The list of all genders.
@@ -328,7 +323,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             }
         }
     }
-    
+
     /**
      * Opens a dialog and sets the structure level(s) for all selected users.
      * SelectedRows is only filled with data in multiSelect mode
