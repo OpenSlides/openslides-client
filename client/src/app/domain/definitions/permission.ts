@@ -5,8 +5,10 @@
  */
 export enum Permission {
     agendaItemCanManage = `agenda_item.can_manage`,
+    agendaItemCanManageModeratorNotes = `agenda_item.can_manage_moderator_notes`,
     agendaItemCanSee = `agenda_item.can_see`,
     agendaItemCanSeeInternal = `agenda_item.can_see_internal`,
+    agendaItemCanSeeModeratorNotes = `agenda_item.can_see_moderator_notes`,
     assignmentCanManage = `assignment.can_manage`,
     assignmentCanNominateOther = `assignment.can_nominate_other`,
     assignmentCanNominateSelf = `assignment.can_nominate_self`,
@@ -38,5 +40,5 @@ export enum Permission {
     tagCanManage = `tag.can_manage`,
     userCanManage = `user.can_manage`,
     userCanManagePresence = `user.can_manage_presence`,
-    userCanSee = `user.can_see`
+    userCanSee = `user.can_see`,
 }
