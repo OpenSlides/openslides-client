@@ -365,13 +365,15 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `list_of_speakers_intervention_time`,
-                        label: _(`Intervention speaking time`),
+                        label: _(`Intervention speaking time in seconds`),
                         type: `integer`,
+                        helpText: _(`Choose 0 to disable Intervention`),
                         validators: [Validators.min(0)]
                     },
                     {
                         key: `list_of_speakers_default_structure_level_time`,
-                        label: _(`Default structure level speaking time`),
+                        label: _(`Default structure level speaking time in seconds`),
+                        helpText: _(`Choose a number bigger than 0 to couple countdown with the speaking times`),
                         type: `integer`,
                         validators: [Validators.min(0)]
                     }
