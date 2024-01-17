@@ -70,7 +70,7 @@
     <!-- Current Speaker -->
     <div class="current-speaker background-accent" *ngIf="activeSpeaker">
         <span class="prefix">
-            <mat-icon>mic</mat-icon>
+            <mat-icon *ngIf="activeSpeaker.isSpeaking">mic</mat-icon>
         </span>
 
         <span class="name">
@@ -123,8 +123,17 @@
     </div>
 
     <div class="interposed-questions">
-        <div *ngFor="let speaker of interposedQuestions; let i = index" class="speaker backgroundColorLight">
-            <span class="prefix"></span>
+        <div
+            *ngFor="let speaker of interposedQuestions; let i = index"
+            class="speaker"
+            [ngClass]="{
+                'current-speaker background-accent': speaker.isSpeaking,
+                backgroundColorLight: !speaker.isSpeaking
+            }"
+        >
+            <span class="prefix">
+                <mat-icon *ngIf="speaker.isSpeaking">mic</mat-icon>
+            </span>
 
             <span class="name">
                 <ng-container *ngIf="speaker.meeting_user_id">
