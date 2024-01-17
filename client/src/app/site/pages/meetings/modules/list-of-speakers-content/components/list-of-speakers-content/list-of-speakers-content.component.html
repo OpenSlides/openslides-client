@@ -371,7 +371,7 @@
             mat-stroked-button
             (click)="addInterposedQuestion()"
             *ngIf="showInterposedQuestions | async"
-            [disabled]="closed"
+            [disabled]="closed || !activeSpeaker"
         >
             <mat-icon>help</mat-icon>
             &nbsp;
