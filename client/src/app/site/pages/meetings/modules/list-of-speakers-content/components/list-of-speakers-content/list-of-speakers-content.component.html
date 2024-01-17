@@ -294,13 +294,13 @@
 </mat-card>
 
 <!-- Moderator Note-->
-<mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'" *ngIf="isAgendaItem()">
+<mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'" *ngIf="canSeeModerationNote">
     <!-- Title edit/save/cancle-->
     <div class="action-title">
         <h1>
             {{ 'Moderator note' | translate }}
         </h1>
-        <div class="buttons">
+        <div class="buttons" *ngIf="canManageModerationNote">
             <ng-container *ngIf="isEditing">
                 <button mat-button (click)="toggleEditModeratorNote()">
                     <mat-icon>cancel</mat-icon>

@@ -40,6 +40,7 @@ import {
     LOS_FIRST_CONTRIBUTION_SUBSCRIPTION
 } from '../../list-of-speakers-content.subscription';
 import { PointOfOrderDialogService } from '../../modules/point-of-order-dialog/services/point-of-order-dialog.service';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 @Component({
     selector: `os-list-of-speakers-content`,
@@ -122,6 +123,14 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public get canManage(): boolean {
         return this.operator.hasPerms(this.permission.listOfSpeakersCanManage);
     }
+    
+    public get canSeeModerationNote(): boolean {
+        return this.operator.hasPerms(this.permission.agendaItemCanSeeModeratorNotes);
+    }
+
+    public get canManageModerationNote(): boolean {
+        return this.operator.hasPerms(this.permission.agendaItemCanManageModeratorNotes);
+    }
 
     public get canSee(): boolean {
         return this.operator.hasPerms(this.permission.listOfSpeakersCanSee);
@@ -176,7 +185,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
 
-    private _contentObject = this._listOfSpeakers?.content_object;
+    private _contentObject: BaseViewModel = this._listOfSpeakers?.content_object;
 
     private pointOfOrderEnabled = false;
 
