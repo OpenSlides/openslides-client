@@ -79,14 +79,6 @@
         </span>
 
         <span class="suffix">
-            <!-- Speaker countdown -->
-            <ng-container
-                [ngTemplateOutlet]="speakerCountdown"
-                [ngTemplateOutletContext]="{
-                    countdown: getSpeakerCountdown(activeSpeaker),
-                }"
-            ></ng-container>
-
             <!-- point of order visible for everyone -->
             <button
                 mat-icon-button
@@ -95,6 +87,14 @@
             >
                 <mat-icon>warning</mat-icon>
             </button>
+
+            <!-- Speaker countdown -->
+            <ng-container
+                [ngTemplateOutlet]="speakerCountdown"
+                [ngTemplateOutletContext]="{
+                    countdown: getSpeakerCountdown(activeSpeaker),
+                }"
+            ></ng-container>
 
             <ng-container
                 [ngTemplateOutlet]="speakerControls"
@@ -194,14 +194,6 @@
                         ></ng-container>
                     </div>
                     <div class="speaker-controls one-line">
-                        <!-- Speaker countdown -->
-                        <ng-container
-                            [ngTemplateOutlet]="speakerCountdown"
-                            [ngTemplateOutletContext]="{
-                                countdown: getSpeakerCountdown(speaker),
-                            }"
-                        ></ng-container>
-
                         <!-- Extra stuff: Spoken Count, Gender, 1st Contribution -->
                         <span *ngIf="canManage && !speaker.point_of_order">
                             <!-- Speaker count -->
@@ -275,6 +267,14 @@
                                 </button>
                             </ng-container>
                         </span>
+
+                        <!-- Speaker countdown -->
+                        <ng-container
+                            [ngTemplateOutlet]="speakerCountdown"
+                            [ngTemplateOutletContext]="{
+                                countdown: getSpeakerCountdown(speaker),
+                            }"
+                        ></ng-container>
 
                         <!-- Start and more button -->
                         <span *ngIf="canManage">
