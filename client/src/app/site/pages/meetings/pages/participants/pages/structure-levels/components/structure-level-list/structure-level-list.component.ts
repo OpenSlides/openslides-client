@@ -58,6 +58,7 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
         super.setTitle(`Structure Levels`);
         this.structureLevelForm = this.formBuilder.group({
             name: [``, Validators.required],
+            color_check: false,
             color: [``, Validators.pattern(/^#[0-9a-fA-F]{6}$/)]
         });
     }
@@ -68,12 +69,15 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
     public openStructureLevelDialog(structureLevel: ViewStructureLevel | null = null): void {
         this.currentStructureLevel = structureLevel;
         this.reset();
-        this.structureLevelForm
-            .get(`name`)!
-            .setValue(this.currentStructureLevel ? this.currentStructureLevel.name : ``);
+        this.structureLevelForm.get(`name`)!.setValue(structureLevel ? structureLevel.name : ``);
+        if (structureLevel && !!structureLevel.color) {
+            this.structureLevelForm.get(`color_check`).setValue(true);
+        } else {
+            this.structureLevelForm.get(`color`).disable();
+        }
         this.structureLevelForm
             .get(`color`)!
-            .setValue(this.currentStructureLevel ? this.currentStructureLevel.color : `#000000`);
+            .setValue(structureLevel && !!structureLevel.color ? structureLevel.color : `#000000`);
         this.dialogRef = this.dialog.open(this.structureLevelDialog!, infoDialogSettings);
         this.dialogRef.afterClosed().subscribe(res => {
             if (res) {
@@ -110,6 +114,19 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
     }
 
     /**
+     * if color_check is not set, disable color.
+     * if color_check is set, enable color.
+     */
+
+    public onColorCheckChanged(): void {
+        if (this.structureLevelForm.get(`color_check`).value) {
+            this.structureLevelForm.get(`color`).enable();
+        } else {
+            this.structureLevelForm.get(`color`).disable();
+        }
+    }
+
+    /**
      * Submit the form and create or update a structure level.
      */
     private save(): void {
@@ -126,7 +143,11 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
 
     private updateStructureLevel(): void {
         if (this.currentStructureLevel) {
-            this.repo.update(this.structureLevelForm.value, this.currentStructureLevel.id).catch(this.raiseError);
+            const data = this.structureLevelForm.value;
+            if (!data.color) {
+                data.color = null;
+            }
+            this.repo.update(data, this.currentStructureLevel.id).catch(this.raiseError);
         }
     }
 
