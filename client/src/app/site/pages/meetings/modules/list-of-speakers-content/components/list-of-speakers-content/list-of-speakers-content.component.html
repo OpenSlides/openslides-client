@@ -524,7 +524,7 @@
 
     <!-- Intervention -->
     <ng-container *ngIf="speaker.speech_state === SpeechState.INTERVENTION">
-        <mat-icon inline class="inline-icon-text-align" [class.icon]="!!showcolor">help</mat-icon>
+        <mat-icon inline class="inline-icon-text-align" [class.icon]="!!showcolor">error</mat-icon>
         <i [class.user-subtitle]="!!showcolor">
             {{ 'Intervention' | translate }}
         </i>
