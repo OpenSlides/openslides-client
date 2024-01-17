@@ -26,7 +26,15 @@
                     <div *osPerms="permission.listOfSpeakersCanSee">{{ number + 1 }}.</div>
                     <div class="finished-speaker-info">
                         <div>
-                            <div>{{ speaker.getTitle() }}</div>
+                            <div>
+                                {{ speaker.getTitle() }}
+                                <span
+                                    *ngIf="speaker.structure_level_list_of_speakers?.structure_level"
+                                    class="speaker-structure-level"
+                                >
+                                    &ndash; {{ speaker.structure_level_list_of_speakers?.structure_level?.name }}
+                                </span>
+                            </div>
                             <div>
                                 <ng-container
                                     *ngTemplateOutlet="speakerSubtitle; context: { speaker: speaker, showcolor: true }"
