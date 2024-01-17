@@ -282,7 +282,7 @@
                             <button
                                 mat-icon-button
                                 matTooltip="{{ 'Begin speech' | translate }}"
-                                matTooltipPosition="left"
+                                matTooltipPosition="above"
                                 (click)="onStartButton(speaker)"
                             >
                                 <mat-icon>play_arrow</mat-icon>
@@ -595,7 +595,7 @@
         *ngIf="!speaker.isSpeaking"
         mat-icon-button
         matTooltip="{{ (speaker.pause_time ? 'Resume speech' : 'Begin speech') | translate }}"
-        matTooltipPosition="left"
+        matTooltipPosition="above"
         (click)="onStartButton(speaker)"
     >
         <mat-icon>play_arrow</mat-icon>
@@ -605,7 +605,7 @@
         *ngIf="speaker.isSpeaking"
         mat-icon-button
         matTooltip="{{ 'Pause speech' | translate }}"
-        matTooltipPosition="left"
+        matTooltipPosition="above"
         (click)="onPauseButton(speaker)"
     >
         <mat-icon>pause</mat-icon>
@@ -616,7 +616,7 @@
         *ngIf="speaker.isCurrentSpeaker"
         mat-icon-button
         matTooltip="{{ 'End speech' | translate }}"
-        matTooltipPosition="left"
+        matTooltipPosition="above"
         (click)="onStopButton(speaker)"
     >
         <mat-icon>stop</mat-icon>
