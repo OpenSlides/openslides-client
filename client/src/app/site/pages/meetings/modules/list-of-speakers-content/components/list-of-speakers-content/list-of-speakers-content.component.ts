@@ -276,16 +276,20 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         }
     }
 
-    public async updateSpeakerMeetingUser(speaker: ViewSpeaker): Promise<void> {
+    public async updateSpeakerMeetingUser(speaker: ViewSpeaker): Promise<boolean> {
         const dialogRef = await this.speakerUserSelectDialog.open(this.listOfSpeakers);
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
                 await this.speakerRepo.setMeetingUser(speaker, result.meeting_user_id);
+                return true;
             }
         } catch (e) {
             this.raiseError(e);
+            throw e;
         }
+
+        return false;
     }
 
     public async addInterposedQuestion(): Promise<void> {
@@ -361,6 +365,18 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      */
     public async onStopButton(speaker: ViewSpeaker): Promise<void> {
         try {
+            if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id) {
+                if (speaker.isSpeaking) {
+                    await this.speakerRepo.pauseSpeak(speaker);
+                }
+                if (!(await this.updateSpeakerMeetingUser(speaker))) {
+                    this.matSnackBar.open(
+                        this.translate.instant(`You need to select a speaker to stop the speach.`),
+                        this.translate.instant(`OK`)
+                    );
+                    return;
+                }
+            }
             await this.speakerRepo.stopToSpeak(speaker);
             this.filterNonAvailableUsers();
         } catch (e) {
