@@ -101,9 +101,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this._listOfSpeakers?.getTitle() || ``;
     }
 
-    public async isAgendaItem(): Promise<boolean> {
+    public isAgendaItem(): boolean {
         //TODO: fix
-        const isOnAgenda = (await this._contentObject?.getModel().agenda_item_id) !== undefined;
+        const isOnAgenda = (this._contentObject?.getModel().agenda_item_id) !== undefined;
         return isOnAgenda;
     }
 
