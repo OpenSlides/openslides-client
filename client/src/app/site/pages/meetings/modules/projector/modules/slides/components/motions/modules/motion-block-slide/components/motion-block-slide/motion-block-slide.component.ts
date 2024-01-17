@@ -78,6 +78,10 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
         return Math.min(columns, this.maxColumns);
     }
 
+    public get columnWidthInPercent(): string {
+        return `${Math.floor(100 / this.columns)}%`;
+    }
+
     /**
      * @returns an aray with [0, ..., this.columns-1]
      */
