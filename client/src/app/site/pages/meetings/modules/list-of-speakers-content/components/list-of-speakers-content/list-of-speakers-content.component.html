@@ -392,7 +392,7 @@
 </mat-card>
 
 <!-- Moderator Note-->
-<mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'" *ngIf="canSeeModerationNote">
+<mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'" *ngIf="canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))">
     <!-- Title edit/save/cancle-->
     <div class="action-title">
         <h1>
