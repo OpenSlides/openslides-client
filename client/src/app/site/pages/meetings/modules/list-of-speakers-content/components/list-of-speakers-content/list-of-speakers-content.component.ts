@@ -559,15 +559,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                     ? speaker.begin_time + total_pause
                     : (end - (speaker.begin_time + total_pause) || 0) * -1
             };
-        } else if (this.structureLevelCountdownEnabled && speaker.structure_level_list_of_speakers) {
-            const speakingTime = speaker.structure_level_list_of_speakers;
-            const remaining = speakingTime.remaining_time + (speakingTime.additional_time || 0);
-            return {
-                running: !!speakingTime.current_start_time,
-                countdown_time: speakingTime.current_start_time
-                    ? speakingTime.current_start_time + remaining
-                    : remaining
-            };
         } else if (
             this.meetingSettingService.instant(`list_of_speakers_intervention_time`) > 0 &&
             speaker.speech_state === SpeechState.INTERVENTION
@@ -582,6 +573,15 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 running: speaker.isSpeaking,
                 default_time,
                 countdown_time: speaker.begin_time ? countdown_time : default_time
+            };
+        } else if (this.structureLevelCountdownEnabled && speaker.structure_level_list_of_speakers) {
+            const speakingTime = speaker.structure_level_list_of_speakers;
+            const remaining = speakingTime.remaining_time + (speakingTime.additional_time || 0);
+            return {
+                running: !!speakingTime.current_start_time,
+                countdown_time: speakingTime.current_start_time
+                    ? speakingTime.current_start_time + remaining
+                    : remaining
             };
         }
 
