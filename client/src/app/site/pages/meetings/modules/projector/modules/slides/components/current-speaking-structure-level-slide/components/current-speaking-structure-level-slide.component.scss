@@ -1,0 +1,33 @@
+@import 'src/assets/styles/fonts.scss';
+
+#chyron {
+    position: absolute;
+    left: 50px;
+    bottom: 20px;
+    right: 0;
+    z-index: 10;
+    height: 80px;
+    font-size: 32px;
+    text-align: left;
+    line-height: 1;
+    opacity: 1;
+
+    #inner {
+        vertical-align: middle;
+        padding-left: 18px;
+        padding-right: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        height: 60px;
+        display: table-cell;
+
+        #inner-name {
+            font-family: customChyronNameFont, $font-chyronname;
+        }
+
+        #inner-level {
+            margin-top: 5px;
+            font-size: 70%;
+        }
+    }
+}

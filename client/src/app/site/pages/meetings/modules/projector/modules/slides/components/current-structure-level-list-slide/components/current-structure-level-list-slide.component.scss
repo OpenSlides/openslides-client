@@ -1,0 +1,28 @@
+table {
+    line-height: 1;
+    width: 100%;
+    table-layout: fixed;
+}
+
+td {
+    min-width: 50%;
+    vertical-align: top;
+}
+
+.mat-basic-chip.large {
+    font-size: 85%;
+}
+
+.block-recommendation {
+    font-size: 12px;
+    min-height: 22px !important;
+    border-radius: 5px !important;
+    padding: 0 8px !important;
+    margin: 0;
+    line-height: 2;
+    display: inline-flex;
+}
+
+.ellipsis-overflow {
+    padding-top: 2px;
+}
