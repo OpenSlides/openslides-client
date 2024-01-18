@@ -392,7 +392,11 @@
 </mat-card>
 
 <!-- Moderator Note-->
-<mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'" *ngIf="canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))">
+<mat-card
+    class="spacer-bottom-60"
+    [ngClass]="isEditing ? 'os-form-card' : 'os-card'"
+    *ngIf="canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))"
+>
     <!-- Title edit/save/cancle-->
     <div class="action-title">
         <h1>
@@ -400,15 +404,28 @@
         </h1>
         <div class="buttons" *ngIf="canManageModerationNote">
             <ng-container *ngIf="isEditing">
-                <button mat-button (click)="toggleEditModeratorNote()">
-                    <mat-icon>cancel</mat-icon>
+                <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="saveChangesModerationNote()"
+                    matTooltip="{{ 'Save' | translate }}"
+                >
+                    <mat-icon>done</mat-icon>
                 </button>
-                <button mat-button [disabled]="!moderatorNoteForm.valid" (click)="saveChangesModerationNote()">
-                    <strong class="upper">{{ saveText | translate }}</strong>
+                <button
+                    mat-icon-button
+                    (click)="toggleEditModeratorNote()"
+                    matTooltip="{{ 'Cancel edit' | translate }}"
+                >
+                    <mat-icon>close</mat-icon>
                 </button>
             </ng-container>
             <ng-container *ngIf="!isEditing">
-                <button mat-button (click)="toggleEditModeratorNote()">
+                <button
+                    mat-icon-button
+                    (click)="toggleEditModeratorNote()"
+                    matTooltip="{{ 'Edit moderation note' | translate }}"
+                >
                     <mat-icon>edit</mat-icon>
                 </button>
             </ng-container>
