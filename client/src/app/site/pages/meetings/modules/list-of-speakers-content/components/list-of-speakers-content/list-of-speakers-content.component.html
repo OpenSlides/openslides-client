@@ -305,7 +305,7 @@
                 <button mat-button (click)="toggleEditModeratorNote()">
                     <mat-icon>cancel</mat-icon>
                 </button>
-                <button mat-button [disabled]="!moderatorNoteForm.valid" (click)="saveChanges()">
+                <button mat-button [disabled]="!moderatorNoteForm.valid" (click)="saveChangesModerationNote()">
                     <strong class="upper">{{ saveText | translate }}</strong>
                 </button>
             </ng-container>
@@ -320,7 +320,7 @@
     <mat-card-content>
         <ng-container *ngIf="!isEditing">
             <div class="app-content underlined-links">
-                <ng-container *ngIf="moderatorNoteObservable | async as moderatorNoteText">
+                <ng-container *ngIf="moderatorNotes | async as moderatorNoteText">
                     <div [innerHTML]="moderatorNoteText | trust : 'html'"></div>
                 </ng-container>
             </div>

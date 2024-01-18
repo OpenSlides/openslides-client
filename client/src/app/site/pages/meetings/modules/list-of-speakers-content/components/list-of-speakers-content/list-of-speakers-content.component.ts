@@ -19,6 +19,7 @@ import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
@@ -40,7 +41,6 @@ import {
     LOS_FIRST_CONTRIBUTION_SUBSCRIPTION
 } from '../../list-of-speakers-content.subscription';
 import { PointOfOrderDialogService } from '../../modules/point-of-order-dialog/services/point-of-order-dialog.service';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 @Component({
     selector: `os-list-of-speakers-content`,
@@ -52,14 +52,8 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 export class ListOfSpeakersContentComponent extends BaseMeetingComponent implements OnInit {
     public readonly SpeechState = SpeechState;
 
-    /**
-     * Whether the user is editing the content.
-     */
     public isEditing = false;
 
-    /**
-     * Formular for the content.
-     */
     public moderatorNoteForm: UntypedFormGroup;
 
     /**
@@ -102,9 +96,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public isAgendaItem(): boolean {
-        //TODO: fix
-        const isOnAgenda = (this._contentObject?.getModel().agenda_item_id) !== undefined;
-        return isOnAgenda;
+        /**
+         * TODO:
+         * should return true if this contentObject is on the agenda
+         */
+        return true;
     }
 
     public get agendaItem(): ViewAgendaItem<any> {
@@ -123,7 +119,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public get canManage(): boolean {
         return this.operator.hasPerms(this.permission.listOfSpeakersCanManage);
     }
-    
+
     public get canSeeModerationNote(): boolean {
         return this.operator.hasPerms(this.permission.agendaItemCanSeeModeratorNotes);
     }
@@ -566,26 +562,16 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         );
     }
 
-    /**
-     * Changes to editing mode.
-     */
     public toggleEditModeratorNote(): void {
         this.isEditing = !this.isEditing;
     }
 
-    /**
-     * Saves changes and updates the content.
-     */
-    public saveChanges(): void {
+    public saveChangesModerationNote(): void {
         this.agendaItemRepo
             .update(this.moderatorNoteForm.value, this.agendaItem)
             .then(() => {
                 this.isEditing = false;
             })
             .catch(this.raiseError);
-    }
-
-    public get moderatorNoteObservable(): Observable<string> {
-        return this.moderatorNotes;
     }
 }
