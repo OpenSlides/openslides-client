@@ -106,14 +106,16 @@
     >
         <mat-card class="os-card spacer-bottom-60">
             <mat-card-content class="spacer-left-20">
-                <div class="action-title">
-                    <p class="subtitle-text" translate>Speaking times</p>
+                <p class="line-and-icon subtitle-text">
+                    <span>
+                        {{'Speaking times' | translate }}
+                    </span>
                     <ng-container *ngIf="permission.projectorCanManage">
                         <button type="button" mat-icon-button [matMenuTriggerFor]="projectionMenu">
                             <mat-icon>more_horiz</mat-icon>
                         </button>
                     </ng-container>
-                </div>
+                </p>
                 <os-speaking-times
                     [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"
                 ></os-speaking-times>
