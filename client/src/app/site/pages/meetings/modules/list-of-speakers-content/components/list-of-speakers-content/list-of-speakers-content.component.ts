@@ -672,7 +672,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public saveChangesModerationNote(): void {
-        console.log(this.moderatorNoteForm.value, this.agendaItem);
         this.agendaItemRepo
             .update(this.moderatorNoteForm.value, this.agendaItem)
             .then(() => {
