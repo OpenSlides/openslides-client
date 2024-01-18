@@ -242,6 +242,15 @@
                 <span>{{ 'Add/remove groups ...' | translate }}</span>
             </button>
 
+            <button
+                mat-menu-item
+                [disabled]="!selectedRows.length || !hasStructureLevels"
+                (click)="setStructureLevelSelected()"
+            >
+                <mat-icon>flag</mat-icon>
+                <span>{{ 'Add/remove structure levels ...' | translate }}</span>
+            </button>
+
             <mat-divider></mat-divider>
 
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveStateOfSelectedUsers()">

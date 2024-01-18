@@ -31,7 +31,6 @@ export class SpeakingTimesComponent implements OnDestroy {
             this.subscriptions.set(
                 speakingTimeId,
                 this.speakingTimesRepo.getViewModelObservable(speakingTimeId).subscribe(speakingTime => {
-                    console.log(speakingTime.structure_level.color, speakingTime, speakingTime.structure_level);
                     const remaining = speakingTime.remaining_time + (speakingTime.additional_time || 0);
                     this.structureLevels.set(speakingTimeId, {
                         name: speakingTime.structure_level.getTitle(),
