@@ -57,12 +57,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public moderatorNoteForm: UntypedFormGroup;
 
-    /**
-     * Custom text to show as "save"
-     */
-    @Input()
-    public saveText = `Save`;
-
     @ViewChild(SortingListComponent)
     public listElement!: SortingListComponent;
 
@@ -107,10 +101,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public get title(): string {
         return this._listOfSpeakers?.getTitle() || ``;
-    }
-
-    public isAgendaItem(): boolean {
-        return !!this._contentObject?.getModel().agenda_item_id;
     }
 
     public get agendaItem(): ViewAgendaItem<any> {
