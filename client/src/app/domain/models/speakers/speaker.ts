@@ -19,6 +19,9 @@ export class Speaker extends BaseModel<Speaker> {
      */
     public end_time!: number;
 
+    public pause_time!: number;
+    public total_pause!: number;
+
     public weight!: number;
     public point_of_order!: boolean;
     public speech_state!: SpeechState;
@@ -43,6 +46,8 @@ export class Speaker extends BaseModel<Speaker> {
         `id`,
         `begin_time`,
         `end_time`,
+        `pause_time`,
+        `total_pause`,
         `weight`,
         `speech_state`,
         `note`,

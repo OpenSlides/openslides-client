@@ -25,7 +25,7 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
 
     public create(
         listOfSpeakers: ListOfSpeakers,
-        meetingUserId: Id,
+        meetingUserId?: Id,
         optionalInformation: {
             pointOfOrder?: boolean;
             note?: UnsafeHtml;
@@ -48,7 +48,21 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         return this.sendActionToBackend(SpeakerAction.CREATE, payload);
     }
 
-    public update(speech_state: SpeechState | null, viewModel: ViewSpeaker): Promise<void> {
+    public update(
+        info: {
+            speech_state?: SpeechState;
+            meeting_user_id?: Id;
+        },
+        viewModel: ViewSpeaker
+    ): Promise<void> {
+        const payload: any = {
+            id: viewModel.id,
+            ...info
+        };
+        return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
+    }
+
+    public updateSpeechState(speech_state: SpeechState | null, viewModel: ViewSpeaker): Promise<void> {
         const payload: any = {
             id: viewModel.id,
             speech_state
@@ -82,6 +96,16 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         return this.sendActionToBackend(SpeakerAction.START_SPEAK, payload);
     }
 
+    public pauseSpeak(speaker: ViewSpeaker): Promise<void> {
+        const payload = { id: speaker.id };
+        return this.sendActionToBackend(SpeakerAction.PAUSE_SPEAK, payload);
+    }
+
+    public unpauseSpeak(speaker: ViewSpeaker): Promise<void> {
+        const payload = { id: speaker.id };
+        return this.sendActionToBackend(SpeakerAction.UNPAUSE_SPEAK, payload);
+    }
+
     public stopToSpeak(speaker: ViewSpeaker): Promise<void> {
         const payload = { id: speaker.id };
         return this.sendActionToBackend(SpeakerAction.END_SPEAK, payload);
@@ -89,16 +113,21 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
 
     public setContribution(speaker: ViewSpeaker): Promise<void> {
         const speechState = speaker.speech_state === SpeechState.CONTRIBUTION ? null : SpeechState.CONTRIBUTION;
-        return this.update(speechState, speaker);
+        return this.updateSpeechState(speechState, speaker);
+    }
+
+    public setIntervention(speaker: ViewSpeaker): Promise<void> {
+        const speechState = speaker.speech_state === SpeechState.INTERVENTION ? null : SpeechState.INTERVENTION;
+        return this.updateSpeechState(speechState, speaker);
     }
 
     public setProSpeech(speaker: ViewSpeaker): Promise<void> {
         const speechState = speaker.speech_state === SpeechState.PRO ? null : SpeechState.PRO;
-        return this.update(speechState, speaker);
+        return this.updateSpeechState(speechState, speaker);
     }
 
     public setContraSpeech(speaker: ViewSpeaker): Promise<void> {
         const speechState = speaker.speech_state === SpeechState.CONTRA ? null : SpeechState.CONTRA;
-        return this.update(speechState, speaker);
+        return this.updateSpeechState(speechState, speaker);
     }
 }
