@@ -41,6 +41,9 @@ export class SpeakingTimesComponent implements OnDestroy {
     public totalTimeForm: UntypedFormGroup;
     public currentEntry: any = null;
 
+    // if some speaker has spoken.
+    public hasSpokenFlag = false;
+
     @Input()
     public set currentSpeakingTimes(speakingTimes: Id[]) {
         const newSpeakingTimes = new Set(speakingTimes);
@@ -57,8 +60,7 @@ export class SpeakingTimesComponent implements OnDestroy {
             this.subscriptions.set(
                 speakingTimeId,
                 this.speakingTimesRepo.getViewModelObservable(speakingTimeId).subscribe(speakingTime => {
-                    console.log(speakingTime.structure_level.color, speakingTime, speakingTime.structure_level);
-                    const remaining = speakingTime.remaining_time + (speakingTime.additional_time || 0);
+                    const remaining = speakingTime.remaining_time;
                     this.structureLevels.set(speakingTimeId, {
                         name: speakingTime.structure_level.getTitle(),
                         color: speakingTime.structure_level.color,
@@ -70,6 +72,13 @@ export class SpeakingTimesComponent implements OnDestroy {
                         },
                         id: speakingTimeId
                     });
+                    if (
+                        !this.hasSpokenFlag &&
+                        (speakingTime.list_of_speakers.finishedSpeakers.length > 0 ||
+                            !!speakingTime.list_of_speakers.activeSpeaker)
+                    ) {
+                        this.hasSpokenFlag = true;
+                    }
                     this.cd.markForCheck();
                 })
             );
@@ -86,7 +95,7 @@ export class SpeakingTimesComponent implements OnDestroy {
         private translateService: TranslateService
     ) {
         this.totalTimeForm = this.formBuilder.group({
-            totalTime: [0, Validators.required]
+            totalTime: [0, [Validators.required, Validators.min(1)]]
         });
     }
 
@@ -146,11 +155,7 @@ export class SpeakingTimesComponent implements OnDestroy {
                 `Are you sure you want add ${Math.abs(countdownTime)} s onto every structure level?`
             );
             if (await this.promptService.open(title, content)) {
-                // Update the countdowns
-                for (const tmpId of this.subscribedIds) {
-                    this.structureLevels.get(tmpId).countdown.countdown_time += Math.abs(countdownTime);
-                }
-                // TODO: send update action "add_time"(?)
+                this.speakingTimesRepo.add_time([{ id: speakingTimeId }]);
             }
         }
     }
@@ -186,7 +191,8 @@ export class SpeakingTimesComponent implements OnDestroy {
         if (!this.totalTimeForm.value || !this.totalTimeForm.valid) {
             return;
         }
-        this.currentEntry.countdown.countdown_time = this.totalTimeForm.get(`totalTime`).value;
-        console.log(`save`, this.totalTimeForm.value);
+        this.speakingTimesRepo.update([
+            { id: this.currentEntry.id, initial_time: this.totalTimeForm.get(`totalTime`).value }
+        ]);
     }
 }

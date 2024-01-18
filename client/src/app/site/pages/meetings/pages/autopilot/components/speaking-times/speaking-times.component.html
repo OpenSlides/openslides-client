@@ -21,7 +21,7 @@
 
 <mat-menu #projectionMenu="matMenu">
     <ng-template let-structure_level="structure_level" matMenuContent>
-        <button mat-menu-item (click)="setTotalTime(structure_level.id)">
+        <button mat-menu-item (click)="setTotalTime(structure_level.id)" [disabled]="hasSpokenFlag">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit total time' | translate }}</span>
         </button>
@@ -46,7 +46,7 @@
                 <mat-label>{{ 'Total time' | translate }}</mat-label>
                 <input type="number" formControlName="totalTime" matInput required />
                 <mat-error>
-                    {{ 'A total time  is required' | translate }}
+                    {{ 'A total time is required and must be greater than 0.' | translate }}
                 </mat-error>
             </mat-form-field>
         </form>
