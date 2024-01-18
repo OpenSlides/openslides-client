@@ -161,6 +161,10 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
                         fieldset: [`number`, `vote_weight`]
                     },
                     {
+                        idField: `structure_level_list_of_speakers_id`,
+                        fieldset: FULL_FIELDSET
+                    },
+                    {
                         idField: `point_of_order_category_id`,
                         fieldset: FULL_FIELDSET
                     }
