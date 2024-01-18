@@ -83,6 +83,11 @@ export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfi
                             {
                                 idField: `structure_level_list_of_speakers_ids`,
                                 fieldset: FULL_FIELDSET
+                            },
+                            {
+                                idField: `content_object_id`,
+                                fieldset: [],
+                                follow: [{ idField: `agenda_item_id`, fieldset: [`moderator_notes`] }]
                             }
                         ]
                     }

@@ -110,15 +110,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public isAgendaItem(): boolean {
-        /**
-         * TODO:
-         * should return true if this contentObject is on the agenda
-         */
-        return true;
+        return !!this._contentObject?.getModel().agenda_item_id;
     }
 
     public get agendaItem(): ViewAgendaItem<any> {
-        return this.agendaItemRepo.getViewModel(this._contentObject?.getModel().agenda_item_id);
+        return this.agendaItemRepo.getViewModelUnsafe(this._contentObject?.getModel().agenda_item_id);
     }
 
     public get moderatorNotes(): Observable<string> {
@@ -231,7 +227,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 .subscribe(enabled => (this.restrictPointOfOrderActions = enabled))
         );
         this.moderatorNoteForm = this.formBuilder.group({
-            moderator_note: ``
+            moderator_notes: ``
         });
     }
 
@@ -675,6 +671,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public saveChangesModerationNote(): void {
+        console.log(this.moderatorNoteForm.value, this.agendaItem);
         this.agendaItemRepo
             .update(this.moderatorNoteForm.value, this.agendaItem)
             .then(() => {
