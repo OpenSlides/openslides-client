@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { StructureLevel } from 'src/app/domain/models/structure-levels/structure-level';
@@ -29,5 +30,16 @@ export class StructureLevelControllerService extends BaseMeetingControllerServic
 
     public delete(...structureLevelIds: Id[]): Promise<void | void[]> {
         return this.repo.delete(...structureLevelIds).resolve();
+    }
+
+    /**
+     * Returns an Observable for all structure levels.
+     */
+    public getViewModelListStructureLevelObservable(): Observable<ViewStructureLevel[]> {
+        return this.getViewModelListObservable();
+    }
+
+    public getViewModelListStructureLevel(): ViewStructureLevel[] {
+        return this.getViewModelList();
     }
 }

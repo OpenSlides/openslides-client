@@ -38,6 +38,7 @@ import {
     LOS_FIRST_CONTRIBUTION_SUBSCRIPTION
 } from '../../list-of-speakers-content.subscription';
 import { PointOfOrderDialogService } from '../../modules/point-of-order-dialog/services/point-of-order-dialog.service';
+import { SpeakerUserSelectDialogService } from '../../modules/speaker-user-select-dialog/services/speaker-user-select-dialog.service';
 
 @Component({
     selector: `os-list-of-speakers-content`,
@@ -57,6 +58,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public finishedSpeakers: ViewSpeaker[] = [];
     public waitingSpeakers: ViewSpeaker[] = [];
+    public interposedQuestions: ViewSpeaker[] = [];
     public activeSpeaker: ViewSpeaker | null = null;
 
     public users: ViewUser[] = [];
@@ -68,6 +70,18 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public get showFirstContributionHintObservable(): Observable<boolean> {
         return this.meetingSettingsService.get(`list_of_speakers_show_first_contribution`);
+    }
+
+    public get showInterposedQuestions(): Observable<boolean> {
+        return this.meetingSettingService.get(`list_of_speakers_enable_interposed_question`);
+    }
+
+    public get interventionEnabled(): Observable<boolean> {
+        return this.meetingSettingService.get(`list_of_speakers_intervention_time`).pipe(map(v => v > 0));
+    }
+
+    public get structureLevelCountdownEnabled(): Observable<boolean> {
+        return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v > 0));
     }
 
     public get showPointOfOrders(): boolean {
@@ -127,8 +141,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public restrictPointOfOrderActions = false;
 
-    public structureLevelCountdownEnabled = false;
-
     public isPointOfOrderFn = (speaker: ViewSpeaker) => speaker.point_of_order;
     public enableProContraSpeech = false;
 
@@ -162,6 +174,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private viewport: ViewPortService,
         private cd: ChangeDetectorRef,
         private dialog: PointOfOrderDialogService,
+        private speakerUserSelectDialog: SpeakerUserSelectDialogService,
         private interactionService: InteractionService
     ) {
         super(componentServiceCollector, translate);
@@ -172,10 +185,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled)),
             this.meetingSettingsService
                 .get(`list_of_speakers_closing_disables_point_of_order`)
-                .subscribe(enabled => (this.restrictPointOfOrderActions = enabled)),
-            this.meetingSettingsService
-                .get(`list_of_speakers_default_structure_level_time`)
-                .subscribe(time => (this.structureLevelCountdownEnabled = time > 0))
+                .subscribe(enabled => (this.restrictPointOfOrderActions = enabled))
         );
     }
 
@@ -266,6 +276,28 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         }
     }
 
+    public async updateSpeakerMeetingUser(speaker: ViewSpeaker): Promise<boolean> {
+        const dialogRef = await this.speakerUserSelectDialog.open(this.listOfSpeakers);
+        try {
+            const result = await firstValueFrom(dialogRef.afterClosed());
+            if (result) {
+                await this.speakerRepo.setMeetingUser(speaker, result.meeting_user_id);
+                return true;
+            }
+        } catch (e) {
+            this.raiseError(e);
+            throw e;
+        }
+
+        return false;
+    }
+
+    public async addInterposedQuestion(): Promise<void> {
+        await this.speakerRepo.create(this.listOfSpeakers, this.canManage ? undefined : this._currentUser.id, {
+            speechState: SpeechState.INTERPOSED_QUESTION
+        });
+    }
+
     public async addPointOfOrder(): Promise<void> {
         const dialogRef = await this.dialog.open(this.listOfSpeakers);
         try {
@@ -305,7 +337,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      */
     public async onStartButton(speaker: ViewSpeaker): Promise<void> {
         try {
-            await this.speakerRepo.startToSpeak(speaker);
+            if (speaker.pause_time) {
+                await this.speakerRepo.unpauseSpeak(speaker);
+            } else {
+                await this.speakerRepo.startToSpeak(speaker);
+            }
             this.filterNonAvailableUsers();
         } catch (e) {
             this.raiseError(e);
@@ -315,9 +351,33 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     /**
      * Click on the mic-cross button to stop the current speaker
      */
-    public async onStopButton(): Promise<void> {
+    public async onPauseButton(speaker: ViewSpeaker): Promise<void> {
         try {
-            await this.speakerRepo.stopToSpeak(this.activeSpeaker!);
+            await this.speakerRepo.pauseSpeak(speaker);
+            this.filterNonAvailableUsers();
+        } catch (e) {
+            this.raiseError(e);
+        }
+    }
+
+    /**
+     * Click on the mic-cross button to stop the current speaker
+     */
+    public async onStopButton(speaker: ViewSpeaker): Promise<void> {
+        try {
+            if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id) {
+                if (speaker.isSpeaking) {
+                    await this.speakerRepo.pauseSpeak(speaker);
+                }
+                if (!(await this.updateSpeakerMeetingUser(speaker))) {
+                    this.matSnackBar.open(
+                        this.translate.instant(`You need to select a speaker to stop the speach.`),
+                        this.translate.instant(`OK`)
+                    );
+                    return;
+                }
+            }
+            await this.speakerRepo.stopToSpeak(speaker);
             this.filterNonAvailableUsers();
         } catch (e) {
             this.raiseError(e);
@@ -339,6 +399,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      */
     public async onMarkButton(speaker: ViewSpeaker): Promise<void> {
         await this.speakerRepo.setContribution(speaker);
+    }
+
+    public async onInterventionButton(speaker: ViewSpeaker): Promise<void> {
+        await this.speakerRepo.setIntervention(speaker);
     }
 
     public async onProContraButtons(speaker: ViewSpeaker, isProSpeech: boolean): Promise<void> {
@@ -385,6 +449,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
         const allSpeakers = this._listOfSpeakers!.speakers.sort((a, b) => a.weight - b.weight);
         this.waitingSpeakers = allSpeakers.filter(speaker => speaker.state === SpeakerState.WAITING);
+        this.interposedQuestions = allSpeakers.filter(speaker => speaker.state === SpeakerState.INTERPOSED_QUESTION);
         this.finishedSpeakers = allSpeakers.filter(speaker => speaker.state === SpeakerState.FINISHED);
 
         // convert begin time to date and sort
@@ -428,7 +493,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         }
         const user = this.userRepository.getViewModel(data.userId);
         let structureLevelId: Id;
-        if (this.structureLevelCountdownEnabled && user.getMeetingUser().structure_level_ids.length === 1) {
+        if (
+            (await firstValueFrom(this.structureLevelCountdownEnabled)) &&
+            user.getMeetingUser().structure_level_ids.length === 1
+        ) {
             structureLevelId = user.getMeetingUser().structure_level_ids[0];
         }
 
@@ -478,6 +546,46 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             (speaker.getEndTimeAsDate()!.valueOf() - speaker.getBeginTimeAsDate()!.valueOf()) / 1000
         );
         return this.durationService.durationToString(duration, `m`);
+    }
+
+    public getSpeakerCountdown(speaker: ViewSpeaker): any {
+        if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
+            const total_pause = speaker.total_pause || 0;
+            const end = speaker.pause_time || speaker.end_time || 0;
+            return {
+                running: speaker.isSpeaking,
+                default_time: 0,
+                countdown_time: speaker.isSpeaking
+                    ? speaker.begin_time + total_pause
+                    : (end - (speaker.begin_time + total_pause) || 0) * -1
+            };
+        } else if (
+            this.meetingSettingService.instant(`list_of_speakers_intervention_time`) > 0 &&
+            speaker.speech_state === SpeechState.INTERVENTION
+        ) {
+            const default_time = this.meetingSettingService.instant(`list_of_speakers_intervention_time`) || 0;
+            const total_pause = speaker.total_pause || 0;
+            const end = speaker.pause_time || speaker.end_time || 0;
+            const countdown_time = speaker.isSpeaking
+                ? speaker.begin_time + total_pause + default_time
+                : (end - (speaker.begin_time + total_pause + default_time)) * -1;
+            return {
+                running: speaker.isSpeaking,
+                default_time,
+                countdown_time: speaker.begin_time ? countdown_time : default_time
+            };
+        } else if (this.structureLevelCountdownEnabled && speaker.structure_level_list_of_speakers) {
+            const speakingTime = speaker.structure_level_list_of_speakers;
+            const remaining = speakingTime.remaining_time + (speakingTime.additional_time || 0);
+            return {
+                running: !!speakingTime.current_start_time,
+                countdown_time: speakingTime.current_start_time
+                    ? speakingTime.current_start_time + remaining
+                    : remaining
+            };
+        }
+
+        return null;
     }
 
     /**
