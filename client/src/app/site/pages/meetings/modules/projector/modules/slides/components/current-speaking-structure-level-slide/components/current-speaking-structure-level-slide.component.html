@@ -1,4 +1,4 @@
-<div id="structure-level-current" *ngIf="data">
+<div id="structure-level-current" *ngIf="data && (data.data.current_start_time || data.data.remaining_time)">
     <span id="inner">
         <div id="inner-name">{{ data.data.name }}</div>
         <div id="inner-countdown">
