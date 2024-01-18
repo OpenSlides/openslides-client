@@ -1,13 +1,16 @@
-<div
-    id="chyron"
-    *ngIf="data"
-    [ngStyle]="{
-        'background-color': projector?.chyron_background_color || data.data.background_color,
-        color: projector?.chyron_font_color || data.data.font_color
-    }"
->
+<div id="structure-level-current" *ngIf="data">
     <span id="inner">
-        <div id="inner-name">{{ data.data.current_speaker_name }}</div>
-        <div id="inner-level">{{ data.data.current_speaker_level }}</div>
+        <div id="inner-name">{{ data.data.name }}</div>
+        <div id="inner-countdown">
+            <os-countdown-time
+                [unstyled]="true"
+                [countdown]="{
+                    running: !!data.data.current_start_time,
+                    countdown_time: data.data.current_start_time
+                        ? data.data.current_start_time + data.data.remaining_time
+                        : data.data.remaining_time
+                }"
+            ></os-countdown-time>
+        </div>
     </span>
 </div>

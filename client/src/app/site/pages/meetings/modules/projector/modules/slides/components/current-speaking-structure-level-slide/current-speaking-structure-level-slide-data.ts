@@ -1,6 +1,7 @@
 export interface CurrentSpeakingStructureLevelSlideData {
-    current_speaker_name?: string;
-    current_speaker_level?: string;
-    background_color: string;
-    font_color: string;
+    id: number;
+    name: string;
+    color: string;
+    remaining_time: number;
+    current_start_time: number;
 }

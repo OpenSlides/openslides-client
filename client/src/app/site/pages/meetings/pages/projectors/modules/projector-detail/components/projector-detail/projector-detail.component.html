@@ -401,7 +401,13 @@
 
                         <!-- All structure level -->
                         <mat-list>
-                            <mat-list-item *ngIf="isStructureLevelCountdownEnabled()">
+                            <mat-list-item
+                                *ngIf="
+                                    projectorCount > 1 &&
+                                    !projector.isReferenceProjector &&
+                                    isStructureLevelCountdownEnabled()
+                                "
+                            >
                                 <os-projector-button
                                     [object]="getAllStructureLevel()"
                                     [projector]="projector"

@@ -9,20 +9,14 @@ td {
     vertical-align: top;
 }
 
-.mat-basic-chip.large {
-    font-size: 85%;
-}
-
-.block-recommendation {
-    font-size: 12px;
-    min-height: 22px !important;
-    border-radius: 5px !important;
-    padding: 0 8px !important;
-    margin: 0;
-    line-height: 2;
-    display: inline-flex;
-}
-
 .ellipsis-overflow {
     padding-top: 2px;
+}
+
+.structure-level-color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    margin-right: 6px;
 }
