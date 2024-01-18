@@ -78,6 +78,9 @@
                 </mat-error>
             </mat-form-field>
             <!-- Colour -->
+            <mat-checkbox formControlName="color_check" (change)="onColorCheckChanged()">
+                {{ 'Use color' | translate }}
+            </mat-checkbox>
             <mat-form-field class="os-dialog-large">
                 <mat-label>{{ 'Color' | translate }}</mat-label>
                 <input formControlName="color" type="color" matInput />
