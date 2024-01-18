@@ -28,10 +28,37 @@
         <button
             mat-menu-item
             (click)="distributOverhangTime(structure_level.id)"
-            [disabled]="isInOvertime(structure_level.id)"
+            [disabled]="!isInOvertime(structure_level.id)"
         >
             <mat-icon>more_time</mat-icon>
             <span>{{ 'Distribute overhang time' | translate }}</span>
         </button>
     </ng-template>
 </mat-menu>
+
+<!-- Template for total times dialog -->
+<ng-template #totalTimeDialog>
+    <h2 mat-dialog-title>{{ 'Change total time of' | translate }} {{ currentEntry.name }}</h2>
+    <div class="os-form-card-mobile" mat-dialog-content>
+        <form [formGroup]="totalTimeForm" (keydown)="onKeyDown($event)">
+            <!-- total time -->
+            <mat-form-field>
+                <mat-label>{{ 'Total time' | translate }}</mat-label>
+                <input type="number" formControlName="totalTime" matInput required />
+                <mat-error>
+                    {{ 'A total time  is required' | translate }}
+                </mat-error>
+            </mat-form-field>
+        </form>
+        <p class="warn">{{ 'This will overwrite the current time.' | translate }}</p>
+    </div>
+
+    <div mat-dialog-actions>
+        <button mat-button [disabled]="!totalTimeForm.valid" [mat-dialog-close]="true">
+            <span>{{ 'OK' | translate }}</span>
+        </button>
+        <button mat-button [mat-dialog-close]="false">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </div>
+</ng-template>
