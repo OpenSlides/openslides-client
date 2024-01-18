@@ -118,8 +118,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public get moderatorNotes(): Observable<string> {
-        const moderator_notes = this._contentObject?.getModel().moderator_notes;
-        return moderator_notes;
+        return this.agendaItemRepo
+            .getViewModelObservable(this._contentObject?.getModel().agenda_item_id)
+            .pipe(map(item => item?.moderator_notes));
     }
 
     public get closed(): boolean {
