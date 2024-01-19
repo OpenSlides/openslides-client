@@ -198,6 +198,11 @@
             </button>
         </div>
 
+        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="speaker-list">
+            <mat-icon>record_voice_over</mat-icon>
+            <span translate>List of speakers</span>
+        </button>
+
         <button mat-menu-item (click)="pdfExportUserList()">
             <mat-icon>picture_as_pdf</mat-icon>
             <span>{{ 'List of participants (PDF)' | translate }}</span>
