@@ -495,7 +495,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         let structureLevelId: Id;
         if (
             (await firstValueFrom(this.structureLevelCountdownEnabled)) &&
-            user.getMeetingUser().structure_level_ids.length === 1
+            user.getMeetingUser().structure_level_ids?.length === 1
         ) {
             structureLevelId = user.getMeetingUser().structure_level_ids[0];
         }
