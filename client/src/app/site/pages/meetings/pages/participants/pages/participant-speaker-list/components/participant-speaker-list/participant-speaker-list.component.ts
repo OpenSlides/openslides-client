@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -22,6 +23,8 @@ const SPEAKERS_LIST_STORAGE_INDEX = `speakers`;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParticipantSpeakerListComponent extends BaseMeetingListViewComponent<ViewSpeaker> implements OnInit {
+    public readonly SpeechState = SpeechState;
+
     /**
      * The list of all genders.
      */

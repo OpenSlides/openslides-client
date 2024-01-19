@@ -45,6 +45,42 @@
             <div *ngIf="speaker.point_of_order" class="spacer-top-5">
                 <os-icon-container icon="warning" translate>Point of order</os-icon-container>
             </div>
+
+            <!-- Pro Speech -->
+            <div *ngIf="speaker.speech_state === SpeechState.PRO" class="spacer-top-5">
+                <os-icon-container icon="add_circle">
+                    {{ 'Forspeech' | translate }}
+                </os-icon-container>
+            </div>
+
+            <!-- Contra Speech -->
+            <div *ngIf="speaker.speech_state === SpeechState.CONTRA" class="spacer-top-5">
+                <os-icon-container icon="remove_circle">
+                    {{ 'Counter speech' | translate }}
+                </os-icon-container>
+            </div>
+
+            <!-- Marked -->
+            <div *ngIf="speaker.speech_state === SpeechState.CONTRIBUTION" class="spacer-top-5">
+                <os-icon-container icon="star">
+                    {{ 'Contribution' | translate }}
+                </os-icon-container>
+            </div>
+
+            <!-- Interposed question -->
+            <div *ngIf="speaker.speech_state === SpeechState.INTERPOSED_QUESTION" class="spacer-top-5">
+                <os-icon-container icon="help">
+                    {{ 'Interposed question' | translate }}
+                </os-icon-container>
+            </div>
+
+            <!-- Intervention -->
+            <div *ngIf="speaker.speech_state === SpeechState.INTERVENTION" class="spacer-top-5">
+                <os-icon-container icon="error">
+                    {{ 'Intervention' | translate }}
+                </os-icon-container>
+            </div>
+
             <div *ngIf="speaker.end_time" class="spacer-top-5">
                 <os-icon-container icon="schedule" translate>
                     <os-countdown-time
