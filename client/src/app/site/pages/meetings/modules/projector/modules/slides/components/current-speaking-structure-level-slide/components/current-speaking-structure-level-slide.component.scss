@@ -1,11 +1,20 @@
 #structure-level-current {
     position: absolute;
-    left: 50px;
-    bottom: 80px;
+    right: 0;
+    bottom: calc(50% - 125px);
     right: 0;
     z-index: 10;
-    font-size: 32px;
-    text-align: left;
+    text-align: right;
     line-height: 1;
-    opacity: 1;
+    opacity: 1;   
+    margin-right: 50px;
+    
+    .level-time {
+        font-size: 250px;
+        font-weight: 500;
+    }
+    .level-name {
+        font-size: 70px;
+        opacity: 0.9;   
+    }
 }
