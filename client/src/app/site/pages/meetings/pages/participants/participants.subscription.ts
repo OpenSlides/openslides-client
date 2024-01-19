@@ -1,5 +1,5 @@
 import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
 import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -162,10 +162,11 @@ export const getSpeakersListSubscriptionConfig: SubscriptionConfigGenerator = (i
                     },
                     {
                         idField: `list_of_speakers_id`,
+                        fieldset: [`speaker_ids`, `closed`, ...MEETING_ROUTING_FIELDS],
                         follow: [
                             {
                                 idField: `content_object_id`,
-                                fieldset: [`title`]
+                                fieldset: [`title`, `list_of_speakers_id`, ...MEETING_ROUTING_FIELDS]
                             }
                         ]
                     }
