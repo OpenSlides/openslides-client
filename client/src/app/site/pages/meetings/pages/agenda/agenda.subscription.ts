@@ -172,7 +172,8 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
             },
             {
                 idField: `content_object_id`,
-                fieldset: [`number`, `title`, ...MEETING_ROUTING_FIELDS]
+                fieldset: [`number`, `title`, ...MEETING_ROUTING_FIELDS],
+                follow: [{ idField: `agenda_item_id`, fieldset: [`moderator_notes`] }]
             }
         ]
     },
