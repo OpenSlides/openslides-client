@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -262,16 +263,23 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
     }
 
-    public getCurrentStructureLevel(overlay: boolean): ProjectionBuildDescriptor {
-        // TODO: create own thing for project current structure level
-        // should project speaker, time from structure level and structure level
-        return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
+    public getCurrentStructureLevel(): ProjectionBuildDescriptor {
+        return {
+            content_object_id: `meeting/${this.activeMeetingId}`,
+            type: MeetingProjectionType.CurrentSpeakingStructureLevel,
+            stable: true,
+            projectionDefault: PROJECTIONDEFAULT.currentListOfSpeakers,
+            getDialogTitle: () => this.translate.instant(`Current speaker`)
+        };
     }
 
-    public getAllStructureLevel(overlay: boolean): ProjectionBuildDescriptor {
-        // TODO: create own thing for project all structure level
-        // should project all structure levels and their times
-        return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
+    public getAllStructureLevel(): ProjectionBuildDescriptor {
+        return {
+            content_object_id: `meeting/${this.activeMeetingId}`,
+            type: MeetingProjectionType.CurrentStructureLevelList,
+            projectionDefault: PROJECTIONDEFAULT.currentListOfSpeakers,
+            getDialogTitle: () => this.translate.instant(`All structure levels`)
+        };
     }
 
     public isStructureLevelCountdownEnabled(): boolean {
