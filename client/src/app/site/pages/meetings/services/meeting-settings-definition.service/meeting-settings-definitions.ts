@@ -571,6 +571,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             number: _(`Identifier`),
                             weight: _(`Call list`)
                         }
+                    },
+                    {
+                        key: `motions_enable_editor`,
+                        label: _(`Enable the ability to enter a participant as motion editor`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_working_group_speaker`,
+                        label: _(`Enable the ability to enter a participant as working group speaker for a motion`),
+                        type: `boolean`
                     }
                 ]
             },

@@ -788,6 +788,18 @@ export const RELATIONS: Relation[] = [
         MField: `motion`,
         OField: `comments`
     }),
+    ...makeM2O({
+        MViewModel: ViewMotion,
+        OViewModel: ViewMeetingUser,
+        MField: `editor`,
+        OField: `editor_for_motions`
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotion,
+        OViewModel: ViewMeetingUser,
+        MField: `working_group_speaker`,
+        OField: `working_group_speaker_for_motions`
+    }),
     // ########## Motion comment sections
     ...makeM2O({
         MViewModel: ViewMotionComment,

@@ -128,6 +128,8 @@ export class Settings {
     public motions_amendments_multiple_paragraphs!: boolean;
     public motions_supporters_min_amount!: number;
     public motions_block_slide_columns!: number;
+    public motions_enable_editor!: boolean;
+    public motions_enable_working_group_speaker!: boolean;
     public motions_export_title!: string;
     public motions_export_preamble!: string;
     public motions_export_submitter_recommendation!: boolean;
@@ -359,6 +361,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_amendments_text_mode`,
         `motions_amendments_multiple_paragraphs`,
         `motions_supporters_min_amount`,
+        `motions_enable_editor`,
+        `motions_enable_working_group_speaker`,
         `motions_export_title`,
         `motions_export_preamble`,
         `motions_export_submitter_recommendation`,

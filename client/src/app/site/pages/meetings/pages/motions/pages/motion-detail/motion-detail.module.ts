@@ -54,6 +54,7 @@ import { MotionExtensionFieldComponent } from './components/motion-extension-fie
 import { MotionFinalVersionComponent } from './components/motion-final-version/motion-final-version.component';
 import { MotionHighlightFormComponent } from './components/motion-highlight-form/motion-highlight-form.component';
 import { MotionManagePollsComponent } from './components/motion-manage-polls/motion-manage-polls.component';
+import { MotionManageSingleParticipantFieldComponent } from './components/motion-manage-single-participant-field/motion-manage-single-participant-field.component';
 import { MotionManageSubmittersComponent } from './components/motion-manage-submitters/motion-manage-submitters.component';
 import { MotionManageTitleComponent } from './components/motion-manage-title/motion-manage-title.component';
 import { MotionMetaDataComponent } from './components/motion-meta-data/motion-meta-data.component';
@@ -78,6 +79,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MotionHighlightFormComponent,
         MotionExtensionFieldComponent,
         MotionManageSubmittersComponent,
+        MotionManageSingleParticipantFieldComponent,
         MotionParagraphbasedAmendmentComponent,
         MotionDetailDiffComponent,
         MotionDetailDiffSummaryComponent,

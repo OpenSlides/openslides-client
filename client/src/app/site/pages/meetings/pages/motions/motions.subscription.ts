@@ -196,6 +196,26 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                     }
                 ],
                 ...MeetingUserFieldsets.FullNameSubscription
+            },
+            {
+                idField: `editor_id`,
+                follow: [
+                    {
+                        idField: `user_id`,
+                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                    }
+                ],
+                ...MeetingUserFieldsets.FullNameSubscription
+            },
+            {
+                idField: `working_group_speaker_id`,
+                follow: [
+                    {
+                        idField: `user_id`,
+                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                    }
+                ],
+                ...MeetingUserFieldsets.FullNameSubscription
             }
         ],
         fieldset: [

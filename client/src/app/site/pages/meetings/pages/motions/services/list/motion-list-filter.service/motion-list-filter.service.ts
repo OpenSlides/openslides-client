@@ -101,6 +101,24 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         options: []
     };
 
+    private hasEditorFilterOptions: OsFilter<ViewMotion> = {
+        property: `hasEditor`,
+        label: _(`Editor`),
+        options: [
+            { condition: true, label: _(`Has editor`) },
+            { condition: [false, null], label: _(`Has no editor`) }
+        ]
+    };
+
+    private hasWorkingGroupSpeakerFilterOptions: OsFilter<ViewMotion> = {
+        property: `hasWorkingGroupSpeaker`,
+        label: _(`Working group speaker`),
+        options: [
+            { condition: true, label: _(`Has working group speaker`) },
+            { condition: [false, null], label: _(`Has no working group speaker`) }
+        ]
+    };
+
     private hasSpeakerOptions: OsFilter<ViewMotion> = {
         property: `hasSpeakers`,
         label: _(`Speakers`),
@@ -110,7 +128,7 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         ]
     };
 
-    private AmendmentFilterOption: OsFilter<ViewMotion> = {
+    private amendmentFilterOption: OsFilter<ViewMotion> = {
         property: `amendmentType`,
         label: _(`Amendment`),
         options: [
@@ -178,6 +196,7 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
     protected translate = inject(TranslateService);
     private operator = inject(OperatorService);
     private meetingSettingsService = inject(MeetingSettingsService);
+
     public constructor(store: MeetingActiveFiltersService) {
         super(store);
         this.getWorkflowConfig();
@@ -272,11 +291,16 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         }
 
         if (this.showAmendmentsInMainTable) {
-            filterDefinitions.push(this.AmendmentFilterOption);
+            filterDefinitions.push(this.amendmentFilterOption);
         }
 
         if (!this.operator.isAnonymous) {
             filterDefinitions = filterDefinitions.concat(this.personalNoteFilterOptions);
+        }
+
+        if (this.operator.hasPerms(Permission.motionCanManage)) {
+            filterDefinitions.push(this.hasEditorFilterOptions);
+            filterDefinitions.push(this.hasWorkingGroupSpeakerFilterOptions);
         }
 
         return filterDefinitions;

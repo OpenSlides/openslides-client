@@ -27,6 +27,8 @@ interface IMeetingUserRelations {
     personal_notes: ViewPersonalNote[];
     supported_motions: ViewMotion[];
     submitted_motions: ViewMotionSubmitter[];
+    editor_for_motions: ViewMotion[];
+    working_group_speaker_for_motions: ViewMotion[];
     vote_delegated_to: ViewMeetingUser;
     vote_delegations_from: ViewMeetingUser[];
     vote_delegated_votes: ViewVote[];

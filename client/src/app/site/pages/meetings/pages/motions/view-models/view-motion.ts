@@ -138,6 +138,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.speakerAmount > 0;
     }
 
+    public get hasEditor(): boolean {
+        return !!this.editor_id;
+    }
+
+    public get hasWorkingGroupSpeaker(): boolean {
+        return !!this.working_group_speaker_id;
+    }
+
     public get showPreamble(): boolean {
         return !this.state?.isFinalState ?? true;
     }
@@ -369,6 +377,8 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
     supporter_meeting_users: ViewMeetingUser[];
+    editor?: ViewMeetingUser;
+    working_group_speaker?: ViewMeetingUser;
     change_recommendations: ViewMotionChangeRecommendation[];
     statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];

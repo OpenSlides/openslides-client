@@ -1,0 +1,30 @@
+<h4>
+    <span class="title-font">{{ title }}</span>
+    <button class="small-button" type="button" mat-icon-button disableRipple *ngIf="!isEditMode" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+    </button>
+    <button class="small-button" type="button" mat-icon-button disableRipple *ngIf="isEditMode" (click)="onCancel()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h4>
+
+<mat-basic-chip disableRipple>{{ value?.getTitle() ?? '–' }}</mat-basic-chip>
+
+<div *ngIf="isEditMode">
+    <os-participant-search-selector
+        [nonSelectableUserIds]="nonSelectableUserIds"
+        [placeholder]="placeholder"
+        (userSelected)="setEditor($event)"
+    ></os-participant-search-selector>
+    <p>
+        <button type="button" mat-button (click)="onSave()">
+            <span>{{ 'Save' | translate }}</span>
+        </button>
+        <button type="button" mat-button (click)="onCancel()">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+        <button type="button" mat-button (click)="onClear()">
+            <span>{{ 'Clear' | translate }}</span>
+        </button>
+    </p>
+</div>
