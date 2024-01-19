@@ -13,8 +13,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
 import { StructureLevelListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/structure-level-list-of-speakers';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -70,7 +72,8 @@ export class SpeakingTimesComponent implements OnDestroy {
                                 ? speakingTime.current_start_time + remaining
                                 : remaining
                         },
-                        id: speakingTimeId
+                        id: speakingTimeId,
+                        speakers: speakingTime.speakers
                     });
                     if (
                         !this.hasSpokenFlag &&
@@ -88,6 +91,7 @@ export class SpeakingTimesComponent implements OnDestroy {
     constructor(
         private durationService: DurationService,
         private speakingTimesRepo: StructureLevelListOfSpeakersRepositoryService,
+        private speakerRepo: SpeakerRepositoryService,
         private dialog: MatDialog,
         private formBuilder: UntypedFormBuilder,
         private cd: ChangeDetectorRef,
@@ -160,12 +164,9 @@ export class SpeakingTimesComponent implements OnDestroy {
         }
     }
 
-    /**
-     * return true if structure level is in overtime (countdown time < 0)
-     */
-    public isInOvertime(speakingTimeId: number): boolean {
+    public isInOvertimeAndNotSpeaking(speakingTimeId: number): boolean {
         const entry = this.structureLevels.get(speakingTimeId);
-        return entry.countdown.countdown_time < 0;
+        return entry.countdown.countdown_time < 0 && !this.checkSpeaking(entry.speakers);
     }
 
     /**
@@ -182,6 +183,16 @@ export class SpeakingTimesComponent implements OnDestroy {
         if (event.key === `Escape`) {
             this.dialogRef!.close();
         }
+    }
+
+    private checkSpeaking(speakers: ViewSpeaker[]): boolean {
+        for (const speaker of speakers) {
+            const loaded_speaker = this.speakerRepo.getViewModel(speaker.id);
+            if (loaded_speaker.isCurrentSpeaker) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

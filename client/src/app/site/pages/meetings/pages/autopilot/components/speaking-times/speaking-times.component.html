@@ -28,7 +28,7 @@
         <button
             mat-menu-item
             (click)="distributOverhangTime(structure_level.id)"
-            [disabled]="!isInOvertime(structure_level.id)"
+            [disabled]="!isInOvertimeAndNotSpeaking(structure_level.id)"
         >
             <mat-icon>more_time</mat-icon>
             <span>{{ 'Distribute overhang time' | translate }}</span>
