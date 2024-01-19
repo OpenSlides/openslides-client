@@ -11,6 +11,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewSpeaker } from '../../../../../agenda';
 import { SpeakerControllerService } from '../../../../../agenda/modules/list-of-speakers/services';
 import { InteractionService } from '../../../../../interaction/services/interaction.service';
+import { SpeakerCsvExportService } from '../../../../export/speaker-csv-export.service';
 import { ParticipantSpeakerListFilterService } from '../../services/participant-speaker-list-filter.service/participant-speaker-list-filter.service';
 import { ParticipantSpeakerListSortService } from '../../services/participant-speaker-list-sort.service/participant-speaker-list-sort.service';
 
@@ -42,7 +43,7 @@ export class ParticipantSpeakerListComponent extends BaseMeetingListViewComponen
     /**
      * Define extra filter properties
      */
-    public filterProps = [`full_name`, `structure_level`];
+    public filterProps = [`name`, `structureLevelName`, `topic`];
 
     public get hasInteractionState(): Observable<boolean> {
         return this.interactionService.isConfStateNone.pipe(map(isNone => !isNone));
@@ -55,6 +56,7 @@ export class ParticipantSpeakerListComponent extends BaseMeetingListViewComponen
         public operator: OperatorService,
         public filterService: ParticipantSpeakerListFilterService,
         public sortService: ParticipantSpeakerListSortService,
+        private csvExport: SpeakerCsvExportService,
         private interactionService: InteractionService
     ) {
         super(componentServiceCollector, translate);
@@ -77,7 +79,6 @@ export class ParticipantSpeakerListComponent extends BaseMeetingListViewComponen
      * as CSV
      */
     public csvExportSpeakerList(): void {
-        alert(`TODO`);
-        // this.csvExport.export(this.listComponent.source);
+        this.csvExport.export(this.listComponent.source);
     }
 }

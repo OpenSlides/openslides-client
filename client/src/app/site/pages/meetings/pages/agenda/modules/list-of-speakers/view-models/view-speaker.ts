@@ -65,6 +65,16 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return this.user ? this.user.gender : ``;
     }
 
+    public get topic(): string {
+        return this.list_of_speakers?.content_object ? this.list_of_speakers.content_object.getTitle() : ``;
+    }
+
+    public get structureLevelName(): string {
+        return this.structure_level_list_of_speakers?.structure_level
+            ? this.structure_level_list_of_speakers.structure_level.name
+            : ``;
+    }
+
     public get structureLevelId(): Id {
         return this.structure_level_list_of_speakers ? this.structure_level_list_of_speakers.structure_level_id : null;
     }
