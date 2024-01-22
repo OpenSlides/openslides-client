@@ -8,14 +8,17 @@
         margin-bottom: 26px;
         display: flex;
     }
-    .structure-level-time {
+    .structure-level-info {
         border-top-color: transparent;
         border-top-width: 3px;
         border-top-style: solid;
+    }
+    .structure-level-time {
         font-size: 35px;
         line-height: 1;
     }
     .structure-level-name {
         line-height: 1;
+        text-align: right;
     }
 }
