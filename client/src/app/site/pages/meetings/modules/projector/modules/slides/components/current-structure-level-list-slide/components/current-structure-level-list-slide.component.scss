@@ -1,0 +1,22 @@
+table {
+    line-height: 1;
+    width: 100%;
+    table-layout: fixed;
+}
+
+td {
+    min-width: 50%;
+    vertical-align: top;
+}
+
+.ellipsis-overflow {
+    padding-top: 2px;
+}
+
+.structure-level-color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    margin-right: 6px;
+}
