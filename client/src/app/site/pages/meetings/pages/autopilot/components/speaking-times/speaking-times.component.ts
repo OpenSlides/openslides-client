@@ -117,16 +117,6 @@ export class SpeakingTimesComponent implements OnDestroy {
         return this.durationService.durationToString(duration_time, `m`).slice(0, -2);
     }
 
-    /**
-     * an dialog should open with:
-     * title: "Change total time of `structure_level_name`"
-     * input (required and required >=0) field with new time
-     * warn-text: "this will overwrite the current time"
-     * buttons: OK and Cancel
-     *
-     * the countdown the structure level with the structure_level id should
-     * be set to whatever number time was given
-     */
     public setTotalTime(speakingTimeId: number): void {
         this.currentEntry = this.structureLevels.get(speakingTimeId);
         this.totalTimeForm.get(`totalTime`).setValue(this.currentEntry.countdown.countdown_time);
@@ -139,17 +129,6 @@ export class SpeakingTimesComponent implements OnDestroy {
         });
     }
 
-    /**
-     * an dialog should open with:
-     * title: "Distribute overhang time"
-     * text: "Are you sure you want add `overhang time-from-structure-level` onto every structure level?"
-     * buttons: OK and Cancel
-     * the overhang time from the structure level should he added onto every structure level
-     * Example:
-     * If level A has 20 sec left and level B an overhang from -30sec
-     * the level A should have (after distributing B's overhang time) 50 sec
-     * and B should have 0 secs
-     */
     public async distributOverhangTime(speakingTimeId: number): Promise<void> {
         const entry = this.structureLevels.get(speakingTimeId);
         const countdownTime = entry.countdown.countdown_time;
@@ -169,12 +148,6 @@ export class SpeakingTimesComponent implements OnDestroy {
         return entry.countdown.countdown_time < 0 && !this.checkSpeaking(entry.speakers);
     }
 
-    /**
-     * clicking Enter will save automatically
-     * clicking Escape will cancel the process
-     *
-     * @param event has the code
-     */
     public onKeyDown(event: KeyboardEvent): void {
         if (event.key === `Enter`) {
             this.save();
@@ -195,9 +168,6 @@ export class SpeakingTimesComponent implements OnDestroy {
         return false;
     }
 
-    /**
-     * save the form value into the counter
-     */
     private save(): void {
         if (!this.totalTimeForm.value || !this.totalTimeForm.valid) {
             return;
