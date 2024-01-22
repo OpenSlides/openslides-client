@@ -96,7 +96,6 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
                 .get(`list_of_speakers_default_structure_level_time`)
                 .subscribe(time => (this.structureLevelCountdownEnabled = time > 0))
         );
-
     }
 
     public ngOnInit(): void {

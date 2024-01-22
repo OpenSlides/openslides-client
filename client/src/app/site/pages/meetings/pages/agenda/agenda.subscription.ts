@@ -184,7 +184,7 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
                         fieldset: [`name`, `color`]
                     }
                 ]
-             }
+            }
         ]
     },
     subscriptionName: LIST_OF_SPEAKERS_SUBSCRIPTION
