@@ -27,6 +27,8 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
      */
     private token!: string;
 
+    public hidePassword = true;
+
     /**
      * Constructur for the reset password confirm view. Initializes the form for the new password.
      */
