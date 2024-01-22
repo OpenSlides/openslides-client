@@ -36,4 +36,8 @@ export class SpeakerUserSelectDialogComponent {
     public onCancel(): void {
         this.dialogRef.close();
     }
+
+    public onContinue(): void {
+        this.dialogRef.close({ meeting_user_id: null });
+    }
 }

@@ -1,5 +1,8 @@
 <h2 mat-dialog-title>
-    <span translate>Select or search speaker for interposed question</span>
+    <span translate>
+        Are you sure you want to stop the interposed question without selecting a speaker, the "Last speakers"-List will
+        display this interposed question with a "Deleted user"?
+    </span>
 </h2>
 
 <form class="edit-form">
@@ -12,5 +15,6 @@
     </mat-dialog-content>
     <mat-dialog-actions>
         <button mat-button type="button" (click)="onCancel()">{{ 'Cancel' | translate }}</button>
+        <button mat-button type="button" (click)="onContinue()">{{ 'Continue' | translate }}</button>
     </mat-dialog-actions>
 </form>

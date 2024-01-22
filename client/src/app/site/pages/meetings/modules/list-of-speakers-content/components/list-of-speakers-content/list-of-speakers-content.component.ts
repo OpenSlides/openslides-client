@@ -314,7 +314,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
-                await this.speakerRepo.setMeetingUser(speaker, result.meeting_user_id);
+                if (result.meeting_user_id) {
+                    await this.speakerRepo.setMeetingUser(speaker, result.meeting_user_id);
+                }
                 return true;
             }
         } catch (e) {
@@ -403,10 +405,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                     await this.speakerRepo.pauseSpeak(speaker);
                 }
                 if (!(await this.updateSpeakerMeetingUser(speaker))) {
-                    this.matSnackBar.open(
-                        this.translate.instant(`You need to select a speaker to stop the speach.`),
-                        this.translate.instant(`OK`)
-                    );
                     return;
                 }
             }
