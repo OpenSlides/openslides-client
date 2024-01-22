@@ -28,10 +28,9 @@ import { AutopilotRoutingModule } from './autopilot-routing.module';
 import { AutopilotComponent } from './components/autopilot/autopilot.component';
 import { AutopilotMainComponent } from './components/autopilot-main/autopilot-main.component';
 import { PollCollectionComponent } from './components/poll-collection/poll-collection.component';
-import { SpeakingTimesComponent } from './components/speaking-times/speaking-times.component';
 
 @NgModule({
-    declarations: [AutopilotMainComponent, AutopilotComponent, PollCollectionComponent, SpeakingTimesComponent],
+    declarations: [AutopilotMainComponent, AutopilotComponent, PollCollectionComponent],
     imports: [
         CommonModule,
         RouterModule,
