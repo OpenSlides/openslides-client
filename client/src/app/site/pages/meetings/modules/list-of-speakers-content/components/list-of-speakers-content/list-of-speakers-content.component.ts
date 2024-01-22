@@ -305,7 +305,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         if (speakerToDelete && (await this.promptService.open(title))) {
             await this.speakerRepo.delete(speakerToDelete.id);
             this.filterNonAvailableUsers();
-            this.interactionService.kickUsers([speakerToDelete.user], `Removed from the list of speakers`);
+            if (speakerToDelete.user) {
+                this.interactionService.kickUsers([speakerToDelete.user], `Removed from the list of speakers`);
+            }
         }
     }
 
@@ -409,7 +411,51 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                     );
                     return;
                 }
+            } else if (
+                speaker.speech_state !== SpeechState.INTERPOSED_QUESTION &&
+                this.interposedQuestions.length > 0
+            ) {
+                const messages: string[] = [];
+                const cleared = this.interposedQuestions.filter(speaker => !speaker.begin_time).length;
+                const unaccurateTime = this.interposedQuestions.length - cleared;
+                const noUser =
+                    unaccurateTime -
+                    this.interposedQuestions.filter(speaker => !!speaker.begin_time && !speaker.meeting_user_id).length;
+                if (cleared > 0) {
+                    messages.push(
+                        this.translate
+                            .instant(`{{amount}} interposed questions will be cleared`)
+                            .replace(`{{amount}}`, cleared)
+                    );
+                }
+
+                if (unaccurateTime > 0) {
+                    messages.push(
+                        this.translate
+                            .instant(`{{amount}} will be saved with an inaccurate time`)
+                            .replace(`{{amount}}`, unaccurateTime)
+                    );
+                }
+
+                if (noUser > 0) {
+                    messages.push(
+                        this.translate
+                            .instant(`{{amount}} of them will be saved with 'Deleted User' as their speaker`)
+                            .replace(`{{amount}}`, noUser)
+                    );
+                }
+                if (
+                    !(await this.promptService.open(
+                        this.translate.instant(
+                            `Are you sure you want to end a contribution which still has interposed question(s)?`
+                        ),
+                        messages.join(`, `)
+                    ))
+                ) {
+                    return;
+                }
             }
+
             await this.speakerRepo.stopToSpeak(speaker);
             this.filterNonAvailableUsers();
         } catch (e) {
