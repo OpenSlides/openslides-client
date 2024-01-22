@@ -154,6 +154,14 @@ In combination with motion blocks, the recommendation of multiple motions can be
             type: `input`
         },
         {
+            name: _(`Internal recommendation`),
+            help_text: _(
+                `Defines the state to be an internal recommendation which is only visible to motion managers.`
+            ),
+            selector: `is_internal_recommendation`,
+            type: `check`
+        },
+        {
             name: _(`Allow support`),
             help_text: _(
                 `Enables the support function for motions in the selected state. The support function must be activated under > [Settings] > [Motions] as well as the corresponding group permission in > [Participants] > [Groups] > [Motions] > [Can support motions].`
