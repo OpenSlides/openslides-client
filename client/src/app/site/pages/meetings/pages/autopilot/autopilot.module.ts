@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -39,15 +44,20 @@ import { SpeakingTimesComponent } from './components/speaking-times/speaking-tim
         MatProgressBarModule,
         MatTabsModule,
         MatTooltipModule,
+        MatFormFieldModule,
         MatIconModule,
+        MatDialogModule,
         ListOfSpeakersContentModule,
         HeadBarModule,
         CountdownTimeModule,
         OpenSlidesTranslationModule.forChild(),
         PollModule,
         MotionPollModule,
+        MatMenuModule,
         TopicPollModule,
-        AssignmentPollModule
+        AssignmentPollModule,
+        ReactiveFormsModule,
+        MatInputModule
     ]
 })
 export class AutopilotModule {}

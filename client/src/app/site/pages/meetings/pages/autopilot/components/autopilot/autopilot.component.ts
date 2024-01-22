@@ -5,7 +5,6 @@ import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/de
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
@@ -115,8 +114,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         private operator: OperatorService,
         projectorRepo: ProjectorControllerService,
         closService: CurrentListOfSpeakersService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService,
-        private durationService: DurationService
+        private listOfSpeakersRepo: ListOfSpeakersControllerService
     ) {
         super(componentServiceCollector, translate);
 
@@ -148,5 +146,23 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public async readdLastSpeaker(): Promise<void> {
         await this.listOfSpeakersRepo.readdLastSpeaker(this.listOfSpeakers!).catch(this.raiseError);
+    }
+
+    public showAllStructureLevels(): void {
+        /**
+         *  TODO
+         * - a dialog should open to select the projector
+         *    (see election-list -> projector button for similar dialog)
+         * - every structure level/time/colour etc. should be projected onto the selected projector(s)
+         */
+    }
+
+    public showActiveStructureLevel(): void {
+        /**
+         *  TODO
+         * - a dialog should open to select the projector(s), "fullscreen"-mode and display type
+         *    (see projector-detail -> countdowns -> "open projection dialog"-dialog for similar dialog)
+         * - only the structure level/time/colour of the currently speaking person should be projected
+         */
     }
 }

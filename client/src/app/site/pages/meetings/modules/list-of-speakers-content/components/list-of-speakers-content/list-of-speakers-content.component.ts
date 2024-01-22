@@ -609,7 +609,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             };
         } else if (this.structureLevelCountdownEnabled && speaker.structure_level_list_of_speakers) {
             const speakingTime = speaker.structure_level_list_of_speakers;
-            const remaining = speakingTime.remaining_time + (speakingTime.additional_time || 0);
+            const remaining = speakingTime.remaining_time;
             return {
                 running: !!speakingTime.current_start_time,
                 countdown_time: speakingTime.current_start_time

@@ -1,8 +1,24 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnDestroy,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
 import { StructureLevelListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/structure-level-list-of-speakers';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { DurationService } from 'src/app/site/services/duration.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 @Component({
     selector: `os-speaking-times`,
@@ -11,9 +27,24 @@ import { DurationService } from 'src/app/site/services/duration.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpeakingTimesComponent implements OnDestroy {
+    /**
+     * To check permissions in templates using permission.[...]
+     */
+    public readonly permission = Permission;
+
     private subscribedIds: Set<Id> = new Set();
     private subscriptions: Map<Id, Subscription> = new Map();
     private structureLevels: Map<Id, any> = new Map();
+
+    @ViewChild(`totalTimeDialog`, { static: true })
+    private totalTimeDialog: TemplateRef<string> | null = null;
+
+    private dialogRef: MatDialogRef<any> | null = null;
+    public totalTimeForm: UntypedFormGroup;
+    public currentEntry: any = null;
+
+    // if some speaker has spoken.
+    public hasSpokenFlag = false;
 
     @Input()
     public set currentSpeakingTimes(speakingTimes: Id[]) {
@@ -31,7 +62,7 @@ export class SpeakingTimesComponent implements OnDestroy {
             this.subscriptions.set(
                 speakingTimeId,
                 this.speakingTimesRepo.getViewModelObservable(speakingTimeId).subscribe(speakingTime => {
-                    const remaining = speakingTime.remaining_time + (speakingTime.additional_time || 0);
+                    const remaining = speakingTime.remaining_time;
                     this.structureLevels.set(speakingTimeId, {
                         name: speakingTime.structure_level.getTitle(),
                         color: speakingTime.structure_level.color,
@@ -40,8 +71,17 @@ export class SpeakingTimesComponent implements OnDestroy {
                             countdown_time: speakingTime.current_start_time
                                 ? speakingTime.current_start_time + remaining
                                 : remaining
-                        }
+                        },
+                        id: speakingTimeId,
+                        speakers: speakingTime.speakers
                     });
+                    if (
+                        !this.hasSpokenFlag &&
+                        (speakingTime.list_of_speakers.finishedSpeakers.length > 0 ||
+                            !!speakingTime.list_of_speakers.activeSpeaker)
+                    ) {
+                        this.hasSpokenFlag = true;
+                    }
                     this.cd.markForCheck();
                 })
             );
@@ -51,8 +91,17 @@ export class SpeakingTimesComponent implements OnDestroy {
     constructor(
         private durationService: DurationService,
         private speakingTimesRepo: StructureLevelListOfSpeakersRepositoryService,
-        private cd: ChangeDetectorRef
-    ) {}
+        private speakerRepo: SpeakerRepositoryService,
+        private dialog: MatDialog,
+        private formBuilder: UntypedFormBuilder,
+        private cd: ChangeDetectorRef,
+        private promptService: PromptService,
+        private translateService: TranslateService
+    ) {
+        this.totalTimeForm = this.formBuilder.group({
+            totalTime: [0, [Validators.required, Validators.min(1)]]
+        });
+    }
 
     ngOnDestroy(): void {
         for (const speakingTimeId of this.subscribedIds) {
@@ -66,5 +115,65 @@ export class SpeakingTimesComponent implements OnDestroy {
 
     public duration(duration_time: number): string {
         return this.durationService.durationToString(duration_time, `m`).slice(0, -2);
+    }
+
+    public setTotalTime(speakingTimeId: number): void {
+        this.currentEntry = this.structureLevels.get(speakingTimeId);
+        this.totalTimeForm.get(`totalTime`).setValue(this.currentEntry.countdown.countdown_time);
+        const dialogSettings = infoDialogSettings;
+        this.dialogRef = this.dialog.open(this.totalTimeDialog!, dialogSettings);
+        this.dialogRef.afterClosed().subscribe(res => {
+            if (res) {
+                this.save();
+            }
+        });
+    }
+
+    public async distributOverhangTime(speakingTimeId: number): Promise<void> {
+        const entry = this.structureLevels.get(speakingTimeId);
+        const countdownTime = entry.countdown.countdown_time;
+        if (countdownTime < 0) {
+            const title = this.translateService.instant(`Distribute overhang time`);
+            const content = this.translateService.instant(
+                `Are you sure you want add ${Math.abs(countdownTime)} s onto every structure level?`
+            );
+            if (await this.promptService.open(title, content)) {
+                this.speakingTimesRepo.add_time([{ id: speakingTimeId }]);
+            }
+        }
+    }
+
+    public isInOvertimeAndNotSpeaking(speakingTimeId: number): boolean {
+        const entry = this.structureLevels.get(speakingTimeId);
+        return entry.countdown.countdown_time < 0 && !this.checkSpeaking(entry.speakers);
+    }
+
+    public onKeyDown(event: KeyboardEvent): void {
+        if (event.key === `Enter`) {
+            this.save();
+            this.dialogRef!.close();
+        }
+        if (event.key === `Escape`) {
+            this.dialogRef!.close();
+        }
+    }
+
+    private checkSpeaking(speakers: ViewSpeaker[]): boolean {
+        for (const speaker of speakers) {
+            const loaded_speaker = this.speakerRepo.getViewModel(speaker.id);
+            if (loaded_speaker.isCurrentSpeaker) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private save(): void {
+        if (!this.totalTimeForm.value || !this.totalTimeForm.valid) {
+            return;
+        }
+        this.speakingTimesRepo.update([
+            { id: this.currentEntry.id, initial_time: this.totalTimeForm.get(`totalTime`).value }
+        ]);
     }
 }
