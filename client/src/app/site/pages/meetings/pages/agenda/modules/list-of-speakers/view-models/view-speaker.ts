@@ -57,6 +57,22 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return this.user ? this.user.full_name : ``;
     }
 
+    public get user_title(): string {
+        return this.user ? this.user.title : ``;
+    }
+
+    public get user_first_name(): string {
+        return this.user ? this.user.first_name : ``;
+    }
+
+    public get user_last_name(): string {
+        return this.user ? this.user.last_name : ``;
+    }
+
+    public get user_number(): string {
+        return this.user ? this.meeting_user.number : ``;
+    }
+
     public get userId(): Id {
         return this.user_id;
     }
