@@ -309,8 +309,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         }
     }
 
-    public async updateSpeakerMeetingUser(speaker: ViewSpeaker): Promise<boolean> {
-        const dialogRef = await this.speakerUserSelectDialog.open(this.listOfSpeakers);
+    public async updateSpeakerMeetingUser(speaker: ViewSpeaker, stopAfter?: boolean): Promise<boolean> {
+        const dialogRef = await this.speakerUserSelectDialog.open(this.listOfSpeakers, stopAfter);
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
@@ -404,7 +404,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 if (speaker.isSpeaking) {
                     await this.speakerRepo.pauseSpeak(speaker);
                 }
-                if (!(await this.updateSpeakerMeetingUser(speaker))) {
+                if (!(await this.updateSpeakerMeetingUser(speaker, true))) {
                     return;
                 }
             }
