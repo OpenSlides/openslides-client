@@ -107,7 +107,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     // Will be set by the repository
     public getName!: () => string;
     public getShortName!: () => string;
-    public getFullName!: () => string;
+    public getFullName!: (structureLevel?: ViewStructureLevel) => string;
     public getLevelAndNumber!: () => string;
     public getMeetingUser!: (meetingId?: Id) => ViewMeetingUser;
 
