@@ -46,10 +46,9 @@ export class MotionManageSingleParticipantFieldComponent extends BaseUiComponent
         super();
     }
 
-    public setEditor(data: UserSelectionData): void {
-        this.nonSelectableUserIds = [];
+    public setUser(data: UserSelectionData): void {
+        this.nonSelectableUserIds = []; // necessary to prevent users from being removed from the dropdown after selection
         this.value = data.user ?? this.userRepository.getViewModel(data.userId);
-        console.log(this.value);
     }
 
     public async onSave(): Promise<void> {
@@ -58,7 +57,6 @@ export class MotionManageSingleParticipantFieldComponent extends BaseUiComponent
     }
 
     public onEdit(): void {
-        console.log(this.motion[this.field]);
         this.isEditMode = true;
         this.value = this.motion[this.field];
     }

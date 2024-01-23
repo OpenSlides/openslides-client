@@ -6,14 +6,11 @@ import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { UserSelectionData } from 'src/app/site/pages/meetings/modules/participant-search-selector';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
-import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort.service/participant-list-sort.service';
-import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
@@ -25,8 +22,6 @@ import { SearchListDefinition } from '../motion-extension-field/motion-extension
     styleUrls: [`./motion-meta-data.component.scss`]
 })
 export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
-    public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
-
     public motionBlocks: MotionBlock[] = [];
 
     public categories: ViewMotionCategory[] = [];
@@ -126,8 +121,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         public perms: MotionPermissionService,
         private operator: OperatorService,
         private motionForwardingService: MotionForwardDialogService,
-        private meetingController: MeetingControllerService,
-        public participantSortService: ParticipantListSortService
+        private meetingController: MeetingControllerService
     ) {
         super();
 
@@ -236,10 +230,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
      */
     public openSupportersDialog(): void {
         this.showSupporters = !this.showSupporters;
-    }
-
-    public setEditor({ userId }: UserSelectionData): void {
-        this.repo.update({ editor_id: userId }, this.motion);
     }
 
     public getCategorySelectionMarginLeft(category: ViewMotionCategory): string {

@@ -14,7 +14,7 @@
     <os-participant-search-selector
         [nonSelectableUserIds]="nonSelectableUserIds"
         [placeholder]="placeholder"
-        (userSelected)="setEditor($event)"
+        (userSelected)="setUser($event)"
     ></os-participant-search-selector>
     <p>
         <button type="button" mat-button (click)="onSave()">
