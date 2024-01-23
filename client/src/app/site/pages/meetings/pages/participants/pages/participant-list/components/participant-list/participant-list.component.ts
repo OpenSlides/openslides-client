@@ -338,7 +338,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             if (selectedChoice.action === ADD) {
                 this.repo
                     .update(user => {
-                        const nextStructureLevelIds = user.structure_level_ids();
+                        const nextStructureLevelIds = user.structure_level_ids() || [];
                         return {
                             id: user.id,
                             structure_level_ids: [...new Set(nextStructureLevelIds.concat(chosenStructureLevelIds))]
@@ -348,7 +348,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             } else {
                 this.repo
                     .update(user => {
-                        const nextStructureLevelIds = new Set(user.structure_level_ids());
+                        const nextStructureLevelIds = new Set(user.structure_level_ids() || []);
                         chosenStructureLevelIds.forEach(id => nextStructureLevelIds.delete(id));
                         return {
                             id: user.id,
