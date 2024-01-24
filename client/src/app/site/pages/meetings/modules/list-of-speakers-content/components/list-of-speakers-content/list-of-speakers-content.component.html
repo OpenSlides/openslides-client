@@ -198,10 +198,22 @@
                         <div>
                             {{ speaker.getTitle() }}
                             <span
-                                *ngIf="speaker.structure_level_list_of_speakers?.structure_level"
+                                *ngIf="
+                                    (structureLevelCountdownEnabled | async) &&
+                                    speaker.structure_level_list_of_speakers?.structure_level
+                                "
                                 class="speaker-structure-level accent-text"
                             >
                                 {{ speaker.structure_level_list_of_speakers?.structure_level?.name }}
+                            </span>
+                            <span
+                                *ngIf="
+                                    (structureLevelCountdownDisabled | async) &&
+                                    speaker.meeting_user.structure_levels?.length
+                                "
+                                class="speaker-structure-level accent-text"
+                            >
+                                {{ displayStructureLevels(speaker.meeting_user.structure_levels) }}
                             </span>
                         </div>
                         <!-- Extra line -->
