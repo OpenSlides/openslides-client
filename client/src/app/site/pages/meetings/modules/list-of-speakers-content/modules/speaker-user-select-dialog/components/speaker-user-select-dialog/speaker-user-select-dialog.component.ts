@@ -11,7 +11,6 @@ import { UserSelectionData } from '../../../../../participant-search-selector';
 
 interface SpeakerUserSelectDialogComponentData {
     listOfSpeakers: ViewListOfSpeakers;
-    stopSpeechDialog?: boolean;
 }
 
 @Component({
@@ -21,16 +20,13 @@ interface SpeakerUserSelectDialogComponentData {
 })
 export class SpeakerUserSelectDialogComponent {
     public nonAvailableUserIds: Id[] = [];
-    public stopSpeechDialog = false;
 
     public constructor(
         public readonly dialogRef: MatDialogRef<SpeakerUserSelectDialogComponent>,
         @Inject(MAT_DIALOG_DATA)
         public readonly data: SpeakerUserSelectDialogComponentData,
         public userRepo: UserRepositoryService
-    ) {
-        this.stopSpeechDialog = !!data.stopSpeechDialog;
-    }
+    ) {}
 
     public setCurrentUser(selection: UserSelectionData) {
         if (selection.userId) {

@@ -27,7 +27,22 @@
                     <div class="finished-speaker-info">
                         <div>
                             <div>
-                                {{ speaker.getTitle() }}
+                                <ng-container
+                                    *ngIf="
+                                        speaker.speech_state === SpeechState.INTERPOSED_QUESTION &&
+                                        !speaker.meeting_user_id
+                                    "
+                                >
+                                    {{ 'Unknown' | translate }}
+                                </ng-container>
+                                <ng-container
+                                    *ngIf="
+                                        speaker.speech_state !== SpeechState.INTERPOSED_QUESTION ||
+                                        speaker.meeting_user_id
+                                    "
+                                >
+                                    {{ speaker.getTitle() }}
+                                </ng-container>
                                 <span
                                     *ngIf="speaker.structure_level_list_of_speakers?.structure_level"
                                     class="speaker-structure-level"
@@ -47,6 +62,17 @@
                         </div>
                     </div>
 
+                    <div *osPerms="permission.listOfSpeakersCanManage">
+                        <button
+                            *ngIf="speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id"
+                            mat-icon-button
+                            matTooltip="{{ 'Select speaker' | translate }}"
+                            matTooltipPosition="left"
+                            (click)="updateSpeakerMeetingUser(speaker)"
+                        >
+                            <mat-icon>person_add</mat-icon>
+                        </button>
+                    </div>
                     <div>
                         <button
                             mat-icon-button

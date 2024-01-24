@@ -309,8 +309,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         }
     }
 
-    public async updateSpeakerMeetingUser(speaker: ViewSpeaker, stopAfter?: boolean): Promise<boolean> {
-        const dialogRef = await this.speakerUserSelectDialog.open(this.listOfSpeakers, stopAfter);
+    public async updateSpeakerMeetingUser(speaker: ViewSpeaker): Promise<boolean> {
+        const dialogRef = await this.speakerUserSelectDialog.open(this.listOfSpeakers);
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
@@ -400,14 +400,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      */
     public async onStopButton(speaker: ViewSpeaker): Promise<void> {
         try {
-            if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id) {
-                if (speaker.isSpeaking) {
-                    await this.speakerRepo.pauseSpeak(speaker);
-                }
-                if (!(await this.updateSpeakerMeetingUser(speaker, true))) {
-                    return;
-                }
-            }
             await this.speakerRepo.stopToSpeak(speaker);
             this.filterNonAvailableUsers();
         } catch (e) {
