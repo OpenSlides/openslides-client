@@ -35,7 +35,7 @@ export class Speaker extends BaseModel<Speaker> {
     public structure_level_list_of_speakers_id: Id; // structure_level_list_of_speakers/speaker_ids
 
     public get speakingTime(): number {
-        return this.end_time - this.begin_time - this.total_pause || 0;
+        return this.end_time - this.begin_time - (this.total_pause || 0) || 0;
     }
 
     public constructor(input?: any) {
