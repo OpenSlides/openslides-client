@@ -21,6 +21,8 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { hasListOfSpeakers, ViewListOfSpeakers } from '../../../../../agenda';
 import { CurrentListOfSpeakersSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-list-of-speakers-slide.service';
+import { CurrentSpeakingStructureLevelSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-speaking-structure-level-slide.service';
+import { CurrentStructureLevelListSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-structure-level-list-slide.service';
 import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog';
 import { ProjectorEditDialogService } from '../../../../components/projector-edit-dialog/services/projector-edit-dialog.service';
 import { ProjectorMessageDialogService } from '../../../../components/projector-message-dialog';
@@ -109,6 +111,8 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         private countdownRepo: ProjectorCountdownControllerService,
         private messageRepo: ProjectorMessageControllerService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
+        private currentStructureLevelListSlideService: CurrentStructureLevelListSlideService,
+        private currentSpeakingStructureLevelSlideService: CurrentSpeakingStructureLevelSlideService,
         private currentSpeakerChyronService: CurrentSpeakerChyronSlideService,
         private projectorEditDialog: ProjectorEditDialogService,
         private projectorMessageDialog: ProjectorMessageDialogService,
@@ -258,6 +262,14 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     public getCurrentLoSBuildDesc(overlay: boolean): ProjectionBuildDescriptor {
         return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
+    }
+
+    public getCurrentStructureLevel(): ProjectionBuildDescriptor {
+        return this.currentSpeakingStructureLevelSlideService.getProjectionBuildDescriptor(true);
+    }
+
+    public getAllStructureLevel(): ProjectionBuildDescriptor {
+        return this.currentStructureLevelListSlideService.getProjectionBuildDescriptor(false);
     }
 
     public isStructureLevelCountdownEnabled(): boolean {

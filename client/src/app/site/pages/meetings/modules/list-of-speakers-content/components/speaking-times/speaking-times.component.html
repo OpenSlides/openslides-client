@@ -1,3 +1,12 @@
+<div class="action-title">
+    <p class="subtitle-text" translate>Speaking times</p>
+    <ng-container *osPerms="permission.projectorCanManage">
+        <button type="button" mat-icon-button [matMenuTriggerFor]="projectionMenu">
+            <mat-icon>more_horiz</mat-icon>
+        </button>
+    </ng-container>
+</div>
+
 <div class="structure-level-list">
     <div class="structure-level" *ngFor="let structure_level of getStructureLevels()">
         <div>
@@ -62,3 +71,12 @@
         </button>
     </div>
 </ng-template>
+
+<mat-menu #projectionMenu="matMenu">
+    <os-projector-button [object]="getAllStructureLevel()" [menuItem]="true">
+        {{ 'Project all structure levels' | translate }}
+    </os-projector-button>
+    <os-projector-button [object]="getCurrentStructureLevel()" [menuItem]="true">
+        {{ 'Project active structure level' | translate }}
+    </os-projector-button>
+</mat-menu>
