@@ -7,10 +7,7 @@ import {
     CurrentStructureLevelListSlideStructureLevelRepresentation
 } from '../current-structure-level-list-slide-data';
 
-const ROWS_PER_COLUMN_SHORT = 8;
-const ROWS_PER_COLUMN_LONG = 16;
-const SHORT_LAYOUT_THRESHOLD = 8;
-const MAX_COLUMNS = 3;
+const MAX_COLUMNS = 4;
 
 @Component({
     selector: `os-current-structure-level-list-slide`,
@@ -45,10 +42,6 @@ export class CurrentStructureLevelListSlideComponent extends BaseSlideComponent<
         }
     }
 
-    public get shortDisplayStyle(): boolean {
-        return this.structureLevelsAmount > SHORT_LAYOUT_THRESHOLD;
-    }
-
     /**
      * @returns the amount of rows to display.
      */
@@ -64,9 +57,7 @@ export class CurrentStructureLevelListSlideComponent extends BaseSlideComponent<
     }
 
     public get columns(): number {
-        const rowsPerColumn = this.shortDisplayStyle ? ROWS_PER_COLUMN_SHORT : ROWS_PER_COLUMN_LONG;
-        const columns = Math.ceil(this.structureLevelsAmount / rowsPerColumn);
-        return Math.min(columns, this.maxColumns);
+        return Math.min(this.structureLevelsAmount, this.maxColumns);
     }
 
     /**
@@ -95,11 +86,11 @@ export class CurrentStructureLevelListSlideComponent extends BaseSlideComponent<
     /**
      * Get the motion for the cell given by i and j
      *
-     * @param i the row
-     * @param j the column
+     * @param i the column
+     * @param j the row
      */
-    public getStructureLevel(i: number, j: number): CurrentStructureLevelListSlideStructureLevelRepresentation {
-        const index = i + this.rows * j;
+    public getStructureLevel(j: number, i: number): CurrentStructureLevelListSlideStructureLevelRepresentation {
+        const index = i + this.columns * j;
         return this.data.data.structure_levels[index];
     }
 }
