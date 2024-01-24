@@ -6,7 +6,7 @@
             </span>
             <div class="structure-level-name">{{ structure_level.name }}</div>
         </div>
-        <ng-container *ngIf="permission.projectorCanManage">
+        <ng-container *osPerms="permission.listOfSpeakersCanManage">
             <button
                 type="button"
                 mat-icon-button
