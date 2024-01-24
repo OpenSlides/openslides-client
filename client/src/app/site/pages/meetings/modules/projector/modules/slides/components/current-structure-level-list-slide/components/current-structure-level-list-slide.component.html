@@ -12,7 +12,7 @@
         <tr *ngFor="let i of rowsArray">
             <td *ngFor="let j of columnsArray">
                 <ng-container *ngIf="getStructureLevel(i, j)">
-                    <div class="ellipsis-overflow spacer-top-5">
+                    <div class="ellipsis-overflow spacer-top-25">
                         <div class="level-time-list">
                             <span class="color-line" [ngStyle]="{ 'border-top-color': getStructureLevel(i, j).color }">
                                 <os-countdown-time
