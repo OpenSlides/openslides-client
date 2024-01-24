@@ -224,4 +224,22 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
                 }
             });
     }
+    
+    public showAllStructureLevels(): void {
+        /**
+         *  TODO
+         * - a dialog should open to select the projector
+         *    (see election-list -> projector button for similar dialog)
+         * - every structure level/time/colour etc. should be projected onto the selected projector(s)
+         */
+    }
+
+    public showActiveStructureLevel(): void {
+        /**
+         *  TODO
+         * - a dialog should open to select the projector(s), "fullscreen"-mode and display type
+         *    (see projector-detail -> countdowns -> "open projection dialog"-dialog for similar dialog)
+         * - only the structure level/time/colour of the currently speaking person should be projected
+         */
+    }
 }
