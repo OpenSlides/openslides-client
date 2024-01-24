@@ -1,15 +1,15 @@
 import { Directive, inject } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
+import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
 
 import { ActiveMeetingService } from '../services/active-meeting.service';
 import { ActiveMeetingIdService } from '../services/active-meeting-id.service';
 import { MeetingComponentServiceCollectorService } from '../services/meeting-component-service-collector.service';
 import { MeetingSettingsService } from '../services/meeting-settings.service';
-import { ViewMeeting } from '../view-models/view-meeting';
-import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ProjectionBuildDescriptor } from '../view-models';
-import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
+import { ViewMeeting } from '../view-models/view-meeting';
 
 @Directive()
 export abstract class BaseMeetingComponent extends BaseComponent {
@@ -41,7 +41,6 @@ export abstract class BaseMeetingComponent extends BaseComponent {
     }
 
     public override componentServiceCollector = inject(MeetingComponentServiceCollectorService);
-
 
     public getAllStructureLevel(): ProjectionBuildDescriptor {
         return {

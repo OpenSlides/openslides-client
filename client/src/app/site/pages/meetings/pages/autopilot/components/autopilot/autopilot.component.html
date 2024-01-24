@@ -120,18 +120,10 @@
 </div>
 
 <mat-menu #projectionMenu="matMenu">
-    <os-projector-button
-        [object]="getAllStructureLevel()"
-        [projector]="projector"
-        [menuItem]="true"
-    >
+    <os-projector-button [object]="getAllStructureLevel()" [projector]="projector" [menuItem]="true">
         {{ 'Project all structure levels' | translate }}
     </os-projector-button>
-    <os-projector-button
-        [object]="getCurrentStructureLevel()"
-        [projector]="projector"
-        [menuItem]="true"
-    >
+    <os-projector-button [object]="getCurrentStructureLevel()" [projector]="projector" [menuItem]="true">
         {{ 'Project active structure level' | translate }}
     </os-projector-button>
 </mat-menu>
