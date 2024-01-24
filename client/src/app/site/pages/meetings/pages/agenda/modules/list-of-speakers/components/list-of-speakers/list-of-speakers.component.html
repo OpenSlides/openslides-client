@@ -127,12 +127,18 @@
 </mat-menu>
 
 <mat-menu #projectionMenu="matMenu">
-    <button mat-menu-item (click)="showAllStructureLevels()">
-        <mat-icon>videocam</mat-icon>
-        <span>{{ 'Project all structure levels' | translate }}</span>
-    </button>
-    <button mat-menu-item (click)="showActiveStructureLevel()">
-        <mat-icon>videocam</mat-icon>
-        <span>{{ 'Project active structure level' | translate }}</span>
-    </button>
+    <os-projector-button
+        [object]="getAllStructureLevel()"
+        [projector]="projector"
+        [menuItem]="true"
+    >
+        {{ 'Project all structure levels' | translate }}
+    </os-projector-button>
+    <os-projector-button
+        [object]="getCurrentStructureLevel()"
+        [projector]="projector"
+        [menuItem]="true"
+    >
+        {{ 'Project active structure level' | translate }}
+    </os-projector-button>
 </mat-menu>
