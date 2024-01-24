@@ -71,6 +71,7 @@ export interface AssignMeetingsResult {
 
 interface LevelAndNumberInformation {
     number: (meetingId?: Id) => string;
+    structureLevels: (meetingId?: Id) => string;
 }
 
 export type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
