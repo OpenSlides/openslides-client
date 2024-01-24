@@ -90,6 +90,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v > 0));
     }
 
+    public get structureLevelCountdownDisabled(): Observable<boolean> {
+        return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v === 0));
+    }
+
     public get showPointOfOrders(): boolean {
         return this.pointOfOrderEnabled && this.canAddDueToPresence;
     }
@@ -110,6 +114,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.agendaItemRepo
             .getViewModelObservable(this._contentObject?.getModel().agenda_item_id)
             .pipe(map(item => item?.moderator_notes));
+    }
+
+    private get moderatorNotesForForm(): string {
+        return this.agendaItemRepo.getViewModel(this._contentObject?.getModel().agenda_item_id).moderator_notes;
     }
 
     public get closed(): boolean {
@@ -688,6 +696,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public toggleEditModeratorNote(): void {
         this.isEditing = !this.isEditing;
+        if (this.isEditing && !!this.moderatorNotesForForm) {
+            this.moderatorNoteForm.setValue({ moderator_notes: this.moderatorNotesForForm });
+        }
     }
 
     public saveChangesModerationNote(): void {
@@ -697,5 +708,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 this.isEditing = false;
             })
             .catch(this.raiseError);
+    }
+
+    public displayStructureLevels(structureLevels: any): string {
+        return structureLevels.map(e => e.name).join(`, `);
     }
 }

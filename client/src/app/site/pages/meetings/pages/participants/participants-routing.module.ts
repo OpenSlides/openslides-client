@@ -40,6 +40,14 @@ const routes: Routes = [
                 }
             },
             {
+                path: `speaker-list`,
+                loadChildren: () =>
+                    import(`./pages/participant-speaker-list/participant-speaker-list.module`).then(
+                        m => m.ParticipantSpeakerListModule
+                    ),
+                data: { meetingPermissions: [Permission.userCanManage] }
+            },
+            {
                 path: `groups`,
                 loadChildren: () => import(`./modules/groups/groups.module`).then(m => m.GroupsModule),
                 data: { meetingPermissions: [Permission.userCanManage] }

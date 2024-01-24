@@ -57,12 +57,48 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return this.user ? this.user.full_name : ``;
     }
 
+    public get user_title(): string {
+        return this.user ? this.user.title : ``;
+    }
+
+    public get user_first_name(): string {
+        return this.user ? this.user.first_name : ``;
+    }
+
+    public get user_last_name(): string {
+        return this.user ? this.user.last_name : ``;
+    }
+
+    public get user_number(): string {
+        return this.user ? this.meeting_user.number : ``;
+    }
+
     public get userId(): Id {
         return this.user_id;
     }
 
     public get gender(): string {
         return this.user ? this.user.gender : ``;
+    }
+
+    public get topic(): string {
+        return this.list_of_speakers?.content_object ? this.list_of_speakers.content_object.getTitle() : ``;
+    }
+
+    public get structureLevelName(): string {
+        return this.structure_level_list_of_speakers?.structure_level
+            ? this.structure_level_list_of_speakers.structure_level.name
+            : ``;
+    }
+
+    public get structureLevelId(): Id {
+        return this.structure_level_list_of_speakers ? this.structure_level_list_of_speakers.structure_level_id : null;
+    }
+
+    public get speakingTime(): number {
+        return this.speaker.end_time
+            ? this.speaker.end_time - this.speaker.begin_time - (this.speaker.total_pause || 0)
+            : null;
     }
 
     public getBeginTimeAsDate(): Date | null {
