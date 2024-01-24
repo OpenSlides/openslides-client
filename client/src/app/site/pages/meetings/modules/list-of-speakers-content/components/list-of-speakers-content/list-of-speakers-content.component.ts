@@ -565,10 +565,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      * @returns string representation of the duration in `[MM]M:SS minutes` format
      */
     public durationString(speaker: ViewSpeaker): string {
-        const duration = Math.floor(
-            (speaker.getEndTimeAsDate()!.valueOf() - speaker.getBeginTimeAsDate()!.valueOf()) / 1000
-        );
-        return this.durationService.durationToString(duration, `m`);
+        return this.durationService.durationToString(speaker.speakingTime, `m`);
     }
 
     public getSpeakerCountdown(speaker: ViewSpeaker): any {
