@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -28,13 +27,12 @@ export class SpeakersTimeManagementComponent extends BaseMeetingComponent {
     });
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private durationService: DurationService,
         private promptService: PromptService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public toggleEdit(): void {

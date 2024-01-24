@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -146,7 +147,11 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private selfUpdateEnabled = false;
 
-    public constructor(private fb: UntypedFormBuilder, private operator: OperatorService) {
+    public constructor(
+        private fb: UntypedFormBuilder,
+        private operator: OperatorService,
+        private cd: ChangeDetectorRef
+    ) {
         super();
     }
 
@@ -160,6 +165,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     public ngAfterViewInit(): void {
         this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
+        this.cd.detectChanges();
     }
 
     public isAllowed(permission: string): boolean {

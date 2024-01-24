@@ -208,9 +208,9 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public number(meetingId?: Id): string {
         try {
-            return this.getMeetingUser(meetingId)?.number || this.default_number;
+            return this.getMeetingUser(meetingId)?.number;
         } catch (e) {
-            return this.user.default_number;
+            return ``;
         }
     }
 

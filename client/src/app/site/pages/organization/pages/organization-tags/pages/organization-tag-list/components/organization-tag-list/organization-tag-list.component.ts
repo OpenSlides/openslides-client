@@ -3,7 +3,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ColorService } from 'src/app/site/services/color.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -18,7 +17,6 @@ import { ViewOrganizationTag } from '../../../../view-models';
 })
 export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrganizationTag> {
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: OrganizationTagControllerService,
         private promptService: PromptService,
@@ -26,7 +24,7 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
         private colorService: ColorService,
         private theme: ThemeService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Tags`);
         this.canMultiSelect = true;
     }

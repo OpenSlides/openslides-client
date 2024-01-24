@@ -9,7 +9,6 @@ import { GENDERS } from 'src/app/domain/models/users/user';
 import { UserStateField } from 'src/app/gateways/repositories/users';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
@@ -126,7 +125,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     );
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
@@ -143,7 +141,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         private prompt: PromptService,
         private interactionService: InteractionService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         // enable multiSelect for this listView
         this.canMultiSelect = true;

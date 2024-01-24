@@ -11,7 +11,6 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { ApplauseService } from '../../../../services/applause.service';
 import { StreamService } from '../../../../services/stream.service';
@@ -47,13 +46,12 @@ export class StreamComponent extends BaseMeetingComponent implements AfterViewIn
     public streamSubtitle: EventEmitter<string> = new EventEmitter();
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private streamService: StreamService,
         private applauseService: ApplauseService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
             this.streamService.liveStreamUrlObservable.subscribe(url => {

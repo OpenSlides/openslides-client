@@ -1,11 +1,9 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Fqid } from 'src/app/domain/definitions/key-types';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { NotifyService } from 'src/app/gateways/notify.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 /**
@@ -106,13 +104,8 @@ export class ListenEditingDirective extends BaseComponent implements OnDestroy {
 
     private isEditing = false;
 
-    public constructor(
-        private notifyService: NotifyService,
-        private operator: OperatorService,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
-    ) {
-        super(componentServiceCollector, translate);
+    public constructor(private notifyService: NotifyService, private operator: OperatorService) {
+        super();
     }
 
     public override ngOnDestroy(): void {

@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
 import { SortService } from 'src/app/ui/modules/list/definitions/sort-service';
@@ -25,8 +25,10 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
      * Constructor.
      * Pass the `TranslatorService`.
      */
-    public constructor(protected translate: TranslateService) {
-        this.intl = new Intl.Collator(translate.currentLang, {
+    protected translate = inject(TranslateService);
+
+    public constructor() {
+        this.intl = new Intl.Collator(this.translate.currentLang, {
             numeric: true,
             ignorePunctuation: true,
             sensitivity: `base`
