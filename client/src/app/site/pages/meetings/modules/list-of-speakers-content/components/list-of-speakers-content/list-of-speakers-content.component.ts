@@ -26,7 +26,6 @@ import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pag
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -191,7 +190,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private speakerRepo: SpeakerControllerService,
@@ -207,7 +205,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private speakerUserSelectDialog: SpeakerUserSelectDialogService,
         private interactionService: InteractionService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
             this.meetingSettingsService
@@ -305,7 +303,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         if (speakerToDelete && (await this.promptService.open(title))) {
             await this.speakerRepo.delete(speakerToDelete.id);
             this.filterNonAvailableUsers();
-            this.interactionService.kickUsers([speakerToDelete.user], `Removed from the list of speakers`);
+            if (speakerToDelete.user) {
+                this.interactionService.kickUsers([speakerToDelete.user], `Removed from the list of speakers`);
+            }
         }
     }
 
@@ -400,6 +400,48 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      */
     public async onStopButton(speaker: ViewSpeaker): Promise<void> {
         try {
+            if (speaker.speech_state !== SpeechState.INTERPOSED_QUESTION && this.interposedQuestions.length > 0) {
+                const messages: string[] = [];
+                const cleared = this.interposedQuestions.filter(speaker => !speaker.begin_time).length;
+                const unaccurateTime = this.interposedQuestions.length - cleared;
+                const noUser =
+                    unaccurateTime -
+                    this.interposedQuestions.filter(speaker => !!speaker.begin_time && !speaker.meeting_user_id).length;
+                if (cleared > 0) {
+                    messages.push(
+                        this.translate
+                            .instant(`{{amount}} interposed questions will be cleared`)
+                            .replace(`{{amount}}`, cleared)
+                    );
+                }
+
+                if (unaccurateTime > 0) {
+                    messages.push(
+                        this.translate
+                            .instant(`{{amount}} will be saved with an inaccurate time`)
+                            .replace(`{{amount}}`, unaccurateTime)
+                    );
+                }
+
+                if (noUser > 0) {
+                    messages.push(
+                        this.translate
+                            .instant(`{{amount}} of them will be saved with 'Deleted User' as their speaker`)
+                            .replace(`{{amount}}`, noUser)
+                    );
+                }
+                if (
+                    !(await this.promptService.open(
+                        this.translate.instant(
+                            `Are you sure you want to end a contribution which still has interposed question(s)?`
+                        ),
+                        messages.join(`, `)
+                    ))
+                ) {
+                    return;
+                }
+            }
+
             await this.speakerRepo.stopToSpeak(speaker);
             this.filterNonAvailableUsers();
         } catch (e) {

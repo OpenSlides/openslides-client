@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 import { ElementSize } from 'src/app/ui/directives/resized/resized.directive';
 import { Container } from 'tsparticles';
@@ -29,12 +28,11 @@ export class ApplauseParticleDisplayComponent extends BaseMeetingComponent {
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private applauseService: ApplauseService,
         private osStatus: OpenSlidesStatusService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.subscriptions.push(
             applauseService.applauseLevelObservable.subscribe(applauseLevel => {
                 this.particleLevel = this.calcEmitterLevel(applauseLevel || 0);

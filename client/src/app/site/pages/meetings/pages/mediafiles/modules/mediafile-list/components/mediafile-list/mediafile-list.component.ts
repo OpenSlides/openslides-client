@@ -15,7 +15,6 @@ import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/b
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
@@ -36,6 +35,12 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     @ViewChild(FileListComponent)
     public readonly fileListComponent!: FileListComponent;
 
+    /**
+     * Reference to the template for edit-dialog
+     */
+    @ViewChild(`fileEditDialog`, { static: true })
+    private readonly _fileEditDialog: TemplateRef<string> | null = null;
+
     public logoPlaces: string[];
     public logoDisplayNames = LogoDisplayNames;
     public fontPlaces: string[];
@@ -48,6 +53,8 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
 
     public newDirectoryForm: UntypedFormGroup;
     public groupsBehaviorSubject: Observable<ViewGroup[]>;
+
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
 
     /**
      * @return true if the user can manage media files
@@ -90,7 +97,6 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: MediafileControllerService,
@@ -104,7 +110,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         private commonService: MediafileCommonService,
         private interactionService: InteractionService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
 
         this.logoPlaces = this.mediaManage.allLogoPlaces;
@@ -212,6 +218,10 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         this.commonService.navigateToUploadPage(this.directory?.id);
     }
 
+    public triggerEdit(file: ViewMediafile): void {
+        this.fileListComponent.onEditFile(file, this._fileEditDialog);
+    }
+
     /**
      * Click on the edit button in the file menu
      *
@@ -223,7 +233,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
 
             this.fileEditForm = this.formBuilder.group({
                 title: [file.title, Validators.required],
-                access_group_ids: [file.access_group_ids]
+                access_group_ids: [[...file.access_group_ids]]
             });
         }
     }

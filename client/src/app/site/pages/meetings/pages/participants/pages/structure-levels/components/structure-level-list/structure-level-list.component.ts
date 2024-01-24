@@ -6,7 +6,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -44,7 +43,6 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
     public currentStructureLevel: ViewStructureLevel | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: StructureLevelControllerService,
         private formBuilder: UntypedFormBuilder,
@@ -54,7 +52,7 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
         private operator: OperatorService,
         public sortService: StructureLevelSortService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Structure Levels`);
         this.structureLevelForm = this.formBuilder.group({
             name: [``, Validators.required],
