@@ -112,6 +112,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             .pipe(map(item => item?.moderator_notes));
     }
 
+    private get moderatorNotesForForm(): string {
+        return this.agendaItemRepo.getViewModel(this._contentObject?.getModel().agenda_item_id).moderator_notes;
+    }
+
     public get closed(): boolean {
         return this._listOfSpeakers?.closed || false;
     }
@@ -703,6 +707,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public toggleEditModeratorNote(): void {
         this.isEditing = !this.isEditing;
+        if (this.isEditing && !!this.moderatorNotesForForm) {
+            this.moderatorNoteForm.setValue({ moderator_notes: this.moderatorNotesForForm });
+        }
     }
 
     public saveChangesModerationNote(): void {
