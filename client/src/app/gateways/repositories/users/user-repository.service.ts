@@ -298,6 +298,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         if (structureLevel) {
             additions.push(structureLevel.getTitle());
+        } else if (structureLevel !== null) {
+            additions.push(user.structureLevels());
         }
 
         const number = user.number ? user.number() : null;

@@ -27,13 +27,7 @@
                     <div class="finished-speaker-info">
                         <div>
                             <div>
-                                {{ speaker.getTitle() }}
-                                <span
-                                    *ngIf="speaker.structure_level_list_of_speakers?.structure_level"
-                                    class="speaker-structure-level"
-                                >
-                                    &ndash; {{ speaker.structure_level_list_of_speakers?.structure_level?.name }}
-                                </span>
+                                {{ speaker.getLOSName(!(structureLevelCountdownEnabled | async)) }}
                             </div>
                             <div>
                                 <ng-container
@@ -74,7 +68,7 @@
         </span>
 
         <span class="name">
-            {{ activeSpeaker.name }}
+            {{ activeSpeaker.getLOSName(!(structureLevelCountdownEnabled | async)) }}
             <div class="active-speaker-subtitle">
                 <ng-container *ngTemplateOutlet="speakerSubtitle; context: { speaker: activeSpeaker }"></ng-container>
             </div>
@@ -131,7 +125,7 @@
 
             <span class="name">
                 <ng-container *ngIf="speaker.meeting_user_id">
-                    {{ speaker.name }}
+                    {{ speaker.getLOSName(!(structureLevelCountdownEnabled | async)) }}
                 </ng-container>
                 <span
                     *ngIf="!speaker.meeting_user_id && canManage"
@@ -190,7 +184,7 @@
                     <div class="speaker-name">
                         <!-- Speaker name -->
                         <div>
-                            {{ speaker.name }}
+                            {{ speaker.getLOSName(!(structureLevelCountdownEnabled | async)) }}
                         </div>
                         <!-- Extra line -->
                         <ng-container
