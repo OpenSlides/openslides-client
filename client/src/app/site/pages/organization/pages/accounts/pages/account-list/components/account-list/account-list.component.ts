@@ -48,7 +48,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         private operator: OperatorService,
         private vp: ViewPortService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Accounts`);
         this.canMultiSelect = true;
         this.listStorageIndex = ACCOUNT_LIST_STORAGE_INDEX;

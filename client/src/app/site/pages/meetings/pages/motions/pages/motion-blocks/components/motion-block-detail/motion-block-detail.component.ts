@@ -9,7 +9,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewMotion, ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ColumnRestriction } from 'src/app/ui/modules/list';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -70,7 +69,6 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
      * Constructor for motion block details
      */
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         protected repo: MotionBlockControllerService,
@@ -81,7 +79,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
         public filterService: MotionBlockDetailFilterListService,
         public vp: ViewPortService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

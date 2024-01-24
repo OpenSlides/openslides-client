@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -34,13 +33,12 @@ export class StartComponent extends BaseMeetingComponent implements OnInit {
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private meetingRepositoryService: MeetingControllerService,
         private formBuilder: UntypedFormBuilder,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.startForm = this.formBuilder.group({
             welcome_title: [``, Validators.required],
             welcome_text: ``

@@ -1,9 +1,8 @@
-import { ChangeDetectorRef, Directive, Input } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 
 /**
  * A wrapper component for components in the motion detail view which uses an `<action-card />`.
@@ -33,14 +32,12 @@ export abstract class BaseMotionDetailActionCardComponent extends BaseComponent 
     private _isEditing = false;
     private _motion!: ViewMotion;
 
-    public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected cd: ChangeDetectorRef,
-        protected fb: FormBuilder
-    ) {
-        super(componentServiceCollector, translate);
-        this.formGroup = fb.group({ text: `` });
+    protected override translate = inject(TranslateService);
+    protected cd = inject(ChangeDetectorRef);
+    protected fb = inject(FormBuilder);
+    public constructor() {
+        super();
+        this.formGroup = this.fb.group({ text: `` });
     }
 
     public async leaveEditMode(): Promise<void> {

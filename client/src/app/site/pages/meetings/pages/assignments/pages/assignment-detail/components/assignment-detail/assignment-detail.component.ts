@@ -18,7 +18,6 @@ import { ViewAssignment, ViewAssignmentCandidate } from 'src/app/site/pages/meet
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -147,7 +146,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * Constructor. Build forms and subscribe to needed configs and updates
      */
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private operator: OperatorService,
         formBuilder: UntypedFormBuilder,
@@ -161,7 +159,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         private pollController: PollControllerService,
         private userRepo: UserControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.assignmentForm = formBuilder.group({
             phase: null,
             tag_ids: [[]],

@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { DurationService } from 'src/app/site/services/duration.service';
 
 import {
@@ -59,13 +58,12 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
     private _lastStructureLevelId = Math.max(...Array.from(this._structureLevelIdMap.values())) ?? 0;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private speakerRepo: SpeakerControllerService,
         private speakerListRepo: ListOfSpeakersControllerService,
         private durationService: DurationService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

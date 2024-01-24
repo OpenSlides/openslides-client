@@ -5,7 +5,6 @@ import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { ColumnRestriction } from 'src/app/ui/modules/list';
@@ -33,7 +32,6 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         !this.operator.hasOrganizationPermissions(restriction.permission);
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public meetingController: MeetingControllerService,
         public operator: OperatorService,
@@ -41,7 +39,7 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         public sortService: MeetingListSortService,
         private choiceService: ChoiceService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Meetings`);
         this.canMultiSelect = true;
         this.listStorageIndex = MEETING_LIST_STORAGE_INDEX;

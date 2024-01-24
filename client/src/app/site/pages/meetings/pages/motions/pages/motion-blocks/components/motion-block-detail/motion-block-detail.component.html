@@ -37,8 +37,8 @@
                 (click)="onFollowRecButton()"
                 [disabled]="isFollowButtonDisabledObservable() | async"
             >
-                <os-icon-container icon="done_all">
-                    {{ 'Follow recommendations for all motions' | translate }}
+                <os-icon-container icon="done_all" class="follow-all-icon">
+                    <div>{{ 'Follow recommendations for all motions' | translate }}</div>
                 </os-icon-container>
             </button>
         </div>

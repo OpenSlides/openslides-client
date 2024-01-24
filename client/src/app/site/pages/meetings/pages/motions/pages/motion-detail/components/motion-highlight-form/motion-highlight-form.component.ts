@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -14,7 +13,6 @@ import { verboseChangeRecoMode } from '../../../../../../../../../domain/models/
 import { LineNumberingService } from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
 import { ViewUnifiedChange } from '../../../../modules/change-recommendations/view-models/view-unified-change';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 import { ModifiedFinalVersionAction } from '../../services/motion-detail-view.service';
 
 @Component({
@@ -104,14 +102,12 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private linenumberingService: LineNumberingService,
         private promptService: PromptService,
         private vpService: ViewPortService
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
     }
 
     public ngOnInit(): void {

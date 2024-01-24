@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulatio
 import { TranslateService } from '@ngx-translate/core';
 import { fadeInAnim } from 'src/app/infrastructure/animations';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { ApplauseService } from '../../../../services/applause.service';
 
@@ -20,12 +19,11 @@ export class ApplauseBarDisplayComponent extends BaseMeetingComponent {
     private level = 0;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         cd: ChangeDetectorRef,
         private applauseService: ApplauseService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.subscriptions.push(
             applauseService.applauseLevelObservable.subscribe(applauseLevel => {
                 this.level = applauseLevel || 0;
