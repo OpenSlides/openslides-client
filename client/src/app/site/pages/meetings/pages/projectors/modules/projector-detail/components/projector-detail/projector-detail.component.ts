@@ -261,25 +261,6 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
     }
 
-    public getCurrentStructureLevel(): ProjectionBuildDescriptor {
-        return {
-            content_object_id: `meeting/${this.activeMeetingId}`,
-            type: MeetingProjectionType.CurrentSpeakingStructureLevel,
-            stable: true,
-            projectionDefault: PROJECTIONDEFAULT.currentListOfSpeakers,
-            getDialogTitle: () => this.translate.instant(`Current speaker`)
-        };
-    }
-
-    public getAllStructureLevel(): ProjectionBuildDescriptor {
-        return {
-            content_object_id: `meeting/${this.activeMeetingId}`,
-            type: MeetingProjectionType.CurrentStructureLevelList,
-            projectionDefault: PROJECTIONDEFAULT.currentListOfSpeakers,
-            getDialogTitle: () => this.translate.instant(`All structure levels`)
-        };
-    }
-
     public isStructureLevelCountdownEnabled(): boolean {
         const strucutreLevelTime = this.meetingSettingsService.instant(`list_of_speakers_default_structure_level_time`);
         return strucutreLevelTime > 0;
