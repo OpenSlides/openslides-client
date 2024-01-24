@@ -92,7 +92,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public get structureLevelCountdownDisabled(): Observable<boolean> {
-        return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v == 0));
+        return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v === 0));
     }
 
     public get showPointOfOrders(): boolean {
