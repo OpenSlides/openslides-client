@@ -707,7 +707,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public toggleEditModeratorNote(): void {
         this.isEditing = !this.isEditing;
-        if (this.isEditing) {
+        if (this.isEditing && !!this.moderatorNotesForForm) {
             this.moderatorNoteForm.setValue({ moderator_notes: this.moderatorNotesForForm });
         }
     }
