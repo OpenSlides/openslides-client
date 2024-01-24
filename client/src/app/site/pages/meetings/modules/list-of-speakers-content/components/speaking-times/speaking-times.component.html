@@ -73,7 +73,7 @@
 </ng-template>
 
 <mat-menu #projectionMenu="matMenu">
-    <os-projector-button [object]="getAllStructureLevel()" [menuItem]="true">
+    <os-projector-button [object]="getAllStructureLevel()" [allowReferenceProjector]="false" [menuItem]="true">
         {{ 'Project all structure levels' | translate }}
     </os-projector-button>
     <os-projector-button [object]="getCurrentStructureLevel()" [menuItem]="true">

@@ -11,7 +11,7 @@ import {
 } from 'src/app/site/pages/meetings/pages/projectors/projectors.subscription';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
+import { isProjectionBuildDescriptor, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 import {
     isSlideChoiceOption,
     isSlideDecisionOption,
@@ -24,6 +24,11 @@ import { ModelRequestService } from 'src/app/site/services/model-request.service
 
 import { ProjectionDialogReturnType } from '../../definitions';
 
+export interface ProjectionDialogConfig {
+    descriptor: ProjectionBuildDescriptor;
+    allowReferenceProjector: boolean;
+}
+
 @Component({
     selector: `os-projection-dialog`,
     templateUrl: `./projection-dialog.component.html`,
@@ -34,19 +39,24 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     private selectedProjectors: ViewProjector[] = [];
     public optionValues: any = {};
     public options!: SlideOptions;
+    public descriptor: ProjectionBuildDescriptor;
+    public allowReferenceProjector = true;
     private _projectorSubscription: string;
     private _subscriptions: Subscription[] = [];
 
     public constructor(
         public dialogRef: MatDialogRef<ProjectionDialogComponent, ProjectionDialogReturnType>,
-        @Inject(MAT_DIALOG_DATA) public descriptor: ProjectionBuildDescriptor,
+        @Inject(MAT_DIALOG_DATA) public data: ProjectionDialogConfig | ProjectionBuildDescriptor,
         private projectorService: ProjectorControllerService,
         private activeMeetingService: ActiveMeetingService,
         private modelRequestService: ModelRequestService
     ) {
+        this.descriptor = isProjectionBuildDescriptor(data) ? data : data.descriptor;
+        this.allowReferenceProjector = !isProjectionBuildDescriptor(data) && data.allowReferenceProjector;
+
         this._subscriptions.push(
             projectorService.getViewModelListObservable().subscribe(projectors => {
-                this.projectors = projectors;
+                this.projectors = projectors.filter(p => this.allowReferenceProjector || !p.isReferenceProjector);
 
                 // TODO: Maybe watch. But this may not be necessary for the short living time of this dialog.
                 this.selectedProjectors = this.projectorService.getProjectorsWhichAreProjecting(this.descriptor);
