@@ -28,6 +28,7 @@ import { AutopilotRoutingModule } from './autopilot-routing.module';
 import { AutopilotComponent } from './components/autopilot/autopilot.component';
 import { AutopilotMainComponent } from './components/autopilot-main/autopilot-main.component';
 import { PollCollectionComponent } from './components/poll-collection/poll-collection.component';
+import { ProjectorButtonModule } from '../../modules/meetings-component-collector/projector-button/projector-button.module';
 
 @NgModule({
     declarations: [AutopilotMainComponent, AutopilotComponent, PollCollectionComponent],
@@ -56,7 +57,8 @@ import { PollCollectionComponent } from './components/poll-collection/poll-colle
         TopicPollModule,
         AssignmentPollModule,
         ReactiveFormsModule,
-        MatInputModule
+        MatInputModule,
+        ProjectorButtonModule
     ]
 })
 export class AutopilotModule {}
