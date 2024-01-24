@@ -6,11 +6,11 @@
             </span>
             <div class="structure-level-name">{{ structure_level.name }}</div>
         </div>
-        <ng-container *ngIf="permission.projectorCanManage">
+        <ng-container *osPerms="permission.listOfSpeakersCanManage">
             <button
                 type="button"
                 mat-icon-button
-                [matMenuTriggerFor]="projectionMenu"
+                [matMenuTriggerFor]="editAndDistributeMenu"
                 [matMenuTriggerData]="{ structure_level: structure_level }"
             >
                 <mat-icon>more_vert</mat-icon>
@@ -19,7 +19,7 @@
     </div>
 </div>
 
-<mat-menu #projectionMenu="matMenu">
+<mat-menu #editAndDistributeMenu="matMenu">
     <ng-template let-structure_level="structure_level" matMenuContent>
         <button mat-menu-item (click)="setTotalTime(structure_level.id)" [disabled]="hasSpokenFlag">
             <mat-icon>edit</mat-icon>

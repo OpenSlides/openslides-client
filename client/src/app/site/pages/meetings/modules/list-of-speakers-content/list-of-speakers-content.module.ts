@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +13,7 @@ import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-m
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { SpeakersTimeManagementComponent } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/components/speakers-time-management/speakers-time-management.component';
+import { SpeakingTimesComponent } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { EditorModule } from 'src/app/ui/modules/editor';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules/sorting-list/sorting-list.module';
@@ -27,11 +28,7 @@ import { ListOfSpeakersContentTitleDirective } from './directives/list-of-speake
 import { PointOfOrderDialogModule } from './modules/point-of-order-dialog/point-of-order-dialog.module';
 import { SpeakerUserSelectDialogModule } from './modules/speaker-user-select-dialog/speaker-user-select-dialog.module';
 
-const DECLARATIONS = [
-    ListOfSpeakersContentComponent,
-    ListOfSpeakersContentTitleDirective,
-    SpeakersTimeManagementComponent
-];
+const DECLARATIONS = [ListOfSpeakersContentComponent, ListOfSpeakersContentTitleDirective, SpeakingTimesComponent];
 
 @NgModule({
     exports: DECLARATIONS,
@@ -43,6 +40,7 @@ const DECLARATIONS = [
         MatExpansionModule,
         MatListModule,
         MatCardModule,
+        MatDialogModule,
         MatTooltipModule,
         MatMenuModule,
         MatFormFieldModule,
