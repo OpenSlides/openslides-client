@@ -1,8 +1,0 @@
-<div class="structure-level-list">
-    <div class="structure-level" *ngFor="let structure_level of getStructureLevels()">
-        <span class="structure-level-time" [ngStyle]="{ 'border-top-color': structure_level.color }">
-            <os-countdown-time [unstyled]="true" [countdown]="structure_level.countdown"></os-countdown-time>
-        </span>
-        <div class="structure-level-name">{{ structure_level.name }}</div>
-    </div>
-</div>

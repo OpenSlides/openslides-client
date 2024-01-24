@@ -4,11 +4,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollState, VOTE_MAJORITY } from 'src/app/domain/models/poll';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { MotionPollService } from '../../services';
@@ -58,17 +54,13 @@ export class MotionPollComponent extends BasePollComponent {
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        promptService: PromptService,
-        choiceService: ChoiceService,
-        pollRepo: PollControllerService,
         private pollService: MotionPollService,
         private pdfService: MotionPollPdfService,
         private operator: OperatorService,
         private votingPrivacyDialog: VotingPrivacyWarningDialogService
     ) {
-        super(componentServiceCollector, translate, promptService, choiceService, pollRepo);
+        super();
     }
 
     public openVotingWarning(): void {

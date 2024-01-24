@@ -11,7 +11,6 @@ export const participantsExportExample: any = [
         username: `mmustermann`,
         gender: `male`,
         pronoun: `Er`,
-        default_number: 1234567890,
         default_structure_level: `Berlin`,
         default_vote_weight: 1.0,
         group_ids: `Delegates, Staff`
@@ -20,7 +19,6 @@ export const participantsExportExample: any = [
         first_name: `John`,
         last_name: `Doe`,
         default_structure_level: `Washington`,
-        default_number: `75/99/8/2`,
         group_ids: `Committees`,
         comment: `This is a comment, without doubt`,
         is_active: true,

@@ -20,7 +20,6 @@ import {
 } from 'src/app/site/pages/meetings/pages/motions';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort.service/participant-list-sort.service';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
@@ -30,7 +29,6 @@ import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-ch
 import { MotionTinyMceConfig } from '../../definitions/tinymce-config';
 import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 
 /**
  * fields that are required for the motion form but are not part of any motion payload
@@ -161,9 +159,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     private _motionNumbersSubject = new BehaviorSubject<string[]>([]);
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private fb: UntypedFormBuilder,
         private dialog: MotionChangeRecommendationDialogService,
         private route: ActivatedRoute,
@@ -172,7 +168,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         private motionController: MotionControllerService,
         public participantSortService: ParticipantListSortService
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
         this.motionController
             .getViewModelListObservable()
             .subscribe(motions => this.updateMotionNumbersSubject(motions));

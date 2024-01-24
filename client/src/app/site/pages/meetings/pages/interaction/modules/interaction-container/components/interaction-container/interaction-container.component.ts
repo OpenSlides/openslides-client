@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, Observable } from 'rxjs';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { ApplauseService } from '../../../../services/applause.service';
 import { InteractionService } from '../../../../services/interaction.service';
@@ -53,7 +52,6 @@ export class InteractionContainerComponent extends BaseMeetingComponent implemen
     private _streamLoadedOnce = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         rtcService: RtcService,
         streamService: StreamService,
@@ -61,7 +59,7 @@ export class InteractionContainerComponent extends BaseMeetingComponent implemen
         private applauseService: ApplauseService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.subscriptions.push(
             rtcService.showCallDialogObservable.subscribe(show => {
                 if (show) {

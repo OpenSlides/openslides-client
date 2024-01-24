@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { HttpService } from 'src/app/gateways/http.service';
-import { HttpStreamEndpointService, HttpStreamService } from 'src/app/gateways/http-stream';
-import { CommunicationManagerService } from 'src/app/site/services/communication-manager.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
-import { ActiveMeetingIdService } from '../site/pages/meetings/services/active-meeting-id.service';
 import { BaseICCGatewayService } from './base-icc-gateway.service';
 
 /**
@@ -113,15 +109,8 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
     /**
      * Constructor to create the NotifyService.
      */
-    public constructor(
-        httpService: HttpService,
-        httpStreamService: HttpStreamService,
-        private operator: OperatorService,
-        activeMeetingIdService: ActiveMeetingIdService,
-        communicationManager: CommunicationManagerService,
-        httpEndpointService: HttpStreamEndpointService
-    ) {
-        super(httpService, httpStreamService, activeMeetingIdService, communicationManager, httpEndpointService);
+    public constructor(private operator: OperatorService) {
+        super();
         this.setupConnections();
     }
 

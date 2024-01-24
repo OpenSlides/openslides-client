@@ -26,7 +26,6 @@ import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pag
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -91,6 +90,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v > 0));
     }
 
+    public get structureLevelCountdownDisabled(): Observable<boolean> {
+        return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v === 0));
+    }
+
     public get showPointOfOrders(): boolean {
         return this.pointOfOrderEnabled && this.canAddDueToPresence;
     }
@@ -111,6 +114,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.agendaItemRepo
             .getViewModelObservable(this._contentObject?.getModel().agenda_item_id)
             .pipe(map(item => item?.moderator_notes));
+    }
+
+    private get moderatorNotesForForm(): string {
+        return this.agendaItemRepo.getViewModel(this._contentObject?.getModel().agenda_item_id).moderator_notes;
     }
 
     public get closed(): boolean {
@@ -191,7 +198,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private speakerRepo: SpeakerControllerService,
@@ -207,7 +213,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private speakerUserSelectDialog: SpeakerUserSelectDialogService,
         private interactionService: InteractionService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
             this.meetingSettingsService
@@ -305,7 +311,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         if (speakerToDelete && (await this.promptService.open(title))) {
             await this.speakerRepo.delete(speakerToDelete.id);
             this.filterNonAvailableUsers();
-            this.interactionService.kickUsers([speakerToDelete.user], `Removed from the list of speakers`);
+            if (speakerToDelete.user) {
+                this.interactionService.kickUsers([speakerToDelete.user], `Removed from the list of speakers`);
+            }
         }
     }
 
@@ -409,7 +417,51 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                     );
                     return;
                 }
+            } else if (
+                speaker.speech_state !== SpeechState.INTERPOSED_QUESTION &&
+                this.interposedQuestions.length > 0
+            ) {
+                const messages: string[] = [];
+                const cleared = this.interposedQuestions.filter(speaker => !speaker.begin_time).length;
+                const unaccurateTime = this.interposedQuestions.length - cleared;
+                const noUser =
+                    unaccurateTime -
+                    this.interposedQuestions.filter(speaker => !!speaker.begin_time && !speaker.meeting_user_id).length;
+                if (cleared > 0) {
+                    messages.push(
+                        this.translate
+                            .instant(`{{amount}} interposed questions will be cleared`)
+                            .replace(`{{amount}}`, cleared)
+                    );
+                }
+
+                if (unaccurateTime > 0) {
+                    messages.push(
+                        this.translate
+                            .instant(`{{amount}} will be saved with an inaccurate time`)
+                            .replace(`{{amount}}`, unaccurateTime)
+                    );
+                }
+
+                if (noUser > 0) {
+                    messages.push(
+                        this.translate
+                            .instant(`{{amount}} of them will be saved with 'Deleted User' as their speaker`)
+                            .replace(`{{amount}}`, noUser)
+                    );
+                }
+                if (
+                    !(await this.promptService.open(
+                        this.translate.instant(
+                            `Are you sure you want to end a contribution which still has interposed question(s)?`
+                        ),
+                        messages.join(`, `)
+                    ))
+                ) {
+                    return;
+                }
             }
+
             await this.speakerRepo.stopToSpeak(speaker);
             this.filterNonAvailableUsers();
         } catch (e) {
@@ -609,7 +661,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             };
         } else if (this.structureLevelCountdownEnabled && speaker.structure_level_list_of_speakers) {
             const speakingTime = speaker.structure_level_list_of_speakers;
-            const remaining = speakingTime.remaining_time + (speakingTime.additional_time || 0);
+            const remaining = speakingTime.remaining_time;
             return {
                 running: !!speakingTime.current_start_time,
                 countdown_time: speakingTime.current_start_time
@@ -659,6 +711,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public toggleEditModeratorNote(): void {
         this.isEditing = !this.isEditing;
+        if (this.isEditing && !!this.moderatorNotesForForm) {
+            this.moderatorNoteForm.setValue({ moderator_notes: this.moderatorNotesForForm });
+        }
     }
 
     public saveChangesModerationNote(): void {
@@ -668,5 +723,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 this.isEditing = false;
             })
             .catch(this.raiseError);
+    }
+
+    public displayStructureLevels(structureLevels: any): string {
+        return structureLevels.map(e => e.name).join(`, `);
     }
 }
