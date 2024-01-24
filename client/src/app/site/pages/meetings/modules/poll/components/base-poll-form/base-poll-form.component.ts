@@ -1,4 +1,4 @@
-import { Directive, Input, OnInit } from '@angular/core';
+import { Directive, inject, Input, OnInit } from '@angular/core';
 import {
     AbstractControl,
     UntypedFormBuilder,
@@ -7,7 +7,6 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, Observable, startWith } from 'rxjs';
 import {
     FormPollMethod,
@@ -23,10 +22,9 @@ import {
 } from 'src/app/domain/models/poll';
 import { isNumberRange } from 'src/app/infrastructure/utils/validators';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
-import { GroupControllerService } from '../../../../pages/participants';
+import { GroupControllerService, ViewGroup } from '../../../../pages/participants';
 import { ViewPoll } from '../../../../pages/polls';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
@@ -96,6 +94,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             {}
         );
     }
+
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
 
     private _data: Partial<ViewPoll>;
 
@@ -176,19 +176,16 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return this.pollMethodControl.valueChanges.pipe(map(method => method === FormPollMethod.LIST_YNA));
     }
 
+    private fb = inject(UntypedFormBuilder);
+    public groupRepo = inject(GroupControllerService);
+    private dialog = inject(VotingPrivacyWarningDialogService);
+    protected meetingSettingService = inject(MeetingSettingsService);
     /**
      * Constructor. Retrieves necessary metadata from the pollService,
      * injects the poll itself
      */
-    public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
-        private fb: UntypedFormBuilder,
-        public groupRepo: GroupControllerService,
-        private dialog: VotingPrivacyWarningDialogService,
-        protected meetingSettingService: MeetingSettingsService
-    ) {
-        super(componentServiceCollector, translate);
+    public constructor() {
+        super();
         this.initContentForm();
     }
 

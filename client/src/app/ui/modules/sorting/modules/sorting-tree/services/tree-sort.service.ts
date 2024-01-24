@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
 import { FlatNode } from 'src/app/infrastructure/definitions/tree';
 import { BaseSortService, OsSortProperty } from 'src/app/site/base/base-sort.service';
@@ -13,10 +12,6 @@ import { BaseSortService, OsSortProperty } from 'src/app/site/base/base-sort.ser
     providedIn: `root`
 })
 export class TreeSortService<T extends Identifiable & Displayable> extends BaseSortService<T> {
-    public constructor(translate: TranslateService) {
-        super(translate);
-    }
-
     /**
      * Function to sort the passed source of a tree
      * and resets some properties like `level`, `expandable`, `position`.

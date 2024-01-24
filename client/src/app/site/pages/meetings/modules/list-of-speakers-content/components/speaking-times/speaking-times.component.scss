@@ -1,12 +1,13 @@
 .structure-level-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: start;
     padding-top: 8px;
     .structure-level {
         width: 33%;
         margin-bottom: 26px;
         display: flex;
+        flex-direction: row;
     }
     .structure-level-info {
         border-top-color: transparent;

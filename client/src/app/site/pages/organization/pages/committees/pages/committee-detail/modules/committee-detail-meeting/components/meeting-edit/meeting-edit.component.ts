@@ -17,7 +17,6 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -131,7 +130,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         private formBuilder: UntypedFormBuilder,
@@ -145,7 +143,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         private orga: OrganizationService,
         private routingState: RoutingStateService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.checkCreateView();
         this.createForm();
         this.init();

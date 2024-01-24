@@ -13,7 +13,6 @@ import {
     MEETING_RELATED_FORM_CONTROLS,
     ParticipantControllerService
 } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -49,6 +48,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         vote_delegated_to_id: [``],
         is_present: [``]
     };
+
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
 
     public get randomPasswordFn(): () => string {
         return () => this.getRandomPassword();
@@ -161,7 +162,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     private _isUserInScope = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: ParticipantControllerService,
@@ -176,7 +176,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         private cd: ChangeDetectorRef,
         private organizationSettingsService: OrganizationSettingsService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.getUserByUrl();
 
         this.subscriptions.push(

@@ -62,6 +62,10 @@ export class SpeakingTimesComponent implements OnDestroy {
             this.subscriptions.set(
                 speakingTimeId,
                 this.speakingTimesRepo.getViewModelObservable(speakingTimeId).subscribe(speakingTime => {
+                    if (!speakingTime.structure_level) {
+                        return;
+                    }
+
                     const remaining = speakingTime.remaining_time;
                     this.structureLevels.set(speakingTimeId, {
                         name: speakingTime.structure_level.getTitle(),

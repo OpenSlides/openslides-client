@@ -21,7 +21,6 @@ import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/se
 import { SettingsItem } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
@@ -118,6 +117,8 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     /** used by the groups config type */
     public groupObservable: Observable<ViewGroup[]> | null = null;
 
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+
     public get watchProperties(): (keyof Settings)[] {
         return this.setting.automaticChangesSetting?.watchProperties;
     }
@@ -155,7 +156,6 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     private _firstValue: any;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private formBuilder: UntypedFormBuilder,
         private cd: ChangeDetectorRef,
@@ -164,7 +164,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         private mapper: CollectionMapperService,
         private orgaSettings: OrganizationSettingsService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

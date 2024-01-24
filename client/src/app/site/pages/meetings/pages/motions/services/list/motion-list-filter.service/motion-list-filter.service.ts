@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -170,41 +170,39 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         ]
     };
 
-    public constructor(
-        store: MeetingActiveFiltersService,
-        categoryRepo: MotionCategoryControllerService,
-        motionBlockRepo: MotionBlockControllerService,
-        commentRepo: MotionCommentSectionControllerService,
-        tagRepo: TagControllerService,
-        private workflowRepo: MotionWorkflowControllerService,
-        protected translate: TranslateService,
-        private operator: OperatorService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    private categoryRepo = inject(MotionCategoryControllerService);
+    private motionBlockRepo = inject(MotionBlockControllerService);
+    private commentRepo = inject(MotionCommentSectionControllerService);
+    private tagRepo = inject(TagControllerService);
+    private workflowRepo = inject(MotionWorkflowControllerService);
+    protected translate = inject(TranslateService);
+    private operator = inject(OperatorService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    public constructor(store: MeetingActiveFiltersService) {
         super(store);
         this.getWorkflowConfig();
         this.getShowAmendmentConfig();
 
         this.updateFilterForRepo({
-            repo: categoryRepo,
+            repo: this.categoryRepo,
             filter: this.categoryFilterOptions,
             noneOptionLabel: _(`No category set`)
         });
 
         this.updateFilterForRepo({
-            repo: motionBlockRepo,
+            repo: this.motionBlockRepo,
             filter: this.motionBlockFilterOptions,
             noneOptionLabel: _(`No motion block set`)
         });
 
         this.updateFilterForRepo({
-            repo: commentRepo,
+            repo: this.commentRepo,
             filter: this.motionCommentFilterOptions,
             noneOptionLabel: _(`No comment`)
         });
 
         this.updateFilterForRepo({
-            repo: tagRepo,
+            repo: this.tagRepo,
             filter: this.tagFilterOptions,
             noneOptionLabel: _(`No tags`)
         });
@@ -220,10 +218,11 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
      * @param motions The motions without amendments, if the according config was set
      */
     protected override preFilter(motions: ViewMotion[]): ViewMotion[] {
-        if (!this.showAmendmentsInMainTable) {
-            return motions.filter(motion => !motion.lead_motion_id);
-        }
-        return motions;
+        return motions.filter(
+            motion =>
+                motion.meeting_id === motion.getActiveMeetingId() &&
+                (this.showAmendmentsInMainTable || !motion.lead_motion_id)
+        );
     }
 
     /**

@@ -441,12 +441,7 @@
 <mat-menu #manageSpeakerMenu>
     <ng-template let-speaker="speaker" matMenuContent>
         <ng-container *ngIf="canManage">
-            <ng-container
-                *ngIf="
-                    speaker.speech_state !== SpeechState.INTERVENTION &&
-                    speaker.speech_state !== SpeechState.INTERPOSED_QUESTION
-                "
-            >
+            <ng-container *ngIf="speaker.speech_state !== SpeechState.INTERPOSED_QUESTION">
                 <!-- pro button -->
                 <button
                     mat-menu-item

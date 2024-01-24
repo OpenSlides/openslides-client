@@ -3,7 +3,6 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 
 import { MessageDialogData } from '../../definitions';
 
@@ -19,12 +18,11 @@ export class ProjectorMessageDialogComponent extends BaseComponent implements On
     public messageForm!: UntypedFormGroup;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private formBuilder: UntypedFormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: MessageDialogData
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**
