@@ -71,7 +71,10 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
                     );
 
                     for (const defaultProjector of defaultProjectors) {
-                        if (!this.selectedProjectors.includes(defaultProjector)) {
+                        if (
+                            !this.selectedProjectors.includes(defaultProjector) &&
+                            (this.allowReferenceProjector || !defaultProjector.isReferenceProjector)
+                        ) {
                             this.selectedProjectors.push(defaultProjector);
                         }
                     }
