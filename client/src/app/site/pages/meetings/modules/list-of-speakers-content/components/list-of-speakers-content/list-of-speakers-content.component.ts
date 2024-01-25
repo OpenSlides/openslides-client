@@ -318,7 +318,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
-                await this.speakerRepo.setMeetingUser(speaker, result.meeting_user_id);
+                if (result.meeting_user_id) {
+                    await this.speakerRepo.setMeetingUser(speaker, result.meeting_user_id);
+                }
                 return true;
             }
         } catch (e) {
@@ -402,27 +404,15 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      */
     public async onStopButton(speaker: ViewSpeaker): Promise<void> {
         try {
-            if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id) {
-                if (speaker.isSpeaking) {
-                    await this.speakerRepo.pauseSpeak(speaker);
-                }
-                if (!(await this.updateSpeakerMeetingUser(speaker))) {
-                    this.matSnackBar.open(
-                        this.translate.instant(`You need to select a speaker to stop the speach.`),
-                        this.translate.instant(`OK`)
-                    );
-                    return;
-                }
-            } else if (
-                speaker.speech_state !== SpeechState.INTERPOSED_QUESTION &&
-                this.interposedQuestions.length > 0
-            ) {
+            if (speaker.speech_state !== SpeechState.INTERPOSED_QUESTION && this.interposedQuestions.length > 0) {
+                this.onPauseButton(speaker);
                 const messages: string[] = [];
                 const cleared = this.interposedQuestions.filter(speaker => !speaker.begin_time).length;
-                const unaccurateTime = this.interposedQuestions.length - cleared;
+                const accurateTime = this.interposedQuestions.length - cleared;
                 const noUser =
-                    unaccurateTime -
-                    this.interposedQuestions.filter(speaker => !!speaker.begin_time && !speaker.meeting_user_id).length;
+                    accurateTime -
+                    this.interposedQuestions.filter(speaker => !!speaker.begin_time && !!speaker.meeting_user_id)
+                        .length;
                 if (cleared > 0) {
                     messages.push(
                         this.translate
@@ -431,18 +421,18 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                     );
                 }
 
-                if (unaccurateTime > 0) {
+                if (accurateTime > 0) {
                     messages.push(
                         this.translate
-                            .instant(`{{amount}} will be saved with an inaccurate time`)
-                            .replace(`{{amount}}`, unaccurateTime)
+                            .instant(`{{amount}} will be saved with an accurate time`)
+                            .replace(`{{amount}}`, accurateTime)
                     );
                 }
 
                 if (noUser > 0) {
                     messages.push(
                         this.translate
-                            .instant(`{{amount}} of them will be saved with 'Deleted User' as their speaker`)
+                            .instant(`{{amount}} of them will be saved with 'Unknown' as their speaker`)
                             .replace(`{{amount}}`, noUser)
                     );
                 }
@@ -623,10 +613,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      * @returns string representation of the duration in `[MM]M:SS minutes` format
      */
     public durationString(speaker: ViewSpeaker): string {
-        const duration = Math.floor(
-            (speaker.getEndTimeAsDate()!.valueOf() - speaker.getBeginTimeAsDate()!.valueOf()) / 1000
-        );
-        return this.durationService.durationToString(duration, `m`);
+        return this.durationService.durationToString(speaker.speakingTime, `m`);
     }
 
     public getSpeakerCountdown(speaker: ViewSpeaker): any {
