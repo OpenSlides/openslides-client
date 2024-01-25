@@ -9,10 +9,12 @@
         display: flex;
         flex-direction: row;
     }
-    .structure-level-time {
+    .structure-level-info {
         border-top-color: transparent;
         border-top-width: 3px;
         border-top-style: solid;
+    }
+    .structure-level-time {
         font-size: 35px;
         line-height: 1;
     }
