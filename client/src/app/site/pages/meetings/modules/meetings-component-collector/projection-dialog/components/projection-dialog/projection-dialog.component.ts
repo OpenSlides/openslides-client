@@ -11,7 +11,10 @@ import {
 } from 'src/app/site/pages/meetings/pages/projectors/projectors.subscription';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { isProjectionBuildDescriptor, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
+import {
+    isProjectionBuildDescriptor,
+    ProjectionBuildDescriptor
+} from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 import {
     isSlideChoiceOption,
     isSlideDecisionOption,
