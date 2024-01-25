@@ -90,10 +90,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v > 0));
     }
 
-    public get structureLevelCountdownDisabled(): Observable<boolean> {
-        return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v === 0));
-    }
-
     public get showPointOfOrders(): boolean {
         return this.pointOfOrderEnabled && this.canAddDueToPresence;
     }
@@ -710,9 +706,5 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 this.isEditing = false;
             })
             .catch(this.raiseError);
-    }
-
-    public displayStructureLevels(structureLevels: any): string {
-        return structureLevels.map(e => e.name).join(`, `);
     }
 }

@@ -27,28 +27,7 @@
                     <div class="finished-speaker-info">
                         <div>
                             <div>
-                                <ng-container
-                                    *ngIf="
-                                        speaker.speech_state === SpeechState.INTERPOSED_QUESTION &&
-                                        !speaker.meeting_user_id
-                                    "
-                                >
-                                    {{ 'Unknown' | translate }}
-                                </ng-container>
-                                <ng-container
-                                    *ngIf="
-                                        speaker.speech_state !== SpeechState.INTERPOSED_QUESTION ||
-                                        speaker.meeting_user_id
-                                    "
-                                >
-                                    {{ speaker.getTitle() }}
-                                </ng-container>
-                                <span
-                                    *ngIf="speaker.structure_level_list_of_speakers?.structure_level"
-                                    class="speaker-structure-level"
-                                >
-                                    &ndash; {{ speaker.structure_level_list_of_speakers?.structure_level?.name }}
-                                </span>
+                                {{ speaker.getLOSName((structureLevelCountdownEnabled | async) === false) }}
                             </div>
                             <div>
                                 <ng-container
@@ -100,13 +79,7 @@
         </span>
 
         <span class="name">
-            {{ activeSpeaker.getListTitle() }}
-            <span
-                *ngIf="activeSpeaker.structure_level_list_of_speakers?.structure_level"
-                class="speaker-structure-level"
-            >
-                {{ activeSpeaker.structure_level_list_of_speakers?.structure_level?.name }}
-            </span>
+            {{ activeSpeaker.getLOSName((structureLevelCountdownEnabled | async) === false) }}
             <div class="active-speaker-subtitle">
                 <ng-container *ngTemplateOutlet="speakerSubtitle; context: { speaker: activeSpeaker }"></ng-container>
             </div>
@@ -163,7 +136,7 @@
 
             <span class="name">
                 <ng-container *ngIf="speaker.meeting_user_id">
-                    {{ speaker.getListTitle() }}
+                    {{ speaker.getLOSName((structureLevelCountdownEnabled | async) === false) }}
                 </ng-container>
                 <span
                     *ngIf="!speaker.meeting_user_id && canManage"
@@ -222,25 +195,7 @@
                     <div class="speaker-name">
                         <!-- Speaker name -->
                         <div>
-                            {{ speaker.getTitle() }}
-                            <span
-                                *ngIf="
-                                    (structureLevelCountdownEnabled | async) &&
-                                    speaker.structure_level_list_of_speakers?.structure_level
-                                "
-                                class="speaker-structure-level accent-text"
-                            >
-                                {{ speaker.structure_level_list_of_speakers?.structure_level?.name }}
-                            </span>
-                            <span
-                                *ngIf="
-                                    (structureLevelCountdownDisabled | async) &&
-                                    speaker.meeting_user.structure_levels?.length
-                                "
-                                class="speaker-structure-level accent-text"
-                            >
-                                {{ displayStructureLevels(speaker.meeting_user.structure_levels) }}
-                            </span>
+                            {{ speaker.getLOSName((structureLevelCountdownEnabled | async) === false) }}
                         </div>
                         <!-- Extra line -->
                         <ng-container

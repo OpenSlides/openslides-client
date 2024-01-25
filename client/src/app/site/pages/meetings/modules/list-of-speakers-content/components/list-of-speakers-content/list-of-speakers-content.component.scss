@@ -52,7 +52,6 @@
     .name {
         display: table-cell;
         vertical-align: middle;
-        font-weight: bold;
         padding-left: 10px;
         width: 100%;
 
@@ -73,6 +72,12 @@
         vertical-align: middle;
         white-space: nowrap;
         padding-right: 10px;
+    }
+}
+
+.current-speaker {
+    .name {
+        font-weight: bold;
     }
 }
 

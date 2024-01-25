@@ -13,10 +13,18 @@ td {
     padding-top: 2px;
 }
 
-.structure-level-color {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 6px;
-    margin-right: 6px;
+.level-time-list {
+    font-size: 80px;
+    text-align: right;
+    .color-line {
+        border-top-color: transparent;
+        border-top-width: 10px;
+        border-top-style: solid;
+        line-height: 1.25;
+    }
+}
+
+.structure-level-name {
+    text-align: right;
+    font-size: 30px;
 }
