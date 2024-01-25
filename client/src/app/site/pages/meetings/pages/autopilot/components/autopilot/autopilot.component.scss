@@ -7,12 +7,10 @@
     display: flex;
     .col-main {
         flex-grow: 1;
-        max-width: 770px;
     }
     .col-right {
         padding-left: 20px;
         width: 40%;
-        max-width: 770px;
     }
 }
 
