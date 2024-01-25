@@ -411,10 +411,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             if (speaker.speech_state !== SpeechState.INTERPOSED_QUESTION && this.interposedQuestions.length > 0) {
                 const messages: string[] = [];
                 const cleared = this.interposedQuestions.filter(speaker => !speaker.begin_time).length;
-                const unaccurateTime = this.interposedQuestions.length - cleared;
+                const accurateTime = this.interposedQuestions.length - cleared;
                 const noUser =
-                    unaccurateTime -
-                    this.interposedQuestions.filter(speaker => !!speaker.begin_time && !speaker.meeting_user_id).length;
+                    accurateTime -
+                    this.interposedQuestions.filter(speaker => !!speaker.begin_time && !!speaker.meeting_user_id).length;
                 if (cleared > 0) {
                     messages.push(
                         this.translate
@@ -423,18 +423,18 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                     );
                 }
 
-                if (unaccurateTime > 0) {
+                if (accurateTime > 0) {
                     messages.push(
                         this.translate
-                            .instant(`{{amount}} will be saved with an inaccurate time`)
-                            .replace(`{{amount}}`, unaccurateTime)
+                            .instant(`{{amount}} will be saved with an accurate time`)
+                            .replace(`{{amount}}`, accurateTime)
                     );
                 }
 
                 if (noUser > 0) {
                     messages.push(
                         this.translate
-                            .instant(`{{amount}} of them will be saved with 'Deleted User' as their speaker`)
+                            .instant(`{{amount}} of them will be saved with 'Unknown' as their speaker`)
                             .replace(`{{amount}}`, noUser)
                     );
                 }
