@@ -3,6 +3,7 @@ import { Fqid } from 'src/app/domain/definitions/key-types';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
+import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
@@ -70,6 +71,7 @@ export interface AssignMeetingsResult {
 
 interface LevelAndNumberInformation {
     number: (meetingId?: Id) => string;
+    structureLevels: (meetingId?: Id) => string;
 }
 
 export type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
@@ -285,13 +287,19 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return `${title} ${name}`.trim();
     }
 
-    private getFullName(user: FullNameInformation): string {
+    private getFullName(user: FullNameInformation, structureLevel?: ViewStructureLevel): string {
         let fullName = this.getShortName(user);
         const additions: string[] = [];
 
         // addition: add pronoun, structure level and number
         if (user.pronoun) {
             additions.push(user.pronoun);
+        }
+
+        if (structureLevel) {
+            additions.push(structureLevel.getTitle());
+        } else if (structureLevel !== null) {
+            additions.push(user.structureLevels());
         }
 
         const number = user.number ? user.number() : null;
@@ -346,7 +354,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         viewModel.getName = () => this.getName(viewModel);
         viewModel.getShortName = () => this.getShortName(viewModel);
-        viewModel.getFullName = () => this.getFullName(viewModel);
+        viewModel.getFullName = (structureLevel?: ViewStructureLevel) => this.getFullName(viewModel, structureLevel);
         viewModel.getMeetingUser = (meetingId: Id) => this.getMeetingUser(getMeetingUserId, meetingId);
         viewModel.getLevelAndNumber = () => this.getLevelAndNumber(viewModel);
         viewModel.getEnsuredActiveMeetingId = () => this.activeMeetingIdService.meetingId;

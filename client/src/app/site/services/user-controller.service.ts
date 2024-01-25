@@ -153,6 +153,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         const newUser: FullNameInformation = {
             username: ``,
             number: () => ``,
+            structureLevels: () => ``,
             first_name: ``,
             last_name: ``
         };
