@@ -415,7 +415,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 const accurateTime = this.interposedQuestions.length - cleared;
                 const noUser =
                     accurateTime -
-                    this.interposedQuestions.filter(speaker => !!speaker.begin_time && !!speaker.meeting_user_id).length;
+                    this.interposedQuestions.filter(speaker => !!speaker.begin_time && !!speaker.meeting_user_id)
+                        .length;
                 if (cleared > 0) {
                     messages.push(
                         this.translate
