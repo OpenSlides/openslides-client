@@ -11,17 +11,14 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
-import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
+import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
@@ -51,10 +48,6 @@ import { SpeakerUserSelectDialogService } from '../../modules/speaker-user-selec
 })
 export class ListOfSpeakersContentComponent extends BaseMeetingComponent implements OnInit {
     public readonly SpeechState = SpeechState;
-
-    public isEditing = false;
-
-    public moderatorNoteForm: UntypedFormGroup;
 
     @ViewChild(SortingListComponent)
     public listElement!: SortingListComponent;
@@ -102,34 +95,12 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this._listOfSpeakers?.getTitle() || ``;
     }
 
-    public get agendaItem(): ViewAgendaItem<any> {
-        return this.agendaItemRepo.getViewModelUnsafe(this._contentObject?.getModel().agenda_item_id);
-    }
-
-    public get moderatorNotes(): Observable<string> {
-        return this.agendaItemRepo
-            .getViewModelObservable(this._contentObject?.getModel().agenda_item_id)
-            .pipe(map(item => item?.moderator_notes));
-    }
-
-    private get moderatorNotesForForm(): string {
-        return this.agendaItemRepo.getViewModel(this._contentObject?.getModel().agenda_item_id).moderator_notes;
-    }
-
     public get closed(): boolean {
         return this._listOfSpeakers?.closed || false;
     }
 
     public get canManage(): boolean {
         return this.operator.hasPerms(this.permission.listOfSpeakersCanManage);
-    }
-
-    public get canSeeModerationNote(): boolean {
-        return this.operator.hasPerms(this.permission.agendaItemCanSeeModeratorNotes);
-    }
-
-    public get canManageModerationNote(): boolean {
-        return this.operator.hasPerms(this.permission.agendaItemCanManageModeratorNotes);
     }
 
     public get canSee(): boolean {
@@ -144,7 +115,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public set listOfSpeakers(los: ViewListOfSpeakers) {
         if (los) {
             this._listOfSpeakers = los;
-            this._contentObject = this._listOfSpeakers.content_object;
             this.updateSpeakers();
         }
     }
@@ -183,8 +153,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
 
-    private _contentObject: BaseViewModel = this._listOfSpeakers?.content_object;
-
     private pointOfOrderEnabled = false;
 
     private canMarkSelf = false;
@@ -204,8 +172,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private viewport: ViewPortService,
         private cd: ChangeDetectorRef,
         private dialog: PointOfOrderDialogService,
-        private formBuilder: FormBuilder,
-        protected agendaItemRepo: AgendaItemRepositoryService,
         private speakerUserSelectDialog: SpeakerUserSelectDialogService,
         private interactionService: InteractionService
     ) {
@@ -219,9 +185,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 .get(`list_of_speakers_closing_disables_point_of_order`)
                 .subscribe(enabled => (this.restrictPointOfOrderActions = enabled))
         );
-        this.moderatorNoteForm = this.formBuilder.group({
-            moderator_notes: ``
-        });
     }
 
     public ngOnInit(): void {
@@ -694,21 +657,5 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.waitingSpeakers.find(
             speaker => speaker.user_id === this.operator.operatorId && speaker.point_of_order === pointOfOrder
         );
-    }
-
-    public toggleEditModeratorNote(): void {
-        this.isEditing = !this.isEditing;
-        if (this.isEditing && !!this.moderatorNotesForForm) {
-            this.moderatorNoteForm.setValue({ moderator_notes: this.moderatorNotesForForm });
-        }
-    }
-
-    public saveChangesModerationNote(): void {
-        this.agendaItemRepo
-            .update(this.moderatorNoteForm.value, this.agendaItem)
-            .then(() => {
-                this.isEditing = false;
-            })
-            .catch(this.raiseError);
     }
 }
