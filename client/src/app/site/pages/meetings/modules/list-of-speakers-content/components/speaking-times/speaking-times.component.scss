@@ -5,7 +5,7 @@
     padding: 8px 25px 0 25px;
     .structure-level {
         width: 33%;
-        margin-bottom: 26px;
+        margin-bottom: 16px;
         display: flex;
         flex-direction: row;
         justify-content: end;
@@ -16,19 +16,27 @@
             .structure-level-color {
                 height: 3px;
                 background-color: transparent;
-                width: calc(100% - 24px);
+                margin-left:10%;
+                width: calc(100% - margin-left);
                 border-width: 0;
                 border-radius: 7px;
             }
+
             .structure-level-time {
                 font-size: 35px;
                 display: flex;
                 justify-content: end;
+                line-height: 0.95;
             }
+
             .structure-level-name {
                 line-height: 1;
                 text-align: right;
             }
+        }
+
+        .icon-less-space-to-left {
+            width: 25px;
         }
     }
 }
