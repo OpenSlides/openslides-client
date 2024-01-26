@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { UserStateField } from 'src/app/gateways/repositories/users';
+import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -21,8 +23,9 @@ import { ParticipantCsvExportService } from '../../../../export/participant-csv-
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
 import { GroupControllerService, ViewGroup } from '../../../../modules';
 import { ParticipantListInfoDialogService } from '../../modules/participant-list-info-dialog';
-import { ParticipantListFilterService } from '../../services/participant-list-filter.service/participant-list-filter.service';
-import { ParticipantListSortService } from '../../services/participant-list-sort.service/participant-list-sort.service';
+import { ParticipantListFilterService } from '../../services/participant-list-filter/participant-list-filter.service';
+import { ParticipantListSortService } from '../../services/participant-list-sort/participant-list-sort.service';
+import { ParticipantSwitchDialogComponent } from '../participant-switch-dialog/participant-switch-dialog.component';
 
 const PARTICIPANTS_LIST_STORAGE_INDEX = `participants`;
 
@@ -126,7 +129,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         private organizationSettingsService: OrganizationSettingsService,
         private route: ActivatedRoute,
         private prompt: PromptService,
-        private interactionService: InteractionService
+        private interactionService: InteractionService,
+        private dialog: MatDialog
     ) {
         super();
 
@@ -305,6 +309,29 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                     }, ...this.selectedRows)
                     .resolve();
             }
+        }
+    }
+
+    public async switchParticipants(): Promise<void> {
+        const leftUser = this.selectedRows[0];
+        const rightUser = this.selectedRows[1];
+        const dialogRef = this.dialog.open(ParticipantSwitchDialogComponent, {
+            ...mediumDialogSettings,
+            data: { leftUser, rightUser }
+        });
+        const response = await firstValueFrom(dialogRef.afterClosed());
+        if (response) {
+            await this.repo
+                .update(user => {
+                    const other = user.id === leftUser.id ? rightUser : leftUser;
+                    return {
+                        id: user.id,
+                        group_ids: other.group_ids(),
+                        number: other.number()
+                    };
+                }, ...this.selectedRows)
+                .resolve();
+            this.matSnackBar.open(this.translate.instant(`Mandates switched sucessfully!`), null, { duration: 3000 });
         }
     }
 

@@ -24,7 +24,7 @@ import { ParticipantPdfExportService } from '../../../../export/participant-pdf-
 import { GroupControllerService } from '../../../../modules';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
 import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
-import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort.service/participant-list-sort.service';
+import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort/participant-list-sort.service';
 
 @Component({
     selector: `os-participant-detail-view`,
