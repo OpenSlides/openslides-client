@@ -9,8 +9,7 @@
 
 <div class="structure-level-list">
     <div class="structure-level" *ngFor="let structure_level of getStructureLevels()">
-        <div class="structure-level-content">
-            <hr class="structure-level-color" [ngStyle]="{ 'background-color': structure_level.color }" />
+        <div class="structure-level-info" [ngStyle]="{ 'border-top-color': structure_level.color }">
             <span class="structure-level-time">
                 <os-countdown-time [unstyled]="true" [countdown]="structure_level.countdown"></os-countdown-time>
             </span>
@@ -18,7 +17,6 @@
         </div>
         <ng-container *osPerms="permission.listOfSpeakersCanManage">
             <button
-                class="icon-less-space-to-left"
                 type="button"
                 mat-icon-button
                 [matMenuTriggerFor]="editAndDistributeMenu"

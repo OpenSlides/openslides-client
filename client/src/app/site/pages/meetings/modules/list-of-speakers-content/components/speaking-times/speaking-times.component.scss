@@ -5,39 +5,20 @@
     padding: 8px 25px 0 25px;
     .structure-level {
         width: 33%;
-        margin-bottom: 16px;
+        margin-bottom: 26px;
         display: flex;
         flex-direction: row;
-        justify-content: end;
-
-        .structure-level-content {
-            width: 100%;
-
-            .structure-level-color {
-                height: 3px;
-                background-color: transparent;
-                margin-left: 10%;
-                width: calc(100% - margin-left);
-                border-width: 0;
-                border-radius: 7px;
-            }
-
-            .structure-level-time {
-                font-size: 35px;
-                display: flex;
-                justify-content: end;
-                line-height: 0.95;
-            }
-
-            .structure-level-name {
-                line-height: 1;
-                text-align: right;
-            }
-        }
-
-        .icon-less-space-to-left {
-            width: 25px;
-            margin-top: 12px;
-        }
+    }
+    .structure-level-info {
+        border-top-color: transparent;
+        border-top-width: 3px;
+        border-top-style: solid;
+    }
+    .structure-level-time {
+        font-size: 35px;
+        line-height: 1;
+    }
+    .structure-level-name {
+        line-height: 1;
     }
 }

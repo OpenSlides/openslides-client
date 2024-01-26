@@ -14,22 +14,18 @@
                 <ng-container *ngIf="getStructureLevel(i, j)">
                     <div class="ellipsis-overflow spacer-top-25">
                         <div class="level-time-list">
-                            <span class="align-right">
-                                <hr
-                                    class="structure-level-color"
-                                    [ngStyle]="{ 'background-color': getStructureLevel(i, j).color }"
-                                />
+                            <span class="color-line" [ngStyle]="{ 'border-top-color': getStructureLevel(i, j).color }">
+                                <os-countdown-time
+                                    [unstyled]="true"
+                                    [countdown]="{
+                                        running: !!getStructureLevel(i, j).current_start_time,
+                                        countdown_time: getStructureLevel(i, j).current_start_time
+                                            ? getStructureLevel(i, j).current_start_time +
+                                              getStructureLevel(i, j).remaining_time
+                                            : getStructureLevel(i, j).remaining_time
+                                    }"
+                                ></os-countdown-time>
                             </span>
-                            <os-countdown-time
-                                [unstyled]="true"
-                                [countdown]="{
-                                    running: !!getStructureLevel(i, j).current_start_time,
-                                    countdown_time: getStructureLevel(i, j).current_start_time
-                                        ? getStructureLevel(i, j).current_start_time +
-                                          getStructureLevel(i, j).remaining_time
-                                        : getStructureLevel(i, j).remaining_time
-                                }"
-                            ></os-countdown-time>
                         </div>
                         <div class="structure-level-name">
                             {{ getStructureLevel(i, j).name }}
