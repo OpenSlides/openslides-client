@@ -25,11 +25,17 @@ import { ProjectorButtonModule } from '../meetings-component-collector/projector
 import { ParticipantSearchSelectorModule } from '../participant-search-selector';
 import { CountdownTimeModule } from '../projector/modules/countdown-time/countdown-time.module';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
+import { ModerationNoteComponent } from './components/moderation-note/moderation-note.component';
 import { ListOfSpeakersContentTitleDirective } from './directives/list-of-speakers-content-title.directive';
 import { PointOfOrderDialogModule } from './modules/point-of-order-dialog/point-of-order-dialog.module';
 import { SpeakerUserSelectDialogModule } from './modules/speaker-user-select-dialog/speaker-user-select-dialog.module';
 
-const DECLARATIONS = [ListOfSpeakersContentComponent, ListOfSpeakersContentTitleDirective, SpeakingTimesComponent];
+const DECLARATIONS = [
+    ListOfSpeakersContentComponent,
+    ListOfSpeakersContentTitleDirective,
+    SpeakingTimesComponent,
+    ModerationNoteComponent
+];
 
 @NgModule({
     exports: DECLARATIONS,
