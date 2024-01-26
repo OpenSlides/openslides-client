@@ -8,19 +8,27 @@
         margin-bottom: 26px;
         display: flex;
         flex-direction: row;
-    }
-    .structure-level-color {
-        height: 3px;
-        background-color: transparent;
-        width: 100%;
-        border-width: 0;
-        border-radius: 7px;
-    }
-    .structure-level-time {
-        font-size: 35px;
-        line-height: 1;
-    }
-    .structure-level-name {
-        line-height: 1;
+        justify-content: end;
+
+        .structure-level-content {
+            width: 100%;
+
+            .structure-level-color {
+                height: 3px;
+                background-color: transparent;
+                width: calc(100% - 24px);
+                border-width: 0;
+                border-radius: 7px;
+            }
+            .structure-level-time {
+                font-size: 35px;
+                display: flex;
+                justify-content: end;
+            }
+            .structure-level-name {
+                line-height: 1;
+                text-align: right;
+            }
+        }
     }
 }
