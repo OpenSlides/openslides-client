@@ -74,6 +74,9 @@
             </ng-template>
         </os-list-of-speakers-content>
 
+        <!-- Moderator Note-->
+        <os-moderation-note [listOfSpeakers]="listOfSpeakers"></os-moderation-note>
+
         <!-- Poll-Collection -->
         <os-poll-collection *ngIf="showPollCollection" [currentProjection]="projectedViewModel"></os-poll-collection>
 
