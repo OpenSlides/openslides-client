@@ -1,4 +1,4 @@
-<mat-card class="os-card" [ngClass]="{ 'spacer-bottom-60': addBottomSpacer }">
+<mat-card class="os-card card-padding" [ngClass]="{ 'spacer-bottom-60': addBottomSpacer }">
     <!-- Title -->
     <os-projectable-title class="los-title" *ngIf="!explicitTitleContent" [model]="listOfSpeakers">
         <mat-icon
@@ -386,7 +386,7 @@
 
 <!-- Moderator Note-->
 <mat-card
-    class="spacer-bottom-60"
+    class="spacer-bottom-60 card-padding"
     [ngClass]="isEditing ? 'os-form-card' : 'os-card'"
     *ngIf="canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))"
 >

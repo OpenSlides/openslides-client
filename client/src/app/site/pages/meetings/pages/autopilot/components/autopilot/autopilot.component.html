@@ -96,14 +96,6 @@
     <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers" class="col-right">
         <mat-card class="os-card spacer-bottom-60">
             <mat-card-content>
-                <div class="action-title">
-                    <p class="subtitle-text" translate>Speaking times</p>
-                    <ng-container *osPerms="permission.projectorCanManage">
-                        <button type="button" mat-icon-button [matMenuTriggerFor]="projectionMenu">
-                            <mat-icon>more_horiz</mat-icon>
-                        </button>
-                    </ng-container>
-                </div>
                 <os-speaking-times
                     [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"
                 ></os-speaking-times>
@@ -111,14 +103,3 @@
         </mat-card>
     </div>
 </div>
-
-<mat-menu #projectionMenu="matMenu">
-    <button mat-menu-item (click)="showAllStructureLevels()">
-        <mat-icon>videocam</mat-icon>
-        <span>{{ 'Project all structure levels' | translate }}</span>
-    </button>
-    <button mat-menu-item (click)="showActiveStructureLevel()">
-        <mat-icon>videocam</mat-icon>
-        <span>{{ 'Project active structure level' | translate }}</span>
-    </button>
-</mat-menu>

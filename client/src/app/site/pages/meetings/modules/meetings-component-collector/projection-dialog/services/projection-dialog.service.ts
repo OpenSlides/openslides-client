@@ -4,7 +4,10 @@ import { firstValueFrom } from 'rxjs';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 
-import { ProjectionDialogComponent } from '../components/projection-dialog/projection-dialog.component';
+import {
+    ProjectionDialogComponent,
+    ProjectionDialogConfig
+} from '../components/projection-dialog/projection-dialog.component';
 import { ProjectionDialogReturnType } from '../definitions';
 import { ProjectionDialogModule } from '../projection-dialog.module';
 
@@ -16,11 +19,11 @@ export class ProjectionDialogService {
      * Opens the projection dialog for the given projectable. After the user's choice,
      * the projectors will be updated.
      */
-    public async openProjectDialogFor(descriptor: ProjectionBuildDescriptor): Promise<void> {
+    public async openProjectDialogFor(descriptor: ProjectionBuildDescriptor | ProjectionDialogConfig): Promise<void> {
         const module = await import(`../projection-dialog.module`).then(m => m.ProjectionDialogModule);
         const dialogRef = this.dialog.open<
             ProjectionDialogComponent,
-            ProjectionBuildDescriptor,
+            ProjectionBuildDescriptor | ProjectionDialogConfig,
             ProjectionDialogReturnType
         >(module.getComponent(), {
             maxHeight: `90vh`,

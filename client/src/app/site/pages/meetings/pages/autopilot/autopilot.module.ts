@@ -20,6 +20,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
+import { ProjectorButtonModule } from '../../modules/meetings-component-collector/projector-button/projector-button.module';
 import { CountdownTimeModule } from '../../modules/projector/modules/countdown-time/countdown-time.module';
 import { ProjectorModule } from '../../modules/projector/projector.module';
 import { TopicPollModule } from '../agenda/modules/topics/modules/topic-poll/topic-poll.module';
@@ -56,7 +57,8 @@ import { PollCollectionComponent } from './components/poll-collection/poll-colle
         TopicPollModule,
         AssignmentPollModule,
         ReactiveFormsModule,
-        MatInputModule
+        MatInputModule,
+        ProjectorButtonModule
     ]
 })
 export class AutopilotModule {}

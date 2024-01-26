@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -22,6 +21,8 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { hasListOfSpeakers, ViewListOfSpeakers } from '../../../../../agenda';
 import { CurrentListOfSpeakersSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-list-of-speakers-slide.service';
+import { CurrentSpeakingStructureLevelSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-speaking-structure-level-slide.service';
+import { CurrentStructureLevelListSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-structure-level-list-slide.service';
 import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog';
 import { ProjectorEditDialogService } from '../../../../components/projector-edit-dialog/services/projector-edit-dialog.service';
 import { ProjectorMessageDialogService } from '../../../../components/projector-message-dialog';
@@ -110,6 +111,8 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         private countdownRepo: ProjectorCountdownControllerService,
         private messageRepo: ProjectorMessageControllerService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
+        private currentStructureLevelListSlideService: CurrentStructureLevelListSlideService,
+        private currentSpeakingStructureLevelSlideService: CurrentSpeakingStructureLevelSlideService,
         private currentSpeakerChyronService: CurrentSpeakerChyronSlideService,
         private projectorEditDialog: ProjectorEditDialogService,
         private projectorMessageDialog: ProjectorMessageDialogService,
@@ -262,22 +265,11 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     }
 
     public getCurrentStructureLevel(): ProjectionBuildDescriptor {
-        return {
-            content_object_id: `meeting/${this.activeMeetingId}`,
-            type: MeetingProjectionType.CurrentSpeakingStructureLevel,
-            stable: true,
-            projectionDefault: PROJECTIONDEFAULT.currentListOfSpeakers,
-            getDialogTitle: () => this.translate.instant(`Current speaker`)
-        };
+        return this.currentSpeakingStructureLevelSlideService.getProjectionBuildDescriptor(true);
     }
 
     public getAllStructureLevel(): ProjectionBuildDescriptor {
-        return {
-            content_object_id: `meeting/${this.activeMeetingId}`,
-            type: MeetingProjectionType.CurrentStructureLevelList,
-            projectionDefault: PROJECTIONDEFAULT.currentListOfSpeakers,
-            getDialogTitle: () => this.translate.instant(`All structure levels`)
-        };
+        return this.currentStructureLevelListSlideService.getProjectionBuildDescriptor(false);
     }
 
     public isStructureLevelCountdownEnabled(): boolean {
