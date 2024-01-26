@@ -14,7 +14,9 @@
                 <ng-container *ngIf="getStructureLevel(i, j)">
                     <div class="ellipsis-overflow spacer-top-25">
                         <div class="level-time-list">
-                            <span class="color-line" [ngStyle]="{ 'border-top-color': getStructureLevel(i, j).color }">
+                            <span class="align-right">
+                                <hr class="structure-level-color" [ngStyle]="{ 'background-color': getStructureLevel(i, j).color }"/>
+                            </span>
                                 <os-countdown-time
                                     [unstyled]="true"
                                     [countdown]="{
@@ -25,7 +27,6 @@
                                             : getStructureLevel(i, j).remaining_time
                                     }"
                                 ></os-countdown-time>
-                            </span>
                         </div>
                         <div class="structure-level-name">
                             {{ getStructureLevel(i, j).name }}
