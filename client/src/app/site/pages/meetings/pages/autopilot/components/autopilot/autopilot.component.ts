@@ -1,5 +1,7 @@
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
@@ -95,6 +97,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public structureLevelCountdownEnabled = false;
 
+    public showRightCol: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
     private _currentProjection: ViewProjection | null = null;
 
     public constructor(
@@ -102,7 +106,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         private operator: OperatorService,
         projectorRepo: ProjectorControllerService,
         closService: CurrentListOfSpeakersService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService
+        private listOfSpeakersRepo: ListOfSpeakersControllerService,
+        breakpoint: BreakpointObserver
     ) {
         super();
 
@@ -120,7 +125,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
             }),
             this.meetingSettingsService
                 .get(`list_of_speakers_default_structure_level_time`)
-                .subscribe(time => (this.structureLevelCountdownEnabled = time > 0))
+                .subscribe(time => (this.structureLevelCountdownEnabled = time > 0)),
+            breakpoint.observe([`(min-width: 1050px)`]).subscribe((state: BreakpointState) => {
+                this.showRightCol.next(state.matches);
+            })
         );
     }
 

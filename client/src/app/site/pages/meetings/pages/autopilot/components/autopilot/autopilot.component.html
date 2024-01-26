@@ -74,6 +74,10 @@
             </ng-template>
         </os-list-of-speakers-content>
 
+        <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && (showRightCol | async) === false">
+            <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
+        </div>
+
         <!-- Moderator Note-->
         <os-moderation-note [listOfSpeakers]="listOfSpeakers"></os-moderation-note>
 
@@ -96,13 +100,17 @@
         </mat-card>
     </div>
 
-    <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers" class="col-right">
-        <mat-card class="os-card spacer-bottom-60">
-            <mat-card-content>
-                <os-speaking-times
-                    [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"
-                ></os-speaking-times>
-            </mat-card-content>
-        </mat-card>
+    <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && showRightCol | async" class="col-right">
+        <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
     </div>
 </div>
+
+<ng-template #speakingTimes>
+    <mat-card class="os-card spacer-bottom-60">
+        <mat-card-content>
+            <os-speaking-times
+                [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"
+            ></os-speaking-times>
+        </mat-card-content>
+    </mat-card>
+</ng-template>

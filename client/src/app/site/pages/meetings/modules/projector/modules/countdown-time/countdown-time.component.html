@@ -24,6 +24,13 @@
         </span>
     </div>
 </div>
-<span *ngIf="unstyled" id="countdown">
+<span
+    *ngIf="unstyled"
+    id="countdown"
+    [ngClass]="{
+        'negative-time': seconds <= 0 && (countdown.default_time !== 0 || seconds < 0),
+        'warning-time': seconds <= warningTime && seconds > 0,
+    }"
+>
     {{ time }}
 </span>
