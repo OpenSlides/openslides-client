@@ -405,7 +405,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public async onStopButton(speaker: ViewSpeaker): Promise<void> {
         try {
             if (speaker.speech_state !== SpeechState.INTERPOSED_QUESTION && this.interposedQuestions.length > 0) {
-                this.onPauseButton(speaker);
+                for (const currentSpeaker of this.interposedQuestions
+                    .concat([speaker])
+                    .filter(speaker => speaker.isSpeaking)) {
+                    await this.onPauseButton(currentSpeaker);
+                }
                 const messages: string[] = [];
                 const cleared = this.interposedQuestions.filter(speaker => !speaker.begin_time).length;
                 const accurateTime = this.interposedQuestions.length - cleared;
