@@ -37,25 +37,23 @@ export class SpeakerCsvExportService {
         private dfnsConfig: DateFnsConfigurationService
     ) {}
 
-    private col_begin_time(speaker: ViewSpeaker): string {
-        return speaker.begin_time
-            ? format(fromUnixTime(speaker.begin_time), `Ppp`, {
-                  locale: this.dfnsConfig.locale()
-              })
-            : ``;
-    }
-
-    private col_speakingTime(speaker: ViewSpeaker): string {
-        return this.durationService.durationToString(speaker.speakingTime, ``);
-    }
+    private columnMappings = {
+        begin_time: (speaker: ViewSpeaker): string =>
+            speaker.begin_time
+                ? format(fromUnixTime(speaker.begin_time), `Ppp`, {
+                      locale: this.dfnsConfig.locale()
+                  })
+                : ``,
+        speakingTime: (speaker: ViewSpeaker): string => this.durationService.durationToString(speaker.speakingTime, ``)
+    };
 
     public export(speakers: ViewSpeaker[]): void {
         this.csvExport.export(
             speakers,
             Object.keys(speakerHeadersAndVerboseNames).map(key => {
-                if (this[`col_` + key]) {
+                if (this.columnMappings[key]) {
                     return {
-                        map: speaker => this[`col_` + key](speaker),
+                        map: speaker => this.columnMappings[key](speaker),
                         label: this.translate.instant(speakerHeadersAndVerboseNames[key])
                     } as CsvColumnDefinitionMap<ViewSpeaker>;
                 }
