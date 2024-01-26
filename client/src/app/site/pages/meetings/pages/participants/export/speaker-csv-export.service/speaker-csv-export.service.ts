@@ -46,7 +46,7 @@ export class SpeakerCsvExportService {
     }
 
     private col_speakingTime(speaker: ViewSpeaker): string {
-        return this.durationService.durationToString(speaker.speakingTime, `m`);
+        return this.durationService.durationToString(speaker.speakingTime, ``);
     }
 
     public export(speakers: ViewSpeaker[]): void {
