@@ -1,6 +1,11 @@
 @import 'src/assets/styles/media-queries.scss';
 @import 'src/assets/styles/fonts.scss';
 
+#countdown {
+    white-space: nowrap;
+    font-family: $font-monospace;
+}
+
 .countdown-time-wrapper {
     $margin: 50px;
     display: flex;
