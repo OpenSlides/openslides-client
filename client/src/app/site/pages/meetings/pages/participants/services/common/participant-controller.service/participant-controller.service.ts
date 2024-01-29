@@ -311,6 +311,8 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
      */
     public async createFromString(name: string): Promise<RawUser> {
         const newUser = this.parseStringIntoUser(name);
+        // we want to generate the username in the backend
+        newUser.username = ``;
         const newUserPayload: any = {
             ...newUser,
             is_active: true,

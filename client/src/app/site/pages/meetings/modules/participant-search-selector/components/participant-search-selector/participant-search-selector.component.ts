@@ -149,8 +149,8 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
         }
     }
 
-    public async createNewSelectedUser(username: string): Promise<void> {
-        const newUserObj = await this.userRepo.createFromString(username);
+    public async createNewSelectedUser(name: string): Promise<void> {
+        const newUserObj = await this.userRepo.createFromString(name);
         this.emitSelectedUser({ userId: newUserObj.id, user: newUserObj });
     }
 
