@@ -321,17 +321,24 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         });
         const response = await firstValueFrom(dialogRef.afterClosed());
         if (response) {
-            await this.repo
-                .update(user => {
-                    const other = user.id === leftUser.id ? rightUser : leftUser;
-                    return {
-                        id: user.id,
-                        group_ids: other.group_ids(),
-                        number: other.number()
-                    };
-                }, ...this.selectedRows)
-                .resolve();
-            this.matSnackBar.open(this.translate.instant(`Mandates switched sucessfully!`), null, { duration: 3000 });
+            try {
+                await this.repo
+                    .update(user => {
+                        const other = user.id === leftUser.id ? rightUser : leftUser;
+                        return {
+                            group_ids: other.group_ids(),
+                            number: other.number()
+                        };
+                    }, ...this.selectedRows)
+                    .resolve();
+                this.matSnackBar.open(
+                    this.translate.instant(`Mandates switched sucessfully!`),
+                    this.translate.instant(`Ok`),
+                    { duration: 3000 }
+                );
+            } catch (e) {
+                this.raiseError(e);
+            }
         }
     }
 
