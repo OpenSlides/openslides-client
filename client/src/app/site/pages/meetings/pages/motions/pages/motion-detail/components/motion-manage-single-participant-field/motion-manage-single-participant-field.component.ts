@@ -63,6 +63,7 @@ export class MotionManageSingleParticipantFieldComponent extends BaseUiComponent
 
     public onCancel(): void {
         this.isEditMode = false;
+        this.value = this.motion[this.field];
     }
 
     public onClear(): void {
