@@ -60,7 +60,6 @@ const getActionErrorMap: (data: any) => ErrorMap | null = data => {
         case MotionAction.CREATE_FORWARDED:
         case UserAction.FORGET_PASSWORD_CONFIRM:
         case UserAction.SET_PASSWORD_SELF:
-        case UserAction.UPDATE:
             return MatchAllErrorMap;
         default:
             if (typeof actionName === `string` && actionName.endsWith(`.import`)) {

@@ -58,7 +58,8 @@ export class HttpService {
         data?: any,
         queryParams?: QueryParams,
         customHeader?: HttpHeaders,
-        responseType: ResponseType = `json`
+        responseType: ResponseType = `json`,
+        catchError = true
     ): Promise<T> {
         let url = path + formatQueryParams(queryParams);
         if (url[0] !== `/`) {
@@ -93,6 +94,9 @@ export class HttpService {
                         throw cleanError;
                     }
                     this.snackBar.open(cleanError, this.translate.instant(`Ok`));
+                    if (!catchError) {
+                        throw cleanError;
+                    }
                     return null;
                 } else if (!navigator.onLine) {
                     const cleanError = this.translate.instant(`The request could not be sent. Check your connection.`);
@@ -137,9 +141,10 @@ export class HttpService {
         data?: any,
         queryParams?: QueryParams,
         header?: HttpHeaders,
-        responseType: ResponseType = `json`
+        responseType: ResponseType = `json`,
+        catchError = true
     ): Promise<T> {
-        return await this.send<T>(path, HttpMethod.GET, data, queryParams, header, responseType);
+        return await this.send<T>(path, HttpMethod.GET, data, queryParams, header, responseType, catchError);
     }
 
     /**
@@ -150,8 +155,14 @@ export class HttpService {
      * @param header optional HTTP header if required
      * @returns A promise holding a generic
      */
-    public async post<T>(path: string, data?: any, queryParams?: QueryParams, header?: HttpHeaders): Promise<T> {
-        return await this.send<T>(path, HttpMethod.POST, data, queryParams, header);
+    public async post<T>(
+        path: string,
+        data?: any,
+        queryParams?: QueryParams,
+        header?: HttpHeaders,
+        catchError = true
+    ): Promise<T> {
+        return await this.send<T>(path, HttpMethod.POST, data, queryParams, header, `json`, catchError);
     }
 
     /**
@@ -162,8 +173,14 @@ export class HttpService {
      * @param header optional HTTP header if required
      * @returns A promise holding a generic
      */
-    public async patch<T>(path: string, data?: any, queryParams?: QueryParams, header?: HttpHeaders): Promise<T> {
-        return await this.send<T>(path, HttpMethod.PATCH, data, queryParams, header);
+    public async patch<T>(
+        path: string,
+        data?: any,
+        queryParams?: QueryParams,
+        header?: HttpHeaders,
+        catchError = true
+    ): Promise<T> {
+        return await this.send<T>(path, HttpMethod.PATCH, data, queryParams, header, `json`, catchError);
     }
 
     /**
@@ -174,8 +191,14 @@ export class HttpService {
      * @param header optional HTTP header if required
      * @returns A promise holding a generic
      */
-    public async put<T>(path: string, data?: any, queryParams?: QueryParams, header?: HttpHeaders): Promise<T> {
-        return await this.send<T>(path, HttpMethod.PUT, data, queryParams, header);
+    public async put<T>(
+        path: string,
+        data?: any,
+        queryParams?: QueryParams,
+        header?: HttpHeaders,
+        catchError = true
+    ): Promise<T> {
+        return await this.send<T>(path, HttpMethod.PUT, data, queryParams, header, `json`, catchError);
     }
 
     /**
@@ -186,8 +209,14 @@ export class HttpService {
      * @param header optional HTTP header if required
      * @returns A promise holding a generic
      */
-    public async delete<T>(path: string, data?: any, queryParams?: QueryParams, header?: HttpHeaders): Promise<T> {
-        return await this.send<T>(path, HttpMethod.DELETE, data, queryParams, header);
+    public async delete<T>(
+        path: string,
+        data?: any,
+        queryParams?: QueryParams,
+        header?: HttpHeaders,
+        catchError = true
+    ): Promise<T> {
+        return await this.send<T>(path, HttpMethod.DELETE, data, queryParams, header, `json`, catchError);
     }
 
     /**

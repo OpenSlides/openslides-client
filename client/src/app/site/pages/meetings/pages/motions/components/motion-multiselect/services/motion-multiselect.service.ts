@@ -329,7 +329,7 @@ export class MotionMultiselectService {
 
             if (actions.length) {
                 for (const action of actions) {
-                    action.setSendActionFn((req: ActionRequest[]) => this.actionService.sendRequests(req, true));
+                    action.setSendActionFn((req: ActionRequest[], _) => this.actionService.sendRequests(req, true));
                 }
 
                 const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;

@@ -114,7 +114,7 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
             );
 
             if (Object.values(this._removeSubmittersMap).length > 0) {
-                actions[0].setSendActionFn(r => this.actionService.sendRequests(r, true));
+                actions[0].setSendActionFn((r, _) => this.actionService.sendRequests(r, true));
             }
         }
 

@@ -330,7 +330,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                             number: other.number()
                         };
                     }, ...this.selectedRows)
-                    .resolve();
+                    .resolve(false);
                 this.matSnackBar.open(
                     this.translate.instant(`Mandates switched sucessfully!`),
                     this.translate.instant(`Ok`),
