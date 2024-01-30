@@ -52,6 +52,7 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         info: {
             speech_state?: SpeechState;
             meeting_user_id?: Id;
+            structure_level_id?: Id;
         },
         viewModel: ViewSpeaker
     ): Promise<void> {
