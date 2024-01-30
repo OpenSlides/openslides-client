@@ -22,7 +22,7 @@
             class="background-card"
             [formControl]="searchValueForm"
             placeholder="{{ 'Search' | translate }}"
-            (keydown)="onSearchKeydown($event)"
+            (keydown.space)="$event.stopPropagation()"
         />
     </div>
     <ng-container *ngIf="multiple && showChips">
