@@ -20,7 +20,7 @@ type HttpHeadersObj = HttpHeaders | { [header: string]: string | string[] };
 
 const defaultHeaders: HttpHeadersObj = { [`Content-Type`]: `application/json` };
 
-interface RequestSettings {
+export interface RequestSettings {
     queryParams?: QueryParams;
     customHeader?: HttpHeaders;
     responseType?: ResponseType;
