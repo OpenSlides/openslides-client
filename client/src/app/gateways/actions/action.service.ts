@@ -42,13 +42,9 @@ export class ActionService {
             return null;
         }
         console.log(`send requests:`, requests);
-        const response = await this.http.post<T>(
-            handleSeparately ? ACTION_SEPARATELY_URL : ACTION_URL,
-            requests,
-            null,
-            null,
+        const response = await this.http.post<T>(handleSeparately ? ACTION_SEPARATELY_URL : ACTION_URL, requests, {
             catchError
-        );
+        });
         if (isActionError(response)) {
             throw response.message;
         } else if (isActionResponse<T>(response)) {
