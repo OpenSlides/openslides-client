@@ -10,7 +10,7 @@ import {
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { merge, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
@@ -22,6 +22,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { CurrentSpeakingStructureLevelSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-speaking-structure-level-slide.service';
 import { CurrentStructureLevelListSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-structure-level-list-slide.service';
+import { ViewStructureLevelListOfSpeakers } from '../../../../pages/participants/pages/structure-levels/view-models';
 import { ProjectionBuildDescriptor } from '../../../../view-models';
 
 @Component({
@@ -39,6 +40,9 @@ export class SpeakingTimesComponent implements OnDestroy {
     private subscribedIds: Set<Id> = new Set();
     private subscriptions: Map<Id, Subscription> = new Map();
     private structureLevels: Map<Id, any> = new Map();
+
+    private subscribedSpeakerIds: Map<Id, Set<Id>> = new Map();
+    private speakerSubscriptions: Map<Id, Subscription> = new Map();
 
     @ViewChild(`totalTimeDialog`, { static: true })
     private totalTimeDialog: TemplateRef<string> | null = null;
@@ -58,6 +62,9 @@ export class SpeakingTimesComponent implements OnDestroy {
             this.subscribedIds.delete(speakingTimeId);
             this.subscriptions.get(speakingTimeId).unsubscribe();
             this.subscriptions.delete(speakingTimeId);
+            this.speakerSubscriptions.get(speakingTimeId)?.unsubscribe();
+            this.speakerSubscriptions.delete(speakingTimeId);
+            this.subscribedSpeakerIds.delete(speakingTimeId);
             this.structureLevels.delete(speakingTimeId);
         }
 
@@ -70,19 +77,20 @@ export class SpeakingTimesComponent implements OnDestroy {
                         return;
                     }
 
-                    const remaining = speakingTime.remaining_time;
-                    this.structureLevels.set(speakingTimeId, {
-                        name: speakingTime.structure_level.getTitle(),
-                        color: speakingTime.structure_level.color,
-                        countdown: {
-                            running: !!speakingTime.current_start_time,
-                            countdown_time: speakingTime.current_start_time
-                                ? speakingTime.current_start_time + remaining
-                                : remaining
-                        },
-                        id: speakingTimeId,
-                        speakers: speakingTime.speakers
-                    });
+                    const speakerIds = new Set(speakingTime.speaker_ids);
+                    if (speakerIds != this.subscribedSpeakerIds.get(speakingTimeId)) {
+                        this.subscribedSpeakerIds.set(speakingTimeId, speakerIds);
+                        this.speakerSubscriptions.get(speakingTimeId)?.unsubscribe();
+                        this.speakerSubscriptions.set(
+                            speakingTimeId,
+                            merge(
+                                ...speakingTime.speaker_ids.map(speakerId =>
+                                    this.speakerRepo.getViewModelObservable(speakerId)
+                                )
+                            ).subscribe(speaker => this.updateSpeakingTime(speaker.structure_level_list_of_speakers))
+                        );
+                    }
+
                     if (
                         !this.hasSpokenFlag &&
                         (speakingTime.list_of_speakers.finishedSpeakers.length > 0 ||
@@ -90,7 +98,7 @@ export class SpeakingTimesComponent implements OnDestroy {
                     ) {
                         this.hasSpokenFlag = true;
                     }
-                    this.cd.markForCheck();
+                    this.updateSpeakingTime(speakingTime);
                 })
             );
         }
@@ -116,6 +124,7 @@ export class SpeakingTimesComponent implements OnDestroy {
     ngOnDestroy(): void {
         for (const speakingTimeId of this.subscribedIds) {
             this.subscriptions.get(speakingTimeId).unsubscribe();
+            this.speakerSubscriptions.get(speakingTimeId)?.unsubscribe();
         }
     }
 
@@ -166,6 +175,27 @@ export class SpeakingTimesComponent implements OnDestroy {
         if (event.key === `Escape`) {
             this.dialogRef!.close();
         }
+    }
+
+    private updateSpeakingTime(speakingTime: ViewStructureLevelListOfSpeakers) {
+        if (speakingTime.isInactive) {
+            this.structureLevels.delete(speakingTime.id);
+        } else {
+            const remaining = speakingTime.remaining_time;
+            this.structureLevels.set(speakingTime.id, {
+                name: speakingTime.structure_level.getTitle(),
+                color: speakingTime.structure_level.color,
+                countdown: {
+                    running: !!speakingTime.current_start_time,
+                    countdown_time: speakingTime.current_start_time
+                        ? speakingTime.current_start_time + remaining
+                        : remaining
+                },
+                id: speakingTime.id,
+                speakers: speakingTime.speakers
+            });
+        }
+        this.cd.markForCheck();
     }
 
     private checkSpeaking(speakers: ViewSpeaker[]): boolean {

@@ -116,7 +116,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
                 if (refProjector) {
                     this.projector = refProjector;
                     const currentProjections = refProjector.nonStableCurrentProjections;
-                    this._currentProjection = currentProjections.length > 0 ? currentProjections[0] : null;
+                    this._currentProjection =
+                        currentProjections.length > 0 && !!currentProjections[0].type ? currentProjections[0] : null;
                     this.projectedViewModel = this._currentProjection?.content_object || null;
                 }
             }),
