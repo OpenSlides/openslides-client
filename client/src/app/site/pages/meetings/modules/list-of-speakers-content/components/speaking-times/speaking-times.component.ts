@@ -37,11 +37,8 @@ export class SpeakingTimesComponent implements OnDestroy {
      */
     public readonly permission = Permission;
 
-    private subscribedIds: Set<Id> = new Set();
     private subscriptions: Map<Id, Subscription> = new Map();
     private structureLevels: Map<Id, any> = new Map();
-
-    private speakerSubscriptions: Map<Id, Subscription> = new Map();
 
     @ViewChild(`totalTimeDialog`, { static: true })
     private totalTimeDialog: TemplateRef<string> | null = null;
@@ -56,24 +53,21 @@ export class SpeakingTimesComponent implements OnDestroy {
     @Input()
     public set currentSpeakingTimes(speakingTimes: Id[]) {
         const newSpeakingTimes = new Set(speakingTimes);
+        const subscribedIds = new Set(this.subscriptions.keys());
 
-        for (const speakingTimeId of this.subscribedIds.difference(newSpeakingTimes)) {
-            this.subscribedIds.delete(speakingTimeId);
+        for (const speakingTimeId of subscribedIds.difference(newSpeakingTimes)) {
             this.subscriptions.get(speakingTimeId).unsubscribe();
             this.subscriptions.delete(speakingTimeId);
-            this.speakerSubscriptions.get(speakingTimeId)?.unsubscribe();
-            this.speakerSubscriptions.delete(speakingTimeId);
             this.structureLevels.delete(speakingTimeId);
         }
 
-        for (const speakingTimeId of newSpeakingTimes.difference(this.subscribedIds)) {
-            this.subscribedIds.add(speakingTimeId);
+        for (const speakingTimeId of newSpeakingTimes.difference(subscribedIds)) {
             this.subscriptions.set(
                 speakingTimeId,
                 this.speakingTimesRepo
                     .getViewModelObservable(speakingTimeId)
-                    .pipe(filter(st => !!st.structure_level))
                     .pipe(
+                        filter(st => !!st.structure_level),
                         mergeMap(st =>
                             merge(
                                 ...st.speaker_ids.map(speakerId => this.speakerRepo.getViewModelObservable(speakerId))
@@ -113,9 +107,8 @@ export class SpeakingTimesComponent implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        for (const speakingTimeId of this.subscribedIds) {
+        for (const speakingTimeId of this.subscriptions.keys()) {
             this.subscriptions.get(speakingTimeId).unsubscribe();
-            this.speakerSubscriptions.get(speakingTimeId)?.unsubscribe();
         }
     }
 
