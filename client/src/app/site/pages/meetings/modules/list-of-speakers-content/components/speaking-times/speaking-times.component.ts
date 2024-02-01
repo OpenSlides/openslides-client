@@ -10,7 +10,7 @@ import {
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { merge, Subscription } from 'rxjs';
+import { filter, merge, mergeMap, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
@@ -41,7 +41,6 @@ export class SpeakingTimesComponent implements OnDestroy {
     private subscriptions: Map<Id, Subscription> = new Map();
     private structureLevels: Map<Id, any> = new Map();
 
-    private subscribedSpeakerIds: Map<Id, Set<Id>> = new Map();
     private speakerSubscriptions: Map<Id, Subscription> = new Map();
 
     @ViewChild(`totalTimeDialog`, { static: true })
@@ -64,7 +63,6 @@ export class SpeakingTimesComponent implements OnDestroy {
             this.subscriptions.delete(speakingTimeId);
             this.speakerSubscriptions.get(speakingTimeId)?.unsubscribe();
             this.speakerSubscriptions.delete(speakingTimeId);
-            this.subscribedSpeakerIds.delete(speakingTimeId);
             this.structureLevels.delete(speakingTimeId);
         }
 
@@ -72,34 +70,27 @@ export class SpeakingTimesComponent implements OnDestroy {
             this.subscribedIds.add(speakingTimeId);
             this.subscriptions.set(
                 speakingTimeId,
-                this.speakingTimesRepo.getViewModelObservable(speakingTimeId).subscribe(speakingTime => {
-                    if (!speakingTime.structure_level) {
-                        return;
-                    }
-
-                    const speakerIds = new Set(speakingTime.speaker_ids);
-                    if (speakerIds != this.subscribedSpeakerIds.get(speakingTimeId)) {
-                        this.subscribedSpeakerIds.set(speakingTimeId, speakerIds);
-                        this.speakerSubscriptions.get(speakingTimeId)?.unsubscribe();
-                        this.speakerSubscriptions.set(
-                            speakingTimeId,
+                this.speakingTimesRepo
+                    .getViewModelObservable(speakingTimeId)
+                    .pipe(filter(st => !!st.structure_level))
+                    .pipe(
+                        mergeMap(st =>
                             merge(
-                                ...speakingTime.speaker_ids.map(speakerId =>
-                                    this.speakerRepo.getViewModelObservable(speakerId)
-                                )
-                            ).subscribe(speaker => this.updateSpeakingTime(speaker.structure_level_list_of_speakers))
-                        );
-                    }
+                                ...st.speaker_ids.map(speakerId => this.speakerRepo.getViewModelObservable(speakerId))
+                            )
+                        )
+                    )
+                    .subscribe(speaker => {
+                        if (
+                            !this.hasSpokenFlag &&
+                            (speaker.list_of_speakers.finishedSpeakers.length > 0 ||
+                                !!speaker.list_of_speakers.activeSpeaker)
+                        ) {
+                            this.hasSpokenFlag = true;
+                        }
 
-                    if (
-                        !this.hasSpokenFlag &&
-                        (speakingTime.list_of_speakers.finishedSpeakers.length > 0 ||
-                            !!speakingTime.list_of_speakers.activeSpeaker)
-                    ) {
-                        this.hasSpokenFlag = true;
-                    }
-                    this.updateSpeakingTime(speakingTime);
-                })
+                        this.updateSpeakingTime(speaker.structure_level_list_of_speakers);
+                    })
             );
         }
     }
