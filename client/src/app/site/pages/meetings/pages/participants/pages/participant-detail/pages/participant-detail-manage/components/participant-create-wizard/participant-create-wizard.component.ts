@@ -1,6 +1,6 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, Observable } from 'rxjs';
@@ -12,7 +12,6 @@ import { OneOfValidator, UserDetailViewComponent } from 'src/app/site/modules/us
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { UserService } from 'src/app/site/services/user.service';
@@ -41,9 +40,17 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
-    public readonly additionalFormControls = MEETING_RELATED_FORM_CONTROLS.mapToObject(controlName => ({
-        [controlName]: [``]
-    }));
+    public readonly additionalFormControls = {
+        structure_level: [``],
+        number: [``],
+        vote_weight: [``, Validators.min(0.000001)],
+        about_me: [``],
+        comment: [``],
+        group_ids: [``],
+        vote_delegations_from_ids: [``],
+        vote_delegated_to_id: [``],
+        is_present: [``]
+    };
 
     public get randomPasswordFn(): (() => string) | null {
         return this._accountId ? null : () => this.repo.getRandomPassword();
@@ -122,7 +129,13 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         return this.flickerSubject;
     }
 
+    public get isVoteWeightError(): boolean {
+        return this.personalInfoFormValue.vote_weight < 0.000001;
+    }
+
     public flickerSubject = new BehaviorSubject<boolean>(false);
+
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
 
     private readonly _currentStepIndexSubject = new BehaviorSubject<number>(0);
 
@@ -137,7 +150,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     private _suitableAccountList: Partial<User>[] = [];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         fb: UntypedFormBuilder,
         public readonly repo: ParticipantControllerService,
@@ -147,7 +159,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         private presenter: SearchUsersPresenterService,
         private organizationSettingsService: OrganizationSettingsService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.createUserForm = fb.group(
             {
                 username: [``],

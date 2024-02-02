@@ -16,6 +16,8 @@ import { MediafileCommonService } from '../../../../services/mediafile-common.se
 export class MediafileUploadComponent extends OrganizationMediafileUploadComponent implements OnInit {
     public availableGroups: Observable<ViewGroup[]> | null = null;
 
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+
     public constructor(
         route: ActivatedRoute,
         repo: MediafileControllerService,

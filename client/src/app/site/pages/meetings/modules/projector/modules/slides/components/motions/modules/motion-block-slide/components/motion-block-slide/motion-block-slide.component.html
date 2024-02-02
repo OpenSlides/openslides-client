@@ -16,20 +16,32 @@
 
     <table>
         <tr *ngFor="let i of rowsArray">
-            <td *ngFor="let j of columnsArray">
+            <td *ngFor="let j of columnsArray" [ngStyle]="{ width: columnWidthInPercent }">
                 <ng-container *ngIf="getMotion(i, j)">
-                    <div class="ellipsis-overflow spacer-top-5">
-                        {{ getMotionTitle(i, j) }}
+                    <div
+                        class="spacer-top-5"
+                        [ngClass]="
+                            !commonRecommendation && getMotion(i, j).recommendationLabel
+                                ? 'motion-wrapper'
+                                : 'motion-wrapper-single'
+                        "
+                    >
+                        <div class="motion-title">{{ getMotionTitle(i, j) }}</div>
                         <br *ngIf="!shortDisplayStyle" />
-                        <span class="white" *ngIf="!commonRecommendation && getMotion(i, j).recommendationLabel">
+                        <div
+                            class="white recommendation-chip-wrapper"
+                            *ngIf="!commonRecommendation && getMotion(i, j).recommendationLabel"
+                        >
                             <mat-basic-chip
                                 disableRipple
                                 [ngClass]="getStateCssColor(i, j)"
                                 class="block-recommendation"
                             >
-                                {{ getMotion(i, j).recommendationLabel }}
+                                <div class="ellipsis-overflow">
+                                    {{ getMotion(i, j).recommendationLabel }}
+                                </div>
                             </mat-basic-chip>
-                        </span>
+                        </div>
                     </div>
                 </ng-container>
             </td>

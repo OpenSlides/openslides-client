@@ -1,9 +1,5 @@
 import { AfterViewInit, Component, Inject } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import {
-    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-    MatLegacyDialogRef as MatDialogRef
-} from '@angular/material/legacy-dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { PollPercentBaseVerbose, VoteValue } from 'src/app/domain/models/poll';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
@@ -23,11 +19,9 @@ export class MotionPollDialogComponent extends BasePollDialogComponent implement
 
     public constructor(
         public motionPollService: MotionPollService,
-        dialogRef: MatDialogRef<BasePollDialogComponent>,
-        formBuilder: UntypedFormBuilder,
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewMotion>
     ) {
-        super(dialogRef, pollData, formBuilder);
+        super(pollData);
     }
 
     public ngAfterViewInit() {

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,7 +13,6 @@ import {
     MEETING_RELATED_FORM_CONTROLS,
     ParticipantControllerService
 } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -35,9 +35,19 @@ import { ParticipantListSortService } from '../../../participant-list/services/p
 export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
-    public readonly additionalFormControls = MEETING_RELATED_FORM_CONTROLS.mapToObject(controlName => ({
-        [controlName]: [``]
-    }));
+    public readonly additionalFormControls = {
+        structure_level: [``],
+        number: [``],
+        vote_weight: [``, Validators.min(0.000001)],
+        about_me: [``],
+        comment: [``],
+        group_ids: [``],
+        vote_delegations_from_ids: [``],
+        vote_delegated_to_id: [``],
+        is_present: [``]
+    };
+
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
 
     public get randomPasswordFn(): () => string {
         return () => this.getRandomPassword();
@@ -68,6 +78,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 return PERSONAL_FORM_CONTROLS.includes(controlName);
             }
         };
+    }
+
+    public get isVoteWeightError(): boolean {
+        return this.personalInfoFormValue.vote_weight < 0.000001;
     }
 
     public get operatorHasEqualOrHigherOML(): boolean {
@@ -127,7 +141,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     private _isUserInScope = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: ParticipantControllerService,
@@ -141,7 +154,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         private cd: ChangeDetectorRef,
         private organizationSettingsService: OrganizationSettingsService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.getUserByUrl();
 
         this.subscriptions.push(

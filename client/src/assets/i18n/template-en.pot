@@ -2472,9 +2472,6 @@ msgstr ""
 msgid "Line spacing"
 msgstr ""
 
-msgid "Linenumber"
-msgstr ""
-
 msgid "List of electronic votes"
 msgstr ""
 
@@ -4022,6 +4019,10 @@ msgstr ""
 msgid "Start date"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/components/motion-highlight-form/motion-highlight-form.component.html
+msgid "Start line number"
+msgstr ""
+
 msgid "Start time"
 msgstr ""
 
@@ -4556,6 +4557,10 @@ msgid "User not found."
 msgstr ""
 
 msgid "Username"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-detail/pages/participant-detail-manage/components/participant-create-wizard/participant-create-wizard.component.html
+msgid "Username may not contain spaces"
 msgstr ""
 
 msgid "Username or password is incorrect."

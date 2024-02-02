@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
@@ -39,10 +39,6 @@ export abstract class BaseMeetingListViewComponent<V extends BaseViewModel> exte
         return this.componentServiceCollector.activeMeetingService;
     }
 
-    public constructor(
-        public override componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    public override componentServiceCollector = inject(MeetingComponentServiceCollectorService);
+    protected override translate = inject(TranslateService);
 }

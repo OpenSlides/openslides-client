@@ -9,7 +9,6 @@ import { getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/o
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -61,7 +60,6 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     public readonly additionalFormControls = {
         default_structure_level: [``],
-        default_number: [``],
         default_vote_weight: [``, Validators.min(0.000001)],
         organization_management_level: [],
         committee_management_ids: []
@@ -100,7 +98,6 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     private _tableData: ParticipationTableData = {};
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         private osRouter: OpenSlidesRouterService,
@@ -111,7 +108,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         private userController: UserControllerService,
         private promptService: PromptService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

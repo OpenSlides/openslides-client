@@ -12,7 +12,6 @@ import {
     SortTreeFilterId,
     SortTreeFilterOption
 } from 'src/app/ui/base/base-sort-tree-view-component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../services/agenda-item-controller.service/agenda-item-controller.service';
 
@@ -47,10 +46,9 @@ export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaIte
 
     public constructor(
         protected override translate: TranslateService,
-        promptService: PromptService,
         private agendaRepo: AgendaItemControllerService
     ) {
-        super(translate, promptService);
+        super();
         this.itemsObservable = this.agendaRepo.getViewModelListObservable();
     }
 

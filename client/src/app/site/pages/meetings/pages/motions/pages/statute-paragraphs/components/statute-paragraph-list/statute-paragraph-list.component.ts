@@ -7,7 +7,6 @@ import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-sta
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewMotionStatuteParagraph } from 'src/app/site/pages/meetings/pages/motions';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionStatuteParagraphControllerService } from '../../../../modules/statute-paragraphs/services';
@@ -37,7 +36,6 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
     public statuteParagraphForm: UntypedFormGroup;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private repo: MotionStatuteParagraphControllerService,
         private formBuilder: UntypedFormBuilder,
@@ -45,7 +43,7 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
         private dialog: MatDialog,
         private csvExportService: StatuteParagraphCsvExportService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         const form = {
             title: [``, Validators.required],

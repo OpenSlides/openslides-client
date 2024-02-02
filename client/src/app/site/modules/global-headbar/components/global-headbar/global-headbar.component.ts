@@ -32,6 +32,10 @@ export class GlobalHeadbarComponent {
     ) {}
 
     public openSearch(): void {
-        this.dialog.open(GlobalSearchComponent);
+        this.dialog.open(GlobalSearchComponent, {
+            position: {
+                top: `5vh`
+            }
+        });
     }
 }

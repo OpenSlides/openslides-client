@@ -100,6 +100,12 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
     public inputChanged = new EventEmitter<string>();
 
     /**
+     * EventHandler for the input-clear.
+     */
+    @Output()
+    public inputCleared = new EventEmitter<string>();
+
+    /**
      * EventHandler for the clickSubmit event.
      */
     @Output()
@@ -147,6 +153,7 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
     public clear(event?: MouseEvent): void {
         event?.preventDefault();
         this.contentForm.setValue(``);
+        this.inputCleared.emit();
     }
 
     /**
@@ -174,6 +181,9 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
     public keyPressed(event: KeyboardEvent): void {
         if (this.clearOnEscape && event.key === `Escape`) {
             this.clear();
+        }
+        if (this.clearOnEscape && event.key === `Enter`) {
+            this.send();
         }
     }
 

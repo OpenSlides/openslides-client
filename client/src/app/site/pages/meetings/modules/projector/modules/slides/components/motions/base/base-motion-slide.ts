@@ -1,3 +1,4 @@
+import { inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { fqidFromCollectionAndId } from 'src/app/infrastructure/utils/transform-functions';
 import {
@@ -25,9 +26,8 @@ export interface ReferencedMotions {
  * replacing referenced motions (format: `[motion/<id>]`) in strings.
  */
 export class BaseMotionSlideComponent<T extends object> extends BaseSlideComponent<T> {
-    public constructor(protected translate: TranslateService, protected motionRepo: MotionControllerService) {
-        super();
-    }
+    protected translate = inject(TranslateService);
+    protected motionRepo = inject(MotionControllerService);
 
     public replaceReferencedMotions(text: string, referencedMotions: ReferencedMotions): string {
         return text.replace(REFERENCED_MOTION_REGEX, (_, id) => {

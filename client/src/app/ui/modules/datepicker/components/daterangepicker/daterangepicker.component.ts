@@ -1,7 +1,6 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, ElementRef, Optional, Self, ViewEncapsulation } from '@angular/core';
-import { NgControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
+import { NgControl, UntypedFormGroup } from '@angular/forms';
+import { MatFormFieldControl } from '@angular/material/form-field';
 
 import { BaseDatepickerComponent } from '../base-datepicker/base-datepicker.component';
 import { DatepickerComponent } from '../datepicker/datepicker.component';
@@ -23,13 +22,8 @@ export class DaterangepickerComponent extends BaseDatepickerComponent {
 
     private currentValue: any;
 
-    constructor(
-        formBuilder: UntypedFormBuilder,
-        focusMonitor: FocusMonitor,
-        element: ElementRef<HTMLElement>,
-        @Optional() @Self() ngControl: NgControl
-    ) {
-        super(formBuilder, focusMonitor, element, ngControl);
+    constructor(element: ElementRef<HTMLElement>, @Optional() @Self() ngControl: NgControl) {
+        super(element, ngControl);
     }
 
     protected createForm(): UntypedFormGroup {
