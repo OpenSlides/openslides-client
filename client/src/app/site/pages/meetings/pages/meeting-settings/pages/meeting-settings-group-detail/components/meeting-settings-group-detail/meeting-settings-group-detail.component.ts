@@ -13,7 +13,8 @@ import { MeetingControllerService } from 'src/app/site/pages/meetings/services/m
 import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import {
     SettingsGroup,
-    SettingsItem
+    SettingsItem,
+    SKIPPED_SETTINGS
 } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
@@ -166,7 +167,9 @@ export class MeetingSettingsGroupDetailComponent
         );
         if (await this.promptDialog.open(title)) {
             for (const settingsField of this.settingsFields) {
-                settingsField.onResetButton();
+                if (!SKIPPED_SETTINGS.includes(settingsField.setting.label)) {
+                    settingsField.onResetButton();
+                }
             }
             await this.saveAll();
         }
