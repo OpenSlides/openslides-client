@@ -1,5 +1,5 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import { VoteDecryptGatewayService } from 'src/app/gateways/vote-decrypt-gateway.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
