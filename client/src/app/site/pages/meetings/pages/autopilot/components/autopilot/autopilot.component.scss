@@ -16,6 +16,16 @@
         padding-left: 20px;
         width: 40%;
     }
+    @media screen and (min-width: 1320px) {
+        .col-wrapper {
+            max-width: 1565px;
+        }
+        .col-right {
+            flex-grow: 1;
+            padding-left: 0;
+            width: auto;
+        }
+    }
 }
 
 :host ::ng-deep .mat-card {
