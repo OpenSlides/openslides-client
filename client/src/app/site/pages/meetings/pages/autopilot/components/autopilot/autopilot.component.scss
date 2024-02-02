@@ -15,11 +15,10 @@
     .col-right {
         width: auto;
         @media (max-width: 1840px) {
-                padding-left: 20px;
+            padding-left: 20px;
         }
         @media (min-width: 1841px) {
-                padding-left: 0px;
-            
+            padding-left: 0px;
         }
     }
     @media screen and (min-width: 1320px) {
