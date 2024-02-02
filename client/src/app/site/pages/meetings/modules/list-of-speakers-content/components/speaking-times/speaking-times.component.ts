@@ -10,7 +10,7 @@ import {
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { filter, merge, mergeMap, Subscription, tap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
@@ -22,6 +22,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { CurrentSpeakingStructureLevelSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-speaking-structure-level-slide.service';
 import { CurrentStructureLevelListSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-structure-level-list-slide.service';
+import { ViewStructureLevelListOfSpeakers } from '../../../../pages/participants/pages/structure-levels/view-models';
 import { ProjectionBuildDescriptor } from '../../../../view-models';
 
 @Component({
@@ -36,7 +37,6 @@ export class SpeakingTimesComponent implements OnDestroy {
      */
     public readonly permission = Permission;
 
-    private subscribedIds: Set<Id> = new Set();
     private subscriptions: Map<Id, Subscription> = new Map();
     private structureLevels: Map<Id, any> = new Map();
 
@@ -53,45 +53,39 @@ export class SpeakingTimesComponent implements OnDestroy {
     @Input()
     public set currentSpeakingTimes(speakingTimes: Id[]) {
         const newSpeakingTimes = new Set(speakingTimes);
+        const subscribedIds = new Set(this.subscriptions.keys());
 
-        for (const speakingTimeId of this.subscribedIds.difference(newSpeakingTimes)) {
-            this.subscribedIds.delete(speakingTimeId);
+        for (const speakingTimeId of subscribedIds.difference(newSpeakingTimes)) {
             this.subscriptions.get(speakingTimeId).unsubscribe();
             this.subscriptions.delete(speakingTimeId);
             this.structureLevels.delete(speakingTimeId);
         }
 
-        for (const speakingTimeId of newSpeakingTimes.difference(this.subscribedIds)) {
-            this.subscribedIds.add(speakingTimeId);
+        for (const speakingTimeId of newSpeakingTimes.difference(subscribedIds)) {
             this.subscriptions.set(
                 speakingTimeId,
-                this.speakingTimesRepo.getViewModelObservable(speakingTimeId).subscribe(speakingTime => {
-                    if (!speakingTime.structure_level) {
-                        return;
-                    }
+                this.speakingTimesRepo
+                    .getViewModelObservable(speakingTimeId)
+                    .pipe(
+                        filter(st => !!st.structure_level),
+                        tap(st => this.updateSpeakingTime(st)),
+                        mergeMap(st =>
+                            merge(
+                                ...st.speaker_ids.map(speakerId => this.speakerRepo.getViewModelObservable(speakerId))
+                            )
+                        )
+                    )
+                    .subscribe(speaker => {
+                        if (
+                            !this.hasSpokenFlag &&
+                            (speaker.list_of_speakers.finishedSpeakers.length > 0 ||
+                                !!speaker.list_of_speakers.activeSpeaker)
+                        ) {
+                            this.hasSpokenFlag = true;
+                        }
 
-                    const remaining = speakingTime.remaining_time;
-                    this.structureLevels.set(speakingTimeId, {
-                        name: speakingTime.structure_level.getTitle(),
-                        color: speakingTime.structure_level.color,
-                        countdown: {
-                            running: !!speakingTime.current_start_time,
-                            countdown_time: speakingTime.current_start_time
-                                ? speakingTime.current_start_time + remaining
-                                : remaining
-                        },
-                        id: speakingTimeId,
-                        speakers: speakingTime.speakers
-                    });
-                    if (
-                        !this.hasSpokenFlag &&
-                        (speakingTime.list_of_speakers.finishedSpeakers.length > 0 ||
-                            !!speakingTime.list_of_speakers.activeSpeaker)
-                    ) {
-                        this.hasSpokenFlag = true;
-                    }
-                    this.cd.markForCheck();
-                })
+                        this.updateSpeakingTime(speaker.structure_level_list_of_speakers);
+                    })
             );
         }
     }
@@ -114,7 +108,7 @@ export class SpeakingTimesComponent implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        for (const speakingTimeId of this.subscribedIds) {
+        for (const speakingTimeId of this.subscriptions.keys()) {
             this.subscriptions.get(speakingTimeId).unsubscribe();
         }
     }
@@ -166,6 +160,27 @@ export class SpeakingTimesComponent implements OnDestroy {
         if (event.key === `Escape`) {
             this.dialogRef!.close();
         }
+    }
+
+    private updateSpeakingTime(speakingTime: ViewStructureLevelListOfSpeakers) {
+        if (speakingTime.isInactive) {
+            this.structureLevels.delete(speakingTime.id);
+        } else {
+            const remaining = speakingTime.remaining_time;
+            this.structureLevels.set(speakingTime.id, {
+                name: speakingTime.structure_level.getTitle(),
+                color: speakingTime.structure_level.color,
+                countdown: {
+                    running: !!speakingTime.current_start_time,
+                    countdown_time: speakingTime.current_start_time
+                        ? speakingTime.current_start_time + remaining
+                        : remaining
+                },
+                id: speakingTime.id,
+                speakers: speakingTime.speakers
+            });
+        }
+        this.cd.markForCheck();
     }
 
     private checkSpeaking(speakers: ViewSpeaker[]): boolean {
