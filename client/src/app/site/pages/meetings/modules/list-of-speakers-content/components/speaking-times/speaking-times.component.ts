@@ -10,7 +10,7 @@ import {
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, merge, mergeMap, Subscription } from 'rxjs';
+import { filter, merge, mergeMap, Subscription, tap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
@@ -68,6 +68,7 @@ export class SpeakingTimesComponent implements OnDestroy {
                     .getViewModelObservable(speakingTimeId)
                     .pipe(
                         filter(st => !!st.structure_level),
+                        tap(st => this.updateSpeakingTime(st)),
                         mergeMap(st =>
                             merge(
                                 ...st.speaker_ids.map(speakerId => this.speakerRepo.getViewModelObservable(speakerId))
