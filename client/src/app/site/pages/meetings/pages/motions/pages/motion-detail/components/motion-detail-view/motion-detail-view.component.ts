@@ -218,7 +218,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     public async deleteMotionButton(): Promise<void> {
         let title = this.translate.instant(`Are you sure you want to delete this motion? `);
         let content = this.motion.getTitle();
-        let amendments = ``;
         if (this.motion.amendments.length) {
             title = this.translate.instant(
                 `Warning: Amendments exist for this motion. Are you sure you want to delete this motion regardless?`
@@ -227,14 +226,12 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
                 this.translate.instant(`Motion: `) +
                 this.motion.getTitle() +
                 this.translate.instant(
-                    `. Deleting this motion will likely impact it's amendments negatively and they could become unusable.`) +
-                    `<br>` +
-                this.translate.instant(                    
-                     ` List of amendments: `)
-                +
-                `<br>`
-                +
-            this.motion.amendments.map(amendment => amendment.number).join(', ')
+                    `. Deleting this motion will likely impact it's amendments negatively and they could become unusable.`
+                ) +
+                `<br>` +
+                this.translate.instant(` List of amendments: `) +
+                `<br>` +
+                this.motion.amendments.map(amendment => amendment.number).join(`, `);
         }
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.motion);
