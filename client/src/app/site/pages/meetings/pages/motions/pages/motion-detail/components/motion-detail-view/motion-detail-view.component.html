@@ -32,7 +32,9 @@
                     class="motion-detail-nav-button"
                 >
                     <os-icon-container icon="chevron_left">
-                        {{ previousMotion ? previousMotion.number : '' }}
+                        <span class="chevron_number">
+                            {{ previousMotion ? previousMotion.number : '' }}
+                        </span>
                     </os-icon-container>
                 </button>
                 <button
@@ -42,7 +44,9 @@
                     class="motion-detail-nav-button"
                 >
                     <os-icon-container icon="chevron_right" [swap]="true">
-                        {{ nextMotion ? nextMotion.number : '' }}
+                        <span class="chevron_number">
+                            {{ nextMotion ? nextMotion.number : '' }}
+                        </span>
                     </os-icon-container>
                 </button>
             </div>

@@ -164,6 +164,8 @@ span {
         white-space: nowrap !important;
         text-overflow: ellipsis;
         overflow: hidden;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
 
         @supports (-webkit-line-clamp: 3) {
             white-space: initial !important;
@@ -172,4 +174,19 @@ span {
             -webkit-box-orient: vertical;
         }
     }
+    
+    @media (max-width: 460px) {
+        .motion-detail-nav-button {
+            min-width: 2px;
+            max-width: 4px;
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+        }
+
+        .chevron_number {
+            visibility: hidden;
+            max-width: 0px !important
+        }
+    }
+
 }
