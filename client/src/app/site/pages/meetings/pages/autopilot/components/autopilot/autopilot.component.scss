@@ -13,8 +13,14 @@
         flex-grow: 1;
     }
     .col-right {
-        padding-left: 20px;
         width: 40%;
+        @media (max-width: 1840px) {
+                padding-left: 20px;
+        }
+        @media (min-width: 1841px) {
+                padding-left: 0px;
+            
+        }
     }
     @media screen and (min-width: 1320px) {
         .col-wrapper {
