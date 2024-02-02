@@ -91,7 +91,11 @@ export interface SettingsGroup {
     }[];
 }
 
-export const SKIPPED_SETTINGS = [ `Workflow of new motions`, `Workflow of new amendments`, `Workflow of new statute amendments` ];
+export const SKIPPED_SETTINGS = [
+    `Workflow of new motions`,
+    `Workflow of new amendments`,
+    `Workflow of new statute amendments`
+];
 
 function fillInSettingsDefaults(settingsGroups: SettingsGroup[]): SettingsGroup[] {
     settingsGroups.forEach(group =>
