@@ -10,6 +10,7 @@ import { SpeakerUserSelectDialogModule } from '../speaker-user-select-dialog.mod
 
 interface SpeakerUserSelectResult {
     meeting_user_id: Id;
+    structure_level_id?: Id;
 }
 
 @Injectable({

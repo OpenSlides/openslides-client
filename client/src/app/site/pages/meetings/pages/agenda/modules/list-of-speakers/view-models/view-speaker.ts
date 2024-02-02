@@ -50,7 +50,10 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
     }
 
     public get isWaiting(): boolean {
-        return this.state === SpeakerState.WAITING;
+        return (
+            this.state === SpeakerState.WAITING ||
+            (this.state === SpeakerState.INTERPOSED_QUESTION && !this.speaker.begin_time)
+        );
     }
 
     public get name(): string {

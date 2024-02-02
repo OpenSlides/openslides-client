@@ -52,10 +52,11 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
         return this.repo.delete(id);
     }
 
-    public setMeetingUser(speaker: ViewSpeaker, meeting_user_id: Id): Promise<void> {
+    public setMeetingUser(speaker: ViewSpeaker, meeting_user_id: Id, structure_level_id?: Id): Promise<void> {
         return this.repo.update(
             {
-                meeting_user_id
+                meeting_user_id,
+                structure_level_id
             },
             speaker
         );
