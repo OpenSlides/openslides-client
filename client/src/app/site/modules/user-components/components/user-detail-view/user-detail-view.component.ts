@@ -325,7 +325,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         return (control: AbstractControl): ValidationErrors | null => {
             const value = control.value;
 
-            if (!value || control.pristine) {
+            if (!value || (this.user?.id && control.pristine)) {
                 return null;
             }
 
@@ -347,9 +347,11 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
                     this.personalInfoForm.get(key).markAsTouched();
                 }
             });
-            for (const key of Object.keys(newData)) {
-                if (this.personalInfoForm.get(key).pristine) {
-                    delete newData[key];
+            if (this.user.id) {
+                for (const key of Object.keys(newData)) {
+                    if (this.personalInfoForm.get(key).pristine) {
+                        delete newData[key];
+                    }
                 }
             }
             if (this.user.saml_id && newData[`default_password`]) {
