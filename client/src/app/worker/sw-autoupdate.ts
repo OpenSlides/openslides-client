@@ -8,6 +8,7 @@ import {
     AutoupdateOpenStreamParams,
     AutoupdateSetEndpointParams
 } from './autoupdate/interfaces-autoupdate';
+import { WorkerHttpAuth } from './http/auth';
 
 const autoupdatePool = new AutoupdateStreamPool({
     url: `/system/autoupdate`,
@@ -182,7 +183,7 @@ export function autoupdateMessageHandler(ctx: any, e: any): void {
             cleanupStream(params);
             break;
         case `auth-change`:
-            autoupdatePool.updateAuthentication();
+            WorkerHttpAuth.update();
             break;
         case `set-endpoint`:
             autoupdatePool.setEndpoint(params);

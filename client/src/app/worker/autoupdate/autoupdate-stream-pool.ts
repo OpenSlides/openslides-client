@@ -1,4 +1,4 @@
-import { environment } from 'src/environments/environment';
+import { Id } from 'src/app/domain/definitions/key-types';
 
 import { ModelRequest } from '../../domain/interfaces/model-request';
 import {
@@ -7,6 +7,7 @@ import {
     isCommunicationError,
     isCommunicationErrorWrapper
 } from '../../gateways/http-stream/stream-utils';
+import { WorkerHttpAuth } from '../http/auth';
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 import {
@@ -25,13 +26,11 @@ export class AutoupdateStreamPool {
     private streams: AutoupdateStream[] = [];
     private subscriptions: Map<number, AutoupdateSubscription> = new Map<number, AutoupdateSubscription>();
     private messagePorts: Set<MessagePort> = new Set<MessagePort>();
-    private authToken: string = undefined;
-    private currentUserId: number = undefined;
+    private get authToken(): Promise<string> {
+        return WorkerHttpAuth.currentToken();
+    }
 
     private _waitEndpointHealthyPromise: Promise<void> | null = null;
-    private _authTokenRefreshTimeout: any | null = null;
-    private _updateAuthPromise: Promise<boolean> | undefined;
-    private _waitingForUpdateAuthPromise = false;
     private _disableCompression = false;
 
     public get activeStreams(): AutoupdateStream[] {
@@ -39,7 +38,7 @@ export class AutoupdateStreamPool {
     }
 
     constructor(private endpoint: AutoupdateSetEndpointParams) {
-        this.updateAuthentication();
+        WorkerHttpAuth.subscribe(`autoupdate-pool`, (token, uid?) => this.onAuthUpdate(token, uid));
     }
 
     /**
@@ -48,7 +47,10 @@ export class AutoupdateStreamPool {
      * @param subscriptions
      * @param queryParams
      */
-    public openNewStream(subscriptions: AutoupdateSubscription[], queryParams: string): AutoupdateStream {
+    public async openNewStream(
+        subscriptions: AutoupdateSubscription[],
+        queryParams: string
+    ): Promise<AutoupdateStream> {
         for (const subscription of subscriptions) {
             this.subscriptions[subscription.id] = subscription;
         }
@@ -58,7 +60,7 @@ export class AutoupdateStreamPool {
             params.delete(`compress`);
         }
 
-        const stream = new AutoupdateStream(subscriptions, params, this.endpoint, this.authToken);
+        const stream = new AutoupdateStream(subscriptions, params, this.endpoint, await this.authToken);
         this.streams.push(stream);
         this.connectStream(stream);
 
@@ -179,46 +181,6 @@ export class AutoupdateStreamPool {
         return null;
     }
 
-    /**
-     * Updates the auth token
-     */
-    public async updateAuthentication(): Promise<boolean> {
-        const currentPromise = this._updateAuthPromise;
-
-        if (this._waitingForUpdateAuthPromise) {
-            return await this._updateAuthPromise;
-        }
-
-        this._updateAuthPromise = new Promise(async resolve => {
-            if (currentPromise) {
-                this._waitingForUpdateAuthPromise = true;
-                await currentPromise;
-                this._waitingForUpdateAuthPromise = false;
-            }
-
-            try {
-                clearTimeout(this._authTokenRefreshTimeout);
-                const res = await fetch(`/${environment.authUrlPrefix}/who-am-i/`, {
-                    method: `POST`,
-                    headers: {
-                        'ngsw-bypass': true
-                    } as any
-                });
-                const json = await res.json();
-                if (json?.success) {
-                    this.setAuthToken(res.headers.get(`authentication`) || null);
-                } else if (!res.ok && json?.message === `Not signed in`) {
-                    this.setAuthToken(null);
-                    resolve(false);
-                    return;
-                }
-                resolve(true);
-            } catch (e) {}
-        });
-
-        return await this._updateAuthPromise;
-    }
-
     public async disableCompression(): Promise<void> {
         this._disableCompression = true;
         for (const stream of this.streams) {
@@ -228,30 +190,15 @@ export class AutoupdateStreamPool {
         this.reconnectAll(false);
     }
 
-    private setAuthToken(token: string | null): void {
-        const lastUserId = this.currentUserId;
-        this.authToken = token;
-
+    private onAuthUpdate(token: string, userId?: Id) {
         for (const stream of this.streams) {
-            stream.setAuthToken(this.authToken);
+            console.log(token);
+            stream.setAuthToken(token);
         }
 
-        if (this.authToken) {
-            const payload = atob(this.authToken.split(`.`)[1]);
-            const token = JSON.parse(payload);
-            const issuedAt = new Date().getTime(); // in ms
-            const expiresAt = token.exp; // in sec
-            this.currentUserId = token.userId;
-            this._authTokenRefreshTimeout = setTimeout(() => {
-                this.updateAuthentication();
-            }, expiresAt * 1000 - issuedAt - 100); // 100ms before token is invalid
-        } else {
-            this.currentUserId = null;
-        }
-
-        if (lastUserId !== undefined && this.currentUserId !== lastUserId) {
+        if (userId) {
             this.sendToAll(`new-user`, {
-                id: this.currentUserId
+                id: userId
             } as AutoupdateNewUserContent);
 
             for (const stream of this.streams) {
@@ -262,8 +209,8 @@ export class AutoupdateStreamPool {
     }
 
     private async connectStream(stream: AutoupdateStream, force?: boolean): Promise<void> {
-        if (this._updateAuthPromise) {
-            await this._updateAuthPromise;
+        if (WorkerHttpAuth.updating()) {
+            await WorkerHttpAuth.updating();
         }
 
         const { stopReason, error } = await stream.start(force);
@@ -364,12 +311,12 @@ export class AutoupdateStreamPool {
 
         if (stream.failedConnects <= POOL_CONFIG.RETRY_AMOUNT && error?.type !== ErrorType.CLIENT) {
             if (error?.error.content?.type === `auth`) {
-                await this.updateAuthentication();
+                await WorkerHttpAuth.update();
             }
 
             await this.connectStream(stream);
         } else if (stream.failedConnects <= POOL_CONFIG.RETRY_AMOUNT && error?.error.content?.type === `auth`) {
-            if (await this.updateAuthentication()) {
+            if (await WorkerHttpAuth.update()) {
                 await this.connectStream(stream);
             } else {
                 for (const subscription of stream.subscriptions) {

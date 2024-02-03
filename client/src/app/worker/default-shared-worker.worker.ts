@@ -1,6 +1,7 @@
 import { SW_BROADCAST_CHANNEL_NAME, WorkerMessage } from './interfaces';
 import { autoupdateMessageHandler } from './sw-autoupdate';
 import { controlGeneralMessageHandler, controlMessageHandler } from './sw-control';
+import { iccMessageHandler } from './sw-icc';
 
 const broadcastChannel = new BroadcastChannel(SW_BROADCAST_CHANNEL_NAME);
 function broadcast(sender: string, action: string, content?: any) {
@@ -14,6 +15,8 @@ function registerMessageListener(ctx: any) {
         const receiver = e.data?.receiver;
         if (receiver === `autoupdate`) {
             autoupdateMessageHandler(ctx, e);
+        } else if (receiver === `icc`) {
+            iccMessageHandler(ctx, e, broadcast);
         } else if (receiver === `control`) {
             controlMessageHandler(ctx, e, broadcast);
         }
