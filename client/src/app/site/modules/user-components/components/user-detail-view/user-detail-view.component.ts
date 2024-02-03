@@ -314,7 +314,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private propagateValues(): void {
         setTimeout(() => {
             // setTimeout prevents 'ExpressionChangedAfterItHasBeenChecked'-error
-            this.changeEvent.emit(this.getChangedValues(this.personalInfoForm.value));
+            const changes = this.getChangedValues(this.personalInfoForm.value);
+            this.changeEvent.emit(changes);
             this.validEvent.emit(this.personalInfoForm.valid && (this.isNewUser || this._hasChanges));
             this.errorEvent.emit(this.personalInfoForm.errors);
         });
@@ -324,7 +325,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         return (control: AbstractControl): ValidationErrors | null => {
             const value = control.value;
 
-            if (!value) {
+            if (!value || control.pristine) {
                 return null;
             }
 
@@ -346,6 +347,11 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
                     this.personalInfoForm.get(key).markAsTouched();
                 }
             });
+            for (const key of Object.keys(newData)) {
+                if (this.personalInfoForm.get(key).pristine) {
+                    delete newData[key];
+                }
+            }
             if (this.user.saml_id && newData[`default_password`]) {
                 delete newData[`default_password`];
             }
