@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -74,7 +75,8 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
         private userSortService: ParticipantListSortService,
         private modelRequestService: ModelRequestService,
         private activeMeeting: ActiveMeetingService,
-        formBuilder: UntypedFormBuilder
+        formBuilder: UntypedFormBuilder,
+        private snackBar: MatSnackBar
     ) {
         super();
 
@@ -152,6 +154,13 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
     public async createNewSelectedUser(name: string): Promise<void> {
         const newUserObj = await this.userRepo.createFromString(name);
         this.emitSelectedUser({ userId: newUserObj.id, user: newUserObj });
+        const user = await firstValueFrom(
+            this.userRepo.getViewModelObservable(newUserObj.id).pipe(filter(user => !!user))
+        );
+        this.snackBar.open(
+            `A user with the username '${user.username}' and the surname '${user.last_name}' was created.`,
+            `Ok`
+        );
     }
 
     private emitSelectedUser(data: UserSelectionData): void {
