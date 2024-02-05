@@ -315,7 +315,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         newUser.username = ``;
         const newUserPayload: any = {
             ...newUser,
-            is_active: true,
+            is_active: false,
             group_ids: [this.activeMeeting?.default_group_id]
         };
         const identifiable = (await this.create(newUserPayload))[0];
