@@ -70,6 +70,7 @@
                         {{ state.name }}
                         <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                     </button>
+                    <mat-divider *ngIf="perms.isAllowed('change_metadata', motion)"></mat-divider>
                     <button *ngIf="perms.isAllowed('change_metadata', motion)" mat-menu-item (click)="resetState()">
                         <mat-icon>replay</mat-icon>
                         {{ 'Reset state' | translate }}
