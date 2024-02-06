@@ -88,7 +88,10 @@ export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfi
                                 idField: `content_object_id`,
                                 fieldset: [],
                                 follow: [
-                                    { idField: `agenda_item_id`, fieldset: [`moderator_notes`, `content_object_id`] }
+                                    {
+                                        idField: `agenda_item_id`,
+                                        fieldset: [`item_number`, `moderator_notes`, `content_object_id`]
+                                    }
                                 ]
                             }
                         ]
