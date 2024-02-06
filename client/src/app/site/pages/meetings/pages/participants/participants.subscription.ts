@@ -88,7 +88,8 @@ export const getParticipantMinimalSubscriptionConfig: SubscriptionConfigGenerato
                         idField: `user_id`,
                         fieldset: `participantListMinimal`,
                         additionalFields: [`is_present_in_meeting_ids`]
-                    }
+                    },
+                    { idField: `structure_level_ids`, fieldset: [`name`] }
                 ]
             }
         ]
