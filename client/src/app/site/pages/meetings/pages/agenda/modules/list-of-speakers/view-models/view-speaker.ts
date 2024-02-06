@@ -93,7 +93,10 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
     }
 
     public get topic(): string {
-        return this.list_of_speakers?.content_object ? this.list_of_speakers.content_object.getTitle() : ``;
+        const number = this.list_of_speakers?.content_object?.agenda_item?.item_number;
+        const title = this.list_of_speakers?.content_object?.getTitle();
+
+        return number ? `${number} - ${title}` : title || ``;
     }
 
     public get structureLevelName(): string {
