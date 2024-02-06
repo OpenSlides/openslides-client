@@ -131,13 +131,13 @@
     }
 }
 
-.mat-dialog-title {
+.mat-mdc-dialog-title {
     line-height: inherit;
     font-size: inherit;
     font-weight: inherit;
 }
 
-.mat-dialog-content {
+.mat-mdc-dialog-content {
     max-height: calc(75vh - 193px);
 }
 
@@ -152,7 +152,7 @@
 }
 
 @media (max-width: 959.99px) {
-    .mat-dialog-content {
+    .mat-mdc-dialog-content {
         max-height: calc(75vh - 120px);
     }
 }

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
