@@ -170,7 +170,7 @@ export const getSpeakersListSubscriptionConfig: SubscriptionConfigGenerator = (i
                                 follow: [
                                     {
                                         idField: `agenda_item_id`,
-                                        fieldset: [`item_number`]
+                                        fieldset: [`item_number`, `content_object_id`]
                                     }
                                 ]
                             }
