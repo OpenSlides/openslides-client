@@ -1,0 +1,3 @@
+[submodule "openslides-meta"]
+	path = client/src/meta
+	url = https://github.com/OpenSlides/openslides-meta.git
