@@ -15,12 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone main repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: OpenSlides/OpenSlides
           path: "."
           ref: main
-          submodules: true
+          submodules: "recursive"
       - name: Checkout latest commits
         run: git submodule foreach 'git checkout main && git pull origin main'
       - name: Delete the client folder
@@ -63,7 +63,7 @@ jobs:
   build-and-test-dev-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: create docker dev image
         run: make build-dev
