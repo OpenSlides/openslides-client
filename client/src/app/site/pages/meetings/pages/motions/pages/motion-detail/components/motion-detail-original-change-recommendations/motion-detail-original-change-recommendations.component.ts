@@ -193,7 +193,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         const from = <HTMLElement>(
             this.element.querySelector(`.os-line-number.line-number-` + reco.getLineFrom().toString(10))
         );
-        return from.offsetTop.toString() + `px`;
+        return !!from ? from.offsetTop.toString() + `px`: `0px`;
     }
 
     /**
