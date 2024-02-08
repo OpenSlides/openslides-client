@@ -22,7 +22,9 @@ jobs:
           ref: main
           submodules: "recursive"
       - name: Checkout latest commits
-        run: git submodule foreach 'git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" && ((git fetch origin ${{ github.event.pull_request.base.ref }} && git checkout ${{ github.event.pull_request.base.ref }}) || (git checkout main && git pull origin main)) && git submodule update --init'
+        env:
+          BRANCH: ${{ github.event.pull_request.head.repo.owner.login == 'OpenSlides' && github.event.pull_request.head.ref || github.event.pull_request.base.ref }}
+        run: git submodule foreach 'git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" && ((git fetch origin ${{ env.BRANCH }} && git checkout ${{ env.BRANCH }}) || (git checkout main && git pull origin main)) && git submodule update --init'
       - name: Delete the client folder
         run: rm -r openslides-client
       - name: Clone openslides-client
