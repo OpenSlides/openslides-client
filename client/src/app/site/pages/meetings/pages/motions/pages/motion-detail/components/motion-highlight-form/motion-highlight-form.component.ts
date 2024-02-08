@@ -268,6 +268,13 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
                 this.setChangeRecoMode(this.determineCrMode(recoMode as ChangeRecoMode));
             }
         }
+        if (
+            this.isRecoMode(ChangeRecoMode.Original) &&
+            current?.isParagraphBasedAmendment() &&
+            this.hasChangeRecommendations
+        ) {
+            this.setChangeRecoMode(this.determineCrMode(ChangeRecoMode.Diff));
+        }
     }
 
     /**
