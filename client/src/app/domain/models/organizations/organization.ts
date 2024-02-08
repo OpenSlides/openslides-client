@@ -64,6 +64,7 @@ export class Organization extends BaseModel<Organization> {
         `privacy_policy`,
         `login_text`,
         `reset_password_verbose_errors`,
+        `genders`,
         `enable_electronic_voting`,
         `enable_chat`,
         `limit_of_meetings`,
@@ -88,8 +89,7 @@ export class Organization extends BaseModel<Organization> {
         `users_email_replyto`,
         `users_email_subject`,
         `users_email_body`,
-        `url`,
-        `genders`
+        `url`
     ];
 }
 
