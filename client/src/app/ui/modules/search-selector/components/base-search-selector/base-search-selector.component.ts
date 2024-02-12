@@ -225,7 +225,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     protected noneItem: Selectable = {
         getListTitle: () => this.noneTitle,
         getTitle: () => this.noneTitle,
-        id: 0
+        id: null
     };
 
     protected readonly filteredItemsSubject = new BehaviorSubject<Selectable[]>([]);
