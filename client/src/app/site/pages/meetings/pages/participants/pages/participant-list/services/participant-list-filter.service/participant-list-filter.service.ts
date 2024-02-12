@@ -107,7 +107,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                     { condition: GENDER_FITLERABLE[1], label: this.translate.instant(GENDERS[1]) },
                     { condition: GENDER_FITLERABLE[2], label: this.translate.instant(GENDERS[2]) },
                     { condition: GENDER_FITLERABLE[3], label: this.translate.instant(GENDERS[3]) },
-                    { condition: null, label: this.translate.instant(`unknown`) }
+                    { condition: null, label: this.translate.instant(`not specified`) }
                 ]
             },
             {
