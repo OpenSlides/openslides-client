@@ -1,5 +1,8 @@
-h4 {
-    margin-bottom: -4px;
+.search-users {
+    display: grid;
+    .mat-mdc-form-field {
+        width: 100%;
+    }
 }
 
 .small-button {
@@ -10,6 +13,17 @@ h4 {
 
     mat-icon {
         font-size: 100%;
+    }
+}
+
+.single-line {
+    display: grid;
+    grid-template-columns: auto min-content;
+    grid-column-gap: 0.5em;
+    margin-right: 0.5em;
+
+    span {
+        margin: auto 0;
     }
 }
 

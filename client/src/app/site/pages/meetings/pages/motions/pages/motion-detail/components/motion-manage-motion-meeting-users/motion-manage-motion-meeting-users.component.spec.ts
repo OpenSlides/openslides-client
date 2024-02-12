@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MotionManageSubmittersComponent } from './motion-manage-submitters.component';
+import { MotionManageMotionMeetingUsersComponent } from './motion-manage-motion-meeting-users.component';
 
 xdescribe(`MotionManageSubmittersComponent`, () => {
-    let component: MotionManageSubmittersComponent;
-    let fixture: ComponentFixture<MotionManageSubmittersComponent>;
+    let component: MotionManageMotionMeetingUsersComponent;
+    let fixture: ComponentFixture<MotionManageMotionMeetingUsersComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [MotionManageSubmittersComponent]
+            declarations: [MotionManageMotionMeetingUsersComponent]
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(MotionManageSubmittersComponent);
+        fixture = TestBed.createComponent(MotionManageMotionMeetingUsersComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

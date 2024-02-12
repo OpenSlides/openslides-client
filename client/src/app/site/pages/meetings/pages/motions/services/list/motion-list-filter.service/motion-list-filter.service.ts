@@ -13,9 +13,11 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
+import { MotionEditorControllerService } from '../../../modules/editors/services';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { TagControllerService } from '../../../modules/tags/services';
 import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
+import { MotionWorkingGroupSpeakerControllerService } from '../../../modules/working-group-speakers/services';
 import { ForwardingStatus, ViewMotion } from '../../../view-models';
 import { MotionsListServiceModule } from '../motions-list-service.module';
 
@@ -101,22 +103,16 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         options: []
     };
 
-    private hasEditorFilterOptions: OsFilter<ViewMotion> = {
-        property: `hasEditor`,
-        label: _(`Editor`),
-        options: [
-            { condition: true, label: _(`Has editor`) },
-            { condition: [false, null], label: _(`Has no editor`) }
-        ]
+    private editorFilterOptions: OsFilter<ViewMotion> = {
+        property: `editor_ids`,
+        label: _(`Editors`),
+        options: []
     };
 
-    private hasWorkingGroupSpeakerFilterOptions: OsFilter<ViewMotion> = {
-        property: `hasWorkingGroupSpeaker`,
-        label: _(`Working group speaker`),
-        options: [
-            { condition: true, label: _(`Has working group speaker`) },
-            { condition: [false, null], label: _(`Has no working group speaker`) }
-        ]
+    private workingGroupSpeakerFilterOptions: OsFilter<ViewMotion> = {
+        property: `working_group_speaker_ids`,
+        label: _(`Working group speakers`),
+        options: []
     };
 
     private hasSpeakerOptions: OsFilter<ViewMotion> = {
@@ -193,6 +189,8 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
     private commentRepo = inject(MotionCommentSectionControllerService);
     private tagRepo = inject(TagControllerService);
     private workflowRepo = inject(MotionWorkflowControllerService);
+    private editorRepo = inject(MotionEditorControllerService);
+    private workingGroupSpeakerRepo = inject(MotionWorkingGroupSpeakerControllerService);
     protected translate = inject(TranslateService);
     private operator = inject(OperatorService);
     private meetingSettingsService = inject(MeetingSettingsService);
@@ -224,6 +222,18 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
             repo: this.tagRepo,
             filter: this.tagFilterOptions,
             noneOptionLabel: _(`No tags`)
+        });
+
+        this.updateFilterForRepo({
+            repo: this.editorRepo,
+            filter: this.editorFilterOptions,
+            noneOptionLabel: _(`No editors`)
+        });
+
+        this.updateFilterForRepo({
+            repo: this.workingGroupSpeakerRepo,
+            filter: this.workingGroupSpeakerFilterOptions,
+            noneOptionLabel: _(`No working group speakers`)
         });
 
         this.subscribeWorkflows();
@@ -299,8 +309,8 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         }
 
         if (this.operator.hasPerms(Permission.motionCanManage)) {
-            filterDefinitions.push(this.hasEditorFilterOptions);
-            filterDefinitions.push(this.hasWorkingGroupSpeakerFilterOptions);
+            filterDefinitions.push(this.editorFilterOptions);
+            filterDefinitions.push(this.workingGroupSpeakerFilterOptions);
         }
 
         return filterDefinitions;

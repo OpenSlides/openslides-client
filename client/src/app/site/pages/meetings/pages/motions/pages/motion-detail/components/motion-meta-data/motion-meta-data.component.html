@@ -1,6 +1,13 @@
 <!-- Submitters -->
 <div *ngIf="motion?.submitters">
-    <div><os-motion-manage-submitters [motion]="motion"></os-motion-manage-submitters></div>
+    <div class="remove-top-margin">
+        <os-motion-manage-motion-meeting-users
+            [motion]="motion"
+            [repo]="motionSubmitterRepo"
+            field="submitters"
+            title="{{ 'Submitters' | translate }}"
+        ></os-motion-manage-motion-meeting-users>
+    </div>
 </div>
 
 <!-- do Support -->
@@ -42,21 +49,21 @@
 </div>
 
 <div *osMeetingSetting="'motions_enable_editor'; and: perms.isAllowed('manage')">
-    <os-motion-manage-single-participant-field
+    <os-motion-manage-motion-meeting-users
         [motion]="motion"
-        field="editor"
-        title="{{ 'Editor' | translate }}"
-        placeholder="{{ 'Select or search new editor ...' | translate }}"
-    ></os-motion-manage-single-participant-field>
+        [repo]="motionEditorRepo"
+        field="editors"
+        title="{{ 'Editors' | translate }}"
+    ></os-motion-manage-motion-meeting-users>
 </div>
 
 <div *osMeetingSetting="'motions_enable_working_group_speaker'; and: perms.isAllowed('manage')">
-    <os-motion-manage-single-participant-field
+    <os-motion-manage-motion-meeting-users
         [motion]="motion"
-        field="working_group_speaker"
-        title="{{ 'Working group speaker' | translate }}"
-        placeholder="{{ 'Select or search new speaker ...' | translate }}"
-    ></os-motion-manage-single-participant-field>
+        [repo]="motionWorkingGroupSpeakerRepo"
+        field="working_group_speakers"
+        title="{{ 'Working group speakers' | translate }}"
+    ></os-motion-manage-motion-meeting-users>
 </div>
 
 <!-- Set State -->

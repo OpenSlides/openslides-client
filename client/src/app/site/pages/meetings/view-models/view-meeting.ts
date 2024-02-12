@@ -33,6 +33,8 @@ import {
     ViewPersonalNote,
     ViewTag
 } from '../pages/motions';
+import { ViewMotionEditor } from '../pages/motions/modules/editors';
+import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
 import { ViewGroup } from '../pages/participants';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
@@ -158,6 +160,8 @@ interface IMeetingRelations {
     motion_categories: ViewMotionCategory[];
     motion_blocks: ViewMotionBlock[];
     motion_submitters: ViewMotionSubmitter[];
+    motion_editors: ViewMotionEditor[];
+    motion_working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     motion_change_recommendations: ViewMotionChangeRecommendation[];
     motion_workflows: ViewMotionWorkflow[];
     motion_states: ViewMotionState[];

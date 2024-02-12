@@ -11,6 +11,8 @@ import {
 import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
 import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/projector.constants';
 import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
+import { ViewMotionEditor } from 'src/app/site/pages/meetings/pages/motions/modules/editors';
+import { ViewMotionWorkingGroupSpeaker } from 'src/app/site/pages/meetings/pages/motions/modules/working-group-speakers';
 import { ViewPollCandidate } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
@@ -84,7 +86,6 @@ const PROJECTABLE_VIEW_MODELS: ViewModelConstructor<BaseViewModel & Projectable>
 ];
 
 // Where to place relations (in this order):
-// 1) For structured relations, the relation is defined on the structured side
 // 2) For generic relations, the relation is defined on the generic side
 // 3) Relations should assigned to the "higher" part of the relation. E.g.:
 //     - The meeting<->committee relation is in the committee block.
@@ -249,6 +250,18 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewMeetingUser,
         MField: `meeting_user`,
         OField: `submitted_motions`
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotionEditor,
+        OViewModel: ViewMeetingUser,
+        MField: `meeting_user`,
+        OField: `motion_editors`
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotionWorkingGroupSpeaker,
+        OViewModel: ViewMeetingUser,
+        MField: `meeting_user`,
+        OField: `motion_working_group_speakers`
     }),
     // Vote delegations
     // vote_delegated_to_id -> vote_delegations_from_ids
@@ -476,6 +489,20 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionSubmitter,
         OField: `motion_submitters`,
+        MField: `meeting`,
+        isFullList: true
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotionEditor,
+        OField: `motion_editors`,
+        MField: `meeting`,
+        isFullList: true
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotionWorkingGroupSpeaker,
+        OField: `motion_working_group_speakers`,
         MField: `meeting`,
         isFullList: true
     }),
@@ -789,16 +816,16 @@ export const RELATIONS: Relation[] = [
         OField: `comments`
     }),
     ...makeM2O({
-        MViewModel: ViewMotion,
-        OViewModel: ViewMeetingUser,
-        MField: `editor`,
-        OField: `editor_for_motions`
+        MViewModel: ViewMotionEditor,
+        OViewModel: ViewMotion,
+        MField: `motion`,
+        OField: `editors`
     }),
     ...makeM2O({
-        MViewModel: ViewMotion,
-        OViewModel: ViewMeetingUser,
-        MField: `working_group_speaker`,
-        OField: `working_group_speaker_for_motions`
+        MViewModel: ViewMotionWorkingGroupSpeaker,
+        OViewModel: ViewMotion,
+        MField: `motion`,
+        OField: `working_group_speakers`
     }),
     // ########## Motion comment sections
     ...makeM2O({
