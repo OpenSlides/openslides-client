@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
@@ -76,7 +77,8 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
         private modelRequestService: ModelRequestService,
         private activeMeeting: ActiveMeetingService,
         formBuilder: UntypedFormBuilder,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private translate: TranslateService
     ) {
         super();
 
@@ -158,8 +160,11 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
             this.userRepo.getViewModelObservable(newUserObj.id).pipe(filter(user => !!user))
         );
         this.snackBar.open(
-            `A user with the username '${user.username}' and the surname '${user.last_name}' was created.`,
-            `Ok`
+            this.translate
+                .instant(`A user with the username 'USERNAME' and the surname 'LAST_NAME' was created.`)
+                .replace(`USERNAME`, user.username)
+                .replace(`LAST_NAME`, user.last_name),
+            this.translate.instant(`Ok`)
         );
     }
 
