@@ -192,7 +192,7 @@
     <ng-container
         *ngIf="!getHeader(def).is_object"
         [ngTemplateOutlet]="nonObjectEntryTemplate"
-        [ngTemplateOutletContext]="{ entry, type: getHeader(def).type}"
+        [ngTemplateOutletContext]="{ entry: entry, type: getHeader(def).type }"
     ></ng-container>
 </ng-template>
 
