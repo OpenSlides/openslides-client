@@ -161,9 +161,9 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
         );
         this.snackBar.open(
             this.translate
-                .instant(`A user with the username 'USERNAME' and the first name 'FIRST_NAME' was created.`)
-                .replace(`USERNAME`, user.username)
-                .replace(`FIRST_NAME`, user.first_name),
+                .instant(`A user with the username '%username%' and the first name '%first_name%' was created.`)
+                .replace(`%username%`, user.username)
+                .replace(`%first_name%`, user.first_name),
             this.translate.instant(`Ok`)
         );
     }
