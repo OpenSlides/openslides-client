@@ -43,9 +43,9 @@ export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
 
     private getDefaultValues(): any {
         const payload: any = {};
-        for (const setting of this.meetingSettingsDefinitionProvider.getSettingsKeys()) {
-            if (!SKIPPED_SETTINGS.includes(payload[setting].setting.label)) {
-                payload[setting] = this.meetingSettingsDefinitionProvider.getDefaultValue(setting);
+        for (const settingGroup of this.meetingSettingsDefinitionProvider.getSettingsKeys()) {
+            if (!SKIPPED_SETTINGS.includes(settingGroup)) {
+                payload[settingGroup] = this.meetingSettingsDefinitionProvider.getDefaultValue(settingGroup);
             }
         }
         return payload;

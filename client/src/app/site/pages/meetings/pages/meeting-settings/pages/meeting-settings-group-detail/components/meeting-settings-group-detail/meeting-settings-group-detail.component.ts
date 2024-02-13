@@ -167,7 +167,7 @@ export class MeetingSettingsGroupDetailComponent
         );
         if (await this.promptDialog.open(title)) {
             for (const settingsField of this.settingsFields) {
-                if (!SKIPPED_SETTINGS.includes(settingsField.setting.label)) {
+                if (!SKIPPED_SETTINGS.includes(settingsField.setting.key.toString())) {
                     settingsField.onResetButton();
                 }
             }
