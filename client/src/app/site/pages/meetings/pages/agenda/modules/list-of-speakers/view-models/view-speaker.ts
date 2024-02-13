@@ -92,6 +92,10 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return this.user ? this.user.gender : ``;
     }
 
+    public get contentType(): string {
+        return this.list_of_speakers?.content_object_id?.split(`/`)[0];
+    }
+
     public get topic(): string {
         const number = this.list_of_speakers?.content_object?.agenda_item?.item_number;
         const title = this.list_of_speakers?.content_object?.getTitle();
