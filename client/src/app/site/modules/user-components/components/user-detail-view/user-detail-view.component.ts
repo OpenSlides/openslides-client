@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -146,7 +147,11 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private selfUpdateEnabled = false;
 
-    public constructor(private fb: UntypedFormBuilder, private operator: OperatorService) {
+    public constructor(
+        private fb: UntypedFormBuilder,
+        private operator: OperatorService,
+        private cd: ChangeDetectorRef
+    ) {
         super();
     }
 
@@ -160,6 +165,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     public ngAfterViewInit(): void {
         this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
+        this.cd.detectChanges();
     }
 
     public isAllowed(permission: string): boolean {
@@ -314,7 +320,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private propagateValues(): void {
         setTimeout(() => {
             // setTimeout prevents 'ExpressionChangedAfterItHasBeenChecked'-error
-            this.changeEvent.emit(this.getChangedValues(this.personalInfoForm.value));
+            const changes = this.getChangedValues(this.personalInfoForm.value);
+            this.changeEvent.emit(changes);
             this.validEvent.emit(this.personalInfoForm.valid && (this.isNewUser || this._hasChanges));
             this.errorEvent.emit(this.personalInfoForm.errors);
         });
@@ -324,7 +331,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         return (control: AbstractControl): ValidationErrors | null => {
             const value = control.value;
 
-            if (!value) {
+            if (!value || (this.user?.id && control.pristine)) {
                 return null;
             }
 
@@ -346,6 +353,13 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
                     this.personalInfoForm.get(key).markAsTouched();
                 }
             });
+            if (this.user.id) {
+                for (const key of Object.keys(newData)) {
+                    if (this.personalInfoForm.get(key).pristine) {
+                        delete newData[key];
+                    }
+                }
+            }
             if (this.user.saml_id && newData[`default_password`]) {
                 delete newData[`default_password`];
             }

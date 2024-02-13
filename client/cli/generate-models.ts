@@ -1,11 +1,9 @@
-import axios from 'axios';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import * as path from 'path';
 import { Project, Scope } from 'ts-morph';
 
-const SOURCE = `https://github.com/OpenSlides/openslides-backend/raw/feature/remove-template-fields/global/meta/models.yml`;
-
+const SOURCE = path.resolve(path.join(__dirname, '../src/meta/models.yml'));
 const DESTINATION = path.resolve(path.join(__dirname, `../src/app/domain/models`));
 
 function findModelFile(startPath: string, name: string): string | null {
@@ -39,8 +37,8 @@ function snakeToPascal(input: string) {
 }
 
 (async () => {
-    const result = await axios.get(SOURCE);
-    const models: any = yaml.load(result.data);
+    const buffer = fs.readFileSync(SOURCE);
+    const models: any = yaml.load(buffer.toString());
     const project = new Project({});
     project.addSourceFilesAtPaths(`${DESTINATION}/**/*.ts`);
     for (const modelName of Object.keys(models)) {

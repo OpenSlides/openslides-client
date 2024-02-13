@@ -102,7 +102,6 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `pronoun`,
             `username` /* Required! To getShortName */,
             `gender`,
-            `default_number`,
             `default_structure_level`,
             `default_vote_weight`,
             `is_physical_person`,
@@ -257,7 +256,6 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             gender: partialUser.gender,
             email: partialUser.email,
             default_structure_level: partialUser.default_structure_level,
-            default_number: partialUser.default_number,
             default_vote_weight: toDecimal(partialUser.default_vote_weight, false) as any,
             organization_management_level: partialUser.organization_management_level,
             committee_management_ids: partialUser.committee_management_ids
@@ -541,7 +539,6 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `about_me`,
             `number`,
             `structure_level`,
-            `default_number`,
             `default_structure_level`
         ];
         return fields.includes(field);
