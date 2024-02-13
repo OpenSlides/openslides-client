@@ -7,7 +7,7 @@ import {
     CurrentStructureLevelListSlideStructureLevelRepresentation
 } from '../current-structure-level-list-slide-data';
 
-const MAX_COLUMNS = 4;
+const MAX_COLUMNS = 3;
 
 @Component({
     selector: `os-current-structure-level-list-slide`,
@@ -19,7 +19,6 @@ export class CurrentStructureLevelListSlideComponent extends BaseSlideComponent<
     /**
      * For sorting motion blocks by their displayed title
      */
-    private languageCollator: Intl.Collator;
     private maxColumns: number = MAX_COLUMNS;
 
     /**
@@ -67,9 +66,8 @@ export class CurrentStructureLevelListSlideComponent extends BaseSlideComponent<
         return this.makeIndicesArray(this.columns);
     }
 
-    public constructor(translate: TranslateService) {
+    public constructor() {
         super();
-        this.languageCollator = new Intl.Collator(translate.currentLang);
     }
 
     /**
