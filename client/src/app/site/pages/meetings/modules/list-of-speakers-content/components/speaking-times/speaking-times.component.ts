@@ -159,7 +159,6 @@ export class SpeakingTimesComponent implements OnDestroy {
     }
 
     private updateSpeakingTime(speakingTime: ViewStructureLevelListOfSpeakers) {
-        console.log(`updateSpeakingTime`);
         if (speakingTime.isInactive) {
             this.structureLevels.delete(speakingTime.id);
         } else {
