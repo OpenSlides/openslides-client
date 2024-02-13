@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import {
@@ -64,10 +63,6 @@ export class CurrentStructureLevelListSlideComponent extends BaseSlideComponent<
      */
     public get columnsArray(): number[] {
         return this.makeIndicesArray(this.columns);
-    }
-
-    public constructor() {
-        super();
     }
 
     /**
