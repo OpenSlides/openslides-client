@@ -31,7 +31,7 @@ export class MotionState extends BaseModel<MotionState> {
 
     public name!: string;
     public recommendation_label!: string;
-    public is_internal_recommendation!: boolean;
+    public is_internal!: boolean;
     public css_class!: string;
     public restrictions!: Restriction[];
     public allow_support!: boolean;
@@ -63,7 +63,7 @@ export class MotionState extends BaseModel<MotionState> {
         `name`,
         `weight`,
         `recommendation_label`,
-        `is_internal_recommendation`,
+        `is_internal`,
         `css_class`,
         `restrictions`,
         `allow_support`,
