@@ -60,7 +60,7 @@
                     <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                 </button>
                 <div>
-                    <mat-divider *ngIf="motion.state.next_states.length > 0"></mat-divider>
+                    <mat-divider *ngIf="motion.state.previous_states.length > 0"></mat-divider>
                     <button
                         *ngFor="let state of motion.state.previous_states"
                         mat-menu-item
@@ -70,7 +70,8 @@
                         {{ state.name }}
                         <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                     </button>
-                    <button mat-menu-item (click)="resetState()">
+                    <mat-divider *ngIf="perms.isAllowed('change_metadata', motion)"></mat-divider>
+                    <button *ngIf="perms.isAllowed('change_metadata', motion)" mat-menu-item (click)="resetState()">
                         <mat-icon>replay</mat-icon>
                         {{ 'Reset state' | translate }}
                     </button>
@@ -226,16 +227,16 @@
     </os-chip-select>
 </div>
 
-<!-- Created timestamp -->
-<div *ngIf="motion?.created">
-    <h4>{{ 'Creation date' | translate }}</h4>
-    <div>{{ motion.created | localizedDate }}</div>
-</div>
-
 <!-- Workflow timestamp -->
 <div *ngIf="motion?.workflow_timestamp">
     <h4>{{ 'Submission date' | translate }}</h4>
     <div>{{ motion.workflow_timestamp | localizedDate }}</div>
+</div>
+
+<!-- Created timestamp -->
+<div *ngIf="motion?.created && perms.isAllowed('change_metadata', motion)">
+    <h4>{{ 'Creation date' | translate }}</h4>
+    <div>{{ motion.created | localizedDate }}</div>
 </div>
 
 <!-- Origins - display only -->

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import * as path from 'path';
@@ -8,7 +7,7 @@ import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-fu
 
 overloadJsFunctions();
 
-const SOURCE = 'https://raw.githubusercontent.com/OpenSlides/openslides-backend/main/global/meta/permission.yml';
+const SOURCE = path.resolve(path.join(__dirname, '../src/meta/permission.yml'));
 
 const BASE_PATH = path.resolve(path.join(__dirname, `..`));
 const DOMAIN_DEFINITIONS_PATH = `src/app/domain/definitions`;
@@ -146,12 +145,11 @@ function getPermissionRelatives(node: PermissionNode, field: PermissionNodeRelat
     return relatives;
 }
 
-async function loadSource(): Promise<object> {
-    const result = await axios.get(SOURCE);
-    return yaml.load(result.data) as object;
-}
-
-loadSource().then(permissionsYaml => {
+fs.readFile(SOURCE, (err, buffer) => {
+    if (err) {
+        throw err;
+    }
+    const permissionsYaml = yaml.load(buffer.toString()) as object;
     const sortedPermissions = generatePermissionMap(permissionsYaml);
     writePermissions(sortedPermissions);
     writePermissionRelations(sortedPermissions);
