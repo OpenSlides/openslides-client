@@ -8,13 +8,13 @@
 </div>
 
 <div class="structure-level-list">
-    <div class="structure-level" *ngFor="let structure_level of getStructureLevels()">
+    <div class="structure-level" *ngFor="let structure_level of structureLevels | keyvalue">
         <div class="structure-level-content">
-            <hr class="structure-level-color" [ngStyle]="{ 'background-color': structure_level.color }" />
+            <hr class="structure-level-color" [ngStyle]="{ 'background-color': structure_level.value.color }" />
             <span class="structure-level-time">
-                <os-countdown-time [unstyled]="true" [countdown]="structure_level.countdown"></os-countdown-time>
+                <os-countdown-time [unstyled]="true" [countdown]="structure_level.value.countdown"></os-countdown-time>
             </span>
-            <div class="structure-level-name">{{ structure_level.name }}</div>
+            <div class="structure-level-name">{{ structure_level.value.name }}</div>
         </div>
         <ng-container *osPerms="permission.listOfSpeakersCanManage">
             <button
