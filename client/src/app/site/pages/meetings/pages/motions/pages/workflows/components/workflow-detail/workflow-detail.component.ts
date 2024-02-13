@@ -155,9 +155,7 @@ In combination with motion blocks, the recommendation of multiple motions can be
         },
         {
             name: _(`Internal`),
-            help_text: _(
-                `The recommendation of motions in such a state can only be seen by motion managers.`
-            ),
+            help_text: _(`The recommendation of motions in such a state can only be seen by motion managers.`),
             selector: `is_internal`,
             type: `check`
         },
