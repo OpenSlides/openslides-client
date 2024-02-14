@@ -36,6 +36,7 @@ import {
 import { ViewMotionEditor } from '../pages/motions/modules/editors';
 import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
 import { ViewGroup } from '../pages/participants';
+import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from '../pages/polls/view-models/view-poll-candidate-list';
@@ -191,6 +192,7 @@ interface IMeetingRelations {
     list_of_speakers_countdown: ViewProjectorCountdown;
     point_of_order_categories: ViewPointOfOrderCategory[];
     point_of_order_categories_as_observable: Observable<ViewPointOfOrderCategory[]>;
+    structure_levels: ViewStructureLevel[];
 }
 export interface ViewMeeting
     extends Meeting,
