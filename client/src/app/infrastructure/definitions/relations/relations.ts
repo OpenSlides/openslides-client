@@ -852,13 +852,15 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMotionEditor,
         OViewModel: ViewMotion,
         MField: `motion`,
-        OField: `editors`
+        OField: `editors`,
+        order: `weight`
     }),
     ...makeM2O({
         MViewModel: ViewMotionWorkingGroupSpeaker,
         OViewModel: ViewMotion,
         MField: `motion`,
-        OField: `working_group_speakers`
+        OField: `working_group_speakers`,
+        order: `weight`
     }),
     // ########## Motion comment sections
     ...makeM2O({
