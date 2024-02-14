@@ -139,7 +139,7 @@ export class SpeakingTimesComponent implements OnDestroy {
         if (countdownTime < 0) {
             const title = this.translateService.instant(`Distribute overhang time`);
             const content = this.translateService.instant(
-                `Are you sure you want add ${Math.abs(countdownTime)} s onto every structure level?`
+                `Are you sure you want to add ${Math.abs(countdownTime)}s onto every structure level?`
             );
             if (await this.promptService.open(title, content)) {
                 this.speakingTimesRepo.add_time([{ id: speakingTimeId }]);

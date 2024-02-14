@@ -29,7 +29,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
 
     private userStructureLevelFilterOptions: OsFilter<ViewUser> = {
         property: `structure_level_ids`,
-        label: `Structure Level`,
+        label: `Structure level`,
         options: []
     };
 

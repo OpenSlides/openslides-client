@@ -67,11 +67,16 @@
 
 <!-- Template for new structure level dialog -->
 <ng-template #structureLevelDialog>
+    <h1 mat-dialog-title>
+        <span>{{ 'Structure level' | translate }}</span>
+    </h1>
     <div class="os-form-card-mobile" mat-dialog-content>
+
         <form [formGroup]="structureLevelForm" (keydown)="onKeyDown($event)">
+           
             <!-- Name -->
             <mat-form-field class="os-dialog-large">
-                <mat-label>{{ 'Name of the structure level' | translate }}</mat-label>
+                <mat-label>{{ 'Name' | translate }}</mat-label>
                 <input formControlName="name" matInput required />
                 <mat-error>
                     {{ 'A name is required' | translate }}
@@ -84,9 +89,6 @@
             <mat-form-field class="os-dialog-large">
                 <mat-label>{{ 'Color' | translate }}</mat-label>
                 <input formControlName="color" type="color" matInput />
-                <mat-error>
-                    {{ 'A color is required' | translate }}
-                </mat-error>
             </mat-form-field>
         </form>
     </div>

@@ -391,7 +391,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 if (accurateTime > 0) {
                     messages.push(
                         this.translate
-                            .instant(`{{amount}} will be saved with an accurate time`)
+                            .instant(`{{amount}} will be saved`)
                             .replace(`{{amount}}`, accurateTime)
                     );
                 }
@@ -399,14 +399,14 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 if (noUser > 0) {
                     messages.push(
                         this.translate
-                            .instant(`{{amount}} of them will be saved with 'Unknown' as their speaker`)
+                            .instant(`{{amount}} of them will be saved with 'unknown' speaker`)
                             .replace(`{{amount}}`, noUser)
                     );
                 }
                 if (
                     !(await this.promptService.open(
                         this.translate.instant(
-                            `Are you sure you want to end a contribution which still has interposed question(s)?`
+                            `Are you sure you want to end this contribution which still has interposed question(s)?`
                         ),
                         messages.join(`, `)
                     ))

@@ -19,7 +19,7 @@ export class StructureLevelListOfSpeakersRepositoryService extends BaseMeetingRe
         super(repositoryServiceCollector, StructureLevelListOfSpeakers);
     }
 
-    public getVerboseName = (): string => _(`StructureLevelListOfSpeakers`);
+    public getVerboseName = (): string => `StructureLevelListOfSpeakers`;
     public getTitle = (): string => ``;
 
     public async create(payload: any[]): Promise<void | void[]> {
