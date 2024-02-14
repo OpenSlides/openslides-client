@@ -326,9 +326,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * SelectedRows is only filled with data in multiSelect mode
      */
     public async setStructureLevelSelected(): Promise<void> {
-        const content = _(`This will add or remove the following structure level for all selected participants:`);
-        const ADD = _(`add structure level(s)`);
-        const REMOVE = _(`remove structure level(s)`);
+        const content = _(`This will add or remove the following structure levels for all selected participants:`);
+        const ADD = _(`Add`);
+        const REMOVE = _(`Remove`);
         const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(content, this.structureLevelObservable, true, choices);
         if (selectedChoice && selectedChoice.ids.length) {

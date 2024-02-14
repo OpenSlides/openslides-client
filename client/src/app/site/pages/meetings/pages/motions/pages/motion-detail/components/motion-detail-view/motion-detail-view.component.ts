@@ -223,13 +223,17 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
                 `Warning: Amendments exist for this motion. Are you sure you want to delete this motion regardless?`
             );
             content =
-                this.translate.instant(`Motion: `) +
+                `<i>` +
+                this.translate.instant(`Motion`) +
+                ` ` +
                 this.motion.getTitle() +
+                `</i>` +
+                `<br>` +
                 this.translate.instant(
-                    `. Deleting this motion will likely impact it's amendments negatively and they could become unusable.`
+                    `Deleting this motion will likely impact it's amendments negatively and they could become unusable.`
                 ) +
                 `<br>` +
-                this.translate.instant(` List of amendments: `) +
+                this.translate.instant(`List of amendments: `) +
                 `<br>` +
                 this.motion.amendments.map(amendment => amendment.number).join(`, `);
         }

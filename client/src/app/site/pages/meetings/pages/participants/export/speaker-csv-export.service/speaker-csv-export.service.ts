@@ -63,7 +63,7 @@ export class SpeakerCsvExportService {
                     label: this.translate.instant(speakerHeadersAndVerboseNames[key])
                 } as CsvColumnDefinitionProperty<ViewSpeaker>;
             }) as CsvColumnsDefinition<ViewSpeaker>,
-            this.translate.instant(`contributions`) + `.csv`
+            this.translate.instant(`Contributions`) + `.csv`
         );
     }
 }

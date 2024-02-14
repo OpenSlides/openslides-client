@@ -49,7 +49,7 @@
 
 <!-- Template for total times dialog -->
 <ng-template #totalTimeDialog>
-    <h2 mat-dialog-title>{{ 'Change total time of' | translate }} {{ currentEntry.name }}</h2>
+    <h2 mat-dialog-title>{{ currentEntry.name }}</h2>
     <div class="os-form-card-mobile" mat-dialog-content>
         <form [formGroup]="totalTimeForm" (keydown)="onKeyDown($event)">
             <!-- total time -->
@@ -61,7 +61,6 @@
                 </mat-error>
             </mat-form-field>
         </form>
-        <p class="warn">{{ 'This will overwrite the current time.' | translate }}</p>
     </div>
 
     <div mat-dialog-actions>
