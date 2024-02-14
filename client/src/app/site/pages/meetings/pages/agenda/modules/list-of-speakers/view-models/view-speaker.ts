@@ -1,4 +1,7 @@
+import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
+import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 
 import { Id } from '../../../../../../../../domain/definitions/key-types';
 import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';
@@ -24,21 +27,62 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
      *  - finished if there are both begin and end time
      */
     public get state(): SpeakerState {
-        if (!this.speaker.begin_time && !this.speaker.end_time) {
+        if (this.speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !this.speaker.end_time) {
+            return SpeakerState.INTERPOSED_QUESTION;
+        } else if (!this.speaker.begin_time && !this.speaker.end_time) {
             return SpeakerState.WAITING;
-        } else if (this.speaker.begin_time && !this.speaker.end_time) {
+        } else if (this.speaker.begin_time && (this.speaker.pause_time || !this.speaker.end_time)) {
             return SpeakerState.CURRENT;
         } else {
             return SpeakerState.FINISHED;
         }
     }
 
+    public get isSpeaking(): boolean {
+        return this.speaker.begin_time && !this.speaker.end_time && !this.speaker.pause_time;
+    }
+
+    public get isCurrentSpeaker(): boolean {
+        return this.speaker.begin_time && !this.speaker.end_time;
+    }
+
     public get isFinished(): boolean {
         return this.state === SpeakerState.FINISHED;
     }
 
+    public get isWaiting(): boolean {
+        return (
+            this.state === SpeakerState.WAITING ||
+            (this.state === SpeakerState.INTERPOSED_QUESTION && !this.speaker.begin_time)
+        );
+    }
+
     public get name(): string {
-        return this.user ? this.user.full_name : ``;
+        return this.user ? this.user.getFullName(this.structure_level_list_of_speakers?.structure_level) : ``;
+    }
+
+    public getLOSName(listAllStructureLevels: boolean): string {
+        if (listAllStructureLevels) {
+            return this.user?.getFullName() || ``;
+        }
+
+        return this.user ? this.user.getFullName(this.structure_level_list_of_speakers?.structure_level || null) : ``;
+    }
+
+    public get user_title(): string {
+        return this.user ? this.user.title : ``;
+    }
+
+    public get user_first_name(): string {
+        return this.user ? this.user.first_name : ``;
+    }
+
+    public get user_last_name(): string {
+        return this.user ? this.user.last_name : ``;
+    }
+
+    public get user_number(): string {
+        return this.user ? this.meeting_user.number : ``;
     }
 
     public get userId(): Id {
@@ -47,6 +91,37 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
 
     public get gender(): string {
         return this.user ? this.user.gender : ``;
+    }
+
+    public get contentType(): string {
+        if (!this.list_of_speakers?.content_object_id) {
+            return null;
+        }
+
+        return collectionFromFqid(this.list_of_speakers?.content_object_id);
+    }
+
+    public get topic(): string {
+        const number = this.list_of_speakers?.content_object?.agenda_item?.item_number;
+        const title = this.list_of_speakers?.content_object?.getTitle();
+
+        return number ? `${number} - ${title}` : title || ``;
+    }
+
+    public get structureLevelName(): string {
+        return this.structure_level_list_of_speakers?.structure_level
+            ? this.structure_level_list_of_speakers.structure_level.name
+            : ``;
+    }
+
+    public get structureLevelId(): Id {
+        return this.structure_level_list_of_speakers ? this.structure_level_list_of_speakers.structure_level_id : null;
+    }
+
+    public get speakingTime(): number {
+        return this.speaker.end_time
+            ? this.speaker.end_time - this.speaker.begin_time - (this.speaker.total_pause || 0)
+            : null;
     }
 
     public getBeginTimeAsDate(): Date | null {
@@ -60,5 +135,6 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
 interface ISpeakerRelations {
     list_of_speakers: ViewListOfSpeakers;
     point_of_order_category: ViewPointOfOrderCategory;
+    structure_level_list_of_speakers: ViewStructureLevelListOfSpeakers;
 }
 export interface ViewSpeaker extends Speaker, ISpeakerRelations, HasMeeting {}
