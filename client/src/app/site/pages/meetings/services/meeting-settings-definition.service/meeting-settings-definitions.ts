@@ -373,7 +373,9 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `list_of_speakers_default_structure_level_time`,
                         label: _(`Default speaking time for structure levels in seconds`),
-                        helpText: _(`Choose a number greater than 0 to activate speaking times widget for structure level countdowns.`),
+                        helpText: _(
+                            `Choose a number greater than 0 to activate speaking times widget for structure level countdowns.`
+                        ),
                         type: `integer`,
                         validators: [Validators.min(0)]
                     }

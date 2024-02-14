@@ -390,9 +390,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
                 if (accurateTime > 0) {
                     messages.push(
-                        this.translate
-                            .instant(`{{amount}} will be saved`)
-                            .replace(`{{amount}}`, accurateTime)
+                        this.translate.instant(`{{amount}} will be saved`).replace(`{{amount}}`, accurateTime)
                     );
                 }
 

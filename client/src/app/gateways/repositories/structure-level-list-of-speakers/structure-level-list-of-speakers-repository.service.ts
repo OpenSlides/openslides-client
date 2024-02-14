@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { StructureLevelListOfSpeakers } from 'src/app/domain/models/structure-levels/structure-level-list-of-speakers';
 import { StructureLevelListOfSpeakersAction } from 'src/app/gateways/repositories/structure-level-list-of-speakers/structure-level-list-of-speakers.action';
