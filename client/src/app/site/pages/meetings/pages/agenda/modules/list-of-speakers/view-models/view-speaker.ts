@@ -1,4 +1,5 @@
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
+import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
 import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 
@@ -50,7 +51,10 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
     }
 
     public get isWaiting(): boolean {
-        return this.state === SpeakerState.WAITING;
+        return (
+            this.state === SpeakerState.WAITING ||
+            (this.state === SpeakerState.INTERPOSED_QUESTION && !this.speaker.begin_time)
+        );
     }
 
     public get name(): string {
@@ -89,8 +93,19 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return this.user ? this.user.gender : ``;
     }
 
+    public get contentType(): string {
+        if (!this.list_of_speakers?.content_object_id) {
+            return null;
+        }
+
+        return collectionFromFqid(this.list_of_speakers?.content_object_id);
+    }
+
     public get topic(): string {
-        return this.list_of_speakers?.content_object ? this.list_of_speakers.content_object.getTitle() : ``;
+        const number = this.list_of_speakers?.content_object?.agenda_item?.item_number;
+        const title = this.list_of_speakers?.content_object?.getTitle();
+
+        return number ? `${number} - ${title}` : title || ``;
     }
 
     public get structureLevelName(): string {

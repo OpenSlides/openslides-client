@@ -30,10 +30,16 @@ export class SpeakerUserSelectDialogComponent {
 
     public setCurrentUser(selection: UserSelectionData) {
         if (selection.userId) {
-            const meeting_user_id = this.userRepo
+            const meeting_user = this.userRepo
                 .getViewModel(selection.userId)
-                .getMeetingUser(this.data.listOfSpeakers.meeting_id).id;
-            this.dialogRef.close({ meeting_user_id });
+                .getMeetingUser(this.data.listOfSpeakers.meeting_id);
+
+            let structure_level_id = undefined;
+            if (meeting_user.structure_levels.length === 1) {
+                structure_level_id = meeting_user.structure_levels[0].id;
+            }
+
+            this.dialogRef.close({ meeting_user_id: meeting_user.id, structure_level_id });
         }
     }
 

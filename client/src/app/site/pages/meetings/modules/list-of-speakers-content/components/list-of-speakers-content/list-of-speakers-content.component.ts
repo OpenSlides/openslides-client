@@ -282,7 +282,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
                 if (result.meeting_user_id) {
-                    await this.speakerRepo.setMeetingUser(speaker, result.meeting_user_id);
+                    await this.speakerRepo.setMeetingUser(speaker, result.meeting_user_id, result.structure_level_id);
                 }
                 return true;
             }

@@ -4,45 +4,38 @@
     </div>
 </os-head-bar>
 <div class="content-container">
-    <div class="col-main">
-        <!-- Title Card -->
-        <mat-card class="os-card" *ngIf="!!title">
-            <mat-card-content>
-                <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
-                    <h1 class="line-and-icon">
-                        {{ title | translate }}
-                    </h1>
-                </a>
-            </mat-card-content>
-        </mat-card>
-
-        <!-- List of speakers -->
-        <os-list-of-speakers-content
-            *osPerms="[permission.listOfSpeakersCanSee, permission.listOfSpeakersCanBeSpeaker]; and: !!listOfSpeakers"
-            [listOfSpeakers]="listOfSpeakers!"
-            (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
-        >
-            <ng-template osListOfSpeakersContentTitle>
-                <p class="line-and-icon subtitle-text">
-                    <a [routerLink]="closUrl" *ngIf="closUrl">
-                        {{ 'List of speakers' | translate }}
+    <div class="col-wrapper">
+        <div class="col-main">
+            <!-- Title Card -->
+            <mat-card class="os-card" *ngIf="!!title">
+                <mat-card-content>
+                    <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
+                        <h1 class="line-and-icon">
+                            {{ title | translate }}
+                        </h1>
                     </a>
-                    <span *ngIf="!closUrl">
-                        {{ 'List of speakers' | translate }}
-                    </span>
+                </mat-card-content>
+            </mat-card>
 
-                    <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
-                        <mat-icon
-                            *ngIf="isLosClosed"
-                            matTooltip="{{ 'The list of speakers is closed.' | translate }}"
-                            matTooltipPosition="above"
-                        >
-                            lock
-                        </mat-icon>
-                    </ng-container>
+            <!-- List of speakers -->
+            <os-list-of-speakers-content
+                *osPerms="
+                    [permission.listOfSpeakersCanSee, permission.listOfSpeakersCanBeSpeaker];
+                    and: !!listOfSpeakers
+                "
+                [listOfSpeakers]="listOfSpeakers!"
+                (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
+            >
+                <ng-template osListOfSpeakersContentTitle>
+                    <p class="line-and-icon subtitle-text">
+                        <a [routerLink]="closUrl" *ngIf="closUrl">
+                            {{ 'List of speakers' | translate }}
+                        </a>
+                        <span *ngIf="!closUrl">
+                            {{ 'List of speakers' | translate }}
+                        </span>
 
-                    <ng-container *osPerms="permission.listOfSpeakersCanManage">
-                        <button mat-icon-button (click)="toggleListOfSpeakersOpen()">
+                        <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
                             <mat-icon
                                 *ngIf="isLosClosed"
                                 matTooltip="{{ 'The list of speakers is closed.' | translate }}"
@@ -50,58 +43,73 @@
                             >
                                 lock
                             </mat-icon>
+                        </ng-container>
 
-                            <mat-icon
-                                *ngIf="!isLosClosed"
-                                matTooltip="{{ 'The list of speakers is open.' | translate }}"
+                        <ng-container *osPerms="permission.listOfSpeakersCanManage">
+                            <button mat-icon-button (click)="toggleListOfSpeakersOpen()">
+                                <mat-icon
+                                    *ngIf="isLosClosed"
+                                    matTooltip="{{ 'The list of speakers is closed.' | translate }}"
+                                    matTooltipPosition="above"
+                                >
+                                    lock
+                                </mat-icon>
+
+                                <mat-icon
+                                    *ngIf="!isLosClosed"
+                                    matTooltip="{{ 'The list of speakers is open.' | translate }}"
+                                    matTooltipPosition="above"
+                                >
+                                    lock_open
+                                </mat-icon>
+                            </button>
+
+                            <button
+                                mat-icon-button
+                                (click)="readdLastSpeaker()"
+                                matTooltip="{{ 'Re-add last speaker' | translate }}"
                                 matTooltipPosition="above"
+                                [disabled]="!canReaddLastSpeaker"
                             >
-                                lock_open
-                            </mat-icon>
-                        </button>
+                                <mat-icon>undo</mat-icon>
+                            </button>
+                        </ng-container>
+                    </p>
+                </ng-template>
+            </os-list-of-speakers-content>
 
-                        <button
-                            mat-icon-button
-                            (click)="readdLastSpeaker()"
-                            matTooltip="{{ 'Re-add last speaker' | translate }}"
-                            matTooltipPosition="above"
-                            [disabled]="!canReaddLastSpeaker"
-                        >
-                            <mat-icon>undo</mat-icon>
-                        </button>
-                    </ng-container>
-                </p>
-            </ng-template>
-        </os-list-of-speakers-content>
+            <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && (showRightCol | async) === false">
+                <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
+            </div>
 
-        <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && (showRightCol | async) === false">
-            <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
+            <!-- Moderator Note-->
+            <os-moderation-note [listOfSpeakers]="listOfSpeakers"></os-moderation-note>
+
+            <!-- Poll-Collection -->
+            <os-poll-collection
+                *ngIf="showPollCollection"
+                [currentProjection]="projectedViewModel"
+            ></os-poll-collection>
+
+            <!-- Projector -->
+            <mat-card class="os-card spacer-bottom-60">
+                <mat-card-content>
+                    <a [routerLink]="projectorUrl" [target]="projectionTarget" [state]="{ back: 'true' }">
+                        <p class="subtitle-text">{{ projectorTitle | translate }}</p>
+                    </a>
+
+                    <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
+                        <div class="projector">
+                            <os-projector *ngIf="projector" [projector]="projector"></os-projector>
+                        </div>
+                    </a>
+                </mat-card-content>
+            </mat-card>
         </div>
 
-        <!-- Moderator Note-->
-        <os-moderation-note [listOfSpeakers]="listOfSpeakers"></os-moderation-note>
-
-        <!-- Poll-Collection -->
-        <os-poll-collection *ngIf="showPollCollection" [currentProjection]="projectedViewModel"></os-poll-collection>
-
-        <!-- Projector -->
-        <mat-card class="os-card spacer-bottom-60">
-            <mat-card-content>
-                <a [routerLink]="projectorUrl" [target]="projectionTarget" [state]="{ back: 'true' }">
-                    <p class="subtitle-text">{{ projectorTitle | translate }}</p>
-                </a>
-
-                <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
-                    <div class="projector">
-                        <os-projector *ngIf="projector" [projector]="projector"></os-projector>
-                    </div>
-                </a>
-            </mat-card-content>
-        </mat-card>
-    </div>
-
-    <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && showRightCol | async" class="col-right">
-        <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
+        <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && showRightCol | async" class="col-right">
+            <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
+        </div>
     </div>
 </div>
 
