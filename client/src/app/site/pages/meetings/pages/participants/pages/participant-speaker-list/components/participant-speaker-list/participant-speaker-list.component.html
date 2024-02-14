@@ -40,16 +40,7 @@
     <div *osScrollingTableCell="'info'; row as speaker; config: { width: 200 }" class="cell-slot fill">
         <div class="infoCell">
             <div *ngIf="speaker.list_of_speakers?.content_object" class="spacer-top-5">
-                <os-icon-container *ngIf="speaker.contentType === 'motion'" icon="assignment">
-                    {{ speaker.topic }}
-                </os-icon-container>
-                <os-icon-container *ngIf="speaker.contentType === 'motion_block'" icon="widgets">
-                    {{ speaker.topic }}
-                </os-icon-container>
-                <os-icon-container *ngIf="speaker.contentType === 'assignment'" icon="how_to_vote">
-                    {{ speaker.topic }}
-                </os-icon-container>
-                <os-icon-container *ngIf="speaker.contentType === 'topic'" icon="today">
+                <os-icon-container [icon]="getSpeakerIcon(speaker)">
                     {{ speaker.topic }}
                 </os-icon-container>
             </div>
