@@ -1,0 +1,102 @@
+<os-head-bar [hasMainButton]="canEdit" [nav]="false" (mainEvent)="openStructureLevelDialog()" [multiSelectMode]="false">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Structure levels' | translate }}</h2>
+    </div>
+</os-head-bar>
+
+<os-list
+    [listObservableProvider]="repo"
+    [(selectedRows)]="selectedRows"
+    listStorageKey="structure_levels"
+    [vScrollFixed]="60"
+    [filterProps]="['name']"
+    [hiddenInMobile]="['info']"
+    [alwaysShowMenu]="canEdit"
+    [showMenu]="canEdit"
+    [sortService]="sortService"
+>
+    <!-- Name -->
+    <div *osScrollingTableCell="'name'; row as structure_level" class="cell-slot fill">
+        <div>
+            {{ structure_level.name }}
+        </div>
+    </div>
+
+    <!-- Color -->
+    <div
+        *osScrollingTableCell="'color'; row as structure_level; config: { width: 40, position: END_POSITION }"
+        class="cell-slot fill"
+    >
+        <div
+            class="fake-button-no-touch"
+            [ngStyle]="{ background: structure_level.color, width: '20px', height: '20px' }"
+        ></div>
+    </div>
+
+    <!-- Menu -->
+    <div
+        *osScrollingTableCell="'menu'; row as item; config: { width: 40, position: END_POSITION }"
+        class="cell-slot fill"
+    >
+        <button
+            mat-icon-button
+            [matMenuTriggerFor]="singleItemMenu"
+            (click)="$event.stopPropagation()"
+            [matMenuTriggerData]="{ item: item }"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+</os-list>
+
+<mat-menu #singleItemMenu="matMenu">
+    <ng-template matMenuContent let-item="item">
+        <!-- edit item -->
+        <button mat-menu-item (click)="openStructureLevelDialog(item)">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'Edit' | translate }}</span>
+        </button>
+        <!-- delete item -->
+        <button mat-menu-item class="red-warning-text" (click)="onDeleteButton(item)">
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </ng-template>
+</mat-menu>
+
+<!-- Template for new structure level dialog -->
+<ng-template #structureLevelDialog>
+    <div class="os-form-card-mobile" mat-dialog-content>
+        <form [formGroup]="structureLevelForm" (keydown)="onKeyDown($event)">
+            <!-- Name -->
+            <mat-form-field class="os-dialog-large">
+                <mat-label>{{ 'Name of the structure level' | translate }}</mat-label>
+                <input formControlName="name" matInput required />
+                <mat-error>
+                    {{ 'A name is required' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <!-- Colour -->
+            <mat-checkbox formControlName="color_check" (change)="onColorCheckChanged()">
+                {{ 'Use color' | translate }}
+            </mat-checkbox>
+            <mat-form-field class="os-dialog-large">
+                <mat-label>{{ 'Color' | translate }}</mat-label>
+                <input formControlName="color" type="color" matInput />
+                <mat-error>
+                    {{ 'A color is required' | translate }}
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+
+    <div mat-dialog-actions>
+        <button mat-button [disabled]="!structureLevelForm.valid" [mat-dialog-close]="true">
+            <span>{{ 'Save' | translate }}</span>
+        </button>
+        <button mat-button [mat-dialog-close]="false">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </div>
+</ng-template>

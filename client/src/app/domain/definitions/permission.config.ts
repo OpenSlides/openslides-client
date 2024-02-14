@@ -61,6 +61,16 @@ export const PERMISSIONS: AppPermission[] = [
                 value: Permission.agendaItemCanManage
             },
             {
+                display_name: _(`Can see moderation notes`),
+                help_text: _(`Can see all moderation notes`),
+                value: Permission.agendaItemCanSeeModeratorNotes
+            },
+            {
+                display_name: _(`Can manage moderation notes`),
+                help_text: _(`Can edit all moderation notes`),
+                value: Permission.agendaItemCanManageModeratorNotes
+            },
+            {
                 display_name: _(`Can see list of speakers`),
                 help_text: _(`Can see all lists of speakers`),
                 value: Permission.listOfSpeakersCanSee
