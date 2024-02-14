@@ -64,6 +64,16 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
                     { condition: SpeechState.INTERVENTION, label: this.translate.instant(`Intervention`) },
                     { condition: SpeechState.INTERPOSED_QUESTION, label: this.translate.instant(`Interposed question`) }
                 ]
+            },
+            {
+                property: `contentType`,
+                label: this.translate.instant(`Content type`),
+                options: [
+                    { condition: `motion`, label: this.translate.instant(`Motion`) },
+                    { condition: `motion_block`, label: this.translate.instant(`Motion block`) },
+                    { condition: `assignment`, label: this.translate.instant(`Election`) },
+                    { condition: `topic`, label: this.translate.instant(`Agenda item`) }
+                ]
             }
         ];
         return staticFilterOptions.concat(this.speakerStructureLevelFilterOptions);
