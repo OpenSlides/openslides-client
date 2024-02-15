@@ -161,19 +161,16 @@
 </ng-template>
 
 <ng-template #entryTemplate let-entry="entry" let-def="def" let-row="row" let-type="type">
-    <div *ngIf="entry[def] || type === 'boolean'" class="flex-vertical-center">
-        <ng-container *ngIf="getHeader(def).is_list">
+    <div *ngIf="entry && (entry[def] || type === 'boolean')" class="flex-vertical-center">
+        <div *ngIf="getHeader(def).is_list && entry[def]">
             <ng-container
-                *ngIf="entry[def][0]"
+                *ngFor="let item of entry[def]"
                 [ngTemplateOutlet]="entryContentTemplate"
-                [ngTemplateOutletContext]="{ entry: entry[def][0], def: def }"
+                [ngTemplateOutletContext]="{ entry: item, def: def }"
             ></ng-container>
-            <ng-container *ngIf="entry[def].length > 1">
-                <div class="fake-button-no-touch">+{{ entry[def].length - 1 }}</div>
-            </ng-container>
-        </ng-container>
+        </div>
         <ng-container
-            *ngIf="!getHeader(def).is_list"
+            *ngIf="!getHeader(def).is_list && entry[def] !== undefined"
             [ngTemplateOutlet]="entryContentTemplate"
             [ngTemplateOutletContext]="{ entry: entry[def], def: def }"
         ></ng-container>
@@ -182,23 +179,25 @@
 
 <ng-template #entryContentTemplate let-entry="entry" let-def="def">
     <ng-container *ngIf="getHeader(def).is_object">
-        <ng-container
-            [ngTemplateOutlet]="nonObjectEntryTemplate"
-            [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
-        ></ng-container>
-        <mat-icon class="newBadge" color="accent" inline *ngIf="getActionIcon(entry.info)">
-            {{ getEntryIcon(entry) }}
-        </mat-icon>
+        <div class="list-field-entry">
+            <ng-container
+                [ngTemplateOutlet]="nonObjectEntryTemplate"
+                [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
+            ></ng-container>
+            <mat-icon color="accent" inline *ngIf="getActionIcon(entry)">
+                {{ getEntryIcon(entry) }}
+            </mat-icon>
+        </div>
     </ng-container>
     <ng-container
         *ngIf="!getHeader(def).is_object"
         [ngTemplateOutlet]="nonObjectEntryTemplate"
-        [ngTemplateOutletContext]="{ entry, type: getHeader(def).type}"
+        [ngTemplateOutletContext]="{ entry: entry, type: getHeader(def).type }"
     ></ng-container>
 </ng-template>
 
 <ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
-    <ng-container *ngIf="type === 'string'">{{ entry | translate }}</ng-container>
+    <ng-container *ngIf="type === 'string'">{{ entry }}</ng-container>
     <ng-container *ngIf="type === 'number' || type === 'integer'">{{ entry }}</ng-container>
     <ng-container *ngIf="type === 'decimal'">{{ getShortenedDecimal(entry) }}</ng-container>
     <ng-container *ngIf="type === 'date'">{{ entry }}</ng-container>

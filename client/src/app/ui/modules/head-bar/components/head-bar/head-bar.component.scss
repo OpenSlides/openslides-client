@@ -13,7 +13,7 @@
 
     .toolbar-left {
         display: flex;
-        max-width: calc(100% - 100px);
+        min-width: 0;
         button {
             margin: 12px 0;
         }
@@ -34,13 +34,9 @@
         }
     }
 
-    .toolbar-centered {
-        margin: auto;
-        vertical-align: baseline;
-    }
-
     .toolbar-right {
         display: flex;
+        align-items: center;
         .extra-controls-slot {
             display: flex;
         }

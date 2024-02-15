@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>
     <span *ngIf="isCreateView">
-        {{ 'Create new chat group' | translate }}
+        {{ 'New chat group' | translate }}
     </span>
 
     <span *ngIf="!isCreateView">{{ 'Edit details for' | translate }} {{ previousChatGroupName }}</span>
@@ -9,35 +9,37 @@
 <form *ngIf="chatGroupFormGroup" [formGroup]="chatGroupFormGroup">
     <div class="os-form-card-mobile" mat-dialog-content>
         <!-- Name -->
-        <mat-form-field>
-            <input
-                type="text"
-                matInput
-                osAutofocus
-                required
-                formControlName="name"
-                placeholder="{{ 'Name' | translate }}"
-            />
-            <mat-error *ngIf="chatGroupFormGroup.invalid">{{ 'Required' | translate }}</mat-error>
-        </mat-form-field>
+        <p>
+            <mat-form-field>
+                <mat-label>{{ 'Name' | translate }}</mat-label>
+                <input type="text" matInput osAutofocus required formControlName="name" />
+                <mat-error *ngIf="chatGroupFormGroup.invalid">{{ 'Required' | translate }}</mat-error>
+            </mat-form-field>
+        </p>
 
         <!-- Groups -->
-        <mat-form-field>
-            <os-list-search-selector
-                formControlName="read_group_ids"
-                placeholder="{{ 'Groups with read permissions' | translate }}"
-                [multiple]="true"
-                [inputListValues]="groupsObservable"
-            ></os-list-search-selector>
-        </mat-form-field>
-        <mat-form-field>
-            <os-list-search-selector
-                formControlName="write_group_ids"
-                placeholder="{{ 'Groups with write permissions' | translate }}"
-                [multiple]="true"
-                [inputListValues]="groupsObservable"
-            ></os-list-search-selector>
-        </mat-form-field>
+        <p>
+            <mat-form-field>
+                <mat-label>{{ 'Groups with read permissions' | translate }}</mat-label>
+                <os-list-search-selector
+                    formControlName="read_group_ids"
+                    [multiple]="true"
+                    [inputListValues]="groupsObservable"
+                    [sortFn]="sortFn"
+                ></os-list-search-selector>
+            </mat-form-field>
+        </p>
+        <p>
+            <mat-form-field>
+                <mat-label>{{ 'Groups with write permissions' | translate }}</mat-label>
+                <os-list-search-selector
+                    formControlName="write_group_ids"
+                    [multiple]="true"
+                    [inputListValues]="groupsObservable"
+                    [sortFn]="sortFn"
+                ></os-list-search-selector>
+            </mat-form-field>
+        </p>
     </div>
 
     <div mat-dialog-actions>

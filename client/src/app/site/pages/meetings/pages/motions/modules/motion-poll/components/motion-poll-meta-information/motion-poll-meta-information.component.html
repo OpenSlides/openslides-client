@@ -3,7 +3,7 @@
         {{ 'Groups' | translate }}:
 
         <os-comma-separated-listing [list]="poll.entitled_groups">
-            <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+            <ng-template let-group>{{ group.getTitle() }}</ng-template>
         </os-comma-separated-listing>
     </small>
     <small>{{ '100% base' | translate }}: {{ poll.percentBaseVerbose | translate }}</small>

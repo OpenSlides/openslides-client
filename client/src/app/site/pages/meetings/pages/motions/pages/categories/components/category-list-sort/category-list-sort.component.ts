@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingTreeComponent } from 'src/app/ui/modules/sorting/modules/sorting-tree/components/sorting-tree/sorting-tree.component';
 
@@ -33,12 +32,11 @@ export class CategoryListSortComponent extends BaseMeetingComponent implements C
     public hasChanged = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private categoryRepo: MotionCategoryControllerService,
         private promptService: PromptService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.categoriesObservable = this.categoryRepo.getViewModelListObservable();
     }
 

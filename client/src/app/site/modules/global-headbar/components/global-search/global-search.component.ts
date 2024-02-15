@@ -8,6 +8,7 @@ import { splitStringKeepSeperator } from 'src/app/infrastructure/utils';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchService } from 'src/app/site/services/global-search';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
 
 @Component({
     selector: `os-global-search`,
@@ -63,16 +64,23 @@ export class GlobalSearchComponent implements OnDestroy {
 
     public searching: number | null = null;
 
+    public filterOpen = false;
+    public get isMobile(): boolean {
+        return this.viewport.isMobile;
+    }
+
     private results: GlobalSearchEntry[] = [];
     private static models: GlobalSearchResponse;
 
     private filterChangeSubscription: Subscription;
+    private viewportSubscription: Subscription;
 
     public constructor(
         private activeMeeting: ActiveMeetingService,
         public operator: OperatorService,
         private globalSearchService: GlobalSearchService,
         private formBuilder: FormBuilder,
+        private viewport: ViewPortService,
         private cd: ChangeDetectorRef
     ) {
         this.updateCurrentlyAvailableFilters();
@@ -83,14 +91,24 @@ export class GlobalSearchComponent implements OnDestroy {
                     this.searchChange();
                 }
             });
+        this.viewportSubscription = this.viewport.isMobileSubject.subscribe(() => {
+            this.cd.markForCheck();
+        });
     }
 
     ngOnDestroy(): void {
         this.filterChangeSubscription.unsubscribe();
+        this.viewportSubscription.unsubscribe();
     }
 
     public hasFilterPermission(filter: string): boolean {
         return !this.activeMeeting.meetingId || this.operator.hasPerms(this.getPermissionByFilter(filter));
+    }
+
+    public searchCleared(): void {
+        this.results = [];
+        GlobalSearchComponent._filteredResults = [];
+        this.cd.markForCheck();
     }
 
     public async searchChange(): Promise<void> {

@@ -7,18 +7,19 @@
     <div class="history-table-header">
         <div>
             <span [formGroup]="modelSelectForm">
-                <mat-form-field>
-                    <mat-select formControlName="collection" placeholder="{{ 'Module' | translate }}">
+                <mat-form-field class="history-module-form-field">
+                    <mat-label>{{ 'Module' | translate }}</mat-label>
+                    <mat-select formControlName="collection">
                         <mat-option *ngFor="let item of modelsRepoMap | keyvalue" [value]="item.key">
                             {{ item.value.getVerboseName() }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field class="spacer-left-20">
+                    <mat-label>{{ modelPlaceholder | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="id"
                         [multiple]="false"
-                        placeholder="{{ modelPlaceholder | translate }}"
                         [inputListValues]="models"
                         [disabled]="!modelSelectForm.get('collection').value"
                         (clickNotFound)="searchDeletedMotions($event)"
@@ -46,7 +47,8 @@
         </div>
         <div>
             <mat-form-field>
-                <input matInput (keyup)="applySearch($event.target)" placeholder="{{ 'Search' | translate }}" />
+                <mat-label>{{ 'Search' | translate }}</mat-label>
+                <input matInput (keyup)="applySearch($event.target)" />
                 <mat-icon matSuffix>search</mat-icon>
             </mat-form-field>
         </div>

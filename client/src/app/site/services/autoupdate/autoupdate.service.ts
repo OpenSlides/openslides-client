@@ -107,7 +107,7 @@ export class AutoupdateService {
             })
         );
 
-        window.addEventListener(`beforeunload`, () => {
+        window.addEventListener(`unload`, () => {
             for (const id of Object.keys(this._activeRequestObjects)) {
                 const streamId = Number(id);
                 const { modelSubscription } = this._activeRequestObjects[streamId];

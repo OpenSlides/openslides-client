@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText, StyleDictionary, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -64,17 +64,16 @@ export abstract class BasePollPdfService {
         return this.activeMeetingService.meetingId!;
     }
 
-    public constructor(
-        protected meetingSettingsService: MeetingSettingsService,
-        protected userRepo: ParticipantControllerService,
-        protected activeMeetingService: ActiveMeetingService,
-        protected mediaManageService: MediaManageService,
-        protected pdfExport: MeetingPdfExportService,
-        protected translate: TranslateService,
-        protected pollService: PollService,
-        private pollKeyVerbose: PollKeyVerbosePipe,
-        private pollParseNumber: PollParseNumberPipe
-    ) {
+    protected meetingSettingsService = inject(MeetingSettingsService);
+    protected userRepo = inject(ParticipantControllerService);
+    protected activeMeetingService = inject(ActiveMeetingService);
+    protected mediaManageService = inject(MediaManageService);
+    protected pdfExport = inject(MeetingPdfExportService);
+    protected translate = inject(TranslateService);
+    private pollKeyVerbose = inject(PollKeyVerbosePipe);
+    private pollParseNumber = inject(PollParseNumberPipe);
+
+    public constructor(protected pollService: PollService) {
         this.meetingSettingsService.get(`name`).subscribe(name => (this.eventName = name));
         this.mediaManageService.getLogoUrlObservable(`pdf_ballot_paper`).subscribe(url => (this.logoUrl = url));
     }

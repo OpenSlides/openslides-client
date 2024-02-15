@@ -10,7 +10,7 @@
     <mat-select-trigger *ngIf="multiple">
         <ng-container *ngIf="selectedItems?.length">
             <span *ngFor="let item of selectedItems; let last = last" class="inline-flex">
-                {{ item.getTitle() | translate }} {{ getItemAdditionalInfoFn(item) }}
+                {{ item.getTitle() }} {{ getItemAdditionalInfoFn(item) }}
                 <span *ngIf="!last">,&nbsp;</span>
             </span>
         </ng-container>
@@ -18,7 +18,6 @@
 
     <div #searchSelectorInput class="os-search-selector--input-wrapper" *ngIf="matSelect.panelOpen">
         <input
-            matInput
             osAutofocus
             class="background-card"
             [formControl]="searchValueForm"
@@ -38,7 +37,7 @@
                         [disableRipple]="true"
                     >
                         <span class="one-line">
-                            {{ item.getTitle() | translate }}
+                            {{ item.getTitle() }}
                         </span>
                         <button matChipRemove>
                             <mat-icon>cancel</mat-icon>
@@ -99,5 +98,5 @@
 </mat-select>
 
 <ng-template #optionContent let-item="item">
-    <ng-container *ngIf="item">{{ item.getTitle() | translate }} {{ getItemAdditionalInfoFn(item) }}</ng-container>
+    <ng-container *ngIf="item">{{ item.getTitle() }} {{ getItemAdditionalInfoFn(item) }}</ng-container>
 </ng-template>

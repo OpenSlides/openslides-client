@@ -55,6 +55,9 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     @Input()
     public disabled = false;
 
+    @Input()
+    public allowReferenceProjector = true;
+
     /**
      * If this is re-defined, it will replace the usual click functionality.
      */
@@ -68,7 +71,10 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
             this.projectorService.toggle(descriptor, [this.projector]);
         } else {
             // open the projection dialog
-            this.projectionDialogService.openProjectDialogFor(descriptor);
+            this.projectionDialogService.openProjectDialogFor({
+                descriptor,
+                allowReferenceProjector: this.allowReferenceProjector
+            });
         }
     };
 

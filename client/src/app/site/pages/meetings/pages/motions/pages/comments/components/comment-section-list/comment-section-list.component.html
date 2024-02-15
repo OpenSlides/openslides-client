@@ -1,4 +1,9 @@
-<os-head-bar [nav]="false" [hasMainButton]="true" (mainEvent)="openDialog()">
+<os-head-bar
+    [nav]="false"
+    [hasMainButton]="true"
+    [mainActionTooltip]="'New comment field' | translate"
+    (mainEvent)="openDialog()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Comment fields' | translate }}</h2>
@@ -54,14 +59,14 @@
             <div class="spacer-left">{{ section.name }}</div>
             <h3>{{ 'Groups with read permissions' | translate }}</h3>
             <ul *ngFor="let group of section.read_groups">
-                <li>{{ group.getTitle() | translate }}</li>
+                <li>{{ group.getTitle() }}</li>
             </ul>
             <div class="spacer-left" *ngIf="section.read_groups.length === 0">
                 {{ 'No groups selected' | translate }}
             </div>
             <h3>{{ 'Groups with write permissions' | translate }}</h3>
             <ul *ngFor="let group of section.write_groups">
-                <li>{{ group.getTitle() | translate }}</li>
+                <li>{{ group.getTitle() }}</li>
             </ul>
             <div class="spacer-left" *ngIf="section.write_groups.length === 0">
                 {{ 'No groups selected' | translate }}
@@ -87,7 +92,7 @@
 
 <ng-template #groupList let-groups="groups">
     <os-comma-separated-listing [list]="groups">
-        <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+        <ng-template let-group>{{ group.getTitle() }}</ng-template>
     </os-comma-separated-listing>
 </ng-template>
 
@@ -101,7 +106,8 @@
         <form [formGroup]="commentFieldForm" (keydown)="onKeyDown($event)">
             <p>
                 <mat-form-field>
-                    <input formControlName="name" matInput placeholder="{{ 'Name' | translate }}" required />
+                    <mat-label>{{ 'Name' | translate }}</mat-label>
+                    <input formControlName="name" matInput required />
                     <mat-error *ngIf="!commentFieldForm.controls['name'].valid">
                         <span>{{ 'Required' | translate }}</span>
                     </mat-error>
@@ -109,21 +115,23 @@
             </p>
             <p>
                 <mat-form-field>
+                    <mat-label>{{ 'Groups with read permissions' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="read_group_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Groups with read permissions' | translate }}"
                         [inputListValues]="groups"
+                        [sortFn]="sortFn"
                     ></os-list-search-selector>
                 </mat-form-field>
             </p>
             <p>
                 <mat-form-field>
+                    <mat-label>{{ 'Groups with write permissions' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="write_group_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Groups with write permissions' | translate }}"
                         [inputListValues]="groups"
+                        [sortFn]="sortFn"
                     ></os-list-search-selector>
                 </mat-form-field>
             </p>

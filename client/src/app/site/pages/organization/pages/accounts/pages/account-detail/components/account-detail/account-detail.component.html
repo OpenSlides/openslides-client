@@ -1,6 +1,7 @@
 <os-head-bar
     [hasMainButton]="true"
     mainButtonIcon="edit"
+    [mainActionTooltip]="'Edit account' | translate"
     (mainEvent)="editMember()"
     [goBack]="false"
     [nav]="false"
@@ -43,40 +44,23 @@
                     form37: true
                 }"
             >
-                <input
-                    type="text"
-                    matInput
-                    placeholder="{{ 'Default structure level' | translate }}"
-                    formControlName="default_structure_level"
-                />
-            </mat-form-field>
-
-            <!-- Default Participant Number -->
-            <mat-form-field
-                [ngClass]="{
-                    distance: true,
-                    form37: true
-                }"
-            >
-                <input
-                    type="text"
-                    matInput
-                    placeholder="{{ 'Default number' | translate }}"
-                    formControlName="default_number"
-                />
+                <mat-label>{{ 'Default structure level' | translate }}</mat-label>
+                <input type="text" matInput formControlName="default_structure_level" />
             </mat-form-field>
 
             <!-- Default Vote weight -->
             <!-- TODO Input type should be number with limited decimal spaces -->
             <mat-form-field class="form16 force-min-with">
-                <input
-                    type="number"
-                    matInput
-                    placeholder="{{ 'Default vote weight' | translate }}"
-                    formControlName="default_vote_weight"
-                />
-                <mat-error *ngIf="isDefaultVoteWeightError" translate>
-                    Please select a vote weight bigger than zero.
+                <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
+                <input type="number" matInput formControlName="default_vote_weight" />
+                <mat-error *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0" translate>
+                    Please select a vote weight greater than or equal to 0.000001
+                </mat-error>
+                <mat-error
+                    *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value <= 0"
+                    translate
+                >
+                    Please select a vote weight greater than zero.
                 </mat-error>
             </mat-form-field>
         </div>
@@ -99,10 +83,10 @@
             </div>
             <div *osOmlPerms="OML.can_manage_organization">
                 <mat-form-field>
+                    <mat-label>{{ 'Committee admin' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="committee_management_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Committee admin' | translate }}"
                         [subscriptionConfig]="committeeSubscriptionConfig"
                         [repo]="committeeController"
                         [sortService]="committeeSortService"
@@ -116,16 +100,10 @@
 
     <ng-template #showView let-user="user">
         <h2>{{ 'Organization specific information' | translate }}</h2>
-        <!-- Structure Level -->
+        <!-- Structure level -->
         <div *ngIf="user.default_structure_level">
             <h4>{{ 'Default structure level' | translate }}</h4>
             <span>{{ user.default_structure_level }}</span>
-        </div>
-
-        <!-- Participant number -->
-        <div *ngIf="user.default_number">
-            <h4>{{ 'Default participant number' | translate }}</h4>
-            <span>{{ user.default_number }}</span>
         </div>
 
         <div *ngIf="user.default_vote_weight || user.default_vote_weight === 0">
@@ -228,7 +206,7 @@
                         </td>
                         <td [ngClass]="getCellClass(false, isLast, lastLine)">
                             <span *ngFor="let group of meeting_row.value.group_names; last as lastGroup">
-                                {{ group | translate }}{{ !lastGroup ? ', ' : '' }}
+                                {{ group }}{{ !lastGroup ? ', ' : '' }}
                             </span>
                         </td>
                     </tr>

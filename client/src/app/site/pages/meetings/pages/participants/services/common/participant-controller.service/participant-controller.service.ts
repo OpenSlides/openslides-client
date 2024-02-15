@@ -38,6 +38,7 @@ import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-me
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 
@@ -197,6 +198,14 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         return this.repo.setPasswordSelf(user, oldPassword, newPassword);
     }
 
+    public jsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+        return this.repo.participantJsonUpload(payload);
+    }
+
+    public import(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
+        return this.repo.participantImport(payload);
+    }
+
     /**
      * Should determine if the user (Operator) has the
      * correct permission to perform the given action.
@@ -302,9 +311,11 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
      */
     public async createFromString(name: string): Promise<RawUser> {
         const newUser = this.parseStringIntoUser(name);
+        // we want to generate the username in the backend
+        newUser.username = ``;
         const newUserPayload: any = {
             ...newUser,
-            is_active: true,
+            is_active: false,
             group_ids: [this.activeMeeting?.default_group_id]
         };
         const identifiable = (await this.create(newUserPayload))[0];
@@ -329,7 +340,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             meeting_users: [
                 {
                     group_ids: this.validateField(participant, `group_ids`),
-                    structure_level: this.validateField(participant, `structure_level`),
+                    structure_level_ids: this.validateField(participant, `structure_level_ids`),
                     number: this.validateField(participant, `number`),
                     vote_weight: toDecimal(this.validateField(participant, `vote_weight`), false),
                     vote_delegated_to_id: this.validateField(participant, `vote_delegated_to_id`),

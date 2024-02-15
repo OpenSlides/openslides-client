@@ -1,4 +1,4 @@
-import { Directive, OnDestroy, OnInit } from '@angular/core';
+import { Directive, inject, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
@@ -164,12 +164,12 @@ export abstract class BaseGameDialogComponent implements OnInit, OnDestroy {
         }
     };
 
-    public constructor(
-        private activeMeetingService: ActiveMeetingService,
-        protected notifyService: NotifyService,
-        private op: OperatorService,
-        protected translate: TranslateService
-    ) {
+    private activeMeetingService = inject(ActiveMeetingService);
+    protected notifyService = inject(NotifyService);
+    private op = inject(OperatorService);
+    protected translate = inject(TranslateService);
+
+    public constructor() {
         this.inMeeting = !!this.activeMeetingService.meetingId;
     }
 

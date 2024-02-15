@@ -3,7 +3,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { filter, firstValueFrom, map } from 'rxjs';
 import { OrganizationRepositoryService } from 'src/app/gateways/repositories/organization-repository.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -28,12 +27,11 @@ export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private orgaRepo: OrganizationRepositoryService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         firstValueFrom(this.activeMeetingIdService.meetingIdObservable.pipe(filter(val => !!val))).then(() =>
             this.modelRequestService.subscribeTo({
                 modelRequest: {

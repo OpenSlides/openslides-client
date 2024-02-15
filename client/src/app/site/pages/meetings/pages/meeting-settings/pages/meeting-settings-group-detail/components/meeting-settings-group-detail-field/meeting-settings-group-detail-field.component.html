@@ -17,8 +17,8 @@
 
                 <!-- required for all kinds of input -->
                 <mat-label>{{ setting.label | translate }}</mat-label>
-                <span matSuffix>
-                    <mat-icon pull="right" class="red-warning-text" *ngIf="error">error</mat-icon>
+                <span *ngIf="error" matSuffix>
+                    <mat-icon pull="right" class="red-warning-text">error</mat-icon>
                 </span>
                 <mat-error *ngIf="error">{{ error }}</mat-error>
 
@@ -45,6 +45,7 @@
                         [errorStateMatcher]="matcher"
                         [inputListValues]="groupObservable!"
                         [shouldPropagateOnRegistering]="false"
+                        [sortFn]="sortFn"
                     ></os-list-search-selector>
                 </ng-template>
 
@@ -81,13 +82,7 @@
                 <!-- textarea -->
                 <div *ngIf="setting.type === 'text'">
                     <mat-form-field>
-                        <textarea
-                            formControlName="value"
-                            rows="10"
-                            matInput
-                            placeholder="{{ setting.label | translate }}"
-                            [value]="internalValue"
-                        ></textarea>
+                        <textarea formControlName="value" rows="10" matInput [value]="internalValue"></textarea>
                         <span matSuffix>
                             <mat-icon pull="right" class="red-warning-text" *ngIf="updateSuccessIcon">
                                 check_circle

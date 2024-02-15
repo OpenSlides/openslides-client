@@ -6,23 +6,20 @@
     <div mat-dialog-content>
         <!-- Title field -->
         <mat-form-field>
-            <input
-                matInput
-                osAutofocus
-                placeholder="{{ 'Countdown title' | translate }}"
-                formControlName="title"
-                required
-            />
+            <mat-label>{{ 'Countdown title' | translate }}</mat-label>
+            <input matInput osAutofocus formControlName="title" required />
         </mat-form-field>
 
         <!-- Description field -->
         <mat-form-field>
-            <input matInput placeholder="{{ 'Countdown description' | translate }}" formControlName="description" />
+            <mat-label>{{ 'Countdown description' | translate }}</mat-label>
+            <input matInput formControlName="description" />
         </mat-form-field>
 
         <!-- Time field -->
         <mat-form-field>
-            <input matInput placeholder="{{ 'Countdown time' | translate }}" formControlName="duration" required />
+            <mat-label>{{ 'Countdown time' | translate }}</mat-label>
+            <input matInput formControlName="duration" required />
         </mat-form-field>
     </div>
     <div mat-dialog-actions>

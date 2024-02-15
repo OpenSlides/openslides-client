@@ -1,5 +1,6 @@
 <os-head-bar
     [hasMainButton]="true"
+    [mainActionTooltip]="'New group' | translate"
     (mainEvent)="setEditMode(!editGroup)"
     [nav]="false"
     [editMode]="hasChanges"
@@ -81,30 +82,22 @@
 
 <ng-template #groupEditDialog>
     <h1 mat-dialog-title>
-        <span>{{ 'New group name' | translate }}</span>
+        <span *ngIf="!groupForm.value.name">{{ 'New group' | translate }}</span>
+        <span *ngIf="groupForm.value.name">{{ 'Edit group' | translate }}</span>
     </h1>
     <div class="os-form-card-mobile" mat-dialog-content>
         <form class="edit-form" [formGroup]="groupForm!" (keydown)="keyDownFunction($event)">
             <mat-form-field>
-                <input
-                    type="text"
-                    matInput
-                    osAutofocus
-                    formControlName="name"
-                    placeholder="{{ 'New group name' | translate }}"
-                />
+                <mat-label>{{ 'Group name' | translate }}</mat-label>
+                <input type="text" matInput osAutofocus formControlName="name" />
                 <mat-error *ngIf="!groupForm?.valid && !groupForm.value.name">{{ 'Required' | translate }}</mat-error>
                 <mat-error *ngIf="!groupForm?.valid && groupForm.value.name">
                     {{ 'Must be unique' | translate }}
                 </mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input
-                    type="text"
-                    matInput
-                    formControlName="external_id"
-                    placeholder="{{ 'External ID' | translate }}"
-                />
+                <mat-label>{{ 'External ID' | translate }}</mat-label>
+                <input type="text" matInput formControlName="external_id" />
             </mat-form-field>
         </form>
     </div>

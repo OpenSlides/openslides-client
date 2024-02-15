@@ -67,7 +67,8 @@
         <form [formGroup]="statuteParagraphForm" (keydown)="onKeyDown($event)">
             <p>
                 <mat-form-field>
-                    <input formControlName="title" matInput placeholder="{{ 'Title' | translate }}" required />
+                    <mat-label>{{ 'Title' | translate }}</mat-label>
+                    <input formControlName="title" matInput required />
                     <mat-hint *ngIf="!statuteParagraphForm.controls['title'].valid">
                         <span>{{ 'Required' | translate }}</span>
                     </mat-hint>

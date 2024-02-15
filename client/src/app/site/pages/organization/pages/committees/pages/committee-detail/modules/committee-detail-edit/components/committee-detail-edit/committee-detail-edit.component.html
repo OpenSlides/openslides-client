@@ -32,20 +32,16 @@
                 [repo]="orgaTagRepo"
                 [multiple]="true"
                 (clickNotFound)="onOrgaTagNotFound($event)"
-                placeholder="{{ 'Tags' | translate }}"
             >
                 <ng-template osNotFoundDescription>
-                    {{ 'Create new tag' | translate }}
+                    {{ 'New tag' | translate }}
                 </ng-template>
             </os-repo-search-selector>
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>{{ 'Committee managers' | translate }}</mat-label>
-            <os-account-search-selector
-                formControlName="manager_ids"
-                placeholder="{{ 'Committee managers' | translate }}"
-            ></os-account-search-selector>
+            <os-account-search-selector formControlName="manager_ids"></os-account-search-selector>
         </mat-form-field>
 
         <mat-form-field>

@@ -1,20 +1,24 @@
-<os-head-bar [hasMainButton]="true" (mainEvent)="createNewMember()" [multiSelectMode]="isMultiSelect">
+<os-head-bar
+    [hasMainButton]="true"
+    [mainActionTooltip]="'New account' | translate"
+    (mainEvent)="createNewMember()"
+    [multiSelectMode]="isMultiSelect"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Accounts' | translate }}</h2>
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button type="button" mat-icon-button [matMenuTriggerFor]="memberMenu"><mat-icon>more_vert</mat-icon></button>
-    </div>
+    </ng-container>
 
     <!-- Multiselect info -->
-    <div class="central-info-slot">
+    <ng-container class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span>
-        <span>{{ 'selected' | translate }}</span>
-    </div>
+        <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
+    </ng-container>
 </os-head-bar>
 
 <os-list
@@ -22,7 +26,7 @@
     [(selectedRows)]="selectedRows"
     [multiSelect]="isMultiSelect"
     listStorageKey="member"
-    [filterProps]="['full_name', 'default_structure_level', 'default_number']"
+    [filterProps]="['full_name']"
     [filterService]="filterService"
     [searchService]="searchService"
     [sortService]="sortService"

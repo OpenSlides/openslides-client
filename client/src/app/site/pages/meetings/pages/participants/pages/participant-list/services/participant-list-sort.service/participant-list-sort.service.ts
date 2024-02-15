@@ -1,9 +1,7 @@
-import { Injectable, Injector, ProviderToken } from '@angular/core';
+import { Injectable, ProviderToken } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseSortListService, OsHideSortingOptionSetting, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -30,11 +28,6 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
         { property: `is_active`, label: _(`Is active`) },
         { property: `is_physical_person`, label: _(`Is a natural person`) },
         { property: `number`, label: _(`Participant number`), foreignBaseKeys: { meeting_user: [`number`] } },
-        {
-            property: `structure_level`,
-            label: _(`Structure level`),
-            foreignBaseKeys: { meeting_user: [`structure_level`] }
-        },
         { property: `voteWeight`, label: _(`Vote weight`), foreignBaseKeys: { meeting_user: [`vote_weight`] } },
         { property: `comment`, baseKeys: [], foreignBaseKeys: { meeting_user: [`comment`] } },
         { property: `last_email_sent`, label: _(`Last email sent`) },
@@ -43,13 +36,8 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
 
     private _voteWeightEnabled: boolean;
 
-    public constructor(
-        translate: TranslateService,
-        store: StorageService,
-        private meetingSettings: MeetingSettingsService,
-        injector: Injector
-    ) {
-        super(translate, store, injector, {
+    public constructor(private meetingSettings: MeetingSettingsService) {
+        super({
             sortProperty: [`first_name`, `last_name`],
             sortAscending: true
         });

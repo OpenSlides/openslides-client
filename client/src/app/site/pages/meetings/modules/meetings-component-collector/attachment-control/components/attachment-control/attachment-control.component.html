@@ -1,10 +1,10 @@
 <div class="attachment-container" *ngIf="contentForm">
     <form [formGroup]="formGroup">
         <mat-form-field>
+            <mat-label>{{ 'Attachments' | translate }}</mat-label>
             <os-repo-search-selector
                 class="selector"
                 [multiple]="true"
-                placeholder="{{ 'Attachments' | translate }}"
                 formControlName="mediafile_ids"
                 [repo]="repo"
                 [pipeFn]="getMediafilesPipeFn()"
@@ -24,7 +24,7 @@
 <!-- upload file dialog -->
 <ng-template #uploadDialog>
     <h1 mat-dialog-title>
-        <span>{{ 'Upload files' | translate }}</span>
+        <span>{{ 'New file' | translate }}</span>
     </h1>
     <os-media-upload-content
         [directories]="directoriesObservable"
@@ -34,11 +34,11 @@
     >
         <div *osScrollingTableCell="'access_groups'; row as file" class="cell-slot">
             <form [formGroup]="file.form">
-                <mat-form-field>
+                <mat-form-field subscriptSizing="dynamic">
+                    <mat-label>{{ 'Access groups' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="access_group_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Access groups' | translate }}"
                         [inputListValues]="availableGroups"
                     ></os-list-search-selector>
                 </mat-form-field>

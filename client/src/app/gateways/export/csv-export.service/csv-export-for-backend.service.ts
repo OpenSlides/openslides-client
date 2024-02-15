@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { ExportServiceModule } from '../export-service.module';
@@ -17,7 +17,7 @@ import {
     providedIn: ExportServiceModule
 })
 export class CsvExportForBackendService {
-    public constructor(private exporter: FileExportService) {}
+    private exporter = inject(FileExportService);
 
     /**
      * Saves an array of model data to a CSV.
@@ -54,7 +54,7 @@ export class CsvExportForBackendService {
         const header = columns.map(column => {
             let label = ``;
             if (isPropertyDefinition(column)) {
-                label = column.property as string;
+                label = (column.label || column.property) as string;
             } else if (isMapDefinition(column)) {
                 label = column.label;
             }

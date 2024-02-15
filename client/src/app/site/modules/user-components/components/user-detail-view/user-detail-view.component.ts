@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -10,7 +11,14 @@ import {
     QueryList,
     TemplateRef
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
+import {
+    AbstractControl,
+    UntypedFormBuilder,
+    UntypedFormGroup,
+    ValidationErrors,
+    ValidatorFn,
+    Validators
+} from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -139,7 +147,11 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private selfUpdateEnabled = false;
 
-    public constructor(private fb: UntypedFormBuilder, private operator: OperatorService) {
+    public constructor(
+        private fb: UntypedFormBuilder,
+        private operator: OperatorService,
+        private cd: ChangeDetectorRef
+    ) {
         super();
     }
 
@@ -153,6 +165,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     public ngAfterViewInit(): void {
         this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
+        this.cd.detectChanges();
     }
 
     public isAllowed(permission: string): boolean {
@@ -250,7 +263,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private getFormValuePatch(controlName: keyof ViewUser): any {
         let patchValue = this.patchFormValueFn(controlName, this.user!);
         if (!patchValue) {
-            const userValue = this.user![controlName] as Function | string;
+            const userValue = this.user![controlName] as () => unknown | string;
             patchValue = typeof userValue === `function` ? userValue.call(this.user) : userValue;
         }
         return patchValue;
@@ -289,7 +302,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private getCreateFormControlsConfig(): { [key: string]: any } {
         return {
-            username: [``, this.isNewUser ? [] : [Validators.required]],
+            username: [``, this.isNewUser ? [this.noSpaceValidator()] : [Validators.required, this.noSpaceValidator()]],
             pronoun: [``, Validators.maxLength(32)],
             title: [``],
             first_name: [``],
@@ -307,10 +320,27 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private propagateValues(): void {
         setTimeout(() => {
             // setTimeout prevents 'ExpressionChangedAfterItHasBeenChecked'-error
-            this.changeEvent.emit(this.getChangedValues(this.personalInfoForm.value));
+            const changes = this.getChangedValues(this.personalInfoForm.value);
+            this.changeEvent.emit(changes);
             this.validEvent.emit(this.personalInfoForm.valid && (this.isNewUser || this._hasChanges));
             this.errorEvent.emit(this.personalInfoForm.errors);
         });
+    }
+
+    private noSpaceValidator(): ValidationErrors | null {
+        return (control: AbstractControl): ValidationErrors | null => {
+            const value = control.value;
+
+            if (!value || (this.user?.id && control.pristine)) {
+                return null;
+            }
+
+            const noSpace = value.indexOf(` `) === -1;
+            if (!noSpace) {
+                return { noSpace: `Username may not contain spaces` };
+            }
+            return null;
+        };
     }
 
     private getChangedValues(data: { [key: string]: any }): { [key: string]: any } {
@@ -323,6 +353,13 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
                     this.personalInfoForm.get(key).markAsTouched();
                 }
             });
+            if (this.user.id) {
+                for (const key of Object.keys(newData)) {
+                    if (this.personalInfoForm.get(key).pristine) {
+                        delete newData[key];
+                    }
+                }
+            }
             if (this.user.saml_id && newData[`default_password`]) {
                 delete newData[`default_password`];
             }

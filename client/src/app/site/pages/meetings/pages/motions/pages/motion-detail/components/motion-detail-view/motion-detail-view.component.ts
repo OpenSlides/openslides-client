@@ -17,7 +17,6 @@ import { LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motio
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -140,7 +139,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     private _amendmentsInMainList = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public vp: ViewPortService,
         public operator: OperatorService,
@@ -159,7 +157,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         private cd: ChangeDetectorRef,
         private pdfExport: MotionPdfExportService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
             this._forwardingAvailable = forwardingAvailable;
@@ -218,8 +216,27 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Trigger to delete the motion.
      */
     public async deleteMotionButton(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this motion?`);
-        const content = this.motion.getTitle();
+        let title = this.translate.instant(`Are you sure you want to delete this motion? `);
+        let content = this.motion.getTitle();
+        if (this.motion.amendments.length) {
+            title = this.translate.instant(
+                `Warning: Amendments exist for this motion. Are you sure you want to delete this motion regardless?`
+            );
+            content =
+                `<i>` +
+                this.translate.instant(`Motion`) +
+                ` ` +
+                this.motion.getTitle() +
+                `</i>` +
+                `<br>` +
+                this.translate.instant(
+                    `Deleting this motion will likely impact it's amendments negatively and they could become unusable.`
+                ) +
+                `<br>` +
+                this.translate.instant(`List of amendments: `) +
+                `<br>` +
+                this.motion.amendments.map(amendment => amendment.number).join(`, `);
+        }
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.motion);
             this.router.navigate([this.activeMeetingId, `motions`]);
@@ -457,8 +474,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
             const defaultTitle = `${this.translate.instant(`Amendment to`)} ${parentMotion.numberOrTitle}`;
             motion.title = defaultTitle;
             motion.category_id = parentMotion.category_id;
-            motion.tag_ids = parentMotion.tag_ids;
-            motion.block_id = parentMotion.block_id;
             const amendmentTextMode = this.meetingSettingService.instant(`motions_amendments_text_mode`);
             if (amendmentTextMode === `fulltext`) {
                 motion.text = parentMotion.text;
