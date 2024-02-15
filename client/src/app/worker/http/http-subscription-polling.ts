@@ -11,11 +11,14 @@ export class HttpSubscriptionPolling extends HttpSubscription {
     }
 
     public async stop(): Promise<void> {
-        clearTimeout(this.timeout);
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
     }
 
-    public restart(): Promise<void> {
-        throw new Error(`Method not implemented.`);
+    public async restart(): Promise<void> {
+        await this.stop();
+        await this.start();
     }
 
     private async initialRequest(): Promise<void> {

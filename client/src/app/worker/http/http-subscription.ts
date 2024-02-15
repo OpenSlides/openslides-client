@@ -1,15 +1,22 @@
+import { HttpMethod } from 'src/app/infrastructure/definitions/http';
+
 export interface HttpSubscriptionEndpoint {
     url: string;
-    method: 'POST' | 'GET';
+    method: HttpMethod;
     payload?: string;
     authToken?: string;
+    healthCheckUrl?: string;
 }
 
 export interface HttpSubscriptionCallbacks {
-    onData: (data: unknown) => void;
-    onError: (error: unknown) => void;
+    onData?: (data: unknown) => void;
+    onError?: (error: unknown) => void;
 }
 
+/**
+ * Abstraction of a connection to a service which continiously publishes
+ * new data.
+ */
 export abstract class HttpSubscription {
     constructor(protected endpoint: HttpSubscriptionEndpoint, protected callbacks: HttpSubscriptionCallbacks) {}
 

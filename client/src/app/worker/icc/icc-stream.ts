@@ -1,3 +1,3 @@
-import { WorkerHttpStream } from '../http/stream';
+import { HttpStream } from '../http/http-stream';
 
-export class ICCStream extends WorkerHttpStream {}
+export class ICCStream extends HttpStream {}

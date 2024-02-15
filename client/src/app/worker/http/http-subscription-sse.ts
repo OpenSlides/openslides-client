@@ -4,14 +4,19 @@ import { HttpSubscription } from './http-subscription';
 
 export class HttpSubscriptionSSE extends HttpSubscription {
     private abortCtrl: AbortController = undefined;
+    private abortResolver: (val?: any) => void | undefined;
 
     public async start(): Promise<void> {
         await this.doRequest();
     }
 
     public async stop(): Promise<void> {
-        if (this.abortCtrl) {
+        if (this.abortCtrl !== undefined) {
+            const abortPromise = new Promise(resolver => (this.abortResolver = resolver));
+            setTimeout(this.abortResolver, 5000);
             this.abortCtrl.abort();
+            await abortPromise;
+            this.abortResolver = undefined;
         }
     }
 
@@ -61,6 +66,14 @@ export class HttpSubscriptionSSE extends HttpSubscription {
                     next = line;
                 }
             }
+        }
+
+        if (next) {
+            this.callbacks.onData(next);
+        }
+
+        if (this.abortResolver) {
+            this.abortResolver();
         }
 
         if (!response.ok) {
