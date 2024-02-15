@@ -26,12 +26,14 @@ import { ViewMotionChangeRecommendation, ViewMotionStatuteParagraph, ViewMotionW
 import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
 import { ViewMotionComment } from '../modules/comments/view-models/view-motion-comment';
 import { ViewMotionCommentSection } from '../modules/comments/view-models/view-motion-comment-section';
+import { ViewMotionEditor } from '../modules/editors';
 import { ViewMotionBlock } from '../modules/motion-blocks/view-models/view-motion-block';
 import { HasPersonalNote } from '../modules/personal-notes/view-models/has-personal-note';
 import { ViewPersonalNote } from '../modules/personal-notes/view-models/view-personal-note';
 import { ViewMotionState } from '../modules/states/view-models/view-motion-state';
 import { ViewMotionSubmitter } from '../modules/submitters';
 import { HasTags } from '../modules/tags/view-models/has-tags';
+import { ViewMotionWorkingGroupSpeaker } from '../modules/working-group-speakers';
 
 export interface HasReferencedMotionsInExtension extends HasReferencedMotionInExtensionIds {
     referenced_in_motion_state_extensions: ViewMotion[];
@@ -369,6 +371,8 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
     supporter_meeting_users: ViewMeetingUser[];
+    editors: ViewMotionEditor[];
+    working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     change_recommendations: ViewMotionChangeRecommendation[];
     statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];

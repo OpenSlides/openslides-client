@@ -1,28 +1,25 @@
-import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionSubmitter } from 'src/app/domain/models/motions/motion-submitter';
+import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
 import { Action } from 'src/app/gateways/actions';
-import { MotionSubmitterRepositoryService } from 'src/app/gateways/repositories/motions';
+import { BaseMotionMeetingUserRepositoryService } from 'src/app/gateways/repositories/motions/util';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
-import { ViewMotion } from '../../../../view-models';
-import { ViewMotionSubmitter } from '../../view-models';
+import { BaseHasMeetingUserViewModel } from '../../../base/base-has-meeting-user-view-model';
+import { ViewMotion } from '../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
-export class MotionSubmitterControllerService extends BaseMeetingControllerService<
-    ViewMotionSubmitter,
-    MotionSubmitter
-> {
+export class BaseMotionMeetingUserControllerService<
+    V extends BaseHasMeetingUserViewModel<M>,
+    M extends BaseModel
+> extends BaseMeetingControllerService<V, M> {
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionSubmitterRepositoryService,
+        constructor: ModelConstructor<M>,
+        protected override repo: BaseMotionMeetingUserRepositoryService<V, M>,
         private userRepo: UserControllerService
     ) {
-        super(controllerServiceCollector, MotionSubmitter, repo);
+        super(controllerServiceCollector, constructor, repo);
     }
 
     public create(motion: ViewMotion, ...users: Identifiable[]): Action<Identifiable[]> {
@@ -30,11 +27,11 @@ export class MotionSubmitterControllerService extends BaseMeetingControllerServi
         return this.repo.create(motion, ...meetingUsers);
     }
 
-    public delete(...submitters: Identifiable[]): Action<void> {
-        return this.repo.delete(...submitters);
+    public delete(...models: Identifiable[]): Action<void> {
+        return this.repo.delete(...models);
     }
 
-    public sort(submitters: Identifiable[], motion: Identifiable): Action<void> {
-        return this.repo.sort(submitters, motion);
+    public sort(models: Identifiable[], motion: Identifiable): Action<void> {
+        return this.repo.sort(models, motion);
     }
 }

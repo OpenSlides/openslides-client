@@ -90,7 +90,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                     { condition: `male`, label: this.translate.instant(`male`) },
                     { condition: `diverse`, label: this.translate.instant(`diverse`) },
                     { condition: `non-binary`, label: this.translate.instant(`non-binary`) },
-                    { condition: null, label: this.translate.instant(`unknown`) }
+                    { condition: null, label: this.translate.instant(`not specified`) }
                 ]
             },
             {

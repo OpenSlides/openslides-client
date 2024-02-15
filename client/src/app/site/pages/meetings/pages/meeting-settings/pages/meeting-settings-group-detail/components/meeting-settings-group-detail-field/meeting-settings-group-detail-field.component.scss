@@ -6,14 +6,15 @@
         flex: 2;
     }
 
-    .mat-form-field {
+    .mat-mdc-form-field {
+        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
         .mat-form-field-subscript-wrapper {
             position: static;
         }
     }
 
     /* Full width form fields */
-    .mat-form-field {
+    .mat-mdc-form-field {
         width: 100%;
     }
 
@@ -21,7 +22,7 @@
         margin-left: -20px;
         display: flex;
 
-        .mat-form-field {
+        .mat-mdc-form-field {
             flex: 1;
             box-sizing: border-box;
             padding-left: 20px;

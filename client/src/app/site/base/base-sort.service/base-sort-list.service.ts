@@ -1,5 +1,4 @@
 import { Directive, inject, Injector, ProviderToken } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import {
     auditTime,
     BehaviorSubject,
@@ -36,7 +35,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         const option = this.sortOptions.find(option =>
             this.isSameProperty(option.property, this.sortDefinition.sortProperty)
         );
-        return option.baseKeys ?? (Array.isArray(option.property) ? option.property : [option.property]);
+        return option?.baseKeys ?? (Array.isArray(option.property) ? option.property : [option.property]);
     }
 
     /**
@@ -46,7 +45,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         const option = this.sortOptions.find(option =>
             this.isSameProperty(option.property, this.sortDefinition.sortProperty)
         );
-        return option.foreignBaseKeys ?? {};
+        return option?.foreignBaseKeys ?? {};
     }
 
     /**
@@ -180,14 +179,11 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     private initializationCount = 0;
 
     private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private store = inject(StorageService);
+    private injector = inject(Injector);
 
-    public constructor(
-        translate: TranslateService,
-        private store: StorageService,
-        private injector: Injector,
-        defaultDefinition: OsSortingDefinition<V> | Observable<OsSortingDefinition<V>>
-    ) {
-        super(translate);
+    public constructor(defaultDefinition: OsSortingDefinition<V> | Observable<OsSortingDefinition<V>>) {
+        super();
 
         this._defaultDefinitionSubject
             .pipe(distinctUntilChanged((prev, curr) => prev?.sortProperty === curr?.sortProperty))

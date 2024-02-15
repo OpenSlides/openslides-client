@@ -3,44 +3,42 @@
 </h1>
 <div class="os-form-card-mobile" mat-dialog-content>
     <mat-form-field>
-        <mat-select placeholder="{{ 'Groups' | translate }}" [(ngModel)]="infoDialog.group_ids" multiple>
+        <mat-label>{{ 'Groups' | translate }}</mat-label>
+        <mat-select [(ngModel)]="infoDialog.group_ids" multiple>
             <mat-option *ngFor="let group of groupsObservable | async" [value]="group.id">
                 {{ group.getTitle() }}
             </mat-option>
         </mat-select>
     </mat-form-field>
     <mat-form-field *ngIf="showVoteDelegations">
+        <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
         <os-list-search-selector
             [(ngModel)]="infoDialog.vote_delegations_from_ids"
             [multiple]="true"
-            placeholder="{{ 'Voting right received from (principals)' | translate }}"
             [inputListValues]="otherParticipantsObservable"
         ></os-list-search-selector>
     </mat-form-field>
     <mat-form-field *ngIf="showVoteDelegations">
+        <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
         <os-list-search-selector
             [(ngModel)]="infoDialog.vote_delegated_to_id"
             [multiple]="false"
             [includeNone]="true"
-            placeholder="{{ 'Voting right delegated to (proxy)' | translate }}"
             [inputListValues]="otherParticipantsObservable"
         ></os-list-search-selector>
     </mat-form-field>
     <mat-form-field>
-        <input
-            type="text"
-            matInput
-            placeholder="{{ 'Structure level' | translate }}"
-            [(ngModel)]="infoDialog.structure_level"
-        />
+        <mat-label>{{ 'Structure level' | translate }}</mat-label>
+        <os-list-search-selector
+            [(ngModel)]="infoDialog.structure_level_ids"
+            [multiple]="true"
+            [includeNone]="true"
+            [inputListValues]="structureLevelObservable"
+        ></os-list-search-selector>
     </mat-form-field>
     <mat-form-field>
-        <input
-            type="text"
-            matInput
-            placeholder="{{ 'Participant number' | translate }}"
-            [(ngModel)]="infoDialog.number"
-        />
+        <mat-label>{{ 'Participant number' | translate }}</mat-label>
+        <input type="text" matInput [(ngModel)]="infoDialog.number" />
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
@@ -53,7 +51,7 @@
             vote_delegations_from_ids: infoDialog.vote_delegations_from_ids,
             vote_delegated_to_id: infoDialog.vote_delegated_to_id,
             number: infoDialog.number,
-            structure_level: infoDialog.structure_level
+            structure_level_ids: infoDialog.structure_level_ids
         }"
     >
         <span>{{ 'Save' | translate }}</span>

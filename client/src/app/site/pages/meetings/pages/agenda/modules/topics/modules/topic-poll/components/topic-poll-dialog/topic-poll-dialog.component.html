@@ -43,13 +43,8 @@
                 <!-- Enter new option -->
                 <div>
                     <mat-form-field>
-                        <input
-                            require
-                            matInput
-                            [(ngModel)]="optionInput"
-                            type="text"
-                            [placeholder]="'New option' | translate"
-                        />
+                        <mat-label>{{ 'New option' | translate }}</mat-label>
+                        <input require matInput [(ngModel)]="optionInput" type="text" />
                         <mat-error>{{ 'This field is required.' | translate }}</mat-error>
                     </mat-form-field>
                 </div>

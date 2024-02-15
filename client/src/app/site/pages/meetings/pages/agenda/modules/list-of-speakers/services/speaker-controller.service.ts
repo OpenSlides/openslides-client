@@ -29,19 +29,20 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
 
     public create(
         listOfSpeakers: ViewListOfSpeakers,
-        userId: Id,
+        userId?: Id,
         optionalInformation?: {
             pointOfOrder?: boolean;
             note?: UnsafeHtml;
             speechState?: SpeechState;
             point_of_order_category_id?: Id;
             meeting_user_id?: Id;
+            structure_level_id?: Id;
         }
     ): Promise<Identifiable> {
         const meetingUserId =
             optionalInformation.meeting_user_id ??
             this.userRepo.getViewModel(userId)?.getMeetingUser(listOfSpeakers.meeting_id).id;
-        if (!meetingUserId) {
+        if (!meetingUserId && optionalInformation.speechState !== SpeechState.INTERPOSED_QUESTION) {
             throw new Error(`Speaker creation failed: Selected user may not be in meeting`);
         }
         return this.repo.create(listOfSpeakers, meetingUserId, optionalInformation);
@@ -49,6 +50,16 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
 
     public delete(id: Id): Promise<void> {
         return this.repo.delete(id);
+    }
+
+    public setMeetingUser(speaker: ViewSpeaker, meeting_user_id: Id, structure_level_id?: Id): Promise<void> {
+        return this.repo.update(
+            {
+                meeting_user_id,
+                structure_level_id
+            },
+            speaker
+        );
     }
 
     public setProSpeech(speaker: ViewSpeaker): Promise<void> {
@@ -63,8 +74,20 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
         return this.repo.setContribution(speaker);
     }
 
+    public setIntervention(speaker: ViewSpeaker): Promise<void> {
+        return this.repo.setIntervention(speaker);
+    }
+
     public startToSpeak(speaker: ViewSpeaker): Promise<void> {
         return this.repo.startToSpeak(speaker);
+    }
+
+    public unpauseSpeak(speaker: ViewSpeaker): Promise<void> {
+        return this.repo.unpauseSpeak(speaker);
+    }
+
+    public pauseSpeak(speaker: ViewSpeaker): Promise<void> {
+        return this.repo.pauseSpeak(speaker);
     }
 
     public stopToSpeak(speaker: ViewSpeaker): Promise<void> {
@@ -73,6 +96,10 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
 
     public sortSpeakers(listOfSpeakers: ViewListOfSpeakers, speakerIds: Id[]): Promise<void> {
         return this.repo.sortSpeakers(listOfSpeakers, speakerIds);
+    }
+
+    public setStructureLevel(speaker: ViewSpeaker, structureLevelId: Id): Promise<void> {
+        return this.repo.setStructureLevel(structureLevelId, speaker);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

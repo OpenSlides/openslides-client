@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
@@ -35,7 +35,6 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
     private _forwardingMeetingsUpdateRequired = true;
 
     public constructor(
-        dialog: MatDialog,
         private translate: TranslateService,
         private repo: MotionRepositoryService,
         private formatService: MotionFormatService,
@@ -45,7 +44,7 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         private operator: OperatorService,
         private modelRequest: ModelRequestService
     ) {
-        super(dialog);
+        super();
 
         this.activeMeeting.meetingIdObservable.subscribe(() => {
             this._forwardingMeetingsUpdateRequired = true;
@@ -73,6 +72,10 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
 
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
         const toForward = motions.filter(motion => motion.state?.allow_motion_forwarding);
+        if (toForward.length === 0) {
+            this.snackbar.open(this.translate.instant(`None of the selected motions can be forwarded.`), `Ok`);
+            return;
+        }
         const dialogRef = await this.open(toForward);
         const toMeetingIds = (await firstValueFrom(dialogRef.afterClosed())) as Ids;
         if (toMeetingIds) {

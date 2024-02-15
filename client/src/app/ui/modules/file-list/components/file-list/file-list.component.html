@@ -169,14 +169,8 @@
     <div class="os-form-card-mobile" mat-dialog-content>
         <form class="edit-file-form" [formGroup]="fileEditForm">
             <mat-form-field>
-                <input
-                    type="text"
-                    matInput
-                    osAutofocus
-                    required
-                    formControlName="title"
-                    placeholder="{{ 'New file name' | translate }}"
-                />
+                <mat-label>{{ 'New file name' | translate }}</mat-label>
+                <input type="text" matInput osAutofocus required formControlName="title" />
                 <mat-error *ngIf="fileEditForm.invalid">{{ 'Required' | translate }}</mat-error>
             </mat-form-field>
         </form>
@@ -205,11 +199,11 @@
     <div class="os-form-card-mobile" [formGroup]="moveForm" mat-dialog-content>
         <p>{{ 'Please select the directory:' | translate }}</p>
         <mat-form-field>
+            <mat-label>{{ 'Upload to' | translate }}</mat-label>
             <os-list-search-selector
                 formControlName="directory_id"
                 [includeNone]="true"
                 noneTitle="{{ 'Base folder' | translate }}"
-                placeholder="{{ 'Upload to' | translate }}"
                 [inputListValues]="filteredDirectoryBehaviorSubject"
             ></os-list-search-selector>
         </mat-form-field>

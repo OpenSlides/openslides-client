@@ -1,5 +1,5 @@
 <h4>
-    <span class="title-font">{{ 'Submitters' | translate }}</span>
+    <span class="title-font">{{ title }}</span>
     <button
         class="small-button"
         type="button"
@@ -23,22 +23,16 @@
 </h4>
 
 <div *ngIf="!isEditMode || !perms.isAllowed('change_metadata')">
-    <mat-chip-list *ngFor="let submitter of motion.submitters" class="user">
-        <mat-basic-chip disableRipple>{{ submitter.user?.getTitle() }}</mat-basic-chip>
+    <mat-chip-list *ngFor="let model of intermediateModels" class="user">
+        <mat-basic-chip disableRipple>{{ model.user?.getTitle() }}</mat-basic-chip>
     </mat-chip-list>
 </div>
 
 <div *ngIf="isEditMode && perms.isAllowed('change_metadata')">
-    <os-sorting-list
-        *ngIf="motion.submitters?.length"
-        [input]="editSubmitterObservable"
-        [live]="true"
-        [count]="false"
-        (sortEvent)="onSortingChange($event)"
-    >
+    <os-sorting-list [input]="editObservable" [live]="true" [count]="false" (sortEvent)="onSortingChange($event)">
         <!-- implicit user references into the component using ng-template slot -->
         <ng-template let-user>
-            <div class="single-submitter-line">
+            <div class="single-line">
                 <span class="ellipsis-overflow">
                     {{ user.getTitle() }}
                 </span>
@@ -59,9 +53,9 @@
 
     <div class="search-users">
         <os-participant-search-selector
-            [nonSelectableUserIds]="editSubmitterUserIds"
-            placeholder="{{ 'Select or search new submitter ...' | translate }}"
-            (userSelected)="addSubmitter($event)"
+            [nonSelectableUserIds]="editUserIds"
+            placeholder="{{ 'Select or search new participant ...' | translate }}"
+            (userSelected)="addUser($event)"
         ></os-participant-search-selector>
     </div>
 
