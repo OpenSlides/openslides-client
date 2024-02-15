@@ -167,7 +167,6 @@ export const PollPercentBaseVerbose = {
     entitled: _(`All entitled users`),
     entitled_present: _(`All present entitled users`),
     disabled: _(`Disabled (no percents)`)
-
 };
 
 export type PollPercentBaseVerboseKey = keyof typeof PollPercentBaseVerbose;
