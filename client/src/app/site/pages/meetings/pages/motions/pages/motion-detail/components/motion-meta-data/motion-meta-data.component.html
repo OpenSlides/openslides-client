@@ -142,6 +142,7 @@
         [searchLists]="searchLists"
         [listValueTransformFns]="[motionTransformFn]"
         (succeeded)="setRecommendationExtension($event)"
+        [internal]="motion?.state?.is_internal"
     >
         <span class="trigger-menu">
             <button
