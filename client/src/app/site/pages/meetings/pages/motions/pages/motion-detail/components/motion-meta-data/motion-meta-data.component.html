@@ -48,7 +48,7 @@
     </p>
 </div>
 
-<div *osMeetingSetting="'motions_enable_editor'; and: !!motion?.editors">
+<div *osMeetingSetting="'motions_enable_editor'; and: perms.isAllowed('change_metadata')">
     <os-motion-manage-motion-meeting-users
         [motion]="motion"
         [repo]="motionEditorRepo"
@@ -57,7 +57,7 @@
     ></os-motion-manage-motion-meeting-users>
 </div>
 
-<div *osMeetingSetting="'motions_enable_working_group_speaker'; and: !!motion?.working_group_speakers">
+<div *osMeetingSetting="'motions_enable_working_group_speaker'; and: perms.isAllowed('change_metadata')">
     <os-motion-manage-motion-meeting-users
         [motion]="motion"
         [repo]="motionWorkingGroupSpeakerRepo"
