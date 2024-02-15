@@ -1,6 +1,13 @@
 <!-- Submitters -->
 <div *ngIf="motion?.submitters">
-    <div><os-motion-manage-submitters [motion]="motion"></os-motion-manage-submitters></div>
+    <div class="remove-top-margin">
+        <os-motion-manage-motion-meeting-users
+            [motion]="motion"
+            [repo]="motionSubmitterRepo"
+            field="submitters"
+            title="{{ 'Submitters' | translate }}"
+        ></os-motion-manage-motion-meeting-users>
+    </div>
 </div>
 
 <!-- do Support -->
@@ -39,6 +46,24 @@
             <ng-template let-supporter>{{ supporter.full_name }}</ng-template>
         </os-comma-separated-listing>
     </p>
+</div>
+
+<div *osMeetingSetting="'motions_enable_editor'; and: perms.isAllowed('change_metadata')">
+    <os-motion-manage-motion-meeting-users
+        [motion]="motion"
+        [repo]="motionEditorRepo"
+        field="editors"
+        title="{{ 'Editors' | translate }}"
+    ></os-motion-manage-motion-meeting-users>
+</div>
+
+<div *osMeetingSetting="'motions_enable_working_group_speaker'; and: perms.isAllowed('change_metadata')">
+    <os-motion-manage-motion-meeting-users
+        [motion]="motion"
+        [repo]="motionWorkingGroupSpeakerRepo"
+        field="working_group_speakers"
+        title="{{ 'Working group speakers' | translate }}"
+    ></os-motion-manage-motion-meeting-users>
 </div>
 
 <!-- Set State -->

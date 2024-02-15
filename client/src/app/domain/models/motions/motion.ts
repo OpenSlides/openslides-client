@@ -75,6 +75,8 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public block_id!: Id; // block/motion_ids;
     public submitter_ids!: Id[]; // (motion_submitter/motion_id)[];
     public supporter_meeting_user_ids!: Id[]; // (_meeting_user/supported_motion_ids)[];
+    public editor_ids: Id[]; // motion_editor/motion_id;
+    public working_group_speaker_ids: Id[]; // motion_working_group_speaker/motion_id;
     public poll_ids!: Id[]; // (motion_poll/motion_id)[];
     public change_recommendation_ids!: Id[]; // (motion_change_recommendation/motion_id)[];
     public statute_paragraph_id!: Id; // motion_statute_paragraph/motion_ids;
@@ -132,6 +134,8 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `category_id`,
         `block_id`,
         `submitter_ids`,
+        `editor_ids`,
+        `working_group_speaker_ids`,
         `supporter_meeting_user_ids`,
         `poll_ids`,
         `change_recommendation_ids`,
