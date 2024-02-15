@@ -4,6 +4,7 @@
             [listObservable]="entitledUsersObservable"
             [filterProps]="filterPropsEntitledUsersTable"
             [fullScreen]="false"
+            [filterService]="filter"
         >
             <!-- Content -->
             <div *osScrollingTableCell="'user_id'; row as entry">
