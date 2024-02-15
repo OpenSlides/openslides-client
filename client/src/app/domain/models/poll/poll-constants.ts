@@ -98,6 +98,7 @@ export enum PollPercentBase {
 
 export interface EntitledUsersEntry {
     user_id: number;
+    present: boolean;
     voted: boolean;
     vote_delegated_to_user_id?: number;
 }

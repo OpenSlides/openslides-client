@@ -26,6 +26,10 @@
                 </div>
                 <i *ngIf="!entry.user">{{ 'Anonymous' | translate }}</i>
             </div>
+            <div *osScrollingTableCell="'present'; row as entry; config: { width: 24 }">
+                <div *osScrollingTableCellLabel>{{ 'Is present' | translate }}</div>
+                <mat-icon *ngIf="entry.present" [matTooltip]="'Is present' | translate">check</mat-icon>
+            </div>
             <div *osScrollingTableCell="'voted'; row as entry; config: { width: 24 }">
                 <div *osScrollingTableCellLabel>{{ 'Voted' | translate }}</div>
                 <mat-icon *ngIf="entry.voted" [matTooltip]="'Vote submitted' | translate">how_to_vote</mat-icon>
