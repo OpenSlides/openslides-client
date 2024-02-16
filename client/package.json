@@ -37,6 +37,7 @@
     "get-available-languages": "npm run ts -- cli/get-available-languages.ts"
   },
   "dependencies": {
+    "@angular-material-components/datetime-picker": "^16.0.1",
     "@angular/animations": "^16.2.5",
     "@angular/cdk": "^16.2.4",
     "@angular/common": "^16.2.5",

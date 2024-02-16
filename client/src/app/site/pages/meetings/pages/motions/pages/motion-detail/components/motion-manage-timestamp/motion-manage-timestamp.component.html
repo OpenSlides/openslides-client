@@ -1,0 +1,55 @@
+<h4>
+    <span class="title-font">{{ title }}</span>
+    <button
+        class="small-button"
+        type="button"
+        mat-icon-button
+        disableRipple
+        *ngIf="!isEditMode && perms.isAllowed('change_metadata')"
+        (click)="onEdit()"
+    >
+        <mat-icon>edit</mat-icon>
+    </button>
+    <button
+        class="small-button"
+        type="button"
+        mat-icon-button
+        disableRipple
+        *ngIf="isEditMode && perms.isAllowed('change_metadata')"
+        (click)="onCancel()"
+    >
+        <mat-icon>close</mat-icon>
+    </button>
+</h4>
+
+<div *ngIf="!isEditMode || !perms.isAllowed('change_metadata')">
+    <div>{{ motion[field] | localizedDate }}</div>
+</div>
+
+<div *ngIf="isEditMode && perms.isAllowed('change_metadata')">
+    <mat-form-field class="datepicker-form-field">
+        <mat-label *ngIf="title">{{ title | translate }}</mat-label>
+        <input matInput [ngxMatDatetimePicker]="picker" [formControl]="contentForm" (click)="picker.open()" readonly />
+        <div class="suffix-wrapper" matSuffix>
+            <ngx-mat-datepicker-toggle [for]="picker" (click)="$event.preventDefault()"></ngx-mat-datepicker-toggle>
+        </div>
+        <ngx-mat-datetime-picker #picker>
+            <ngx-mat-datepicker-actions>
+                <!-- <button mat-button (click)="updateForm(null)" ngxMatDatepickerCancel color="warn">
+                    {{ 'Clear' | translate }}
+                </button> -->
+                <button mat-button ngxMatDatepickerCancel>{{ 'Cancel' | translate }}</button>
+                <button mat-raised-button color="primary" ngxMatDatepickerApply>{{ 'Apply' | translate }}</button>
+            </ngx-mat-datepicker-actions>
+        </ngx-mat-datetime-picker>
+    </mat-form-field>
+
+    <p>
+        <button type="button" mat-button (click)="onSave()">
+            <span>{{ 'Save' | translate }}</span>
+        </button>
+        <button type="button" mat-button (click)="onCancel()">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </p>
+</div>

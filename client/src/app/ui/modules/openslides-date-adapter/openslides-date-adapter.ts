@@ -23,4 +23,66 @@ export class OpenSlidesDateAdapter extends DateFnsAdapter {
     private async updateLocaleByName(name: string): Promise<void> {
         this.setLocale(await langToTimeLocale(name));
     }
+
+    // -------------------------------------------------------
+    // NgxMatDateAdapter port for NgxMatDatetimePicker support
+    // -------------------------------------------------------
+    public getHour(date: Date): number {
+        return date.getHours();
+    }
+
+    public getMinute(date: Date): number {
+        return date.getMinutes();
+    }
+
+    public getSecond(date: Date): number {
+        return date.getSeconds();
+    }
+
+    public setHour(date: Date, value: number): void {
+        date.setHours(value);
+    }
+
+    public setMinute(date: Date, value: number): void {
+        date.setMinutes(value);
+    }
+
+    public setSecond(date: Date, value: number): void {
+        date.setSeconds(value);
+    }
+
+    public isSameTime(a: Date, b: Date): boolean {
+        if (a == null || b == null) return true;
+        return (
+            this.getHour(a) === this.getHour(b) &&
+            this.getMinute(a) === this.getMinute(b) &&
+            this.getSecond(a) === this.getSecond(b)
+        );
+    }
+
+    public copyTime(toDate: Date, fromDate: Date): void {
+        this.setHour(toDate, this.getHour(fromDate));
+        this.setMinute(toDate, this.getMinute(fromDate));
+        this.setSecond(toDate, this.getSecond(fromDate));
+    }
+
+    public compareDateWithTime(first: Date, second: Date, showSeconds?: boolean): number {
+        let res =
+            super.compareDate(first, second) ||
+            this.getHour(first) - this.getHour(second) ||
+            this.getMinute(first) - this.getMinute(second);
+        if (showSeconds) {
+            res = res || this.getSecond(first) - this.getSecond(second);
+        }
+        return res;
+    }
+
+    public setTimeByDefaultValues(date: Date, defaultTime: number[]): void {
+        if (!Array.isArray(defaultTime)) {
+            throw Error(`@Input DefaultTime should be an array`);
+        }
+        this.setHour(date, defaultTime[0] || 0);
+        this.setMinute(date, defaultTime[1] || 0);
+        this.setSecond(date, defaultTime[2] || 0);
+    }
 }
