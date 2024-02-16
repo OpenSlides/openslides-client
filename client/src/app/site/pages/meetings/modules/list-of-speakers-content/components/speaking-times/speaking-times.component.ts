@@ -20,10 +20,7 @@ import { ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { CurrentSpeakingStructureLevelSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-speaking-structure-level-slide.service';
-import { CurrentStructureLevelListSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-structure-level-list-slide.service';
 import { ViewStructureLevelListOfSpeakers } from '../../../../pages/participants/pages/structure-levels/view-models';
-import { ProjectionBuildDescriptor } from '../../../../view-models';
 
 @Component({
     selector: `os-speaking-times`,
@@ -98,8 +95,6 @@ export class SpeakingTimesComponent implements OnDestroy {
         private formBuilder: UntypedFormBuilder,
         private cd: ChangeDetectorRef,
         private promptService: PromptService,
-        private currentStructureLevelListSlideService: CurrentStructureLevelListSlideService,
-        private currentSpeakingStructureLevelSlideService: CurrentSpeakingStructureLevelSlideService,
         private translateService: TranslateService
     ) {
         this.totalTimeForm = this.formBuilder.group({
@@ -200,13 +195,5 @@ export class SpeakingTimesComponent implements OnDestroy {
         this.speakingTimesRepo.update([
             { id: this.currentEntry.id, initial_time: this.totalTimeForm.get(`totalTime`).value }
         ]);
-    }
-
-    public getAllStructureLevel(): ProjectionBuildDescriptor {
-        return this.currentStructureLevelListSlideService.getProjectionBuildDescriptor(false);
-    }
-
-    public getCurrentStructureLevel(): ProjectionBuildDescriptor {
-        return this.currentSpeakingStructureLevelSlideService.getProjectionBuildDescriptor(true);
     }
 }
