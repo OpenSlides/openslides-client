@@ -137,8 +137,8 @@ export class OpenSlidesMainComponent implements OnInit {
                     await this.updateService.applyUpdate();
                     return;
                 }
-            } else {
-                this.updateService.checkForUpdate();
+            } else if (await this.updateService.checkForUpdate()) {
+                await this.updateService.applyUpdate();
             }
         } catch (_) {}
 
