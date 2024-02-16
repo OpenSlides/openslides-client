@@ -57,8 +57,9 @@ export class MotionManageTimestampComponent extends BaseUiComponent {
     }
 
     public async onSave(): Promise<void> {
+        const date: Date | null = this.contentForm.value;
         await this.motionController
-            .update({ [this.field]: (this.contentForm.value as Date).getTime() / 1000 }, this.motion)
+            .update({ [this.field]: date ? date.getTime() / 1000 : null }, this.motion)
             .resolve();
         this.isEditMode = false;
     }
@@ -78,5 +79,9 @@ export class MotionManageTimestampComponent extends BaseUiComponent {
         const date = timestamp ? new Date(timestamp * 1000) : null;
         this.contentForm.setValue(date);
         this.isEditMode = true;
+    }
+
+    public clearForm(): void {
+        this.contentForm.setValue(null);
     }
 }
