@@ -130,7 +130,7 @@ export const Slides: SlideManifest[] = [
             import(`../components/projector-countdown-slide/projector-countdown-slide.module`).then(
                 m => m.ProjectorCountdownSlideModule
             ),
-        verboseName: _(`Countdown`),
+        verboseName: _(`Countdown/Timer`),
         scaleable: false,
         scrollable: false
     },
