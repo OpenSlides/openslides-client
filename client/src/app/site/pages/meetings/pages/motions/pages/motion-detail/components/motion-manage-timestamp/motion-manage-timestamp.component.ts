@@ -74,7 +74,9 @@ export class MotionManageTimestampComponent extends BaseUiComponent {
      * Enter the edit mode and reset the form and the data.
      */
     public onEdit(): void {
-        this.contentForm.setValue(this.motion[this.field]);
+        const timestamp = this.motion[this.field];
+        const date = timestamp ? new Date(timestamp * 1000) : null;
+        this.contentForm.setValue(date);
         this.isEditMode = true;
     }
 }
