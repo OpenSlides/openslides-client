@@ -38,6 +38,7 @@ import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
+import { Plugin } from '@tiptap/pm/state';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 
 import { EditorHtmlDialogComponent, EditorHtmlDialogOutput } from '../editor-html-dialog/editor-html-dialog.component';
@@ -46,6 +47,110 @@ import {
     EditorImageDialogOutput
 } from '../editor-image-dialog/editor-image-dialog.component';
 import { EditorLinkDialogComponent, EditorLinkDialogOutput } from '../editor-link-dialog/editor-link-dialog.component';
+
+const OfficePastePlugin = new Plugin({
+    props: {
+        transformPastedHTML(html: string) {
+            if (html.indexOf(`MsoListParagraphCxSp`) === -1) {
+                return html;
+            }
+
+            const doc = document.createElement(`div`);
+            doc.innerHTML = html;
+
+            const lists: HTMLElement[] = [];
+            let currentUl: HTMLElement;
+            doc.childNodes.forEach(node => {
+                if (node.nodeType !== Node.ELEMENT_NODE) {
+                    return;
+                }
+
+                // Check if the element is part of a list
+                const el = <HTMLElement>node;
+                if (el.className.indexOf(`MsoListParagraphCxSp`) === -1) {
+                    return;
+                }
+
+                if (el.className.indexOf(`MsoListParagraphCxSpFirst`) !== -1) {
+                    if (/[0-9]*\./.test(el.firstElementChild.textContent)) {
+                        currentUl = document.createElement(`ol`);
+                    } else {
+                        currentUl = document.createElement(`ul`);
+                    }
+                    lists.push(currentUl);
+                    el.before(currentUl);
+                }
+
+                // Remove list item numbers
+                if (el.firstElementChild.nodeName === `SPAN`) {
+                    el.firstElementChild.remove();
+                }
+
+                // Get the mso list item level
+                const li = document.createElement(`li`);
+                li.innerHTML = el.innerHTML;
+                const msoListValue: string = el.attributes[`style`].value
+                    .split(`;`)
+                    .find((style: string) => style.split(`:`)[0] === `mso-list`)
+                    .split(`:`)[1];
+
+                const listLevel = +msoListValue
+                    .split(` `)
+                    .find((e: string) => e.startsWith(`level`))
+                    .substring(5);
+
+                // Add list level attribute if element needs to be moved to sublist
+                if (listLevel && listLevel > 1) {
+                    li.dataset[`listLevel`] = `${listLevel - 1}`;
+                }
+                currentUl.appendChild(li);
+                el.remove();
+            });
+
+            fixLists(lists);
+            console.log(html, doc.innerHTML);
+            return doc.innerHTML;
+        }
+    }
+});
+
+function fixLists(lists: HTMLElement[]) {
+    const nextLists = [];
+    for (const list of lists) {
+        // list.childNodes.forEach((node: Element) => {
+        let node = list.childNodes[0];
+        while (node) {
+            if (node.nodeName !== `LI`) {
+                node = node.nextSibling;
+                continue;
+            }
+
+            const el = <HTMLElement>node;
+            node = node.nextSibling;
+            if (+el.dataset[`listLevel`]) {
+                el.dataset[`listLevel`] = `${+el.dataset[`listLevel`] - 1}`;
+                if (!el.previousElementSibling) {
+                    return;
+                }
+
+                // Check if parent already has a sublist
+                let sublist: HTMLElement = document.createElement(list.nodeName);
+                if (el.previousElementSibling?.lastElementChild?.nodeName === list.nodeName) {
+                    sublist = <HTMLElement>el.previousElementSibling.lastElementChild;
+                } else {
+                    el.previousElementSibling.appendChild(sublist);
+                    nextLists.push(sublist);
+                }
+
+                sublist.appendChild(el);
+            }
+        }
+    }
+
+    if (nextLists.length) {
+        fixLists(nextLists);
+    }
+}
 
 @Component({
     selector: `os-editor`,
@@ -75,6 +180,11 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         this.editor = new Editor({
             element: this.editorEl.nativeElement,
             extensions: [
+                Extension.create({
+                    addProseMirrorPlugins() {
+                        return [OfficePastePlugin];
+                    }
+                }),
                 // Nodes
                 Document,
                 Blockquote,
