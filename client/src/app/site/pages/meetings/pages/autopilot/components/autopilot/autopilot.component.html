@@ -83,7 +83,9 @@
             </div>
 
             <!-- Moderator Note-->
-            <os-moderation-note [listOfSpeakers]="listOfSpeakers"></os-moderation-note>
+            <div *ngIf="hasCurrentProjection">
+                <os-moderation-note [listOfSpeakers]="listOfSpeakers"></os-moderation-note>
+            </div>
 
             <!-- Poll-Collection -->
             <os-poll-collection
