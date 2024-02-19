@@ -19,6 +19,9 @@ export class Speaker extends BaseModel<Speaker> {
      */
     public end_time!: number;
 
+    public pause_time!: number;
+    public total_pause!: number;
+
     public weight!: number;
     public point_of_order!: boolean;
     public speech_state!: SpeechState;
@@ -29,8 +32,10 @@ export class Speaker extends BaseModel<Speaker> {
 
     public point_of_order_category_id!: Id; // point_of_order_category/speaker_ids;
 
+    public structure_level_list_of_speakers_id: Id; // structure_level_list_of_speakers/speaker_ids
+
     public get speakingTime(): number {
-        return this.end_time - this.begin_time || 0;
+        return this.end_time - this.begin_time - (this.total_pause || 0) || 0;
     }
 
     public constructor(input?: any) {
@@ -41,11 +46,14 @@ export class Speaker extends BaseModel<Speaker> {
         `id`,
         `begin_time`,
         `end_time`,
+        `pause_time`,
+        `total_pause`,
         `weight`,
         `speech_state`,
         `note`,
         `point_of_order`,
         `list_of_speakers_id`,
+        `structure_level_list_of_speakers_id`,
         `meeting_user_id`,
         `point_of_order_category_id`,
         `meeting_id`

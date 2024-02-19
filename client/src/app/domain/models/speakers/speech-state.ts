@@ -1,5 +1,7 @@
 export enum SpeechState {
     PRO = `pro`,
     CONTRA = `contra`,
-    CONTRIBUTION = `contribution`
+    CONTRIBUTION = `contribution`,
+    INTERPOSED_QUESTION = `interposed_question`,
+    INTERVENTION = `intervention`
 }

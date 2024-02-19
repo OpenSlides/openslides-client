@@ -54,7 +54,7 @@ export class CsvExportForBackendService {
         const header = columns.map(column => {
             let label = ``;
             if (isPropertyDefinition(column)) {
-                label = column.property as string;
+                label = (column.label || column.property) as string;
             } else if (isMapDefinition(column)) {
                 label = column.label;
             }
