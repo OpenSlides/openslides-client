@@ -34,7 +34,8 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
 
         this.updateFilterForRepo({
             repo: structureRepo,
-            filter: this.speakerStructureLevelFilterOptions
+            filter: this.speakerStructureLevelFilterOptions,
+            noneOptionLabel: this.translate.instant(`no structure level`)
         });
     }
 
@@ -62,7 +63,11 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
                     { condition: SpeechState.CONTRA, label: this.translate.instant(`Contra speech`) },
                     { condition: SpeechState.CONTRIBUTION, label: this.translate.instant(`Contribution`) },
                     { condition: SpeechState.INTERVENTION, label: this.translate.instant(`Intervention`) },
-                    { condition: SpeechState.INTERPOSED_QUESTION, label: this.translate.instant(`Interposed question`) }
+                    {
+                        condition: SpeechState.INTERPOSED_QUESTION,
+                        label: this.translate.instant(`Interposed question`)
+                    },
+                    { condition: null, label: this.translate.instant(`no speech type`) }
                 ]
             },
             {
