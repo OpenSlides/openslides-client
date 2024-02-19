@@ -18,7 +18,7 @@ export class StructureLevelRepositoryService extends BaseMeetingRelatedRepositor
         super(repositoryServiceCollector, StructureLevel);
     }
 
-    public getVerboseName = (plural?: boolean): string => (plural ? _(`StructureLevels`) : _(`StructureLevel`));
+    public getVerboseName = (plural?: boolean): string => (plural ? _(`Structure levels`) : _(`Structure level`));
     public getTitle = (viewModel: ViewStructureLevel): string => viewModel.name;
 
     public create(structureLevel: any, meeting_id: Id = this.activeMeetingId): Action<Identifiable> {

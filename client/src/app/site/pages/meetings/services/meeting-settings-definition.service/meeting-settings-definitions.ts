@@ -367,13 +367,15 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `list_of_speakers_intervention_time`,
                         label: _(`Intervention speaking time in seconds`),
                         type: `integer`,
-                        helpText: _(`Choose 0 to disable Intervention`),
+                        helpText: _(`Choose 0 to disable Intervention.`),
                         validators: [Validators.min(0)]
                     },
                     {
                         key: `list_of_speakers_default_structure_level_time`,
-                        label: _(`Default structure level speaking time in seconds`),
-                        helpText: _(`Choose a number bigger than 0 to couple countdown with the speaking times`),
+                        label: _(`Default speaking time for structure levels in seconds`),
+                        helpText: _(
+                            `Choose a number greater than 0 to activate speaking times widget for structure level countdowns.`
+                        ),
                         type: `integer`,
                         validators: [Validators.min(0)]
                     }
@@ -590,6 +592,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             number: _(`Identifier`),
                             weight: _(`Call list`)
                         }
+                    },
+                    {
+                        key: `motions_enable_editor`,
+                        label: _(`Enable the ability to enter a participant as motion editor`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_working_group_speaker`,
+                        label: _(`Enable the ability to enter a participant as working group speaker for a motion`),
+                        type: `boolean`
                     }
                 ]
             },

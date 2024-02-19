@@ -21,7 +21,7 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
 
     private speakerStructureLevelFilterOptions: OsFilter<ViewSpeaker> = {
         property: `structureLevelId`,
-        label: `Structure Level`,
+        label: `Structure level`,
         options: []
     };
 
@@ -34,7 +34,8 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
 
         this.updateFilterForRepo({
             repo: structureRepo,
-            filter: this.speakerStructureLevelFilterOptions
+            filter: this.speakerStructureLevelFilterOptions,
+            noneOptionLabel: this.translate.instant(`No structure level`)
         });
     }
 
@@ -51,18 +52,32 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
                     { condition: GENDER_FITLERABLE[1], label: this.translate.instant(GENDERS[1]) },
                     { condition: GENDER_FITLERABLE[2], label: this.translate.instant(GENDERS[2]) },
                     { condition: GENDER_FITLERABLE[3], label: this.translate.instant(GENDERS[3]) },
-                    { condition: null, label: this.translate.instant(`unknown`) }
+                    { condition: null, label: this.translate.instant(`not specified`) }
                 ]
             },
             {
                 property: `speech_state`,
-                label: this.translate.instant(`Type`),
+                label: this.translate.instant(`Speech type`),
                 options: [
                     { condition: SpeechState.PRO, label: this.translate.instant(`Forspeech`) },
                     { condition: SpeechState.CONTRA, label: this.translate.instant(`Contra speech`) },
                     { condition: SpeechState.CONTRIBUTION, label: this.translate.instant(`Contribution`) },
                     { condition: SpeechState.INTERVENTION, label: this.translate.instant(`Intervention`) },
-                    { condition: SpeechState.INTERPOSED_QUESTION, label: this.translate.instant(`Interposed question`) }
+                    {
+                        condition: SpeechState.INTERPOSED_QUESTION,
+                        label: this.translate.instant(`Interposed question`)
+                    },
+                    { condition: null, label: this.translate.instant(`No speech type`) }
+                ]
+            },
+            {
+                property: `contentType`,
+                label: this.translate.instant(`Module`),
+                options: [
+                    { condition: `topic`, label: this.translate.instant(`Agenda`) },
+                    { condition: `motion`, label: this.translate.instant(`Motions`) },
+                    { condition: `motion_block`, label: this.translate.instant(`Motion blocks`) },
+                    { condition: `assignment`, label: this.translate.instant(`Elections`) }
                 ]
             }
         ];
