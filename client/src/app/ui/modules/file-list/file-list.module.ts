@@ -13,6 +13,7 @@ import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-cont
 import { ListModule } from 'src/app/ui/modules/list';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
+import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 
 import { FileListComponent } from './components/file-list/file-list.component';
 
@@ -35,7 +36,8 @@ const DECLARATIONS = [FileListComponent];
         SearchSelectorModule,
         IconContainerModule,
         PipesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule.forChild(),
+        CommaSeparatedListingModule
     ]
 })
 export class FileListModule {}

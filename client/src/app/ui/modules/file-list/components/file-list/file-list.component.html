@@ -103,6 +103,16 @@
         </div>
     </div>
 
+    <div *osScrollingTableCell="'edit'; row as mediafile" class="fill detail-link">
+        <div *ngIf="canEdit" class="fill detail-link" tabindex="0" (click)="onEditFile(mediafile, fileEditDialog)" (keydown.enter)="onEditFile(mediafile, fileEditDialog)" >
+            <os-icon-container icon="group">
+                <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
+                    <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
+                </os-comma-separated-listing>
+            </os-icon-container>
+        </div>
+    </div>
+
     <!-- Mimetype (usually hidden) -->
     <div *osScrollingTableCell="'mimetype'; row as mediafile; isHidden: true" class="fill clickable">
         {{ mediafile.mimetype }}
