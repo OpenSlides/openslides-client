@@ -66,6 +66,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public derived_motion_ids!: Id[]; // motion/all_origin_ids;
     public all_derived_motion_ids!: Id[]; // (motion/origin_id)[];
     public all_origin_ids!: Id[]; // motion/all_derived_motion_ids;
+    public identical_motion_ids!: Id[]; // motion/identical_motion_ids;
     public state_id!: Id; // motion_state/motion_ids;
     public recommendation_id!: Id; // motion_state/motion_recommendation_ids;
     public state_extension_reference_ids!: Fqid[]; // (*/referenced_in_motion_state_extension_ids)[];

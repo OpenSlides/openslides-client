@@ -280,6 +280,19 @@
     </div>
 </div>
 
+<!-- Identical motions -->
+<div *ngIf="motion?.identical_motions?.length">
+    <h4>{{ (motion.hasLeadMotion ? 'Identical amendments' : 'Identical motions') | translate }}</h4>
+    <div *ngFor="let identicalMotion of motion?.identical_motions">
+        <a
+            [routerLink]="['/', activeMeetingId, 'motions', identicalMotion.sequential_number]"
+            [state]="{ back: 'true' }"
+        >
+            {{ identicalMotion.getTitle() }}
+        </a>
+    </div>
+</div>
+
 <!-- Amendments -->
 <div *ngIf="amendments && amendments.length > 0">
     <h4>{{ 'Amendments' | translate }}</h4>
