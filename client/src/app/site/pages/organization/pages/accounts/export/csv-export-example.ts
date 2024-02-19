@@ -10,13 +10,11 @@ export const AccountCsvExportExample: UserExport[] = [
         default_password: `initialPassword`,
         username: `mmustermann`,
         gender: `male`,
-        default_structure_level: `Berlin`,
         default_vote_weight: 1.0
     },
     {
         first_name: `John`,
         last_name: `Doe`,
-        default_structure_level: `Washington`,
         is_active: true,
         is_physical_person: true,
         email: `john.doe@email.com`,
@@ -27,7 +25,6 @@ export const AccountCsvExportExample: UserExport[] = [
     {
         first_name: `Julia`,
         last_name: `Bloggs`,
-        default_structure_level: `London`,
         username: `jbloggs`,
         gender: `female`,
         default_vote_weight: 1.5

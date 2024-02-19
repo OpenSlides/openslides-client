@@ -4,4 +4,30 @@
 
 .content-container {
     min-height: calc(100vh - 77px);
+    .col-wrapper {
+        display: flex;
+        max-width: 1320px;
+        margin: 0 auto;
+    }
+    .col-main {
+        flex-grow: 1;
+    }
+    .col-right {
+        padding-left: 20px;
+        width: 40%;
+    }
+    @media screen and (min-width: 1320px) {
+        .col-wrapper {
+            max-width: 1565px;
+        }
+        .col-right {
+            flex-grow: 1;
+            padding-left: 0;
+            width: auto;
+        }
+    }
+}
+
+:host ::ng-deep .mat-card {
+    max-width: 738px;
 }

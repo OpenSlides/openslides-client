@@ -141,6 +141,7 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
             item_number: content.item_number,
             parent_id: content.parent_id,
             comment: content.comment,
+            moderator_notes: content.moderator_notes,
             closed: content.closed,
             type: content.type,
             duration: content.duration,

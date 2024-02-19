@@ -74,6 +74,10 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         return this.operator.isOrgaManager;
     }
 
+    public isSuperAdmin(): boolean {
+        return this.operator.isSuperAdmin;
+    }
+
     public canAccessCommittee(committee: Committee): boolean {
         return (
             this.operator.hasCommitteePermissions(committee.id, CML.can_manage) ||

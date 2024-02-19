@@ -311,9 +311,11 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
      */
     public async createFromString(name: string): Promise<RawUser> {
         const newUser = this.parseStringIntoUser(name);
+        // we want to generate the username in the backend
+        newUser.username = ``;
         const newUserPayload: any = {
             ...newUser,
-            is_active: true,
+            is_active: false,
             group_ids: [this.activeMeeting?.default_group_id]
         };
         const identifiable = (await this.create(newUserPayload))[0];
@@ -338,7 +340,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             meeting_users: [
                 {
                     group_ids: this.validateField(participant, `group_ids`),
-                    structure_level: this.validateField(participant, `structure_level`),
+                    structure_level_ids: this.validateField(participant, `structure_level_ids`),
                     number: this.validateField(participant, `number`),
                     vote_weight: toDecimal(this.validateField(participant, `vote_weight`), false),
                     vote_delegated_to_id: this.validateField(participant, `vote_delegated_to_id`),
