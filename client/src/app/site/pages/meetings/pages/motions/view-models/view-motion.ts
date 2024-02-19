@@ -363,6 +363,7 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     derived_motions?: ViewMotion[];
     all_derived_motions?: ViewMotion[];
     all_origins?: ViewMotion[];
+    identical_motions?: ViewMotion[];
     state?: ViewMotionState;
     state_extension_references: (BaseViewModel & HasReferencedMotionsInExtension)[];
     recommendation?: ViewMotionState;
