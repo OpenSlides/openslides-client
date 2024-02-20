@@ -6,21 +6,21 @@
     <div mat-dialog-content>
         <!-- Title field -->
         <mat-form-field>
-            <mat-label>{{ 'Countdown/Timer title' | translate }}</mat-label>
+            <mat-label>{{ 'Title' | translate }}</mat-label>
             <input matInput osAutofocus formControlName="title" required />
         </mat-form-field>
 
         <!-- Description field -->
         <mat-form-field>
-            <mat-label>{{ 'Countdown/Timer description' | translate }}</mat-label>
+            <mat-label>{{ 'Description' | translate }}</mat-label>
             <input matInput formControlName="description" />
         </mat-form-field>
 
         <!-- Time field -->
         <mat-form-field>
-            <mat-label>{{ 'Countdown/Timer time' | translate }}</mat-label>
+            <mat-label>{{ 'Time' | translate }}</mat-label>
             <input matInput formControlName="duration" required />
-            <mat-hint translate>If set to zero this will be a timer</mat-hint>
+            <mat-hint translate>If the value is set to 0, the time counts up as a timer.</mat-hint>
         </mat-form-field>
     </div>
     <div mat-dialog-actions>
