@@ -1,7 +1,7 @@
 <div class="action-title">
     <p class="subtitle-text" translate>Speaking times</p>
     <ng-container *osPerms="permission.projectorCanManage">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="projectionMenu">
+        <button type="button" *ngIf="showProjectionMenu" mat-icon-button [matMenuTriggerFor]="projectionMenu">
             <mat-icon>more_horiz</mat-icon>
         </button>
     </ng-container>

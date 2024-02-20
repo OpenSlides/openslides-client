@@ -51,6 +51,9 @@ export class SpeakingTimesComponent implements OnDestroy {
     public hasSpokenFlag = false;
 
     @Input()
+    public showProjectionMenu = false;
+
+    @Input()
     public set currentSpeakingTimes(speakingTimes: Id[]) {
         const newSpeakingTimes = new Set(speakingTimes);
         const subscribedIds = new Set(this.subscriptions.keys());
