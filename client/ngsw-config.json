@@ -5,7 +5,6 @@
         {
             "name": "app",
             "installMode": "prefetch",
-            "version": 2,
             "resources": {
                 "files": [
                     "/favicon.ico",
