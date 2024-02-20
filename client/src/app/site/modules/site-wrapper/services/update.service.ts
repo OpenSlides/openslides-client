@@ -33,8 +33,11 @@ export class UpdateService {
      */
     public async applyUpdate(): Promise<void> {
         if (await this.swUpdate.activateUpdate()) {
-            document.location.reload();
-            this.store.clear();
+            console.warn(`RELOAD`);
+            if (confirm()) {
+                document.location.reload();
+                this.store.clear();
+            }
         }
     }
 
