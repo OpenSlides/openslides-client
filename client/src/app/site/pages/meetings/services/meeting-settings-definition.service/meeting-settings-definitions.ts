@@ -365,7 +365,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `list_of_speakers_can_create_point_of_order_for_others`,
-                        label: _(`Allow one participant to be on the LoS serveral times`),
+                        label: _(`Enable point of orders for other participants`),
                         type: `boolean`
                     },
                     {
