@@ -95,6 +95,7 @@ export class Settings {
     public list_of_speakers_initially_closed!: boolean;
     public list_of_speakers_enable_pro_contra_speech!: boolean;
     public list_of_speakers_can_set_contribution_self!: boolean;
+    public list_of_speakers_allow_multiple_speakers!: boolean;
     public list_of_speakers_speaker_note_for_everyone!: boolean;
     public list_of_speakers_closing_disables_point_of_order!: boolean;
 
@@ -339,6 +340,7 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_enable_point_of_order_speakers`,
         `list_of_speakers_enable_point_of_order_categories`,
         `list_of_speakers_closing_disables_point_of_order`,
+        `list_of_speakers_allow_multiple_speakers`,
         `list_of_speakers_enable_pro_contra_speech`,
         `list_of_speakers_can_set_contribution_self`,
         `list_of_speakers_speaker_note_for_everyone`,
