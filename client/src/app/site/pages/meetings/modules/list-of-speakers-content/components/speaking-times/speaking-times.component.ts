@@ -76,14 +76,6 @@ export class SpeakingTimesComponent implements OnDestroy {
                         )
                     )
                     .subscribe(speaker => {
-                        if (
-                            !this.hasSpokenFlag &&
-                            (speaker.list_of_speakers.finishedSpeakers.length > 0 ||
-                                !!speaker.list_of_speakers.activeSpeaker)
-                        ) {
-                            this.hasSpokenFlag = true;
-                        }
-
                         this.updateSpeakingTime(speaker.structure_level_list_of_speakers);
                     })
             );
@@ -119,7 +111,7 @@ export class SpeakingTimesComponent implements OnDestroy {
 
     public setTotalTime(speakingTimeId: number): void {
         this.currentEntry = this.structureLevels.get(speakingTimeId);
-        this.totalTimeForm.get(`totalTime`).setValue(this.currentEntry.countdown.countdown_time);
+        this.totalTimeForm.get(`remainingTime`).setValue(this.currentEntry.countdown.countdown_time);
         const dialogSettings = infoDialogSettings;
         this.dialogRef = this.dialog.open(this.totalTimeDialog!, dialogSettings);
         this.dialogRef.afterClosed().subscribe(res => {

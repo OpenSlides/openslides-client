@@ -32,7 +32,7 @@
 
 <mat-menu #editAndDistributeMenu="matMenu">
     <ng-template let-structure_level="structure_level" matMenuContent>
-        <button mat-menu-item (click)="setTotalTime(structure_level.id)" [disabled]="hasSpokenFlag">
+        <button mat-menu-item (click)="setTotalTime(structure_level.id)">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit total time' | translate }}</span>
         </button>
