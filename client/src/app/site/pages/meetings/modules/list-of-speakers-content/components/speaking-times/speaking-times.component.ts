@@ -111,7 +111,7 @@ export class SpeakingTimesComponent implements OnDestroy {
 
     public setTotalTime(speakingTimeId: number): void {
         this.currentEntry = this.structureLevels.get(speakingTimeId);
-        this.totalTimeForm.get(`remainingTime`).setValue(this.currentEntry.countdown.countdown_time);
+        this.totalTimeForm.get(`totalTime`).setValue(this.currentEntry.countdown.countdown_time);
         const dialogSettings = infoDialogSettings;
         this.dialogRef = this.dialog.open(this.totalTimeDialog!, dialogSettings);
         this.dialogRef.afterClosed().subscribe(res => {
