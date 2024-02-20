@@ -1,5 +1,6 @@
 import { Directive } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 import { ActiveFiltersStoreService, FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
 
@@ -23,10 +24,20 @@ interface RepositoryFilterConfig<OV extends BaseViewModel, V> {
      * An optional function to filter the view models.
      */
     filterFn?: (filter: OV) => boolean;
+    /**
+     * An optional function to map the view models.
+     */
+    mapFn?: (model: OV) => FilterModel;
+}
+
+interface FilterModel extends Identifiable {
+    getTitle(): string;
+    parent?: FilterModel;
+    children?: FilterModel[];
 }
 
 /**
- * Filter for the list view. List views can subscribe to its' dataService (providing filter definitions)
+ * Filter for the list view. List views can subscribe to its dataService (providing filter definitions)
  * and will receive their filtered data as observable
  */
 @Directive()
@@ -264,36 +275,39 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     }
 
     /**
-     * Helper function to get the `viewModelListObservable` of a given repository object and creates dynamic
+     * Helper function to get the `viewModelListObservable` of a given repository object and create dynamic
      * filters for them
      */
     protected updateFilterForRepo<OV extends BaseViewModel>({
         repo,
         filter,
         noneOptionLabel,
-        filterFn
+        filterFn,
+        mapFn
     }: RepositoryFilterConfig<OV, V>): void {
         repo.getViewModelListObservable()
             .pipe(
                 map(viewModels => {
                     let filterProperties: (OsFilterOption | string)[] = [];
                     if (viewModels && viewModels.length) {
-                        filterProperties = viewModels
-                            .filter(filterFn ?? (() => true))
-                            .map((model: any) => ({
+                        let models: FilterModel[] = viewModels.filter(filterFn ?? (() => true));
+                        if (mapFn) {
+                            models = Object.values(models.map(mapFn).mapToObject(model => ({ [model.id]: model })));
+                        }
+                        filterProperties = models
+                            .map((model: FilterModel) => ({
                                 condition: model.id,
                                 label: model.getTitle(),
                                 isChild: !!model.parent,
                                 isActive: (<OsFilterOption>(
                                     filter.options.find(f => (<OsFilterOption>f)?.condition === model.id)
                                 ))?.isActive,
-                                children:
-                                    model.children && model.children.length
-                                        ? model.children.map((child: any) => ({
-                                              label: child.getTitle(),
-                                              condition: child.id
-                                          }))
-                                        : undefined
+                                children: model.children?.length
+                                    ? model.children.map((child: any) => ({
+                                          label: child.getTitle(),
+                                          condition: child.id
+                                      }))
+                                    : undefined
                             }))
                             .sort((a, b) => a.label.trim().localeCompare(b.label.trim()));
 
