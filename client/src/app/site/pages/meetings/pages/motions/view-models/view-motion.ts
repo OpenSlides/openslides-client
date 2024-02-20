@@ -74,6 +74,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return (this.submitters || []).map(submitter => submitter.user);
     }
 
+    public get editorUserIds(): Id[] {
+        return (this.editors || []).map(editor => editor.user_id);
+    }
+
+    public get workingGroupSpeakerUserIds(): Id[] {
+        return (this.working_group_speakers || []).map(workingGroupSpeaker => workingGroupSpeaker.user_id);
+    }
+
     public get numberOrTitle(): string {
         return this.number ? this.number : this.title;
     }
