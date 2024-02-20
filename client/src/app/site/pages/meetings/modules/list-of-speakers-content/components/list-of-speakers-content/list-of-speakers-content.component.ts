@@ -153,7 +153,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
 
-    private pointOfOrderEnabled = false;
+    public pointOfOrderEnabled = false;
 
     private canMarkSelf = false;
 

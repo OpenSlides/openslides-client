@@ -428,6 +428,29 @@
                     </mat-icon>
                     <span>{{ 'Intervention' | translate }}</span>
                 </button>
+                <!-- Poinbt of order button -->
+                <button
+                    mat-stroked-button
+                    color="warn"
+                    (click)="addPointOfOrder()"
+                    *ngIf="showPointOfOrders && !isOpInWaitlist(true)"
+                    [disabled]="restrictPointOfOrderActions && closed"
+                >
+                    <mat-icon>warning</mat-icon>
+                    &nbsp;
+                    <span>
+                        {{ 'Point of order' | translate }}
+                    </span>
+                </button>
+                <button
+                    mat-stroked-button
+                    color="warn"
+                    (click)="removePointOfOrder()"
+                    *ngIf="showPointOfOrders && isOpInWaitlist(true)"
+                >
+                    <mat-icon>remove</mat-icon>
+                    <span translate>Withdraw point of order</span>
+                </button>
             </ng-container>
 
             <!-- update user button -->
