@@ -280,10 +280,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
                 /**
                  * Because without change recos you cannot escape the final version anymore
                  */
-            } else if (
-                !this.hasChangeRecommendations &&
-                !this.getAllChangingObjectsSorted().some(change => change.showInFinalView())
-            ) {
+            } else if (!this.getAllChangingObjectsSorted().some(change => change.showInFinalView())) {
                 return ChangeRecoMode.Original;
             }
         } else if (mode === ChangeRecoMode.Changed && !this.hasChangeRecommendations) {
