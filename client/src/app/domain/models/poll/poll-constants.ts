@@ -93,6 +93,7 @@ export enum PollPercentBase {
     Valid = `valid`,
     Cast = `cast`,
     Entitled = `entitled`,
+    EntitledPresent = `entitled_present`,
     Disabled = `disabled`
 }
 
