@@ -79,14 +79,6 @@ export class SpeakingTimesComponent implements OnDestroy {
                         )
                     )
                     .subscribe(speaker => {
-                        if (
-                            !this.hasSpokenFlag &&
-                            (speaker.list_of_speakers.finishedSpeakers.length > 0 ||
-                                !!speaker.list_of_speakers.activeSpeaker)
-                        ) {
-                            this.hasSpokenFlag = true;
-                        }
-
                         this.updateSpeakingTime(speaker.structure_level_list_of_speakers);
                     })
             );
