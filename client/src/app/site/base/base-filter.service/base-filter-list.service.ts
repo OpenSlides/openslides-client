@@ -276,8 +276,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         repo.getViewModelListObservable()
             .pipe(
                 map(viewModels => {
+                    let filterProperties: (OsFilterOption | string)[] = [];
                     if (viewModels && viewModels.length) {
-                        const filterProperties: (OsFilterOption | string)[] = viewModels
+                        filterProperties = viewModels
                             .filter(filterFn ?? (() => true))
                             .map((model: any) => ({
                                 condition: model.id,
@@ -298,15 +299,15 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
 
                         if (noneOptionLabel) {
                             filterProperties.push(`-`);
-                            filterProperties.push({
-                                condition: null,
-                                label: noneOptionLabel
-                            });
                         }
-                        return filterProperties;
                     }
-
-                    return [];
+                    if (noneOptionLabel) {
+                        filterProperties.push({
+                            condition: null,
+                            label: noneOptionLabel
+                        });
+                    }
+                    return filterProperties;
                 })
             )
             .pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))

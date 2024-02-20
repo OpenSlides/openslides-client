@@ -27,6 +27,8 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
      */
     private token!: string;
 
+    public hidePassword = true;
+
     /**
      * Constructur for the reset password confirm view. Initializes the form for the new password.
      */
@@ -59,7 +61,7 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
                                 duration: 0
                             }
                         );
-                        this.router.navigate([`..`]);
+                        this.router.navigate([`/login`]);
                     });
                 } else {
                     this.user_id = Number(params[`user_id`]);

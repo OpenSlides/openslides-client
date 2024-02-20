@@ -22,6 +22,11 @@ import { ViewListOfSpeakers } from '../../view-models';
     styleUrls: [`./list-of-speakers.component.scss`]
 })
 export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
+    /**
+     * The projector to show.
+     */
+    public projector!: ViewProjector;
+
     public readonly COLLECTION = ViewListOfSpeakers.COLLECTION;
 
     @ViewChild(`content`)
@@ -66,6 +71,7 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
         return !this.viewListOfSpeakers?.finishedSpeakers?.length;
     }
 
+    public structureLevelCountdownEnabled = false;
     /**
      * filled by child component
      */
@@ -87,6 +93,12 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
         private collectionMapper: CollectionMapperService
     ) {
         super();
+
+        this.subscriptions.push(
+            this.meetingSettingsService
+                .get(`list_of_speakers_default_structure_level_time`)
+                .subscribe(time => (this.structureLevelCountdownEnabled = time > 0))
+        );
     }
 
     public ngOnInit(): void {

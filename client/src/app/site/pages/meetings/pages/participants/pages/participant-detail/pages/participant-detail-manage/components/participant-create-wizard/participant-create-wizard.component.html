@@ -134,15 +134,14 @@
                             </div>
                             <div>
                                 <!-- Strucuture Level -->
-                                <mat-form-field
-                                    class="distance"
-                                    [ngClass]="{
-                                        form37: showVoteWeight,
-                                        form70: !showVoteWeight
-                                    }"
-                                >
+                                <mat-form-field>
                                     <mat-label>{{ 'Structure level' | translate }}</mat-label>
-                                    <input type="text" matInput formControlName="structure_level" />
+                                    <os-list-search-selector
+                                        formControlName="structure_level_ids"
+                                        [multiple]="true"
+                                        [includeNone]="true"
+                                        [inputListValues]="structureLevelObservable"
+                                    ></os-list-search-selector>
                                 </mat-form-field>
 
                                 <!-- Participant Number -->
@@ -185,6 +184,7 @@
                                         formControlName="group_ids"
                                         [multiple]="true"
                                         [inputListValues]="groupsObservable"
+                                        [sortFn]="sortFn"
                                     ></os-list-search-selector>
                                 </mat-form-field>
 

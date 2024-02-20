@@ -24,7 +24,7 @@ import { isNumberRange } from 'src/app/infrastructure/utils/validators';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
-import { GroupControllerService } from '../../../../pages/participants';
+import { GroupControllerService, ViewGroup } from '../../../../pages/participants';
 import { ViewPoll } from '../../../../pages/polls';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
@@ -94,6 +94,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             {}
         );
     }
+
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
 
     private _data: Partial<ViewPoll>;
 
