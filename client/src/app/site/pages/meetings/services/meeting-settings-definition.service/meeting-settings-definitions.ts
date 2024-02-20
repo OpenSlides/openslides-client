@@ -364,6 +364,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
+                        key: `list_of_speakers_can_create_point_of_order_for_others`,
+                        label: _(`Allow one participant to be on the LoS serveral times`),
+                        type: `boolean`
+                    },
+                    {
                         key: `list_of_speakers_intervention_time`,
                         label: _(`Intervention speaking time in seconds`),
                         type: `integer`,
