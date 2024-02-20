@@ -24,11 +24,11 @@ import {
     AutoupdateStatus
 } from 'src/app/worker/autoupdate/interfaces-autoupdate';
 
+import { UpdateService } from '../../modules/site-wrapper/services/update.service';
 import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';
 import { ConnectionStatusService } from '../connection-status.service';
 import { SUBSCRIPTION_SUFFIX } from '../model-request.service';
-import { UpdateService } from '../../modules/site-wrapper/services/update.service';
 
 @Injectable({
     providedIn: `root`
