@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import {
@@ -7,7 +6,7 @@ import {
     CurrentStructureLevelListSlideStructureLevelRepresentation
 } from '../current-structure-level-list-slide-data';
 
-const MAX_COLUMNS = 4;
+const MAX_COLUMNS = 3;
 
 @Component({
     selector: `os-current-structure-level-list-slide`,
@@ -19,7 +18,6 @@ export class CurrentStructureLevelListSlideComponent extends BaseSlideComponent<
     /**
      * For sorting motion blocks by their displayed title
      */
-    private languageCollator: Intl.Collator;
     private maxColumns: number = MAX_COLUMNS;
 
     /**
@@ -65,11 +63,6 @@ export class CurrentStructureLevelListSlideComponent extends BaseSlideComponent<
      */
     public get columnsArray(): number[] {
         return this.makeIndicesArray(this.columns);
-    }
-
-    public constructor(translate: TranslateService) {
-        super();
-        this.languageCollator = new Intl.Collator(translate.currentLang);
     }
 
     /**
