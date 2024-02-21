@@ -30,6 +30,10 @@ export class PointOfOrderDialogComponent {
     public get canManage(): boolean {
         return this.operator.hasPerms(this.permission.listOfSpeakersCanManage);
     }
+    
+    public get canSetPoOsForOthers(): boolean {
+        return this.meetingSettingsService.instant(`list_of_speakers_can_create_point_of_order_for_others`) ?? false;
+    }
 
     public users: ViewUser[] = [];
     public nonAvailableUserIds: number[] = [];
@@ -146,8 +150,7 @@ export class PointOfOrderDialogComponent {
         return data;
     }
 
-    public getSelectedUser() {
-        console.log(this.speaker)
+    public getSelectedUser(): ViewUser {
         return this.speaker;
     }
 }

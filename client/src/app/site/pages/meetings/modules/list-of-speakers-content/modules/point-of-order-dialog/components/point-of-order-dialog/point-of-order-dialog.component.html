@@ -5,7 +5,7 @@
 
 <form class="edit-form" [formGroup]="editForm" (ngSubmit)="onOk()">
     <!-- Search for speakers -->
-    <mat-dialog-content *ngIf="canManage">
+    <mat-dialog-content *ngIf="canManage && canSetPoOsForOthers">
         <div>
             <span translate> Selected speaker: </span>
             <span> {{ getSelectedUser() }}</span>
