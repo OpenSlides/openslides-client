@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { UserStateField } from 'src/app/gateways/repositories/users';
+import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -23,8 +25,9 @@ import { GroupControllerService, ViewGroup } from '../../../../modules';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../structure-levels/view-models';
 import { ParticipantListInfoDialogService } from '../../modules/participant-list-info-dialog';
-import { ParticipantListFilterService } from '../../services/participant-list-filter.service/participant-list-filter.service';
-import { ParticipantListSortService } from '../../services/participant-list-sort.service/participant-list-sort.service';
+import { ParticipantListFilterService } from '../../services/participant-list-filter/participant-list-filter.service';
+import { ParticipantListSortService } from '../../services/participant-list-sort/participant-list-sort.service';
+import { ParticipantSwitchDialogComponent } from '../participant-switch-dialog/participant-switch-dialog.component';
 
 const PARTICIPANTS_LIST_STORAGE_INDEX = `participants`;
 
@@ -139,7 +142,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         private organizationSettingsService: OrganizationSettingsService,
         private route: ActivatedRoute,
         private prompt: PromptService,
-        private interactionService: InteractionService
+        private interactionService: InteractionService,
+        private dialog: MatDialog
     ) {
         super();
 
@@ -326,9 +330,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * SelectedRows is only filled with data in multiSelect mode
      */
     public async setStructureLevelSelected(): Promise<void> {
-        const content = _(`This will add or remove the following structure level for all selected participants:`);
-        const ADD = _(`add structure level(s)`);
-        const REMOVE = _(`remove structure level(s)`);
+        const content = _(`This will add or remove the following structure levels for all selected participants:`);
+        const ADD = _(`Add`);
+        const REMOVE = _(`Remove`);
         const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(content, this.structureLevelObservable, true, choices);
         if (selectedChoice && selectedChoice.ids.length) {
@@ -354,6 +358,36 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                         };
                     }, ...this.selectedRows)
                     .resolve();
+            }
+        }
+    }
+
+    public async switchParticipants(): Promise<void> {
+        const leftUser = this.selectedRows[0];
+        const rightUser = this.selectedRows[1];
+        const dialogRef = this.dialog.open(ParticipantSwitchDialogComponent, {
+            ...mediumDialogSettings,
+            data: { leftUser, rightUser }
+        });
+        const response = await firstValueFrom(dialogRef.afterClosed());
+        if (response) {
+            try {
+                await this.repo
+                    .update(user => {
+                        const other = user.id === leftUser.id ? rightUser : leftUser;
+                        return {
+                            group_ids: other.group_ids(),
+                            number: other.number()
+                        };
+                    }, ...this.selectedRows)
+                    .resolve(false);
+                this.matSnackBar.open(
+                    this.translate.instant(`Mandates switched sucessfully!`),
+                    this.translate.instant(`Ok`),
+                    { duration: 3000 }
+                );
+            } catch (e) {
+                this.raiseError(e);
             }
         }
     }

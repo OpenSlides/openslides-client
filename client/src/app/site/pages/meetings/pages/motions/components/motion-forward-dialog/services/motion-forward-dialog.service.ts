@@ -73,7 +73,7 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
         const toForward = motions.filter(motion => motion.state?.allow_motion_forwarding);
         if (toForward.length === 0) {
-            this.snackbar.open(this.translate.instant(`None of the selected motions can be forwarded`), `Ok`);
+            this.snackbar.open(this.translate.instant(`None of the selected motions can be forwarded.`), `Ok`);
             return;
         }
         const dialogRef = await this.open(toForward);

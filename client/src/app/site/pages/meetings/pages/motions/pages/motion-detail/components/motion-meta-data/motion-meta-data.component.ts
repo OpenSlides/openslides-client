@@ -12,6 +12,9 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
+import { MotionEditorControllerService } from '../../../../modules/editors/services';
+import { MotionSubmitterControllerService } from '../../../../modules/submitters/services';
+import { MotionWorkingGroupSpeakerControllerService } from '../../../../modules/working-group-speakers/services';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
 import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
@@ -121,7 +124,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         public perms: MotionPermissionService,
         private operator: OperatorService,
         private motionForwardingService: MotionForwardDialogService,
-        private meetingController: MeetingControllerService
+        private meetingController: MeetingControllerService,
+        public motionSubmitterRepo: MotionSubmitterControllerService,
+        public motionEditorRepo: MotionEditorControllerService,
+        public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService
     ) {
         super();
 

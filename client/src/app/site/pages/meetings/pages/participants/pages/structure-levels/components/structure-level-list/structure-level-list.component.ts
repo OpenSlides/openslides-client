@@ -53,7 +53,7 @@ export class StructureLevelListComponent extends BaseMeetingListViewComponent<Vi
         public sortService: StructureLevelSortService
     ) {
         super();
-        super.setTitle(`Structure Levels`);
+        super.setTitle(`Structure levels`);
         this.structureLevelForm = this.formBuilder.group({
             name: [``, Validators.required],
             color_check: false,

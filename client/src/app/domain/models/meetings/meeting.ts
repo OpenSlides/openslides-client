@@ -132,6 +132,8 @@ export class Settings {
     public motions_amendments_multiple_paragraphs!: boolean;
     public motions_supporters_min_amount!: number;
     public motions_block_slide_columns!: number;
+    public motions_enable_editor!: boolean;
+    public motions_enable_working_group_speaker!: boolean;
     public motions_export_title!: string;
     public motions_export_preamble!: string;
     public motions_export_submitter_recommendation!: boolean;
@@ -218,6 +220,8 @@ export class Meeting extends BaseModel<Meeting> {
     public motion_category_ids!: Id[]; // (motion_category/meeting_id)[];
     public motion_block_ids!: Id[]; // (motion_block/meeting_id)[];
     public motion_submitter_ids!: Id[]; // (motion_submitter/meeting_id)[];
+    public motion_editor_ids!: Id[]; // (motion_editor/meeting_id)[];
+    public motion_working_group_speaker_ids!: Id[]; // (motion_working_group_speaker/meeting_id)[];
     public motion_change_recommendation_ids!: Id[]; // (motion_change_recommendation/meeting_id)[];
     public motion_workflow_ids!: Id[]; // (motion_workflow/meeting_id)[];
     public motion_state_ids!: Id[]; // (motion_state/meeting_id)[];
@@ -371,6 +375,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_amendments_text_mode`,
         `motions_amendments_multiple_paragraphs`,
         `motions_supporters_min_amount`,
+        `motions_enable_editor`,
+        `motions_enable_working_group_speaker`,
         `motions_export_title`,
         `motions_export_preamble`,
         `motions_export_submitter_recommendation`,
@@ -440,6 +446,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_statute_paragraph_ids`,
         `motion_comment_ids`,
         `motion_submitter_ids`,
+        `motion_editor_ids`,
+        `motion_working_group_speaker_ids`,
         `motion_change_recommendation_ids`,
         `motion_state_ids`,
         `poll_ids`,
