@@ -7,7 +7,6 @@ import {
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ViewListOfSpeakers, ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda';
-import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -67,8 +66,7 @@ export class PointOfOrderDialogComponent {
         private meetingSettings: MeetingSettingsService,
         private activeMeeting: ActiveMeetingService,
         private operator: OperatorService,
-        private meetingSettingsService: MeetingSettingsService,
-        private speakerRepo: SpeakerControllerService
+        private meetingSettingsService: MeetingSettingsService
     ) {
         this.activeMeeting.meeting.point_of_order_categories_as_observable
             .pipe(
@@ -143,9 +141,5 @@ export class PointOfOrderDialogComponent {
         this.speaker = this.users.find(speaker => speaker.id === data.userId);
         this.editForm.value.speaker = data;
         return data;
-    }
-
-    public getSelectedUser(): ViewUser {
-        return this.speaker;
     }
 }
