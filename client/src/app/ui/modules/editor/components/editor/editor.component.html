@@ -205,7 +205,9 @@
             <button
                 mat-ripple
                 [matTooltip]="'Text color' | translate"
-                class="color-selection" [ngStyle]="{ color: editor.getAttributes('textStyle')['color'] }">
+                class="color-selection"
+                [ngStyle]="{ color: editor.getAttributes('textStyle')['color'] }"
+            >
                 <mat-icon>format_color_text</mat-icon>
                 <input
                     [value]="editor.getAttributes('textStyle')['color']"
@@ -235,11 +237,21 @@
                 <mat-icon>format_clear</mat-icon>
             </button>
 
-            <button mat-ripple [matTooltip]="'Insert/edit link' | translate" [ngClass]="{ active: editor.isActive('link') }" (click)="setLinkDialog()">
+            <button
+                mat-ripple
+                [matTooltip]="'Insert/edit link' | translate"
+                [ngClass]="{ active: editor.isActive('link') }"
+                (click)="setLinkDialog()"
+            >
                 <mat-icon>link</mat-icon>
             </button>
 
-            <button mat-ripple [matTooltip]="'Insert/edit image' | translate" [ngClass]="{ active: editor.isActive('image') }" (click)="setImageDialog()">
+            <button
+                mat-ripple
+                [matTooltip]="'Insert/edit image' | translate"
+                [ngClass]="{ active: editor.isActive('image') }"
+                (click)="setImageDialog()"
+            >
                 <mat-icon>image</mat-icon>
             </button>
 
