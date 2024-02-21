@@ -5,6 +5,7 @@ import { Id } from '../../../../domain/definitions/key-types';
 import { ViewCommittee } from '../../organization/pages/committees';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
+import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { DelegationType } from './delegation-type';
@@ -106,7 +107,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     // Will be set by the repository
     public getName!: () => string;
     public getShortName!: () => string;
-    public getFullName!: () => string;
+    public getFullName!: (structureLevel?: ViewStructureLevel) => string;
     public getLevelAndNumber!: () => string;
     public getMeetingUser!: (meetingId?: Id) => ViewMeetingUser;
 
@@ -213,14 +214,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         }
     }
 
-    public structure_level(meetingId?: Id): string {
-        try {
-            return this.getMeetingUser(meetingId)?.structure_level || this.default_structure_level;
-        } catch (e) {
-            return this.user.default_structure_level;
-        }
-    }
-
     public comment(meetingId?: Id): string {
         return this.getMeetingUser(meetingId)?.comment;
     }
@@ -235,6 +228,24 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public group_ids(meetingId?: Id): number[] {
         return this.getMeetingUser(meetingId)?.group_ids ?? [];
+    }
+
+    public structure_level_ids(meetingId?: Id): Id[] {
+        return this.getMeetingUser(meetingId)?.structure_level_ids;
+    }
+
+    public structure_levels(meetingId?: Id): ViewStructureLevel[] {
+        return this.getMeetingUser(meetingId)?.structure_levels;
+    }
+
+    public structureLevels(meetingId?: Id): string {
+        try {
+            return this.getMeetingUser(meetingId)
+                ?.structure_levels?.map(sl => sl.name)
+                .join(`, `);
+        } catch (e) {
+            return ``;
+        }
     }
 
     public get isVoteWeightOne(): boolean {

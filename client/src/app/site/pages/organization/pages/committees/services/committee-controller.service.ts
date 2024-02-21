@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action } from 'src/app/gateways/actions';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { Ids } from '../../../../../../domain/definitions/key-types';
 import { Identifiable } from '../../../../../../domain/interfaces';
@@ -39,5 +40,13 @@ export class CommitteeControllerService extends BaseController<ViewCommittee, Co
 
     public delete(...committees: ViewCommittee[]): Promise<void> {
         return this.repo.delete(...committees);
+    }
+
+    public jsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+        return this.repo.committeeJsonUpload(payload);
+    }
+
+    public import(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
+        return this.repo.committeeImport(payload);
     }
 }
