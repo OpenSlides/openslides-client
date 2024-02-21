@@ -660,8 +660,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     private findOperatorSpeaker(pointOfOrder?: boolean): ViewSpeaker | undefined {
-        return this.waitingSpeakers.sort((a, b) => b.id - a.id).find(
-            speaker => speaker.user_id === this.operator.operatorId && speaker.point_of_order === pointOfOrder
-        );
+        return this.waitingSpeakers
+            .sort((a, b) => b.id - a.id)
+            .find(speaker => speaker.user_id === this.operator.operatorId && speaker.point_of_order === pointOfOrder);
     }
 }
