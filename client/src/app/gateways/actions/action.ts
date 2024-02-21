@@ -1,14 +1,16 @@
 import { ActionRequest } from './action-utils';
 
+type SendActionFunction<T> = (requests: ActionRequest[], throwError: boolean) => Promise<T[]>;
+
 export class Action<T = void> {
     private _actions: ActionRequest[];
-    private _sendActionFn: (requests: ActionRequest[]) => Promise<T[]>;
+    private _sendActionFn: SendActionFunction<T>;
 
-    public setSendActionFn(sendActionFn: (requests: ActionRequest[]) => Promise<T[]>): void {
+    public setSendActionFn(sendActionFn: SendActionFunction<T>): void {
         this._sendActionFn = sendActionFn;
     }
 
-    public constructor(sendActionFn: (requests: ActionRequest[]) => Promise<T[]>, actions: ActionRequest[] = []) {
+    public constructor(sendActionFn: SendActionFunction<T>, actions: ActionRequest[] = []) {
         this._actions = actions.filter(action => !!action?.data?.length);
         this._sendActionFn = sendActionFn;
     }
@@ -35,8 +37,8 @@ export class Action<T = void> {
         );
     }
 
-    public async resolve(): Promise<T[] | void> {
-        const result = await this._sendActionFn(this._actions).then(result => {
+    public async resolve(throwError = false): Promise<T[] | void> {
+        const result = await this._sendActionFn(this._actions, throwError).then(result => {
             if (Array.isArray(result)) {
                 return result.flatMap(value => value);
             } else {

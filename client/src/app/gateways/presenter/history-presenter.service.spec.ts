@@ -7,7 +7,7 @@ import { QueryParams } from 'src/app/infrastructure/definitions/http';
 import { collectionIdFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
-import { HttpService } from '../http.service';
+import { HttpService, RequestSettings } from '../http.service';
 import { HistoryPosition, HistoryPresenterService } from './history-presenter.service';
 
 function getMultiple<T>(of: T, amount = 1): T[] {
@@ -182,7 +182,7 @@ class MockHttpService {
 
     public constructor() {}
 
-    public async post<R>(path: string, data: any, queryParams: QueryParams): Promise<R> {
+    public async post<R>(path: string, data: any, { queryParams }: RequestSettings): Promise<R> {
         this.lastPosts.push({ path, data, queryParams });
         if (
             path !== `/system/autoupdate/history_information` ||
