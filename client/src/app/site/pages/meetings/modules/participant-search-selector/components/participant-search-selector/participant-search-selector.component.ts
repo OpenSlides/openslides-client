@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -74,7 +76,9 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
         private userSortService: ParticipantListSortService,
         private modelRequestService: ModelRequestService,
         private activeMeeting: ActiveMeetingService,
-        formBuilder: UntypedFormBuilder
+        formBuilder: UntypedFormBuilder,
+        private snackBar: MatSnackBar,
+        private translate: TranslateService
     ) {
         super();
 
@@ -149,9 +153,19 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
         }
     }
 
-    public async createNewSelectedUser(username: string): Promise<void> {
-        const newUserObj = await this.userRepo.createFromString(username);
+    public async createNewSelectedUser(name: string): Promise<void> {
+        const newUserObj = await this.userRepo.createFromString(name);
         this.emitSelectedUser({ userId: newUserObj.id, user: newUserObj });
+        const user = await firstValueFrom(
+            this.userRepo.getViewModelObservable(newUserObj.id).pipe(filter(user => !!user))
+        );
+        this.snackBar.open(
+            this.translate
+                .instant(`A user with the username '%username%' and the first name '%first_name%' was created.`)
+                .replace(`%username%`, user.username)
+                .replace(`%first_name%`, user.first_name),
+            this.translate.instant(`Ok`)
+        );
     }
 
     private emitSelectedUser(data: UserSelectionData): void {

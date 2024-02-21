@@ -1,15 +1,23 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { ServerTimePresenterService } from 'src/app/gateways/presenter/server-time-presenter.service';
 
 interface CountdownData {
     running: boolean;
+    default_time?: number;
     countdown_time: number;
+}
+
+export enum CountdownState {
+    RESET = 0,
+    STARTED = 1,
+    STOPPED = 2
 }
 
 @Component({
     selector: `os-countdown-time`,
     templateUrl: `./countdown-time.component.html`,
-    styleUrls: [`./countdown-time.component.scss`]
+    styleUrls: [`./countdown-time.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CountdownTimeComponent implements OnDestroy {
     /**
@@ -23,6 +31,9 @@ export class CountdownTimeComponent implements OnDestroy {
      */
     @Input()
     public fullscreen = false;
+
+    @Input()
+    public unstyled = false;
 
     /**
      * The needed data for the countdown.
@@ -42,6 +53,27 @@ export class CountdownTimeComponent implements OnDestroy {
 
     public get countdown(): CountdownData {
         return this._countdown;
+    }
+
+    public get state(): CountdownState {
+        if (!this._countdown.running) {
+            if (this._countdown.countdown_time === this._countdown.default_time) {
+                return CountdownState.RESET;
+            } else if (this._countdown.countdown_time !== this._countdown.default_time) {
+                return CountdownState.STOPPED;
+            }
+        }
+
+        return CountdownState.STARTED;
+    }
+
+    public get secondsRemaining(): number {
+        const factor = this._countdown.default_time === 0 ? -1 : 1;
+        if (this._countdown.running) {
+            return Math.floor(this.countdown.countdown_time - this.servertimeService.getServertime() / 1000) * factor;
+        }
+
+        return this._countdown.countdown_time * factor;
     }
 
     /**
@@ -88,7 +120,7 @@ export class CountdownTimeComponent implements OnDestroy {
 
     private _countdown!: CountdownData;
 
-    public constructor(private servertimeService: ServerTimePresenterService) {}
+    public constructor(private servertimeService: ServerTimePresenterService, private cd: ChangeDetectorRef) {}
 
     /**
      * Clear all pending intervals.
@@ -103,11 +135,7 @@ export class CountdownTimeComponent implements OnDestroy {
      * Updates the countdown time and string format it.
      */
     private updateCountdownTime(): void {
-        if (this.countdown.running) {
-            this.seconds = Math.floor(this.countdown.countdown_time - this.servertimeService.getServertime() / 1000);
-        } else {
-            this.seconds = this.countdown.countdown_time;
-        }
+        this.seconds = this.secondsRemaining;
 
         const negative = this.seconds < 0;
         let seconds = this.seconds;
@@ -124,5 +152,6 @@ export class CountdownTimeComponent implements OnDestroy {
         if (negative) {
             this.time = `-` + this.time;
         }
+        this.cd.markForCheck();
     }
 }

@@ -82,8 +82,8 @@
                     </os-comma-separated-listing>
                 </os-icon-container>
             </div>
-            <div *ngIf="user.structure_level()" class="spacer-top-5">
-                <os-icon-container icon="flag">{{ user.structure_level() }}</os-icon-container>
+            <div *ngIf="user.structure_levels()?.length" class="spacer-top-5">
+                <os-icon-container icon="flag">{{ user.structure_levels() }}</os-icon-container>
             </div>
             <div *ngIf="user.number()" class="spacer-top-5">
                 <os-icon-container icon="perm_identity">{{ user.number() }}</os-icon-container>
@@ -186,12 +186,22 @@
             <span>{{ 'Groups' | translate }}</span>
         </button>
 
+        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="structure-levels">
+            <mat-icon>flag</mat-icon>
+            <span>{{ 'Structure levels' | translate }}</span>
+        </button>
+
         <div *ngIf="presenceViewConfigured">
             <button mat-menu-item *osPerms="permission.userCanManage" routerLink="presence">
                 <mat-icon>transfer_within_a_station</mat-icon>
                 <span>{{ 'Presence' | translate }}</span>
             </button>
         </div>
+
+        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="speaker-list">
+            <mat-icon>record_voice_over</mat-icon>
+            <span translate>Contributions</span>
+        </button>
 
         <button mat-menu-item (click)="pdfExportUserList()">
             <mat-icon>picture_as_pdf</mat-icon>
@@ -248,6 +258,15 @@
             >
                 <mat-icon>swap_horiz</mat-icon>
                 <span>{{ 'Swap mandates ...' | translate }}</span>
+            </button>
+
+            <button
+                mat-menu-item
+                [disabled]="!selectedRows.length || !hasStructureLevels"
+                (click)="setStructureLevelSelected()"
+            >
+                <mat-icon>flag</mat-icon>
+                <span>{{ 'Add/remove structure levels ...' | translate }}</span>
             </button>
 
             <mat-divider></mat-divider>

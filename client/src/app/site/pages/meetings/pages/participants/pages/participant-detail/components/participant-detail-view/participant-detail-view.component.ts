@@ -25,6 +25,8 @@ import { GroupControllerService } from '../../../../modules';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
 import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
 import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort/participant-list-sort.service';
+import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
+import { ViewStructureLevel } from '../../../structure-levels/view-models';
 
 @Component({
     selector: `os-participant-detail-view`,
@@ -36,7 +38,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
     public readonly additionalFormControls = {
-        structure_level: [``],
+        structure_level_ids: [``],
         number: [``],
         vote_weight: [``, Validators.min(0.000001)],
         about_me: [``],
@@ -120,6 +122,25 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return this.user?.groups() || [];
     }
 
+    public get usersStructureLevels(): ViewStructureLevel[] {
+        if (!this.activeMeetingId) {
+            return [];
+        }
+        return this.user?.structure_levels() || [];
+    }
+
+    public get usersStructureLevelIds(): number[] {
+        if (!this.activeMeetingId) {
+            return [];
+        }
+        return this.user?.structure_level_ids() || [];
+    }
+
+    /**
+     * Contains all structure levels.
+     */
+    public readonly structureLevelObservable: Observable<ViewStructureLevel[]>;
+
     /**
      * Contains all groups, except for the default group.
      */
@@ -150,6 +171,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         private promptService: PromptService,
         private pdfService: ParticipantPdfExportService,
         private groupRepo: GroupControllerService,
+        private structureLevelRepo: StructureLevelControllerService,
         private userService: UserService,
         private cd: ChangeDetectorRef,
         private organizationSettingsService: OrganizationSettingsService
@@ -170,6 +192,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 .get(`users_enable_vote_delegations`)
                 .subscribe(enabled => (this._isVoteDelegationEnabled = enabled))
         );
+
+        this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
 
         // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();

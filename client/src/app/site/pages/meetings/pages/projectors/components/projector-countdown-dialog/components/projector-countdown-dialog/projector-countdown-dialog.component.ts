@@ -38,7 +38,7 @@ export class ProjectorCountdownDialogComponent implements OnInit {
      */
     public ngOnInit(): void {
         const time = this.data.duration || this.durationService.durationToString(this.defaultTime, `m`);
-        const title = this.data.title || `${this.translate.instant(`Countdown`)} ${this.data.count || 0 + 1}`;
+        const title = this.data.title || `${this.translate.instant(`Countdown/Timer`)} ${this.data.count || 0 + 1}`;
 
         this.countdownForm = this.formBuilder.group({
             title: [title, Validators.required],

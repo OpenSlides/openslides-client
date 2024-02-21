@@ -1,1 +1,1 @@
-export * from './motion-submitter-controller.service';
+export * from './motion-submitter-controller';

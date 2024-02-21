@@ -76,6 +76,38 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                                 ...MeetingUserFieldsets.FullNameSubscription
                             }
                         ]
+                    },
+                    {
+                        idField: `editor_ids`,
+                        fieldset: FULL_FIELDSET,
+                        follow: [
+                            {
+                                idField: `meeting_user_id`,
+                                follow: [
+                                    {
+                                        idField: `user_id`,
+                                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                                    }
+                                ],
+                                ...MeetingUserFieldsets.FullNameSubscription
+                            }
+                        ]
+                    },
+                    {
+                        idField: `working_group_speaker_ids`,
+                        fieldset: FULL_FIELDSET,
+                        follow: [
+                            {
+                                idField: `meeting_user_id`,
+                                follow: [
+                                    {
+                                        idField: `user_id`,
+                                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                                    }
+                                ],
+                                ...MeetingUserFieldsets.FullNameSubscription
+                            }
+                        ]
                     }
                 ]
             }
@@ -206,6 +238,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             `all_origin_ids`,
             `origin_meeting_id`,
             `derived_motion_ids`,
+            `identical_motion_ids`,
             `amendment_ids`,
             `amendment_paragraphs`
         ]

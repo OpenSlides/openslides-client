@@ -7,7 +7,6 @@ import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/serv
 import {
     AGENDA_LIST_ITEM_SUBSCRIPTION,
     getAgendaListMinimalSubscriptionConfig,
-    getAgendaListSubscriptionConfig,
     getTopicDetailSubscriptionConfig
 } from '../../../../../../agenda.subscription';
 
@@ -47,11 +46,10 @@ export class TopicDetailMainComponent extends BaseModelRequestHandlerComponent {
     }
 
     private async loadTopicList(meetingId: number): Promise<void> {
-        const hasMaxSubscription = await this.modelRequestService.subscriptionGotData(AGENDA_LIST_ITEM_SUBSCRIPTION);
-        this.updateSubscribeTo(
-            hasMaxSubscription
-                ? getAgendaListSubscriptionConfig(meetingId)
-                : getAgendaListMinimalSubscriptionConfig(meetingId)
-        );
+        try {
+            await this.modelRequestService.waitSubscriptionReady(AGENDA_LIST_ITEM_SUBSCRIPTION, 500);
+        } catch (e) {
+            await this.updateSubscribeTo(getAgendaListMinimalSubscriptionConfig(meetingId));
+        }
     }
 }
