@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
@@ -20,6 +21,7 @@ import { ListOfSpeakersRoutingModule } from './list-of-speakers-routing.module';
     imports: [
         CommonModule,
         ListOfSpeakersRoutingModule,
+        MatCardModule,
         MatIconModule,
         MatMenuModule,
         MatDividerModule,

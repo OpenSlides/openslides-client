@@ -1,7 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatInputModule } from '@angular/material/input';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
@@ -13,6 +20,8 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
+import { ProjectorButtonModule } from '../../modules/meetings-component-collector/projector-button/projector-button.module';
+import { CountdownTimeModule } from '../../modules/projector/modules/countdown-time/countdown-time.module';
 import { ProjectorModule } from '../../modules/projector/projector.module';
 import { TopicPollModule } from '../agenda/modules/topics/modules/topic-poll/topic-poll.module';
 import { InteractionServiceModule } from '../interaction/services/interaction-service.module';
@@ -32,15 +41,24 @@ import { PollCollectionComponent } from './components/poll-collection/poll-colle
         ProjectorModule,
         DirectivesModule,
         MatCardModule,
+        MatProgressBarModule,
+        MatTabsModule,
         MatTooltipModule,
+        MatFormFieldModule,
         MatIconModule,
+        MatDialogModule,
         ListOfSpeakersContentModule,
         HeadBarModule,
+        CountdownTimeModule,
         OpenSlidesTranslationModule.forChild(),
         PollModule,
         MotionPollModule,
+        MatMenuModule,
         TopicPollModule,
-        AssignmentPollModule
+        AssignmentPollModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        ProjectorButtonModule
     ]
 })
 export class AutopilotModule {}

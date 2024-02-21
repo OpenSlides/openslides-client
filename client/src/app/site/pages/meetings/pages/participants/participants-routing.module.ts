@@ -40,8 +40,22 @@ const routes: Routes = [
                 }
             },
             {
+                path: `speaker-list`,
+                loadChildren: () =>
+                    import(`./pages/participant-speaker-list/participant-speaker-list.module`).then(
+                        m => m.ParticipantSpeakerListModule
+                    ),
+                data: { meetingPermissions: [Permission.userCanManage] }
+            },
+            {
                 path: `groups`,
                 loadChildren: () => import(`./modules/groups/groups.module`).then(m => m.GroupsModule),
+                data: { meetingPermissions: [Permission.userCanManage] }
+            },
+            {
+                path: `structure-levels`,
+                loadChildren: () =>
+                    import(`./pages/structure-levels/structure-level.module`).then(m => m.StructureLevelModule),
                 data: { meetingPermissions: [Permission.userCanManage] }
             },
             {

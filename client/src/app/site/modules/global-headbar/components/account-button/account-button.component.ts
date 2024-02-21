@@ -179,13 +179,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public getStructureLevel(): string {
-        if (this.user) {
-            if (this.hasActiveMeeting) {
-                return this.user.structure_level();
-            } else {
-                return this.user.default_structure_level;
-            }
-        }
         return ``;
     }
 

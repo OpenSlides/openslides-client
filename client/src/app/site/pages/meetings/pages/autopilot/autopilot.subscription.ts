@@ -66,9 +66,31 @@ export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfi
                                                     ...UserFieldsets.FullNameSubscription.fieldset,
                                                     `meeting_user_ids`
                                                 ]
+                                            },
+                                            {
+                                                idField: `structure_level_ids`,
+                                                fieldset: [`name`, `color`]
                                             }
                                         ],
                                         ...MeetingUserFieldsets.FullNameSubscription
+                                    },
+                                    {
+                                        idField: `structure_level_list_of_speakers_id`,
+                                        fieldset: FULL_FIELDSET
+                                    }
+                                ]
+                            },
+                            {
+                                idField: `structure_level_list_of_speakers_ids`,
+                                fieldset: FULL_FIELDSET
+                            },
+                            {
+                                idField: `content_object_id`,
+                                fieldset: [],
+                                follow: [
+                                    {
+                                        idField: `agenda_item_id`,
+                                        fieldset: [`item_number`, `moderator_notes`, `content_object_id`]
                                     }
                                 ]
                             }

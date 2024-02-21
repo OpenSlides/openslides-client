@@ -290,7 +290,7 @@
                     <!-- countdowns -->
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
-                            <span>{{ 'Countdowns' | translate }}</span>
+                            <span>{{ 'Countdowns/Timers' | translate }}</span>
                         </mat-expansion-panel-header>
                         <mat-list>
                             <mat-list-item *ngFor="let countdown of countdowns" class="larger-mat-list-item">
@@ -304,7 +304,7 @@
                         <mat-action-row>
                             <button type="button" mat-button (click)="createProjectorCountdown()">
                                 <mat-icon>add</mat-icon>
-                                <span>{{ 'Add countdown' | translate }}</span>
+                                <span>{{ 'Add countdown/timer' | translate }}</span>
                             </button>
                         </mat-action-row>
                     </mat-expansion-panel>
@@ -385,6 +385,34 @@
                                     [projector]="projector"
                                 ></os-projector-button>
                                 <span class="spacer-left-10">{{ 'Chyron' | translate }}</span>
+                            </mat-list-item>
+                        </mat-list>
+
+                        <!-- Strucutre level current speaker -->
+                        <mat-list>
+                            <mat-list-item *ngIf="isStructureLevelCountdownEnabled()">
+                                <os-projector-button
+                                    [object]="getCurrentStructureLevel()"
+                                    [projector]="projector"
+                                ></os-projector-button>
+                                <span class="spacer-left-10">{{ 'Current speaker' | translate }}</span>
+                            </mat-list-item>
+                        </mat-list>
+
+                        <!-- All structure level -->
+                        <mat-list>
+                            <mat-list-item
+                                *ngIf="
+                                    projectorCount > 1 &&
+                                    !projector.isReferenceProjector &&
+                                    isStructureLevelCountdownEnabled()
+                                "
+                            >
+                                <os-projector-button
+                                    [object]="getAllStructureLevel()"
+                                    [projector]="projector"
+                                ></os-projector-button>
+                                <span class="spacer-left-10">{{ 'All structure levels' | translate }}</span>
                             </mat-list-item>
                         </mat-list>
                     </mat-expansion-panel>

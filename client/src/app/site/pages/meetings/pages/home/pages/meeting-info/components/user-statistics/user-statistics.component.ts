@@ -43,7 +43,7 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
         return this.statisticIsOpen;
     }
 
-    public readonly filterProps: string[] = [`structureLevel`];
+    public readonly filterProps: string[] = [];
 
     /**
      * List of unique speakers.
@@ -102,11 +102,7 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
         const data = this.speakerListRepo.getSpeakingTimeStructureLevelRelation();
         const transformedData: IdentifiedSpeakingTimeStructureLevelObject[] = [];
         data.forEach(value => {
-            if (this._structureLevelIdMap.get(value.structureLevel)) {
-                transformedData.push({ id: this._structureLevelIdMap.get(value.structureLevel), ...value });
-            } else {
-                transformedData.push({ id: this.getNewId(), ...value });
-            }
+            transformedData.push({ id: this.getNewId(), ...value });
         });
         this.relationSpeakingTimeStructureLevelSubject.next(
             transformedData.sort((a, b) => {
