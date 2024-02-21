@@ -2,7 +2,6 @@
     <span translate>Are you sure you want to submit a point of order?</span>
 </h2>
 
-
 <form class="edit-form" [formGroup]="editForm" (ngSubmit)="onOk()">
     <!-- Search for speakers -->
     <mat-dialog-content *ngIf="canManage && canSetPoOsForOthers">

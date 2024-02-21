@@ -8,8 +8,8 @@ import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/lega
 import { MatSelectModule } from '@angular/material/select';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
-import { PointOfOrderDialogComponent } from './components/point-of-order-dialog/point-of-order-dialog.component';
 import { ParticipantSearchSelectorModule } from '../../../participant-search-selector';
+import { PointOfOrderDialogComponent } from './components/point-of-order-dialog/point-of-order-dialog.component';
 
 @NgModule({
     declarations: [PointOfOrderDialogComponent],
