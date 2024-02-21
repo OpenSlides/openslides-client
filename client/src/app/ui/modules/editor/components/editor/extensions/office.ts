@@ -10,7 +10,7 @@ export const MSOfficePaste = Extension.create({
 const OfficePastePlugin = new Plugin({
     props: {
         transformPastedHTML(html: string) {
-            if (html.indexOf(`MsoListParagraphCxSp`) === -1) {
+            if (html.indexOf(`MsoListParagraph`) === -1) {
                 return html;
             }
 
@@ -26,11 +26,11 @@ const OfficePastePlugin = new Plugin({
 
                 // Check if the element is part of a list
                 const el = <HTMLElement>node;
-                if (el.className.indexOf(`MsoListParagraphCxSp`) === -1) {
+                if (el.className.indexOf(`MsoListParagraph`) === -1) {
                     return;
                 }
 
-                if (el.className.indexOf(`MsoListParagraphCxSpFirst`) !== -1) {
+                if (el.classList.contains(`MsoListParagraph`) || el.classList.contains(`MsoListParagraphCxSpFirst`)) {
                     const listInfo = getListType(el.firstElementChild.textContent);
                     currentUl = document.createElement(listInfo.type);
                     if (listInfo.countType) {
