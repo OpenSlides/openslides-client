@@ -43,13 +43,15 @@ export class ParticipantCsvExportService {
     public constructor(private csvExport: MeetingCsvExportForBackendService, private translate: TranslateService) {}
 
     public export(participants: ViewUser[]): void {
-        const fields = Object.keys(participantHeadersAndVerboseNames).map(key => {
-            return {
-                property: key
-            } as CsvColumnDefinitionProperty<ViewUser>;
-        }) as CsvColumnsDefinition<ViewUser>;
-        fields.push({ property: `structure_levels` });
-        this.csvExport.export(participants, fields, this.translate.instant(`Participants`) + `.csv`);
+        this.csvExport.export(
+            participants,
+            Object.keys(participantHeadersAndVerboseNames).map(key => {
+                return {
+                    property: key
+                } as CsvColumnDefinitionProperty<ViewUser>;
+            }) as CsvColumnsDefinition<ViewUser>,
+            this.translate.instant(`Participants`) + `.csv`
+        );
     }
 
     public exportCsvExample(): void {
