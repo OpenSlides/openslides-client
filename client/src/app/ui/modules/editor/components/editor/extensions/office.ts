@@ -14,12 +14,12 @@ const OfficePastePlugin = new Plugin({
                 return html;
             }
 
-            const doc = document.createElement(`div`);
-            doc.innerHTML = html;
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, `text/html`);
 
             const lists: HTMLElement[] = [];
             let currentUl: HTMLElement;
-            doc.childNodes.forEach(node => {
+            doc.body.childNodes.forEach(node => {
                 if (node.nodeType !== Node.ELEMENT_NODE) {
                     return;
                 }
@@ -74,8 +74,8 @@ const OfficePastePlugin = new Plugin({
             });
 
             fixLists(lists);
-            console.log(html, doc.innerHTML);
-            return doc.innerHTML;
+            console.log(html, doc.body.innerHTML);
+            return doc.body.innerHTML;
         }
     }
 });
