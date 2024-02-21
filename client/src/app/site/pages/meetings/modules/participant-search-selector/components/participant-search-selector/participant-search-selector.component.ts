@@ -62,6 +62,9 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
     @Output()
     public userSelected = new EventEmitter<UserSelectionData>();
 
+    @Input()
+    public shouldReset = true;
+
     /**
      * Subject that holds the currently selectable users.
      */
@@ -90,15 +93,17 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
     public ngOnInit(): void {
         this.userSortService.initSorting();
         this.subscriptions.push(
-            // ovserve changes to the form
+            // observe changes to the form
             this.usersForm.valueChanges.subscribe(async formResult => {
                 // resetting a form triggers a form.next(null) - check if user_id
                 if (formResult?.userId && typeof formResult?.userId === `number`) {
                     await this.processSelectedUser(formResult.userId);
-                    this.usersForm.reset();
+                    if (this.shouldReset) {
+                        this.usersForm.reset();
+                    }
                 }
             }),
-            //The list should be updated when the participants have been edited
+            // The list should be updated when the participants have been edited
             this.userRepo
                 .getSortedViewModelListObservable(this.userSortService.repositorySortingKey)
                 .subscribe(users => {
@@ -146,7 +151,9 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
 
     private processSelectedUser(userId: number): void {
         if (this._filteredUsersSubject.value.some(user => user.id === userId)) {
-            this.removeUserFromSelectorList(userId);
+            if (this.shouldReset) {
+                this.removeUserFromSelectorList(userId);
+            }
             this.emitSelectedUser({ userId: userId });
         } else {
             throw new Error(`Tried to select an unselectable user`);

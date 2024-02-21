@@ -6,14 +6,10 @@
 <form class="edit-form" [formGroup]="editForm" (ngSubmit)="onOk()">
     <!-- Search for speakers -->
     <mat-dialog-content *ngIf="canManage && canSetPoOsForOthers">
-        <div>
-            <span translate> Selected speaker: </span>
-            <span> {{ getSelectedUser() }}</span>
-        </div>
-        <br>
         <os-participant-search-selector
             [nonSelectableUserIds]="nonAvailableUserIds"
-            placeholder="{{ 'Select or search new speaker ...' | translate }}"
+            [shouldReset]="false"
+            placeholder="{{ 'Select or search new speaker for point of order' | translate }}"
             (userSelected)="selectUser($event)"
         ></os-participant-search-selector>
     </mat-dialog-content>
