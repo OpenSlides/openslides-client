@@ -8,6 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
 import { EditorComponent } from './components/editor/editor.component';
 import { EditorHtmlDialogComponent } from './components/editor-html-dialog/editor-html-dialog.component';
@@ -33,7 +35,9 @@ const DECLARATIONS = [
         MatInputModule,
         MatButtonModule,
         MatMenuModule,
-        FormsModule
+        MatTooltipModule,
+        FormsModule,
+        OpenSlidesTranslationModule.forChild()
     ],
     exports: DECLARATIONS
 })
