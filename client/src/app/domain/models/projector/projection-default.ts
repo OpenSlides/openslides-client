@@ -32,7 +32,7 @@ export const PROJECTIONDEFAULT_VERBOSE: { [key in ProjectiondefaultKey]: string 
     assignment: _(`Elections`),
     mediafile: _(`Files`),
     projectorMessage: _(`Messages`),
-    projectorCountdown: _(`Countdowns`),
+    projectorCountdown: _(`Countdowns/Timers`),
     assignmentPoll: _(`Ballots`),
     motionPoll: _(`Motion votes`),
     poll: _(`Polls`)
