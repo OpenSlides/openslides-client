@@ -8,5 +8,5 @@ export const participantHeadersAndVerboseNames: { [key in keyof GeneralUser]?: s
     is_present: `Is present`,
     groups: `Groups`,
     comment: `Comment`,
-    structure_level: `Strucuture levels`
+    structure_level: `Structure levels`
 };
