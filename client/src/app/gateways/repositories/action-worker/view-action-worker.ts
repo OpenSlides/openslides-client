@@ -33,7 +33,7 @@ export class ViewActionWorker extends BaseViewModel<ActionWorker> {
      * Returns true, if the worker timestamp is older than 300 seconds
      */
     public get hasPassedDeathThreshold(): boolean {
-        return -this.timestamp + Date.now() / 1000 > 300;
+        return this.timeSinceLastActivityConfirmation > 300;
     }
 
     /**
