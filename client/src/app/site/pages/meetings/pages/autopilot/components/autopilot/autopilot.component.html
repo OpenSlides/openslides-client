@@ -83,7 +83,9 @@
             </div>
 
             <!-- Moderator Note-->
-            <os-moderation-note [listOfSpeakers]="listOfSpeakers"></os-moderation-note>
+            <div *ngIf="hasCurrentProjection">
+                <os-moderation-note [listOfSpeakers]="listOfSpeakers"></os-moderation-note>
+            </div>
 
             <!-- Poll-Collection -->
             <os-poll-collection
@@ -118,6 +120,7 @@
         <mat-card-content>
             <os-speaking-times
                 [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"
+                [showProjectionMenu]="false"
             ></os-speaking-times>
         </mat-card-content>
     </mat-card>

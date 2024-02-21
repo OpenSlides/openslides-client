@@ -146,4 +146,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     public async readdLastSpeaker(): Promise<void> {
         await this.listOfSpeakersRepo.readdLastSpeaker(this.listOfSpeakers!).catch(this.raiseError);
     }
+
+    public get hasCurrentProjection(): boolean {
+        return !!this._currentProjection;
+    }
 }

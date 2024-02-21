@@ -38,7 +38,6 @@ export class SpeakingTimesComponent implements OnDestroy {
     public readonly permission = Permission;
 
     private subscriptions: Map<Id, Subscription> = new Map();
-    private structureLevels: Map<Id, any> = new Map();
 
     @ViewChild(`totalTimeDialog`, { static: true })
     private totalTimeDialog: TemplateRef<string> | null = null;
@@ -46,9 +45,13 @@ export class SpeakingTimesComponent implements OnDestroy {
     private dialogRef: MatDialogRef<any> | null = null;
     public totalTimeForm: UntypedFormGroup;
     public currentEntry: any = null;
+    public structureLevels: Map<Id, any> = new Map();
 
     // if some speaker has spoken.
     public hasSpokenFlag = false;
+
+    @Input()
+    public showProjectionMenu = false;
 
     @Input()
     public set currentSpeakingTimes(speakingTimes: Id[]) {
@@ -67,7 +70,7 @@ export class SpeakingTimesComponent implements OnDestroy {
                 this.speakingTimesRepo
                     .getViewModelObservable(speakingTimeId)
                     .pipe(
-                        filter(st => !!st.structure_level),
+                        filter(st => !!st?.structure_level),
                         tap(st => this.updateSpeakingTime(st)),
                         mergeMap(st =>
                             merge(
@@ -76,14 +79,6 @@ export class SpeakingTimesComponent implements OnDestroy {
                         )
                     )
                     .subscribe(speaker => {
-                        if (
-                            !this.hasSpokenFlag &&
-                            (speaker.list_of_speakers.finishedSpeakers.length > 0 ||
-                                !!speaker.list_of_speakers.activeSpeaker)
-                        ) {
-                            this.hasSpokenFlag = true;
-                        }
-
                         this.updateSpeakingTime(speaker.structure_level_list_of_speakers);
                     })
             );
@@ -111,10 +106,6 @@ export class SpeakingTimesComponent implements OnDestroy {
         for (const speakingTimeId of this.subscriptions.keys()) {
             this.subscriptions.get(speakingTimeId).unsubscribe();
         }
-    }
-
-    public getStructureLevels(): any {
-        return this.structureLevels.values();
     }
 
     public duration(duration_time: number): string {

@@ -1,20 +1,20 @@
 <div class="action-title">
     <p class="subtitle-text" translate>Speaking times</p>
     <ng-container *osPerms="permission.projectorCanManage">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="projectionMenu">
+        <button type="button" *ngIf="showProjectionMenu" mat-icon-button [matMenuTriggerFor]="projectionMenu">
             <mat-icon>more_horiz</mat-icon>
         </button>
     </ng-container>
 </div>
 
 <div class="structure-level-list">
-    <div class="structure-level" *ngFor="let structure_level of getStructureLevels()">
+    <div class="structure-level" *ngFor="let structure_level of structureLevels | keyvalue">
         <div class="structure-level-content">
-            <hr class="structure-level-color" [ngStyle]="{ 'background-color': structure_level.color }" />
+            <hr class="structure-level-color" [ngStyle]="{ 'background-color': structure_level.value.color }" />
             <span class="structure-level-time">
-                <os-countdown-time [unstyled]="true" [countdown]="structure_level.countdown"></os-countdown-time>
+                <os-countdown-time [unstyled]="true" [countdown]="structure_level.value.countdown"></os-countdown-time>
             </span>
-            <div class="structure-level-name">{{ structure_level.name }}</div>
+            <div class="structure-level-name">{{ structure_level.value.name }}</div>
         </div>
         <ng-container *osPerms="permission.listOfSpeakersCanManage">
             <button
@@ -22,7 +22,7 @@
                 type="button"
                 mat-icon-button
                 [matMenuTriggerFor]="editAndDistributeMenu"
-                [matMenuTriggerData]="{ structure_level: structure_level }"
+                [matMenuTriggerData]="{ structure_level: structure_level.value }"
             >
                 <mat-icon>more_vert</mat-icon>
             </button>
@@ -32,7 +32,7 @@
 
 <mat-menu #editAndDistributeMenu="matMenu">
     <ng-template let-structure_level="structure_level" matMenuContent>
-        <button mat-menu-item (click)="setTotalTime(structure_level.id)" [disabled]="hasSpokenFlag">
+        <button mat-menu-item (click)="setTotalTime(structure_level.id)">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit total time' | translate }}</span>
         </button>
