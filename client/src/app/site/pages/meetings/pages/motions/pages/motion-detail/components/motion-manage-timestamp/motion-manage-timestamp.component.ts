@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { fromUnixTime, getHours, getMinutes, isDate } from 'date-fns';
 import { KeyOfType } from 'src/app/infrastructure/utils/keyof-type';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
@@ -29,7 +30,7 @@ export class MotionManageTimestampComponent extends BaseUiComponent {
     @Input()
     public title: string;
 
-    public contentForm: UntypedFormControl;
+    public form: UntypedFormGroup;
 
     /**
      * Saves if the users edits the note.
@@ -53,13 +54,31 @@ export class MotionManageTimestampComponent extends BaseUiComponent {
     ) {
         super();
 
-        this.contentForm = this.fb.control(null);
+        this.form = this.fb.group({
+            date: [``],
+            time: [``]
+        });
+
+        this.form.get(`date`).valueChanges.subscribe(currDate => {
+            if (isDate(currDate) !== !!this.form.get(`time`).value) {
+                this.form.get(`time`).setValue(isDate(currDate) ? `00:00` : ``);
+            }
+        });
+        this.form.get(`time`).valueChanges.subscribe(currTime => {
+            if (!!currTime !== isDate(this.form.get(`date`).value)) {
+                this.form.get(`date`).setValue(!!currTime ? new Date() : null);
+            }
+        });
     }
 
     public async onSave(): Promise<void> {
-        const date: Date | null = this.contentForm.value;
+        const date: { date: Date | null; time: string } = this.form.value;
+        const [hours, minutes, ..._] = date.time.split(`:`);
+        if (date.date) {
+            date.date.setHours(+hours, +minutes);
+        }
         await this.motionController
-            .update({ [this.field]: date ? date.getTime() / 1000 : null }, this.motion)
+            .update({ [this.field]: date.date ? Math.floor(date.date.getTime() / 1000) : null }, this.motion)
             .resolve();
         this.isEditMode = false;
     }
@@ -76,12 +95,26 @@ export class MotionManageTimestampComponent extends BaseUiComponent {
      */
     public onEdit(): void {
         const timestamp = this.motion[this.field];
-        const date = timestamp ? new Date(timestamp * 1000) : null;
-        this.contentForm.setValue(date);
+        const date = timestamp
+            ? this.getTimes(timestamp)
+            : {
+                  date: ``,
+                  time: ``
+              };
+        this.form.patchValue(date);
         this.isEditMode = true;
     }
 
+    public getTimes(timestamp: number): { date: Date; time: string } {
+        const date = fromUnixTime(timestamp);
+        const time = getHours(date) + `:` + getMinutes(date);
+        return { date, time };
+    }
+
     public clearForm(): void {
-        this.contentForm.setValue(null);
+        this.form.patchValue({
+            date: ``,
+            time: ``
+        });
     }
 }
