@@ -7,6 +7,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { EditorComponent } from './components/editor/editor.component';
 import { EditorHtmlDialogComponent } from './components/editor-html-dialog/editor-html-dialog.component';
@@ -31,6 +32,7 @@ const DECLARATIONS = [
         MatDialogModule,
         MatInputModule,
         MatButtonModule,
+        MatMenuModule,
         FormsModule
     ],
     exports: DECLARATIONS

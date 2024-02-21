@@ -19,6 +19,7 @@ import Color from '@tiptap/extension-color';
 import Document from '@tiptap/extension-document';
 import HardBreak from '@tiptap/extension-hard-break';
 import Heading from '@tiptap/extension-heading';
+import { Level as HeadingLevel } from '@tiptap/extension-heading';
 import Highlight from '@tiptap/extension-highlight';
 import History from '@tiptap/extension-history';
 import Image from '@tiptap/extension-image';
@@ -65,6 +66,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     public editor: Editor;
 
     public editorReady = false;
+
+    public get selectedHeadingLevel(): HeadingLevel {
+        if (this.editor.isActive(`heading`)) {
+            return this.editor.getAttributes(`heading`)[`level`];
+        }
+
+        return 1;
+    }
 
     private cd: ChangeDetectorRef = inject(ChangeDetectorRef);
 
