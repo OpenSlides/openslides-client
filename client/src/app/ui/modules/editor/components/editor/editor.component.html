@@ -4,6 +4,7 @@
             <div class="button-group">
                 <button
                     mat-ripple
+                    class="text"
                     [ngClass]="{ active: editor.isActive('heading') }"
                     (click)="editor.chain().focus().toggleHeading({ level: selectedHeadingLevel }).run()"
                 >
