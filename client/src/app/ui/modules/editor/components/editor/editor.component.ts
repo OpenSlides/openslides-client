@@ -20,13 +20,11 @@ import Document from '@tiptap/extension-document';
 import HardBreak from '@tiptap/extension-hard-break';
 import Heading from '@tiptap/extension-heading';
 import { Level as HeadingLevel } from '@tiptap/extension-heading';
-import Highlight from '@tiptap/extension-highlight';
 import History from '@tiptap/extension-history';
 import Image from '@tiptap/extension-image';
 import Italic from '@tiptap/extension-italic';
 import Link from '@tiptap/extension-link';
 import ListItem from '@tiptap/extension-list-item';
-import OrderedList from '@tiptap/extension-ordered-list';
 import Paragraph from '@tiptap/extension-paragraph';
 import Strike from '@tiptap/extension-strike';
 import Subscript from '@tiptap/extension-subscript';
@@ -47,7 +45,9 @@ import {
     EditorImageDialogOutput
 } from '../editor-image-dialog/editor-image-dialog.component';
 import { EditorLinkDialogComponent, EditorLinkDialogOutput } from '../editor-link-dialog/editor-link-dialog.component';
+import { Highlight } from './extensions/highlight';
 import { MSOfficePaste } from './extensions/office';
+import { OrderedList } from './extensions/ordered-list';
 
 @Component({
     selector: `os-editor`,
@@ -94,19 +94,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 Heading,
                 Image,
                 ListItem,
-                OrderedList.extend({
-                    addAttributes() {
-                        return {
-                            ...this.parent,
-                            type: {
-                                default: null,
-                                parseHTML: element => {
-                                    return element.getAttribute(`type`);
-                                }
-                            }
-                        };
-                    }
-                }),
+                OrderedList,
                 Paragraph,
                 Text,
                 Table,
@@ -116,17 +104,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
                 //Marks
                 Bold,
-                Highlight.extend({
-                    parseHTML() {
-                        return [
-                            ...this.parent(),
-                            {
-                                tag: `span`,
-                                getAttrs: node => !!(node as HTMLElement).style?.backgroundColor && null
-                            }
-                        ];
-                    }
-                }).configure({
+                Highlight.configure({
                     multicolor: true
                 }),
                 Italic,
