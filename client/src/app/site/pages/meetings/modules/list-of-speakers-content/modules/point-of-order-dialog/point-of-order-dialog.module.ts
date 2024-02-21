@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
 import { PointOfOrderDialogComponent } from './components/point-of-order-dialog/point-of-order-dialog.component';
+import { ParticipantSearchSelectorModule } from '../../../participant-search-selector';
 
 @NgModule({
     declarations: [PointOfOrderDialogComponent],
@@ -20,7 +21,8 @@ import { PointOfOrderDialogComponent } from './components/point-of-order-dialog/
         MatInputModule,
         MatSelectModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule.forChild(),
+        ParticipantSearchSelectorModule
     ]
 })
 export class PointOfOrderDialogModule {

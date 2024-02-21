@@ -6,10 +6,12 @@ import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { PointOfOrderDialogComponent } from '../components/point-of-order-dialog/point-of-order-dialog.component';
 import { PointOfOrderDialogModule } from '../point-of-order-dialog.module';
+import { UserSelectionData } from '../../../../participant-search-selector';
 
 interface PointOfOrderResult {
     note: string;
     point_of_order_category_id: number;
+    speaker?: UserSelectionData
 }
 
 @Injectable({

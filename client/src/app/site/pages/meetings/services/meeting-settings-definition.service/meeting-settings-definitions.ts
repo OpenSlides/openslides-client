@@ -366,6 +366,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `list_of_speakers_can_create_point_of_order_for_others`,
                         label: _(`Enable point of orders for other participants`),
+                        helpText: _(`Requires permission can manage list of speaker`),
                         type: `boolean`
                     },
                     {
