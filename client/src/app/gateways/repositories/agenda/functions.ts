@@ -13,6 +13,7 @@ export function createAgendaItem(model: any, setTag = true): any {
         agenda_parent_id: model.agenda_parent_id,
         agenda_type: model.agenda_type,
         agenda_weight: model.agenda_weight,
-        agenda_tag_ids: setTag ? model.tag_ids : undefined
+        agenda_tag_ids: setTag ? model.tag_ids : undefined,
+        moderator_notes: model.moderator_notes
     };
 }

@@ -98,6 +98,10 @@ export class Settings {
     public list_of_speakers_speaker_note_for_everyone!: boolean;
     public list_of_speakers_closing_disables_point_of_order!: boolean;
 
+    public list_of_speakers_default_structure_level_time: number;
+    public list_of_speakers_enable_interposed_question: boolean;
+    public list_of_speakers_intervention_time: number;
+
     // Motions
     public motions_default_workflow_id!: Id; // workflow/default_workflow_meeting_id;
     public motions_default_amendment_workflow_id!: Id; // workflow/default_amendment_workflow_meeting_id;
@@ -128,6 +132,8 @@ export class Settings {
     public motions_amendments_multiple_paragraphs!: boolean;
     public motions_supporters_min_amount!: number;
     public motions_block_slide_columns!: number;
+    public motions_enable_editor!: boolean;
+    public motions_enable_working_group_speaker!: boolean;
     public motions_export_title!: string;
     public motions_export_preamble!: string;
     public motions_export_submitter_recommendation!: boolean;
@@ -185,6 +191,9 @@ export class Settings {
 
     //SSO
     public external_id!: string;
+
+    // Structure Level
+    public structure_level_ids: Id[]; // (structure_level/meeting_id)
 }
 
 export class Meeting extends BaseModel<Meeting> {
@@ -211,6 +220,8 @@ export class Meeting extends BaseModel<Meeting> {
     public motion_category_ids!: Id[]; // (motion_category/meeting_id)[];
     public motion_block_ids!: Id[]; // (motion_block/meeting_id)[];
     public motion_submitter_ids!: Id[]; // (motion_submitter/meeting_id)[];
+    public motion_editor_ids!: Id[]; // (motion_editor/meeting_id)[];
+    public motion_working_group_speaker_ids!: Id[]; // (motion_working_group_speaker/meeting_id)[];
     public motion_change_recommendation_ids!: Id[]; // (motion_change_recommendation/meeting_id)[];
     public motion_workflow_ids!: Id[]; // (motion_workflow/meeting_id)[];
     public motion_state_ids!: Id[]; // (motion_state/meeting_id)[];
@@ -245,6 +256,8 @@ export class Meeting extends BaseModel<Meeting> {
     public is_active_in_organization_id!: Id; // (organization/active_meeting_ids)[];
     public is_archived_in_organization_id!: Id; // (organization/archived_meeting_ids)[];
     public template_for_organization_id!: Id; // (organization/template_meeting_ids)[];
+
+    public structure_level_list_of_speakers_ids: Id[]; // (structure_level_list_of_speakers/meeting_id)[]
 
     public constructor(input?: any) {
         super(Meeting.COLLECTION, input);
@@ -330,6 +343,9 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_can_set_contribution_self`,
         `list_of_speakers_speaker_note_for_everyone`,
         `list_of_speakers_initially_closed`,
+        `list_of_speakers_default_structure_level_time`,
+        `list_of_speakers_enable_interposed_question`,
+        `list_of_speakers_intervention_time`,
         `motions_default_workflow_id`,
         `motions_default_amendment_workflow_id`,
         `motions_default_statute_amendment_workflow_id`,
@@ -359,6 +375,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_amendments_text_mode`,
         `motions_amendments_multiple_paragraphs`,
         `motions_supporters_min_amount`,
+        `motions_enable_editor`,
+        `motions_enable_working_group_speaker`,
         `motions_export_title`,
         `motions_export_preamble`,
         `motions_export_submitter_recommendation`,
@@ -413,6 +431,7 @@ export class Meeting extends BaseModel<Meeting> {
         `tag_ids`,
         `agenda_item_ids`,
         `list_of_speakers_ids`,
+        `structure_level_list_of_speakers_ids`,
         `point_of_order_category_ids`,
         `speaker_ids`,
         `topic_ids`,
@@ -427,6 +446,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_statute_paragraph_ids`,
         `motion_comment_ids`,
         `motion_submitter_ids`,
+        `motion_editor_ids`,
+        `motion_working_group_speaker_ids`,
         `motion_change_recommendation_ids`,
         `motion_state_ids`,
         `poll_ids`,
@@ -437,6 +458,7 @@ export class Meeting extends BaseModel<Meeting> {
         `personal_note_ids`,
         `chat_group_ids`,
         `chat_message_ids`,
+        `structure_level_ids`,
         `logo_projector_main_id`,
         `logo_projector_header_id`,
         `logo_web_header_id`,

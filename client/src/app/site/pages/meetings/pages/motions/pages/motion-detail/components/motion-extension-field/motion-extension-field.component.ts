@@ -68,6 +68,9 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     @Input()
     public inputValue!: string;
 
+    @Input()
+    public internal = false;
+
     /**
      * EventEmitter, when clicking on the 'save'-button.
      */
