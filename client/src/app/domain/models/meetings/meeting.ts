@@ -97,6 +97,7 @@ export class Settings {
     public list_of_speakers_can_set_contribution_self!: boolean;
     public list_of_speakers_speaker_note_for_everyone!: boolean;
     public list_of_speakers_closing_disables_point_of_order!: boolean;
+    public list_of_speakers_can_create_point_of_order_for_others!: boolean;
 
     public list_of_speakers_default_structure_level_time: number;
     public list_of_speakers_enable_interposed_question: boolean;
@@ -338,6 +339,7 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_show_first_contribution`,
         `list_of_speakers_enable_point_of_order_speakers`,
         `list_of_speakers_enable_point_of_order_categories`,
+        `list_of_speakers_can_create_point_of_order_for_others`,
         `list_of_speakers_closing_disables_point_of_order`,
         `list_of_speakers_enable_pro_contra_speech`,
         `list_of_speakers_can_set_contribution_self`,

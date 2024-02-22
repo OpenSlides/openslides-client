@@ -4,12 +4,14 @@ import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings
 import { ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
+import { UserSelectionData } from '../../../../participant-search-selector';
 import { PointOfOrderDialogComponent } from '../components/point-of-order-dialog/point-of-order-dialog.component';
 import { PointOfOrderDialogModule } from '../point-of-order-dialog.module';
 
 interface PointOfOrderResult {
     note: string;
     point_of_order_category_id: number;
+    speaker?: UserSelectionData;
 }
 
 @Injectable({

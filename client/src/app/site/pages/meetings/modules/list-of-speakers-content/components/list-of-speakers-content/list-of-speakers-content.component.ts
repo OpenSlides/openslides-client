@@ -305,10 +305,14 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
-                await this.speakerRepo.create(this.listOfSpeakers, this._currentUser!.id, {
-                    pointOfOrder: true,
-                    ...result
-                });
+                await this.speakerRepo.create(
+                    this.listOfSpeakers,
+                    result.speaker ? result.speaker.userId : this._currentUser!.id,
+                    {
+                        pointOfOrder: true,
+                        ...result
+                    }
+                );
             }
         } catch (e) {
             this.raiseError(e);
