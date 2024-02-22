@@ -1,28 +1,32 @@
 {
     "$schema": "./node_modules/@angular/service-worker/config/schema.json",
     "index": "/index.html",
+    "version": 2,
     "assetGroups": [
         {
             "name": "app",
-            "installMode": "prefetch",
+            "installMode": "lazy",
             "resources": {
                 "files": [
                     "/favicon.ico",
                     "/index.html",
                     "/manifest.webmanifest",
                     "/*.css",
-                    "/*.js",
-                    "/fira-sans*",
-                    "/Material-Icons-Baseline.*"
+                    "/*.js"
                 ]
             }
         },
         {
             "name": "assets",
             "installMode": "lazy",
-            "updateMode": "prefetch",
+            "updateMode": "lazy",
             "resources": {
-                "files": ["/assets/**", "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
+                "files": [
+                    "/assets/**",
+                    "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)",
+                    "/fira-sans*",
+                    "/Material-Icons-Baseline.*"
+                ]
             }
         }
     ],
