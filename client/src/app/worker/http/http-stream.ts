@@ -1,15 +1,14 @@
 import {
     ErrorDescription,
-    ErrorType,
     isCommunicationError,
     isCommunicationErrorWrapper
 } from '../../gateways/http-stream/stream-utils';
 import { AutoupdateSetEndpointParams } from '../autoupdate/interfaces-autoupdate';
-import { HttpSubscription } from './http-subscription';
+import { HttpSubscription, HttpSubscriptionEndpoint } from './http-subscription';
 import { HttpSubscriptionPolling } from './http-subscription-polling';
 import { HttpSubscriptionSSE } from './http-subscription-sse';
 
-export class HttpStream {
+export abstract class HttpStream {
     public failedCounter = 0;
 
     private static CONNECTION_MODE: 'SSE' | 'LONGPOLLING' = `SSE`;
@@ -31,11 +30,17 @@ export class HttpStream {
         return this.failedCounter;
     }
 
-    constructor(queryParams: URLSearchParams, endpoint: AutoupdateSetEndpointParams, authToken: string) {
-        const endpointConfig = {
-            url: endpoint.url + queryParams,
+    constructor(
+        queryParams: URLSearchParams,
+        endpoint: AutoupdateSetEndpointParams,
+        authToken: string,
+        requestPayload?: string
+    ) {
+        const endpointConfig: HttpSubscriptionEndpoint = {
+            url: endpoint.url + `?` + queryParams,
             method: endpoint.method,
-            authToken
+            authToken,
+            payload: requestPayload
         };
         const handlerConfig = {
             onData: (data: unknown) => this.handleContent(data)
@@ -64,7 +69,7 @@ export class HttpStream {
      */
     public async start(
         force?: boolean
-    ): Promise<{ stopReason: 'error' | 'aborted' | 'resolved' | 'in-use'; error?: any }> {
+    ): Promise<{ stopReason: 'error' | 'aborted' | 'resolved' | 'in-use' | string; error?: any }> {
         if (this.subscription.active && !force) {
             return { stopReason: `in-use` };
         } else if (this.subscription.active && force) {
@@ -102,15 +107,11 @@ export class HttpStream {
         this.subscription.authToken = token;
     }
 
-    protected onData(_data: unknown) {}
-    protected onError(_error: unknown) {}
+    protected abstract onData(_data: unknown): void;
+    protected abstract onError(_error: unknown): void;
 
-    protected requestPayload(): string | undefined {
-        return undefined;
-    }
-
+    /*
     private async doRequest(): Promise<void> {
-        /*
         const content = next ? this.parse(next) : null;
         const autoupdateSentUnmarkedError = content?.type !== ErrorType.UNKNOWN && content?.error;
 
@@ -143,10 +144,11 @@ export class HttpStream {
         } else if (this.lastError) {
             this.failedCounter++;
         }
-        */
     }
+        */
 
-    private handleContent(data: any): void {
+    protected handleContent(data: any): void {
+        data = this.parse(data);
         if (data instanceof ErrorDescription || isCommunicationError(data) || isCommunicationErrorWrapper(data)) {
             this.lastError = data;
             this.onError(data);
@@ -156,29 +158,7 @@ export class HttpStream {
         }
     }
 
-    private parse(data: Uint8Array): any | ErrorDescription {
-        const content = new TextDecoder().decode(data);
-        try {
-            return JSON.parse(content);
-        } catch (e) {
-            return { reason: `JSON is malformed`, type: ErrorType.UNKNOWN, error: e as any };
-        }
-    }
-
-    protected async healthCheck(): Promise<boolean> {
-        /*
-        if (!this.endpoint.healthCheckUrl) {
-            return true;
-        }
-
-        try {
-            const resp = await fetch(this.endpoint.healthCheckUrl);
-            const data = await resp.json();
-            return !!data?.healthy;
-        } catch (e) {
-            return false;
-        }
-        */
-        return true;
+    protected parse(data: string): any | ErrorDescription {
+        return data;
     }
 }

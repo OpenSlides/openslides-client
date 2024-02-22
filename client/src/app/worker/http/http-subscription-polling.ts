@@ -4,16 +4,17 @@ const POLLING_INTERVAL = 5000;
 
 export class HttpSubscriptionPolling extends HttpSubscription {
     private timeout = undefined;
+    private lastHash: string = undefined;
 
     public async start(): Promise<void> {
-        await this.initialRequest();
-        await this.startPolling();
+        await this.nextPoll();
     }
 
     public async stop(): Promise<void> {
         if (this.timeout) {
             clearTimeout(this.timeout);
         }
+        this.lastHash = undefined;
     }
 
     public async restart(): Promise<void> {
@@ -21,13 +22,20 @@ export class HttpSubscriptionPolling extends HttpSubscription {
         await this.start();
     }
 
-    private async initialRequest(): Promise<void> {
+    private async nextPoll(): Promise<void> {
+        await this.request();
+        this.timeout = setTimeout(() => {
+            this.nextPoll();
+        }, POLLING_INTERVAL);
+    }
+
+    private async request() {
         const headers: any = {
             'ngsw-bypass': true
         };
 
-        if (this.authToken) {
-            headers.authentication = this.authToken;
+        if (this.endpoint.authToken) {
+            headers.authentication = this.endpoint.authToken;
         }
 
         const url = new URL(this.endpoint.url);
@@ -35,7 +43,9 @@ export class HttpSubscriptionPolling extends HttpSubscription {
 
         const body = new FormData();
         body.append(`request`, this.endpoint.payload);
-        body.append(`lastpolling`, null);
+        if (this.lastHash) {
+            body.append(`lastpolling`, this.lastHash);
+        }
 
         const response = await fetch(url.toString(), {
             method: this.endpoint.method,
@@ -44,10 +54,7 @@ export class HttpSubscriptionPolling extends HttpSubscription {
         });
 
         const parts = await response.formData();
-        // TODO: Handle data
-    }
-
-    private async startPolling(): Promise<void> {
-        this.timeout = setTimeout(() => {}, POLLING_INTERVAL);
+        console.log(parts);
+        // TODO: Handle results
     }
 }

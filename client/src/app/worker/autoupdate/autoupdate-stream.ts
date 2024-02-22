@@ -1,34 +1,13 @@
 import * as fzstd from 'fzstd';
 
-import {
-    ErrorDescription,
-    ErrorType,
-    isCommunicationError,
-    isCommunicationErrorWrapper
-} from '../../gateways/http-stream/stream-utils';
-import { joinTypedArrays, splitTypedArray } from '../../infrastructure/utils/functions';
+import { ErrorDescription, ErrorType } from '../../gateways/http-stream/stream-utils';
+import { HttpStream } from '../http/http-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 import { AutoupdateSetEndpointParams } from './interfaces-autoupdate';
 
-export class AutoupdateStream {
-    public failedCounter = 0;
-
-    private abortCtrl: AbortController = undefined;
+export class AutoupdateStream extends HttpStream {
     private activeSubscriptions: AutoupdateSubscription[] = null;
-    private _active = false;
-    private _connecting = false;
-    private _abortResolver: (val?: any) => void | undefined;
-    private error: any | ErrorDescription = null;
-    private restarting = false;
     private _currentData: unknown | null = null;
-
-    public get active(): boolean {
-        return this._active;
-    }
-
-    public get connecting(): boolean {
-        return this._connecting;
-    }
 
     /**
      * Full data object received by autoupdate
@@ -41,16 +20,14 @@ export class AutoupdateStream {
         return this._subscriptions;
     }
 
-    public get failedConnects(): number {
-        return this.failedCounter;
-    }
-
     constructor(
         private _subscriptions: AutoupdateSubscription[],
         public queryParams: URLSearchParams,
         private endpoint: AutoupdateSetEndpointParams,
         private authToken: string
-    ) {}
+    ) {
+        super(queryParams, endpoint, authToken, JSON.stringify(_subscriptions.map(s => s.request)));
+    }
 
     /**
      * Clones this stream with the specified subscriptions
@@ -61,65 +38,15 @@ export class AutoupdateStream {
         return new AutoupdateStream(subscriptions, this.queryParams, this.endpoint, this.authToken);
     }
 
-    /**
-     * Closes the stream
-     */
-    public async abort(): Promise<void> {
-        if (this.abortCtrl !== undefined) {
-            const abortPromise = new Promise(resolver => (this._abortResolver = resolver));
-            setTimeout(this._abortResolver, 5000);
-            this.abortCtrl.abort();
-            await abortPromise;
-            this._abortResolver = undefined;
-        }
-    }
-
-    /**
-     * Opens a new connection to autoupdate.
-     * Also this function registers this stream inside all subscriptions
-     * handled by this stream.
-     *
-     * resolves when fetch connection is closed
-     */
-    public async start(
+    public override async start(
         force?: boolean
-    ): Promise<{ stopReason: 'error' | 'aborted' | 'unused' | 'resolved' | 'in-use'; error?: any }> {
-        if (this._active && !force) {
-            return { stopReason: `in-use` };
-        } else if ((this._active || this.abortCtrl) && force) {
-            await this.abort();
+    ): Promise<{ stopReason: 'error' | 'aborted' | 'resolved' | 'in-use' | string; error?: any }> {
+        const stopInfo = await super.start(force);
+        if (stopInfo.stopReason === `aborted` && !this.activeSubscriptions?.length) {
+            stopInfo.stopReason = `unused`;
         }
 
-        this.restarting = false;
-        this.error = null;
-        try {
-            await this.doRequest();
-            this._active = false;
-
-            if (this._abortResolver) {
-                this._abortResolver();
-            }
-        } catch (e) {
-            this._active = false;
-            if (e.name !== `AbortError`) {
-                console.error(e);
-
-                return { stopReason: `error`, error: this.error };
-            } else if (this.restarting) {
-                return await this.start();
-            }
-
-            if (this._abortResolver) {
-                this._abortResolver();
-            }
-            return { stopReason: this.activeSubscriptions?.length ? `aborted` : `unused`, error: this.error };
-        }
-
-        if (this.error) {
-            return { stopReason: `error`, error: this.error };
-        }
-
-        return { stopReason: `resolved` };
+        return stopInfo;
     }
 
     /**
@@ -161,9 +88,8 @@ export class AutoupdateStream {
         this.restart();
     }
 
-    public restart(): void {
-        this.restarting = true;
-        this.abort();
+    public override restart(): void {
+        super.restart();
         this.clearSubscriptions();
     }
 
@@ -195,11 +121,8 @@ export class AutoupdateStream {
         this._currentData = null;
     }
 
-    public setAuthToken(token: string): void {
-        this.authToken = token;
-    }
-
     private async doRequest(): Promise<void> {
+        /*
         this._active = true;
 
         if (this.activeSubscriptions === null) {
@@ -287,22 +210,47 @@ export class AutoupdateStream {
         } else if (this.error) {
             this.failedCounter++;
         }
+        */
     }
 
-    private handleContent(data: any): void {
-        if (data instanceof ErrorDescription || isCommunicationError(data) || isCommunicationErrorWrapper(data)) {
-            this.error = data;
-            this.sendErrorToSubscriptions(data);
+    protected onData(data: unknown): void {
+        if (this._currentData !== null) {
+            Object.assign(this._currentData, data);
         } else {
-            if (this._currentData !== null) {
-                Object.assign(this._currentData, data);
-            } else {
-                this._currentData = data;
-            }
-
-            this.failedCounter = 0;
-            this.sendToSubscriptions(data);
+            this._currentData = data;
         }
+
+        this.sendToSubscriptions(data);
+    }
+
+    protected onError(error: unknown): void {
+        this.sendErrorToSubscriptions(error);
+    }
+
+    protected override parse(content: string): any | ErrorDescription {
+        if (this.queryParams.get(`compress`)) {
+            content = this.decode(content);
+        }
+
+        try {
+            return JSON.parse(content);
+        } catch (e) {
+            return { reason: `JSON is malformed`, type: ErrorType.UNKNOWN, error: e as any };
+        }
+    }
+
+    private decode(data: string): string {
+        try {
+            const atobbed = Uint8Array.from(atob(data), c => c.charCodeAt(0));
+            const decompressedArray = fzstd.decompress(atobbed);
+            const decompressedString = new TextDecoder().decode(decompressedArray);
+
+            return decompressedString;
+        } catch (e) {
+            console.warn(`Received uncompressed message from autoupdate.`);
+        }
+
+        return data;
     }
 
     private sendToSubscriptions(data: any): void {
@@ -317,28 +265,5 @@ export class AutoupdateStream {
         for (const subscription of this.subscriptions) {
             subscription.sendError(data);
         }
-    }
-
-    private parse(content: string): any | ErrorDescription {
-        try {
-            return JSON.parse(content);
-        } catch (e) {
-            return { reason: `JSON is malformed`, type: ErrorType.UNKNOWN, error: e as any };
-        }
-    }
-
-    private decode(data: Uint8Array): string {
-        const content = new TextDecoder().decode(data);
-        try {
-            const atobbed = Uint8Array.from(atob(content), c => c.charCodeAt(0));
-            const decompressedArray = fzstd.decompress(atobbed);
-            const decompressedString = new TextDecoder().decode(decompressedArray);
-
-            return decompressedString;
-        } catch (e) {
-            console.warn(`Received uncompressed message from autoupdate.`);
-        }
-
-        return content;
     }
 }

@@ -33,8 +33,8 @@ export class HttpSubscriptionSSE extends HttpSubscription {
             'ngsw-bypass': true
         };
 
-        if (this.authToken) {
-            headers.authentication = this.authToken;
+        if (this.endpoint.authToken) {
+            headers.authentication = this.endpoint.authToken;
         }
 
         this.abortCtrl = new AbortController();
@@ -59,7 +59,8 @@ export class HttpSubscriptionSSE extends HttpSubscription {
                     }
 
                     next = null;
-                    this.callbacks.onData(line);
+                    const data = new TextDecoder().decode(line);
+                    this.callbacks.onData(data);
                 } else if (next) {
                     next = joinTypedArrays(Uint8Array, next, line);
                 } else {
