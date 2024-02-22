@@ -17,5 +17,6 @@ export const AssignmentPollPercentBaseVerbose = {
     valid: _(`All valid ballots`),
     cast: _(`All casted ballots`),
     entitled: _(`All entitled users`),
+    entitled_present: _(`All present entitled users`),
     disabled: _(`Disabled (no percents)`)
 };

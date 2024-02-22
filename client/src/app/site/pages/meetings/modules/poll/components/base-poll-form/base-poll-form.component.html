@@ -133,7 +133,7 @@
             <div>
                 <mat-form-field *ngIf="!hideSelects.hundredPercentBase">
                     <mat-label>{{ PollPropertyVerbose.onehundred_percent_base | translate }}</mat-label>
-                    <mat-select formControlName="onehundred_percent_base" required>
+                    <mat-select panelClass="percent-base-panel" formControlName="onehundred_percent_base" required>
                         <ng-container *ngFor="let option of validPercentBases | keyvalue : keepEntryOrder">
                             <mat-option [value]="option.key">
                                 {{
