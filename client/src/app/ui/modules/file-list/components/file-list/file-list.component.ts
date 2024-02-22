@@ -90,6 +90,9 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     }
 
     @Input()
+    public isInaMeeting = true;
+
+    @Input()
     public addBottomSpacer = false;
 
     /**
