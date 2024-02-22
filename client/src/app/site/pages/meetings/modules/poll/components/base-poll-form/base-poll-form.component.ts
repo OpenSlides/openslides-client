@@ -305,7 +305,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         }
 
         if (type === PollType.Analog) {
-            forbiddenBases.push(PollPercentBase.Entitled);
+            forbiddenBases.push(PollPercentBase.Entitled, PollPercentBase.EntitledPresent);
         }
 
         const bases = {};
@@ -330,7 +330,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             return PollPercentBase.YNA;
         } else if (method === PollMethod.Y && (base === PollPercentBase.YN || base === PollPercentBase.YNA)) {
             return PollPercentBase.Y;
-        } else if (type === PollType.Analog && base === PollPercentBase.Entitled) {
+        } else if (
+            type === PollType.Analog &&
+            (base === PollPercentBase.Entitled || base === PollPercentBase.EntitledPresent)
+        ) {
             return PollPercentBase.Cast;
         }
         return base;

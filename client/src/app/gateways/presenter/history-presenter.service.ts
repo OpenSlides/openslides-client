@@ -63,7 +63,9 @@ export class HistoryPresenterService {
     public constructor(private http: HttpService, private userRepo: UserControllerService) {}
 
     public async call(fqid: Fqid): Promise<HistoryPosition[]> {
-        const response = await this.http.post<HistoryPresenterResponse>(HISTORY_ENDPOINT, undefined, { fqid });
+        const response = await this.http.post<HistoryPresenterResponse>(HISTORY_ENDPOINT, undefined, {
+            queryParams: { fqid }
+        });
         return Object.values(response)
             .flatMap(positions => getUniqueItems(positions))
             .sort((positionA, positionB) => positionB.timestamp - positionA.timestamp)
