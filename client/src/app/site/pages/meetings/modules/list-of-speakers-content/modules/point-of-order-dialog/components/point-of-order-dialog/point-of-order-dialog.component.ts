@@ -85,24 +85,24 @@ export class PointOfOrderDialogComponent {
             speaker: []
         });
 
-        this.operator.userObservable.subscribe(user => (this._currentUser = user)),
-            combineLatest([
-                this.meetingSettings.get(`list_of_speakers_enable_point_of_order_categories`),
-                this.categoriesSubject
-            ]).subscribe(([enabled, categories]) => {
-                const show = categories.length && enabled;
-                const categoryForm = this.editForm.get(`category`);
-                if (show) {
-                    categoryForm.setValidators([Validators.required]);
-                    if (!categories.map(cat => cat.id).includes(categoryForm.value)) {
-                        categoryForm.setValue(categories[0].id);
-                    }
-                } else {
-                    categoryForm.clearValidators();
+        this.operator.userObservable.subscribe(user => (this._currentUser = user));
+        combineLatest([
+            this.meetingSettings.get(`list_of_speakers_enable_point_of_order_categories`),
+            this.categoriesSubject
+        ]).subscribe(([enabled, categories]) => {
+            const show = categories.length && enabled;
+            const categoryForm = this.editForm.get(`category`);
+            if (show) {
+                categoryForm.setValidators([Validators.required]);
+                if (!categories.map(cat => cat.id).includes(categoryForm.value)) {
+                    categoryForm.setValue(categories[0].id);
                 }
-                this.editForm.updateValueAndValidity();
-                this._showCategorySelect = show;
-            });
+            } else {
+                categoryForm.clearValidators();
+            }
+            this.editForm.updateValueAndValidity();
+            this._showCategorySelect = show;
+        });
 
         this.filterNonAvailableUsers();
     }
