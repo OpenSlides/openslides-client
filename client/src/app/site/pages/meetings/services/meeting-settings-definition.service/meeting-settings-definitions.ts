@@ -359,6 +359,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
+                        key: `list_of_speakers_allow_multiple_speakers`,
+                        label: _(`Allow one participant to be on the LoS serveral times`),
+                        type: `boolean`
+                    },
+                    {
                         key: `list_of_speakers_enable_interposed_question`,
                         label: _(`Enable interposed questions`),
                         type: `boolean`

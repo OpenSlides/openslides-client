@@ -143,6 +143,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public isPointOfOrderFn = (speaker: ViewSpeaker) => speaker.point_of_order;
     public enableProContraSpeech = false;
 
+    public enableMultipleParticipants = false;
+
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
 
@@ -245,7 +247,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                     ) ||
                     (!this.activeSpeaker?.point_of_order && this.activeSpeaker?.user_id === lastSpeaker.user_id);
             }
-            canReaddLast = !isLastSpeakerWaiting;
+            canReaddLast = !isLastSpeakerWaiting || this.enableMultipleParticipants;
         } else {
             canReaddLast = false;
         }
@@ -518,7 +520,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             )
             .map(user => user?.id)
             .filter(user => !!user);
-        this.nonAvailableUserIds = nonAvailableUsers;
+
+        if (!this.enableMultipleParticipants) {
+            this.nonAvailableUserIds = nonAvailableUsers;
+        }
     }
 
     /**
@@ -651,13 +656,16 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             }),
             this.meetingSettingService.get(`list_of_speakers_can_set_contribution_self`).subscribe(canSet => {
                 this.canMarkSelf = canSet;
+            }),
+            this.meetingSettingService.get(`list_of_speakers_allow_multiple_speakers`).subscribe(multiple => {
+                this.enableMultipleParticipants = multiple;
             })
         );
     }
 
     private findOperatorSpeaker(pointOfOrder?: boolean): ViewSpeaker | undefined {
-        return this.waitingSpeakers.find(
-            speaker => speaker.user_id === this.operator.operatorId && speaker.point_of_order === pointOfOrder
-        );
+        return this.waitingSpeakers
+            .sort((a, b) => b.id - a.id)
+            .find(speaker => speaker.user_id === this.operator.operatorId && speaker.point_of_order === pointOfOrder);
     }
 }
