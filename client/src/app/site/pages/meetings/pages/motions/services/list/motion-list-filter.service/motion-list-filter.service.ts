@@ -13,10 +13,12 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
+import { ViewMotionEditor } from '../../../modules/editors';
 import { MotionEditorControllerService } from '../../../modules/editors/services';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { TagControllerService } from '../../../modules/tags/services';
 import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
+import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers';
 import { MotionWorkingGroupSpeakerControllerService } from '../../../modules/working-group-speakers/services';
 import { ForwardingStatus, ViewMotion } from '../../../view-models';
 import { MotionsListServiceModule } from '../motions-list-service.module';
@@ -104,13 +106,13 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
     };
 
     private editorFilterOptions: OsFilter<ViewMotion> = {
-        property: `editor_ids`,
+        property: `editorUserIds`,
         label: _(`Editors`),
         options: []
     };
 
     private workingGroupSpeakerFilterOptions: OsFilter<ViewMotion> = {
-        property: `working_group_speaker_ids`,
+        property: `workingGroupSpeakerUserIds`,
         label: _(`Working group speakers`),
         options: []
     };
@@ -227,13 +229,15 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         this.updateFilterForRepo({
             repo: this.editorRepo,
             filter: this.editorFilterOptions,
-            noneOptionLabel: _(`No editors`)
+            noneOptionLabel: _(`No editors`),
+            mapFn: (editor: ViewMotionEditor) => editor.user
         });
 
         this.updateFilterForRepo({
             repo: this.workingGroupSpeakerRepo,
             filter: this.workingGroupSpeakerFilterOptions,
-            noneOptionLabel: _(`No working group speakers`)
+            noneOptionLabel: _(`No working group speakers`),
+            mapFn: (speaker: ViewMotionWorkingGroupSpeaker) => speaker.user
         });
 
         this.subscribeWorkflows();

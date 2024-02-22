@@ -116,12 +116,12 @@ export class ModelRequestService {
         await fn();
     }
 
-    public async waitSubscriptionReady(subscriptionName: string): Promise<void> {
+    public async waitSubscriptionReady(subscriptionName: string, waitExistingDuration = 4000): Promise<void> {
         if (this._modelSubscriptionMap[subscriptionName]) {
             await this._modelSubscriptionMap[subscriptionName].receivedData;
         } else {
             const retryInterval = 100;
-            for (let i = 0; i <= 4000; i += retryInterval) {
+            for (let i = 0; i <= waitExistingDuration; i += retryInterval) {
                 await new Promise(resolve => setTimeout(resolve, retryInterval));
 
                 if (this._modelSubscriptionMap[subscriptionName]) {

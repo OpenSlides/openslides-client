@@ -7,5 +7,6 @@ export const participantHeadersAndVerboseNames: { [key in keyof GeneralUser]?: s
     vote_weight: `Vote weight`,
     is_present: `Is present`,
     groups: `Groups`,
-    comment: `Comment`
+    comment: `Comment`,
+    structure_level: `Structure levels`
 };

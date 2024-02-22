@@ -19,7 +19,7 @@ export class SlideMediafileService {
         this.cache[projectorId] = { data: null, id }; // Prevent duplicate request of file
 
         try {
-            const file = await this.http.get<Blob>(`/system/media/get/${id}`, {}, {}, null, `blob`);
+            const file = await this.http.get<Blob>(`/system/media/get/${id}`, {}, { responseType: `blob` });
             // TODO: When mediafile service supports single page retrieval
             //       we might want to cache multiple pages of a file to prevent
             //       rerequesting pages when navigating back.

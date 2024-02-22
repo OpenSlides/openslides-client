@@ -117,7 +117,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
             actions.push(this.repo.create(this.motion, ...Array.from(this._addUsersSet).map(id => ({ id }))));
 
             if (Object.values(this._removeUsersMap).length > 0) {
-                actions[0].setSendActionFn(r => this.actionService.sendRequests(r, true));
+                actions[0].setSendActionFn((r, _) => this.actionService.sendRequests(r, true));
             }
         }
 
