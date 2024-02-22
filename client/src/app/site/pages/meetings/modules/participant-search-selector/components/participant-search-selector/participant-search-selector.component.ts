@@ -7,7 +7,7 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { ParticipantListSortService } from '../../../../pages/participants/pages/participant-list/services/participant-list-sort.service/participant-list-sort.service';
+import { ParticipantListSortService } from '../../../../pages/participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import {
     getParticipantMinimalSubscriptionConfig,
     PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL

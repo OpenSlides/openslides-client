@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>Switch mandates</h2>
+
+<div mat-dialog-content>
+    <table class="participant-switch-table">
+        <tbody>
+            <tr>
+                <td>
+                    <span translate>Name</span>
+                </td>
+                <td *ngFor="let user of users">
+                    <span>{{ user.short_name }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate>Structure level</span>
+                </td>
+                <td *ngFor="let user of users">
+                    <span>{{ user.structure_level() }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate>Groups</span>
+                </td>
+                <td *ngFor="let user of users">
+                    <os-comma-separated-listing [list]="user.groups()"></os-comma-separated-listing>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate>Number</span>
+                </td>
+                <td *ngFor="let user of users">
+                    <span>{{ user.number() }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate>Is present</span>
+                </td>
+                <td *ngFor="let user of users">
+                    <mat-checkbox [checked]="user.isPresentInMeeting()" [disabled]="true"></mat-checkbox>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<p mat-dialog-actions>
+    <button mat-button [matDialogClose]="true">
+        <span translate>Switch</span>
+    </button>
+    <button mat-button [matDialogClose]="false">
+        <span translate>Cancel</span>
+    </button>
+</p>
