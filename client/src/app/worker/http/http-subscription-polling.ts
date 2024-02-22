@@ -24,9 +24,10 @@ export class HttpSubscriptionPolling extends HttpSubscription {
 
     private async nextPoll(): Promise<void> {
         await this.request();
-        this.timeout = setTimeout(() => {
-            this.nextPoll();
-        }, POLLING_INTERVAL);
+        await new Promise<void>(resolve => {
+            this.timeout = setTimeout(() => resolve(), POLLING_INTERVAL);
+        });
+        await this.nextPoll();
     }
 
     private async request() {
@@ -38,23 +39,28 @@ export class HttpSubscriptionPolling extends HttpSubscription {
             headers.authentication = this.endpoint.authToken;
         }
 
-        const url = new URL(this.endpoint.url);
-        url.searchParams.set(`longpolling`, `1`);
+        const [url, paramString] = this.endpoint.url.split(`?`);
+        const params = new URLSearchParams(paramString);
+        params.set(`longpolling`, `1`);
 
         const body = new FormData();
         body.append(`request`, this.endpoint.payload);
-        if (this.lastHash) {
-            body.append(`lastpolling`, this.lastHash);
-        }
+        body.append(`lastpolling`, this.lastHash || null);
 
-        const response = await fetch(url.toString(), {
+        const response = await fetch(url + `?` + params.toString(), {
             method: this.endpoint.method,
             headers,
             body
         });
 
-        const parts = await response.formData();
-        console.log(parts);
+        // const parts = btoa(await response.text());
+        try {
+            const formData = await response.formData();
+            this.lastHash = formData.get(`hash`).toString();
+            this.callbacks.onData(formData.get(`data`).toString());
+        } catch (e) {
+            console.error(e);
+        }
         // TODO: Handle results
     }
 }
