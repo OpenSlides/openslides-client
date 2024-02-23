@@ -7,21 +7,21 @@
 <ng-container *ngIf="openedStatistics">
     <table class="user-statistics-table">
         <tr>
-            <td>{{ 'Number of all requests to speak' | translate }}</td>
-            <td>{{ (finishedSpeakers | async)?.length }}</td>
+            <td class="divider-bottom">{{ 'Number of all requests to speak' | translate }}</td>
+            <td class="divider-bottom">{{ (finishedSpeakers | async)?.length }}</td>
         </tr>
         <tr>
-            <td>{{ 'Thereof point of orders' | translate }}</td>
-            <td>{{ (pointOfOrders | async)?.length }}</td>
+            <td class="divider-bottom">{{ 'Thereof point of orders' | translate }}</td>
+            <td class="divider-bottom">{{ (pointOfOrders | async)?.length }}</td>
         </tr>
         <tr>
-            <td>{{ 'Unique speakers' | translate }}</td>
-            <td>{{ (uniqueSpeakers | async)?.length }}</td>
+            <td class="divider-bottom">{{ 'Unique speakers' | translate }}</td>
+            <td class="divider-bottom">{{ (uniqueSpeakers | async)?.length }}</td>
         </tr>
         <tr>
-            <td>{{ 'Duration of all requests to speak' | translate }}</td>
+            <td class="divider-bottom">{{ 'Duration of all requests to speak' | translate }}</td>
             <!-- I believe we had a pipe fot that, but could not find it -->
-            <td>{{ parseDuration(totalSpeakingTime | async, true) }}</td>
+            <td class="divider-bottom">{{ parseDuration(totalSpeakingTime | async, true) }}</td>
         </tr>
     </table>
     <os-list

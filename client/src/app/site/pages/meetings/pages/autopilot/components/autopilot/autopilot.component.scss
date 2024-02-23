@@ -4,13 +4,31 @@
 
 .content-container {
     min-height: calc(100vh - 77px);
-    display: flex;
+    .col-wrapper {
+        display: flex;
+        max-width: 1320px;
+        margin: 0 auto;
+    }
     .col-main {
         flex-grow: 1;
     }
     .col-right {
-        padding-left: 20px;
-        width: 40%;
+        width: auto;
+        @media (max-width: 1840px) {
+            padding-left: 20px;
+        }
+        @media (min-width: 1841px) {
+            padding-left: 0px;
+        }
+    }
+    @media screen and (min-width: 1320px) {
+        .col-wrapper {
+            max-width: 1565px;
+        }
+        .col-right {
+            flex-grow: 1;
+            max-width: 1320px;
+        }
     }
 }
 

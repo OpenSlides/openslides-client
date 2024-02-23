@@ -9,6 +9,7 @@ import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-model
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 
 import { SpeakerStateOnList } from '../../../definitions/index';
+import { HasAgendaItem } from '../../../view-models';
 import { HasListOfSpeakers } from './has-list-of-speakers';
 import { ViewSpeaker } from './view-speaker';
 
@@ -87,7 +88,7 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
     }
 }
 interface IListOfSpeakersRelations {
-    content_object?: BaseViewModel & HasListOfSpeakers & Projectable;
+    content_object?: BaseViewModel & HasListOfSpeakers & HasAgendaItem & Projectable;
     speakers: ViewSpeaker[];
     structure_level_list_of_speakers: ViewStructureLevelListOfSpeakers[];
 }

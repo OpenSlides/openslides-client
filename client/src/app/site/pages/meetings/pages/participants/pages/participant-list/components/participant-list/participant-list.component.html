@@ -200,7 +200,7 @@
 
         <button mat-menu-item *osPerms="permission.userCanManage" routerLink="speaker-list">
             <mat-icon>record_voice_over</mat-icon>
-            <span translate>List of speakers</span>
+            <span translate>Contributions</span>
         </button>
 
         <button mat-menu-item (click)="pdfExportUserList()">
@@ -242,9 +242,22 @@
             (deselectAll)="deselectAll()"
         >
             <mat-divider></mat-divider>
+
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setGroupSelected()">
                 <mat-icon>people</mat-icon>
                 <span>{{ 'Add/remove groups ...' | translate }}</span>
+            </button>
+
+            <button
+                mat-menu-item
+                [disabled]="selectedRows.length !== 2"
+                [matTooltip]="
+                    (selectedRows.length !== 2 ? 'Select exactly two participants to swap mandates' : '') | translate
+                "
+                (click)="switchParticipants()"
+            >
+                <mat-icon>swap_horiz</mat-icon>
+                <span>{{ 'Swap mandates ...' | translate }}</span>
             </button>
 
             <button

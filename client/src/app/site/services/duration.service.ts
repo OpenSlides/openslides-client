@@ -94,13 +94,13 @@ export class DurationService {
      * @param suffix any suffix to add.
      * @returns a more human readable time representation
      */
-    public durationToString(duration: number, suffix: 'h' | 'm'): string {
+    public durationToString(duration: number, suffix: 'h' | 'm' | ''): string {
         const negative = duration < 0;
         const major = negative ? Math.ceil(duration / 60) : Math.floor(duration / 60);
         const minor = `0${Math.abs(duration) % 60}`.slice(-2);
-        if (!isNaN(+major) && !isNaN(+minor) && suffix) {
+        if (!isNaN(+major) && !isNaN(+minor)) {
             // converting the number '-0' to string results in '0', depending on the browser.
-            return `${major === 0 && negative ? `-` + Math.abs(major) : major}:${minor} ${suffix}`;
+            return `${major === 0 && negative ? `-` + Math.abs(major) : major}:${minor} ${suffix}`.trim();
         } else {
             return ``;
         }

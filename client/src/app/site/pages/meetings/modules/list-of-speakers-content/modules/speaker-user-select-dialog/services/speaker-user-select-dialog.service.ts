@@ -10,6 +10,7 @@ import { SpeakerUserSelectDialogModule } from '../speaker-user-select-dialog.mod
 
 interface SpeakerUserSelectResult {
     meeting_user_id: Id;
+    structure_level_id?: Id;
 }
 
 @Injectable({
@@ -21,11 +22,11 @@ export class SpeakerUserSelectDialogService extends BaseDialogService<
     SpeakerUserSelectResult
 > {
     public async open(
-        data: ViewListOfSpeakers
+        los: ViewListOfSpeakers
     ): Promise<MatDialogRef<SpeakerUserSelectDialogComponent, SpeakerUserSelectResult>> {
         const module = await import(`../speaker-user-select-dialog.module`).then(m => m.SpeakerUserSelectDialogModule);
         return this.dialog.open(module.getComponent(), {
-            data,
+            data: { listOfSpeakers: los },
             ...infoDialogSettings,
             disableClose: false
         });

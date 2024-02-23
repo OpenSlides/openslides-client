@@ -107,7 +107,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     // Will be set by the repository
     public getName!: () => string;
     public getShortName!: () => string;
-    public getFullName!: () => string;
+    public getFullName!: (structureLevel?: ViewStructureLevel) => string;
     public getLevelAndNumber!: () => string;
     public getMeetingUser!: (meetingId?: Id) => ViewMeetingUser;
 
@@ -235,7 +235,19 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public structure_levels(meetingId?: Id): ViewStructureLevel[] {
-        return this.getMeetingUser(meetingId)?.structure_levels;
+        return this.getMeetingUser(meetingId)?.structure_levels ?? [];
+    }
+
+    public structure_level(meetingId?: Id): string {
+        return this.structure_levels(meetingId)
+            .map(sl => sl.name)
+            .join(`,`);
+    }
+
+    public structureLevels(meetingId?: Id): string {
+        return this.structure_levels(meetingId)
+            .map(sl => sl.name)
+            .join(`, `);
     }
 
     public get isVoteWeightOne(): boolean {

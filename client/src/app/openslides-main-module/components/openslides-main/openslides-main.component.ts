@@ -6,14 +6,17 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { DateFnsConfigurationService } from 'ngx-date-fns';
 import { first, firstValueFrom, tap } from 'rxjs';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
+import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { langToTimeLocale } from 'src/app/infrastructure/utils';
 import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
+import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
 const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
 
@@ -39,9 +42,11 @@ export class OpenSlidesMainComponent implements OnInit {
         private storageService: StorageService,
         private config: DateFnsConfigurationService,
         private updateService: UpdateService,
-        private router: Router
+        private router: Router,
+        private modelStore: ViewModelStoreService
     ) {
         overloadJsFunctions();
+        this.addDebugFunctions();
         this.waitForAppLoaded();
         this.loadTranslation();
         this.loadCustomIcons();
@@ -83,6 +88,27 @@ export class OpenSlidesMainComponent implements OnInit {
         this.config.setLocale(await langToTimeLocale(name));
     }
 
+    private addDebugFunctions(): void {
+        const router = this.router;
+        const modelStore = this.modelStore;
+        Object.defineProperty(Window.prototype, `getID`, {
+            value(collection?: string, sequentialNumber?: number): number {
+                if (!collection && !sequentialNumber) {
+                    const parts = router.url.split(`/`);
+                    collection = parts[parts.length - 2];
+                    collection = collection.replace(/s$/, ``); // remove plural "s" to get valid collection
+                    sequentialNumber = parseInt(parts[parts.length - 1]);
+                }
+                const model = modelStore.find<BaseViewModel<any> & HasSequentialNumber>(
+                    collection,
+                    model => model.sequential_number === sequentialNumber
+                );
+                return model.id;
+            },
+            enumerable: false
+        });
+    }
+
     private async waitForAppLoaded(): Promise<void> {
         // Wait until the App reaches a stable state.
         // Required for the Service Worker.
@@ -101,20 +127,21 @@ export class OpenSlidesMainComponent implements OnInit {
         await this.onInitDone;
 
         try {
-            if ((await navigator.serviceWorker?.getRegistrations())?.length) {
-                if (
-                    await Promise.race([
-                        this.updateService.checkForUpdate(),
-                        new Promise((_, reject) => setTimeout(() => reject(), 3000))
-                    ])
-                ) {
-                    await this.updateService.applyUpdate();
-                    return;
-                }
+            if (
+                (await navigator.serviceWorker?.getRegistrations())?.length &&
+                (await Promise.race([
+                    this.updateService.checkForUpdate(),
+                    new Promise((_, reject) => setTimeout(() => reject(), 3000))
+                ]))
+            ) {
+                await this.updateService.applyUpdate();
+                return;
             } else {
                 this.updateService.checkForUpdate();
             }
-        } catch (_) {}
+        } catch (_) {
+            this.updateService.checkForUpdate();
+        }
 
         setTimeout(() => {
             this.lifecycleService.appLoaded.next();

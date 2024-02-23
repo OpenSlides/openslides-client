@@ -1,9 +1,10 @@
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -35,15 +36,6 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
             return this._currentProjection.getTitle();
         } else {
             return ``;
-        }
-    }
-
-    public get moderationNotes(): string {
-        if (this._currentProjection.content?.collection === Topic.COLLECTION) {
-            // @ts-ignore
-            return (<Topic>this._currentProjection.content).moderator_notes;
-        } else {
-            return null;
         }
     }
 
@@ -105,6 +97,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public structureLevelCountdownEnabled = false;
 
+    public showRightCol: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
     private _currentProjection: ViewProjection | null = null;
 
     public constructor(
@@ -112,7 +106,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         private operator: OperatorService,
         projectorRepo: ProjectorControllerService,
         closService: CurrentListOfSpeakersService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService
+        private listOfSpeakersRepo: ListOfSpeakersControllerService,
+        breakpoint: BreakpointObserver
     ) {
         super();
 
@@ -121,7 +116,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
                 if (refProjector) {
                     this.projector = refProjector;
                     const currentProjections = refProjector.nonStableCurrentProjections;
-                    this._currentProjection = currentProjections.length > 0 ? currentProjections[0] : null;
+                    this._currentProjection =
+                        currentProjections.length > 0 && !!currentProjections[0].meeting_id
+                            ? currentProjections[0]
+                            : null;
                     this.projectedViewModel = this._currentProjection?.content_object || null;
                 }
             }),
@@ -130,7 +128,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
             }),
             this.meetingSettingsService
                 .get(`list_of_speakers_default_structure_level_time`)
-                .subscribe(time => (this.structureLevelCountdownEnabled = time > 0))
+                .subscribe(time => (this.structureLevelCountdownEnabled = time > 0)),
+            breakpoint.observe([`(min-width: 1050px)`]).subscribe((state: BreakpointState) => {
+                this.showRightCol.next(state.matches);
+            })
         );
     }
 
@@ -146,21 +147,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         await this.listOfSpeakersRepo.readdLastSpeaker(this.listOfSpeakers!).catch(this.raiseError);
     }
 
-    public showAllStructureLevels(): void {
-        /**
-         *  TODO
-         * - a dialog should open to select the projector
-         *    (see election-list -> projector button for similar dialog)
-         * - every structure level/time/colour etc. should be projected onto the selected projector(s)
-         */
-    }
-
-    public showActiveStructureLevel(): void {
-        /**
-         *  TODO
-         * - a dialog should open to select the projector(s), "fullscreen"-mode and display type
-         *    (see projector-detail -> countdowns -> "open projection dialog"-dialog for similar dialog)
-         * - only the structure level/time/colour of the currently speaking person should be projected
-         */
+    public get hasCurrentProjection(): boolean {
+        return !!this._currentProjection;
     }
 }

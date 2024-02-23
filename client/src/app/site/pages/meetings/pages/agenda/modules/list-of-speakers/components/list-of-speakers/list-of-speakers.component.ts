@@ -22,6 +22,11 @@ import { ViewListOfSpeakers } from '../../view-models';
     styleUrls: [`./list-of-speakers.component.scss`]
 })
 export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
+    /**
+     * The projector to show.
+     */
+    public projector!: ViewProjector;
+
     public readonly COLLECTION = ViewListOfSpeakers.COLLECTION;
 
     @ViewChild(`content`)

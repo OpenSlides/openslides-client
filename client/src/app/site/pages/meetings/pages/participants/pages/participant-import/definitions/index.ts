@@ -8,5 +8,6 @@ export const participantHeadersAndVerboseNames: { [key in keyof GeneralUser]?: s
     number: `Participant number`,
     vote_weight: `Vote weight`,
     groups: `Groups`,
-    comment: `Comment`
+    comment: `Comment`,
+    structure_level: `Structure levels`
 };

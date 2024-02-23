@@ -211,6 +211,9 @@ export abstract class PollService {
             case PollPercentBase.Entitled:
                 totalByBase = poll.entitled_users_at_stop?.length || 0;
                 break;
+            case PollPercentBase.EntitledPresent:
+                totalByBase = poll.entitled_users_at_stop?.filter(x => x.present).length || 0;
+                break;
             case PollPercentBase.Cast:
                 totalByBase = poll.votescast > 0 ? poll.votescast : 0;
                 break;
@@ -300,7 +303,8 @@ export abstract class PollService {
         return (
             poll.onehundred_percent_base === PollPercentBase.Valid ||
             poll.onehundred_percent_base === PollPercentBase.Cast ||
-            poll.onehundred_percent_base === PollPercentBase.Entitled
+            poll.onehundred_percent_base === PollPercentBase.Entitled ||
+            poll.onehundred_percent_base === PollPercentBase.EntitledPresent
         );
     }
 

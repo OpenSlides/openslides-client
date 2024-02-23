@@ -105,6 +105,9 @@
 
     <!-- The HTML Editor for motions and traditional amendments -->
     <ng-container *ngIf="editMotion && !isParagraphBasedAmendment">
+        <h3 *ngIf="preamble">
+            <span>{{ preamble }}</span>
+        </h3>
         <os-editor
             formControlName="text"
             [required]="!isParagraphBasedAmendment"
@@ -241,7 +244,6 @@
                     <os-repo-search-selector
                         formControlName="workflow_id"
                         [repo]="workflowRepo"
-                        [defaultDataConfigKey]="getDefaultWorkflowKeyOfSettingsByParagraph()"
                     ></os-repo-search-selector>
                 </mat-form-field>
             </div>

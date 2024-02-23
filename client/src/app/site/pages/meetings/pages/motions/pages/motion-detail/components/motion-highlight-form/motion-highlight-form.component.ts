@@ -3,7 +3,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -280,7 +280,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
                 /**
                  * Because without change recos you cannot escape the final version anymore
                  */
-            } else if (!this.hasChangeRecommendations) {
+            } else if (!this.getAllChangingObjectsSorted().some(change => change.showInFinalView())) {
                 return ChangeRecoMode.Original;
             }
         } else if (mode === ChangeRecoMode.Changed && !this.hasChangeRecommendations) {
@@ -309,7 +309,10 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
             this.meetingSettingsService
                 .get(`motions_default_line_numbering`)
                 .subscribe(mode => this.setLineNumberingMode(mode)),
-            this.meetingSettingsService.get(`motions_recommendation_text_mode`).subscribe(mode => {
+            combineLatest([
+                this.changeRecoRepo.getViewModelListObservable(),
+                this.meetingSettingsService.get(`motions_recommendation_text_mode`)
+            ]).subscribe(([_, mode]) => {
                 if (mode) {
                     this.setChangeRecoMode(this.determineCrMode(mode as ChangeRecoMode));
                 }

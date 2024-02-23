@@ -1,4 +1,4 @@
-<mat-card class="os-card" [ngClass]="{ 'spacer-bottom-60': addBottomSpacer }">
+<mat-card class="os-card card-padding" [ngClass]="{ 'spacer-bottom-60': addBottomSpacer }">
     <!-- Title -->
     <os-projectable-title class="los-title" *ngIf="!explicitTitleContent" [model]="listOfSpeakers">
         <mat-icon
@@ -27,13 +27,7 @@
                     <div class="finished-speaker-info">
                         <div>
                             <div>
-                                {{ speaker.getTitle() }}
-                                <span
-                                    *ngIf="speaker.structure_level_list_of_speakers?.structure_level"
-                                    class="speaker-structure-level"
-                                >
-                                    &ndash; {{ speaker.structure_level_list_of_speakers?.structure_level?.name }}
-                                </span>
+                                {{ speaker.getLOSName((structureLevelCountdownEnabled | async) === false) }}
                             </div>
                             <div>
                                 <ng-container
@@ -47,6 +41,17 @@
                         </div>
                     </div>
 
+                    <div *osPerms="permission.listOfSpeakersCanManage">
+                        <button
+                            *ngIf="speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id"
+                            mat-icon-button
+                            matTooltip="{{ 'Select speaker' | translate }}"
+                            matTooltipPosition="left"
+                            (click)="updateSpeakerMeetingUser(speaker)"
+                        >
+                            <mat-icon>person_add</mat-icon>
+                        </button>
+                    </div>
                     <div>
                         <button
                             mat-icon-button
@@ -74,13 +79,7 @@
         </span>
 
         <span class="name">
-            {{ activeSpeaker.getListTitle() }}
-            <span
-                *ngIf="activeSpeaker.structure_level_list_of_speakers?.structure_level"
-                class="speaker-structure-level"
-            >
-                {{ activeSpeaker.structure_level_list_of_speakers?.structure_level?.name }}
-            </span>
+            {{ activeSpeaker.getLOSName((structureLevelCountdownEnabled | async) === false) }}
             <div class="active-speaker-subtitle">
                 <ng-container *ngTemplateOutlet="speakerSubtitle; context: { speaker: activeSpeaker }"></ng-container>
             </div>
@@ -137,7 +136,7 @@
 
             <span class="name">
                 <ng-container *ngIf="speaker.meeting_user_id">
-                    {{ speaker.getListTitle() }}
+                    {{ speaker.getLOSName((structureLevelCountdownEnabled | async) === false) }}
                 </ng-container>
                 <span
                     *ngIf="!speaker.meeting_user_id && canManage"
@@ -145,7 +144,7 @@
                     (click)="updateSpeakerMeetingUser(speaker)"
                     translate
                 >
-                    Select or search new speaker
+                    Select or search new speaker ...
                 </span>
                 <div class="active-speaker-subtitle">
                     <ng-container *ngTemplateOutlet="speakerSubtitle; context: { speaker: speaker }"></ng-container>
@@ -196,25 +195,7 @@
                     <div class="speaker-name">
                         <!-- Speaker name -->
                         <div>
-                            {{ speaker.getTitle() }}
-                            <span
-                                *ngIf="
-                                    (structureLevelCountdownEnabled | async) &&
-                                    speaker.structure_level_list_of_speakers?.structure_level
-                                "
-                                class="speaker-structure-level accent-text"
-                            >
-                                {{ speaker.structure_level_list_of_speakers?.structure_level?.name }}
-                            </span>
-                            <span
-                                *ngIf="
-                                    (structureLevelCountdownDisabled | async) &&
-                                    speaker.meeting_user.structure_levels?.length
-                                "
-                                class="speaker-structure-level accent-text"
-                            >
-                                {{ displayStructureLevels(speaker.meeting_user.structure_levels) }}
-                            </span>
+                            {{ speaker.getLOSName((structureLevelCountdownEnabled | async) === false) }}
                         </div>
                         <!-- Extra line -->
                         <ng-container
@@ -403,64 +384,6 @@
     </div>
 </mat-card>
 
-<!-- Moderator Note-->
-<mat-card
-    class="spacer-bottom-60"
-    [ngClass]="isEditing ? 'os-form-card' : 'os-card'"
-    *ngIf="canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))"
->
-    <!-- Title edit/save/cancle-->
-    <div class="action-title">
-        <h1>
-            {{ 'Moderator note' | translate }}
-        </h1>
-        <div class="buttons" *ngIf="canManageModerationNote">
-            <ng-container *ngIf="isEditing">
-                <button
-                    mat-icon-button
-                    color="warn"
-                    (click)="saveChangesModerationNote()"
-                    matTooltip="{{ 'Save' | translate }}"
-                >
-                    <mat-icon>done</mat-icon>
-                </button>
-                <button
-                    mat-icon-button
-                    (click)="toggleEditModeratorNote()"
-                    matTooltip="{{ 'Cancel edit' | translate }}"
-                >
-                    <mat-icon>close</mat-icon>
-                </button>
-            </ng-container>
-            <ng-container *ngIf="!isEditing">
-                <button
-                    mat-icon-button
-                    (click)="toggleEditModeratorNote()"
-                    matTooltip="{{ 'Edit moderation note' | translate }}"
-                >
-                    <mat-icon>edit</mat-icon>
-                </button>
-            </ng-container>
-        </div>
-    </div>
-
-    <mat-card-content>
-        <ng-container *ngIf="!isEditing">
-            <div class="app-content underlined-links">
-                <ng-container *ngIf="moderatorNotes | async as moderatorNoteText">
-                    <div [innerHTML]="moderatorNoteText | trust : 'html'"></div>
-                </ng-container>
-            </div>
-        </ng-container>
-
-        <ng-container *ngIf="isEditing">
-            <form [formGroup]="moderatorNoteForm">
-                <os-editor formControlName="moderator_notes"></os-editor>
-            </form>
-        </ng-container>
-    </mat-card-content>
-</mat-card>
-
 <!-- admin menu for managing single speakers -->
 <mat-menu #manageSpeakerMenu>
     <ng-template let-speaker="speaker" matMenuContent>
@@ -526,7 +449,7 @@
                 <mat-divider></mat-divider>
             </ng-container>
 
-            <!-- star button -->
+            <!-- Structure levels -->
             <button
                 *ngIf="
                     canManage &&

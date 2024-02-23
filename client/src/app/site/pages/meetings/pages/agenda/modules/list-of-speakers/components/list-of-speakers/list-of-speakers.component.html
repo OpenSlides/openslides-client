@@ -47,16 +47,18 @@
         "
         class="col-right"
     >
-        <mat-card class="os-card spacer-bottom-60">
+        <mat-card class="spacer-bottom-60 os-card">
             <mat-card-content>
-                <div class="action-title">
-                    <p class="subtitle-text" translate>Speaking times</p>
-                </div>
                 <os-speaking-times
                     [currentSpeakingTimes]="viewListOfSpeakers.structure_level_list_of_speakers_ids"
+                    [showProjectionMenu]="true"
                 ></os-speaking-times>
             </mat-card-content>
         </mat-card>
+    </div>
+    <div *ngIf="viewListOfSpeakers">
+        <!-- Moderator Note-->
+        <os-moderation-note [listOfSpeakers]="viewListOfSpeakers"></os-moderation-note>
     </div>
 </os-detail-view>
 

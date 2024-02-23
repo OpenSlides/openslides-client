@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
+import { modelIcons } from 'src/app/domain/definitions/model-icons';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { GENDERS } from 'src/app/domain/models/users/user';
@@ -78,5 +79,9 @@ export class ParticipantSpeakerListComponent extends BaseMeetingListViewComponen
      */
     public csvExportSpeakerList(): void {
         this.csvExport.export(this.listComponent.source);
+    }
+
+    public getSpeakerIcon(speaker: ViewSpeaker) {
+        return modelIcons[speaker.contentType];
     }
 }

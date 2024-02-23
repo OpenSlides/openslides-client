@@ -3,8 +3,6 @@
         <h1 translate>Speaking times</h1>
         <h2>
             <span>{{ data.data.title }}</span>
-            – {{ structureLevelsAmount }}
-            <span>{{ 'structure levels' | translate }}</span>
         </h2>
     </div>
 
@@ -12,24 +10,28 @@
         <tr *ngFor="let i of rowsArray">
             <td *ngFor="let j of columnsArray">
                 <ng-container *ngIf="getStructureLevel(i, j)">
-                    <div class="ellipsis-overflow spacer-top-5">
-                        <span
-                            *ngIf="getStructureLevel(i, j).color"
-                            class="structure-level-color"
-                            [ngStyle]="{ 'background-color': getStructureLevel(i, j).color }"
-                        ></span>
-                        {{ getStructureLevel(i, j).name }}
-                        <os-countdown-time
-                            [unstyled]="true"
-                            [countdown]="{
-                                running: !!getStructureLevel(i, j).current_start_time,
-                                countdown_time: getStructureLevel(i, j).current_start_time
-                                    ? getStructureLevel(i, j).current_start_time +
-                                      getStructureLevel(i, j).remaining_time
-                                    : getStructureLevel(i, j).remaining_time
-                            }"
-                        ></os-countdown-time>
-                        <br *ngIf="!shortDisplayStyle" />
+                    <div class="ellipsis-overflow spacer-top-25">
+                        <div class="level-time-list">
+                            <span class="align-right">
+                                <hr
+                                    class="structure-level-color"
+                                    [ngStyle]="{ 'background-color': getStructureLevel(i, j).color }"
+                                />
+                            </span>
+                            <os-countdown-time
+                                [unstyled]="true"
+                                [countdown]="{
+                                    running: !!getStructureLevel(i, j).current_start_time,
+                                    countdown_time: getStructureLevel(i, j).current_start_time
+                                        ? getStructureLevel(i, j).current_start_time +
+                                          getStructureLevel(i, j).remaining_time
+                                        : getStructureLevel(i, j).remaining_time
+                                }"
+                            ></os-countdown-time>
+                        </div>
+                        <div class="structure-level-name">
+                            {{ getStructureLevel(i, j).name }}
+                        </div>
                     </div>
                 </ng-container>
             </td>

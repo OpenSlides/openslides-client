@@ -359,21 +359,34 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
+                        key: `list_of_speakers_allow_multiple_speakers`,
+                        label: _(`Allow one participant to be on the LoS serveral times`),
+                        type: `boolean`
+                    },
+                    {
                         key: `list_of_speakers_enable_interposed_question`,
                         label: _(`Enable interposed questions`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_can_create_point_of_order_for_others`,
+                        label: _(`Enable point of orders for other participants`),
+                        helpText: _(`Requires permission to manage lists of speakers`),
                         type: `boolean`
                     },
                     {
                         key: `list_of_speakers_intervention_time`,
                         label: _(`Intervention speaking time in seconds`),
                         type: `integer`,
-                        helpText: _(`Choose 0 to disable Intervention`),
+                        helpText: _(`Choose 0 to disable Intervention.`),
                         validators: [Validators.min(0)]
                     },
                     {
                         key: `list_of_speakers_default_structure_level_time`,
-                        label: _(`Default structure level speaking time in seconds`),
-                        helpText: _(`Choose a number bigger than 0 to couple countdown with the speaking times`),
+                        label: _(`Default speaking time for structure levels in seconds`),
+                        helpText: _(
+                            `Choose a number greater than 0 to activate speaking times widget for structure level countdowns.`
+                        ),
                         type: `integer`,
                         validators: [Validators.min(0)]
                     }
@@ -590,6 +603,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             number: _(`Identifier`),
                             weight: _(`Call list`)
                         }
+                    },
+                    {
+                        key: `motions_enable_editor`,
+                        label: _(`Enable the ability to enter a participant as motion editor`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_working_group_speaker`,
+                        label: _(`Enable the ability to enter a participant as working group speaker for a motion`),
+                        type: `boolean`
                     }
                 ]
             },
