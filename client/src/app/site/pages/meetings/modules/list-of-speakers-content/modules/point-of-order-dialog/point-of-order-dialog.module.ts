@@ -8,7 +8,6 @@ import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/lega
 import { MatSelectModule } from '@angular/material/select';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
-import { ParticipantSearchSelectorModule } from '../../../participant-search-selector';
 import { PointOfOrderDialogComponent } from './components/point-of-order-dialog/point-of-order-dialog.component';
 
 @NgModule({
@@ -21,8 +20,7 @@ import { PointOfOrderDialogComponent } from './components/point-of-order-dialog/
         MatInputModule,
         MatSelectModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild(),
-        ParticipantSearchSelectorModule
+        OpenSlidesTranslationModule.forChild()
     ]
 })
 export class PointOfOrderDialogModule {
