@@ -3,15 +3,6 @@
 </h2>
 
 <form class="edit-form" [formGroup]="editForm" (ngSubmit)="onOk()">
-    <!-- Search for speakers -->
-    <mat-dialog-content *ngIf="canManage && canSetPoOsForOthers">
-        <os-participant-search-selector
-            [nonSelectableUserIds]="nonAvailableUserIds"
-            [shouldReset]="false"
-            placeholder="{{ 'Select or search new speaker for point of order' | translate }}"
-            (userSelected)="selectUser($event)"
-        ></os-participant-search-selector>
-    </mat-dialog-content>
     <mat-dialog-content>
         <mat-form-field *ngIf="showCategorySelect">
             <mat-label>{{ 'Possible points of order' | translate }}</mat-label>

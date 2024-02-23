@@ -79,6 +79,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.meetingSettingService.get(`list_of_speakers_intervention_time`).pipe(map(v => v > 0));
     }
 
+    public get pointOfOrderForOthersEnabled(): Observable<boolean> {
+        return this.meetingSettingsService.get(`list_of_speakers_can_create_point_of_order_for_others`);
+    }
+
     public get structureLevelCountdownEnabled(): Observable<boolean> {
         return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v > 0));
     }
@@ -145,6 +149,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public enableMultipleParticipants = false;
 
+    public pointOfOrderEnabled = false;
+
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
 
@@ -154,8 +160,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     private _currentUser: ViewUser | null = null;
 
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
-
-    private pointOfOrderEnabled = false;
 
     private canMarkSelf = false;
 
@@ -167,7 +171,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         protected override translate: TranslateService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private speakerRepo: SpeakerControllerService,
-        private operator: OperatorService,
+        public operator: OperatorService,
         private promptService: PromptService,
         private durationService: DurationService,
         private userRepository: ParticipantControllerService,
@@ -303,18 +307,14 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public async addPointOfOrder(): Promise<void> {
-        const dialogRef = await this.dialog.open(this.listOfSpeakers);
+        const dialogRef = await this.dialog.open();
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
-                await this.speakerRepo.create(
-                    this.listOfSpeakers,
-                    result.speaker ? result.speaker.userId : this._currentUser!.id,
-                    {
-                        pointOfOrder: true,
-                        ...result
-                    }
-                );
+                await this.speakerRepo.create(this.listOfSpeakers, this._currentUser!.id, {
+                    pointOfOrder: true,
+                    ...result
+                });
             }
         } catch (e) {
             this.raiseError(e);
@@ -452,6 +452,31 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             await this.speakerRepo.setProSpeech(speaker);
         } else {
             await this.speakerRepo.setContraSpeech(speaker);
+        }
+    }
+
+    public async onPointOfOrderButton(speaker: ViewSpeaker): Promise<void> {
+        if (!speaker.point_of_order && this.pointOfOrderCategoriesEnabled) {
+            const dialogRef = await this.dialog.open();
+            const result = await firstValueFrom(dialogRef.afterClosed());
+            if (result) {
+                await this.speakerRepo.setPointOfOrder(speaker, {
+                    point_of_order: true,
+                    ...result
+                });
+            }
+        } else {
+            await this.speakerRepo.setPointOfOrder(speaker, {
+                point_of_order: !speaker.point_of_order
+            });
+        }
+    }
+
+    public async onEditPointOfOrderButton(speaker: ViewSpeaker): Promise<void> {
+        const dialogRef = await this.dialog.open(speaker);
+        const result = await firstValueFrom(dialogRef.afterClosed());
+        if (result) {
+            await this.speakerRepo.setPointOfOrder(speaker, result);
         }
     }
 
@@ -666,6 +691,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     private findOperatorSpeaker(pointOfOrder?: boolean): ViewSpeaker | undefined {
         return this.waitingSpeakers
             .sort((a, b) => b.id - a.id)
-            .find(speaker => speaker.user_id === this.operator.operatorId && speaker.point_of_order === pointOfOrder);
+            .find(
+                speaker => speaker.user_id === this.operator.operatorId && !!speaker.point_of_order === !!pointOfOrder
+            );
     }
 }
