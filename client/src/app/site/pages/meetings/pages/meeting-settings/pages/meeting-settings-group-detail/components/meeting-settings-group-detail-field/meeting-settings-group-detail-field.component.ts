@@ -18,7 +18,7 @@ import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
-import { SettingsItem } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
+import { SettingsInput } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
@@ -67,7 +67,16 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      * The settings item for this component.
      */
     @Input()
-    public setting!: SettingsItem;
+    public setting!: SettingsInput;
+
+    @Input()
+    public set disabled(disabled: boolean) {
+        if (disabled) {
+            this.form?.disable();
+        } else {
+            this.form?.enable();
+        }
+    }
 
     /**
      * The current value of this component's setting.
@@ -93,7 +102,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             const time = this.form.get(`time`)!.value;
             return this.dateAndTimeToUnix(date, time);
         }
-        return value;
+        return value.value;
     }
 
     /**
@@ -274,7 +283,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         });
     }
 
-    public getAllocationConfig(setting: SettingsItem<any>): AllocationListConfig {
+    public getAllocationConfig(setting: SettingsInput<any>): AllocationListConfig {
         return {
             ...(setting.type === `translations` ? this.TRANSLATION_CONFIG : this.RANKING_CONFIG),
             useIds: setting.useRelation

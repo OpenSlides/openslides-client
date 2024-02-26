@@ -10,3 +10,13 @@ h3.accent {
         margin-top: 30px;
     }
 }
+
+.settings-help-container {
+    margin-bottom: 37px;
+    display: flex;
+    align-items: center;
+
+    .settings-help-text {
+        margin-left: 10px;
+    }
+}

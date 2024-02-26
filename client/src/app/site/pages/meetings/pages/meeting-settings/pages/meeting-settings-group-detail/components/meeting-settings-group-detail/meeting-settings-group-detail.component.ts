@@ -12,8 +12,12 @@ import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meet
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import {
+    isSettingsInput,
     SettingsGroup,
-    SettingsItem
+    SettingsHelpText,
+    SettingsInput,
+    SettingsItem,
+    SettingsValueMap
 } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
@@ -196,7 +200,7 @@ export class MeetingSettingsGroupDetailComponent
         return true;
     }
 
-    public getDetailFieldValue(meeting: ViewMeeting, setting: SettingsItem): any {
+    public getDetailFieldValue(meeting: ViewMeeting, setting: SettingsInput): any {
         const isArray = Array.isArray(setting.key);
         let key: keyof ViewMeeting;
         if (setting.type === `daterange`) {
@@ -225,7 +229,33 @@ export class MeetingSettingsGroupDetailComponent
         return this.getValueForKey(meeting, key, setting);
     }
 
-    private getValueForKey(meeting: ViewMeeting, key: keyof Settings, setting: SettingsItem): any {
+    public isSettingsInput(setting: SettingsItem): setting is SettingsInput {
+        return isSettingsInput(setting);
+    }
+
+    public getHelpLink(setting: SettingsHelpText): string {
+        let link = ``;
+        if (setting.buttonLinkPrependMeetingId) {
+            link += `/` + this.meeting.id;
+        }
+        return link + setting.buttonLink;
+    }
+
+    public isSettingDisabled(setting: SettingsInput): boolean {
+        if (!setting.disable || !this.settingsFields) {
+            return false;
+        }
+        const currentSettings = this.settingsFields
+            .toArray()
+            .mapToObject<Settings>(field =>
+                Array.isArray(field.setting.key)
+                    ? field.setting.key.mapToObject(key => ({ [key]: field.currentValue }))
+                    : { [field.setting.key]: field.currentValue }
+            ) as SettingsValueMap;
+        return setting.disable(currentSettings) ?? false;
+    }
+
+    private getValueForKey(meeting: ViewMeeting, key: keyof Settings, setting: SettingsInput): any {
         let newKey: keyof ViewMeeting = key;
         if (setting.useRelation) {
             if (!this.keyRelations[key]) {

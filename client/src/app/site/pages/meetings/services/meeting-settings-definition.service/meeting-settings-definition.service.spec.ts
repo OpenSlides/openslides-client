@@ -4,7 +4,7 @@ import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Group } from 'src/app/domain/models/users/group';
 
 import { MeetingSettingsDefinitionService, SettingsMap } from './meeting-settings-definition.service';
-import { meetingSettings, SettingsGroup, SettingsItem, SettingsType } from './meeting-settings-definitions';
+import { meetingSettings, SettingsGroup, SettingsInput, SettingsType } from './meeting-settings-definitions';
 
 const fakeSettings: SettingsGroup[] = [
     {
@@ -104,7 +104,7 @@ const fakeSettings: SettingsGroup[] = [
     }
 ];
 
-const fakeSettingsMap: { [key: string]: SettingsItem } = fakeSettings
+const fakeSettingsMap: { [key: string]: SettingsInput } = fakeSettings
     .flatMap(group => group.subgroups.flatMap(subgroup => subgroup.settings))
     .filter(setting => !!setting)
     .mapToObject(setting =>
