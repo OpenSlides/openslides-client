@@ -14,7 +14,9 @@ export class ViewStructureLevelListOfSpeakers extends BaseViewModel<StructureLev
         return (
             !this.current_start_time &&
             this.initial_time + (this.additional_time ?? 0) === this.remaining_time &&
-            this.speakers.every(speaker => SPECIAL_SPEECH_STATES.includes(speaker.speech_state))
+            this.speakers.every(
+                speaker => SPECIAL_SPEECH_STATES.includes(speaker.speech_state) || speaker.point_of_order
+            )
         );
     }
 }
