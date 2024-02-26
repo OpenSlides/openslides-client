@@ -45,9 +45,16 @@ export const permissionChildren: PermissionsMap = {
     'projector.can_manage': [Permission.projectorCanSee],
     'projector.can_see': [],
     'tag.can_manage': [],
-    'user.can_manage': [Permission.userCanManagePresence, Permission.userCanSee],
+    'user.can_manage': [
+        Permission.userCanManagePresence,
+        Permission.userCanSee,
+        Permission.userCanUpdate,
+        Permission.userCanSeePersonalData
+    ],
     'user.can_manage_presence': [Permission.userCanSee],
-    'user.can_see': []
+    'user.can_see': [],
+    'user.can_see_personal_data': [Permission.userCanSee],
+    'user.can_update': [Permission.userCanSeePersonalData, Permission.userCanSee]
 };
 
 export const permissionParents: PermissionsMap = {
@@ -105,5 +112,12 @@ export const permissionParents: PermissionsMap = {
     'tag.can_manage': [],
     'user.can_manage': [],
     'user.can_manage_presence': [Permission.userCanManage],
-    'user.can_see': [Permission.userCanManagePresence, Permission.userCanManage]
+    'user.can_see': [
+        Permission.userCanManagePresence,
+        Permission.userCanManage,
+        Permission.userCanSeePersonalData,
+        Permission.userCanUpdate
+    ],
+    'user.can_see_personal_data': [Permission.userCanUpdate, Permission.userCanManage],
+    'user.can_update': [Permission.userCanManage]
 };

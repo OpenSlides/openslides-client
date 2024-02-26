@@ -216,9 +216,19 @@ Meeting specific information: Structure level, Group, Participant number, About 
                 value: Permission.userCanSee
             },
             {
+                display_name: _(`Can see personal data`),
+                help_text: _(`Can see additional personal data: Email, TODO.`),
+                value: Permission.userCanSeePersonalData
+            },
+            {
                 display_name: _(`Can manage presence of others`),
                 help_text: _(`Can change the presence status of other participants.`),
                 value: Permission.userCanManagePresence
+            },
+            {
+                display_name: _(`Can update participants`),
+                help_text: _(`Can modify existing participants, but cannot create or delete them.`),
+                value: Permission.userCanUpdate
             },
             {
                 display_name: _(`Can manage participants`),
