@@ -216,8 +216,8 @@ Meeting specific information: Structure level, Group, Participant number, About 
                 value: Permission.userCanSee
             },
             {
-                display_name: _(`Can see personal data`),
-                help_text: _(`Can see additional personal data: Email, TODO.`),
+                display_name: _(`Can see sensitive data`),
+                help_text: _(`Can see the email addresses of all participants.`),
                 value: Permission.userCanSeePersonalData
             },
             {
