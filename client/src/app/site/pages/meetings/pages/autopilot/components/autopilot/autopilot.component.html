@@ -111,7 +111,6 @@
             </mat-card>
         </div>
 
-        
         <ng-container *osPerms="permission.listOfSpeakersCanSee">
             <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && showRightCol | async" class="col-right">
                 <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
