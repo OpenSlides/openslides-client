@@ -30,6 +30,7 @@
                         "assets": [
                             "src/assets",
                             "src/manifest.webmanifest",
+                            "src/sw.js",
                             {
                                 "glob": "**/*",
                                 "input": "node_modules/tinymce",

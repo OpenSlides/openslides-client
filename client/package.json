@@ -34,7 +34,8 @@
     "generate-defaults": "npm run ts -- cli/generate-settings-defaults.ts && prettier --write src/app/domain/definitions/meeting-settings-defaults.ts",
     "generate-permissions": "npm run ts -- cli/generate-permissions.ts && prettier --write src/app/domain/definitions/permission*.ts",
     "generate-models": "npm run ts -- cli/generate-models.ts && ng lint --fix --lint-file-patterns=src/app/domain/models/**/*.ts",
-    "get-available-languages": "npm run ts -- cli/get-available-languages.ts"
+    "get-available-languages": "npm run ts -- cli/get-available-languages.ts",
+    "postbuild": "mv ./dist/client/ngsw-worker.js ./dist/client/ngsw-worker-1.js && cp ./dist/client/safety-worker.js ./dist/client/ngsw-worker.js"
   },
   "dependencies": {
     "@angular/animations": "^16.2.5",
