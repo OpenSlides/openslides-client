@@ -641,7 +641,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 default_time,
                 countdown_time: speaker.begin_time ? countdown_time : default_time
             };
-        } else if (this.structureLevelCountdownEnabled && speaker.structure_level_list_of_speakers) {
+        } else if (
+            this.structureLevelCountdownEnabled &&
+            speaker.structure_level_list_of_speakers &&
+            !speaker.point_of_order
+        ) {
             const speakingTime = speaker.structure_level_list_of_speakers;
             const remaining = speakingTime.remaining_time;
             return {
