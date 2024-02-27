@@ -78,9 +78,11 @@
                 </ng-template>
             </os-list-of-speakers-content>
 
-            <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && (showRightCol | async) === false">
-                <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
-            </div>
+            <ng-container *osPerms="permission.listOfSpeakersCanSee">
+                <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && (showRightCol | async) === false">
+                    <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
+                </div>
+            </ng-container>
 
             <!-- Moderator Note-->
             <div *ngIf="hasCurrentProjection">
@@ -109,9 +111,12 @@
             </mat-card>
         </div>
 
-        <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && showRightCol | async" class="col-right">
-            <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
-        </div>
+        
+        <ng-container *osPerms="permission.listOfSpeakersCanSee">
+            <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && showRightCol | async" class="col-right">
+                <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
+            </div>
+        </ng-container>
     </div>
 </div>
 
