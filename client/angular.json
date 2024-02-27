@@ -31,6 +31,7 @@
                             "src/assets",
                             "src/manifest.webmanifest",
                             "src/sw.js",
+                            "src/ngsw-safety.json",
                             {
                                 "glob": "**/*",
                                 "input": "node_modules/tinymce",

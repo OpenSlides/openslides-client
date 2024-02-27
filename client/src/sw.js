@@ -1,1 +1,1 @@
-importScripts('ngsw-worker-1.js');
+importScripts('ngsw-worker.js');
