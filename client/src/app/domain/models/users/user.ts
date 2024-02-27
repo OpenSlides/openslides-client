@@ -42,7 +42,6 @@ export class User extends BaseDecimalModel<User> {
     public is_present_in_meeting_ids!: Id[]; // (meeting/present_user_ids)[];
     public committee_ids!: Id[]; // (committee/user_ids)[];
     public meeting_user_ids!: Id[]; // (meeting_user/user_id);
-    public structure_level_ids?: Id[];
 
     public poll_voted_ids!: string[]; // (poll/voted_ids)[];
     public vote_ids!: string[]; // (vote/user_id)[];
@@ -89,8 +88,7 @@ export class User extends BaseDecimalModel<User> {
         `vote_ids`,
         `poll_candidate_ids`,
         `meeting_ids`,
-        `organization_id`,
-        `structure_level_ids`
+        `organization_id`
     ];
 }
 export interface User {}
