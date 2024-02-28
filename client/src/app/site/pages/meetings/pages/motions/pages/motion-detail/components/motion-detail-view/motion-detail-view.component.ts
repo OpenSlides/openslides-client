@@ -229,9 +229,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
                 this.motion.getTitle() +
                 `</i>` +
                 `<br>` +
-                this.translate.instant(
-                    `Deleting this motion will likely impact it's amendments negatively and they could become unusable.`
-                ) +
+                this.translate.instant(`Deleting this motion will also remove its amendments.`) +
                 `<br>` +
                 this.translate.instant(`List of amendments: `) +
                 `<br>` +
