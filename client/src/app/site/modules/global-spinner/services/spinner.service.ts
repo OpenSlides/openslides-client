@@ -16,17 +16,17 @@ import { GlobalSpinnerModule } from '../global-spinner.module';
 export class SpinnerService {
     private overlayInstance: OverlayInstance<GlobalSpinnerComponent> | null = null;
 
-    private isOperatorReady = false;
-    private isStable = false;
-    private _isOffline = false;
-    private isOnLoginMask = false;
-    private isOnErrorPage = false;
+    private static isOperatorReady = false;
+    private static isStable = false;
+    private static _isOffline = false;
+    private static isOnLoginMask = false;
+    private static isOnErrorPage = false;
 
-    public get isOffline(): boolean {
+    public static get isOffline(): boolean {
         return this._isOffline;
     }
 
-    private set isOffline(isOffline: boolean) {
+    private static set isOffline(isOffline: boolean) {
         this._isOffline = isOffline;
     }
 
@@ -72,7 +72,7 @@ export class SpinnerService {
      *
      * @returns True, if the three booleans are all true.
      */
-    public isConnectionStable(): boolean {
+    public static isConnectionStable(): boolean {
         return this.isOnLoginMask || this.isOnErrorPage || (this.isOperatorReady && (this.isOffline || this.isStable));
     }
 
@@ -80,7 +80,7 @@ export class SpinnerService {
      * Function to check, if the app is stable and, if true, hide the spinner.
      */
     private checkConnection(): void {
-        if (this.isConnectionStable()) {
+        if (SpinnerService.isConnectionStable()) {
             this.hide();
             this.cleanupStableSubscription();
         }
@@ -94,12 +94,12 @@ export class SpinnerService {
             this.router.events.pipe(filter(event => event instanceof RoutesRecognized)).pipe(startWith(null)),
             this.router.events.pipe(filter(event => event.type === EventType.ActivationEnd)).pipe(startWith(null))
         ]).subscribe(([isReady, isOffline, isStable, event, activationEnd]) => {
-            this.isOperatorReady = isReady;
-            this.isOffline = isOffline;
-            this.isStable = isStable && !!activationEnd;
+            SpinnerService.isOperatorReady = isReady;
+            SpinnerService.isOffline = isOffline;
+            SpinnerService.isStable = isStable && !!activationEnd;
             if (event) {
-                this.isOnLoginMask = (event as RoutesRecognized).url.includes(`login`);
-                this.isOnErrorPage = (event as RoutesRecognized).url.includes(`error`);
+                SpinnerService.isOnLoginMask = (event as RoutesRecognized).url.includes(`login`);
+                SpinnerService.isOnErrorPage = (event as RoutesRecognized).url.includes(`error`);
             }
 
             this.checkConnection();
