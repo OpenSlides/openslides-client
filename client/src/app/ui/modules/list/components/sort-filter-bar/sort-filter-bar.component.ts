@@ -1,9 +1,11 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     HostListener,
     Input,
+    OnInit,
     Output,
     ViewChild,
     ViewEncapsulation
@@ -43,7 +45,7 @@ import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SortFilterBarComponent<V extends Identifiable> {
+export class SortFilterBarComponent<V extends Identifiable> implements OnInit {
     @ViewChild(`searchField`, { static: true })
     private readonly _searchFieldComponent!: RoundedInputComponent | undefined;
 
@@ -168,11 +170,21 @@ export class SortFilterBarComponent<V extends Identifiable> {
 
     private _searchField = ``;
 
+    public isMobile = false;
+
     public constructor(
         protected translate: TranslateService,
         public vp: ViewPortService,
-        private bottomSheet: MatBottomSheet
+        private bottomSheet: MatBottomSheet,
+        private cd: ChangeDetectorRef
     ) {}
+
+    public ngOnInit() {
+        this.vp.isMobileSubject.subscribe(v => {
+            this.isMobile = v;
+            this.cd.markForCheck();
+        });
+    }
 
     /**
      * on Click, remove Filter
