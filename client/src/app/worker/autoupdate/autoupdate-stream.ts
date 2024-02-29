@@ -182,13 +182,13 @@ export class AutoupdateStream extends HttpStream {
         this.sendErrorToSubscriptions(error);
     }
 
-    protected override parse(content: string): any | ErrorDescription {
+    protected override parse(content: unknown): any | ErrorDescription {
         if (this.queryParams.get(`compress`)) {
-            content = this.decode(content);
+            content = this.decode(content as string);
         }
 
         try {
-            return JSON.parse(content);
+            return JSON.parse(content as string);
         } catch (e) {
             return { reason: `JSON is malformed`, type: ErrorType.UNKNOWN, error: e as any };
         }

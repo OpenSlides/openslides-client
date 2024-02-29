@@ -11,7 +11,7 @@ import { HttpSubscriptionSSE } from './http-subscription-sse';
 export abstract class HttpStream {
     public failedCounter = 0;
 
-    private static CONNECTION_MODE: 'SSE' | 'LONGPOLLING' = `SSE`;
+    private static CONNECTION_MODE: 'SSE' | 'LONGPOLLING' = `LONGPOLLING`;
     private subscription: HttpSubscription;
 
     private _connecting = false;
@@ -147,18 +147,19 @@ export abstract class HttpStream {
     }
         */
 
-    protected handleContent(data: any): void {
-        data = this.parse(data);
+    protected handleContent(data: unknown): void {
         if (data instanceof ErrorDescription || isCommunicationError(data) || isCommunicationErrorWrapper(data)) {
             this.lastError = data;
+            this.failedCounter++;
             this.onError(data);
         } else {
+            data = this.parse(data);
             this.failedCounter = 0;
             this.onData(data);
         }
     }
 
-    protected parse(data: string): any | ErrorDescription {
+    protected parse(data: unknown): any | ErrorDescription {
         return data;
     }
 }

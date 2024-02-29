@@ -8,8 +8,11 @@ export class HttpSubscriptionPolling extends HttpSubscription {
     private abortCtrl: AbortController = undefined;
     private abortResolver: (val?: any) => void | undefined;
 
+    private reopen = false;
+
     public async start(): Promise<void> {
         this._active = true;
+        this.reopen = true;
         await this.nextPoll();
         this._active = false;
     }
@@ -34,13 +37,13 @@ export class HttpSubscriptionPolling extends HttpSubscription {
 
     private async nextPoll(): Promise<void> {
         await this.request();
-        if (this.active) {
+        if (this.active && this.reopen) {
             await new Promise<void>(resolve => {
                 setTimeout(() => resolve(), POLLING_INTERVAL);
             });
         }
 
-        if (this.active) {
+        if (this.active && this.reopen) {
             await this.nextPoll();
         }
     }
@@ -76,15 +79,39 @@ export class HttpSubscriptionPolling extends HttpSubscription {
             const formData = await response.formData();
             this.lastHash = formData.get(`hash`).toString();
             this.callbacks.onData(formData.get(`data`).toString());
-        } catch (e) {
-            console.error(e);
-        }
+        } catch (_) {}
 
         this.abortCtrl = undefined;
 
         // TODO: Handle results
         if (this.abortResolver) {
             this.abortResolver();
+        }
+
+        if (!response.ok) {
+            const error = this.parseErrorFromResponse(response, await this.parseNonOkResponse(response));
+            if (this.callbacks.onError) {
+                this.callbacks.onError(error);
+            } else {
+                this.callbacks.onData(error);
+            }
+            this.reopen = false;
+        }
+    }
+
+    private async parseNonOkResponse(response: Response): Promise<unknown> {
+        try {
+            return (await response.formData()).get(`data`);
+        } catch (_) {
+            try {
+                return await response.json();
+            } catch (_) {
+                try {
+                    return await response.text();
+                } catch (_) {
+                    return null;
+                }
+            }
         }
     }
 }
