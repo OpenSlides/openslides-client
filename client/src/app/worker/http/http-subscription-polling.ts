@@ -1,6 +1,6 @@
 import { HttpSubscription } from './http-subscription';
 
-const POLLING_INTERVAL = 5000;
+export const POLLING_INTERVAL = 5000;
 
 export class HttpSubscriptionPolling extends HttpSubscription {
     private lastHash: string = undefined;
@@ -9,6 +9,7 @@ export class HttpSubscriptionPolling extends HttpSubscription {
     private abortResolver: (val?: any) => void | undefined;
 
     private reopen = false;
+    private currentTimeoutResolver: CallableFunction;
 
     public async start(): Promise<void> {
         this._active = true;
@@ -28,6 +29,10 @@ export class HttpSubscriptionPolling extends HttpSubscription {
             await abortPromise;
             this.abortResolver = undefined;
         }
+
+        if (this.currentTimeoutResolver !== undefined) {
+            this.currentTimeoutResolver();
+        }
     }
 
     public async restart(): Promise<void> {
@@ -39,7 +44,13 @@ export class HttpSubscriptionPolling extends HttpSubscription {
         await this.request();
         if (this.active && this.reopen) {
             await new Promise<void>(resolve => {
-                setTimeout(() => resolve(), POLLING_INTERVAL);
+                const timeout = setTimeout(() => this.currentTimeoutResolver(), POLLING_INTERVAL);
+
+                this.currentTimeoutResolver = () => {
+                    this.currentTimeoutResolver = undefined;
+                    clearTimeout(timeout);
+                    resolve();
+                };
             });
         }
 
@@ -67,35 +78,41 @@ export class HttpSubscriptionPolling extends HttpSubscription {
         body.append(`request`, this.endpoint.payload);
         body.append(`lastpolling`, this.lastHash || null);
 
-        const response = await fetch(url + `?` + params.toString(), {
-            signal: this.abortCtrl.signal,
-            method: this.endpoint.method,
-            headers,
-            body
-        });
-
-        // const parts = btoa(await response.text());
         try {
-            const formData = await response.formData();
-            this.lastHash = formData.get(`hash`).toString();
-            this.callbacks.onData(formData.get(`data`).toString());
-        } catch (_) {}
+            const response = await fetch(url + `?` + params.toString(), {
+                signal: this.abortCtrl.signal,
+                method: this.endpoint.method,
+                headers,
+                body
+            });
+
+            try {
+                const formData = await response.formData();
+                this.lastHash = formData.get(`hash`).toString();
+                this.callbacks.onData(formData.get(`data`).toString());
+            } catch (_) {}
+
+            if (!response.ok) {
+                const error = this.parseErrorFromResponse(response, await this.parseNonOkResponse(response));
+                if (this.callbacks.onError) {
+                    this.callbacks.onError(error);
+                } else {
+                    this.callbacks.onData(error);
+                }
+                this.reopen = false;
+            }
+        } catch (e) {
+            if (e.name !== `AbortError`) {
+                throw e;
+            } else {
+                this.reopen = false;
+            }
+        }
 
         this.abortCtrl = undefined;
 
-        // TODO: Handle results
         if (this.abortResolver) {
             this.abortResolver();
-        }
-
-        if (!response.ok) {
-            const error = this.parseErrorFromResponse(response, await this.parseNonOkResponse(response));
-            if (this.callbacks.onError) {
-                this.callbacks.onError(error);
-            } else {
-                this.callbacks.onData(error);
-            }
-            this.reopen = false;
         }
     }
 
