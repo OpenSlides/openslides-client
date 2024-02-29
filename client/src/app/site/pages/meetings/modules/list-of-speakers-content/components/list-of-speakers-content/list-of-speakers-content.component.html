@@ -227,6 +227,19 @@
                         <!-- For normal users -->
                         <span *ngIf="!canManage">
                             <ng-container *ngIf="isSpeakerOperator(speaker)">
+                                <button
+                                    mat-icon-button
+                                    *ngIf="
+                                        (structureLevelCountdownEnabled | async) &&
+                                        speaker.isWaiting &&
+                                        speaker.meeting_user_id &&
+                                        speaker.meeting_user.structure_levels?.length
+                                    "
+                                    matTooltip="{{ 'Structure level' | translate }}"
+                                    [matMenuTriggerFor]="structureLevelsMenu"
+                                >
+                                    <mat-icon>flag</mat-icon>
+                                </button>
                                 <!-- pro -->
                                 <button
                                     mat-icon-button
@@ -275,6 +288,27 @@
                                         star_border
                                     </mat-icon>
                                 </button>
+                                <mat-menu #structureLevelsMenu="matMenu">
+                                    <ng-container *ngIf="speaker.meeting_user_id">
+                                        <button
+                                            *ngFor="let structureLevel of speaker.meeting_user.structure_levels"
+                                            mat-menu-item
+                                            (click)="setStructureLevel(speaker, structureLevel.id)"
+                                        >
+                                            <mat-icon
+                                                *ngIf="speaker.structure_level_list_of_speakers?.structure_level_id"
+                                            >
+                                                {{
+                                                    speaker.structure_level_list_of_speakers?.structure_level_id ===
+                                                    structureLevel.id
+                                                        ? 'check'
+                                                        : ''
+                                                }}
+                                            </mat-icon>
+                                            {{ structureLevel.name }}
+                                        </button>
+                                    </ng-container>
+                                </mat-menu>
                             </ng-container>
                         </span>
 
