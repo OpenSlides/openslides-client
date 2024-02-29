@@ -235,6 +235,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             `reason`,
             `text`,
             `modified_final_version`,
+            `additional_submitter`,
             `all_origin_ids`,
             `origin_meeting_id`,
             `derived_motion_ids`,
