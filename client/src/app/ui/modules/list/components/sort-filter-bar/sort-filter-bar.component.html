@@ -27,28 +27,6 @@
 
     <!-- Actions -->
     <div class="action-buttons">
-        <!-- Filter button -->
-        <button mat-button *ngIf="hasFilters" (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()">
-            <mat-icon
-                [matBadge]="filterAmount"
-                matBadgeColor="accent"
-                [matBadgeHidden]="filterAmount === 0 || !isMobile"
-                [matBadgeOverlap]="false"
-            >
-                filter_list
-            </mat-icon>
-            <span
-                class="upper"
-                *ngIf="!isMobile"
-                [matBadge]="filterAmount"
-                matBadgeColor="accent"
-                [matBadgeHidden]="filterAmount === 0"
-                [matBadgeOverlap]="false"
-            >
-                {{ 'Filter' | translate }}
-            </span>
-        </button>
-
         <!-- Sort Button -->
         <button mat-button *ngIf="isMobile && hasSorting" (click)="openSortDropDown()">
             <mat-icon
@@ -77,6 +55,28 @@
                 class="upper"
             >
                 {{ 'Sort' | translate }}
+            </span>
+        </button>
+
+        <!-- Filter button -->
+        <button mat-button *ngIf="hasFilters" (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()">
+            <mat-icon
+                [matBadge]="filterAmount"
+                matBadgeColor="accent"
+                [matBadgeHidden]="filterAmount === 0 || !isMobile"
+                [matBadgeOverlap]="false"
+            >
+                filter_list
+            </mat-icon>
+            <span
+                class="upper"
+                *ngIf="!isMobile"
+                [matBadge]="filterAmount"
+                matBadgeColor="accent"
+                [matBadgeHidden]="filterAmount === 0"
+                [matBadgeOverlap]="false"
+            >
+                {{ 'Filter' | translate }}
             </span>
         </button>
 
