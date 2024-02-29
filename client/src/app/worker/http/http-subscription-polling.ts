@@ -3,18 +3,28 @@ import { HttpSubscription } from './http-subscription';
 const POLLING_INTERVAL = 5000;
 
 export class HttpSubscriptionPolling extends HttpSubscription {
-    private timeout = undefined;
     private lastHash: string = undefined;
 
+    private abortCtrl: AbortController = undefined;
+    private abortResolver: (val?: any) => void | undefined;
+
     public async start(): Promise<void> {
+        this._active = true;
         await this.nextPoll();
+        this._active = false;
     }
 
     public async stop(): Promise<void> {
-        if (this.timeout) {
-            clearTimeout(this.timeout);
-        }
+        this._active = false;
         this.lastHash = undefined;
+
+        if (this.abortCtrl !== undefined) {
+            const abortPromise = new Promise(resolver => (this.abortResolver = resolver));
+            setTimeout(this.abortResolver, 5000);
+            this.abortCtrl.abort();
+            await abortPromise;
+            this.abortResolver = undefined;
+        }
     }
 
     public async restart(): Promise<void> {
@@ -24,10 +34,15 @@ export class HttpSubscriptionPolling extends HttpSubscription {
 
     private async nextPoll(): Promise<void> {
         await this.request();
-        await new Promise<void>(resolve => {
-            this.timeout = setTimeout(() => resolve(), POLLING_INTERVAL);
-        });
-        await this.nextPoll();
+        if (this.active) {
+            await new Promise<void>(resolve => {
+                setTimeout(() => resolve(), POLLING_INTERVAL);
+            });
+        }
+
+        if (this.active) {
+            await this.nextPoll();
+        }
     }
 
     private async request() {
@@ -39,6 +54,8 @@ export class HttpSubscriptionPolling extends HttpSubscription {
             headers.authentication = this.endpoint.authToken;
         }
 
+        this.abortCtrl = new AbortController();
+
         const [url, paramString] = this.endpoint.url.split(`?`);
         const params = new URLSearchParams(paramString);
         params.set(`longpolling`, `1`);
@@ -48,6 +65,7 @@ export class HttpSubscriptionPolling extends HttpSubscription {
         body.append(`lastpolling`, this.lastHash || null);
 
         const response = await fetch(url + `?` + params.toString(), {
+            signal: this.abortCtrl.signal,
             method: this.endpoint.method,
             headers,
             body
@@ -61,6 +79,12 @@ export class HttpSubscriptionPolling extends HttpSubscription {
         } catch (e) {
             console.error(e);
         }
+
+        this.abortCtrl = undefined;
+
         // TODO: Handle results
+        if (this.abortResolver) {
+            this.abortResolver();
+        }
     }
 }

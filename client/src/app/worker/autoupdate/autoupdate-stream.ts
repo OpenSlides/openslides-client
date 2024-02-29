@@ -41,6 +41,14 @@ export class AutoupdateStream extends HttpStream {
     public override async start(
         force?: boolean
     ): Promise<{ stopReason: 'error' | 'aborted' | 'resolved' | 'in-use' | string; error?: any }> {
+        if (this.activeSubscriptions === null) {
+            this.activeSubscriptions = [];
+            for (const subscription of this.subscriptions) {
+                this.activeSubscriptions.push(subscription);
+                subscription.stream = this;
+            }
+        }
+
         const stopInfo = await super.start(force);
         if (stopInfo.stopReason === `aborted` && !this.activeSubscriptions?.length) {
             stopInfo.stopReason = `unused`;
@@ -123,59 +131,6 @@ export class AutoupdateStream extends HttpStream {
 
     private async doRequest(): Promise<void> {
         /*
-        this._active = true;
-
-        if (this.activeSubscriptions === null) {
-            this.activeSubscriptions = [];
-            for (const subscription of this.subscriptions) {
-                this.activeSubscriptions.push(subscription);
-                subscription.stream = this;
-            }
-        }
-
-        const headers: any = {
-            'Content-Type': `application/json`,
-            'ngsw-bypass': true
-        };
-
-        if (this.authToken) {
-            headers.authentication = this.authToken;
-        }
-
-        this.abortCtrl = new AbortController();
-
-        const queryParams = this.queryParams.toString() ? `?${this.queryParams.toString()}` : ``;
-        const response = await fetch(this.endpoint.url + queryParams, {
-            signal: this.abortCtrl.signal,
-            method: this.endpoint.method,
-            headers,
-            body: JSON.stringify(this.subscriptions.map(s => s.request))
-        });
-
-        const LINE_BREAK = `\n`.charCodeAt(0);
-        const reader = response.body.getReader();
-        let next: Uint8Array = null;
-        let result: ReadableStreamReadResult<Uint8Array>;
-        while (!(result = await reader.read()).done) {
-            const lines = splitTypedArray(LINE_BREAK, result.value);
-            for (let line of lines) {
-                if (line[line.length - 1] === LINE_BREAK) {
-                    if (next !== null) {
-                        line = joinTypedArrays(Uint8Array, next, line);
-                    }
-
-                    next = null;
-
-                    const data = this.queryParams.get(`compress`) ? this.decode(line) : new TextDecoder().decode(line);
-                    const parsedData = this.parse(data);
-                    this.handleContent(parsedData);
-                } else if (next) {
-                    next = joinTypedArrays(Uint8Array, next, line);
-                } else {
-                    next = line;
-                }
-            }
-        }
 
         // Hotfix wrong status codes
         const content = next ? this.parse(this.decode(next)) : null;
