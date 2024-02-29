@@ -29,6 +29,7 @@
     <div class="action-buttons">
         <!-- Filter button -->
         <button mat-button *ngIf="hasFilters" (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()">
+            <mat-icon>filter_list</mat-icon>
             <span
                 class="upper"
                 [matBadge]="filterAmount"
@@ -42,6 +43,7 @@
 
         <!-- Sort Button -->
         <button mat-button *ngIf="vp.isMobile && hasSorting" (click)="openSortDropDown()">
+            <mat-icon>sort</mat-icon>
             <span
                 matBadge="&#8288;"
                 matBadgeColor="accent"
@@ -59,6 +61,7 @@
             [matTooltip]="getSortLabel(sortOption) | translate"
             [matMenuTriggerFor]="menu"
         >
+            <mat-icon>sort</mat-icon>
             <span
                 matBadge="&#8288;"
                 matBadgeColor="accent"
