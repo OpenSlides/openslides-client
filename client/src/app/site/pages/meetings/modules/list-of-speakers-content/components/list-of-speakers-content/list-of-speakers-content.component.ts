@@ -252,6 +252,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                     (!this.activeSpeaker?.point_of_order && this.activeSpeaker?.user_id === lastSpeaker.user_id);
             }
             canReaddLast = !isLastSpeakerWaiting || this.enableMultipleParticipants;
+            if (lastSpeaker.speech_state === `interposed_question` && !this.activeSpeaker) {
+                canReaddLast = false;
+            } else {
+                canReaddLast = true;
+            }
         } else {
             canReaddLast = false;
         }
