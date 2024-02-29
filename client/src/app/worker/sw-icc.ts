@@ -7,7 +7,7 @@ const iccPool = new ICCStreamPool({
     method: `get`
 } as AutoupdateSetEndpointParams);
 
-export function iccMessageHandler(ctx: any, e: any, broadcast: (s: string, a: string, c?: any) => void): void {
+export function iccMessageHandler(_ctx: any, e: any, _broadcast: (s: string, a: string, c?: any) => void): void {
     const msg = e.data?.msg;
     // const params = msg?.params;
     const action = msg?.action;
