@@ -93,6 +93,9 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
         this._borderRadius = size + `-border-radius`;
     }
 
+    @Input()
+    public iconName = `search`;
+
     /**
      * EventHandler for the input-changes.
      */
