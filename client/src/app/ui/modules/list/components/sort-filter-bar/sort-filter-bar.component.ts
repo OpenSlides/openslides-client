@@ -170,7 +170,7 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnInit {
 
     private _searchField = ``;
 
-    public isMobile = false;
+    private _isMobile = false;
 
     public constructor(
         protected translate: TranslateService,
@@ -181,7 +181,7 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnInit {
 
     public ngOnInit() {
         this.vp.isMobileSubject.subscribe(v => {
-            this.isMobile = v;
+            this._isMobile = v;
             this.cd.markForCheck();
         });
     }
@@ -254,6 +254,10 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnInit {
         }
         const itemProperty = option.property as string;
         return itemProperty.charAt(0).toUpperCase() + itemProperty.slice(1);
+    }
+
+    public get isMobile(): boolean {
+        return this._isMobile;
     }
 
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {
