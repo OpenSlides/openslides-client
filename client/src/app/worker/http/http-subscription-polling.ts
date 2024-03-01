@@ -99,7 +99,7 @@ export class HttpSubscriptionPolling extends HttpSubscription {
                 } else {
                     this.callbacks.onData(error);
                 }
-                this.reopen = false;
+                this._active = false;
             }
         } catch (e) {
             if (e.name !== `AbortError`) {
