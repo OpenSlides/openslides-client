@@ -428,6 +428,25 @@
                     </mat-icon>
                     <span>{{ 'Intervention' | translate }}</span>
                 </button>
+
+                <!-- point of order -->
+                <button
+                    *ngIf="
+                        pointOfOrderEnabled &&
+                        (speaker.meeting_user?.user.id === operator.user.id || (pointOfOrderForOthersEnabled | async))
+                    "
+                    mat-menu-item
+                    (click)="onPointOfOrderButton(speaker)"
+                >
+                    <mat-icon>warning</mat-icon>
+                    <!-- TODO: don't fill icon if not enabled-->
+                    <span>{{ 'Point of order' | translate }}</span>
+                </button>
+
+                <button *ngIf="speaker.point_of_order" mat-menu-item (click)="onEditPointOfOrderButton(speaker)">
+                    <mat-icon>edit</mat-icon>
+                    <span>{{ 'Edit point of order...' | translate }}</span>
+                </button>
             </ng-container>
 
             <!-- update user button -->

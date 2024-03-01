@@ -79,6 +79,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.meetingSettingService.get(`list_of_speakers_intervention_time`).pipe(map(v => v > 0));
     }
 
+    public get pointOfOrderForOthersEnabled(): Observable<boolean> {
+        return this.meetingSettingsService.get(`list_of_speakers_can_create_point_of_order_for_others`);
+    }
+
     public get structureLevelCountdownEnabled(): Observable<boolean> {
         return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v > 0));
     }
@@ -143,6 +147,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public isPointOfOrderFn = (speaker: ViewSpeaker) => speaker.point_of_order;
     public enableProContraSpeech = false;
 
+    public enableMultipleParticipants = false;
+
+    public pointOfOrderEnabled = false;
+
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
 
@@ -152,8 +160,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     private _currentUser: ViewUser | null = null;
 
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
-
-    private pointOfOrderEnabled = false;
 
     private canMarkSelf = false;
 
@@ -165,7 +171,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         protected override translate: TranslateService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private speakerRepo: SpeakerControllerService,
-        private operator: OperatorService,
+        public operator: OperatorService,
         private promptService: PromptService,
         private durationService: DurationService,
         private userRepository: ParticipantControllerService,
@@ -245,7 +251,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                     ) ||
                     (!this.activeSpeaker?.point_of_order && this.activeSpeaker?.user_id === lastSpeaker.user_id);
             }
-            canReaddLast = !isLastSpeakerWaiting;
+            canReaddLast = !isLastSpeakerWaiting || this.enableMultipleParticipants;
         } else {
             canReaddLast = false;
         }
@@ -301,7 +307,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public async addPointOfOrder(): Promise<void> {
-        const dialogRef = await this.dialog.open(this.listOfSpeakers);
+        const dialogRef = await this.dialog.open();
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
@@ -449,6 +455,31 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         }
     }
 
+    public async onPointOfOrderButton(speaker: ViewSpeaker): Promise<void> {
+        if (!speaker.point_of_order && this.pointOfOrderCategoriesEnabled) {
+            const dialogRef = await this.dialog.open();
+            const result = await firstValueFrom(dialogRef.afterClosed());
+            if (result) {
+                await this.speakerRepo.setPointOfOrder(speaker, {
+                    point_of_order: true,
+                    ...result
+                });
+            }
+        } else {
+            await this.speakerRepo.setPointOfOrder(speaker, {
+                point_of_order: !speaker.point_of_order
+            });
+        }
+    }
+
+    public async onEditPointOfOrderButton(speaker: ViewSpeaker): Promise<void> {
+        const dialogRef = await this.dialog.open(speaker);
+        const result = await firstValueFrom(dialogRef.afterClosed());
+        if (result) {
+            await this.speakerRepo.setPointOfOrder(speaker, result);
+        }
+    }
+
     /**
      * Receives an updated list from sorting-event.
      *
@@ -514,7 +545,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             )
             .map(user => user?.id)
             .filter(user => !!user);
-        this.nonAvailableUserIds = nonAvailableUsers;
+
+        if (!this.enableMultipleParticipants) {
+            this.nonAvailableUserIds = nonAvailableUsers;
+        }
     }
 
     /**
@@ -607,7 +641,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 default_time,
                 countdown_time: speaker.begin_time ? countdown_time : default_time
             };
-        } else if (this.structureLevelCountdownEnabled && speaker.structure_level_list_of_speakers) {
+        } else if (
+            this.structureLevelCountdownEnabled &&
+            speaker.structure_level_list_of_speakers &&
+            !speaker.point_of_order
+        ) {
             const speakingTime = speaker.structure_level_list_of_speakers;
             const remaining = speakingTime.remaining_time;
             return {
@@ -647,13 +685,18 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             }),
             this.meetingSettingService.get(`list_of_speakers_can_set_contribution_self`).subscribe(canSet => {
                 this.canMarkSelf = canSet;
+            }),
+            this.meetingSettingService.get(`list_of_speakers_allow_multiple_speakers`).subscribe(multiple => {
+                this.enableMultipleParticipants = multiple;
             })
         );
     }
 
     private findOperatorSpeaker(pointOfOrder?: boolean): ViewSpeaker | undefined {
-        return this.waitingSpeakers.find(
-            speaker => speaker.user_id === this.operator.operatorId && speaker.point_of_order === pointOfOrder
-        );
+        return this.waitingSpeakers
+            .sort((a, b) => b.id - a.id)
+            .find(
+                speaker => speaker.user_id === this.operator.operatorId && !!speaker.point_of_order === !!pointOfOrder
+            );
     }
 }

@@ -55,7 +55,8 @@
                 ></os-speaking-times>
             </mat-card-content>
         </mat-card>
-
+    </div>
+    <div *ngIf="viewListOfSpeakers">
         <!-- Moderator Note-->
         <os-moderation-note [listOfSpeakers]="viewListOfSpeakers"></os-moderation-note>
     </div>

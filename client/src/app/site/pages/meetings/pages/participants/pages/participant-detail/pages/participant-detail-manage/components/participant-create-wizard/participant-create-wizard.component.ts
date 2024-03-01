@@ -22,7 +22,7 @@ import {
     getParticipantMinimalSubscriptionConfig
 } from '../../../../../../participants.subscription';
 import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common/participant-controller.service/participant-controller.service';
-import { ParticipantListSortService } from '../../../../../participant-list/services/participant-list-sort.service/participant-list-sort.service';
+import { ParticipantListSortService } from '../../../../../participant-list/services/participant-list-sort/participant-list-sort.service';
 import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../../../structure-levels/view-models';
 

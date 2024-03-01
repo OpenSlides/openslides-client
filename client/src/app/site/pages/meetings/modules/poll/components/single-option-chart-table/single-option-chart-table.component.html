@@ -67,6 +67,15 @@
                     {{ poll.entitled_users_at_stop.length }}
                 </td>
             </tr>
+            <tr *ngIf="shouldShowEntitledPresent" class="entitled-users-row">
+                <td>{{ 'Entitled present users' | translate }}</td>
+                <td class="result-cell-definition">
+                    {{ entitledUsersPresentCount | pollPercentBase : poll }}
+                </td>
+                <td class="result-cell-definition">
+                    {{ entitledUsersPresentCount }}
+                </td>
+            </tr>
         </tbody>
     </table>
 
