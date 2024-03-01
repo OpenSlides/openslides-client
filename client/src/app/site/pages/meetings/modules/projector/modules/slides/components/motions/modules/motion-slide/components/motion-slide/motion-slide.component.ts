@@ -168,7 +168,7 @@ export class MotionSlideComponent
 
     protected override setData(value: SlideData<MotionSlideData>): void {
         super.setData(value);
-        const submitters = value.data.submitters || [];
+        const submitters = [...value.data.submitters] || [];
         if (value.data.additional_submitter) {
             submitters.push(value.data.additional_submitter);
         }
