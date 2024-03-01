@@ -69,8 +69,10 @@ export class HttpSubscriptionSSE extends HttpSubscription {
             }
         }
 
+        let data = ``;
         if (next) {
-            this.callbacks.onData(next);
+            data = new TextDecoder().decode(next);
+            this.callbacks.onData(data);
         }
 
         if (this.abortResolver) {
