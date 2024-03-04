@@ -55,6 +55,7 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     `state_extension_reference_ids`,
                     `state_id`,
                     `submitter_ids`,
+                    `additional_submitter`,
                     `tag_ids`,
                     `title`
                 ],
