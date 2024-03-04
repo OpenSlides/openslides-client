@@ -17,12 +17,14 @@ function getHttpSubscriptionSSEInstance(url = `/`, onData: any = () => {}, onErr
     return new HttpSubscriptionSSE(endpointConfig, handlerConfig);
 }
 
-function getValidStream(interval: number, resolveAfter: number) {
+function getValidStream(interval: number, resolveAfter = -1) {
     let cnt = 0;
+    const textEncoder = new TextEncoder();
+
     return new Response(
         new ReadableStream({
             async pull(controller) {
-                controller.enqueue(`resp:${cnt}\n`);
+                controller.enqueue(textEncoder.encode(`resp:${cnt}\n`));
 
                 cnt++;
                 if (cnt >= resolveAfter && resolveAfter >= 0) {
@@ -37,7 +39,7 @@ function getValidStream(interval: number, resolveAfter: number) {
 
 describe(`http subscription polling`, () => {
     beforeEach(() => {
-        fetchMock.mock(`end:/does-not-resolve`, getValidStream(-1, 100));
+        fetchMock.mock(`end:/does-not-resolve`, getValidStream(100));
     });
 
     afterEach(() => fetchMock.reset());
@@ -53,8 +55,7 @@ describe(`http subscription polling`, () => {
         const subscr = getHttpSubscriptionSSEInstance(`/does-not-resolve`, (d: any) => resolver(d));
         subscr.start();
         const data = await receivedData;
-        console.log(data);
-        expect(data).toEqual(`resp:0`);
+        expect(data).toEqual(`resp:0\n`);
         expect(subscr.active).toBeTrue();
         await subscr.stop();
     });
