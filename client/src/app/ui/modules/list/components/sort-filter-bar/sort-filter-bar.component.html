@@ -85,13 +85,17 @@
         <!-- Search bar -->
         <os-rounded-input
             #searchField
-            *ngIf="searchService"
+            *ngIf="searchService && !showSearchIconOnly"
             placeholder="{{ 'Search' | translate }}"
             [size]="'small'"
             [fullWidth]="false"
             [(ngModel)]="searchFieldInput"
             iconName="manage_search"
+            (clickIcon)="toggleSearchEdit()"
         ></os-rounded-input>
+        <button mat-icon-button *ngIf="showSearchIconOnly" (click)="toggleSearchEdit()">
+            <mat-icon>manage_search</mat-icon>
+        </button>
     </div>
 </div>
 

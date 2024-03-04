@@ -1,12 +1,11 @@
 <div class="input-container" [ngClass]="{ 'has-submit': hasSubmit }">
     <div *ngIf="!hasSubmit" class="input-prefix">
-        <mat-icon class="foreground-active">{{ iconName }}</mat-icon>
+        <mat-icon class="foreground-active" (click)="clickOnIcon()">{{ iconName }}</mat-icon>
     </div>
     <input
         #osInput
         [placeholder]="placeholder"
-        class="rounded-input background-default"
-        [ngClass]="[size, borderRadius, hasChildren ? 'children-bottom' : '']"
+        [ngClass]="['rounded-input', 'background-default', size, borderRadius, hasChildren ? 'children-bottom' : '']"
         [formControl]="dedicatedContentForm"
         (keyup)="keyPressed($event)"
         (blur)="blur()"

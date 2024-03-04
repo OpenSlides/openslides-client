@@ -166,6 +166,8 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnInit {
         this._sortOption = option;
     }
 
+    public searchEdit = false;
+
     private _sortOption: OsSortingOption<V>;
 
     private _searchField = ``;
@@ -182,6 +184,9 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnInit {
     public ngOnInit() {
         this.vp.isMobileSubject.subscribe(v => {
             this._isMobile = v;
+            if (v) {
+                this.searchEdit = false;
+            }
             this.cd.markForCheck();
         });
     }
@@ -258,6 +263,15 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnInit {
 
     public get isMobile(): boolean {
         return this._isMobile;
+    }
+
+    public get showSearchIconOnly(): boolean {
+        return this.isMobile && !this.searchEdit && !this.searchFieldInput;
+    }
+
+    public toggleSearchEdit(): void {
+        this.searchEdit = !this.searchEdit;
+        this.cd.markForCheck();
     }
 
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {

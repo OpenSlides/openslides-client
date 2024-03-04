@@ -115,6 +115,12 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
     public clickSubmit = new EventEmitter<string>();
 
     /**
+     * EventHandler for click Icon
+     */
+    @Output()
+    public clickIcon = new EventEmitter<string>();
+
+    /**
      * Getter to get the border-radius as a string.
      *
      * @returns {string} The border-radius as class.
@@ -188,6 +194,10 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
         if (this.clearOnEscape && event.key === `Enter`) {
             this.send();
         }
+    }
+
+    public clickOnIcon(): void {
+        this.clickIcon.emit();
     }
 
     protected createForm(): UntypedFormControl {
