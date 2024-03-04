@@ -43,7 +43,8 @@ export abstract class HttpStream {
             payload: requestPayload
         };
         const handlerConfig = {
-            onData: (data: unknown) => this.handleContent(data)
+            onData: (data: unknown) => this.handleContent(data),
+            onError: (data: unknown) => this.handleError(data)
         };
 
         if (HttpStream.CONNECTION_MODE === `SSE`) {
@@ -109,6 +110,12 @@ export abstract class HttpStream {
 
     protected abstract onData(_data: unknown): void;
     protected abstract onError(_error: unknown): void;
+
+    protected handleError(data: unknown): void {
+        this.lastError = data;
+        this.failedCounter++;
+        this.onError(data);
+    }
 
     protected handleContent(data: unknown): void {
         if (data instanceof ErrorDescription || isCommunicationError(data) || isCommunicationErrorWrapper(data)) {

@@ -1,3 +1,4 @@
+import { ErrorDescription, ErrorType } from 'src/app/gateways/http-stream/stream-utils';
 import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 
 import { AutoupdateSetEndpointParams } from '../autoupdate/interfaces-autoupdate';
@@ -20,8 +21,12 @@ class MockSubsciption extends HttpSubscription {
     }
 
     public start(): Promise<void> {
+        this._active = true;
         return new Promise(r => {
-            this.resolver = r;
+            this.resolver = () => {
+                r();
+                this._active = false;
+            };
         });
     }
 
@@ -42,23 +47,27 @@ class SimpleHttpStream extends HttpStream {
         queryParams: URLSearchParams,
         endpoint: AutoupdateSetEndpointParams,
         authToken: string,
-        requestPayload?: string,
-        subscription?: HttpSubscription
+        requestPayload?: string
     ) {
         super(queryParams, endpoint, authToken, requestPayload);
 
-        if (subscription) {
-            this.subscription = subscription;
-        }
+        this.subscription = new MockSubsciption(endpoint, {
+            onData: (data: unknown) => this.handleContent(data),
+            onError: (data: unknown) => this.handleError(data)
+        });
     }
 
-    protected onData(_data: unknown): void {}
+    public getSubscription(): MockSubsciption {
+        return this.subscription as MockSubsciption;
+    }
 
-    protected onError(_error: unknown): void {}
+    public onData(_data: unknown): void {}
+
+    public onError(_error: unknown): void {}
 }
 
-describe(`http stream`, () => {
-    let _httpStream: HttpStream;
+fdescribe(`http stream`, () => {
+    let httpStream: SimpleHttpStream;
     let subscription: MockSubsciption;
 
     beforeEach(() => {
@@ -67,33 +76,74 @@ describe(`http stream`, () => {
             method: HttpMethod.POST,
             healthUrl: `/health`
         };
-        subscription = new MockSubsciption(endpoint, {});
-        _httpStream = new SimpleHttpStream(null, endpoint, ``, null, subscription);
+        httpStream = new SimpleHttpStream(null, endpoint, ``, null);
+        subscription = httpStream.getSubscription();
     });
 
-    xit(`receives data`, () => {});
+    it(`receives data`, () => {
+        spyOn(httpStream, `onData`);
+        subscription.sendData(`test-data`);
+        expect(httpStream.onData).toHaveBeenCalledWith(`test-data`);
+    });
 
-    xit(`receives error`, () => {});
+    it(`receives error`, () => {
+        spyOn(httpStream, `onError`);
+        subscription.sendError(`test-error`);
+        expect(httpStream.onError).toHaveBeenCalledWith(`test-error`);
+    });
 
-    xit(`increases failed counter`, () => {});
+    it(`receives error via data in onError`, () => {
+        spyOn(httpStream, `onData`);
+        spyOn(httpStream, `onError`);
+        const error = new ErrorDescription(ErrorType.UNKNOWN, null, ``);
+        subscription.sendData(error);
+        expect(httpStream.onError).toHaveBeenCalledWith(error);
+        expect(httpStream.onData).not.toHaveBeenCalled();
+    });
 
-    xit(`resets failed counter on data`, () => {});
+    it(`increases failed counter via direct error`, () => {
+        expect(httpStream.failedCounter).toEqual(0);
+        subscription.sendError(`test-error`);
+        expect(httpStream.failedCounter).toEqual(1);
+    });
 
-    xit(`parses data`, () => {});
+    it(`increases failed counter via onData error`, () => {
+        expect(httpStream.failedCounter).toEqual(0);
+        const error = new ErrorDescription(ErrorType.UNKNOWN, null, ``);
+        subscription.sendData(error);
+        expect(httpStream.failedCounter).toEqual(1);
+    });
+
+    it(`resets failed counter on data`, () => {
+        subscription.sendError(`test-error`);
+        subscription.sendData(`reset-failed`);
+        expect(httpStream.failedCounter).toEqual(0);
+    });
 
     xit(`restart with open connection`, () => {});
 
     xit(`restart before open connection`, () => {});
 
-    xdescribe(`receives stop reasons`, () => {
-        it(`error`, () => {});
+    xit(`force start`, async () => {
+        const start = httpStream.start();
+        const forceStart = httpStream.start(true);
+        await expectAsync(start).toBeResolvedTo({ stopReason: `aborted` });
+        await expectAsync(forceStart).toBePending();
+    });
 
-        it(`abort`, () => {});
+    describe(`receives stop reasons`, () => {
+        xit(`error`, async () => {});
 
-        it(`abort`, () => {});
+        xit(`abort`, async () => {});
 
-        it(`resolve with last error`, () => {});
+        it(`in-use`, async () => {
+            const start = httpStream.start();
+            await expectAsync(httpStream.start()).toBeResolvedTo({ stopReason: `in-use` });
+            await expectAsync(start).toBePending();
+        });
 
-        it(`resolve without error`, () => {});
+        xit(`resolve with last error`, async () => {});
+
+        xit(`resolve without error`, async () => {});
     });
 });
