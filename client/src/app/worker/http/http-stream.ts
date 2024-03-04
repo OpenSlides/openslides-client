@@ -11,8 +11,8 @@ import { HttpSubscriptionSSE } from './http-subscription-sse';
 export abstract class HttpStream {
     public failedCounter = 0;
 
-    private static CONNECTION_MODE: 'SSE' | 'LONGPOLLING' = `LONGPOLLING`;
-    private subscription: HttpSubscription;
+    protected static CONNECTION_MODE: 'SSE' | 'LONGPOLLING' = `SSE`;
+    protected subscription: HttpSubscription;
 
     private _connecting = false;
     private lastError: any | ErrorDescription = null;
@@ -37,7 +37,7 @@ export abstract class HttpStream {
         requestPayload?: string
     ) {
         const endpointConfig: HttpSubscriptionEndpoint = {
-            url: endpoint.url + `?` + queryParams,
+            url: queryParams ? endpoint.url + `?` + queryParams : endpoint.url,
             method: endpoint.method,
             authToken,
             payload: requestPayload
@@ -110,43 +110,6 @@ export abstract class HttpStream {
     protected abstract onData(_data: unknown): void;
     protected abstract onError(_error: unknown): void;
 
-    /*
-    private async doRequest(): Promise<void> {
-        const content = next ? this.parse(next) : null;
-        const autoupdateSentUnmarkedError = content?.type !== ErrorType.UNKNOWN && content?.error;
-
-        if (!response.ok || autoupdateSentUnmarkedError) {
-            if ((headers.authentication ?? null) !== (this.authToken ?? null)) {
-                return await this.doRequest();
-            }
-
-            let errorContent = null;
-            if (content && (errorContent = content)?.error) {
-                errorContent = errorContent.error;
-            }
-
-            let type = ErrorType.UNKNOWN;
-            if ((response.status >= 400 && response.status < 500) || errorContent?.type === `invalid`) {
-                type = ErrorType.CLIENT;
-            } else if (response.status >= 500) {
-                type = ErrorType.SERVER;
-            }
-
-            this.lastError = {
-                reason: `HTTP error`,
-                type,
-                error: { code: response.status, content: errorContent, endpoint: this.endpoint }
-            };
-            if (errorContent?.type !== `auth`) {
-                this.onError(this.lastError);
-            }
-            this.failedCounter++;
-        } else if (this.lastError) {
-            this.failedCounter++;
-        }
-    }
-        */
-
     protected handleContent(data: unknown): void {
         if (data instanceof ErrorDescription || isCommunicationError(data) || isCommunicationErrorWrapper(data)) {
             this.lastError = data;
@@ -155,6 +118,7 @@ export abstract class HttpStream {
         } else {
             data = this.parse(data);
             this.failedCounter = 0;
+            this.lastError = null;
             this.onData(data);
         }
     }
