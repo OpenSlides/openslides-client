@@ -23,9 +23,9 @@
         <mat-list>
             <mat-list-item *ngFor="let speaker of finishedSpeakers; let number = index">
                 <div class="finished-speakers-grid">
-                    <div *osPerms="permission.listOfSpeakersCanSee">{{ number + 1 }}.</div>
-                    <div class="finished-speaker-info">
-                        <div>
+                    <div class="center-text" *osPerms="permission.listOfSpeakersCanSee">{{ number + 1 }}.</div>
+                    <div class="finished-speaker-info center-text">
+                        <div class="center-text">
                             <div>
                                 {{ speaker.getLOSName((structureLevelCountdownEnabled | async) === false) }}
                             </div>
@@ -35,7 +35,7 @@
                                 ></ng-container>
                             </div>
                         </div>
-                        <div class="user-subtitle">
+                        <div class="user-subtitle center-text">
                             {{ durationString(speaker) }} ({{ 'Start time' | translate }}:
                             {{ startTimeToString(speaker) }})
                         </div>

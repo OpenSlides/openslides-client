@@ -947,7 +947,7 @@ export const RELATIONS: Relation[] = [
     ...makeO2O({
         AViewModel: ViewOption,
         BViewModel: ViewPoll,
-        AField: `poll`,
+        AField: `used_as_global_option_in_poll`,
         BField: `global_option`
     }),
     // ViewOption -> ViewUser, ViewPollCandidateList

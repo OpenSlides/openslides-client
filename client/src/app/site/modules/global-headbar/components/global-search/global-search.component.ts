@@ -154,14 +154,21 @@ export class GlobalSearchComponent implements OnDestroy {
         return GlobalSearchComponent.models[`${model}/${id}`] || null;
     }
 
-    public getNamesBySubmitters(submitters: Id[]): string[] {
+    public hasSubmitters(entry: GlobalSearchEntry): boolean {
+        return entry.obj?.submitter_ids?.length || entry.obj?.additional_submitter;
+    }
+
+    public getSubmitterNames(entry: GlobalSearchEntry): string[] {
         const submitterNames: string[] = [];
-        for (const submitterId of submitters) {
+        for (const submitterId of entry.obj?.submitter_ids || []) {
             const motionSubmitter = this.getModel(`motion_submitter`, submitterId)?.content;
             const meetingUser = this.getModel(`meeting_user`, motionSubmitter?.meeting_user_id)?.content;
             const user = this.getModel(`user`, meetingUser?.user_id)?.content;
 
             submitterNames.push(this.globalSearchService.getTitle(`user`, user));
+        }
+        if (entry.obj?.additional_submitter) {
+            submitterNames.push(entry.obj.additional_submitter);
         }
 
         return submitterNames;
