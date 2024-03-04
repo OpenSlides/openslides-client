@@ -254,7 +254,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             canReaddLast = !isLastSpeakerWaiting || this.enableMultipleParticipants;
             if (lastSpeaker.speech_state === `interposed_question` && !this.activeSpeaker) {
                 canReaddLast = false;
-            } else {
+            } else if (lastSpeaker.speech_state === `interposed_question` && this.activeSpeaker) {
                 canReaddLast = true;
             }
         } else {
