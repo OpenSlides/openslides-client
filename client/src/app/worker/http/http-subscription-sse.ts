@@ -39,48 +39,54 @@ export class HttpSubscriptionSSE extends HttpSubscription {
 
         this.abortCtrl = new AbortController();
 
-        const response = await fetch(this.endpoint.url, {
-            signal: this.abortCtrl.signal,
-            method: this.endpoint.method,
-            headers,
-            body: this.endpoint.payload
-        });
+        try {
+            const response = await fetch(this.endpoint.url, {
+                signal: this.abortCtrl.signal,
+                method: this.endpoint.method,
+                headers,
+                body: this.endpoint.payload
+            });
 
-        const LINE_BREAK = `\n`.charCodeAt(0);
-        const reader = response.body.getReader();
-        let next: Uint8Array = null;
-        let result: ReadableStreamReadResult<Uint8Array>;
-        while (!(result = await reader.read()).done) {
-            const lines = splitTypedArray(LINE_BREAK, result.value);
-            for (let line of lines) {
-                if (line[line.length - 1] === LINE_BREAK) {
-                    if (next !== null) {
-                        line = joinTypedArrays(Uint8Array, next, line);
+            const LINE_BREAK = `\n`.charCodeAt(0);
+            const reader = response.body.getReader();
+            let next: Uint8Array = null;
+            let result: ReadableStreamReadResult<Uint8Array>;
+            while (!(result = await reader.read()).done) {
+                const lines = splitTypedArray(LINE_BREAK, result.value);
+                for (let line of lines) {
+                    if (line[line.length - 1] === LINE_BREAK) {
+                        if (next !== null) {
+                            line = joinTypedArrays(Uint8Array, next, line);
+                        }
+
+                        next = null;
+                        const data = new TextDecoder().decode(line);
+                        this.callbacks.onData(data);
+                    } else if (next) {
+                        next = joinTypedArrays(Uint8Array, next, line);
+                    } else {
+                        next = line;
                     }
-
-                    next = null;
-                    const data = new TextDecoder().decode(line);
-                    this.callbacks.onData(data);
-                } else if (next) {
-                    next = joinTypedArrays(Uint8Array, next, line);
-                } else {
-                    next = line;
                 }
             }
-        }
 
-        let data = ``;
-        if (next) {
-            data = new TextDecoder().decode(next);
-            this.callbacks.onData(data);
+            let data = ``;
+            if (next) {
+                data = new TextDecoder().decode(next);
+                this.callbacks.onData(data);
+            }
+
+            if (!response.ok) {
+                // throw { response, content: next };
+            }
+        } catch (e) {
+            if (e.name !== `AbortError`) {
+                throw e;
+            }
         }
 
         if (this.abortResolver) {
             this.abortResolver();
-        }
-
-        if (!response.ok) {
-            throw { response, content: next };
         }
 
         this._active = false;

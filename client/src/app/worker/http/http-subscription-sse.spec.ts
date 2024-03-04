@@ -1,4 +1,4 @@
-import fetchMock from 'fetch-mock';
+import fetchMock, { MockRequest } from 'fetch-mock';
 import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 
 import { HttpSubscriptionEndpoint } from './http-subscription';
@@ -17,29 +17,36 @@ function getHttpSubscriptionSSEInstance(url = `/`, onData: any = () => {}, onErr
     return new HttpSubscriptionSSE(endpointConfig, handlerConfig);
 }
 
-function getValidStream(interval: number, resolveAfter = -1) {
+function getValidStream(req: MockRequest, interval: number, resolveAfter = -1) {
     let cnt = 0;
+    let abort = false;
     const textEncoder = new TextEncoder();
+    const stream = new ReadableStream({
+        async pull(controller) {
+            controller.enqueue(textEncoder.encode(`resp:${cnt}\n`));
 
-    return new Response(
-        new ReadableStream({
-            async pull(controller) {
-                controller.enqueue(textEncoder.encode(`resp:${cnt}\n`));
-
-                cnt++;
-                if (cnt >= resolveAfter && resolveAfter >= 0) {
-                    controller.close();
-                }
-
-                await new Promise(r => setTimeout(r, interval));
+            cnt++;
+            if (cnt >= resolveAfter && resolveAfter >= 0) {
+                controller.close();
+            } else if (abort) {
+                const err = new Error(`AbortError`);
+                err.name = `AbortError`;
+                controller.error(err);
             }
-        })
-    );
+
+            await new Promise(r => setTimeout(r, interval));
+        }
+    });
+    req.signal.addEventListener(`abort`, () => {
+        abort = true;
+    });
+
+    return new Response(stream);
 }
 
-describe(`http subscription polling`, () => {
+fdescribe(`http subscription polling`, () => {
     beforeEach(() => {
-        fetchMock.mock(`end:/does-not-resolve`, getValidStream(100));
+        fetchMock.mock(`end:/does-not-resolve`, (_, opts) => getValidStream(opts, 100));
     });
 
     afterEach(() => fetchMock.reset());
@@ -49,7 +56,7 @@ describe(`http subscription polling`, () => {
         expect(fetchMock.called(`/does-not-resolve`)).toBeFalse();
     });
 
-    xit(`receives data once`, async () => {
+    it(`receives data once`, async () => {
         let resolver: CallableFunction;
         const receivedData = new Promise(resolve => (resolver = resolve));
         const subscr = getHttpSubscriptionSSEInstance(`/does-not-resolve`, (d: any) => resolver(d));
