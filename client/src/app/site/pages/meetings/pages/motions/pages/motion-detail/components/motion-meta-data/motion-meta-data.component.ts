@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { distinctUntilChanged, map, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
@@ -9,8 +9,10 @@ import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants'
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
+import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionEditorControllerService } from '../../../../modules/editors/services';
 import { MotionSubmitterControllerService } from '../../../../modules/submitters/services';
@@ -24,7 +26,7 @@ import { SearchListDefinition } from '../motion-extension-field/motion-extension
     templateUrl: `./motion-meta-data.component.html`,
     styleUrls: [`./motion-meta-data.component.scss`]
 })
-export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
+export class MotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnInit, OnDestroy {
     public motionBlocks: MotionBlock[] = [];
 
     public categories: ViewMotionCategory[] = [];
@@ -114,6 +116,12 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     private _forwardingAvailable = false;
 
+    public get supportersObservable(): Observable<ViewUser[]> {
+        return this._supportersSubject;
+    }
+
+    private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
+
     /**
      * The subscription to the recommender config variable.
      */
@@ -127,7 +135,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         private meetingController: MeetingControllerService,
         public motionSubmitterRepo: MotionSubmitterControllerService,
         public motionEditorRepo: MotionEditorControllerService,
-        public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService
+        public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService,
+        private participantSort: ParticipantListSortService
     ) {
         super();
 
@@ -138,6 +147,19 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         } else {
             this._forwardingAvailable = false;
         }
+    }
+
+    public ngOnInit(): void {
+        this.participantSort.initSorting();
+
+        this.subscriptions.push(
+            this.participantSort.getSortedViewModelListObservable().subscribe(() => this.updateSupportersSubject())
+        );
+    }
+
+    public override ngOnDestroy(): void {
+        this.participantSort.exitSortService();
+        super.ngOnDestroy();
     }
 
     /**
@@ -298,6 +320,15 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
             return motion.sequential_number && motion.meeting?.canAccess();
         }
         return origin?.canAccess();
+    }
+
+    protected override onAfterSetMotion(_previous: ViewMotion, _current: ViewMotion): void {
+        super.onAfterSetMotion(_previous, _current);
+        this.updateSupportersSubject();
+    }
+
+    private async updateSupportersSubject(): Promise<void> {
+        this._supportersSubject.next(await this.participantSort.sort(this.motion.supporter_users));
     }
 
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
