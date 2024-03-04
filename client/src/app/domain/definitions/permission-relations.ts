@@ -49,12 +49,12 @@ export const permissionChildren: PermissionsMap = {
         Permission.userCanManagePresence,
         Permission.userCanSee,
         Permission.userCanUpdate,
-        Permission.userCanSeePersonalData
+        Permission.userCanSeeSensitiveData
     ],
     'user.can_manage_presence': [Permission.userCanSee],
     'user.can_see': [],
-    'user.can_see_personal_data': [Permission.userCanSee],
-    'user.can_update': [Permission.userCanSeePersonalData, Permission.userCanSee]
+    'user.can_see_sensitive_data': [Permission.userCanSee],
+    'user.can_update': [Permission.userCanSeeSensitiveData, Permission.userCanSee]
 };
 
 export const permissionParents: PermissionsMap = {
@@ -115,9 +115,9 @@ export const permissionParents: PermissionsMap = {
     'user.can_see': [
         Permission.userCanManagePresence,
         Permission.userCanManage,
-        Permission.userCanSeePersonalData,
+        Permission.userCanSeeSensitiveData,
         Permission.userCanUpdate
     ],
-    'user.can_see_personal_data': [Permission.userCanUpdate, Permission.userCanManage],
+    'user.can_see_sensitive_data': [Permission.userCanUpdate, Permission.userCanManage],
     'user.can_update': [Permission.userCanManage]
 };
