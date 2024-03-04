@@ -71,7 +71,7 @@ export class MotionMultiselectService {
         let title = this.translate.instant(`Are you sure you want to delete all selected motions?`);
         if (motions.some(motion => motion.amendments?.length)) {
             title = this.translate.instant(
-                `Warning: Amendments exist for at least one of the selected motions. Are you sure you want to delete these motions regardless?`
+                `Warning: At least one of the selected motions has amendments, these will be deleted as well. Do you want to delete anyway?`
             );
         }
         if (await this.promptService.open(title)) {
