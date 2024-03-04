@@ -154,22 +154,24 @@ export class SpeakingTimesComponent implements OnDestroy {
     }
 
     private updateSpeakingTime(speakingTime: ViewStructureLevelListOfSpeakers) {
-        if (speakingTime.isInactive) {
-            this.structureLevels.delete(speakingTime.id);
-        } else {
-            const remaining = speakingTime.remaining_time;
-            this.structureLevels.set(speakingTime.id, {
-                name: speakingTime.structure_level.getTitle(),
-                color: speakingTime.structure_level.color,
-                countdown: {
-                    running: !!speakingTime.current_start_time,
-                    countdown_time: speakingTime.current_start_time
-                        ? speakingTime.current_start_time + remaining
-                        : remaining
-                },
-                id: speakingTime.id,
-                speakers: speakingTime.speakers
-            });
+        if (speakingTime) {
+            if (speakingTime.isInactive) {
+                this.structureLevels.delete(speakingTime.id);
+            } else {
+                const remaining = speakingTime.remaining_time;
+                this.structureLevels.set(speakingTime.id, {
+                    name: speakingTime.structure_level.getTitle(),
+                    color: speakingTime.structure_level.color,
+                    countdown: {
+                        running: !!speakingTime.current_start_time,
+                        countdown_time: speakingTime.current_start_time
+                            ? speakingTime.current_start_time + remaining
+                            : remaining
+                    },
+                    id: speakingTime.id,
+                    speakers: speakingTime.speakers
+                });
+            }
         }
         this.cd.markForCheck();
     }
