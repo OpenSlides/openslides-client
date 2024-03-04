@@ -70,14 +70,21 @@ export class HttpSubscriptionSSE extends HttpSubscription {
                 }
             }
 
-            let data = ``;
+            let data: string | null = null;
             if (next) {
                 data = new TextDecoder().decode(next);
-                this.callbacks.onData(data);
             }
 
             if (!response.ok) {
-                // throw { response, content: next };
+                const error = this.parseErrorFromResponse(response, await this.parseNonOkResponse(data));
+                if (this.callbacks.onError) {
+                    this.callbacks.onError(error);
+                } else {
+                    this.callbacks.onData(error);
+                }
+                this._active = false;
+            } else if (data) {
+                this.callbacks.onData(data);
             }
         } catch (e) {
             if (e.name !== `AbortError`) {
@@ -85,10 +92,19 @@ export class HttpSubscriptionSSE extends HttpSubscription {
             }
         }
 
+        this.abortCtrl = undefined;
         if (this.abortResolver) {
             this.abortResolver();
         }
 
         this._active = false;
+    }
+
+    private async parseNonOkResponse(data: string): Promise<unknown> {
+        try {
+            return JSON.parse(data);
+        } catch (_) {
+            return data;
+        }
     }
 }
