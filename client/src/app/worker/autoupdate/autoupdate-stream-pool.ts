@@ -192,7 +192,6 @@ export class AutoupdateStreamPool {
 
     private onAuthUpdate(token: string, userId?: Id) {
         for (const stream of this.streams) {
-            console.log(token);
             stream.setAuthToken(token);
         }
 
