@@ -1,6 +1,5 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     EventEmitter,
     HostListener,
@@ -172,22 +171,17 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnInit {
 
     private _searchField = ``;
 
-    private _isMobile = false;
-
     public constructor(
         protected translate: TranslateService,
         public vp: ViewPortService,
-        private bottomSheet: MatBottomSheet,
-        private cd: ChangeDetectorRef
+        private bottomSheet: MatBottomSheet
     ) {}
 
     public ngOnInit() {
         this.vp.isMobileSubject.subscribe(v => {
-            this._isMobile = v;
             if (v) {
                 this.searchEdit = false;
             }
-            this.cd.markForCheck();
         });
     }
 
@@ -261,17 +255,12 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnInit {
         return itemProperty.charAt(0).toUpperCase() + itemProperty.slice(1);
     }
 
-    public get isMobile(): boolean {
-        return this._isMobile;
-    }
-
     public get showSearchIconOnly(): boolean {
-        return this.isMobile && !this.searchEdit && !this.searchFieldInput;
+        return this.vp.isMobile && !this.searchEdit && !this.searchFieldInput;
     }
 
     public toggleSearchEdit(): void {
         this.searchEdit = !this.searchEdit;
-        this.cd.markForCheck();
     }
 
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {

@@ -28,7 +28,7 @@
     <!-- Actions -->
     <div class="action-buttons">
         <!-- Sort Button -->
-        <button mat-button *ngIf="isMobile && hasSorting" (click)="openSortDropDown()">
+        <button mat-button *ngIf="(vp.isMobileSubject | async) && hasSorting" (click)="openSortDropDown()">
             <mat-icon
                 matBadge="&#8288;"
                 matBadgeColor="accent"
@@ -41,7 +41,7 @@
         </button>
         <button
             mat-button
-            *ngIf="!isMobile && hasSorting"
+            *ngIf="(vp.isMobileSubject | async) === false && hasSorting"
             [matTooltip]="getSortLabel(sortOption) | translate"
             [matMenuTriggerFor]="menu"
         >
@@ -63,7 +63,7 @@
             <mat-icon
                 [matBadge]="filterAmount"
                 matBadgeColor="accent"
-                [matBadgeHidden]="filterAmount === 0 || !isMobile"
+                [matBadgeHidden]="filterAmount === 0 || (vp.isMobileSubject | async) === false"
                 [matBadgeOverlap]="false"
                 matBadgeSize="small"
             >
@@ -71,7 +71,7 @@
             </mat-icon>
             <span
                 class="upper"
-                *ngIf="!isMobile"
+                *ngIf="(vp.isMobileSubject | async) === false"
                 [matBadge]="filterAmount"
                 matBadgeColor="accent"
                 [matBadgeHidden]="filterAmount === 0"
