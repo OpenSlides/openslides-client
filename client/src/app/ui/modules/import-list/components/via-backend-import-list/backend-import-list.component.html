@@ -197,7 +197,9 @@
 </ng-template>
 
 <ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
-    <ng-container *ngIf="type === 'string'">{{ entry }}</ng-container>
+    <ng-container *ngIf="type === 'string'">
+        <div>{{ entry }}</div>
+    </ng-container>
     <ng-container *ngIf="type === 'number' || type === 'integer'">{{ entry }}</ng-container>
     <ng-container *ngIf="type === 'decimal'">{{ getShortenedDecimal(entry) }}</ng-container>
     <ng-container *ngIf="type === 'date'">{{ entry }}</ng-container>
