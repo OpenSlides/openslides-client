@@ -10,4 +10,6 @@ export class MotionAction {
     public static readonly RESET_RECOMMENDATION = `motion.reset_recommendation`;
     public static readonly SET_SUPPORT_SELF = `motion.set_support_self`;
     public static readonly SORT = `motion.sort`;
+    public static readonly JSON_UPLOAD = `motion.json_upload`;
+    public static readonly IMPORT = `motion.import`;
 }

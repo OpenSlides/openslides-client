@@ -257,7 +257,7 @@ export class MotionPdfService {
         const metaTableBody = [];
 
         // submitters
-        if (!infoToExport || infoToExport.includes(`submitters`)) {
+        if (!infoToExport || infoToExport.includes(`submitters_verbose`)) {
             const submitters = motion.mapSubmittersWithAdditional(user => user.full_name).join(`, `);
 
             metaTableBody.push([
@@ -272,7 +272,7 @@ export class MotionPdfService {
         }
 
         // supporters
-        if (!infoToExport || infoToExport.includes(`supporter_users`)) {
+        if (!infoToExport || infoToExport.includes(`supporters_verbose`)) {
             const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
             if (minSupporters && motion.supporter_users.length > 0) {
                 const supporters = motion.supporter_users.map(supporter => supporter.full_name).join(`, `);
@@ -347,7 +347,10 @@ export class MotionPdfService {
         }
 
         // category
-        if (motion.category && (!infoToExport || infoToExport.includes(`category`))) {
+        if (
+            motion.category &&
+            (!infoToExport || infoToExport.includes(`category_name`) || infoToExport.includes(`category_prefix`))
+        ) {
             let categoryText = ``;
             if (motion.category.parent) {
                 categoryText = `${motion.category.parent.toString()}\n${this.translate.instant(
@@ -846,7 +849,12 @@ export class MotionPdfService {
         const crMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`)!;
         const title = this.createTitle(motion, crMode, lineLength);
         const subtitle = this.createSubtitle(motion);
-        const metaInfo = this.createMetaInfoTable(motion, lineLength, crMode, [`submitters`, `state`, `category`]);
+        const metaInfo = this.createMetaInfoTable(motion, lineLength, crMode, [
+            `submitters_verbose`,
+            `state`,
+            `category_name`,
+            `category_prefix`
+        ]);
         const noteContent = this.htmlToPdfService.convertHtml({ htmlText: note, lnMode: LineNumberingMode.None });
 
         const subHeading = {

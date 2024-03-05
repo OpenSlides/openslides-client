@@ -57,7 +57,7 @@
         <div>
             <p class="toggle-group-head">{{ 'Meta information' | translate }}</p>
             <mat-button-toggle-group class="smaller-buttons" multiple formControlName="metaInfo">
-                <mat-button-toggle *ngFor="let metaInfo of metaInfoExportOrder" [value]="metaInfo">
+                <mat-button-toggle *ngFor="let metaInfo of metaInfoExportOrder" [value]="metaInfo" #metaInfoButtons>
                     <span>{{ getLabelForMetadata(metaInfo) | translate }}</span>
                 </mat-button-toggle>
                 <mat-button-toggle *osPerms="permission.listOfSpeakersCanSee" value="speakers" #speakersButton>
