@@ -23,9 +23,9 @@
         <mat-list>
             <mat-list-item *ngFor="let speaker of finishedSpeakers; let number = index">
                 <div class="finished-speakers-grid">
-                    <div *osPerms="permission.listOfSpeakersCanSee">{{ number + 1 }}.</div>
-                    <div class="finished-speaker-info">
-                        <div>
+                    <div class="center-text" *osPerms="permission.listOfSpeakersCanSee">{{ number + 1 }}.</div>
+                    <div class="finished-speaker-info center-text">
+                        <div class="center-text">
                             <div>
                                 {{ speaker.getLOSName((structureLevelCountdownEnabled | async) === false) }}
                             </div>
@@ -35,7 +35,7 @@
                                 ></ng-container>
                             </div>
                         </div>
-                        <div class="user-subtitle">
+                        <div class="user-subtitle center-text">
                             {{ durationString(speaker) }} ({{ 'Start time' | translate }}:
                             {{ startTimeToString(speaker) }})
                         </div>
@@ -427,6 +427,25 @@
                         {{ speaker.speech_state === SpeechState.INTERVENTION ? 'error' : 'error_outline' }}
                     </mat-icon>
                     <span>{{ 'Intervention' | translate }}</span>
+                </button>
+
+                <!-- point of order -->
+                <button
+                    *ngIf="
+                        pointOfOrderEnabled &&
+                        (speaker.meeting_user?.user.id === operator.user.id || (pointOfOrderForOthersEnabled | async))
+                    "
+                    mat-menu-item
+                    (click)="onPointOfOrderButton(speaker)"
+                >
+                    <mat-icon>warning</mat-icon>
+                    <!-- TODO: don't fill icon if not enabled-->
+                    <span>{{ 'Point of order' | translate }}</span>
+                </button>
+
+                <button *ngIf="speaker.point_of_order" mat-menu-item (click)="onEditPointOfOrderButton(speaker)">
+                    <mat-icon>edit</mat-icon>
+                    <span>{{ 'Edit point of order...' | translate }}</span>
                 </button>
             </ng-container>
 

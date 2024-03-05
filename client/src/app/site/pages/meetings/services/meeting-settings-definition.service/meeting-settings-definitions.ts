@@ -91,6 +91,13 @@ export interface SettingsGroup {
     }[];
 }
 
+export const SKIPPED_SETTINGS = [
+    `motions_default_workflow_id`,
+    `motions_default_amendment_workflow_id`,
+    `motions_default_statute_amendment_workflow_id`,
+    `point_of_order_category_ids`
+];
+
 function fillInSettingsDefaults(settingsGroups: SettingsGroup[]): SettingsGroup[] {
     settingsGroups.forEach(group =>
         group.subgroups.forEach(
@@ -359,6 +366,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
+                        key: `list_of_speakers_allow_multiple_speakers`,
+                        label: _(`Allow one participant to be on the LoS serveral times`),
+                        type: `boolean`
+                    },
+                    {
                         key: `list_of_speakers_enable_interposed_question`,
                         label: _(`Enable interposed questions`),
                         type: `boolean`
@@ -428,6 +440,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `list_of_speakers_enable_point_of_order_speakers`,
                         label: _(`Enable point of order`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_can_create_point_of_order_for_others`,
+                        label: _(`Enable point of orders for other participants`),
+                        helpText: _(`Requires permission to manage lists of speakers`),
                         type: `boolean`
                     },
                     {

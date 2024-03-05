@@ -168,7 +168,11 @@ export class MotionSlideComponent
 
     protected override setData(value: SlideData<MotionSlideData>): void {
         super.setData(value);
-        this._submittersSubject.next(value.data.submitters || []);
+        const submitters = [...value.data.submitters] || [];
+        if (value.data.additional_submitter) {
+            submitters.push(value.data.additional_submitter);
+        }
+        this._submittersSubject.next(submitters);
         this.lnMode = value.data.line_numbering;
         this.lineLength = value.data.line_length;
         this.preamble = value.data.preamble;
