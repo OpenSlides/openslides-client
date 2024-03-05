@@ -76,6 +76,28 @@ class TestComponent {
             type: `wifi_access_data`,
             options: {}
         },
+        someDataNopass: {
+            collection: `wifi_access_data`,
+            data: {
+                collection: `wifi_access_data`,
+                users_pdf_wlan_encryption: `nopass`,
+                users_pdf_wlan_ssid: `RandomWiWi`
+            },
+            stable: false,
+            type: `wifi_access_data`,
+            options: {}
+        },
+        wrongDataWEP: {
+            collection: `wifi_access_data`,
+            data: {
+                collection: `wifi_access_data`,
+                users_pdf_wlan_encryption: `WEP`,
+                users_pdf_wlan_ssid: `RandomWiWi`
+            },
+            stable: false,
+            type: `wifi_access_data`,
+            options: {}
+        },
         noData: {
             collection: `wifi_access_data`,
             data: {},
@@ -110,7 +132,7 @@ function findChildFromDebugElement(element: DebugElement, ...nodenames: string[]
     }
     nodenames = [...nodenames[0].split(`.`), ...nodenames.slice(1)];
     const children = element.children?.filter(child => child.name === nodenames[0]) ?? [];
-    for (let child of children) {
+    for (const child of children) {
         const result = findChildFromDebugElement(child, ...nodenames.slice(1));
         if (result) {
             return result;
@@ -141,7 +163,7 @@ describe(`WifiAccessDataSlideComponent`, () => {
         expect(component.ssid).toBe(`RandomWiWi`);
         expect(component.password).toBe(`Super&StrongP455Word`);
         expect(component.encryption).toBe(`WPA/WPA2`);
-        let qr: MockQrCodeComponent = findChildFromDebugElement(
+        const qr: MockQrCodeComponent = findChildFromDebugElement(
             fixture.debugElement,
             QR_COMPONENT_PATH
         )?.componentInstance;
@@ -156,7 +178,7 @@ describe(`WifiAccessDataSlideComponent`, () => {
         expect(component.ssid).toBe(`RandomWiWi`);
         expect(component.password).toBe(`Super&StrongP455Word`);
         expect(component.encryption).toBe(`WEP`);
-        let qr: MockQrCodeComponent = findChildFromDebugElement(
+        const qr: MockQrCodeComponent = findChildFromDebugElement(
             fixture.debugElement,
             QR_COMPONENT_PATH
         )?.componentInstance;
@@ -171,7 +193,7 @@ describe(`WifiAccessDataSlideComponent`, () => {
         expect(component.ssid).toBe(`RandomWiWi`);
         expect(component.password).toBe(`Super&StrongP455Word`);
         expect(component.encryption).toBe(`No encryption`);
-        let qr: MockQrCodeComponent = findChildFromDebugElement(
+        const qr: MockQrCodeComponent = findChildFromDebugElement(
             fixture.debugElement,
             QR_COMPONENT_PATH
         )?.componentInstance;
@@ -180,13 +202,41 @@ describe(`WifiAccessDataSlideComponent`, () => {
         expect(qr.edgeLength).toBe(450);
     });
 
+    it(`should have correct data for encryption = nopass with no password`, () => {
+        testComponent.type = `someDataNopass`;
+        fixture.detectChanges();
+        expect(component.ssid).toBe(`RandomWiWi`);
+        expect(component.password).toBe(undefined);
+        expect(component.encryption).toBe(`No encryption`);
+        const qr: MockQrCodeComponent = findChildFromDebugElement(
+            fixture.debugElement,
+            QR_COMPONENT_PATH
+        )?.componentInstance;
+        expect(qr).not.toBe(undefined);
+        expect(qr.text).toBe(`WIFI:S:RandomWiWi;T:nopass;;`);
+        expect(qr.edgeLength).toBe(450);
+    });
+
+    it(`should not have qr code for incorrect data`, () => {
+        testComponent.type = `wrongDataWEP`;
+        fixture.detectChanges();
+        expect(component.ssid).toBe(`RandomWiWi`);
+        expect(component.password).toBe(undefined);
+        expect(component.encryption).toBe(`WEP`);
+        const qr: MockQrCodeComponent = findChildFromDebugElement(
+            fixture.debugElement,
+            QR_COMPONENT_PATH
+        )?.componentInstance;
+        expect(qr).toBe(undefined);
+    });
+
     it(`should have correct data for no data`, () => {
         testComponent.type = `noData`;
         fixture.detectChanges();
         expect(component.ssid).toBe(undefined);
         expect(component.password).toBe(undefined);
         expect(component.encryption).toBe(undefined);
-        let qr: MockQrCodeComponent = findChildFromDebugElement(
+        const qr: MockQrCodeComponent = findChildFromDebugElement(
             fixture.debugElement,
             QR_COMPONENT_PATH
         )?.componentInstance;
@@ -199,7 +249,7 @@ describe(`WifiAccessDataSlideComponent`, () => {
         expect(component.ssid).toBe(`RandomWiWi\;\:`);
         expect(component.password).toBe(`Super&StrongP455Word\\\"`);
         expect(component.encryption).toBe(`WPA/WPA2`);
-        let qr: MockQrCodeComponent = findChildFromDebugElement(
+        const qr: MockQrCodeComponent = findChildFromDebugElement(
             fixture.debugElement,
             QR_COMPONENT_PATH
         )?.componentInstance;

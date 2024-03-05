@@ -1,14 +1,20 @@
-<os-head-bar [hasMainButton]="canEdit" [multiSelectMode]="isMultiSelect" (mainEvent)="onMainEvent()">
+<os-head-bar
+    [hasMainButton]="canEdit"
+    [mainActionTooltip]="'New file' | translate"
+    [multiSelectMode]="isMultiSelect"
+    (mainEvent)="onMainEvent()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Files' | translate }}</h2>
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button
             type="button"
             mat-icon-button
+            [matTooltip]="'New folder' | translate"
             (click)="createNewFolder(newFolderDialog)"
             *osPerms="permission.mediafileCanManage; and: !isMultiSelect"
         >
@@ -17,14 +23,13 @@
         <button type="button" mat-icon-button [matMenuTriggerFor]="mediafilesMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 
     <!-- Multiselect info -->
-    <div *ngIf="isMultiSelect" class="central-info-slot">
+    <ng-container class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span>
-        <span>{{ 'selected' | translate }}</span>
-    </div>
+        <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
+    </ng-container>
 </os-head-bar>
 
 <!-- the actual file manager -->
@@ -38,6 +43,7 @@
     [editFolderTemplate]="fileEditDialog"
     [fileMenuTemplate]="fileMenuTemplate"
     [shouldShowFileMenuFn]="shouldShowFileMenuFn"
+    [addBottomSpacer]="hasInteractionState | async"
     (directoryChanged)="changeDirectory($event.directoryId)"
     (beforeEditing)="onEditFile($event.file)"
     (saved)="onSaveFile($event.update)"
@@ -47,11 +53,11 @@
     <div
         *osScrollingTableCell="'info'; row as mediafile; config: { width: 200 }"
         class="fill clickable"
-        (click)="onEditFile(mediafile)"
+        (click)="triggerEdit(mediafile)"
     >
         <os-icon-container *ngIf="mediafile.access_groups.length" icon="group">
             <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
-                <ng-template let-group>{{ $any(group).getTitle() | translate }}</ng-template>
+                <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
             </os-comma-separated-listing>
         </os-icon-container>
     </div>
@@ -63,7 +69,7 @@
         <button class="visible-for" mat-button (click)="onEditFile(directory)">
             <os-icon-container icon="group" matTooltip="{{ 'Allowed access groups for this directory' | translate }}">
                 <os-comma-separated-listing [list]="directory.inherited_access_groups" [showElementsAmount]="3">
-                    <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                    <ng-template let-group>{{ group.getTitle() }}</ng-template>
                 </os-comma-separated-listing>
             </os-icon-container>
         </button>
@@ -159,23 +165,18 @@
     <div class="os-form-card-mobile" mat-dialog-content>
         <form class="edit-file-form" [formGroup]="fileEditForm!">
             <mat-form-field>
-                <input
-                    type="text"
-                    matInput
-                    osAutofocus
-                    required
-                    formControlName="title"
-                    placeholder="{{ 'New file name' | translate }}"
-                />
+                <mat-label>{{ 'New file name' | translate }}</mat-label>
+                <input type="text" matInput osAutofocus required formControlName="title" />
                 <mat-error *ngIf="fileEditForm?.invalid">{{ 'Required' | translate }}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
+                <mat-label>{{ 'Access groups' | translate }}</mat-label>
                 <os-list-search-selector
                     formControlName="access_group_ids"
                     [multiple]="true"
-                    placeholder="{{ 'Access groups' | translate }}"
                     [inputListValues]="groupsBehaviorSubject"
+                    [sortFn]="sortFn"
                 ></os-list-search-selector>
             </mat-form-field>
         </form>
@@ -203,15 +204,17 @@
         <form class="edit-file-form" [formGroup]="newDirectoryForm">
             <p>{{ 'Please enter a name for the new directory:' | translate }}</p>
             <mat-form-field>
-                <input matInput osAutofocus formControlName="title" placeholder="{{ 'Title' | translate }}" required />
+                <mat-label>{{ 'Title' | translate }}</mat-label>
+                <input matInput osAutofocus formControlName="title" required />
             </mat-form-field>
 
             <mat-form-field>
+                <mat-label>{{ 'Access groups' | translate }}</mat-label>
                 <os-list-search-selector
                     formControlName="access_group_ids"
                     [multiple]="true"
-                    placeholder="{{ 'Access groups' | translate }}"
                     [inputListValues]="groupsBehaviorSubject"
+                    [sortFn]="sortFn"
                 ></os-list-search-selector>
             </mat-form-field>
         </form>

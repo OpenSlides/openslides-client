@@ -1,4 +1,4 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 export type AssignmentPollMethodKey = keyof typeof AssignmentPollMethodVerbose;
 
@@ -17,5 +17,6 @@ export const AssignmentPollPercentBaseVerbose = {
     valid: _(`All valid ballots`),
     cast: _(`All casted ballots`),
     entitled: _(`All entitled users`),
+    entitled_present: _(`All present entitled users`),
     disabled: _(`Disabled (no percents)`)
 };

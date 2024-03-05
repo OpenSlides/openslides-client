@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
@@ -9,7 +9,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewMotion, ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ColumnRestriction } from 'src/app/ui/modules/list';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -52,7 +51,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
     /**
      * Value of the config variable `motions_show_sequential_numbers`
      */
-    public showSequential: boolean = false;
+    public showSequential = false;
 
     /**
      * The form to edit blocks
@@ -63,14 +62,13 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
     /**
      * Holds the block ID
      */
-    private _blockId: number = 0;
+    private _blockId = 0;
     private _dialogRef: MatDialogRef<MotionBlockEditDialogComponent, MotionBlock> | null = null;
 
     /**
      * Constructor for motion block details
      */
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         protected repo: MotionBlockControllerService,
@@ -81,7 +79,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
         public filterService: MotionBlockDetailFilterListService,
         public vp: ViewPortService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

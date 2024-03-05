@@ -83,6 +83,7 @@ export class ThemeRepositoryService extends BaseRepository<ViewTheme, Theme> {
         const payload = themes;
         return this.sendBulkActionToBackend(ThemeAction.CREATE, payload);
     }
+
     public update(update: any, id: Id): Promise<void> {
         const payload = {
             id,
@@ -90,6 +91,7 @@ export class ThemeRepositoryService extends BaseRepository<ViewTheme, Theme> {
         };
         return this.sendActionToBackend(ThemeAction.UPDATE, payload);
     }
+
     public delete(...ids: Id[]): Promise<void> {
         const payload = ids.map(id => ({ id }));
         return this.sendBulkActionToBackend(ThemeAction.DELETE, payload);

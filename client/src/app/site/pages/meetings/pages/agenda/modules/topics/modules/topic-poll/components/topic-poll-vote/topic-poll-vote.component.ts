@@ -1,19 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { VoteValue } from 'src/app/domain/models/poll';
 import {
     BasePollVoteComponent,
     PollVoteViewSettings,
     VoteOption
 } from 'src/app/site/pages/meetings/modules/poll/components/base-poll-vote/base-poll-vote.component';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewTopic } from '../../../../view-models';
@@ -31,17 +26,8 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> {
 
     public override readonly noDataLabel = _(`Text for this option couldn't load.`);
 
-    public constructor(
-        private promptService: PromptService,
-        operator: OperatorService,
-        votingService: VotingService,
-        cd: ChangeDetectorRef,
-        pollRepo: PollControllerService,
-        meetingSettingsService: MeetingSettingsService,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
-    ) {
-        super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
+    public constructor(private promptService: PromptService, meetingSettingsService: MeetingSettingsService) {
+        super(meetingSettingsService);
     }
 
     public getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
@@ -105,7 +91,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> {
         this.handleVotingMethodYOrN(maxVotesAmount, tmpVoteRequest, user);
     }
 
-    public handleVotingMethodYOrN(maxVotesAmount: number, tmpVoteRequest: {}, user: ViewUser = this.user) {
+    public handleVotingMethodYOrN(maxVotesAmount: number, tmpVoteRequest: any, user: ViewUser = this.user) {
         // check if you can still vote
         const countedVotes = Object.keys(tmpVoteRequest).filter(key => tmpVoteRequest[key]).length;
         if (countedVotes <= maxVotesAmount) {
@@ -122,7 +108,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> {
         }
     }
 
-    private getTMPVoteRequestYOrN(maxVotesAmount: number, optionId: number, user: ViewUser = this.user): {} {
+    private getTMPVoteRequestYOrN(maxVotesAmount: number, optionId: number, user: ViewUser = this.user): any {
         return this.poll.options
             .map(option => option.id)
             .reduce((o, n) => {

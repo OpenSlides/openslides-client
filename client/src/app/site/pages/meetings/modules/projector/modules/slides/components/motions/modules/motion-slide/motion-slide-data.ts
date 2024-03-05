@@ -12,6 +12,7 @@ export interface LeadMotionData {
     number: string;
     title: string;
     text: string;
+    start_line_number: number;
 }
 
 /**
@@ -60,6 +61,7 @@ export interface MotionSlideData extends MotionFormattingRepresentation {
     title: string;
     reason: string;
     submitters: string[];
+    additional_submitter: string;
     amendment_paragraphs: { [paragraphNumber: string]: string };
     lead_motion: LeadMotionData;
     base_statute: BaseStatuteData;

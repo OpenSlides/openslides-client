@@ -1,10 +1,9 @@
-<div class="input-container">
-    <div class="input-prefix">
+<div class="input-container" [ngClass]="{ 'has-submit': hasSubmit }">
+    <div *ngIf="!hasSubmit" class="input-prefix">
         <mat-icon class="foreground-active">search</mat-icon>
     </div>
     <input
         #osInput
-        [autofocus]="autofocus"
         [placeholder]="placeholder"
         class="rounded-input background-default"
         [ngClass]="[size, borderRadius, hasChildren ? 'children-bottom' : '']"
@@ -12,7 +11,17 @@
         (keyup)="keyPressed($event)"
         (blur)="blur()"
     />
-    <div *ngIf="!!contentForm.value" class="input-suffix foreground-icon" (mousedown)="clear($event)">
+    <div
+        *ngIf="!!contentForm.value"
+        class="input-suffix-clear foreground-icon"
+        [ngClass]="{ 'input-suffix-clear': hasSubmit, 'input-suffix': !hasSubmit }"
+        (mousedown)="clear($event)"
+    >
         <mat-icon>close</mat-icon>
+    </div>
+    <div class="input-suffix">
+        <button *ngIf="hasSubmit" mat-icon-button (click)="send()">
+            <mat-icon class="foreground-active">search</mat-icon>
+        </button>
     </div>
 </div>

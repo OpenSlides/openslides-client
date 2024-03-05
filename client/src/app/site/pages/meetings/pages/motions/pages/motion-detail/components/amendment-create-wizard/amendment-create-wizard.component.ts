@@ -7,7 +7,6 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -48,7 +47,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     /**
      * determine if we are in the amendment of amendment mode
      */
-    private isAmendmentOfAmendment: boolean = false;
+    private isAmendmentOfAmendment = false;
 
     /**
      * Change recommendation content.
@@ -63,19 +62,18 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     /**
      * Determine, from the config service, if a reason is required
      */
-    public reasonRequired: boolean = false;
+    public reasonRequired = false;
 
     /**
      * Indicates if an amendment can change multiple paragraphs or only one
      */
-    public multipleParagraphsAllowed: boolean = false;
+    public multipleParagraphsAllowed = false;
 
     public tinyMceConfig = MotionTinyMceConfig;
 
     private _parentMotionId: Id | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private formBuilder: UntypedFormBuilder,
         private repo: AmendmentControllerService,
@@ -85,7 +83,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
         private promptService: PromptService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.createForm();
     }
 
@@ -173,15 +171,16 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
             title: this.translate.instant(`Amendment to`) + ` ` + this.motion.getNumberOrTitle(),
             parent_id: this.motion.id,
             category_id: this.operator.hasPerms(Permission.motionCanManage) ? this.motion.category_id : undefined,
-            tag_ids: this.motion.tag_ids,
-            motion_block_id: this.motion.block_id,
             lead_motion_id: this.motion.id,
             amendment_paragraphs: amendmentParagraphs,
             workflow_id: this.meetingSettingsService.instant(`motions_default_amendment_workflow_id`)
         };
 
         const { sequential_number } = await this.repo.createParagraphBased(motionCreate);
-        this.router.navigate([this.activeMeetingId, `motions`, sequential_number]);
+        this.router.navigate([this.activeMeetingId, `motions`, sequential_number], {
+            replaceUrl: true,
+            state: { canGoBack: true }
+        });
     }
 
     /**

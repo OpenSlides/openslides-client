@@ -18,10 +18,12 @@ export class CallRestrictionService {
     public isJitsiActiveInAnotherTab: Observable<boolean> = this.storageMap
         .watch(RTC_LOGGED_STORAGE_KEY, { type: `boolean` })
         .pipe(distinctUntilChanged() as any);
+
     private userClosPosition = this.closService.currentListOfSpeakersObservable.pipe(
         map(los => los?.findUserIndexOnList(this.operator.operatorId!) ?? -1),
         distinctUntilChanged()
     );
+
     private amountNextSpeakerAutoConnect: Observable<number> = this.settingService.get(
         `conference_auto_connect_next_speakers`
     );

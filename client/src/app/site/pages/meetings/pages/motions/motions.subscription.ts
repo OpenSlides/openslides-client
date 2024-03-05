@@ -1,6 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
-import { UserFieldsets } from 'src/app/domain/fieldsets/user';
+import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
@@ -55,6 +55,7 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     `state_extension_reference_ids`,
                     `state_id`,
                     `submitter_ids`,
+                    `additional_submitter`,
                     `tag_ids`,
                     `title`
                 ],
@@ -67,7 +68,45 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                         follow: [
                             {
                                 idField: `meeting_user_id`,
-                                follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                                follow: [
+                                    {
+                                        idField: `user_id`,
+                                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                                    }
+                                ],
+                                ...MeetingUserFieldsets.FullNameSubscription
+                            }
+                        ]
+                    },
+                    {
+                        idField: `editor_ids`,
+                        fieldset: FULL_FIELDSET,
+                        follow: [
+                            {
+                                idField: `meeting_user_id`,
+                                follow: [
+                                    {
+                                        idField: `user_id`,
+                                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                                    }
+                                ],
+                                ...MeetingUserFieldsets.FullNameSubscription
+                            }
+                        ]
+                    },
+                    {
+                        idField: `working_group_speaker_ids`,
+                        fieldset: FULL_FIELDSET,
+                        follow: [
+                            {
+                                idField: `meeting_user_id`,
+                                follow: [
+                                    {
+                                        idField: `user_id`,
+                                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                                    }
+                                ],
+                                ...MeetingUserFieldsets.FullNameSubscription
                             }
                         ]
                     }
@@ -183,7 +222,13 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             { idField: `comment_ids`, fieldset: FULL_FIELDSET },
             {
                 idField: `supporter_meeting_user_ids`,
-                follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                follow: [
+                    {
+                        idField: `user_id`,
+                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                    }
+                ],
+                ...MeetingUserFieldsets.FullNameSubscription
             }
         ],
         fieldset: [
@@ -194,6 +239,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             `all_origin_ids`,
             `origin_meeting_id`,
             `derived_motion_ids`,
+            `identical_motion_ids`,
             `amendment_ids`,
             `amendment_paragraphs`
         ]
@@ -205,7 +251,7 @@ export const getMotionListMinimalSubscriptionConfig: SubscriptionConfigGenerator
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [{ idField: `motion_ids`, fieldset: [`title`, `meeting_id`, `sequential_number`] }]
+        follow: [{ idField: `motion_ids`, fieldset: [`title`, `meeting_id`, `sequential_number`, `number`] }]
     },
     subscriptionName: MOTION_LIST_MINIMAL_SUBSCRIPTION
 });

@@ -21,6 +21,7 @@ export interface TreeNodeWithoutItem extends TreeIdNode {
 export interface OSTreeNode<T> extends TreeNodeWithoutItem {
     item: T;
     children?: OSTreeNode<T>[];
+    toString: () => string;
 }
 
 /**
@@ -46,6 +47,7 @@ export type FlatNode<T> = T & {
     expandable: boolean;
     id: number;
     filtered?: boolean;
+    toString: () => string;
 };
 
 function isIdentifiedItemNode(obj: any): boolean {

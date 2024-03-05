@@ -28,7 +28,7 @@ export class ViewProjectorMessage extends BaseProjectableViewModel<ProjectorMess
         return PROJECTIONDEFAULT.projectorMessage;
     }
 
-    public getPreview(maxLength: number = 100): string {
+    public getPreview(maxLength = 100): string {
         const html = stripHtmlTags(this.message);
         if (html.length > maxLength) {
             return html.substring(0, maxLength) + ` ...`;

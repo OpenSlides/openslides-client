@@ -1,4 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
+import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
@@ -81,7 +83,14 @@ export const getParticipantMinimalSubscriptionConfig: SubscriptionConfigGenerato
             {
                 idField: `meeting_user_ids`,
                 fieldset: `participantListMinimal`,
-                follow: [{ idField: `user_id`, fieldset: `participantListMinimal` }]
+                follow: [
+                    {
+                        idField: `user_id`,
+                        fieldset: `participantListMinimal`,
+                        additionalFields: [`is_present_in_meeting_ids`]
+                    },
+                    { idField: `structure_level_ids`, fieldset: [`name`] }
+                ]
             }
         ]
     },
@@ -103,4 +112,74 @@ export const getParticipantDetailSubscription: SubscriptionConfigGenerator = (id
         ]
     },
     subscriptionName: PARTICIPANT_DETAIL_SUBSCRIPTION
+});
+
+export const STRUCTURE_LEVEL_LIST_SUBSCRIPTION = `structure_level_list`;
+
+export const getStructureLevelListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        follow: [
+            {
+                idField: `structure_level_ids`,
+                fieldset: DEFAULT_FIELDSET
+            }
+        ]
+    },
+    subscriptionName: STRUCTURE_LEVEL_LIST_SUBSCRIPTION
+});
+
+export const SPEAKERS_LIST_SUBSCRIPTION = `speakers_list`;
+
+export const getSpeakersListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        follow: [
+            {
+                idField: `speaker_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    {
+                        idField: `meeting_user_id`,
+                        follow: [
+                            {
+                                idField: `user_id`,
+                                ...UserFieldsets.FullNameSubscription
+                            }
+                        ],
+                        ...MeetingUserFieldsets.FullNameSubscription
+                    },
+                    {
+                        idField: `structure_level_list_of_speakers_id`,
+                        fieldset: [],
+                        follow: [
+                            {
+                                idField: `structure_level_id`,
+                                fieldset: [`name`]
+                            }
+                        ]
+                    },
+                    {
+                        idField: `list_of_speakers_id`,
+                        fieldset: [`speaker_ids`, `closed`, ...MEETING_ROUTING_FIELDS],
+                        follow: [
+                            {
+                                idField: `content_object_id`,
+                                fieldset: [`title`, `list_of_speakers_id`, ...MEETING_ROUTING_FIELDS],
+                                follow: [
+                                    {
+                                        idField: `agenda_item_id`,
+                                        fieldset: [`item_number`, `content_object_id`]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    subscriptionName: SPEAKERS_LIST_SUBSCRIPTION
 });

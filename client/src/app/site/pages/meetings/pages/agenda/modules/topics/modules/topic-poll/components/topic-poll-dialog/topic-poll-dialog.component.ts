@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { Validators } from '@angular/forms';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Selectable } from 'src/app/domain/interfaces';
@@ -80,13 +80,8 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
         return super.formsValid;
     }
 
-    constructor(
-        formBuilder: UntypedFormBuilder,
-        dialogRef: MatDialogRef<BasePollDialogComponent>,
-        public topicPollService: TopicPollService,
-        @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewTopic>
-    ) {
-        super(dialogRef, pollData, formBuilder);
+    constructor(public topicPollService: TopicPollService, @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewTopic>) {
+        super(pollData);
         this.optionTypeText = true;
     }
 
@@ -236,7 +231,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
         return true;
     }
 
-    public scrolled(event: any): void {
+    public scrolled(_e: any): void {
         this.isNearBottom = this.isUserNearBottom();
     }
 }

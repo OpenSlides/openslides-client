@@ -1,23 +1,17 @@
 import { Directive, OnInit, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import {
     BackendImportListComponent,
     BackendImportPhase
 } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 
-import { Identifiable } from '../../domain/interfaces';
 import { getLongPreview, getShortPreview } from '../../infrastructure/utils';
-import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { BaseBackendImportService } from './base-import.service/base-backend-import.service';
 
 @Directive()
-export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
-    extends BaseComponent
-    implements OnInit
-{
+export abstract class BaseViaBackendImportListComponent extends BaseComponent implements OnInit {
     @ViewChild(BackendImportListComponent)
-    private list: BackendImportListComponent<M>;
+    private list: BackendImportListComponent;
 
     /**
      * Helper function for previews
@@ -33,7 +27,7 @@ export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
      * True if the import is in a state in which an import can be conducted
      */
     public get canImport(): boolean {
-        return this._state === BackendImportPhase.AWAITING_CONFIRM || this.tryAgain;
+        return this._state === BackendImportPhase.AWAITING_CONFIRM;
     }
 
     /**
@@ -46,8 +40,8 @@ export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
     /**
      * True if, after an attempted import failed, the view is waiting for the user to confirm the import on the new preview.
      */
-    public get tryAgain(): boolean {
-        return this._state === BackendImportPhase.TRY_AGAIN;
+    public get finishedWithWarnings(): boolean {
+        return this._state === BackendImportPhase.FINISHED_WITH_WARNING;
     }
 
     /**
@@ -66,12 +60,8 @@ export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
 
     private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
 
-    public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected importer: BaseBackendImportService<M>
-    ) {
-        super(componentServiceCollector, translate);
+    public constructor(protected importer: BaseBackendImportService) {
+        super();
     }
 
     public ngOnInit(): void {

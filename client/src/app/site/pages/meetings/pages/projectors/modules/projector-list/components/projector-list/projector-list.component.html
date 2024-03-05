@@ -1,4 +1,9 @@
-<os-head-bar [nav]="true" [hasMainButton]="canManage" (mainEvent)="createNewProjector(projectorDialog)">
+<os-head-bar
+    [nav]="true"
+    [hasMainButton]="canManage"
+    [mainActionTooltip]="'New projector' | translate"
+    (mainEvent)="createNewProjector(projectorDialog)"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Projectors' | translate }}</h2>
@@ -8,13 +13,14 @@
 <!-- Create projector dialog -->
 <ng-template #projectorDialog>
     <h1 mat-dialog-title>
-        <span>{{ 'New Projector' | translate }}</span>
+        <span>{{ 'New projector' | translate }}</span>
     </h1>
 
     <form [formGroup]="createForm">
         <div mat-dialog-content>
             <mat-form-field>
-                <input formControlName="name" matInput placeholder="{{ 'Name' | translate }}" required />
+                <mat-label>{{ 'Name' | translate }}</mat-label>
+                <input formControlName="name" matInput required />
                 <mat-error>
                     <span>{{ 'Required' | translate }}</span>
                 </mat-error>
@@ -37,8 +43,7 @@
         </div>
     </form>
 </ng-template>
-
-<div id="card-wrapper">
+<div id="card-wrapper" class="spacer-bottom-60">
     <div class="projector-card" *ngFor="let projector of projectors | async; trackBy: trackByIndex">
         <os-projector-list-entry [projector]="projector"></os-projector-list-entry>
     </div>

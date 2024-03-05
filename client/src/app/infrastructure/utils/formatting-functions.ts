@@ -24,7 +24,7 @@ export function formatWiFiConfig(ssid: string, encryption: string, password?: st
 }
 
 function escapeSpecialCharactersForWiFiConfig(text: string): string {
-    for (let symbol of [`\\`, `;`, `,`, `"`, `:`]) {
+    for (const symbol of [`\\`, `;`, `,`, `"`, `:`]) {
         text = text.split(symbol).join(`\\${symbol}`);
     }
     return text;

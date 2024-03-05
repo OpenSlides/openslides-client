@@ -1,0 +1,111 @@
+<os-head-bar>
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Contributions' | translate }}</h2>
+    </div>
+
+    <!-- Menu -->
+    <ng-container class="menu-slot">
+        <button type="button" mat-icon-button [matMenuTriggerFor]="speakerMenu"><mat-icon>more_vert</mat-icon></button>
+    </ng-container>
+</os-head-bar>
+
+<os-list
+    [listObservableProvider]="repo"
+    [filterService]="filterService"
+    [sortService]="sortService"
+    [filterProps]="filterProps"
+    [addBottomSpacer]="hasInteractionState | async"
+    [(selectedRows)]="selectedRows"
+>
+    <!-- Name column -->
+    <div *osScrollingTableCell="'short_name'; row as speaker; rowContext as rowContext" class="cell-slot fill">
+        <div class="nameCell">
+            <div>
+                <div class="flex-vertical-center">
+                    <div>{{ speaker?.getLOSName((structureLevelCountdownEnabled | async) === false) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *osScrollingTableCell="'info'; row as speaker; config: { width: 200 }" class="cell-slot fill">
+        <div class="infoCell">
+            <div *ngIf="speaker.list_of_speakers?.content_object" class="spacer-top-5">
+                <os-icon-container [icon]="getSpeakerIcon(speaker)">
+                    {{ speaker.topic }}
+                </os-icon-container>
+            </div>
+            <div *ngIf="speaker.point_of_order" class="spacer-top-5">
+                <os-icon-container icon="warning" translate>Point of order</os-icon-container>
+            </div>
+
+            <!-- Pro Speech -->
+            <div *ngIf="speaker.speech_state === SpeechState.PRO" class="spacer-top-5">
+                <os-icon-container icon="add_circle">
+                    {{ 'Forspeech' | translate }}
+                </os-icon-container>
+            </div>
+
+            <!-- Contra Speech -->
+            <div *ngIf="speaker.speech_state === SpeechState.CONTRA" class="spacer-top-5">
+                <os-icon-container icon="remove_circle">
+                    {{ 'Counter speech' | translate }}
+                </os-icon-container>
+            </div>
+
+            <!-- Marked -->
+            <div *ngIf="speaker.speech_state === SpeechState.CONTRIBUTION" class="spacer-top-5">
+                <os-icon-container icon="star">
+                    {{ 'Contribution' | translate }}
+                </os-icon-container>
+            </div>
+
+            <!-- Interposed question -->
+            <div *ngIf="speaker.speech_state === SpeechState.INTERPOSED_QUESTION" class="spacer-top-5">
+                <os-icon-container icon="help">
+                    {{ 'Interposed question' | translate }}
+                </os-icon-container>
+            </div>
+
+            <!-- Intervention -->
+            <div *ngIf="speaker.speech_state === SpeechState.INTERVENTION" class="spacer-top-5">
+                <os-icon-container icon="error">
+                    {{ 'Intervention' | translate }}
+                </os-icon-container>
+            </div>
+
+            <div *ngIf="speaker.end_time" class="spacer-top-5">
+                <os-icon-container icon="schedule" translate>
+                    <os-countdown-time
+                        [unstyled]="true"
+                        [countdown]="{ running: false, countdown_time: speaker.speakingTime }"
+                    ></os-countdown-time>
+                </os-icon-container>
+            </div>
+        </div>
+    </div>
+
+    <!-- Speaker -->
+    <div
+        *osScrollingTableCell="
+            'speaker';
+            row as speaker;
+            rowContext as rowContext;
+            config: { width: 60, position: END_POSITION }
+        "
+        class="fill"
+    >
+        <os-speaker-button
+            *ngIf="speaker.list_of_speakers"
+            [object]="speaker.list_of_speakers.content_object"
+        ></os-speaker-button>
+    </div>
+</os-list>
+
+<mat-menu #speakerMenu="matMenu">
+    <button mat-menu-item *osPerms="permission.userCanManage" (click)="csvExportSpeakerList()">
+        <mat-icon>archive</mat-icon>
+        <span>{{ 'Export as CSV' | translate }}</span>
+    </button>
+</mat-menu>

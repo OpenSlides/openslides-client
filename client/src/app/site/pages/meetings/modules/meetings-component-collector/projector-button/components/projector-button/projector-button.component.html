@@ -4,7 +4,7 @@
         mat-mini-fab
         (click)="onClick($event)"
         [disabled]="disabled"
-        [ngClass]="{ 'projector-inactive': !isProjected() }"
+        [ngClass]="{ 'projector-inactive': !isProjected }"
     >
         <ng-container *ngTemplateOutlet="content"></ng-container>
     </button>
@@ -22,7 +22,7 @@
         mat-menu-item
         (click)="onClick()"
         [disabled]="disabled"
-        [ngClass]="{ 'projector-inactive': !isProjected() }"
+        [ngClass]="{ 'projector-inactive': !isProjected }"
     >
         <ng-container *ngTemplateOutlet="content"></ng-container>
     </button>

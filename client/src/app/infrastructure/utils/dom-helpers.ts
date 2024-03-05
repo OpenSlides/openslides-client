@@ -27,7 +27,7 @@ export function replaceHtmlEntities(html: string): string {
  * @param {boolean} last If true returns the last occurrence instead of the first
  * @returns {Element | null}
  */
-export function getNodeByName(node: Node, searchName: string, last: boolean = false): Element | null {
+export function getNodeByName(node: Node, searchName: string, last = false): Element | null {
     if (node.nodeType === Node.TEXT_NODE) {
         return null;
     }

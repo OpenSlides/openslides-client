@@ -25,8 +25,8 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
 
     public currentCommitteeObservable: Observable<ViewCommittee | null> | null = null;
 
-    public receiveExpanded: boolean = false;
-    public forwardingExpanded: boolean = false;
+    public receiveExpanded = false;
+    public forwardingExpanded = false;
 
     public get canManageMeetingsInCommittee(): boolean {
         return this.operator.hasCommitteePermissionsNonAdminCheck(this.committeeId, CML.can_manage);
@@ -72,6 +72,10 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
 
     public isOrgaAdmin(): boolean {
         return this.operator.isOrgaManager;
+    }
+
+    public isSuperAdmin(): boolean {
+        return this.operator.isSuperAdmin;
     }
 
     public canAccessCommittee(committee: Committee): boolean {

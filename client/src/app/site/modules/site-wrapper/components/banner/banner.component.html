@@ -1,18 +1,20 @@
-<div
-    *ngFor="let banner of activeBanners | async"
-    class="banner flex-center background-accent"
-    [ngClass]="[banner.class ? banner.class : '', banner.largerOnMobileView ? 'larger-on-mobile' : '']"
->
-    <ng-container *ngIf="banner.component">
-        <ng-template [cdkPortalOutlet]="createComponentPortal(banner.component)"></ng-template>
-    </ng-container>
-    <ng-container *ngIf="!banner.component">
-        <a class="banner-link" [routerLink]="banner.link" [style.cursor]="banner.link ? 'pointer' : 'default'">
-            <mat-icon>{{ banner.icon }}</mat-icon>
-            <span>{{ banner.text | translate }}</span>
-            <div *ngIf="banner.subText">
-                {{ banner.subText | translate }}
-            </div>
-        </a>
-    </ng-container>
+<div osResized (osResizedHeight)="registerBannerHeight($event)">
+    <div
+        *ngFor="let banner of activeBanners | async"
+        class="banner flex-center background-accent"
+        [ngClass]="[banner.class ? banner.class : '', banner.largerOnMobileView ? 'larger-on-mobile' : '']"
+    >
+        <ng-container *ngIf="banner.component">
+            <ng-template [cdkPortalOutlet]="createComponentPortal(banner.component)"></ng-template>
+        </ng-container>
+        <ng-container *ngIf="!banner.component">
+            <a class="banner-link" [routerLink]="banner.link" [style.cursor]="banner.link ? 'pointer' : 'default'">
+                <mat-icon>{{ banner.icon }}</mat-icon>
+                <span>{{ banner.text | translate }}</span>
+                <div *ngIf="banner.subText">
+                    {{ banner.subText | translate }}
+                </div>
+            </a>
+        </ng-container>
+    </div>
 </div>

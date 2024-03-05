@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PasswordForm, PasswordFormComponent } from 'src/app/site/modules/user-components';
@@ -8,6 +8,7 @@ import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { AuthService } from 'src/app/site/services/auth.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -22,8 +23,6 @@ enum MenuItems {
     SHOW_PROFILE = `My profile`,
     SHOW_MEETINGS = `My meetings`
 }
-
-const PERSONAL_PERMISSIONS = [`seePersonal`, `seeName`, `changePersonal`];
 
 @Component({
     selector: `os-account-dialog`,
@@ -92,7 +91,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     public userPasswordForm!: PasswordForm;
 
     private _self: ViewUser | null = null;
-    private _isUserInScope: boolean = false;
+    private _isUserInScope = false;
     private _isEditing = false;
 
     public constructor(
@@ -102,6 +101,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         private meetingRepo: MeetingControllerService,
         private userService: UserService,
         private snackbar: MatSnackBar,
+        private authService: AuthService,
         private translate: TranslateService
     ) {
         super();
@@ -152,10 +152,23 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
 
     public async changePassword(): Promise<void> {
         const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
-        this.repo.setPasswordSelf(this.self!, oldPassword, newPassword).then(() => {
-            this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
-            this.changePasswordComponent.reset();
-        });
+
+        this.authService
+            .invalidateSessionAfter(() => this.repo.setPasswordSelf(this.self!, oldPassword, newPassword))
+            .then(() => {
+                this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
+                this.changePasswordComponent.reset();
+                this.dialogRef.close();
+            })
+            .catch(e => {
+                if (e?.message) {
+                    this.snackbar.open(this.translate.instant(e.message), this.translate.instant(`OK`), {
+                        duration: 0
+                    });
+                }
+
+                console.log(e);
+            });
     }
 
     public async saveUserChanges(): Promise<void> {
@@ -171,6 +184,8 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     }
 
     private async updateIsUserInScope(): Promise<void> {
-        this._isUserInScope = await this.userService.hasScopeManagePerms(this.operator.operatorId);
+        if (this.operator.operatorId !== null) {
+            this._isUserInScope = await this.userService.hasScopeManagePerms(this.operator.operatorId);
+        }
     }
 }

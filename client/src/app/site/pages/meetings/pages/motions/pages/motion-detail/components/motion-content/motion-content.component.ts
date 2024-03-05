@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, map, Subscription } from 'rxjs';
@@ -20,8 +20,8 @@ import {
 } from 'src/app/site/pages/meetings/pages/motions';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
+import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
@@ -29,7 +29,6 @@ import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-ch
 import { MotionTinyMceConfig } from '../../definitions/tinymce-config';
 import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 
 /**
  * fields that are required for the motion form but are not part of any motion payload
@@ -49,7 +48,9 @@ interface MotionFormFields {
     workflow_id: Id;
 }
 
-type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any };
+type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any } & {
+    supporter_user_ids?: any;
+};
 
 @Component({
     selector: `os-motion-content`,
@@ -147,7 +148,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
     private titleFieldUpdateSubscription: Subscription;
-    private textFieldUpdateSubscription: Subscription;
 
     private _canSaveParagraphBasedAmendment = true;
     private _paragraphBasedAmendmentContent: any = {};
@@ -159,17 +159,16 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     private _motionNumbersSubject = new BehaviorSubject<string[]>([]);
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private fb: UntypedFormBuilder,
         private dialog: MotionChangeRecommendationDialogService,
         private route: ActivatedRoute,
         private cd: ChangeDetectorRef,
         private perms: MotionPermissionService,
-        private motionController: MotionControllerService
+        private motionController: MotionControllerService,
+        public participantSortService: ParticipantListSortService
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
         this.motionController
             .getViewModelListObservable()
             .subscribe(motions => this.updateMotionNumbersSubject(motions));
@@ -190,9 +189,9 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     /**
      * If the checkbox is deactivated, the statute_paragraph_id-field needs to be reset, as only that field is saved
      *
-     * @param {MatCheckboxChange} $event
+     * @param {MatCheckboxChange} _event
      */
-    public onStatuteAmendmentChange($event: MatCheckboxChange): void {
+    public onStatuteAmendmentChange(_event: MatCheckboxChange): void {
         this.contentForm.patchValue({
             statute_paragraph_id: null,
             workflow_id: this.getWorkflowIdForCreateFormByParagraph()
@@ -488,8 +487,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             attachment_ids: [[]],
             agenda_parent_id: [],
             submitter_ids: [[]],
-            supporter_meeting_user_ids: [[]],
-            workflow_id: [],
+            supporter_user_ids: [[]],
+            workflow_id: [+this.meetingSettingService.instant(`motions_default_workflow_id`)],
             tag_ids: [[]],
             statute_amendment: [``], // Internal value for the checkbox, not saved to the model
             statute_paragraph_id: [],

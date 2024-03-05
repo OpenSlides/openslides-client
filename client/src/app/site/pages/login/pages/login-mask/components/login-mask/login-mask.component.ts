@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Observable, Subscription } from 'rxjs';
 import { fadeInAnim } from 'src/app/infrastructure/animations';
@@ -14,7 +14,6 @@ import { AuthService } from 'src/app/site/services/auth.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
-import { MeetingComponentServiceCollectorService } from '../../../../../meetings/services/meeting-component-service-collector.service';
 import { BrowserSupportService } from '../../../../services/browser-support.service';
 
 const HTTP_WARNING = _(`Using OpenSlides over HTTP is not supported. Enable HTTPS to continue.`);
@@ -45,7 +44,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     /**
      * Show or hide password and change the indicator accordingly
      */
-    public hide: boolean = false;
+    public hide = false;
 
     public loginAreaExpanded = false;
 
@@ -54,7 +53,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     /**
      * Reference to the SnackBarEntry for the installation notice send by the server.
      */
-    public installationNotice: string = ``;
+    public installationNotice = ``;
 
     /**
      * Login Error Message if any
@@ -91,7 +90,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     private currentMeetingId: number | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private authService: AuthService,
         private operator: OperatorService,
@@ -101,7 +99,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         private orgaSettings: OrganizationSettingsService,
         private browserSupport: BrowserSupportService // private spinnerService: SpinnerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         // Hide the spinner if the user is at `login-mask`
         this.loginForm = this.createForm();
     }

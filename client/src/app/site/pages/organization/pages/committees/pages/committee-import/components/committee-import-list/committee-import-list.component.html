@@ -5,67 +5,14 @@
     </div>
 
     <div class="menu-slot">
-        <button *ngIf="canImport" mat-button (click)="doImport()" [disabled]="!isImportValid || isImportStarted">
+        <button *ngIf="canImport" mat-button (click)="doImport()">
             <span class="upper">{{ 'Import' | translate }}</span>
         </button>
     </div>
 </os-head-bar>
-<os-import-list
+<os-backend-import-list
     modelName="Committees"
     [importer]="importer"
     [possibleFields]="possibleFields"
-    [columns]="columns"
-    [rowHeight]="56"
->
-    <ng-template osImportListViewStatusTemplate let-row="row">
-        <div *ngIf="row.status === 'merge'">
-            <mat-icon matTooltip="{{ ('Committees' | translate) + ' ' + ('will be referenced' | translate) }}">
-                merge_type
-            </mat-icon>
-        </div>
-    </ng-template>
-
-    <div
-        *osScrollingTableCell="'name'; row as row; config: { width: 250 }"
-        class="one-line"
-        [matTooltip]="row.newEntry.name"
-    >
-        <div *osScrollingTableCellLabel>{{ 'Title' | translate }}</div>
-        <div class="one-line">
-            {{ row.newEntry.name }}
-        </div>
-        <div class="subtitle">
-            <div class="one-line">
-                {{ row.newEntry.description }}
-            </div>
-            <div *ngIf="row.newEntry.organization_tag_ids" class="one-line flex-vertical-center">
-                <mat-icon class="icon-14">local_offer</mat-icon>
-                <div class="margin-left-4 margin-right-4">
-                    <span *ngFor="let tag of row.newEntry.organization_tag_ids | toArray; let last = last">
-                        {{ tag.name }}
-                        <mat-icon class="newBadge" color="accent" inline *ngIf="!tag.id">add</mat-icon>
-                        &nbsp;
-                        <span *ngIf="!last">;&nbsp;</span>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div *osScrollingTableCell="'meeting'; row as row; config: { width: 250 }" class="one-line">
-        <div *osScrollingTableCellLabel>{{ 'Meeting' | translate }}</div>
-        <div class="one-line">
-            <span *ngFor="let meeting of row.model.meeting | toArray; let last = last">
-                {{ meeting.name }}
-                <mat-icon class="newBadge" color="accent" inline *ngIf="meeting.willBeCreated">add</mat-icon>
-                &nbsp;
-                <span *ngIf="!last">,&nbsp;</span>
-            </span>
-        </div>
-        <div class="subtitle">
-            <os-meeting-time
-                [startTime]="row.newEntry.meeting_start_date"
-                [endTime]="row.newEntry.meeting_end_date"
-            ></os-meeting-time>
-        </div>
-    </div>
-</os-import-list>
+    [defaultColumns]="columns"
+></os-backend-import-list>

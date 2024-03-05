@@ -1,6 +1,21 @@
 @import 'src/assets/styles/media-queries.scss';
 @import 'src/assets/styles/fonts.scss';
 
+#countdown {
+    white-space: nowrap;
+    font-family: $font-monospace;
+
+    &.warning-time {
+        $color: #ed940e;
+        color: $color;
+    }
+
+    &.negative-time {
+        $color: #c00;
+        color: $color;
+    }
+}
+
 .countdown-time-wrapper {
     $margin: 50px;
     display: flex;
@@ -48,7 +63,7 @@
     }
 
     .countdown-wrapper {
-        width: 170px;
+        min-width: 170px;
         text-align: right !important;
         position: relative;
         height: 100%;
@@ -69,7 +84,7 @@
         #countdown {
             white-space: nowrap;
             font-family: $font-monospace;
-            font-weight: bold;
+            font-weight: 800;
             text-align: center;
         }
     }

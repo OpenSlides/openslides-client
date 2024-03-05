@@ -3,21 +3,22 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { ChipSelectModule } from 'src/app/site/modules/chip-select/chip-select.module';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
@@ -25,9 +26,11 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { ActionCardModule } from 'src/app/ui/modules/action-card';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
+import { DatepickerModule } from 'src/app/ui/modules/datepicker';
 import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { OpenSlidesDateAdapterModule } from 'src/app/ui/modules/openslides-date-adapter/openslides-date-adapter.module';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { SortingModule } from 'src/app/ui/modules/sorting';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
@@ -53,8 +56,9 @@ import { MotionDetailViewComponent } from './components/motion-detail-view/motio
 import { MotionExtensionFieldComponent } from './components/motion-extension-field/motion-extension-field.component';
 import { MotionFinalVersionComponent } from './components/motion-final-version/motion-final-version.component';
 import { MotionHighlightFormComponent } from './components/motion-highlight-form/motion-highlight-form.component';
+import { MotionManageMotionMeetingUsersComponent } from './components/motion-manage-motion-meeting-users/motion-manage-motion-meeting-users.component';
 import { MotionManagePollsComponent } from './components/motion-manage-polls/motion-manage-polls.component';
-import { MotionManageSubmittersComponent } from './components/motion-manage-submitters/motion-manage-submitters.component';
+import { MotionManageTimestampComponent } from './components/motion-manage-timestamp/motion-manage-timestamp.component';
 import { MotionManageTitleComponent } from './components/motion-manage-title/motion-manage-title.component';
 import { MotionMetaDataComponent } from './components/motion-meta-data/motion-meta-data.component';
 import { MotionParagraphbasedAmendmentComponent } from './components/motion-paragraphbased-amendment/motion-paragraphbased-amendment.component';
@@ -77,7 +81,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MotionManagePollsComponent,
         MotionHighlightFormComponent,
         MotionExtensionFieldComponent,
-        MotionManageSubmittersComponent,
+        MotionManageMotionMeetingUsersComponent,
         MotionParagraphbasedAmendmentComponent,
         MotionDetailDiffComponent,
         MotionDetailDiffSummaryComponent,
@@ -86,7 +90,8 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MotionPersonalNoteComponent,
         MotionCommentComponent,
         MotionFinalVersionComponent,
-        ParagraphBasedAmendmentComponent
+        ParagraphBasedAmendmentComponent,
+        MotionManageTimestampComponent
     ],
     imports: [
         CommonModule,
@@ -129,6 +134,9 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MatInputModule,
         MatProgressBarModule,
         ParticipantSearchSelectorModule,
+        OpenSlidesDateAdapterModule,
+        NgxMaterialTimepickerModule,
+        DatepickerModule,
 
         // Detail view
         ScrollingModule,

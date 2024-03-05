@@ -6,10 +6,16 @@
 
     <div class="menu-slot">
         <button *ngIf="canImport" mat-button (click)="doImport()">
-            <span class="upper">{{ tryAgain ? 'Try again' : ('Import' | translate) }}</span>
+            <span class="upper">{{ 'Import' | translate }}</span>
         </button>
         <div *ngIf="finishedSuccessfully || hasErrors" style="padding-top: 6px">
             <mat-icon *ngIf="finishedSuccessfully" matTooltip="{{ 'Import successful' | translate }}">done</mat-icon>
+            <mat-icon
+                *ngIf="finishedWithWarnings"
+                matTooltip="{{ 'Import successful with some warnings' | translate }}"
+            >
+                done
+            </mat-icon>
             <mat-icon *ngIf="hasErrors" matTooltip="{{ 'Can not import because of errors' | translate }}">
                 block
             </mat-icon>
@@ -34,11 +40,11 @@
                     <div>{{ 'Keep each item in a single line.' | translate }}</div>
                 </div>
                 <mat-form-field>
+                    <mat-label>{{ 'Insert topics here' | translate }}</mat-label>
                     <textarea
                         matInput
                         osAutofocus
                         formControlName="inputtext"
-                        placeholder="{{ 'Insert topics here' | translate }}"
                         cdkTextareaAutosize
                         cdkAutosizeMinRows="3"
                         cdkAutosizeMaxRows="10"

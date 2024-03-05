@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, Observable } from 'rxjs';
 import { fadeInAnim, fadeInOutAnim } from 'src/app/infrastructure/animations';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { ApplauseService } from '../../../../services/applause.service';
 import { CallRestrictionService } from '../../../../services/call-restriction.service';
@@ -59,14 +58,13 @@ export class ActionBarComponent extends BaseMeetingComponent {
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private callRestrictionService: CallRestrictionService,
         private interactionService: InteractionService,
         private rtcService: RtcService,
         private applauseService: ApplauseService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public async enterConferenceRoom(): Promise<void> {

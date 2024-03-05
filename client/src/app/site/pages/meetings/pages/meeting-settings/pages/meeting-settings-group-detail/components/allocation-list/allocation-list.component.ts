@@ -150,7 +150,7 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
     public writeValue(obj: any): void {
         this.deletedIds = [];
         if (Array.isArray(obj)) {
-            for (let entry of obj) {
+            for (const entry of obj) {
                 if (!isAllocationBox(entry)) {
                     console.warn(`Allocation list received data in wrong format`);
                     continue;
@@ -158,7 +158,7 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
                 this.addNewAllocationInternal(entry.entry, entry.allocation, false, entry.id);
             }
         } else if (obj) {
-            for (let key of Object.keys(obj)) {
+            for (const key of Object.keys(obj)) {
                 this.addNewAllocationInternal(key, obj[key], false);
             }
         }
@@ -187,16 +187,16 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
     /**
      * To satisfy the interface.
      *
-     * @param fn
+     * @param _fn
      */
-    public registerOnTouched(fn: any): void {}
+    public registerOnTouched(_fn: any): void {}
 
     /**
      * To satisfy the interface
      *
-     * @param isDisabled
+     * @param _isDisabled
      */
-    public setDisabledState?(isDisabled: boolean): void {}
+    public setDisabledState?(_isDisabled: boolean): void {}
 
     /**
      * Removes a custom allocation
@@ -218,7 +218,7 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
      * @param entry The string to for which the allocation is made.
      * @param allocation The allocation value for the given string.
      */
-    public async addNewAllocation(entry: string = ``, allocation: string | number = ``): Promise<void> {
+    public async addNewAllocation(entry = ``, allocation: string | number = ``): Promise<void> {
         await this.addNewAllocationInternal(entry, allocation, true);
     }
 

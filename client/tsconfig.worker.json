@@ -3,6 +3,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/worker",
+    "skipLibCheck": true,
     "lib": [
       "es2018",
       "webworker"

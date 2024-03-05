@@ -33,7 +33,7 @@ export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepositor
 
     public getTitle = (viewMotionWorkflow: ViewMotionWorkflow) => viewMotionWorkflow.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Workflows` : `Workflow`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Workflows` : `Workflow`);
 
     public create(partialModel: Partial<MotionWorkflow>): Promise<Identifiable> {
         const payload = {

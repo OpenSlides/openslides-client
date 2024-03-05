@@ -2,6 +2,7 @@
     <os-head-bar
         [hasMainButton]="isAllowed('edit') && !!topic"
         mainButtonIcon="edit"
+        [mainActionTooltip]="'Edit' | translate"
         [nav]="false"
         [goBack]="true"
         [editMode]="editTopic"
@@ -38,11 +39,11 @@
         [ngClass]="editTopic ? 'os-form-card' : 'os-card'"
     >
         <ng-container *ngIf="!editTopic && topic">
-            <os-projectable-title [model]="topic"></os-projectable-title>
+            <os-projectable-title [model]="topic" [getTitleFn]="getTitleFn"></os-projectable-title>
             <div>
                 <span *ngIf="topic.text">
                     <!-- Render topic text as HTML -->
-                    <div [innerHTML]="topic.text | trust : 'html'"></div>
+                    <div class="underlined-links" [innerHTML]="topic.text | trust : 'html'"></div>
                 </span>
             </div>
 
@@ -62,14 +63,8 @@
         <form *ngIf="editTopic && topicForm" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
             <div>
                 <mat-form-field>
-                    <input
-                        type="text"
-                        matInput
-                        osAutofocus
-                        required
-                        formControlName="title"
-                        placeholder="{{ 'Title' | translate }}"
-                    />
+                    <mat-label>{{ 'Title' | translate }}</mat-label>
+                    <input type="text" matInput osAutofocus required formControlName="title" />
                     <mat-error *ngIf="topicForm!.invalid">{{ 'A name is required' | translate }}</mat-error>
                 </mat-form-field>
             </div>
@@ -87,7 +82,8 @@
                 <!-- Visibility -->
                 <div>
                     <mat-form-field>
-                        <mat-select formControlName="agenda_type" placeholder="{{ 'Agenda visibility' | translate }}">
+                        <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
+                        <mat-select formControlName="agenda_type">
                             <mat-option *ngFor="let type of itemVisibility" [value]="type.key">
                                 <span>{{ type.name | translate }}</span>
                             </mat-option>
@@ -98,10 +94,10 @@
                 <!-- Parent item -->
                 <div>
                     <mat-form-field>
+                        <mat-label>{{ 'Parent agenda item' | translate }}</mat-label>
                         <os-list-search-selector
                             formControlName="agenda_parent_id"
                             [includeNone]="true"
-                            placeholder="{{ 'Parent agenda item' | translate }}"
                             [inputListValues]="itemObserver"
                         ></os-list-search-selector>
                     </mat-form-field>
@@ -110,7 +106,7 @@
         </form>
     </mat-card>
 
-    <div *ngIf="!editTopic">
+    <div *ngIf="!editTopic" class="spacer-bottom-60">
         <ng-container *ngIf="topic && topic.poll_ids?.length">
             <ng-container *ngFor="let poll of topic.poll_ids | reverse; trackBy: trackById">
                 <os-topic-poll [pollId]="poll" (dialogOpened)="openDialog(poll)"></os-topic-poll>

@@ -37,10 +37,9 @@
                 (click)="onFollowRecButton()"
                 [disabled]="isFollowButtonDisabledObservable() | async"
             >
-                <os-icon-container
-                    icon="done_all"
-                    [iconTooltip]="'Follow recommendations for all motions' | translate"
-                ></os-icon-container>
+                <os-icon-container icon="done_all" class="follow-all-icon">
+                    <div>{{ 'Follow recommendations for all motions' | translate }}</div>
+                </os-icon-container>
             </button>
         </div>
     </os-head-bar>
@@ -63,7 +62,7 @@
             <div class="column-title innerTable overflow-hidden">
                 <div class="title-line ellipsis-overflow">
                     <!-- Is Favorite -->
-                    <span *ngIf="motion.star" class="favorite-star">
+                    <span *ngIf="motion.isFavorite" class="favorite-star">
                         <mat-icon inline>star</mat-icon>
                     </span>
 
@@ -90,9 +89,9 @@
                     </span>
 
                     <span *ngIf="showSequential">
-                        <span *ngIf="motion.submitters.length">&middot;</span>
+                        <span *ngIf="motion.submitters.length">&middot;&thinsp;</span>
                         <span>{{ 'Sequential number' | translate }}</span>
-                        {{ motion.id }}
+                        {{ motion.sequential_number }}
                     </span>
                 </div>
 
@@ -102,14 +101,14 @@
                         {{ getStateLabel(motion) }}
                     </mat-basic-chip>
                 </div>
-            </div>
-        </div>
 
-        <!-- Recommendation column -->
-        <div *osScrollingTableCell="'recommendation'; row as motion; config: { width: 120 }" class="cell-slot fill">
-            <mat-basic-chip *ngIf="!!motion.recommendation" disableRipple class="bluegrey">
-                {{ getRecommendationLabel(motion) }}
-            </mat-basic-chip>
+                <!-- Recommendation column -->
+                <div class="ellipsis-overflow white spacer-top-3">
+                    <mat-basic-chip *ngIf="!!motion.recommendation" class="bluegrey" [disabled]="true">
+                        {{ getRecommendationLabel(motion) }}
+                    </mat-basic-chip>
+                </div>
+            </div>
         </div>
 
         <!-- Remove from block column -->
@@ -148,7 +147,12 @@
     <ng-template matMenuContent let-motion="motion">
         <os-projector-button [object]="motion" [menuItem]="true"></os-projector-button>
         <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
-        <button mat-menu-item class="red-warning-text" (click)="onRemoveMotionButton(motion)">
+        <button
+            mat-menu-item
+            class="red-warning-text"
+            (click)="onRemoveMotionButton(motion)"
+            *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
+        >
             <mat-icon>close</mat-icon>
             <span>{{ 'Remove from motion block' | translate }}</span>
         </button>

@@ -14,9 +14,7 @@ import {
     MotionChangeRecommendationControllerService,
     MotionDiffService
 } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/services';
-import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { MotionFormatService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-format.service';
-import { MotionLineNumberingService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-line-numbering.service';
 import { ViewMotionAmendedParagraph } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion-amended-paragraph';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -93,7 +91,7 @@ export class MotionSlideComponent
 
     @Input()
     public set scroll(value: number) {
-        this._scroll = value;
+        this._scroll = value ?? 0;
 
         value *= -100;
         value += 40;
@@ -108,7 +106,7 @@ export class MotionSlideComponent
 
     @Input()
     public set scale(value: number) {
-        this._scale = value;
+        this._scale = value ?? 0;
 
         value *= 10;
         value += 100;
@@ -158,21 +156,23 @@ export class MotionSlideComponent
 
     public constructor(
         protected override translate: TranslateService,
-        motionRepo: MotionControllerService,
-        private motionLineNumbering: MotionLineNumberingService,
         private motionFormatService: MotionFormatService,
         private changeRepo: MotionChangeRecommendationControllerService,
         private lineNumbering: LineNumberingService,
         private diff: MotionDiffService,
         private meetingSettings: MeetingSettingsService
     ) {
-        super(translate, motionRepo);
+        super();
         this.meetingSettings.get(`motions_enable_text_on_projector`).subscribe(val => (this._showText = val));
     }
 
     protected override setData(value: SlideData<MotionSlideData>): void {
         super.setData(value);
-        this._submittersSubject.next(value.data.submitters || []);
+        const submitters = [...value.data.submitters] || [];
+        if (value.data.additional_submitter) {
+            submitters.push(value.data.additional_submitter);
+        }
+        this._submittersSubject.next(submitters);
         this.lnMode = value.data.line_numbering;
         this.lineLength = value.data.line_length;
         this.preamble = value.data.preamble;
@@ -205,13 +205,13 @@ export class MotionSlideComponent
         baseHtml = this.lineNumbering.insertLineNumbers({
             html: baseHtml,
             lineLength: this.lineLength,
-            firstLine: this.data.data.start_line_number ?? 1
+            firstLine: this.data.data.lead_motion?.start_line_number ?? this.data.data.start_line_number ?? 1
         });
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
         const paragraphNumbers = Object.keys(amendment.amendment_paragraphs)
             .map(x => +x)
-            .sort();
+            .sort((a, b) => a - b);
 
         return paragraphNumbers
             .map(paraNo => {
@@ -253,6 +253,16 @@ export class MotionSlideComponent
 
         if (this.data.data.change_recommendations) {
             this.data.data.change_recommendations.forEach(change => {
+                if (this.data.data.start_line_number > 1) {
+                    const offset = this.data.data.start_line_number - 1;
+                    if (change.line_from) {
+                        change.line_from += offset;
+                    }
+
+                    if (change.line_to) {
+                        change.line_to += offset;
+                    }
+                }
                 this.allChangingObjects.push(new ChangeRecommendationUnifiedChange(change));
             });
         }
@@ -288,7 +298,7 @@ export class MotionSlideComponent
             changes,
             lineLength: this.lineLength,
             highlightedLine: this.highlightedLine,
-            firstLine: this.data.data.start_line_number ?? 1
+            firstLine: this.data.data.lead_motion?.start_line_number ?? this.data.data.start_line_number ?? 1
         });
     }
 
@@ -395,13 +405,13 @@ export class MotionSlideComponent
         const baseHtml = this.lineNumbering.insertLineNumbers({
             html: motion.lead_motion?.text,
             lineLength: this.lineLength,
-            firstLine: motion.start_line_number
+            firstLine: motion.lead_motion?.start_line_number ?? motion.start_line_number
         });
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
         const paragraphNumbers = Object.keys(motion.amendment_paragraphs)
             .map(x => +x)
-            .sort();
+            .sort((a, b) => a - b);
         const amendmentParagraphs: DiffLinesInParagraph[] = paragraphNumbers
             .map(paraNo =>
                 this.diff.getAmendmentParagraphsLines(
@@ -463,7 +473,7 @@ export class MotionSlideComponent
         const baseHtml = this.lineNumbering.insertLineNumbers({
             html: motion.lead_motion?.text,
             lineLength: this.lineLength,
-            firstLine: motion.start_line_number
+            firstLine: motion.lead_motion?.start_line_number ?? motion.start_line_number
         });
         return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
     }

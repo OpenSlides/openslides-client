@@ -7,7 +7,7 @@ import { FormatPipe } from 'ngx-date-fns';
     pure: false
 })
 export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform {
-    public override transform(value: any, dateFormat: string = `PPp`): any {
+    public override transform(value: any, dateFormat = `PPp`): any {
         if (!value) {
             return ``;
         }
@@ -66,7 +66,7 @@ export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform 
             case `cs#PP`:
                 return this.formatDMYPP;
             default:
-                return (startString, startArray, endString, endArray) =>
+                return (startString, _startArray, endString, _endArray) =>
                     this.defaultTransformInterval(startString, endString);
         }
     }

@@ -2,6 +2,7 @@
     [hasMainButton]="canManage()"
     [editMode]="isEditing"
     [mainButtonIcon]="'edit'"
+    [mainActionTooltip]="'Edit' | translate"
     [isSaveButtonEnabled]="startForm.valid"
     (mainEvent)="editStartPage()"
     (saveEvent)="saveChanges()"
@@ -14,7 +15,7 @@
 
 <mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'">
     <ng-container *ngIf="!isEditing">
-        <div class="app-content">
+        <div class="app-content underlined-links">
             <ng-container *ngIf="welcomeTitleObservable | async as welcomeTitle">
                 <h1>{{ welcomeTitle }}</h1>
             </ng-container>
@@ -27,12 +28,8 @@
     <ng-container *ngIf="isEditing">
         <form [formGroup]="startForm">
             <mat-form-field>
-                <input
-                    matInput
-                    formControlName="welcome_title"
-                    required
-                    placeholder="{{ 'Front page title' | translate }}"
-                />
+                <mat-label>{{ 'Front page title' | translate }}</mat-label>
+                <input matInput formControlName="welcome_title" required />
                 <mat-error>{{ 'The title is required' | translate }}</mat-error>
             </mat-form-field>
             <os-editor formControlName="welcome_text"></os-editor>

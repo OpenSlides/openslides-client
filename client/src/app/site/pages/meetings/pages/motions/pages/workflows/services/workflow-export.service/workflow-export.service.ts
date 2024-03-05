@@ -28,7 +28,9 @@ export class WorkflowExportService {
             `show_state_extension_field`,
             `show_recommendation_extension_field`,
             `merge_amendment_into_final`,
-            `weight`
+            `weight`,
+            `set_workflow_timestamp`,
+            `allow_motion_forwarding`
         ];
         const json = [];
         const getNextWorkflowJson = (workflow: ViewMotionWorkflow) => {

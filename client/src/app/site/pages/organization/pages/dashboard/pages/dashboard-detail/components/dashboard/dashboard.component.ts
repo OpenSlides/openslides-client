@@ -5,7 +5,6 @@ import { BaseComponent } from 'src/app/site/base/base.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { RelatedTime, ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 
@@ -39,7 +38,7 @@ export class DashboardComponent extends BaseComponent {
         return this.orgaService.organization?.description;
     }
 
-    public ready: boolean = false;
+    public ready = false;
 
     public previousMeetings: ViewMeeting[] = [];
     public currentMeetings: ViewMeeting[] = [];
@@ -47,14 +46,13 @@ export class DashboardComponent extends BaseComponent {
     public noDateMeetings: ViewMeeting[] = [];
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private orgaService: OrganizationService,
         private meetingRepo: MeetingControllerService,
         private themeService: ThemeService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Calendar`);
         this.loadMeetings();
 

@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ViewTheme } from 'src/app/site/pages/organization/pages/designs';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ThemeBuilderDialogService } from '../../../../modules/theme-builder-dialog/services/theme-builder-dialog.service';
@@ -18,13 +17,12 @@ import { ThemeControllerService } from '../../../../services/theme-controller.se
 })
 export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public readonly repo: ThemeControllerService,
         private dialog: ThemeBuilderDialogService,
         public prompt: PromptService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Design`);
         this.canMultiSelect = true;
     }

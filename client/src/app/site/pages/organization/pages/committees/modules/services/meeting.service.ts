@@ -22,7 +22,7 @@ export class MeetingService {
         await this.router.navigate([`accounts`]);
         this.accountFilterService.clearAllFilters();
         this.accountFilterService.toggleFilterOption(`id`, {
-            condition: meeting.user_ids,
+            condition: meeting.calculated_user_ids,
             label: meeting.name
         });
     }

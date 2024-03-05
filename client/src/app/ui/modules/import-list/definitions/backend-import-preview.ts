@@ -5,14 +5,17 @@ export enum BackendImportState {
     Warning = `warning`,
     New = `new`,
     Done = `done`,
-    Generated = `generated`
+    Generated = `generated`,
+    Remove = `remove`
     // could be expanded later
 }
 
 export interface BackendImportHeader {
     property: string; // field name/column title
-    type: `boolean` | `number` | `string` | `date` | `object`; // date must be in format yyyy-mm-dd
+    type: `boolean` | `number` | `string` | `date`; // date must be in format yyyy-mm-dd
     is_list: boolean; // optional, if not given defaults to `false`
+    is_object: boolean; // optional, if not given defaults to `false`
+    is_hidden: boolean; // optional, if not given defaults to `false`
 }
 
 export type BackendImportEntry = null | boolean | number | string | BackendImportEntryObject;
@@ -40,11 +43,11 @@ export interface BackendImportSummary {
 }
 
 export interface BackendImportRawPreview {
-    id: number; // id of action_worker to import
+    id?: number; // id of action_worker to import
     state: BackendImportState; // May be `error`, `warning` or `done`
-    headers: BackendImportHeader[];
+    headers?: BackendImportHeader[];
     rows: BackendImportRow[];
-    statistics: BackendImportSummary[];
+    statistics?: BackendImportSummary[];
 }
 
 export interface BackendImportPreview {
@@ -59,10 +62,10 @@ export function isBackendImportRawPreview(obj: any): obj is BackendImportRawPrev
     return (
         obj &&
         typeof obj === `object` &&
-        typeof obj.id === `number` &&
+        (!obj.id || typeof obj.id === `number`) &&
         typeof obj.state === `string` &&
-        Array.isArray(obj.headers) &&
+        (!obj.headers || Array.isArray(obj.headers)) &&
         Array.isArray(obj.rows) &&
-        Array.isArray(obj.statistics)
+        (!obj.statistics || Array.isArray(obj.statistics))
     );
 }

@@ -1,5 +1,9 @@
-import { Directive, OnDestroy } from '@angular/core';
-import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
+import { Directive, inject, OnDestroy } from '@angular/core';
+import {
+    LegacySimpleSnackBar as SimpleSnackBar,
+    MatLegacySnackBar as MatSnackBar,
+    MatLegacySnackBarRef as MatSnackBarRef
+} from '@angular/material/legacy-snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -75,12 +79,8 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
         return this.componentServiceCollector.router;
     }
 
-    public constructor(
-        protected componentServiceCollector: ComponentServiceCollectorService,
-        protected translate: TranslateService
-    ) {
-        super();
-    }
+    protected componentServiceCollector = inject(ComponentServiceCollectorService);
+    protected translate = inject(TranslateService);
 
     /**
      * automatically dismisses the error snack bar and clears subscriptions
@@ -131,9 +131,13 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
         } else {
             errorNotification = message;
         }
-        this.messageSnackBar = this.matSnackBar.open(errorNotification, this.translate.instant(`OK`), {
-            duration: 0
-        });
+        this.messageSnackBar = this.matSnackBar.open(
+            this.translate.instant(errorNotification),
+            this.translate.instant(`OK`),
+            {
+                duration: 0
+            }
+        );
     };
 
     /**
@@ -141,7 +145,7 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
      * This snack bar will only dismiss if the user clicks the 'OK'-button.
      */
     protected raiseWarning = (message: string): void => {
-        this.messageSnackBar = this.matSnackBar.open(message, this.translate.instant(`OK`));
+        this.messageSnackBar = this.matSnackBar.open(this.translate.instant(message), this.translate.instant(`OK`));
     };
 
     /**
@@ -158,7 +162,7 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
      * To catch swipe gestures.
      * Should be overwritten by children which need swipe gestures
      */
-    protected swipe(e: TouchEvent, when: string): void {}
+    protected swipe(_e: TouchEvent, _when: string): void {}
 
     /**
      * TinyMCE Init callback. Used for certain mobile editors
@@ -172,7 +176,7 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
         }
     }
 
-    public onLeaveTinyMce(event: any): void {
+    public onLeaveTinyMce(_event: any): void {
         this.saveHint = false;
     }
 }

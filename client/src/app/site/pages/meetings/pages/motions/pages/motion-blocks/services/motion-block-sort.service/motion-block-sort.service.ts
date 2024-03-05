@@ -1,19 +1,19 @@
-import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { Injectable, ProviderToken } from '@angular/core';
+import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { MotionBlockRepositoryService } from 'src/app/gateways/repositories/motions';
+import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
 
-import { MotionBlockServiceModule } from '../motion-block-service.module';
-
 @Injectable({
-    providedIn: MotionBlockServiceModule
+    providedIn: `root`
 })
 export class MotionBlockSortService extends BaseSortListService<ViewMotionBlock> {
     /**
      * set the storage key name
      */
     protected storageKey = `MotionBlockList`;
+
+    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = MotionBlockRepositoryService;
 
     private MotionBlockSortOptions: OsSortingOption<ViewMotionBlock>[] = [
         { property: `title` },
@@ -23,12 +23,16 @@ export class MotionBlockSortService extends BaseSortListService<ViewMotionBlock>
             sortFn: (aBlock, bBlock, ascending) =>
                 ascending
                     ? aBlock.motions.length - bBlock.motions.length
-                    : bBlock.motions.length - aBlock.motions.length
+                    : bBlock.motions.length - aBlock.motions.length,
+            baseKeys: [`motion_ids`]
         }
     ];
 
-    public constructor(translate: TranslateService, store: StorageService) {
-        super(translate, store);
+    public constructor() {
+        super({
+            sortProperty: `title`,
+            sortAscending: true
+        });
     }
 
     /**
@@ -36,12 +40,5 @@ export class MotionBlockSortService extends BaseSortListService<ViewMotionBlock>
      */
     protected getSortOptions(): OsSortingOption<ViewMotionBlock>[] {
         return this.MotionBlockSortOptions;
-    }
-
-    protected async getDefaultDefinition(): Promise<OsSortingDefinition<ViewMotionBlock>> {
-        return {
-            sortProperty: `title`,
-            sortAscending: true
-        };
     }
 }

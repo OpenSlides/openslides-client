@@ -1,4 +1,4 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 
 import { SlideManifest } from './slide-manifest';
@@ -62,6 +62,26 @@ export const Slides: SlideManifest[] = [
         scrollable: false
     },
     {
+        path: `current_speaking_structure_level`,
+        loadChildren: () =>
+            import(
+                `../components/current-speaking-structure-level-slide/current-speaking-structure-level-slide.module`
+            ).then(m => m.CurrentSpeakingStructureLevelSlideModule),
+        verboseName: _(`Current speaker`),
+        scaleable: true,
+        scrollable: false
+    },
+    {
+        path: `current_structure_level_list`,
+        loadChildren: () =>
+            import(`../components/current-structure-level-list-slide/current-structure-level-list-slide.module`).then(
+                m => m.CurrentStructureLevelListSlideModule
+            ),
+        verboseName: _(`Speaking times`),
+        scaleable: true,
+        scrollable: true
+    },
+    {
         path: `list_of_speakers`,
         loadChildren: () =>
             import(`../components/list-of-speakers/modules/list-of-speakers-slide/list-of-speakers-slide.module`).then(
@@ -110,7 +130,7 @@ export const Slides: SlideManifest[] = [
             import(`../components/projector-countdown-slide/projector-countdown-slide.module`).then(
                 m => m.ProjectorCountdownSlideModule
             ),
-        verboseName: _(`Countdown`),
+        verboseName: _(`Countdown/Timer`),
         scaleable: false,
         scrollable: false
     },

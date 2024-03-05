@@ -1,10 +1,16 @@
 import { ActionRequest } from './action-utils';
 
+type SendActionFunction<T> = (requests: ActionRequest[], throwError: boolean) => Promise<T[]>;
+
 export class Action<T = void> {
     private _actions: ActionRequest[];
-    private _sendActionFn: (requests: ActionRequest[]) => Promise<T[]>;
+    private _sendActionFn: SendActionFunction<T>;
 
-    public constructor(sendActionFn: (requests: ActionRequest[]) => Promise<T[]>, actions: ActionRequest[] = []) {
+    public setSendActionFn(sendActionFn: SendActionFunction<T>): void {
+        this._sendActionFn = sendActionFn;
+    }
+
+    public constructor(sendActionFn: SendActionFunction<T>, actions: ActionRequest[] = []) {
         this._actions = actions.filter(action => !!action?.data?.length);
         this._sendActionFn = sendActionFn;
     }
@@ -14,24 +20,25 @@ export class Action<T = void> {
         if (actions.length === 0) {
             return this;
         }
-        const concatedActions = actions
-            .filter(action => action !== null)
-            .flatMap(action => {
-                if (action instanceof Action) {
-                    return action._actions;
-                } else {
-                    return [action];
-                }
-            })
-            .concat(this._actions);
+        const concatedActions = this._actions.concat(
+            actions
+                .filter(action => action !== null)
+                .flatMap(action => {
+                    if (action instanceof Action) {
+                        return action._actions;
+                    } else {
+                        return [action];
+                    }
+                })
+        );
         return new Action(
-            (actions.find(action => action instanceof Action) as Action<T>)?._sendActionFn ?? this._sendActionFn,
+            this._sendActionFn ?? (actions.find(action => action instanceof Action) as Action<T>)?._sendActionFn,
             concatedActions
         );
     }
 
-    public async resolve(): Promise<T[] | void> {
-        const result = await this._sendActionFn(this._actions).then(result => {
+    public async resolve(throwError = false): Promise<T[] | void> {
+        const result = await this._sendActionFn(this._actions, throwError).then(result => {
             if (Array.isArray(result)) {
                 return result.flatMap(value => value);
             } else {

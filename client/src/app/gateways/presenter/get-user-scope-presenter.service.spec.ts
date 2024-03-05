@@ -82,7 +82,7 @@ describe(`GetUserScopePresenterService`, () => {
         expect(await service.call({ user_ids: [2, 3, 5, 6, 7, 8] })).toEqual(testScopes);
     });
 
-    for (let key of Object.keys(scopeMap).map(x => +x as keyof typeof scopeMap)) {
+    for (const key of Object.keys(scopeMap).map(x => +x as keyof typeof scopeMap)) {
         const otherKeys: (keyof typeof scopeMap)[] = Object.keys(scopeMap)
             .map(key => +key as keyof typeof scopeMap)
             .filter(otherKey => otherKey !== key);

@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { AccountSearchSelectorModule } from 'src/app/site/pages/organization/modules/account-search-selector';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';

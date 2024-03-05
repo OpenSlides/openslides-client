@@ -60,14 +60,14 @@ export class LegalNoticeContentComponent extends BaseUiComponent implements OnIn
     /**
      * The legal notive text for the ui.
      */
-    public legalNotice: string = ``;
+    public legalNotice = ``;
 
     /**
      * Get an observable to the version info
      */
     public versionInfo: Observable<string> = this.httpClient.get(`/assets/version.txt`, { responseType: `text` });
 
-    private _value: string = ``;
+    private _value = ``;
 
     public constructor(
         protected translate: TranslateService,

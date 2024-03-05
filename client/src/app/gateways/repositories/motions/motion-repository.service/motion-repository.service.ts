@@ -57,7 +57,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     public async createForwarded(meetingIds: Id[], ...motions: any[]): Promise<{ success: number; partial: number }> {
-        let payloads: any[][] = [];
+        const payloads: any[][] = [];
         motions.forEach(motion => {
             payloads.push(
                 meetingIds.map(id => {
@@ -70,10 +70,10 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         });
         let success = 0;
         let partial = 0;
-        for (let meetingPayloads of payloads) {
+        for (const meetingPayloads of payloads) {
             let partialSuccess = false;
             let failure = false;
-            for (let payload of meetingPayloads) {
+            for (const payload of meetingPayloads) {
                 try {
                     await Promise.race([
                         this.createAction(MotionAction.CREATE_FORWARDED, payload).resolve(),
@@ -203,11 +203,10 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             attachment_ids: partialMotion.attachment_ids,
             reason: partialMotion.reason,
             number: partialMotion.number,
-            block_id: partialMotion.block_id,
             state_extension: partialMotion.state_extension,
             sort_parent_id: partialMotion.sort_parent_id,
             supporter_meeting_user_ids: partialMotion.supporter_meeting_user_ids,
-            ...createAgendaItem(partialMotion)
+            ...createAgendaItem(partialMotion, false)
         };
         return this.createAction(AmendmentAction.CREATE_TEXTBASED_AMENDMENT, payload);
     }
@@ -224,13 +223,12 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             attachment_ids: partialMotion.attachment_ids === null ? [] : partialMotion.attachment_ids,
             reason: partialMotion.reason,
             number: partialMotion.number,
-            block_id: partialMotion.block_id,
             state_extension: partialMotion.state_extension,
             amendment_paragraphs: partialMotion.amendment_paragraphs,
             sort_parent_id: partialMotion.sort_parent_id,
             supporter_meeting_user_ids:
                 partialMotion.supporter_meeting_user_ids === null ? [] : partialMotion.supporter_meeting_user_ids,
-            ...createAgendaItem(partialMotion)
+            ...createAgendaItem(partialMotion, false)
         };
         return this.createAction(AmendmentAction.CREATE_PARAGRAPHBASED_AMENDMENT, payload);
     }
@@ -247,12 +245,11 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             attachment_ids: partialMotion.attachment_ids,
             reason: partialMotion.reason,
             number: partialMotion.number,
-            block_id: partialMotion.block_id,
             state_extension: partialMotion.state_extension,
             statute_paragraph_id: partialMotion.statute_paragraph_id,
             sort_parent_id: partialMotion.sort_parent_id,
             supporter_meeting_user_ids: partialMotion.supporter_meeting_user_ids,
-            ...createAgendaItem(partialMotion)
+            ...createAgendaItem(partialMotion, false)
         };
         return this.createAction(AmendmentAction.CREATE_STATUTEBASED_AMENDMENT, payload);
     }
@@ -294,13 +291,13 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         }
         const agendaTitle: AgendaListTitle = { title };
 
-        if (viewMotion.submittersAsUsers && viewMotion.submittersAsUsers.length) {
-            agendaTitle.subtitle = `${this.translate.instant(`by`)} ${viewMotion.submittersAsUsers.join(`, `)}`;
+        if (viewMotion.submitterNames && viewMotion.submitterNames.length) {
+            agendaTitle.subtitle = `${this.translate.instant(`by`)} ${viewMotion.submitterNames.join(`, `)}`;
         }
         return agendaTitle;
     };
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Motions` : `Motion`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Motions` : `Motion`);
 
     public getProjectorTitle = (viewMotion: ViewMotion) => {
         const subtitle =
@@ -334,12 +331,12 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             reason: partialMotion.reason,
             number: partialMotion.number,
             block_id: partialMotion.block_id,
+            tag_ids: partialMotion.tag_ids === null ? [] : partialMotion.tag_ids,
             state_extension: partialMotion.state_extension,
             sort_parent_id: partialMotion.sort_parent_id,
-            tag_ids: partialMotion.tag_ids === null ? [] : partialMotion.tag_ids,
             supporter_meeting_user_ids:
                 partialMotion.supporter_meeting_user_ids === null ? [] : partialMotion.supporter_meeting_user_ids,
-            ...createAgendaItem(partialMotion)
+            ...createAgendaItem(partialMotion, false)
         };
     }
 

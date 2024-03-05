@@ -17,7 +17,7 @@
         </div>
     </os-head-bar>
 
-    <mat-card>
+    <mat-card class="os-card spacer-bottom-60">
         <div *ngFor="let category of categories">
             <h2>
                 <span>{{ getLevelDashes(category) }}</span>
@@ -101,11 +101,13 @@
     <div class="os-form-card-mobile" mat-dialog-content>
         <form class="edit-form" [formGroup]="editForm" (ngSubmit)="save()" (keydown)="onKeyDown($event)">
             <mat-form-field>
-                <input matInput osAutofocus placeholder="{{ 'Prefix' | translate }}" formControlName="prefix" />
+                <mat-label>{{ 'Prefix' | translate }}</mat-label>
+                <input matInput osAutofocus formControlName="prefix" />
                 <mat-error>{{ 'This prefix already exists.' | translate }}</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input matInput osAutofocus placeholder="{{ 'Name' | translate }}" formControlName="name" required />
+                <mat-label>{{ 'Name' | translate }}</mat-label>
+                <input matInput osAutofocus formControlName="name" required />
             </mat-form-field>
         </form>
     </div>

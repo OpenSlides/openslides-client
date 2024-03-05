@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { DurationService } from 'src/app/site/services/duration.service';
 
 import {
@@ -44,7 +43,7 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
         return this.statisticIsOpen;
     }
 
-    public readonly filterProps: string[] = [`structureLevel`];
+    public readonly filterProps: string[] = [];
 
     /**
      * List of unique speakers.
@@ -59,18 +58,17 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
     private _lastStructureLevelId = Math.max(...Array.from(this._structureLevelIdMap.values())) ?? 0;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private speakerRepo: SpeakerControllerService,
         private speakerListRepo: ListOfSpeakersControllerService,
         private durationService: DurationService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.speakerListRepo.getViewModelListObservable().subscribe(value => {
+            this.speakerListRepo.getViewModelListObservable().subscribe(() => {
                 this.updateRelationSpeakingTimeStructureLevelSubject();
             })
         );
@@ -91,7 +89,7 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
     /**
      * Creates a string from a given `TimeObject`.
      */
-    public parseDuration(time: number | null, withHours: boolean = false): string {
+    public parseDuration(time: number | null, withHours = false): string {
         if (!time) {
             return ``;
         }
@@ -104,11 +102,7 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
         const data = this.speakerListRepo.getSpeakingTimeStructureLevelRelation();
         const transformedData: IdentifiedSpeakingTimeStructureLevelObject[] = [];
         data.forEach(value => {
-            if (this._structureLevelIdMap.get(value.structureLevel)) {
-                transformedData.push({ id: this._structureLevelIdMap.get(value.structureLevel), ...value });
-            } else {
-                transformedData.push({ id: this.getNewId(), ...value });
-            }
+            transformedData.push({ id: this.getNewId(), ...value });
         });
         this.relationSpeakingTimeStructureLevelSubject.next(
             transformedData.sort((a, b) => {

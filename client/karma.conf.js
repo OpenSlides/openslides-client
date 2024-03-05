@@ -8,7 +8,6 @@ module.exports = function(config) {
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
-      require('karma-jsdom-launcher'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
@@ -41,7 +40,13 @@ module.exports = function(config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['jsdom'],
+    browsers: ['ChromiumHeadless'],
+    customLaunchers: {
+      ChromiumHeadlessNoSandbox: {
+        base: 'ChromiumHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
     singleRun: false,
     restartOnFileChange: true,
     browserNoActivityTimeout: 400000

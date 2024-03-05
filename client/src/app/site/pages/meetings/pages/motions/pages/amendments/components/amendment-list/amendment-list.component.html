@@ -1,30 +1,27 @@
 <os-head-bar [nav]="false" [multiSelectMode]="isMultiSelect">
     <!-- Title -->
-    <div class="title-slot" *ngIf="!parentMotion">
-        <h2>{{ 'Amendments' | translate }}</h2>
-    </div>
-
-    <!-- TODO would require translations with parameters -->
-    <div class="title-slot" *ngIf="parentMotion">
-        <h2>
+    <div class="title-slot">
+        <h2 *ngIf="parentMotion | async">
             {{ 'Amendments to' | translate }}
             {{ (parentMotion | async)?.numberOrTitle }}
+        </h2>
+        <h2 *ngIf="(parentMotion | async) === null">
+            {{ 'Amendments' | translate }}
         </h2>
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button type="button" mat-icon-button [matMenuTriggerFor]="amendmentListMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 
     <!-- Multiselect info -->
-    <div class="central-info-slot">
+    <ng-container class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span>
-        <span>{{ 'selected' | translate }}</span>
-    </div>
+        <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
+    </ng-container>
 </os-head-bar>
 
 <os-projectable-list
@@ -95,7 +92,12 @@
     <div *osScrollingTableCell="'summary'; row as motion" class="cell-slot fill">
         <os-detail-view-navigator *ngIf="!isMultiSelect" [model]="motion"></os-detail-view-navigator>
         <div class="innerTable">
-            <div class="motion-text" [innerHtml]="getAmendmentSummary(motion) | trust : 'html'"></div>
+            <div
+                class="motion-text underlined-links"
+                *ngIf="getAmendmentSummary(motion)"
+                [innerHtml]="getAmendmentSummary(motion) | trust : 'html'"
+            ></div>
+            <i *ngIf="!getAmendmentSummary(motion)">{{ 'No changes at the text.' | translate }}</i>
         </div>
     </div>
 
@@ -150,7 +152,10 @@
 
         <ng-container *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]">
             <mat-divider></mat-divider>
-            <os-motion-multiselect-actions [selectedMotions]="selectedRows"></os-motion-multiselect-actions>
+            <os-motion-multiselect-actions
+                [selectedMotions]="selectedRows"
+                [sortService]="amendmentSortService"
+            ></os-motion-multiselect-actions>
         </ng-container>
     </div>
 </mat-menu>

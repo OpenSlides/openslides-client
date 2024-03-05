@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces';
 
@@ -39,10 +39,11 @@ export class ChoiceService {
         clearChoiceOption?: string,
         sortFn?: (a: T, b: T) => number
     ): Promise<ChoiceAnswer<T>>;
+
     public async open<T extends Selectable = Selectable>(
         titleOrConfig: string | ChoiceDialogConfig,
         choices?: Observable<T[]> | T[],
-        multiSelect: boolean = false,
+        multiSelect = false,
         actions?: string[],
         clearChoiceOption?: string,
         sortFn?: (a: T, b: T) => number

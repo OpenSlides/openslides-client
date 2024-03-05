@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, ViewChild } from '@angular/core';
+import { Directive, EventEmitter, inject, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SortDefinition } from 'src/app/site/base/base-sort.service';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -33,7 +33,7 @@ export abstract class BaseSortTreeViewComponent<V extends BaseViewModel>
     /**
      * Emitter to emit if the nodes should expand or collapse.
      */
-    public readonly changeState: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    public readonly changeState: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /**
      * Emitter that emits the filters to the sorting tree.
@@ -63,9 +63,8 @@ export abstract class BaseSortTreeViewComponent<V extends BaseViewModel>
      */
     public seenNodes: [number, number] = [0, 0];
 
-    public constructor(protected translate: TranslateService, protected promptService: PromptService) {
-        super();
-    }
+    protected translate = inject(TranslateService);
+    protected promptService = inject(PromptService);
 
     /**
      * Function to restore the old state.

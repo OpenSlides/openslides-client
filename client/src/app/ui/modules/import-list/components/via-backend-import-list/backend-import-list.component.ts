@@ -13,13 +13,12 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 import { BackendImportService } from 'src/app/ui/base/import-service';
@@ -45,7 +44,7 @@ export enum BackendImportPhase {
     IMPORTING,
     FINISHED,
     ERROR,
-    TRY_AGAIN
+    FINISHED_WITH_WARNING
 }
 
 @Component({
@@ -54,7 +53,7 @@ export enum BackendImportPhase {
     styleUrls: [`./backend-import-list.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
-export class BackendImportListComponent<M extends Identifiable> implements OnInit, OnDestroy {
+export class BackendImportListComponent implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
 
@@ -80,15 +79,15 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
     public additionalInfo = ``;
 
     @Input()
-    public set importer(importer: BackendImportService<M>) {
+    public set importer(importer: BackendImportService) {
         this._importer = importer;
     }
 
-    public get importer(): BackendImportService<M> {
+    public get importer(): BackendImportService {
         return this._importer;
     }
 
-    private _importer!: BackendImportService<M>;
+    private _importer!: BackendImportService;
 
     /**
      * Defines all necessary and optional fields, that a .csv-file can contain.
@@ -117,6 +116,7 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
         this._defaultColumns = cols;
         this.setHeaders({ default: cols });
     }
+
     public get defaultColumns(): ImportListHeaderDefinition[] {
         return this._defaultColumns;
     }
@@ -160,8 +160,8 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
     /**
      * True if, after an attempted import failed, the view is waiting for the user to confirm the import on the new preview.
      */
-    public get tryAgain(): boolean {
-        return this._state === BackendImportPhase.TRY_AGAIN;
+    public get finishedWithWarning(): boolean {
+        return this._state === BackendImportPhase.FINISHED_WITH_WARNING;
     }
 
     /**
@@ -252,6 +252,9 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
         this._importer.clearAll();
         this._requiredFields = this.createRequiredFields();
         this._importer.currentImportPhaseObservable.subscribe(phase => {
+            if (phase === BackendImportPhase.LOADING_PREVIEW && this.fileInput) {
+                this.fileInput.nativeElement.value = ``;
+            }
             this._state = phase;
         });
         this._importer.previewsObservable.subscribe(previews => {
@@ -291,13 +294,6 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
      */
     public onSelectFile(event: any): void {
         this._importer.onSelectFile(event);
-    }
-
-    /**
-     * Triggers the importer's import
-     */
-    public async doImport(): Promise<void> {
-        this._importer.doImport();
     }
 
     /**
@@ -352,13 +348,22 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
                 return `warning`;
             case BackendImportState.New:
                 return `add`;
-            case BackendImportState.Done: // item has been imported
-                return `done`;
+            case BackendImportState.Done: // item will be updated / has been imported
+                return this._state !== BackendImportPhase.FINISHED ? `merge` : `done`;
             case BackendImportState.Generated:
                 return `autorenew`;
+            case BackendImportState.Remove:
+                return `remove`;
             default:
                 return `block`; // fallback: Error
         }
+    }
+
+    public getEntryIcon(item: BackendImportEntryObject): string {
+        if (item.info === BackendImportState.Done || !item) {
+            return undefined;
+        }
+        return this.getActionIcon(item);
     }
 
     /**
@@ -374,13 +379,31 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
                     _(`There is an unspecified error in this line, which prevents the import.`)
                 );
             case BackendImportState.Warning:
-                return this.getErrorDescription(row) ?? _(`This row will not be imported, due to an unknown reason.`);
+                return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
             case BackendImportState.New:
                 return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`will be imported`);
-            case BackendImportState.Done: // item has been imported
-                return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`has been imported`);
+            case BackendImportState.Done: // item will be updated / has been imported
+                return (
+                    this.translate.instant(this.modelName) +
+                    ` ` +
+                    (this._state !== BackendImportPhase.FINISHED
+                        ? this.translate.instant(`will be updated`)
+                        : this.translate.instant(`has been imported`))
+                );
             default:
                 return undefined;
+        }
+    }
+
+    public getWarningRowTooltip(row: BackendImportIdentifiedRow): string {
+        switch (row.state) {
+            case BackendImportState.Error: // no import possible
+                return (
+                    this.getErrorDescription(row) ??
+                    _(`There is an unspecified error in this line, which prevents the import.`)
+                );
+            default:
+                return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
         }
     }
 
@@ -440,9 +463,20 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
         return this._importer.getVerboseSummaryPointTitle(title);
     }
 
+    public getShortenedDecimal(decimalString: string): string {
+        while (decimalString.length && [`0`, `.`].includes(decimalString.charAt(decimalString.length - 1))) {
+            decimalString = decimalString.substring(0, decimalString.length - 1);
+        }
+        return decimalString;
+    }
+
+    public isString(value: any): value is string {
+        return typeof value === `string`;
+    }
+
     private setHeaders(data: { default?: ImportListHeaderDefinition[]; preview?: BackendImportHeader[] }): void {
-        for (let key of Object.keys(data)) {
-            for (let header of data[key] ?? []) {
+        for (const key of Object.keys(data)) {
+            for (const header of data[key] ?? []) {
                 if (!this._headers[header.property]) {
                     this._headers[header.property] = { [key]: header };
                 } else {
@@ -453,7 +487,7 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
     }
 
     private getErrorDescription(entry: BackendImportIdentifiedRow): string {
-        return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`,\n `);
+        return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`\n `);
     }
 
     private fillPreviewData(previews: BackendImportPreview[]) {
@@ -462,8 +496,10 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
             this._summary = undefined;
             this._rows = undefined;
         } else {
-            this._previewColumns = previews[0].headers;
-            this._summary = previews.flatMap(preview => preview.statistics).filter(point => point.value);
+            this._previewColumns = (previews[0].headers ?? this._previewColumns).filter(header => !header[`is_hidden`]);
+            this._summary = previews.some(preview => preview.statistics)
+                ? previews.flatMap(preview => preview.statistics).filter(point => point?.value)
+                : [];
             this._rows = this.calculateRows(previews);
             this.setHeaders({ preview: this._previewColumns });
         }

@@ -5,7 +5,7 @@
                 <div
                     *ngIf="showHeader"
                     class="flex-vertical-center placeholder divider-bottom scrolling-table-header"
-                    [ngStyle]="ngStyle"
+                    [ngStyle]="getNgStyle()"
                 >
                     <ng-container *ngFor="let definition of definitions; let first = first">
                         <div
@@ -27,11 +27,11 @@
                         </div>
                     </ng-container>
                 </div>
-                <ng-container *cdkVirtualFor="let item of dataSource">
+                <ng-container *cdkVirtualFor="let item of dataSource; last as isLast">
                     <div
                         class="scrolling-table-row divider-bottom flex-vertical-center"
                         [ngClass]="rowClass"
-                        [ngStyle]="ngStyle"
+                        [ngStyle]="getNgStyle(isLast)"
                         (click)="onRowClick($event, item)"
                     >
                         <div *ngIf="isSelectionMode" class="selection-cell scrolling-table-cell flex-vertical-center">

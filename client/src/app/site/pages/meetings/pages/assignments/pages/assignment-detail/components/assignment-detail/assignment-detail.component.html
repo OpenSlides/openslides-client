@@ -3,6 +3,7 @@
         <os-head-bar
             [hasMainButton]="hasPerms('manage') && !!assignment"
             mainButtonIcon="edit"
+            [mainActionTooltip]="'Edit' | translate"
             [nav]="false"
             [editMode]="isEditing"
             [isSaveButtonEnabled]="assignmentForm.valid"
@@ -89,7 +90,10 @@
                 </ng-container>
 
                 <!-- New Ballot button -->
-                <div class="new-ballot-button" *ngIf="assignment && hasPerms('createPoll')">
+                <div
+                    class="new-ballot-button"
+                    *ngIf="assignment && assignment.candidatesAsUsers.length && hasPerms('createPoll')"
+                >
                     <button mat-stroked-button (click)="openDialog()">
                         <mat-icon>add</mat-icon>
                         <span>{{ 'New ballot' | translate }}</span>
@@ -108,6 +112,7 @@
         <os-projectable-title *ngIf="!isEditing && assignment.getTitle" [model]="assignment"></os-projectable-title>
         <div *ngIf="assignment">
             <div
+                class="underlined-links"
                 *ngIf="assignment.assignment.description"
                 [innerHTML]="assignment.assignment.description | trust : 'html'"
             ></div>
@@ -153,7 +158,7 @@
             <div>
                 <div class="candidates-list" *ngIf="assignment?.candidates?.length">
                     <os-sorting-list
-                        [input]="assignment.candidates"
+                        [input]="assignmentCandidates"
                         [live]="true"
                         [count]="assignment.number_poll_candidates"
                         [enable]="hasPerms('manage')"
@@ -161,7 +166,7 @@
                     >
                         <!-- implicit item references into the component using ng-template slot -->
                         <ng-template let-item>
-                            <div class="single-candidate-line">
+                            <div [ngClass]="{ 'single-candidate-line': true, 'deleted-candidate': !item.user }">
                                 <span>{{ item.getTitle() }}</span>
                                 <span *ngIf="hasPerms('manage')">
                                     <button
@@ -214,7 +219,8 @@
             <div>
                 <!-- title -->
                 <mat-form-field class="full-width">
-                    <input matInput placeholder="{{ 'Title' | translate }}" formControlName="title" />
+                    <mat-label>{{ 'Title' | translate }}</mat-label>
+                    <input matInput formControlName="title" />
                     <mat-error>{{ 'The title is required' | translate }}</mat-error>
                 </mat-form-field>
             </div>
@@ -226,10 +232,10 @@
             <!-- searchValueSelector: tags -->
             <div class="content-field" *ngIf="tagsAvailable" [formGroup]="assignmentForm">
                 <mat-form-field>
+                    <mat-label>{{ 'Tags' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="tag_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Tags' | translate }}"
                         [inputListValues]="tagsObserver"
                     ></os-list-search-selector>
                 </mat-form-field>
@@ -245,23 +251,16 @@
             <!-- default_poll_description -->
             <div>
                 <mat-form-field>
-                    <input
-                        matInput
-                        placeholder="{{ 'Hint on voting' | translate }}"
-                        formControlName="default_poll_description"
-                    />
+                    <mat-label>{{ 'Hint on voting' | translate }}</mat-label>
+                    <input matInput formControlName="default_poll_description" />
                 </mat-form-field>
             </div>
 
             <!-- open posts: number -->
             <div>
                 <mat-form-field>
-                    <input
-                        matInput
-                        placeholder="{{ 'Number of persons to be elected' | translate }}"
-                        formControlName="open_posts"
-                        type="number"
-                    />
+                    <mat-label>{{ 'Number of persons to be elected' | translate }}</mat-label>
+                    <input matInput formControlName="open_posts" type="number" />
                     <mat-error *ngIf="assignmentForm.get('open_posts')?.hasError('required')">
                         {{ 'This field is required.' | translate }}
                     </mat-error>

@@ -1,4 +1,4 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 import {
@@ -31,8 +31,8 @@ export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCo
                     key: `displayType`,
                     displayName: _(`Display type`),
                     choices: [
-                        { value: `onlyCountdown`, displayName: _(`Only countdown`) },
-                        { value: `countdownAndTimeIndicator`, displayName: _(`Countdown and traffic light`) },
+                        { value: `onlyCountdown`, displayName: _(`Only countdown/timer`) },
+                        { value: `countdownAndTimeIndicator`, displayName: _(`Countdown/Timer and traffic light`) },
                         { value: `onlyTimeIndicator`, displayName: _(`Only traffic light`) }
                     ],
                     default: `onlyCountdown`

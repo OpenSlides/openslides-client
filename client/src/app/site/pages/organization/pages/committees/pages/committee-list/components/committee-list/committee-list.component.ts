@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Action } from 'src/app/gateways/actions';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceAnswer } from 'src/app/ui/modules/choice-dialog/definitions';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog/services/choice.service';
@@ -34,7 +33,6 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public committeeController: CommitteeControllerService,
         public operator: OperatorService,
@@ -47,7 +45,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         private tagRepo: OrganizationTagControllerService,
         private spinnerService: SpinnerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Committees`);
         this.canMultiSelect = true;
         this.listStorageIndex = COMMITTEE_LIST_STORAGE_INDEX;
@@ -134,7 +132,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         });
 
         if (selectedChoice) {
-            let requestData: Promise<void>[] = [];
+            const requestData: Promise<void>[] = [];
             if (selectedChoice.action === ADD) {
                 this.addTags(committees, selectedChoice);
             } else if (selectedChoice.action === REMOVE) {
@@ -146,7 +144,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
             const message = `${committees.length} ` + this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: async () => {
-                    for (let request of requestData) {
+                    for (const request of requestData) {
                         await request;
                     }
                 }

@@ -10,7 +10,7 @@
     <span class="text-prefix-label" *ngIf="showPreamble">{{ preamble }}</span>
 
     <!-- The actual diff view -->
-    <div class="motion-text-with-diffs">
+    <div class="motion-text-with-diffs underlined-links">
         <div *ngIf="getTitleChangingObject() as changedTitle">
             <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix outlined-hover outlined-border">
                 <div class="action-row" *osPerms="permission.motionCanManage">
@@ -146,7 +146,7 @@
                     mat-menu-item
                     (click)="setAmendmentState(change, state.id)"
                 >
-                    {{ state.name | translate }}
+                    {{ state.name }}
                     <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                 </button>
                 <mat-divider *ngIf="change.amendment.state.next_states.length > 0"></mat-divider>
@@ -156,7 +156,7 @@
                     (click)="setAmendmentState(change, state.id)"
                 >
                     <mat-icon>arrow_back</mat-icon>
-                    {{ state.name | translate }}
+                    {{ state.name }}
                     <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                 </button>
                 <button mat-menu-item (click)="resetAmendmentState(change)">

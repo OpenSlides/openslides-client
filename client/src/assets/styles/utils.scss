@@ -1,0 +1,247 @@
+.small {
+    font-size: 90%;
+}
+
+// transform text to uppercase. Use on span, p, h, (...)
+.upper {
+    text-transform: uppercase;
+}
+
+/**use to push content to the right side*/
+.spacer {
+    flex: 1 1 auto;
+}
+
+/** helper classes for margin/padding */
+.spacer-top-3 {
+    margin-top: 3px !important;
+}
+
+.spacer-top-5 {
+    margin-top: 5px !important;
+}
+
+.spacer-top-10 {
+    margin-top: 10px !important;
+}
+
+.spacer-top-20 {
+    margin-top: 20px !important;
+}
+
+.spacer-top-25 {
+    margin-top: 25px !important;
+}
+
+.spacer-bottom-10 {
+    margin-bottom: 10px !important;
+}
+
+.spacer-bottom-20 {
+    margin-bottom: 20px !important;
+}
+
+.spacer-bottom-40 {
+    margin-bottom: 40px !important;
+}
+
+.spacer-bottom-60 {
+    margin-bottom: 60px !important;
+}
+
+.spacer-left-10 {
+    margin-left: 10px;
+}
+
+.spacer-left-20 {
+    margin-left: 20px;
+}
+
+.spacer-left-50 {
+    margin-left: 50px !important;
+}
+
+
+.text-center,
+.center {
+    text-align: center;
+}
+
+.pointer:hover {
+    cursor: pointer;
+}
+
+.pointer.selected {
+    cursor: pointer;
+}
+
+.one-line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ellipsis-overflow {
+    @extend .one-line;
+    padding-right: 0px;
+    margin-right: 0px;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.break-word {
+    hyphens: auto;
+}
+
+.hide {
+    display: none;
+}
+
+/** remove unwanted spaces from group displays */
+.inline-flex {
+    display: inline-flex;
+}
+
+/**even distribution of elements in a row*/
+.flex-spaced {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flex-vertical-center-unsafe {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &.align-left {
+        justify-content: flex-start;
+    }
+}
+
+.flex-vertical-center {
+    display: flex;
+    flex-direction: row;
+
+    &.align-left {
+        justify-content: flex-start;
+    }
+
+    & > * {
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+}
+
+.flex-center {
+    @extend .flex-vertical-center;
+    justify-content: center;
+}
+
+.flex-center-unsafe {
+    @extend .flex-vertical-center-unsafe;
+    justify-content: center;
+}
+
+.nocursor {
+    cursor: none;
+}
+
+.pre-wrap {
+    white-space: pre-wrap;
+}
+
+.regular-shadow {
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37) !important;
+}
+
+.small-text {
+    font-size: 12px;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.white-divider {
+    border-top-color: white;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+.stretch-to-fill-parent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+/**
+* This primarily used to align a title and an icon in one line. The title will use the whole width subtracting
+* the icon's width. So, the icon will be shown at the right edge.
+*/
+// TODO: Choose more general and descriptive name
+.action-title {
+    display: flex;
+    align-items: center;
+
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    > :first-child {
+        flex: 1;
+    }
+}
+
+/**
+* Background styles used for the global theme
+*/
+.background-dark {
+    background: #4f4f4f;
+    color: white;
+}
+
+.background-dark-brighter {
+    background: #6f6f6f !important;
+    color: white;
+}
+
+.subtitle-text {
+    font-size: 125%;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.subtitle-nocolor {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+@keyframes fadeIn {
+    0% {
+        width: 0%;
+        margin-left: 0;
+    }
+    100% {
+        width: 100%;
+        margin-left: -100%;
+    }
+}

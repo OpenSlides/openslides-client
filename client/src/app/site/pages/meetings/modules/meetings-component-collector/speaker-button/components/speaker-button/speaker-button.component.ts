@@ -23,7 +23,7 @@ export class SpeakerButtonComponent implements OnDestroy {
     }
 
     @Input()
-    public disabled: boolean = false;
+    public disabled = false;
 
     @Input()
     public menuItem = false;

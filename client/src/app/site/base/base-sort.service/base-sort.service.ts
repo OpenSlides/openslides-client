@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
 import { SortService } from 'src/app/ui/modules/list/definitions/sort-service';
@@ -25,8 +25,10 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
      * Constructor.
      * Pass the `TranslatorService`.
      */
-    public constructor(protected translate: TranslateService) {
-        this.intl = new Intl.Collator(translate.currentLang, {
+    protected translate = inject(TranslateService);
+
+    public constructor() {
+        this.intl = new Intl.Collator(this.translate.currentLang, {
             numeric: true,
             ignorePunctuation: true,
             sensitivity: `base`
@@ -45,7 +47,7 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
      * Recreates the sorting function. Is supposed to be called on init and
      * every time the sorting (property, ascending/descending) or the language changes
      */
-    protected sortItems(itemA: T, itemB: T, sortProperty: OsSortProperty<T>, ascending: boolean = true): number {
+    protected sortItems(itemA: T, itemB: T, sortProperty: OsSortProperty<T>, ascending = true): number {
         const sortPropertyArray = Array.isArray(sortProperty) ? sortProperty : [sortProperty];
         const primaryProperty = sortPropertyArray[0];
         const result = (ascending ? 1 : -1) * this.sortItemsHelper(itemA, itemB, primaryProperty);
@@ -92,7 +94,7 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
                     }
                 case `function`:
                     const a = propertyA.bind(itemA)();
-                    const b = (propertyB as unknown as Function).bind(itemB)();
+                    const b = (propertyB as unknown as () => any).bind(itemB)();
                     return this.intl.compare(a, b);
                 case `object`:
                     if (propertyA instanceof Date) {

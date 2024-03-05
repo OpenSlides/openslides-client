@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { map, of, switchAll, tap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PasswordForm } from 'src/app/site/modules/user-components';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -27,12 +27,12 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
     /**
      * if this pw-page is for your own user
      */
-    public ownPage: boolean = false;
+    public ownPage = false;
 
     /**
      * if current user has the "can_manage" permission
      */
-    public canManage: boolean = false;
+    public canManage = false;
 
     public get generatePasswordFn(): () => string {
         return () => this.repo.getRandomPassword();
@@ -41,14 +41,13 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
     private urlUserId: number | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private operator: OperatorService,
         private openslidesRouter: OpenSlidesRouterService,
         private route: ActivatedRoute,
         private repo: ParticipantControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**
@@ -56,18 +55,25 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
      */
     public ngOnInit(): void {
         super.setTitle(this.translate.instant(`Change password`));
-        this.openslidesRouter.currentParamMap.subscribe(params => {
-            if (params[`id`]) {
-                this.urlUserId = +params[`id`];
-                this.repo.getViewModelObservable(this.urlUserId).subscribe(user => {
-                    if (user) {
-                        this.user = user;
-                        this.updateUser();
+        this.openslidesRouter.currentParamMap
+            .pipe(
+                tap(() => this.updateUser()),
+                map(params => {
+                    if (params[`id`]) {
+                        this.urlUserId = +params[`id`];
+                        return this.repo.getViewModelObservable(this.urlUserId);
                     }
-                });
-            }
-            this.updateUser();
-        });
+
+                    return of();
+                }),
+                switchAll()
+            )
+            .subscribe(user => {
+                if (user) {
+                    this.user = user;
+                    this.updateUser();
+                }
+            });
 
         this.operator.operatorUpdated.subscribe(() => {
             this.updateUser();

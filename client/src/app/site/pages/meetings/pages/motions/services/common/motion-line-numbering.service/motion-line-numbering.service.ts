@@ -413,7 +413,7 @@ export class MotionLineNumberingService {
             }
 
             const newText = amendment.amendment_paragraph_text(paraNo);
-            if (!newText) {
+            if (newText === null) {
                 return origText;
             }
 

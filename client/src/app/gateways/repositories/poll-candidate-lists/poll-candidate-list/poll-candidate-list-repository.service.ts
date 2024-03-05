@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { PollCandidateList } from 'src/app/domain/models/poll-candidate-lists/poll-candidate-list';
 import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
@@ -29,7 +29,7 @@ export class PollCandidateListRepositoryService extends BaseMeetingRelatedReposi
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `PollCandidateLists` : `PollCandidateList`);
-    public getTitle = (viewModel: ViewPollCandidateList): string => _(`Confirmation of the nomination list`);
+    public getTitle = (): string => _(`Confirmation of the nomination list`);
 
     public override getFieldsets(): Fieldsets<PollCandidateList> {
         const detailFieldset: (keyof PollCandidateList)[] = [`poll_candidate_ids`, `option_id`, `meeting_id`];

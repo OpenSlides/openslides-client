@@ -2,6 +2,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, ContentChild, EventEmitter, Input, OnDestroy, Output, TemplateRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
+import { Mutex } from 'src/app/infrastructure/utils/promises';
 
 @Component({
     selector: `os-sorting-list`,
@@ -24,7 +25,7 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      * Declare the templateRef to coexist between parent in child
      */
     @ContentChild(TemplateRef, { static: true })
-    public templateRef: TemplateRef<T>;
+    public templateRef: TemplateRef<{ $implicit: T; index: number }>;
 
     /**
      * Set to true if events are directly fired after sorting.
@@ -77,6 +78,9 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
         }
     }
 
+    @Input()
+    public isPriorityItemFunction: (item: T) => boolean;
+
     /**
      * Saves the subscription, if observables are used. Cleared in the onDestroy hook.
      */
@@ -86,6 +90,10 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      * Always stores the current items from the last update. Needed for restore and changing between live=true/false
      */
     private currentItems: T[] = [];
+
+    private draggingMutex = new Mutex();
+    private draggingUnlockFnPromise: PromiseLike<() => void> = undefined;
+    private sortingChanged = false;
 
     /**
      * Inform the parent view about sorting.
@@ -104,13 +112,22 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
     }
 
     /**
-     * Updates the array with the new data. This is called, if the input changes
+     * Updates the array with the new data. This is called if the input changes.
      *
      * @param newValues The new values to set.
      */
-    private updateArray(newValues: T[]): void {
+    private async updateArray(newValues: T[]): Promise<void> {
         this.currentItems = newValues.map(val => val);
-        if (this.sortedItems.length !== newValues.length || this.live) {
+        this.sortingChanged = true;
+        const unlock = await this.draggingMutex.lock();
+        newValues = [...this.currentItems];
+        this.updateSortedList(newValues);
+        unlock();
+    }
+
+    private updateSortedList(newValues: T[]): void {
+        const set = new Set(this.sortedItems.map(item => item.id));
+        if (this.live || this.sortedItems.length !== newValues.length || newValues.some(value => !set.has(value.id))) {
             this.sortedItems = newValues.map(val => val);
         } else {
             this.sortedItems = this.sortedItems.map(arrayValue =>
@@ -122,15 +139,18 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
     /**
      * Restore the old order from the last update
      */
-    public restore(): void {
+    public async restore(): Promise<void> {
+        const unlock = await this.draggingMutex.lock();
         this.sortedItems = this.currentItems.map(val => val);
+        unlock();
     }
 
     /**
-     * Handles the start of a dragDrop event and clears multiSelect if the ittem dragged
+     * Handles the start of a dragDrop event and clears multiSelect if the dragged item
      * is not part of the selected items
      */
-    public dragStarted(index: number): void {
+    public async dragStarted(index: number): Promise<void> {
+        this.draggingUnlockFnPromise = this.draggingMutex.lock();
         if (this.multiSelectedIndex.length && !this.multiSelectedIndex.includes(index)) {
             this.multiSelectedIndex = [];
         }
@@ -139,45 +159,35 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
     /**
      * drop event
      * @param event the event
-     * @param dropBehind (optional) toggle explicit 'insert behind'(true) or
+     * @param dropBehind (optional) toggle explicit 'insert behind' (true) or
      * 'insert before' (false) behavior instead of relying on a
      * 'natural drop logic'
      */
-    public drop(event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number }, dropBehind?: boolean): void {
-        if (!this.multiSelectedIndex.length) {
-            moveItemInArray(this.sortedItems, event.previousIndex, event.currentIndex);
-        } else {
-            const before: T[] = [];
-            const insertions: T[] = [];
-            const behind: T[] = [];
-            // TODO: this must be refactored!
-            for (let i = 0; i < this.sortedItems.length; i++) {
-                if (!this.multiSelectedIndex.includes(i)) {
-                    if (i < event.currentIndex) {
-                        before.push(this.sortedItems[i]);
-                    } else if (i > event.currentIndex) {
-                        behind.push(this.sortedItems[i]);
-                    } else {
-                        if (dropBehind === false) {
-                            behind.push(this.sortedItems[i]);
-                        } else if (dropBehind === true) {
-                            before.push(this.sortedItems[i]);
-                        } else {
-                            if (Math.min(...this.multiSelectedIndex) < i) {
-                                before.push(this.sortedItems[i]);
-                            } else {
-                                behind.push(this.sortedItems[i]);
-                            }
-                        }
-                    }
-                } else {
-                    insertions.push(this.sortedItems[i]);
-                }
-            }
-            this.sortedItems = [...before, ...insertions, ...behind];
+    public async drop(
+        event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number },
+        dropBehind?: boolean
+    ): Promise<void> {
+        if (!this.draggingUnlockFnPromise) {
+            throw new Error(`Drop was called without previous drag call`);
         }
-        this.sortEvent.emit(this.sortedItems);
-        this.multiSelectedIndex = [];
+        const unlock = await this.draggingUnlockFnPromise;
+        this.draggingUnlockFnPromise = undefined;
+        let multiSelectedIndex = this.multiSelectedIndex;
+        if (this.sortingChanged) {
+            ({ event, multiSelectedIndex } = this.calculateNewDropIndices(event, multiSelectedIndex));
+            this.updateSortedList([...this.currentItems]);
+            this.sortingChanged = false;
+        }
+        if (event.previousIndex !== undefined) {
+            if (!multiSelectedIndex.length) {
+                moveItemInArray(this.sortedItems, event.previousIndex, event.currentIndex);
+            } else {
+                this.moveMultipleItemsInArray(event, multiSelectedIndex, dropBehind);
+            }
+            this.sortEvent.emit(this.sortedItems);
+            this.multiSelectedIndex = [];
+        }
+        unlock();
     }
 
     /**
@@ -214,5 +224,101 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      */
     public isSelectedRow(index: number): boolean {
         return this.multiSelectedIndex.includes(index);
+    }
+
+    private calculateNewDropIndices(
+        event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number },
+        multiSelectedIndex: number[]
+    ): { event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number }; multiSelectedIndex: number[] } {
+        if (this.sortingChanged) {
+            let newPreviousIndex = this.currentItems.findIndex(
+                item => item.id === this.sortedItems[event.previousIndex].id
+            );
+            const newMultiSelectedIndex = multiSelectedIndex
+                .map(index => this.currentItems.findIndex(item => item.id === this.sortedItems[index].id))
+                .filter(index => index !== -1)
+                .sort((a, b) => a - b);
+            let newCurrentIndex = Math.min(event.currentIndex, this.currentItems.length - 1);
+            if (newPreviousIndex === -1) {
+                newPreviousIndex = newMultiSelectedIndex.length ? newMultiSelectedIndex[0] : undefined;
+            }
+            newCurrentIndex = this.transformDropIndexByPriority(newPreviousIndex, event.currentIndex, newCurrentIndex);
+            return {
+                event: { currentIndex: newCurrentIndex, previousIndex: newPreviousIndex },
+                multiSelectedIndex: newMultiSelectedIndex
+            };
+        }
+        return { event, multiSelectedIndex };
+    }
+
+    private transformDropIndexByPriority(
+        newPreviousIndex: number,
+        oldCurrentIndex: number,
+        newCurrentIndex: number
+    ): number {
+        const item = this.currentItems[newPreviousIndex];
+        if (!this.isPriorityItemFunction) {
+            return newCurrentIndex;
+        }
+        let oldPriorityIndex = -1;
+        let newPriorityIndex = -1;
+        for (
+            let i = -1;
+            (i < this.currentItems.length || i < this.sortedItems.length) &&
+            (i === oldPriorityIndex || i === newPriorityIndex);
+            i++
+        ) {
+            if (oldPriorityIndex === i && this.isPriorityItemFunction(this.sortedItems[i + 1])) {
+                oldPriorityIndex++;
+            }
+            if (newPriorityIndex === i && this.isPriorityItemFunction(this.currentItems[i + 1])) {
+                newPriorityIndex++;
+            }
+        }
+        if (this.isPriorityItemFunction(item)) {
+            if (oldCurrentIndex <= oldPriorityIndex && newCurrentIndex > newPriorityIndex) {
+                return newPreviousIndex > newPriorityIndex ? newPriorityIndex + 1 : newPriorityIndex;
+            }
+            return newCurrentIndex;
+        }
+        if (oldCurrentIndex > oldPriorityIndex && newCurrentIndex <= newPriorityIndex) {
+            return newPriorityIndex + 1;
+        }
+        return newCurrentIndex;
+    }
+
+    private moveMultipleItemsInArray(
+        event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number },
+        multiSelectedIndex: number[],
+        dropBehind?: boolean
+    ): void {
+        const before: T[] = [];
+        const insertions: T[] = [];
+        const behind: T[] = [];
+        // TODO: this must be refactored!
+        for (let i = 0; i < this.sortedItems.length; i++) {
+            if (!multiSelectedIndex.includes(i)) {
+                if (i < event.currentIndex) {
+                    before.push(this.sortedItems[i]);
+                } else if (i > event.currentIndex) {
+                    behind.push(this.sortedItems[i]);
+                } else {
+                    if (dropBehind === false) {
+                        behind.push(this.sortedItems[i]);
+                    } else if (dropBehind === true) {
+                        before.push(this.sortedItems[i]);
+                    } else {
+                        if (Math.min(...multiSelectedIndex) < i) {
+                            before.push(this.sortedItems[i]);
+                        } else {
+                            behind.push(this.sortedItems[i]);
+                        }
+                    }
+                }
+            } else {
+                insertions.push(this.sortedItems[i]);
+            }
+        }
+        this.sortedItems = [...before, ...insertions, ...behind];
     }
 }

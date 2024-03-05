@@ -6,7 +6,7 @@
     </span>
     <div
         *ngIf="changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit"
-        class="motion-text"
+        class="motion-text underlined-links"
         [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
         [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
         [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
@@ -45,11 +45,8 @@
         </mat-checkbox>
 
         <mat-form-field *ngIf="contentForm.value.statute_amendment">
-            <mat-select
-                [placeholder]="'Statute paragraph' | translate"
-                formControlName="statute_paragraph_id"
-                (valueChange)="onStatuteParagraphChange($event)"
-            >
+            <mat-label>{{ 'Statute paragraph' | translate }}</mat-label>
+            <mat-select formControlName="statute_paragraph_id" (valueChange)="onStatuteParagraphChange($event)">
                 <mat-option *ngFor="let paragraph of statuteParagraphs" [value]="paragraph.id">
                     {{ paragraph.title }}
                 </mat-option>
@@ -61,11 +58,12 @@
     <div *ngIf="newMotion" class="content-field">
         <ng-container *ngIf="canChangeMetadata">
             <mat-form-field>
+                <mat-label>{{ 'Submitters' | translate }}</mat-label>
                 <os-repo-search-selector
                     formControlName="submitter_ids"
                     [multiple]="true"
-                    placeholder="{{ 'Submitters' | translate }}"
                     [repo]="participantRepo"
+                    [sortService]="participantSortService"
                     [subscriptionConfig]="participantSubscriptionConfig"
                     (clickNotFound)="createNewSubmitter($event)"
                 >
@@ -82,7 +80,8 @@
         <!-- number -->
         <div *ngIf="editMotion && !newMotion && canChangeMetadata" class="content-field form-number">
             <mat-form-field *ngIf="editMotion">
-                <input matInput osAutofocus placeholder="{{ 'Number' | translate }}" formControlName="number" />
+                <mat-label>{{ 'Number' | translate }}</mat-label>
+                <input matInput osAutofocus formControlName="number" />
                 <mat-error>{{ 'already exists' | translate }}</mat-error>
             </mat-form-field>
         </div>
@@ -90,7 +89,8 @@
         <!-- Title -->
         <div *ngIf="editMotion" class="content-field form-title">
             <mat-form-field *ngIf="editMotion">
-                <input matInput placeholder="{{ 'Title' | translate }}" formControlName="title" required />
+                <mat-label>{{ 'Title' | translate }}</mat-label>
+                <input matInput formControlName="title" required />
                 <mat-error>{{ 'The title is required' | translate }}</mat-error>
             </mat-form-field>
         </div>
@@ -98,13 +98,16 @@
 
     <!-- formatted statute amendment -->
     <div
-        class="motion-text line-numbers-none"
+        class="motion-text line-numbers-none underlined-links"
         *ngIf="!editMotion && motion?.isStatuteAmendment()"
         [innerHTML]="getFormattedStatuteAmendment() | trust : 'html'"
     ></div>
 
     <!-- The HTML Editor for motions and traditional amendments -->
     <ng-container *ngIf="editMotion && !isParagraphBasedAmendment">
+        <h3 *ngIf="preamble">
+            <span>{{ preamble }}</span>
+        </h3>
         <os-editor
             formControlName="text"
             [required]="!isParagraphBasedAmendment"
@@ -149,7 +152,11 @@
             &nbsp;
             <span *ngIf="reasonRequired && editMotion">*</span>
         </h3>
-        <div class="motion-text" *ngIf="!editMotion" [innerHtml]="motion?.reason | trust : 'html'"></div>
+        <div
+            class="motion-text underlined-links"
+            *ngIf="!editMotion"
+            [innerHtml]="motion?.reason | trust : 'html'"
+        ></div>
 
         <!-- The HTML Editor -->
         <os-editor
@@ -173,10 +180,12 @@
     <!-- Category form -->
     <div class="content-field" *ngIf="newMotion && hasCategories">
         <mat-form-field>
+            <mat-label>{{ 'Category' | translate }}</mat-label>
             <os-repo-search-selector
                 formControlName="category_id"
-                placeholder="{{ 'Category' | translate }}"
                 [repo]="categoryRepo"
+                [excludeIds]="true"
+                [addClearSelection]="true"
             ></os-repo-search-selector>
         </mat-form-field>
     </div>
@@ -211,11 +220,12 @@
             <!-- Supporter form -->
             <div class="content-field" *ngIf="editMotion && minSupporters">
                 <mat-form-field>
+                    <mat-label>{{ 'Supporters' | translate }}</mat-label>
                     <os-repo-search-selector
-                        formControlName="supporter_meeting_user_ids"
+                        formControlName="supporter_user_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Supporters' | translate }}"
                         [repo]="participantRepo"
+                        [sortService]="participantSortService"
                         [subscriptionConfig]="participantSubscriptionConfig"
                         (clickNotFound)="createNewSupporter($event)"
                     >
@@ -230,11 +240,10 @@
             <!-- Workflow -->
             <div class="content-field" *ngIf="editMotion">
                 <mat-form-field>
+                    <mat-label>{{ 'Workflow' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="workflow_id"
-                        placeholder="{{ 'Workflow' | translate }}"
                         [repo]="workflowRepo"
-                        [defaultDataConfigKey]="getDefaultWorkflowKeyOfSettingsByParagraph()"
                     ></os-repo-search-selector>
                 </mat-form-field>
             </div>

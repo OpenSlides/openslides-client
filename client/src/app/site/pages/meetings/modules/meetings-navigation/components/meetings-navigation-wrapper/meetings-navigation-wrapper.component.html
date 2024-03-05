@@ -66,7 +66,9 @@
     <ng-template osSidenavMainContent>
         <div class="content">
             <os-global-headbar></os-global-headbar>
-            <router-outlet #o="outlet"></router-outlet>
+            <div class="scrollable-content">
+                <router-outlet #o="outlet"></router-outlet>
+            </div>
         </div>
         <div class="toolbars">
             <os-action-bar></os-action-bar>

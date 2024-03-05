@@ -1,11 +1,10 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, inject, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Subscription } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
@@ -34,6 +33,8 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
         if (!Object.keys(previousMotion || {}).length && Object.keys(motion).length) {
             this.onInitTextBasedAmendment(); // Assuming that it's an amendment
         }
+
+        this.onAfterSetMotion(previousMotion, motion);
     }
 
     public get motion(): ViewMotion {
@@ -168,13 +169,8 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     private _isEditing = false;
     private _motion: ViewMotion | null = null;
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected motionServiceCollector: MotionDetailServiceCollectorService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    protected motionServiceCollector = inject(MotionDetailServiceCollectorService);
 
     /**
      * In the original version, a change-recommendation-annotation has been clicked
@@ -205,6 +201,11 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
      * Function called when a new motion is passed and it's an text-based amendment
      */
     protected onInitTextBasedAmendment(): void {}
+
+    /**
+     * Function called after all eventual updates whenever the motion setter is called
+     */
+    protected onAfterSetMotion(_previous: ViewMotion, _current: ViewMotion): void {}
 
     /**
      * Function called when a new motion is passed and right after the internal `init`-function was called

@@ -22,7 +22,7 @@ export class ChipComponent {
         }
     }
 
-    public cssClass: string = ``;
+    public cssClass = ``;
 
     private _color: Color | null = null;
     private _threshold = `0.5`;

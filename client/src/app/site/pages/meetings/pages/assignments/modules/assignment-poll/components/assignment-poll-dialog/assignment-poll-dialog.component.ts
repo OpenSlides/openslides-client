@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import {
@@ -50,12 +49,10 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
      * injects the poll itself
      */
     public constructor(
-        formBuilder: UntypedFormBuilder,
-        dialogRef: MatDialogRef<BasePollDialogComponent>,
         public readonly assignmentPollService: AssignmentPollService,
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll
     ) {
-        super(dialogRef, pollData, formBuilder);
+        super(pollData);
     }
 
     public override onBeforeInit(): void {

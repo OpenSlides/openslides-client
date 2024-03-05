@@ -1,7 +1,9 @@
 @import 'src/assets/styles/variables.scss';
+.card-padding {
+    padding: 16px;
+}
 
 .los-title {
-    margin: 0 25px;
     display: block;
 }
 
@@ -22,20 +24,25 @@
         font-size: 14px;
         display: grid;
         grid-gap: 1em;
-        grid-template-columns: min-content auto min-content;
+        grid-template-columns: min-content auto min-content min-content;
 
         .finished-speaker-info {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         }
     }
+
+    .center-text {
+        margin: auto 0;
+    }
 }
 
-.current-speaker {
+.current-speaker,
+.interposed-questions .speaker {
     display: table;
     width: -webkit-fill-available;
     height: 50px;
-    margin: 50px 25px 20px 25px;
+    margin: 50px 25px 10px 25px;
     box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.25);
     line-height: 1;
 
@@ -51,9 +58,12 @@
     .name {
         display: table-cell;
         vertical-align: middle;
-        font-weight: bold;
         padding-left: 10px;
         width: 100%;
+
+        .speaker-structure-level {
+            font-size: 12px;
+        }
 
         .active-speaker-subtitle {
             * {
@@ -71,7 +81,14 @@
     }
 }
 
-.waiting-list {
+.current-speaker {
+    .name {
+        font-weight: bold;
+    }
+}
+
+.waiting-list,
+.interposed-questions {
     padding: 10px 25px 0 25px;
 
     .single-speaker-line {
@@ -86,10 +103,24 @@
         .speaker-controls {
             margin-right: 0.5em;
         }
+
+        .speaker-structure-level {
+            font-size: 12px;
+        }
     }
 
     .speaker-warning {
         margin-right: 5px;
+    }
+}
+
+.interposed-questions {
+    padding-top: 0px;
+    padding-left: 40px;
+    margin-bottom: 20px;
+    .speaker {
+        margin: 0px 0 5px 25px;
+        box-shadow: none;
     }
 }
 
@@ -106,4 +137,12 @@
 .search-new-speaker-form {
     padding: 15px 25px 0 25px;
     width: auto;
+}
+
+.centered-text {
+    text-align: center;
+}
+
+.my-border-bottom {
+    border-bottom: 1px solid !important;
 }

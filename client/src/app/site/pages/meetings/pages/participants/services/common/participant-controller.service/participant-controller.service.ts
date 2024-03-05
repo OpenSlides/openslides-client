@@ -1,5 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, firstValueFrom, map, Observable, of, Subscription, switchAll } from 'rxjs';
+import {
+    auditTime,
+    BehaviorSubject,
+    combineLatest,
+    filter,
+    firstValueFrom,
+    map,
+    Observable,
+    of,
+    Subscription,
+    switchAll,
+    tap
+} from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
@@ -26,6 +38,7 @@ import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-me
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 
@@ -49,6 +62,8 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     private _participantListUpdateSubscription: Subscription;
 
+    private _participantIdMapSubject = new BehaviorSubject<{ [id: number]: ViewUser }>({});
+
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
@@ -64,17 +79,22 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         super(controllerServiceCollector, User, repo);
 
         let meetingUserIds = [];
-        this.activeMeetingIdService.meetingIdObservable.subscribe(newId => {
-            if (this._participantListUpdateSubscription) {
-                this._participantListUpdateSubscription.unsubscribe();
-            }
-            if (newId) {
-                this.meetingController.getViewModelObservable(newId).subscribe(meeting => {
-                    meetingUserIds = meeting?.meeting_user_ids ?? [];
-                    this.updateUsersFromMeetingUsers(this.meetingUserRepo.getViewModelList() ?? [], meetingUserIds);
-                });
-            }
-        });
+        this.activeMeetingIdService.meetingIdObservable
+            .pipe(
+                tap(() => {
+                    if (this._participantListUpdateSubscription) {
+                        this._participantListUpdateSubscription.unsubscribe();
+                    }
+                }),
+                map(newId => {
+                    return newId ? this.meetingController.getViewModelObservable(newId) : of();
+                }),
+                switchAll()
+            )
+            .subscribe(meeting => {
+                meetingUserIds = meeting?.meeting_user_ids ?? [];
+                this.updateUsersFromMeetingUsers(this.meetingUserRepo.getViewModelList() ?? [], meetingUserIds);
+            });
 
         this.meetingUserRepo.getViewModelListObservable().subscribe(async mUsers => {
             this.updateUsersFromMeetingUsers(mUsers, meetingUserIds);
@@ -88,7 +108,8 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
                 mUser.group_ids?.length &&
                 meetingUserIds.includes(mUser.id)
         );
-        const users = meetingUsers.map(mUser => mUser.user);
+        const users = meetingUsers.map(mUser => mUser?.user).filter(user => user);
+        this._participantIdMapSubject.next(users.mapToObject(user => ({ [user.id]: user })));
         this._participantListSubject.next(users);
     }
 
@@ -98,6 +119,24 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public override getViewModelListObservable(): Observable<ViewUser[]> {
         return this._participantListSubject;
+    }
+
+    public override getSortedViewModelList(key?: string): ViewUser[] {
+        return this.userController
+            .getSortedViewModelList(key)
+            .filter(user => this._participantIdMapSubject.value[user.id]);
+    }
+
+    public override getSortedViewModelListObservable(key?: string): Observable<ViewUser[]> {
+        return combineLatest([
+            this._participantIdMapSubject,
+            this.userController.getSortedViewModelListObservable(key)
+        ]).pipe(
+            auditTime(1),
+            map(([idMap, sortedUsers]) => {
+                return sortedUsers.filter(user => idMap[user.id]);
+            })
+        );
     }
 
     public override getViewModelObservable(id: Id): Observable<ViewUser | null> {
@@ -157,6 +196,14 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public setPasswordSelf(user: Identifiable, newPassword: string, oldPassword: string): Promise<void> {
         return this.repo.setPasswordSelf(user, oldPassword, newPassword);
+    }
+
+    public jsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+        return this.repo.participantJsonUpload(payload);
+    }
+
+    public import(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
+        return this.repo.participantImport(payload);
     }
 
     /**
@@ -264,9 +311,11 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
      */
     public async createFromString(name: string): Promise<RawUser> {
         const newUser = this.parseStringIntoUser(name);
+        // we want to generate the username in the backend
+        newUser.username = ``;
         const newUserPayload: any = {
             ...newUser,
-            is_active: true,
+            is_active: false,
             group_ids: [this.activeMeeting?.default_group_id]
         };
         const identifiable = (await this.create(newUserPayload))[0];
@@ -291,7 +340,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             meeting_users: [
                 {
                     group_ids: this.validateField(participant, `group_ids`),
-                    structure_level: this.validateField(participant, `structure_level`),
+                    structure_level_ids: this.validateField(participant, `structure_level_ids`),
                     number: this.validateField(participant, `number`),
                     vote_weight: toDecimal(this.validateField(participant, `vote_weight`), false),
                     vote_delegated_to_id: this.validateField(participant, `vote_delegated_to_id`),

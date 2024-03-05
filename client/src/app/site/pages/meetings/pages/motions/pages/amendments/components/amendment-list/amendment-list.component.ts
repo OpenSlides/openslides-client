@@ -5,7 +5,6 @@ import { distinctUntilChanged, firstValueFrom, Observable, of, switchMap } from 
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { ChangeRecoMode } from '../../../../../../../../../domain/models/motions/motions.constants';
 import { MotionExportDialogService } from '../../../../components/motion-export-dialog/services/motion-export-dialog.service';
@@ -35,7 +34,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
      */
     private parentMotionId: Id | null = null;
 
-    public ready: boolean = false;
+    public ready = false;
 
     /**
      * Hold the parent motion if present
@@ -47,7 +46,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
      */
     public itemVisibility = ItemTypeChoices;
 
-    public showSequentialNumber: boolean = false;
+    public showSequentialNumber = false;
 
     /**
      * To filter stuff
@@ -57,7 +56,6 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
     private _amendmentDiffLinesMap: { [amendmentId: number]: string } = {};
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public amendmentRepo: AmendmentControllerService,
@@ -71,7 +69,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         private linenumberingService: LineNumberingService,
         private pdfExport: MotionPdfExportService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Amendments`);
         this.canMultiSelect = true;
         this.listStorageIndex = AMENDMENT_LIST_STORAGE_INDEX;

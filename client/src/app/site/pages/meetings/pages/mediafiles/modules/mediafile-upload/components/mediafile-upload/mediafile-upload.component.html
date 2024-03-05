@@ -1,7 +1,7 @@
 <os-head-bar [nav]="false" [goBack]="true">
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ 'Upload files' | translate }}</h2>
+        <h2>{{ 'New file' | translate }}</h2>
     </div>
 
     <!-- Menu for parallel upload
@@ -12,7 +12,7 @@
     </div> -->
 </os-head-bar>
 
-<mat-card class="os-card">
+<mat-card class="os-card spacer-bottom-60">
     <os-media-upload-content
         [parallel]="parallel"
         [directoryId]="directoryId"
@@ -23,12 +23,13 @@
     >
         <div *osScrollingTableCell="'access_groups'; row as file" class="cell-slot">
             <form [formGroup]="file.form">
-                <mat-form-field>
+                <mat-form-field subscriptSizing="dynamic">
+                    <mat-label>{{ 'Access groups' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="access_group_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Access groups' | translate }}"
                         [inputListValues]="availableGroups"
+                        [sortFn]="sortFn"
                     ></os-list-search-selector>
                 </mat-form-field>
             </form>

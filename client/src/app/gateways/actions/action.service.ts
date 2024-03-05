@@ -33,12 +33,18 @@ export class ActionService {
         delete this._beforeActionFnMap[index];
     }
 
-    public async sendRequests<T>(requests: ActionRequest[], handle_separately = false): Promise<T[] | null> {
+    public async sendRequests<T>(
+        requests: ActionRequest[],
+        handleSeparately = false,
+        catchError = true
+    ): Promise<T[] | null> {
         if (!this.isAllowed()) {
             return null;
         }
         console.log(`send requests:`, requests);
-        const response = await this.http.post<T>(handle_separately ? ACTION_SEPARATELY_URL : ACTION_URL, requests);
+        const response = await this.http.post<T>(handleSeparately ? ACTION_SEPARATELY_URL : ACTION_URL, requests, {
+            catchError
+        });
         if (isActionError(response)) {
             throw response.message;
         } else if (isActionResponse<T>(response)) {
@@ -60,11 +66,11 @@ export class ActionService {
      * @deprecated this does not offer the handle_separately route option, which is vital for certain types of bulk requests, it's better to use `createFromArray` instead.
      */
     public create<T>(...requests: ActionRequest[]): Action<T> {
-        return new Action<T>(r => this.sendRequests<T>(r), requests);
+        return new Action<T>((r, c) => this.sendRequests<T>(r, false, c), requests);
     }
 
     public createFromArray<T>(requests: ActionRequest[], handle_separately = false): Action<T> {
-        return new Action<T>(r => this.sendRequests<T>(r, handle_separately), requests);
+        return new Action<T>((r, c) => this.sendRequests<T>(r, handle_separately, c), requests);
     }
 
     private isAllowed(): boolean {
@@ -73,40 +79,5 @@ export class ActionService {
             return true;
         }
         return functions.every(fn => !fn());
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////// The following methods will be removed ///////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * @deprecated This will be removed pretty soon, use `create` instead!
-     * @param action
-     * @param data
-     * @returns
-     */
-    public async sendRequest<T>(action: string, data: any): Promise<T | void> {
-        const results = await this.sendRequests<T>([{ action, data: [data] }]);
-        if (!results) {
-            return;
-        }
-        if (results.length !== 1) {
-            throw new Error(`The action service did not respond with exactly one response for one request.`);
-        }
-        return results[0];
-    }
-
-    /**
-     * @deprecated This will be removed pretty soon, use `createFromArray` instead!
-     * @param action
-     * @param data
-     * @returns
-     */
-    public async sendBulkRequest<T>(action: string, data: any[]): Promise<T[] | null> {
-        const results = await this.sendRequests<T>([{ action, data }]);
-        if (results && results.length !== data.length) {
-            throw new Error(`Inner resultlength is not ${data.length} from the action service`);
-        }
-        return results;
     }
 }

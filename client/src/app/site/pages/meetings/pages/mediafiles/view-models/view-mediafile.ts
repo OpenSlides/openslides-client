@@ -1,4 +1,4 @@
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
 import { ViewMediafileMeetingUsageKey } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
@@ -50,10 +50,13 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
      * @returns The id of the currently active meeting
      */
     public getEnsuredActiveMeetingId!: () => Id;
+    public getProjectedContentObjects!: () => Fqid[];
 
     public override canAccess(): boolean {
         if (this.owner_id === `organization/1`) {
             return !this.getEnsuredActiveMeetingId();
+        } else if (this.getProjectedContentObjects().indexOf(`mediafile/${this.id}`) !== -1) {
+            return true;
         } else {
             return this.getEnsuredActiveMeetingId() === this.meeting_id;
         }

@@ -35,8 +35,8 @@ export class OpenSlidesTranslationService extends TranslateService {
         compiler: TranslateCompiler,
         parser: TranslateParser,
         missingTranslationHandler: MissingTranslationHandler,
-        @Inject(USE_DEFAULT_LANG) useDefaultLang: boolean = true,
-        @Inject(USE_STORE) isolate: boolean = false
+        @Inject(USE_DEFAULT_LANG) useDefaultLang = true,
+        @Inject(USE_STORE) isolate = false
     ) {
         super(store, currentLoader, compiler, parser, missingTranslationHandler, useDefaultLang, isolate, true, `en`);
     }
@@ -46,7 +46,7 @@ export class OpenSlidesTranslationService extends TranslateService {
      *
      * @override
      */
-    public override get(key: string | string[], interpolateParams?: Object): Observable<string | any> {
+    public override get(key: string | string[], interpolateParams?: unknown): Observable<string | any> {
         try {
             return super.get(key, interpolateParams);
         } catch {
@@ -59,7 +59,7 @@ export class OpenSlidesTranslationService extends TranslateService {
      *
      * @override
      */
-    public override stream(key: string | string[], interpolateParams?: Object): Observable<string | any> {
+    public override stream(key: string | string[], interpolateParams?: unknown): Observable<string | any> {
         try {
             return super.stream(key, interpolateParams);
         } catch {
@@ -72,7 +72,7 @@ export class OpenSlidesTranslationService extends TranslateService {
      *
      * @override
      */
-    public override instant(key: string | string[], interpolateParams?: Object): string | any {
+    public override instant(key: string | string[], interpolateParams?: unknown): string | any {
         try {
             return super.instant(key, interpolateParams);
         } catch {

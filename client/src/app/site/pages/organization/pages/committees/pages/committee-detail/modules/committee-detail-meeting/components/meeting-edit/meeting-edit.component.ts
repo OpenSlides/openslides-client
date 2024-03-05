@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -17,7 +17,6 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -95,7 +94,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public addMeetingLabel = ADD_MEETING_LABEL;
     public editMeetingLabel = EDIT_MEETING_LABEL;
 
-    public isCreateView: boolean = false;
+    public isCreateView = false;
 
     public meetingForm!: UntypedFormGroup;
     public theDuplicateFromId: Id | null = null;
@@ -107,7 +106,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public committee!: ViewCommittee;
 
     public get meetingUsers(): ViewUser[] {
-        return this.editMeeting?.users || [];
+        const users = this.editMeeting?.calculated_users;
+        if (users && !users.some(u => u.id === this.operator.operatorId)) {
+            users.push(this.operator.user);
+        }
+
+        return users || [];
     }
 
     private meetingId: Id | null = null;
@@ -126,7 +130,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         private formBuilder: UntypedFormBuilder,
@@ -140,7 +143,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         private orga: OrganizationService,
         private routingState: RoutingStateService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.checkCreateView();
         this.createForm();
         this.init();
@@ -149,6 +152,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             super.setTitle(ADD_MEETING_LABEL);
         } else {
             super.setTitle(EDIT_MEETING_LABEL);
+            this.meetingForm.get(`language`)?.disable();
         }
 
         this.availableUsers = userRepo.getViewModelListObservable();
@@ -208,6 +212,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         this.theDuplicateFromId = id;
         if (id) {
             this.meetingForm.get(`language`)?.setValue(this.meetingRepo.getViewModel(id).language);
+            this.meetingForm.get(`language`)?.disable();
+        } else {
+            this.meetingForm.get(`language`)?.enable();
         }
     }
 
@@ -309,7 +316,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         }: any = meeting.getUpdatedModelData({
             start_time: start_time,
             end_time: end_time,
-            admin_ids: [...(meeting.admin_group?.user_ids || [])]
+            admin_ids: [...(meeting.admin_group?.calculated_user_ids || [])]
         } as any);
         const patchDaterange = {
             start,
@@ -361,7 +368,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const { daterange: { start: start_time, end: end_time } = { start: null, end: null }, ...rawPayload } = {
             ...this.meetingForm.value
         };
-        return { start_time, end_time, ...rawPayload };
+        if (!this.meetingForm.get(`daterange`).disabled) {
+            return { start_time, end_time, ...rawPayload };
+        }
+        return { ...rawPayload };
     }
 
     /**
@@ -373,7 +383,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
      */
     private getUsersToUpdateForMeetingObject(): MeetingUserModifiedFields {
         const nextAdminIds = this.meetingForm.value.admin_ids as Id[];
-        const previousAdminIds = this.editMeeting!.admin_group.user_ids || [];
+        const previousAdminIds = this.editMeeting!.admin_group.calculated_user_ids || [];
         const addedAdminIds = (nextAdminIds || []).difference(previousAdminIds);
         const removedAdminIds = previousAdminIds.difference(nextAdminIds);
 

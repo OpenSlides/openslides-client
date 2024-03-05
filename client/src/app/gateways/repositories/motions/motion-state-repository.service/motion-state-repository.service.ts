@@ -18,7 +18,7 @@ export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<V
 
     public getTitle = (viewMotionState: ViewMotionState) => viewMotionState.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Workflows` : `Workflow`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Workflows` : `Workflow`);
 
     public async create(model: Partial<MotionState>): Promise<Identifiable> {
         const payload = {
@@ -36,11 +36,11 @@ export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<V
             previous_state_ids: update.previous_state_ids,
             ...update
         };
-        return this.actions.sendRequest(MotionStateAction.UPDATE, payload);
+        await this.createAction(MotionStateAction.UPDATE, payload).resolve();
     }
 
     public async delete(viewModel: Identifiable): Promise<void> {
-        return this.actions.sendRequest(MotionStateAction.DELETE, { id: viewModel.id });
+        await this.createAction(MotionStateAction.DELETE, { id: viewModel.id }).resolve();
     }
 
     public sort(workflowId: number, viewModels: Identifiable[]): Action<void> {

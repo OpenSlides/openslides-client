@@ -3,14 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { OsFilter } from 'src/app/site/base/base-filter.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
-import { MotionCategoryControllerService } from '../../../modules/categories/services';
-import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
-import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
-import { TagControllerService } from '../../../modules/tags/services';
-import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { MotionListFilterService } from '../motion-list-filter.service';
 import { MotionsListServiceModule } from '../motions-list-service.module';
@@ -27,7 +20,7 @@ export class AmendmentListFilterService extends MotionListFilterService {
     /**
      * set the storage key nae
      */
-    protected override storageKey: string = ``;
+    protected override storageKey = ``;
 
     /**
      * The sorage key prefix to identify the parent id
@@ -53,27 +46,10 @@ export class AmendmentListFilterService extends MotionListFilterService {
 
     public constructor(
         store: MeetingActiveFiltersService,
-        categoryRepo: MotionCategoryControllerService,
-        motionBlockRepo: MotionBlockControllerService,
-        commentRepo: MotionCommentSectionControllerService,
-        tagRepo: TagControllerService,
-        workflowRepo: MotionWorkflowControllerService,
         protected override translate: TranslateService,
-        operator: OperatorService,
-        meetingSettingsService: MeetingSettingsService,
         motionRepo: MotionControllerService
     ) {
-        super(
-            store,
-            categoryRepo,
-            motionBlockRepo,
-            commentRepo,
-            tagRepo,
-            workflowRepo,
-            translate,
-            operator,
-            meetingSettingsService
-        );
+        super(store);
 
         this.updateFilterForRepo({
             repo: motionRepo,

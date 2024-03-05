@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
 
@@ -13,8 +13,8 @@ const noMicMessage = _(`Your device has no microphone`);
     providedIn: InteractionServiceModule
 })
 export class OperatorMediaPermissionService {
-    private hasAudioDevice: boolean = false;
-    private hasVideoDevice: boolean = false;
+    private hasAudioDevice = false;
+    private hasVideoDevice = false;
 
     public constructor(private translate: TranslateService, private spinnerService: SpinnerService) {}
 

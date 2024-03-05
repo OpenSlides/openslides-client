@@ -68,6 +68,20 @@
                     </div>
                 </td>
             </tr>
+            <tr *ngIf="isPercentBaseEntitledPresent && poll.entitled_users_at_stop" class="entitled-users-row">
+                <td></td>
+                <td>{{ 'Entitled present users' | translate }}</td>
+                <td class="result">
+                    <div class="single-result">
+                        <span>
+                            {{ entitledPresentUsersCount | pollPercentBase : poll }}
+                        </span>
+                        <span>
+                            {{ entitledPresentUsersCount }}
+                        </span>
+                    </div>
+                </td>
+            </tr>
         </tbody>
     </table>
 

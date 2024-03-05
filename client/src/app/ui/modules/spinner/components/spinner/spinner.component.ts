@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 /**
  * Component for the global spinner.
@@ -18,16 +18,16 @@ export class SpinnerComponent {
         this._height = value;
     }
 
+    public get height(): string {
+        return this._height;
+    }
+
     @Input()
     public set width(value: string | number) {
         if (typeof value === `number`) {
             value = `${value}px`;
         }
         this._width = value;
-    }
-
-    public get height(): string {
-        return this._height;
     }
 
     public get width(): string {

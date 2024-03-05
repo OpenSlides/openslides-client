@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, Inject } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { PollPercentBaseVerbose, VoteValue } from 'src/app/domain/models/poll';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
@@ -20,24 +19,22 @@ export class MotionPollDialogComponent extends BasePollDialogComponent implement
 
     public constructor(
         public motionPollService: MotionPollService,
-        dialogRef: MatDialogRef<BasePollDialogComponent>,
-        formBuilder: UntypedFormBuilder,
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewMotion>
     ) {
-        super(dialogRef, pollData, formBuilder);
+        super(pollData);
     }
 
     public ngAfterViewInit() {
         this.dialogVoteForm.get(`options.${this.pollData.content_object?.fqid}`)?.valueChanges.subscribe(data => {
             let newMajority = data[this.majority] === -1 ? this.majority : ``;
-            for (let option of Object.keys(data)) {
+            for (const option of Object.keys(data)) {
                 if (data[option] === -1 && this.majority !== option) {
                     newMajority = option;
                 }
             }
 
             if (this.majority !== newMajority) {
-                for (let option of Object.keys(data)) {
+                for (const option of Object.keys(data)) {
                     if (data[option] === -1 && newMajority !== option) {
                         this.dialogVoteForm
                             .get(`options.${this.pollData.content_object?.fqid}.${option}`)

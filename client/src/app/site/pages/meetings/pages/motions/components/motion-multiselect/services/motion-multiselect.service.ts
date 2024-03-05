@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { Action } from 'src/app/gateways/actions';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
+import { Action, ActionService } from 'src/app/gateways/actions';
+import { ActionRequest } from 'src/app/gateways/actions/action-utils';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
@@ -24,6 +24,7 @@ import {
     getParticipantMinimalSubscriptionConfig,
     PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
 } from '../../../../participants/participants.subscription';
+import { ParticipantControllerService } from '../../../../participants/services/common/participant-controller.service';
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { PersonalNoteControllerService } from '../../../modules/personal-notes/services';
@@ -45,7 +46,7 @@ export class MotionMultiselectService {
         private translate: TranslateService,
         private promptService: PromptService,
         private choiceService: ChoiceService,
-        private userRepo: UserRepositoryService,
+        private userRepo: ParticipantControllerService,
         private workflowRepo: MotionWorkflowControllerService,
         private categoryRepo: MotionCategoryControllerService,
         private submitterRepo: MotionSubmitterControllerService,
@@ -57,7 +58,8 @@ export class MotionMultiselectService {
         private spinnerService: SpinnerService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private snackbar: MatSnackBar,
-        private modelRequestService: ModelRequestService
+        private modelRequestService: ModelRequestService,
+        private actionService: ActionService
     ) {}
 
     /**
@@ -66,7 +68,12 @@ export class MotionMultiselectService {
      * @param motions The motions to delete
      */
     public async delete(motions: ViewMotion[]): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete all selected motions?`);
+        let title = this.translate.instant(`Are you sure you want to delete all selected motions?`);
+        if (motions.some(motion => motion.amendments?.length)) {
+            title = this.translate.instant(
+                `Warning: Amendments exist for at least one of the selected motions. Are you sure you want to delete these motions regardless?`
+            );
+        }
         if (await this.promptService.open(title)) {
             const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
             this.spinnerService.show(message, { hideAfterPromiseResolved: () => this.repo.delete(...motions) });
@@ -202,18 +209,22 @@ export class MotionMultiselectService {
         this.modelRequestService.closeSubscription(subscriptionName);
         if (selectedChoice) {
             let action: Action<any> | null = null;
-            const users = (selectedChoice.ids as Ids).map(userId => ({ id: userId }));
+            const userIds = selectedChoice.ids as Ids;
+            const reloadedMotions = motions.map(motion => this.repo.getViewModel(motion.id));
+
             if (selectedChoice.action === ADD) {
-                action = Action.from(...motions.map(motion => this.submitterRepo.create(motion, ...users)));
-            } else if (selectedChoice.action === REMOVE) {
                 action = Action.from(
-                    this.submitterRepo.delete(
-                        ...this.getSubmitterIds(
-                            users.map(user => user.id),
-                            motions
+                    ...reloadedMotions
+                        .filter(motion => this.newSubmittersInMotion(userIds, motion).length)
+                        .map(motion =>
+                            this.submitterRepo.create(motion, ...this.newSubmittersInMotion(userIds, motion))
                         )
-                    )
                 );
+            } else if (selectedChoice.action === REMOVE) {
+                const deleteSubmitterIds = this.getSubmitterIds(userIds, reloadedMotions);
+                if (deleteSubmitterIds.length) {
+                    action = Action.from(this.submitterRepo.delete(...deleteSubmitterIds));
+                }
             }
 
             if (action) {
@@ -250,7 +261,7 @@ export class MotionMultiselectService {
             } else if (selectedChoice.action === REMOVE) {
                 requestData = motions.map(motion => {
                     const remainingTagIds = new Set((motion.tag_ids || []) as number[]);
-                    for (let id of selectedChoice.ids) remainingTagIds.delete(id);
+                    for (const id of selectedChoice.ids) remainingTagIds.delete(id);
                     return this.repo.update({ tag_ids: Array.from(remainingTagIds) }, motion);
                 });
             } else {
@@ -310,7 +321,7 @@ export class MotionMultiselectService {
             const motionsNotInAgenda = motions.filter(motion => !motion.agenda_item_id);
             if (motionsNotInAgenda.length) {
                 const payload = { parent_id: selectedChoice.firstId, type: AgendaItemType.HIDDEN };
-                actions.push(this.agendaRepo.addToAgenda(payload, ...motions));
+                actions.push(this.agendaRepo.addToAgenda(payload, ...motionsNotInAgenda));
             }
             if (motions.length > motionsNotInAgenda.length) {
                 actions.push(
@@ -322,6 +333,10 @@ export class MotionMultiselectService {
             }
 
             if (actions.length) {
+                for (const action of actions) {
+                    action.setSendActionFn((req: ActionRequest[], _) => this.actionService.sendRequests(req, true));
+                }
+
                 const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
                 this.spinnerService.show(message, {
                     hideAfterPromiseResolved: () => Action.from(...actions).resolve()
@@ -389,8 +404,13 @@ export class MotionMultiselectService {
             // `bulkSetStar` does imply that "true" sets favorites while "false" unsets favorites
             const isFavorite = selectedChoice.action === options[0];
             const message = this.translate.instant(`I have ${motions.length} favorite motions. Please wait ...`);
+
+            const filteredMotions = motions
+                .map(motion => this.repo.getViewModel(motion.id))
+                .filter(motion => isFavorite || motion.getPersonalNote());
             this.spinnerService.show(message, {
-                hideAfterPromiseResolved: () => this.personalNoteRepo.setPersonalNote({ star: isFavorite }, ...motions)
+                hideAfterPromiseResolved: () =>
+                    this.personalNoteRepo.setPersonalNote({ star: isFavorite }, ...filteredMotions)
             });
         }
     }
@@ -409,5 +429,14 @@ export class MotionMultiselectService {
             );
         }
         return submitterIds.map(id => ({ id }));
+    }
+
+    private submitterInMotion(userId: Id, motion: ViewMotion): boolean {
+        return motion.submitters.some(submitter => userId == submitter.user_id);
+    }
+
+    private newSubmittersInMotion(userIds: Ids, motion: ViewMotion): Identifiable[] {
+        const newSubmitters: Id[] = userIds.filter(userId => !this.submitterInMotion(userId, motion));
+        return newSubmitters.map(id => ({ id }));
     }
 }

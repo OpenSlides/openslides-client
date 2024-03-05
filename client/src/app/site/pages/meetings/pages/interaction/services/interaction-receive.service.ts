@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import {
     BehaviorSubject,
     combineLatest,
@@ -12,7 +12,7 @@ import {
     startWith,
     Subscription
 } from 'rxjs';
-import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
+import { NotifyService } from 'src/app/gateways/notify.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ActiveMeetingService } from '../../../services/active-meeting.service';
@@ -46,16 +46,18 @@ export class InteractionReceiveService {
         }
         return this._showLiveConfObservable;
     }
+
     private _showLiveConfObservable: Observable<boolean>;
 
     public get conferenceState(): ConferenceState {
         return this.conferenceStateSubject.value;
     }
+
     public set conferenceState(state: ConferenceState) {
         this.setConferenceState(state);
     }
 
-    private isInCall: boolean = false;
+    private isInCall = false;
 
     private get promptService(): PromptService {
         return this._lazyServices.promptService;
@@ -143,7 +145,7 @@ export class InteractionReceiveService {
             this.promptService.close();
         });
 
-        this._kickObservable.subscribe(response => this.onKickMessage(response));
+        this._kickObservable.subscribe(() => this.onKickMessage());
     }
 
     public async enterCall(): Promise<void> {
@@ -174,7 +176,7 @@ export class InteractionReceiveService {
         }
     }
 
-    private async onKickMessage(message: NotifyResponse<kickMessage>): Promise<void> {
+    private async onKickMessage(): Promise<void> {
         if (await firstValueFrom(this.rtcService.isJitsiActiveObservable)) {
             this.rtcService.stopJitsi();
         }

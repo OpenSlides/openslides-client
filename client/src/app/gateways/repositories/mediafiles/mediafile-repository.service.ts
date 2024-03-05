@@ -8,6 +8,7 @@ import { Fieldsets } from 'src/app/site/services/model-request-builder';
 import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
 import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from '../base-repository';
+import { ProjectionRepositoryService } from '../projections/projection-repository.service';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { MediafileAction } from './mediafile.action';
 
@@ -21,7 +22,8 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
 
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollectorService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private projectionRepo: ProjectionRepositoryService
     ) {
         super(repositoryServiceCollector, Mediafile);
 
@@ -30,7 +32,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
 
     public getTitle = (viewMediafile: ViewMediafile) => viewMediafile.title;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Files` : `File`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Files` : `File`);
 
     public override getFieldsets(): Fieldsets<Mediafile> {
         const fileSelectionFields: TypedFieldset<Mediafile> = [`title`, `is_directory`];
@@ -116,6 +118,8 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     protected override createViewModel(model: Mediafile): ViewMediafile {
         const viewModel = super.createViewModel(model);
         viewModel.getEnsuredActiveMeetingId = () => this.activeMeetingIdService.meetingId;
+        viewModel.getProjectedContentObjects = () =>
+            this.projectionRepo.getViewModelList().map(p => p.content_object_id);
         return viewModel;
     }
 }

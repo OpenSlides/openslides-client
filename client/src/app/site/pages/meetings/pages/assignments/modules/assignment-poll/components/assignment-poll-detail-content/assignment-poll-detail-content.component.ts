@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { combineLatestWith, map } from 'rxjs';
+import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
@@ -14,6 +14,7 @@ import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/p
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 
+import { ViewPoll } from '../../../../../polls';
 import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
@@ -36,12 +37,12 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         this.cd.markForCheck();
     }
 
-    @Input()
-    public iconSize: 'large' | 'gigantic' = `large`;
-
     public get poll(): PollData {
         return this._poll;
     }
+
+    @Input()
+    public iconSize: 'large' | 'gigantic' = `large`;
 
     public get chartData(): ChartData {
         return this._chartData;
@@ -110,6 +111,14 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         return this.poll?.onehundred_percent_base === PollPercentBase.Entitled;
     }
 
+    public get isPercentBaseEntitledPresent(): boolean {
+        return this.poll?.onehundred_percent_base === PollPercentBase.EntitledPresent;
+    }
+
+    public get entitledPresentUsersCount(): number {
+        return this.poll?.entitled_users_at_stop.filter(x => x.present).length || 0;
+    }
+
     public get assignmentPollService(): PollService {
         return this.pollService;
     }
@@ -134,12 +143,27 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     ) {}
 
     public ngOnInit(): void {
-        this.poll.options_as_observable
-            .pipe(
-                combineLatestWith(this.themeService.currentGeneralColorsSubject),
-                map(([options, _]) => options)
-            )
-            .subscribe(options => this.setupTableData());
+        combineLatest([
+            this.poll.options_as_observable,
+            iif(
+                () => this.poll instanceof ViewPoll,
+                (this.poll as ViewPoll).options_as_observable.pipe(
+                    map(options =>
+                        options.filter(option => !!option.content_object_id && !!option.content_object_as_observable)
+                    ),
+                    filter(options => !!options.length),
+                    switchMap(options =>
+                        combineLatest(
+                            options.map(option =>
+                                option.content_object_as_observable.pipe(filter(content_object => !!content_object))
+                            )
+                        ).pipe(auditTime(1))
+                    )
+                ),
+                NEVER
+            ).pipe(startWith(null)),
+            this.themeService.currentGeneralColorsSubject
+        ]).subscribe(() => this.setupTableData());
     }
 
     private setupTableData(): void {

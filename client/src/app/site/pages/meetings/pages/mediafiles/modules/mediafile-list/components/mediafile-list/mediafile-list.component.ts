@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import {
@@ -15,17 +15,16 @@ import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/b
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
 
+import { InteractionService } from '../../../../../interaction/services/interaction.service';
 import { ViewGroup } from '../../../../../participants/modules/groups/view-models/view-group';
 import { MEDIAFILES_SUBSCRIPTION } from '../../../../mediafiles.subscription';
 import { MediafileCommonService } from '../../../../services/mediafile-common.service';
 import { MediafileListExportService } from '../../services/mediafile-list-export.service/mediafile-list-export.service';
 import { MediafileListGroupService } from '../../services/mediafile-list-group.service';
-import { MediafileListSortService } from '../../services/mediafile-list-sort.service';
 
 @Component({
     selector: `os-mediafile-list`,
@@ -35,6 +34,12 @@ import { MediafileListSortService } from '../../services/mediafile-list-sort.ser
 export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMediafile> implements OnInit, OnDestroy {
     @ViewChild(FileListComponent)
     public readonly fileListComponent!: FileListComponent;
+
+    /**
+     * Reference to the template for edit-dialog
+     */
+    @ViewChild(`fileEditDialog`, { static: true })
+    private readonly _fileEditDialog: TemplateRef<string> | null = null;
 
     public logoPlaces: string[];
     public logoDisplayNames = LogoDisplayNames;
@@ -48,6 +53,8 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
 
     public newDirectoryForm: UntypedFormGroup;
     public groupsBehaviorSubject: Observable<ViewGroup[]>;
+
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
 
     /**
      * @return true if the user can manage media files
@@ -77,6 +84,10 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      */
     public fileEditForm: UntypedFormGroup | null = null;
 
+    public get hasInteractionState(): Observable<boolean> {
+        return this.interactionService.isConfStateNone.pipe(map(isNone => !isNone));
+    }
+
     private folderSubscription: Subscription | null = null;
     private directorySubscription: Subscription | null = null;
     public directory: ViewMediafile | null = null;
@@ -86,21 +97,20 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: MediafileControllerService,
         private exporter: MediafileListExportService,
         private mediaManage: MediaManageService,
         public vp: ViewPortService,
-        public sortService: MediafileListSortService,
         private operator: OperatorService,
         private formBuilder: UntypedFormBuilder,
         private groupRepo: MediafileListGroupService,
         private cd: ChangeDetectorRef,
-        private commonService: MediafileCommonService
+        private commonService: MediafileCommonService,
+        private interactionService: InteractionService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
 
         this.logoPlaces = this.mediaManage.allLogoPlaces;
@@ -208,6 +218,10 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         this.commonService.navigateToUploadPage(this.directory?.id);
     }
 
+    public triggerEdit(file: ViewMediafile): void {
+        this.fileListComponent.onEditFile(file, this._fileEditDialog);
+    }
+
     /**
      * Click on the edit button in the file menu
      *
@@ -219,7 +233,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
 
             this.fileEditForm = this.formBuilder.group({
                 title: [file.title, Validators.required],
-                access_group_ids: [file.access_group_ids]
+                access_group_ids: [[...file.access_group_ids]]
             });
         }
     }

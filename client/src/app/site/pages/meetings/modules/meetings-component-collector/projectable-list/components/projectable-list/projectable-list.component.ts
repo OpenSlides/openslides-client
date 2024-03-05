@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasListOfSpeakers, hasListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
+import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
 import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models/base-projectable-model';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ColumnRestriction, ListComponent } from 'src/app/ui/modules/list';
 import { BaseListComponent } from 'src/app/ui/modules/list/base/base-list.component';
-import { ScrollingTableManageService } from 'src/app/ui/modules/scrolling-table';
 import {
     END_POSITION,
     START_POSITION
@@ -84,18 +84,20 @@ export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableV
         }
     }
 
+    public get hasInteractionState(): Observable<boolean> {
+        return this.interactionService.isConfStateNone.pipe(map(isNone => !isNone));
+    }
+
     public readonly permission = Permission;
 
     public readonly isProjectedFn = (model: BaseProjectableViewModel) => this.service.isProjected(model);
 
     public constructor(
-        vp: ViewPortService,
-        cd: ChangeDetectorRef,
-        scrollingTableManager: ScrollingTableManageService,
         private operator: OperatorService,
-        private service: ProjectableListService
+        private service: ProjectableListService,
+        private interactionService: InteractionService
     ) {
-        super(vp, cd, scrollingTableManager);
+        super();
     }
 
     public _getSpeakerButtonObject(viewModel: V): (BaseViewModel & HasListOfSpeakers) | null {

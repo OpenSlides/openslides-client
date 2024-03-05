@@ -76,6 +76,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     }
 
     public isPercentBaseEntitled = false;
+    public isPercentBaseEntitledPresent = false;
 
     private _tableData: PollTableData[] = [];
     private _chartData: ChartData | null = null;
@@ -91,7 +92,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
 
     public ngOnInit(): void {
         this.subscriptions.push(
-            this._poll.options_as_observable.subscribe(data => {
+            this._poll.options_as_observable.subscribe(() => {
                 this.setupTableData();
             })
         );

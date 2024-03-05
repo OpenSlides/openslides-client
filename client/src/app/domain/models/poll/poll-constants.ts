@@ -1,4 +1,4 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 import { OptionDataKey, PollDataKey } from './generic-poll';
 
@@ -93,13 +93,15 @@ export enum PollPercentBase {
     Valid = `valid`,
     Cast = `cast`,
     Entitled = `entitled`,
+    EntitledPresent = `entitled_present`,
     Disabled = `disabled`
 }
 
 export interface EntitledUsersEntry {
     user_id: number;
+    present: boolean;
     voted: boolean;
-    vote_delegated_to_id?: number;
+    vote_delegated_to_user_id?: number;
 }
 
 export const VOTE_MAJORITY = -1;
@@ -164,6 +166,7 @@ export const PollPercentBaseVerbose = {
     valid: _(`All valid ballots`),
     cast: _(`All casted ballots`),
     entitled: _(`All entitled users`),
+    entitled_present: _(`All present entitled users`),
     disabled: _(`Disabled (no percents)`)
 };
 

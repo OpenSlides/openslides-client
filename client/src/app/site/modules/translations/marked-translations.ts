@@ -1,4 +1,4 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 /**
  * Add strings here that require translations but have never been declared
@@ -16,67 +16,6 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 _(
     `<a href="https://openslides.com">OpenSlides</a> is a free web based presentation and assembly system for visualizing and controlling agenda, motions and elections of an assembly.`
 );
-_(`Front page text`);
-_(`[Place for your welcome text.]`);
-_(`Live conference has to be active. Choose 0 to disable auto connect.`);
-_(
-    `Dear {name},\n\nthis is your personal OpenSlides login:\n\n{url}\nUsername: {username}\nPassword: {password}\n\n\nThis email was generated automatically.`
-);
-
-// Default model names
-// Projectors
-_(`Default projector`);
-// Simple workflow
-_(`Simple Workflow`);
-_(`submitted`);
-_(`accepted`);
-_(`Accept`);
-_(`Acceptance`);
-_(`rejected`);
-_(`Reject`);
-_(`Rejection`);
-_(`not decided`);
-_(`Do not decide`);
-_(`No decision`);
-// Complex workflow
-_(`Complex Workflow`);
-_(`in progress`);
-_(`published`);
-_(`permitted`);
-_(`Permit`);
-_(`Permission`);
-_(`accepted`);
-_(`Accept`);
-_(`Acceptance`);
-_(`rejected`);
-_(`Reject`);
-_(`Rejection`);
-_(`withdrawn`);
-_(`adjourned`);
-_(`Adjourn`);
-_(`Adjournment`);
-_(`not concerned`);
-_(`Do not concern`);
-_(`No concernment`);
-_(`referred to committee`);
-_(`Refer to committee`);
-_(`Referral to committee`);
-_(`needs review`);
-_(`Needs review`);
-_(`rejected (not authorized)`);
-_(`Reject (not authorized)`);
-_(`Rejection (not authorized)`);
-// Default groups
-_(`Default`);
-_(`Admin`);
-_(`Delegates`);
-_(`Staff`);
-_(`Committees`);
-// Default users
-_(`Administrator`);
-// Countdowns
-_(`Voting`);
-_(`Speaking time`);
 
 // Backend error messages
 // Workflows

@@ -236,7 +236,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         };
     }
 
-    private getAnalogOptions(pollOptions: any[], isUpdate: boolean = false): any[] {
+    private getAnalogOptions(pollOptions: any[], isUpdate = false): any[] {
         const result: any[] = [];
         for (const option of pollOptions) {
             if (!isUpdate) {

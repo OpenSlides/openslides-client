@@ -1,20 +1,15 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
+import { Component } from '@angular/core';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { PollMethod } from 'src/app/domain/models/poll/poll-constants';
 import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
 import {
     BasePollVoteComponent,
     VoteOption
 } from 'src/app/site/pages/meetings/modules/poll/components/base-poll-vote/base-poll-vote.component';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
-import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { UnknownUserLabel } from '../../services/assignment-poll.service';
@@ -47,17 +42,8 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         return this.assignment?.number_poll_candidates || false;
     }
 
-    public constructor(
-        private promptService: PromptService,
-        operator: OperatorService,
-        votingService: VotingService,
-        cd: ChangeDetectorRef,
-        pollRepo: PollControllerService,
-        meetingSettingsService: MeetingSettingsService,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
-    ) {
-        super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
+    public constructor(private promptService: PromptService, meetingSettingsService: MeetingSettingsService) {
+        super(meetingSettingsService);
     }
 
     public getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser = this.user): string {

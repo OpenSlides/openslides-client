@@ -6,7 +6,6 @@ import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meet
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { HEAD_BAR_HEIGHT } from 'src/app/ui/modules/head-bar/components/head-bar/head-bar.component';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -63,22 +62,34 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
     @Input()
     public motion!: ViewMotion;
+
     @Input()
     public changes: ViewUnifiedChange[] = [];
+
     @Input()
     public scrollToChange: ViewUnifiedChange | null = null;
+
     @Input()
     public highlightedLine!: number;
+
     @Input()
     public lineNumberingMode!: LineNumberingMode;
+
     @Input()
-    public showAllAmendments: boolean = false;
+    public showAllAmendments = false;
+
     @Input()
-    public showSummary: boolean = true;
+    public showSummary = true;
+
     @Input()
     public set showPreamble(value: boolean) {
         this._showPreamble = value;
     }
+
+    public get showPreamble(): boolean {
+        return this.motion.showPreamble ? this._showPreamble : false;
+    }
+
     @Input()
     public lineRange: LineRange | null = null;
 
@@ -92,17 +103,13 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
     public preamble!: string;
 
-    public get showPreamble(): boolean {
-        return this.motion.showPreamble ? this._showPreamble : false;
-    }
-    private _showPreamble: boolean = true;
+    private _showPreamble = true;
 
     public get nativeElement(): any {
         return this.el.nativeElement;
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private diff: MotionDiffService,
         private lineNumbering: LineNumberingService,
@@ -113,7 +120,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         private promptService: PromptService,
         private dialog: MotionChangeRecommendationDialogService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => (this.lineLength = lineLength));
         this.meetingSettingsService.get(`motions_preamble`).subscribe(preamble => (this.preamble = preamble));
     }
@@ -180,7 +187,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         const baseHtml = this.lineNumbering.insertLineNumbers({
             html: motionHtml,
             lineLength: this.lineLength,
-            firstLine: this.motion.firstLine
+            firstLine: this.motion.lead_motion?.firstLine ?? this.motion.firstLine
         });
         return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
     }

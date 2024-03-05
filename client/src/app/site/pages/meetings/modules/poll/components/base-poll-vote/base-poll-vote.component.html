@@ -33,7 +33,7 @@
                     <ng-container
                         *ngIf="
                             !settings.hideGlobalOptions &&
-                            (poll.isMethodY || poll.isMethodN) &&
+                            (poll.isMethodY || poll.isMethodN || poll.isMethodYN) &&
                             poll.hasGlobalOptionEnabled
                         "
                     >

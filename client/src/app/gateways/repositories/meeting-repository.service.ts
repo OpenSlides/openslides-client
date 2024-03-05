@@ -19,6 +19,8 @@ import { UserAction } from './users/user-action';
 export enum MeetingProjectionType {
     CurrentListOfSpeakers = `current_list_of_speakers`,
     CurrentSpeakerChyron = `current_speaker_chyron`,
+    CurrentSpeakingStructureLevel = `current_speaking_structure_level`,
+    CurrentStructureLevelList = `current_structure_level_list`,
     AgendaItemList = `agenda_item_list`,
     WiFiAccess = `wifi_access_data`
 }
@@ -59,6 +61,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `is_active_in_organization_id`,
             `template_for_organization_id`,
             `meeting_user_ids`,
+            `user_ids`,
             `description`,
             `location`,
             `organization_tag_ids`,
@@ -91,7 +94,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
 
     public getTitle = (viewMeeting: ViewMeeting) => viewMeeting.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Meetings` : `Meeting`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Meetings` : `Meeting`);
 
     public getProjectorTitle = (_: ViewMeeting, projection: Projection) => {
         let title: string;
@@ -102,6 +105,12 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
                 break;
             case MeetingProjectionType.CurrentSpeakerChyron:
                 title = this.translate.instant(`Current speaker chyron`);
+                break;
+            case MeetingProjectionType.CurrentStructureLevelList:
+                title = this.translate.instant(`All structure levels`);
+                break;
+            case MeetingProjectionType.CurrentSpeakingStructureLevel:
+                title = this.translate.instant(`Current speaker`);
                 break;
             case MeetingProjectionType.AgendaItemList:
                 title = this.translate.instant(`Agenda`);
@@ -136,6 +145,13 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             update.start_time = this.anyDateToUnix(update.start_time);
             update.end_time = this.anyDateToUnix(update.end_time);
         }
+        if (meeting && meeting.start_time === undefined && update.start_time === null) {
+            delete update.start_time;
+        }
+        if (meeting && meeting.end_time === undefined && update.end_time === null) {
+            delete update.end_time;
+        }
+
         if (update.organization_tag_ids === null) {
             update.organization_tag_ids = [];
         }

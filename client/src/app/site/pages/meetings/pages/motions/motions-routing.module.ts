@@ -48,7 +48,8 @@ const routes: Routes = [
             },
             {
                 path: `tags`,
-                loadChildren: () => import(`./pages/tags/tags.module`).then(m => m.TagsModule)
+                loadChildren: () => import(`./pages/tags/tags.module`).then(m => m.TagsModule),
+                data: { meetingPermissions: [Permission.tagCanManage] }
             },
             {
                 path: `polls`,

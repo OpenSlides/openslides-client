@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, forwardRef, Input } from '@angular/core';
-import { NG_VALUE_ACCESSOR, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
@@ -55,8 +55,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         paste_preprocess: this.onPastePreprocess
     };
 
-    public constructor(fb: UntypedFormBuilder, translate: TranslateService) {
-        super(fb);
+    public constructor(translate: TranslateService) {
+        super();
         this.tinyMceSettings.language_url = `/assets/tinymce/langs/` + translate.currentLang + `.js`;
         this.tinyMceSettings.language = translate.currentLang;
     }
@@ -84,6 +84,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     protected createForm(): UntypedFormControl {
         return this.fb.control([``]);
     }
+
     protected updateForm(value: string | null): void {
         this.contentForm.setValue(value);
     }

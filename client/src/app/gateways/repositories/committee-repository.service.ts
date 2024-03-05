@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { Id } from '../../domain/definitions/key-types';
 import { CML, OML } from '../../domain/definitions/organization-permission';
@@ -28,7 +29,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
 
     public getTitle = (viewCommittee: ViewCommittee) => viewCommittee.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Committees` : `Committee`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Committees` : `Committee`);
 
     public override getFieldsets(): Fieldsets<Committee> {
         const nameFields: TypedFieldset<Committee> = [`name`];
@@ -94,6 +95,14 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
             )
         }));
         return this.sendBulkActionToBackend(CommitteeAction.UPDATE, payload);
+    }
+
+    public committeeJsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+        return this.createAction<BackendImportRawPreview>(CommitteeAction.JSON_UPLOAD, payload);
+    }
+
+    public committeeImport(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
+        return this.createAction<BackendImportRawPreview | void>(CommitteeAction.IMPORT, payload);
     }
 
     protected override createViewModel(model: Committee): ViewCommittee {

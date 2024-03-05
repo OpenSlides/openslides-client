@@ -1,4 +1,4 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 export const PROJECTIONDEFAULT = {
     agendaItemList: `agenda_item_list`,
@@ -32,7 +32,7 @@ export const PROJECTIONDEFAULT_VERBOSE: { [key in ProjectiondefaultKey]: string 
     assignment: _(`Elections`),
     mediafile: _(`Files`),
     projectorMessage: _(`Messages`),
-    projectorCountdown: _(`Countdowns`),
+    projectorCountdown: _(`Countdowns/Timers`),
     assignmentPoll: _(`Ballots`),
     motionPoll: _(`Motion votes`),
     poll: _(`Polls`)

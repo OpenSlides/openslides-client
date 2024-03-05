@@ -26,11 +26,11 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
         const participantListFieldsMinimal: TypedFieldset<MeetingUser> = groupFields.concat([
             `vote_delegated_to_id`,
             `vote_delegations_from_ids`,
+            `structure_level_ids`,
             `vote_weight`,
-            `structure_level`,
-            `number`,
             `comment`,
-            `user_id`
+            `user_id`,
+            `number`
         ]);
 
         const detailFields: TypedFieldset<MeetingUser> = [`about_me`, `user_id`, `meeting_id`];
@@ -47,13 +47,13 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
         if (partialUser.meeting_id || this.activeMeetingId) {
             const partialPayload: Partial<MeetingUser> = {
                 meeting_id: partialUser.meeting_id ?? this.activeMeetingId,
-                structure_level: partialUser.structure_level,
                 number: partialUser.number,
                 about_me: partialUser.about_me,
                 vote_weight: toDecimal(partialUser.vote_weight, false) as any,
                 comment: partialUser.comment,
                 vote_delegated_to_id: partialUser.vote_delegated_to_id,
                 vote_delegations_from_ids: partialUser.vote_delegations_from_ids,
+                structure_level_ids: partialUser.structure_level_ids,
                 group_ids: partialUser.group_ids
             };
 
@@ -65,6 +65,5 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
 
     public getTitle = (viewUser: ViewMeetingUser) => viewUser.user?.getTitle() ?? `Unknown`;
 
-    public getVerboseName = (plural: boolean = false): string =>
-        this.translate.instant(plural ? `Participants` : `Participant`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Participants` : `Participant`);
 }

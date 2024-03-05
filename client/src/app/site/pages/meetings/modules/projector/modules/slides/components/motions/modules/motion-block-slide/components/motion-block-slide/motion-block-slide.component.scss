@@ -13,14 +13,46 @@ td {
     font-size: 85%;
 }
 
-.block-recommendation {
-    font-size: 12px;
-    min-height: 22px !important;
-    border-radius: 5px !important;
-    padding: 0 8px !important;
-    margin: 0;
-    line-height: 2;
+.motion-wrapper-single {
     display: inline-flex;
+    width: 100%;
+
+    .motion-title {
+        max-width: 100%;
+        overflow-wrap: break-word;
+    }
+}
+
+.motion-wrapper {
+    display: inline-flex;
+    width: 100%;
+
+    .motion-title {
+        max-width: max-content;
+        min-width: 10%;
+        overflow-wrap: break-word;
+    }
+
+    .recommendation-chip-wrapper {
+        padding-right: 5px;
+        padding-left: 15px;
+        overflow: hidden;
+        max-width: max-content;
+        min-width: 10%;
+        margin: auto 0;
+
+        .block-recommendation {
+            font-size: 12px;
+            min-height: 22px !important;
+            border-radius: 5px !important;
+            padding: 0 8px !important;
+            margin: 0;
+            line-height: 2;
+            display: inline-flex;
+            max-width: 100%;
+            margin-left: -10px;
+        }
+    }
 }
 
 .ellipsis-overflow {

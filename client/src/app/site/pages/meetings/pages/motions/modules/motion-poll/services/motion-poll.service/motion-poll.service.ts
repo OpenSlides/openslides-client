@@ -17,11 +17,8 @@ import {
     VotingResult,
     YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
-import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { MotionPollControllerService } from '../motion-poll-controller.service';
 import { MotionPollServiceModule } from '../motion-poll-service.module';
@@ -45,15 +42,11 @@ export class MotionPollService extends PollService {
     public defaultGroupIds!: number[];
 
     public constructor(
-        organizationSettingsService: OrganizationSettingsService,
-        pollKeyVerbose: PollKeyVerbosePipe,
-        parsePollNumber: PollParseNumberPipe,
         protected override translate: TranslateService,
         private repo: MotionPollControllerService,
-        private meetingSettingsService: MeetingSettingsService,
-        themeService: ThemeService
+        private meetingSettingsService: MeetingSettingsService
     ) {
-        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
+        super();
         this.meetingSettingsService
             .get(`motion_poll_default_onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base));
@@ -65,7 +58,7 @@ export class MotionPollService extends PollService {
         const poll: Partial<Poll> = {
             title: this.translate.instant(`Vote`),
             onehundred_percent_base: this.defaultPercentBase,
-            entitled_group_ids: this.defaultGroupIds,
+            entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog,
             pollmethod: PollMethod.YNA
         };

@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -10,7 +10,6 @@ import { MergeAmendment, MotionState, Restriction } from 'src/app/domain/models/
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotionState, ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionStateControllerService } from '../../../../modules/states/services';
@@ -79,6 +78,12 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      */
     public dialogData!: DialogData;
 
+    private set workflow(workflow: ViewMotionWorkflow) {
+        this._workflow = workflow;
+        this.updateRowDef();
+        this.cd.markForCheck();
+    }
+
     /**
      * Holds the current workflow
      */
@@ -120,12 +125,6 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         { merge: MergeAmendment.YES, label: `Yes` }
     ] as AmendmentIntoFinal[];
 
-    private set workflow(workflow: ViewMotionWorkflow) {
-        this._workflow = workflow;
-        this.updateRowDef();
-        this.cd.markForCheck();
-    }
-
     private _workflow!: ViewMotionWorkflow;
     private _workflowId!: Id;
 
@@ -153,6 +152,12 @@ In combination with motion blocks, the recommendation of multiple motions can be
             ),
             selector: `recommendation_label`,
             type: `input`
+        },
+        {
+            name: _(`Internal`),
+            help_text: _(`The recommendation of motions in such a state can only be seen by motion managers.`),
+            selector: `is_internal`,
+            type: `check`
         },
         {
             name: _(`Allow support`),
@@ -198,7 +203,7 @@ Prerequisites:
             type: `check`
         },
         {
-            name: _(`Set timestamp`),
+            name: _(`Set submission timestamp`),
             help_text: _(
                 `Activates the automatic logging of the date and time when this state was first reached. A set time stamp cannot be removed.`
             ),
@@ -266,7 +271,6 @@ Note: Does not affect the visibility of change recommendations.`
     ] as StatePerm[];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private promptService: PromptService,
         private dialog: MatDialog,
@@ -275,7 +279,7 @@ Note: Does not affect the visibility of change recommendations.`
         private exporter: WorkflowExportService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public onIdFound(id: Id | null): void {
@@ -292,7 +296,7 @@ Note: Does not affect the visibility of change recommendations.`
      * @param state the selected workflow state
      */
     public onClickStateName(state: ViewMotionState): void {
-        this.openEditDialog(state.name, this.translate.instant(`Rename state`), ``, true).subscribe(result => {
+        this.openEditDialog(state.name, this.translate.instant(`Edit state`), ``, true).subscribe(result => {
             if (result) {
                 if (result.action === `update`) {
                     this.updateWorkflowStateName(result.value!, state);
@@ -326,11 +330,7 @@ Note: Does not affect the visibility of change recommendations.`
      * Opens a dialog to rename the workflow
      */
     public onEditWorkflowButton(): void {
-        this.openEditDialog(
-            this.workflow.name,
-            this.translate.instant(`Edit name`),
-            this.translate.instant(`Please enter a new workflow name:`)
-        ).subscribe(result => {
+        this.openEditDialog(this.workflow.name, this.translate.instant(`Edit workflow`)).subscribe(result => {
             if (result && result.action === `update`) {
                 this.handleRequest(this.workflowRepo.update({ name: result.value! }, this.workflow).resolve());
             }
@@ -345,7 +345,7 @@ Note: Does not affect the visibility of change recommendations.`
      * @param state The selected workflow state
      */
     public onClickInputPerm(perm: StatePerm, state: ViewMotionState): void {
-        this.openEditDialog((<any>state)[perm.selector], `Edit`, perm.name, false, true).subscribe(result => {
+        this.openEditDialog((<any>state)[perm.selector], `Edit state`, perm.name, false, true).subscribe(result => {
             if (!result) {
                 return;
             }
@@ -532,6 +532,10 @@ Note: Does not affect the visibility of change recommendations.`
 
     public getValueOfState(state: ViewMotionState, perm: StatePerm): any {
         return (<any>state)[perm.selector];
+    }
+
+    public sortedNextStates(state: ViewMotionState): ViewMotionState[] {
+        return state.next_states.sort((a, b) => a.weight - b.weight);
     }
 
     private async deleteWorkflowState(state: ViewMotionState): Promise<void> {

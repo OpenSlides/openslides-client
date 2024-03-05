@@ -1,5 +1,6 @@
 import { Directive } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 import { ActiveFiltersStoreService, FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
 
@@ -23,10 +24,20 @@ interface RepositoryFilterConfig<OV extends BaseViewModel, V> {
      * An optional function to filter the view models.
      */
     filterFn?: (filter: OV) => boolean;
+    /**
+     * An optional function to map the view models.
+     */
+    mapFn?: (model: OV) => FilterModel;
+}
+
+interface FilterModel extends Identifiable {
+    getTitle(): string;
+    parent?: FilterModel;
+    children?: FilterModel[];
 }
 
 /**
- * Filter for the list view. List views can subscribe to its' dataService (providing filter definitions)
+ * Filter for the list view. List views can subscribe to its dataService (providing filter definitions)
  * and will receive their filtered data as observable
  */
 @Directive()
@@ -161,14 +172,18 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             this.storeActiveFilters();
         }
 
-        if (this.inputDataSubscription) {
-            this.inputDataSubscription.unsubscribe();
-            this.inputDataSubscription = null;
-        }
+        this.exitFilterService();
         this.inputDataSubscription = inputData.subscribe(data => {
             this._source.next(this.preFilter(data));
             this.updateFilteredData();
         });
+    }
+
+    public exitFilterService(): void {
+        if (this.inputDataSubscription) {
+            this.inputDataSubscription.unsubscribe();
+            this.inputDataSubscription = null;
+        }
     }
 
     public getViewModelListObservable(): Observable<V[]> {
@@ -186,7 +201,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
 
         const nextDefinitions = this.getFilterDefinitions();
 
-        let storedFilters: OsFilter<V>[] = (await this.loadFilters()) ?? [];
+        const storedFilters: OsFilter<V>[] = (await this.loadFilters()) ?? [];
 
         if (!(storedFilters && storedFilters.length && nextDefinitions && nextDefinitions.length)) {
             return;
@@ -206,7 +221,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param filter
      * @param update
      */
-    public clearFilter(filter: OsFilter<V>, update: boolean = true): void {
+    public clearFilter(filter: OsFilter<V>, update = true): void {
         filter.options.forEach(option => {
             if (typeof option === `object` && option.isActive) {
                 this.removeFilterOption(filter.property, option);
@@ -260,46 +275,53 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     }
 
     /**
-     * Helper function to get the `viewModelListObservable` of a given repository object and creates dynamic
+     * Helper function to get the `viewModelListObservable` of a given repository object and create dynamic
      * filters for them
      */
     protected updateFilterForRepo<OV extends BaseViewModel>({
         repo,
         filter,
         noneOptionLabel,
-        filterFn
+        filterFn,
+        mapFn
     }: RepositoryFilterConfig<OV, V>): void {
         repo.getViewModelListObservable()
             .pipe(
                 map(viewModels => {
+                    let filterProperties: (OsFilterOption | string)[] = [];
                     if (viewModels && viewModels.length) {
-                        const filterProperties: (OsFilterOption | string)[] = viewModels
-                            .filter(filterFn ?? (() => true))
-                            .map((model: any) => ({
+                        let models: FilterModel[] = viewModels.filter(filterFn ?? (() => true));
+                        if (mapFn) {
+                            models = Object.values(models.map(mapFn).mapToObject(model => ({ [model.id]: model })));
+                        }
+                        filterProperties = models
+                            .map((model: FilterModel) => ({
                                 condition: model.id,
                                 label: model.getTitle(),
                                 isChild: !!model.parent,
-                                children:
-                                    model.children && model.children.length
-                                        ? model.children.map((child: any) => ({
-                                              label: child.getTitle(),
-                                              condition: child.id
-                                          }))
-                                        : undefined
-                            }));
+                                isActive: (<OsFilterOption>(
+                                    filter.options.find(f => (<OsFilterOption>f)?.condition === model.id)
+                                ))?.isActive,
+                                children: model.children?.length
+                                    ? model.children.map((child: any) => ({
+                                          label: child.getTitle(),
+                                          condition: child.id
+                                      }))
+                                    : undefined
+                            }))
+                            .sort((a, b) => a.label.trim().localeCompare(b.label.trim()));
 
                         if (noneOptionLabel) {
                             filterProperties.push(`-`);
-                            filterProperties.push({
-                                condition: null,
-                                label: noneOptionLabel
-                            });
                         }
-
-                        return filterProperties;
                     }
-
-                    return [];
+                    if (noneOptionLabel) {
+                        filterProperties.push({
+                            condition: null,
+                            label: noneOptionLabel
+                        });
+                    }
+                    return filterProperties;
                 })
             )
             .pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
@@ -406,7 +428,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * Returns an array with custom arguments for said function.
      * If any filter property needs to receive arguments this function may be expanded.
      */
-    protected getFilterPropertyFunctionArguments(property: keyof V): any[] {
+    protected getFilterPropertyFunctionArguments(_property: keyof V): any[] {
         return [];
     }
 

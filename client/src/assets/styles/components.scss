@@ -1,0 +1,103 @@
+.os-tree {
+    .node-content-wrapper {
+        border: 1px black;
+        width: 100%;
+        padding: 10px 20px;
+    }
+
+    tree-loading-component {
+        display: none;
+    }
+}
+
+// to display quantities. Use in span or div
+.os-amount-chip {
+    border-radius: 50%;
+    min-width: 20px;
+    height: 20px;
+    line-height: 20px;
+    padding: 3px;
+    text-align: center;
+}
+
+.os-card,
+.os-form-card {
+    max-width: 770px;
+    margin-top: 20px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    font-size: 16px;
+}
+
+.os-card {
+    margin-bottom: 20px !important;
+    /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
+    .mat-select-arrow-wrapper {
+        visibility: hidden;
+    }
+}
+
+.os-form-card {
+    padding: 27px;
+
+    .mat-mdc-form-field {
+        width: 100%;
+        padding: 10px 0;
+    }
+}
+
+.os-form-card-mobile {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+
+    .mat-mdc-form-field,
+    .mat-mdc-select {
+        width: 100%;
+    }
+}
+
+// Shared table definitions
+// TODO: Might be deprecated since we now have Virtual Scrolling Tables
+%os-table {
+    width: 100%;
+
+    /** size of the mat row  */
+    mat-row {
+        position: relative;
+        min-height: 60px;
+    }
+    mat-row.lg {
+        height: 110px;
+        min-height: 90px;
+    }
+    mat-row:hover {
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.025);
+    }
+    mat-row.selected {
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.055);
+    }
+}
+
+.os-listview-table {
+    @extend %os-table;
+
+    /* multi select column */
+    .mat-column-selector {
+        flex: 0 0 60px;
+    }
+    /* projector button column */
+    .mat-column-projector {
+        flex: 0 0 40px;
+        overflow: visible;
+    }
+    /** hide mat header row */
+    .mat-header-row {
+        display: none;
+    }
+}
+
+.os-headed-listview-table {
+    @extend %os-table;
+}

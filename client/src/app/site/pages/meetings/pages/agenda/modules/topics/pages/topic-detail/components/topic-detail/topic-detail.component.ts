@@ -14,7 +14,6 @@ import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/
 import { ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -50,7 +49,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
     /**
      * Determine is created
      */
-    public newTopic: boolean = false;
+    public newTopic = false;
 
     /**
      * Holds the current view topic
@@ -76,12 +75,13 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     private _topicId: Id | null = null;
 
+    public getTitleFn = () => this.topic.getListTitle();
+
     /**
      * Constructor for the topic detail page.
      */
     public constructor(
         organizationSettingsService: OrganizationSettingsService,
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private formBuilder: UntypedFormBuilder,
         private repo: TopicControllerService,
@@ -94,7 +94,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         private topicPdfService: TopicPdfService,
         private route: ActivatedRoute
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.createForm();
 
         organizationSettingsService
@@ -192,7 +192,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
             // repo sometimes delivers undefined values
             // also ensures edition cannot be interrupted by autoupdate
             if (newViewTopic) {
-                const title = newViewTopic.getTitle();
+                const title = newViewTopic.getListTitle();
                 super.setTitle(title);
                 this.topic = newViewTopic;
                 // personalInfoForm is undefined during 'new' and directly after reloading

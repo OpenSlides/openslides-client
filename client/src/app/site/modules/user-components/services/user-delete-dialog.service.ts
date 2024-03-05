@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import {
     GetUserRelatedModelsPresenterResult,
     GetUserRelatedModelsPresenterService
@@ -26,8 +26,8 @@ export class UserDeleteDialogService extends BaseDialogService<
     UserDeleteDialogOpenConfig,
     boolean
 > {
-    public constructor(dialog: MatDialog, private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService) {
-        super(dialog);
+    public constructor(private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService) {
+        super();
     }
 
     public async open(data: UserDeleteDialogOpenConfig): Promise<MatDialogRef<UserDeleteDialogComponent, boolean>> {

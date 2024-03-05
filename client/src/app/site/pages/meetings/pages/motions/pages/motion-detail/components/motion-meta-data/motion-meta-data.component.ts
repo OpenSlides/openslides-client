@@ -7,15 +7,16 @@ import { Motion } from 'src/app/domain/models/motions';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
+import { MotionEditorControllerService } from '../../../../modules/editors/services';
+import { MotionSubmitterControllerService } from '../../../../modules/submitters/services';
+import { MotionWorkingGroupSpeakerControllerService } from '../../../../modules/working-group-speakers/services';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
 
 @Component({
@@ -111,7 +112,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     private _referencedMotions: ViewMotion[];
 
-    private _forwardingAvailable: boolean = false;
+    private _forwardingAvailable = false;
 
     /**
      * The subscription to the recommender config variable.
@@ -119,15 +120,16 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     private recommenderSubscription: Subscription | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         public perms: MotionPermissionService,
         private operator: OperatorService,
         private motionForwardingService: MotionForwardDialogService,
-        private meetingController: MeetingControllerService
+        private meetingController: MeetingControllerService,
+        public motionSubmitterRepo: MotionSubmitterControllerService,
+        public motionEditorRepo: MotionEditorControllerService,
+        public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
 
         if (operator.hasPerms(Permission.motionCanManage)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
@@ -316,7 +318,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
                         motion.recommendation_extension_references as ViewMotion[]
                     ]),
                     distinctUntilChanged((p, c) => [...Array(2).keys()].every(i => p[i].equals(c[i]))),
-                    map(arr => arr.map(motions => (motions || []).sort((a, b) => a.number.localeCompare(b.number))))
+                    map(arr =>
+                        arr.map(motions => (motions || []).naturalSort(this.translate.currentLang, [`number`, `title`]))
+                    )
                 )
                 .subscribe(value => ([this._referencingMotions, this._referencedMotions] = value))
         ];

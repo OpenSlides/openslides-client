@@ -1,8 +1,15 @@
-import { HttpDownloadProgressEvent, HttpErrorResponse, HttpEvent, HttpHeaderResponse } from '@angular/common/http';
+import {
+    HttpDownloadProgressEvent,
+    HttpErrorResponse,
+    HttpEvent,
+    HttpEventType,
+    HttpHeaderResponse
+} from '@angular/common/http';
 import * as fzstd from 'fzstd';
 import { firstValueFrom, Observable, Subscription } from 'rxjs';
 
 import { EndpointConfiguration } from './endpoint-configuration';
+import { PossibleStreamError } from './http-stream.service';
 import {
     CommunicationError,
     CommunicationErrorWrapper,
@@ -147,7 +154,7 @@ class StreamMessageParser<T> {
         }
     }
 
-    private handleContent(content: string, errorReason: string = `Reported by server`): void {
+    private handleContent(content: string, errorReason = `Reported by server`): void {
         const decompressedContent = this.decompressContent(content);
         const parsedContent = this.parse(decompressedContent);
         if (parsedContent instanceof ErrorDescription) {
@@ -294,7 +301,7 @@ export class HttpStream<T> {
         const observable = this.createStreamFn();
         this._subscription = observable.subscribe({
             next: event => this.handleStreamEvent(event),
-            error: error => this.handleStreamError(error),
+            error: (error: unknown) => this.handleStreamError(error),
             complete: () => this.onComplete()
         });
     }
@@ -313,15 +320,17 @@ export class HttpStream<T> {
         if (this.isClosed) {
             console.warn(`Got incoming message from stream ${this.id}, but it is closed.`);
             return;
+        } else if (event.type === HttpEventType.Response) {
+            this.reconnect();
+        } else {
+            this._parser.read(event);
         }
-        this._parser.read(event);
     }
 
     private async handleStreamError(error: unknown): Promise<void> {
         if (error instanceof HttpErrorResponse) {
-            error = error.error;
             try {
-                error = this.parseCommunicationError(error as any);
+                error = this.parseCommunicationError(error.error as any, error);
             } catch (e) {}
         }
         this.handleError(error);
@@ -393,7 +402,7 @@ export class HttpStream<T> {
         }
     }
 
-    private parseCommunicationError(text: string): CommunicationError {
+    private parseCommunicationError(text: string, error?: HttpErrorResponse): CommunicationError {
         try {
             const errorBody = JSON.parse(text) as CommunicationError | CommunicationErrorWrapper;
             if (isCommunicationError(errorBody)) {
@@ -401,6 +410,9 @@ export class HttpStream<T> {
             }
             if (isCommunicationErrorWrapper(errorBody)) {
                 return errorBody.error;
+            }
+            if (error.status === 401) {
+                return { msg: `Unauthorized`, type: PossibleStreamError.AUTH };
             }
         } catch (e) {
             return {

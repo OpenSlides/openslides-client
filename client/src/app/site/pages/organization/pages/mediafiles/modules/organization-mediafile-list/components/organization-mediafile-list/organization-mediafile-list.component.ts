@@ -17,11 +17,9 @@ import { LogoDisplayNames, LogoPlace } from 'src/app/domain/models/mediafiles/me
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileListExportService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-export.service/mediafile-list-export.service';
-import { MediafileListSortService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-sort.service';
 import { MediafileCommonService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { ORGANIZATION_SUBSCRIPTION } from 'src/app/site/pages/organization/organization.subscription';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
@@ -61,7 +59,7 @@ export class OrganizationMediafileListComponent
     }
 
     public get shouldShowFileMenuFn(): (file: ViewMediafile) => boolean {
-        return file => this.showFileMenu(file);
+        return () => this.showFileMenu();
     }
 
     /**
@@ -77,7 +75,7 @@ export class OrganizationMediafileListComponent
     public fileEditForm: UntypedFormGroup | null = null;
 
     public isUsedAsLogoFn = (file: ViewMediafile) => this.isUsedAs(file);
-    public isUsedAsFontFn = (file: ViewMediafile) => false;
+    public isUsedAsFontFn = (_file: ViewMediafile) => false;
 
     private folderSubscription: Subscription | null = null;
     private directorySubscription: Subscription | null = null;
@@ -88,19 +86,17 @@ export class OrganizationMediafileListComponent
     private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: MediafileControllerService,
         private exporter: MediafileListExportService,
         public vp: ViewPortService,
-        public sortService: MediafileListSortService,
         private operator: OperatorService,
         private formBuilder: UntypedFormBuilder,
         private cd: ChangeDetectorRef,
         private commonService: MediafileCommonService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
 
         this.newDirectoryForm = this.formBuilder.group({
@@ -144,7 +140,7 @@ export class OrganizationMediafileListComponent
         }
         const fullPlace = place;
         if (file.token !== fullPlace) {
-            for (let filteredFile of this.repo
+            for (const filteredFile of this.repo
                 .getViewModelList()
                 .filter(filterFile => filterFile.token === fullPlace && filterFile.id !== file.id)) {
                 await this.repo.update({ token: null }, filteredFile);
@@ -180,10 +176,9 @@ export class OrganizationMediafileListComponent
 
     /**
      * Determine if the given file has any extra option to show.
-     * @param file the file to check
      * @returns wether the extra menu should be accessible
      */
-    public showFileMenu(file: ViewMediafile): boolean {
+    public showFileMenu(): boolean {
         return this.canEdit;
     }
 

@@ -114,7 +114,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
      * @param length The length of the password to generate
      * @returns a random password
      */
-    public getRandomPassword(length: number = 10): string {
+    public getRandomPassword(length = 10): string {
         let pw = ``;
         const characters = `abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789`;
         // set charactersLengthPower2 to characters.length rounded up to the next power of two
@@ -152,8 +152,8 @@ export class UserControllerService extends BaseController<ViewUser, User> {
     public parseStringIntoUser(inputUser: string, schema: StringNamingSchema = `firstSpaceLast`): FullNameInformation {
         const newUser: FullNameInformation = {
             username: ``,
-            structure_level: () => ``,
             number: () => ``,
+            structureLevels: () => ``,
             first_name: ``,
             last_name: ``
         };

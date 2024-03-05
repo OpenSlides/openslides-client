@@ -1,5 +1,5 @@
 import { Directive, EventEmitter } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, map, Observable } from 'rxjs';
@@ -178,6 +178,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
     private _afterImportHandler: {
         [key: string]: { mainHandler: AfterImportHandler; additionalHandlers: AdditionalImportHandler[] };
     } = {};
+
     private _otherMainImportHelper: MainImportHandler[] = [];
 
     private _modelHeadersAndVerboseNames: { [key: string]: string } = {};
@@ -756,7 +757,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
     private async propagateNextNewEntries(): Promise<void> {
         const rawEntries = this._csvLines.map((line, i) => this.createRawImportModel(line, i + 1));
         await this.onBeforeCreatingImportModels(rawEntries);
-        for (let entry of rawEntries) {
+        for (const entry of rawEntries) {
             const nextEntry = await this.createImportModel(entry);
             this.pushNextNewEntry(nextEntry);
         }

@@ -1,5 +1,5 @@
 import { ValidatorFn, Validators } from '@angular/forms';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
@@ -9,6 +9,7 @@ import {
     PollTypeVerbose
 } from 'src/app/domain/models/poll/poll-constants';
 import { ObjectReplaceKeysConfig } from 'src/app/infrastructure/utils';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
@@ -89,6 +90,13 @@ export interface SettingsGroup {
         settings: SettingsItem[];
     }[];
 }
+
+export const SKIPPED_SETTINGS = [
+    `motions_default_workflow_id`,
+    `motions_default_amendment_workflow_id`,
+    `motions_default_statute_amendment_workflow_id`,
+    `point_of_order_category_ids`
+];
 
 function fillInSettingsDefaults(settingsGroups: SettingsGroup[]): SettingsGroup[] {
     settingsGroups.forEach(group =>
@@ -348,13 +356,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
-                        key: `list_of_speakers_speaker_note_for_everyone`,
-                        label: _(
-                            `Everyone can see the request of a point of order (instead of managers for list of speakers only)`
-                        ),
-                        type: `boolean`
-                    },
-                    {
                         key: `list_of_speakers_initially_closed`,
                         label: _(`List of speakers is initially closed`),
                         type: `boolean`
@@ -363,6 +364,32 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `list_of_speakers_show_first_contribution`,
                         label: _(`Show hint »first speech« in the list of speakers management view`),
                         type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_allow_multiple_speakers`,
+                        label: _(`Allow one participant to be on the LoS serveral times`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_enable_interposed_question`,
+                        label: _(`Enable interposed questions`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_intervention_time`,
+                        label: _(`Intervention speaking time in seconds`),
+                        type: `integer`,
+                        helpText: _(`Choose 0 to disable Intervention.`),
+                        validators: [Validators.min(0)]
+                    },
+                    {
+                        key: `list_of_speakers_default_structure_level_time`,
+                        label: _(`Default speaking time for structure levels in seconds`),
+                        helpText: _(
+                            `Choose a number greater than 0 to activate speaking times widget for structure level countdowns.`
+                        ),
+                        type: `integer`,
+                        validators: [Validators.min(0)]
                     }
                 ]
             },
@@ -416,8 +443,21 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
+                        key: `list_of_speakers_can_create_point_of_order_for_others`,
+                        label: _(`Enable point of orders for other participants`),
+                        helpText: _(`Requires permission to manage lists of speakers`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_speaker_note_for_everyone`,
+                        label: _(
+                            `Everyone can see the request of a point of order (instead of managers for list of speakers only)`
+                        ),
+                        type: `boolean`
+                    },
+                    {
                         key: `list_of_speakers_closing_disables_point_of_order`,
-                        label: _(`Restrict point of order actions to open lists of speakers`),
+                        label: _(`Disallow new point of order when list of speakers is closed`),
                         type: `boolean`
                     },
                     {
@@ -552,7 +592,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_recommendation_text_mode`,
-                        label: _(`Default text version for change recommendations`),
+                        label: _(`Default text version for change recommendations and projection of motions`),
                         type: `choice`,
                         choices: {
                             // matches ChangeRecoMode
@@ -570,6 +610,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             number: _(`Identifier`),
                             weight: _(`Call list`)
                         }
+                    },
+                    {
+                        key: `motions_enable_editor`,
+                        label: _(`Enable the ability to enter a participant as motion editor`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_working_group_speaker`,
+                        label: _(`Enable the ability to enter a participant as working group speaker for a motion`),
+                        type: `boolean`
                     }
                 ]
             },
@@ -896,7 +946,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_email_sender`,
                         label: _(`Sender name`),
                         helpText: _(
-                            `The sender address is defined in the OpenSlides server settings and should modified by administrator only.`
+                            `IMPORTANT: The sender address (noreply@openslides.com) is defined in the OpenSlides server settings and cannot be changed here.
+                            To receive replies you have to enter a reply address in the next field. Please test the email dispatch in case of changes!`
                         ),
                         dontTranslateDefault: true
                     },
@@ -904,7 +955,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_email_replyto`,
                         label: _(`Reply address`),
                         type: `email`,
-                        validators: [Validators.email]
+                        validators: [createEmailValidator()]
                     },
                     {
                         key: `users_email_subject`,

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { map, OperatorFunction } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -10,13 +10,13 @@ import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { OsOptionSelectionChanged } from 'src/app/ui/modules/search-selector';
 
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
 import { ViewCommittee } from '../../../../../../view-models';
 import { NAVIGATION_FROM_LIST } from '../../../../../committee-list/components/committee-list/committee-list.component';
+import { CommitteeSortService } from '../../../../../committee-list/services/committee-list-sort.service/committee-sort.service';
 
 const CREATE_COMMITTEE_LABEL = _(`New committee`);
 const EDIT_COMMITTEE_LABEL = _(`Edit committee`);
@@ -33,7 +33,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     public addCommitteeLabel = CREATE_COMMITTEE_LABEL;
     public editCommitteeLabel = EDIT_COMMITTEE_LABEL;
 
-    public isCreateView: boolean = false;
+    public isCreateView = false;
     public committeeForm!: UntypedFormGroup;
 
     public editCommittee!: ViewCommittee;
@@ -45,15 +45,15 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     private navigatedFrom: string | undefined;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private formBuilder: UntypedFormBuilder,
         public committeeRepo: CommitteeControllerService,
+        public committeeSortService: CommitteeSortService,
         public orgaTagRepo: OrganizationTagControllerService,
         private route: ActivatedRoute,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.createForm();
         this.getCommitteeByUrl();
 

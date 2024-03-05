@@ -11,8 +11,8 @@
     </div>
 </os-head-bar>
 
-<os-import-list
-    [columns]="generateImportColumns"
+<os-backend-import-list
+    [defaultColumns]="columns"
     [importer]="importer"
     [possibleFields]="possibleFields"
     additionalInfo="{{
@@ -20,22 +20,4 @@
             | translate
     }}"
     modelName="Participant"
->
-    <ng-template osImportListStatusTemplate let-row="row">
-        <div *ngIf="row.status === 'merge'">
-            <mat-icon matTooltip="{{ ('Participant' | translate) + ' ' + ('will be referenced' | translate) }}">
-                merge_type
-            </mat-icon>
-        </div>
-    </ng-template>
-
-    <div *osScrollingTableCell="'group_ids'; row as entry">
-        <span *ngFor="let group of entry.newEntry.group_ids; let last = last">
-            <span>{{ group.name | translate }}</span>
-            <span *ngIf="!group.id">
-                <mat-icon color="accent">add</mat-icon>
-            </span>
-            <span *ngIf="!last">,</span>
-        </span>
-    </div>
-</os-import-list>
+></os-backend-import-list>

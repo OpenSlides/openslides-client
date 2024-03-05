@@ -15,9 +15,14 @@
     [sortService]="sortService"
     [vScrollFixed]="vScrollFixed"
     [fullScreen]="fullScreen"
+    [addBottomSpacer]="addBottomSpacer"
     (selectedRowsChange)="selectedRowsChange.emit($event)"
     (searchFilterUpdated)="searchFilterUpdated.emit($event)"
-></os-view-list>
+>
+    <div class="filter-bar-info-slot">
+        <ng-content select=".filter-bar-info-slot"></ng-content>
+    </div>
+</os-view-list>
 
 <ng-template #content>
     <ng-content></ng-content>

@@ -1,12 +1,13 @@
 import { environment } from 'src/environments/environment';
 
-import { AutoupdateStreamPool } from './autoupdate-stream-pool';
-import { AutoupdateSubscription } from './autoupdate-subscription';
+import { AutoupdateStreamPool } from './autoupdate/autoupdate-stream-pool';
+import { AutoupdateSubscription } from './autoupdate/autoupdate-subscription';
 import {
+    AutoupdateCleanupCacheParams,
     AutoupdateCloseStreamParams,
     AutoupdateOpenStreamParams,
     AutoupdateSetEndpointParams
-} from './interfaces-autoupdate';
+} from './autoupdate/interfaces-autoupdate';
 
 const autoupdatePool = new AutoupdateStreamPool({
     url: `/system/autoupdate`,
@@ -14,13 +15,13 @@ const autoupdatePool = new AutoupdateStreamPool({
     method: `post`
 } as AutoupdateSetEndpointParams);
 
-let subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
+const subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
     required: [],
     requiredMeeting: [],
     sequentialnumbermapping: [],
     other: []
 };
-let openTimeouts = {
+const openTimeouts = {
     required: null,
     requiredMeeting: [],
     sequentialnumbermapping: null,
@@ -38,7 +39,7 @@ function registerDebugCommands() {
         console.log(`AU POOL INFO`);
         console.log(`Currently open:`, autoupdatePool.activeStreams.length);
         console.group(`Streams`);
-        for (let stream of autoupdatePool.activeStreams) {
+        for (const stream of autoupdatePool.activeStreams) {
             console.groupCollapsed(stream.subscriptions.map(s => s.description).join(`, `));
             console.log(`Current data:`, stream.currentData);
             console.log(`Current data size:`, JSON.stringify(stream.currentData).length);
@@ -46,7 +47,7 @@ function registerDebugCommands() {
             console.log(`Query params:`, stream.queryParams.toString());
             console.log(`Failed connects:`, stream.failedConnects);
             console.groupCollapsed(`Subscriptions`);
-            for (let subscr of stream.subscriptions) {
+            for (const subscr of stream.subscriptions) {
                 console.group(subscr.description);
                 console.log(`ID:`, subscr.id);
                 console.log(`Request:`, subscr.request);
@@ -75,7 +76,7 @@ function openConnection(
 ): void {
     function getRequestCategory(
         description: string,
-        _request: Object
+        _request: unknown
     ): 'required' | 'requiredMeeting' | 'other' | 'sequentialnumbermapping' {
         const required = [`theme_list:subscription`, `operator:subscription`, `organization:subscription`];
         if (required.indexOf(description) !== -1) {
@@ -97,15 +98,24 @@ function openConnection(
     for (const queue of Object.keys(subscriptionQueues)) {
         const fulfillingSubscription = subscriptionQueues[queue].find(s => s.fulfills(queryParams, request));
         if (fulfillingSubscription) {
-            fulfillingSubscription.addPort(ctx);
+            fulfillingSubscription.addPort(ctx, requestHash);
             return;
         }
     }
 
     const existingSubscription = autoupdatePool.getMatchingSubscription(queryParams, request);
     if (existingSubscription) {
-        existingSubscription.addPort(ctx);
-        if (!existingSubscription.stream.active) {
+        if (existingSubscription.description !== description) {
+            const subscription = new AutoupdateSubscription(streamId, queryParams, requestHash, request, description, [
+                ctx
+            ]);
+            autoupdatePool.addSubscription(subscription, existingSubscription.stream);
+            subscription.resendTo(ctx);
+        } else {
+            existingSubscription.addPort(ctx, requestHash);
+        }
+
+        if (!existingSubscription.stream?.active) {
             autoupdatePool.reconnect(existingSubscription.stream, false);
         }
         return;
@@ -134,6 +144,15 @@ function closeConnection(ctx: MessagePort, params: AutoupdateCloseStreamParams):
     subscription.closePort(ctx);
 }
 
+function cleanupStream(params: AutoupdateCleanupCacheParams): void {
+    const subscription = autoupdatePool.getSubscriptionById(params.streamId);
+    if (!subscription) {
+        return;
+    }
+
+    subscription.stream.removeFqids(params.deletedFqids);
+}
+
 let currentlyOnline = navigator.onLine;
 function updateOnlineStatus(): void {
     if (currentlyOnline === navigator.onLine) {
@@ -148,41 +167,37 @@ if (!environment.production) {
     registerDebugCommands();
 }
 
-export function addAutoupdateListener(context: any): void {
-    context.addEventListener(`message`, e => {
-        const receiver = e.data?.receiver;
-        if (!receiver || receiver !== `autoupdate`) {
-            return;
-        }
-
-        const msg = e.data?.msg;
-        const params = msg?.params;
-        const action = msg?.action;
-        switch (action) {
-            case `open`:
-                openConnection(context, params);
-                break;
-            case `close`:
-                closeConnection(context, params);
-                break;
-            case `auth-change`:
-                autoupdatePool.updateAuthentication();
-                break;
-            case `set-endpoint`:
-                autoupdatePool.setEndpoint(params);
-                break;
-            case `set-connection-status`:
-                updateOnlineStatus();
-                break;
-            case `reconnect-inactive`:
-                autoupdatePool.reconnectAll(true);
-                break;
-            case `reconnect-force`:
-                autoupdatePool.reconnectAll(false);
-                break;
-            case `enable-debug`:
-                registerDebugCommands();
-                break;
-        }
-    });
+export function autoupdateMessageHandler(ctx: any, e: any): void {
+    const msg = e.data?.msg;
+    const params = msg?.params;
+    const action = msg?.action;
+    switch (action) {
+        case `open`:
+            openConnection(ctx, params);
+            break;
+        case `close`:
+            closeConnection(ctx, params);
+            break;
+        case `cleanup-cache`:
+            cleanupStream(params);
+            break;
+        case `auth-change`:
+            autoupdatePool.updateAuthentication();
+            break;
+        case `set-endpoint`:
+            autoupdatePool.setEndpoint(params);
+            break;
+        case `set-connection-status`:
+            updateOnlineStatus();
+            break;
+        case `reconnect-inactive`:
+            autoupdatePool.reconnectAll(true);
+            break;
+        case `reconnect-force`:
+            autoupdatePool.reconnectAll(false);
+            break;
+        case `enable-debug`:
+            registerDebugCommands();
+            break;
+    }
 }

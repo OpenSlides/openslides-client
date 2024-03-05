@@ -1,4 +1,5 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { Observable } from 'rxjs';
 
 import { OptionData, OptionTitle } from '../../../../../../domain/models/poll/generic-poll';
 import { Option } from '../../../../../../domain/models/poll/option';
@@ -43,11 +44,13 @@ export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Opt
                     title: this.content_object.getShortName(),
                     subtitle: this.content_object.getLevelAndNumber()
                 };
-            } else if (this.poll.isAssignmentPoll) {
+            } else if (this.poll.isAssignmentPoll && !this.content_object_id) {
                 return {
                     title: UnknownUserLabel,
                     subtitle: ``
                 };
+            } else if (this.poll.isAssignmentPoll) {
+                return { title: `` };
             } else {
                 return { title: this.content_object?.getTitle() ?? _(`No data`) };
             }
@@ -57,8 +60,10 @@ export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Opt
 
 interface IViewOptionRelations<C extends BaseViewModel = any> {
     content_object?: C;
+    content_object_as_observable?: Observable<C>;
     votes: ViewVote[];
     poll: ViewPoll;
+    used_as_global_option_in_poll: ViewPoll;
 }
 
 export interface ViewOption extends HasMeeting, IViewOptionRelations, Option {}

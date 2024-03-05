@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
-import { MotionListSortService } from '../motion-list-sort.service';
-import { MotionsListServiceModule } from '../motions-list-service.module';
+import { MotionListBaseSortService } from '../motion-list-base-sort.service';
 
 @Injectable({
-    providedIn: MotionsListServiceModule
+    providedIn: `root`
 })
-export class AmendmentListSortService extends MotionListSortService {
+export class AmendmentListSortService extends MotionListBaseSortService {
     /**
      * set the storage key name
      */
@@ -17,18 +16,24 @@ export class AmendmentListSortService extends MotionListSortService {
     private amendmentSortOptions: OsSortingOption<ViewMotion>[] = [
         {
             property: `parentAndLineNumber`,
-            label: this.translate.instant(`Main motion and line number`)
+            label: this.translate.instant(`Main motion and line number`),
+            baseKeys: [`amendment_paragraphs`],
+            foreignBaseKeys: {
+                motion: [`number`, `text`],
+                motion_change_recommendation: [`rejected`],
+                meeting: [`motions_line_length`]
+            }
         }
     ];
 
-    protected override getSortOptions(): OsSortingOption<ViewMotion>[] {
-        return this.amendmentSortOptions.concat(super.getSortOptions());
-    }
-
-    protected override async getDefaultDefinition(): Promise<OsSortingDefinition<ViewMotion>> {
-        return {
+    constructor() {
+        super({
             sortProperty: `parentAndLineNumber`,
             sortAscending: true
-        };
+        });
+    }
+
+    protected override getSortOptions(): OsSortingOption<ViewMotion>[] {
+        return this.amendmentSortOptions.concat(super.getSortOptions());
     }
 }

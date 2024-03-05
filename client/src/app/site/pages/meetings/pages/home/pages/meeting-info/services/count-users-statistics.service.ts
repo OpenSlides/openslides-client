@@ -57,7 +57,7 @@ export class CountUsersStatisticsService {
             entry => entry[1] > 0 && this.userRepo.getViewModel(+entry[0])?.getMeetingUser()
         );
         const users = Object.fromEntries(entries);
-        let result = {
+        const result = {
             activeUserHandles: entries
                 .map(entry => entry[1])
                 .reduce((previousValue, currentValue) => (previousValue ?? 0) + currentValue),

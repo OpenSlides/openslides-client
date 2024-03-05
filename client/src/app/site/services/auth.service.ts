@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { ActionService } from 'src/app/gateways/actions';
 
 import { AuthToken } from '../../domain/interfaces/auth-token';
 import { AuthAdapterService } from '../../gateways/auth-adapter.service';
@@ -50,6 +51,7 @@ export class AuthService {
         private router: Router,
         private authAdapter: AuthAdapterService,
         private authTokenService: AuthTokenService,
+        private actionService: ActionService,
         private DS: DataStoreService
     ) {
         this.resumeTokenSubscription();
@@ -110,6 +112,23 @@ export class AuthService {
             this._logoutEvent.emit();
             await this.DS.clear();
             this.lifecycleService.bootup();
+        }
+    }
+
+    public async invalidateSessionAfter(callback: () => Promise<any>): Promise<void> {
+        this.clearRefreshRoutine();
+        try {
+            const response = await callback();
+            if (response?.success) {
+                this.authTokenService.setRawAccessToken(null);
+                this._logoutEvent.emit();
+                this.DS.deleteCollections(...this.DS.getCollections());
+                await this.DS.clear();
+                this.lifecycleService.bootup();
+            }
+        } catch (e) {
+            this.setupRefreshRoutine();
+            throw e;
         }
     }
 

@@ -13,7 +13,8 @@ export const projectionContentObjectFieldset = [
     `title`,
     `meeting_id`,
     `sequential_number`,
-    `owner_id`
+    `owner_id`,
+    `agenda_item_id`
 ];
 
 export const PROJECTOR_LIST_SUBSCRIPTION = `projector_list`;
@@ -45,7 +46,8 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
             `projector_message_ids`,
             ...MEETING_DEFAULT_PROJECTOR_IDS_KEYS,
             { idField: `speaker_ids`, additionalFields: [`meeting_user_id`] },
-            `list_of_speakers_ids`
+            `list_of_speakers_ids`,
+            { idField: `agenda_item_ids`, fieldset: [`item_number`, `content_object_id`] }
         ],
         additionalFields: [`reference_projector_id`]
     },

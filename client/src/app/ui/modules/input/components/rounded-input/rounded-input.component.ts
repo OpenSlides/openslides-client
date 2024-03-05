@@ -80,6 +80,12 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
     public hasChildren = false;
 
     /**
+     * Boolean to indicate, whether the input should have a submit button included.
+     */
+    @Input()
+    public hasSubmit = false;
+
+    /**
      * Boolean to indicate, whether the borders should be rounded with a smaller size.
      */
     @Input()
@@ -92,6 +98,18 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
      */
     @Output()
     public inputChanged = new EventEmitter<string>();
+
+    /**
+     * EventHandler for the input-clear.
+     */
+    @Output()
+    public inputCleared = new EventEmitter<string>();
+
+    /**
+     * EventHandler for the clickSubmit event.
+     */
+    @Output()
+    public clickSubmit = new EventEmitter<string>();
 
     /**
      * Getter to get the border-radius as a string.
@@ -125,9 +143,17 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
     /**
      * Function to clear the input and refocus it.
      */
+    public send(): void {
+        this.clickSubmit.emit(this.contentForm.getRawValue());
+    }
+
+    /**
+     * Function to clear the input and refocus it.
+     */
     public clear(event?: MouseEvent): void {
         event?.preventDefault();
         this.contentForm.setValue(``);
+        this.inputCleared.emit();
     }
 
     /**
@@ -155,6 +181,9 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
     public keyPressed(event: KeyboardEvent): void {
         if (this.clearOnEscape && event.key === `Escape`) {
             this.clear();
+        }
+        if (this.clearOnEscape && event.key === `Enter`) {
+            this.send();
         }
     }
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Content, ContentTable, ContentText, TableCell } from 'pdfmake/interfaces';
 import {
     ChangeRecoMode,
     LineNumberingMode,
@@ -98,7 +99,7 @@ export class MotionPdfService {
      * @param motion the motion to convert to pdf
      * @returns doc def for the motion
      */
-    public motionToDocDef({ motion, continuousText, exportInfo }: MotionToDocDefData): object {
+    public motionToDocDef({ motion, continuousText, exportInfo }: MotionToDocDefData): Content {
         let lnMode = exportInfo && exportInfo.lnMode ? exportInfo.lnMode : null;
         let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
         const infoToExport = exportInfo ? exportInfo.metaInfo : null;
@@ -197,19 +198,14 @@ export class MotionPdfService {
      * @param lineLength the line length
      * @returns doc def for the document title
      */
-    private createTitle(motion: ViewMotion, crMode: ChangeRecoMode, lineLength: number): object {
+    private createTitle(motion: ViewMotion, crMode: ChangeRecoMode, lineLength: number): ContentText {
         // summary of change recommendations (for motion diff version only)
         const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
         const titleChange = changes.find(change => change?.isTitleChange())!;
         const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
 
         const number = motion.number ? motion.number : ``;
-        let title = ``;
-        if (this.pdfDocumentService.pageSize === `A4`) {
-            title += `${this.translate.instant(`Motion`)} `;
-        }
-
-        title += `${number}: ${changedTitle}`;
+        const title = `${this.translate.instant(`Motion`)} ${number}: ${changedTitle}`;
 
         return {
             text: title,
@@ -224,7 +220,7 @@ export class MotionPdfService {
      * @param sequential set to true to include the sequential number
      * @returns doc def for the subtitle
      */
-    private createSubtitle(motion: ViewMotion, sequential?: boolean): object {
+    private createSubtitle(motion: ViewMotion, sequential?: boolean): ContentText {
         const subtitleLines = [];
         if (sequential) {
             subtitleLines.push(`${this.translate.instant(`Sequential number`)}: ${motion.sequential_number}`);
@@ -257,12 +253,12 @@ export class MotionPdfService {
         crMode: ChangeRecoMode,
         infoToExport: InfoToExport[] | null | undefined,
         optionToFollowRecommendation?: boolean
-    ): object {
+    ): Content {
         const metaTableBody = [];
 
         // submitters
         if (!infoToExport || infoToExport.includes(`submitters`)) {
-            const submitters = motion.submittersAsUsers.map(user => user.full_name).join(`, `);
+            const submitters = motion.mapSubmittersWithAdditional(user => user.full_name).join(`, `);
 
             metaTableBody.push([
                 {
@@ -328,9 +324,13 @@ export class MotionPdfService {
         }
 
         // referring motions
-        if (!infoToExport || infoToExport.includes(`referring_motions`)) {
+        if (
+            infoToExport?.includes(`referring_motions`) ||
+            (!infoToExport && this.meetingSettingsService.instant(`motions_show_referring_motions`))
+        ) {
             if (motion.referenced_in_motion_recommendation_extensions.length) {
                 const referringMotions = motion.referenced_in_motion_recommendation_extensions
+                    .naturalSort(this.translate.currentLang, [`number`, `title`])
                     .map(motion => motion.getNumberOrTitle())
                     .join(`, `);
 
@@ -575,7 +575,7 @@ export class MotionPdfService {
             };
         }
 
-        return {};
+        return [];
     }
 
     /**
@@ -583,7 +583,7 @@ export class MotionPdfService {
      *
      * @returns doc def for the motion text
      */
-    private createPreamble(): object {
+    private createPreamble(): ContentText {
         const motions_preamble = this.meetingSettingsService.instant(`motions_preamble`) as string;
         return {
             text: `${motions_preamble}`,
@@ -600,7 +600,7 @@ export class MotionPdfService {
      * @param crMode determine the used change Recommendation mode
      * @returns doc def for the "the assembly may decide" preamble
      */
-    private createText({ crMode, lineHeight, lineLength, lnMode, motion }: CreateTextData): object {
+    private createText({ crMode, lineHeight, lineLength, lnMode, motion }: CreateTextData): Content {
         let htmlText = ``;
 
         if (motion.isParagraphBasedAmendment()) {
@@ -738,13 +738,13 @@ export class MotionPdfService {
      * @param motions A list of motions
      * @returns definitions ready to be opened or exported via {@link PdfDocumentService}
      */
-    public callListToDoc(motions: ViewMotion[]): object {
+    public callListToDoc(motions: ViewMotion[]): Content {
         motions.sort((a, b) => a.sort_weight - b.sort_weight);
         const title = {
             text: this.translate.instant(`Call list`),
             style: `title`
         };
-        const callListTableBody: object[] = [
+        const callListTableBody: TableCell[][] = [
             [
                 {
                     text: this.translate.instant(`Called`),
@@ -773,7 +773,7 @@ export class MotionPdfService {
             ]
         ];
 
-        const callListRows: object[] = [];
+        const callListRows: TableCell[][] = [];
         let currentTitle = ``;
 
         motions.forEach(motion => {
@@ -799,7 +799,7 @@ export class MotionPdfService {
             callListRows.push(this.createCallListRow(motion));
         });
 
-        const table: object = {
+        const table: ContentTable = {
             table: {
                 widths: [`auto`, `auto`, `auto`, `*`, `auto`, `auto`],
                 headerRows: 1,
@@ -817,13 +817,13 @@ export class MotionPdfService {
      * @param motion
      * @returns pdfmakre definitions
      */
-    private createCallListRow(motion: ViewMotion): object {
+    private createCallListRow(motion: ViewMotion): Content[] {
         return [
             {
                 text: motion.sort_parent_id ? `` : motion.numberOrTitle
             },
             { text: motion.sort_parent_id ? motion.numberOrTitle : `` },
-            { text: motion.submitters.length ? motion.submittersAsUsers.map(s => s.short_name).join(`, `) : `` },
+            { text: motion.submitters.length ? motion.mapSubmittersWithAdditional(s => s.short_name).join(`, `) : `` },
             { text: motion.title },
             {
                 text: motion.recommendation ? this.motionService.getExtendedRecommendationLabel(motion) : ``
@@ -841,7 +841,7 @@ export class MotionPdfService {
      * @param noteTitle additional heading to be used (will be translated)
      * @returns pdfMake definitions
      */
-    public textToDocDef(note: string, motion: ViewMotion, noteTitle: string): object {
+    public textToDocDef(note: string, motion: ViewMotion, noteTitle: string): Content[] {
         const lineLength = this.meetingSettingsService.instant(`motions_line_length`)!;
         const crMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`)!;
         const title = this.createTitle(motion, crMode, lineLength);

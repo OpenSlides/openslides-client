@@ -1,9 +1,8 @@
 import { Directive } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { FileReaderProgressEvent, ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 import { BackendImportService } from 'src/app/ui/base/import-service';
 import { BackendImportPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
@@ -17,9 +16,7 @@ import {
 import { ImportServiceCollectorService } from '../../services/import-service-collector.service';
 
 @Directive()
-export abstract class BaseBackendImportService<MainModel extends Identifiable>
-    implements BackendImportService<MainModel>
-{
+export abstract class BaseBackendImportService implements BackendImportService {
     /**
      * The minimimal number of header entries needed to successfully create an entry
      */
@@ -179,7 +176,7 @@ export abstract class BaseBackendImportService<MainModel extends Identifiable>
             header: true,
             skipEmptyLines: `greedy`,
             quoteChar: this.textSeparator,
-            transform: (value, columnOrHeader) => (!value ? undefined : value)
+            transform: value => (!value ? undefined : value)
         };
         if (this.columnSeparator) {
             papaConfig.delimiter = this.columnSeparator;
@@ -278,24 +275,46 @@ export abstract class BaseBackendImportService<MainModel extends Identifiable>
     public async doImport(): Promise<boolean> {
         this._currentImportPhaseSubject.next(BackendImportPhase.IMPORTING);
 
-        const results = await this.import(this.previewActionIds, false);
+        const results = await this.import(this.previewActionIds, false)
+            .then(results => {
+                if (Array.isArray(results) && results.find(result => isBackendImportRawPreview(result))) {
+                    const updatedPreviews = results.filter(result =>
+                        isBackendImportRawPreview(result)
+                    ) as BackendImportRawPreview[];
+                    this.processRawPreviews(updatedPreviews);
+                    const statesSet = new Set(updatedPreviews.map(preview => preview.state));
+                    if (statesSet.has(BackendImportState.Error)) {
+                        this._currentImportPhaseSubject.next(BackendImportPhase.ERROR);
+                    } else if (statesSet.has(BackendImportState.Warning)) {
+                        this.processRawPreviews(
+                            updatedPreviews
+                                .filter(preview => preview.state === BackendImportState.Warning)
+                                .map(preview => ({
+                                    ...preview,
+                                    rows: preview.rows.filter(row => row.messages && row.messages.length)
+                                }))
+                        );
+                        this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED_WITH_WARNING);
+                    } else {
+                        this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED);
+                        this._csvLines = [];
+                        return true;
+                    }
+                }
+                return false;
+            })
+            .catch(e => e);
 
-        if (Array.isArray(results) && results.find(result => isBackendImportRawPreview(result))) {
-            const updatedPreviews = results.filter(result =>
-                isBackendImportRawPreview(result)
-            ) as BackendImportRawPreview[];
-            this.processRawPreviews(updatedPreviews);
-            if (this.previewHasRowErrors) {
-                this._currentImportPhaseSubject.next(BackendImportPhase.ERROR);
-            } else {
-                this._currentImportPhaseSubject.next(BackendImportPhase.TRY_AGAIN);
-            }
-        } else {
-            this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED);
-            this._csvLines = [];
-            return true;
+        if (typeof results !== `boolean`) {
+            this._currentImportPhaseSubject.next(BackendImportPhase.LOADING_PREVIEW);
+            this.clearAll();
+            this.matSnackbar.open(
+                this.translate.instant(results.error?.message ?? results?.message ?? results),
+                this.translate.instant(`Ok`)
+            );
+            return false;
         }
-        return false;
+        return results;
     }
 
     /**
@@ -363,8 +382,8 @@ export abstract class BaseBackendImportService<MainModel extends Identifiable>
     private processRawPreviews(rawPreviews: BackendImportRawPreview[]): void {
         const previews: (BackendImportRawPreview | BackendImportPreview)[] = rawPreviews;
         let index = 1;
-        for (let preview of previews) {
-            for (let row of preview.rows) {
+        for (const preview of previews) {
+            for (const row of preview.rows) {
                 row[`id`] = index;
                 index++;
             }

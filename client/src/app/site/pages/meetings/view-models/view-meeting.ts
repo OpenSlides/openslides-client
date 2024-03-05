@@ -33,7 +33,10 @@ import {
     ViewPersonalNote,
     ViewTag
 } from '../pages/motions';
+import { ViewMotionEditor } from '../pages/motions/modules/editors';
+import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
 import { ViewGroup } from '../pages/participants';
+import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from '../pages/polls/view-models/view-poll-candidate-list';
@@ -41,6 +44,7 @@ import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMes
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
+export const MEETING_CREATE_SUBSCRIPTION = `meeting_create`;
 
 export enum RelatedTime {
     Future = 1,
@@ -63,7 +67,7 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     }
 
     public get userAmount(): number {
-        return this.meeting_user_ids?.length || 0;
+        return this.user_ids?.length || 0;
     }
 
     public get motionsAmount(): number {
@@ -137,6 +141,7 @@ interface IMeetingRelations {
     motions_default_statute_amendment_workflow: ViewMotionWorkflow;
     motion_poll_default_groups: ViewGroup[];
     assignment_poll_default_groups: ViewGroup[];
+    topic_poll_default_groups: ViewGroup[];
     poll_default_groups: ViewGroup[];
     projectors: ViewProjector[];
     all_projections: ViewProjection[];
@@ -156,6 +161,8 @@ interface IMeetingRelations {
     motion_categories: ViewMotionCategory[];
     motion_blocks: ViewMotionBlock[];
     motion_submitters: ViewMotionSubmitter[];
+    motion_editors: ViewMotionEditor[];
+    motion_working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     motion_change_recommendations: ViewMotionChangeRecommendation[];
     motion_workflows: ViewMotionWorkflow[];
     motion_states: ViewMotionState[];
@@ -185,6 +192,7 @@ interface IMeetingRelations {
     list_of_speakers_countdown: ViewProjectorCountdown;
     point_of_order_categories: ViewPointOfOrderCategory[];
     point_of_order_categories_as_observable: Observable<ViewPointOfOrderCategory[]>;
+    structure_levels: ViewStructureLevel[];
 }
 export interface ViewMeeting
     extends Meeting,

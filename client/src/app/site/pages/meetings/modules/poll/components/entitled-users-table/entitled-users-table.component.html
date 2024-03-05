@@ -4,6 +4,7 @@
             [listObservable]="entitledUsersObservable"
             [filterProps]="filterPropsEntitledUsersTable"
             [fullScreen]="false"
+            [filterService]="filter"
         >
             <!-- Content -->
             <div *osScrollingTableCell="'user_id'; row as entry">
@@ -17,7 +18,7 @@
                         </div>
 
                         <!-- Delegation -->
-                        <div *ngIf="entry.vote_delegated_to_id">
+                        <div *ngIf="entry.vote_delegated_to_user_id">
                             <span>
                                 ({{ 'represented by' | translate }} {{ entry.vote_delegated_to.getShortName().trim() }})
                             </span>
@@ -26,9 +27,13 @@
                 </div>
                 <i *ngIf="!entry.user">{{ 'Anonymous' | translate }}</i>
             </div>
+            <div *osScrollingTableCell="'present'; row as entry; config: { width: 24 }">
+                <div *osScrollingTableCellLabel>{{ 'Is present' | translate }}</div>
+                <mat-icon *ngIf="entry.present" [matTooltip]="'Is present' | translate">check</mat-icon>
+            </div>
             <div *osScrollingTableCell="'voted'; row as entry; config: { width: 24 }">
                 <div *osScrollingTableCellLabel>{{ 'Voted' | translate }}</div>
-                <mat-icon *ngIf="entry.voted">how_to_vote</mat-icon>
+                <mat-icon *ngIf="entry.voted" [matTooltip]="'Vote submitted' | translate">how_to_vote</mat-icon>
             </div>
         </os-list>
     </div>

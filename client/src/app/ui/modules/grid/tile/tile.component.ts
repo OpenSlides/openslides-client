@@ -29,7 +29,7 @@ export class TileComponent implements OnInit {
      * Optional data, that can be passed to the component.
      */
     @Input()
-    public data: Object | null = null;
+    public data: any | null = null;
 
     /**
      * Optional input to define the preferred size of the tile.
@@ -106,7 +106,7 @@ export class TileComponent implements OnInit {
      *
      * @param size how great the tile should be
      */
-    private setMobileSize(size: number = 4): void {
+    private setMobileSize(size = 4): void {
         if (size <= 4 && size >= 0) {
             this.mobileSize = size;
         } else {
@@ -119,7 +119,7 @@ export class TileComponent implements OnInit {
      *
      * @param size how great the tile should be
      */
-    private setTabletSize(size: number = 4): void {
+    private setTabletSize(size = 4): void {
         if (size <= 8 && size >= 0) {
             this.tabletSize = size;
         } else {
@@ -132,7 +132,7 @@ export class TileComponent implements OnInit {
      *
      * @param size how great the tile should be
      */
-    private setMediumSize(size: number = 4): void {
+    private setMediumSize(size = 4): void {
         if (size <= 12 && size >= 0) {
             this.mediumSize = size;
         } else {
@@ -145,7 +145,7 @@ export class TileComponent implements OnInit {
      *
      * @param size how great the tile should be
      */
-    private setLargeSize(size: number = 4): void {
+    private setLargeSize(size = 4): void {
         if (size <= 16 && size >= 0) {
             this.largeSize = size;
         } else {

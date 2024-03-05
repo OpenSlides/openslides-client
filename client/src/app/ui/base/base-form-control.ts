@@ -1,5 +1,5 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
+import { Directive, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
@@ -26,6 +26,10 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
         this.stateChanges.next();
     }
 
+    public get value(): T | null {
+        return this.contentForm.value;
+    }
+
     @Input()
     public set disabled(disable: boolean) {
         this._disabled = coerceBooleanProperty(disable);
@@ -41,10 +45,6 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
         return this._disabled;
     }
 
-    public get value(): T | null {
-        return this.contentForm.value;
-    }
-
     public get id(): number {
         return this._id;
     }
@@ -57,7 +57,8 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
     private readonly _id: number;
     private _disabled = false;
 
-    public constructor(protected fb: UntypedFormBuilder) {
+    protected fb = inject(UntypedFormBuilder);
+    public constructor() {
         this._id = ++BaseFormControlComponent.formControlId;
         this.contentForm = this.createForm();
     }
@@ -80,21 +81,24 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
     public writeValue(value: T): void {
         this.value = value;
     }
+
     public registerOnChange(fn: any): void {
         this._onChange = fn;
         this.push(this.value);
     }
+
     public registerOnTouched(fn: any): void {
         this._onTouched = fn;
         this.push(this.value);
     }
+
     public setDisabledState?(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
 
-    protected _onChange = (value: T | null) => {};
+    protected _onChange: (_v: T | null) => void = () => {};
 
-    protected _onTouched = (value: T | null) => {};
+    protected _onTouched: (_v: T | null) => void = () => {};
 
     protected abstract createForm(): UntypedFormControl | UntypedFormGroup;
 

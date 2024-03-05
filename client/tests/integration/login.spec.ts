@@ -52,8 +52,8 @@ test.describe(`Testing the internal sign in process with saml enabled`, () => {
         await page.goto(`/login`);
         await expect(page).toHaveURL(`/login`);
         await page.getByText(`Internal login`).click();
-        await page.getByLabel(`Username *`).fill(`admin`);
-        await page.getByLabel(`Password *`).fill(`admin`);
+        await page.getByLabel(`Username`).fill(`admin`);
+        await page.getByLabel(`Password`).fill(`admin`);
         await page.getByRole(`button`, { name: `Login`, exact: true }).click();
         await expect(page).not.toHaveURL(`/login`);
     });
@@ -62,8 +62,8 @@ test.describe(`Testing the internal sign in process with saml enabled`, () => {
         await page.goto(`/login`);
         await expect(page).toHaveURL(`/login`);
         await page.getByText(`Internal login`).click();
-        await page.getByLabel(`Username *`).fill(username);
-        await page.getByLabel(`Password *`).fill(username);
+        await page.getByLabel(`Username`).fill(username);
+        await page.getByLabel(`Password`).fill(username);
         await page.getByRole(`button`, { name: `Login`, exact: true }).click();
         await expect(page).not.toHaveURL(`/login`);
         await expect(page).toHaveURL(`/${meetingId}`);
@@ -73,8 +73,8 @@ test.describe(`Testing the internal sign in process with saml enabled`, () => {
         await page.goto(`/login`);
         await expect(page).toHaveURL(`/login`);
         await page.getByText(`Internal login`).click();
-        await page.getByLabel(`Username *`).fill(DELEGATE_NAME);
-        await page.getByLabel(`Password *`).fill(DELEGATE_NAME);
+        await page.getByLabel(`Username`).fill(DELEGATE_NAME);
+        await page.getByLabel(`Password`).fill(DELEGATE_NAME);
         await page.getByRole(`button`, { name: `Login`, exact: true }).click();
         await expect(page).not.toHaveURL(`/login`);
         await expect(page).toHaveURL(`/${DEFAULT_MEETING_ID}`);
@@ -122,8 +122,8 @@ test.describe(`Testing the sign in and out process`, () => {
     test(`signs in as superadmin`, async ({ page }) => {
         await page.goto(`/login`);
         await expect(page).toHaveURL(`/login`);
-        await page.getByLabel(`Username *`).fill(`admin`);
-        await page.getByLabel(`Password *`).fill(`admin`);
+        await page.getByLabel(`Username`).fill(`admin`);
+        await page.getByLabel(`Password`).fill(`admin`);
         await page.getByRole(`button`, { name: `Login` }).click();
         await expect(page).not.toHaveURL(`/login`);
     });
@@ -131,8 +131,8 @@ test.describe(`Testing the sign in and out process`, () => {
     test(`signs in as meeting admin`, async ({ page }) => {
         await page.goto(`/login`);
         await expect(page).toHaveURL(`/login`);
-        await page.getByLabel(`Username *`).fill(username);
-        await page.getByLabel(`Password *`).fill(username);
+        await page.getByLabel(`Username`).fill(username);
+        await page.getByLabel(`Password`).fill(username);
         await page.getByRole(`button`, { name: `Login` }).click();
         await expect(page).not.toHaveURL(`/login`);
         await expect(page).toHaveURL(`/${meetingId}`);
@@ -141,8 +141,8 @@ test.describe(`Testing the sign in and out process`, () => {
     test(`signs in as delegate`, async ({ page }) => {
         await page.goto(`/login`);
         await expect(page).toHaveURL(`/login`);
-        await page.getByLabel(`Username *`).fill(DELEGATE_NAME);
-        await page.getByLabel(`Password *`).fill(DELEGATE_NAME);
+        await page.getByLabel(`Username`).fill(DELEGATE_NAME);
+        await page.getByLabel(`Password`).fill(DELEGATE_NAME);
         await page.getByRole(`button`, { name: `Login` }).click();
         await expect(page).not.toHaveURL(`/login`);
         await expect(page).toHaveURL(`/${DEFAULT_MEETING_ID}`);
@@ -164,6 +164,27 @@ test.describe(`Testing the sign in and out process`, () => {
         await page.locator(`os-account-button > div`).click();
         await page.getByText(`Logout`).first().click();
         await expect(page).toHaveURL(`/login`);
+    });
+
+    test(`sign in after logout`, async ({ page }) => {
+        const loginDelegate = async () => {
+            await page.goto(`/login`);
+            await expect(page).toHaveURL(`/login`);
+            await page.getByLabel(`Username`).fill(DELEGATE_NAME);
+            await page.getByLabel(`Password`).fill(DELEGATE_NAME);
+            await page.getByRole(`button`, { name: `Login` }).click();
+        };
+        loginDelegate();
+        await expect(page).not.toHaveURL(`/login`);
+        await expect(page).toHaveURL(`/${DEFAULT_MEETING_ID}`);
+
+        await page.locator(`os-account-button > div`).click();
+        await page.getByText(`Logout`).first().click();
+        await expect(page).toHaveURL(`/login`);
+
+        loginDelegate();
+        await expect(page).not.toHaveURL(`/login`);
+        await expect(page).toHaveURL(`/${DEFAULT_MEETING_ID}`);
     });
 
     test(`open login after logout via api`, async ({ page, context }) => {

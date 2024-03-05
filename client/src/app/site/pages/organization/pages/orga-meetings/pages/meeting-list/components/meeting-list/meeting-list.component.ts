@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { ColumnRestriction } from 'src/app/ui/modules/list';
@@ -23,8 +21,6 @@ const MEETING_LIST_STORAGE_INDEX = `committee_list`;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
-    public meetingsObservable: Observable<ViewMeeting[]>;
-
     public restrictedColumns: ColumnRestriction<OML>[] = [
         {
             columnName: `menu`,
@@ -36,7 +32,6 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         !this.operator.hasOrganizationPermissions(restriction.permission);
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public meetingController: MeetingControllerService,
         public operator: OperatorService,
@@ -44,20 +39,10 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         public sortService: MeetingListSortService,
         private choiceService: ChoiceService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Meetings`);
         this.canMultiSelect = true;
         this.listStorageIndex = MEETING_LIST_STORAGE_INDEX;
-
-        this.meetingsObservable = this.meetingController
-            .getViewModelListObservable()
-            .pipe(
-                map(meetings =>
-                    this.operator.isSuperAdmin
-                        ? meetings
-                        : meetings.filter(meeting => this.operator.isInMeeting(meeting.id))
-                )
-            );
     }
 
     public editSingle(meeting: ViewMeeting): void {

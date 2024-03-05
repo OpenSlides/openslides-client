@@ -22,7 +22,7 @@ export class GridComponent {
      * This contains the padding for the grid itself and the margin of the tiles.
      */
     @Input()
-    public noSpace: boolean = false;
+    public noSpace = false;
 
     /**
      * Defines the height of every card

@@ -1,3 +1,5 @@
+import { ProjectorTitle } from 'src/app/domain/interfaces';
+import { Projection } from 'src/app/domain/models/projector/projection';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { HasAgendaItem, HasListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
@@ -15,7 +17,7 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
     }
 
     public getVotingText(context: VotingTextContext<ViewTopic>): string {
-        return `${this.getTitle()}: ${context.poll.getTitle()}: ${context.translateFn(`Voting opened`)}`;
+        return `${this.getListTitle()}: ${context.poll.getTitle()}: ${context.translateFn(`Voting opened`)}`;
     }
 
     public override getDetailStateUrl(): string {
@@ -36,6 +38,10 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
 
     public hasAttachments(): boolean {
         return this.attachments && this.attachments.length > 0;
+    }
+
+    public override getProjectorTitle(_projection: Projection): ProjectorTitle {
+        return { title: this.getListTitle() };
     }
 }
 export interface ViewTopic

@@ -1,9 +1,9 @@
 import { Injectable, TemplateRef } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -93,7 +93,7 @@ export class MediafileCommonService {
         newDirectoryForm.reset();
         const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
 
-        const result = await firstValueFrom(dialogRef.afterClosed().pipe(filter(result => result)));
+        const result = await firstValueFrom(dialogRef.afterClosed());
         if (result) {
             const mediafile = {
                 ...newDirectoryForm.value,

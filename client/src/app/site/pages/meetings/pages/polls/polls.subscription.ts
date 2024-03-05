@@ -18,7 +18,7 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
             follow: [
                 {
                     idField: `content_object_id`,
-                    ...UserFieldsets.FullNameSubscription,
+                    fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `option_ids`],
                     follow: [
                         {
                             idField: `poll_candidate_ids`,
@@ -71,7 +71,11 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
                     { idField: `vote_ids`, fieldset: FULL_FIELDSET }
                 ]
             },
-            { idField: `global_option_id`, fieldset: FULL_FIELDSET, follow: [{ idField: `vote_ids` }] }
+            {
+                idField: `global_option_id`,
+                fieldset: FULL_FIELDSET,
+                follow: [{ idField: `vote_ids` }]
+            }
         ]
     },
     subscriptionName: POLL_DETAIL_SUBSCRIPTION

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ActivatedRoute, NavigationExtras } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -14,7 +14,6 @@ import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/b
 import { hasListOfSpeakers, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -55,7 +54,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     /**
      * Show or hide the numbering button
      */
-    public isNumberingAllowed: boolean = false;
+    public isNumberingAllowed = false;
 
     public showSubtitles: Observable<boolean> = this.meetingSettingsService.get(`agenda_show_subtitles`);
 
@@ -89,7 +88,6 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     public filterProps = [`item_number`, `comment`, `getListTitle`];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private operator: OperatorService,
         private route: ActivatedRoute,
@@ -107,7 +105,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         private tagRepo: TagControllerService,
         private agendaItemMultiselectService: AgendaItemMultiselectService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
         this.listStorageIndex = AGENDA_ITEM_LIST_STORAGE_INDEX;
     }

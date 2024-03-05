@@ -1,10 +1,15 @@
 import { Component, Inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+    MatLegacyDialogRef as MatDialogRef
+} from '@angular/material/legacy-dialog';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
-import { ViewListOfSpeakers, ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda';
+import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+
+import { PointOfOrderData } from '../../services/point-of-order-dialog.service';
 
 @Component({
     selector: `os-point-of-order-dialog`,
@@ -29,7 +34,7 @@ export class PointOfOrderDialogComponent {
     public constructor(
         public readonly dialogRef: MatDialogRef<PointOfOrderDialogComponent>,
         @Inject(MAT_DIALOG_DATA)
-        public readonly listOfSpeakers: ViewListOfSpeakers,
+        public readonly data: PointOfOrderData,
         private fb: UntypedFormBuilder,
         private meetingSettings: MeetingSettingsService,
         private activeMeeting: ActiveMeetingService
@@ -46,7 +51,7 @@ export class PointOfOrderDialogComponent {
             .subscribe(this.categoriesSubject);
 
         this.editForm = this.fb.group({
-            note: [``, [Validators.maxLength(this.MAX_LENGTH)]],
+            note: [data?.note ?? ``, [Validators.maxLength(this.MAX_LENGTH)]],
             category: []
         });
 
@@ -59,7 +64,7 @@ export class PointOfOrderDialogComponent {
             if (show) {
                 categoryForm.setValidators([Validators.required]);
                 if (!categories.map(cat => cat.id).includes(categoryForm.value)) {
-                    categoryForm.setValue(categories[0].id);
+                    categoryForm.setValue(data?.point_of_order_category_id ?? categories[0].id);
                 }
             } else {
                 categoryForm.clearValidators();
@@ -73,7 +78,7 @@ export class PointOfOrderDialogComponent {
         if (!this.editForm.valid) {
             return;
         }
-        const note = this.editForm.value.note || undefined;
+        const note = this.editForm.value.note;
         const point_of_order_category_id = this._showCategorySelect
             ? this.editForm.value.category || undefined
             : undefined;

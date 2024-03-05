@@ -1,5 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ActionWorker } from 'src/app/domain/models/action-worker/action-worker';
@@ -25,6 +25,19 @@ export class WaitForActionDialogService {
         return this._currentReasonSubject.value;
     }
 
+    private set currentReason(reason: WaitForActionReason) {
+        const oldReason = this.currentReason;
+        if (oldReason !== reason) {
+            this._currentReasonSubject.next(reason);
+            if (oldReason === null) {
+                this.openDialog();
+            }
+            if (reason === null) {
+                this.closeDialog();
+            }
+        }
+    }
+
     public get dataObservable(): Observable<Map<WaitForActionReason, WaitForActionData[]>> {
         return this._dataObservable;
     }
@@ -38,19 +51,6 @@ export class WaitForActionDialogService {
             this._workerWatch = this.injector.get(ActionWorkerWatchService);
         }
         return this._workerWatch;
-    }
-
-    private set currentReason(reason: WaitForActionReason) {
-        const oldReason = this.currentReason;
-        if (oldReason !== reason) {
-            this._currentReasonSubject.next(reason);
-            if (oldReason === null) {
-                this.openDialog();
-            }
-            if (reason === null) {
-                this.closeDialog();
-            }
-        }
     }
 
     private _workerWatch: ActionWorkerWatchService;
@@ -118,7 +118,7 @@ export class WaitForActionDialogService {
     public wait(all = false, noConfirmation = false): WaitForActionData[] {
         const map = this._dataSubject.value;
         let removed: WaitForActionData[];
-        if (all || map.get(this.currentReason).length === 1) {
+        if (all || map.get(this.currentReason)?.length === 1) {
             removed = map.get(this.currentReason);
             map.delete(this.currentReason);
         } else {
@@ -129,8 +129,8 @@ export class WaitForActionDialogService {
         this.newCurrentReason();
         removed.forEach(date => {
             const worker = this.repo.getViewModel(date.workerId);
-            if (worker) {
-                worker.lastConfirmationToWaitTimestamp = Date.now();
+            if (worker && !noConfirmation) {
+                this.workerWatch.setWaitingConfirmed(worker.id);
             }
         });
         return removed;
@@ -163,6 +163,6 @@ export class WaitForActionDialogService {
 
     private newCurrentReason(): void {
         const keys = Array.from(this._dataSubject.value.keys()).sort((a, b) => a - b);
-        this.currentReason = keys.length ? keys[0] : null;
+        this.currentReason = keys?.length ? keys[0] : null;
     }
 }

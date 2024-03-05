@@ -47,7 +47,7 @@ export class CommunicationManagerService {
         buildFn: (streamId: number) => HttpStream<T>,
         streamId?: Id
     ): { closeFn: CloseFn; id: number } {
-        const nextId = streamId || Math.floor(Math.random() * (900000 - 1) + 100000);
+        const nextId = streamId || Math.floor(Math.random() * (900000000 - 1) + 100000000);
         this._activeStreamHandlers[nextId] = new StreamHandler(() => buildFn(nextId), {
             afterOpenedFn: stream => this.printStreamInformation(stream, `OPENED`),
             afterClosedFn: stream => this.printStreamInformation(stream, `CLOSED`)

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, merge, Observable } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, merge, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import {
     FONT_PLACES,
@@ -69,7 +69,7 @@ export class MediaManageService {
         if (!this.fontUrlSubjects[place]) {
             this.fontUrlSubjects[place] = new BehaviorSubject(this.getFontUrl(place));
         }
-        return this.fontUrlSubjects[place];
+        return this.fontUrlSubjects[place].pipe(distinctUntilChanged());
     }
 
     public getFontUrl(place: FontPlace): string {

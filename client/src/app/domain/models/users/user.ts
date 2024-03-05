@@ -1,4 +1,4 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 import { Id } from '../../definitions/key-types';
 import { OMLMapping } from '../../definitions/organization-permission';
@@ -12,6 +12,7 @@ export type UserSortProperty = 'first_name' | 'last_name' | 'number';
  * Iterable pre selection of genders
  */
 export const GENDERS = [_(`female`), _(`male`), _(`diverse`), _(`non-binary`)];
+export const GENDER_FITLERABLE = [`female`, `male`, `diverse`, `non-binary`];
 
 /**
  * Representation of a user in contrast to the operator.
@@ -29,8 +30,6 @@ export class User extends BaseDecimalModel<User> {
     public readonly default_password!: string;
     public readonly can_change_own_password!: boolean;
     public readonly gender!: string;
-    public readonly default_number!: string;
-    public readonly default_structure_level!: string;
     public readonly email!: string;
     public readonly last_email_sent!: number; // comes in seconds
     public readonly last_login!: number; // comes in seconds
@@ -75,8 +74,6 @@ export class User extends BaseDecimalModel<User> {
         `can_change_own_password`,
         `gender`,
         `email`,
-        `default_number`,
-        `default_structure_level`,
         `default_vote_weight`,
         `last_email_sent`,
         `is_demo_user`,

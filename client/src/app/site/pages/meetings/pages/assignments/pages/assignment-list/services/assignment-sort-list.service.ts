@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { Injectable, ProviderToken } from '@angular/core';
+import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
+import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-
-import { AssignmentListServiceModule } from './assignment-list-service.module';
 
 /**
  * Sorting service for the assignment list
  */
 @Injectable({
-    providedIn: AssignmentListServiceModule
+    providedIn: `root`
 })
 export class AssignmentSortListService extends BaseSortListService<ViewAssignment> {
     /**
@@ -16,32 +16,29 @@ export class AssignmentSortListService extends BaseSortListService<ViewAssignmen
      */
     protected storageKey = `AssignmentList`;
 
+    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = AssignmentRepositoryService;
+
     /**
      * Define the sort options
      */
     private assignmentSortOptions: OsSortingOption<ViewAssignment>[] = [
         { property: `title`, label: `Name` },
         { property: `phase`, label: `Phase` },
-        { property: `candidateAmount`, label: `Number of candidates` },
+        { property: `candidateAmount`, label: `Number of candidates`, baseKeys: [`candidate_ids`] },
         { property: `id`, label: `Creation date` }
     ];
+
+    constructor() {
+        super({
+            sortProperty: `title`,
+            sortAscending: true
+        });
+    }
 
     /**
      * @override
      */
     protected getSortOptions(): OsSortingOption<ViewAssignment>[] {
         return this.assignmentSortOptions;
-    }
-
-    /**
-     * Required by parent
-     *
-     * @returns the default sorting strategy
-     */
-    public async getDefaultDefinition(): Promise<OsSortingDefinition<ViewAssignment>> {
-        return {
-            sortProperty: `title`,
-            sortAscending: true
-        };
     }
 }

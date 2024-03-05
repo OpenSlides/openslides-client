@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { OptionDataKey } from 'src/app/domain/models/poll/generic-poll';
@@ -44,14 +44,14 @@ export abstract class PollService {
 
     private _isElectronicVotingEnabled = false;
 
-    public constructor(
-        organizationSettingsService: OrganizationSettingsService,
-        protected translate: TranslateService,
-        protected pollKeyVerbose: PollKeyVerbosePipe,
-        protected pollParseNumber: PollParseNumberPipe,
-        protected themeService: ThemeService
-    ) {
-        organizationSettingsService
+    private organizationSettingsService = inject(OrganizationSettingsService);
+    protected translate = inject(TranslateService);
+    protected pollKeyVerbose = inject(PollKeyVerbosePipe);
+    protected pollParseNumber = inject(PollParseNumberPipe);
+    protected themeService = inject(ThemeService);
+
+    public constructor() {
+        this.organizationSettingsService
             .get(`enable_electronic_voting`)
             .subscribe(is => (this._isElectronicVotingEnabled = is));
     }
@@ -119,7 +119,7 @@ export abstract class PollService {
         return tableData;
     }
 
-    public getChartLabels(poll: PollData, excludeYNALabels: boolean = false): string[] {
+    public getChartLabels(poll: PollData, excludeYNALabels = false): string[] {
         const fields = this.getPollDataFields(poll);
         return poll.options.map(option => {
             const votingResults = fields.map(field => {
@@ -193,7 +193,7 @@ export abstract class PollService {
      */
     protected getPercentBase(poll: PollData, row?: OptionData): number {
         const base: PollPercentBase = poll.onehundred_percent_base as PollPercentBase;
-        let totalByBase: number = 0;
+        let totalByBase = 0;
         const option = row ?? poll.options[0]; // Assuming that its a motion poll and the first option contains every vote.
         switch (base) {
             case PollPercentBase.YN:
@@ -210,6 +210,9 @@ export abstract class PollService {
                 break;
             case PollPercentBase.Entitled:
                 totalByBase = poll.entitled_users_at_stop?.length || 0;
+                break;
+            case PollPercentBase.EntitledPresent:
+                totalByBase = poll.entitled_users_at_stop?.filter(x => x.present).length || 0;
                 break;
             case PollPercentBase.Cast:
                 totalByBase = poll.votescast > 0 ? poll.votescast : 0;
@@ -300,7 +303,8 @@ export abstract class PollService {
         return (
             poll.onehundred_percent_base === PollPercentBase.Valid ||
             poll.onehundred_percent_base === PollPercentBase.Cast ||
-            poll.onehundred_percent_base === PollPercentBase.Entitled
+            poll.onehundred_percent_base === PollPercentBase.Entitled ||
+            poll.onehundred_percent_base === PollPercentBase.EntitledPresent
         );
     }
 

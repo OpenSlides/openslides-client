@@ -1,20 +1,24 @@
-<os-head-bar [hasMainButton]="canManage" (mainEvent)="onPlusButton()" [multiSelectMode]="isMultiSelect">
+<os-head-bar
+    [hasMainButton]="canManage"
+    [mainActionTooltip]="'New participant' | translate"
+    (mainEvent)="onPlusButton()"
+    [multiSelectMode]="isMultiSelect"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Participants' | translate }}</h2>
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button type="button" mat-icon-button [matMenuTriggerFor]="userMenu"><mat-icon>more_vert</mat-icon></button>
-    </div>
+    </ng-container>
 
     <!-- Multiselect info -->
-    <div class="central-info-slot">
+    <ng-container class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span>
-        <span>{{ 'selected' | translate }}</span>
-    </div>
+        <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
+    </ng-container>
 </os-head-bar>
 
 <os-list
@@ -24,6 +28,7 @@
     [filterProps]="filterProps"
     [multiSelect]="isMultiSelect"
     [hiddenInMobile]="['group', 'presence']"
+    [addBottomSpacer]="hasInteractionState | async"
     [(selectedRows)]="selectedRows"
 >
     <!-- extra content in the filter bar -->
@@ -73,12 +78,12 @@
             <div *ngIf="user.groups()?.length">
                 <os-icon-container icon="people" [noWrap]="true">
                     <os-comma-separated-listing [list]="user.groups()">
-                        <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                        <ng-template let-group>{{ group.getTitle() }}</ng-template>
                     </os-comma-separated-listing>
                 </os-icon-container>
             </div>
-            <div *ngIf="user.structure_level()" class="spacer-top-5">
-                <os-icon-container icon="flag">{{ user.structure_level() }}</os-icon-container>
+            <div *ngIf="user.structure_levels()?.length" class="spacer-top-5">
+                <os-icon-container icon="flag">{{ user.structure_levels() }}</os-icon-container>
             </div>
             <div *ngIf="user.number()" class="spacer-top-5">
                 <os-icon-container icon="perm_identity">{{ user.number() }}</os-icon-container>
@@ -181,12 +186,22 @@
             <span>{{ 'Groups' | translate }}</span>
         </button>
 
+        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="structure-levels">
+            <mat-icon>flag</mat-icon>
+            <span>{{ 'Structure levels' | translate }}</span>
+        </button>
+
         <div *ngIf="presenceViewConfigured">
             <button mat-menu-item *osPerms="permission.userCanManage" routerLink="presence">
                 <mat-icon>transfer_within_a_station</mat-icon>
                 <span>{{ 'Presence' | translate }}</span>
             </button>
         </div>
+
+        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="speaker-list">
+            <mat-icon>record_voice_over</mat-icon>
+            <span translate>Contributions</span>
+        </button>
 
         <button mat-menu-item (click)="pdfExportUserList()">
             <mat-icon>picture_as_pdf</mat-icon>
@@ -227,9 +242,31 @@
             (deselectAll)="deselectAll()"
         >
             <mat-divider></mat-divider>
+
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setGroupSelected()">
                 <mat-icon>people</mat-icon>
                 <span>{{ 'Add/remove groups ...' | translate }}</span>
+            </button>
+
+            <button
+                mat-menu-item
+                [disabled]="selectedRows.length !== 2"
+                [matTooltip]="
+                    (selectedRows.length !== 2 ? 'Select exactly two participants to swap mandates' : '') | translate
+                "
+                (click)="switchParticipants()"
+            >
+                <mat-icon>swap_horiz</mat-icon>
+                <span>{{ 'Swap mandates ...' | translate }}</span>
+            </button>
+
+            <button
+                mat-menu-item
+                [disabled]="!selectedRows.length || !hasStructureLevels"
+                (click)="setStructureLevelSelected()"
+            >
+                <mat-icon>flag</mat-icon>
+                <span>{{ 'Add/remove structure levels ...' | translate }}</span>
             </button>
 
             <mat-divider></mat-divider>

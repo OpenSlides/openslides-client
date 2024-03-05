@@ -1,7 +1,7 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -9,7 +9,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion, ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -44,9 +43,11 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
     public get selectedCategory(): ViewMotionCategory {
         return this._selectedCategory;
     }
+
     public set selectedCategory(category: ViewMotionCategory) {
         this._selectedCategory = category;
     }
+
     private _selectedCategory!: ViewMotionCategory;
 
     /**
@@ -72,7 +73,6 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
     private _categoryId: Id = -1;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         private operator: OperatorService,
@@ -82,7 +82,7 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
         private formBuilder: UntypedFormBuilder,
         private dialog: MatDialog
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public onIdFound(id: Id | null): void {

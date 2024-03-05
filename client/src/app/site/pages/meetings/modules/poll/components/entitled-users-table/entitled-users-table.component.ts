@@ -4,6 +4,7 @@ import { Permission } from 'src/app/domain/definitions/permission';
 
 import { ParticipantControllerService } from '../../../../pages/participants/services/common/participant-controller.service';
 import { EntitledUsersTableEntry } from '../../definitions/entitled-users-table-entry';
+import { EntitledUsersListFilterService } from '../../services/entitled-user-filter.service';
 
 @Component({
     selector: `os-entitled-users-table`,
@@ -13,7 +14,7 @@ import { EntitledUsersTableEntry } from '../../definitions/entitled-users-table-
     encapsulation: ViewEncapsulation.None
 })
 export class EntitledUsersTableComponent {
-    private _isViewingThis: boolean = true;
+    private _isViewingThis = true;
 
     @Input()
     public set entitledUsersObservable(observable: Observable<EntitledUsersTableEntry[]>) {
@@ -25,6 +26,12 @@ export class EntitledUsersTableComponent {
             )
         );
     }
+
+    public get entitledUsersObservable(): Observable<EntitledUsersTableEntry[]> {
+        return this._entitledUsersObservable;
+    }
+
+    private _entitledUsersObservable!: Observable<EntitledUsersTableEntry[]>;
 
     @Input()
     public set isViewingThis(value: boolean) {
@@ -38,14 +45,7 @@ export class EntitledUsersTableComponent {
     public readonly permission = Permission;
 
     public filterPropsEntitledUsersTable = [`user.full_name`, `vote_delegated_to.full_name`, `voted_verbose`];
-
-    public get entitledUsersObservable(): Observable<EntitledUsersTableEntry[]> {
-        return this._entitledUsersObservable;
-    }
-
-    private _entitledUsersObservable!: Observable<EntitledUsersTableEntry[]>;
-
-    constructor(private controller: ParticipantControllerService) {}
+    constructor(private controller: ParticipantControllerService, public filter: EntitledUsersListFilterService) {}
 
     private getNameFromEntry(entry: EntitledUsersTableEntry): string {
         return (entry.user ?? this.controller.getViewModel(entry.user_id))?.getShortName();

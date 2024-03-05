@@ -1,4 +1,9 @@
-<os-head-bar [nav]="false" [hasMainButton]="canEdit" (mainEvent)="onPlusButton()">
+<os-head-bar
+    [nav]="false"
+    [hasMainButton]="canEdit"
+    [mainActionTooltip]="'New category' | translate"
+    (mainEvent)="onPlusButton()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Categories' | translate }}</h2>
@@ -51,7 +56,8 @@
             <!-- Prefix -->
             <p>
                 <mat-form-field>
-                    <input formControlName="prefix" matInput placeholder="{{ 'Prefix' | translate }}" />
+                    <mat-label>{{ 'Prefix' | translate }}</mat-label>
+                    <input formControlName="prefix" matInput />
                     <mat-error>{{ 'This prefix already exists' | translate }}</mat-error>
                 </mat-form-field>
             </p>
@@ -59,12 +65,8 @@
             <!-- Name -->
             <p>
                 <mat-form-field>
-                    <input
-                        formControlName="name"
-                        matInput
-                        placeholder="{{ 'Name of the new category' | translate }}"
-                        required
-                    />
+                    <mat-label>{{ 'Name of the new category' | translate }}</mat-label>
+                    <input formControlName="name" matInput required />
                     <mat-error>
                         {{ 'A name is required' | translate }}
                     </mat-error>

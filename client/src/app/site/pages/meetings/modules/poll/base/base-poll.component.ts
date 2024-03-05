@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -6,7 +6,6 @@ import { PollContentObject } from 'src/app/domain/models/poll';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -48,15 +47,10 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
     protected _id!: Id;
     protected _poll!: ViewPoll<C>;
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected promptService: PromptService,
-        protected choiceService: ChoiceService,
-        protected repo: PollControllerService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    protected promptService = inject(PromptService);
+    protected choiceService = inject(ChoiceService);
+    protected repo = inject(PollControllerService);
 
     public async nextPollState(): Promise<void> {
         const currentState: PollState = this._poll.state;
@@ -112,7 +106,7 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
      */
     protected onAfterUpdatePoll(_poll: ViewPoll<C>): void {}
 
-    protected loadPoll(id: Id): void {
+    protected loadPoll(_id: Id): void {
         this.subscriptions.push(
             this.repo.getViewModelObservable(this._id).subscribe(poll => {
                 if (poll) {

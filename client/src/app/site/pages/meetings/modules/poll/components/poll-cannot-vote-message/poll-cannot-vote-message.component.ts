@@ -20,10 +20,10 @@ export class PollCannotVoteMessageComponent {
     public hasAlreadyVoted: boolean;
 
     @Input()
-    public isDeliveringVote: boolean = false;
+    public isDeliveringVote = false;
 
     @Input()
-    public hasDelegations: boolean = false;
+    public hasDelegations = false;
 
     @Input()
     public poll: ViewPoll;

@@ -13,14 +13,28 @@
                 mat-icon-button
                 (click)="onBringDialog()"
                 matTooltip="{{ 'Open projection dialog' | translate }}"
-                matTooltipPosition="above"
+                matTooltipPosition="left"
             >
                 <mat-icon>open_in_new</mat-icon>
             </button>
-            <button type="button" class="small-mat-icon-button" mat-icon-button (click)="onEdit()">
+            <button
+                type="button"
+                class="small-mat-icon-button"
+                mat-icon-button
+                (click)="onEdit()"
+                matTooltip="{{ 'Edit' | translate }}"
+                matTooltipPosition="left"
+            >
                 <mat-icon>edit</mat-icon>
             </button>
-            <button type="button" class="small-mat-icon-button" mat-icon-button (click)="onDelete()">
+            <button
+                type="button"
+                class="small-mat-icon-button"
+                mat-icon-button
+                (click)="onDelete()"
+                matTooltip="{{ 'Delete' | translate }}"
+                matTooltipPosition="left"
+            >
                 <mat-icon>close</mat-icon>
             </button>
         </div>

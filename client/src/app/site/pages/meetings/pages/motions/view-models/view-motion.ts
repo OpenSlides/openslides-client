@@ -1,4 +1,4 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 
@@ -26,12 +26,14 @@ import { ViewMotionChangeRecommendation, ViewMotionStatuteParagraph, ViewMotionW
 import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
 import { ViewMotionComment } from '../modules/comments/view-models/view-motion-comment';
 import { ViewMotionCommentSection } from '../modules/comments/view-models/view-motion-comment-section';
+import { ViewMotionEditor } from '../modules/editors';
 import { ViewMotionBlock } from '../modules/motion-blocks/view-models/view-motion-block';
 import { HasPersonalNote } from '../modules/personal-notes/view-models/has-personal-note';
 import { ViewPersonalNote } from '../modules/personal-notes/view-models/view-personal-note';
 import { ViewMotionState } from '../modules/states/view-models/view-motion-state';
 import { ViewMotionSubmitter } from '../modules/submitters';
 import { HasTags } from '../modules/tags/view-models/has-tags';
+import { ViewMotionWorkingGroupSpeaker } from '../modules/working-group-speakers';
 
 export interface HasReferencedMotionsInExtension extends HasReferencedMotionInExtensionIds {
     referenced_in_motion_state_extensions: ViewMotion[];
@@ -70,6 +72,18 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     public get submittersAsUsers(): ViewUser[] {
         return (this.submitters || []).map(submitter => submitter.user);
+    }
+
+    public get submitterNames(): string[] {
+        return this.mapSubmittersWithAdditional(submitter => submitter.getTitle());
+    }
+
+    public get editorUserIds(): Id[] {
+        return (this.editors || []).map(editor => editor.user_id);
+    }
+
+    public get workingGroupSpeakerUserIds(): Id[] {
+        return (this.working_group_speakers || []).map(workingGroupSpeaker => workingGroupSpeaker.user_id);
     }
 
     public get numberOrTitle(): string {
@@ -238,6 +252,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         recoMode: ChangeRecoMode,
         includeUnchanged?: boolean
     ) => DiffLinesInParagraph[] = () => [];
+
     public getParagraphTitleByParagraph!: (paragraph: DiffLinesInParagraph) => string | null;
     // This is set by the repository
     public getNumberOrTitle!: () => string;
@@ -249,6 +264,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
             return this.personal_notes[0] || null;
         }
         return null;
+    }
+
+    public mapSubmittersWithAdditional(mapFn: (submitter: ViewUser) => string): string[] {
+        const submitters = this.submittersAsUsers.map(mapFn);
+        if (this.additional_submitter) {
+            submitters.push(this.additional_submitter);
+        }
+        return submitters;
     }
 
     /**
@@ -360,6 +383,7 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     derived_motions?: ViewMotion[];
     all_derived_motions?: ViewMotion[];
     all_origins?: ViewMotion[];
+    identical_motions?: ViewMotion[];
     state?: ViewMotionState;
     state_extension_references: (BaseViewModel & HasReferencedMotionsInExtension)[];
     recommendation?: ViewMotionState;
@@ -368,6 +392,8 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
     supporter_meeting_users: ViewMeetingUser[];
+    editors: ViewMotionEditor[];
+    working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     change_recommendations: ViewMotionChangeRecommendation[];
     statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];

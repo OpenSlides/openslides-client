@@ -1,22 +1,26 @@
-<os-head-bar [hasMainButton]="perms.isAllowed('create')" (mainEvent)="onPlusButton()" [multiSelectMode]="isMultiSelect">
+<os-head-bar
+    [hasMainButton]="perms.isAllowed('create')"
+    [mainActionTooltip]="'New motion' | translate"
+    (mainEvent)="onPlusButton()"
+    [multiSelectMode]="isMultiSelect"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Motions' | translate }}</h2>
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button type="button" mat-icon-button [matMenuTriggerFor]="motionListMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 
     <!-- Multiselect info -->
-    <div class="central-info-slot">
+    <ng-container class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span>
-        <span>{{ 'selected' | translate }}</span>
-    </div>
+        <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
+    </ng-container>
 
     <div class="extra-controls-slot">
         <div *ngIf="hasCategories && !isMultiSelect">
@@ -25,7 +29,6 @@
                 *ngIf="selectedView === 'list'"
                 (click)="onChangeView('tiles')"
                 matTooltip="{{ 'Tile view' | translate }}"
-                matTooltipPosition="left"
             >
                 <mat-icon>view_module</mat-icon>
             </button>
@@ -35,7 +38,6 @@
                 *ngIf="selectedView === 'tiles'"
                 (click)="onChangeView('list')"
                 matTooltip="{{ 'List view' | translate }}"
-                matTooltipPosition="left"
             >
                 <mat-icon>view_headline</mat-icon>
             </button>
@@ -90,9 +92,9 @@
 
                 <!-- Submitters -->
                 <div class="submitters-line ellipsis-overflow">
-                    <span *ngIf="motion.submitters.length">
+                    <span *ngIf="motion.submitterNames.length">
                         <span>{{ 'by' | translate }}</span>
-                        {{ motion.submittersAsUsers }}
+                        {{ motion.submitterNames }}
                     </span>
 
                     <span *ngIf="showSequential">
@@ -194,37 +196,39 @@
 </mat-menu>
 
 <ng-template #tiles>
-    <os-grid rowHeight="50%">
-        <os-tile *ngFor="let tile of listTiles" [data]="tile" (clicked)="changeToViewWithTileCategory(tile)">
-            <div class="motion-tile-card" [osPaper]="2" [osPaperRaise]="true">
-                <div class="full-height">
-                    <div class="flex-center background-selected">
-                        <span
-                            class="tile-content-prefix"
-                            [matBadge]="tile.amountOfMotions"
-                            [matBadgeColor]="'accent'"
-                            [ngSwitch]="tile.name"
-                        >
-                            <span *ngSwitchCase="'Favorites'"><mat-icon>star</mat-icon></span>
-                            <span *ngSwitchCase="'No category'"><mat-icon>block</mat-icon></span>
-                            <span *ngSwitchCase="'Personal notes'"><mat-icon>speaker_notes</mat-icon></span>
-                            <span *ngSwitchDefault>
-                                <span *ngIf="tile.prefix">
-                                    {{ tile.prefix }}
-                                </span>
-                                <span *ngIf="!tile.prefix">
-                                    <mat-icon>category</mat-icon>
+    <div class="spacer-bottom-60">
+        <os-grid rowHeight="50%">
+            <os-tile *ngFor="let tile of listTiles" [data]="tile" (clicked)="changeToViewWithTileCategory(tile)">
+                <div class="motion-tile-card" [osPaper]="2" [osPaperRaise]="true">
+                    <div class="full-height">
+                        <div class="flex-center background-selected">
+                            <span
+                                class="tile-content-prefix"
+                                [matBadge]="tile.amountOfMotions"
+                                [matBadgeColor]="'accent'"
+                                [ngSwitch]="tile.name"
+                            >
+                                <span *ngSwitchCase="'Favorites'"><mat-icon>star</mat-icon></span>
+                                <span *ngSwitchCase="'No category'"><mat-icon>block</mat-icon></span>
+                                <span *ngSwitchCase="'Personal notes'"><mat-icon>speaker_notes</mat-icon></span>
+                                <span *ngSwitchDefault>
+                                    <span *ngIf="tile.prefix">
+                                        {{ tile.prefix }}
+                                    </span>
+                                    <span *ngIf="!tile.prefix">
+                                        <mat-icon>category</mat-icon>
+                                    </span>
                                 </span>
                             </span>
-                        </span>
-                    </div>
-                    <div class="tile-content-name background-card">
-                        {{ tile.name | translate }}
+                        </div>
+                        <div class="tile-content-name background-card">
+                            {{ tile.name | translate }}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </os-tile>
-    </os-grid>
+            </os-tile>
+        </os-grid>
+    </div>
 </ng-template>
 
 <mat-menu #motionListMenu="matMenu">
@@ -239,7 +243,7 @@
         </div>
 
         <!-- Amendments -->
-        <div *ngIf="amendmentsEnabled && (perms.isAllowed('manage') || hasAmendments())">
+        <div *ngIf="amendmentsEnabled && (perms.isAllowed('manage') || hasAmendments)">
             <button mat-menu-item routerLink="amendments">
                 <!-- color_lens -->
                 <!-- format_paint -->
@@ -266,7 +270,7 @@
 
         <mat-divider
             *ngIf="
-                (hasCategories || hasMotionBlocks || hasAmendments() || perms.isAllowed('manage')) &&
+                (hasCategories || hasMotionBlocks || hasAmendments || perms.isAllowed('manage')) &&
                 (perms.isAllowed('manage') || selectedView === 'list' || perms.isAllowed('can_manage_config'))
             "
         ></mat-divider>

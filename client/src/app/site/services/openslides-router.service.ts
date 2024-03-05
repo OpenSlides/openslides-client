@@ -84,7 +84,7 @@ export class OpenSlidesRouterService {
     }
 
     public navigateToLogin(): void {
-        const url = this.router.routerState.snapshot.url;
+        const url = this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
 
         // Navigate to login if the user is not already there
         if (!url.startsWith(`/${UrlTarget.LOGIN}`)) {
@@ -131,16 +131,16 @@ export class OpenSlidesRouterService {
     private async checkRouteGuards(route: ActivatedRoute): Promise<boolean | UrlTree> {
         const routeSnapshot = route.snapshot;
         const config = routeSnapshot.routeConfig;
-        let conditions: Promise<boolean | UrlTree>[] = [
+        const conditions: Promise<boolean | UrlTree>[] = [
             ...(config?.canActivate?.map(guard => this.validateGuard(guard, route, `canActivate`)) || []),
             ...(config?.canActivateChild?.map(guard => this.validateGuard(guard, route, `canActivateChild`)) || []),
             ...(config?.canLoad?.map(guard => this.validateGuard(guard, route, `canLoad`)) || [])
         ];
 
-        let conditionResults = await Promise.all(conditions);
+        const conditionResults = await Promise.all(conditions);
         if (conditionResults.some(r => r !== true)) {
             let redirect: boolean | UrlTree = false;
-            for (let r of conditionResults) {
+            for (const r of conditionResults) {
                 if (typeof r !== `boolean`) {
                     redirect = r;
                 }

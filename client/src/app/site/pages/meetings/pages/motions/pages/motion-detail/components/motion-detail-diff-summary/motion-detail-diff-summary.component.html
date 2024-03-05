@@ -27,7 +27,7 @@
                             <span>{{ 'Rejected' | translate }}</span>
                         </ng-container>
                         <ng-container *ngIf="(change.isAccepted() || isAmendment(change)) && change.stateName">
-                            – {{ change.stateName | translate }}
+                            – {{ change.stateName }}
                         </ng-container>
                     </i>
                     <a

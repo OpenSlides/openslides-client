@@ -6,6 +6,7 @@ import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants'
 import { Action, createEmptyAction } from 'src/app/gateways/actions';
 import { CreateResponse } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { NullablePartial } from 'src/app/infrastructure/utils';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
@@ -24,7 +25,8 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MotionRepositoryService,
-        private motionLineNumbering: MotionLineNumberingService
+        private motionLineNumbering: MotionLineNumberingService,
+        private userRepo: UserRepositoryService
     ) {
         super(controllerServiceCollector, Motion, repo);
 
@@ -41,9 +43,17 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     }
 
     public update(
-        update?: NullablePartial<Motion & { workflow_id: Id }>,
+        update?: NullablePartial<Motion & { workflow_id: Id; supporter_user_ids: Id[] }>,
         ...motions: (Motion & { workflow_id: Id })[]
     ): Action<void> {
+        if (update.supporter_user_ids) {
+            update.supporter_meeting_user_ids = (update.supporter_meeting_user_ids ?? []).concat(
+                update.supporter_user_ids
+                    .map(id => this.userRepo.getViewModel(id)?.getMeetingUser()?.id)
+                    .filter(id => !!id)
+            );
+            delete update.supporter_user_ids;
+        }
         if (update) {
             return this.repo.update(update, ...motions);
         }
@@ -202,8 +212,8 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         return rec;
     }
 
-    public hasAmendments(motion: Identifiable): boolean {
-        return !!this.getViewModelList().filter(_motion => _motion.lead_motion_id === motion.id).length;
+    public hasAmendments(motion: ViewMotion): boolean {
+        return !!motion.amendment_ids?.length;
     }
 
     /**
@@ -228,7 +238,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         viewModel.getParagraphTitleByParagraph = (paragraph: DiffLinesInParagraph) =>
             this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph);
         if (viewModel.lead_motion && viewModel.isParagraphBasedAmendment()) {
-            viewModel.getAmendmentParagraphLines = (recoMode: ChangeRecoMode, includeUnchanged: boolean = false) => {
+            viewModel.getAmendmentParagraphLines = (recoMode: ChangeRecoMode, includeUnchanged = false) => {
                 const changeRecos = viewModel.change_recommendations.filter(changeReco => changeReco.showInFinalView());
                 return this.motionLineNumbering.getAmendmentParagraphLines(
                     viewModel,
@@ -239,7 +249,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
                 );
             };
         } else {
-            viewModel.getAmendmentParagraphLines = (recoMode: ChangeRecoMode) => [];
+            viewModel.getAmendmentParagraphLines = () => [];
         }
         viewModel.getExtendedStateLabel = () => this.getExtendedStateLabel(viewModel);
         viewModel.getExtendedRecommendationLabel = () => this.getExtendedRecommendationLabel(viewModel);

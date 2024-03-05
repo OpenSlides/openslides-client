@@ -1,4 +1,14 @@
-import { ChangeDetectorRef, Directive, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Directive,
+    EventEmitter,
+    inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -150,13 +160,13 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
     /**
      * Check if mobile and required semaphore for change detection
      */
-    public isMobile: boolean = false;
+    public isMobile = false;
 
     /**
      * Search input value
      */
     @Input()
-    public inputValue: string = ``;
+    public inputValue = ``;
 
     public get currentOffset(): number {
         if (!this._viewListComponent.scrollViewport) {
@@ -199,12 +209,11 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
         return hidden;
     }
 
-    public constructor(
-        protected vp: ViewPortService,
-        protected cd: ChangeDetectorRef,
-        protected scrollingTableManager: ScrollingTableManageService
-    ) {
-        vp.isMobileSubject.subscribe(mobile => {
+    protected vp = inject(ViewPortService);
+    protected cd = inject(ChangeDetectorRef);
+    protected scrollingTableManager = inject(ScrollingTableManageService);
+    public constructor() {
+        this.vp.isMobileSubject.subscribe(mobile => {
             if (mobile !== this.isMobile) {
                 this.cd.markForCheck();
             }

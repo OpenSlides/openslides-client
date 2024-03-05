@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
@@ -48,7 +48,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         private operator: OperatorService,
         private vp: ViewPortService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Accounts`);
         this.canMultiSelect = true;
         this.listStorageIndex = ACCOUNT_LIST_STORAGE_INDEX;
@@ -90,7 +90,11 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
             if (result.action === ADD) {
                 this.controller.bulkAddUserToMeeting(this.selectedRows, ...result.items).resolve();
             } else {
-                this.controller.bulkRemoveUserFromMeeting(this.selectedRows, ...result.items).resolve();
+                this.controller.bulkRemoveUserFromMeeting(this.selectedRows, ...result.items).then(action => {
+                    if (action) {
+                        action.resolve();
+                    }
+                });
             }
         }
     }
@@ -106,8 +110,8 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         }
     }
 
-    public csvExportMemberList(): void {
-        this.exporter.downloadAccountCsvFile(this.listComponent.source);
+    public csvExportMemberList(users = this.listComponent.source): void {
+        this.exporter.downloadAccountCsvFile(users);
     }
 
     public getOmlByUser(user: ViewUser): string {

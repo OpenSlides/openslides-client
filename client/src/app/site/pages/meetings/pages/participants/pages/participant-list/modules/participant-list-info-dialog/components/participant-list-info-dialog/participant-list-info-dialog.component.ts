@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
@@ -11,6 +11,8 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
+import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
+import { ViewStructureLevel } from '../../../../../structure-levels/view-models';
 import { InfoDialog } from '../../services/participant-list-info-dialog.service';
 
 @Component({
@@ -37,15 +39,18 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         return this._voteDelegationEnabled;
     }
 
+    public structureLevelObservable: Observable<ViewStructureLevel[]>;
+
     private readonly _otherParticipantsSubject = new BehaviorSubject<ViewMeetingUser[]>([]);
     private _isUserInScope = true;
     private _currentUser: ViewUser | null = null;
-    private _voteDelegationEnabled: boolean = false;
+    private _voteDelegationEnabled = false;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog,
         private participantRepo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
+        private structureLevelRepo: StructureLevelControllerService,
         private userService: UserService,
         private meetingSettings: MeetingSettingsService
     ) {
@@ -55,6 +60,7 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     public ngOnInit(): void {
         this._currentUser = this.participantRepo.getViewModel(this.infoDialog.id);
         this.updateIsUserInScope();
+        this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
         this.subscriptions.push(
             this.participantRepo
                 .getViewModelListObservable()

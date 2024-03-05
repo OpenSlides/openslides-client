@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { objectToFormattedString } from 'src/app/infrastructure/utils';
+import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
@@ -31,18 +31,17 @@ export class OrganizationSettingsComponent extends BaseComponent {
         return this._ssoConfigRows;
     }
 
-    private _ssoConfigRows: number = 3;
+    private _ssoConfigRows = 3;
 
     private _currentOrgaSettings: ViewOrganization | null = null;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private controller: OrganizationControllerService,
         private formBuilder: UntypedFormBuilder,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(this.pageTitle);
 
         this.subscriptions.push(
@@ -70,7 +69,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 privacy_policy: [this._currentOrgaSettings.privacy_policy],
                 login_text: [this._currentOrgaSettings.login_text],
                 users_email_body: [this._currentOrgaSettings.users_email_body],
-                users_email_replyto: [this._currentOrgaSettings.users_email_replyto, [Validators.email]],
+                users_email_replyto: [this._currentOrgaSettings.users_email_replyto, [createEmailValidator()]],
                 users_email_sender: [this._currentOrgaSettings.users_email_sender],
                 users_email_subject: [this._currentOrgaSettings.users_email_subject],
                 default_language: [this._currentOrgaSettings.default_language]
@@ -137,7 +136,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
                 : null;
         }
-        for (let key of Object.keys(payload)) {
+        for (const key of Object.keys(payload)) {
             if (this.orgaSettingsForm.get(key).pristine) {
                 delete payload[key];
             }

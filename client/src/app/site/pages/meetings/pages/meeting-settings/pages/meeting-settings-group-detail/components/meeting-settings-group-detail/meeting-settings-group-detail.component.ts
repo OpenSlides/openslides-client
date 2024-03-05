@@ -9,12 +9,12 @@ import { ObjectReplaceKeysConfig, partitionModelsForUpdate, replaceObjectKeys } 
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import {
     SettingsGroup,
-    SettingsItem
+    SettingsItem,
+    SKIPPED_SETTINGS
 } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
@@ -57,7 +57,6 @@ export class MeetingSettingsGroupDetailComponent
     @ViewChildren(`settingsFields`) public settingsFields!: QueryList<MeetingSettingsGroupDetailFieldComponent>;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private cd: ChangeDetectorRef,
         private route: ActivatedRoute,
@@ -66,7 +65,7 @@ export class MeetingSettingsGroupDetailComponent
         private repo: MeetingControllerService,
         private collectionMapper: CollectionMapperService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**
@@ -110,18 +109,18 @@ export class MeetingSettingsGroupDetailComponent
     public async saveAll(): Promise<void> {
         this.cd.detach();
         try {
-            let data = deepCopy(this.changedSettings);
-            for (let key of Object.keys(this.keyTransformConfigs)) {
+            const data = deepCopy(this.changedSettings);
+            for (const key of Object.keys(this.keyTransformConfigs)) {
                 if (Array.isArray(data[key])) {
-                    data[key] = data[key].map(val =>
+                    data[key] = data[key].map((val: unknown) =>
                         typeof val === `object` ? replaceObjectKeys(val, this.keyTransformConfigs[key], true) : val
                     );
                 } else if (typeof data[key] === `object`) {
                     data[key] = replaceObjectKeys(data[key], this.keyTransformConfigs[key], true);
                 }
             }
-            let actions: Action<any>[] = [];
-            for (let key of Object.keys(this.keyRelations)) {
+            const actions: Action<any>[] = [];
+            for (const key of Object.keys(this.keyRelations)) {
                 if (data[key] === undefined) {
                     continue;
                 }
@@ -164,11 +163,13 @@ export class MeetingSettingsGroupDetailComponent
      */
     public async resetAll(): Promise<void> {
         const title = this.translate.instant(
-            `Are you sure you want to reset all options to factory defaults? All changes of this settings group will be lost!`
+            `Are you sure you want to reset all options to default settings? All changes of this settings group will be lost!`
         );
         if (await this.promptDialog.open(title)) {
             for (const settingsField of this.settingsFields) {
-                settingsField.onResetButton();
+                if (!SKIPPED_SETTINGS.includes(settingsField.setting.key.toString())) {
+                    settingsField.onResetButton();
+                }
             }
             await this.saveAll();
         }

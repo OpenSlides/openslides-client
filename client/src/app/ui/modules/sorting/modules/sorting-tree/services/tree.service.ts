@@ -31,7 +31,10 @@ export class TreeService {
             name: item.getTitle(),
             id: item.id,
             item,
-            children
+            children,
+            toString: function () {
+                return this.item.toString();
+            }
         };
     }
 
@@ -58,7 +61,7 @@ export class TreeService {
         }
 
         let tree_weight = 1;
-        const inject = (nodes: T[], level: number = 0) => {
+        const inject = (nodes: T[], level = 0) => {
             nodes.sort((nodeA, nodeB) => (nodeA[weightKey] as any) - (nodeB[weightKey] as any));
             for (const node of nodes) {
                 node.tree_weight = tree_weight++;
@@ -174,6 +177,7 @@ export class TreeService {
 
     /**
      * Removes the `item`-property from any node in the given tree.
+     * Deletes empty children-arrays.
      *
      * @param tree The tree with items
      * @returns The tree without items
@@ -185,7 +189,7 @@ export class TreeService {
                 id: node.id
             };
             if (node.children) {
-                nodeWithoutItem.children = this.stripTree(node.children);
+                nodeWithoutItem.children = node.children.length ? this.stripTree(node.children) : undefined;
             }
             return nodeWithoutItem;
         });
@@ -301,12 +305,12 @@ export class TreeService {
         if (!deleteIds.length) {
             return tree;
         }
-        deleteIds = deleteIds.sort();
+        deleteIds = deleteIds.sort((a, b) => a - b);
         tree = tree.sort((a, b) =>
             a.position != null && b.position != null ? a.position - b.position : b != null ? -1 : 0
         );
         for (let i = 0; i < tree.length; ) {
-            let node = tree[i];
+            const node = tree[i];
             if (findIndexInSortedArray(deleteIds, byItemId ? node.item.id : node.id, (a, b) => a - b) !== -1) {
                 tree = [tree.slice(0, i), i + 1 < tree.length ? tree.slice(i + 1) : []].flatMap(
                     val => val as FlatNode<T>[]
@@ -345,14 +349,17 @@ export class TreeService {
      */
     public concatNewNodesFromItems<T extends Identifiable>(tree: FlatNode<T>[], newItems: T[]): FlatNode<T>[] {
         const oldMaxPosition = Math.max(...tree.map(node => node.position), tree.length - 1);
-        let items = newItems.map((item, index) => ({
+        const items = newItems.map((item, index) => ({
             ...item,
             item,
             level: 0,
             isSeen: true,
             expandable: false,
             id: item.id,
-            position: index + oldMaxPosition + 1
+            position: index + oldMaxPosition + 1,
+            toString: function () {
+                return this.item.toString();
+            }
         }));
         return tree.concat(items);
     }
@@ -406,7 +413,10 @@ export class TreeService {
             expandable: !!children,
             isExpanded: !!children,
             level,
-            isSeen: true
+            isSeen: true,
+            toString: function () {
+                return this.item.toString();
+            }
         };
         return new Proxy(node, {
             get: (target: FlatNode<T>, property: keyof Identifiable & Displayable & T) => {

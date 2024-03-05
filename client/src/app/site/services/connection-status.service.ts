@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BehaviorSubject, filter, firstValueFrom, fromEvent, map, Observable } from 'rxjs';
 
 import { BannerDefinition, BannerService } from '../modules/site-wrapper/services/banner.service';
@@ -12,7 +12,7 @@ export interface OfflineReasonConfig {
     /**
      * A function to check if we are online again. This has to return a boolean.
      */
-    isOnlineFn: () => boolean | Promise<boolean> | Observable<boolean>;
+    isOnlineFn: () => boolean | Promise<boolean>;
 }
 
 const DEFAULT_OFFLINE_REASON: OfflineReasonConfig = {
@@ -82,32 +82,22 @@ export class ConnectionStatusService {
 
     private deferCheckStillOffline(): void {
         this._isOfflineSubject.next(true);
-        let addBannerTimeout = setTimeout(() => this.bannerService.addBanner(OFFLINE_BANNER), 5000);
-        if (this._config?.isOnlineFn instanceof Observable) {
-            const subscription = this._config.isOnlineFn.subscribe(is => {
-                if (is) {
-                    clearTimeout(addBannerTimeout);
-                    this.goOnline();
-                    subscription.unsubscribe();
-                }
-            });
-        } else {
-            const timeout = Math.floor(Math.random() * 3000 + 2000);
-            console.warn(`Try to go online in ${timeout} ms`);
-            setTimeout(async () => {
-                // Verifies that we are (still) offline
-                const isOnline = await this._config?.isOnlineFn();
-                console.warn(`Is online again? ->`, isOnline);
+        const addBannerTimeout = setTimeout(() => this.bannerService.addBanner(OFFLINE_BANNER), 5000);
+        const timeout = Math.floor(Math.random() * 3000 + 2000);
+        console.warn(`Try to go online in ${timeout} ms`);
+        setTimeout(async () => {
+            // Verifies that we are (still) offline
+            const isOnline = await this._config?.isOnlineFn();
+            console.warn(`Is online again? ->`, isOnline);
 
-                if (isOnline) {
-                    clearTimeout(addBannerTimeout);
-                    this.goOnline();
-                } else {
-                    // continue trying.
-                    this.deferCheckStillOffline();
-                }
-            }, timeout);
-        }
+            if (isOnline) {
+                clearTimeout(addBannerTimeout);
+                this.goOnline();
+            } else {
+                // continue trying.
+                this.deferCheckStillOffline();
+            }
+        }, timeout);
     }
 
     private goOnline(): void {

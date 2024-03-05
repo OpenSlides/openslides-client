@@ -68,6 +68,9 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     @Input()
     public inputValue!: string;
 
+    @Input()
+    public internal = false;
+
     /**
      * EventEmitter, when clicking on the 'save'-button.
      */
@@ -106,7 +109,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      * The index of the search list that was last selected from, or -1 if something was written in
      * the input field afterwards.
      */
-    private searchListLastSelected: number = -1;
+    private searchListLastSelected = -1;
 
     /**
      * Prevent selecting the same value twice while a selection box is open.
@@ -212,7 +215,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      *
      * @param save Boolean, whether the changes should be saved or resetted.
      */
-    public changeEditMode(save: boolean = false): void {
+    public changeEditMode(save = false): void {
         if (save) {
             this.sendSuccess();
         } else {

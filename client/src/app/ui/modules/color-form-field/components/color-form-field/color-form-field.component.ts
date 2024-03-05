@@ -12,10 +12,10 @@ import { BaseFormControlComponent } from '../../../../base/base-form-control';
 })
 export class ColorFormFieldComponent extends BaseFormControlComponent<string> {
     @Input()
-    public formControlName: string = ``;
+    public formControlName = ``;
 
     @Input()
-    public title: string = ``;
+    public title = ``;
 
     @Input()
     public set defaultDisplayColor(displayCol: Observable<string> | string) {
@@ -29,9 +29,11 @@ export class ColorFormFieldComponent extends BaseFormControlComponent<string> {
             this._defaultDisplayColorSubscription = displayCol.subscribe(col => this.setDefaultDisplayColor(col));
         }
     }
+
     public get defaultDisplayColor(): BehaviorSubject<string> {
         return this._defaultDisplayColor;
     }
+
     private _defaultDisplayColor = new BehaviorSubject<string>(``);
 
     private _defaultDisplayColorSubscription: Subscription;

@@ -19,7 +19,7 @@ export class SingleOptionChartTableComponent {
     private _pollService: PollService = null;
 
     @Input()
-    public shouldShowHead: boolean = true;
+    public shouldShowHead = true;
 
     @Input()
     public set tableData(tableData: PollTableData[]) {
@@ -30,6 +30,10 @@ export class SingleOptionChartTableComponent {
         }
     }
 
+    public get tableData(): PollTableData[] {
+        return this._tableData;
+    }
+
     @Input()
     public set pollService(pollService: PollService) {
         this._pollService = pollService;
@@ -37,11 +41,19 @@ export class SingleOptionChartTableComponent {
         this.cd.markForCheck();
     }
 
+    public get pollService() {
+        return this._pollService || this.defaultPollService;
+    }
+
     @Input()
     public set poll(pollData: PollData) {
         this._poll = pollData;
         this.setChartData();
         this.cd.markForCheck();
+    }
+
+    public get poll(): PollData {
+        return this._poll;
     }
 
     private get method(): string | null {
@@ -52,22 +64,13 @@ export class SingleOptionChartTableComponent {
     public iconSize: 'large' | 'gigantic' = `large`;
 
     @Input()
-    public shouldShowEntitled: boolean = false;
+    public shouldShowEntitled = false;
 
-    public get pollService() {
-        return this._pollService || this.defaultPollService;
-    }
-
-    public get poll(): PollData {
-        return this._poll;
-    }
+    @Input()
+    public shouldShowEntitledPresent = false;
 
     public get chartData(): ChartData {
         return this._chartData;
-    }
-
-    public get tableData(): PollTableData[] {
-        return this._tableData;
     }
 
     public get isMethodY(): boolean {
@@ -92,6 +95,10 @@ export class SingleOptionChartTableComponent {
 
     public get shouldShowChart(): boolean {
         return !this.tableData.some(option => option.value[0].amount < 0);
+    }
+
+    public get entitledUsersPresentCount(): number {
+        return this.poll.entitled_users_at_stop?.filter(x => x.present).length || 0;
     }
 
     public constructor(

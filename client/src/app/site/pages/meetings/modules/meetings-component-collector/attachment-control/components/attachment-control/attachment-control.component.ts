@@ -8,8 +8,8 @@ import {
     Output,
     TemplateRef
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NG_VALUE_ACCESSOR, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { map, Observable, OperatorFunction } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -58,6 +58,7 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
     public get empty(): boolean {
         return !this.contentForm.value.length;
     }
+
     public get controlType(): string {
         return `attachment-control`;
     }
@@ -75,14 +76,13 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
     private dialogRef: MatDialogRef<any> | null = null;
 
     public constructor(
-        formBuilder: UntypedFormBuilder,
         private dialogService: MatDialog,
         public readonly repo: MediafileControllerService,
         private groupsRepo: GroupControllerService,
         private modelRequestService: ModelRequestService,
         private activeMeeting: ActiveMeetingService
     ) {
-        super(formBuilder);
+        super();
     }
 
     public override ngOnInit(): void {
