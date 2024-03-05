@@ -18,7 +18,8 @@ import {
 
 const POOL_CONFIG = {
     RETRY_AMOUNT: 3,
-    CONNECTION_LOST_CLOSE_TIMEOUT: 10000
+    CONNECTION_LOST_CLOSE_TIMEOUT: 10000,
+    SINGLE_REQUEST_TEST_DELAY: 5000
 };
 
 export class AutoupdateStreamPool {
@@ -212,7 +213,16 @@ export class AutoupdateStreamPool {
             await WorkerHttpAuth.updating();
         }
 
-        const { stopReason, error } = await stream.start(force);
+        const streamHandle = stream.start(force);
+        if (
+            !force &&
+            (<any>self).useLongpolling === undefined &&
+            !!stream.subscriptions.find(v => v.description === `organization_detail:subscription`)
+        ) {
+            await this.streamStartRace(stream, streamHandle);
+        }
+
+        const { stopReason, error } = await streamHandle;
 
         if (stopReason === `unused`) {
             this.removeStream(stream);
@@ -224,6 +234,30 @@ export class AutoupdateStreamPool {
                 await this.handleError(stream, null);
             } else {
                 this.removeStream(stream);
+            }
+        }
+    }
+
+    private async streamStartRace(stream: AutoupdateStream, streamHandle: Promise<any>): Promise<void> {
+        let streamStartTimeout: any;
+        let singleReqStream: AutoupdateStream;
+        const singleReceived = new Promise<string>(r => {
+            streamStartTimeout = setTimeout(() => {
+                singleReqStream = stream.cloneWithSubscriptions([]);
+                singleReqStream.queryParams.set(`single`, `1`);
+                singleReqStream.receivedData.then(() => r(`single-win`));
+            }, POOL_CONFIG.SINGLE_REQUEST_TEST_DELAY);
+        });
+
+        const singleWin = (await Promise.race([stream.receivedData, singleReceived, streamHandle])) === `single-win`;
+        clearTimeout(streamStartTimeout);
+        singleReqStream?.abort();
+
+        (<any>self).useLongpolling = singleWin;
+        if (singleWin) {
+            for (const stream of this.streams) {
+                stream.updateConnectionMode();
+                // TODO: Notify client
             }
         }
     }

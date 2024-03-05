@@ -4,26 +4,31 @@ import {
     isCommunicationErrorWrapper
 } from '../../gateways/http-stream/stream-utils';
 import { AutoupdateSetEndpointParams } from '../autoupdate/interfaces-autoupdate';
-import { HttpSubscription, HttpSubscriptionEndpoint } from './http-subscription';
+import { HttpSubscription, HttpSubscriptionCallbacks, HttpSubscriptionEndpoint } from './http-subscription';
 import { HttpSubscriptionPolling } from './http-subscription-polling';
 import { HttpSubscriptionSSE } from './http-subscription-sse';
 
 export abstract class HttpStream {
     public failedCounter = 0;
 
-    protected static CONNECTION_MODE: 'SSE' | 'LONGPOLLING' = `SSE`;
+    protected supportLongpolling = true;
+    protected connectionMode: 'SSE' | 'LONGPOLLING' = `SSE`;
     protected subscription: HttpSubscription;
 
-    private _connecting = false;
     private lastError: any | ErrorDescription = null;
     private restarting = false;
+
+    private endpointConfig: HttpSubscriptionEndpoint;
+    private handlerConfig: HttpSubscriptionCallbacks;
 
     public get active(): boolean {
         return this.subscription.active;
     }
 
-    public get connecting(): boolean {
-        return this._connecting;
+    private _receivedData: Promise<void>;
+    private _receivedDataResolver: CallableFunction;
+    public get receivedData(): Promise<void> {
+        return this._receivedData;
     }
 
     public get failedConnects(): number {
@@ -36,28 +41,26 @@ export abstract class HttpStream {
         authToken: string,
         requestPayload?: string
     ) {
-        const endpointConfig: HttpSubscriptionEndpoint = {
+        this.endpointConfig = {
             url: queryParams ? endpoint.url + `?` + queryParams : endpoint.url,
             method: endpoint.method,
             authToken,
             payload: requestPayload
         };
-        const handlerConfig = {
+        this.handlerConfig = {
             onData: (data: unknown) => this.handleContent(data),
             onError: (data: unknown) => this.handleError(data)
         };
 
-        if (HttpStream.CONNECTION_MODE === `SSE`) {
-            this.subscription = new HttpSubscriptionSSE(endpointConfig, handlerConfig);
-        } else if (HttpStream.CONNECTION_MODE === `LONGPOLLING`) {
-            this.subscription = new HttpSubscriptionPolling(endpointConfig, handlerConfig);
-        }
+        this.resetReceivedData();
+        this.updateConnectionMode();
     }
 
     /**
      * Closes the stream
      */
     public async abort(): Promise<void> {
+        this.resetReceivedData();
         await this.subscription.stop();
     }
 
@@ -109,6 +112,26 @@ export abstract class HttpStream {
         await this.subscription.stop();
     }
 
+    public async updateConnectionMode(): Promise<void> {
+        const oldSubscription = this.subscription;
+        if ((<any>self).useLongpolling && this.supportLongpolling && this.connectionMode === `SSE`) {
+            this.connectionMode = `LONGPOLLING`;
+        } else if (this.subscription) {
+            return;
+        }
+
+        if (this.connectionMode === `SSE`) {
+            this.subscription = new HttpSubscriptionSSE(this.endpointConfig, this.handlerConfig);
+        } else if (this.connectionMode === `LONGPOLLING`) {
+            this.subscription = new HttpSubscriptionPolling(this.endpointConfig, this.handlerConfig);
+        }
+
+        if (oldSubscription?.active) {
+            this.restarting = true;
+            await oldSubscription.stop();
+        }
+    }
+
     public setAuthToken(token: string): void {
         this.subscription.authToken = token;
     }
@@ -123,6 +146,11 @@ export abstract class HttpStream {
     }
 
     protected handleContent(data: unknown): void {
+        if (this._receivedDataResolver) {
+            this._receivedDataResolver();
+            this._receivedDataResolver = undefined;
+        }
+
         if (data instanceof ErrorDescription || isCommunicationError(data) || isCommunicationErrorWrapper(data)) {
             this.lastError = data;
             this.failedCounter++;
@@ -137,5 +165,11 @@ export abstract class HttpStream {
 
     protected parse(data: unknown): any | ErrorDescription {
         return data;
+    }
+
+    private resetReceivedData(): void {
+        this._receivedData = new Promise(r => {
+            this._receivedDataResolver = r;
+        });
     }
 }
