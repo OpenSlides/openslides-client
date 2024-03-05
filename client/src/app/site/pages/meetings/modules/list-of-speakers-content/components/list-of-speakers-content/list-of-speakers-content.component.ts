@@ -526,8 +526,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
         // convert begin time to date and sort
         this.finishedSpeakers.sort((a: ViewSpeaker, b: ViewSpeaker) => {
-            const aTime = new Date(a.begin_time).getTime();
-            const bTime = new Date(b.begin_time).getTime();
+            const aTime = new Date(a.end_time).getTime();
+            const bTime = new Date(b.end_time).getTime();
+            if (aTime === bTime) {
+                return a.weight - b.weight;
+            }
             return aTime - bTime;
         });
 
