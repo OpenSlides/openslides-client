@@ -322,8 +322,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return origin?.canAccess();
     }
 
-    protected override onAfterSetMotion(_previous: ViewMotion, _current: ViewMotion): void {
-        super.onAfterSetMotion(_previous, _current);
+    protected override onAfterSetMotion(previous: ViewMotion, current: ViewMotion): void {
+        super.onAfterSetMotion(previous, current);
         this.updateSupportersSubject();
     }
 
