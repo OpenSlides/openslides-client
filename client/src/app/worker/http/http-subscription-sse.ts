@@ -20,11 +20,6 @@ export class HttpSubscriptionSSE extends HttpSubscription {
         }
     }
 
-    public async restart(): Promise<void> {
-        await this.stop();
-        await this.start();
-    }
-
     private async doRequest(): Promise<void> {
         this._active = true;
 

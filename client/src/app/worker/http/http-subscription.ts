@@ -32,7 +32,6 @@ export abstract class HttpSubscription {
 
     public abstract start(): Promise<void>;
     public abstract stop(): Promise<void>;
-    public abstract restart(): Promise<void>;
 
     protected parseErrorFromResponse(response: Response, content: any): ErrorDescription | null {
         let errorContent = null;

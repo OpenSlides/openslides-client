@@ -35,11 +35,6 @@ export class HttpSubscriptionPolling extends HttpSubscription {
         }
     }
 
-    public async restart(): Promise<void> {
-        await this.stop();
-        await this.start();
-    }
-
     private async nextPoll(): Promise<void> {
         await this.request();
         if (this.active && this.reopen) {

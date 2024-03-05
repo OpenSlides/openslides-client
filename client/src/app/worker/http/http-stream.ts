@@ -85,23 +85,28 @@ export abstract class HttpStream {
             if (e.name !== `AbortError`) {
                 console.error(e);
 
-                return { stopReason: `error`, error: this.lastError };
+                return { stopReason: `error`, error: null };
             } else if (this.restarting) {
                 return await this.start();
             }
 
-            return { stopReason: `aborted`, error: this.lastError };
+            return { stopReason: `aborted` };
         }
 
         if (this.lastError) {
             return { stopReason: `error`, error: this.lastError };
         }
 
+        if (this.restarting) {
+            return await this.start();
+        }
+
         return { stopReason: `resolved` };
     }
 
-    public restart(): void {
-        this.subscription.restart();
+    public async restart(): Promise<void> {
+        this.restarting = true;
+        await this.subscription.stop();
     }
 
     public setAuthToken(token: string): void {

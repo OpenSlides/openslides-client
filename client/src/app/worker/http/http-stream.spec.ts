@@ -7,6 +7,7 @@ import { HttpSubscription } from './http-subscription';
 
 class MockSubsciption extends HttpSubscription {
     private resolver: any;
+    private rejector: any;
 
     public setActive(active: boolean) {
         this._active = active;
@@ -22,16 +23,31 @@ class MockSubsciption extends HttpSubscription {
 
     public start(): Promise<void> {
         this._active = true;
-        return new Promise(r => {
+        return new Promise((res, rej) => {
+            this.rejector = (e: unknown) => {
+                rej(e);
+                this._active = false;
+            };
+
             this.resolver = () => {
-                r();
+                res();
                 this._active = false;
             };
         });
     }
 
     public async stop(): Promise<void> {
-        if (this.resolver) {
+        if (this.rejector) {
+            const e = new Error();
+            e.name = `AbortError`;
+            this.rejector(e);
+        }
+    }
+
+    public stopCustom(e?: any): void {
+        if (e && this.rejector) {
+            this.rejector(e);
+        } else if (this.resolver) {
             this.resolver();
         }
     }
@@ -66,7 +82,7 @@ class SimpleHttpStream extends HttpStream {
     public onError(_error: unknown): void {}
 }
 
-fdescribe(`http stream`, () => {
+describe(`http stream`, () => {
     let httpStream: SimpleHttpStream;
     let subscription: MockSubsciption;
 
@@ -120,11 +136,13 @@ fdescribe(`http stream`, () => {
         expect(httpStream.failedCounter).toEqual(0);
     });
 
-    xit(`restart with open connection`, () => {});
+    it(`restart`, async () => {
+        const start = httpStream.start();
+        await httpStream.restart();
+        await expectAsync(start).toBePending();
+    });
 
-    xit(`restart before open connection`, () => {});
-
-    xit(`force start`, async () => {
+    it(`force start`, async () => {
         const start = httpStream.start();
         const forceStart = httpStream.start(true);
         await expectAsync(start).toBeResolvedTo({ stopReason: `aborted` });
@@ -132,9 +150,17 @@ fdescribe(`http stream`, () => {
     });
 
     describe(`receives stop reasons`, () => {
-        xit(`error`, async () => {});
+        it(`error`, async () => {
+            const start = httpStream.start();
+            subscription.stopCustom(`test`);
+            await expectAsync(start).toBeResolvedTo({ stopReason: `error`, error: null });
+        });
 
-        xit(`abort`, async () => {});
+        it(`abort`, async () => {
+            const start = httpStream.start();
+            await httpStream.abort();
+            await expectAsync(start).toBeResolvedTo({ stopReason: `aborted` });
+        });
 
         it(`in-use`, async () => {
             const start = httpStream.start();
@@ -142,8 +168,17 @@ fdescribe(`http stream`, () => {
             await expectAsync(start).toBePending();
         });
 
-        xit(`resolve with last error`, async () => {});
+        it(`resolve with last error`, async () => {
+            const start = httpStream.start();
+            subscription.sendError(`test-error`);
+            subscription.stopCustom();
+            await expectAsync(start).toBeResolvedTo({ stopReason: `error`, error: `test-error` });
+        });
 
-        xit(`resolve without error`, async () => {});
+        it(`clean resolve`, async () => {
+            const start = httpStream.start();
+            subscription.stopCustom();
+            await expectAsync(start).toBeResolvedTo({ stopReason: `resolved` });
+        });
     });
 });

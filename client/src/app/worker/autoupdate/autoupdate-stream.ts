@@ -96,7 +96,7 @@ export class AutoupdateStream extends HttpStream {
         this.restart();
     }
 
-    public override restart(): void {
+    public override async restart(): Promise<void> {
         super.restart();
         this.clearSubscriptions();
     }
