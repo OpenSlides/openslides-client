@@ -27,6 +27,7 @@ function getResponseBody(data = ``, hash = `0`) {
 
 describe(`http subscription polling`, () => {
     beforeEach(() => {
+        jasmine.clock().install();
         fetchMock.mock(`end:/instant-forever?longpolling=1`, getResponseBody(`instant-forever`));
         fetchMock.mock(`end:/error400-expected-format?longpolling=1`, {
             status: 400,
@@ -37,7 +38,10 @@ describe(`http subscription polling`, () => {
         });
     });
 
-    afterEach(() => fetchMock.reset());
+    afterEach(() => {
+        fetchMock.reset();
+        jasmine.clock().uninstall();
+    });
 
     it(`initializes inactive`, () => {
         expect(getHttpSubscriptionPollingInstance().active).toBeFalse();
@@ -83,7 +87,6 @@ describe(`http subscription polling`, () => {
 
     describe(`stopping`, () => {
         it(`stop while waiting for data`, async () => {
-            jasmine.clock().install();
             fetchMock.mock(`end:/once-instant?longpolling=1`, getResponseBody(`once-instant`));
             let resolver: CallableFunction;
             const receivedData = new Promise(resolve => (resolver = resolve));
