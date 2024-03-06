@@ -1,79 +1,81 @@
-<!-- Settings -->
-<os-topic-poll-form
-    [pollClassType]="pollClassType.Topic"
-    [data]="pollData"
-    [pollService]="topicPollService"
-    [pollMethods]="PollMethodVerbose"
-    [percentBases]="PollPercentBaseVerbose"
-    [pollTypes]="PollTypes"
-    #pollForm
-></os-topic-poll-form>
-
-<!-- Options -->
-<div mat-dialog-content class="option-selection topic-poll-preview-meta-info-form info-grid" *ngIf="!isEdit">
-    <ng-container>
-        <h3>{{ 'Options' | translate }}</h3>
-        <div>
-            <div class="option-list" (scroll)="scrolled($event)" #scrollframe>
-                <os-sorting-list
-                    *ngIf="newOptions.length"
-                    [input]="optionsSubject"
-                    [live]="true"
-                    (sortEvent)="onSortingChange($event)"
-                >
-                    <!-- implicit item references into the component using ng-template slot -->
-                    <ng-template let-item>
-                        <div class="single-option-line" #item>
-                            <span>{{ item.getTitle() }}</span>
-                            <span class="delete-button">
-                                <button
-                                    mat-icon-button
-                                    matTooltip="{{ 'Remove option' | translate }}"
-                                    (click)="removeOption(item)"
-                                >
-                                    <mat-icon>clear</mat-icon>
-                                </button>
-                            </span>
-                        </div>
-                    </ng-template>
-                </os-sorting-list>
-            </div>
-
+<div mat-dialog-content class="padding-top-bottom-0"> 
+    <!-- Settings -->
+    <os-topic-poll-form
+        [pollClassType]="pollClassType.Topic"
+        [data]="pollData"
+        [pollService]="topicPollService"
+        [pollMethods]="PollMethodVerbose"
+        [percentBases]="PollPercentBaseVerbose"
+        [pollTypes]="PollTypes"
+        #pollForm
+    ></os-topic-poll-form>
+    
+    <!-- Options -->
+    <div class="option-selection topic-poll-preview-meta-info-form info-grid" *ngIf="!isEdit">
+        <ng-container>
+            <h3>{{ 'Options' | translate }}</h3>
             <div>
-                <!-- Enter new option -->
-                <div>
-                    <mat-form-field>
-                        <mat-label>{{ 'New option' | translate }}</mat-label>
-                        <input require matInput [(ngModel)]="optionInput" type="text" />
-                        <mat-error>{{ 'This field is required.' | translate }}</mat-error>
-                    </mat-form-field>
+                <div class="option-list" (scroll)="scrolled($event)" #scrollframe>
+                    <os-sorting-list
+                        *ngIf="newOptions.length"
+                        [input]="optionsSubject"
+                        [live]="true"
+                        (sortEvent)="onSortingChange($event)"
+                    >
+                        <!-- implicit item references into the component using ng-template slot -->
+                        <ng-template let-item>
+                            <div class="single-option-line" #item>
+                                <span>{{ item.getTitle() }}</span>
+                                <span class="delete-button">
+                                    <button
+                                        mat-icon-button
+                                        matTooltip="{{ 'Remove option' | translate }}"
+                                        (click)="removeOption(item)"
+                                    >
+                                        <mat-icon>clear</mat-icon>
+                                    </button>
+                                </span>
+                            </div>
+                        </ng-template>
+                    </os-sorting-list>
                 </div>
-
-                <!-- Add option -->
+    
                 <div>
+                    <!-- Enter new option -->
                     <div>
-                        <button mat-button color="accent" (click)="addNewOption()" [disabled]="optionInput === ''">
-                            <mat-icon>add</mat-icon>
-                            <span>{{ 'Add option' | translate }}</span>
-                        </button>
+                        <mat-form-field>
+                            <mat-label>{{ 'New option' | translate }}</mat-label>
+                            <input require matInput [(ngModel)]="optionInput" type="text" />
+                            <mat-error>{{ 'This field is required.' | translate }}</mat-error>
+                        </mat-form-field>
+                    </div>
+    
+                    <!-- Add option -->
+                    <div>
+                        <div>
+                            <button mat-button color="accent" (click)="addNewOption()" [disabled]="optionInput === ''">
+                                <mat-icon>add</mat-icon>
+                                <span>{{ 'Add option' | translate }}</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </ng-container>
-
-    <!-- Too few options warning -->
-    <div class="potential-warning">
-        <ng-container *ngIf="!hasEnoughOptions()">
-            <i class="foreground-warn">
-                {{ optionsWarning | translate }}
-            </i>
         </ng-container>
+    
+        <!-- Too few options warning -->
+        <div class="potential-warning">
+            <ng-container *ngIf="!hasEnoughOptions()">
+                <i class="foreground-warn">
+                    {{ optionsWarning | translate }}
+                </i>
+            </ng-container>
+        </div>
     </div>
 </div>
 
 <!-- Actions -->
-<div mat-dialog-actions>
+<div mat-dialog-actions class="padding-left-24 padding-top-bottom-16">
     <!-- Save Button -->
     <button
         mat-button
