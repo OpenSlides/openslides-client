@@ -243,8 +243,10 @@ export class AutoupdateStreamPool {
         let singleReqStream: AutoupdateStream;
         const singleReceived = new Promise<string>(r => {
             streamStartTimeout = setTimeout(() => {
-                singleReqStream = stream.cloneWithSubscriptions([]);
-                singleReqStream.queryParams.set(`single`, `1`);
+                const params = new URLSearchParams(stream.queryParams);
+                params.set(`single`, `1`);
+                singleReqStream = stream.cloneWithSubscriptions(stream.subscriptions, params);
+                singleReqStream.start();
                 singleReqStream.receivedData.then(() => r(`single-win`));
             }, POOL_CONFIG.SINGLE_REQUEST_TEST_DELAY);
         });

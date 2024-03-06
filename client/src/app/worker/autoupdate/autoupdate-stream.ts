@@ -34,8 +34,11 @@ export class AutoupdateStream extends HttpStream {
      *
      * @param subscriptions The subscriptions handled by the created stream
      */
-    public cloneWithSubscriptions(subscriptions: AutoupdateSubscription[]): AutoupdateStream {
-        return new AutoupdateStream(subscriptions, this.queryParams, this.endpoint, this.authToken);
+    public cloneWithSubscriptions(
+        subscriptions: AutoupdateSubscription[],
+        queryParams = this.queryParams
+    ): AutoupdateStream {
+        return new AutoupdateStream(subscriptions, queryParams, this.endpoint, this.authToken);
     }
 
     public override async start(
@@ -127,45 +130,6 @@ export class AutoupdateStream extends HttpStream {
 
     public clearSubscriptions(): void {
         this._currentData = null;
-    }
-
-    private async doRequest(): Promise<void> {
-        /*
-
-        // Hotfix wrong status codes
-        const content = next ? this.parse(this.decode(next)) : null;
-        const autoupdateSentUnmarkedError = content?.type !== ErrorType.UNKNOWN && content?.error;
-
-        if (!response.ok || autoupdateSentUnmarkedError) {
-            if ((headers.authentication ?? null) !== (this.authToken ?? null)) {
-                return await this.doRequest();
-            }
-
-            let errorContent = null;
-            if (content && (errorContent = content)?.error) {
-                errorContent = errorContent.error;
-            }
-
-            let type = ErrorType.UNKNOWN;
-            if ((response.status >= 400 && response.status < 500) || errorContent?.type === `invalid`) {
-                type = ErrorType.CLIENT;
-            } else if (response.status >= 500) {
-                type = ErrorType.SERVER;
-            }
-
-            this.error = {
-                reason: `HTTP error`,
-                type,
-                error: { code: response.status, content: errorContent, endpoint: this.endpoint }
-            };
-            if (errorContent?.type !== `auth`) {
-                this.sendErrorToSubscriptions(this.error);
-            }
-            this.failedCounter++;
-        } else if (this.error) {
-            this.failedCounter++;
-        }
-        */
     }
 
     protected onData(data: unknown): void {
