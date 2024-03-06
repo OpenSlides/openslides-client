@@ -168,6 +168,10 @@ if (!environment.production) {
     registerDebugCommands();
 }
 
+export function initAutoupdateSw(broadcast: (s: string, a: string, c?: any) => void) {
+    autoupdatePool.registerBroadcast(broadcast);
+}
+
 export function autoupdateMessageHandler(ctx: any, e: any): void {
     const msg = e.data?.msg;
     const params = msg?.params;

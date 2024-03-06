@@ -27,6 +27,7 @@ export class AutoupdateStreamPool {
     private streams: AutoupdateStream[] = [];
     private subscriptions: Map<number, AutoupdateSubscription> = new Map<number, AutoupdateSubscription>();
     private messagePorts: Set<MessagePort> = new Set<MessagePort>();
+    private broadcast: (s: string, a: string, c?: any) => void = () => {};
     private get authToken(): Promise<string> {
         return WorkerHttpAuth.currentToken();
     }
@@ -145,6 +146,10 @@ export class AutoupdateStreamPool {
         }
     }
 
+    public registerBroadcast(broadcast: (s: string, a: string, c?: any) => void): void {
+        this.broadcast = broadcast;
+    }
+
     /**
      * @param subscriptionId Id of the subscription
      *
@@ -257,9 +262,9 @@ export class AutoupdateStreamPool {
 
         (<any>self).useLongpolling = singleWin;
         if (singleWin) {
+            this.broadcast(`autoupdate`, `set-connection-mode`, `longpolling`);
             for (const stream of this.streams) {
                 stream.updateConnectionMode();
-                // TODO: Notify client
             }
         }
     }

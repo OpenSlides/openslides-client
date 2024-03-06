@@ -1,5 +1,5 @@
 import { SW_BROADCAST_CHANNEL_NAME, WorkerMessage } from './interfaces';
-import { autoupdateMessageHandler } from './sw-autoupdate';
+import { autoupdateMessageHandler, initAutoupdateSw } from './sw-autoupdate';
 import { controlGeneralMessageHandler, controlMessageHandler } from './sw-control';
 import { iccMessageHandler } from './sw-icc';
 
@@ -7,6 +7,8 @@ const broadcastChannel = new BroadcastChannel(SW_BROADCAST_CHANNEL_NAME);
 function broadcast(sender: string, action: string, content?: any) {
     broadcastChannel.postMessage({ sender, action, content });
 }
+
+initAutoupdateSw(broadcast);
 
 function registerMessageListener(ctx: any) {
     ctx.addEventListener(`message`, (e: MessageEvent<WorkerMessage>) => {
