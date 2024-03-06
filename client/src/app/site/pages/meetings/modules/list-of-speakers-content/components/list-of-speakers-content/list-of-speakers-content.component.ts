@@ -16,7 +16,7 @@ import { firstValueFrom, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
-import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
+import { SPECIAL_SPEECH_STATES, SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
@@ -73,14 +73,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public get showInterposedQuestions(): Observable<boolean> {
         return this.meetingSettingService.get(`list_of_speakers_enable_interposed_question`);
-    }
-
-    public get interventionEnabled(): Observable<boolean> {
-        return this.meetingSettingService.get(`list_of_speakers_intervention_time`).pipe(map(v => v > 0));
-    }
-
-    public get pointOfOrderForOthersEnabled(): Observable<boolean> {
-        return this.meetingSettingsService.get(`list_of_speakers_can_create_point_of_order_for_others`);
     }
 
     public get structureLevelCountdownEnabled(): Observable<boolean> {
@@ -150,6 +142,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public enableMultipleParticipants = false;
 
     public pointOfOrderEnabled = false;
+
+    private pointOfOrderForOthersEnabled = false;
+
+    private interventionEnabled = false;
 
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
@@ -336,6 +332,38 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             return false;
         }
         return !!this.findOperatorSpeaker(pointOfOrder);
+    }
+
+    public enableSpeechStateControls(speaker: ViewSpeaker): boolean {
+        return (
+            speaker.speech_state !== SpeechState.INTERPOSED_QUESTION &&
+            (!speaker.isSpeaking || speaker.speech_state !== SpeechState.INTERVENTION)
+        );
+    }
+
+    public enableProContraButton(speaker: ViewSpeaker): boolean {
+        return (
+            this.enableProContraSpeech &&
+            (!speaker.isSpeaking || (!SPECIAL_SPEECH_STATES.includes(speaker.speech_state) && !speaker.point_of_order))
+        );
+    }
+
+    public enableContributionButton(speaker: ViewSpeaker): boolean {
+        return (
+            !speaker.isSpeaking || (!SPECIAL_SPEECH_STATES.includes(speaker.speech_state) && !speaker.point_of_order)
+        );
+    }
+
+    public enableInterventionButton(speaker: ViewSpeaker): boolean {
+        return this.interventionEnabled && !speaker.isSpeaking;
+    }
+
+    public enablePointOfOrderButton(speaker: ViewSpeaker): boolean {
+        return (
+            this.pointOfOrderEnabled &&
+            (speaker.meeting_user?.user.id === this.operator.user.id || this.pointOfOrderForOthersEnabled) &&
+            (!speaker.isSpeaking || !speaker.structure_level_list_of_speakers_id)
+        );
     }
 
     /**
@@ -672,22 +700,30 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     private subscribeToSettings(): void {
         this.subscriptions.push(
             // observe changes the agenda_present_speakers_only setting
-            this.meetingSettingService.get(`list_of_speakers_present_users_only`).subscribe(() => {
+            this.meetingSettingsService.get(`list_of_speakers_present_users_only`).subscribe(() => {
                 this.filterNonAvailableUsers();
             }),
             // observe changes to the agenda_show_first_contribution setting
             // observe point of order settings
-            this.meetingSettingService.get(`list_of_speakers_enable_point_of_order_speakers`).subscribe(show => {
+            this.meetingSettingsService.get(`list_of_speakers_enable_point_of_order_speakers`).subscribe(show => {
                 this.pointOfOrderEnabled = show;
             }),
-            this.meetingSettingService.get(`list_of_speakers_enable_pro_contra_speech`).subscribe(enabled => {
+            this.meetingSettingsService
+                .get(`list_of_speakers_can_create_point_of_order_for_others`)
+                .subscribe(canCreate => {
+                    this.pointOfOrderForOthersEnabled = canCreate;
+                }),
+            this.meetingSettingsService.get(`list_of_speakers_enable_pro_contra_speech`).subscribe(enabled => {
                 this.enableProContraSpeech = enabled;
             }),
-            this.meetingSettingService.get(`list_of_speakers_can_set_contribution_self`).subscribe(canSet => {
+            this.meetingSettingsService.get(`list_of_speakers_can_set_contribution_self`).subscribe(canSet => {
                 this.canMarkSelf = canSet;
             }),
-            this.meetingSettingService.get(`list_of_speakers_allow_multiple_speakers`).subscribe(multiple => {
+            this.meetingSettingsService.get(`list_of_speakers_allow_multiple_speakers`).subscribe(multiple => {
                 this.enableMultipleParticipants = multiple;
+            }),
+            this.meetingSettingsService.get(`list_of_speakers_intervention_time`).subscribe(time => {
+                this.interventionEnabled = time > 0;
             })
         );
     }

@@ -422,12 +422,12 @@
 <mat-menu #manageSpeakerMenu>
     <ng-template let-speaker="speaker" matMenuContent>
         <ng-container *ngIf="canManage">
-            <ng-container *ngIf="speaker.speech_state !== SpeechState.INTERPOSED_QUESTION">
+            <ng-container *ngIf="enableSpeechStateControls(speaker)">
                 <!-- pro button -->
                 <button
                     mat-menu-item
                     (click)="onProContraButtons(speaker, true)"
-                    *ngIf="enableProContraSpeech && speaker.speech_state !== SpeechState.INTERPOSED_QUESTION"
+                    *ngIf="enableProContraButton(speaker)"
                 >
                     <mat-icon *ngIf="speaker.speech_state !== SpeechState.PRO">add_circle_outline</mat-icon>
                     <mat-icon class="green-text" *ngIf="speaker.speech_state === SpeechState.PRO">add_circle</mat-icon>
@@ -438,7 +438,7 @@
                 <button
                     mat-menu-item
                     (click)="onProContraButtons(speaker, false)"
-                    *ngIf="enableProContraSpeech && speaker.speech_state !== SpeechState.INTERPOSED_QUESTION"
+                    *ngIf="enableProContraButton(speaker)"
                 >
                     <mat-icon *ngIf="speaker.speech_state !== SpeechState.CONTRA">remove_circle_outline</mat-icon>
                     <mat-icon class="red-warning-text" *ngIf="speaker.speech_state === SpeechState.CONTRA">
@@ -448,7 +448,7 @@
                 </button>
 
                 <!-- star button -->
-                <button mat-menu-item (click)="onMarkButton(speaker)">
+                <button mat-menu-item (click)="onMarkButton(speaker)" *ngIf="enableContributionButton(speaker)">
                     <mat-icon>
                         {{ speaker.speech_state === SpeechState.CONTRIBUTION ? 'star' : 'star_border' }}
                     </mat-icon>
@@ -456,7 +456,7 @@
                 </button>
 
                 <!-- intervention -->
-                <button *ngIf="interventionEnabled | async" mat-menu-item (click)="onInterventionButton(speaker)">
+                <button mat-menu-item (click)="onInterventionButton(speaker)" *ngIf="enableInterventionButton(speaker)">
                     <mat-icon>
                         {{ speaker.speech_state === SpeechState.INTERVENTION ? 'error' : 'error_outline' }}
                     </mat-icon>
@@ -464,14 +464,7 @@
                 </button>
 
                 <!-- point of order -->
-                <button
-                    *ngIf="
-                        pointOfOrderEnabled &&
-                        (speaker.meeting_user?.user.id === operator.user.id || (pointOfOrderForOthersEnabled | async))
-                    "
-                    mat-menu-item
-                    (click)="onPointOfOrderButton(speaker)"
-                >
+                <button mat-menu-item (click)="onPointOfOrderButton(speaker)" *ngIf="enablePointOfOrderButton(speaker)">
                     <mat-icon>warning</mat-icon>
                     <!-- TODO: don't fill icon if not enabled-->
                     <span>{{ 'Point of order' | translate }}</span>
