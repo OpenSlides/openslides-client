@@ -51,9 +51,10 @@ describe(`http subscription polling`, () => {
         fetchMock.mock(`end:/error400-expected-format`, {
             status: 400,
             headers: { 'Content-Type': `application/json` },
-            body: JSON.stringify({
-                error: { type: `mock-error`, msg: `Example error` }
-            })
+            body:
+                JSON.stringify({
+                    error: { type: `mock-error`, msg: `Example error` }
+                }) + `\n`
         });
     });
 

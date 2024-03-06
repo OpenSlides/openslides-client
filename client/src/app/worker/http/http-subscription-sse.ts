@@ -49,7 +49,7 @@ export class HttpSubscriptionSSE extends HttpSubscription {
             while (!(result = await reader.read()).done) {
                 const lines = splitTypedArray(LINE_BREAK, result.value);
                 for (let line of lines) {
-                    if (line[line.length - 1] === LINE_BREAK) {
+                    if (line[line.length - 1] === LINE_BREAK && response.ok) {
                         if (next !== null) {
                             line = joinTypedArrays(Uint8Array, next, line);
                         }
