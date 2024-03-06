@@ -113,6 +113,12 @@ export interface SettingsGroup {
 export function isSettingsInput(item: SettingsItem): item is SettingsInput {
     return `key` in item;
 }
+export const SKIPPED_SETTINGS = [
+    `motions_default_workflow_id`,
+    `motions_default_amendment_workflow_id`,
+    `motions_default_statute_amendment_workflow_id`,
+    `point_of_order_category_ids`
+];
 
 function fillInSettingsDefaults(settingsGroups: SettingsGroup[]): SettingsGroup[] {
     settingsGroups.forEach(group =>

@@ -6,6 +6,10 @@
             [repo]="motionSubmitterRepo"
             field="submitters"
             title="{{ 'Submitters' | translate }}"
+            [useAdditionalInput]="true"
+            additionalInputField="additional_submitter"
+            additionalInputLabel="{{ 'Extension' | translate }}"
+            [additionalInputValue]="motion?.additional_submitter"
         ></os-motion-manage-motion-meeting-users>
     </div>
 </div>
@@ -254,10 +258,11 @@
 </div>
 
 <!-- Workflow timestamp -->
-<div *ngIf="motion?.workflow_timestamp">
-    <h4>{{ 'Submission date' | translate }}</h4>
-    <div>{{ motion.workflow_timestamp | localizedDate }}</div>
-</div>
+<os-motion-manage-timestamp
+    title="{{ 'Submission date' | translate }}"
+    [motion]="motion"
+    field="workflow_timestamp"
+></os-motion-manage-timestamp>
 
 <!-- Created timestamp -->
 <div *ngIf="motion?.created && perms.isAllowed('change_metadata', motion)">

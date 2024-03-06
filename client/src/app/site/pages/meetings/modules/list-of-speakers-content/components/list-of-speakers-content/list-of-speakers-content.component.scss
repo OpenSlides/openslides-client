@@ -31,6 +31,10 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         }
     }
+
+    .center-text {
+        margin: auto 0;
+    }
 }
 
 .current-speaker,

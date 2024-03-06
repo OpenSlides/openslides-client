@@ -17,7 +17,8 @@ import {
     SettingsHelpText,
     SettingsInput,
     SettingsItem,
-    SettingsValueMap
+    SettingsValueMap,
+    SKIPPED_SETTINGS
 } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
@@ -170,7 +171,9 @@ export class MeetingSettingsGroupDetailComponent
         );
         if (await this.promptDialog.open(title)) {
             for (const settingsField of this.settingsFields) {
-                settingsField.onResetButton();
+                if (!SKIPPED_SETTINGS.includes(settingsField.setting.key.toString())) {
+                    settingsField.onResetButton();
+                }
             }
             await this.saveAll();
         }
