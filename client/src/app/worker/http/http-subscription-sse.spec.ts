@@ -52,7 +52,7 @@ describe(`http subscription polling`, () => {
             status: 400,
             headers: { 'Content-Type': `application/json` },
             body: JSON.stringify({
-                error: { type: `ClientError`, msg: `Example error` }
+                error: { type: `mock-error`, msg: `Example error` }
             })
         });
     });
@@ -89,6 +89,7 @@ describe(`http subscription polling`, () => {
         await expectAsync(receivedError).toBeResolved();
         expectAsync(receivedData).toBePending();
         expect((<ErrorDescription>await receivedError)?.type).toEqual(ErrorType.CLIENT);
+        expect((<ErrorDescription>await receivedError)?.error?.type).toEqual(`mock-error`);
         await subscr.stop();
     });
 
@@ -99,6 +100,7 @@ describe(`http subscription polling`, () => {
         subscr.start();
         await expectAsync(receivedData).toBeResolved();
         expect((<ErrorDescription>await receivedData)?.type).toEqual(ErrorType.CLIENT);
+        expect((<ErrorDescription>await receivedData)?.error?.type).toEqual(`mock-error`);
         await subscr.stop();
     });
 

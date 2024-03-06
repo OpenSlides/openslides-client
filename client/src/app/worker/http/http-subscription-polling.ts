@@ -82,13 +82,14 @@ export class HttpSubscriptionPolling extends HttpSubscription {
             });
 
             try {
-                const formData = await response.formData();
+                const formData = await response.clone().formData();
                 this.lastHash = formData.get(`hash`).toString();
                 this.callbacks.onData(formData.get(`data`).toString());
             } catch (_) {}
 
             if (!response.ok) {
-                const error = this.parseErrorFromResponse(response, await this.parseNonOkResponse(response));
+                const data = await this.parseNonOkResponse(response);
+                const error = this.parseErrorFromResponse(response, data);
                 if (this.callbacks.onError) {
                     this.callbacks.onError(error);
                 } else {
@@ -113,10 +114,10 @@ export class HttpSubscriptionPolling extends HttpSubscription {
 
     private async parseNonOkResponse(response: Response): Promise<unknown> {
         try {
-            return (await response.formData()).get(`data`);
+            return (await response.clone().formData()).get(`data`);
         } catch (_) {
             try {
-                return await response.json();
+                return await response.clone().json();
             } catch (_) {
                 try {
                     return await response.text();
