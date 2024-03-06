@@ -14,7 +14,7 @@ import {
 } from 'src/app/domain/models/poll';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewOption, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -116,6 +116,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     public readonly optionPluralLabel: string = _(`Options`);
 
+    public voteDelegationEnabled: Observable<boolean> =
+        this.meetingSettingsService.get(`users_enable_vote_delegations`);
+
     protected voteRequestData: IdentifiedVotingData = {};
 
     protected alreadyVoted: { [userId: number]: boolean } = {};
@@ -123,9 +126,6 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     protected deliveringVote: { [userId: number]: boolean } = {};
 
     protected user!: ViewUser;
-
-    public voteDelegationEnabled: Observable<boolean> =
-        this.meetingSettingsService.get(`users_enable_vote_delegations`);
 
     private _isReady = false;
     private _poll!: ViewPoll<C>;
@@ -146,7 +146,11 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                 if (user) {
                     this.user = user;
                     this.delegations = user.vote_delegations_from();
-                    this.createVotingDataObjects();
+                    this.voteRequestData[this.user.id] = { value: {} } as VotingData;
+                    this.alreadyVoted[this.user.id] = this.poll.hasVoted;
+                    if (this.delegations) {
+                        this.setupDelegations();
+                    }
 
                     for (const key of Object.keys(this._canVoteForSubjectMap)) {
                         this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
@@ -291,6 +295,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     }
 
     public abstract saveSingleVote(optionId: number, vote: VoteValue, user: ViewUser): void;
+    public abstract shouldStrikeOptionText(option: ViewOption, user: ViewUser): boolean;
 
     protected async sendVote(userId: Id, votePayload: any): Promise<void> {
         try {

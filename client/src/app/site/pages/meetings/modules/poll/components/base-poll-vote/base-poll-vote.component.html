@@ -22,7 +22,7 @@
     </h4>
 
     <ng-container *ngIf="{ canVote: canVoteForObservable(delegation) | async } as voting">
-        <ng-container *ngIf="voting.canVote">
+        <ng-container *ngIf="voting.canVote && !(hasAlreadyVoted(delegation) || isDeliveringVote(delegation))">
             <!-- Poll hint -->
             <p *ngIf="pollHint">
                 <i>{{ pollHint }}</i>
@@ -150,12 +150,13 @@
                                 'single-multi-vote-grid':
                                     !settings.isSplitSingleOption &&
                                     (poll.isMethodY || poll.isMethodN) &&
-                                    poll.max_votes_per_option > 1
+                                    poll.max_votes_per_option > 1,
                             }"
                         >
                             <div
                                 class="vote-option-title"
                                 *ngIf="!settings.isSplitSingleOption && !option.isListOption"
+                                [ngClass]="{ 'strike-text no': shouldStrikeOptionText(option, delegation) }"
                             >
                                 <span *ngIf="option.content_object">
                                     <span>{{ option.content_object.short_name }}</span>

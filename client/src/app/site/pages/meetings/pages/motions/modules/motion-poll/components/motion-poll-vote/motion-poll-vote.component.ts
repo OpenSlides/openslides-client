@@ -49,4 +49,8 @@ export class MotionPollVoteComponent extends BasePollVoteComponent {
             await super.submitVote(user, { [optionId]: vote });
         }
     }
+
+    public override shouldStrikeOptionText(_option: ViewOption, _user: ViewUser): boolean {
+        return false;
+    }
 }

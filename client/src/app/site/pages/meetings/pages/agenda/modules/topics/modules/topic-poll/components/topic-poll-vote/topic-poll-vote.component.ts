@@ -71,7 +71,11 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> {
         }
     }
 
-    public saveSingleVoteMethodYNOrYNA(optionId: number, vote: VoteValue, user: ViewUser = this.user): void {
+    public override shouldStrikeOptionText(_option: ViewOption, _user: ViewUser): boolean {
+        return false;
+    }
+
+    private saveSingleVoteMethodYNOrYNA(optionId: number, vote: VoteValue, user: ViewUser = this.user): void {
         if (this.voteRequestData[user.id].value[optionId] && this.voteRequestData[user.id].value[optionId] === vote) {
             delete (this.voteRequestData[user.id] as any).value[optionId];
         } else {
@@ -84,7 +88,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> {
         }
     }
 
-    public saveSingleVoteMethodYOrN(optionId: number, vote: VoteValue, user: ViewUser = this.user): void {
+    private saveSingleVoteMethodYOrN(optionId: number, vote: VoteValue, user: ViewUser = this.user): void {
         const maxVotesAmount = this.poll.max_votes_amount;
         const tmpVoteRequest = this.getTMPVoteRequestYOrN(maxVotesAmount, optionId, user);
 

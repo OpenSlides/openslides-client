@@ -133,4 +133,11 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             }
         }
     }
+
+    public override shouldStrikeOptionText(option: ViewOption, user: ViewUser = this.user): boolean {
+        if (this.poll.pollmethod === PollMethod.N) {
+            return !!this.voteRequestData[user.id].value[option.id];
+        }
+        return false;
+    }
 }
