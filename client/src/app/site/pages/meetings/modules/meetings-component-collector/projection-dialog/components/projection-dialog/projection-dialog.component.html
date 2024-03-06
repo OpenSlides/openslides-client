@@ -1,11 +1,11 @@
 <h2 mat-dialog-title>
     <span>{{ 'Project selection?' | translate }}</span>
 </h2>
-<div class="element-name" *ngIf="descriptor">
-    {{ descriptor.getDialogTitle() }}
-</div>
 
 <mat-dialog-content *ngIf="projectors && projectors.length">
+    <div class="element-name" *ngIf="descriptor">
+        {{ descriptor.getDialogTitle() }}
+    </div>
     <div class="content-wrapper">
         <div
             class="projectors"
@@ -47,7 +47,7 @@
     </div>
 </mat-dialog-content>
 
-<mat-dialog-actions>
+<mat-dialog-actions class="padding-left-right-24 padding-bottom-24">
     <button mat-button osAutofocus (click)="onProject()" color="accent">{{ 'Project' | translate }}</button>
     <button mat-button (click)="onAddToPreview()">{{ 'Add to queue' | translate }}</button>
     <button mat-button (click)="onCancel()">{{ 'Cancel' | translate }}</button>
