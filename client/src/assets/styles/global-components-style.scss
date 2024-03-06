@@ -30,6 +30,16 @@
         }
     }
 
+    .accentuated-background, .accentuated-background button {
+        background-color: if($is-dark-theme, lighten(mat.get-color-from-palette($background, background), 4%), darken(mat.get-color-from-palette($background, background), 4%));
+    }
+
+    mat-card {
+        .accentuated-background, .accentuated-background button {
+            background-color: if($is-dark-theme, lighten(mat.get-color-from-palette($background, card), 4%), darken(mat.get-color-from-palette($background, card), 4%));
+        }
+    }
+
     .anchor-button {
         color: mat.get-color-from-palette($foreground, text) !important;
     }

@@ -151,6 +151,7 @@
                                     !settings.isSplitSingleOption &&
                                     (poll.isMethodY || poll.isMethodN) &&
                                     poll.max_votes_per_option > 1,
+                                'accentuated-background': i % 2 === 1
                             }"
                         >
                             <div
@@ -214,7 +215,6 @@
                                 </mat-error>
                             </mat-form-field>
                         </div>
-                        <mat-divider *ngIf="poll.options.length - 1 > i"></mat-divider>
                     </ng-container>
                 </div>
             </div>

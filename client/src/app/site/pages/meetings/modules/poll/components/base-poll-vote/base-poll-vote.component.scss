@@ -4,7 +4,8 @@
 %vote-grid-base {
     display: grid;
     grid-gap: 10px;
-    margin: 20px;
+    padding: 10px;
+    margin: 0 10px;
 
     .vote-button {
         min-width: 50px;
@@ -17,6 +18,8 @@
 
     .poll-option-title {
         text-align: center;
+        padding-right: 14px;
+        word-break: break-all;
     }
 }
 
@@ -101,7 +104,6 @@
         margin-top: auto;
         margin-bottom: auto;
     }
-
 }
 
 .strike-text {
@@ -111,6 +113,7 @@
 .centered-button-wrapper {
     display: flex;
     text-align: center;
+    margin-top: 20px;
     > * {
         margin-left: auto;
         margin-right: auto;
