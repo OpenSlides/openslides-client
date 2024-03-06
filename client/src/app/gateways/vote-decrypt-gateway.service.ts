@@ -350,10 +350,11 @@ export class VoteDecryptGatewayService {
     }
 
     private createPayload(ephPublKey: Uint8Array, nonce: Uint8Array, encrypted: Uint8Array): string {
-        const payload = new Uint8Array(this._publicKeySize + this._nonceSize + encrypted.length);
-        payload.set(ephPublKey.slice(0, this._publicKeySize));
-        payload.set(nonce, this._publicKeySize);
-        payload.set(encrypted, this._publicKeySize + this._nonceSize);
+        const payload = new Uint8Array(this._publicKeySize + this._nonceSize + encrypted.length + 1);
+        payload.set([this._publicKeySize])
+        payload.set(ephPublKey.slice(0, this._publicKeySize), 1);
+        payload.set(nonce, this._publicKeySize + 1);
+        payload.set(encrypted, this._publicKeySize + this._nonceSize + 1);
         return btoa(String.fromCharCode(...payload));
     }
 }
