@@ -1,6 +1,7 @@
 .search-form-container {
     width: 800px;
     max-width: 100%;
+    min-height: fit-content;
     .search-top-form {
         display: flex;
         .search-input-container {
@@ -37,6 +38,7 @@
     max-width: calc(100% + 48px);
     margin: 0 -24px -24px -24px;
     padding: 0;
+    display: contents;
 
     .info {
         > span:not(:last-of-type):after {
@@ -138,7 +140,7 @@
 }
 
 .mat-mdc-dialog-content {
-    max-height: calc(75vh - 193px);
+    max-height: calc(75vh - 150px);
 }
 
 .close-button-container {
