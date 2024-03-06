@@ -31,7 +31,7 @@ export class AutoupdateStreamPool {
         return WorkerHttpAuth.currentToken();
     }
 
-    private _waitEndpointHealthyPromise: Promise<void> | null = null;
+    private _waitEndpointHealthyPromise: Promise<boolean> | null = null;
     private _disableCompression = false;
 
     public get activeStreams(): AutoupdateStream[] {
@@ -231,7 +231,7 @@ export class AutoupdateStreamPool {
         } else if (stopReason === `resolved`) {
             const params = new URLSearchParams(stream.queryParams);
             if (+params.get(`position`) === 0 && !params.get(`single`)) {
-                await this.handleError(stream, null);
+                await this.handleResolve(stream);
             } else {
                 this.removeStream(stream);
             }
@@ -313,7 +313,10 @@ export class AutoupdateStreamPool {
         }
     }
 
-    private waitUntilEndpointHealthy(): Promise<void> {
+    /**
+     * Return true if the endpoint was unhealty.
+     */
+    private waitUntilEndpointHealthy(): Promise<boolean> {
         if (!this._waitEndpointHealthyPromise) {
             this.sendToAll(`status`, {
                 status: `unhealthy`
@@ -322,8 +325,10 @@ export class AutoupdateStreamPool {
 
         if (!this._waitEndpointHealthyPromise) {
             this._waitEndpointHealthyPromise = (async () => {
+                let wasUnhealty = false;
                 let timeout = 0;
                 while (!(await this.isEndpointHealthy())) {
+                    wasUnhealty = true;
                     timeout = Math.min(timeout + 1000, 10000);
                     await new Promise(f => setTimeout(f, timeout));
                 }
@@ -333,10 +338,62 @@ export class AutoupdateStreamPool {
                 this.sendToAll(`status`, {
                     status: `healthy`
                 } as AutoupdateStatusContent);
+                return wasUnhealty;
             })();
         }
 
         return this._waitEndpointHealthyPromise;
+    }
+
+    /**
+     * Handles an unexpected resolve and might restart a stream.
+     * It is assumed that a resolve only ever happens in the following cases:
+     * 1. Service got unavailable
+     * 2. Session invalidated
+     */
+    private _handleResolvePromise: Promise<CallableFunction> = null;
+    private async handleResolve(stream: AutoupdateStream): Promise<void> {
+        if (this._handleResolvePromise) {
+            const cb = await this._handleResolvePromise;
+            await cb(stream);
+            return;
+        }
+
+        this._handleResolvePromise = new Promise(async res => {
+            let cb: CallableFunction;
+            if (stream.failedConnects === POOL_CONFIG.RETRY_AMOUNT) {
+                cb = (s: AutoupdateStream) => {
+                    for (const subscription of s.subscriptions) {
+                        subscription.sendError({
+                            reason: `Repeated failure or client error`,
+                            terminate: true
+                        });
+                    }
+                };
+            } else if (await this.waitUntilEndpointHealthy()) {
+                cb = async (s: AutoupdateStream) => {
+                    await this.connectStream(s);
+                };
+            } else if (await WorkerHttpAuth.update()) {
+                cb = async (s: AutoupdateStream) => {
+                    s.failedCounter++;
+                    await this.connectStream(s);
+                };
+            } else {
+                cb = (s: AutoupdateStream) => {
+                    for (const subscription of s.subscriptions) {
+                        subscription.sendError({
+                            reason: `Logout`,
+                            terminate: true
+                        });
+                    }
+                };
+            }
+            res(cb);
+            await cb(stream);
+            setTimeout(() => (this._handleResolvePromise = null), 1000);
+        });
+        await this._handleResolvePromise;
     }
 
     private async handleError(stream: AutoupdateStream, error: any): Promise<void> {

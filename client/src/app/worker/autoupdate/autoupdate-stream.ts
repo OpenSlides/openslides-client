@@ -52,6 +52,10 @@ export class AutoupdateStream extends HttpStream {
             }
         }
 
+        if (!this.activeSubscriptions?.length) {
+            return { stopReason: `unused` };
+        }
+
         const stopInfo = await super.start(force);
         if (stopInfo.stopReason === `aborted` && !this.activeSubscriptions?.length) {
             stopInfo.stopReason = `unused`;
@@ -106,7 +110,7 @@ export class AutoupdateStream extends HttpStream {
 
     /**
      * Removes fqids from the cache.
-     *
+     *;
      * @param fqids list of fqids to delete
      */
     public removeFqids(fqids: string[]): void {

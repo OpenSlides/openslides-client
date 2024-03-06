@@ -248,7 +248,10 @@ export class AutoupdateCommunicationService {
 
     private handleReceiveError(data: AutoupdateReceiveError): void {
         if (data.content.data?.reason === `Logout`) {
-            this.authService.logout();
+            if (this.authService.isAuthenticated) {
+                this.authService.logout();
+            }
+            return;
         } else if (data.content.data?.terminate) {
             this.tryReconnectOpen = true;
             this.matSnackBar
