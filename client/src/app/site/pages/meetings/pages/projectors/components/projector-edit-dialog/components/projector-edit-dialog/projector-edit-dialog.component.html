@@ -159,7 +159,7 @@
             </button>
         </div>
     </form>
-    <div *ngIf="previewProjector">
+    <div *ngIf="previewProjector" mat-dialog-content class="padding-left-right-0">
         <h3>{{ 'Preview' | translate }}</h3>
         <div class="preview-container">
             <os-projector #preview *ngIf="previewProjector" [projector]="previewProjector"></os-projector>
