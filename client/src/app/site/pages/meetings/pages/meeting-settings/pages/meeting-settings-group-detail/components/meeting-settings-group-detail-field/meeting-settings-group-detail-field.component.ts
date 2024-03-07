@@ -71,12 +71,19 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
 
     @Input()
     public set disabled(disabled: boolean) {
+        this._disabled = disabled;
         if (disabled) {
             this.form?.disable();
         } else {
             this.form?.enable();
         }
     }
+
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+
+    private _disabled = false;
 
     /**
      * The current value of this component's setting.
@@ -214,6 +221,9 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 }
             ]
         });
+        if (this.disabled) {
+            this.form.disable();
+        }
         this.internalValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
         if ((this.setting.type === `datetime` || this.setting.type === `date`) && this.value) {
             const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(this.value as number));

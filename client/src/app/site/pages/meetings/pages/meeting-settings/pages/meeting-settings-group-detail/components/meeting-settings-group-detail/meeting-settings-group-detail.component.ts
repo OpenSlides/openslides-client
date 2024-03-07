@@ -15,9 +15,9 @@ import {
     isSettingsInput,
     SettingsGroup,
     SettingsHelpText,
+    SettingsHelpTextLinkType,
     SettingsInput,
     SettingsItem,
-    SettingsValueMap,
     SKIPPED_SETTINGS
 } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -46,16 +46,16 @@ export class MeetingSettingsGroupDetailComponent
     /**
      * Map of all changed settings.
      */
-    private changedSettings: { [key: string]: any } = {};
+    private changedSettings: { [key in keyof Settings]?: any } = {};
 
     /**
      * Map of original values for settings that were transformed.
      */
-    private untransformedValues: { [key: string]: any } = {};
+    private originalSettings: { [key in keyof Settings]?: any } = {};
 
-    private keyTransformConfigs: { [key: string]: ObjectReplaceKeysConfig } = {};
+    private keyTransformConfigs: { [key in keyof Settings]?: ObjectReplaceKeysConfig } = {};
 
-    private keyRelations: { [key: string]: Relation } = {};
+    private keyRelations: { [key in keyof Settings]?: Relation } = {};
 
     /** Provides access to all created settings fields. */
     @ViewChildren(`settingsFields`) public settingsFields!: QueryList<MeetingSettingsGroupDetailFieldComponent>;
@@ -89,6 +89,20 @@ export class MeetingSettingsGroupDetailComponent
             }),
             this.activeMeetingService.meetingObservable.subscribe(meeting => {
                 this.meeting = meeting as ViewMeeting;
+                if (meeting && this.settingsGroup) {
+                    for (const subgroup of this.settingsGroup.subgroups) {
+                        for (const setting of subgroup.settings) {
+                            if (isSettingsInput(setting)) {
+                                const keys = Array.isArray(setting.key) ? setting.key : [setting.key];
+                                const value = this.getDetailFieldValue(meeting, setting);
+                                const valueArray = Array.isArray(value) ? value : [value];
+                                for (let i = 0; i < keys.length; i++) {
+                                    this.originalSettings[keys[i]] = valueArray[i];
+                                }
+                            }
+                        }
+                    }
+                }
             })
         );
     }
@@ -114,6 +128,14 @@ export class MeetingSettingsGroupDetailComponent
         this.cd.detach();
         try {
             const data = deepCopy(this.changedSettings);
+            for (const field of this.settingsFields) {
+                if (field.disabled) {
+                    const keys = Array.isArray(field.setting.key) ? field.setting.key : [field.setting.key];
+                    for (const key of keys) {
+                        delete data[key];
+                    }
+                }
+            }
             for (const key of Object.keys(this.keyTransformConfigs)) {
                 if (Array.isArray(data[key])) {
                     data[key] = data[key].map((val: unknown) =>
@@ -139,7 +161,7 @@ export class MeetingSettingsGroupDetailComponent
                     actions.push(
                         repo.listUpdate(
                             relation.many
-                                ? partitionModelsForUpdate(data[key], this.untransformedValues[key])
+                                ? partitionModelsForUpdate(data[key], this.originalSettings[key])
                                 : { toUpdate: data[key] }
                         )
                     );
@@ -184,11 +206,14 @@ export class MeetingSettingsGroupDetailComponent
      * `changedSettings` object.
      */
     public hasChanges(): boolean {
-        return Object.keys(this.changedSettings).length > 0;
+        return this.settingsFields?.some(field => {
+            const keys = Array.isArray(field.setting.key) ? field.setting.key : [field.setting.key];
+            return keys.some(key => this.changedSettings.hasOwnProperty(key) && !field.disabled);
+        });
     }
 
     public hasErrors(): boolean {
-        return this.settingsFields?.some(field => !field.valid);
+        return this.settingsFields?.some(field => !field.disabled && !field.valid);
     }
 
     /**
@@ -236,26 +261,25 @@ export class MeetingSettingsGroupDetailComponent
         return isSettingsInput(setting);
     }
 
+    public hasExternalLink(setting: SettingsHelpText): boolean {
+        return setting.buttonLinkType === SettingsHelpTextLinkType.External;
+    }
+
     public getHelpLink(setting: SettingsHelpText): string {
-        let link = ``;
-        if (setting.buttonLinkPrependMeetingId) {
-            link += `/` + this.meeting.id;
+        let link = setting.buttonLink;
+        if (setting.buttonLinkType != SettingsHelpTextLinkType.External) {
+            if (!link.startsWith(`/`)) {
+                link = `/` + link;
+            }
+            if (setting.buttonLinkType != SettingsHelpTextLinkType.Organization) {
+                link = `/` + this.meeting.id + link;
+            }
         }
-        return link + setting.buttonLink;
+        return link;
     }
 
     public isSettingDisabled(setting: SettingsInput): boolean {
-        if (!setting.disable || !this.settingsFields) {
-            return false;
-        }
-        const currentSettings = this.settingsFields
-            .toArray()
-            .mapToObject<Settings>(field =>
-                Array.isArray(field.setting.key)
-                    ? field.setting.key.mapToObject(key => ({ [key]: field.currentValue }))
-                    : { [field.setting.key]: field.currentValue }
-            ) as SettingsValueMap;
-        return setting.disable(currentSettings) ?? false;
+        return setting.disable?.({ ...this.originalSettings, ...this.changedSettings });
     }
 
     private getValueForKey(meeting: ViewMeeting, key: keyof Settings, setting: SettingsInput): any {
@@ -286,7 +310,6 @@ export class MeetingSettingsGroupDetailComponent
         }
         if (setting.keyTransformationConfig) {
             this.keyTransformConfigs[key] = setting.keyTransformationConfig;
-            this.untransformedValues[key] = result;
             if (Array.isArray(result)) {
                 result = result.map(val =>
                     typeof val === `object` ? replaceObjectKeys(val, setting.keyTransformationConfig) : val

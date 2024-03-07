@@ -83,6 +83,8 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
         return this.config?.isNumberAllocation;
     }
 
+    public disabled = false;
+
     private get useIds(): boolean {
         return this.config?.useIds;
     }
@@ -115,6 +117,9 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
         this.allocationListForm = this.formBuilder.group({
             allocationBoxes: this.formBuilder.array([])
         });
+        if (this.disabled) {
+            this.allocationListForm.disable();
+        }
 
         this.allocationBoxes = this.allocationListForm.get(`allocationBoxes`) as UntypedFormArray;
         combineLatest([
@@ -192,11 +197,18 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
     public registerOnTouched(_fn: any): void {}
 
     /**
-     * To satisfy the interface
+     * Enable/disable the component.
      *
-     * @param _isDisabled
+     * @param isDisabled
      */
-    public setDisabledState?(_isDisabled: boolean): void {}
+    public setDisabledState?(isDisabled: boolean): void {
+        this.disabled = isDisabled;
+        if (isDisabled) {
+            this.allocationListForm?.disable();
+        } else {
+            this.allocationListForm?.enable();
+        }
+    }
 
     /**
      * Removes a custom allocation

@@ -14,7 +14,7 @@ import { createEmailValidator } from 'src/app/infrastructure/utils/validators/em
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
 
-export type SettingsValueMap = { [key in keyof Settings]: any };
+export type SettingsValueMap = { [key in keyof Settings]?: any };
 
 export type SettingsType =
     | 'string'
@@ -92,11 +92,17 @@ interface SettingsItemAutomaticChangeSetting<V> {
     getChangeFn: (currentValue: V, currentWatchPropertyValues: any[]) => V;
 }
 
+export enum SettingsHelpTextLinkType {
+    Meeting,
+    Organization,
+    External
+}
+
 export interface SettingsHelpText {
-    text: string;
+    text?: string;
     buttonLabel?: string;
     buttonLink?: string;
-    buttonLinkPrependMeetingId?: boolean;
+    buttonLinkType?: SettingsHelpTextLinkType;
 }
 
 export type SettingsItem = SettingsInput | SettingsHelpText;
@@ -485,7 +491,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `list_of_speakers_enable_point_of_order_categories`,
                         label: _(`Enable specifications and ranking for possible motions`),
-                        type: `boolean`
+                        type: `boolean`,
+                        disable: settings => !settings.list_of_speakers_enable_point_of_order_speakers
                     },
                     {
                         key: `point_of_order_category_ids`,
@@ -496,7 +503,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             [`text`, `entry`],
                             [`rank`, `allocation`]
                         ],
-                        pickKeys: [`id`, `text`, `rank`]
+                        pickKeys: [`id`, `text`, `rank`],
+                        disable: settings => !settings.list_of_speakers_enable_point_of_order_categories
                     }
                 ]
             }

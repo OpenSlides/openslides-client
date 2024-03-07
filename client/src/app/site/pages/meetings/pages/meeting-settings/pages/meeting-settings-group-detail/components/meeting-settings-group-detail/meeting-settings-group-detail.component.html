@@ -36,15 +36,25 @@
                     [disabled]="isSettingDisabled(setting)"
                 ></os-meeting-settings-group-detail-field>
                 <div *ngIf="!isSettingsInput(setting)" class="settings-help-container">
-                    <a
-                        mat-stroked-button
-                        *ngIf="setting.buttonLabel && setting.buttonLink"
-                        color="primary"
-                        [routerLink]="getHelpLink(setting)"
-                    >
-                        {{ setting.buttonLabel | translate }}
-                    </a>
-                    <span class="settings-help-text">{{ setting.text | translate }}</span>
+                    <span *ngIf="setting.text" class="settings-help-text" [innerHtml]="setting.text | translate"></span>
+                    <ng-container *ngIf="setting.buttonLabel && setting.buttonLink">
+                        <a
+                            mat-stroked-button
+                            color="primary"
+                            *ngIf="hasExternalLink(setting)"
+                            [href]="getHelpLink(setting)"
+                        >
+                            {{ setting.buttonLabel | translate }}
+                        </a>
+                        <a
+                            mat-stroked-button
+                            color="primary"
+                            *ngIf="!hasExternalLink(setting)"
+                            [routerLink]="getHelpLink(setting)"
+                        >
+                            {{ setting.buttonLabel | translate }}
+                        </a>
+                    </ng-container>
                 </div>
             </ng-container>
         </ng-container>
