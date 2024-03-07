@@ -26,7 +26,6 @@ export class AutoupdateStreamPool {
     private onlineStatusStopTimeout: any;
     private streams: AutoupdateStream[] = [];
     private subscriptions: Map<number, AutoupdateSubscription> = new Map<number, AutoupdateSubscription>();
-    private messagePorts: Set<MessagePort> = new Set<MessagePort>();
     private broadcast: (s: string, a: string, c?: any) => void = () => {};
     private get authToken(): Promise<string> {
         return WorkerHttpAuth.currentToken();
@@ -289,33 +288,8 @@ export class AutoupdateStreamPool {
         }
     }
 
-    private updateMessagePorts(): void {
-        const updatedPorts = new Set<MessagePort>();
-        for (const stream of this.streams) {
-            for (const subscription of stream.subscriptions) {
-                for (const port of subscription.ports) {
-                    updatedPorts.add(port);
-                }
-            }
-        }
-
-        this.messagePorts = updatedPorts;
-    }
-
     private sendToAll(action: string, content?: any): void {
-        // TODO: This in inefficient, but as long as this is only used by
-        // waitUntilEndpointHealthy this should not be a problem.
-        // If we need this for other things that happen more frequently
-        // we need to implement a management mechanism for MessagePorts
-        this.updateMessagePorts();
-
-        for (const port of this.messagePorts) {
-            port.postMessage({
-                sender: `autoupdate`,
-                action,
-                content
-            });
-        }
+        this.broadcast(`autoupdate`, action, content);
     }
 
     /**
