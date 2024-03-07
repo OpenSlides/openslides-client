@@ -11,7 +11,6 @@ import { djb2hash } from 'src/app/infrastructure/utils';
 import { fqidFromCollectionAndId } from 'src/app/infrastructure/utils/transform-functions';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 import {
-    AutoupdateAuthChange,
     AutoupdateCleanupCache,
     AutoupdateCloseStream,
     AutoupdateOpenStream,

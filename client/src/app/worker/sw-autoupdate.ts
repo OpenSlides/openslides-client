@@ -8,7 +8,6 @@ import {
     AutoupdateOpenStreamParams,
     AutoupdateSetEndpointParams
 } from './autoupdate/interfaces-autoupdate';
-import { WorkerHttpAuth } from './http/auth';
 
 const autoupdatePool = new AutoupdateStreamPool({
     url: `/system/autoupdate`,

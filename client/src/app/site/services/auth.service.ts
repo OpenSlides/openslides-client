@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 
 import { AuthToken } from '../../domain/interfaces/auth-token';
@@ -43,9 +43,6 @@ export class AuthService {
     private readonly _logoutEvent = new EventEmitter<void>();
     private readonly _loginEvent = new EventEmitter<void>();
 
-    private _authTokenSubscription: Subscription | null = null;
-    private _authTokenRefreshTimeout: any | null = null;
-
     public constructor(
         private lifecycleService: LifecycleService,
         private router: Router,
@@ -54,12 +51,18 @@ export class AuthService {
         private DS: DataStoreService,
         private sharedWorker: SharedWorkerService
     ) {
-        this.resumeTokenSubscription();
+        this.authTokenService.accessTokenObservable.subscribe(token => {
+            this._authTokenSubject.next(token);
+        });
 
         this.sharedWorker.listenTo(`auth`).subscribe(msg => {
             switch (msg?.action) {
                 case `new-user`:
+                    this.authTokenService.setRawAccessToken(msg.content?.token);
                     this.updateUser(msg.content?.user);
+                    break;
+                case `new-token`:
+                    this.authTokenService.setRawAccessToken(msg.content?.token);
                     break;
             }
         });
@@ -75,25 +78,18 @@ export class AuthService {
      * Required, if anyone signs in as guest.
      */
     public async login(username: string, password: string, meetingId: number | null = null): Promise<void> {
-        this.holdBackTokenSubscription();
         try {
             const response = await this.authAdapter.login({ username, password });
             if (response?.success) {
                 // Shutdowning kills all connections. The operator is listening for token changes, so
                 // we must hold them back to this point.
                 this._loginEvent.emit();
-                this.sharedWorker.sendMessage(`auth`, { action: `update` });
                 this.lifecycleService.reboot();
-                this.resumeTokenSubscription();
+                this.sharedWorker.sendMessage(`auth`, { action: `update` });
                 this.redirectUser(meetingId);
             }
         } catch (e) {
             throw e;
-        } finally {
-            // in error cases, resume the subscription
-            if (!this._authTokenSubscription) {
-                this.resumeTokenSubscription();
-            }
         }
     }
 
@@ -109,9 +105,7 @@ export class AuthService {
     }
 
     public async updateUser(userId: number): Promise<void> {
-        this.clearRefreshRoutine();
         if (userId) {
-            await this.doWhoAmIRequest();
             this._loginEvent.emit();
             this.lifecycleService.reboot();
             this.redirectUser(null);
@@ -125,7 +119,6 @@ export class AuthService {
     }
 
     public async invalidateSessionAfter(callback: () => Promise<any>): Promise<void> {
-        this.clearRefreshRoutine();
         try {
             const response = await callback();
             if (response?.success) {
@@ -137,13 +130,12 @@ export class AuthService {
                 this.lifecycleService.bootup();
             }
         } catch (e) {
-            this.setupRefreshRoutine();
+            this.sharedWorker.sendMessage(`auth`, { action: `update` });
             throw e;
         }
     }
 
     public async logout(): Promise<void> {
-        this.clearRefreshRoutine();
         this.lifecycleService.shutdown();
         const response = await this.authAdapter.logout();
         if (response?.success) {
@@ -180,48 +172,5 @@ export class AuthService {
         }
         console.log(`auth: WhoAmI done, online:`, online, `authenticated:`, !!this.authTokenService.accessToken);
         return online;
-    }
-
-    private resumeTokenSubscription(): void {
-        if (this._authTokenSubscription) {
-            console.error(`The token subscription is already running`);
-            return;
-        }
-        this._authTokenSubscription = this.authTokenService.accessTokenObservable.subscribe(token => {
-            this._authTokenSubject.next(token);
-            this.setupRefreshRoutine();
-        });
-    }
-
-    private holdBackTokenSubscription(): void {
-        if (!this._authTokenSubscription) {
-            console.error(`The token subscription is already stopped`);
-            return;
-        }
-        this._authTokenSubscription.unsubscribe();
-        this._authTokenSubscription = null;
-        this.clearRefreshRoutine();
-    }
-
-    private setupRefreshRoutine(): void {
-        if (this._authTokenRefreshTimeout) {
-            this.clearRefreshRoutine();
-        }
-        if (!this.authToken) {
-            return;
-        }
-        const issuedAt = new Date().getTime(); // in ms
-        const expiresAt = this.authToken.exp; // in sec
-        this._authTokenRefreshTimeout = setTimeout(() => {
-            this.doWhoAmIRequest();
-        }, expiresAt * 1000 - issuedAt - 100); // 100ms before token is invalid
-    }
-
-    private clearRefreshRoutine(): void {
-        if (!this._authTokenRefreshTimeout) {
-            return;
-        }
-        clearTimeout(this._authTokenRefreshTimeout);
-        this._authTokenRefreshTimeout = null;
     }
 }
