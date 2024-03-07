@@ -4,7 +4,7 @@
 
 <div class="settings-grid">
     <form [formGroup]="updateForm" (ngSubmit)="onSubmitProjector()">
-        <div mat-dialog-content *ngIf="projector">
+        <div mat-dialog-content *ngIf="projector" class="padding-bottom-0">
             <!-- Name field -->
             <mat-form-field>
                 <mat-label>{{ 'Name' | translate }}</mat-label>
@@ -146,8 +146,8 @@
         </div>
 
         <!-- Actions -->
-        <div mat-dialog-actions>
-            <mat-divider></mat-divider>
+        <div mat-dialog-actions class="padding-left-right-24 padding-top-bottom-24">
+            <mat-divider class="padding-bottom-16"></mat-divider>
             <button type="submit" mat-button color="accent">
                 <span>{{ 'Save' | translate }}</span>
             </button>
