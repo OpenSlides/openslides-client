@@ -1,9 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import {
-    MAT_DIALOG_DATA,
-    MatDialogRef
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { OrganizationTagDialogData } from '../services/organization-tag-dialog.service';

@@ -1,9 +1,6 @@
 import { Directive, Inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import {
-    MAT_DIALOG_DATA,
-    MatDialogRef
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
 
 import { MotionChangeRecommendationControllerService } from '../../../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';

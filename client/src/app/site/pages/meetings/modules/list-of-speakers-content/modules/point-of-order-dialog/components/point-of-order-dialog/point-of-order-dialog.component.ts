@@ -1,9 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import {
-    MAT_DIALOG_DATA,
-    MatDialogRef
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';

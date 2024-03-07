@@ -1,10 +1,7 @@
 import { AfterViewInit, Component, Inject } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
-import {
-    MAT_DIALOG_DATA,
-    MatDialogRef
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Theme, ThemeGeneralColors } from 'src/app/domain/models/theme/theme';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';

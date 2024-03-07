@@ -5,7 +5,7 @@
     </button>
 </h2>
 
-<mat-dialog-content  class="padding-top-0">
+<mat-dialog-content class="padding-top-0">
     <div *ngIf="opponentName" class="center spacer-top-5">{{ 'Playing against' | translate }} {{ opponentName }}</div>
     <div #chessboard class="spacer-top-5"></div>
     <div *ngIf="inMeeting && state === 'start'" class="center spacer-top-5">

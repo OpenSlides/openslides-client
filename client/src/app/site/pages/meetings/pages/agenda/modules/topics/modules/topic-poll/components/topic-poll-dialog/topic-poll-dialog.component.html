@@ -1,4 +1,4 @@
-<div mat-dialog-content class="padding-top-bottom-0"> 
+<div mat-dialog-content class="padding-top-bottom-0">
     <!-- Settings -->
     <os-topic-poll-form
         [pollClassType]="pollClassType.Topic"
@@ -9,7 +9,7 @@
         [pollTypes]="PollTypes"
         #pollForm
     ></os-topic-poll-form>
-    
+
     <!-- Options -->
     <div class="option-selection topic-poll-preview-meta-info-form info-grid" *ngIf="!isEdit">
         <ng-container>
@@ -39,7 +39,7 @@
                         </ng-template>
                     </os-sorting-list>
                 </div>
-    
+
                 <div>
                     <!-- Enter new option -->
                     <div>
@@ -49,7 +49,7 @@
                             <mat-error>{{ 'This field is required.' | translate }}</mat-error>
                         </mat-form-field>
                     </div>
-    
+
                     <!-- Add option -->
                     <div>
                         <div>
@@ -62,7 +62,7 @@
                 </div>
             </div>
         </ng-container>
-    
+
         <!-- Too few options warning -->
         <div class="potential-warning">
             <ng-container *ngIf="!hasEnoughOptions()">

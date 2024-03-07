@@ -23,7 +23,7 @@
                             {{ unknownUserLabel | translate }}
                         </i>
                     </div>
-    
+
                     <div class="amount">
                         <div *ngFor="let value of analogVoteFields" [formGroupName]="calculateOptionKey(option)">
                             <os-check-input
@@ -38,7 +38,7 @@
                     <mat-divider></mat-divider>
                 </div>
             </div>
-    
+
             <!-- Sum Values -->
             <div *ngFor="let value of sumValues" class="votes-grid">
                 <div class="assignment-dialog-input--container">
@@ -49,7 +49,7 @@
                 </div>
             </div>
         </form>
-    
+
         <!-- Publish Check -->
         <div class="spacer-top-20">
             <mat-checkbox [(ngModel)]="publishImmediately" (change)="publishStateChanged($event.checked)">
@@ -59,7 +59,6 @@
         </div>
     </ng-container>
 </div>
-
 
 <!-- Actions -->
 <div mat-dialog-actions class="padding-left-24 padding-bottom-24">
