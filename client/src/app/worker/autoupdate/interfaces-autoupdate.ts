@@ -111,12 +111,3 @@ export interface AutoupdateStatus extends AutoupdateWorkerResponse {
     action: 'status';
     content: AutoupdateStatusContent;
 }
-
-export interface AutoupdateNewUserContent {
-    id: number;
-}
-
-export interface AutoupdateNewUser extends AutoupdateWorkerResponse {
-    action: 'new-user';
-    content: AutoupdateNewUserContent;
-}

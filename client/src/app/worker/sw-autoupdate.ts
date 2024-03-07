@@ -186,9 +186,6 @@ export function autoupdateMessageHandler(ctx: any, e: any): void {
         case `cleanup-cache`:
             cleanupStream(params);
             break;
-        case `auth-change`:
-            WorkerHttpAuth.update();
-            break;
         case `set-endpoint`:
             autoupdatePool.setEndpoint(params);
             break;

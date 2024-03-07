@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 
 import { AuthToken } from '../../domain/interfaces/auth-token';
 import { AuthAdapterService } from '../../gateways/auth-adapter.service';
@@ -50,9 +51,18 @@ export class AuthService {
         private router: Router,
         private authAdapter: AuthAdapterService,
         private authTokenService: AuthTokenService,
-        private DS: DataStoreService
+        private DS: DataStoreService,
+        private sharedWorker: SharedWorkerService
     ) {
         this.resumeTokenSubscription();
+
+        this.sharedWorker.listenTo(`auth`).subscribe(msg => {
+            switch (msg?.action) {
+                case `new-user`:
+                    this.updateUser(msg.content?.user);
+                    break;
+            }
+        });
     }
 
     /**
@@ -72,6 +82,7 @@ export class AuthService {
                 // Shutdowning kills all connections. The operator is listening for token changes, so
                 // we must hold them back to this point.
                 this._loginEvent.emit();
+                this.sharedWorker.sendMessage(`auth`, { action: `update` });
                 this.lifecycleService.reboot();
                 this.resumeTokenSubscription();
                 this.redirectUser(meetingId);
@@ -120,6 +131,7 @@ export class AuthService {
             if (response?.success) {
                 this.authTokenService.setRawAccessToken(null);
                 this._logoutEvent.emit();
+                this.sharedWorker.sendMessage(`auth`, { action: `update` });
                 this.DS.deleteCollections(...this.DS.getCollections());
                 await this.DS.clear();
                 this.lifecycleService.bootup();
@@ -138,6 +150,7 @@ export class AuthService {
             this.authTokenService.setRawAccessToken(null);
         }
         this._logoutEvent.emit();
+        this.sharedWorker.sendMessage(`auth`, { action: `update` });
         this.DS.deleteCollections(...this.DS.getCollections());
         await this.DS.clear();
         this.lifecycleService.bootup();

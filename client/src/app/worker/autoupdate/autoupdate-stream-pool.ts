@@ -10,11 +10,7 @@ import {
 import { WorkerHttpAuth } from '../http/auth';
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
-import {
-    AutoupdateNewUserContent,
-    AutoupdateSetEndpointParams,
-    AutoupdateStatusContent
-} from './interfaces-autoupdate';
+import { AutoupdateSetEndpointParams, AutoupdateStatusContent } from './interfaces-autoupdate';
 
 const POOL_CONFIG = {
     RETRY_AMOUNT: 3,
@@ -201,10 +197,6 @@ export class AutoupdateStreamPool {
         }
 
         if (userId !== undefined) {
-            this.sendToAll(`new-user`, {
-                id: userId
-            } as AutoupdateNewUserContent);
-
             for (const stream of this.streams) {
                 stream.clearSubscriptions();
                 stream.restart();

@@ -32,6 +32,14 @@ export class WorkerHttpAuth {
         return this.workerHttpAuth?.authToken || ``;
     }
 
+    public static async currentUser(): Promise<number> {
+        if (this.workerHttpAuth?.updateAuthPromise) {
+            await this.workerHttpAuth?.updateAuthPromise;
+        }
+
+        return this.workerHttpAuth?.currentUserId || null;
+    }
+
     /**
      * Updates the auth token
      */
@@ -44,6 +52,10 @@ export class WorkerHttpAuth {
      */
     public static async updating(): Promise<boolean> | undefined {
         return this.workerHttpAuth && (await this.workerHttpAuth.updateAuthPromise);
+    }
+
+    public static stopRefresh(): void {
+        clearTimeout(this.workerHttpAuth?._authTokenRefreshTimeout);
     }
 
     private currentUserId: number = undefined;

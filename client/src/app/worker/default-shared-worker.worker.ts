@@ -1,4 +1,5 @@
 import { SW_BROADCAST_CHANNEL_NAME, WorkerMessage } from './interfaces';
+import { authMessageHandler, initAuthWorker } from './sw-auth';
 import { autoupdateMessageHandler, initAutoupdateSw } from './sw-autoupdate';
 import { controlGeneralMessageHandler, controlMessageHandler } from './sw-control';
 import { iccMessageHandler } from './sw-icc';
@@ -8,6 +9,7 @@ function broadcast(sender: string, action: string, content?: any) {
     broadcastChannel.postMessage({ sender, action, content });
 }
 
+initAuthWorker(broadcast);
 initAutoupdateSw(broadcast);
 
 function registerMessageListener(ctx: any) {
@@ -19,6 +21,8 @@ function registerMessageListener(ctx: any) {
             autoupdateMessageHandler(ctx, e);
         } else if (receiver === `icc`) {
             iccMessageHandler(ctx, e, broadcast);
+        } else if (receiver === `auth`) {
+            authMessageHandler(ctx, e);
         } else if (receiver === `control`) {
             controlMessageHandler(ctx, e, broadcast);
         }

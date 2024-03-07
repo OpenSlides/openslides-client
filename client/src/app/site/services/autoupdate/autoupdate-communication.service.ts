@@ -14,7 +14,6 @@ import {
     AutoupdateAuthChange,
     AutoupdateCleanupCache,
     AutoupdateCloseStream,
-    AutoupdateNewUser,
     AutoupdateOpenStream,
     AutoupdateReceiveData,
     AutoupdateReceiveError,
@@ -70,9 +69,6 @@ export class AutoupdateCommunicationService {
                     case `status`:
                         this.handleStatus(<AutoupdateStatus>msg);
                         break;
-                    case `new-user`:
-                        this.authService.updateUser((<AutoupdateNewUser>msg).content?.id);
-                        break;
                     case `set-connection-mode`:
                         this.handleSetConnectionMode(<string>msg.content);
                         break;
@@ -84,24 +80,6 @@ export class AutoupdateCommunicationService {
             if (this.endpointName) {
                 this.setEndpoint();
             }
-        });
-
-        this.authService.loginObservable.subscribe(() => {
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `auth-change`,
-                params: {
-                    type: `login`
-                }
-            } as AutoupdateAuthChange);
-        });
-
-        this.authService.logoutObservable.subscribe(() => {
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `auth-change`,
-                params: {
-                    type: `logout`
-                }
-            } as AutoupdateAuthChange);
         });
 
         if (window.localStorage.getItem(`DEBUG_MODE`)) {
