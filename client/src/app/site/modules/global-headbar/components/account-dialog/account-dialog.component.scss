@@ -1,7 +1,3 @@
-.account-dialog-title {
-    margin-bottom: 20px;
-}
-
 .account-dialog-container {
     min-height: 400px;
     display: flex;
@@ -39,4 +35,12 @@ cdk-virtual-scroll-viewport {
     .meeting-group-block {
         height: 50px;
     }
+}
+
+.padding-top-16 {
+    padding-top: 16px!important;
+}
+
+.padding-0 {
+    padding: 0px !important;
 }
