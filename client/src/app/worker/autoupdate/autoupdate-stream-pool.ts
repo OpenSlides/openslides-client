@@ -201,7 +201,7 @@ export class AutoupdateStreamPool {
             stream.setAuthToken(token);
         }
 
-        if (userId) {
+        if (userId !== undefined) {
             this.sendToAll(`new-user`, {
                 id: userId
             } as AutoupdateNewUserContent);
