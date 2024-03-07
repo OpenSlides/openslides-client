@@ -1,7 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { ActionService } from 'src/app/gateways/actions';
 
 import { AuthToken } from '../../domain/interfaces/auth-token';
 import { AuthAdapterService } from '../../gateways/auth-adapter.service';
@@ -51,7 +50,6 @@ export class AuthService {
         private router: Router,
         private authAdapter: AuthAdapterService,
         private authTokenService: AuthTokenService,
-        private actionService: ActionService,
         private DS: DataStoreService
     ) {
         this.resumeTokenSubscription();
