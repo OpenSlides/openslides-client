@@ -233,7 +233,10 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 })
             )
             .subscribe(form => {
-                if (this._comparedForm || JSON.stringify(form.value) !== JSON.stringify(this._firstValue)) {
+                if (
+                    this._comparedForm ||
+                    (JSON.stringify(form.value) !== JSON.stringify(this._firstValue) && this.setting.type !== `groups`)
+                ) {
                     this.onChange(form.value);
                 }
             });
