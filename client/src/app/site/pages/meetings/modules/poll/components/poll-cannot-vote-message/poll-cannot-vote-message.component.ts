@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { debounceTime } from 'rxjs';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
+import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
 import { ViewPoll } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
 import { VotingService } from '../../services/voting.service';
@@ -12,7 +13,7 @@ import { VotingService } from '../../services/voting.service';
     styleUrls: [`./poll-cannot-vote-message.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollCannotVoteMessageComponent {
+export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
     @Input()
     public delegationUser: ViewUser;
 
@@ -34,12 +35,16 @@ export class PollCannotVoteMessageComponent {
         return this.user?.isPresentInMeeting();
     }
 
-    public constructor(operator: OperatorService, private votingService: VotingService) {
-        operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
-            if (user) {
-                this.user = user;
-            }
-        });
+    public constructor(operator: OperatorService, private votingService: VotingService, private cd: ChangeDetectorRef) {
+        super();
+        this.subscriptions.push(
+            operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
+                if (user) {
+                    this.user = user;
+                }
+                this.cd.markForCheck();
+            })
+        );
     }
 
     public getVotingError(user: ViewUser = this.user): string {
