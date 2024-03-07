@@ -229,12 +229,7 @@
                             <ng-container *ngIf="isSpeakerOperator(speaker)">
                                 <button
                                     mat-icon-button
-                                    *ngIf="
-                                        (structureLevelCountdownEnabled | async) &&
-                                        speaker.isWaiting &&
-                                        speaker.meeting_user_id &&
-                                        speaker.meeting_user.structure_levels?.length
-                                    "
+                                    *ngIf="showStructureLevels(speaker)"
                                     matTooltip="{{ 'Structure level' | translate }}"
                                     [matMenuTriggerFor]="structureLevelsMenu"
                                 >
@@ -466,9 +461,7 @@
                 <!-- point of order -->
                 <button mat-menu-item (click)="onPointOfOrderButton(speaker)" *ngIf="enablePointOfOrderButton(speaker)">
                     <mat-icon>warning</mat-icon>
-                    <span>
-                        {{ (speaker.point_of_order ? 'Remove point of order' : 'Point of order') | translate }}
-                    </span>
+                    <span>{{ (speaker.point_of_order ? 'Remove point of order' : 'Point of order') | translate }}</span>
                 </button>
 
                 <button *ngIf="speaker.point_of_order" mat-menu-item (click)="onEditPointOfOrderButton(speaker)">
