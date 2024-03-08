@@ -38,7 +38,23 @@
         </button>
         <button
             mat-menu-item
-            (click)="distributOverhangTime(structure_level.id)"
+            (click)="resetTimer(structure_level.id)"
+            [disabled]="structureLevelIsSpeaking(structure_level.id)"
+        >
+            <mat-icon>replay</mat-icon>
+            <span>{{ 'Reset timer' | translate }}</span>
+        </button>
+        <button
+            mat-menu-item
+            (click)="addRemoveTime(structure_level.id)"
+            [disabled]="structureLevelIsSpeaking(structure_level.id)"
+        >
+            <mat-icon>more_time</mat-icon>
+            <span>{{ 'Add/Remove time' | translate }}</span>
+        </button>
+        <button
+            mat-menu-item
+            (click)="distributeOverhangTime(structure_level.id)"
             [disabled]="!isInOvertimeAndNotSpeaking(structure_level.id)"
         >
             <mat-icon>more_time</mat-icon>
@@ -66,6 +82,45 @@
     <div mat-dialog-actions>
         <button mat-button [disabled]="!totalTimeForm.valid" [mat-dialog-close]="true">
             <span>{{ 'OK' | translate }}</span>
+        </button>
+        <button mat-button [mat-dialog-close]="false">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </div>
+</ng-template>
+
+<!-- Template for add/remove time dialog -->
+<ng-template #addRemoveTimeDialog>
+    <h2 mat-dialog-title>{{ currentEntry.name }}</h2>
+    <div class="os-form-card-mobile" mat-dialog-content>
+        <form (keydown)="onKeyDown($event)">
+            <!-- total time -->
+            <mat-form-field>
+                <mat-label>{{ 'Add or remove time' | translate }}</mat-label>
+                <input type="text" [formControl]="addTimeControl" matInput required />
+                <mat-error>
+                    {{ 'A time is required and must be in min:secs format.' | translate }}
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+
+    <div mat-dialog-actions>
+        <button
+            mat-button
+            (click)="doAddOrRemoveTime(true)"
+            [disabled]="!addTimeControl.valid"
+            [mat-dialog-close]="true"
+        >
+            <span>{{ 'Add' | translate }}</span>
+        </button>
+        <button
+            mat-button
+            (click)="doAddOrRemoveTime(false)"
+            [disabled]="!addTimeControl.valid"
+            [mat-dialog-close]="true"
+        >
+            <span>{{ 'Remove' | translate }}</span>
         </button>
         <button mat-button [mat-dialog-close]="false">
             <span>{{ 'Cancel' | translate }}</span>
