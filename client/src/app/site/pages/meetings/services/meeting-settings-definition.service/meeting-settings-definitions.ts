@@ -611,7 +611,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_enable_working_group_speaker`,
-                        label: _(`Activate the selection field 'spokesman'`),
+                        label: _(`Activate the selection field 'spokesperson'`),
                         type: `boolean`
                     }
                 ]
