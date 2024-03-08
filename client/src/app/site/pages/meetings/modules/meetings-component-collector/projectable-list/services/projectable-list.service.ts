@@ -21,6 +21,15 @@ export class ProjectableListService {
         });
     }
 
+    public isProjectedOnReferenceProjector(model: ProjectionBuildDescriptor | Projectable | null): boolean {
+        if (!model) {
+            return false;
+        }
+        const descriptor = this.ensureDescriptor(model);
+        const projector = this.activeMeetingService.meeting?.reference_projector;
+        return projector.current_projections.some(projection => projection.isEqualToDescriptor(descriptor));
+    }
+
     private ensureDescriptor(obj: ProjectionBuildDescriptor | Projectable): ProjectionBuildDescriptor {
         return isProjectable(obj) ? obj.getProjectionBuildDescriptor(this.meetingSettingsService)! : obj;
     }
