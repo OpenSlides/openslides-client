@@ -253,7 +253,7 @@ export class AutoupdateStreamPool {
 
         (<any>self).useLongpolling = singleWin;
         if (singleWin) {
-            this.broadcast(`autoupdate`, `set-connection-mode`, `longpolling`);
+            this.sendToAll(`set-connection-mode`, `longpolling`);
             for (const stream of this.streams) {
                 stream.updateConnectionMode();
             }
