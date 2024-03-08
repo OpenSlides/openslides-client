@@ -360,7 +360,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `list_of_speakers_allow_multiple_speakers`,
-                        label: _(`Allow one participant to be on the LoS serveral times`),
+                        label: _(`Allow one participant multiple times on the same list`),
                         type: `boolean`
                     },
                     {
@@ -606,12 +606,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_enable_editor`,
-                        label: _(`Enable the ability to enter a participant as motion editor`),
+                        label: _(`Activate the selection field 'motion editor'`),
                         type: `boolean`
                     },
                     {
                         key: `motions_enable_working_group_speaker`,
-                        label: _(`Enable the ability to enter a participant as working group speaker for a motion`),
+                        label: _(`Activate the selection field 'spokesman'`),
                         type: `boolean`
                     }
                 ]
