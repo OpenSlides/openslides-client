@@ -499,8 +499,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public async onSaveSorting(sortedSpeakerList: Selectable[] = this.listElement.sortedItems): Promise<void> {
         return await this.speakerRepo
             .sortSpeakers(
-                this._listOfSpeakers!,
-                sortedSpeakerList.map(el => el.id)
+                this.listOfSpeakers,
+                this.listOfSpeakers.speakers
+                    .filter(speaker => speaker.state == SpeakerState.INTERPOSED_QUESTION && !speaker.isCurrentSpeaker)
+                    .map(speaker => speaker.id)
+                    .concat(sortedSpeakerList.map(el => el.id))
             )
             .catch(this.raiseError);
     }
