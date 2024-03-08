@@ -57,7 +57,7 @@
         [motion]="motion"
         [repo]="motionEditorRepo"
         field="editors"
-        title="{{ 'Editors' | translate }}"
+        title="{{ 'Motion editors' | translate }}"
     ></os-motion-manage-motion-meeting-users>
 </div>
 
@@ -66,7 +66,7 @@
         [motion]="motion"
         [repo]="motionWorkingGroupSpeakerRepo"
         field="working_group_speakers"
-        title="{{ 'Working group speakers' | translate }}"
+        title="{{ 'Spokesperson' | translate }}"
     ></os-motion-manage-motion-meeting-users>
 </div>
 
@@ -287,7 +287,7 @@
 
 <!-- Identical motions -->
 <div *ngIf="motion?.identical_motions?.length">
-    <h4>{{ (motion.hasLeadMotion ? 'Identical amendments' : 'Identical motions') | translate }}</h4>
+    <h4>{{ 'Identical with' | translate }}</h4>
     <div *ngFor="let identicalMotion of motion?.identical_motions">
         <a
             [routerLink]="['/', activeMeetingId, 'motions', identicalMotion.sequential_number]"

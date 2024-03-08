@@ -144,7 +144,7 @@
                     (click)="updateSpeakerMeetingUser(speaker)"
                     translate
                 >
-                    Select or search new speaker ...
+                    Select speaker
                 </span>
                 <div class="active-speaker-subtitle">
                     <ng-container *ngTemplateOutlet="speakerSubtitle; context: { speaker: speaker }"></ng-container>
@@ -346,7 +346,7 @@
     <div class="search-new-speaker-form" *ngIf="canManage">
         <os-participant-search-selector
             [nonSelectableUserIds]="nonAvailableUserIds"
-            placeholder="{{ 'Select or search new speaker ...' | translate }}"
+            placeholder="{{ 'Select speaker' | translate }}"
             (userSelected)="addUserAsNewSpeaker($event)"
         ></os-participant-search-selector>
     </div>
@@ -466,7 +466,7 @@
 
                 <button *ngIf="speaker.point_of_order" mat-menu-item (click)="onEditPointOfOrderButton(speaker)">
                     <mat-icon>edit</mat-icon>
-                    <span>{{ 'Edit point of order...' | translate }}</span>
+                    <span>{{ 'Edit point of order ...' | translate }}</span>
                 </button>
             </ng-container>
 

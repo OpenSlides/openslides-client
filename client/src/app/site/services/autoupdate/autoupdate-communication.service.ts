@@ -285,7 +285,7 @@ export class AutoupdateCommunicationService {
 
                 this.matSnackBar
                     .open(
-                        this.translate.instant(`You are using an incompatible client version`),
+                        this.translate.instant(`You are using an incompatible client version.`),
                         this.translate.instant(`Reload page`),
                         {
                             duration: 0
