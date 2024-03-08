@@ -7,23 +7,19 @@ const iccPool = new ICCStreamPool({
     method: `get`
 } as AutoupdateSetEndpointParams);
 
-export function iccMessageHandler(_ctx: any, e: any, _broadcast: (s: string, a: string, c?: any) => void): void {
+export function initIccSw(broadcast: (s: string, a: string, c?: any) => void) {
+    iccPool.registerBroadcast(broadcast);
+}
+
+export function iccMessageHandler(ctx: any, e: any): void {
     const msg = e.data?.msg;
     // const params = msg?.params;
     const action = msg?.action;
     switch (action) {
-        case `open`:
-            iccPool.openNewStream(msg);
+        case `connect`:
+            iccPool.openNewStream(ctx, msg);
             break;
-        case `close`:
-            break;
-        case `send`:
-            break;
-        case `auth-change`:
-            break;
-        case `set-endpoint`:
-            break;
-        case `set-connection-status`:
+        case `disconnect`:
             break;
     }
 }
