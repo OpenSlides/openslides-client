@@ -3,10 +3,8 @@ import { filter, Observable } from 'rxjs';
 
 import { SharedWorkerService } from '../openslides-main-module/services/shared-worker.service';
 import { ActiveMeetingIdService } from '../site/pages/meetings/services/active-meeting-id.service';
-import { CommunicationManagerService } from '../site/services/communication-manager.service';
 import { WorkerResponse } from '../worker/interfaces';
 import { HttpService } from './http.service';
-import { HttpStreamEndpointService, HttpStreamService } from './http-stream';
 
 const ICC_ENDPOINT = `icc`;
 
@@ -31,19 +29,10 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
      */
     protected abstract readonly sendPath: string;
 
-    private readonly healthPath: string = `${ICC_PATH}/health`;
-
     private connectionClosingFn: (() => void) | undefined;
 
-    private get iccEndpointName(): string {
-        return ICC_ENDPOINT + `_` + this.serviceDescription;
-    }
-
     private httpService = inject(HttpService);
-    private httpStreamService = inject(HttpStreamService);
     protected activeMeetingIdService = inject(ActiveMeetingIdService);
-    private communicationManager = inject(CommunicationManagerService);
-    private httpEndpointService = inject(HttpStreamEndpointService);
     private sharedWorker = inject(SharedWorkerService);
 
     /**
@@ -127,7 +116,7 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
     }
 
     private sendConnectToWorker(meetingId: number): void {
-        this.sharedWorker.sendMessage(`icc`, {
+        this.sharedWorker.sendMessage(ICC_ENDPOINT, {
             action: `connect`,
             params: {
                 type: this.receivePath,
@@ -138,7 +127,7 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
 
     private messageObservable(meetingId: number): Observable<WorkerResponse> {
         return this.sharedWorker
-            .listenTo(`icc`)
+            .listenTo(ICC_ENDPOINT)
             .pipe(
                 filter(
                     data =>
@@ -151,7 +140,7 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
 
     private closedObservable(meetingId: number): Observable<WorkerResponse> {
         return this.sharedWorker
-            .listenTo(`icc`)
+            .listenTo(ICC_ENDPOINT)
             .pipe(
                 filter(
                     data =>

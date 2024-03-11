@@ -1,14 +1,9 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 
 import { ModelRequest } from '../../domain/interfaces/model-request';
-import {
-    ErrorDescription,
-    ErrorType,
-    isCommunicationError,
-    isCommunicationErrorWrapper
-} from '../../gateways/http-stream/stream-utils';
 import { WorkerHttpAuth } from '../http/auth';
 import { HTTP_POOL_CONFIG, HttpStreamPool } from '../http/http-stream-pool';
+import { ErrorDescription, ErrorType, isCommunicationError, isCommunicationErrorWrapper } from '../http/stream-utils';
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 import { AutoupdateSetEndpointParams } from './interfaces-autoupdate';

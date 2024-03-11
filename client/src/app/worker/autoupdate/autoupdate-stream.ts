@@ -1,7 +1,7 @@
 import * as fzstd from 'fzstd';
 
-import { ErrorDescription, ErrorType } from '../../gateways/http-stream/stream-utils';
 import { HttpStream } from '../http/http-stream';
+import { ErrorDescription, ErrorType } from '../http/stream-utils';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 import { AutoupdateSetEndpointParams } from './interfaces-autoupdate';
 

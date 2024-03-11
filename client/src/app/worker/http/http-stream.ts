@@ -1,12 +1,8 @@
-import {
-    ErrorDescription,
-    isCommunicationError,
-    isCommunicationErrorWrapper
-} from '../../gateways/http-stream/stream-utils';
 import { AutoupdateSetEndpointParams } from '../autoupdate/interfaces-autoupdate';
 import { HttpSubscription, HttpSubscriptionCallbacks, HttpSubscriptionEndpoint } from './http-subscription';
 import { HttpSubscriptionPolling } from './http-subscription-polling';
 import { HttpSubscriptionSSE } from './http-subscription-sse';
+import { ErrorDescription, isCommunicationError, isCommunicationErrorWrapper } from './stream-utils';
 
 export abstract class HttpStream {
     public failedCounter = 0;

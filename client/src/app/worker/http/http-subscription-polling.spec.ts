@@ -1,9 +1,9 @@
 import fetchMock from 'fetch-mock';
-import { ErrorDescription, ErrorType } from 'src/app/gateways/http-stream/stream-utils';
 import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 
 import { HttpSubscriptionEndpoint } from './http-subscription';
 import { HttpSubscriptionPolling, POLLING_INTERVAL } from './http-subscription-polling';
+import { ErrorDescription, ErrorType } from './stream-utils';
 
 function getHttpSubscriptionPollingInstance(url = `/`, onData: any = () => {}, onError: any = undefined) {
     const endpointConfig: HttpSubscriptionEndpoint = {

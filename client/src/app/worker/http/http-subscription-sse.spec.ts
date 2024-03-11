@@ -1,9 +1,9 @@
 import fetchMock, { MockRequest } from 'fetch-mock';
-import { ErrorDescription, ErrorType } from 'src/app/gateways/http-stream/stream-utils';
 import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 
 import { HttpSubscriptionEndpoint } from './http-subscription';
 import { HttpSubscriptionSSE } from './http-subscription-sse';
+import { ErrorDescription, ErrorType } from './stream-utils';
 
 function getHttpSubscriptionSSEInstance(url = `/`, onData: any = () => {}, onError: any = undefined) {
     const endpointConfig: HttpSubscriptionEndpoint = {

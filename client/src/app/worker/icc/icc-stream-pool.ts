@@ -1,8 +1,8 @@
 import { Id } from 'src/app/domain/definitions/key-types';
-import { ErrorType } from 'src/app/gateways/http-stream/stream-utils';
 
 import { WorkerHttpAuth } from '../http/auth';
 import { HTTP_POOL_CONFIG, HttpStreamPool } from '../http/http-stream-pool';
+import { ErrorType } from '../http/stream-utils';
 import { ICCStream } from './icc-stream';
 
 export class ICCStreamPool extends HttpStreamPool<ICCStream> {

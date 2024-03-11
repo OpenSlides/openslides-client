@@ -1,5 +1,6 @@
-import { ErrorDescription, ErrorType, isCommunicationError } from 'src/app/gateways/http-stream/stream-utils';
 import { HttpMethod } from 'src/app/infrastructure/definitions/http';
+
+import { ErrorDescription, ErrorType, isCommunicationError } from './stream-utils';
 
 export interface HttpSubscriptionEndpoint {
     url: string;

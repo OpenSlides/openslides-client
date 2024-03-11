@@ -1,9 +1,9 @@
-import { ErrorDescription, ErrorType } from 'src/app/gateways/http-stream/stream-utils';
 import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 
 import { AutoupdateSetEndpointParams } from '../autoupdate/interfaces-autoupdate';
 import { HttpStream } from './http-stream';
 import { HttpSubscription } from './http-subscription';
+import { ErrorDescription, ErrorType } from './stream-utils';
 
 class MockSubsciption extends HttpSubscription {
     private resolver: any;
