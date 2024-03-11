@@ -16,7 +16,7 @@ export class ICCStreamPool extends HttpStreamPool<ICCStream> {
                 config,
                 {
                     ...this.endpoint,
-                    url: this.endpoint.url + `/${config.type}`
+                    url: this.endpoint.url + `/${config.type.replace(/^\//, ``)}`
                 },
                 await WorkerHttpAuth.currentToken()
             );
