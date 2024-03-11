@@ -217,7 +217,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
 
         this._handleResolvePromise = new Promise(async res => {
             let cb: CallableFunction;
-            if (stream.failedConnects === HTTP_POOL_CONFIG.RETRY_AMOUNT) {
+            if (stream.failedConnects >= HTTP_POOL_CONFIG.RETRY_AMOUNT) {
                 cb = (s: AutoupdateStream) => {
                     for (const subscription of s.subscriptions) {
                         subscription.sendError({
