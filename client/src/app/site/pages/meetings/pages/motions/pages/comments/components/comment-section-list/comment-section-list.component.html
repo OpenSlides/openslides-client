@@ -102,7 +102,7 @@
         <span *ngIf="currentComment">{{ 'Edit comment field' | translate }}</span>
         <span *ngIf="!currentComment">{{ 'New comment field' | translate }}</span>
     </h1>
-    <mat-dialog-content class="os-form-card-mobile padding-top-bottom-0 margin-top-bottom-0" >
+    <mat-dialog-content class="os-form-card-mobile padding-top-bottom-0 margin-top-bottom-0">
         <form [formGroup]="commentFieldForm" (keydown)="onKeyDown($event)">
             <p>
                 <mat-form-field>
