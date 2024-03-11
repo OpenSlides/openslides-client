@@ -7,10 +7,6 @@ import { ErrorDescription, isCommunicationError, isCommunicationErrorWrapper } f
 export abstract class HttpStream {
     public failedCounter = 0;
 
-    protected supportLongpolling = true;
-    protected connectionMode: 'SSE' | 'LONGPOLLING' = `SSE`;
-    protected subscription: HttpSubscription;
-
     private lastError: any | ErrorDescription = null;
     private restarting = false;
     private stopping = false;
@@ -18,12 +14,17 @@ export abstract class HttpStream {
     private endpointConfig: HttpSubscriptionEndpoint;
     private handlerConfig: HttpSubscriptionCallbacks;
 
+    private _receivedData: Promise<void>;
+    private _receivedDataResolver: CallableFunction;
+
+    protected supportLongpolling = true;
+    protected connectionMode: 'SSE' | 'LONGPOLLING' = `SSE`;
+    protected subscription: HttpSubscription;
+
     public get active(): boolean {
         return this.subscription.active;
     }
 
-    private _receivedData: Promise<void>;
-    private _receivedDataResolver: CallableFunction;
     public get receivedData(): Promise<void> {
         return this._receivedData;
     }

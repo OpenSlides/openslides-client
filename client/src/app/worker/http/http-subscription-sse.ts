@@ -23,22 +23,13 @@ export class HttpSubscriptionSSE extends HttpSubscription {
     private async doRequest(): Promise<void> {
         this._active = true;
 
-        const headers: any = {
-            'Content-Type': `application/json`,
-            'ngsw-bypass': true
-        };
-
-        if (this.endpoint.authToken) {
-            headers.authentication = this.endpoint.authToken;
-        }
-
         this.abortCtrl = new AbortController();
 
         try {
             const response = await fetch(this.endpoint.url, {
                 signal: this.abortCtrl.signal,
                 method: this.endpoint.method,
-                headers,
+                headers: this.getHeaders(),
                 body: this.endpoint.payload
             });
 
@@ -93,6 +84,19 @@ export class HttpSubscriptionSSE extends HttpSubscription {
         }
 
         this._active = false;
+    }
+
+    private getHeaders(): { [name: string]: any } {
+        const headers: any = {
+            'Content-Type': `application/json`,
+            'ngsw-bypass': true
+        };
+
+        if (this.endpoint.authToken) {
+            headers.authentication = this.endpoint.authToken;
+        }
+
+        return headers;
     }
 
     private async parseNonOkResponse(data: string): Promise<unknown> {

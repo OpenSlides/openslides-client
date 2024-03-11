@@ -83,7 +83,7 @@ export class WorkerHttpAuth {
         this.updateAuthentication();
     }
 
-    private destroy() {
+    private destroy(): void {
         clearTimeout(this._authTokenRefreshTimeout);
     }
 

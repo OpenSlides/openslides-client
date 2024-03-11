@@ -55,30 +55,14 @@ export class HttpSubscriptionPolling extends HttpSubscription {
     }
 
     private async request() {
-        const headers: any = {
-            'ngsw-bypass': true
-        };
-
-        if (this.endpoint.authToken) {
-            headers.authentication = this.endpoint.authToken;
-        }
-
         this.abortCtrl = new AbortController();
 
-        const [url, paramString] = this.endpoint.url.split(`?`);
-        const params = new URLSearchParams(paramString);
-        params.set(`longpolling`, `1`);
-
-        const body = new FormData();
-        body.append(`request`, this.endpoint.payload);
-        body.append(`lastpolling`, this.lastHash || null);
-
         try {
-            const response = await fetch(url + `?` + params.toString(), {
+            const response = await fetch(this.getUrl(), {
                 signal: this.abortCtrl.signal,
                 method: this.endpoint.method,
-                headers,
-                body
+                headers: this.getHeaders(),
+                body: this.getBody()
             });
 
             try {
@@ -110,6 +94,34 @@ export class HttpSubscriptionPolling extends HttpSubscription {
         if (this.abortResolver) {
             this.abortResolver();
         }
+    }
+
+    private getHeaders(): { [name: string]: any } {
+        const headers: any = {
+            'ngsw-bypass': true
+        };
+
+        if (this.endpoint.authToken) {
+            headers.authentication = this.endpoint.authToken;
+        }
+
+        return headers;
+    }
+
+    private getUrl(): string {
+        const [url, paramString] = this.endpoint.url.split(`?`);
+        const params = new URLSearchParams(paramString);
+        params.set(`longpolling`, `1`);
+
+        return url + `?` + params.toString();
+    }
+
+    private getBody(): FormData {
+        const body = new FormData();
+        body.append(`request`, this.endpoint.payload);
+        body.append(`lastpolling`, this.lastHash || null);
+
+        return body;
     }
 
     private async parseNonOkResponse(response: Response): Promise<unknown> {
