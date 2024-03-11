@@ -4,17 +4,7 @@ import { autoupdateMessageHandler, initAutoupdateSw } from './sw-autoupdate';
 import { controlGeneralMessageHandler, controlMessageHandler, initControlMessageHandler } from './sw-control';
 import { iccMessageHandler, initIccSw } from './sw-icc';
 
-const broadcastChannel = new BroadcastChannel(SW_BROADCAST_CHANNEL_NAME);
-function broadcast(sender: string, action: string, content?: any) {
-    broadcastChannel.postMessage({ sender, action, content });
-}
-
 function registerMessageListener(ctx: any) {
-    initAuthWorker(broadcast);
-    initAutoupdateSw(broadcast);
-    initIccSw(broadcast);
-    initControlMessageHandler(broadcast);
-
     const handlers = {
         autoupdate: autoupdateMessageHandler,
         icc: iccMessageHandler,
@@ -32,10 +22,30 @@ function registerMessageListener(ctx: any) {
     });
 }
 
+function initAll(broadcast: (s: string, a: string, c?: any) => void) {
+    initAuthWorker(broadcast);
+    initAutoupdateSw(broadcast);
+    initIccSw(broadcast);
+    initControlMessageHandler(broadcast);
+}
+
 if ((<any>self).Window && self instanceof (<any>self).Window) {
+    function broadcast(sender: string, action: string, content?: any) {
+        self.postMessage({ sender, action, content });
+    }
+
+    initAll(broadcast);
+
     registerMessageListener(self);
     self.postMessage(`ready`);
 } else {
+    const broadcastChannel = new BroadcastChannel(SW_BROADCAST_CHANNEL_NAME);
+    function broadcast(sender: string, action: string, content?: any) {
+        broadcastChannel.postMessage({ sender, action, content });
+    }
+
+    initAll(broadcast);
+
     (<any>self).addEventListener(`connect`, (e: any) => {
         const port: MessagePort = e.ports[0];
 
