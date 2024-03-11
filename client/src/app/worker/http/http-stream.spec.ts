@@ -145,6 +145,23 @@ describe(`http stream`, () => {
         await expectAsync(forceStart).toBePending();
     });
 
+    it(`passes subscription active`, async () => {
+        subscription.setActive(true);
+        expect(httpStream.active).toBeTrue();
+    });
+
+    it(`passes subscription inactive`, async () => {
+        subscription.setActive(false);
+        expect(httpStream.active).toBeFalse();
+    });
+
+    it(`resolves data received`, async () => {
+        httpStream.start();
+        await expectAsync(httpStream.receivedData).toBePending();
+        subscription.sendData(`test-error`);
+        await expectAsync(httpStream.receivedData).toBeResolved();
+    });
+
     describe(`receives stop reasons`, () => {
         it(`error`, async () => {
             const start = httpStream.start();
@@ -155,6 +172,14 @@ describe(`http stream`, () => {
         it(`abort`, async () => {
             const start = httpStream.start();
             await httpStream.abort();
+            await expectAsync(start).toBeResolvedTo({ stopReason: `aborted` });
+        });
+
+        it(`abort with error`, async () => {
+            const start = httpStream.start();
+            const e = new Error();
+            e.name = `AbortError`;
+            subscription.stopCustom(e);
             await expectAsync(start).toBeResolvedTo({ stopReason: `aborted` });
         });
 

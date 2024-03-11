@@ -8,7 +8,8 @@ import { ErrorDescription, ErrorType } from './stream-utils';
 function getHttpSubscriptionPollingInstance(url = `/`, onData: any = () => {}, onError: any = undefined) {
     const endpointConfig: HttpSubscriptionEndpoint = {
         url,
-        method: HttpMethod.POST
+        method: HttpMethod.POST,
+        authToken: `foo`
     };
     const handlerConfig = {
         onData,
@@ -55,6 +56,18 @@ describe(`http subscription polling`, () => {
         subscr.start();
         await receivedData;
         expect(subscr.active).toBeTrue();
+        await subscr.stop();
+    });
+
+    it(`receives data twice`, async () => {
+        let resolver: CallableFunction;
+        let receivedData = new Promise(resolve => (resolver = resolve));
+        const subscr = getHttpSubscriptionPollingInstance(`/instant-forever`, () => resolver());
+        subscr.start();
+        await expectAsync(receivedData).toBeResolved();
+        receivedData = new Promise(resolve => (resolver = resolve));
+        jasmine.clock().tick(POLLING_INTERVAL + 200);
+        await expectAsync(receivedData).toBeResolved();
         await subscr.stop();
     });
 

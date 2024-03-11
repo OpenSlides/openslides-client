@@ -55,7 +55,21 @@ export class WorkerHttpAuth {
     }
 
     public static stopRefresh(): void {
-        clearTimeout(this.workerHttpAuth?._authTokenRefreshTimeout);
+        if (this.workerHttpAuth) {
+            clearTimeout(this.workerHttpAuth._authTokenRefreshTimeout);
+            this.workerHttpAuth.updateAuthPromise = new Promise(r => r(false));
+        }
+    }
+
+    /**
+     * Only for usage in unit tests
+     */
+    public static reset(): void {
+        this.subscriptions.clear();
+        if (this.workerHttpAuth) {
+            this.workerHttpAuth.destroy();
+            this.workerHttpAuth = null;
+        }
     }
 
     private currentUserId: number = undefined;
@@ -69,7 +83,9 @@ export class WorkerHttpAuth {
         this.updateAuthentication();
     }
 
-    private destroy() {}
+    private destroy() {
+        clearTimeout(this._authTokenRefreshTimeout);
+    }
 
     private async updateAuthentication(): Promise<boolean> {
         const currentPromise = this.updateAuthPromise;
