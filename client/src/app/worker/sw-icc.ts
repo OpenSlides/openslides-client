@@ -11,15 +11,16 @@ export function initIccSw(broadcast: (s: string, a: string, c?: any) => void) {
     iccPool.registerBroadcast(broadcast);
 }
 
-export function iccMessageHandler(ctx: any, e: any): void {
+export function iccMessageHandler(_ctx: any, e: any): void {
     const msg = e.data?.msg;
-    // const params = msg?.params;
+    const params = msg?.params;
     const action = msg?.action;
     switch (action) {
         case `connect`:
-            iccPool.openNewStream(ctx, msg);
+            iccPool.openNewStream(params);
             break;
         case `disconnect`:
+            iccPool.closeStream(params);
             break;
     }
 }

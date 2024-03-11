@@ -1,8 +1,10 @@
 import { Directive, inject } from '@angular/core';
+import { filter, Observable } from 'rxjs';
 
-import { HttpMethod } from '../infrastructure/definitions/http';
+import { SharedWorkerService } from '../openslides-main-module/services/shared-worker.service';
 import { ActiveMeetingIdService } from '../site/pages/meetings/services/active-meeting-id.service';
 import { CommunicationManagerService } from '../site/services/communication-manager.service';
+import { WorkerResponse } from '../worker/interfaces';
 import { HttpService } from './http.service';
 import { HttpStreamEndpointService, HttpStreamService } from './http-stream';
 
@@ -42,6 +44,7 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
     protected activeMeetingIdService = inject(ActiveMeetingIdService);
     private communicationManager = inject(CommunicationManagerService);
     private httpEndpointService = inject(HttpStreamEndpointService);
+    private sharedWorker = inject(SharedWorkerService);
 
     /**
      * Can be called in the subclasses constructor after the super call.
@@ -58,35 +61,45 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
     }
 
     public async connect(meetingId: number): Promise<void> {
-        console.log(`${this.serviceDescription}: Connect to ICC service with: meeting_id=${meetingId}`);
+        console.log(`${this.serviceDescription}: Subscribe to ICC service with: meeting_id=${meetingId}`);
         if (!meetingId) {
-            throw new Error(`Cannot connect to ICC, no meeting ID was provided`);
+            throw new Error(`Cannot subscribe to ICC, no meeting ID was provided`);
         }
 
         if (!this.receivePath) {
-            throw new Error(`Cannot connect to ICC, no path was provided`);
+            throw new Error(`Cannot subscribe to ICC, no path was provided`);
         }
 
         this.disconnect();
+        this.sendConnectToWorker(meetingId);
 
-        const iccMeeting = `${ICC_PATH}${this.receivePath}?meeting_id=${meetingId}`;
-        this.httpEndpointService.registerEndpoint(this.iccEndpointName, iccMeeting, this.healthPath, HttpMethod.GET);
-        const buildStreamFn = () =>
-            this.httpStreamService.create<ICCResponseType>(this.iccEndpointName, {
-                onMessage: (response: ICCResponseType) => this.onMessage(response),
-                description: this.serviceDescription
-            });
-        const { closeFn } = this.communicationManager.registerStreamBuildFn(buildStreamFn);
-        this.connectionClosingFn = closeFn;
+        const onReastartSub = this.sharedWorker.restartObservable.subscribe(() => {
+            this.sendConnectToWorker(meetingId);
+        });
+        const msgSub = this.messageObservable(meetingId).subscribe(resp => this.onMessage(resp.content?.data));
+        const onClosedSub = this.closedObservable(meetingId).subscribe(() => {
+            this.connectionClosingFn = undefined;
+            onReastartSub.unsubscribe();
+            msgSub.unsubscribe();
+            onClosedSub.unsubscribe();
+        });
+        this.connectionClosingFn = () => {
+            onReastartSub.unsubscribe();
+            msgSub.unsubscribe();
+            onClosedSub.unsubscribe();
+            this.sharedWorker.sendMessage(`icc`, {
+                action: `disconnect`,
+                params: {
+                    type: this.receivePath,
+                    meetingId
+                }
+            } as any);
+        };
     }
 
     public disconnect(): void {
         if (this.connectionClosingFn) {
-            try {
-                this.connectionClosingFn();
-            } catch (e) {
-                console.warn(`Was not able to properly close previous ICC connection: `, e);
-            }
+            this.connectionClosingFn();
             this.connectionClosingFn = undefined;
         }
     }
@@ -111,5 +124,41 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
             console.debug(`Send message to ICC with following route:`, `${ICC_PATH}${this.sendPath}`);
             await this.httpService.post<unknown>(`${ICC_PATH}${this.sendPath}`);
         }
+    }
+
+    private sendConnectToWorker(meetingId: number): void {
+        this.sharedWorker.sendMessage(`icc`, {
+            action: `connect`,
+            params: {
+                type: this.receivePath,
+                meetingId
+            }
+        } as any);
+    }
+
+    private messageObservable(meetingId: number): Observable<WorkerResponse> {
+        return this.sharedWorker
+            .listenTo(`icc`)
+            .pipe(
+                filter(
+                    data =>
+                        data?.action === `receive-data` &&
+                        data.content?.type === this.receivePath &&
+                        data.content?.meeting_id === meetingId
+                )
+            );
+    }
+
+    private closedObservable(meetingId: number): Observable<WorkerResponse> {
+        return this.sharedWorker
+            .listenTo(`icc`)
+            .pipe(
+                filter(
+                    data =>
+                        data?.action === `closed` &&
+                        data.content?.type === this.receivePath &&
+                        data.content?.meetingId === meetingId
+                )
+            );
     }
 }
