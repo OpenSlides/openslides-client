@@ -13,6 +13,16 @@ type TestConditionalType = {
     complement: boolean;
 };
 
+export class BasePermsTestComponent<ComponentDataType extends object> {
+    public constructor(public conditionals: ComponentDataType) {}
+
+    public setTestComponentData(conditionals: Partial<ComponentDataType>): void {
+        for (const key of Object.keys(conditionals)) {
+            this.conditionals[key] = conditionals[key];
+        }
+    }
+}
+
 @Component({
     template: `
         <div id="normal" *osPerms="permission"></div>
@@ -21,15 +31,11 @@ type TestConditionalType = {
         <div id="complement" *osPerms="permission; complement: conditionals.complement"></div>
     `
 })
-class TestComponent {
+class TestComponent extends BasePermsTestComponent<TestConditionalType> {
     public readonly permission = Permission.listOfSpeakersCanSee;
-    public conditionals: TestConditionalType = { and: true, or: true, complement: true };
 
-    public setTestComponentData(conditionals: { and?: boolean; or?: boolean; complement?: boolean }): void {
-        for (const key in Object.keys(this.conditionals)) {
-            conditionals[key] = conditionals[key] ?? this.conditionals[key];
-        }
-        this.conditionals = conditionals as TestConditionalType;
+    public constructor() {
+        super({ and: true, or: true, complement: true });
     }
 }
 
