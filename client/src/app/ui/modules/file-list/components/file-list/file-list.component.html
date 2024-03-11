@@ -111,14 +111,14 @@
             (click)="onEditFile(mediafile, fileEditDialog)"
             (keydown.enter)="onEditFile(mediafile, fileEditDialog)"
         >
-            <ng-container *ngIf="isInaMeeting">
+            <ng-container *ngIf="isInMeeting">
                 <os-icon-container icon="group">
                     <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
                         <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
                     </os-comma-separated-listing>
                 </os-icon-container>
             </ng-container>
-            <ng-container *ngIf="!isInaMeeting">
+            <ng-container *ngIf="!isInMeeting">
                 <os-icon-container icon="edit"></os-icon-container>
             </ng-container>
         </div>
