@@ -74,11 +74,7 @@ export class HttpSubscriptionPolling extends HttpSubscription {
             if (!response.ok) {
                 const data = await this.parseNonOkResponse(response);
                 const error = this.parseErrorFromResponse(response, data);
-                if (this.callbacks.onError) {
-                    this.callbacks.onError(error);
-                } else {
-                    this.callbacks.onData(error);
-                }
+                this.errorCallback(error);
                 this._active = false;
             }
         } catch (e) {

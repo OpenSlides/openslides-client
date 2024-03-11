@@ -7,7 +7,15 @@ export class HttpSubscriptionSSE extends HttpSubscription {
     private abortResolver: (val?: any) => void | undefined;
 
     public async start(): Promise<void> {
+        this._active = true;
+
         await this.doRequest();
+
+        if (this.abortResolver) {
+            this.abortResolver();
+        }
+
+        this._active = false;
     }
 
     public async stop(): Promise<void> {
@@ -21,8 +29,6 @@ export class HttpSubscriptionSSE extends HttpSubscription {
     }
 
     private async doRequest(): Promise<void> {
-        this._active = true;
-
         this.abortCtrl = new AbortController();
 
         try {
@@ -63,11 +69,7 @@ export class HttpSubscriptionSSE extends HttpSubscription {
 
             if (!response.ok) {
                 const error = this.parseErrorFromResponse(response, await this.parseNonOkResponse(data));
-                if (this.callbacks.onError) {
-                    this.callbacks.onError(error);
-                } else {
-                    this.callbacks.onData(error);
-                }
+                this.errorCallback(error);
                 this._active = false;
             } else if (data) {
                 this.callbacks.onData(data);
@@ -79,11 +81,6 @@ export class HttpSubscriptionSSE extends HttpSubscription {
         }
 
         this.abortCtrl = undefined;
-        if (this.abortResolver) {
-            this.abortResolver();
-        }
-
-        this._active = false;
     }
 
     private getHeaders(): { [name: string]: any } {

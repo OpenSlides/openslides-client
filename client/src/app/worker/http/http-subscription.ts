@@ -34,6 +34,14 @@ export abstract class HttpSubscription {
     public abstract start(): Promise<void>;
     public abstract stop(): Promise<void>;
 
+    protected errorCallback(error: unknown): void {
+        if (this.callbacks.onError) {
+            this.callbacks.onError(error);
+        } else if (this.callbacks.onData) {
+            this.callbacks.onData(error);
+        }
+    }
+
     protected parseErrorFromResponse(response: Response, content: any): ErrorDescription | null {
         let errorContent = null;
         if (content && (errorContent = content)?.error) {
