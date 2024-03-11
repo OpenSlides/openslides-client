@@ -4,7 +4,7 @@
 
 <div class="settings-grid">
     <form [formGroup]="updateForm" (ngSubmit)="onSubmitProjector()">
-        <div mat-dialog-content *ngIf="projector" class="padding-bottom-0">
+        <mat-dialog-content *ngIf="projector">
             <!-- Name field -->
             <mat-form-field>
                 <mat-label>{{ 'Name' | translate }}</mat-label>
@@ -143,10 +143,10 @@
                     [ngTemplateOutletContext]="{ title: field.value, form: field.key }"
                 ></ng-template>
             </div>
-        </div>
+        </mat-dialog-content>
 
         <!-- Actions -->
-        <div mat-dialog-actions class="padding-left-right-24 padding-top-bottom-24">
+        <mat-dialog-actions>
             <mat-divider class="padding-bottom-16"></mat-divider>
             <button type="submit" mat-button color="accent">
                 <span>{{ 'Save' | translate }}</span>
@@ -157,12 +157,12 @@
             <button type="button" mat-button (click)="applyChanges()">
                 <span>{{ 'Apply' | translate }}</span>
             </button>
-        </div>
+        </mat-dialog-actions>
     </form>
-    <div *ngIf="previewProjector" mat-dialog-content class="padding-left-right-0">
+    <mat-dialog-content *ngIf="previewProjector">
         <h3>{{ 'Preview' | translate }}</h3>
         <div class="preview-container">
             <os-projector #preview *ngIf="previewProjector" [projector]="previewProjector"></os-projector>
         </div>
-    </div>
+    </mat-dialog-content>
 </div>

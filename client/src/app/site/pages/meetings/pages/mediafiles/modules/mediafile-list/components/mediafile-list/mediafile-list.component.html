@@ -181,7 +181,7 @@
             </mat-form-field>
         </form>
     </mat-dialog-content>
-    <mat-dialog-actions class="padding-left-24 padding-top-bottom-16">
+    <mat-dialog-actions>
         <button
             type="submit"
             mat-button
@@ -200,7 +200,7 @@
 <!-- New folder dialog -->
 <ng-template #newFolderDialog>
     <h1 mat-dialog-title>{{ 'New directory' | translate }}</h1>
-    <mat-dialog-content class="os-form-card-mobile padding-top-bottom-0">
+    <mat-dialog-content class="os-form-card-mobile">
         <form class="edit-file-form" [formGroup]="newDirectoryForm">
             <p>{{ 'Please enter a name for the new directory:' | translate }}</p>
             <mat-form-field>
@@ -219,7 +219,7 @@
             </mat-form-field>
         </form>
     </mat-dialog-content>
-    <mat-dialog-actions class="padding-left-24 padding-top-bottom-16">
+    <mat-dialog-actions>
         <button type="submit" mat-button [disabled]="!newDirectoryForm.valid" color="accent" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>

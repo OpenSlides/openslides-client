@@ -44,7 +44,7 @@
         <span *ngIf="currentTag">{{ 'Edit tag' | translate }}</span>
         <span *ngIf="!currentTag">{{ 'New tag' | translate }}</span>
     </h1>
-    <mat-dialog-content class="os-form-card-mobile padding-top-bottom-0">
+    <mat-dialog-content class="os-form-card-mobile">
         <form [formGroup]="tagForm" (keydown)="onKeyDown($event)">
             <mat-form-field>
                 <mat-label>{{ 'Name' | translate }}</mat-label>
@@ -53,7 +53,7 @@
         </form>
     </mat-dialog-content>
 
-    <mat-dialog-actions class="padding-left-24 padding-top-bottom-16">
+    <mat-dialog-actions>
         <button type="submit" mat-button [mat-dialog-close]="true" color="accent">
             <span>{{ 'Save' | translate }}</span>
         </button>

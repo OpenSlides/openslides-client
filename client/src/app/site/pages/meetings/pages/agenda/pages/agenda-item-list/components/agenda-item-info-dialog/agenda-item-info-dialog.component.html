@@ -1,5 +1,5 @@
 <h1 mat-dialog-title *ngIf="item">{{ 'Edit details for' | translate }} {{ item.getTitle() }}</h1>
-<div mat-dialog-content class="padding-top-bottom-0">
+<mat-dialog-content>
     <form class="item-dialog-form" [formGroup]="agendaInfoForm" (keydown)="onKeyDown($event)">
         <!-- Tag -->
         <mat-form-field *ngIf="isTagAvailable()">
@@ -48,12 +48,12 @@
             ></textarea>
         </mat-form-field>
     </form>
-</div>
-<div mat-dialog-actions class="padding-left-24 padding-bottom-24">
+</mat-dialog-content>
+<mat-dialog-actions>
     <button mat-button (click)="saveItemInfo()" [disabled]="agendaInfoForm.invalid">
         <span>{{ 'Save' | translate }}</span>
     </button>
     <button mat-button (click)="onCancelButton()">
         <span>{{ 'Cancel' | translate }}</span>
     </button>
-</div>
+</mat-dialog-actions>

@@ -2,6 +2,7 @@
     min-height: 400px;
     display: flex;
     flex-direction: row;
+    padding: 0px !important;
 
     .account-dialog-menu-items {
         flex: 1;
@@ -15,7 +16,10 @@
         flex: 3;
 
         .content-wrapper {
-            padding: 24px;
+            padding-left: 24px;
+            padding-right: 24px;
+            margin-top: 0px;
+            margin-bottom: 0px;
         }
     }
 }
@@ -39,15 +43,4 @@ cdk-virtual-scroll-viewport {
 
 .padding-top-16 {
     padding-top: 16px !important;
-}
-
-.padding-0 {
-    padding: 0px !important;
-}
-
-.margin-padding-top-bottom-0 {
-    margin-top: 0px !important;
-    margin-bottom: 0px !important;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
 }

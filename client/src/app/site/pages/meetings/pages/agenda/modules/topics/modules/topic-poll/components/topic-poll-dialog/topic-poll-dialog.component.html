@@ -1,4 +1,4 @@
-<div mat-dialog-content class="padding-top-bottom-0">
+<mat-dialog-content>
     <!-- Settings -->
     <os-topic-poll-form
         [pollClassType]="pollClassType.Topic"
@@ -72,10 +72,10 @@
             </ng-container>
         </div>
     </div>
-</div>
+</mat-dialog-content>
 
 <!-- Actions -->
-<div mat-dialog-actions class="padding-left-24 padding-top-bottom-16">
+<mat-dialog-actions>
     <!-- Save Button -->
     <button
         mat-button
@@ -90,4 +90,4 @@
     <button mat-button [mat-dialog-close]="false">
         <span>{{ 'Cancel' | translate }}</span>
     </button>
-</div>
+</mat-dialog-actions>

@@ -1,4 +1,4 @@
-<div mat-dialog-content class="padding-bottom-0">
+<mat-dialog-content>
     <os-motion-poll-form
         [pollClassType]="pollClassType.Motion"
         [data]="pollData"
@@ -49,12 +49,12 @@
             <mat-error *ngIf="!dialogVoteForm.valid">{{ 'Error in form field.' | translate }}</mat-error>
         </div>
     </ng-container>
-</div>
-<div mat-dialog-actions class="padding-left-24 padding-bottom-24">
+</mat-dialog-content>
+<mat-dialog-actions>
     <button mat-button (click)="submitPoll()" [disabled]="!formsValid">
         <span>{{ 'Save' | translate }}</span>
     </button>
     <button mat-button [mat-dialog-close]="false">
         <span>{{ 'Cancel' | translate }}</span>
     </button>
-</div>
+</mat-dialog-actions>

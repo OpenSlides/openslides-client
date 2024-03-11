@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{ 'Export motions' | translate }}</h1>
 
-<form [formGroup]="exportForm" mat-dialog-content class="padding-top-bottom-0">
+<form [formGroup]="exportForm" mat-dialog-content>
     <!-- Content -->
     <div class="motion-export-dialog-wrapper">
         <div>
@@ -121,11 +121,11 @@
 </form>
 
 <!-- Action buttons -->
-<div mat-dialog-actions class="padding-left-24 padding-top-bottom-24">
+<mat-dialog-actions>
     <button mat-button type="button" color="accent" [mat-dialog-close]="exportForm.value">
         <span>{{ 'Export' | translate }}</span>
     </button>
     <button mat-button type="button" (click)="onCloseClick()">
         <span>{{ 'Cancel' | translate }}</span>
     </button>
-</div>
+</mat-dialog-actions>
