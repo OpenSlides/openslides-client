@@ -17,6 +17,7 @@ export abstract class HttpStream {
 
     private lastError: any | ErrorDescription = null;
     private restarting = false;
+    private stopping = false;
 
     private endpointConfig: HttpSubscriptionEndpoint;
     private handlerConfig: HttpSubscriptionCallbacks;
@@ -60,6 +61,7 @@ export abstract class HttpStream {
      * Closes the stream
      */
     public async abort(): Promise<void> {
+        this.stopping = true;
         this.resetReceivedData();
         await this.subscription.stop();
     }
@@ -77,10 +79,11 @@ export abstract class HttpStream {
         if (this.subscription.active && !force) {
             return { stopReason: `in-use` };
         } else if (this.subscription.active && force) {
-            await this.subscription.stop();
+            await this.abort();
         }
 
         this.restarting = false;
+        this.stopping = false;
         this.lastError = null;
         try {
             await this.subscription.start();
@@ -104,7 +107,7 @@ export abstract class HttpStream {
             return await this.start();
         }
 
-        return { stopReason: `resolved` };
+        return { stopReason: this.stopping ? `aborted` : `resolved` };
     }
 
     public async restart(): Promise<void> {

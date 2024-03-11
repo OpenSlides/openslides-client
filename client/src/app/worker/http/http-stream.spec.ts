@@ -37,11 +37,7 @@ class MockSubsciption extends HttpSubscription {
     }
 
     public async stop(): Promise<void> {
-        if (this.rejector) {
-            const e = new Error();
-            e.name = `AbortError`;
-            this.rejector(e);
-        }
+        this.resolver();
     }
 
     public stopCustom(e?: any): void {
