@@ -20,6 +20,7 @@ export class ICCStreamPool extends HttpStreamPool<ICCStream> {
                 },
                 await WorkerHttpAuth.currentToken()
             );
+            this.streams.push(stream);
             this.connectStream(stream);
         } else {
             stream.addUser();
