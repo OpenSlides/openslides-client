@@ -56,7 +56,7 @@ export class AmendmentListPdfService {
                 text: amendment.getChangedLines()
             },
             {
-                text: amendment.submittersAsUsers.toString()
+                text: amendment.submitterNames.toString()
             },
             {
                 // requires stack cause this can be an array

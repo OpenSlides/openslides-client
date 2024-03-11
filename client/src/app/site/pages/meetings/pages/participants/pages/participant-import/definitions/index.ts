@@ -3,10 +3,10 @@ import { GeneralUser } from 'src/app/gateways/repositories/users';
 
 export const participantHeadersAndVerboseNames: { [key in keyof GeneralUser]?: string } = {
     ...userHeadersAndVerboseNames,
+    is_present: `Is present`,
+    structure_level: `Structure levels`,
     number: `Participant number`,
     vote_weight: `Vote weight`,
-    is_present: `Is present`,
     groups: `Groups`,
-    comment: `Comment`,
-    structure_level: `Structure levels`
+    comment: `Comment`
 };

@@ -1,0 +1,53 @@
+<h4>
+    <span class="title-font">{{ title }}</span>
+    <button
+        class="small-button"
+        type="button"
+        mat-icon-button
+        disableRipple
+        *ngIf="!isEditMode && perms.isAllowed('change_metadata')"
+        (click)="onEdit()"
+    >
+        <mat-icon>edit</mat-icon>
+    </button>
+    <button
+        class="small-button"
+        type="button"
+        mat-icon-button
+        disableRipple
+        *ngIf="isEditMode && perms.isAllowed('change_metadata')"
+        (click)="onCancel()"
+    >
+        <mat-icon>close</mat-icon>
+    </button>
+</h4>
+
+<div *ngIf="!isEditMode || !perms.isAllowed('change_metadata')">
+    <div>{{ motion[field] | localizedDate }}</div>
+</div>
+
+<div *ngIf="isEditMode && perms.isAllowed('change_metadata')">
+    <form [formGroup]="form">
+        <os-datepicker formControlName="date"></os-datepicker>
+        <mat-form-field style="width: 100%">
+            <input style="width: 100%" matInput [format]="24" formControlName="time" [ngxTimepicker]="timepicker" />
+            <div class="suffix-wrapper" matSuffix>
+                <ngx-material-timepicker-toggle [for]="timepicker">
+                    <mat-icon class="icon" style="margin-right: 10px" ngxMaterialTimepickerToggleIcon>
+                        access_time
+                    </mat-icon>
+                </ngx-material-timepicker-toggle>
+            </div>
+            <ngx-material-timepicker #timepicker></ngx-material-timepicker>
+        </mat-form-field>
+    </form>
+
+    <p>
+        <button type="button" mat-button (click)="onSave()">
+            <span>{{ 'Save' | translate }}</span>
+        </button>
+        <button type="button" mat-button (click)="onCancel()">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </p>
+</div>

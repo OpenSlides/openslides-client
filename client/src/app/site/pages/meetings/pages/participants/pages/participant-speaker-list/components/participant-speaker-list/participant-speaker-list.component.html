@@ -23,15 +23,7 @@
         <div class="nameCell">
             <div>
                 <div class="flex-vertical-center">
-                    <div>{{ speaker?.meeting_user?.user?.short_name }}</div>
-                    <ng-container *ngIf="speaker?.meeting_user?.user?.pronoun">
-                        &nbsp;
-                        <div>({{ speaker.meeting_user.user.pronoun }})</div>
-                    </ng-container>
-                    <ng-container *ngIf="speaker?.structure_level_list_of_speakers?.structure_level?.name">
-                        &nbsp;
-                        <div>({{ speaker.structure_level_list_of_speakers.structure_level.name }})</div>
-                    </ng-container>
+                    <div>{{ speaker?.getLOSName((structureLevelCountdownEnabled | async) === false) }}</div>
                 </div>
             </div>
         </div>
