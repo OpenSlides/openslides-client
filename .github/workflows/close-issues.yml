@@ -1,0 +1,52 @@
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - "feature/*"
+
+jobs:
+  close-issue:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged
+    steps:
+      - name: Generate access token
+        uses: tibdex/github-app-token@v2
+        id: generate-token
+        with:
+          app_id: ${{ secrets.AUTOMATION_APP_ID }}
+          private_key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+
+      - uses: octokit/graphql-action@v2.x
+        id: get-issues
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+        with:
+          query: |
+            query getLinkedIssues($owner: String!, $name: String!, $number: Int!) {
+              repository(owner: $owner, name: $name) {
+                pullRequest(number: $number) {
+                  closingIssuesReferences(first: 100) {
+                    nodes {
+                      number
+                      repository {
+                        nameWithOwner
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          variables: |
+            owner: ${{ github.event.repository.owner.name }}
+            repo: ${{ github.event.repository.name }}
+            number: ${{ github.event.pull_request.number }}
+
+      - name: Close issues
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          issue_data="$(echo "${{ steps.get-issues.outputs.data }}" | jq -r '.data.repository.pullRequest.closingIssuesReferences.nodes[] | [.number,.repository.nameWithOwner] | @tsv')"
+          echo "$issue_data" | while read number nameWithOwner; do
+            gh issue close "$number" -r "$nameWithOwner"
+          done
