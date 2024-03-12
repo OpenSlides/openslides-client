@@ -98,7 +98,7 @@ export class SpeakingTimesComponent implements OnDestroy {
         private translateService: TranslateService
     ) {
         this.totalTimeForm = this.formBuilder.group({
-            totalTime: [0, [Validators.required, Validators.min(1)]]
+            totalTime: [0, [Validators.required, Validators.pattern(/^\d+:\d{2}$/)]]
         });
     }
 
@@ -114,7 +114,7 @@ export class SpeakingTimesComponent implements OnDestroy {
 
     public setTotalTime(speakingTimeId: number): void {
         this.currentEntry = this.structureLevels.get(speakingTimeId);
-        this.totalTimeForm.get(`totalTime`).setValue(this.currentEntry.countdown.countdown_time);
+        this.totalTimeForm.get(`totalTime`).setValue(this.duration(this.currentEntry.countdown.countdown_time));
         const dialogSettings = infoDialogSettings;
         this.dialogRef = this.dialog.open(this.totalTimeDialog!, dialogSettings);
         this.dialogRef.afterClosed().subscribe(res => {
@@ -191,7 +191,14 @@ export class SpeakingTimesComponent implements OnDestroy {
             return;
         }
         this.speakingTimesRepo.update([
-            { id: this.currentEntry.id, initial_time: this.totalTimeForm.get(`totalTime`).value }
+            {
+                id: this.currentEntry.id,
+                initial_time: this.durationService.stringToDuration(
+                    this.totalTimeForm.get(`totalTime`).value,
+                    `m`,
+                    true
+                )
+            }
         ]);
     }
 

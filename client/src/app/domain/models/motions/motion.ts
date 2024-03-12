@@ -44,6 +44,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public state_extension!: string;
     public recommendation_extension!: string;
     public sort_weight!: number;
+    public additional_submitter!: string;
     /**
      * Client-calculated field: The tree_weight indicates the position of a motion in a list of
      * motions in regard to the call list.
@@ -117,6 +118,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `workflow_timestamp`,
         `start_line_number`,
         `forwarded`,
+        `additional_submitter`,
         `lead_motion_id`,
         `amendment_ids`,
         `sort_parent_id`,

@@ -6,6 +6,10 @@
             [repo]="motionSubmitterRepo"
             field="submitters"
             title="{{ 'Submitters' | translate }}"
+            [useAdditionalInput]="true"
+            additionalInputField="additional_submitter"
+            additionalInputLabel="{{ 'Extension' | translate }}"
+            [additionalInputValue]="motion?.additional_submitter"
         ></os-motion-manage-motion-meeting-users>
     </div>
 </div>
@@ -42,7 +46,7 @@
         {{ motion.supporter_users.length }} {{ 'supporters' | translate }}
     </button>
     <p *ngIf="showSupporters" class="supporters">
-        <os-comma-separated-listing [list]="motion.supporter_users">
+        <os-comma-separated-listing [list]="supportersObservable | async">
             <ng-template let-supporter>{{ supporter.full_name }}</ng-template>
         </os-comma-separated-listing>
     </p>

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { BehaviorSubject, filter, firstValueFrom, map, Observable } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -50,6 +51,20 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
     @Input()
     public title: string;
 
+    @Input()
+    public useAdditionalInput: boolean;
+
+    @Input()
+    public additionalInputLabel: string;
+
+    @Input()
+    public additionalInputValue: string;
+
+    @Input()
+    public additionalInputField: KeyOfType<ViewMotion, string>;
+
+    public additionalInputControl: UntypedFormControl;
+
     public get intermediateModels(): V[] {
         return this.getIntermediateModels(this.motion);
     }
@@ -92,7 +107,8 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         private userRepository: ParticipantControllerService,
         public perms: MotionPermissionService,
         private motionController: MotionControllerService,
-        private actionService: ActionService
+        private actionService: ActionService,
+        private fb: UntypedFormBuilder
     ) {
         super();
 
@@ -100,6 +116,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
     }
 
     public ngOnInit(): void {
+        this.additionalInputControl = this.fb.control(``);
         this.subscriptions.push(
             this.editSubject.subscribe(ids => (this.editUserIds = ids.map(model => model.user_id ?? model.id)))
         );
@@ -133,11 +150,21 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                       )
             )
         );
+        if (this.useAdditionalInput) {
+            actions.push(
+                this.motionController.update(
+                    { [this.additionalInputField]: this.additionalInputControl.value },
+                    this.motion
+                )
+            );
+        }
 
         await Action.from(...actions).resolve();
 
         const result = await promise;
-        this.repo.sort(result, this.motion).resolve();
+        if (result.length > 0) {
+            this.repo.sort(result, this.motion).resolve();
+        }
         this.isEditMode = false;
     }
 
@@ -153,6 +180,9 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
      */
     public onEdit(): void {
         this.isEditMode = true;
+        if (this.useAdditionalInput) {
+            this.additionalInputControl.setValue(this.additionalInputValue);
+        }
         this.editSubject.next(this.intermediateModels);
         this._oldIds = new Set(this.intermediateModels.map(model => model.user_id));
     }
