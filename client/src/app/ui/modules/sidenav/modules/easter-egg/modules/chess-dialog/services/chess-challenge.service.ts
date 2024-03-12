@@ -12,7 +12,7 @@ import { ChessDialogModule } from '../chess-dialog.module';
     providedIn: ChessDialogModule
 })
 export class ChessChallengeService {
-    constructor(
+    public constructor(
         private notifyService: NotifyService,
         private op: OperatorService,
         private dialog: MatDialog,

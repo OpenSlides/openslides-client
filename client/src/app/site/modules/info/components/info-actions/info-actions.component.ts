@@ -11,7 +11,7 @@ import { LifecycleService } from 'src/app/site/services/lifecycle.service';
     styleUrls: [`./info-actions.component.scss`]
 })
 export class InfoActionsComponent extends BaseComponent {
-    constructor(
+    public constructor(
         private lifecycleService: LifecycleService,
         private snackbar: MatSnackBar,
         private presenter: CheckDatabasePresenterService,

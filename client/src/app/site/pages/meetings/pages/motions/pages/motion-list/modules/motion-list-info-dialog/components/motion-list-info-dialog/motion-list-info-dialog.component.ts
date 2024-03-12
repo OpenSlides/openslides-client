@@ -40,7 +40,7 @@ export class MotionListInfoDialogComponent {
     public readonly selectedMotion: ViewMotion;
 
     public constructor(
-        @Inject(MAT_DIALOG_DATA) readonly config: MotionListInfoDialogConfig,
+        @Inject(MAT_DIALOG_DATA) public readonly config: MotionListInfoDialogConfig,
         repo: MotionControllerService,
         private categoryRepo: MotionCategoryControllerService,
         private blockRepo: MotionBlockControllerService,

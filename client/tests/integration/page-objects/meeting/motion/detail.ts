@@ -3,7 +3,7 @@ import { Page } from '@playwright/test';
 export class MeetingMotionDetailPage {
     private readonly page: Page;
 
-    constructor(page: Page) {
+    public constructor(page: Page) {
         this.page = page;
     }
 

@@ -34,7 +34,7 @@ export class MeetingComponentServiceCollectorService {
         return this.componentServiceCollector.router;
     }
 
-    constructor(
+    public constructor(
         private componentServiceCollector: ComponentServiceCollectorService,
         public activeMeetingIdService: ActiveMeetingIdService,
         public activeMeetingService: ActiveMeetingService,

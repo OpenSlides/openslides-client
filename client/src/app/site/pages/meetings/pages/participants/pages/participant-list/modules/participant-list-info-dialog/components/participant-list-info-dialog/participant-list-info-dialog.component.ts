@@ -46,7 +46,7 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled = false;
 
-    constructor(
+    public constructor(
         @Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog,
         private participantRepo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
