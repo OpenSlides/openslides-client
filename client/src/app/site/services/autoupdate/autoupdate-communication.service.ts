@@ -42,7 +42,7 @@ export class AutoupdateCommunicationService {
     private tryReconnectOpen = false;
     private subscriptionsWithData = new Set<string>();
 
-    constructor(
+    public constructor(
         private authTokenService: AuthTokenService,
         private authService: AuthService,
         private sharedWorker: SharedWorkerService,

@@ -13,7 +13,7 @@ import { ViewMotionState } from '../../view-models';
     providedIn: `root`
 })
 export class MotionStateControllerService extends BaseMeetingControllerService<ViewMotionState, MotionState> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MotionStateRepositoryService
     ) {

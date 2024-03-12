@@ -10,7 +10,7 @@ import { ModelRequestService } from './model-request.service';
     providedIn: `root`
 })
 export class ComponentServiceCollectorService {
-    constructor(
+    public constructor(
         public router: Router,
         public titleService: Title,
         public matSnackBar: MatSnackBar,

@@ -13,7 +13,7 @@ import { ProjectionDialogModule } from '../projection-dialog.module';
 
 @Injectable({ providedIn: ProjectionDialogModule })
 export class ProjectionDialogService {
-    constructor(private dialog: MatDialog, private projectorRepo: ProjectorControllerService) {}
+    public constructor(private dialog: MatDialog, private projectorRepo: ProjectorControllerService) {}
 
     /**
      * Opens the projection dialog for the given projectable. After the user's choice,

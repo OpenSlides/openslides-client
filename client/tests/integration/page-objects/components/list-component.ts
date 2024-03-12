@@ -4,7 +4,7 @@ export class ListComponent {
     readonly page: Page;
     readonly osList: Locator;
 
-    constructor(page: Page, osList?: Locator) {
+    public constructor(page: Page, osList?: Locator) {
         this.page = page;
         this.osList = osList || page.locator('os-list').first();
     }

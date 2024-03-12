@@ -10,7 +10,7 @@ export const WRONG_JSON_IMPORT_FORMAT_ERROR_MSG = _(`Import data needs to have t
     providedIn: `root`
 })
 export class UploadFileJsonProcessorService {
-    constructor(private snackbar: MatSnackBar, private translate: TranslateService) {}
+    public constructor(private snackbar: MatSnackBar, private translate: TranslateService) {}
 
     public async getUploadFileJson<ExpectType>(file: FileData): Promise<ExpectType> {
         const json = await new Promise<ExpectType>(resolve => {

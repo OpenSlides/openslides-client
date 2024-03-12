@@ -96,7 +96,7 @@ export class GlobalSearchComponent implements OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.filterChangeSubscription.unsubscribe();
         this.viewportSubscription.unsubscribe();
     }
