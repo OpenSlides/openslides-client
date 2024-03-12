@@ -1,7 +1,7 @@
 <div class="action-title">
     <p class="subtitle-text" translate>Speaking times</p>
     <ng-container *osPerms="permission.projectorCanManage">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="projectionMenu">
+        <button type="button" *ngIf="showProjectionMenu" mat-icon-button [matMenuTriggerFor]="projectionMenu">
             <mat-icon>more_horiz</mat-icon>
         </button>
     </ng-container>
@@ -32,7 +32,7 @@
 
 <mat-menu #editAndDistributeMenu="matMenu">
     <ng-template let-structure_level="structure_level" matMenuContent>
-        <button mat-menu-item (click)="setTotalTime(structure_level.id)" [disabled]="hasSpokenFlag">
+        <button mat-menu-item (click)="setTotalTime(structure_level.id)">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit total time' | translate }}</span>
         </button>
@@ -55,9 +55,9 @@
             <!-- total time -->
             <mat-form-field>
                 <mat-label>{{ 'Total time' | translate }}</mat-label>
-                <input type="number" formControlName="totalTime" matInput required />
+                <input type="text" formControlName="totalTime" matInput required />
                 <mat-error>
-                    {{ 'A total time is required and must be greater than 0.' | translate }}
+                    {{ 'A total time is required and must be in min:secs format.' | translate }}
                 </mat-error>
             </mat-form-field>
         </form>

@@ -74,6 +74,18 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return (this.submitters || []).map(submitter => submitter.user);
     }
 
+    public get submitterNames(): string[] {
+        return this.mapSubmittersWithAdditional(submitter => submitter.getTitle());
+    }
+
+    public get editorUserIds(): Id[] {
+        return (this.editors || []).map(editor => editor.user_id);
+    }
+
+    public get workingGroupSpeakerUserIds(): Id[] {
+        return (this.working_group_speakers || []).map(workingGroupSpeaker => workingGroupSpeaker.user_id);
+    }
+
     public get numberOrTitle(): string {
         return this.number ? this.number : this.title;
     }
@@ -252,6 +264,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
             return this.personal_notes[0] || null;
         }
         return null;
+    }
+
+    public mapSubmittersWithAdditional(mapFn: (submitter: ViewUser) => string): string[] {
+        const submitters = this.submittersAsUsers.map(mapFn);
+        if (this.additional_submitter) {
+            submitters.push(this.additional_submitter);
+        }
+        return submitters;
     }
 
     /**

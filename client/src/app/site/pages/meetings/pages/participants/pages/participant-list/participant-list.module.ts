@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
@@ -17,12 +18,13 @@ import { PipesModule } from 'src/app/ui/pipes';
 
 import { ParticipantExportModule } from '../../export/participant-export.module';
 import { ParticipantListComponent } from './components/participant-list/participant-list.component';
+import { ParticipantSwitchDialogComponent } from './components/participant-switch-dialog/participant-switch-dialog.component';
 import { ParticipantListInfoDialogModule } from './modules/participant-list-info-dialog/participant-list-info-dialog.module';
 import { ParticipantListRoutingModule } from './participant-list-routing.module';
 import { ParticipantListServiceModule } from './services/participant-list-service.module';
 
 @NgModule({
-    declarations: [ParticipantListComponent],
+    declarations: [ParticipantListComponent, ParticipantSwitchDialogComponent],
     imports: [
         CommonModule,
         CommaSeparatedListingModule,
@@ -40,6 +42,7 @@ import { ParticipantListServiceModule } from './services/participant-list-servic
         MatIconModule,
         MatMenuModule,
         MatCheckboxModule,
+        MatDialogModule,
         MatDividerModule,
         MatTooltipModule,
         PipesModule

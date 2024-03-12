@@ -20,32 +20,30 @@ export class CommitteeExportService {
     public export(committees: ViewCommittee[]): void {
         const properties: CsvColumnsDefinition<ViewCommittee> = [
             {
-                property: `name`,
-                label: this.translate.instant(`Title`)
+                property: `name`
             },
             {
-                property: `description`,
-                label: this.translate.instant(`Description`)
+                property: `description`
             },
             {
                 label: `organization_tags`,
-                map: model => model.organization_tags.map(tag => tag.name).join(`, `)
+                map: model => model.organization_tags.map(tag => tag.name).join(`,`)
             },
             {
                 label: `forward_to_committees`,
-                map: model => model.forward_to_committees.map(committee => committee.name).join(`, `)
+                map: model => model.forward_to_committees.map(committee => committee.name).join(`,`)
             },
             {
                 label: `managers`,
                 map: model =>
                     model
                         .getManagers()
-                        .map(manager => manager.full_name)
-                        .join(`, `)
+                        .map(manager => manager.username)
+                        .join(`,`)
             },
             {
                 label: `meeting_name`,
-                map: model => (console.log(`meeting:`, model.meetings[0]), model.meetings[0]?.name)
+                map: model => model.meetings[0]?.name
             },
             {
                 label: `meeting_start_time`,
@@ -54,6 +52,10 @@ export class CommitteeExportService {
             {
                 label: `meeting_end_time`,
                 map: model => this.meetingRepo.parseUnixToMeetingTime(model.meetings[0]?.end_time * 1000)
+            },
+            {
+                label: `meeting_admins`,
+                map: _ => ``
             }
         ];
         const filename = `${this.translate.instant(`Committees`)}.csv`;
