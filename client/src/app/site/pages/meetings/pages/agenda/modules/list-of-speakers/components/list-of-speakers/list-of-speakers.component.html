@@ -37,6 +37,29 @@
         (isListOfSpeakersEmptyEvent)="isListOfSpeakersEmpty = $event"
         (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
     ></os-list-of-speakers-content>
+
+    <!-- special los part for structure level -->
+    <div
+        *ngIf="
+            structureLevelCountdownEnabled &&
+            viewListOfSpeakers &&
+            viewListOfSpeakers.structure_level_list_of_speakers_ids?.length
+        "
+        class="col-right"
+    >
+        <mat-card class="spacer-bottom-60 os-card">
+            <mat-card-content>
+                <os-speaking-times
+                    [currentSpeakingTimes]="viewListOfSpeakers.structure_level_list_of_speakers_ids"
+                    [showProjectionMenu]="true"
+                ></os-speaking-times>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div *ngIf="viewListOfSpeakers">
+        <!-- Moderator Note-->
+        <os-moderation-note [listOfSpeakers]="viewListOfSpeakers"></os-moderation-note>
+    </div>
 </os-detail-view>
 
 <mat-menu #speakerMenu="matMenu">

@@ -68,11 +68,11 @@ export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAg
                 options: this.createVisibilityFilterOptions()
             },
             {
-                label: this.translate.instant(`Type`),
+                label: this.translate.instant(`Module`),
                 property: `getContentObjectCollection`,
                 options: [
-                    { label: this.translate.instant(`Motions`), condition: Motion.COLLECTION },
                     { label: this.translate.instant(`Topics`), condition: Topic.COLLECTION },
+                    { label: this.translate.instant(`Motions`), condition: Motion.COLLECTION },
                     { label: this.translate.instant(`Motion blocks`), condition: MotionBlock.COLLECTION },
                     { label: this.translate.instant(`Elections`), condition: Assignment.COLLECTION }
                 ]

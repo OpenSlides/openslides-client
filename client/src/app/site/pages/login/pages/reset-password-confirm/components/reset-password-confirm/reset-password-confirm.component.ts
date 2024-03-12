@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 @Component({
@@ -28,17 +27,18 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
      */
     private token!: string;
 
+    public hidePassword = true;
+
     /**
      * Constructur for the reset password confirm view. Initializes the form for the new password.
      */
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         formBuilder: UntypedFormBuilder,
         private activatedRoute: ActivatedRoute,
         private userRepo: UserControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.newPasswordForm = formBuilder.group({
             password: [``, [Validators.required]]
         });
@@ -61,7 +61,7 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
                                 duration: 0
                             }
                         );
-                        this.router.navigate([`..`]);
+                        this.router.navigate([`/login`]);
                     });
                 } else {
                     this.user_id = Number(params[`user_id`]);

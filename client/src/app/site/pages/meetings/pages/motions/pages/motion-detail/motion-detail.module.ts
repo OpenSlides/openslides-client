@@ -53,8 +53,8 @@ import { MotionDetailViewComponent } from './components/motion-detail-view/motio
 import { MotionExtensionFieldComponent } from './components/motion-extension-field/motion-extension-field.component';
 import { MotionFinalVersionComponent } from './components/motion-final-version/motion-final-version.component';
 import { MotionHighlightFormComponent } from './components/motion-highlight-form/motion-highlight-form.component';
+import { MotionManageMotionMeetingUsersComponent } from './components/motion-manage-motion-meeting-users/motion-manage-motion-meeting-users.component';
 import { MotionManagePollsComponent } from './components/motion-manage-polls/motion-manage-polls.component';
-import { MotionManageSubmittersComponent } from './components/motion-manage-submitters/motion-manage-submitters.component';
 import { MotionManageTitleComponent } from './components/motion-manage-title/motion-manage-title.component';
 import { MotionMetaDataComponent } from './components/motion-meta-data/motion-meta-data.component';
 import { MotionParagraphbasedAmendmentComponent } from './components/motion-paragraphbased-amendment/motion-paragraphbased-amendment.component';
@@ -77,7 +77,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MotionManagePollsComponent,
         MotionHighlightFormComponent,
         MotionExtensionFieldComponent,
-        MotionManageSubmittersComponent,
+        MotionManageMotionMeetingUsersComponent,
         MotionParagraphbasedAmendmentComponent,
         MotionDetailDiffComponent,
         MotionDetailDiffSummaryComponent,

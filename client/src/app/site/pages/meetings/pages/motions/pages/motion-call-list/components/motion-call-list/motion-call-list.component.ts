@@ -8,7 +8,6 @@ import {
     SortTreeFilterId,
     SortTreeFilterOption
 } from 'src/app/ui/base/base-sort-tree-view-component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { TagControllerService } from '../../../../modules/tags/services';
@@ -69,14 +68,13 @@ export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotio
 
     public constructor(
         protected override translate: TranslateService,
-        promptService: PromptService,
         private motionRepo: MotionControllerService,
         private motionCsvExport: MotionCsvExportService,
         private motionPdfExport: MotionPdfExportService,
         private tagRepo: TagControllerService,
         private categoryRepo: MotionCategoryControllerService
     ) {
-        super(translate, promptService);
+        super();
 
         this.motionsObservable = this.motionRepo.getViewModelListObservable();
         this.motionsObservable.subscribe(motions => {

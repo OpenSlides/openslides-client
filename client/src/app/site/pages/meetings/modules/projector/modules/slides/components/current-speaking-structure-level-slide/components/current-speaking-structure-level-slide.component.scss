@@ -1,0 +1,33 @@
+#structure-level-current {
+    position: absolute;
+    right: 0;
+    bottom: calc(50% - 125px);
+    right: 0;
+    z-index: 10;
+    text-align: right;
+    line-height: 1;
+    opacity: 1;
+    margin-right: 50px;
+
+    #inner-countdown {
+        font-size: 250px;
+        font-weight: 500;
+    }
+    #inner-name {
+        font-size: 70px;
+        opacity: 0.9;
+    }
+
+    .structure-level-color {
+        height: 15px;
+        background-color: transparent;
+        width: 100%;
+        border-width: 0;
+        border-radius: 7px;
+    }
+
+    .align-right {
+        display: flex;
+        justify-content: flex-end;
+    }
+}

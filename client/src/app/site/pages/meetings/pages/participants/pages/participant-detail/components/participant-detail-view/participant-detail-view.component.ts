@@ -13,7 +13,6 @@ import {
     MEETING_RELATED_FORM_CONTROLS,
     ParticipantControllerService
 } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -25,7 +24,9 @@ import { ParticipantPdfExportService } from '../../../../export/participant-pdf-
 import { GroupControllerService } from '../../../../modules';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
 import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
-import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort.service/participant-list-sort.service';
+import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort/participant-list-sort.service';
+import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
+import { ViewStructureLevel } from '../../../structure-levels/view-models';
 
 @Component({
     selector: `os-participant-detail-view`,
@@ -37,7 +38,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
     public readonly additionalFormControls = {
-        structure_level: [``],
+        structure_level_ids: [``],
         number: [``],
         vote_weight: [``, Validators.min(0.000001)],
         about_me: [``],
@@ -47,6 +48,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         vote_delegated_to_id: [``],
         is_present: [``]
     };
+
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
 
     public get randomPasswordFn(): () => string {
         return () => this.getRandomPassword();
@@ -119,6 +122,25 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return this.user?.groups() || [];
     }
 
+    public get usersStructureLevels(): ViewStructureLevel[] {
+        if (!this.activeMeetingId) {
+            return [];
+        }
+        return this.user?.structure_levels() || [];
+    }
+
+    public get usersStructureLevelIds(): number[] {
+        if (!this.activeMeetingId) {
+            return [];
+        }
+        return this.user?.structure_level_ids() || [];
+    }
+
+    /**
+     * Contains all structure levels.
+     */
+    public readonly structureLevelObservable: Observable<ViewStructureLevel[]>;
+
     /**
      * Contains all groups, except for the default group.
      */
@@ -140,7 +162,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     private _isUserInScope = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: ParticipantControllerService,
@@ -150,11 +171,12 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         private promptService: PromptService,
         private pdfService: ParticipantPdfExportService,
         private groupRepo: GroupControllerService,
+        private structureLevelRepo: StructureLevelControllerService,
         private userService: UserService,
         private cd: ChangeDetectorRef,
         private organizationSettingsService: OrganizationSettingsService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.getUserByUrl();
 
         this.subscriptions.push(
@@ -170,6 +192,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 .get(`users_enable_vote_delegations`)
                 .subscribe(enabled => (this._isVoteDelegationEnabled = enabled))
         );
+
+        this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
 
         // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();

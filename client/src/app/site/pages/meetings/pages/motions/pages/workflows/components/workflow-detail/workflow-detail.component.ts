@@ -10,7 +10,6 @@ import { MergeAmendment, MotionState, Restriction } from 'src/app/domain/models/
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotionState, ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionStateControllerService } from '../../../../modules/states/services';
@@ -155,6 +154,12 @@ In combination with motion blocks, the recommendation of multiple motions can be
             type: `input`
         },
         {
+            name: _(`Internal`),
+            help_text: _(`The recommendation of motions in such a state can only be seen by motion managers.`),
+            selector: `is_internal`,
+            type: `check`
+        },
+        {
             name: _(`Allow support`),
             help_text: _(
                 `Enables the support function for motions in the selected state. The support function must be activated under > [Settings] > [Motions] as well as the corresponding group permission in > [Participants] > [Groups] > [Motions] > [Can support motions].`
@@ -266,7 +271,6 @@ Note: Does not affect the visibility of change recommendations.`
     ] as StatePerm[];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private promptService: PromptService,
         private dialog: MatDialog,
@@ -275,7 +279,7 @@ Note: Does not affect the visibility of change recommendations.`
         private exporter: WorkflowExportService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public onIdFound(id: Id | null): void {

@@ -1,0 +1,26 @@
+@import 'src/assets/styles/tables.scss';
+
+.infoCell {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+    mat-icon {
+        font-size: 80%;
+    }
+}
+
+.nameCell {
+    position: relative;
+    z-index: 1;
+    display: flex;
+
+    span {
+        margin-right: 5px;
+    }
+}
+
+.icon-group {
+    margin-left: 1em;
+    z-index: 3;
+}

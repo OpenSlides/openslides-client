@@ -1,0 +1,19 @@
+<div id="structure-level-current" *ngIf="data && (data.data.current_start_time || data.data.remaining_time)">
+    <span id="inner">
+        <div id="inner-countdown">
+            <span class="align-right">
+                <hr class="structure-level-color" [ngStyle]="{ 'background-color': data.data.color }" />
+            </span>
+            <os-countdown-time
+                [unstyled]="true"
+                [countdown]="{
+                    running: !!data.data.current_start_time,
+                    countdown_time: data.data.current_start_time
+                        ? data.data.current_start_time + data.data.remaining_time
+                        : data.data.remaining_time
+                }"
+            ></os-countdown-time>
+        </div>
+        <div id="inner-name">{{ data.data.name }}</div>
+    </span>
+</div>

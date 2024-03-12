@@ -1,13 +1,11 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
-import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { PasswordForm } from 'src/app/site/modules/user-components';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { AuthService } from 'src/app/site/services/auth.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -31,11 +29,9 @@ export class AccountPasswordComponent extends BaseComponent implements OnInit, A
         private userController: UserControllerService,
         private authService: AuthService,
         private osRouter: OpenSlidesRouterService,
-        private snackbar: MatSnackBar,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
+        private snackbar: MatSnackBar
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

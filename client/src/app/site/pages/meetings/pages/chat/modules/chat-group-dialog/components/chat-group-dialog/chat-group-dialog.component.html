@@ -25,6 +25,7 @@
                     formControlName="read_group_ids"
                     [multiple]="true"
                     [inputListValues]="groupsObservable"
+                    [sortFn]="sortFn"
                 ></os-list-search-selector>
             </mat-form-field>
         </p>
@@ -35,6 +36,7 @@
                     formControlName="write_group_ids"
                     [multiple]="true"
                     [inputListValues]="groupsObservable"
+                    [sortFn]="sortFn"
                 ></os-list-search-selector>
             </mat-form-field>
         </p>
