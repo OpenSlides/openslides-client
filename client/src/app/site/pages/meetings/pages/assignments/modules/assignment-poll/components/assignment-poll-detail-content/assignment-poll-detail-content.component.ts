@@ -111,6 +111,14 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         return this.poll?.onehundred_percent_base === PollPercentBase.Entitled;
     }
 
+    public get isPercentBaseEntitledPresent(): boolean {
+        return this.poll?.onehundred_percent_base === PollPercentBase.EntitledPresent;
+    }
+
+    public get entitledPresentUsersCount(): number {
+        return this.poll?.entitled_users_at_stop.filter(x => x.present).length || 0;
+    }
+
     public get assignmentPollService(): PollService {
         return this.pollService;
     }

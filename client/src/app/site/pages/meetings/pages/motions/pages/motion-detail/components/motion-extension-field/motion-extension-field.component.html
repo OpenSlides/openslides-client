@@ -24,6 +24,7 @@
         <mat-basic-chip *ngIf="!canBeEdited" [ngClass]="classes" disableRipple>
             {{ chipValue | translate }}
         </mat-basic-chip>
+        <span *ngIf="internal" class="internal-suffix">({{ 'internal' | translate }})</span>
     </os-icon-container>
 </div>
 

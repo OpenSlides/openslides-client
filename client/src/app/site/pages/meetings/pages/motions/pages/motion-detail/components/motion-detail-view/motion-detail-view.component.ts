@@ -216,8 +216,27 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Trigger to delete the motion.
      */
     public async deleteMotionButton(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this motion?`);
-        const content = this.motion.getTitle();
+        let title = this.translate.instant(`Are you sure you want to delete this motion? `);
+        let content = this.motion.getTitle();
+        if (this.motion.amendments.length) {
+            title = this.translate.instant(
+                `Warning: Amendments exist for this motion. Are you sure you want to delete this motion regardless?`
+            );
+            content =
+                `<i>` +
+                this.translate.instant(`Motion`) +
+                ` ` +
+                this.motion.getTitle() +
+                `</i>` +
+                `<br>` +
+                this.translate.instant(`Deleting this motion will also delete the amendments.`) +
+                `<br>` +
+                this.translate.instant(`List of amendments: `) +
+                `<br>` +
+                this.motion.amendments
+                    .map(amendment => (amendment.number ? amendment.number : amendment.title))
+                    .join(`, `);
+        }
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.motion);
             this.router.navigate([this.activeMeetingId, `motions`]);

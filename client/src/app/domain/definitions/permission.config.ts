@@ -84,6 +84,16 @@ Optional combination of requests to speak with presence status is possible. ( > 
                 display_name: _(`Can manage polls`),
                 help_text: _(`Can create, change, start/stop and delete polls.`),
                 value: Permission.pollCanManage
+            },
+            {
+                display_name: _(`Can see moderation notes`),
+                help_text: _(`Can see all moderation notes in each list of speakers.`),
+                value: Permission.agendaItemCanSeeModeratorNotes
+            },
+            {
+                display_name: _(`Can manage moderation notes`),
+                help_text: _(`Can edit all moderation notes.`),
+                value: Permission.agendaItemCanManageModeratorNotes
             }
         ]
     },

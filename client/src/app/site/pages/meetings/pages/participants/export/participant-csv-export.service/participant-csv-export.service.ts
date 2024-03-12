@@ -46,13 +46,8 @@ export class ParticipantCsvExportService {
         this.csvExport.export(
             participants,
             Object.keys(participantHeadersAndVerboseNames).map(key => {
-                // const map = this._csvColumnDefinitionMapsMap.get(key);
-                // if (map) {
-                //     return map;
-                // }
                 return {
                     property: key
-                    // label: participantHeadersAndVerboseNames[key]
                 } as CsvColumnDefinitionProperty<ViewUser>;
             }) as CsvColumnsDefinition<ViewUser>,
             this.translate.instant(`Participants`) + `.csv`

@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - 'feature/**'
+      - 'staging/**'
 
 env:
   NG_CLI_ANALYTICS: ci
@@ -15,14 +16,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone main repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: OpenSlides/OpenSlides
           path: "."
           ref: main
-          submodules: true
+          submodules: "recursive"
       - name: Checkout latest commits
-        run: git submodule foreach 'git checkout main && git pull origin main'
+        env:
+          BRANCH: ${{ github.event.pull_request.head.repo.owner.login == 'OpenSlides' && github.head_ref || github.base_ref }}
+        run: git submodule foreach 'git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" && ((git fetch origin ${{ env.BRANCH }} && git checkout ${{ env.BRANCH }}) || (git checkout main && git pull origin main)) && git submodule update --init'
       - name: Delete the client folder
         run: rm -r openslides-client
       - name: Clone openslides-client
@@ -63,7 +66,7 @@ jobs:
   build-and-test-dev-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: create docker dev image
         run: make build-dev

@@ -38,7 +38,7 @@ export class GlobalSearchService {
             params.c = reqCollections.join(`,`);
         }
 
-        const rawResults: GlobalSearchResponse = await this.http.get(`/system/search`, null, params);
+        const rawResults: GlobalSearchResponse = await this.http.get(`/system/search`, null, { queryParams: params });
 
         this.updateScores(rawResults);
         this.parseFragments(rawResults, searchTerm);

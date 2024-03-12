@@ -43,12 +43,6 @@ export class ParticipantPdfService {
                 style: `userDataTitle`
             }
         ];
-        if (user.structure_level()) {
-            userHeadline.push({
-                text: user.structure_level(),
-                style: `userDataHeading`
-            });
-        }
         return [userHeadline, this.createAccessDataContent(user), this.createWelcomeText()];
     }
 

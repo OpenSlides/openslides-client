@@ -22,7 +22,9 @@ import {
     getParticipantMinimalSubscriptionConfig
 } from '../../../../../../participants.subscription';
 import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common/participant-controller.service/participant-controller.service';
-import { ParticipantListSortService } from '../../../../../participant-list/services/participant-list-sort.service/participant-list-sort.service';
+import { ParticipantListSortService } from '../../../../../participant-list/services/participant-list-sort/participant-list-sort.service';
+import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
+import { ViewStructureLevel } from '../../../../../structure-levels/view-models';
 
 @Component({
     selector: `os-participant-create-wizard`,
@@ -41,7 +43,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
     public readonly additionalFormControls = {
-        structure_level: [``],
+        structure_level_ids: [``],
         number: [``],
         vote_weight: [``, Validators.min(0.000001)],
         about_me: [``],
@@ -100,6 +102,11 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public formErrors: { [name: string]: boolean } | null = null;
     public groupsObservable: Observable<ViewGroup[]> | null = null;
 
+    /**
+     * Contains all structure levels.
+     */
+    public structureLevelObservable: Observable<ViewStructureLevel[]>;
+
     public get currentStepIndexObservable(): Observable<number> {
         return this._currentStepIndexSubject;
     }
@@ -135,6 +142,8 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public flickerSubject = new BehaviorSubject<boolean>(false);
 
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+
     private readonly _currentStepIndexSubject = new BehaviorSubject<number>(0);
 
     private _isNewUser = false;
@@ -154,6 +163,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         public readonly sortService: ParticipantListSortService,
         private groupRepo: GroupControllerService,
         private userService: UserService,
+        private structureLevelRepo: StructureLevelControllerService,
         private presenter: SearchUsersPresenterService,
         private organizationSettingsService: OrganizationSettingsService
     ) {
@@ -182,6 +192,8 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public ngOnInit(): void {
         // TODO: Fetch groups for repo search selection
         this.groupsObservable = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
+
+        this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
 
         this.subscriptions.push(
             this.organizationSettingsService

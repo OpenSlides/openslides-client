@@ -154,8 +154,15 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
                 follow: [
                     {
                         idField: `meeting_user_id`,
-                        follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }],
-                        fieldset: [`number`, `structure_level`, `vote_weight`]
+                        follow: [
+                            { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
+                            { idField: `structure_level_ids`, fieldset: [`name`] }
+                        ],
+                        fieldset: [`number`, `vote_weight`]
+                    },
+                    {
+                        idField: `structure_level_list_of_speakers_id`,
+                        fieldset: FULL_FIELDSET
                     },
                     {
                         idField: `point_of_order_category_id`,
@@ -165,7 +172,18 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
             },
             {
                 idField: `content_object_id`,
-                fieldset: [`number`, `title`, ...MEETING_ROUTING_FIELDS]
+                fieldset: [`number`, `title`, ...MEETING_ROUTING_FIELDS],
+                follow: [{ idField: `agenda_item_id`, fieldset: [`moderator_notes`, `content_object_id`] }]
+            },
+            {
+                idField: `structure_level_list_of_speakers_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    {
+                        idField: `structure_level_id`,
+                        fieldset: [`name`, `color`]
+                    }
+                ]
             }
         ]
     },
