@@ -10,7 +10,7 @@ export const MSOfficePaste = Extension.create({
 const OfficePastePlugin = new Plugin({
     props: {
         transformPastedHTML(html: string) {
-            if (html.indexOf(`MsoListParagraph`) === -1) {
+            if (html.indexOf(`mso-list:`) === -1) {
                 return html;
             }
 
@@ -19,6 +19,7 @@ const OfficePastePlugin = new Plugin({
 
             const lists: HTMLElement[] = [];
             let currentUl: HTMLElement;
+            let currentListId: string;
             doc.body.childNodes.forEach(node => {
                 if (node.nodeType !== Node.ELEMENT_NODE) {
                     return;
@@ -26,12 +27,18 @@ const OfficePastePlugin = new Plugin({
 
                 // Check if the element is part of a list
                 const el = <HTMLElement>node;
-                if (el.className.indexOf(`MsoListParagraph`) === -1) {
+                const msoListValue: string = parseStyleAttribute(el.attributes[`style`]?.value || ``)[`mso-list`];
+                if (!msoListValue) {
                     return;
                 }
 
-                if (el.classList.contains(`MsoListParagraph`) || el.classList.contains(`MsoListParagraphCxSpFirst`)) {
-                    const listInfo = getListType(el.firstElementChild.textContent);
+                const msoListInfos = msoListValue.split(` `);
+                const msoListId = msoListInfos.find(e => /l[0-9]+/.test(e));
+                const classIdentified =
+                    el.classList.contains(`MsoListParagraph`) || el.classList.contains(`MsoListParagraphCxSpFirst`);
+                if (classIdentified || currentListId !== msoListId) {
+                    currentListId = msoListId;
+                    const listInfo = getListType(getListPrefix(el));
                     currentUl = document.createElement(listInfo.type);
                     if (listInfo.countType) {
                         currentUl.attributes[`type`] = listInfo.countType;
@@ -41,24 +48,15 @@ const OfficePastePlugin = new Plugin({
                     el.before(currentUl);
                 }
 
-                const prefix = el.firstElementChild.textContent;
+                const prefix = getListPrefix(el);
                 // Remove list item numbers
-                if (el.firstElementChild.nodeName === `SPAN`) {
-                    el.firstElementChild.remove();
-                }
+                el.innerHTML = el.innerHTML.replace(listTypeRegex, ``);
 
                 // Get the mso list item level
                 const li = document.createElement(`li`);
                 li.innerHTML = el.innerHTML;
-                const msoListValue: string = el.attributes[`style`].value
-                    .split(`;`)
-                    .find((style: string) => style.split(`:`)[0] === `mso-list`)
-                    .split(`:`)[1];
 
-                const listLevel = +msoListValue
-                    .split(` `)
-                    .find((e: string) => e.startsWith(`level`))
-                    .substring(5);
+                const listLevel = +msoListInfos.find((e: string) => e.startsWith(`level`)).substring(5);
 
                 // Add list level attribute if element needs to be moved to sublist
                 if (listLevel && listLevel > 1) {
@@ -79,6 +77,22 @@ const OfficePastePlugin = new Plugin({
         }
     }
 });
+
+const listTypeRegex = /<!--\[if \!supportLists\]-->((.|\n)*)<!--\[endif\]-->/m;
+function getListPrefix(el: HTMLElement) {
+    const matches = el.innerHTML.match(listTypeRegex);
+    if (matches?.length) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(matches[0], `text/html`);
+        return doc.textContent;
+    }
+
+    return ``;
+}
+
+function parseStyleAttribute(styleRaw: string): { [prop: string]: string } {
+    return Object.fromEntries(styleRaw.split(`;`).map(line => line.split(`:`).map(v => v.trim())));
+}
 
 function getListType(prefix: string) {
     let type = `ul`;
@@ -130,7 +144,6 @@ function fixLists(lists: HTMLElement[]) {
                     sublist = <HTMLElement>el.previousElementSibling.lastElementChild;
                 } else {
                     if (el.dataset[`countType`]) {
-                        console.log(el.dataset[`countType`]);
                         sublist.setAttribute(`type`, el.dataset[`countType`]);
                     }
                     el.previousElementSibling.appendChild(sublist);
