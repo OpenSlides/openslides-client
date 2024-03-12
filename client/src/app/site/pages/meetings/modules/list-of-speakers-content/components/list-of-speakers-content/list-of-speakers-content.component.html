@@ -432,7 +432,9 @@
                 <!-- point of order -->
                 <button mat-menu-item (click)="onPointOfOrderButton(speaker)" *ngIf="enablePointOfOrderButton(speaker)">
                     <mat-icon>warning</mat-icon>
-                    <span>{{ speaker.point_of_order ? 'Remove point of order' : ('Point of order' | translate) }}</span>
+                    <span>
+                        {{ (speaker.point_of_order ? 'Remove point of order' : 'Point of order') | translate }}
+                    </span>
                 </button>
 
                 <button *ngIf="speaker.point_of_order" mat-menu-item (click)="onEditPointOfOrderButton(speaker)">
