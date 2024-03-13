@@ -138,7 +138,7 @@ function getListPrefix(el: HTMLElement) {
     if (matches?.length) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(matches[0], `text/html`);
-        return doc.textContent;
+        return doc.body.textContent;
     }
 
     return ``;
