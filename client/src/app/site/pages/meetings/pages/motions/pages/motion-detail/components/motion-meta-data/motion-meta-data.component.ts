@@ -322,10 +322,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return origin?.canAccess();
     }
 
-    public showIdenticalMotionComma(identical: ViewMotion, identical_motions: ViewMotion[]): boolean {
-        return identical_motions.length > 0 && identical.id !== identical_motions[identical_motions.length - 1].id;
-    }
-
     protected override onAfterSetMotion(previous: ViewMotion, current: ViewMotion): void {
         super.onAfterSetMotion(previous, current);
         this.updateSupportersSubject();
