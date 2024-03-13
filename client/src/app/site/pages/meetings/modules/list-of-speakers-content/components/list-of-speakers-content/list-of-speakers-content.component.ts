@@ -83,6 +83,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.meetingSettingsService.get(`list_of_speakers_speaker_note_for_everyone`);
     }
 
+    public get hideSecondaryContributionsCount(): Observable<boolean> {
+        return this.meetingSettingsService.get(`list_of_speakers_hide_secondary_contributions_count`);
+    }
+
     public get title(): string {
         return this._listOfSpeakers?.getTitle() || ``;
     }

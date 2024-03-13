@@ -366,6 +366,13 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
+                        key: `list_of_speakers_hide_secondary_contributions_count`,
+                        label: _(
+                            `Dont show hint »2. contribution« (and following) in the list of speakers management view`
+                        ),
+                        type: `boolean`
+                    },
+                    {
                         key: `list_of_speakers_allow_multiple_speakers`,
                         label: _(`Allow one participant to be on the LoS serveral times`),
                         type: `boolean`
