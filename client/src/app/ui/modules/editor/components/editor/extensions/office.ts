@@ -2,6 +2,8 @@ import { Extension } from '@tiptap/core';
 import { Plugin } from '@tiptap/pm/state';
 
 export const MSOfficePaste = Extension.create({
+    priority: 99999,
+
     addProseMirrorPlugins() {
         return [OfficePastePlugin];
     }
@@ -12,22 +14,48 @@ const OfficePastePlugin = new Plugin({
         transformPastedHTML(html: string) {
             console.log(html);
             html = transformLists(html);
-            html = transformRemoveMso(html);
+            html = transformRemoveBookmarks(html);
+            html = transformMsoStyles(html);
             console.log(html);
             return html;
         }
     }
 });
 
-function transformRemoveMso(html: string): string {
+function transformMsoStyles(html: string): string {
+    html = html.replace(/<o:p>(.*)<\/o:p>/g, ``);
+
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, `text/html`);
-    const toUnwrap = doc.querySelectorAll(`[style*="mso-bookmark:"]`);
-    toUnwrap.forEach(node => {
+    const elements = doc.querySelectorAll(`[style*="mso-"]`);
+    elements.forEach(node => {
+        const styles = parseStyleAttribute(node.attributes[`style`]?.value || ``);
+        const newStyles = [];
+        for (const prop of Object.keys(styles)) {
+            if (prop && !prop.startsWith(`mso-`)) {
+                newStyles.push(`${prop}: ${styles[prop]}`);
+            }
+        }
+        node.setAttribute(`style`, newStyles.join(`;`));
+    });
+
+    return doc.documentElement.outerHTML;
+}
+
+function transformRemoveBookmarks(html: string): string {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, `text/html`);
+    const bookmarks = doc.querySelectorAll(`[style*="mso-bookmark:"]`);
+    bookmarks.forEach(node => {
+        const bookmark = parseStyleAttribute(node.attributes[`style`]?.value || ``)[`mso-bookmark`];
+        const bookmarkLink = doc.querySelector(`a[name="${bookmark}"]`);
+        if (bookmarkLink) {
+            bookmarkLink.parentNode.removeChild(bookmarkLink);
+        }
         unwrap(node as HTMLElement);
     });
 
-    return doc.body.innerHTML;
+    return doc.documentElement.outerHTML;
 }
 
 function unwrap(el: HTMLElement): void {
@@ -101,7 +129,7 @@ function transformLists(html: string): string {
     });
 
     fixLists(lists);
-    return doc.body.innerHTML;
+    return doc.documentElement.outerHTML;
 }
 
 const listTypeRegex = /<!--\[if \!supportLists\]-->((.|\n)*)<!--\[endif\]-->/m;
@@ -148,7 +176,6 @@ function getListType(prefix: string) {
 function fixLists(lists: HTMLElement[]) {
     const nextLists = [];
     for (const list of lists) {
-        // list.childNodes.forEach((node: Element) => {
         let node = list.childNodes[0];
         while (node) {
             if (node.nodeName !== `LI`) {
