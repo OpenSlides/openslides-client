@@ -67,6 +67,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     public editorReady = false;
 
+    public headingLevels: HeadingLevel[] = [1, 2, 3, 4, 5, 6];
+
     public get selectedHeadingLevel(): HeadingLevel {
         if (this.editor.isActive(`heading`)) {
             return this.editor.getAttributes(`heading`)[`level`];
