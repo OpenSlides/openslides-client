@@ -13,9 +13,12 @@ const OfficePastePlugin = new Plugin({
     props: {
         transformPastedHTML(html: string) {
             console.log(html);
-            html = transformLists(html);
-            html = transformRemoveBookmarks(html);
-            html = transformMsoStyles(html);
+            if (html.indexOf(`microsoft-com`) !== -1 && html.indexOf(`office`) !== -1) {
+                console.log(`Cleaning up`);
+                html = transformLists(html);
+                html = transformRemoveBookmarks(html);
+                html = transformMsoStyles(html);
+            }
             console.log(html);
             return html;
         }
@@ -27,8 +30,7 @@ function transformMsoStyles(html: string): string {
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, `text/html`);
-    const elements = doc.querySelectorAll(`[style*="mso-"]`);
-    elements.forEach(node => {
+    doc.querySelectorAll(`[style*="mso-"]`).forEach(node => {
         const styles = parseStyleAttribute(node.attributes[`style`]?.value || ``);
         const newStyles = [];
         for (const prop of Object.keys(styles)) {
@@ -37,6 +39,10 @@ function transformMsoStyles(html: string): string {
             }
         }
         node.setAttribute(`style`, newStyles.join(`;`));
+    });
+
+    doc.querySelectorAll(`[style*="color: black"]`).forEach(node => {
+        (node as HTMLElement).style.removeProperty(`color`);
     });
 
     return doc.documentElement.outerHTML;
@@ -77,6 +83,7 @@ function transformLists(html: string): string {
     const lists: HTMLElement[] = [];
     let currentUl: HTMLElement;
     let currentListId: string;
+    let elementBetween = false;
     doc.body.childNodes.forEach(node => {
         if (node.nodeType !== Node.ELEMENT_NODE) {
             return;
@@ -86,19 +93,22 @@ function transformLists(html: string): string {
         const el = <HTMLElement>node;
         const msoListValue: string = parseStyleAttribute(el.attributes[`style`]?.value || ``)[`mso-list`];
         if (!msoListValue) {
+            elementBetween = true;
             return;
         }
 
         const msoListInfos = msoListValue.split(` `);
+        const listLevel = +msoListInfos.find((e: string) => e.startsWith(`level`)).substring(5);
         const msoListId = msoListInfos.find(e => /l[0-9]+/.test(e));
         const classIdentified =
             el.classList.contains(`MsoListParagraph`) || el.classList.contains(`MsoListParagraphCxSpFirst`);
-        if (classIdentified || currentListId !== msoListId) {
+        if (classIdentified || (currentListId !== msoListId && (elementBetween || listLevel === 1))) {
+            elementBetween = false;
             currentListId = msoListId;
             const listInfo = getListType(getListPrefix(el));
             currentUl = document.createElement(listInfo.type);
             if (listInfo.countType) {
-                currentUl.attributes[`type`] = listInfo.countType;
+                currentUl.setAttribute(`type`, listInfo.countType);
             }
 
             lists.push(currentUl);
@@ -112,8 +122,6 @@ function transformLists(html: string): string {
         // Get the mso list item level
         const li = document.createElement(`li`);
         li.innerHTML = el.innerHTML;
-
-        const listLevel = +msoListInfos.find((e: string) => e.startsWith(`level`)).substring(5);
 
         // Add list level attribute if element needs to be moved to sublist
         if (listLevel && listLevel > 1) {
@@ -138,7 +146,7 @@ function getListPrefix(el: HTMLElement) {
     if (matches?.length) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(matches[0], `text/html`);
-        return doc.body.textContent;
+        return doc.body.querySelector(`span`).textContent;
     }
 
     return ``;
