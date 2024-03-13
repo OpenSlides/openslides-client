@@ -21,7 +21,7 @@ import {
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 
-import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort.service/participant-list-sort.service';
+import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
@@ -476,7 +476,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             agenda_parent_id: [],
             submitter_ids: [[]],
             supporter_user_ids: [[]],
-            workflow_id: [],
+            workflow_id: [+this.meetingSettingService.instant(`motions_default_workflow_id`)],
             tag_ids: [[]],
             statute_amendment: [``], // Internal value for the checkbox, not saved to the model
             statute_paragraph_id: [],

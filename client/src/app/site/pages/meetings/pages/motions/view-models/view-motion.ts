@@ -74,6 +74,18 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return (this.submitters || []).map(submitter => submitter.user);
     }
 
+    public get submitterNames(): string[] {
+        return this.mapSubmittersWithAdditional(submitter => submitter.getTitle());
+    }
+
+    public get editorUserIds(): Id[] {
+        return (this.editors || []).map(editor => editor.user_id);
+    }
+
+    public get workingGroupSpeakerUserIds(): Id[] {
+        return (this.working_group_speakers || []).map(workingGroupSpeaker => workingGroupSpeaker.user_id);
+    }
+
     public get numberOrTitle(): string {
         return this.number ? this.number : this.title;
     }
@@ -254,6 +266,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return null;
     }
 
+    public mapSubmittersWithAdditional(mapFn: (submitter: ViewUser) => string): string[] {
+        const submitters = this.submittersAsUsers.map(mapFn);
+        if (this.additional_submitter) {
+            submitters.push(this.additional_submitter);
+        }
+        return submitters;
+    }
+
     /**
      * Extract the lines of the amendments
      * If an amendments has multiple changes, they will be printed like an array of strings
@@ -363,6 +383,7 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     derived_motions?: ViewMotion[];
     all_derived_motions?: ViewMotion[];
     all_origins?: ViewMotion[];
+    identical_motions?: ViewMotion[];
     state?: ViewMotionState;
     state_extension_references: (BaseViewModel & HasReferencedMotionsInExtension)[];
     recommendation?: ViewMotionState;

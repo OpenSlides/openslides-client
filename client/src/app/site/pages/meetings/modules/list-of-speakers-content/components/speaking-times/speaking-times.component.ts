@@ -38,7 +38,6 @@ export class SpeakingTimesComponent implements OnDestroy {
     public readonly permission = Permission;
 
     private subscriptions: Map<Id, Subscription> = new Map();
-    private structureLevels: Map<Id, any> = new Map();
 
     @ViewChild(`totalTimeDialog`, { static: true })
     private totalTimeDialog: TemplateRef<string> | null = null;
@@ -46,9 +45,13 @@ export class SpeakingTimesComponent implements OnDestroy {
     private dialogRef: MatDialogRef<any> | null = null;
     public totalTimeForm: UntypedFormGroup;
     public currentEntry: any = null;
+    public structureLevels: Map<Id, any> = new Map();
 
     // if some speaker has spoken.
     public hasSpokenFlag = false;
+
+    @Input()
+    public showProjectionMenu = false;
 
     @Input()
     public set currentSpeakingTimes(speakingTimes: Id[]) {
@@ -67,7 +70,7 @@ export class SpeakingTimesComponent implements OnDestroy {
                 this.speakingTimesRepo
                     .getViewModelObservable(speakingTimeId)
                     .pipe(
-                        filter(st => !!st.structure_level),
+                        filter(st => !!st?.structure_level),
                         tap(st => this.updateSpeakingTime(st)),
                         mergeMap(st =>
                             merge(
@@ -76,14 +79,6 @@ export class SpeakingTimesComponent implements OnDestroy {
                         )
                     )
                     .subscribe(speaker => {
-                        if (
-                            !this.hasSpokenFlag &&
-                            (speaker.list_of_speakers.finishedSpeakers.length > 0 ||
-                                !!speaker.list_of_speakers.activeSpeaker)
-                        ) {
-                            this.hasSpokenFlag = true;
-                        }
-
                         this.updateSpeakingTime(speaker.structure_level_list_of_speakers);
                     })
             );
@@ -103,7 +98,7 @@ export class SpeakingTimesComponent implements OnDestroy {
         private translateService: TranslateService
     ) {
         this.totalTimeForm = this.formBuilder.group({
-            totalTime: [0, [Validators.required, Validators.min(1)]]
+            totalTime: [0, [Validators.required, Validators.pattern(/^\d+:\d{2}$/)]]
         });
     }
 
@@ -113,17 +108,13 @@ export class SpeakingTimesComponent implements OnDestroy {
         }
     }
 
-    public getStructureLevels(): any {
-        return this.structureLevels.values();
-    }
-
     public duration(duration_time: number): string {
         return this.durationService.durationToString(duration_time, `m`).slice(0, -2);
     }
 
     public setTotalTime(speakingTimeId: number): void {
         this.currentEntry = this.structureLevels.get(speakingTimeId);
-        this.totalTimeForm.get(`totalTime`).setValue(this.currentEntry.countdown.countdown_time);
+        this.totalTimeForm.get(`totalTime`).setValue(this.duration(this.currentEntry.countdown.countdown_time));
         const dialogSettings = infoDialogSettings;
         this.dialogRef = this.dialog.open(this.totalTimeDialog!, dialogSettings);
         this.dialogRef.afterClosed().subscribe(res => {
@@ -163,22 +154,24 @@ export class SpeakingTimesComponent implements OnDestroy {
     }
 
     private updateSpeakingTime(speakingTime: ViewStructureLevelListOfSpeakers) {
-        if (speakingTime.isInactive) {
-            this.structureLevels.delete(speakingTime.id);
-        } else {
-            const remaining = speakingTime.remaining_time;
-            this.structureLevels.set(speakingTime.id, {
-                name: speakingTime.structure_level.getTitle(),
-                color: speakingTime.structure_level.color,
-                countdown: {
-                    running: !!speakingTime.current_start_time,
-                    countdown_time: speakingTime.current_start_time
-                        ? speakingTime.current_start_time + remaining
-                        : remaining
-                },
-                id: speakingTime.id,
-                speakers: speakingTime.speakers
-            });
+        if (speakingTime) {
+            if (speakingTime.isInactive) {
+                this.structureLevels.delete(speakingTime.id);
+            } else {
+                const remaining = speakingTime.remaining_time;
+                this.structureLevels.set(speakingTime.id, {
+                    name: speakingTime.structure_level.getTitle(),
+                    color: speakingTime.structure_level.color,
+                    countdown: {
+                        running: !!speakingTime.current_start_time,
+                        countdown_time: speakingTime.current_start_time
+                            ? speakingTime.current_start_time + remaining
+                            : remaining
+                    },
+                    id: speakingTime.id,
+                    speakers: speakingTime.speakers
+                });
+            }
         }
         this.cd.markForCheck();
     }
@@ -198,7 +191,14 @@ export class SpeakingTimesComponent implements OnDestroy {
             return;
         }
         this.speakingTimesRepo.update([
-            { id: this.currentEntry.id, initial_time: this.totalTimeForm.get(`totalTime`).value }
+            {
+                id: this.currentEntry.id,
+                initial_time: this.durationService.stringToDuration(
+                    this.totalTimeForm.get(`totalTime`).value,
+                    `m`,
+                    true
+                )
+            }
         ]);
     }
 

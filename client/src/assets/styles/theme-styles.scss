@@ -8,6 +8,12 @@
 /** Global component style definition */
 @import 'global-components-style.scss';
 
+@mixin os-var-overwrites {
+    .mat-mdc-progress-bar {
+        --mdc-linear-progress-track-color: var(--theme-primary-100);
+    }
+}
+
 @include mat.all-component-themes($openslides-light-theme);
 
 .openslides-light-theme {
@@ -15,6 +21,7 @@
     @include mat.all-legacy-component-themes($openslides-light-theme);
     @include mat.all-component-themes($openslides-light-theme);
     @include os-component-themes($openslides-light-theme);
+    @include os-var-overwrites();
 }
 
 .openslides-dark-theme {
@@ -22,6 +29,7 @@
     @include mat.all-legacy-component-colors($openslides-dark-theme);
     @include mat.all-component-colors($openslides-dark-theme);
     @include os-component-themes($openslides-dark-theme);
+    @include os-var-overwrites();
 }
 
 .mat-calendar-body-cell {

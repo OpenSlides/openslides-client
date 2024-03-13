@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Selectable } from 'src/app/domain/interfaces';
@@ -95,9 +95,13 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
 
     private async updateForwardMeetings(): Promise<void> {
         if (this._forwardingMeetingsUpdateRequired && !this.activeMeeting.meeting.isArchived) {
-            const meetings = this.operator.hasPerms(Permission.motionCanManage)
-                ? await this.presenter.call({ meeting_id: this.activeMeeting.meetingId! })
-                : [];
+            const meetingId = await firstValueFrom(
+                this.activeMeeting.meetingIdObservable.pipe(filter(id => id !== undefined))
+            );
+            const meetings =
+                this.operator.hasPerms(Permission.motionCanManage) && !!meetingId
+                    ? await this.presenter.call({ meeting_id: meetingId })
+                    : [];
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
             this._forwardingCommitteesSubject.next(

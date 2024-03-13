@@ -54,7 +54,7 @@ export class ImageComponent {
     }
 
     private loadResource(): void {
-        this.http.get<Blob>(this._source!, null, undefined, undefined, `blob`).then(response => {
+        this.http.get<Blob>(this._source!, null, { responseType: `blob` }).then(response => {
             this.readBlobData(response);
         });
     }

@@ -6,6 +6,10 @@
             [repo]="motionSubmitterRepo"
             field="submitters"
             title="{{ 'Submitters' | translate }}"
+            [useAdditionalInput]="true"
+            additionalInputField="additional_submitter"
+            additionalInputLabel="{{ 'Extension' | translate }}"
+            [additionalInputValue]="motion?.additional_submitter"
         ></os-motion-manage-motion-meeting-users>
     </div>
 </div>
@@ -42,7 +46,7 @@
         {{ motion.supporter_users.length }} {{ 'supporters' | translate }}
     </button>
     <p *ngIf="showSupporters" class="supporters">
-        <os-comma-separated-listing [list]="motion.supporter_users">
+        <os-comma-separated-listing [list]="supportersObservable | async">
             <ng-template let-supporter>{{ supporter.full_name }}</ng-template>
         </os-comma-separated-listing>
     </p>
@@ -142,6 +146,7 @@
         [searchLists]="searchLists"
         [listValueTransformFns]="[motionTransformFn]"
         (succeeded)="setRecommendationExtension($event)"
+        [internal]="motion?.state?.is_internal"
     >
         <span class="trigger-menu">
             <button
@@ -253,10 +258,11 @@
 </div>
 
 <!-- Workflow timestamp -->
-<div *ngIf="motion?.workflow_timestamp">
-    <h4>{{ 'Submission date' | translate }}</h4>
-    <div>{{ motion.workflow_timestamp | localizedDate }}</div>
-</div>
+<os-motion-manage-timestamp
+    title="{{ 'Submission date' | translate }}"
+    [motion]="motion"
+    field="workflow_timestamp"
+></os-motion-manage-timestamp>
 
 <!-- Created timestamp -->
 <div *ngIf="motion?.created && perms.isAllowed('change_metadata', motion)">
@@ -276,6 +282,19 @@
                 <mat-icon *ngIf="!last">north</mat-icon>
             </div>
         </ng-container>
+    </div>
+</div>
+
+<!-- Identical motions -->
+<div *ngIf="motion?.identical_motions?.length">
+    <h4>{{ (motion.hasLeadMotion ? 'Identical amendments' : 'Identical motions') | translate }}</h4>
+    <div *ngFor="let identicalMotion of motion?.identical_motions">
+        <a
+            [routerLink]="['/', activeMeetingId, 'motions', identicalMotion.sequential_number]"
+            [state]="{ back: 'true' }"
+        >
+            {{ identicalMotion.getTitle() }}
+        </a>
     </div>
 </div>
 

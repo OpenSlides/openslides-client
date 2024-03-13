@@ -235,7 +235,9 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
                 `<br>` +
                 this.translate.instant(`List of amendments: `) +
                 `<br>` +
-                this.motion.amendments.map(amendment => amendment.number).join(`, `);
+                this.motion.amendments
+                    .map(amendment => (amendment.number ? amendment.number : amendment.title))
+                    .join(`, `);
         }
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.motion);

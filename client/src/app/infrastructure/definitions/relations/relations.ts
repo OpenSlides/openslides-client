@@ -767,9 +767,7 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMotion,
         OViewModel: ViewMotion,
         MField: `origin`,
-        MIdField: `origin_id`,
-        OField: `derived_motions`,
-        OIdField: `derived_motion_ids`
+        OField: `derived_motions`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
@@ -781,9 +779,13 @@ export const RELATIONS: Relation[] = [
         AViewModel: ViewMotion,
         BViewModel: ViewMotion,
         AField: `all_origins`,
-        AIdField: `all_origin_ids`,
-        BField: `all_derived_motions`,
-        BIdField: `all_derived_motion_ids`
+        BField: `all_derived_motions`
+    }),
+    ...makeM2M({
+        AViewModel: ViewMotion,
+        BViewModel: ViewMotion,
+        AField: `identical_motions`,
+        BField: `identical_motions`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
@@ -945,7 +947,7 @@ export const RELATIONS: Relation[] = [
     ...makeO2O({
         AViewModel: ViewOption,
         BViewModel: ViewPoll,
-        AField: `poll`,
+        AField: `used_as_global_option_in_poll`,
         BField: `global_option`
     }),
     // ViewOption -> ViewUser, ViewPollCandidateList

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscriber } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -24,6 +24,7 @@ import {
     AutoupdateStatus
 } from 'src/app/worker/autoupdate/interfaces-autoupdate';
 
+import { UpdateService } from '../../modules/site-wrapper/services/update.service';
 import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';
 import { ConnectionStatusService } from '../connection-status.service';
@@ -48,7 +49,8 @@ export class AutoupdateCommunicationService {
         private endpointService: HttpStreamEndpointService,
         private matSnackBar: MatSnackBar,
         private translate: TranslateService,
-        private connectionStatusService: ConnectionStatusService
+        private connectionStatusService: ConnectionStatusService,
+        private updateService: UpdateService
     ) {
         this.autoupdateDataObservable = new Observable(dataSubscription => {
             this.sharedWorker.listenTo(`autoupdate`).subscribe(msg => {
@@ -271,6 +273,23 @@ export class AutoupdateCommunicationService {
                 this.setEndpoint();
             }
         }
+
+        this.updateService.checkForUpdate().then((hasUpdate: boolean) => {
+            if (hasUpdate) {
+                this.matSnackBar
+                    .open(
+                        this.translate.instant(`You are using an incompatible client version`),
+                        this.translate.instant(`Reload page`),
+                        {
+                            duration: 0
+                        }
+                    )
+                    .onAction()
+                    .subscribe(() => {
+                        document.location.reload();
+                    });
+            }
+        });
     }
 
     private handleSetStreamId(data: AutoupdateSetStreamId): void {
