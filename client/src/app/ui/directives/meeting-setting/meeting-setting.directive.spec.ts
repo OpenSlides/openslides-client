@@ -94,6 +94,9 @@ describe(`MeetingSettingDirective`, () => {
         fixture.componentInstance.and = true;
         update();
         expect(getElement(`#and`)).toBeTruthy();
+        fixture.componentInstance.setting = `list_of_speakers_initially_closed`;
+        update();
+        expect(getElement(`#and`)).toBeFalsy();
     });
 
     it(`check if then and else work`, async () => {
