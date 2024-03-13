@@ -110,6 +110,9 @@ function transformLists(html: string): string {
             if (listInfo.countType) {
                 currentUl.setAttribute(`type`, listInfo.countType);
             }
+            if (listInfo.start > 1) {
+                currentUl.setAttribute(`start`, listInfo.start.toString());
+            }
 
             lists.push(currentUl);
             el.before(currentUl);
@@ -129,6 +132,7 @@ function transformLists(html: string): string {
             if (prefix) {
                 const listInfo = getListType(prefix);
                 li.dataset[`listType`] = listInfo.type;
+                li.dataset[`start`] = listInfo.start.toString() || ``;
                 li.dataset[`countType`] = listInfo.countType || ``;
             }
         }
@@ -156,27 +160,71 @@ function parseStyleAttribute(styleRaw: string): { [prop: string]: string } {
     return Object.fromEntries(styleRaw.split(`;`).map(line => line.split(`:`).map(v => v.trim())));
 }
 
+const listOrderRegex = {
+    number: /[0-9]+\./,
+    romanLower: /(?=[mdclxvi])m*(c[md]|d?c*)(x[cl]|l?x*)(i[xv]|v?i*)\./,
+    romanUpper: /(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)\./,
+    letterLower: /[a-z]+\./,
+    letterUpper: /[A-Z]+\./
+};
+
+function parseRoman(roman: string): number {
+    roman = roman.toUpperCase();
+    let value = 0;
+    const values = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
+    let i = roman.length;
+    let lastVal = 0;
+    while (i--) {
+        if (values[roman.charAt(i)] >= lastVal) {
+            value += values[roman.charAt(i)];
+        } else {
+            value -= values[roman.charAt(i)];
+        }
+        lastVal = values[roman.charAt(i)];
+    }
+
+    return value;
+}
+
+function parseLetterNumber(str: string) {
+    const alphaVal = (s: string) => s.toLowerCase().charCodeAt(0) - 97 + 1;
+    let value = 0;
+    let i = str.length;
+    while (i--) {
+        const factor = Math.pow(26, str.length - i - 1);
+        value += alphaVal(str.charAt(i)) * factor;
+    }
+    return value;
+}
+
 function getListType(prefix: string) {
     let type = `ul`;
     let countType: string | null = null;
-    if (/[0-9]+\./.test(prefix)) {
+    let start = 1;
+    if (listOrderRegex.number.test(prefix)) {
         type = `ol`;
-    } else if (/(?=[mdclxvi])m*(c[md]|d?c*)(x[cl]|l?x*)(i[xv]|v?i*)/.test(prefix)) {
+        start = +prefix.match(listOrderRegex.number)[0].replace(`.`, ``);
+    } else if (listOrderRegex.romanLower.test(prefix)) {
         type = `ol`;
         countType = `i`;
-    } else if (/(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)/.test(prefix)) {
+        start = +parseRoman(prefix.match(listOrderRegex.romanLower)[0].replace(`.`, ``));
+    } else if (listOrderRegex.romanUpper.test(prefix)) {
         type = `ol`;
         countType = `I`;
-    } else if (/[a-z]+\./.test(prefix)) {
+        start = +parseRoman(prefix.match(listOrderRegex.romanUpper)[0].replace(`.`, ``));
+    } else if (listOrderRegex.letterLower.test(prefix)) {
         type = `ol`;
         countType = `a`;
-    } else if (/[A-Z]+\./.test(prefix)) {
+        start = +parseLetterNumber(prefix.match(listOrderRegex.letterLower)[0].replace(`.`, ``));
+    } else if (listOrderRegex.letterUpper.test(prefix)) {
         type = `ol`;
         countType = `A`;
+        start = +parseLetterNumber(prefix.match(listOrderRegex.letterUpper)[0].replace(`.`, ``));
     }
 
     return {
         type,
+        start,
         countType
     };
 }
@@ -204,6 +252,9 @@ function fixLists(lists: HTMLElement[]) {
                 if (el.previousElementSibling?.lastElementChild?.nodeName === list.nodeName) {
                     sublist = <HTMLElement>el.previousElementSibling.lastElementChild;
                 } else {
+                    if (+el.dataset[`start`] > 1) {
+                        sublist.setAttribute(`start`, el.dataset[`start`]);
+                    }
                     if (el.dataset[`countType`]) {
                         sublist.setAttribute(`type`, el.dataset[`countType`]);
                     }
