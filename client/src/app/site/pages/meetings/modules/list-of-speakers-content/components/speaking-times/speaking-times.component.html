@@ -32,25 +32,21 @@
 
 <mat-menu #editAndDistributeMenu="matMenu">
     <ng-template let-structure_level="structure_level" matMenuContent>
-        <button mat-menu-item (click)="setTotalTime(structure_level.id)">
+        <button
+            mat-menu-item
+            (click)="setTotalTime(structure_level.id)"
+            [disabled]="structureLevelIsSpeaking(structure_level.id)"
+        >
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit total time' | translate }}</span>
         </button>
-        <button
-            mat-menu-item
-            (click)="resetTimer(structure_level.id)"
-            [disabled]="structureLevelIsSpeaking(structure_level.id)"
-        >
+        <button mat-menu-item (click)="resetTimer(structure_level.id)">
             <mat-icon>replay</mat-icon>
             <span>{{ 'Reset timer' | translate }}</span>
         </button>
-        <button
-            mat-menu-item
-            (click)="addRemoveTime(structure_level.id)"
-            [disabled]="structureLevelIsSpeaking(structure_level.id)"
-        >
+        <button mat-menu-item (click)="addRemoveTime(structure_level.id)">
             <mat-icon>more_time</mat-icon>
-            <span>{{ 'Add/Remove time' | translate }}</span>
+            <span>{{ 'Add/subtract time' | translate }}</span>
         </button>
         <button
             mat-menu-item
@@ -96,7 +92,7 @@
         <form (keydown)="onKeyDown($event)">
             <!-- total time -->
             <mat-form-field>
-                <mat-label>{{ 'Add or remove time' | translate }}</mat-label>
+                <mat-label>{{ 'Add or subtract time' | translate }}</mat-label>
                 <input type="text" [formControl]="addTimeControl" matInput required />
                 <mat-error>
                     {{ 'A time is required and must be in min:secs format.' | translate }}

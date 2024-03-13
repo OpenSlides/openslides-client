@@ -140,9 +140,10 @@ export class SpeakingTimesComponent implements OnDestroy {
             throw new Error(`Can't reset timer: Initial time not loaded.`);
         }
         const title = this.translateService.instant(`Reset timer`);
-        const content = this.translateService.instant(
-            `Are you sure you want to reset the spoken time to the initial value?`
-        );
+        const content =
+            this.translateService.instant(
+                `Are you sure you want to reset the spoken time to the initial value? It will be reset to: `
+            ) + this.duration(sllos.initial_time);
         if (await this.promptService.open(title, content)) {
             sllos = this.speakingTimesRepo.getViewModel(speakingTimeId);
             let initialTime = sllos.initial_time;
@@ -170,7 +171,7 @@ export class SpeakingTimesComponent implements OnDestroy {
         this.speakingTimesRepo.update([
             {
                 id: this.currentEntry.id,
-                initial_time:
+                remaining_time:
                     sllos.remaining_time +
                     this.durationService.stringToDuration(this.addTimeControl.value, `m`, true) * (+add || -1)
             }
