@@ -293,7 +293,8 @@
             [routerLink]="['/', activeMeetingId, 'motions', identicalMotion.sequential_number]"
             [state]="{ back: 'true' }"
         >
-            {{ identicalMotion.numberOrTitle }}
+            {{ identicalMotion.numberOrTitle
+            }}{{ showIdenticalMotionComma(identicalMotion, motion?.identical_motions) ? ',' : '' }}
         </a>
     </span>
 </div>
