@@ -13,7 +13,7 @@ export interface EditorHtmlDialogOutput {
 export class EditorHtmlDialogComponent {
     public isUpdate: boolean;
 
-    constructor(
+    public constructor(
         @Inject(MAT_DIALOG_DATA) public data: string,
         private dialogRef: MatDialogRef<EditorHtmlDialogComponent>
     ) {

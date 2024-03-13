@@ -23,7 +23,7 @@ export class EditorLinkDialogComponent {
 
     public text = ``;
 
-    constructor(
+    public constructor(
         @Inject(MAT_DIALOG_DATA) public data: EditorLinkDialogInput,
         private dialogRef: MatDialogRef<EditorLinkDialogComponent>
     ) {

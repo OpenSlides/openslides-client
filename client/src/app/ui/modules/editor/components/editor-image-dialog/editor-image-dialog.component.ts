@@ -23,7 +23,7 @@ export interface EditorImageDialogOutput {
 export class EditorImageDialogComponent {
     public image: EditorImageData;
 
-    constructor(
+    public constructor(
         @Inject(MAT_DIALOG_DATA) public data: EditorImageDialogInput,
         private dialogRef: MatDialogRef<EditorImageDialogComponent>
     ) {
