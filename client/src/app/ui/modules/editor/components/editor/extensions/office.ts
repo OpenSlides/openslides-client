@@ -10,73 +10,99 @@ export const MSOfficePaste = Extension.create({
 const OfficePastePlugin = new Plugin({
     props: {
         transformPastedHTML(html: string) {
-            if (html.indexOf(`mso-list:`) === -1) {
-                return html;
-            }
-
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, `text/html`);
-
-            const lists: HTMLElement[] = [];
-            let currentUl: HTMLElement;
-            let currentListId: string;
-            doc.body.childNodes.forEach(node => {
-                if (node.nodeType !== Node.ELEMENT_NODE) {
-                    return;
-                }
-
-                // Check if the element is part of a list
-                const el = <HTMLElement>node;
-                const msoListValue: string = parseStyleAttribute(el.attributes[`style`]?.value || ``)[`mso-list`];
-                if (!msoListValue) {
-                    return;
-                }
-
-                const msoListInfos = msoListValue.split(` `);
-                const msoListId = msoListInfos.find(e => /l[0-9]+/.test(e));
-                const classIdentified =
-                    el.classList.contains(`MsoListParagraph`) || el.classList.contains(`MsoListParagraphCxSpFirst`);
-                if (classIdentified || currentListId !== msoListId) {
-                    currentListId = msoListId;
-                    const listInfo = getListType(getListPrefix(el));
-                    currentUl = document.createElement(listInfo.type);
-                    if (listInfo.countType) {
-                        currentUl.attributes[`type`] = listInfo.countType;
-                    }
-
-                    lists.push(currentUl);
-                    el.before(currentUl);
-                }
-
-                const prefix = getListPrefix(el);
-                // Remove list item numbers
-                el.innerHTML = el.innerHTML.replace(listTypeRegex, ``);
-
-                // Get the mso list item level
-                const li = document.createElement(`li`);
-                li.innerHTML = el.innerHTML;
-
-                const listLevel = +msoListInfos.find((e: string) => e.startsWith(`level`)).substring(5);
-
-                // Add list level attribute if element needs to be moved to sublist
-                if (listLevel && listLevel > 1) {
-                    li.dataset[`listLevel`] = `${listLevel - 1}`;
-                    if (prefix) {
-                        const listInfo = getListType(prefix);
-                        li.dataset[`listType`] = listInfo.type;
-                        li.dataset[`countType`] = listInfo.countType || ``;
-                    }
-                }
-                currentUl.appendChild(li);
-                el.remove();
-            });
-
-            fixLists(lists);
-            console.log(html, doc.body.innerHTML);
-            return doc.body.innerHTML;
+            console.log(html);
+            html = transformLists(html);
+            html = transformRemoveMso(html);
+            console.log(html);
+            return html;
         }
     }
 });
+
+function transformRemoveMso(html: string): string {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, `text/html`);
+    const toUnwrap = doc.querySelectorAll(`[style*="mso-bookmark:"]`);
+    toUnwrap.forEach(node => {
+        unwrap(node as HTMLElement);
+    });
+
+    return doc.body.innerHTML;
+}
+
+function unwrap(el: HTMLElement): void {
+    const parent = el.parentNode;
+    while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+    }
+    parent.removeChild(el);
+}
+
+function transformLists(html: string): string {
+    if (html.indexOf(`mso-list:`) === -1) {
+        return html;
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, `text/html`);
+
+    const lists: HTMLElement[] = [];
+    let currentUl: HTMLElement;
+    let currentListId: string;
+    doc.body.childNodes.forEach(node => {
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+
+        // Check if the element is part of a list
+        const el = <HTMLElement>node;
+        const msoListValue: string = parseStyleAttribute(el.attributes[`style`]?.value || ``)[`mso-list`];
+        if (!msoListValue) {
+            return;
+        }
+
+        const msoListInfos = msoListValue.split(` `);
+        const msoListId = msoListInfos.find(e => /l[0-9]+/.test(e));
+        const classIdentified =
+            el.classList.contains(`MsoListParagraph`) || el.classList.contains(`MsoListParagraphCxSpFirst`);
+        if (classIdentified || currentListId !== msoListId) {
+            currentListId = msoListId;
+            const listInfo = getListType(getListPrefix(el));
+            currentUl = document.createElement(listInfo.type);
+            if (listInfo.countType) {
+                currentUl.attributes[`type`] = listInfo.countType;
+            }
+
+            lists.push(currentUl);
+            el.before(currentUl);
+        }
+
+        const prefix = getListPrefix(el);
+        // Remove list item numbers
+        el.innerHTML = el.innerHTML.replace(listTypeRegex, ``);
+
+        // Get the mso list item level
+        const li = document.createElement(`li`);
+        li.innerHTML = el.innerHTML;
+
+        const listLevel = +msoListInfos.find((e: string) => e.startsWith(`level`)).substring(5);
+
+        // Add list level attribute if element needs to be moved to sublist
+        if (listLevel && listLevel > 1) {
+            li.dataset[`listLevel`] = `${listLevel - 1}`;
+            if (prefix) {
+                const listInfo = getListType(prefix);
+                li.dataset[`listType`] = listInfo.type;
+                li.dataset[`countType`] = listInfo.countType || ``;
+            }
+        }
+        currentUl.appendChild(li);
+        el.remove();
+    });
+
+    fixLists(lists);
+    return doc.body.innerHTML;
+}
 
 const listTypeRegex = /<!--\[if \!supportLists\]-->((.|\n)*)<!--\[endif\]-->/m;
 function getListPrefix(el: HTMLElement) {
