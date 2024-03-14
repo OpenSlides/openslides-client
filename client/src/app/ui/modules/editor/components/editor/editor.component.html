@@ -13,7 +13,7 @@
                     Heading {{ selectedHeadingLevel }}
                 </button>
 
-                <button type="button" mat-ripple [matMenuTriggerFor]="headingMenu">
+                <button type="button" class="more" mat-ripple [matMenuTriggerFor]="headingMenu">
                     <mat-icon>arrow_drop_down</mat-icon>
                 </button>
             </div>
@@ -197,7 +197,7 @@
                 >
                     <mat-icon>format_color_fill</mat-icon>
                 </button>
-                <button type="button" mat-ripple class="color-selection">
+                <button type="button" mat-ripple class="more color-selection">
                     <mat-icon>arrow_drop_down</mat-icon>
                     <input
                         [value]="editor.getAttributes('highlight')['color']"

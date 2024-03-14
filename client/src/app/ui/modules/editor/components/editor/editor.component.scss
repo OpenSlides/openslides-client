@@ -12,10 +12,13 @@
             align-items: center;
             margin-right: 4px;
             margin-bottom: 4px;
-            border-radius: 2px;
+            border-radius: 4px;
             color: var(--mdc-text-button-label-text-color, inherit);
             &.text {
                 padding: 0 16px;
+            }
+            &.more {
+                padding: 0;
             }
             &.color-selection {
                 position: relative;
@@ -36,11 +39,12 @@
         > .button-group {
             display: flex;
             border: 1px solid rgba(0, 0, 0, 0.42);
-            border-radius: 2px;
+            border-radius: 4px;
             margin-right: 4px;
             margin-bottom: 4px;
             > button {
                 border: none;
+                border-radius: 0;
                 margin-right: 0;
                 margin-bottom: 0;
                 height: 32px;
@@ -52,15 +56,27 @@
     }
 
     .editor-content {
-        border: 1px solid rgba(0, 0, 0, 0.42);
-        padding: 0 16px;
+        border-bottom: solid 1px;
+        border-bottom-color: var(--mdc-filled-text-field-active-indicator-color);
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        background-color: var(--mdc-filled-text-field-container-color);
+        color: var(--mat-toolbar-container-text-color);
+        caret-color: var(--mdc-filled-text-field-caret-color);
+        padding: 0 16px 1px;
         margin-top: 8px;
+        min-height: 100px;
         height: 232px;
         overflow-y: auto;
         resize: vertical;
         ::ng-deep .tiptap {
             outline: none;
             min-height: calc(100% - 32px);
+        }
+        &:focus-within {
+            border-bottom-color: var(--mdc-filled-text-field-focus-active-indicator-color);
+            border-bottom-width: 2px;
+            padding-bottom: 0;
         }
     }
 }
