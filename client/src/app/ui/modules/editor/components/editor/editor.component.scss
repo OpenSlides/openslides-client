@@ -72,6 +72,14 @@
         ::ng-deep .tiptap {
             outline: none;
             min-height: calc(100% - 32px);
+            table {
+                border-collapse: collapse;
+                &,
+                th,
+                td {
+                    border: 1px dashed #bbb;
+                }
+            }
         }
         &:focus-within {
             border-bottom-color: var(--mdc-filled-text-field-focus-active-indicator-color);
