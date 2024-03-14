@@ -1,11 +1,9 @@
-import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
+import { SPECIAL_SPEECH_STATES } from 'src/app/domain/models/speakers/speech-state';
 import { StructureLevelListOfSpeakers } from 'src/app/domain/models/structure-levels/structure-level-list-of-speakers';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
-
-const SPECIAL_SPEECH_STATES = [SpeechState.INTERPOSED_QUESTION, SpeechState.INTERVENTION];
 
 export class ViewStructureLevelListOfSpeakers extends BaseViewModel<StructureLevelListOfSpeakers> {
     public static COLLECTION = StructureLevelListOfSpeakers.COLLECTION;

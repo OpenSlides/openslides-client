@@ -225,10 +225,10 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                 follow: [
                     {
                         idField: `user_id`,
-                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                        fieldset: `participantList`
                     }
                 ],
-                ...MeetingUserFieldsets.FullNameSubscription
+                fieldset: `participantListMinimal`
             }
         ],
         fieldset: [

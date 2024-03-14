@@ -55,9 +55,9 @@
             <!-- total time -->
             <mat-form-field>
                 <mat-label>{{ 'Total time' | translate }}</mat-label>
-                <input type="number" formControlName="totalTime" matInput required />
+                <input type="text" formControlName="totalTime" matInput required />
                 <mat-error>
-                    {{ 'A total time is required and must be greater than 0.' | translate }}
+                    {{ 'A total time is required and must be in min:secs format.' | translate }}
                 </mat-error>
             </mat-form-field>
         </form>

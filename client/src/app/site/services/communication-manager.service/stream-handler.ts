@@ -15,7 +15,7 @@ export class StreamHandler<T> {
 
     public constructor(
         private readonly buildStreamFn: () => HttpStream<T>,
-        readonly config: {
+        config: {
             afterOpenedFn?: AfterEventFn;
             afterClosedFn?: AfterEventFn;
         } = {}

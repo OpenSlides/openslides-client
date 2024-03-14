@@ -47,7 +47,7 @@ export class ExpandableContentWrapperComponent {
 
     public showCollapsed: boolean;
 
-    constructor(private cd: ChangeDetectorRef) {
+    public constructor(private cd: ChangeDetectorRef) {
         this.update();
     }
 

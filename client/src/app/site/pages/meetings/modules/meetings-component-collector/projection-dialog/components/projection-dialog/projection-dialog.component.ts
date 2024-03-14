@@ -92,12 +92,12 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
         );
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.modelRequestService.closeSubscription(this._projectorSubscription);
         this._subscriptions.forEach(s => s.unsubscribe());
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this._projectorSubscription = PROJECTOR_LIST_MINIMAL_SUBSCRIPTION + `_${Date.now()}`;
         this.modelRequestService.subscribeTo({
             ...getProjectorListMinimalSubscriptionConfig(this.activeMeetingService.meetingId),

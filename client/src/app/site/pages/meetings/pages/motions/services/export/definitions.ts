@@ -15,7 +15,9 @@ export type InfoToExport =
     | 'id'
     | 'sequential_number'
     | 'referring_motions'
-    | 'allcomments';
+    | 'allcomments'
+    | 'editors'
+    | 'working_group_speakers';
 
 /**
  * Determines the possible file format of a motion export
