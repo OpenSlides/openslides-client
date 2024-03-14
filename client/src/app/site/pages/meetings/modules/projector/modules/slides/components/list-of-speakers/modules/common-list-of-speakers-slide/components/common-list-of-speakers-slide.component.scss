@@ -5,17 +5,35 @@
 
 .currentSpeaker {
     font-weight: bold;
-    margin: 20px 0 16px;
+    margin: 20px 0 0;
 
     .micicon {
         vertical-align: middle;
     }
 }
 
+.interposed-questions {
+    padding-left: 50px;
+
+    ol {
+        list-style-type: none;
+        margin: 0;
+        padding-left: 6px;
+
+        li {
+            list-style-position: inside;
+            line-height: 150%;
+        }
+    }
+    .currentSpeaker {
+        margin: 0;
+    }
+}
+
 .nextSpeakers {
     margin: 0;
     padding-left: 6px;
-    margin-top: 20px !important;
+    margin-top: 36px !important;
 
     li {
         list-style-position: inside;
