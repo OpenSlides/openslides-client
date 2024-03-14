@@ -38,6 +38,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
+import { EditorEmbedDialogComponent, EditorEmbedDialogOutput } from '../editor-embed-dialog/editor-embed-dialog.component';
 
 import { EditorHtmlDialogComponent, EditorHtmlDialogOutput } from '../editor-html-dialog/editor-html-dialog.component';
 import {
@@ -46,6 +47,7 @@ import {
 } from '../editor-image-dialog/editor-image-dialog.component';
 import { EditorLinkDialogComponent, EditorLinkDialogOutput } from '../editor-link-dialog/editor-link-dialog.component';
 import { Highlight } from './extensions/highlight';
+import IFrame from './extensions/iframe';
 import { MSOfficePaste } from './extensions/office';
 import { OrderedList } from './extensions/ordered-list';
 
@@ -60,6 +62,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     @Input()
     public customSettings: object = {};
+
+    @Input()
+    public allowEmbeds = false;
 
     public override contentForm!: UntypedFormControl;
 
@@ -84,7 +89,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public ngAfterViewInit(): void {
-        this.editor = new Editor({
+        const editorConfig = {
             element: this.editorEl.nativeElement,
             extensions: [
                 MSOfficePaste,
@@ -145,7 +150,13 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 })
             ],
             content: this.value
-        });
+        };
+
+        if (this.allowEmbeds) {
+            editorConfig.extensions.push(IFrame);
+        }
+
+        this.editor = new Editor(editorConfig);
     }
 
     public override ngOnDestroy(): void {
@@ -237,6 +248,27 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                         src: result.image.src,
                         title: result.image.title,
                         alt: result.image.alt
+                    });
+                }
+            });
+    }
+
+    public async setEmbedDialog(): Promise<void> {
+        this.dialog
+            .open(EditorEmbedDialogComponent, {
+                data: {
+                    embed: {
+                        src: this.editor.getAttributes(`iframe`)[`src`],
+                        title: this.editor.getAttributes(`iframe`)[`title`]
+                    }
+                }
+            })
+            .afterClosed()
+            .subscribe((result?: EditorEmbedDialogOutput) => {
+                if (result?.action === `set-embed`) {
+                    this.editor.commands.setIframe({
+                        src: result.embed.src,
+                        title: result.embed.title
                     });
                 }
             });
