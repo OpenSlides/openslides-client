@@ -288,14 +288,10 @@
 <!-- Identical motions -->
 <div *ngIf="motion?.identical_motions?.length">
     <h4>{{ (motion.hasLeadMotion ? 'Identical amendments' : 'Identical motions') | translate }}</h4>
-    <os-comma-separated-listing [list]="motion?.identical_motions" [comma_space]="false">
+    <os-comma-separated-listing [list]="motion?.identical_motions">
         <ng-template let-view>
-            <a
-                [routerLink]="['/', activeMeetingId, 'motions', view.sequential_number]"
-                [state]="{ back: 'true' }"
-                class="comma-link"
-            >
-                {{ view.numberOrTitle }}
+            <a [routerLink]="['/', activeMeetingId, 'motions', view.sequential_number]" [state]="{ back: 'true' }">
+                <span>{{ view.numberOrTitle }}</span>
             </a>
         </ng-template>
     </os-comma-separated-listing>
