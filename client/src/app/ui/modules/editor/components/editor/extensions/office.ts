@@ -1,5 +1,7 @@
 import { Extension } from '@tiptap/core';
 import { Plugin } from '@tiptap/pm/state';
+import { parseLetterNumber, parseRomanNumber } from 'src/app/infrastructure/utils';
+import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 
 export const MSOfficePaste = Extension.create({
     priority: 99999,
@@ -12,14 +14,13 @@ export const MSOfficePaste = Extension.create({
 const OfficePastePlugin = new Plugin({
     props: {
         transformPastedHTML(html: string) {
-            console.log(html);
+            console.log([html]);
             if (html.indexOf(`microsoft-com`) !== -1 && html.indexOf(`office`) !== -1) {
-                console.log(`Cleaning up`);
                 html = transformLists(html);
                 html = transformRemoveBookmarks(html);
                 html = transformMsoStyles(html);
             }
-            console.log(html);
+            console.log([html]);
             return html;
         }
     }
@@ -31,7 +32,7 @@ function transformMsoStyles(html: string): string {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, `text/html`);
     doc.querySelectorAll(`[style*="mso-"]`).forEach(node => {
-        const styles = parseStyleAttribute(node.attributes[`style`]?.value || ``);
+        const styles = parseStyleAttribute(node);
         const newStyles = [];
         for (const prop of Object.keys(styles)) {
             if (prop && !prop.startsWith(`mso-`)) {
@@ -53,23 +54,15 @@ function transformRemoveBookmarks(html: string): string {
     const doc = parser.parseFromString(html, `text/html`);
     const bookmarks = doc.querySelectorAll(`[style*="mso-bookmark:"]`);
     bookmarks.forEach(node => {
-        const bookmark = parseStyleAttribute(node.attributes[`style`]?.value || ``)[`mso-bookmark`];
+        const bookmark = parseStyleAttribute(node)[`mso-bookmark`];
         const bookmarkLink = doc.querySelector(`a[name="${bookmark}"]`);
         if (bookmarkLink) {
             bookmarkLink.parentNode.removeChild(bookmarkLink);
         }
-        unwrap(node as HTMLElement);
+        unwrapNode(node as HTMLElement);
     });
 
     return doc.documentElement.outerHTML;
-}
-
-function unwrap(el: HTMLElement): void {
-    const parent = el.parentNode;
-    while (el.firstChild) {
-        parent.insertBefore(el.firstChild, el);
-    }
-    parent.removeChild(el);
 }
 
 function transformLists(html: string): string {
@@ -83,27 +76,23 @@ function transformLists(html: string): string {
     const lists: HTMLElement[] = [];
     let currentUl: HTMLElement;
     let currentListId: string;
-    let elementBetween = false;
-    doc.body.childNodes.forEach(node => {
+    const listElements = doc.querySelectorAll(`p[style*="mso-list:"]`);
+    listElements.forEach(node => {
         if (node.nodeType !== Node.ELEMENT_NODE) {
             return;
         }
 
         // Check if the element is part of a list
         const el = <HTMLElement>node;
-        const msoListValue: string = parseStyleAttribute(el.attributes[`style`]?.value || ``)[`mso-list`];
-        if (!msoListValue) {
-            elementBetween = true;
-            return;
-        }
+        const msoListValue: string = parseStyleAttribute(el)[`mso-list`];
+        const hasNonListItemSibling =
+            !el.previousElementSibling ||
+            !(el.previousElementSibling.nodeName === `OL` || el.previousElementSibling.nodeName === `UL`);
 
         const msoListInfos = msoListValue.split(` `);
-        const listLevel = +msoListInfos.find((e: string) => e.startsWith(`level`)).substring(5);
+        const listLevel = +msoListInfos.find((e: string) => e.startsWith(`level`))?.substring(5) || 1;
         const msoListId = msoListInfos.find(e => /l[0-9]+/.test(e));
-        const classIdentified =
-            el.classList.contains(`MsoListParagraph`) || el.classList.contains(`MsoListParagraphCxSpFirst`);
-        if (classIdentified || (currentListId !== msoListId && (elementBetween || listLevel === 1))) {
-            elementBetween = false;
+        if (currentListId !== msoListId && (hasNonListItemSibling || listLevel === 1)) {
             currentListId = msoListId;
             const listInfo = getListType(getListPrefix(el));
             currentUl = document.createElement(listInfo.type);
@@ -156,7 +145,8 @@ function getListPrefix(el: HTMLElement) {
     return ``;
 }
 
-function parseStyleAttribute(styleRaw: string): { [prop: string]: string } {
+function parseStyleAttribute(el: Element): { [prop: string]: string } {
+    const styleRaw = el?.attributes[`style`]?.value || ``;
     return Object.fromEntries(styleRaw.split(`;`).map(line => line.split(`:`).map(v => v.trim())));
 }
 
@@ -168,35 +158,6 @@ const listOrderRegex = {
     letterUpper: /[A-Z]+\./
 };
 
-function parseRoman(roman: string): number {
-    roman = roman.toUpperCase();
-    let value = 0;
-    const values = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
-    let i = roman.length;
-    let lastVal = 0;
-    while (i--) {
-        if (values[roman.charAt(i)] >= lastVal) {
-            value += values[roman.charAt(i)];
-        } else {
-            value -= values[roman.charAt(i)];
-        }
-        lastVal = values[roman.charAt(i)];
-    }
-
-    return value;
-}
-
-function parseLetterNumber(str: string) {
-    const alphaVal = (s: string) => s.toLowerCase().charCodeAt(0) - 97 + 1;
-    let value = 0;
-    let i = str.length;
-    while (i--) {
-        const factor = Math.pow(26, str.length - i - 1);
-        value += alphaVal(str.charAt(i)) * factor;
-    }
-    return value;
-}
-
 function getListType(prefix: string) {
     let type = `ul`;
     let countType: string | null = null;
@@ -207,11 +168,11 @@ function getListType(prefix: string) {
     } else if (listOrderRegex.romanLower.test(prefix)) {
         type = `ol`;
         countType = `i`;
-        start = +parseRoman(prefix.match(listOrderRegex.romanLower)[0].replace(`.`, ``));
+        start = +parseRomanNumber(prefix.match(listOrderRegex.romanLower)[0].replace(`.`, ``));
     } else if (listOrderRegex.romanUpper.test(prefix)) {
         type = `ol`;
         countType = `I`;
-        start = +parseRoman(prefix.match(listOrderRegex.romanUpper)[0].replace(`.`, ``));
+        start = +parseRomanNumber(prefix.match(listOrderRegex.romanUpper)[0].replace(`.`, ``));
     } else if (listOrderRegex.letterLower.test(prefix)) {
         type = `ol`;
         countType = `a`;

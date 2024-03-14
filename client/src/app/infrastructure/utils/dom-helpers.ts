@@ -201,6 +201,14 @@ export function findNextAuntNode(node: Node): Node | null {
     return null;
 }
 
+export function unwrapNode(el: Node): void {
+    const parent = el.parentNode;
+    while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+    }
+    parent.removeChild(el);
+}
+
 /**
  * This method adds a CSS class name to a given node.
  *
