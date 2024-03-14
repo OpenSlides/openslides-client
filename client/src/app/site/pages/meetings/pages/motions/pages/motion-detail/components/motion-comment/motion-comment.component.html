@@ -16,7 +16,7 @@
         </ng-container>
         <form [formGroup]="formGroup" *ngIf="isEditing">
             <!-- The HTML Editor -->
-            <os-legacy-editor [id]="sectionId" formControlName="text"></os-legacy-editor>
+            <os-editor [id]="sectionId" formControlName="text"></os-editor>
         </form>
         <div *ngIf="saveHint">
             <span>{{ 'Touch the book icon to enter text' | translate }}</span>

@@ -8,8 +8,8 @@ import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-c
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { EditorModule } from 'src/app/ui/modules/editor';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
-import { LegacyEditorModule } from 'src/app/ui/modules/legacy-editor';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { InfoActionsComponent } from './components/info-actions/info-actions.component';
@@ -26,7 +26,7 @@ const DECLARATIONS = [LegalNoticeContentComponent, PrivacyPolicyContentComponent
         MatCardModule,
         MatIconModule,
         MatButtonModule,
-        LegacyEditorModule,
+        EditorModule,
         ReactiveFormsModule,
         MatDividerModule,
         IconContainerModule,

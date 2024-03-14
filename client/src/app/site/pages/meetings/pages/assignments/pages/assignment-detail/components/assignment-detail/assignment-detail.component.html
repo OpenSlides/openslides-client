@@ -227,7 +227,7 @@
 
             <!-- description: HTML Editor -->
             <h4>{{ 'Description' | translate }}:</h4>
-            <os-legacy-editor formControlName="description"></os-legacy-editor>
+            <os-editor [allowEmbeds]="true" formControlName="description"></os-editor>
 
             <!-- searchValueSelector: tags -->
             <div class="content-field" *ngIf="tagsAvailable" [formGroup]="assignmentForm">

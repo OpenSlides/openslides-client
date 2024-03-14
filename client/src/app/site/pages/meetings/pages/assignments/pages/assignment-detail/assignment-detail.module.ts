@@ -13,8 +13,8 @@ import { ChipSelectModule } from 'src/app/site/modules/chip-select/chip-select.m
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { AttachmentControlModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/attachment-control';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { LegacyEditorModule } from 'src/app/ui/modules/legacy-editor';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { ChessDialogModule } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules/sorting-list/sorting-list.module';
@@ -55,7 +55,7 @@ import { AssignmentDetailServiceModule } from './services/assignment-detail-serv
         PipesModule,
         DirectivesModule,
         HeadBarModule,
-        LegacyEditorModule,
+        EditorModule,
         SearchSelectorModule,
         SortingListModule,
         OpenSlidesTranslationModule.forChild(),

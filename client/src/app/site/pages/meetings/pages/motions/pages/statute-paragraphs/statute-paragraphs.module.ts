@@ -11,9 +11,9 @@ import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/lega
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ImportListModule } from 'src/app/ui/modules/import-list';
-import { LegacyEditorModule } from 'src/app/ui/modules/legacy-editor';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { StatuteParagraphImportListComponent } from './components/statute-paragraph-import-list/statute-paragraph-import-list.component';
@@ -29,7 +29,7 @@ import { StatuteParagraphsRoutingModule } from './statute-paragraphs-routing.mod
         StatuteParagraphServiceModule,
         ImportListModule,
         HeadBarModule,
-        LegacyEditorModule,
+        EditorModule,
         PipesModule,
         DirectivesModule,
         OpenSlidesTranslationModule.forChild(),

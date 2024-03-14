@@ -32,11 +32,6 @@
                             "src/manifest.webmanifest",
                             {
                                 "glob": "**/*",
-                                "input": "node_modules/tinymce",
-                                "output": "/tinymce/"
-                            },
-                            {
-                                "glob": "**/*",
                                 "input": "node_modules/cm-chessboard/assets/",
                                 "output": "/chess/"
                             }

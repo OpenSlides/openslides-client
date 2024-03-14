@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { LegacyEditorModule } from 'src/app/ui/modules/legacy-editor';
+import { EditorModule } from 'src/app/ui/modules/editor';
 
 import { ProjectorMessageDialogComponent } from './components/projector-message-dialog/projector-message-dialog.component';
 
@@ -16,7 +16,7 @@ import { ProjectorMessageDialogComponent } from './components/projector-message-
         MatButtonModule,
         FormsModule,
         ReactiveFormsModule,
-        LegacyEditorModule,
+        EditorModule,
         OpenSlidesTranslationModule.forChild()
     ]
 })

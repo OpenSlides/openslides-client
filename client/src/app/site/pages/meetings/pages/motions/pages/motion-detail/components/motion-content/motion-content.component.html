@@ -108,11 +108,7 @@
         <h3 *ngIf="preamble">
             <span>{{ preamble }}</span>
         </h3>
-        <os-editor
-            formControlName="text"
-            [required]="!isParagraphBasedAmendment"
-            [customSettings]="tinyMceConfig"
-        ></os-editor>
+        <os-editor formControlName="text" [required]="!isParagraphBasedAmendment"></os-editor>
         <div
             *ngIf="
                 contentForm.get('text')?.invalid && (contentForm.get('text')?.dirty || contentForm.get('text')?.touched)
@@ -159,12 +155,7 @@
         ></div>
 
         <!-- The HTML Editor -->
-        <os-editor
-            *ngIf="editMotion"
-            formControlName="reason"
-            [required]="reasonRequired"
-            [customSettings]="tinyMceConfig"
-        ></os-editor>
+        <os-editor *ngIf="editMotion" formControlName="reason" [required]="reasonRequired"></os-editor>
         <div
             *ngIf="
                 reasonRequired &&

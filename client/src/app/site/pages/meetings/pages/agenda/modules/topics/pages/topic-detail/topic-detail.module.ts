@@ -13,8 +13,8 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { AttachmentControlModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/attachment-control';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { LegacyEditorModule } from 'src/app/ui/modules/legacy-editor';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
@@ -36,7 +36,7 @@ import { TopicDetailRoutingModule } from './topic-detail-routing.module';
         AttachmentControlModule,
         MeetingsComponentCollectorModule,
         SearchSelectorModule,
-        LegacyEditorModule,
+        EditorModule,
         OpenSlidesTranslationModule.forChild(),
         ReactiveFormsModule,
         MatSelectModule,

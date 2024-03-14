@@ -30,7 +30,6 @@ import { DatepickerModule } from 'src/app/ui/modules/datepicker';
 import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
-import { LegacyEditorModule } from 'src/app/ui/modules/legacy-editor';
 import { OpenSlidesDateAdapterModule } from 'src/app/ui/modules/openslides-date-adapter/openslides-date-adapter.module';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { SortingModule } from 'src/app/ui/modules/sorting';
@@ -113,7 +112,6 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         IconContainerModule,
         SortingModule,
         SearchSelectorModule,
-        LegacyEditorModule,
         EditorModule,
         ActionCardModule,
         HeadBarModule,

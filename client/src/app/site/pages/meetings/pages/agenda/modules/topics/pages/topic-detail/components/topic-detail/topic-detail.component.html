@@ -72,7 +72,7 @@
             <!-- The editor -->
             <div class="spacer-bottom-20">
                 <h4>{{ 'Text' | translate }}</h4>
-                <os-legacy-editor formControlName="text"></os-legacy-editor>
+                <os-editor [allowEmbeds]="true" formControlName="text"></os-editor>
             </div>
 
             <!-- Attachments -->

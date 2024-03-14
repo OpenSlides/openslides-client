@@ -32,7 +32,7 @@
                 <input matInput formControlName="welcome_title" required />
                 <mat-error>{{ 'The title is required' | translate }}</mat-error>
             </mat-form-field>
-            <os-legacy-editor formControlName="welcome_text"></os-legacy-editor>
+            <os-editor [allowEmbeds]="true" formControlName="welcome_text"></os-editor>
         </form>
     </ng-container>
 </mat-card>

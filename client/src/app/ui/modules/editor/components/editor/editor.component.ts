@@ -38,8 +38,11 @@ import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
-import { EditorEmbedDialogComponent, EditorEmbedDialogOutput } from '../editor-embed-dialog/editor-embed-dialog.component';
 
+import {
+    EditorEmbedDialogComponent,
+    EditorEmbedDialogOutput
+} from '../editor-embed-dialog/editor-embed-dialog.component';
 import { EditorHtmlDialogComponent, EditorHtmlDialogOutput } from '../editor-html-dialog/editor-html-dialog.component';
 import {
     EditorImageDialogComponent,
