@@ -3,10 +3,12 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
+    EventEmitter,
     forwardRef,
     inject,
     Input,
     OnDestroy,
+    Output,
     ViewChild
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
@@ -68,6 +70,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     @Input()
     public allowEmbeds = false;
+
+    @Output()
+    public leaveFocus = new EventEmitter<void>();
 
     public override contentForm!: UntypedFormControl;
 
@@ -140,6 +145,10 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                     },
                     onDestroy: () => {
                         this.editorReady = false;
+                        this.leaveFocus.emit();
+                    },
+                    onBlur: () => {
+                        this.leaveFocus.emit();
                     },
                     onSelectionUpdate: () => {
                         this.cd.detectChanges();

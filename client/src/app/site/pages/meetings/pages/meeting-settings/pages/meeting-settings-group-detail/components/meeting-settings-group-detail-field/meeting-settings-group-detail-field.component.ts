@@ -417,12 +417,9 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      * @returns an instance of tinyMCE settings with additional setup definitions
      */
     public onEditorBlur(): void {
-        // TODO: Save if content changed
-        /*
-        if (ev.target.getContent() !== this.internalValue) {
-            this.sendUpdate(ev.target.getContent());
+        if (this.value !== this.internalValue) {
+            this.sendUpdate(this.value);
         }
-        */
     }
 
     /**
