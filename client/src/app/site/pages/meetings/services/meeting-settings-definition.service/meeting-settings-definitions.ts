@@ -90,12 +90,13 @@ export interface SettingsGroup {
         settings: SettingsItem[];
     }[];
 }
-
+// remove `motions_statutes_enabled` if statute (Statute) amendments are removed
 export const SKIPPED_SETTINGS = [
     `motions_default_workflow_id`,
     `motions_default_amendment_workflow_id`,
     `motions_default_statute_amendment_workflow_id`,
-    `point_of_order_category_ids`
+    `point_of_order_category_ids`,
+    `motions_statutes_enabled`
 ];
 
 function fillInSettingsDefaults(settingsGroups: SettingsGroup[]): SettingsGroup[] {
