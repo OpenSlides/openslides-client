@@ -8,7 +8,7 @@ import { ProgressSnackBarServiceModule } from './progress-snack-bar-service.modu
     providedIn: ProgressSnackBarServiceModule
 })
 export class ProgressSnackBarService {
-    constructor(private matSnackBar: MatSnackBar) {}
+    public constructor(private matSnackBar: MatSnackBar) {}
 
     public async open(config?: MatSnackBarConfig): Promise<MatSnackBarRef<ProgressSnackBarComponent>> {
         const module = await import(`../progress-snack-bar.module`).then(m => m.ProgressSnackBarModule);

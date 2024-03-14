@@ -13,7 +13,7 @@ import { MotionWorkflowAction } from './motion-workflow.action';
     providedIn: `root`
 })
 export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepository<ViewMotionWorkflow, MotionWorkflow> {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionWorkflow);
     }
 

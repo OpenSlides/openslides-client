@@ -18,7 +18,7 @@ export class MediafileCommonService {
         return this.meetingIdService.meetingId!;
     }
 
-    constructor(
+    public constructor(
         private meetingIdService: ActiveMeetingIdService,
         private router: Router,
         private repo: MediafileControllerService,

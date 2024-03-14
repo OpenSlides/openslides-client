@@ -50,7 +50,7 @@ export class SharedWorkerService {
     private healthCheckSubscription: Subscription;
     private messageEventSubscription: Subscription;
 
-    constructor(private zone: NgZone) {
+    public constructor(private zone: NgZone) {
         this.connectWorker(true);
     }
 
