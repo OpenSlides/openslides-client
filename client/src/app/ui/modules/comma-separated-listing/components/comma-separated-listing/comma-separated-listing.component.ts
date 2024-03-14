@@ -16,6 +16,9 @@ export class CommaSeparatedListingComponent<T = unknown> {
     @Input()
     public list: T[] = [];
 
+    @Input()
+    public comma_space = true;
+
     /**
      * If it is bigger than 0, the listing will be ellipsed after showElementsAmount elements.
      */

@@ -288,16 +288,17 @@
 <!-- Identical motions -->
 <div *ngIf="motion?.identical_motions?.length">
     <h4>{{ (motion.hasLeadMotion ? 'Identical amendments' : 'Identical motions') | translate }}</h4>
-    <span *ngFor="let identicalMotion of motion?.identical_motions; let isLast = last">
-        <a
-            [routerLink]="['/', activeMeetingId, 'motions', identicalMotion.sequential_number]"
-            [state]="{ back: 'true' }"
-            class="comma-link"
-        >
-            {{ identicalMotion.numberOrTitle }}
-        </a>
-        <span *ngIf="!isLast">,</span>
-    </span>
+    <os-comma-separated-listing [list]="motion?.identical_motions" [comma_space]="false">
+        <ng-template let-view>
+            <a
+                [routerLink]="['/', activeMeetingId, 'motions', view.sequential_number]"
+                [state]="{ back: 'true' }"
+                class="comma-link"
+            >
+                {{ view.numberOrTitle }}
+            </a>
+        </ng-template>
+    </os-comma-separated-listing>
 </div>
 
 <!-- Amendments -->
