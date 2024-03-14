@@ -84,7 +84,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public get hideSecondaryContributionsCount(): Observable<boolean> {
-        return this.meetingSettingsService.get(`list_of_speakers_hide_secondary_contributions_count`);
+        return this.meetingSettingsService.get(`list_of_speakers_hide_contribution_count`);
     }
 
     public get title(): string {

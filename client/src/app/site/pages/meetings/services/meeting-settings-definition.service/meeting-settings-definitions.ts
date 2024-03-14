@@ -366,10 +366,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
-                        key: `list_of_speakers_hide_secondary_contributions_count`,
-                        label: _(
-                            `Dont show hint »2. contribution« (and following) in the list of speakers management view`
-                        ),
+                        key: `list_of_speakers_hide_contribution_count`,
+                        label: _(`Hide hint for multiple contributions`),
                         type: `boolean`
                     },
                     {
