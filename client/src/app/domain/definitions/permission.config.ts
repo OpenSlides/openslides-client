@@ -218,7 +218,7 @@ Meeting specific information: Structure level, Group, Participant number, About 
             {
                 display_name: _(`Can see sensitive data`),
                 help_text: _(`Can see the email addresses of all participants.`),
-                value: Permission.userCanSeePersonalData
+                value: Permission.userCanSeeSensitiveData
             },
             {
                 display_name: _(`Can manage presence of others`),
