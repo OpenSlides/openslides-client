@@ -190,7 +190,7 @@
 
 <!-- Identical motions -->
 <div *ngIf="motion?.identical_motions?.length">
-    <h4>{{ (motion.hasLeadMotion ? 'Identical amendments' : 'Identical motions') | translate }}</h4>
+    <h4>{{ 'Identical with' | translate }}</h4>
     <os-comma-separated-listing [list]="motion?.identical_motions" [useMidpoint]="true">
         <ng-template let-view>
             <a [routerLink]="['/', activeMeetingId, 'motions', view.sequential_number]" [state]="{ back: 'true' }">
