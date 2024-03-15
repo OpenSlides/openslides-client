@@ -215,7 +215,7 @@
 <!-- Form -->
 <ng-template #assignmentFormTemplate>
     <mat-card class="os-form-card spacer-bottom-60">
-        <form class="content" [formGroup]="assignmentForm" (keydown)="onKeyDown($event)">
+        <form class="content" [formGroup]="assignmentForm" (keydown)="onKeyDown($event)" tabindex="-1">
             <div>
                 <!-- title -->
                 <mat-form-field class="full-width">
