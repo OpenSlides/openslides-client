@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>
-    <span>{{ 'Countdown/Timer' | translate }}</span>
+    <span>{{ 'Timer' | translate }}</span>
 </h1>
 
 <form [formGroup]="countdownForm">
@@ -20,7 +20,7 @@
         <mat-form-field>
             <mat-label>{{ 'Time' | translate }}</mat-label>
             <input matInput formControlName="duration" required />
-            <mat-hint translate>If the value is set to 0, the time counts up as a timer.</mat-hint>
+            <mat-hint translate>If the value is set to 0 the time counts up as stopwatch.</mat-hint>
         </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
@@ -35,7 +35,7 @@
             <span>{{ 'Save' | translate }}</span>
         </button>
 
-        <!-- Cancel Countdown/Timer button -->
+        <!-- Cancel countdown button -->
         <button type="button" mat-button [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>

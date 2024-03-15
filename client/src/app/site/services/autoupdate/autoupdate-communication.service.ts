@@ -24,6 +24,7 @@ import {
     AutoupdateStatus
 } from 'src/app/worker/autoupdate/interfaces-autoupdate';
 
+import { SpinnerService } from '../../modules/global-spinner';
 import { UpdateService } from '../../modules/site-wrapper/services/update.service';
 import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';
@@ -250,22 +251,24 @@ export class AutoupdateCommunicationService {
         if (data.content.data?.reason === `Logout`) {
             this.authService.logout();
         } else if (data.content.data?.terminate) {
-            this.tryReconnectOpen = true;
-            this.matSnackBar
-                .open(
-                    this.translate.instant(`Error talking to autoupdate service`),
-                    this.translate.instant(`Try reconnect`),
-                    {
-                        duration: 0
-                    }
-                )
-                .onAction()
-                .subscribe(() => {
-                    this.tryReconnectOpen = false;
-                    this.sharedWorker.sendMessage(`autoupdate`, {
-                        action: `reconnect-inactive`
-                    } as AutoupdateReconnectInactive);
-                });
+            if (SpinnerService.isConnectionStable) {
+                this.tryReconnectOpen = true;
+                this.matSnackBar
+                    .open(
+                        this.translate.instant(`Error talking to autoupdate service`),
+                        this.translate.instant(`Try reconnect`),
+                        {
+                            duration: 0
+                        }
+                    )
+                    .onAction()
+                    .subscribe(() => {
+                        this.tryReconnectOpen = false;
+                        this.sharedWorker.sendMessage(`autoupdate`, {
+                            action: `reconnect-inactive`
+                        } as AutoupdateReconnectInactive);
+                    });
+            }
         } else if (data.content.data?.reason === `HTTP error`) {
             console.error(data.content.data);
             const error = data.content?.data?.error;
@@ -276,9 +279,13 @@ export class AutoupdateCommunicationService {
 
         this.updateService.checkForUpdate().then((hasUpdate: boolean) => {
             if (hasUpdate) {
+                if (!SpinnerService.isConnectionStable) {
+                    this.updateService.applyUpdate();
+                }
+
                 this.matSnackBar
                     .open(
-                        this.translate.instant(`You are using an incompatible client version`),
+                        this.translate.instant(`You are using an incompatible client version.`),
                         this.translate.instant(`Reload page`),
                         {
                             duration: 0
@@ -286,7 +293,7 @@ export class AutoupdateCommunicationService {
                     )
                     .onAction()
                     .subscribe(() => {
-                        document.location.reload();
+                        this.updateService.applyUpdate();
                     });
             }
         });
