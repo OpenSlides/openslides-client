@@ -27,15 +27,12 @@
         <ng-container *ngFor="let subgroup of settingsGroup.subgroups; trackBy: trackByIndex">
             <h3 class="accent" *ngIf="settingsGroup.subgroups.length > 1">{{ subgroup.label | translate }}</h3>
             <ng-container *ngFor="let setting of subgroup.settings">
-                <!-- Remove ng-container if statute (Statute) amendments are removed -->
-                <ng-container *ngIf="!(setting.key.toString() === 'motions_statutes_enabled')">
-                    <os-meeting-settings-group-detail-field
-                        #settingsFields
-                        (update)="updateSetting($event)"
-                        [setting]="setting"
-                        [value]="meeting && getDetailFieldValue(meeting, setting)"
-                    ></os-meeting-settings-group-detail-field>
-                </ng-container>
+                <os-meeting-settings-group-detail-field
+                    #settingsFields
+                    (update)="updateSetting($event)"
+                    [setting]="setting"
+                    [value]="meeting && getDetailFieldValue(meeting, setting)"
+                ></os-meeting-settings-group-detail-field>
             </ng-container>
         </ng-container>
     </div>
