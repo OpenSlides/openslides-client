@@ -14,7 +14,7 @@ export class MotionCommentSectionControllerService extends BaseMeetingController
     ViewMotionCommentSection,
     MotionCommentSection
 > {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MotionCommentSectionRepositoryService
     ) {

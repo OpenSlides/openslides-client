@@ -36,7 +36,7 @@ export class ChatGroupDetailMessageFormComponent {
 
     private _currentMessage: ViewChatMessage | null = null;
 
-    constructor(fb: UntypedFormBuilder) {
+    public constructor(fb: UntypedFormBuilder) {
         this.messageForm = fb.control(``, [Validators.maxLength(CHAT_MESSAGE_MAX_LENGTH)]);
     }
 

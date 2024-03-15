@@ -154,8 +154,8 @@ In combination with motion blocks, the recommendation of multiple motions can be
             type: `input`
         },
         {
-            name: _(`Internal`),
-            help_text: _(`The recommendation of motions in such a state can only be seen by motion managers.`),
+            name: _(`Show recommendations not public`),
+            help_text: _(`Recommendation of motions in such a state can only be seen by motion managers.`),
             selector: `is_internal`,
             type: `check`
         },

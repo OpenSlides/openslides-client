@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
@@ -71,7 +71,7 @@ export class MotionMultiselectService {
         let title = this.translate.instant(`Are you sure you want to delete all selected motions?`);
         if (motions.some(motion => motion.amendments?.length)) {
             title = this.translate.instant(
-                `Warning: Amendments exist for at least one of the selected motions. Are you sure you want to delete these motions regardless?`
+                `Warning: At least one of the selected motions has amendments, these will be deleted as well. Do you want to delete anyway?`
             );
         }
         if (await this.promptService.open(title)) {

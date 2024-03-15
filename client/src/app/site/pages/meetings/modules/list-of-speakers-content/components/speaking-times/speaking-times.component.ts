@@ -85,7 +85,7 @@ export class SpeakingTimesComponent implements OnDestroy {
         }
     }
 
-    constructor(
+    public constructor(
         private durationService: DurationService,
         private speakingTimesRepo: StructureLevelListOfSpeakersRepositoryService,
         private speakerRepo: SpeakerRepositoryService,
@@ -102,7 +102,7 @@ export class SpeakingTimesComponent implements OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         for (const speakingTimeId of this.subscriptions.keys()) {
             this.subscriptions.get(speakingTimeId).unsubscribe();
         }

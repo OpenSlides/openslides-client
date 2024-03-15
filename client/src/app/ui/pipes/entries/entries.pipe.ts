@@ -15,7 +15,7 @@ export class EntriesPipe implements PipeTransform {
 
     public constructor(private readonly differs: KeyValueDiffers) {}
 
-    transform<K, V>(
+    public transform<K, V>(
         instance: IterableMap<K, V> | any,
         compareFn?: (a: KeyValue<K, V>, b: KeyValue<K, V>) => number
     ): Array<KeyValue<K, V>> {

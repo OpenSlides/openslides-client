@@ -66,6 +66,8 @@ module.exports = {
                 '@typescript-eslint/no-this-alias': ['error'],
                 '@typescript-eslint/adjacent-overload-signatures': ['error'],
                 '@typescript-eslint/ban-types': ['error'],
+                '@typescript-eslint/explicit-member-accessibility': ['error'],
+                '@typescript-eslint/explicit-function-return-type': ['warn'],
 
                 'jsdoc/require-example': ['off'],
                 'jsdoc/newline-after-description': ['off'],
@@ -85,6 +87,8 @@ module.exports = {
             files: ['*.spec.ts'],
             rules: {
                 'no-restricted-globals': ['error', 'fdescribe', 'fit'],
+                '@typescript-eslint/explicit-member-accessibility': ['off'],
+                '@typescript-eslint/explicit-function-return-type': ['off'],
             }
         },
         {
