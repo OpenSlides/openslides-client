@@ -188,6 +188,18 @@
     </span>
 </div>
 
+<!-- Identical motions -->
+<div *ngIf="motion?.identical_motions?.length">
+    <h4>{{ 'Identical with' | translate }}</h4>
+    <os-comma-separated-listing [list]="motion?.identical_motions" [useMidpoint]="true">
+        <ng-template let-view>
+            <a [routerLink]="['/', activeMeetingId, 'motions', view.sequential_number]" [state]="{ back: 'true' }">
+                <span>{{ view.numberOrTitle }}</span>
+            </a>
+        </ng-template>
+    </os-comma-separated-listing>
+</div>
+
 <!-- Category -->
 <!-- Disabled during "new motion" since changing has no effect -->
 <div *ngIf="categories.length">
@@ -282,19 +294,6 @@
                 <mat-icon *ngIf="!last">north</mat-icon>
             </div>
         </ng-container>
-    </div>
-</div>
-
-<!-- Identical motions -->
-<div *ngIf="motion?.identical_motions?.length">
-    <h4>{{ 'Identical with' | translate }}</h4>
-    <div *ngFor="let identicalMotion of motion?.identical_motions">
-        <a
-            [routerLink]="['/', activeMeetingId, 'motions', identicalMotion.sequential_number]"
-            [state]="{ back: 'true' }"
-        >
-            {{ identicalMotion.getTitle() }}
-        </a>
     </div>
 </div>
 
