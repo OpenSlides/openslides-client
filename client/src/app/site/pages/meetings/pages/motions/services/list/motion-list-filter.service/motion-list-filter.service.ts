@@ -107,13 +107,13 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
 
     private editorFilterOptions: OsFilter<ViewMotion> = {
         property: `editorUserIds`,
-        label: _(`Editors`),
+        label: _(`Motion editors`),
         options: []
     };
 
     private workingGroupSpeakerFilterOptions: OsFilter<ViewMotion> = {
         property: `workingGroupSpeakerUserIds`,
-        label: _(`Working group speakers`),
+        label: _(`Spokesperson`),
         options: []
     };
 
@@ -229,14 +229,14 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         this.updateFilterForRepo({
             repo: this.editorRepo,
             filter: this.editorFilterOptions,
-            noneOptionLabel: _(`No editors`),
+            noneOptionLabel: _(`No motion editors`),
             mapFn: (editor: ViewMotionEditor) => editor.user
         });
 
         this.updateFilterForRepo({
             repo: this.workingGroupSpeakerRepo,
             filter: this.workingGroupSpeakerFilterOptions,
-            noneOptionLabel: _(`No working group speakers`),
+            noneOptionLabel: _(`No spokesperson`),
             mapFn: (speaker: ViewMotionWorkingGroupSpeaker) => speaker.user
         });
 

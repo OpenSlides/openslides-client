@@ -13,7 +13,15 @@
     }
 }
 
-.mat-dialog-content {
+.mat-mdc-dialog-content {
     max-height: 95vh;
     overflow: hidden;
+}
+
+.padding-top-8 {
+    padding-top: 8px !important;
+}
+
+.padding-bottom-0 {
+    padding-bottom: 0px;
 }

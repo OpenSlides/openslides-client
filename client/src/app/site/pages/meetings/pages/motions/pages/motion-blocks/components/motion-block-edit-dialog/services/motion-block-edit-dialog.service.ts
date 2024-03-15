@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';

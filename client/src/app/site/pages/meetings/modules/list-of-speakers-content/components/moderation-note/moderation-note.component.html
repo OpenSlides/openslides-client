@@ -2,7 +2,7 @@
 <mat-card
     class="spacer-bottom-60 card-padding"
     [ngClass]="isEditing ? 'os-form-card' : 'os-card'"
-    *ngIf="canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))"
+    *ngIf="agendaItem && canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))"
 >
     <!-- Title edit/save/cancle-->
     <div class="action-title">

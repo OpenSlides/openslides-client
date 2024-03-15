@@ -1,11 +1,11 @@
 <div class="theme-builder-dialog-title">
     <h2 mat-dialog-title>{{ 'Color set' | translate }}</h2>
-    <button mat-icon-button [mat-dialog-close]="null">
-        <mat-icon>close</mat-icon>
-    </button>
+    <div mat-dialog-close class="close-button-container">
+        <button mat-icon-button tabindex="0"><mat-icon>close</mat-icon></button>
+    </div>
 </div>
 
-<div mat-dialog-content>
+<mat-dialog-content>
     <div *ngIf="paletteBuilderForm" [formGroup]="paletteBuilderForm">
         <div class="padding-top-12">
             <mat-form-field>
@@ -82,8 +82,8 @@
             ></ng-template>
         </div>
     </div>
-</div>
-<p mat-dialog-actions>
+</mat-dialog-content>
+<mat-dialog-actions>
     <button mat-button color="primary" (click)="onConfirm()">{{ 'Save' | translate }}</button>
     <button mat-button (click)="onClose()">{{ 'Cancel' | translate }}</button>
-</p>
+</mat-dialog-actions>

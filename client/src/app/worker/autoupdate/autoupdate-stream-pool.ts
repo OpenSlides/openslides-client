@@ -38,7 +38,7 @@ export class AutoupdateStreamPool {
         return this.streams.filter(stream => stream.active);
     }
 
-    constructor(private endpoint: AutoupdateSetEndpointParams) {
+    public constructor(private endpoint: AutoupdateSetEndpointParams) {
         this.updateAuthentication();
     }
 

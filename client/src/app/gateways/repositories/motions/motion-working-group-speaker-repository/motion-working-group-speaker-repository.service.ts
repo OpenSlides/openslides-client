@@ -19,6 +19,5 @@ export class MotionWorkingGroupSpeakerRepositoryService extends BaseMotionMeetin
         super(repositoryServiceCollector, MotionWorkingGroupSpeaker, MotionWorkingGroupSpeakerAction);
     }
 
-    public getVerboseName = (plural = false) =>
-        this.translate.instant(plural ? `Working group speakers` : `Working group speaker`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Spokespersons` : `Spokesperson`);
 }

@@ -488,7 +488,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             agenda_parent_id: [],
             submitter_ids: [[]],
             supporter_user_ids: [[]],
-            workflow_id: [],
+            workflow_id: [+this.meetingSettingService.instant(`motions_default_workflow_id`)],
             tag_ids: [[]],
             statute_amendment: [``], // Internal value for the checkbox, not saved to the model
             statute_paragraph_id: [],

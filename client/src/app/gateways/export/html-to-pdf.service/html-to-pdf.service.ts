@@ -372,7 +372,7 @@ export class HtmlToPdfService {
      * Takes a list of paragraphs and the data from which to calculate the next paragraph and appends the child node.
      * Can be overwritten by subclasses for more specific functionality.
      */
-    protected addChildNodeIntoParagraphs(paragraph: any[], data: ChildNodeParagraphPayload) {
+    protected addChildNodeIntoParagraphs(paragraph: any[], data: ChildNodeParagraphPayload): void {
         const parsedElement = this.parseElement(data.child, data.styles);
         paragraph.push(parsedElement);
     }

@@ -22,7 +22,7 @@ export class DaterangepickerComponent extends BaseDatepickerComponent {
 
     private currentValue: any;
 
-    constructor(element: ElementRef<HTMLElement>, @Optional() @Self() ngControl: NgControl) {
+    public constructor(element: ElementRef<HTMLElement>, @Optional() @Self() ngControl: NgControl) {
         super(element, ngControl);
     }
 

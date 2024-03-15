@@ -1,8 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import {
-    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-    MatLegacyDialogRef as MatDialogRef
-} from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import {
@@ -92,12 +89,12 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
         );
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.modelRequestService.closeSubscription(this._projectorSubscription);
         this._subscriptions.forEach(s => s.unsubscribe());
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this._projectorSubscription = PROJECTOR_LIST_MINIMAL_SUBSCRIPTION + `_${Date.now()}`;
         this.modelRequestService.subscribeTo({
             ...getProjectorListMinimalSubscriptionConfig(this.activeMeetingService.meetingId),

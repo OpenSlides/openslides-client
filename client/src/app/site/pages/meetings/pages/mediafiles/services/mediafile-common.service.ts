@@ -1,6 +1,6 @@
 import { Injectable, TemplateRef } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -18,7 +18,7 @@ export class MediafileCommonService {
         return this.meetingIdService.meetingId!;
     }
 
-    constructor(
+    public constructor(
         private meetingIdService: ActiveMeetingIdService,
         private router: Router,
         private repo: MediafileControllerService,

@@ -28,7 +28,7 @@ const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
 export class OpenSlidesMainComponent implements OnInit {
     private onInitDone = new Deferred();
 
-    title = `OpenSlides`;
+    public title = `OpenSlides`;
 
     public constructor(
         _viewContainer: ViewContainerRef,

@@ -12,7 +12,7 @@ import { ChatGroupAction } from './chat-group.action';
     providedIn: `root`
 })
 export class ChatGroupRepositoryService extends BaseMeetingRelatedRepository<ViewChatGroup, ChatGroup> {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, ChatGroup);
     }
 

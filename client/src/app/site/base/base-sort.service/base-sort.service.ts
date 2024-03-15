@@ -81,7 +81,7 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
                         return 1;
                     }
                 case `number`:
-                    return propertyA > propertyB ? 1 : -1;
+                    return propertyA >= propertyB ? 1 : -1;
                 case `string`:
                     if (propertyA && !propertyB) {
                         return -1;

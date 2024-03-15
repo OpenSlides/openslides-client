@@ -1,8 +1,7 @@
-<div class="close-button-container">
-    <button mat-icon-button mat-dialog-close tabindex="-1"><mat-icon>close</mat-icon></button>
-</div>
-
-<div matDialogTitle class="search-form-container">
+<div mat-dialog-title class="search-form-container">
+    <div mat-dialog-close class="close-button-container">
+        <button mat-icon-button tabindex="-1"><mat-icon>close</mat-icon></button>
+    </div>
     <div class="search-top-form">
         <div class="search-input-container">
             <os-rounded-input
@@ -81,10 +80,10 @@
                             <span [innerHTML]="result.title"></span>
                         </h3>
                         <div class="info">
-                            <span *ngIf="result.obj?.submitter_ids?.length">
+                            <span *ngIf="hasSubmitters(result)">
                                 {{ 'by' | translate }}
                                 <os-comma-separated-listing
-                                    [list]="getNamesBySubmitters(result.obj.submitter_ids)"
+                                    [list]="getSubmitterNames(result)"
                                 ></os-comma-separated-listing>
                             </span>
                             <span *ngIf="result.meeting.motions_show_sequential_number">

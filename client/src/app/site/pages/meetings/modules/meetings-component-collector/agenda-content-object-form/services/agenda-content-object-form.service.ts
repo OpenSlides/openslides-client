@@ -7,7 +7,10 @@ import { ViewAgendaItem } from '../../../../pages/agenda';
 
 @Injectable()
 export class AgendaContentObjectFormService {
-    constructor(private repo: AgendaItemRepositoryService, private activeMeetingIdService: ActiveMeetingIdService) {}
+    public constructor(
+        private repo: AgendaItemRepositoryService,
+        private activeMeetingIdService: ActiveMeetingIdService
+    ) {}
 
     public getViewModelListObservable(): Observable<ViewAgendaItem[]> {
         return this.repo.getViewModelListObservable();

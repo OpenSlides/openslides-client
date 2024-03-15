@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { FileData } from 'src/app/ui/modules/file-upload/components/file-upload/file-upload.component';
@@ -10,7 +10,7 @@ export const WRONG_JSON_IMPORT_FORMAT_ERROR_MSG = _(`Import data needs to have t
     providedIn: `root`
 })
 export class UploadFileJsonProcessorService {
-    constructor(private snackbar: MatSnackBar, private translate: TranslateService) {}
+    public constructor(private snackbar: MatSnackBar, private translate: TranslateService) {}
 
     public async getUploadFileJson<ExpectType>(file: FileData): Promise<ExpectType> {
         const json = await new Promise<ExpectType>(resolve => {

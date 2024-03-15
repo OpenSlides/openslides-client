@@ -14,7 +14,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseMeetingRela
     ViewMotionChangeRecommendation,
     MotionChangeRecommendation
 > {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionChangeRecommendation);
     }
 

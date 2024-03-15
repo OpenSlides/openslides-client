@@ -108,7 +108,7 @@ export class ActionWorkerWatchService {
      * Should only be used if the option to manage the handling of these specific action workers is done in a separate component.
      * @param actionName the (backend) name of the action for which there shouldn't be a dialog.
      */
-    public disableWaitDialog(actionName: string) {
+    public disableWaitDialog(actionName: string): void {
         if (!this._noDialogActionNames.find(name => name === actionName)) {
             this._noDialogActionNames.push(actionName);
         }
@@ -117,7 +117,7 @@ export class ActionWorkerWatchService {
     /**
      * May be used to reverse the effects of enableWaitDialog.
      */
-    public enableWaitDialog(actionName: string) {
+    public enableWaitDialog(actionName: string): void {
         const index = this._noDialogActionNames.findIndex(name => name === actionName);
         if (!(index === -1)) {
             this._noDialogActionNames.splice(index, 1);
@@ -163,7 +163,7 @@ export class ActionWorkerWatchService {
     /**
      * Deletes all workers from _toBeDeleted that have been in there for more than 10 seconds.
      */
-    private cleanup() {
+    private cleanup(): void {
         const toDelete = this._toBeDeleted
             .filter(date => (Date.now() - date.timestamp) / 1000 > 10)
             .map(date => date.workerId);

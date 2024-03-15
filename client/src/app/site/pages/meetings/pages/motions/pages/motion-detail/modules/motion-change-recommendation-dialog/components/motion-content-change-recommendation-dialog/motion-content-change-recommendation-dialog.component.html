@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>{{ 'New change recommendation' | translate }}</h1>
-<div mat-dialog-content>
+<mat-dialog-content>
     <form class="motion-content" [formGroup]="contentForm" (ngSubmit)="submitChanges()">
         <mat-radio-group #rGroup formControlName="type">
             <mat-radio-button *ngFor="let radio of replacementTypes" [value]="radio.value">
@@ -24,8 +24,8 @@
 
         <mat-checkbox formControlName="public">{{ 'Public' | translate }}</mat-checkbox>
     </form>
-</div>
-<div mat-dialog-actions>
+</mat-dialog-content>
+<mat-dialog-actions>
     <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
     <button mat-button (click)="submitChanges()">
         <span>{{ 'Save' | translate }}</span>
@@ -33,4 +33,4 @@
     <button mat-button mat-dialog-close>
         <span>{{ 'Cancel' | translate }}</span>
     </button>
-</div>
+</mat-dialog-actions>

@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>Switch mandates</h2>
 
-<div mat-dialog-content>
+<mat-dialog-content>
     <table class="participant-switch-table">
         <tbody>
             <tr>
@@ -45,13 +45,13 @@
             </tr>
         </tbody>
     </table>
-</div>
+</mat-dialog-content>
 
-<p mat-dialog-actions>
+<mat-dialog-actions>
     <button mat-button [matDialogClose]="true">
         <span translate>Switch</span>
     </button>
     <button mat-button [matDialogClose]="false">
         <span translate>Cancel</span>
     </button>
-</p>
+</mat-dialog-actions>

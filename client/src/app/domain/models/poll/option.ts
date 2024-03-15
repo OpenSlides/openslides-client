@@ -11,6 +11,7 @@ export class Option extends BaseDecimalModel<Option> {
     public abstain!: number;
 
     public poll_id!: Id; // (assignment|motion)_poll/option_ids;
+    public used_as_global_option_in_poll_id: Id; // (assignment|motion)_poll/global_option_id;
     public vote_ids!: Ids; // ((assignment|motion)_vote/option_id)[];
     public meeting_id!: Id;
 
@@ -33,6 +34,7 @@ export class Option extends BaseDecimalModel<Option> {
         `no`,
         `abstain`,
         `poll_id`,
+        `used_as_global_option_in_poll_id`,
         `vote_ids`,
         `content_object_id`,
         `meeting_id`

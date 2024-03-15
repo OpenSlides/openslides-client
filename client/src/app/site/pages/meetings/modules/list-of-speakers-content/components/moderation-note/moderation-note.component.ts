@@ -1,7 +1,17 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    Input,
+    OnInit,
+    TemplateRef,
+    ViewEncapsulation
+} from '@angular/core';
 import { FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -17,7 +27,7 @@ import { ListOfSpeakersContentTitleDirective } from '../../directives/list-of-sp
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModerationNoteComponent extends BaseMeetingComponent {
+export class ModerationNoteComponent extends BaseMeetingComponent implements OnInit {
     public isEditing = false;
 
     public moderatorNoteForm: UntypedFormGroup;
@@ -45,12 +55,16 @@ export class ModerationNoteComponent extends BaseMeetingComponent {
     }
 
     public get canSeeModerationNote(): boolean {
-        return this.operator.hasPerms(this.permission.agendaItemCanSeeModeratorNotes);
+        return this._canSeeModerationNote;
     }
 
+    private _canSeeModerationNote: boolean;
+
     public get canManageModerationNote(): boolean {
-        return this.operator.hasPerms(this.permission.agendaItemCanManageModeratorNotes);
+        return this._canManageModerationNote;
     }
+
+    private _canManageModerationNote: boolean;
 
     @ContentChild(ListOfSpeakersContentTitleDirective, { read: TemplateRef })
     public explicitTitleContent: TemplateRef<any> | null = null;
@@ -63,12 +77,21 @@ export class ModerationNoteComponent extends BaseMeetingComponent {
         protected override translate: TranslateService,
         private operator: OperatorService,
         private formBuilder: FormBuilder,
-        protected agendaItemRepo: AgendaItemRepositoryService
+        protected agendaItemRepo: AgendaItemRepositoryService,
+        private cd: ChangeDetectorRef
     ) {
         super();
 
         this.moderatorNoteForm = this.formBuilder.group({
             moderator_notes: ``
+        });
+    }
+
+    public ngOnInit(): void {
+        this.operator.permissionsObservable.subscribe(() => {
+            this._canSeeModerationNote = this.operator.hasPerms(Permission.agendaItemCanSeeModeratorNotes);
+            this._canManageModerationNote = this.operator.hasPerms(Permission.agendaItemCanManageModeratorNotes);
+            this.cd.markForCheck();
         });
     }
 

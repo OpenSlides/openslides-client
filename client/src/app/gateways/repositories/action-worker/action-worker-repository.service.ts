@@ -9,7 +9,7 @@ import { ViewActionWorker } from './view-action-worker';
     providedIn: `root`
 })
 export class ActionWorkerRepositoryService extends BaseRepository<ViewActionWorker, ActionWorker> {
-    constructor(repositoryServiceCollector: RepositoryServiceCollectorService) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollectorService) {
         super(repositoryServiceCollector, ActionWorker);
     }
 

@@ -51,7 +51,7 @@
     <h1 mat-dialog-title>
         <span>{{ 'New category' | translate }}</span>
     </h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form [formGroup]="createForm" (keydown)="onKeyDown($event)">
             <!-- Prefix -->
             <p>
@@ -73,13 +73,13 @@
                 </mat-form-field>
             </p>
         </form>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button mat-button [disabled]="!createForm.valid" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
         <button mat-button [mat-dialog-close]="false">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

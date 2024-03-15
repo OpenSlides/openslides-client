@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 
 import { OpenSlidesTranslationModule } from '../translations';
 import { StoppedWaitingForActionDialogComponent } from './components/stopped-waiting-for-action-dialog/stopped-waiting-for-action-dialog.component';

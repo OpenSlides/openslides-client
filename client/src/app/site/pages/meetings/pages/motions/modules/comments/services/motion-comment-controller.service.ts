@@ -11,7 +11,7 @@ import { ViewMotionComment } from '../view-models';
     providedIn: `root`
 })
 export class MotionCommentControllerService extends BaseMeetingControllerService<ViewMotionComment, MotionComment> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MotionCommentRepositoryService
     ) {

@@ -4,7 +4,10 @@ import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Speaker } from 'src/app/domain/models/speakers/speaker';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
-import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
+import {
+    PointOfOrderInformation,
+    SpeakerRepositoryService
+} from 'src/app/gateways/repositories/speakers/speaker-repository.service';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
@@ -15,7 +18,7 @@ import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
     providedIn: `root`
 })
 export class SpeakerControllerService extends BaseMeetingControllerService<ViewSpeaker, Speaker> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: SpeakerRepositoryService,
         protected userRepo: UserControllerService
@@ -76,6 +79,10 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
 
     public setIntervention(speaker: ViewSpeaker): Promise<void> {
         return this.repo.setIntervention(speaker);
+    }
+
+    public setPointOfOrder(speaker: ViewSpeaker, data: PointOfOrderInformation): Promise<void> {
+        return this.repo.setPointOfOrder(speaker, data);
     }
 
     public startToSpeak(speaker: ViewSpeaker): Promise<void> {

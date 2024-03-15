@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>{{ (isCreateView ? 'New tag' : 'Edit tag') | translate }}</h2>
-<div mat-dialog-content class="organization-tag-content">
+<mat-dialog-content class="organization-tag-content">
     <form [formGroup]="organizationTagForm">
         <mat-form-field appearance="fill">
             <mat-label>{{ 'Name' | translate }}</mat-label>
@@ -22,10 +22,10 @@
         </mat-form-field>
         <os-chip *ngIf="name.value" [color]="currentColor">{{ name.value }}</os-chip>
     </form>
-</div>
-<div mat-dialog-actions>
+</mat-dialog-content>
+<mat-dialog-actions>
     <button mat-button [disabled]="organizationTagForm?.invalid" color="primary" (click)="onSaveClicked()">
         {{ 'Save' | translate }}
     </button>
     <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>
-</div>
+</mat-dialog-actions>

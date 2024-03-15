@@ -26,7 +26,7 @@ export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaIte
      */
     public itemsObservable: Observable<ViewAgendaItem[]>;
 
-    @ViewChild(`visibilities`) visibilitiesEl: MatSelectionList;
+    @ViewChild(`visibilities`) public visibilitiesEl: MatSelectionList;
 
     /**
      * These are the available options for filtering the nodes.

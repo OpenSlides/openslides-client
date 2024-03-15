@@ -15,7 +15,7 @@ export class AssignmentCandidateControllerService extends BaseMeetingControllerS
     ViewAssignmentCandidate,
     AssignmentCandidate
 > {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: AssignmentCandidateRepositoryService
     ) {

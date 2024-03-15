@@ -163,7 +163,7 @@ export class MotionCsvExportService {
             [
                 { label: `Called`, map: motion => (motion.sort_parent_id ? `` : motion.numberOrTitle) },
                 { label: `Called with`, map: motion => (!motion.sort_parent_id ? `` : motion.numberOrTitle) },
-                { label: `submitters`, map: motion => motion.submittersAsUsers.map(s => s.short_name).join(`,`) },
+                { label: `submitters`, map: motion => motion.mapSubmittersWithAdditional(s => s.short_name).join(`,`) },
                 { property: `title` },
                 {
                     label: `recommendation`,

@@ -4,9 +4,9 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
     selector: `[osTrimOnPaste]`
 })
 export class TrimOnPasteDirective {
-    constructor(private el: ElementRef) {}
+    public constructor(private el: ElementRef) {}
 
-    @HostListener(`paste`, [`$event`]) onPaste(event: ClipboardEvent) {
+    @HostListener(`paste`, [`$event`]) public onPaste(event: ClipboardEvent): void {
         const clipboardData = event.clipboardData;
         let paste = clipboardData?.getData(`text`);
         if (paste !== paste.trim()) {

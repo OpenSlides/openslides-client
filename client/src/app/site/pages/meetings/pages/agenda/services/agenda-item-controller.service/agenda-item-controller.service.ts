@@ -17,7 +17,7 @@ import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.mod
     providedIn: AgendaItemCommonServiceModule
 })
 export class AgendaItemControllerService extends BaseMeetingControllerService<ViewAgendaItem, AgendaItem> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: AgendaItemRepositoryService
     ) {

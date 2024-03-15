@@ -279,16 +279,16 @@
             <mat-icon>close</mat-icon>
         </button>
     </div>
-    <div mat-dialog-content>
+    <mat-dialog-content>
         <ng-container *ngTemplateOutlet="previewList"></ng-container>
-    </div>
+    </mat-dialog-content>
 </ng-template>
 
 <ng-template #fieldsInfoDialog>
     <div mat-dialog-title class="action-title">
         <h1 class="dialog-title" translate>The fields are defined as follows</h1>
     </div>
-    <div mat-dialog-content>
+    <mat-dialog-content>
         <table>
             <tr *ngFor="let column of defaultColumns">
                 <td class="table-title-column">{{ column.property }}:</td>
@@ -306,10 +306,10 @@
                 </td>
             </tr>
         </table>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button mat-button mat-dialog-close>
             {{ 'Close' | translate }}
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

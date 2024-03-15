@@ -17,7 +17,7 @@ export class AssignmentCandidateRepositoryService extends BaseMeetingRelatedRepo
     ViewAssignmentCandidate,
     AssignmentCandidate
 > {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, AssignmentCandidate);
     }
 

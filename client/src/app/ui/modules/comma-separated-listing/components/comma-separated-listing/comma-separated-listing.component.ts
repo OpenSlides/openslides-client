@@ -19,7 +19,7 @@ export class CommaSeparatedListingComponent<T = unknown> {
     /**
      * If it is bigger than 0, the listing will be ellipsed after showElementsAmount elements.
      */
-    @Input() showElementsAmount = 0;
+    @Input() public showElementsAmount = 0;
 
     public get ellipsed(): boolean {
         return this.showElementsAmount > 0 && this.showElementsAmount < this.list.length;
@@ -29,5 +29,5 @@ export class CommaSeparatedListingComponent<T = unknown> {
         return this.ellipsed ? this.list.slice(0, this.showElementsAmount) : this.list;
     }
 
-    constructor() {}
+    public constructor() {}
 }

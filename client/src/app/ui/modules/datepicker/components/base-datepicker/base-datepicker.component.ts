@@ -6,7 +6,7 @@ import { BaseFormFieldControlComponent } from 'src/app/ui/base/base-form-field-c
 
 @Directive()
 export abstract class BaseDatepickerComponent extends BaseFormFieldControlComponent<any> {
-    @ViewChild(`picker`) picker: MatDateRangePicker<Date> | MatDatepicker<Date>;
+    @ViewChild(`picker`) public picker: MatDateRangePicker<Date> | MatDatepicker<Date>;
 
     public readonly controlType = `os-datepicker`;
 
@@ -25,7 +25,7 @@ export abstract class BaseDatepickerComponent extends BaseFormFieldControlCompon
     @Input()
     public showUpdateSuccessIcon = false;
 
-    constructor(element: ElementRef<HTMLElement>, @Optional() @Self() ngControl: NgControl) {
+    public constructor(element: ElementRef<HTMLElement>, @Optional() @Self() ngControl: NgControl) {
         super(ngControl);
 
         this.fm

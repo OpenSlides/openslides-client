@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
@@ -12,7 +12,7 @@ import { ChessDialogModule } from '../chess-dialog.module';
     providedIn: ChessDialogModule
 })
 export class ChessChallengeService {
-    constructor(
+    public constructor(
         private notifyService: NotifyService,
         private op: OperatorService,
         private dialog: MatDialog,

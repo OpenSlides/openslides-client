@@ -12,7 +12,7 @@ import { ViewTopic } from '../../view-models';
     providedIn: `root`
 })
 export class TopicControllerService extends BaseMeetingControllerService<ViewTopic, Topic> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: TopicRepositoryService
     ) {

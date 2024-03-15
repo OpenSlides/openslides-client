@@ -2,7 +2,7 @@
     <span>{{ 'Secret voting can not be guaranteed' | translate }}</span>
 </h1>
 
-<div mat-dialog-content>
+<mat-dialog-content>
     <span>
         {{
             'During non-nominal voting OpenSlides does NOT store the individual user ID of the voter. This in no way means
@@ -10,10 +10,10 @@
         the data has been submitted. The validity of the data cannot always be guaranteed.' | translate
         }}
     </span>
-</div>
+</mat-dialog-content>
 
-<div mat-dialog-actions>
+<mat-dialog-actions>
     <button type="button" mat-button [mat-dialog-close]="null">
         <span>{{ 'I know the risk' | translate }}</span>
     </button>
-</div>
+</mat-dialog-actions>

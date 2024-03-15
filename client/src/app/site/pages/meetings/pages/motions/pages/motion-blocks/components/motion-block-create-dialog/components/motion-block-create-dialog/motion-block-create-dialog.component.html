@@ -1,9 +1,7 @@
 <!-- Template for new motion block dialog -->
-<h1 mat-dialog-title>
-    <span>{{ 'New motion block' | translate }}</span>
-</h1>
+<h1 mat-dialog-title>{{ 'New motion block' | translate }}</h1>
 <form [formGroup]="createBlockForm" (keydown)="onKeyDown($event)">
-    <div mat-dialog-content>
+    <mat-dialog-content>
         <!-- Title -->
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
@@ -21,13 +19,13 @@
         </p>
 
         <os-agenda-content-object-form [form]="createBlockForm"></os-agenda-content-object-form>
-    </div>
+    </mat-dialog-content>
 </form>
-<div mat-dialog-actions>
+<mat-dialog-actions>
     <button mat-button [disabled]="!createBlockForm.valid" (click)="saveBlock()">
         <span>{{ 'Save' | translate }}</span>
     </button>
     <button mat-button [mat-dialog-close]="null">
         <span>{{ 'Cancel' | translate }}</span>
     </button>
-</div>
+</mat-dialog-actions>

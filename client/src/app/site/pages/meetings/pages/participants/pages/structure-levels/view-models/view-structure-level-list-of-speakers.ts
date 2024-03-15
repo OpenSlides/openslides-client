@@ -1,11 +1,9 @@
-import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
+import { SPECIAL_SPEECH_STATES } from 'src/app/domain/models/speakers/speech-state';
 import { StructureLevelListOfSpeakers } from 'src/app/domain/models/structure-levels/structure-level-list-of-speakers';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
-
-const SPECIAL_SPEECH_STATES = [SpeechState.INTERPOSED_QUESTION, SpeechState.INTERVENTION];
 
 export class ViewStructureLevelListOfSpeakers extends BaseViewModel<StructureLevelListOfSpeakers> {
     public static COLLECTION = StructureLevelListOfSpeakers.COLLECTION;
@@ -14,7 +12,9 @@ export class ViewStructureLevelListOfSpeakers extends BaseViewModel<StructureLev
         return (
             !this.current_start_time &&
             this.initial_time + (this.additional_time ?? 0) === this.remaining_time &&
-            this.speakers.every(speaker => SPECIAL_SPEECH_STATES.includes(speaker.speech_state))
+            this.speakers.every(
+                speaker => SPECIAL_SPEECH_STATES.includes(speaker.speech_state) || speaker.point_of_order
+            )
         );
     }
 }

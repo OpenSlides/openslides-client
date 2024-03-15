@@ -1,8 +1,9 @@
 .theme-builder-dialog-title {
     display: flex;
     align-items: center;
+    padding-top: 10px;
 
-    .mat-dialog-title {
+    .mat-mdc-dialog-title {
         margin: 0;
         flex: 1;
     }
@@ -10,4 +11,13 @@
 
 .color-picker-row {
     flex-wrap: wrap;
+}
+
+.close-button-container {
+    position: relative;
+    > button {
+        position: absolute;
+        top: -15px;
+        right: 24px;
+    }
 }

@@ -1,0 +1,54 @@
+name: Copy staging commits to main
+
+on:
+  push:
+    branches:
+      - 'staging/4*'
+      
+
+jobs:
+  create-pr-for-main:
+    name: Create PR against main branch
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout main
+      uses: actions/checkout@v4
+      with:
+        ref: main
+
+    - name: Set git credentials
+      run: |
+        git config --global user.name openslides-automation
+        git config --global user.email openslides-automation@users.noreply.github.com
+    
+    - name: Cherry-pick new commit
+      id: cherry-pick
+      run: |
+        git fetch origin
+        git cherry-pick ${{ github.sha }} || {
+          echo "error=1" >> $GITHUB_OUTPUT
+          git add .
+          git cherry-pick --continue
+        }
+
+    - name: Generate access token
+      uses: tibdex/github-app-token@v2
+      id: generate-token
+      with:
+        app_id: ${{ secrets.AUTOMATION_APP_ID }}
+        private_key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+
+    - name: Create or update PR
+      uses: peter-evans/create-pull-request@v6
+      with:
+        token: ${{ steps.generate-token.outputs.token }}
+        commit-message: ${{ github.event.commits[0].message }}
+        branch: apply/commit-${{ github.sha }}
+        delete-branch: true
+        title: ${{ github.event.commits[0].message }}
+        body: "Triggered by commit [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})\n\n${{ steps.cherry-pick.outputs.error && 'There were conflicts during the cherry-pick. These were commited without any resolving. Please resolve them manually and push the result to this branch before merging.' || 'The cherry-pick was successful without any conflicts. You should be able to simply merge this PR.' }}"
+        reviewers: ${{ github.event.commits[0].author.username }}
+        assignees: ${{ github.event.commits[0].author.username }}
+        labels: staging-port
+        milestone: 4

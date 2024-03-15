@@ -62,13 +62,13 @@
     <h1 mat-dialog-title>
         <span>{{ 'New workflow' | translate }}</span>
     </h1>
-    <div mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <p>{{ 'Please enter a name for the new workflow:' | translate }}</p>
         <mat-form-field>
             <input matInput osAutofocus [(ngModel)]="newWorkflowTitle" required />
         </mat-form-field>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button
             type="submit"
             mat-button
@@ -81,7 +81,7 @@
         <button type="button" mat-button [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>
 
 <mat-menu #workflowListMenu="matMenu">

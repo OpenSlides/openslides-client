@@ -30,7 +30,7 @@ export class MeetingControllerServiceCollectorService {
         return this.controllerServiceCollector.viewModelStoreService;
     }
 
-    constructor(
+    public constructor(
         private controllerServiceCollector: ControllerServiceCollectorService,
         public activeMeetingIdService: ActiveMeetingIdService,
         public activeMeetingService: ActiveMeetingService,

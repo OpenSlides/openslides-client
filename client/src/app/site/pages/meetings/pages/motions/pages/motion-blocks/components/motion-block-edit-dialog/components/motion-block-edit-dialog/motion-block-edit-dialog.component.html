@@ -1,7 +1,5 @@
-<h1 mat-dialog-title>
-    <span>{{ 'Edit details for' | translate }} {{ block.title }}</span>
-</h1>
-<div class="os-form-card-mobile" mat-dialog-content>
+<h1 mat-dialog-title>{{ 'Edit details for' | translate }} {{ block.title }}</h1>
+<mat-dialog-content class="os-form-card-mobile">
     <form class="edit-form" [formGroup]="blockEditForm" (ngSubmit)="saveBlock()" (keydown)="onKeyDown($event)">
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
@@ -9,12 +7,12 @@
         </mat-form-field>
         <mat-checkbox formControlName="internal">Internal</mat-checkbox>
     </form>
-</div>
-<div mat-dialog-actions>
+</mat-dialog-content>
+<mat-dialog-actions>
     <button type="submit" mat-button [disabled]="!blockEditForm.valid" color="accent" (click)="saveBlock()">
         <span>{{ 'Save' | translate }}</span>
     </button>
     <button type="button" mat-button [mat-dialog-close]="null">
         <span>{{ 'Cancel' | translate }}</span>
     </button>
-</div>
+</mat-dialog-actions>

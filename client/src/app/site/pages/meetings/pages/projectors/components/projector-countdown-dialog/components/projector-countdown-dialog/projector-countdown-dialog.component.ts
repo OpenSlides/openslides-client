@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { DurationService } from 'src/app/site/services/duration.service';
@@ -38,7 +38,7 @@ export class ProjectorCountdownDialogComponent implements OnInit {
      */
     public ngOnInit(): void {
         const time = this.data.duration || this.durationService.durationToString(this.defaultTime, `m`);
-        const title = this.data.title || `${this.translate.instant(`Countdown/Timer`)} ${this.data.count || 0 + 1}`;
+        const title = this.data.title || `${this.translate.instant(`Timer`)} ${this.data.count || 0 + 1}`;
 
         this.countdownForm = this.formBuilder.group({
             title: [title, Validators.required],

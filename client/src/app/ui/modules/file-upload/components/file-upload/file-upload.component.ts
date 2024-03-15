@@ -46,7 +46,7 @@ export class FileUploadComponent {
     @ContentChild(TemplateRef, { static: true })
     public additionalContent: TemplateRef<any> | null = null;
 
-    @ViewChild(`fileInput`) fileInput: ElementRef;
+    @ViewChild(`fileInput`) public fileInput: ElementRef;
 
     /**
      * Determine if uploading should happen parallel or synchronously.

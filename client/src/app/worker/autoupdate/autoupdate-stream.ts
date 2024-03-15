@@ -45,7 +45,7 @@ export class AutoupdateStream {
         return this.failedCounter;
     }
 
-    constructor(
+    public constructor(
         private _subscriptions: AutoupdateSubscription[],
         public queryParams: URLSearchParams,
         private endpoint: AutoupdateSetEndpointParams,

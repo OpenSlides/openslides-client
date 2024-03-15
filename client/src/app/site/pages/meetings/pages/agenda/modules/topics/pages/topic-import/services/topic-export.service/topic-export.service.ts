@@ -17,7 +17,7 @@ interface TopicExport {
     providedIn: TopicImportServiceModule
 })
 export class TopicExportService {
-    constructor(private csvExportService: CsvExportForBackendService, private translate: TranslateService) {}
+    public constructor(private csvExportService: CsvExportForBackendService, private translate: TranslateService) {}
 
     public downloadCsvImportExample(): void {
         const rows: TopicExport[] = [

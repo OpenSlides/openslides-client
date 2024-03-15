@@ -3,14 +3,14 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Constructable } from 'src/app/domain/interfaces/constructable';
 
 export class BannerDefinition {
-    type?: string;
-    class?: string;
-    icon?: string;
-    text?: string;
-    subText?: string;
-    link?: string;
-    largerOnMobileView?: boolean;
-    component?: Constructable;
+    public type?: string;
+    public class?: string;
+    public icon?: string;
+    public text?: string;
+    public subText?: string;
+    public link?: string;
+    public largerOnMobileView?: boolean;
+    public component?: Constructable;
 }
 
 @Injectable({

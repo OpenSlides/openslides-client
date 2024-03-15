@@ -63,7 +63,7 @@
         <span *ngIf="currentStatuteParagraph">{{ 'Edit statute paragraph' | translate }}</span>
         <span *ngIf="!currentStatuteParagraph">{{ 'New statute paragraph' | translate }}</span>
     </h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form [formGroup]="statuteParagraphForm" (keydown)="onKeyDown($event)">
             <p>
                 <mat-form-field>
@@ -80,13 +80,13 @@
                 <os-editor formControlName="text"></os-editor>
             </span>
         </form>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button mat-button [mat-dialog-close]="true" [disabled]="!statuteParagraphForm.valid">
             <span>{{ 'Save' | translate }}</span>
         </button>
         <button mat-button [mat-dialog-close]="false">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

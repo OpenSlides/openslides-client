@@ -92,9 +92,9 @@
 
                 <!-- Submitters -->
                 <div class="submitters-line ellipsis-overflow">
-                    <span *ngIf="motion.submitters.length">
+                    <span *ngIf="motion.submitterNames.length">
                         <span>{{ 'by' | translate }}</span>
-                        {{ motion.submittersAsUsers }}
+                        {{ motion.submitterNames }}
                     </span>
 
                     <span *ngIf="showSequential">
@@ -152,7 +152,10 @@
                 <!-- Category -->
                 <div class="ellipsis-overflow" *ngIf="motion.category">
                     <os-icon-container icon="category">
-                        {{ motion.category.nameWithParentAbove }}
+                        <div class="ellipsis-overflow" *ngIf="motion.category.parent">
+                            {{ motion.category.parent.toString() }}
+                        </div>
+                        <div class="ellipsis-overflow">{{ motion.category.toString() }}</div>
                     </os-icon-container>
                 </div>
 

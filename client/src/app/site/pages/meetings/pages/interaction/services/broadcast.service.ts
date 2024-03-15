@@ -28,7 +28,7 @@ export class BroadcastService {
     private broadcastChannel: BroadcastChannel;
     private onMessage = new Subject<any>();
 
-    constructor() {
+    public constructor() {
         this.broadcastChannel = new BroadcastChannel(BroadcastChannelName);
         this.broadcastChannel.onmessage = message => this.onMessage.next(message.data);
     }

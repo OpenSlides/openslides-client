@@ -4,6 +4,8 @@ import { ConnectionStatusService } from 'src/app/site/services/connection-status
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { SpinnerComponent } from 'src/app/ui/modules/spinner/components/spinner/spinner.component';
 
+import { UpdateService } from '../../../site-wrapper/services/update.service';
+
 @Component({
     selector: `os-global-spinner`,
     templateUrl: `./global-spinner.component.html`,
@@ -28,6 +30,8 @@ export class GlobalSpinnerComponent extends SpinnerComponent {
                 if (this.connectionStatusService.getReason()) {
                     errorText.push(this.connectionStatusService.getReason());
                 }
+            } else if (this.updateService.updateAvailable) {
+                errorText.push(this.translate.instant(`Application update in progress.`));
             }
         }
 
@@ -37,18 +41,14 @@ export class GlobalSpinnerComponent extends SpinnerComponent {
     public constructor(
         private lifecycleService: LifecycleService,
         private connectionStatusService: ConnectionStatusService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private updateService: UpdateService
     ) {
         super();
 
         this.lifecycleService.booted.then(() => {
             setTimeout(() => {
                 this.displayDetailedInformation = true;
-                console.log(
-                    this.displayDetailedInformation,
-                    this.connectionStatusService.isOffline(),
-                    this.connectionStatusService.getReason()
-                );
             }, 10000);
         });
     }

@@ -21,7 +21,7 @@ interface AgendaTreePdfEntry {
     providedIn: AgendaItemListServiceModule
 })
 export class AgendaItemExportService {
-    constructor(
+    public constructor(
         private translate: TranslateService,
         private csvExportService: MeetingCsvExportForBackendService,
         private pdfExportService: MeetingPdfExportService,

@@ -14,7 +14,7 @@ import { ActionService } from '../actions';
 export class RepositoryServiceCollectorService {
     public collectionToKeyUpdatesObservableMap: { [collection: string]: BehaviorSubject<string[]> } = {};
 
-    constructor(
+    public constructor(
         public DS: DataStoreService,
         public actionService: ActionService,
         public collectionMapperService: CollectionMapperService,

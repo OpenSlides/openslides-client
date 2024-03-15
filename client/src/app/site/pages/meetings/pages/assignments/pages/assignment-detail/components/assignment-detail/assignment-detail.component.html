@@ -188,7 +188,7 @@
                     <div class="search-new-speaker-form" *ngIf="hasPerms('addOthers')">
                         <os-participant-search-selector
                             [nonSelectableUserIds]="candidateUserIds"
-                            placeholder="{{ 'Select or search new candidate ...' | translate }}"
+                            placeholder="{{ 'Select participant' | translate }}"
                             (userSelected)="addCandidate($event)"
                         ></os-participant-search-selector>
                     </div>

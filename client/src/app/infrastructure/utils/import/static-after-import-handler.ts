@@ -9,9 +9,9 @@ export class StaticAfterImportHandler<ToCreate = any, ToImport = any> extends Ba
     ToImport
 > {
     public constructor(
-        readonly config: StaticAfterImportConfig<ToCreate, ToImport>,
-        override readonly idProperty: keyof ToCreate,
-        override readonly translateFn: (value: string) => string
+        config: StaticAfterImportConfig<ToCreate, ToImport>,
+        idProperty: keyof ToCreate,
+        translateFn: (value: string) => string
     ) {
         super({ idProperty, ...config, translateFn });
     }

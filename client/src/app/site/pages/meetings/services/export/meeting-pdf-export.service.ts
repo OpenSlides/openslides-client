@@ -53,7 +53,7 @@ export class MeetingPdfExportService {
         return mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`)!);
     }
 
-    constructor(
+    public constructor(
         private pdfExportService: PdfDocumentService,
         private meetingSettingsService: MeetingSettingsService,
         private httpService: HttpService,

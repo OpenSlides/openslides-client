@@ -98,7 +98,7 @@
     <h1 mat-dialog-title>
         <span>{{ 'Edit details for' | translate }} {{ selectedCategory.prefixedName }}</span>
     </h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form class="edit-form" [formGroup]="editForm" (ngSubmit)="save()" (keydown)="onKeyDown($event)">
             <mat-form-field>
                 <mat-label>{{ 'Prefix' | translate }}</mat-label>
@@ -110,13 +110,13 @@
                 <input matInput osAutofocus formControlName="name" required />
             </mat-form-field>
         </form>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button type="submit" mat-button [disabled]="!editForm.valid" color="accent" (click)="save()">
             <span>{{ 'Save' | translate }}</span>
         </button>
         <button type="button" mat-button [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

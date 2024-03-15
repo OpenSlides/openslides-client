@@ -10,7 +10,7 @@ import { MotionPollServiceModule } from '../motion-poll-service.module';
     providedIn: MotionPollServiceModule
 })
 export class MotionPollControllerService {
-    constructor(private repo: PollRepositoryService) {}
+    public constructor(private repo: PollRepositoryService) {}
 
     public getViewModelList(): ViewPoll[] {
         return this.repo.getViewModelList().filter(poll => poll.pollClassType === PollClassType.Motion);
