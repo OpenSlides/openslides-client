@@ -69,6 +69,7 @@ export interface SettingsItem<V = any> {
      * @param value: The value used...
      */
     restrictionFn?: <T>(orgaSettings: OrganizationSettingsService, value: T) => any;
+    hide?: boolean; // Hide the setting in the settings view
 }
 
 interface SettingsItemAutomaticChangeSetting<V> {
@@ -662,7 +663,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `motions_statutes_enabled`,
                         label: _(`Activate statute amendments`),
-                        type: `boolean`
+                        type: `boolean`,
+                        hide: true
                     },
                     {
                         key: `motions_amendments_in_main_list`,
