@@ -288,6 +288,45 @@ export class MotionPdfService {
                 ]);
             }
         }
+        // editors
+        if (!infoToExport || infoToExport.includes(`editors`)) {
+            const motionEnableEditor = this.meetingSettingsService.instant(`motions_enable_editor`);
+            if (motionEnableEditor && motion.editors.length > 0) {
+                const editors = motion.editors.map(editor => editor.user.full_name).join(`, `);
+
+                metaTableBody.push([
+                    {
+                        text: `${this.translate.instant(`Editors`)}:`,
+                        style: `boldText`
+                    },
+                    {
+                        text: editors
+                    }
+                ]);
+            }
+        }
+
+        // working group speakers
+        if (!infoToExport || infoToExport.includes(`working_group_speakers`)) {
+            const motionEnableWorkingGroupSpeaker = this.meetingSettingsService.instant(
+                `motions_enable_working_group_speaker`
+            );
+            if (motionEnableWorkingGroupSpeaker && motion.working_group_speakers.length > 0) {
+                const working_group_speakers = motion.working_group_speakers
+                    .map(speaker => speaker.user.full_name)
+                    .join(`, `);
+
+                metaTableBody.push([
+                    {
+                        text: `${this.translate.instant(`Working group speakers`)}:`,
+                        style: `boldText`
+                    },
+                    {
+                        text: working_group_speakers
+                    }
+                ]);
+            }
+        }
 
         // state
         if (!infoToExport || infoToExport.includes(`state`)) {

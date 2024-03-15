@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -154,8 +154,8 @@ In combination with motion blocks, the recommendation of multiple motions can be
             type: `input`
         },
         {
-            name: _(`Internal`),
-            help_text: _(`The recommendation of motions in such a state can only be seen by motion managers.`),
+            name: _(`Show recommendations not public`),
+            help_text: _(`Recommendation of motions in such a state can only be seen by motion managers.`),
             selector: `is_internal`,
             type: `check`
         },

@@ -15,7 +15,7 @@ export class MotionStatuteParagraphRepositoryService extends BaseMeetingRelatedR
     ViewMotionStatuteParagraph,
     MotionStatuteParagraph
 > {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionStatuteParagraph);
     }
 

@@ -13,7 +13,7 @@ export class ProjectorCountdownControllerService extends BaseMeetingControllerSe
     ViewProjectorCountdown,
     ProjectorCountdown
 > {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: ProjectorCountdownRepositoryService
     ) {

@@ -179,17 +179,17 @@ export class Settings {
     public assignment_poll_default_backend!: PollBackendDurationType;
 
     //topic poll
-    topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
+    public topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
 
     //default poll
-    poll_ballot_paper_selection: BallotPaperSelection;
-    poll_ballot_paper_number: number;
-    poll_sort_poll_result_by_votes: boolean;
-    poll_default_type: PollType;
-    poll_default_method: PollMethod;
-    poll_default_onehundred_percent_base: PollPercentBase;
-    poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
-    poll_default_backend: PollBackendDurationType;
+    public poll_ballot_paper_selection: BallotPaperSelection;
+    public poll_ballot_paper_number: number;
+    public poll_sort_poll_result_by_votes: boolean;
+    public poll_default_type: PollType;
+    public poll_default_method: PollMethod;
+    public poll_default_onehundred_percent_base: PollPercentBase;
+    public poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
+    public poll_default_backend: PollBackendDurationType;
 
     //SSO
     public external_id!: string;

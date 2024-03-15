@@ -29,7 +29,7 @@ export class ImportProcess<ModelsToCreate> {
 
     private _importFailCounter = 0;
 
-    public constructor(readonly config: ImportProcessConfig<ModelsToCreate>) {
+    public constructor(config: ImportProcessConfig<ModelsToCreate>) {
         this._afterImportChunkFn = config.afterImportChunkFn ?? VoidFn;
         this._importFn = config.importFn;
         this._chunkSize = config.chunkSize;

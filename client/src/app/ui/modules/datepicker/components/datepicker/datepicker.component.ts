@@ -19,7 +19,7 @@ export class DatepickerComponent extends BaseDatepickerComponent {
 
     public override contentForm: UntypedFormControl;
 
-    constructor(element: ElementRef<HTMLElement>, @Optional() @Self() ngControl: NgControl) {
+    public constructor(element: ElementRef<HTMLElement>, @Optional() @Self() ngControl: NgControl) {
         super(element, ngControl);
     }
 
