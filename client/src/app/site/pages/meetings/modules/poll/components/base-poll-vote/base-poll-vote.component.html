@@ -185,10 +185,28 @@
                                         class="vote-button"
                                         mat-raised-button
                                         (click)="saveSingleVote(option.id, action.vote, delegation)"
+                                        (mouseenter)="setHover(true, action, option, delegation)"
+                                        (mouseleave)="setHover(false, action, option, delegation)"
                                         [disabled]="isDeliveringVote(delegation)"
                                         [ngClass]="getActionButtonClass(action, option, delegation)"
                                     >
-                                        <mat-icon>{{ action.icon }}</mat-icon>
+                                        <mat-icon
+                                            *ngIf="
+                                                getActionButtonClass(action, option, delegation) ||
+                                                isHovered(action, option, delegation)
+                                            "
+                                            [ngStyle]="action.style"
+                                        >
+                                            {{ action.icon }}
+                                        </mat-icon>
+                                        <mat-icon
+                                            *ngIf="
+                                                !getActionButtonClass(action, option, delegation) &&
+                                                !isHovered(action, option, delegation)
+                                            "
+                                        >
+                                            radio_button_unchecked
+                                        </mat-icon>
                                     </button>
                                     <span *ngIf="settings.isSplitSingleOption" class="vote-label">
                                         {{ action.label | translate }}

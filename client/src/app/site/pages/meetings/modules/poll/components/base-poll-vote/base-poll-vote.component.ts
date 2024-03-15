@@ -27,6 +27,7 @@ export interface VoteOption {
     css?: string;
     icon?: string;
     label: string;
+    style?: { [key: string]: string };
 }
 
 export interface PollVoteViewSettings {
@@ -85,8 +86,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         {
             vote: `A`,
             css: `voted-abstain`,
-            icon: `radio_button_unchecked`,
-            label: `Abstain`
+            icon: `pause_circle_outline`,
+            label: `Abstain`,
+            style: { transform: `rotate(90deg)` }
         }
     ];
 
@@ -138,6 +140,8 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     protected cd = inject(ChangeDetectorRef);
     private pollRepo = inject(PollControllerService);
     private operator = inject(OperatorService);
+
+    private hovered: { [userId: number]: { [optionId: number]: { Y?: boolean; N?: boolean; A?: boolean } } } = {};
 
     public constructor(private meetingSettingsService: MeetingSettingsService) {
         super();
@@ -211,6 +215,24 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
             return `-`;
         }
         return this.poll.max_votes_amount - this.getVotesCount(user);
+    }
+
+    public setHover(isHovering: boolean, voteOption: VoteOption, option: ViewOption, user: ViewUser = this.user): void {
+        if (!this.hovered[user.id]) {
+            this.hovered[user.id] = {};
+        }
+        if (!this.hovered[user.id][option.id]) {
+            this.hovered[user.id][option.id] = {};
+        }
+        this.hovered[user.id][option.id][voteOption.vote] = isHovering;
+    }
+
+    public isHovered(voteOption: VoteOption, option: ViewOption, user: ViewUser = this.user): boolean {
+        return (
+            this.hovered[user.id] &&
+            this.hovered[user.id][option.id] &&
+            this.hovered[user.id][option.id][voteOption.vote]
+        );
     }
 
     public getFormControl(optionId: number): UntypedFormControl {
