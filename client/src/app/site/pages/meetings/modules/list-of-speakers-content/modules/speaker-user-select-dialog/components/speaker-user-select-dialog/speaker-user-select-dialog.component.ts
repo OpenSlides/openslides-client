@@ -1,8 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import {
-    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-    MatLegacyDialogRef as MatDialogRef
-} from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';

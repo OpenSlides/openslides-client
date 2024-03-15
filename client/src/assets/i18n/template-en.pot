@@ -62,7 +62,7 @@ msgid "A topic needs a title"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component.html
-msgid "A total time is required and must be greater than 0."
+msgid "A total time is required and must be in min:secs format."
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/modules/participant-search-selector/components/participant-search-selector/participant-search-selector.component.ts
@@ -1751,7 +1751,15 @@ msgstr ""
 msgid "Edit workflow"
 msgstr ""
 
+#: /app/src/app/gateways/repositories/motions/motion-editor-repository/motion-editor-repository.service.ts
+msgid "Editor"
+msgstr ""
+
 msgid "Editorial final version"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
+msgid "Editors"
 msgstr ""
 
 msgid "Election"
@@ -1821,6 +1829,16 @@ msgid "Enable specifications and ranking for possible motions"
 msgstr ""
 
 msgid "Enable star icon usage by speakers"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Enable the ability to enter a participant as motion editor"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid ""
+"Enable the ability to enter a participant as working group speaker for a "
+"motion"
 msgstr ""
 
 msgid "Enable virtual applause"
@@ -3036,6 +3054,10 @@ msgstr ""
 msgid "No delegation of vote"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
+msgid "No editors"
+msgstr ""
+
 msgid "No emails were send."
 msgstr ""
 
@@ -3106,6 +3128,10 @@ msgid "No tags"
 msgstr ""
 
 msgid "No verbose name is defined"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
+msgid "No working group speakers"
 msgstr ""
 
 msgid "No."
@@ -3762,6 +3788,10 @@ msgid "Remove me"
 msgstr ""
 
 msgid "Remove option"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-content/list-of-speakers-content.component.html
+msgid "Remove point of order"
 msgstr ""
 
 msgid "Reopen"
@@ -4500,6 +4530,12 @@ msgstr ""
 msgid "The process will be started. Please wait!"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid ""
+"The recommendation of motions in such a state can only be seen by motion "
+"managers."
+msgstr ""
+
 msgid "The request could not be sent. Check your connection."
 msgstr ""
 
@@ -5047,6 +5083,14 @@ msgstr ""
 msgid "Workflows"
 msgstr ""
 
+#: /app/src/app/gateways/repositories/motions/motion-working-group-speaker-repository/motion-working-group-speaker-repository.service.ts
+msgid "Working group speaker"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
+msgid "Working group speakers"
+msgstr ""
+
 msgid "Yes"
 msgstr ""
 
@@ -5345,6 +5389,10 @@ msgid "inactive"
 msgstr ""
 
 msgid "inline"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/components/motion-extension-field/motion-extension-field.component.html
+msgid "intern"
 msgstr ""
 
 msgid "internal"
