@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Editor, Extension } from '@tiptap/core';
 import Blockquote from '@tiptap/extension-blockquote';
 import Bold from '@tiptap/extension-bold';
@@ -90,9 +91,32 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         return 1;
     }
 
+    public get isGodButtonActive(): boolean {
+        return (
+            this.editor.isActive(`subscript`) ||
+            this.editor.isActive(`superscript`) ||
+            this.editor.isActive(`heading`) ||
+            this.editor.isActive(`blockquote`)
+        );
+    }
+
+    public get godButtonText(): string {
+        if (this.editor.isActive(`subscript`)) {
+            return this.translate.instant(`Subscript`);
+        } else if (this.editor.isActive(`superscript`)) {
+            return this.translate.instant(`Superscript`);
+        } else if (this.editor.isActive(`heading`)) {
+            return this.translate.instant(`Heading`) + ` ${this.selectedHeadingLevel}`;
+        } else if (this.editor.isActive(`blockquote`)) {
+            return this.translate.instant(`Blockquote`);
+        }
+
+        return this.translate.instant(`Paragraph`);
+    }
+
     private cd: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-    public constructor(private dialog: MatDialog) {
+    public constructor(private dialog: MatDialog, private translate: TranslateService) {
         super();
     }
 
@@ -176,21 +200,33 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         this.editor.destroy();
     }
 
-    public updateFontColor(e: Event) {
+    public godButtonAction(): void {
+        if (this.editor.isActive(`subscript`)) {
+            this.editor.chain().focus().toggleSubscript().run();
+        } else if (this.editor.isActive(`superscript`)) {
+            this.editor.chain().focus().toggleSuperscript().run();
+        } else if (this.editor.isActive(`heading`)) {
+            this.editor.chain().focus().toggleHeading({ level: this.selectedHeadingLevel }).run();
+        } else if (this.editor.isActive(`blockquote`)) {
+            this.editor.chain().focus().toggleBlockquote().run();
+        }
+    }
+
+    public updateFontColor(e: Event): void {
         const val = (<any>e.target)?.value;
         if (val) {
             this.editor.chain().focus().setColor(val).run();
         }
     }
 
-    public updateHighlightColor(e: Event) {
+    public updateHighlightColor(e: Event): void {
         const val = (<any>e.target)?.value;
         if (val) {
             this.editor.chain().focus().setHighlight({ color: val }).run();
         }
     }
 
-    public clearSelectedFormat() {
+    public clearSelectedFormat(): void {
         this.editor
             .chain()
             .focus()
@@ -286,7 +322,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             });
     }
 
-    public editCode() {
+    public editCode(): void {
         this.dialog
             .open(EditorHtmlDialogComponent, {
                 data: this.editor.getHTML()
