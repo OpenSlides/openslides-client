@@ -16,7 +16,7 @@ import { AgendaItemListServiceModule } from '../agenda-item-list-service.module'
 export class AgendaItemMultiselectService {
     private messageForSpinner = this.translate.instant(`Agenda items are in process. Please wait ...`);
 
-    constructor(
+    public constructor(
         private choiceService: ChoiceService,
         private spinnerService: SpinnerService,
         public repo: AgendaItemControllerService,

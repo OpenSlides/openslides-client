@@ -147,7 +147,7 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
     }
 
     /**
-     * Removes the last finished speaker from the list an re-adds him on pole position
+     * Removes the last finished speaker from the list an re-adds them on pole position
      */
     public readdLastSpeaker(): void {
         this.listOfSpeakersRepo.readdLastSpeaker(this.viewListOfSpeakers);

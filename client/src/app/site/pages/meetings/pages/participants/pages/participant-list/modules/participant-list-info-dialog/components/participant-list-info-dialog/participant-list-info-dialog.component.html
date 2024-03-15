@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>
     <span>{{ 'Edit details for' | translate }} {{ infoDialog.name }}</span>
 </h1>
-<div class="os-form-card-mobile" mat-dialog-content>
+<mat-dialog-content class="os-form-card-mobile">
     <mat-form-field>
         <mat-label>{{ 'Groups' | translate }}</mat-label>
         <mat-select [(ngModel)]="infoDialog.group_ids" multiple>
@@ -40,8 +40,8 @@
         <mat-label>{{ 'Participant number' | translate }}</mat-label>
         <input type="text" matInput [(ngModel)]="infoDialog.number" />
     </mat-form-field>
-</div>
-<div mat-dialog-actions>
+</mat-dialog-content>
+<mat-dialog-actions>
     <button
         type="submit"
         mat-button
@@ -59,4 +59,4 @@
     <button type="button" mat-button [mat-dialog-close]="null">
         <span>{{ 'Cancel' | translate }}</span>
     </button>
-</div>
+</mat-dialog-actions>

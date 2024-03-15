@@ -187,7 +187,7 @@
 <!-- File edit dialog -->
 <ng-template #fileEditDialog>
     <h1 mat-dialog-title>{{ 'Edit details for' | translate }}</h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form class="edit-file-form" [formGroup]="fileEditForm">
             <mat-form-field>
                 <mat-label>{{ 'New file name' | translate }}</mat-label>
@@ -195,8 +195,8 @@
                 <mat-error *ngIf="fileEditForm.invalid">{{ 'Required' | translate }}</mat-error>
             </mat-form-field>
         </form>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button
             type="submit"
             mat-button
@@ -209,7 +209,7 @@
         <button type="button" mat-button [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>
 
 <!-- Move dialog -->
@@ -217,7 +217,7 @@
     <h1 mat-dialog-title>
         <span>{{ 'Move into directory' | translate }}</span>
     </h1>
-    <div class="os-form-card-mobile" [formGroup]="moveForm" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile" [formGroup]="moveForm">
         <p>{{ 'Please select the directory:' | translate }}</p>
         <mat-form-field>
             <mat-label>{{ 'Upload to' | translate }}</mat-label>
@@ -228,13 +228,13 @@
                 [inputListValues]="filteredDirectoryBehaviorSubject"
             ></os-list-search-selector>
         </mat-form-field>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button type="submit" mat-button color="accent" [mat-dialog-close]="true">
             <span>{{ 'Move' | translate }}</span>
         </button>
         <button type="button" mat-button [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - 'feature/**'
+      - 'staging/**'
 
 env:
   NG_CLI_ANALYTICS: ci

@@ -1,10 +1,10 @@
 <!-- Title -->
 <h2 mat-dialog-title *ngIf="data">{{ data.title | translate }}</h2>
-<div class="choice-dialog-content" mat-dialog-content>{{ data.content | translate }}</div>
+<mat-dialog-content class="choice-dialog-content">{{ data.content | translate }}</mat-dialog-content>
 
 <form [formGroup]="selectForm" *ngIf="data">
     <!-- Content -->
-    <div mat-dialog-content *ngIf="data?.choices">
+    <mat-dialog-content *ngIf="data?.choices">
         <os-list-search-selector
             ngDefaultControl
             formControlName="select"
@@ -13,10 +13,10 @@
             [inputListValues]="data.choices!"
             (selectionChanged)="onSelectionChanged($event)"
         ></os-list-search-selector>
-    </div>
+    </mat-dialog-content>
 
     <!-- Actions -->
-    <div mat-dialog-actions>
+    <mat-dialog-actions>
         <!-- Custom Actions -->
         <div *ngIf="data.actions as actions">
             <button
@@ -51,5 +51,5 @@
         <button mat-button (click)="closeDialog(false)">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </form>
