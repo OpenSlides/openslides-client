@@ -73,63 +73,49 @@ function transformLists(html: string): string {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, `text/html`);
 
-    const lists: HTMLElement[] = [];
-    let currentUl: HTMLElement;
+    let listStack: HTMLElement[] = [];
     let currentListId: string;
     const listElements = doc.querySelectorAll(`p[style*="mso-list:"]`);
     listElements.forEach(node => {
-        if (node.nodeType !== Node.ELEMENT_NODE) {
-            return;
-        }
-
-        // Check if the element is part of a list
         const el = <HTMLElement>node;
-        const msoListValue: string = parseStyleAttribute(el)[`mso-list`];
         const hasNonListItemSibling =
             !el.previousElementSibling ||
             !(el.previousElementSibling.nodeName === `OL` || el.previousElementSibling.nodeName === `UL`);
 
+        // Parse `mso-list` style attribute
+        const msoListValue: string = parseStyleAttribute(el)[`mso-list`];
         const msoListInfos = msoListValue.split(` `);
-        const listLevel = +msoListInfos.find((e: string) => e.startsWith(`level`))?.substring(5) || 1;
         const msoListId = msoListInfos.find(e => /l[0-9]+/.test(e));
-        if (currentListId !== msoListId && (hasNonListItemSibling || listLevel === 1)) {
+        const msoListLevel = +msoListInfos.find((e: string) => e.startsWith(`level`))?.substring(5) || 1;
+
+        // Check for start of a new list
+        if (currentListId !== msoListId && (hasNonListItemSibling || msoListLevel === 1)) {
             currentListId = msoListId;
-            const listInfo = getListType(getListPrefix(el));
-            currentUl = document.createElement(listInfo.type);
-            if (listInfo.countType) {
-                currentUl.setAttribute(`type`, listInfo.countType);
-            }
-            if (listInfo.start > 1) {
-                currentUl.setAttribute(`start`, listInfo.start.toString());
-            }
-
-            lists.push(currentUl);
-            el.before(currentUl);
+            listStack = [];
         }
 
-        const prefix = getListPrefix(el);
-        // Remove list item numbers
-        el.innerHTML = el.innerHTML.replace(listTypeRegex, ``);
+        while (msoListLevel > listStack.length) {
+            const newList = createListElement(el);
 
-        // Get the mso list item level
+            if (listStack.length > 0) {
+                listStack[listStack.length - 1].appendChild(newList);
+            } else {
+                el.before(newList);
+            }
+            listStack.push(newList);
+        }
+
+        while (msoListLevel < listStack.length) {
+            listStack.pop();
+        }
+
+        // Remove list item numbers and create li
         const li = document.createElement(`li`);
-        li.innerHTML = el.innerHTML;
-
-        // Add list level attribute if element needs to be moved to sublist
-        if (listLevel && listLevel > 1) {
-            li.dataset[`listLevel`] = `${listLevel - 1}`;
-            if (prefix) {
-                const listInfo = getListType(prefix);
-                li.dataset[`listType`] = listInfo.type;
-                li.dataset[`start`] = listInfo.start.toString() || ``;
-                li.dataset[`countType`] = listInfo.countType || ``;
-            }
-        }
-        currentUl.appendChild(li);
+        li.innerHTML = el.innerHTML.replace(listTypeRegex, ``);
+        listStack[listStack.length - 1].appendChild(li);
         el.remove();
     });
 
-    fixLists(lists);
     return doc.documentElement.outerHTML;
 }
 
@@ -146,8 +132,20 @@ function getListPrefix(el: HTMLElement) {
 }
 
 function parseStyleAttribute(el: Element): { [prop: string]: string } {
-    const styleRaw = el?.attributes[`style`]?.value || ``;
+    const styleRaw: string = el?.attributes[`style`]?.value || ``;
     return Object.fromEntries(styleRaw.split(`;`).map(line => line.split(`:`).map(v => v.trim())));
+}
+
+function createListElement(el: HTMLElement) {
+    const listInfo = getListInfo(getListPrefix(el));
+    const list = document.createElement(listInfo.type);
+    if (listInfo.countType) {
+        list.setAttribute(`type`, listInfo.countType);
+    }
+    if (listInfo.start > 1) {
+        list.setAttribute(`start`, listInfo.start.toString());
+    }
+    return list;
 }
 
 const listOrderRegex = {
@@ -158,7 +156,7 @@ const listOrderRegex = {
     letterUpper: /[A-Z]+\./
 };
 
-function getListType(prefix: string) {
+function getListInfo(prefix: string) {
     let type = `ul`;
     let countType: string | null = null;
     let start = 1;
@@ -188,47 +186,4 @@ function getListType(prefix: string) {
         start,
         countType
     };
-}
-
-function fixLists(lists: HTMLElement[]) {
-    const nextLists = [];
-    for (const list of lists) {
-        let node = list.childNodes[0];
-        while (node) {
-            if (node.nodeName !== `LI`) {
-                node = node.nextSibling;
-                continue;
-            }
-
-            const el = <HTMLElement>node;
-            node = node.nextSibling;
-            if (+el.dataset[`listLevel`]) {
-                el.dataset[`listLevel`] = `${+el.dataset[`listLevel`] - 1}`;
-                if (!el.previousElementSibling) {
-                    return;
-                }
-
-                // Check if parent already has a sublist
-                let sublist: HTMLElement = document.createElement(el.dataset[`listType`] || list.nodeName);
-                if (el.previousElementSibling?.lastElementChild?.nodeName === list.nodeName) {
-                    sublist = <HTMLElement>el.previousElementSibling.lastElementChild;
-                } else {
-                    if (+el.dataset[`start`] > 1) {
-                        sublist.setAttribute(`start`, el.dataset[`start`]);
-                    }
-                    if (el.dataset[`countType`]) {
-                        sublist.setAttribute(`type`, el.dataset[`countType`]);
-                    }
-                    el.previousElementSibling.appendChild(sublist);
-                    nextLists.push(sublist);
-                }
-
-                sublist.appendChild(el);
-            }
-        }
-    }
-
-    if (nextLists.length) {
-        fixLists(nextLists);
-    }
 }
