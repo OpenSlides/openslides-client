@@ -102,7 +102,7 @@
 <!-- File edit dialog -->
 <ng-template #fileEditDialog>
     <h1 mat-dialog-title>{{ 'Edit details for' | translate }}</h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form class="edit-file-form" [formGroup]="fileEditForm!">
             <mat-form-field>
                 <mat-label>{{ 'New file name' | translate }}</mat-label>
@@ -110,8 +110,8 @@
                 <mat-error *ngIf="fileEditForm?.invalid">{{ 'Required' | translate }}</mat-error>
             </mat-form-field>
         </form>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button
             type="submit"
             mat-button
@@ -124,7 +124,7 @@
         <button type="button" mat-button [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>
 
 <!-- Template for the managing buttons -->
@@ -158,7 +158,7 @@
 <!-- New folder dialog -->
 <ng-template #newFolderDialog>
     <h1 mat-dialog-title>{{ 'New directory' | translate }}</h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form class="edit-file-form" [formGroup]="newDirectoryForm">
             <p>{{ 'Please enter a name for the new directory:' | translate }}</p>
             <mat-form-field>
@@ -166,13 +166,13 @@
                 <input matInput osAutofocus formControlName="title" required />
             </mat-form-field>
         </form>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button type="submit" mat-button [disabled]="!newDirectoryForm.valid" color="accent" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
         <button type="button" mat-button [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

@@ -85,7 +85,7 @@ export class SpeakingTimesComponent implements OnDestroy {
         }
     }
 
-    constructor(
+    public constructor(
         private durationService: DurationService,
         private speakingTimesRepo: StructureLevelListOfSpeakersRepositoryService,
         private speakerRepo: SpeakerRepositoryService,
@@ -98,11 +98,11 @@ export class SpeakingTimesComponent implements OnDestroy {
         private translateService: TranslateService
     ) {
         this.totalTimeForm = this.formBuilder.group({
-            totalTime: [0, [Validators.required, Validators.min(1)]]
+            totalTime: [0, [Validators.required, Validators.pattern(/^\d+:\d{2}$/)]]
         });
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         for (const speakingTimeId of this.subscriptions.keys()) {
             this.subscriptions.get(speakingTimeId).unsubscribe();
         }
@@ -114,7 +114,7 @@ export class SpeakingTimesComponent implements OnDestroy {
 
     public setTotalTime(speakingTimeId: number): void {
         this.currentEntry = this.structureLevels.get(speakingTimeId);
-        this.totalTimeForm.get(`totalTime`).setValue(this.currentEntry.countdown.countdown_time);
+        this.totalTimeForm.get(`totalTime`).setValue(this.duration(this.currentEntry.countdown.countdown_time));
         const dialogSettings = infoDialogSettings;
         this.dialogRef = this.dialog.open(this.totalTimeDialog!, dialogSettings);
         this.dialogRef.afterClosed().subscribe(res => {
@@ -154,22 +154,24 @@ export class SpeakingTimesComponent implements OnDestroy {
     }
 
     private updateSpeakingTime(speakingTime: ViewStructureLevelListOfSpeakers) {
-        if (speakingTime.isInactive) {
-            this.structureLevels.delete(speakingTime.id);
-        } else {
-            const remaining = speakingTime.remaining_time;
-            this.structureLevels.set(speakingTime.id, {
-                name: speakingTime.structure_level.getTitle(),
-                color: speakingTime.structure_level.color,
-                countdown: {
-                    running: !!speakingTime.current_start_time,
-                    countdown_time: speakingTime.current_start_time
-                        ? speakingTime.current_start_time + remaining
-                        : remaining
-                },
-                id: speakingTime.id,
-                speakers: speakingTime.speakers
-            });
+        if (speakingTime) {
+            if (speakingTime.isInactive) {
+                this.structureLevels.delete(speakingTime.id);
+            } else {
+                const remaining = speakingTime.remaining_time;
+                this.structureLevels.set(speakingTime.id, {
+                    name: speakingTime.structure_level.getTitle(),
+                    color: speakingTime.structure_level.color,
+                    countdown: {
+                        running: !!speakingTime.current_start_time,
+                        countdown_time: speakingTime.current_start_time
+                            ? speakingTime.current_start_time + remaining
+                            : remaining
+                    },
+                    id: speakingTime.id,
+                    speakers: speakingTime.speakers
+                });
+            }
         }
         this.cd.markForCheck();
     }
@@ -189,7 +191,14 @@ export class SpeakingTimesComponent implements OnDestroy {
             return;
         }
         this.speakingTimesRepo.update([
-            { id: this.currentEntry.id, initial_time: this.totalTimeForm.get(`totalTime`).value }
+            {
+                id: this.currentEntry.id,
+                initial_time: this.durationService.stringToDuration(
+                    this.totalTimeForm.get(`totalTime`).value,
+                    `m`,
+                    true
+                )
+            }
         ]);
     }
 

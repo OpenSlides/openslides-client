@@ -30,7 +30,7 @@ export class PollControllerService extends BaseMeetingControllerService<ViewPoll
 
     private _tokens: { [poll_id: number]: { [user_id: number]: string } } = {};
 
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: PollRepositoryService,
         protected voteRepo: VoteRepositoryService,

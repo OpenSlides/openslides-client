@@ -67,7 +67,7 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
                         condition: SpeechState.INTERPOSED_QUESTION,
                         label: this.translate.instant(`Interposed question`)
                     },
-                    { condition: null, label: this.translate.instant(`No speech type`) }
+                    { condition: null, label: this.translate.instant(`not specified`) }
                 ]
             },
             {

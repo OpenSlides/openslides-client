@@ -18,7 +18,7 @@ import { ViewMotionCategory } from '../../view-models';
 export class MotionCategoryControllerService extends BaseMeetingControllerService<ViewMotionCategory, MotionCategory> {
     private readonly _currentCategoriesSubject = new BehaviorSubject<ViewMotionCategory[]>([]);
 
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MotionCategoryRepositoryService,
         private treeService: TreeService

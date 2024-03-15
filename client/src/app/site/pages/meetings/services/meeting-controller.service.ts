@@ -96,6 +96,6 @@ export class MeetingControllerService extends BaseController<ViewMeeting, Meetin
         }
         const date = new Date(time);
         const month = date.getMonth() + 1 > 9 ? `${date.getMonth() + 1}` : `0${date.getMonth() + 1}`;
-        return `${date.getFullYear()}${month}${date.getDate()}`;
+        return `${date.getFullYear()}-${month}-${date.getDate()}`;
     }
 }

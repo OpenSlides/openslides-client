@@ -120,7 +120,8 @@
 
 .submit-vote-indicator {
     text-align: center;
-    .mat-spinner {
+    .mat-mdc-progress-spinner {
+        display: block;
         margin: auto;
     }
 }

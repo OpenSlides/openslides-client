@@ -6,5 +6,5 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
     styleUrls: [`./chip-select-chip.component.scss`]
 })
 export class ChipSelectChipComponent {
-    @ViewChild(TemplateRef) template: TemplateRef<any>;
+    @ViewChild(TemplateRef) public template: TemplateRef<any>;
 }

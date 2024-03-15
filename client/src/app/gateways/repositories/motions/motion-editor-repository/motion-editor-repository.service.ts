@@ -19,5 +19,5 @@ export class MotionEditorRepositoryService extends BaseMotionMeetingUserReposito
         super(repositoryServiceCollector, MotionEditor, MotionEditorAction);
     }
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Editors` : `Editor`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Motion editors` : `Motion editor`);
 }

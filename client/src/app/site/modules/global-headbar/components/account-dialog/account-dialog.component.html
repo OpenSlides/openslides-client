@@ -1,50 +1,48 @@
-<div>
-    <div class="account-dialog-title flex-container">
-        <h2 mat-dialog-title class="left-align no-margin">{{ self?.short_name }}</h2>
-        <button mat-icon-button [matDialogClose]="null">
-            <mat-icon>close</mat-icon>
-        </button>
+<h2 mat-dialog-title class="flex-container padding-top-16">
+    <span class="left-align no-margin">{{ self?.short_name }}</span>
+    <button mat-icon-button [matDialogClose]="null">
+        <mat-icon>close</mat-icon>
+    </button>
+</h2>
+<mat-divider></mat-divider>
+<mat-dialog-content class="account-dialog-container">
+    <div class="account-dialog-menu-items">
+        <mat-selection-list [multiple]="false">
+            <ng-container *ngFor="let item of filteredMenuItems">
+                <mat-list-option
+                    [value]="item"
+                    [selected]="activeMenuItem === item.name"
+                    (click)="activeMenuItem = item.name"
+                >
+                    {{ item.name | translate }}
+                </mat-list-option>
+                <mat-divider></mat-divider>
+            </ng-container>
+        </mat-selection-list>
     </div>
-    <mat-divider></mat-divider>
-    <div mat-dialog-content class="account-dialog-container">
-        <div class="account-dialog-menu-items">
-            <mat-selection-list [multiple]="false">
-                <ng-container *ngFor="let item of filteredMenuItems">
-                    <mat-list-option
-                        [value]="item"
-                        [selected]="activeMenuItem === item.name"
-                        (click)="activeMenuItem = item.name"
-                    >
-                        {{ item.name | translate }}
-                    </mat-list-option>
-                    <mat-divider></mat-divider>
-                </ng-container>
-            </mat-selection-list>
-        </div>
-        <mat-divider [vertical]="true"></mat-divider>
-        <div class="account-dialog-content">
-            <div class="content-wrapper" (keydown)="onKeyDown($event)">
-                <ng-container [ngSwitch]="activeMenuItem">
-                    <ng-container
-                        *ngSwitchCase="menuItemsRef.SHOW_PROFILE"
-                        [ngTemplateOutlet]="showProfileView"
-                    ></ng-container>
-                    <ng-container
-                        *ngSwitchCase="menuItemsRef.SHOW_MEETINGS"
-                        [ngTemplateOutlet]="showMeetingsView"
-                    ></ng-container>
-                    <ng-container
-                        *ngSwitchCase="menuItemsRef.CHANGE_PASSWORD"
-                        [ngTemplateOutlet]="changePasswordView"
-                    ></ng-container>
-                </ng-container>
-            </div>
+    <mat-divider [vertical]="true"></mat-divider>
+    <div class="account-dialog-content">
+        <div class="content-wrapper" (keydown)="onKeyDown($event)">
+            <ng-container [ngSwitch]="activeMenuItem">
+                <ng-container
+                    *ngSwitchCase="menuItemsRef.SHOW_PROFILE"
+                    [ngTemplateOutlet]="showProfileView"
+                ></ng-container>
+                <ng-container
+                    *ngSwitchCase="menuItemsRef.SHOW_MEETINGS"
+                    [ngTemplateOutlet]="showMeetingsView"
+                ></ng-container>
+                <ng-container
+                    *ngSwitchCase="menuItemsRef.CHANGE_PASSWORD"
+                    [ngTemplateOutlet]="changePasswordView"
+                ></ng-container>
+            </ng-container>
         </div>
     </div>
-</div>
+</mat-dialog-content>
 
 <ng-template #showProfileView>
-    <div class="flex-container">
+    <div class="flex-container padding-0">
         <h2 class="left-align">{{ 'My profile' | translate }}</h2>
         <button mat-icon-button (click)="isEditing = !isEditing">
             <mat-icon>{{ isEditing ? 'close' : 'edit' }}</mat-icon>
@@ -59,7 +57,7 @@
         (validEvent)="isUserFormValid = $event"
         (changeEvent)="userPersonalForm = $event"
     ></os-user-detail-view>
-    <div *ngIf="isEditing" class="margin-top-16">
+    <div *ngIf="isEditing" class="margin-bottom-16">
         <button mat-button [disabled]="!isUserFormValid" (click)="saveUserChanges()">
             {{ 'Save' | translate }}
         </button>
