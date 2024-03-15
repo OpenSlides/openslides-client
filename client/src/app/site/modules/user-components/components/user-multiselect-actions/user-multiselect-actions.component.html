@@ -8,7 +8,7 @@
     <span>{{ 'Deselect all' | translate }}</span>
 </button>
 
-<ng-container *ngIf="canManage">
+<ng-container *ngIf="canUpdate">
     <mat-divider></mat-divider>
 
     <!-- <ng-container *ngIf="implicitContent">
@@ -43,12 +43,14 @@
         <span>{{ 'Generate new passwords' | translate }}</span>
     </button>
 
-    <mat-divider></mat-divider>
+    <ng-container *ngIf="canManage">
+        <mat-divider></mat-divider>
 
-    <button mat-menu-item class="red-warning-text" [disabled]="!selectedUsers.length" (click)="deleteSelected()">
-        <mat-icon>delete</mat-icon>
-        <span>{{ 'Delete' | translate }}</span>
-    </button>
+        <button mat-menu-item class="red-warning-text" [disabled]="!selectedUsers.length" (click)="deleteSelected()">
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </ng-container>
 </ng-container>
 
 <!-- <ng-template>

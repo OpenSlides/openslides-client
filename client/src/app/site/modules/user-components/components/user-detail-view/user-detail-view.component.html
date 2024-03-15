@@ -120,7 +120,7 @@
             </mat-form-field>
         </div>
 
-        <div *ngIf="isAllowed('manage') && !user?.saml_id">
+        <div *ngIf="isAllowed('update') && !user?.saml_id">
             <!-- Initial Password -->
             <mat-form-field class="full-width">
                 <mat-label>{{ 'Initial password' | translate }}</mat-label>
@@ -169,17 +169,17 @@
                     &nbsp;
                     <span>({{ user.pronoun }})</span>
                 </ng-container>
-                <mat-icon *ngIf="!user.is_active && isAllowed('manage')" matTooltip="{{ 'Inactive' | translate }}">
+                <mat-icon *ngIf="!user.is_active && isAllowed('update')" matTooltip="{{ 'Inactive' | translate }}">
                     block
                 </mat-icon>
                 <mat-icon
-                    *ngIf="!user.is_physical_person && isAllowed('manage')"
+                    *ngIf="!user.is_physical_person && isAllowed('update')"
                     matTooltip="{{ 'Is no natural person' | translate }}"
                 >
                     account_balance
                 </mat-icon>
                 <mat-icon
-                    *ngIf="user.hasSamlId && isAllowed('manage')"
+                    *ngIf="user.hasSamlId && isAllowed('update')"
                     matTooltip="{{ 'Has SSO identification' | translate }}"
                 >
                     fingerprint
@@ -201,7 +201,7 @@
             <span>{{ user.gender | translate }}</span>
         </div>
 
-        <div *ngIf="isAllowed('manage')">
+        <div *ngIf="isAllowed('update')">
             <!-- Username -->
             <div *ngIf="user.username">
                 <h4>{{ 'Username' | translate }}</h4>

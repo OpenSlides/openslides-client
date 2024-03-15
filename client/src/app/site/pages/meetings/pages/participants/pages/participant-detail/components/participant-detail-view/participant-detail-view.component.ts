@@ -71,10 +71,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
     public get shouldEnableFormControlFn(): (controlName: string) => boolean {
         return controlName => {
-            const canManageUsers = this.isAllowed(`manage`);
-            if (this._isUserInScope || (this.newUser && canManageUsers)) {
+            const canUpdateUsers = this.isAllowed(`update`);
+            if (this._isUserInScope || (this.newUser && canUpdateUsers)) {
                 return true;
-            } else if (canManageUsers) {
+            } else if (canUpdateUsers) {
                 return MEETING_RELATED_FORM_CONTROLS.includes(controlName);
             } else {
                 return PERSONAL_FORM_CONTROLS.includes(controlName);
@@ -353,7 +353,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     private async updateUser(): Promise<void> {
-        if (this.operator.hasPerms(Permission.userCanManage)) {
+        if (this.operator.hasPerms(Permission.userCanUpdate)) {
             this.checkForGroups(this.personalInfoFormValue);
             const isPresent = this.personalInfoFormValue.is_present || false;
             if (this.personalInfoFormValue.vote_delegated_to_id === 0) {

@@ -173,7 +173,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
 
     public async saveUserChanges(): Promise<void> {
         if (this.self) {
-            if (this.operator.hasPerms(Permission.userCanManage) && this._isUserInScope) {
+            if (this.operator.hasPerms(Permission.userCanUpdate) && this._isUserInScope) {
                 await this.repo.update(this.userPersonalForm, this.self).resolve();
             } else {
                 await this.repo.updateSelf(this.userPersonalForm, this.self);

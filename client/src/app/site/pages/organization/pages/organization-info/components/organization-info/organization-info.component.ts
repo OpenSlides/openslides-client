@@ -11,12 +11,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
     styleUrls: [`./organization-info.component.scss`]
 })
 export class OrganizationInfoComponent extends BaseComponent implements OnInit {
-    public get osIsManager(): boolean {
+    public get isManager(): boolean {
         return this.operator.isSuperAdmin || this.operator.isOrgaManager;
-    }
-
-    public get canSeeStatistics(): boolean {
-        return this.osIsManager || this.operator.hasPerms(Permission.userCanManage);
     }
 
     public constructor(

@@ -52,18 +52,17 @@ export class UserService {
                 return this.operator.hasPerms(Permission.userCanManage) && !isOwnPage;
             case `manage`:
                 return this.operator.hasPerms(Permission.userCanManage);
-            case `seeName`:
-                return this.operator.hasPerms(Permission.userCanSee, Permission.userCanManage);
-            case `seeOtherUsers`:
-                return this.operator.hasPerms(Permission.userCanSee, Permission.userCanManage);
-            case `seePersonal`:
-                return this.operator.hasPerms(Permission.userCanManage);
+            case `update`:
             case `changePersonal`:
-                return this.operator.hasPerms(Permission.userCanManage);
+            case `seePersonal`:
+                return this.operator.hasPerms(Permission.userCanUpdate);
+            case `seeName`:
+            case `seeOtherUsers`:
+                return this.operator.hasPerms(Permission.userCanSee, Permission.userCanUpdate);
             case `changePassword`:
                 return (
                     (isOwnPage && this.operator.canChangeOwnPassword) ||
-                    this.operator.hasPerms(Permission.userCanManage)
+                    this.operator.hasPerms(Permission.userCanUpdate)
                 );
             default:
                 return false;

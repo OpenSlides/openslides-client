@@ -31,15 +31,6 @@ export class ParticipantSpeakerListComponent extends BaseMeetingListViewComponen
      */
     public genderList = GENDERS;
 
-    /**
-     * Helper to check for main button permissions
-     *
-     * @returns true if the user should be able to create users
-     */
-    public get canManage(): boolean {
-        return this.operator.hasPerms(Permission.userCanManage);
-    }
-
     public get structureLevelCountdownEnabled(): Observable<boolean> {
         return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v > 0));
     }

@@ -39,12 +39,12 @@
             <span>{{ 'Change password' | translate }}</span>
         </button>
         <!-- invitation email -->
-        <button mat-menu-item *ngIf="isAllowed('manage') && user && user.email" (click)="sendInvitationEmail()">
+        <button mat-menu-item *ngIf="isAllowed('update') && user && user.email" (click)="sendInvitationEmail()">
             <mat-icon>mail</mat-icon>
             <span>{{ 'Send invitation email' | translate }}</span>
         </button>
         <!-- PDF -->
-        <button mat-menu-item *ngIf="isAllowed('manage')" (click)="onDownloadPdf()">
+        <button mat-menu-item *ngIf="isAllowed('update')" (click)="onDownloadPdf()">
             <mat-icon>picture_as_pdf</mat-icon>
             <span>{{ 'PDF' | translate }}</span>
         </button>
@@ -176,7 +176,7 @@
                 <os-editor formControlName="about_me"></os-editor>
             </div>
 
-            <div *ngIf="isAllowed('manage')">
+            <div *ngIf="isAllowed('update')">
                 <!-- Comment -->
                 <mat-form-field>
                     <mat-label>{{ 'Comment' | translate }}</mat-label>
@@ -230,7 +230,7 @@
             <span>{{ 'Default group' | translate }}</span>
         </div>
 
-        <div *ngIf="isAllowed('manage') || ownPage">
+        <div *ngIf="isAllowed('update') || ownPage">
             <!-- Own Vote delegations -->
             <div *ngIf="user?.vote_delegated_to() && showVoteDelegations">
                 <h4>{{ 'Voting right delegated to (proxy)' | translate }}</h4>
@@ -258,7 +258,7 @@
             </div>
         </div>
 
-        <div *ngIf="isAllowed('manage')">
+        <div *ngIf="isAllowed('update')">
             <!-- Comment -->
             <div *ngIf="user?.comment()">
                 <h4>{{ 'Comment' | translate }}</h4>
