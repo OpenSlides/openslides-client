@@ -28,6 +28,7 @@
             <h3 class="accent" *ngIf="settingsGroup.subgroups.length > 1">{{ subgroup.label | translate }}</h3>
             <ng-container *ngFor="let setting of subgroup.settings">
                 <os-meeting-settings-group-detail-field
+                    *ngIf="!setting.hide"
                     #settingsFields
                     (update)="updateSetting($event)"
                     [setting]="setting"
