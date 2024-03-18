@@ -1,6 +1,6 @@
 <div class="input-container" [ngClass]="{ 'has-submit': hasSubmit }">
     <div *ngIf="!hasSubmit" class="input-prefix">
-        <mat-icon class="foreground-active" (click)="clickOnIcon()">{{ iconName }}</mat-icon>
+        <mat-icon (click)="clickOnIcon()">{{ iconName }}</mat-icon>
     </div>
     <input
         #osInput
@@ -20,7 +20,7 @@
     </div>
     <div class="input-suffix">
         <button *ngIf="hasSubmit" mat-icon-button (click)="send()">
-            <mat-icon class="foreground-active">{{ iconName }}</mat-icon>
+            <mat-icon>{{ iconName }}</mat-icon>
         </button>
     </div>
 </div>
