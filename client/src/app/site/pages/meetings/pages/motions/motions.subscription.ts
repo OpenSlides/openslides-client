@@ -55,6 +55,7 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     `state_extension_reference_ids`,
                     `state_id`,
                     `submitter_ids`,
+                    `additional_submitter`,
                     `tag_ids`,
                     `title`
                 ],
@@ -224,10 +225,10 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                 follow: [
                     {
                         idField: `user_id`,
-                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                        fieldset: `participantList`
                     }
                 ],
-                ...MeetingUserFieldsets.FullNameSubscription
+                fieldset: `participantListMinimal`
             }
         ],
         fieldset: [

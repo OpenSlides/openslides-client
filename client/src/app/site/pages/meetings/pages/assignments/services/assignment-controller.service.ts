@@ -10,7 +10,7 @@ import { AssignmentCommonServiceModule } from './assignment-common-service.modul
 
 @Injectable({ providedIn: AssignmentCommonServiceModule })
 export class AssignmentControllerService extends BaseMeetingControllerService<ViewAssignment, Assignment> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: AssignmentRepositoryService
     ) {

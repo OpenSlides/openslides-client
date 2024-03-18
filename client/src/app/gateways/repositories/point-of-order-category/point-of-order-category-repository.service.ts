@@ -18,7 +18,7 @@ export class PointOfOrderCategoryRepositoryService
     extends BaseMeetingRelatedRepository<ViewPointOfOrderCategory, PointOfOrderCategory>
     implements CanPerformListUpdates<PointOfOrderCategory, void | Identifiable>
 {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, PointOfOrderCategory);
     }
 

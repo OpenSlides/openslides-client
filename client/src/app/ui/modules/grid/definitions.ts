@@ -3,7 +3,7 @@
  */
 export interface GridTileClickEvent<T = object> {
     data: T | null;
-    source: MouseEvent;
+    source: MouseEvent | Event;
 }
 
 /**
