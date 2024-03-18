@@ -4,5 +4,5 @@ import { Directive } from '@angular/core';
     selector: `[osImportListFirstTab]`
 })
 export class ImportListFirstTabDirective {
-    constructor() {}
+    public constructor() {}
 }

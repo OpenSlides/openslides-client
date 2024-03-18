@@ -31,7 +31,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
      */
     protected sortProperty: SortProperty = `number`;
 
-    constructor(
+    public constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         agendaItemRepo: AgendaItemRepositoryService,
         private treeService: TreeService

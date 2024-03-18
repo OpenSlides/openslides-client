@@ -1,11 +1,11 @@
 <h2 mat-dialog-title>
     <span>{{ 'Project selection?' | translate }}</span>
 </h2>
-<div class="element-name" *ngIf="descriptor">
-    {{ descriptor.getDialogTitle() }}
-</div>
 
 <mat-dialog-content *ngIf="projectors && projectors.length">
+    <div class="element-name" *ngIf="descriptor">
+        {{ descriptor.getDialogTitle() }}
+    </div>
     <div class="content-wrapper">
         <div
             class="projectors"

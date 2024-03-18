@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -25,7 +25,7 @@ let uniqueId = 0;
 export class TextOptionSelectable implements Selectable {
     public readonly id = ++uniqueId;
 
-    constructor(private readonly text: string) {}
+    public constructor(private readonly text: string) {}
 
     public getTitle(): string {
         return this.text;
@@ -42,8 +42,8 @@ export class TextOptionSelectable implements Selectable {
     styleUrls: [`./topic-poll-dialog.component.scss`]
 })
 export class TopicPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {
-    @ViewChild(`scrollframe`, { static: false }) scrollFrame: ElementRef;
-    @ViewChildren(`item`) itemElements: QueryList<any>;
+    @ViewChild(`scrollframe`, { static: false }) public scrollFrame: ElementRef;
+    @ViewChildren(`item`) public itemElements: QueryList<any>;
 
     private scrollContainer: any;
     private isNearBottom = true;
@@ -80,12 +80,15 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
         return super.formsValid;
     }
 
-    constructor(public topicPollService: TopicPollService, @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewTopic>) {
+    public constructor(
+        public topicPollService: TopicPollService,
+        @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewTopic>
+    ) {
         super(pollData);
         this.optionTypeText = true;
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         if (this.scrollFrame) {
             this.scrollContainer = this.scrollFrame.nativeElement;
             this.itemElements.changes.subscribe(_ => this.onItemElementsChanged());

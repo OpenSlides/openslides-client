@@ -13,7 +13,7 @@ import { ViewPoll } from '../../../../pages/polls';
 
 @Injectable({ providedIn: `root` })
 export class PollControllerService extends BaseMeetingControllerService<ViewPoll, Poll> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: PollRepositoryService,
         protected voteRepo: VoteRepositoryService

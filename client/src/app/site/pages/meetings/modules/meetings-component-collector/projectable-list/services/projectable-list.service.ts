@@ -5,7 +5,7 @@ import { isProjectable, Projectable, ProjectionBuildDescriptor } from 'src/app/s
 
 @Injectable()
 export class ProjectableListService {
-    constructor(
+    public constructor(
         private activeMeetingService: ActiveMeetingService,
         private meetingSettingsService: MeetingSettingsService
     ) {}

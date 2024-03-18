@@ -50,7 +50,7 @@
 <!-- Template for total times dialog -->
 <ng-template #totalTimeDialog>
     <h2 mat-dialog-title>{{ currentEntry.name }}</h2>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form [formGroup]="totalTimeForm" (keydown)="onKeyDown($event)">
             <!-- total time -->
             <mat-form-field>
@@ -61,16 +61,16 @@
                 </mat-error>
             </mat-form-field>
         </form>
-    </div>
+    </mat-dialog-content>
 
-    <div mat-dialog-actions>
+    <mat-dialog-actions>
         <button mat-button [disabled]="!totalTimeForm.valid" [mat-dialog-close]="true">
             <span>{{ 'OK' | translate }}</span>
         </button>
         <button mat-button [mat-dialog-close]="false">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>
 
 <mat-menu #projectionMenu="matMenu">
