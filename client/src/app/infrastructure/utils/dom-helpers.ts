@@ -201,12 +201,18 @@ export function findNextAuntNode(node: Node): Node | null {
     return null;
 }
 
-export function unwrapNode(el: Node): void {
-    const parent = el.parentNode;
-    while (el.firstChild) {
-        parent.insertBefore(el.firstChild, el);
+/**
+ * Removes the sourounding tag of a node
+ *
+ * @param {Node} node
+ * @returns {Node}
+ */
+export function unwrapNode(node: Node): void {
+    const parent = node.parentNode;
+    while (node.firstChild) {
+        parent.insertBefore(node.firstChild, node);
     }
-    parent.removeChild(el);
+    parent.removeChild(node);
 }
 
 /**

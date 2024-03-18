@@ -15,6 +15,8 @@ import {
     ListUpdateData,
     mmToPoints,
     objectToFormattedString,
+    parseLetterNumber,
+    parseRomanNumber,
     partitionModelsForUpdate,
     reconvertChars,
     replaceObjectKeys,
@@ -64,6 +66,62 @@ describe(`utils: functions`, () => {
             expect(
                 stripHtmlTags(`<div>Hello World!</div><span>Please enter your data:</span><input class="data" /> `)
             ).toBe(`Hello World! Please enter your data:`);
+        });
+    });
+
+    describe(`parseLetterNumber function`, () => {
+        it(`test one digit numbers`, () => {
+            expect(parseLetterNumber(`a`)).toBe(1);
+            expect(parseLetterNumber(`b`)).toBe(2);
+            expect(parseLetterNumber(`g`)).toBe(7);
+            expect(parseLetterNumber(`n`)).toBe(14);
+        });
+
+        it(`test two digit numbers`, () => {
+            expect(parseLetterNumber(`aa`)).toBe(27);
+            expect(parseLetterNumber(`be`)).toBe(57);
+            expect(parseLetterNumber(`gt`)).toBe(202);
+            expect(parseLetterNumber(`no`)).toBe(379);
+        });
+
+        it(`test big numbers`, () => {
+            expect(parseLetterNumber(`popeye`)).toBe(197241907);
+            expect(parseLetterNumber(`openslides`)).toBe(84828503480493);
+            expect(parseLetterNumber(`magma`)).toBe(5963335);
+        });
+
+        it(`test case irrelevant`, () => {
+            expect(parseLetterNumber(`scHwaRzteE`)).toBe(103858431216103);
+        });
+    });
+
+    describe(`parseRomanNumber function`, () => {
+        it(`test simple one digit roman numbers`, () => {
+            expect(parseRomanNumber(`I`)).toBe(1);
+            expect(parseRomanNumber(`L`)).toBe(50);
+            expect(parseRomanNumber(`M`)).toBe(1000);
+        });
+
+        it(`test summation`, () => {
+            expect(parseRomanNumber(`III`)).toBe(3);
+            expect(parseRomanNumber(`XII`)).toBe(12);
+            expect(parseRomanNumber(`CV`)).toBe(105);
+            expect(parseRomanNumber(`DX`)).toBe(510);
+        });
+
+        it(`test subtraction`, () => {
+            expect(parseRomanNumber(`XL`)).toBe(40);
+            expect(parseRomanNumber(`VX`)).toBe(5);
+            expect(parseRomanNumber(`ICD`)).toBe(399);
+        });
+
+        it(`test complex operations`, () => {
+            expect(parseRomanNumber(`IDC`)).toBe(599);
+            expect(parseRomanNumber(`CMVI`)).toBe(906);
+        });
+
+        it(`test case irrelevant`, () => {
+            expect(parseRomanNumber(`cMvI`)).toBe(906);
         });
     });
 
