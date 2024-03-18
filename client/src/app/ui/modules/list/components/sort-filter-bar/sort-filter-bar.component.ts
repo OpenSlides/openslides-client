@@ -4,6 +4,7 @@ import {
     EventEmitter,
     HostListener,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     ViewChild,
@@ -12,6 +13,7 @@ import {
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDrawer } from '@angular/material/sidenav';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { OsFilterIndicator } from 'src/app/site/base/base-filter.service';
 import { OsSortingOption } from 'src/app/site/base/base-sort.service';
@@ -44,7 +46,7 @@ import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SortFilterBarComponent<V extends Identifiable> implements OnInit {
+export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy, OnInit {
     @ViewChild(`searchField`, { static: true })
     private readonly _searchFieldComponent!: RoundedInputComponent | undefined;
 
@@ -171,18 +173,27 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnInit {
 
     private _searchField = ``;
 
+    private mobileSubscription: Subscription | null;
+
     public constructor(
         protected translate: TranslateService,
         public vp: ViewPortService,
         private bottomSheet: MatBottomSheet
     ) {}
 
-    public ngOnInit() {
-        this.vp.isMobileSubject.subscribe(v => {
+    public ngOnInit(): void {
+        this.mobileSubscription = this.vp.isMobileSubject.subscribe(v => {
             if (v) {
                 this.searchEdit = false;
             }
         });
+    }
+
+    public ngOnDestroy(): void {
+        if (this.mobileSubscription) {
+            this.mobileSubscription.unsubscribe();
+            this.mobileSubscription = null;
+        }
     }
 
     /**
