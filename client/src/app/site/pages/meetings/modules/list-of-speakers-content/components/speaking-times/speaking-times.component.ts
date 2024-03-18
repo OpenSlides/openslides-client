@@ -142,8 +142,10 @@ export class SpeakingTimesComponent implements OnDestroy {
         const title = this.translateService.instant(`Reset timer`);
         const content =
             this.translateService.instant(
-                `Are you sure you want to reset the spoken time to the initial value? It will be reset to: `
-            ) + this.duration(sllos.initial_time);
+                `Are you sure you want to reset the time to the last set value? It will be reset to:`
+            ) +
+            ` ` +
+            this.duration(sllos.initial_time);
         if (await this.promptService.open(title, content)) {
             sllos = this.speakingTimesRepo.getViewModel(speakingTimeId);
             let initialTime = sllos.initial_time;
@@ -197,9 +199,12 @@ export class SpeakingTimesComponent implements OnDestroy {
         const countdownTime = entry.countdown.countdown_time;
         if (countdownTime < 0) {
             const title = this.translateService.instant(`Distribute overhang time`);
-            const content = this.translateService.instant(
-                `Are you sure you want to add ${Math.abs(countdownTime)}s onto every structure level?`
-            );
+            const content =
+                this.translateService.instant(
+                    `Are you sure you want to add the following time onto every structure level?`
+                ) +
+                ` ` +
+                this.duration(Math.abs(countdownTime));
             if (await this.promptService.open(title, content)) {
                 this.speakingTimesRepo.add_time([{ id: speakingTimeId }]);
             }
