@@ -18,7 +18,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
 
     private _disableCompression = false;
 
-    constructor(endpoint: AutoupdateSetEndpointParams) {
+    public constructor(endpoint: AutoupdateSetEndpointParams) {
         super(endpoint);
         WorkerHttpAuth.subscribe(`autoupdate-pool`, (token, uid?) => this.onAuthUpdate(token, uid));
     }
@@ -127,7 +127,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
         this.reconnectAll(false);
     }
 
-    private onAuthUpdate(token: string, userId?: Id) {
+    private onAuthUpdate(token: string, userId?: Id): void {
         for (const stream of this.streams) {
             stream.setAuthToken(token);
         }

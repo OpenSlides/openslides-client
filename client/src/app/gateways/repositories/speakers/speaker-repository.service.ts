@@ -10,6 +10,12 @@ import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { SpeakerAction } from './speaker.action';
 
+export interface PointOfOrderInformation {
+    point_of_order?: boolean;
+    note?: string;
+    point_of_order_category_id?: Id;
+}
+
 @Injectable({
     providedIn: `root`
 })
@@ -68,6 +74,9 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
             id: viewModel.id,
             speech_state
         };
+        if (speech_state !== null) {
+            payload.point_of_order = false;
+        }
         return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
     }
 
@@ -130,5 +139,16 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
     public setContraSpeech(speaker: ViewSpeaker): Promise<void> {
         const speechState = speaker.speech_state === SpeechState.CONTRA ? null : SpeechState.CONTRA;
         return this.updateSpeechState(speechState, speaker);
+    }
+
+    public setPointOfOrder(speaker: ViewSpeaker, data: PointOfOrderInformation): Promise<void> {
+        const payload: any = {
+            id: speaker.id,
+            ...data
+        };
+        if (data.point_of_order) {
+            payload.speech_state = null;
+        }
+        return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
     }
 }

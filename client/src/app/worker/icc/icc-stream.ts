@@ -6,7 +6,7 @@ import { HttpStream } from '../http/http-stream';
 export class ICCStream extends HttpStream {
     private users = 1;
 
-    constructor(
+    public constructor(
         private dataCb: (data: any) => void,
         public config: { type: string; meetingId: Id },
         endpoint: AutoupdateSetEndpointParams,
@@ -37,7 +37,8 @@ export class ICCStream extends HttpStream {
 
     public removeUser(): void {
         this.users--;
-        if (this.users === 0) {
+        console.log(this.users);
+        if (this.users <= 0) {
             this.abort();
         }
     }

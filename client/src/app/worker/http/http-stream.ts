@@ -33,7 +33,7 @@ export abstract class HttpStream {
         return this.failedCounter;
     }
 
-    constructor(
+    public constructor(
         queryParams: URLSearchParams,
         endpoint: AutoupdateSetEndpointParams,
         authToken: string,

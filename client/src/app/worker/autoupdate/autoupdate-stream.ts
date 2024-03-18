@@ -20,7 +20,7 @@ export class AutoupdateStream extends HttpStream {
         return this._subscriptions;
     }
 
-    constructor(
+    public constructor(
         private _subscriptions: AutoupdateSubscription[],
         public queryParams: URLSearchParams,
         private endpoint: AutoupdateSetEndpointParams,

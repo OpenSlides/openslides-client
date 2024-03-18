@@ -31,7 +31,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
      */
     protected sortProperty: SortProperty = `number`;
 
-    constructor(
+    public constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         agendaItemRepo: AgendaItemRepositoryService,
         private treeService: TreeService
@@ -291,8 +291,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         }
         const agendaTitle: AgendaListTitle = { title };
 
-        if (viewMotion.submittersAsUsers && viewMotion.submittersAsUsers.length) {
-            agendaTitle.subtitle = `${this.translate.instant(`by`)} ${viewMotion.submittersAsUsers.join(`, `)}`;
+        if (viewMotion.submitterNames && viewMotion.submitterNames.length) {
+            agendaTitle.subtitle = `${this.translate.instant(`by`)} ${viewMotion.submitterNames.join(`, `)}`;
         }
         return agendaTitle;
     };

@@ -51,7 +51,7 @@ export class SharedWorkerService {
     private messageEventSubscription: Subscription;
     private windowMode = false;
 
-    constructor(private zone: NgZone) {
+    public constructor(private zone: NgZone) {
         this.connectWorker(true);
     }
 

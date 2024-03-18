@@ -20,7 +20,7 @@ export abstract class HttpStreamPool<T extends HttpStream> {
         return this.streams.filter(stream => stream.active);
     }
 
-    constructor(protected endpoint: AutoupdateSetEndpointParams) {}
+    public constructor(protected endpoint: AutoupdateSetEndpointParams) {}
 
     protected abstract connectStream(stream: T, force?: boolean): Promise<void>;
 

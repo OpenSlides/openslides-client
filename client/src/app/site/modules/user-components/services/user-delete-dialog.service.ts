@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import {
     GetUserRelatedModelsPresenterResult,

@@ -1,8 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-    MatLegacyDialog as MatDialog,
-    MatLegacyDialogConfig as MatDialogConfig
-} from '@angular/material/legacy-dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';

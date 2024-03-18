@@ -79,11 +79,11 @@ export class WorkerHttpAuth {
     private _authTokenRefreshTimeout: any | null = null;
     private _waitingForUpdateAuthPromise = false;
 
-    constructor() {
+    public constructor() {
         this.updateAuthentication();
     }
 
-    private destroy(): void {
+    private destroy() {
         clearTimeout(this._authTokenRefreshTimeout);
     }
 

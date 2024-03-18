@@ -90,7 +90,8 @@ export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableV
 
     public readonly permission = Permission;
 
-    public readonly isProjectedFn = (model: BaseProjectableViewModel) => this.service.isProjected(model);
+    public readonly isProjectedFn = (model: BaseProjectableViewModel) =>
+        this.service.isProjectedOnReferenceProjector(model);
 
     public constructor(
         private operator: OperatorService,

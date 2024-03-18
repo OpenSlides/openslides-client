@@ -18,7 +18,7 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
     ViewAssignment,
     Assignment
 > {
-    constructor(
+    public constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         agendaItemRepo: AgendaItemRepositoryService
     ) {

@@ -1,65 +1,67 @@
-<os-assignment-poll-form
-    [pollClassType]="pollClassType.Assignment"
-    [data]="pollData"
-    [pollOptionAmount]="getOptionAmount()"
-    [pollService]="assignmentPollService"
-    [pollMethods]="AssignmentPollMethodVerbose"
-    [percentBases]="AssignmentPollPercentBaseVerbose"
-    #pollForm
-></os-assignment-poll-form>
+<mat-dialog-content>
+    <os-assignment-poll-form
+        [pollClassType]="pollClassType.Assignment"
+        [data]="pollData"
+        [pollOptionAmount]="getOptionAmount()"
+        [pollService]="assignmentPollService"
+        [pollMethods]="AssignmentPollMethodVerbose"
+        [percentBases]="AssignmentPollPercentBaseVerbose"
+        #pollForm
+    ></os-assignment-poll-form>
 
-<!-- Analog voting -->
-<ng-container *ngIf="isAnalogPoll && dialogVoteForm && !reloading">
-    <form [formGroup]="dialogVoteForm">
-        <!-- Candidates Values -->
-        <div formGroupName="options">
-            <div *ngFor="let option of options" class="votes-grid">
-                <div class="candidate">
-                    <span *ngIf="option.content_object && option.content_object['getFullName']">
-                        {{ option.content_object | toString : 'getFullName' }}
-                    </span>
-                    <i *ngIf="!option.content_object && !option.poll_candidate_user_ids">
-                        {{ unknownUserLabel | translate }}
-                    </i>
-                </div>
-
-                <div class="amount">
-                    <div *ngFor="let value of analogVoteFields" [formGroupName]="calculateOptionKey(option)">
-                        <os-check-input
-                            [placeholder]="voteValueVerbose[value] | translate"
-                            [checkboxValue]="-1"
-                            inputType="number"
-                            [checkboxLabel]="'majority' | translate"
-                            [formControlName]="value"
-                        ></os-check-input>
+    <!-- Analog voting -->
+    <ng-container *ngIf="isAnalogPoll && dialogVoteForm && !reloading">
+        <form [formGroup]="dialogVoteForm">
+            <!-- Candidates Values -->
+            <div formGroupName="options">
+                <div *ngFor="let option of options" class="votes-grid">
+                    <div class="candidate">
+                        <span *ngIf="option.content_object && option.content_object['getFullName']">
+                            {{ option.content_object | toString : 'getFullName' }}
+                        </span>
+                        <i *ngIf="!option.content_object && !option.poll_candidate_user_ids">
+                            {{ unknownUserLabel | translate }}
+                        </i>
                     </div>
+
+                    <div class="amount">
+                        <div *ngFor="let value of analogVoteFields" [formGroupName]="calculateOptionKey(option)">
+                            <os-check-input
+                                [placeholder]="voteValueVerbose[value] | translate"
+                                [checkboxValue]="-1"
+                                inputType="number"
+                                [checkboxLabel]="'majority' | translate"
+                                [formControlName]="value"
+                            ></os-check-input>
+                        </div>
+                    </div>
+                    <mat-divider></mat-divider>
                 </div>
-                <mat-divider></mat-divider>
             </div>
-        </div>
 
-        <!-- Sum Values -->
-        <div *ngFor="let value of sumValues" class="votes-grid">
-            <div class="assignment-dialog-input--container">
-                <mat-form-field class="amount">
-                    <mat-label>{{ generalValueVerbose[value] | translate }}</mat-label>
-                    <input matInput type="number" [formControlName]="value" />
-                </mat-form-field>
+            <!-- Sum Values -->
+            <div *ngFor="let value of sumValues" class="votes-grid">
+                <div class="assignment-dialog-input--container">
+                    <mat-form-field class="amount">
+                        <mat-label>{{ generalValueVerbose[value] | translate }}</mat-label>
+                        <input matInput type="number" [formControlName]="value" />
+                    </mat-form-field>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
 
-    <!-- Publish Check -->
-    <div class="spacer-top-20">
-        <mat-checkbox [(ngModel)]="publishImmediately" (change)="publishStateChanged($event.checked)">
-            <span>{{ 'Publish immediately' | translate }}</span>
-        </mat-checkbox>
-        <mat-error *ngIf="!dialogVoteForm.valid">{{ 'Error in form field.' | translate }}</mat-error>
-    </div>
-</ng-container>
+        <!-- Publish Check -->
+        <div class="spacer-top-20">
+            <mat-checkbox [(ngModel)]="publishImmediately" (change)="publishStateChanged($event.checked)">
+                <span>{{ 'Publish immediately' | translate }}</span>
+            </mat-checkbox>
+            <mat-error *ngIf="!dialogVoteForm.valid">{{ 'Error in form field.' | translate }}</mat-error>
+        </div>
+    </ng-container>
+</mat-dialog-content>
 
 <!-- Actions -->
-<div mat-dialog-actions>
+<mat-dialog-actions>
     <!-- Save Button -->
     <button mat-button (click)="submitPoll()" [disabled]="!formsValid">
         <span>{{ 'Save' | translate }}</span>
@@ -69,4 +71,4 @@
     <button mat-button [mat-dialog-close]="false">
         <span>{{ 'Cancel' | translate }}</span>
     </button>
-</div>
+</mat-dialog-actions>

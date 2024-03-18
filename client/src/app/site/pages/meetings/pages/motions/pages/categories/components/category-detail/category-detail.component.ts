@@ -1,6 +1,6 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';

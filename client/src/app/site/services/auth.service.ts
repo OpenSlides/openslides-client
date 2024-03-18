@@ -6,6 +6,7 @@ import { SharedWorkerService } from 'src/app/openslides-main-module/services/sha
 import { AuthToken } from '../../domain/interfaces/auth-token';
 import { AuthAdapterService } from '../../gateways/auth-adapter.service';
 import { ProcessError } from '../../infrastructure/errors';
+import { UpdateService } from '../modules/site-wrapper/services/update.service';
 import { AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
@@ -48,8 +49,9 @@ export class AuthService {
         private router: Router,
         private authAdapter: AuthAdapterService,
         private authTokenService: AuthTokenService,
-        private DS: DataStoreService,
-        private sharedWorker: SharedWorkerService
+        private sharedWorker: SharedWorkerService,
+        private updateService: UpdateService,
+        private DS: DataStoreService
     ) {
         this.authTokenService.accessTokenObservable.subscribe(token => {
             this._authTokenSubject.next(token);
@@ -100,7 +102,12 @@ export class AuthService {
     public redirectUser(meetingId: number | null): void {
         if (this.isAuthenticated()) {
             const baseRoute = meetingId ? `${meetingId}/` : `/`;
-            this.router.navigate([baseRoute]);
+            if (this.updateService.updateAvailable) {
+                const baseUrl = this.router.serializeUrl(this.router.createUrlTree([baseRoute]));
+                location.href = baseUrl;
+            } else {
+                this.router.navigate([baseRoute]);
+            }
         }
     }
 

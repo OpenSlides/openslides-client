@@ -55,7 +55,7 @@ class MockSubsciption extends HttpSubscription {
 }
 
 class SimpleHttpStream extends HttpStream {
-    constructor(
+    public constructor(
         queryParams: URLSearchParams,
         endpoint: AutoupdateSetEndpointParams,
         authToken: string,

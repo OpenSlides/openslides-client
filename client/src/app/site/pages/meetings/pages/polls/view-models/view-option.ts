@@ -63,6 +63,7 @@ interface IViewOptionRelations<C extends BaseViewModel = any> {
     content_object_as_observable?: Observable<C>;
     votes: ViewVote[];
     poll: ViewPoll;
+    used_as_global_option_in_poll: ViewPoll;
 }
 
 export interface ViewOption extends HasMeeting, IViewOptionRelations, Option {}
