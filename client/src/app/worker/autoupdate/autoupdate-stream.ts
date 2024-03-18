@@ -9,6 +9,8 @@ export class AutoupdateStream extends HttpStream {
     private activeSubscriptions: AutoupdateSubscription[] = null;
     private _currentData: unknown | null = null;
 
+    protected override readonly supportLongpolling = true;
+
     /**
      * Full data object received by autoupdate
      */

@@ -89,7 +89,7 @@ export class ICCStreamPool extends HttpStreamPool<ICCStream> {
         }
     }
 
-    private async handleData(meeting: Id, type: string, data: any) {
+    private async handleData(meeting: Id, type: string, data: any): Promise<void> {
         this.sendToAll(`receive-data`, {
             type,
             meeting_id: meeting,

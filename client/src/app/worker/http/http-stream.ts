@@ -17,7 +17,7 @@ export abstract class HttpStream {
     private _receivedData: Promise<void>;
     private _receivedDataResolver: CallableFunction;
 
-    protected supportLongpolling = true;
+    protected readonly supportLongpolling: boolean = false;
     protected connectionMode: 'SSE' | 'LONGPOLLING' = `SSE`;
     protected subscription: HttpSubscription;
 
@@ -51,7 +51,7 @@ export abstract class HttpStream {
         };
 
         this.resetReceivedData();
-        this.updateConnectionMode();
+        this.updateSubscription();
     }
 
     /**
@@ -83,6 +83,7 @@ export abstract class HttpStream {
         this.stopping = false;
         this.lastError = null;
         try {
+            this.updateSubscription();
             await this.subscription.start();
         } catch (e) {
             if (e.name !== `AbortError`) {
@@ -114,17 +115,8 @@ export abstract class HttpStream {
 
     public async updateConnectionMode(): Promise<void> {
         const oldSubscription = this.subscription;
-        if ((<any>self).useLongpolling && this.supportLongpolling && this.connectionMode === `SSE`) {
-            this.connectionMode = `LONGPOLLING`;
-        } else if (this.subscription) {
-            return;
-        }
 
-        if (this.connectionMode === `SSE`) {
-            this.subscription = new HttpSubscriptionSSE(this.endpointConfig, this.handlerConfig);
-        } else if (this.connectionMode === `LONGPOLLING`) {
-            this.subscription = new HttpSubscriptionPolling(this.endpointConfig, this.handlerConfig);
-        }
+        this.updateSubscription();
 
         if (oldSubscription?.active) {
             this.restarting = true;
@@ -169,5 +161,19 @@ export abstract class HttpStream {
         this._receivedData = new Promise(r => {
             this._receivedDataResolver = r;
         });
+    }
+
+    private updateSubscription(): void {
+        if ((<any>self).useLongpolling && this.supportLongpolling && this.connectionMode === `SSE`) {
+            this.connectionMode = `LONGPOLLING`;
+        } else if (this.subscription) {
+            return;
+        }
+
+        if (this.connectionMode === `SSE`) {
+            this.subscription = new HttpSubscriptionSSE(this.endpointConfig, this.handlerConfig);
+        } else if (this.connectionMode === `LONGPOLLING`) {
+            this.subscription = new HttpSubscriptionPolling(this.endpointConfig, this.handlerConfig);
+        }
     }
 }

@@ -54,7 +54,7 @@ export class HttpSubscriptionPolling extends HttpSubscription {
         }
     }
 
-    private async request() {
+    private async request(): Promise<void> {
         this.abortCtrl = new AbortController();
 
         try {
