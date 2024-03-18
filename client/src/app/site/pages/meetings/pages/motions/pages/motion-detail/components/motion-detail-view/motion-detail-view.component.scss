@@ -174,18 +174,18 @@ span {
             -webkit-box-orient: vertical;
         }
     }
+}
 
-    @media (max-width: 700px) {
-        .motion-detail-nav-button {
-            min-width: 2px;
-            max-width: 4px;
-            padding-left: 0px !important;
-            padding-right: 0px !important;
-        }
+@media (max-width: 700px) {
+    .motion-detail-nav-button {
+        min-width: 2px;
+        max-width: 4px;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
 
-        .chevron_number {
-            visibility: hidden;
-            max-width: 0px !important;
-        }
+    .chevron_number {
+        visibility: hidden;
+        max-width: 0px !important;
     }
 }
