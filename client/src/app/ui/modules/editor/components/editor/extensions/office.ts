@@ -78,18 +78,10 @@ function transformLists(html: string): string {
     const listElements = doc.querySelectorAll(`p[style*="mso-list:"]`);
     listElements.forEach(node => {
         const el = <HTMLElement>node;
-        const hasNonListItemSibling =
-            !el.previousElementSibling ||
-            !(el.previousElementSibling.nodeName === `OL` || el.previousElementSibling.nodeName === `UL`);
-
-        // Parse `mso-list` style attribute
-        const msoListValue: string = parseStyleAttribute(el)[`mso-list`];
-        const msoListInfos = msoListValue.split(` `);
-        const msoListId = msoListInfos.find(e => /l[0-9]+/.test(e));
-        const msoListLevel = +msoListInfos.find((e: string) => e.startsWith(`level`))?.substring(5) || 1;
+        const [msoListId, msoListLevel] = parseMsoListAttribute(parseStyleAttribute(el)[`mso-list`]);
 
         // Check for start of a new list
-        if (currentListId !== msoListId && (hasNonListItemSibling || msoListLevel === 1)) {
+        if (currentListId !== msoListId && (hasNonListItemSibling(el) || msoListLevel === 1)) {
             currentListId = msoListId;
             listStack = [];
         }
@@ -110,13 +102,35 @@ function transformLists(html: string): string {
         }
 
         // Remove list item numbers and create li
-        const li = document.createElement(`li`);
-        li.innerHTML = el.innerHTML.replace(listTypeRegex, ``);
-        listStack[listStack.length - 1].appendChild(li);
+        listStack[listStack.length - 1].appendChild(getListItemFromParagraph(el));
         el.remove();
     });
 
     return doc.documentElement.outerHTML;
+}
+
+function hasNonListItemSibling(el: HTMLElement): boolean {
+    return (
+        !el.previousElementSibling ||
+        !(el.previousElementSibling.nodeName === `OL` || el.previousElementSibling.nodeName === `UL`)
+    );
+}
+
+function getListItemFromParagraph(el: HTMLElement): HTMLElement {
+    const li = document.createElement(`li`);
+    li.innerHTML = el.innerHTML.replace(listTypeRegex, ``);
+
+    return li;
+}
+
+// Parses `mso-list` style attribute
+function parseMsoListAttribute(attr: string): [id: string, level: number] {
+    const msoListValue: string = attr;
+    const msoListInfos = msoListValue.split(` `);
+    const msoListId = msoListInfos.find(e => /l[0-9]+/.test(e));
+    const msoListLevel = +msoListInfos.find((e: string) => e.startsWith(`level`))?.substring(5) || 1;
+
+    return [msoListId, msoListLevel];
 }
 
 const listTypeRegex = /<!--\[if \!supportLists\]-->((.|\n)*)<!--\[endif\]-->/m;
