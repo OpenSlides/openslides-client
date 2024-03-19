@@ -296,7 +296,7 @@ export class MotionPdfService {
 
                 metaTableBody.push([
                     {
-                        text: `${this.translate.instant(`Editors`)}:`,
+                        text: `${this.translate.instant(`Motion editor`)}:`,
                         style: `boldText`
                     },
                     {
@@ -318,7 +318,7 @@ export class MotionPdfService {
 
                 metaTableBody.push([
                     {
-                        text: `${this.translate.instant(`Working group speakers`)}:`,
+                        text: `${this.translate.instant(`Spokesperson`)}:`,
                         style: `boldText`
                     },
                     {
