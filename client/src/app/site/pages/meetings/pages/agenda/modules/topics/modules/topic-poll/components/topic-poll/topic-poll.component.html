@@ -1,4 +1,4 @@
-<mat-card class="os-card" *ngIf="shouldShowPoll">
+<mat-card class="os-card" *ngIf="shouldShowPoll" [ngClass]="newCardWidth ? 'new-card-width' : ''">
     <div class="topic-poll-wrapper">
         <div>
             <!-- Title -->

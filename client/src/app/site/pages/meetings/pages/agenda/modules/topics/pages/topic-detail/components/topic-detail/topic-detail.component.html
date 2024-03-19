@@ -36,7 +36,7 @@
     <mat-card
         *ngIf="(topic || editTopic) && (hasLoaded | async)"
         class="spacer-bottom-60"
-        [ngClass]="editTopic ? 'os-form-card' : 'os-card'"
+        [ngClass]="editTopic ? 'os-form-card' : 'os-card card-padding'"
     >
         <ng-container *ngIf="!editTopic && topic">
             <os-projectable-title [model]="topic" [getTitleFn]="getTitleFn"></os-projectable-title>
@@ -106,10 +106,11 @@
         </form>
     </mat-card>
 
+    <os-moderation-note [contentObject]="topic" *ngIf="!editTopic"></os-moderation-note>
     <div *ngIf="!editTopic" class="spacer-bottom-60">
         <ng-container *ngIf="topic && topic.poll_ids?.length">
             <ng-container *ngFor="let poll of topic.poll_ids | reverse; trackBy: trackById">
-                <os-topic-poll [pollId]="poll" (dialogOpened)="openDialog(poll)"></os-topic-poll>
+                <os-topic-poll [pollId]="poll" (dialogOpened)="openDialog(poll)" [newCardWidth]="true"></os-topic-poll>
             </ng-container>
         </ng-container>
         <div class="create-poll-button" *ngIf="topic && isEVotingEnabled">
