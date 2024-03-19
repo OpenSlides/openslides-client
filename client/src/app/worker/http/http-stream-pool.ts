@@ -73,7 +73,8 @@ export abstract class HttpStreamPool<T extends HttpStream> {
         if (online) {
             clearTimeout(this.onlineStatusStopTimeout);
             this.reconnectAll(true);
-        } else {
+            this.onlineStatusStopTimeout = undefined;
+        } else if (!this.onlineStatusStopTimeout) {
             this.onlineStatusStopTimeout = setTimeout(() => {
                 for (const stream of this.streams) {
                     stream.abort();
@@ -86,12 +87,13 @@ export abstract class HttpStreamPool<T extends HttpStream> {
         this.broadcast(this.messageSenderName, action, content);
     }
 
-    protected async isEndpointHealthy(): Promise<boolean> {
+    public async isEndpointHealthy(): Promise<boolean> {
         try {
             const data = await fetch(this.endpoint.healthUrl, {
                 headers: {
                     'ngsw-bypass': true
-                } as any
+                } as any,
+                signal: AbortSignal.timeout(6000)
             }).then(response => {
                 if (response.ok) {
                     return response.json();
@@ -109,7 +111,7 @@ export abstract class HttpStreamPool<T extends HttpStream> {
     /**
      * Return true if the endpoint was unhealty.
      */
-    protected waitUntilEndpointHealthy(): Promise<boolean> {
+    public waitUntilEndpointHealthy(): Promise<boolean> {
         if (!this._waitEndpointHealthyPromise) {
             this.sendToAll(`status`, {
                 status: `unhealthy`
