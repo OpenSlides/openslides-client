@@ -14,7 +14,7 @@ import { MediafileCommonServiceModule } from './mediafile-common-service.module'
 
 @Injectable({ providedIn: MediafileCommonServiceModule })
 export class MediafileControllerService extends BaseController<ViewMediafile, Mediafile> {
-    constructor(
+    public constructor(
         protected override controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MediafileRepositoryService,
         private operator: OperatorService

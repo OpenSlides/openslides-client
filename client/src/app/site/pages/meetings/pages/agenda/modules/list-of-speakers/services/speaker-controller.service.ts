@@ -18,7 +18,7 @@ import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
     providedIn: `root`
 })
 export class SpeakerControllerService extends BaseMeetingControllerService<ViewSpeaker, Speaker> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: SpeakerRepositoryService,
         protected userRepo: UserControllerService

@@ -79,6 +79,7 @@ export interface SettingsInput<V = any> {
      * @returns whether to disable the setting or not
      */
     disable?: (settings: SettingsValueMap) => boolean;
+    hide?: boolean; // Hide the setting in the settings view
 }
 
 interface SettingsItemAutomaticChangeSetting<V> {
@@ -395,7 +396,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `list_of_speakers_allow_multiple_speakers`,
-                        label: _(`Allow one participant to be on the LoS serveral times`),
+                        label: _(`Allow one participant multiple times on the same list`),
                         type: `boolean`
                     },
                     {
@@ -491,7 +492,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `list_of_speakers_enable_point_of_order_categories`,
                         label: _(`Enable specifications and ranking for possible motions`),
-                        type: `boolean`,
+                        type: `boolean`
                     },
                     {
                         key: `point_of_order_category_ids`,
@@ -502,7 +503,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             [`text`, `entry`],
                             [`rank`, `allocation`]
                         ],
-                        pickKeys: [`id`, `text`, `rank`],
+                        pickKeys: [`id`, `text`, `rank`]
                     }
                 ]
             }
@@ -641,12 +642,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_enable_editor`,
-                        label: _(`Enable the ability to enter a participant as motion editor`),
+                        label: _(`Activate the selection field 'motion editor'`),
                         type: `boolean`
                     },
                     {
                         key: `motions_enable_working_group_speaker`,
-                        label: _(`Enable the ability to enter a participant as working group speaker for a motion`),
+                        label: _(`Activate the selection field 'spokesperson'`),
                         type: `boolean`
                     }
                 ]
@@ -690,7 +691,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `motions_statutes_enabled`,
                         label: _(`Activate statute amendments`),
-                        type: `boolean`
+                        type: `boolean`,
+                        hide: true
                     },
                     {
                         key: `motions_amendments_in_main_list`,

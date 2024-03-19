@@ -152,7 +152,10 @@
                 <!-- Category -->
                 <div class="ellipsis-overflow" *ngIf="motion.category">
                     <os-icon-container icon="category">
-                        {{ motion.category.nameWithParentAbove }}
+                        <div class="ellipsis-overflow" *ngIf="motion.category.parent">
+                            {{ motion.category.parent.toString() }}
+                        </div>
+                        <div class="ellipsis-overflow">{{ motion.category.toString() }}</div>
                     </os-icon-container>
                 </div>
 

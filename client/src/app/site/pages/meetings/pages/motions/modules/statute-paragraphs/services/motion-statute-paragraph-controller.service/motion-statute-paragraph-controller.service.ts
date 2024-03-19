@@ -14,7 +14,7 @@ export class MotionStatuteParagraphControllerService extends BaseMeetingControll
     ViewMotionStatuteParagraph,
     MotionStatuteParagraph
 > {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MotionStatuteParagraphRepositoryService
     ) {

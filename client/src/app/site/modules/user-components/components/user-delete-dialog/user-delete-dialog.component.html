@@ -5,7 +5,7 @@
     <span *ngIf="isOneUserToRemove" translate>Are you sure you want to remove this participant?</span>
 </h2>
 
-<div mat-dialog-content>
+<mat-dialog-content>
     <div class="user-delete-dialog-content">
         <div *ngIf="!isOneUser" class="user-list-block">
             <div *ngIf="hasUsersToDelete" class="user-list-wrapper">
@@ -40,9 +40,9 @@
             <ng-container *ngTemplateOutlet="userDetailTemplate; context: { user: selectedUser }"></ng-container>
         </div>
     </div>
-</div>
+</mat-dialog-content>
 
-<p mat-dialog-actions>
+<mat-dialog-actions>
     <button mat-button color="warn" [matDialogClose]="true">
         <span translate>Yes</span>
         <span>,&nbsp;</span>
@@ -50,7 +50,7 @@
         <span translate *ngIf="hasUsersToDelete">delete</span>
     </button>
     <button mat-button [matDialogClose]="false">{{ 'Cancel' | translate }}</button>
-</p>
+</mat-dialog-actions>
 
 <ng-template #userRowTemplate let-user="user">
     <div
