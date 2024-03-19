@@ -492,7 +492,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `list_of_speakers_enable_point_of_order_categories`,
                         label: _(`Enable specifications and ranking for possible motions`),
                         type: `boolean`,
-                        disable: settings => !settings.list_of_speakers_enable_point_of_order_speakers
                     },
                     {
                         key: `point_of_order_category_ids`,
@@ -504,7 +503,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             [`rank`, `allocation`]
                         ],
                         pickKeys: [`id`, `text`, `rank`],
-                        disable: settings => !settings.list_of_speakers_enable_point_of_order_categories
                     }
                 ]
             }

@@ -255,6 +255,9 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
                   }),
             ...(emitEvent === false ? [{ emitEvent }] : [])
         );
+        if (this.disabled) {
+            this.allocationListForm.disable();
+        }
         this.cd.markForCheck();
     }
 

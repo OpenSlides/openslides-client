@@ -95,7 +95,7 @@ export class MeetingSettingsGroupDetailComponent
                             if (isSettingsInput(setting)) {
                                 const keys = Array.isArray(setting.key) ? setting.key : [setting.key];
                                 const value = this.getDetailFieldValue(meeting, setting);
-                                const valueArray = Array.isArray(value) ? value : [value];
+                                const valueArray = Array.isArray(setting.key) ? value : [value];
                                 for (let i = 0; i < keys.length; i++) {
                                     this.originalSettings[keys[i]] = valueArray[i];
                                 }
@@ -133,6 +133,11 @@ export class MeetingSettingsGroupDetailComponent
                     const keys = Array.isArray(field.setting.key) ? field.setting.key : [field.setting.key];
                     for (const key of keys) {
                         delete data[key];
+                        // reset disabled boolean values
+                        if (field.setting.type === `boolean`) {
+                            data[key] = false;
+                            field.updateValue(false);
+                        }
                     }
                 }
             }
