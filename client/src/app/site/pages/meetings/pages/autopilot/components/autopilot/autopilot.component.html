@@ -46,7 +46,7 @@
                         </ng-container>
 
                         <ng-container *osPerms="permission.listOfSpeakersCanManage">
-                            <button mat-icon-button (click)="toggleListOfSpeakersOpen()">
+                            <button mat-mini-fab class="title-action" (click)="toggleListOfSpeakersOpen()">
                                 <mat-icon
                                     *ngIf="isLosClosed"
                                     matTooltip="{{ 'The list of speakers is closed.' | translate }}"
@@ -65,7 +65,8 @@
                             </button>
 
                             <button
-                                mat-icon-button
+                                mat-mini-fab
+                                class="title-action"
                                 (click)="readdLastSpeaker()"
                                 matTooltip="{{ 'Re-add last speaker' | translate }}"
                                 matTooltipPosition="above"
