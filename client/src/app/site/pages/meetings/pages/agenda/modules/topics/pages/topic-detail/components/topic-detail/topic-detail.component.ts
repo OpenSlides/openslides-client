@@ -237,6 +237,13 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         return `../..`;
     }
 
+    public getNavDisplay(topic: ViewTopic | null): string | number {
+        if (!!topic) {
+            return !!topic.agenda_item?.item_number ? topic.agenda_item.item_number : topic.sequential_number;
+        }
+        return ``;
+    }
+
     private initTopicCreation(): void {
         // creates a new topic
         this.newTopic = true;
@@ -340,7 +347,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         this.setEditMode(false);
     }
 
-    public onDownloadPdf() {
+    public onDownloadPdf(): void {
         this.topicPdfService.exportSingleTopic(this.topic);
     }
 

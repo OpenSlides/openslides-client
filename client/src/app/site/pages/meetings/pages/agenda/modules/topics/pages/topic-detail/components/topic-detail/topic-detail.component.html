@@ -32,7 +32,7 @@
                 class="topic-detail-nav-button"
             >
                 <os-icon-container icon="chevron_left">
-                    {{ previousTopic ? previousTopic.sequential_number : '' }}
+                    {{ getNavDisplay(previousTopic) }}
                 </os-icon-container>
             </button>
             <button
@@ -42,7 +42,7 @@
                 class="topic-detail-nav-button"
             >
                 <os-icon-container icon="chevron_right" [swap]="true">
-                    {{ nextTopic ? nextTopic.sequential_number : '' }}
+                    {{ getNavDisplay(nextTopic) }}
                 </os-icon-container>
             </button>
         </div>
@@ -164,7 +164,7 @@
                 class="motion-detail-nav-button"
             >
                 <mat-icon>chevron_left</mat-icon>
-                <span *ngIf="previousTopic">{{ 'Topic' | translate }} {{ previousTopic.sequential_number }}</span>
+                <span *ngIf="previousTopic">{{ 'Topic' | translate }} {{ getNavDisplay(previousTopic) }}</span>
             </button>
             <button
                 mat-menu-item
@@ -173,7 +173,7 @@
                 class="motion-detail-nav-button"
             >
                 <mat-icon>chevron_right</mat-icon>
-                <span *ngIf="nextTopic">{{ 'Topic' | translate }} {{ nextTopic.sequential_number }}</span>
+                <span *ngIf="nextTopic">{{ 'Topic' | translate }} {{ getNavDisplay(nextTopic) }}</span>
             </button>
             <mat-divider *ngIf="previousTopic || nextTopic"></mat-divider>
         </div>
