@@ -133,11 +133,6 @@ export class MeetingSettingsGroupDetailComponent
                     const keys = Array.isArray(field.setting.key) ? field.setting.key : [field.setting.key];
                     for (const key of keys) {
                         delete data[key];
-                        // reset disabled boolean values
-                        if (field.setting.type === `boolean`) {
-                            data[key] = false;
-                            field.updateValue(false);
-                        }
                     }
                 }
             }

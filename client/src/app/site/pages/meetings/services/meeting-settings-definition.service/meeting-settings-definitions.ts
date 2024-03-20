@@ -58,7 +58,7 @@ export interface SettingsInput<V = any> {
     // alternative to `choices`; overwrites `choices` if both are given
     choicesFunc?: ChoicesFunctionDefinition<V>;
     helpText?: string; // default: ""
-    indented?: boolean; // default: false. If true, indents the input field to simulate nested settings
+    indentation?: number; // default: 0. Indents the input field by the given amount to simulate nested settings
     validators?: ValidatorFn[]; // default: []
     automaticChangesSetting?: SettingsItemAutomaticChangeSetting<V>;
     useRelation?: boolean; // May be set to true for relation id fields to get the relation item(s) instead if the id(s)

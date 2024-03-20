@@ -49,6 +49,11 @@ export interface SettingsFieldUpdate {
 })
 export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent implements OnInit, OnDestroy {
     /**
+     * The amount of pixels to indent the field per indentation level.
+     */
+    public readonly INDENTATION_PIXEL_AMOUNT = 15;
+
+    /**
      * Option to show a green check-icon.
      */
     public updateSuccessIcon = false;
