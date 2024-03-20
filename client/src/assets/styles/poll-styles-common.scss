@@ -13,17 +13,17 @@
 }
 
 .voted-yes {
-    background-color: $votes-yes-color;
+    background-color: $votes-yes-color !important;
     color: $vote-active-color;
 }
 
 .voted-no {
-    background-color: $votes-no-color;
+    background-color: $votes-no-color !important;
     color: $vote-active-color;
 }
 
 .voted-abstain {
-    background-color: $votes-abstain-color;
+    background-color: $votes-abstain-color !important;
     color: $vote-active-color;
 }
 
