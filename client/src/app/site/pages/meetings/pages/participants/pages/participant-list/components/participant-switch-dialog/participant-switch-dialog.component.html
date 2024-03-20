@@ -1,54 +1,81 @@
-<h2 mat-dialog-title>Switch mandates</h2>
+<h2 mat-dialog-title translate>Switch mandates</h2>
 
 <mat-dialog-content>
     <table class="participant-switch-table">
-        <tbody>
-            <tr>
-                <td>
-                    <span translate>Name</span>
-                </td>
-                <td *ngFor="let user of users">
-                    <span>{{ user.short_name }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span translate>Structure level</span>
-                </td>
-                <td *ngFor="let user of users">
-                    <span>{{ user.structure_level() }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span translate>Groups</span>
-                </td>
-                <td *ngFor="let user of users">
-                    <os-comma-separated-listing [list]="user.groups()"></os-comma-separated-listing>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span translate>Number</span>
-                </td>
-                <td *ngFor="let user of users">
-                    <span>{{ user.number() }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span translate>Is present</span>
-                </td>
-                <td *ngFor="let user of users">
-                    <mat-checkbox [checked]="user.isPresentInMeeting()" [disabled]="true"></mat-checkbox>
-                </td>
-            </tr>
-        </tbody>
+        <colgroup>
+            <col style="width: 20%" />
+            <col style="width: 40%" />
+            <col style="width: 50px" />
+            <col style="width: 40%" />
+        </colgroup>
+        <tr>
+            <th>
+                <span translate>Name</span>
+            </th>
+            <td colSpan="2">
+                <span>{{ left.short_name }}</span>
+            </td>
+            <td>
+                <os-participant-search-selector
+                    [shouldReset]="false"
+                    [nonSelectableUserIds]="[left.id]"
+                    (userSelected)="onUserSelect($event)"
+                ></os-participant-search-selector>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <span translate>Structure level</span>
+            </th>
+            <td colSpan="2">
+                <span>{{ left.structure_level() }}</span>
+            </td>
+            <td>
+                <span *ngIf="right">{{ right.structure_level() }}</span>
+                <span *ngIf="!right">-</span>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <span translate>Groups</span>
+            </th>
+            <td class="red-warning-text">
+                <os-comma-separated-listing [list]="left.groups()"></os-comma-separated-listing>
+            </td>
+            <td class="red-warning-text">
+                <mat-icon>swap_horiz</mat-icon>
+            </td>
+            <td class="red-warning-text">
+                <os-comma-separated-listing *ngIf="right" [list]="right.groups()"></os-comma-separated-listing>
+                <span *ngIf="!right">-</span>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <span translate>Number</span>
+            </th>
+            <td class="red-warning-text">
+                <span>{{ left.number() }}</span>
+            </td>
+            <td class="red-warning-text">
+                <mat-icon>swap_horiz</mat-icon>
+            </td>
+            <td class="red-warning-text">
+                <span *ngIf="right">{{ right.number() }}</span>
+                <span *ngIf="!right">-</span>
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td colSpan="3" class="red-warning-text warning-hint" translate>
+                Only groups and participant number are switched.
+            </td>
+        </tr>
     </table>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button mat-button [matDialogClose]="true">
+    <button mat-button [disabled]="!right" [matDialogClose]="{ leftUser: left, rightUser: right }">
         <span translate>Switch</span>
     </button>
     <button mat-button [matDialogClose]="false">

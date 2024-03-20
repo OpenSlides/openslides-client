@@ -29,6 +29,7 @@
     [multiSelect]="isMultiSelect"
     [hiddenInMobile]="['group', 'presence']"
     [addBottomSpacer]="hasInteractionState | async"
+    [alwaysShowMenu]="true"
     [(selectedRows)]="selectedRows"
 >
     <!-- extra content in the filter bar -->
@@ -164,6 +165,7 @@
     <ng-template matMenuContent let-user="user">
         <!-- Presence -->
         <mat-checkbox
+            *ngIf="viewport.isMobileSubject | async"
             class="mat-menu-item"
             (change)="setPresent(user)"
             [checked]="isUserPresent(user)"
@@ -171,6 +173,35 @@
         >
             <span>{{ 'Present' | translate }}</span>
         </mat-checkbox>
+
+        <button *osPerms="permission.userCanManage" mat-menu-item (click)="switchParticipants(user)">
+            <mat-icon>swap_horiz</mat-icon>
+            <span>{{ 'Swap mandates' | translate }}</span>
+        </button>
+
+        <button
+            *ngIf="canChangePassword(user)"
+            mat-menu-item
+            [routerLink]="['/', activeMeetingId, 'participants', 'password', user.id]"
+        >
+            <mat-icon>security</mat-icon>
+            <span>{{ 'Change password' | translate }}</span>
+        </button>
+
+        <button *osPerms="permission.userCanManage" mat-menu-item (click)="sendInvitationEmail(user)">
+            <mat-icon>mail</mat-icon>
+            <span>{{ 'Send invitation email' | translate }}</span>
+        </button>
+
+        <button
+            *osPerms="permission.userCanManage"
+            mat-menu-item
+            class="red-warning-text"
+            (click)="removeUserFromMeeting(user)"
+        >
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
     </ng-template>
 </mat-menu>
 
@@ -246,18 +277,6 @@
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setGroupSelected()">
                 <mat-icon>people</mat-icon>
                 <span>{{ 'Add/remove groups ...' | translate }}</span>
-            </button>
-
-            <button
-                mat-menu-item
-                [disabled]="selectedRows.length !== 2"
-                [matTooltip]="
-                    (selectedRows.length !== 2 ? 'Select exactly two participants to swap mandates' : '') | translate
-                "
-                (click)="switchParticipants()"
-            >
-                <mat-icon>swap_horiz</mat-icon>
-                <span>{{ 'Swap mandates ...' | translate }}</span>
             </button>
 
             <button
