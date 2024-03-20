@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { CheckDatabasePresenterService } from 'src/app/gateways/presenter/check-database-presenter.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -11,7 +11,7 @@ import { LifecycleService } from 'src/app/site/services/lifecycle.service';
     styleUrls: [`./info-actions.component.scss`]
 })
 export class InfoActionsComponent extends BaseComponent {
-    constructor(
+    public constructor(
         private lifecycleService: LifecycleService,
         private snackbar: MatSnackBar,
         private presenter: CheckDatabasePresenterService,

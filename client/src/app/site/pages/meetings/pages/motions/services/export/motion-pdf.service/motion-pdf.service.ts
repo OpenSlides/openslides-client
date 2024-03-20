@@ -258,7 +258,7 @@ export class MotionPdfService {
 
         // submitters
         if (!infoToExport || infoToExport.includes(`submitters`)) {
-            const submitters = motion.submittersAsUsers.map(user => user.full_name).join(`, `);
+            const submitters = motion.mapSubmittersWithAdditional(user => user.full_name).join(`, `);
 
             metaTableBody.push([
                 {
@@ -284,6 +284,45 @@ export class MotionPdfService {
                     },
                     {
                         text: supporters
+                    }
+                ]);
+            }
+        }
+        // editors
+        if (!infoToExport || infoToExport.includes(`editors`)) {
+            const motionEnableEditor = this.meetingSettingsService.instant(`motions_enable_editor`);
+            if (motionEnableEditor && motion.editors.length > 0) {
+                const editors = motion.editors.map(editor => editor.user.full_name).join(`, `);
+
+                metaTableBody.push([
+                    {
+                        text: `${this.translate.instant(`Motion editor`)}:`,
+                        style: `boldText`
+                    },
+                    {
+                        text: editors
+                    }
+                ]);
+            }
+        }
+
+        // working group speakers
+        if (!infoToExport || infoToExport.includes(`working_group_speakers`)) {
+            const motionEnableWorkingGroupSpeaker = this.meetingSettingsService.instant(
+                `motions_enable_working_group_speaker`
+            );
+            if (motionEnableWorkingGroupSpeaker && motion.working_group_speakers.length > 0) {
+                const working_group_speakers = motion.working_group_speakers
+                    .map(speaker => speaker.user.full_name)
+                    .join(`, `);
+
+                metaTableBody.push([
+                    {
+                        text: `${this.translate.instant(`Spokesperson`)}:`,
+                        style: `boldText`
+                    },
+                    {
+                        text: working_group_speakers
                     }
                 ]);
             }
@@ -823,7 +862,7 @@ export class MotionPdfService {
                 text: motion.sort_parent_id ? `` : motion.numberOrTitle
             },
             { text: motion.sort_parent_id ? motion.numberOrTitle : `` },
-            { text: motion.submitters.length ? motion.submittersAsUsers.map(s => s.short_name).join(`, `) : `` },
+            { text: motion.submitters.length ? motion.mapSubmittersWithAdditional(s => s.short_name).join(`, `) : `` },
             { text: motion.title },
             {
                 text: motion.recommendation ? this.motionService.getExtendedRecommendationLabel(motion) : ``

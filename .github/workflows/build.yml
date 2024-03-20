@@ -24,7 +24,7 @@ jobs:
           submodules: "recursive"
       - name: Checkout latest commits
         env:
-          BRANCH: ${{ github.event.pull_request.head.repo.owner.login == 'OpenSlides' && github.head_ref || github.base_ref }}
+          BRANCH: ${{ github.event.pull_request.head.repo.owner.login == 'OpenSlides' && contains(github.head_ref, 'feature/') && github.head_ref || github.base_ref }}
         run: git submodule foreach 'git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" && ((git fetch origin ${{ env.BRANCH }} && git checkout ${{ env.BRANCH }}) || (git checkout main && git pull origin main)) && git submodule update --init'
       - name: Delete the client folder
         run: rm -r openslides-client

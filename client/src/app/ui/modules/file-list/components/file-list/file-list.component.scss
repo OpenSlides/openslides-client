@@ -86,3 +86,9 @@ $navbar-size: 40px;
         margin-bottom: 60px !important;
     }
 }
+
+.detail-link:focus {
+    outline: none;
+    border: 0px solid;
+    background-color: rgba(0, 0, 0, 0.087);
+}

@@ -107,7 +107,7 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
 
     private editorFilterOptions: OsFilter<ViewMotion> = {
         property: `editorUserIds`,
-        label: _(`Motion editors`),
+        label: _(`Motion editor`),
         options: []
     };
 
@@ -205,38 +205,38 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         this.updateFilterForRepo({
             repo: this.categoryRepo,
             filter: this.categoryFilterOptions,
-            noneOptionLabel: _(`No category set`)
+            noneOptionLabel: _(`not specified`)
         });
 
         this.updateFilterForRepo({
             repo: this.motionBlockRepo,
             filter: this.motionBlockFilterOptions,
-            noneOptionLabel: _(`No motion block set`)
+            noneOptionLabel: _(`not specified`)
         });
 
         this.updateFilterForRepo({
             repo: this.commentRepo,
             filter: this.motionCommentFilterOptions,
-            noneOptionLabel: _(`No comment`)
+            noneOptionLabel: _(`not specified`)
         });
 
         this.updateFilterForRepo({
             repo: this.tagRepo,
             filter: this.tagFilterOptions,
-            noneOptionLabel: _(`No tags`)
+            noneOptionLabel: _(`not specified`)
         });
 
         this.updateFilterForRepo({
             repo: this.editorRepo,
             filter: this.editorFilterOptions,
-            noneOptionLabel: _(`No motion editors`),
+            noneOptionLabel: _(`not specified`),
             mapFn: (editor: ViewMotionEditor) => editor.user
         });
 
         this.updateFilterForRepo({
             repo: this.workingGroupSpeakerRepo,
             filter: this.workingGroupSpeakerFilterOptions,
-            noneOptionLabel: _(`No spokesperson`),
+            noneOptionLabel: _(`not specified`),
             mapFn: (speaker: ViewMotionWorkingGroupSpeaker) => speaker.user
         });
 
@@ -423,7 +423,7 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
 
         recoOptions.push(`-`);
         recoOptions.push({
-            label: _(`No recommendation`),
+            label: _(`not specified`),
             condition: null
         });
         this.recommendationFilterOptions.options = recoOptions;

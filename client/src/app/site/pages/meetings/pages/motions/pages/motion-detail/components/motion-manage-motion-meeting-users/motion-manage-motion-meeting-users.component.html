@@ -26,6 +26,9 @@
     <mat-chip-list *ngFor="let model of intermediateModels" class="user">
         <mat-basic-chip disableRipple>{{ model.user?.getTitle() }}</mat-basic-chip>
     </mat-chip-list>
+    <mat-chip-list *ngIf="useAdditionalInput && additionalInputValue" class="user">
+        <mat-basic-chip disableRipple>{{ additionalInputValue }}</mat-basic-chip>
+    </mat-chip-list>
 </div>
 
 <div *ngIf="isEditMode && perms.isAllowed('change_metadata')">
@@ -51,12 +54,19 @@
         </ng-template>
     </os-sorting-list>
 
-    <div class="search-users">
+    <div class="text-field-container">
         <os-participant-search-selector
             [nonSelectableUserIds]="editUserIds"
             placeholder="{{ 'Select participant' | translate }}"
             (userSelected)="addUser($event)"
         ></os-participant-search-selector>
+    </div>
+
+    <div *ngIf="useAdditionalInput" class="text-field-container">
+        <mat-form-field>
+            <mat-label>{{ additionalInputLabel }}</mat-label>
+            <input matInput [formControl]="additionalInputControl" [value]="additionalInputValue" />
+        </mat-form-field>
     </div>
 
     <p>

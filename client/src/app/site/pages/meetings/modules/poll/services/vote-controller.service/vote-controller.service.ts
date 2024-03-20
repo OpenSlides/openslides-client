@@ -13,7 +13,7 @@ import { ViewPoll, ViewVote } from '../../../../pages/polls';
     providedIn: `root`
 })
 export class VoteControllerService extends BaseMeetingControllerService<ViewVote, Vote> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: VoteRepositoryService,
         private operator: OperatorService

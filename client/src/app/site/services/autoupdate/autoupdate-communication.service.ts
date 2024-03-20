@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscriber } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -43,7 +43,7 @@ export class AutoupdateCommunicationService {
     private tryReconnectOpen = false;
     private subscriptionsWithData = new Set<string>();
 
-    constructor(
+    public constructor(
         private authTokenService: AuthTokenService,
         private authService: AuthService,
         private sharedWorker: SharedWorkerService,

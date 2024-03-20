@@ -1,4 +1,4 @@
-<div mat-dialog-content>
+<mat-dialog-content>
     <ng-container *ngIf="!selectedModule">
         <os-grid>
             <os-tile *ngFor="let module of choosableModules" (clicked)="selectModule(module.getComponent())">
@@ -16,4 +16,4 @@
     <ng-container *ngIf="selectedModule">
         <ng-template [cdkPortalOutlet]="selectedModule"></ng-template>
     </ng-container>
-</div>
+</mat-dialog-content>

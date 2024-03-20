@@ -80,6 +80,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
      */
     public filterProps = [
         `submitters`,
+        `additional_submitter`,
         `block`,
         `title`,
         `number`,
