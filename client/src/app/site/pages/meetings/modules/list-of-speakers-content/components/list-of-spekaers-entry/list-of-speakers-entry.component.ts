@@ -1,34 +1,27 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ContentChild,
     EventEmitter,
     Input,
     OnInit,
     Output,
-    TemplateRef,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { SPECIAL_SPEECH_STATES, SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
-import { ListOfSpeakersContentTitleDirective } from '../../directives/list-of-speakers-content-title.directive';
 import {
     getLosFirstContributionSubscriptionConfig,
     LOS_FIRST_CONTRIBUTION_SUBSCRIPTION
@@ -64,20 +57,12 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     @Output()
     public stopSpeech = new EventEmitter<void>();
 
-    public isSortMode = false;
-
-    public isMobile = false;
-
     public get showFirstContributionHintObservable(): Observable<boolean> {
         return this.meetingSettingsService.get(`list_of_speakers_show_first_contribution`);
     }
 
     public get showInterposedQuestions(): Observable<boolean> {
         return this.meetingSettingService.get(`list_of_speakers_enable_interposed_question`);
-    }
-
-    public get showPointOfOrders(): boolean {
-        return this.pointOfOrderEnabled && this.canAddDueToPresence;
     }
 
     public get showSpeakerNoteForEveryoneObservable(): Observable<boolean> {
@@ -92,43 +77,23 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         return this.operator.hasPerms(this.permission.listOfSpeakersCanSee);
     }
 
-    public get canAddDueToPresence(): boolean {
-        return !this.onlyPresentUsers || this._currentUser!.isPresentInMeeting();
-    }
-
     public get enableCallControls(): boolean {
         return this.canManage && this.isCallEnabled;
     }
 
-    @ContentChild(ListOfSpeakersContentTitleDirective, { read: TemplateRef })
-    public explicitTitleContent: TemplateRef<any> | null = null;
+    public isPointOfOrderFn = () => this.speaker.point_of_order;
 
     public isCallEnabled = false;
-
     public pointOfOrderCategoriesEnabled = false;
-
-    public restrictPointOfOrderActions = false;
-
-    public isPointOfOrderFn = () => this.speaker.point_of_order;
     public enableProContraSpeech = false;
-
     public enableMultipleParticipants = false;
-
     public pointOfOrderEnabled = false;
-
-    private pointOfOrderForOthersEnabled = false;
-
-    private interventionEnabled = false;
-
     public structureLevelCountdownEnabled = false;
 
-    private _currentUser: ViewUser | null = null;
+    private pointOfOrderForOthersEnabled = false;
+    private interventionEnabled = false;
 
     private canMarkSelf = false;
-
-    private get onlyPresentUsers(): boolean {
-        return this.meetingSettingsService.instant(`list_of_speakers_present_users_only`) ?? false;
-    }
 
     public constructor(
         protected override translate: TranslateService,
@@ -136,10 +101,6 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         private speakerRepo: SpeakerControllerService,
         public operator: OperatorService,
         private promptService: PromptService,
-        private durationService: DurationService,
-        private userRepository: ParticipantControllerService,
-        private viewport: ViewPortService,
-        private cd: ChangeDetectorRef,
         private dialog: PointOfOrderDialogService,
         private speakerUserSelectDialog: SpeakerUserSelectDialogService,
         private interactionService: InteractionService
@@ -151,11 +112,6 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         this.subscribeToSettings();
         this.subscriptions.push(
             // observe changes to the viewport
-            this.viewport.isMobileSubject.subscribe(isMobile => {
-                this.isMobile = isMobile;
-                this.cd.markForCheck();
-            }),
-            this.operator.userObservable.subscribe(user => (this._currentUser = user)),
             this.showFirstContributionHintObservable.subscribe(showFirstContribution => {
                 if (showFirstContribution) {
                     this.modelRequestService.subscribeTo({
@@ -218,7 +174,8 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
 
     public enableProContraButton(): boolean {
         return (
-            this.enableProContraSpeech && (!this.speaker.isSpeaking || !SPECIAL_SPEECH_STATES.includes(this.speaker.speech_state))
+            this.enableProContraSpeech &&
+            (!this.speaker.isSpeaking || !SPECIAL_SPEECH_STATES.includes(this.speaker.speech_state))
         );
     }
 
@@ -351,7 +308,12 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
      * @returns 0 or the number of times a speaker occurs in finishedSpeakers
      */
     public hasSpokenCount(): number {
-        return -1;
+        return this.speaker.list_of_speakers.speakers.filter(
+            speaker =>
+                speaker.state === SpeakerState.FINISHED &&
+                speaker.user_id === this.speaker.user_id &&
+                !speaker.point_of_order
+        ).length;
     }
 
     /**
@@ -361,16 +323,6 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
      */
     public isFirstContribution(): boolean {
         return this.listOfSpeakersRepo.isFirstContribution(this.speaker);
-    }
-
-    /**
-     * get the duration of a speech
-     *
-     * @param speaker
-     * @returns string representation of the duration in `[MM]M:SS minutes` format
-     */
-    public durationString(): string {
-        return this.durationService.durationToString(this.speaker.speakingTime, `m`);
     }
 
     public getSpeakerCountdown(): any {
@@ -414,23 +366,10 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         return null;
     }
 
-    /**
-     * returns a locale-specific version of the starting time for the given speaker item
-     *
-     * @param speaker
-     * @returns a time string using the current language setting of the client
-     */
-    public startTimeToString(): string {
-        return this.speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang);
-    }
-
     private subscribeToSettings(): void {
         this.subscriptions.push(
             this.meetingSettingsService.get(`list_of_speakers_enable_point_of_order_categories`).subscribe(enabled => {
                 this.pointOfOrderCategoriesEnabled = enabled;
-            }),
-            this.meetingSettingsService.get(`list_of_speakers_closing_disables_point_of_order`).subscribe(enabled => {
-                this.restrictPointOfOrderActions = enabled;
             }),
             // observe changes to the agenda_show_first_contribution setting
             // observe point of order settings
