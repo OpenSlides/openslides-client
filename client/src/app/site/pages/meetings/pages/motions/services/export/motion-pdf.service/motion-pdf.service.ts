@@ -37,12 +37,14 @@ interface CreateTextData {
     lnMode: LineNumberingMode;
     crMode: ChangeRecoMode;
     lineHeight: number;
+    onlyChangedParagraph?: boolean;
 }
 
 interface MotionToDocDefData {
     motion: ViewMotion;
     exportInfo?: MotionExportInfo;
     continuousText?: boolean;
+    onlyChangedParagraph?: boolean;
 }
 
 /**
@@ -99,7 +101,7 @@ export class MotionPdfService {
      * @param motion the motion to convert to pdf
      * @returns doc def for the motion
      */
-    public motionToDocDef({ motion, continuousText, exportInfo }: MotionToDocDefData): Content {
+    public motionToDocDef({ motion, continuousText, onlyChangedParagraph, exportInfo }: MotionToDocDefData): Content {
         let lnMode = exportInfo && exportInfo.lnMode ? exportInfo.lnMode : null;
         let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
         const infoToExport = exportInfo ? exportInfo.metaInfo : null;
@@ -151,7 +153,7 @@ export class MotionPdfService {
         }
 
         if (!contentToExport || contentToExport.includes(`text`)) {
-            if (motion.showPreamble && !continuousText) {
+            if (motion.showPreamble && !continuousText && !motion.hasLeadMotion) {
                 const preamble = this.createPreamble();
                 motionPdfContent.push(preamble);
             }
@@ -161,7 +163,8 @@ export class MotionPdfService {
                 lineLength,
                 lnMode,
                 crMode,
-                lineHeight
+                lineHeight,
+                onlyChangedParagraph
             });
             motionPdfContent.push(text);
         }
@@ -200,12 +203,15 @@ export class MotionPdfService {
      */
     private createTitle(motion: ViewMotion, crMode: ChangeRecoMode, lineLength: number): ContentText {
         // summary of change recommendations (for motion diff version only)
-        const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
-        const titleChange = changes.find(change => change?.isTitleChange())!;
-        const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
 
         const number = motion.number ? motion.number : ``;
-        const title = `${this.translate.instant(`Motion`)} ${number}: ${changedTitle}`;
+        let title = `${this.translate.instant(`Motion`)} ${number}`;
+        if (!motion.hasLeadMotion) {
+            const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
+            const titleChange = changes.find(change => change?.isTitleChange())!;
+            const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
+            title = title + `: ${changedTitle}`;
+        }
 
         return {
             text: title,
@@ -639,7 +645,14 @@ export class MotionPdfService {
      * @param crMode determine the used change Recommendation mode
      * @returns doc def for the "the assembly may decide" preamble
      */
-    private createText({ crMode, lineHeight, lineLength, lnMode, motion }: CreateTextData): Content {
+    private createText({
+        crMode,
+        lineHeight,
+        lineLength,
+        lnMode,
+        motion,
+        onlyChangedParagraph
+    }: CreateTextData): Content {
         let htmlText = ``;
 
         if (motion.isParagraphBasedAmendment()) {
@@ -656,9 +669,9 @@ export class MotionPdfService {
                 );
                 for (const paragraph of amendmentParas) {
                     htmlText += `<h3>` + this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph) + `</h3>`;
-                    htmlText += `<div class="paragraphcontext">${paragraph.textPre}</div>`;
+                    htmlText += onlyChangedParagraph ? `` : `<div class="paragraphcontext">${paragraph.textPre}</div>`;
                     htmlText += paragraph.text;
-                    htmlText += `<div class="paragraphcontext">${paragraph.textPost}</div>`;
+                    htmlText += onlyChangedParagraph ? `` : `<div class="paragraphcontext">${paragraph.textPost}</div>`;
                 }
             } catch (e: any) {
                 htmlText += `<em style="color: red; font-weight: bold;">` + e.toString() + `</em>`;

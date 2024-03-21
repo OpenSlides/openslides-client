@@ -30,7 +30,8 @@ export const MOTION_PDF_OPTIONS = {
     Attachments: `attachments`,
     AddBreaks: `addBreaks`,
     Header: `header`,
-    ContinuousText: `continuousText`
+    ContinuousText: `continuousText`,
+    OnlyChangedParagraph: `onlyChangedParagraph`
 };
 
 /**
