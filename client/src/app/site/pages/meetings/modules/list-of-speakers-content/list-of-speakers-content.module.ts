@@ -25,7 +25,7 @@ import { ProjectorButtonModule } from '../meetings-component-collector/projector
 import { ParticipantSearchSelectorModule } from '../participant-search-selector';
 import { CountdownTimeModule } from '../projector/modules/countdown-time/countdown-time.module';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
-import { ListOfSpeakersEntryComponent } from './components/list-of-spekaers-entry/list-of-speakers-entry.component';
+import { ListOfSpeakersEntryComponent } from './components/list-of-speakers-entry/list-of-speakers-entry.component';
 import { ModerationNoteComponent } from './components/moderation-note/moderation-note.component';
 import { ListOfSpeakersContentTitleDirective } from './directives/list-of-speakers-content-title.directive';
 import { PointOfOrderDialogModule } from './modules/point-of-order-dialog/point-of-order-dialog.module';
