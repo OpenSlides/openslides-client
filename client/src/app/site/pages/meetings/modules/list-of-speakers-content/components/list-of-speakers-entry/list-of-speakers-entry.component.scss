@@ -1,154 +1,100 @@
 @import 'src/assets/styles/variables.scss';
-.card-padding {
-    padding: 16px;
-}
 
-.los-title {
-    display: block;
-}
+.single-speaker-line {
+    display: flex;
+    align-items: center;
 
-.finished-list {
-    box-shadow: none !important;
-    margin-bottom: 15px;
-
-    .mat-list-item {
-        height: auto;
-        margin: 10px;
-
-        .mat-list-item-content {
-            display: block !important;
-        }
+    .speaker-info {
+        flex-grow: 1;
     }
 
-    .finished-speakers-grid {
-        font-size: 14px;
-        display: grid;
-        grid-gap: 1em;
-        grid-template-columns: min-content auto min-content min-content;
-
-        .finished-speaker-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        }
+    .speaker-controls {
+        flex-shrink: 1;
+        flex-wrap: nowrap;
     }
 
-    .center-text {
+    .speaker-name {
         margin: auto 0;
-    }
-}
-
-.current-speaker,
-.interposed-questions .speaker {
-    display: table;
-    width: -webkit-fill-available;
-    height: 50px;
-    margin: 50px 25px 10px 25px;
-    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.25);
-    line-height: 1;
-
-    .prefix {
-        display: table-cell;
-        padding: 0 15px;
-        vertical-align: middle;
-        .mat-icon {
-            vertical-align: middle;
-        }
-    }
-
-    .name {
-        display: table-cell;
-        vertical-align: middle;
-        padding-left: 10px;
-        width: 100%;
-
-        .speaker-structure-level {
-            font-size: 12px;
-        }
-
-        .active-speaker-subtitle {
-            * {
-                font-weight: initial;
-                font-size: 95%;
-            }
-        }
-    }
-
-    .suffix {
-        display: table-cell;
-        vertical-align: middle;
-        white-space: nowrap;
-        padding-right: 10px;
-    }
-}
-
-.current-speaker {
-    .name {
+        font-size: 16px;
         font-weight: bold;
-    }
-}
-
-.waiting-list,
-.interposed-questions {
-    padding: 10px 25px 0 25px;
-
-    .single-speaker-line {
-        display: grid;
-        grid-template-columns: auto min-content;
-        grid-column-gap: 0.5em;
-
-        .speaker-name {
-            margin: auto 0;
-        }
-
-        .speaker-controls {
-            margin-right: 0.5em;
-        }
-
-        .speaker-structure-level {
+        .pronoun {
             font-size: 12px;
+            font-weight: normal;
         }
     }
 
-    .speaker-warning {
-        margin-right: 5px;
+    .speaker-index {
+        font-weight: bold;
+        font-size: 16px;
+        padding: 0 8px;
+        min-width: 26px;
+    }
+
+    .speaker-info {
+        padding: 8px 0;
+    }
+
+    .speaker-structure-level {
+        font-size: 12px;
+    }
+
+    .speaker-additional-info,
+    .speech-type {
+        font-size: 12px;
+        & > span:not(:last-of-type):after {
+            content: ' · ';
+        }
+    }
+
+    .countdown {
+        font-size: 18px;
+        margin-right: 6px;
     }
 }
 
-.interposed-questions {
-    padding-top: 0px;
-    padding-left: 40px;
-    margin-bottom: 20px;
-    .speaker {
-        margin: 0px 0 5px 25px;
-        box-shadow: none;
+.speaker-warning {
+    margin-right: 5px;
+}
+
+.speaker-control-button {
+    $speaker-control-button-size: 46px;
+    $speaker-control-button-font-size: 38px;
+    width: $speaker-control-button-size !important;
+    height: $speaker-control-button-size !important;
+    line-height: $speaker-control-button-size !important;
+
+    .mat-icon {
+        width: $speaker-control-button-font-size !important;
+        height: $speaker-control-button-font-size !important;
+        line-height: $speaker-control-button-font-size !important;
     }
-}
-
-.add-self-buttons {
-    margin: 10px 20px;
-    display: inline-flex;
-    flex-wrap: wrap;
-
-    button {
-        margin: 5px;
+    .material-icons {
+        font-size: $speaker-control-button-font-size !important;
     }
-}
 
-.search-new-speaker-form {
-    padding: 15px 25px 0 25px;
-    width: auto;
-}
+    // TODO: Replace after mdc-migration:
+    /*
+    width: $speaker-control-button-size !important;
+    height: $speaker-control-button-size !important;
+    padding: 0px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
 
-.centered-text {
-    text-align: center;
-}
+    & > *[role=img] {
+        width: $speaker-control-button-font-size;
+        height: $speaker-control-button-font-size;
+        font-size: $speaker-control-button-font-size;
 
-.my-border-bottom {
-    border-bottom: 1px solid !important;
-}
-
-os-sorting-list {
-    .line {
-        border-radius: 4px;
+        svg {
+            width: $speaker-control-button-font-size;
+            height: $speaker-control-button-font-size;
+        }
     }
+
+    .mat-mdc-button-touch-target {
+        width: $speaker-control-button-size !important;
+        height: $speaker-control-button-size !important;
+    }
+    */
 }

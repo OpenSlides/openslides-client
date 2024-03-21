@@ -184,15 +184,15 @@
         <os-sorting-list
             [live]="true"
             [input]="waitingSpeakers"
-            [count]="canSee"
             [enable]="canManage && (isSortMode || !isMobile)"
             [isPriorityItemFunction]="isPointOfOrderFn"
             (sortEvent)="onSortingChanged($event)"
         >
             <!-- implicit speaker references into the component using ng-template slot -->
-            <ng-template let-speaker>
+            <ng-template let-speaker let-index="index">
                 <os-list-of-speakers-entry
                     [speaker]="speaker"
+                    [speakerIndex]="index"
                     (startSpeech)="onStartButton(speaker)"
                     (pauseSpeech)="onPauseButton(speaker)"
                     (stopSpeech)="onStopButton(speaker)"

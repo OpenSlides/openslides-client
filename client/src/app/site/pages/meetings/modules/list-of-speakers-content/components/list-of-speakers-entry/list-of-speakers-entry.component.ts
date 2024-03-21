@@ -46,6 +46,9 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     public speaker: ViewSpeaker;
 
     @Input()
+    public speakerIndex: number = null;
+
+    @Input()
     public showcolor = false;
 
     @Output()
@@ -312,7 +315,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
      * @returns 0 or the number of times a speaker occurs in finishedSpeakers
      */
     public hasSpokenCount(): number {
-        return this.speaker.list_of_speakers.speakers.filter(
+        return this.speaker?.list_of_speakers?.speakers.filter(
             speaker =>
                 speaker.state === SpeakerState.FINISHED &&
                 speaker.user_id === this.speaker.user_id &&
@@ -327,6 +330,16 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
      */
     public isFirstContribution(): boolean {
         return this.listOfSpeakersRepo.isFirstContribution(this.speaker);
+    }
+
+    public get hasSpeakerCountdown(): boolean {
+        return (
+            this.speaker.speech_state === SpeechState.INTERPOSED_QUESTION ||
+            (this.interventionEnabled && this.speaker.speech_state === SpeechState.INTERVENTION) ||
+            (this.structureLevelCountdownEnabled &&
+                this.speaker.structure_level_list_of_speakers &&
+                !this.speaker.point_of_order)
+        );
     }
 
     public getSpeakerCountdown(): any {

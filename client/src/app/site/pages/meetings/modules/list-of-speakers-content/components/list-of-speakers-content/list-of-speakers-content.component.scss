@@ -90,28 +90,6 @@
 .waiting-list,
 .interposed-questions {
     padding: 10px 25px 0 25px;
-
-    .single-speaker-line {
-        display: grid;
-        grid-template-columns: auto min-content;
-        grid-column-gap: 0.5em;
-
-        .speaker-name {
-            margin: auto 0;
-        }
-
-        .speaker-controls {
-            margin-right: 0.5em;
-        }
-
-        .speaker-structure-level {
-            font-size: 12px;
-        }
-    }
-
-    .speaker-warning {
-        margin-right: 5px;
-    }
 }
 
 .interposed-questions {
