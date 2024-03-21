@@ -189,7 +189,7 @@
 
     <ng-template #showView>
         <h2>{{ 'Meeting specific information' | translate }}</h2>
-        <div *ngIf="isAllowed('seePersonal') && user?.isLastEmailSent">
+        <div *ngIf="isAllowed('seeSensitiveData') && user?.isLastEmailSent">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>
                 <span>{{ user.last_email_sent | localizedDate }}</span>

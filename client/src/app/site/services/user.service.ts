@@ -34,6 +34,7 @@ export class UserService {
      * - seeName        (title, first, last, gender, about) (user.can_see_name or ownPage)
      * - seeOtherUsers  (title, first, last, gender, about) (user.can_see_name)
      * - seePersonal    (mail, username, structure level) (ownPage)
+     * - seeSensitiveData (mail, username, saml_id, last_email_sent) (ownPage, user.can_see_sensible_data)
      * - manage         (everything) (user.can_manage)
      * - changePersonal (mail, username, about) (user.can_manage or ownPage)
      * - changePassword (user.can_change_password)
@@ -41,7 +42,7 @@ export class UserService {
      * @param action the action the user tries to perform
      */
     public isAllowed(action: string, isOwnPage: boolean): boolean {
-        if ([`seePersonal`, `seeName`, `changePersonal`].includes(action) && isOwnPage === true) {
+        if ([`seePersonal`, `seeName`, `changePersonal`, `seeSensitiveData`].includes(action) && isOwnPage === true) {
             return true;
         }
         if (!this.activeMeetingService.meeting) {
@@ -56,6 +57,8 @@ export class UserService {
             case `changePersonal`:
             case `seePersonal`:
                 return this.operator.hasPerms(Permission.userCanUpdate);
+            case `seeSensitiveData`:
+                return this.operator.hasPerms(Permission.userCanSeeSensitiveData);
             case `seeName`:
             case `seeOtherUsers`:
                 return this.operator.hasPerms(Permission.userCanSee, Permission.userCanUpdate);

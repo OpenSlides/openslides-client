@@ -179,7 +179,7 @@
                     account_balance
                 </mat-icon>
                 <mat-icon
-                    *ngIf="user.hasSamlId && isAllowed('update')"
+                    *ngIf="user.hasSamlId && isAllowed('seeSensitiveData')"
                     matTooltip="{{ 'Has SSO identification' | translate }}"
                 >
                     fingerprint
@@ -188,7 +188,7 @@
         </div>
 
         <!-- Mail -->
-        <div *ngIf="isAllowed('seePersonal')">
+        <div *ngIf="isAllowed('seeSensitiveData')">
             <div *ngIf="user.email">
                 <h4>{{ 'Email' | translate }}</h4>
                 <span>{{ user.email }}</span>
@@ -201,7 +201,7 @@
             <span>{{ user.gender | translate }}</span>
         </div>
 
-        <div *ngIf="isAllowed('update')">
+        <div *ngIf="isAllowed('seeSensitiveData')">
             <!-- Username -->
             <div *ngIf="user.username">
                 <h4>{{ 'Username' | translate }}</h4>
@@ -209,7 +209,7 @@
             </div>
 
             <!-- Initial Password -->
-            <div *ngIf="user.default_password && !user.saml_id">
+            <div *ngIf="user.default_password && !user.saml_id && isAllowed('update')">
                 <h4>{{ 'Initial password' | translate }}</h4>
                 <span>{{ user.default_password }}</span>
             </div>

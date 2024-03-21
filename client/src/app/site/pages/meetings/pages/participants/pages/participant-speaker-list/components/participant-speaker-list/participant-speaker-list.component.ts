@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { modelIcons } from 'src/app/domain/definitions/model-icons';
-import { Permission } from 'src/app/domain/definitions/permission';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
