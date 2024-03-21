@@ -395,6 +395,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
+                        key: `list_of_speakers_hide_contribution_count`,
+                        label: _(`Hide hint for multiple contributions`),
+                        type: `boolean`
+                    },
+                    {
                         key: `list_of_speakers_allow_multiple_speakers`,
                         label: _(`Allow one participant multiple times on the same list`),
                         type: `boolean`
