@@ -174,6 +174,11 @@
             <span>{{ 'Present' | translate }}</span>
         </mat-checkbox>
 
+        <button *osPerms="permission.userCanManage" mat-menu-item (click)="openEditInfo(user, $event)">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'Edit details' | translate }}</span>
+        </button>
+
         <button *osPerms="permission.userCanManage" mat-menu-item (click)="switchParticipants(user)">
             <mat-icon>swap_horiz</mat-icon>
             <span>{{ 'Swap mandates' | translate }}</span>
