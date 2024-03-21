@@ -23,11 +23,17 @@
         }
     }
 
+    .speaking-indicator {
+        height: 24px;
+        width: 40px;
+        text-align: center;
+    }
+
     .speaker-index {
         font-weight: bold;
         font-size: 16px;
-        padding: 0 8px;
         min-width: 26px;
+        padding: 0 8px;
     }
 
     .speaker-info {

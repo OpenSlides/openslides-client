@@ -37,7 +37,11 @@
     }
 }
 
-.current-speaker,
+.current-speaker {
+    margin: 50px 25px 10px 25px;
+    padding: 0 0.75em;
+}
+
 .interposed-questions .speaker {
     display: table;
     width: -webkit-fill-available;
@@ -125,8 +129,7 @@
     border-bottom: 1px solid !important;
 }
 
-os-sorting-list {
-    .line {
-        border-radius: 4px;
-    }
+.current-speaker,
+os-sorting-list .line {
+    border-radius: 4px;
 }

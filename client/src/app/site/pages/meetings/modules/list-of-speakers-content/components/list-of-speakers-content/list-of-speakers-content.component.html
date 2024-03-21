@@ -74,51 +74,12 @@
 
     <!-- Current Speaker -->
     <div class="current-speaker background-accent" *ngIf="activeSpeaker">
-        <span class="prefix">
-            <mat-icon *ngIf="activeSpeaker.isSpeaking">mic</mat-icon>
-        </span>
-
-        <span class="name">
-            {{ activeSpeaker.getLOSName(!structureLevelCountdownEnabled) }}
-            <div class="active-speaker-subtitle">
-                <ng-container *ngTemplateOutlet="speakerSubtitle; context: { speaker: activeSpeaker }"></ng-container>
-            </div>
-        </span>
-
-        <span class="suffix">
-            <!-- point of order visible for everyone -->
-            <button
-                mat-icon-button
-                matTooltip="{{ 'Point of order' | translate }}"
-                *ngIf="activeSpeaker.point_of_order"
-            >
-                <mat-icon>warning</mat-icon>
-            </button>
-
-            <!-- Speaker countdown -->
-            <ng-container
-                [ngTemplateOutlet]="speakerCountdown"
-                [ngTemplateOutletContext]="{
-                    countdown: getSpeakerCountdown(activeSpeaker),
-                }"
-            ></ng-container>
-
-            <ng-container
-                [ngTemplateOutlet]="speakerControls"
-                [ngTemplateOutletContext]="{ speaker: activeSpeaker }"
-                *ngIf="canManage"
-            ></ng-container>
-
-            <!-- Extra menu with call controls -->
-            <button
-                *ngIf="canManage"
-                mat-icon-button
-                [matMenuTriggerFor]="manageSpeakerMenu"
-                [matMenuTriggerData]="{ speaker: activeSpeaker }"
-            >
-                <mat-icon>more_vert</mat-icon>
-            </button>
-        </span>
+        <os-list-of-speakers-entry
+            [speaker]="activeSpeaker"
+            (startSpeech)="onStartButton(activeSpeaker)"
+            (pauseSpeech)="onPauseButton(activeSpeaker)"
+            (stopSpeech)="onStopButton(activeSpeaker)"
+        />
     </div>
 
     <div class="interposed-questions">

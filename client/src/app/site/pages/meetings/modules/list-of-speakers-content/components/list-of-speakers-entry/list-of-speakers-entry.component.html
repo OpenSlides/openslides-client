@@ -1,15 +1,29 @@
 <div class="single-speaker-line">
-
     <div class="speaker-start">
         <ng-container *ngIf="canManage">
             <!-- start button -->
             <button
+                *ngIf="!speaker.isSpeaking"
                 mat-icon-button
                 class="speaker-control-button"
                 matTooltip="{{ 'Begin speech' | translate }}"
                 matTooltipPosition="above"
                 (click)="onStartButton()"
-            ><mat-icon>play_circle_outline</mat-icon></button>
+            >
+                <mat-icon>play_circle_outline</mat-icon>
+            </button>
+
+            <!-- pause button -->
+            <button
+                *ngIf="speaker.isSpeaking"
+                mat-icon-button
+                class="speaker-control-button"
+                matTooltip="{{ 'Pause speech' | translate }}"
+                matTooltipPosition="above"
+                (click)="onPauseButton()"
+            >
+                <mat-icon>pause_circle_outline</mat-icon>
+            </button>
         </ng-container>
     </div>
 
@@ -17,6 +31,10 @@
     <div *ngIf="canSee && speakerIndex !== null" class="speaker-index">
         <span>{{ speakerIndex + 1 }}.</span>
     </div>
+
+    <span *ngIf="speakerIndex === null" class="speaking-indicator">
+        <mat-icon *ngIf="speaker.isSpeaking">mic</mat-icon>
+    </span>
 
     <div class="speaker-info">
         <div class="speaker-name">
