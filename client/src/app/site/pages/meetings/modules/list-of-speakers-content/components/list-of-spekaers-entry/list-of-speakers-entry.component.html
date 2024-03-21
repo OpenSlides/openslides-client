@@ -94,7 +94,10 @@
         <!-- Extra stuff: Spoken Count, Gender, 1st Contribution -->
         <span *ngIf="canManage && !speaker.point_of_order">
             <!-- Speaker count -->
-            <span *ngIf="hasSpokenCount()" class="foreground-warn speaker-warning">
+            <span
+                *ngIf="(hideSecondaryContributionsCount | async) === false && hasSpokenCount()"
+                class="foreground-warn speaker-warning"
+            >
                 {{ hasSpokenCount() + 1 }}.
                 <span>{{ 'contribution' | translate }}</span>
             </span>

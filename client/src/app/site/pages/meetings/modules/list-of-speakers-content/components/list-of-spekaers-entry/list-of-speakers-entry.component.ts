@@ -69,6 +69,10 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         return this.meetingSettingsService.get(`list_of_speakers_speaker_note_for_everyone`);
     }
 
+    public get hideSecondaryContributionsCount(): Observable<boolean> {
+        return this.meetingSettingsService.get(`list_of_speakers_hide_contribution_count`);
+    }
+
     public get canManage(): boolean {
         return this.operator.hasPerms(this.permission.listOfSpeakersCanManage);
     }
