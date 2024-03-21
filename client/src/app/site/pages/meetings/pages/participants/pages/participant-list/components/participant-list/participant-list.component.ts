@@ -387,7 +387,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         });
         const response = await firstValueFrom(dialogRef.afterClosed());
         if (response) {
-            console.log(response);
             try {
                 await this.repo
                     .update(
