@@ -27,7 +27,7 @@ export class ProjectableListService {
         }
         const descriptor = this.ensureDescriptor(model);
         const projector = this.activeMeetingService.meeting?.reference_projector;
-        return projector.current_projections.some(projection => projection.isEqualToDescriptor(descriptor));
+        return projector?.current_projections.some(projection => projection.isEqualToDescriptor(descriptor));
     }
 
     private ensureDescriptor(obj: ProjectionBuildDescriptor | Projectable): ProjectionBuildDescriptor {
