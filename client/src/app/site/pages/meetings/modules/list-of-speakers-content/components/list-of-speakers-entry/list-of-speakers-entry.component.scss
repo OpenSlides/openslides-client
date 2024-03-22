@@ -54,12 +54,17 @@
 
     .countdown {
         font-size: 18px;
-        margin-right: 6px;
+        line-height: 18px;
+        vertical-align: middle;
     }
 }
 
 .speaker-warning {
     margin-right: 5px;
+}
+
+.speaker-appendix {
+    white-space: nowrap;
 }
 
 .speaker-control-button {
