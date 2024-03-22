@@ -82,7 +82,7 @@
         />
     </div>
 
-    <div class="interposed-questions">
+    <div *ngIf="interposedQuestions.length" class="interposed-questions">
         <div
             *ngFor="let speaker of interposedQuestions; let i = index"
             class="speaker"
@@ -91,52 +91,12 @@
                 backgroundColorLight: !speaker.isSpeaking
             }"
         >
-            <span class="prefix">
-                <mat-icon *ngIf="speaker.isSpeaking">mic</mat-icon>
-            </span>
-
-            <span class="name">
-                <ng-container *ngIf="speaker.meeting_user_id">
-                    {{ speaker.getLOSName(!structureLevelCountdownEnabled) }}
-                </ng-container>
-                <span
-                    *ngIf="!speaker.meeting_user_id && canManage"
-                    class="select-speaker-button"
-                    (click)="updateSpeakerMeetingUser(speaker)"
-                    translate
-                >
-                    Select speaker
-                </span>
-                <div class="active-speaker-subtitle">
-                    <ng-container *ngTemplateOutlet="speakerSubtitle; context: { speaker: speaker }"></ng-container>
-                </div>
-            </span>
-
-            <span class="suffix">
-                <!-- Speaker countdown -->
-                <ng-container
-                    [ngTemplateOutlet]="speakerCountdown"
-                    [ngTemplateOutletContext]="{
-                        countdown: getSpeakerCountdown(speaker)
-                    }"
-                ></ng-container>
-
-                <ng-container
-                    [ngTemplateOutlet]="speakerControls"
-                    [ngTemplateOutletContext]="{ speaker: speaker }"
-                    *ngIf="canManage"
-                ></ng-container>
-
-                <!-- Extra menu with call controls -->
-                <button
-                    *ngIf="canManage"
-                    mat-icon-button
-                    [matMenuTriggerFor]="manageSpeakerMenu"
-                    [matMenuTriggerData]="{ speaker: speaker }"
-                >
-                    <mat-icon>more_vert</mat-icon>
-                </button>
-            </span>
+            <os-list-of-speakers-entry
+                [speaker]="speaker"
+                (startSpeech)="onStartButton(speaker)"
+                (pauseSpeech)="onPauseButton(speaker)"
+                (stopSpeech)="onStopButton(speaker)"
+            />
         </div>
     </div>
 
@@ -233,120 +193,6 @@
     </div>
 </mat-card>
 
-<!-- admin menu for managing single speakers -->
-<mat-menu #manageSpeakerMenu>
-    <ng-template let-speaker="speaker" matMenuContent>
-        <ng-container *ngIf="canManage">
-            <ng-container *ngIf="enableSpeechStateControls(speaker)">
-                <!-- pro button -->
-                <button
-                    mat-menu-item
-                    (click)="onProContraButtons(speaker, true)"
-                    *ngIf="enableProContraButton(speaker)"
-                >
-                    <mat-icon *ngIf="speaker.speech_state !== SpeechState.PRO">add_circle_outline</mat-icon>
-                    <mat-icon class="green-text" *ngIf="speaker.speech_state === SpeechState.PRO">add_circle</mat-icon>
-                    <span>{{ 'Forspeech' | translate }}</span>
-                </button>
-
-                <!-- contra button -->
-                <button
-                    mat-menu-item
-                    (click)="onProContraButtons(speaker, false)"
-                    *ngIf="enableProContraButton(speaker)"
-                >
-                    <mat-icon *ngIf="speaker.speech_state !== SpeechState.CONTRA">remove_circle_outline</mat-icon>
-                    <mat-icon class="red-warning-text" *ngIf="speaker.speech_state === SpeechState.CONTRA">
-                        remove_circle
-                    </mat-icon>
-                    <span>{{ 'Contra speech' | translate }}</span>
-                </button>
-
-                <!-- star button -->
-                <button mat-menu-item (click)="onMarkButton(speaker)" *ngIf="enableContributionButton(speaker)">
-                    <mat-icon>
-                        {{ speaker.speech_state === SpeechState.CONTRIBUTION ? 'star' : 'star_border' }}
-                    </mat-icon>
-                    <span>{{ 'Contribution' | translate }}</span>
-                </button>
-
-                <!-- intervention -->
-                <button mat-menu-item (click)="onInterventionButton(speaker)" *ngIf="enableInterventionButton(speaker)">
-                    <mat-icon>
-                        {{ speaker.speech_state === SpeechState.INTERVENTION ? 'error' : 'error_outline' }}
-                    </mat-icon>
-                    <span>{{ 'Intervention' | translate }}</span>
-                </button>
-
-                <!-- point of order -->
-                <button mat-menu-item (click)="onPointOfOrderButton(speaker)" *ngIf="enablePointOfOrderButton(speaker)">
-                    <mat-icon>warning</mat-icon>
-                    <span>{{ (speaker.point_of_order ? 'Remove point of order' : 'Point of order') | translate }}</span>
-                </button>
-
-                <button *ngIf="speaker.point_of_order" mat-menu-item (click)="onEditPointOfOrderButton(speaker)">
-                    <mat-icon>edit</mat-icon>
-                    <span>{{ 'Edit point of order ...' | translate }}</span>
-                </button>
-            </ng-container>
-
-            <!-- update user button -->
-            <button *ngIf="enableUpdateUserButton(speaker)" mat-menu-item (click)="updateSpeakerMeetingUser(speaker)">
-                <mat-icon>person_add</mat-icon>
-                <span translate>Select speaker</span>
-            </button>
-
-            <!-- Call controls -->
-            <ng-container
-                [ngTemplateOutlet]="callControls"
-                [ngTemplateOutletContext]="{ speaker: speaker }"
-                *ngIf="enableCallControls"
-            >
-                <mat-divider></mat-divider>
-            </ng-container>
-
-            <!-- Structure levels -->
-            <button *ngIf="enableStructureLevelsMenu(speaker)" mat-menu-item [matMenuTriggerFor]="structureLevelsMenu">
-                <mat-icon>flag</mat-icon>
-                <span>{{ 'Structure level' | translate }}</span>
-            </button>
-
-            <mat-menu #structureLevelsMenu="matMenu">
-                <ng-container *ngIf="speaker.meeting_user_id">
-                    <button
-                        *ngFor="let structureLevel of speaker.meeting_user.structure_levels"
-                        mat-menu-item
-                        (click)="setStructureLevel(speaker, structureLevel.id)"
-                    >
-                        <mat-icon *ngIf="speaker.structure_level_list_of_speakers?.structure_level_id">
-                            {{
-                                speaker.structure_level_list_of_speakers?.structure_level_id === structureLevel.id
-                                    ? 'check'
-                                    : ''
-                            }}
-                        </mat-icon>
-                        {{ structureLevel.name }}
-                    </button>
-                </ng-container>
-            </mat-menu>
-
-            <mat-divider
-                *ngIf="
-                    enableSpeechStateControls(speaker) ||
-                    enableUpdateUserButton(speaker) ||
-                    enableCallControls ||
-                    enableStructureLevelsMenu(speaker)
-                "
-            ></mat-divider>
-            <!-- remove speaker from list -->
-            <button mat-menu-item (click)="removeSpeaker(speaker)">
-                <mat-icon color="warn">delete</mat-icon>
-                <span>{{ 'Clear' | translate }}</span>
-            </button>
-        </ng-container>
-    </ng-template>
-</mat-menu>
-
 <ng-template #speakerSubtitle let-speaker="speaker" let-showcolor="showcolor">
     <!-- Pro Speech -->
     <ng-container *ngIf="speaker.speech_state === SpeechState.PRO">
@@ -430,52 +276,4 @@
             </i>
         </ng-container>
     </ng-container>
-</ng-template>
-
-<!-- Invite to conference room -->
-<ng-template #callControls let-speaker="speaker">
-    <button mat-menu-item (click)="inviteToVoice(speaker)">
-        <mat-icon>add_call</mat-icon>
-        <span>{{ 'Invite to conference room' | translate }}</span>
-    </button>
-    <ng-container></ng-container>
-</ng-template>
-
-<ng-template #speakerCountdown let-countdown="countdown">
-    <span *ngIf="structureLevelCountdownEnabled && countdown" class="countdown">
-        <os-countdown-time [unstyled]="true" [countdown]="countdown"></os-countdown-time>
-    </span>
-</ng-template>
-
-<ng-template #speakerControls let-speaker="speaker">
-    <button
-        *ngIf="!speaker.isSpeaking"
-        mat-icon-button
-        matTooltip="{{ (speaker.pause_time ? 'Resume speech' : 'Begin speech') | translate }}"
-        matTooltipPosition="above"
-        (click)="onStartButton(speaker)"
-    >
-        <mat-icon>play_arrow</mat-icon>
-    </button>
-
-    <button
-        *ngIf="speaker.isSpeaking"
-        mat-icon-button
-        matTooltip="{{ 'Pause speech' | translate }}"
-        matTooltipPosition="above"
-        (click)="onPauseButton(speaker)"
-    >
-        <mat-icon>pause</mat-icon>
-    </button>
-
-    <!-- Stop speaker button -->
-    <button
-        *ngIf="speaker.isCurrentSpeaker"
-        mat-icon-button
-        matTooltip="{{ 'End speech' | translate }}"
-        matTooltipPosition="above"
-        (click)="onStopButton(speaker)"
-    >
-        <mat-icon>stop</mat-icon>
-    </button>
 </ng-template>

@@ -104,3 +104,46 @@
     }
     */
 }
+
+.speaker-stop-button {
+    $speaker-control-button-size: 40px;
+    $speaker-control-button-font-size: 32px;
+    width: $speaker-control-button-size !important;
+    height: $speaker-control-button-size !important;
+    line-height: $speaker-control-button-size !important;
+
+    .mat-icon {
+        width: $speaker-control-button-font-size !important;
+        height: $speaker-control-button-font-size !important;
+        line-height: $speaker-control-button-font-size !important;
+    }
+    .material-icons {
+        font-size: $speaker-control-button-font-size !important;
+    }
+
+    // TODO: Replace after mdc-migration:
+    /*
+    width: $speaker-control-button-size !important;
+    height: $speaker-control-button-size !important;
+    padding: 0px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+
+    & > *[role=img] {
+        width: $speaker-control-button-font-size;
+        height: $speaker-control-button-font-size;
+        font-size: $speaker-control-button-font-size;
+
+        svg {
+            width: $speaker-control-button-font-size;
+            height: $speaker-control-button-font-size;
+        }
+    }
+
+    .mat-mdc-button-touch-target {
+        width: $speaker-control-button-size !important;
+        height: $speaker-control-button-size !important;
+    }
+    */
+}

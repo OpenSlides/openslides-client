@@ -6,7 +6,7 @@
                 *ngIf="!speaker.isSpeaking"
                 mat-icon-button
                 class="speaker-control-button"
-                matTooltip="{{ 'Begin speech' | translate }}"
+                matTooltip="{{ (speaker.pause_time ? 'Resume speech' : 'Begin speech') | translate }}"
                 matTooltipPosition="above"
                 (click)="onStartButton()"
             >
@@ -37,10 +37,18 @@
     </span>
 
     <div class="speaker-info">
-        <div class="speaker-name">
+        <div *ngIf="speaker.meeting_user_id" class="speaker-name">
             {{ speaker.user_short_name }}
             <span *ngIf="speaker.user_pronoun" class="pronoun">{{ speaker.user_pronoun }}</span>
         </div>
+        <span
+            *ngIf="!speaker.meeting_user_id && canManage"
+            class="select-speaker-button"
+            (click)="updateSpeakerMeetingUser()"
+            translate
+        >
+            Select speaker
+        </span>
 
         <div class="speaker-additional-info">
             <span *ngIf="speaker.getLOSStructureLevels(!structureLevelCountdownEnabled)">
@@ -55,7 +63,7 @@
         <div class="speech-type">
             <ng-container [ngTemplateOutlet]="speechType"></ng-container>
 
-            <span *ngIf="canManage && !speaker.point_of_order">
+            <span *ngIf="canManage && !speaker.point_of_order && speaker.speech_state !== 'interposed_question'">
                 <!-- Speaker count -->
                 <span
                     *ngIf="(hideSecondaryContributionsCount | async) === false && hasSpokenCount()"
@@ -147,6 +155,18 @@
                 </mat-menu>
             </ng-container>
         </span>
+
+        <!-- Stop speaker button -->
+        <button
+            *ngIf="speaker.isCurrentSpeaker && canManage"
+            mat-icon-button
+            class="speaker-stop-button"
+            matTooltip="{{ 'End speech' | translate }}"
+            matTooltipPosition="above"
+            (click)="onStopButton()"
+        >
+            <mat-icon>stop_circle</mat-icon>
+        </button>
 
         <!-- Speaker countdown -->
         <span *ngIf="structureLevelCountdownEnabled && hasSpeakerCountdown" class="countdown">

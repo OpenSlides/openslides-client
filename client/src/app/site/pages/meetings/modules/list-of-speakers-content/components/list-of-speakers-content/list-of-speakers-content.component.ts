@@ -586,7 +586,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     /**
      * Creates an array of users who currently shouldn't be selectable for the speaker list.
      */
-    private filterNonAvailableUsers() {
+    private filterNonAvailableUsers(): void {
         const nonAvailableUsers = this.users
             .filter(
                 user =>

@@ -40,55 +40,12 @@
 .current-speaker {
     margin: 50px 25px 10px 25px;
     padding: 0 0.75em;
+    border-radius: 4px;
 }
 
-.interposed-questions .speaker {
-    display: table;
-    width: -webkit-fill-available;
-    height: 50px;
-    margin: 50px 25px 10px 25px;
-    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.25);
-    line-height: 1;
-
-    .prefix {
-        display: table-cell;
-        padding: 0 15px;
-        vertical-align: middle;
-        .mat-icon {
-            vertical-align: middle;
-        }
-    }
-
-    .name {
-        display: table-cell;
-        vertical-align: middle;
-        padding-left: 10px;
-        width: 100%;
-
-        .speaker-structure-level {
-            font-size: 12px;
-        }
-
-        .active-speaker-subtitle {
-            * {
-                font-weight: initial;
-                font-size: 95%;
-            }
-        }
-    }
-
-    .suffix {
-        display: table-cell;
-        vertical-align: middle;
-        white-space: nowrap;
-        padding-right: 10px;
-    }
-}
-
-.current-speaker {
-    .name {
-        font-weight: bold;
-    }
+.current-speaker:has(+ .interposed-questions) {
+    border-bottom-right-radius: 0;
+    margin-bottom: 0;
 }
 
 .waiting-list,
@@ -101,9 +58,35 @@
     padding-left: 40px;
     margin-bottom: 20px;
     .speaker {
-        margin: 0px 0 5px 25px;
+        margin: 2px 0 0 25px;
         box-shadow: none;
+        padding: 0 0.75em;
     }
+
+    .current-speaker {
+        border-radius: 0;
+    }
+
+    .speaker:first-of-type {
+        border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+    }
+
+    @supports selector(:has(*)) {
+        .speaker:first-of-type {
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+        }
+    }
+
+    .speaker:last-of-type {
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+}
+
+os-sorting-list .line {
+    border-radius: 4px;
 }
 
 .add-self-buttons {
@@ -127,9 +110,4 @@
 
 .my-border-bottom {
     border-bottom: 1px solid !important;
-}
-
-.current-speaker,
-os-sorting-list .line {
-    border-radius: 4px;
 }
