@@ -37,14 +37,14 @@ interface CreateTextData {
     lnMode: LineNumberingMode;
     crMode: ChangeRecoMode;
     lineHeight: number;
-    onlyChangedParagraph?: boolean;
+    onlyChangedLines?: boolean;
 }
 
 interface MotionToDocDefData {
     motion: ViewMotion;
     exportInfo?: MotionExportInfo;
     continuousText?: boolean;
-    onlyChangedParagraph?: boolean;
+    onlyChangedLines?: boolean;
 }
 
 /**
@@ -101,7 +101,7 @@ export class MotionPdfService {
      * @param motion the motion to convert to pdf
      * @returns doc def for the motion
      */
-    public motionToDocDef({ motion, continuousText, onlyChangedParagraph, exportInfo }: MotionToDocDefData): Content {
+    public motionToDocDef({ motion, continuousText, onlyChangedLines, exportInfo }: MotionToDocDefData): Content {
         let lnMode = exportInfo && exportInfo.lnMode ? exportInfo.lnMode : null;
         let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
         const infoToExport = exportInfo ? exportInfo.metaInfo : null;
@@ -164,7 +164,7 @@ export class MotionPdfService {
                 lnMode,
                 crMode,
                 lineHeight,
-                onlyChangedParagraph
+                onlyChangedLines
             });
             motionPdfContent.push(text);
         }
@@ -651,7 +651,7 @@ export class MotionPdfService {
         lineLength,
         lnMode,
         motion,
-        onlyChangedParagraph
+        onlyChangedLines
     }: CreateTextData): Content {
         let htmlText = ``;
 
@@ -669,9 +669,9 @@ export class MotionPdfService {
                 );
                 for (const paragraph of amendmentParas) {
                     htmlText += `<h3>` + this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph) + `</h3>`;
-                    htmlText += onlyChangedParagraph ? `` : `<div class="paragraphcontext">${paragraph.textPre}</div>`;
+                    htmlText += onlyChangedLines ? `` : `<div class="paragraphcontext">${paragraph.textPre}</div>`;
                     htmlText += paragraph.text;
-                    htmlText += onlyChangedParagraph ? `` : `<div class="paragraphcontext">${paragraph.textPost}</div>`;
+                    htmlText += onlyChangedLines ? `` : `<div class="paragraphcontext">${paragraph.textPost}</div>`;
                 }
             } catch (e: any) {
                 htmlText += `<em style="color: red; font-weight: bold;">` + e.toString() + `</em>`;
