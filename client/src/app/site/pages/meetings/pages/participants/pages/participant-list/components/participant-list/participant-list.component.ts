@@ -225,11 +225,11 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      *
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
-    public async openEditInfo(user: ViewUser, ev: MouseEvent): Promise<void> {
+    public async openEditInfo(user: ViewUser, ev?: MouseEvent): Promise<void> {
         if (this.isMultiSelect || !this.operator.hasPerms(Permission.userCanManage)) {
             return;
         }
-        ev.stopPropagation();
+        ev?.stopPropagation();
         const dialogRef = await this.infoDialog.open({
             id: user.id,
             name: user.username,
