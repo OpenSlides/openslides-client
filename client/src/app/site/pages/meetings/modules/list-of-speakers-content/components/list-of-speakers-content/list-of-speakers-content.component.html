@@ -22,48 +22,20 @@
         </mat-expansion-panel-header>
         <mat-list>
             <mat-list-item *ngFor="let speaker of finishedSpeakers; let number = index">
-                <div class="finished-speakers-grid">
-                    <div class="center-text" *osPerms="permission.listOfSpeakersCanSee">{{ number + 1 }}.</div>
-                    <div class="finished-speaker-info center-text">
-                        <div class="center-text">
-                            <div>
-                                {{ speaker.getLOSName(!structureLevelCountdownEnabled) }}
-                            </div>
-                            <div>
-                                <ng-container
-                                    *ngTemplateOutlet="speakerSubtitle; context: { speaker: speaker, showcolor: true }"
-                                ></ng-container>
-                            </div>
-                        </div>
-                        <div class="user-subtitle center-text">
-                            {{ durationString(speaker) }} ({{ 'Start time' | translate }}:
-                            {{ startTimeToString(speaker) }})
-                        </div>
-                    </div>
-
-                    <div *osPerms="permission.listOfSpeakersCanManage">
-                        <button
-                            *ngIf="speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id"
-                            mat-icon-button
-                            matTooltip="{{ 'Select speaker' | translate }}"
-                            matTooltipPosition="left"
-                            (click)="updateSpeakerMeetingUser(speaker)"
-                        >
-                            <mat-icon>person_add</mat-icon>
-                        </button>
-                    </div>
-                    <div>
-                        <button
-                            mat-icon-button
-                            matTooltip="{{ 'Remove' | translate }}"
-                            matTooltipPosition="left"
-                            *osPerms="permission.listOfSpeakersCanManage"
-                            (click)="removeSpeaker(speaker)"
-                        >
-                            <mat-icon>close</mat-icon>
-                        </button>
-                    </div>
+                <div
+                    *ngIf="number < 1 || displayStartTime(speaker, finishedSpeakers[number - 1])"
+                    class="finished-speakers-start"
+                >
+                    {{ 'Start time' | translate }}: {{ startTimeToString(speaker) }}
                 </div>
+
+                <os-list-of-speakers-entry
+                    [speaker]="speaker"
+                    [speakerIndex]="number"
+                    (startSpeech)="onStartButton(activeSpeaker)"
+                    (pauseSpeech)="onPauseButton(activeSpeaker)"
+                    (stopSpeech)="onStopButton(activeSpeaker)"
+                />
             </mat-list-item>
         </mat-list>
     </mat-expansion-panel>
@@ -192,88 +164,3 @@
         </button>
     </div>
 </mat-card>
-
-<ng-template #speakerSubtitle let-speaker="speaker" let-showcolor="showcolor">
-    <!-- Pro Speech -->
-    <ng-container *ngIf="speaker.speech_state === SpeechState.PRO">
-        <mat-icon inline class="inline-icon-text-align" [class.green-text]="!!showcolor">add_circle</mat-icon>
-        <i [class.user-subtitle]="!!showcolor">
-            {{ 'Forspeech' | translate }}
-        </i>
-    </ng-container>
-
-    <!-- Contra Speech -->
-    <ng-container *ngIf="speaker.speech_state === SpeechState.CONTRA">
-        <mat-icon inline class="inline-icon-text-align" [class.red-warning-text]="!!showcolor">remove_circle</mat-icon>
-        <i [class.user-subtitle]="!!showcolor">
-            {{ 'Counter speech' | translate }}
-        </i>
-    </ng-container>
-
-    <!-- Marked -->
-    <ng-container *ngIf="speaker.speech_state === SpeechState.CONTRIBUTION">
-        <mat-icon inline class="inline-icon-text-align" [class.icon]="!!showcolor">star</mat-icon>
-        <i [class.user-subtitle]="!!showcolor">
-            {{ 'Contribution' | translate }}
-        </i>
-    </ng-container>
-
-    <!-- Interposed question -->
-    <ng-container *ngIf="speaker.speech_state === SpeechState.INTERPOSED_QUESTION">
-        <mat-icon inline class="inline-icon-text-align" [class.icon]="!!showcolor">help</mat-icon>
-        <i [class.user-subtitle]="!!showcolor">
-            {{ 'Interposed question' | translate }}
-        </i>
-    </ng-container>
-
-    <!-- Intervention -->
-    <ng-container *ngIf="speaker.speech_state === SpeechState.INTERVENTION">
-        <mat-icon inline class="inline-icon-text-align" [class.icon]="!!showcolor">error</mat-icon>
-        <i [class.user-subtitle]="!!showcolor">
-            {{ 'Intervention' | translate }}
-        </i>
-    </ng-container>
-
-    <!-- Point Of Order and note -->
-    <ng-container>
-        <mat-icon
-            inline
-            color="{{ !!showcolor ? 'warn' : null }}"
-            class="inline-icon-text-align"
-            *ngIf="speaker.point_of_order"
-        >
-            warning
-        </mat-icon>
-        <b
-            [class.foreground-warn]="!!showcolor"
-            *ngIf="speaker.point_of_order_category && ((showSpeakerNoteForEveryoneObservable | async) || canManage)"
-        >
-            {{ speaker.point_of_order_category.text }}
-        </b>
-        <span
-            [class.foreground-warn]="!!showcolor"
-            *ngIf="
-                speaker.point_of_order_category &&
-                speaker.note &&
-                ((showSpeakerNoteForEveryoneObservable | async) || canManage)
-            "
-        >
-            ·
-        </span>
-        <ng-container *ngIf="(showSpeakerNoteForEveryoneObservable | async) || canManage">
-            <i [class.foreground-warn]="!!showcolor" *ngIf="speaker.note">
-                {{ speaker.note }}
-            </i>
-            <i
-                [class.foreground-warn]="!!showcolor"
-                *ngIf="
-                    !speaker.note &&
-                    speaker.point_of_order &&
-                    !(pointOfOrderCategoriesEnabled && speaker.point_of_order_category)
-                "
-            >
-                {{ 'Point of order' | translate }}
-            </i>
-        </ng-container>
-    </ng-container>
-</ng-template>

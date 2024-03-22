@@ -13,7 +13,7 @@
 
     .mat-list-item {
         height: auto;
-        margin: 10px;
+        margin: 10px 0;
 
         .mat-list-item-content {
             display: block !important;
@@ -27,13 +27,29 @@
         grid-template-columns: min-content auto min-content min-content;
 
         .finished-speaker-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: flex;
+            .speaker-name {
+                flex-grow: 1;
+            }
         }
+    }
+
+    .finished-speakers-start {
+        text-align: right;
+        font-size: 14px;
     }
 
     .center-text {
         margin: auto 0;
+    }
+
+    .single-speaker-line {
+        .speaker-index {
+            font-weight: normal;
+        }
+        .speaker-info {
+            padding: 2px 0;
+        }
     }
 }
 

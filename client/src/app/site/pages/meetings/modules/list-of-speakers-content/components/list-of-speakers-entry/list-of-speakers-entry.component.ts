@@ -18,6 +18,7 @@ import { ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
+import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
@@ -109,6 +110,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         public operator: OperatorService,
         private promptService: PromptService,
         private dialog: PointOfOrderDialogService,
+        private durationService: DurationService,
         private speakerUserSelectDialog: SpeakerUserSelectDialogService,
         private interactionService: InteractionService
     ) {
@@ -130,6 +132,16 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
                 }
             })
         );
+    }
+
+    /**
+     * get the duration of a speech
+     *
+     * @param speaker
+     * @returns string representation of the duration in `[MM]M:SS minutes` format
+     */
+    public get durationString(): string {
+        return this.durationService.durationToString(this.speaker.speakingTime, `m`);
     }
 
     /**

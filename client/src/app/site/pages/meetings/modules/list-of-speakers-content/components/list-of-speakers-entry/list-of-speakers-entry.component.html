@@ -1,5 +1,5 @@
 <div class="single-speaker-line">
-    <div class="speaker-start">
+    <div *ngIf="!speaker.isFinished" class="speaker-start">
         <ng-container *ngIf="canManage">
             <!-- start button -->
             <button
@@ -63,7 +63,14 @@
         <div class="speech-type">
             <ng-container [ngTemplateOutlet]="speechType"></ng-container>
 
-            <span *ngIf="canManage && !speaker.point_of_order && speaker.speech_state !== 'interposed_question'">
+            <span
+                *ngIf="
+                    canManage &&
+                    !speaker.point_of_order &&
+                    speaker.speech_state !== 'interposed_question' &&
+                    !speaker.isFinished
+                "
+            >
                 <!-- Speaker count -->
                 <span
                     *ngIf="(hideSecondaryContributionsCount | async) === false && hasSpokenCount()"
@@ -83,7 +90,7 @@
             </span>
         </div>
     </div>
-    <div class="speaker-appendix">
+    <div *ngIf="!speaker.isFinished" class="speaker-appendix">
         <!-- For normal users -->
         <span *ngIf="!canManage">
             <ng-container *ngIf="isSpeakerOperator()">
@@ -177,6 +184,35 @@
             <!-- more menu button -->
             <button mat-icon-button [matMenuTriggerFor]="manageSpeakerMenu" [matMenuTriggerData]="{ speaker: speaker }">
                 <mat-icon>more_vert</mat-icon>
+            </button>
+        </ng-container>
+    </div>
+    <div *ngIf="speaker.isFinished" class="speaker-appendix">
+        <!-- Speaker countdown -->
+        <span class="duration">
+            {{ durationString }}
+        </span>
+
+        <ng-container *osPerms="permission.listOfSpeakersCanManage">
+            <button
+                *ngIf="speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id"
+                mat-icon-button
+                matTooltip="{{ 'Select speaker' | translate }}"
+                matTooltipPosition="left"
+                (click)="updateSpeakerMeetingUser()"
+            >
+                <mat-icon>person_add</mat-icon>
+            </button>
+        </ng-container>
+        <ng-container>
+            <button
+                mat-icon-button
+                matTooltip="{{ 'Remove' | translate }}"
+                matTooltipPosition="left"
+                *osPerms="permission.listOfSpeakersCanManage"
+                (click)="removeSpeaker()"
+            >
+                <mat-icon>close</mat-icon>
             </button>
         </ng-container>
     </div>
