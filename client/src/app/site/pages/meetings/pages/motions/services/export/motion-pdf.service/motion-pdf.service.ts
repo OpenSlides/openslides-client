@@ -645,14 +645,7 @@ export class MotionPdfService {
      * @param crMode determine the used change Recommendation mode
      * @returns doc def for the "the assembly may decide" preamble
      */
-    private createText({
-        crMode,
-        lineHeight,
-        lineLength,
-        lnMode,
-        motion,
-        onlyChangedLines
-    }: CreateTextData): Content {
+    private createText({ crMode, lineHeight, lineLength, lnMode, motion, onlyChangedLines }: CreateTextData): Content {
         let htmlText = ``;
 
         if (motion.isParagraphBasedAmendment()) {
