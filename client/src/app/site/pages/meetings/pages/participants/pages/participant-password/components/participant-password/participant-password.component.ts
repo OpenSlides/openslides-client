@@ -32,7 +32,7 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
     /**
      * if current user has the "can_manage" permission
      */
-    public canManage = false;
+    public canUpdate = false;
 
     public get generatePasswordFn(): () => string {
         return () => this.repo.getRandomPassword();
@@ -82,7 +82,7 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
 
     private updateUser(): void {
         this.ownPage = this.urlUserId ? this.operator.operatorId === this.urlUserId : true;
-        this.canManage = this.operator.hasPerms(Permission.userCanManage);
+        this.canUpdate = this.operator.hasPerms(Permission.userCanUpdate);
     }
 
     /**
@@ -101,7 +101,7 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
         }
         // can Manage, but not own Page (a.k.a. Admin)
         try {
-            if (this.canManage && !this.ownPage) {
+            if (this.canUpdate && !this.ownPage) {
                 const password = this.passwordForm as string;
                 await this.repo.setPassword(this.user, password);
             } else if (this.ownPage) {

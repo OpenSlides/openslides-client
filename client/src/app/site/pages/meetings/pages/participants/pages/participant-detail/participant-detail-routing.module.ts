@@ -19,7 +19,7 @@ const routes: Routes = [
                     import(`./pages/participant-detail-manage/participant-detail-manage.module`).then(
                         m => m.ParticipantDetailManageModule
                     ),
-                data: { meetingPermissions: [Permission.userCanManage] },
+                data: { meetingPermissions: [Permission.userCanUpdate] },
                 canLoad: [PermissionGuard]
             })),
             {

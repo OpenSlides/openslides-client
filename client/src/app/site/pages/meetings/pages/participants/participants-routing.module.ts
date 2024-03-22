@@ -35,7 +35,7 @@ const routes: Routes = [
                         m => m.ParticipantPresenceModule
                     ),
                 data: {
-                    meetingPermissions: [Permission.userCanManage],
+                    meetingPermissions: [Permission.userCanUpdate],
                     meetingSettings: [`users_enable_presence_view`]
                 }
             },
@@ -45,7 +45,7 @@ const routes: Routes = [
                     import(`./pages/participant-speaker-list/participant-speaker-list.module`).then(
                         m => m.ParticipantSpeakerListModule
                     ),
-                data: { meetingPermissions: [Permission.userCanManage] }
+                data: { meetingPermissions: [Permission.userCanUpdate] }
             },
             {
                 path: `groups`,
