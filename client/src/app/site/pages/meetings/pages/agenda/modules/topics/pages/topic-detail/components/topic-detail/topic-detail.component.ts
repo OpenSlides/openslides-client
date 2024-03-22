@@ -239,7 +239,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     public getNavDisplay(topic: ViewTopic | null): string | number {
         if (!!topic) {
-            return !!topic.agenda_item?.item_number ? topic.agenda_item.item_number : topic.sequential_number;
+            return !!topic.agenda_item?.item_number ? topic.agenda_item.item_number : ``;
         }
         return ``;
     }

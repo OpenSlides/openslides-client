@@ -21,17 +21,14 @@
         </div>
 
         <!-- Back and forth buttons -->
-        <div
-            *ngIf="!vp.isMobile && !editTopic && showNavigateButtons"
-            class="extra-controls-slot prev-next-topic-controls"
-        >
+        <div *ngIf="!editTopic && showNavigateButtons" class="extra-controls-slot prev-next-topic-controls">
             <button
                 mat-button
                 (click)="navigateToTopic(previousTopic)"
                 [disabled]="!previousTopic"
                 class="topic-detail-nav-button"
             >
-                <os-icon-container icon="chevron_left">
+                <os-icon-container icon="chevron_left" [showIcon]="!getNavDisplay(previousTopic)">
                     {{ getNavDisplay(previousTopic) }}
                 </os-icon-container>
             </button>
@@ -41,7 +38,7 @@
                 [disabled]="!nextTopic"
                 class="topic-detail-nav-button"
             >
-                <os-icon-container icon="chevron_right" [swap]="true">
+                <os-icon-container icon="chevron_right" [swap]="true" [showIcon]="!getNavDisplay(nextTopic)">
                     {{ getNavDisplay(nextTopic) }}
                 </os-icon-container>
             </button>
@@ -156,28 +153,6 @@
 
 <mat-menu #topicExtraMenu="matMenu">
     <ng-template matMenuContent>
-        <div *ngIf="vp.isMobile && showNavigateButtons">
-            <button
-                mat-menu-item
-                (click)="navigateToTopic(previousTopic)"
-                [disabled]="!previousTopic"
-                class="motion-detail-nav-button"
-            >
-                <mat-icon>chevron_left</mat-icon>
-                <span *ngIf="previousTopic">{{ 'Topic' | translate }} {{ getNavDisplay(previousTopic) }}</span>
-            </button>
-            <button
-                mat-menu-item
-                (click)="navigateToTopic(nextTopic)"
-                [disabled]="!nextTopic"
-                class="motion-detail-nav-button"
-            >
-                <mat-icon>chevron_right</mat-icon>
-                <span *ngIf="nextTopic">{{ 'Topic' | translate }} {{ getNavDisplay(nextTopic) }}</span>
-            </button>
-            <mat-divider *ngIf="previousTopic || nextTopic"></mat-divider>
-        </div>
-
         <!-- PDF -->
         <button mat-menu-item (click)="onDownloadPdf()">
             <mat-icon>picture_as_pdf</mat-icon>
