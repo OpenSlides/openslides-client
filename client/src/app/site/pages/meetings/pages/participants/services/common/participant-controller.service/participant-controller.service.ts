@@ -43,7 +43,7 @@ import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definiti
 import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 
 export const MEETING_RELATED_FORM_CONTROLS = [
-    `structure_level`,
+    `structure_level_ids`,
     `number`,
     `vote_weight`,
     `about_me`,
