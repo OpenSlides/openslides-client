@@ -55,14 +55,14 @@ msgstr ""
 msgid "A server error occured. Please contact your system administrator."
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component.html
+msgid "A time is required and must be in min:secs format."
+msgstr ""
+
 msgid "A title is required"
 msgstr ""
 
 msgid "A topic needs a title"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component.html
-msgid "A total time is required and must be in min:secs format."
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/modules/participant-search-selector/components/participant-search-selector/participant-search-selector.component.ts
@@ -215,6 +215,10 @@ msgstr ""
 msgid "Add to queue"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component.html
+msgid "Add up"
+msgstr ""
+
 msgid "Add yourself to the current list of speakers to join the conference"
 msgstr ""
 
@@ -223,6 +227,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.html
 msgid "Add/remove structure levels ..."
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component.html
+msgid "Add/subtract"
 msgstr ""
 
 msgid ""
@@ -421,6 +429,10 @@ msgstr ""
 msgid "Are you sure you want to activate this meeting?"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component.ts
+msgid "Are you sure you want to add the following time onto every structure level?"
+msgstr ""
+
 msgid "Are you sure you want to anonymize all votes? This cannot be undone."
 msgstr ""
 
@@ -599,6 +611,12 @@ msgid ""
 msgstr ""
 
 msgid "Are you sure you want to reset all passwords to the default ones?"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component.ts
+msgid ""
+"Are you sure you want to reset the time to the last set value? It will be "
+"reset to:"
 msgstr ""
 
 msgid "Are you sure you want to reset this vote?"
@@ -1188,9 +1206,6 @@ msgid ""
 "structure level countdowns."
 msgstr ""
 
-msgid "Chyron"
-msgstr ""
-
 msgid "Chyron background color"
 msgstr ""
 
@@ -1198,6 +1213,10 @@ msgid "Chyron font color"
 msgstr ""
 
 msgid "Chyron speaker name"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+msgid "Chyron – current contribution"
 msgstr ""
 
 msgid "Clear"
@@ -1743,23 +1762,11 @@ msgstr ""
 msgid "Edit topic"
 msgstr ""
 
-#: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component.html
-msgid "Edit total time"
-msgstr ""
-
 #: /app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
 msgid "Edit workflow"
 msgstr ""
 
-#: /app/src/app/gateways/repositories/motions/motion-editor-repository/motion-editor-repository.service.ts
-msgid "Editor"
-msgstr ""
-
 msgid "Editorial final version"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
-msgid "Editors"
 msgstr ""
 
 msgid "Election"
@@ -1829,16 +1836,6 @@ msgid "Enable specifications and ranking for possible motions"
 msgstr ""
 
 msgid "Enable star icon usage by speakers"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
-msgid "Enable the ability to enter a participant as motion editor"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
-msgid ""
-"Enable the ability to enter a participant as working group speaker for a "
-"motion"
 msgstr ""
 
 msgid "Enable virtual applause"
@@ -2648,6 +2645,10 @@ msgstr ""
 msgid "List of speakers"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+msgid "List of speakers as overlay"
+msgstr ""
+
 msgid "List of speakers is initially closed"
 msgstr ""
 
@@ -3030,9 +3031,6 @@ msgstr ""
 msgid "No category"
 msgstr ""
 
-msgid "No category set"
-msgstr ""
-
 msgid "No change recommendations yet"
 msgstr ""
 
@@ -3052,10 +3050,6 @@ msgid "No data"
 msgstr ""
 
 msgid "No delegation of vote"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
-msgid "No editors"
 msgstr ""
 
 msgid "No emails were send."
@@ -3085,13 +3079,6 @@ msgstr ""
 msgid "No meetings have been selected."
 msgstr ""
 
-msgid "No motion block set"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
-msgid "No motion editors"
-msgstr ""
-
 msgid "No one has voted for this poll"
 msgstr ""
 
@@ -3104,17 +3091,10 @@ msgstr ""
 msgid "No personal note"
 msgstr ""
 
-msgid "No recommendation"
-msgstr ""
-
 msgid "No results found"
 msgstr ""
 
 msgid "No results yet."
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
-msgid "No spokesperson"
 msgstr ""
 
 msgid "No statute paragraphs"
@@ -3124,14 +3104,7 @@ msgstr ""
 msgid "No structure level"
 msgstr ""
 
-msgid "No tags"
-msgstr ""
-
 msgid "No verbose name is defined"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
-msgid "No working group speakers"
 msgstr ""
 
 msgid "No."
@@ -3332,9 +3305,6 @@ msgid "Out of sync"
 msgstr ""
 
 msgid "Outside"
-msgstr ""
-
-msgid "Overlay"
 msgstr ""
 
 msgid "PDF"
@@ -3845,6 +3815,10 @@ msgstr ""
 msgid "Reset state"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component.ts
+msgid "Reset timer"
+msgstr ""
+
 msgid "Reset to default settings"
 msgstr ""
 
@@ -4214,9 +4188,6 @@ msgstr ""
 msgid "Single votes"
 msgstr ""
 
-msgid "Slide"
-msgstr ""
-
 msgid "Some csv values could not be read correctly."
 msgstr ""
 
@@ -4258,8 +4229,16 @@ msgstr ""
 msgid "Speakers"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+msgid "Speaking time – current contribution"
+msgstr ""
+
 #: /app/src/app/site/pages/meetings/modules/projector/modules/slides/definitions/slides.ts
 msgid "Speaking times"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+msgid "Speaking times – overview structure levels"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/participants/pages/participant-speaker-list/services/participant-speaker-list-sort.service/participant-speaker-list-sort.service.ts
@@ -4378,6 +4357,10 @@ msgid "Submitters changed"
 msgstr ""
 
 msgid "Subscript"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component.html
+msgid "Subtract"
 msgstr ""
 
 msgid "Suitable accounts found"
@@ -4528,12 +4511,6 @@ msgid "The process may have stopped running."
 msgstr ""
 
 msgid "The process will be started. Please wait!"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
-msgid ""
-"The recommendation of motions in such a state can only be seen by motion "
-"managers."
 msgstr ""
 
 msgid "The request could not be sent. Check your connection."
@@ -5083,14 +5060,6 @@ msgstr ""
 msgid "Workflows"
 msgstr ""
 
-#: /app/src/app/gateways/repositories/motions/motion-working-group-speaker-repository/motion-working-group-speaker-repository.service.ts
-msgid "Working group speaker"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
-msgid "Working group speakers"
-msgstr ""
-
 msgid "Yes"
 msgstr ""
 
@@ -5389,10 +5358,6 @@ msgid "inactive"
 msgstr ""
 
 msgid "inline"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/components/motion-extension-field/motion-extension-field.component.html
-msgid "intern"
 msgstr ""
 
 msgid "internal"

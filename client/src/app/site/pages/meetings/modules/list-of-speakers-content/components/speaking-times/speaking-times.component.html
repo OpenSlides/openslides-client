@@ -32,13 +32,25 @@
 
 <mat-menu #editAndDistributeMenu="matMenu">
     <ng-template let-structure_level="structure_level" matMenuContent>
-        <button mat-menu-item (click)="setTotalTime(structure_level.id)">
+        <button
+            mat-menu-item
+            (click)="setTotalTime(structure_level.id)"
+            [disabled]="structureLevelIsSpeaking(structure_level.id)"
+        >
             <mat-icon>edit</mat-icon>
-            <span>{{ 'Edit total time' | translate }}</span>
+            <span>{{ 'Edit' | translate }}</span>
+        </button>
+        <button mat-menu-item (click)="resetTimer(structure_level.id)">
+            <mat-icon>replay</mat-icon>
+            <span>{{ 'Reset' | translate }}</span>
+        </button>
+        <button mat-menu-item (click)="addRemoveTime(structure_level.id)">
+            <mat-icon>timelapse</mat-icon>
+            <span>{{ 'Add/subtract' | translate }}</span>
         </button>
         <button
             mat-menu-item
-            (click)="distributOverhangTime(structure_level.id)"
+            (click)="distributeOverhangTime(structure_level.id)"
             [disabled]="!isInOvertimeAndNotSpeaking(structure_level.id)"
         >
             <mat-icon>more_time</mat-icon>
@@ -57,7 +69,7 @@
                 <mat-label>{{ 'Total time' | translate }}</mat-label>
                 <input type="text" formControlName="totalTime" matInput required />
                 <mat-error>
-                    {{ 'A total time is required and must be in min:secs format.' | translate }}
+                    {{ 'A time is required and must be in min:secs format.' | translate }}
                 </mat-error>
             </mat-form-field>
         </form>
@@ -65,12 +77,51 @@
 
     <mat-dialog-actions>
         <button mat-button [disabled]="!totalTimeForm.valid" [mat-dialog-close]="true">
-            <span>{{ 'OK' | translate }}</span>
+            <span>{{ 'Reset' | translate }}</span>
         </button>
         <button mat-button [mat-dialog-close]="false">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>
+</ng-template>
+
+<!-- Template for add/remove time dialog -->
+<ng-template #addRemoveTimeDialog>
+    <h2 mat-dialog-title>{{ currentEntry.name }}</h2>
+    <div class="os-form-card-mobile" mat-dialog-content>
+        <form (keydown)="onKeyDown($event)">
+            <!-- total time -->
+            <mat-form-field>
+                <mat-label>{{ 'Time' | translate }}</mat-label>
+                <input type="text" [formControl]="addTimeControl" matInput required />
+                <mat-error>
+                    {{ 'A time is required and must be in min:secs format.' | translate }}
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+
+    <div mat-dialog-actions>
+        <button
+            mat-button
+            (click)="doAddOrRemoveTime(true)"
+            [disabled]="!addTimeControl.valid"
+            [mat-dialog-close]="true"
+        >
+            <span>{{ 'Add up' | translate }}</span>
+        </button>
+        <button
+            mat-button
+            (click)="doAddOrRemoveTime(false)"
+            [disabled]="!addTimeControl.valid"
+            [mat-dialog-close]="true"
+        >
+            <span>{{ 'Subtract' | translate }}</span>
+        </button>
+        <button mat-button [mat-dialog-close]="false">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </div>
 </ng-template>
 
 <mat-menu #projectionMenu="matMenu">
