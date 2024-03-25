@@ -298,7 +298,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         if (structureLevel) {
             additions.push(structureLevel.getTitle());
-        } else if (structureLevel !== null && user.structureLevels()) {
+        } else if (structureLevel !== null && user.structureLevels?.()) {
             additions.push(user.structureLevels());
         }
 
