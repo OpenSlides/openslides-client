@@ -12,11 +12,6 @@ span {
     div {
         display: inherit;
     }
-    @media (max-width: 700px) {
-        span {
-            width: 32px;
-        }
-    }
 }
 
 .motion-content {
@@ -184,6 +179,17 @@ span {
         min-width: 2px;
         max-width: 4px;
     }
+
+    .prev-next-motion-controls {
+        span {
+            width: 32px;
+        }
+    }
+
+    .right_arrow {
+        padding-right: 32px;
+    }
+
 
     .chevron_number {
         visibility: hidden;
