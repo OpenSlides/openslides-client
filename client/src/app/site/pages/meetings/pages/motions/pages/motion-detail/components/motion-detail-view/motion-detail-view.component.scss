@@ -12,6 +12,11 @@ span {
     div {
         display: inherit;
     }
+    @media (max-width: 700px) {
+        span {
+            width: 32px;
+        }
+    }
 }
 
 .motion-content {
@@ -164,8 +169,6 @@ span {
         white-space: nowrap !important;
         text-overflow: ellipsis;
         overflow: hidden;
-        padding-left: 8px !important;
-        padding-right: 8px !important;
 
         @supports (-webkit-line-clamp: 3) {
             white-space: initial !important;
@@ -180,8 +183,6 @@ span {
     .motion-detail-nav-button {
         min-width: 2px;
         max-width: 4px;
-        padding-left: 0px !important;
-        padding-right: 0px !important;
     }
 
     .chevron_number {
