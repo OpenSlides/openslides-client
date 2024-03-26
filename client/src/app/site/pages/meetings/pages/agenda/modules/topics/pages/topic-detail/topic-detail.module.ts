@@ -15,6 +15,7 @@ import { AttachmentControlModule } from 'src/app/site/pages/meetings/modules/mee
 import { DirectivesModule } from 'src/app/ui/directives';
 import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
@@ -47,7 +48,8 @@ import { TopicDetailRoutingModule } from './topic-detail-routing.module';
         MatListModule,
         MatFormFieldModule,
         TopicPollModule,
-        RouterModule
+        RouterModule,
+        IconContainerModule
     ]
 })
 export class TopicDetailModule {}
