@@ -1,10 +1,12 @@
+import { HttpMethod } from 'src/app/infrastructure/definitions/http';
+
 import { Id } from '../../domain/definitions/key-types';
 import { WorkerMessageContent } from '../interfaces';
 
 export interface AutoupdateSetEndpointParams {
     url: string;
     healthUrl: string;
-    method: string;
+    method: HttpMethod;
 }
 
 export interface AutoupdateSetEndpoint extends WorkerMessageContent {
@@ -108,13 +110,4 @@ export interface AutoupdateStatusContent {
 export interface AutoupdateStatus extends AutoupdateWorkerResponse {
     action: 'status';
     content: AutoupdateStatusContent;
-}
-
-export interface AutoupdateNewUserContent {
-    id: number;
-}
-
-export interface AutoupdateNewUser extends AutoupdateWorkerResponse {
-    action: 'new-user';
-    content: AutoupdateNewUserContent;
 }

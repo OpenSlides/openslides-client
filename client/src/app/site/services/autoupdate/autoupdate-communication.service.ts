@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscriber } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -10,10 +11,8 @@ import { djb2hash } from 'src/app/infrastructure/utils';
 import { fqidFromCollectionAndId } from 'src/app/infrastructure/utils/transform-functions';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 import {
-    AutoupdateAuthChange,
     AutoupdateCleanupCache,
     AutoupdateCloseStream,
-    AutoupdateNewUser,
     AutoupdateOpenStream,
     AutoupdateReceiveData,
     AutoupdateReceiveError,
@@ -25,6 +24,7 @@ import {
 } from 'src/app/worker/autoupdate/interfaces-autoupdate';
 
 import { SpinnerService } from '../../modules/global-spinner';
+import { BannerService } from '../../modules/site-wrapper/services/banner.service';
 import { UpdateService } from '../../modules/site-wrapper/services/update.service';
 import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';
@@ -51,7 +51,8 @@ export class AutoupdateCommunicationService {
         private matSnackBar: MatSnackBar,
         private translate: TranslateService,
         private connectionStatusService: ConnectionStatusService,
-        private updateService: UpdateService
+        private updateService: UpdateService,
+        private bannerService: BannerService
     ) {
         this.autoupdateDataObservable = new Observable(dataSubscription => {
             this.sharedWorker.listenTo(`autoupdate`).subscribe(msg => {
@@ -68,8 +69,8 @@ export class AutoupdateCommunicationService {
                     case `status`:
                         this.handleStatus(<AutoupdateStatus>msg);
                         break;
-                    case `new-user`:
-                        this.authService.updateUser((<AutoupdateNewUser>msg).content?.id);
+                    case `set-connection-mode`:
+                        this.handleSetConnectionMode(<string>msg.content);
                         break;
                 }
             });
@@ -79,24 +80,6 @@ export class AutoupdateCommunicationService {
             if (this.endpointName) {
                 this.setEndpoint();
             }
-        });
-
-        this.authService.loginObservable.subscribe(() => {
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `auth-change`,
-                params: {
-                    type: `login`
-                }
-            } as AutoupdateAuthChange);
-        });
-
-        this.authService.logoutObservable.subscribe(() => {
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `auth-change`,
-                params: {
-                    type: `logout`
-                }
-            } as AutoupdateAuthChange);
         });
 
         if (window.localStorage.getItem(`DEBUG_MODE`)) {
@@ -249,7 +232,10 @@ export class AutoupdateCommunicationService {
 
     private handleReceiveError(data: AutoupdateReceiveError): void {
         if (data.content.data?.reason === `Logout`) {
-            this.authService.logout();
+            if (this.authService.isAuthenticated) {
+                this.authService.logout();
+            }
+            return;
         } else if (data.content.data?.terminate) {
             if (SpinnerService.isConnectionStable) {
                 this.tryReconnectOpen = true;
@@ -297,6 +283,16 @@ export class AutoupdateCommunicationService {
                     });
             }
         });
+    }
+
+    private handleSetConnectionMode(mode: string): void {
+        if (mode === `longpolling`) {
+            this.bannerService.addBanner({
+                type: `fallback_mode`,
+                text: _(`Fallback mode`),
+                icon: `warning`
+            });
+        }
     }
 
     private handleSetStreamId(data: AutoupdateSetStreamId): void {

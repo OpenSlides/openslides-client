@@ -1,34 +1,15 @@
 import * as fzstd from 'fzstd';
 
-import {
-    ErrorDescription,
-    ErrorType,
-    isCommunicationError,
-    isCommunicationErrorWrapper
-} from '../../gateways/http-stream/stream-utils';
-import { joinTypedArrays, splitTypedArray } from '../../infrastructure/utils/functions';
+import { HttpStream } from '../http/http-stream';
+import { ErrorDescription, ErrorType } from '../http/stream-utils';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 import { AutoupdateSetEndpointParams } from './interfaces-autoupdate';
 
-export class AutoupdateStream {
-    public failedCounter = 0;
-
-    private abortCtrl: AbortController = undefined;
+export class AutoupdateStream extends HttpStream {
     private activeSubscriptions: AutoupdateSubscription[] = null;
-    private _active = false;
-    private _connecting = false;
-    private _abortResolver: (val?: any) => void | undefined;
-    private error: any | ErrorDescription = null;
-    private restarting = false;
     private _currentData: unknown | null = null;
 
-    public get active(): boolean {
-        return this._active;
-    }
-
-    public get connecting(): boolean {
-        return this._connecting;
-    }
+    protected override readonly supportLongpolling = true;
 
     /**
      * Full data object received by autoupdate
@@ -41,85 +22,48 @@ export class AutoupdateStream {
         return this._subscriptions;
     }
 
-    public get failedConnects(): number {
-        return this.failedCounter;
-    }
-
     public constructor(
         private _subscriptions: AutoupdateSubscription[],
         public queryParams: URLSearchParams,
         private endpoint: AutoupdateSetEndpointParams,
         private authToken: string
-    ) {}
+    ) {
+        super(queryParams, endpoint, authToken, JSON.stringify(_subscriptions.map(s => s.request)));
+    }
 
     /**
      * Clones this stream with the specified subscriptions
      *
      * @param subscriptions The subscriptions handled by the created stream
      */
-    public cloneWithSubscriptions(subscriptions: AutoupdateSubscription[]): AutoupdateStream {
-        return new AutoupdateStream(subscriptions, this.queryParams, this.endpoint, this.authToken);
+    public cloneWithSubscriptions(
+        subscriptions: AutoupdateSubscription[],
+        queryParams = this.queryParams
+    ): AutoupdateStream {
+        return new AutoupdateStream(subscriptions, queryParams, this.endpoint, this.authToken);
     }
 
-    /**
-     * Closes the stream
-     */
-    public async abort(): Promise<void> {
-        if (this.abortCtrl !== undefined) {
-            const abortPromise = new Promise(resolver => (this._abortResolver = resolver));
-            setTimeout(this._abortResolver, 5000);
-            this.abortCtrl.abort();
-            await abortPromise;
-            this._abortResolver = undefined;
-        }
-    }
-
-    /**
-     * Opens a new connection to autoupdate.
-     * Also this function registers this stream inside all subscriptions
-     * handled by this stream.
-     *
-     * resolves when fetch connection is closed
-     */
-    public async start(
+    public override async start(
         force?: boolean
-    ): Promise<{ stopReason: 'error' | 'aborted' | 'unused' | 'resolved' | 'in-use'; error?: any }> {
-        if (this._active && !force) {
-            return { stopReason: `in-use` };
-        } else if ((this._active || this.abortCtrl) && force) {
-            await this.abort();
+    ): Promise<{ stopReason: 'error' | 'aborted' | 'resolved' | 'in-use' | string; error?: any }> {
+        if (this.activeSubscriptions === null) {
+            this.activeSubscriptions = [];
+            for (const subscription of this.subscriptions) {
+                this.activeSubscriptions.push(subscription);
+                subscription.stream = this;
+            }
         }
 
-        this.restarting = false;
-        this.error = null;
-        try {
-            await this.doRequest();
-            this._active = false;
-
-            if (this._abortResolver) {
-                this._abortResolver();
-            }
-        } catch (e) {
-            this._active = false;
-            if (e.name !== `AbortError`) {
-                console.error(e);
-
-                return { stopReason: `error`, error: this.error };
-            } else if (this.restarting) {
-                return await this.start();
-            }
-
-            if (this._abortResolver) {
-                this._abortResolver();
-            }
-            return { stopReason: this.activeSubscriptions?.length ? `aborted` : `unused`, error: this.error };
+        if (!this.activeSubscriptions?.length) {
+            return { stopReason: `unused` };
         }
 
-        if (this.error) {
-            return { stopReason: `error`, error: this.error };
+        const stopInfo = await super.start(force);
+        if (stopInfo.stopReason === `aborted` && !this.activeSubscriptions?.length) {
+            stopInfo.stopReason = `unused`;
         }
 
-        return { stopReason: `resolved` };
+        return stopInfo;
     }
 
     /**
@@ -161,15 +105,14 @@ export class AutoupdateStream {
         this.restart();
     }
 
-    public restart(): void {
-        this.restarting = true;
-        this.abort();
+    public override async restart(): Promise<void> {
+        super.restart();
         this.clearSubscriptions();
     }
 
     /**
      * Removes fqids from the cache.
-     *
+     *;
      * @param fqids list of fqids to delete
      */
     public removeFqids(fqids: string[]): void {
@@ -195,114 +138,44 @@ export class AutoupdateStream {
         this._currentData = null;
     }
 
-    public setAuthToken(token: string): void {
-        this.authToken = token;
-    }
-
-    private async doRequest(): Promise<void> {
-        this._active = true;
-
-        if (this.activeSubscriptions === null) {
-            this.activeSubscriptions = [];
-            for (const subscription of this.subscriptions) {
-                this.activeSubscriptions.push(subscription);
-                subscription.stream = this;
-            }
-        }
-
-        const headers: any = {
-            'Content-Type': `application/json`,
-            'ngsw-bypass': true
-        };
-
-        if (this.authToken) {
-            headers.authentication = this.authToken;
-        }
-
-        this.abortCtrl = new AbortController();
-
-        const queryParams = this.queryParams.toString() ? `?${this.queryParams.toString()}` : ``;
-        const response = await fetch(this.endpoint.url + queryParams, {
-            signal: this.abortCtrl.signal,
-            method: this.endpoint.method,
-            headers,
-            body: JSON.stringify(this.subscriptions.map(s => s.request))
-        });
-
-        const LINE_BREAK = `\n`.charCodeAt(0);
-        const reader = response.body.getReader();
-        let next: Uint8Array = null;
-        let result: ReadableStreamReadResult<Uint8Array>;
-        while (!(result = await reader.read()).done) {
-            const lines = splitTypedArray(LINE_BREAK, result.value);
-            for (let line of lines) {
-                if (line[line.length - 1] === LINE_BREAK) {
-                    if (next !== null) {
-                        line = joinTypedArrays(Uint8Array, next, line);
-                    }
-
-                    next = null;
-
-                    const data = this.queryParams.get(`compress`) ? this.decode(line) : new TextDecoder().decode(line);
-                    const parsedData = this.parse(data);
-                    this.handleContent(parsedData);
-                } else if (next) {
-                    next = joinTypedArrays(Uint8Array, next, line);
-                } else {
-                    next = line;
-                }
-            }
-        }
-
-        // Hotfix wrong status codes
-        const content = next ? this.parse(this.decode(next)) : null;
-        const autoupdateSentUnmarkedError = content?.type !== ErrorType.UNKNOWN && content?.error;
-
-        if (!response.ok || autoupdateSentUnmarkedError) {
-            if ((headers.authentication ?? null) !== (this.authToken ?? null)) {
-                return await this.doRequest();
-            }
-
-            let errorContent = null;
-            if (content && (errorContent = content)?.error) {
-                errorContent = errorContent.error;
-            }
-
-            let type = ErrorType.UNKNOWN;
-            if ((response.status >= 400 && response.status < 500) || errorContent?.type === `invalid`) {
-                type = ErrorType.CLIENT;
-            } else if (response.status >= 500) {
-                type = ErrorType.SERVER;
-            }
-
-            this.error = {
-                reason: `HTTP error`,
-                type,
-                error: { code: response.status, content: errorContent, endpoint: this.endpoint }
-            };
-            if (errorContent?.type !== `auth`) {
-                this.sendErrorToSubscriptions(this.error);
-            }
-            this.failedCounter++;
-        } else if (this.error) {
-            this.failedCounter++;
-        }
-    }
-
-    private handleContent(data: any): void {
-        if (data instanceof ErrorDescription || isCommunicationError(data) || isCommunicationErrorWrapper(data)) {
-            this.error = data;
-            this.sendErrorToSubscriptions(data);
+    protected onData(data: unknown): void {
+        if (this._currentData !== null) {
+            Object.assign(this._currentData, data);
         } else {
-            if (this._currentData !== null) {
-                Object.assign(this._currentData, data);
-            } else {
-                this._currentData = data;
-            }
-
-            this.failedCounter = 0;
-            this.sendToSubscriptions(data);
+            this._currentData = data;
         }
+
+        this.sendToSubscriptions(data);
+    }
+
+    protected onError(error: unknown): void {
+        this.sendErrorToSubscriptions(error);
+    }
+
+    protected override parse(content: unknown): any | ErrorDescription {
+        if (this.queryParams.get(`compress`)) {
+            content = this.decode(content as string);
+        }
+
+        try {
+            return JSON.parse(content as string);
+        } catch (e) {
+            return { reason: `JSON is malformed`, type: ErrorType.UNKNOWN, error: e as any };
+        }
+    }
+
+    private decode(data: string): string {
+        try {
+            const atobbed = Uint8Array.from(atob(data), c => c.charCodeAt(0));
+            const decompressedArray = fzstd.decompress(atobbed);
+            const decompressedString = new TextDecoder().decode(decompressedArray);
+
+            return decompressedString;
+        } catch (e) {
+            console.warn(`Received uncompressed message from autoupdate.`);
+        }
+
+        return data;
     }
 
     private sendToSubscriptions(data: any): void {
@@ -317,28 +190,5 @@ export class AutoupdateStream {
         for (const subscription of this.subscriptions) {
             subscription.sendError(data);
         }
-    }
-
-    private parse(content: string): any | ErrorDescription {
-        try {
-            return JSON.parse(content);
-        } catch (e) {
-            return { reason: `JSON is malformed`, type: ErrorType.UNKNOWN, error: e as any };
-        }
-    }
-
-    private decode(data: Uint8Array): string {
-        const content = new TextDecoder().decode(data);
-        try {
-            const atobbed = Uint8Array.from(atob(content), c => c.charCodeAt(0));
-            const decompressedArray = fzstd.decompress(atobbed);
-            const decompressedString = new TextDecoder().decode(decompressedArray);
-
-            return decompressedString;
-        } catch (e) {
-            console.warn(`Received uncompressed message from autoupdate.`);
-        }
-
-        return content;
     }
 }

@@ -16,11 +16,16 @@ describe(`ConnectionStatusService`, () => {
     let bannerService: BannerService;
 
     beforeEach(() => {
+        jasmine.clock().install();
         TestBed.configureTestingModule({
             providers: [ConnectionStatusService, { provide: BannerService, useClass: MockBannerService }]
         });
         service = TestBed.inject(ConnectionStatusService);
         bannerService = TestBed.inject(BannerService);
+    });
+
+    afterEach(() => {
+        jasmine.clock().uninstall();
     });
 
     it(`should be created`, () => {
