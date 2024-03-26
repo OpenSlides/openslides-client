@@ -57,7 +57,8 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     `submitter_ids`,
                     `additional_submitter`,
                     `tag_ids`,
-                    `title`
+                    `title`,
+                    `identical_motion_ids`
                 ],
                 follow: [
                     { idField: `list_of_speakers_id`, ...listOfSpeakersSpeakerCountSubscription },
