@@ -5,14 +5,14 @@ import { Id } from '../../definitions/key-types';
 export const ID = `id`;
 export const NAME = `name`;
 export const DESCRIPTION = `description`;
-export const FORWARD_TO_COMMITTEE_IDS = `forward_to_committee_ids`;
-export const ORGANIZATION_TAG_IDS = `organization_tag_ids`;
-export const MANAGER_IDS = `manager_ids`;
-export const MEETING = `meeting`;
-export const MEETING_START_DATE = `meeting_start_date`;
-export const MEETING_END_DATE = `meeting_end_date`;
-export const MEETING_ADMIN_IDS = `meeting_admin_ids`;
-export const MEETING_TEMPLATE_ID = `meeting_template_id`;
+export const FORWARD_TO_COMMITTEE_IDS = `forward_to_committees`;
+export const ORGANIZATION_TAG_IDS = `organization_tags`;
+export const MANAGER_IDS = `managers`;
+export const MEETING = `meeting_name`;
+export const MEETING_START_DATE = `meeting_start_time`;
+export const MEETING_END_DATE = `meeting_end_time`;
+export const MEETING_ADMIN_IDS = `meeting_admins`;
+export const MEETING_TEMPLATE_ID = `meeting_template`;
 
 export interface CommitteeCsvPort {
     [ID]: Id;
