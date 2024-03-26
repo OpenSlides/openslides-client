@@ -44,6 +44,10 @@ export class ViewCommittee extends BaseViewModel<Committee> {
         return this.managers;
     }
 
+    public getAdmins(): ViewUser[] {
+        return this.users.filter(user => this.meetings[0]?.admins?.includes(user.id));
+    }
+
     // Functions injected by the committee-repo
     public getViewUser!: (id: Id) => ViewUser | null;
 }
