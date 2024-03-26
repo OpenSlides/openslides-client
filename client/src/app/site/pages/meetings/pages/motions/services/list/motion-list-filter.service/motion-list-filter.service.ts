@@ -126,6 +126,15 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         ]
     };
 
+    private hasIdenticalMotionsOptions: OsFilter<ViewMotion> = {
+        property: `hasIdenticalMotions`,
+        label: _(`Identical motions`),
+        options: [
+            { condition: true, label: _(`Has identical motions`) },
+            { condition: [false, null], label: _(`Has no identical motions`) }
+        ]
+    };
+
     private amendmentFilterOption: OsFilter<ViewMotion> = {
         property: `amendmentType`,
         label: _(`Amendment`),
@@ -296,7 +305,8 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
             this.recommendationFilterOptions,
             this.motionCommentFilterOptions,
             this.tagFilterOptions,
-            this.forwardingFilterOptions
+            this.forwardingFilterOptions,
+            this.hasIdenticalMotionsOptions
         ];
 
         // only add the filter if the user has the correct permission
