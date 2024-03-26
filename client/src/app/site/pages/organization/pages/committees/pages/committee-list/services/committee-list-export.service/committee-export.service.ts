@@ -39,7 +39,7 @@ export class CommitteeExportService {
                     model
                         .getManagers()
                         .map(manager => manager.username)
-                        .join(`,`)
+                        .join(`, `)
             },
             {
                 label: `meeting_name`,
@@ -55,6 +55,14 @@ export class CommitteeExportService {
             },
             {
                 label: `meeting_admins`,
+                map: model =>
+                    model
+                        .getAdmins()
+                        .map(manager => manager.username)
+                        .join(`, `)
+            },
+            {
+                label: `meeting_template`,
                 map: _ => ``
             }
         ];

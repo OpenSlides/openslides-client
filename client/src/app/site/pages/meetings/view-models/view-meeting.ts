@@ -70,6 +70,10 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
         return this.user_ids?.length || 0;
     }
 
+    public get admins(): number[] {
+        return this.admin_group?.calculated_user_ids;
+    }
+
     public get motionsAmount(): number {
         return this.motion_ids?.length || 0;
     }

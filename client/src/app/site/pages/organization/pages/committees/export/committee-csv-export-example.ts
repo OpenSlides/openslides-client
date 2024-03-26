@@ -3,26 +3,26 @@ import { CommitteeCsvPort } from 'src/app/domain/models/comittees/committee.cons
 export const COMMITTEE_CSV_EXPORT_EXAMPLE: Partial<CommitteeCsvPort>[] = [
     {
         name: `Finance committee`,
-        forward_to_committee_ids: `Confederation congress`,
-        organization_tag_ids: `Finance`,
-        meeting: 1
+        forward_to_committees: `Confederation congress`,
+        organization_tags: `Finance`,
+        meeting_name: 1
     },
     {
         name: `Confederation congress`,
         description: `Used to manage resolutions`,
-        forward_to_committee_ids: `General assembly`,
-        organization_tag_ids: `Independent`,
-        manager_ids: `Max Mustermann`,
-        meeting: `General meeting`,
-        meeting_start_date: `2021-12-17`,
-        meeting_end_date: `2021-12-19`,
-        meeting_admin_ids: `Max Mustermann`
+        forward_to_committees: `General assembly`,
+        organization_tags: `Independent`,
+        managers: `Max Mustermann`,
+        meeting_name: `General meeting`,
+        meeting_start_time: `2021-12-17`,
+        meeting_end_time: `2021-12-19`,
+        meeting_admins: `Max Mustermann`
     },
     {
         name: `General assembly`,
         description: `This committee meets once a year. It is the highest decision-making one.`,
-        forward_to_committee_ids: `General assembly`,
-        organization_tag_ids: `Independent`,
-        meeting_template_id: `General main assembly`
+        forward_to_committees: `General assembly`,
+        organization_tags: `Independent`,
+        meeting_template: `General main assembly`
     }
 ];
