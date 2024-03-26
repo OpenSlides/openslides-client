@@ -2,6 +2,13 @@
     <div class="title-slot">
         <h2>{{ 'Autopilot' | translate }}</h2>
     </div>
+
+    <!-- Menu -->
+    <ng-container class="menu-slot">
+        <a type="button" routerLink="edit" mat-icon-button [matTooltip]="'Customize autopilot' | translate">
+            <mat-icon>settings</mat-icon>
+        </a>
+    </ng-container>
 </os-head-bar>
 <div class="content-container">
     <div class="col-wrapper">

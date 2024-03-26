@@ -1,0 +1,19 @@
+<os-head-bar [nav]="false">
+    <div class="title-slot">
+        <h2>{{ 'Autopilot settings' | translate }}</h2>
+    </div>
+</os-head-bar>
+
+<mat-card class="spacer-bottom-60" class="os-card">
+    <mat-card-content>
+        <h1 class="subtitle-text">
+            {{ 'Disabled content elements' | translate }}
+        </h1>
+
+        <div *ngFor="let option of autopilotContentElements" class="option">
+            <mat-checkbox [checked]="isDisabled(option.key)" (checked)="setDisabled(option.key, $event)">
+                {{ option.description | translate }}
+            </mat-checkbox>
+        </div>
+    </mat-card-content>
+</mat-card>
