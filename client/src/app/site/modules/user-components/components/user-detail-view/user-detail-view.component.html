@@ -6,7 +6,7 @@
                     <ng-container *ngTemplateOutlet="editTemplate; context: { form: personalInfoForm }"></ng-container>
                 </mat-card-content>
             </mat-card>
-            <mat-card appearance="outlined" *ngIf="editView" class="os-form-card margin-bottom-60">
+            <mat-card appearance="outlined" class="os-card" *ngIf="editView">
                 <mat-card-content>
                     <ng-container *ngTemplateOutlet="editView; context: { form: personalInfoForm }"></ng-container>
                 </mat-card-content>

@@ -95,7 +95,7 @@
             </div>
             <div>
                 <!-- Strucuture Level -->
-                <mat-form-field>
+                <mat-form-field class="form100 force-min-width">
                     <mat-label>{{ 'Structure level' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="structure_level_ids"
@@ -109,8 +109,8 @@
                 <mat-form-field
                     [ngClass]="{
                         distance: showVoteWeight,
-                        form37: showVoteWeight,
-                        form25: !showVoteWeight
+                        form45: showVoteWeight,
+                        form100: !showVoteWeight
                     }"
                 >
                     <mat-label>{{ 'Participant number' | translate }}</mat-label>
@@ -118,8 +118,7 @@
                 </mat-form-field>
 
                 <!-- Vote weight -->
-                <!-- TODO Input type should be number with limited decimal spaces -->
-                <mat-form-field class="form16 force-min-with" *ngIf="showVoteWeight">
+                <mat-form-field class="form45 force-min-with" *ngIf="showVoteWeight">
                     <mat-label>{{ 'Vote weight' | translate }}</mat-label>
                     <input type="number" matInput formControlName="vote_weight" />
                     <mat-error *ngIf="isVoteWeightError && form.controls['vote_weight'].value > 0" translate>
@@ -133,7 +132,7 @@
 
             <div *ngIf="isAllowed('seeName')">
                 <!-- Groups -->
-                <mat-form-field>
+                <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Groups' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="group_ids"
@@ -144,7 +143,7 @@
                 </mat-form-field>
 
                 <!-- Delegate Vote -->
-                <mat-form-field *ngIf="showVoteDelegations">
+                <mat-form-field class="form100 force-min-with" *ngIf="showVoteDelegations">
                     <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="vote_delegations_from_ids"
@@ -156,7 +155,7 @@
                 </mat-form-field>
 
                 <!-- Delegate Vote -->
-                <mat-form-field *ngIf="showVoteDelegations">
+                <mat-form-field class="form100 force-min-with" *ngIf="showVoteDelegations">
                     <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="vote_delegated_to_id"
@@ -178,7 +177,7 @@
 
             <div *ngIf="isAllowed('manage')">
                 <!-- Comment -->
-                <mat-form-field>
+                <mat-form-field class="form100 force-min-width">
                     <mat-label>{{ 'Comment' | translate }}</mat-label>
                     <input matInput formControlName="comment" />
                     <mat-hint>{{ 'Only for internal notes.' | translate }}</mat-hint>
