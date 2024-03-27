@@ -7,58 +7,23 @@
         font-size: 18px;
     }
     /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
-    /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
     mat-card-header {
-        display: inherit;
-        margin: 0;
-        /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
-        .mat-card-header-text {
-            margin: 0 10px;
-        }
-        .mat-mdc-card-title {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 400;
+        font-size: 16px;
+        font-weight: 400;
 
-            .title-container {
+        .title-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 40px;
+
+            .action-row {
                 display: flex;
-                align-items: center;
-                justify-content: space-between;
-                height: 40px;
-
-                .action-row {
-                    display: flex;
-                }
             }
         }
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
     mat-card-content {
-        padding: 15px 15px;
-        // word-wrap: break-word;
-
-        // .content {
-        //     &.collapsed {
-        //         max-height: 76px;
-        //         overflow: hidden;
-        //         position: relative;
-        //         &::after {
-        //             content: '';
-        //             position: absolute;
-        //             top: 25px;
-        //             bottom: 0;
-        //             left: 0;
-        //             right: 0;
-        //         }
-        //     }
-        // }
-
-        // .show-entire-text {
-        //     text-align: end;
-        //     margin-top: 4px;
-        //     a {
-        //         cursor: pointer;
-        //     }
-        // }
+        padding-top: 16px;
     }
 }
