@@ -110,8 +110,8 @@
                     (disabledContentElements['poll-finished'] !== true ||
                         disabledContentElements['poll-running'] !== true)
                 "
-                [onlyRunning]="disabledContentElements['poll-finished'] === true"
-                [onlyFinished]="disabledContentElements['poll-running'] === true"
+                [disableRunning]="disabledContentElements['poll-running'] === true"
+                [disableFinished]="disabledContentElements['poll-finished'] === true"
                 [currentProjection]="projectedViewModel"
             ></os-poll-collection>
 

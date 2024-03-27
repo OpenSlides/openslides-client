@@ -1,4 +1,4 @@
-<ng-container *ngIf="!onlyFinished">
+<ng-container *ngIf="!disableRunning">
     <ng-container
         *ngFor="let poll of polls; trackBy: identifyPoll"
         [ngTemplateOutlet]="pollArea"
@@ -7,7 +7,7 @@
 </ng-container>
 
 <ng-container
-    *ngIf="lastPublishedPoll && !hasProjectedModelOpenPolls && !onlyRunning"
+    *ngIf="lastPublishedPoll && !hasProjectedModelOpenPolls && !disableFinished"
     [ngTemplateOutlet]="pollArea"
     [ngTemplateOutletContext]="{ poll: lastPublishedPoll, last: true }"
 ></ng-container>

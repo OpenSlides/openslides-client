@@ -28,10 +28,10 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
     private _currentProjection: (Partial<HasPolls<C>> & { readonly fqid: string }) | null = null;
 
     @Input()
-    public onlyRunning = false;
+    public disableRunning = false;
 
     @Input()
-    public onlyFinished = false;
+    public disableFinished = false;
 
     @Input()
     public set currentProjection(viewModel: (Partial<HasPolls<C>> & { readonly fqid: string }) | null) {
