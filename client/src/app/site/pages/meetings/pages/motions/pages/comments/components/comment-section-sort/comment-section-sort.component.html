@@ -7,12 +7,14 @@
 
 <!-- Content -->
 <mat-card appearance="outlined" class="os-card spacer-bottom-60">
-    <!-- The sorting component -->
-    <os-sorting-list (sortEvent)="onSortingChange($event)" [live]="true" [input]="comments" #sorter>
-        <ng-template let-comment>
-            <span>
-                {{ comment.getTitle() }}
-            </span>
-        </ng-template>
-    </os-sorting-list>
+    <mat-card-content>
+        <!-- The sorting component -->
+        <os-sorting-list (sortEvent)="onSortingChange($event)" [live]="true" [input]="comments" #sorter>
+            <ng-template let-comment>
+                <span>
+                    {{ comment.getTitle() }}
+                </span>
+            </ng-template>
+        </os-sorting-list>
+    </mat-card-content>
 </mat-card>

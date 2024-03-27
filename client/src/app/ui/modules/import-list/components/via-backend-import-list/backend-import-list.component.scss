@@ -4,13 +4,8 @@
     --os-row-height: 50px;
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
-mat-card.import-table {
-    .code {
-        span {
-            display: inline-flex;
-        }
-    }
+#code {
+    display: inline-flex;
 }
 
 pbl-ngrid-header-cell,

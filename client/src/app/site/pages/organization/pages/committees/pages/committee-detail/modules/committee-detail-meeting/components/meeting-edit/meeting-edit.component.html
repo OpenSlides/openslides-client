@@ -14,90 +14,97 @@
 
 <form class="meeting-form" [formGroup]="meetingForm" (ngSubmit)="onSubmit()">
     <mat-card appearance="outlined" class="os-card">
-        <mat-form-field>
-            <mat-label>{{ 'Title' | translate }}</mat-label>
-            <input matInput formControlName="name" required />
-        </mat-form-field>
-
-        <p class="has-hint">
-            <mat-form-field *ngIf="isCreateView">
-                <mat-label>{{ 'Duplicate from' | translate }}</mat-label>
-                <os-list-search-selector
-                    [inputListValues]="availableMeetingsObservable"
-                    [includeNone]="true"
-                    [ngModel]="theDuplicateFromId"
-                    [ngModelOptions]="{ standalone: true }"
-                    (ngModelChange)="onUpdateDuplicateFrom($event)"
-                    [sortFn]="false"
-                ></os-list-search-selector>
-                <mat-hint>
-                    {{ 'Participants and administrators are copied completely and cannot be edited here.' | translate }}
-                </mat-hint>
+        <mat-card-content>
+            <mat-form-field>
+                <mat-label>{{ 'Title' | translate }}</mat-label>
+                <input matInput formControlName="name" required />
             </mat-form-field>
-        </p>
 
-        <mat-form-field>
-            <mat-label>{{ 'Language' | translate }}</mat-label>
-            <mat-select formControlName="language">
-                <mat-option *ngFor="let choice of translations | keyvalue" [value]="choice.key">
-                    {{ choice.value }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+            <p class="has-hint">
+                <mat-form-field *ngIf="isCreateView">
+                    <mat-label>{{ 'Duplicate from' | translate }}</mat-label>
+                    <os-list-search-selector
+                        [inputListValues]="availableMeetingsObservable"
+                        [includeNone]="true"
+                        [ngModel]="theDuplicateFromId"
+                        [ngModelOptions]="{ standalone: true }"
+                        (ngModelChange)="onUpdateDuplicateFrom($event)"
+                        [sortFn]="false"
+                    ></os-list-search-selector>
+                    <mat-hint>
+                        {{
+                            'Participants and administrators are copied completely and cannot be edited here.'
+                                | translate
+                        }}
+                    </mat-hint>
+                </mat-form-field>
+            </p>
 
-        <mat-form-field>
-            <mat-label>{{ 'Event location' | translate }}</mat-label>
-            <input matInput formControlName="location" />
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Language' | translate }}</mat-label>
+                <mat-select formControlName="language">
+                    <mat-option *ngFor="let choice of translations | keyvalue" [value]="choice.key">
+                        {{ choice.value }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-        <os-daterangepicker formControlName="daterange" title="{{ 'Meeting date' }}"></os-daterangepicker>
+            <mat-form-field>
+                <mat-label>{{ 'Event location' | translate }}</mat-label>
+                <input matInput formControlName="location" />
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'Administrators' | translate }}</mat-label>
-            <os-account-search-selector
-                formControlName="admin_ids"
-                [accounts]="meetingUsers"
-            ></os-account-search-selector>
-        </mat-form-field>
+            <os-daterangepicker formControlName="daterange" title="{{ 'Meeting date' }}"></os-daterangepicker>
 
-        <!-- Permission: CML.can_manage (implicit or OML.can_manage_organization or higher) -->
-        <!-- Only check for CML.can_manage -> this includes check for OML.can_manage_organization or higher -->
-        <mat-form-field *osCmlPerms="CML.can_manage; committeeId: committee?.id">
-            <mat-label>{{ 'Tags' | translate }}</mat-label>
-            <os-repo-search-selector
-                [repo]="orgaTagRepo"
-                [multiple]="true"
-                formControlName="organization_tag_ids"
-                (clickNotFound)="onOrgaTagNotFound($event)"
-            >
-                <ng-template osNotFoundDescription>
-                    {{ 'New tag' | translate }}
-                </ng-template>
-            </os-repo-search-selector>
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Administrators' | translate }}</mat-label>
+                <os-account-search-selector
+                    formControlName="admin_ids"
+                    [accounts]="meetingUsers"
+                ></os-account-search-selector>
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'External ID' | translate }}</mat-label>
-            <input matInput formControlName="external_id" />
-        </mat-form-field>
+            <!-- Permission: CML.can_manage (implicit or OML.can_manage_organization or higher) -->
+            <!-- Only check for CML.can_manage -> this includes check for OML.can_manage_organization or higher -->
+            <mat-form-field *osCmlPerms="CML.can_manage; committeeId: committee?.id">
+                <mat-label>{{ 'Tags' | translate }}</mat-label>
+                <os-repo-search-selector
+                    [repo]="orgaTagRepo"
+                    [multiple]="true"
+                    formControlName="organization_tag_ids"
+                    (clickNotFound)="onOrgaTagNotFound($event)"
+                >
+                    <ng-template osNotFoundDescription>
+                        {{ 'New tag' | translate }}
+                    </ng-template>
+                </os-repo-search-selector>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{ 'External ID' | translate }}</mat-label>
+                <input matInput formControlName="external_id" />
+            </mat-form-field>
+        </mat-card-content>
     </mat-card>
 
     <mat-card appearance="outlined" class="os-card" *osOmlPerms="OML.superadmin; and: !isCreateView">
-        <div class="superadmin-place">
-            <h2>{{ 'Superadmin settings' | translate }}</h2>
-            <h3>Jitsi</h3>
-            <mat-form-field>
-                <mat-label>{{ 'Jitsi domain' | translate }}</mat-label>
-                <input matInput formControlName="jitsi_domain" />
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>{{ 'Jitsi room name' | translate }}</mat-label>
-                <input matInput formControlName="jitsi_room_name" />
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>{{ 'Jitsi room password' | translate }}</mat-label>
-                <input matInput formControlName="jitsi_room_password" />
-            </mat-form-field>
-        </div>
+        <mat-card-content>
+            <div class="superadmin-place">
+                <h2>{{ 'Superadmin settings' | translate }}</h2>
+                <h3>Jitsi</h3>
+                <mat-form-field>
+                    <mat-label>{{ 'Jitsi domain' | translate }}</mat-label>
+                    <input matInput formControlName="jitsi_domain" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Jitsi room name' | translate }}</mat-label>
+                    <input matInput formControlName="jitsi_room_name" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Jitsi room password' | translate }}</mat-label>
+                    <input matInput formControlName="jitsi_room_password" />
+                </mat-form-field>
+            </div>
+        </mat-card-content>
     </mat-card>
 </form>

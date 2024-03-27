@@ -4,40 +4,6 @@
     max-width: 800px;
     position: relative;
 
-    .mat-mdc-card-header {
-        min-height: 40px;
-        display: flex !important;
-        /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
-        /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
-        .mat-card-header-text {
-            flex: 1;
-            margin-top: auto !important;
-            margin-bottom: auto !important;
-
-            .mat-mdc-card-title {
-                margin: 0;
-            }
-        }
-
-        .align-right {
-            min-width: 40px;
-        }
-    }
-
-    .mat-mdc-card-content {
-        margin-top: 1em;
-
-        .date-loc {
-            display: flex;
-            font-size: large;
-            margin-bottom: 0.5em;
-        }
-    }
-
-    .mat-mdc-card-actions {
-        padding-bottom: 15px;
-    }
-
     .user-footer {
         position: absolute;
         right: 0.5em;

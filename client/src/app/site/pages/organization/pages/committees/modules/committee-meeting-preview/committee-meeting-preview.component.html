@@ -58,12 +58,14 @@
         </span>
     </mat-card-actions>
 
-    <!-- users -->
-    <div class="user-footer">
-        <ng-container
-            *osOmlPerms="OML.can_manage_users; then canManageUsersTemplate; else canNotManageUsersTemplate"
-        ></ng-container>
-    </div>
+    <mat-card-content>
+        <!-- users -->
+        <div class="user-footer">
+            <ng-container
+                *osOmlPerms="OML.can_manage_users; then canManageUsersTemplate; else canNotManageUsersTemplate"
+            ></ng-container>
+        </div>
+    </mat-card-content>
 </mat-card>
 
 <ng-template #canNotManageUsersTemplate>

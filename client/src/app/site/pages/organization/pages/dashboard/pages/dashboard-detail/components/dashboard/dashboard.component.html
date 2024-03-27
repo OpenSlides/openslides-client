@@ -10,7 +10,9 @@
 </div>
 
 <mat-card appearance="outlined" *ngIf="noMeetingsToShow && ready" class="no-content os-card">
-    <i>{{ 'No meetings available' | translate }}</i>
+    <mat-card-content>
+        <i>{{ 'No meetings available' | translate }}</i>
+    </mat-card-content>
 </mat-card>
 
 <div *ngIf="noMeetingsToShow && !ready" class="no-content">
@@ -30,8 +32,10 @@
                 <span>{{ 'today' | translate }}</span>
             </div>
             <div class="meeting-list background-card">
-                <mat-card appearance="outlined" class="no-meetings-card" *ngIf="!currentMeetings.length">
-                    {{ 'No meetings available' | translate }}
+                <mat-card appearance="outlined" *ngIf="!currentMeetings.length">
+                    <mat-card-content>
+                        {{ 'No meetings available' | translate }}
+                    </mat-card-content>
                 </mat-card>
                 <ng-container *ngFor="let meeting of currentMeetings; let last = last">
                     <ng-container
@@ -110,8 +114,10 @@
         [ngClass]="{ 'no-meetings': !meetingList.length }"
         [ngStyle]="{ height: getHeightByMeetings(meetingList) }"
     >
-        <mat-card appearance="outlined" class="no-meetings-card" *ngIf="!meetingList.length">
-            {{ 'No meetings available' | translate }}
+        <mat-card appearance="outlined" *ngIf="!meetingList.length">
+            <mat-card-content>
+                {{ 'No meetings available' | translate }}
+            </mat-card-content>
         </mat-card>
         <cdk-virtual-scroll-viewport [itemSize]="60" *ngIf="!!meetingList.length" class="meeting-list-viewport">
             <ng-container *cdkVirtualFor="let meeting of meetingList; let odd = odd; let last = last">
