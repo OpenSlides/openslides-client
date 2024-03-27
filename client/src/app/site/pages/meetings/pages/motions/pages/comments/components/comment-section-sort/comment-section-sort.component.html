@@ -6,7 +6,7 @@
 </os-head-bar>
 
 <!-- Content -->
-<mat-card class="os-card spacer-bottom-60">
+<mat-card appearance="outlined" class="os-card spacer-bottom-60">
     <!-- The sorting component -->
     <os-sorting-list (sortEvent)="onSortingChange($event)" [live]="true" [input]="comments" #sorter>
         <ng-template let-comment>

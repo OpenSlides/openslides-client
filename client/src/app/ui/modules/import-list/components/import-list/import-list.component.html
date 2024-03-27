@@ -1,4 +1,4 @@
-<mat-card class="os-form-card import-table spacer-bottom-60">
+<mat-card appearance="outlined" class="os-form-card import-table spacer-bottom-60">
     <mat-tab-group *ngIf="hasSeveralTabs()" (selectedTabChange)="onTabChange($event)">
         <!-- Tabs before CSV import tab -->
         <mat-tab *ngFor="let tab of importListFirstTabs">
@@ -28,7 +28,7 @@
 
 <!-- preview table -->
 <ng-container *ngIf="hasFile | async">
-    <mat-card class="os-form-card spacer-bottom-60">
+    <mat-card appearance="outlined" class="os-form-card spacer-bottom-60">
         <div class="action-title">
             <h2 class="no-margin">{{ 'Summary' | translate }}</h2>
             <button

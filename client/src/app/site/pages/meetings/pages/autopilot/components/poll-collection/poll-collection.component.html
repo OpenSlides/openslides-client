@@ -11,7 +11,7 @@
 ></ng-container>
 
 <ng-template #pollArea let-poll="poll" let-last="last">
-    <mat-card class="os-card">
+    <mat-card appearance="outlined" class="os-card">
         <mat-card-content>
             <p>
                 <a [routerLink]="poll.getDetailStateUrl()" [state]="{ back: 'true' }" class="subtitle-text">

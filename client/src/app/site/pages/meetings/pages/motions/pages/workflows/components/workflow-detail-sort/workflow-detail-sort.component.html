@@ -5,7 +5,7 @@
         </div>
     </os-head-bar>
 
-    <mat-card class="os-card spacer-bottom-60">
+    <mat-card appearance="outlined" class="os-card spacer-bottom-60">
         <os-sorting-list [input]="workflowStatesObservable" (sortEvent)="onSorting($event)" #sorter>
             <ng-template let-state let-index="index">
                 <div class="action-title">

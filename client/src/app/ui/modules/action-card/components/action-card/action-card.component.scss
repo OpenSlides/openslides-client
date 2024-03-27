@@ -6,15 +6,16 @@
     .mat-icon-button mat-icon {
         font-size: 18px;
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
+    /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
     mat-card-header {
         display: inherit;
         margin: 0;
-
+        /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
         .mat-card-header-text {
             margin: 0 10px;
         }
-        .mat-card-title {
+        .mat-mdc-card-title {
             margin: 0;
             font-size: 16px;
             font-weight: 400;
@@ -31,7 +32,7 @@
             }
         }
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
     mat-card-content {
         padding: 15px 15px;
         // word-wrap: break-word;

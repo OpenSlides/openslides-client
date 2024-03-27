@@ -6,6 +6,7 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
+/*TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
 mat-card {
     margin-bottom: 20px;
 }

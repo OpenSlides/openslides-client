@@ -13,7 +13,7 @@
 </os-head-bar>
 
 <form class="meeting-form" [formGroup]="meetingForm" (ngSubmit)="onSubmit()">
-    <mat-card class="os-card">
+    <mat-card appearance="outlined" class="os-card">
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
             <input matInput formControlName="name" required />
@@ -82,7 +82,7 @@
         </mat-form-field>
     </mat-card>
 
-    <mat-card class="os-card" *osOmlPerms="OML.superadmin; and: !isCreateView">
+    <mat-card appearance="outlined" class="os-card" *osOmlPerms="OML.superadmin; and: !isCreateView">
         <div class="superadmin-place">
             <h2>{{ 'Superadmin settings' | translate }}</h2>
             <h3>Jitsi</h3>

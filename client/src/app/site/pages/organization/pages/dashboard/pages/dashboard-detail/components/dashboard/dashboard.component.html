@@ -9,7 +9,7 @@
     <div class="meeting-spacer"></div>
 </div>
 
-<mat-card *ngIf="noMeetingsToShow && ready" class="no-content os-card">
+<mat-card appearance="outlined" *ngIf="noMeetingsToShow && ready" class="no-content os-card">
     <i>{{ 'No meetings available' | translate }}</i>
 </mat-card>
 
@@ -30,7 +30,7 @@
                 <span>{{ 'today' | translate }}</span>
             </div>
             <div class="meeting-list background-card">
-                <mat-card class="no-meetings-card" *ngIf="!currentMeetings.length">
+                <mat-card appearance="outlined" class="no-meetings-card" *ngIf="!currentMeetings.length">
                     {{ 'No meetings available' | translate }}
                 </mat-card>
                 <ng-container *ngFor="let meeting of currentMeetings; let last = last">
@@ -110,7 +110,7 @@
         [ngClass]="{ 'no-meetings': !meetingList.length }"
         [ngStyle]="{ height: getHeightByMeetings(meetingList) }"
     >
-        <mat-card class="no-meetings-card" *ngIf="!meetingList.length">
+        <mat-card appearance="outlined" class="no-meetings-card" *ngIf="!meetingList.length">
             {{ 'No meetings available' | translate }}
         </mat-card>
         <cdk-virtual-scroll-viewport [itemSize]="60" *ngIf="!!meetingList.length" class="meeting-list-viewport">

@@ -25,7 +25,7 @@
 </os-head-bar>
 
 <ng-container *ngIf="currentCommitteeObservable | async as committee">
-    <mat-card class="committee-details os-card">
+    <mat-card appearance="outlined" class="committee-details os-card">
         <!-- name -->
         <h1>
             {{ committee.name }}
@@ -118,7 +118,7 @@
 
     <!-- Meetings -->
     <div class="meeting-list">
-        <mat-card class="os-card" *ngIf="!getMeetingsSorted(committee).length">
+        <mat-card appearance="outlined" class="os-card" *ngIf="!getMeetingsSorted(committee).length">
             {{ 'No meetings available' | translate }}
         </mat-card>
         <os-committee-meeting-preview

@@ -14,7 +14,7 @@
 
     <!-- Install notice -->
     <div class="login-container" *ngIf="installationNotice">
-        <mat-card [innerHTML]="installationNotice | translate"></mat-card>
+        <mat-card appearance="outlined" [innerHTML]="installationNotice | translate"></mat-card>
     </div>
 
     <ng-container *ngIf="!samlEnabled && !loading">

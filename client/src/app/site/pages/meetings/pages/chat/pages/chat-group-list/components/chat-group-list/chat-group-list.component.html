@@ -10,6 +10,7 @@
 </os-head-bar>
 
 <mat-card
+    appearance="outlined"
     *ngIf="chatGroupsObservable | async as chatGroups"
     class="os-card chat-group-list-card"
     [ngClass]="{ 'fit-height': !chatGroups?.length }"

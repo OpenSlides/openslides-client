@@ -8,7 +8,7 @@
 
 <os-info-actions></os-info-actions>
 
-<mat-card class="os-card" *ngIf="canSeeStatistics">
+<mat-card appearance="outlined" class="os-card" *ngIf="canSeeStatistics">
     <h2>{{ 'Statistics' | translate }}</h2>
 
     <ng-container *ngIf="osIsManager">
