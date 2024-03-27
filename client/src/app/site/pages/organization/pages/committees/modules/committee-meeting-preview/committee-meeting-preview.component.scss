@@ -4,39 +4,6 @@
     max-width: 800px;
     position: relative;
 
-    .mat-card-header {
-        min-height: 40px;
-        display: flex !important;
-
-        .mat-card-header-text {
-            flex: 1;
-            margin-top: auto !important;
-            margin-bottom: auto !important;
-
-            .mat-card-title {
-                margin: 0;
-            }
-        }
-
-        .align-right {
-            min-width: 40px;
-        }
-    }
-
-    .mat-card-content {
-        margin-top: 1em;
-
-        .date-loc {
-            display: flex;
-            font-size: large;
-            margin-bottom: 0.5em;
-        }
-    }
-
-    .mat-card-actions {
-        padding-bottom: 15px;
-    }
-
     .user-footer {
         position: absolute;
         right: 0.5em;

@@ -4,12 +4,8 @@
     --os-row-height: 50px;
 }
 
-mat-card.import-table {
-    .code {
-        span {
-            display: inline-flex;
-        }
-    }
+#code {
+    display: inline-flex;
 }
 
 pbl-ngrid-header-cell,

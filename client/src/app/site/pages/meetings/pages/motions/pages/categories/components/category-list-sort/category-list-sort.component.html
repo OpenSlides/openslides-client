@@ -5,16 +5,18 @@
     </div>
 </os-head-bar>
 
-<mat-card class="os-card spacer-bottom-60">
-    <os-sorting-tree
-        #osSortedTree
-        parentKey="parent_id"
-        weightKey="weight"
-        (hasChanged)="receiveChanges($event)"
-        [model]="categoriesObservable"
-    >
-        <ng-template #innerNode let-item="item">
-            {{ item.getTitle() }}
-        </ng-template>
-    </os-sorting-tree>
+<mat-card appearance="outlined" class="os-card spacer-bottom-60">
+    <mat-card-content>
+        <os-sorting-tree
+            #osSortedTree
+            parentKey="parent_id"
+            weightKey="weight"
+            (hasChanged)="receiveChanges($event)"
+            [model]="categoriesObservable"
+        >
+            <ng-template #innerNode let-item="item">
+                {{ item.getTitle() }}
+            </ng-template>
+        </os-sorting-tree>
+    </mat-card-content>
 </mat-card>

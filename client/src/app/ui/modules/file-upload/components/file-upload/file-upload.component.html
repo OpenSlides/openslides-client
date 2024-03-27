@@ -30,9 +30,11 @@
     </button>
 </div>
 
-<mat-card class="os-card" *ngIf="showProgress">
-    <mat-progress-bar *ngIf="!parallel" mode="determinate" [value]="progressObservable | async"></mat-progress-bar>
-    <mat-progress-bar *ngIf="parallel" mode="buffer"></mat-progress-bar>
+<mat-card appearance="outlined" class="os-card" *ngIf="showProgress">
+    <mat-card-content>
+        <mat-progress-bar *ngIf="!parallel" mode="determinate" [value]="progressObservable | async"></mat-progress-bar>
+        <mat-progress-bar *ngIf="parallel" mode="buffer"></mat-progress-bar>
+    </mat-card-content>
 </mat-card>
 
 <ng-template #tableTemplate>
