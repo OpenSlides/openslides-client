@@ -75,6 +75,8 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
 
     public recommendationEnabled = false;
 
+    public maxNumLength = 0;
+
     /**
      * Define extra filter properties
      */
@@ -192,6 +194,14 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
                 if (motions && motions.length) {
                     this.createMotionTiles(motions);
                 }
+
+                let maxNumLength = 0;
+                for (const motion of motions) {
+                    if (motion.number.length - 3 > maxNumLength) {
+                        maxNumLength = Math.min(motion.number.length - 3, 8);
+                    }
+                }
+                this.maxNumLength = maxNumLength;
             }),
             this.amendmentController.getViewModelListObservable().subscribe(amendments => {
                 this._hasAmendments = !!amendments.length;

@@ -58,7 +58,10 @@
         [(selectedRows)]="selectedRows"
     >
         <!-- number -->
-        <div *osScrollingTableCell="'number'; row as motion; config: { width: 60 }" class="cell-slot fill">
+        <div
+            *osScrollingTableCell="'number'; row as motion; config: { width: 29 + maxNumLength * 8 }"
+            class="cell-slot fill"
+        >
             <os-detail-view-navigator [model]="motion" *ngIf="!isMultiSelect"></os-detail-view-navigator>
             <div class="column-number innerTable">
                 {{ motion.number }}
