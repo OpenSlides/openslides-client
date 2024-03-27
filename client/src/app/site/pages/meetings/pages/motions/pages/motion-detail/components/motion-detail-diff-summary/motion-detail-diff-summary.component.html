@@ -20,7 +20,9 @@
                     </a>
                     <i class="user-subtitle" *ngIf="isChangeRecommendation(change)">
                         – {{ getRecommendationTypeName(change) | translate }}
-                        <ng-container *ngIf="isChangeRecommendation(change) && motion?.state?.is_internal">({{ 'internal' | translate }})</ng-container>
+                        <ng-container *ngIf="isChangeRecommendation(change) && motion?.state?.is_internal">
+                            ({{ 'internal' | translate }})
+                        </ng-container>
                     </i>
                     <i class="user-subtitle">
                         <ng-container *ngIf="change.isRejected() && !isAmendment(change)">
