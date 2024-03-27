@@ -14,7 +14,7 @@
     <div class="col-wrapper">
         <div class="col-main">
             <!-- Title Card -->
-            <mat-card class="os-card" *ngIf="!!title">
+            <mat-card class="os-card" *ngIf="!!title && disabledContentElements['title'] !== true">
                 <mat-card-content>
                     <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
                         <h1 class="line-and-icon">
@@ -28,7 +28,7 @@
             <os-list-of-speakers-content
                 *osPerms="
                     [permission.listOfSpeakersCanSee, permission.listOfSpeakersCanBeSpeaker];
-                    and: !!listOfSpeakers
+                    and: !!listOfSpeakers && disabledContentElements['list-of-speakers'] !== true
                 "
                 [listOfSpeakers]="listOfSpeakers!"
                 (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
@@ -86,24 +86,37 @@
             </os-list-of-speakers-content>
 
             <ng-container *osPerms="permission.listOfSpeakersCanSee">
-                <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && (showRightCol | async) === false">
+                <div
+                    *ngIf="
+                        structureLevelCountdownEnabled &&
+                        listOfSpeakers &&
+                        (showRightCol | async) === false &&
+                        disabledContentElements['speaking-times'] !== true
+                    "
+                >
                     <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
                 </div>
             </ng-container>
 
             <!-- Moderator Note-->
-            <div *ngIf="hasCurrentProjection">
+            <div *ngIf="hasCurrentProjection && disabledContentElements['moderation-note'] !== true">
                 <os-moderation-note [listOfSpeakers]="listOfSpeakers"></os-moderation-note>
             </div>
 
             <!-- Poll-Collection -->
             <os-poll-collection
-                *ngIf="showPollCollection"
+                *ngIf="
+                    showPollCollection &&
+                    (disabledContentElements['poll-finished'] !== true ||
+                        disabledContentElements['poll-running'] !== true)
+                "
+                [onlyRunning]="disabledContentElements['poll-finished'] === true"
+                [onlyFinished]="disabledContentElements['poll-running'] === true"
                 [currentProjection]="projectedViewModel"
             ></os-poll-collection>
 
             <!-- Projector -->
-            <mat-card class="os-card spacer-bottom-60">
+            <mat-card *ngIf="disabledContentElements['projector'] !== true" class="os-card spacer-bottom-60">
                 <mat-card-content>
                     <a [routerLink]="projectorUrl" [target]="projectionTarget" [state]="{ back: 'true' }">
                         <p class="subtitle-text">{{ projectorTitle | translate }}</p>
@@ -119,7 +132,15 @@
         </div>
 
         <ng-container *osPerms="permission.listOfSpeakersCanSee">
-            <div *ngIf="structureLevelCountdownEnabled && listOfSpeakers && showRightCol | async" class="col-right">
+            <div
+                *ngIf="
+                    disabledContentElements['speaking-times'] !== true &&
+                        structureLevelCountdownEnabled &&
+                        listOfSpeakers &&
+                        showRightCol | async
+                "
+                class="col-right"
+            >
                 <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
             </div>
         </ng-container>

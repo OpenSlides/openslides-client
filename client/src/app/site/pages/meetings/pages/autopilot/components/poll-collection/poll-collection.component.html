@@ -1,11 +1,13 @@
-<ng-container
-    *ngFor="let poll of polls; trackBy: identifyPoll"
-    [ngTemplateOutlet]="pollArea"
-    [ngTemplateOutletContext]="{ poll: poll, last: false }"
-></ng-container>
+<ng-container *ngIf="!onlyFinished">
+    <ng-container
+        *ngFor="let poll of polls; trackBy: identifyPoll"
+        [ngTemplateOutlet]="pollArea"
+        [ngTemplateOutletContext]="{ poll: poll, last: false }"
+    ></ng-container>
+</ng-container>
 
 <ng-container
-    *ngIf="lastPublishedPoll && !hasProjectedModelOpenPolls"
+    *ngIf="lastPublishedPoll && !hasProjectedModelOpenPolls && !onlyRunning"
     [ngTemplateOutlet]="pollArea"
     [ngTemplateOutletContext]="{ poll: lastPublishedPoll, last: true }"
 ></ng-container>

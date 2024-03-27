@@ -97,6 +97,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public structureLevelCountdownEnabled = false;
 
+    public disabledContentElements: { [key: string]: boolean } = {};
+
     public showRightCol: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     private _currentProjection: ViewProjection | null = null;
@@ -110,6 +112,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         breakpoint: BreakpointObserver
     ) {
         super();
+
+        this.storage.get<{ [key: string]: boolean }>(`autopilot-disabled`).then(keys => {
+            this.disabledContentElements = keys;
+        });
 
         this.subscriptions.push(
             projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {

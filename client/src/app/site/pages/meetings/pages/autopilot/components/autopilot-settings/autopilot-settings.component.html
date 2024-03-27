@@ -11,7 +11,10 @@
         </h1>
 
         <div *ngFor="let option of autopilotContentElements" class="option">
-            <mat-checkbox [checked]="isDisabled(option.key)" (checked)="setDisabled(option.key, $event)">
+            <mat-checkbox
+                (ngModelChange)="updateDisabled(option.key, $event)"
+                [ngModel]="disabledAutopilotContentElements[option.key]"
+            >
                 {{ option.description | translate }}
             </mat-checkbox>
         </div>
