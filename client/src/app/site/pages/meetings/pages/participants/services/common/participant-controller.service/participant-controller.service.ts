@@ -21,7 +21,6 @@ import { GetUserRelatedModelsPresenterService, GetUserScopePresenterService } fr
 import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import {
     ExtendedUserPatchFn,
-    FullNameInformation,
     RawUser,
     UserPatchFn,
     UserRepositoryService,
