@@ -28,6 +28,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     list_of_speakers_speaker_note_for_everyone: true,
     list_of_speakers_initially_closed: false,
     list_of_speakers_show_first_contribution: false,
+    list_of_speakers_hide_contribution_count: false,
     list_of_speakers_couple_countdown: true,
     list_of_speakers_show_amount_of_speakers_on_slide: true,
     list_of_speakers_amount_last_on_projector: 0,

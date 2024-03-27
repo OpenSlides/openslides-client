@@ -3097,10 +3097,6 @@ msgstr ""
 msgid "No results yet."
 msgstr ""
 
-#: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
-msgid "No spokesperson"
-msgstr ""
-
 msgid "No statute paragraphs"
 msgstr ""
 
