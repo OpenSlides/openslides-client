@@ -440,16 +440,10 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      *
      * @returns an instance of tinyMCE settings with additional setup definitions
      */
-    public getTinyMceSettings(): object {
-        return {
-            setup: (editor: any) => {
-                editor.on(`Blur`, (ev: any) => {
-                    if (ev.target.getContent() !== this.internalValue) {
-                        this.sendUpdate(ev.target.getContent());
-                    }
-                });
-            }
-        };
+    public onEditorBlur(): void {
+        if (this.value !== this.internalValue) {
+            this.sendUpdate(this.value);
+        }
     }
 
     /**

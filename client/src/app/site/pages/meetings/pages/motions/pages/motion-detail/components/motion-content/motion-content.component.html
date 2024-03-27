@@ -37,7 +37,7 @@
     ></os-motion-detail-diff>
 </ng-container>
 
-<form class="motion-content" [formGroup]="contentForm" (keydown)="onKeyDown($event)">
+<form class="motion-content" [formGroup]="contentForm">
     <!-- Selecting statute paragraphs for amendment -->
     <div class="statute-amendment-selector" *ngIf="newMotion && statuteParagraphs.length && statutesEnabled">
         <mat-checkbox formControlName="statute_amendment" (change)="onStatuteAmendmentChange($event)">
@@ -108,11 +108,7 @@
         <h3 *ngIf="preamble">
             <span>{{ preamble }}</span>
         </h3>
-        <os-editor
-            formControlName="text"
-            [required]="!isParagraphBasedAmendment"
-            [customSettings]="tinyMceConfig"
-        ></os-editor>
+        <os-editor formControlName="text" [required]="!isParagraphBasedAmendment"></os-editor>
         <div
             *ngIf="
                 contentForm.get('text')?.invalid && (contentForm.get('text')?.dirty || contentForm.get('text')?.touched)
@@ -159,12 +155,7 @@
         ></div>
 
         <!-- The HTML Editor -->
-        <os-editor
-            *ngIf="editMotion"
-            formControlName="reason"
-            [required]="reasonRequired"
-            [customSettings]="tinyMceConfig"
-        ></os-editor>
+        <os-editor *ngIf="editMotion" formControlName="reason" [required]="reasonRequired"></os-editor>
         <div
             *ngIf="
                 reasonRequired &&

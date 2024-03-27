@@ -66,13 +66,6 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
      */
     public lineRange!: LineRange;
 
-    public getTinyMceSettings(): object {
-        return {
-            toolbar: `undo redo | bold italic underline strikethrough
-            | removeformat | bullist numlist | outdent indent | link charmap code`
-        };
-    }
-
     /**
      * Creates the forms for the Motion and the MotionVersion
      */
