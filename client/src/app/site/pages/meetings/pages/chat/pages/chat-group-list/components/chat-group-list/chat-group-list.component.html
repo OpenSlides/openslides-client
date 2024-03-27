@@ -44,7 +44,9 @@
                 <mat-tab class="full-height" *ngFor="let chatGroup of chatGroups">
                     <ng-template matTabLabel>
                         <ng-container
-                            *ngIf="{ amount: getNotificationsObservableForChatId(chatGroup.id) | async } as notifications"
+                            *ngIf="{
+                                amount: getNotificationsObservableForChatId(chatGroup.id) | async
+                            } as notifications"
                         >
                             <div
                                 class="tab-label-notification-wrapper"
