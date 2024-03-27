@@ -24,50 +24,52 @@
             </div>
         </mat-card-content>
     </ng-container>
-    <mat-card-content class="padding-0 full-height">
-        <os-vertical-tab-group
-            *ngIf="chatGroups?.length"
-            #verticalTabGroup
-            [labelHeight]="56"
-            [showAlwaysContentHeader]="true"
-            (contentStateChanged)="onTabContentChanged($event)"
-        >
-            <ng-template osVerticalTabGroupLabelHeader>
-                <div
-                    class="flex-vertical-center padding-left-16 padding-right-16 full-width full-height icon fake-disabled"
-                >
-                    <mat-icon>groups</mat-icon>
-                    <span class="padding-left-8">{{ 'Chat groups' | translate }}</span>
-                </div>
-            </ng-template>
-            <mat-tab class="full-height" *ngFor="let chatGroup of chatGroups">
-                <ng-template matTabLabel>
-                    <ng-container
-                        *ngIf="{ amount: getNotificationsObservableForChatId(chatGroup.id) | async } as notifications"
+    <ng-container *ngIf="chatGroups?.length">
+        <mat-card-content class="padding-0 full-height">
+            <os-vertical-tab-group
+                *ngIf="chatGroups?.length"
+                #verticalTabGroup
+                [labelHeight]="56"
+                [showAlwaysContentHeader]="true"
+                (contentStateChanged)="onTabContentChanged($event)"
+            >
+                <ng-template osVerticalTabGroupLabelHeader>
+                    <div
+                        class="flex-vertical-center padding-left-16 padding-right-16 full-width full-height icon fake-disabled"
                     >
-                        <div
-                            class="tab-label-notification-wrapper"
-                            [matBadge]="notifications.amount"
-                            [matBadgeHidden]="!notifications.amount"
-                            matBadgeColor="accent"
-                            matBadgeOverlap="false"
-                        ></div>
-                        <div class="flex-vertical-center full-width one-line" id="fit_content">
-                            <div class="one-line">
-                                <div class="one-line">{{ chatGroup.name }}</div>
-                            </div>
-                        </div>
-                    </ng-container>
-                </ng-template>
-                <ng-template matTabContent>
-                    <div class="full-height">
-                        <os-chat-group-detail
-                            [chatGroup]="chatGroup"
-                            (backButtonClicked)="verticalTabGroup.closeContent()"
-                        ></os-chat-group-detail>
+                        <mat-icon>groups</mat-icon>
+                        <span class="padding-left-8">{{ 'Chat groups' | translate }}</span>
                     </div>
                 </ng-template>
-            </mat-tab>
-        </os-vertical-tab-group>
-    </mat-card-content>
+                <mat-tab class="full-height" *ngFor="let chatGroup of chatGroups">
+                    <ng-template matTabLabel>
+                        <ng-container
+                            *ngIf="{ amount: getNotificationsObservableForChatId(chatGroup.id) | async } as notifications"
+                        >
+                            <div
+                                class="tab-label-notification-wrapper"
+                                [matBadge]="notifications.amount"
+                                [matBadgeHidden]="!notifications.amount"
+                                matBadgeColor="accent"
+                                matBadgeOverlap="false"
+                            ></div>
+                            <div class="flex-vertical-center full-width one-line" id="fit_content">
+                                <div class="one-line">
+                                    <div class="one-line">{{ chatGroup.name }}</div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-template>
+                    <ng-template matTabContent>
+                        <div class="full-height">
+                            <os-chat-group-detail
+                                [chatGroup]="chatGroup"
+                                (backButtonClicked)="verticalTabGroup.closeContent()"
+                            ></os-chat-group-detail>
+                        </div>
+                    </ng-template>
+                </mat-tab>
+            </os-vertical-tab-group>
+        </mat-card-content>
+    </ng-container>
 </mat-card>
