@@ -14,9 +14,9 @@
             <!-- Title -->
             <div class="title-slot">
                 <h2 *ngIf="motion && !newMotion">
-                    <span>{{ 'Motion' | translate }}</span>
+                    <span *ngIf="!vp.isMobile">{{ 'Motion' | translate }}</span>
                     <!-- Whitespace between "Motion" and number -->
-                    <span>&nbsp;</span>
+                    <span *ngIf="!vp.isMobile">&nbsp;</span>
                     <span *ngIf="!editMotion">{{ motion.number }}</span>
                 </h2>
                 <h2 *ngIf="newMotion && !amendmentEdit">{{ 'New motion' | translate }}</h2>
@@ -24,10 +24,7 @@
             </div>
 
             <!-- Back and forth buttons -->
-            <div
-                *ngIf="!editMotion && !vp.isMobile && showNavigateButtons"
-                class="extra-controls-slot prev-next-motion-controls"
-            >
+            <div *ngIf="!editMotion && showNavigateButtons" class="extra-controls-slot prev-next-motion-controls">
                 <button
                     mat-button
                     (click)="navigateToMotion(previousMotion)"
@@ -35,17 +32,21 @@
                     class="motion-detail-nav-button"
                 >
                     <os-icon-container icon="chevron_left">
-                        {{ previousMotion ? previousMotion.number : '' }}
+                        <span class="chevron_number">
+                            {{ previousMotion ? previousMotion.number : '' }}
+                        </span>
                     </os-icon-container>
                 </button>
                 <button
                     mat-button
                     (click)="navigateToMotion(nextMotion)"
                     [disabled]="!nextMotion"
-                    class="motion-detail-nav-button"
+                    class="motion-detail-nav-button right_arrow"
                 >
                     <os-icon-container icon="chevron_right" [swap]="true">
-                        {{ nextMotion ? nextMotion.number : '' }}
+                        <span class="chevron_number">
+                            {{ nextMotion ? nextMotion.number : '' }}
+                        </span>
                     </os-icon-container>
                 </button>
             </div>
@@ -58,27 +59,6 @@
             </div>
 
             <mat-menu #motionExtraMenu="matMenu">
-                <div *ngIf="vp.isMobile && showNavigateButtons">
-                    <button
-                        mat-menu-item
-                        (click)="navigateToMotion(previousMotion)"
-                        [disabled]="!previousMotion"
-                        class="motion-detail-nav-button"
-                    >
-                        <mat-icon>chevron_left</mat-icon>
-                        <span *ngIf="previousMotion">{{ 'Motion' | translate }} {{ previousMotion.number }}</span>
-                    </button>
-                    <button
-                        mat-menu-item
-                        (click)="navigateToMotion(nextMotion)"
-                        [disabled]="!nextMotion"
-                        class="motion-detail-nav-button"
-                    >
-                        <mat-icon>chevron_right</mat-icon>
-                        <span *ngIf="nextMotion">{{ 'Motion' | translate }} {{ nextMotion.number }}</span>
-                    </button>
-                    <mat-divider *ngIf="previousMotion || nextMotion"></mat-divider>
-                </div>
                 <!-- List of speakers -->
                 <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
                 <!-- PDF -->
