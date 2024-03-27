@@ -72,30 +72,32 @@
 </mat-menu>
 
 <mat-card appearance="outlined" class="spacer-bottom-60">
-    <os-sorting-tree
-        #osSortedTree
-        parentKey="sort_parent_id"
-        weightKey="sort_weight"
-        (visibleNodes)="onChangeAmountOfItems($event)"
-        (hasChanged)="receiveChanges($event)"
-        [model]="motionsObservable"
-        [filterChange]="changeFilter"
-        [sortingDefinition]="forceSort"
-    >
-        <ng-template #innerNode let-item="item">
-            <div class="line">
-                <div class="left">
-                    {{ item.getTitle() }}
+    <mat-card-content>
+        <os-sorting-tree
+            #osSortedTree
+            parentKey="sort_parent_id"
+            weightKey="sort_weight"
+            (visibleNodes)="onChangeAmountOfItems($event)"
+            (hasChanged)="receiveChanges($event)"
+            [model]="motionsObservable"
+            [filterChange]="changeFilter"
+            [sortingDefinition]="forceSort"
+        >
+            <ng-template #innerNode let-item="item">
+                <div class="line">
+                    <div class="left">
+                        {{ item.getTitle() }}
+                    </div>
+                    <div class="right">
+                        <span *ngFor="let tag of getTags(item)" class="tag">
+                            <mat-icon inline>local_offer</mat-icon>
+                            {{ tag.getTitle() }}
+                        </span>
+                    </div>
                 </div>
-                <div class="right">
-                    <span *ngFor="let tag of getTags(item)" class="tag">
-                        <mat-icon inline>local_offer</mat-icon>
-                        {{ tag.getTitle() }}
-                    </span>
-                </div>
-            </div>
-        </ng-template>
-    </os-sorting-tree>
+            </ng-template>
+        </os-sorting-tree>
+    </mat-card-content>
 </mat-card>
 
 <mat-menu #mainMenu="matMenu">

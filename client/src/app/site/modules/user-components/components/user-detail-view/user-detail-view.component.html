@@ -2,10 +2,14 @@
     <ng-container *ngIf="isEditing">
         <ng-container *ngIf="useMatcard">
             <mat-card appearance="outlined" class="os-card">
-                <ng-container *ngTemplateOutlet="editTemplate; context: { form: personalInfoForm }"></ng-container>
+                <mat-card-content>
+                    <ng-container *ngTemplateOutlet="editTemplate; context: { form: personalInfoForm }"></ng-container>
+                </mat-card-content>
             </mat-card>
             <mat-card appearance="outlined" *ngIf="editView" class="os-form-card margin-bottom-60">
-                <ng-container *ngTemplateOutlet="editView; context: { form: personalInfoForm }"></ng-container>
+                <mat-card-content>
+                    <ng-container *ngTemplateOutlet="editView; context: { form: personalInfoForm }"></ng-container>
+                </mat-card-content>
             </mat-card>
         </ng-container>
         <ng-container *ngIf="!useMatcard">
@@ -20,7 +24,9 @@
     <ng-container *ngIf="!isEditing && user">
         <ng-container *ngIf="useMatcard">
             <mat-card appearance="outlined" class="os-card">
-                <ng-container *ngTemplateOutlet="showTemplate"></ng-container>
+                <mat-card-content>
+                    <ng-container *ngTemplateOutlet="showTemplate"></ng-container>
+                </mat-card-content>
             </mat-card>
             <ng-container *ngIf="showView">
                 <mat-card
@@ -28,7 +34,9 @@
                     [ngClass]="{ 'os-card': true, 'margin-bottom-60': isLast }"
                     *ngFor="let showViewElement of showView; last as isLast"
                 >
-                    <ng-container *ngTemplateOutlet="showViewElement; context: { user: user }"></ng-container>
+                    <mat-card-content>
+                        <ng-container *ngTemplateOutlet="showViewElement; context: { user: user }"></ng-container>
+                    </mat-card-content>
                 </mat-card>
             </ng-container>
         </ng-container>

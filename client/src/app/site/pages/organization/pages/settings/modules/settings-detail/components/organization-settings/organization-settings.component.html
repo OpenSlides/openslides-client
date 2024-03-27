@@ -12,171 +12,179 @@
 
 <form [formGroup]="orgaSettingsForm" (ngSubmit)="onSubmit()" *ngIf="orgaSettingsForm">
     <mat-card appearance="outlined" class="os-card">
-        <div class="orga-settings-form">
-            <h2>{{ 'General' | translate }}</h2>
-            <mat-form-field>
-                <mat-label>{{ 'Name' | translate }}</mat-label>
-                <input matInput formControlName="name" />
-            </mat-form-field>
+        <mat-card-content>
+            <div class="orga-settings-form">
+                <h2>{{ 'General' | translate }}</h2>
+                <mat-form-field>
+                    <mat-label>{{ 'Name' | translate }}</mat-label>
+                    <input matInput formControlName="name" />
+                </mat-form-field>
 
-            <mat-form-field>
-                <mat-label>{{ 'Description' | translate }}</mat-label>
-                <input matInput formControlName="description" />
-            </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Description' | translate }}</mat-label>
+                    <input matInput formControlName="description" />
+                </mat-form-field>
 
-            <mat-form-field>
-                <mat-label>{{ 'Show this text on the login page' | translate }}</mat-label>
-                <input matInput formControlName="login_text" />
-            </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Show this text on the login page' | translate }}</mat-label>
+                    <input matInput formControlName="login_text" />
+                </mat-form-field>
 
-            <mat-form-field>
-                <mat-label>{{ 'Organization language' | translate }}</mat-label>
-                <mat-select formControlName="default_language">
-                    <mat-option *ngFor="let choice of translations | keyvalue" [value]="choice.key">
-                        {{ choice.value }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+                <mat-form-field>
+                    <mat-label>{{ 'Organization language' | translate }}</mat-label>
+                    <mat-select formControlName="default_language">
+                        <mat-option *ngFor="let choice of translations | keyvalue" [value]="choice.key">
+                            {{ choice.value }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
     </mat-card>
 
     <mat-card appearance="outlined" class="os-card spacer-bottom-60">
-        <div class="orga-settings-form">
-            <h2>{{ 'Email settings' | translate }}</h2>
-            <mat-form-field>
-                <mat-label>{{ 'Sender name' | translate }}</mat-label>
-                <input matInput formControlName="users_email_sender" />
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>{{ 'Reply address' | translate }}</mat-label>
-                <input matInput formControlName="users_email_replyto" osTrimOnPaste />
-                <mat-error>
-                    {{ 'Please enter a valid email address!' | translate }}
-                </mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>{{ 'Email subject' | translate }}</mat-label>
-                <input matInput formControlName="users_email_subject" />
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>{{ 'Email body' | translate }}</mat-label>
-                <textarea formControlName="users_email_body" rows="10" matInput></textarea>
-            </mat-form-field>
-        </div>
+        <mat-card-content>
+            <div class="orga-settings-form">
+                <h2>{{ 'Email settings' | translate }}</h2>
+                <mat-form-field>
+                    <mat-label>{{ 'Sender name' | translate }}</mat-label>
+                    <input matInput formControlName="users_email_sender" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Reply address' | translate }}</mat-label>
+                    <input matInput formControlName="users_email_replyto" osTrimOnPaste />
+                    <mat-error>
+                        {{ 'Please enter a valid email address!' | translate }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Email subject' | translate }}</mat-label>
+                    <input matInput formControlName="users_email_subject" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Email body' | translate }}</mat-label>
+                    <textarea formControlName="users_email_body" rows="10" matInput></textarea>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
     </mat-card>
 
     <mat-card appearance="outlined" class="os-card margin-bottom-60" *osOmlPerms="OML.superadmin">
-        <div class="superadmin-place">
-            <h2>{{ 'Superadmin settings' | translate }}</h2>
-            <!-- System url -->
-            <section>
-                <mat-form-field>
-                    <mat-label>{{ 'OpenSlides URL' | translate }}</mat-label>
-                    <input matInput formControlName="url" />
-                    <mat-hint>
-                        {{ 'Used for invitation emails and QRCode in PDF of access data.' | translate }}
-                    </mat-hint>
-                </mat-form-field>
-            </section>
-            <!-- electronic voting -->
-            <section>
-                <mat-checkbox formControlName="enable_electronic_voting">
-                    {{ 'Enable electronic voting' | translate }}
-                </mat-checkbox>
-            </section>
-            <!-- Reset password verbose errors -->
-            <section>
-                <mat-checkbox formControlName="reset_password_verbose_errors">
-                    {{ 'Allow verbose error messages for reset password process' | translate }}
-                </mat-checkbox>
-            </section>
-            <!-- Enable chat globally -->
-            <section>
-                <mat-checkbox formControlName="enable_chat">
-                    {{ 'Enable chat globally' | translate }}
-                </mat-checkbox>
-            </section>
-            <section>
-                <mat-form-field>
-                    <mat-label>{{ 'Limit of active meetings' | translate }}</mat-label>
-                    <input
-                        matInput
-                        type="number"
-                        formControlName="limit_of_meetings"
-                        min="0"
-                        [osOnlyNumber]="true"
-                        required
-                    />
-                    <mat-hint>{{ '"0" means an unlimited number of active meetings' | translate }}</mat-hint>
-                </mat-form-field>
-            </section>
-            <section>
-                <mat-form-field>
-                    <mat-label>{{ 'Limit of active accounts' | translate }}</mat-label>
-                    <input
-                        matInput
-                        type="number"
-                        formControlName="limit_of_users"
-                        min="0"
-                        [osOnlyNumber]="true"
-                        required
-                    />
-                    <mat-hint>{{ '"0" means an unlimited number of active accounts' | translate }}</mat-hint>
-                </mat-form-field>
-            </section>
-        </div>
+        <mat-card-content>
+            <div class="superadmin-place">
+                <h2>{{ 'Superadmin settings' | translate }}</h2>
+                <!-- System url -->
+                <section>
+                    <mat-form-field>
+                        <mat-label>{{ 'OpenSlides URL' | translate }}</mat-label>
+                        <input matInput formControlName="url" />
+                        <mat-hint>
+                            {{ 'Used for invitation emails and QRCode in PDF of access data.' | translate }}
+                        </mat-hint>
+                    </mat-form-field>
+                </section>
+                <!-- electronic voting -->
+                <section>
+                    <mat-checkbox formControlName="enable_electronic_voting">
+                        {{ 'Enable electronic voting' | translate }}
+                    </mat-checkbox>
+                </section>
+                <!-- Reset password verbose errors -->
+                <section>
+                    <mat-checkbox formControlName="reset_password_verbose_errors">
+                        {{ 'Allow verbose error messages for reset password process' | translate }}
+                    </mat-checkbox>
+                </section>
+                <!-- Enable chat globally -->
+                <section>
+                    <mat-checkbox formControlName="enable_chat">
+                        {{ 'Enable chat globally' | translate }}
+                    </mat-checkbox>
+                </section>
+                <section>
+                    <mat-form-field>
+                        <mat-label>{{ 'Limit of active meetings' | translate }}</mat-label>
+                        <input
+                            matInput
+                            type="number"
+                            formControlName="limit_of_meetings"
+                            min="0"
+                            [osOnlyNumber]="true"
+                            required
+                        />
+                        <mat-hint>{{ '"0" means an unlimited number of active meetings' | translate }}</mat-hint>
+                    </mat-form-field>
+                </section>
+                <section>
+                    <mat-form-field>
+                        <mat-label>{{ 'Limit of active accounts' | translate }}</mat-label>
+                        <input
+                            matInput
+                            type="number"
+                            formControlName="limit_of_users"
+                            min="0"
+                            [osOnlyNumber]="true"
+                            required
+                        />
+                        <mat-hint>{{ '"0" means an unlimited number of active accounts' | translate }}</mat-hint>
+                    </mat-form-field>
+                </section>
+            </div>
+        </mat-card-content>
     </mat-card>
 
     <mat-card appearance="outlined" class="os-card margin-bottom-60" *osOmlPerms="OML.superadmin">
-        <div class="saml-settings-form">
-            <h2>{{ 'Single Sign-On settings' | translate }}</h2>
-            <!-- sso enabled -->
-            <section>
-                <mat-checkbox formControlName="saml_enabled">
-                    {{ 'Enable SSO via SAML' | translate }}
-                </mat-checkbox>
-            </section>
-            <!-- SSO login button text -->
-            <section>
-                <mat-form-field>
-                    <mat-label>{{ 'Login button text' | translate }}</mat-label>
-                    <input matInput formControlName="saml_login_button_text" />
-                </mat-form-field>
-            </section>
-            <!-- JSON source attribute -->
-            <section>
-                <mat-form-field>
-                    <mat-label>{{ 'Attribute mapping (JSON)' | translate }}</mat-label>
-                    <textarea matInput formControlName="saml_attr_mapping" [rows]="ssoConfigRows"></textarea>
-                    <mat-hint>
-                        {{
-                            'Use JSON key:value structure (key = OpenSlides attribute name, value = IdP attribute name).'
-                                | translate
-                        }}
-                    </mat-hint>
-                </mat-form-field>
-            </section>
-            <!-- SSO login button text -->
-            <section>
-                <mat-form-field>
-                    <mat-label>{{ 'Metadata of Identity Provider (IdP)' | translate }}</mat-label>
-                    <textarea matInput formControlName="saml_metadata_idp" [rows]="6" wrap="hard"></textarea>
-                </mat-form-field>
-            </section>
-            <!-- SSO login button text -->
-            <section>
-                <mat-form-field>
-                    <mat-label>{{ 'Metadata of Service Provider (SP)' | translate }}</mat-label>
-                    <textarea matInput formControlName="saml_metadata_sp" [rows]="6" wrap="hard"></textarea>
-                </mat-form-field>
-            </section>
-            <!-- SSO login button text -->
-            <section>
-                <mat-form-field>
-                    <mat-label>{{ 'Private key of Service Provider (SP)' | translate }}</mat-label>
-                    <textarea matInput formControlName="saml_private_key" [rows]="6" wrap="hard"></textarea>
-                </mat-form-field>
-            </section>
-        </div>
+        <mat-card-content>
+            <div class="saml-settings-form">
+                <h2>{{ 'Single Sign-On settings' | translate }}</h2>
+                <!-- sso enabled -->
+                <section>
+                    <mat-checkbox formControlName="saml_enabled">
+                        {{ 'Enable SSO via SAML' | translate }}
+                    </mat-checkbox>
+                </section>
+                <!-- SSO login button text -->
+                <section>
+                    <mat-form-field>
+                        <mat-label>{{ 'Login button text' | translate }}</mat-label>
+                        <input matInput formControlName="saml_login_button_text" />
+                    </mat-form-field>
+                </section>
+                <!-- JSON source attribute -->
+                <section>
+                    <mat-form-field>
+                        <mat-label>{{ 'Attribute mapping (JSON)' | translate }}</mat-label>
+                        <textarea matInput formControlName="saml_attr_mapping" [rows]="ssoConfigRows"></textarea>
+                        <mat-hint>
+                            {{
+                                'Use JSON key:value structure (key = OpenSlides attribute name, value = IdP attribute name).'
+                                    | translate
+                            }}
+                        </mat-hint>
+                    </mat-form-field>
+                </section>
+                <!-- SSO login button text -->
+                <section>
+                    <mat-form-field>
+                        <mat-label>{{ 'Metadata of Identity Provider (IdP)' | translate }}</mat-label>
+                        <textarea matInput formControlName="saml_metadata_idp" [rows]="6" wrap="hard"></textarea>
+                    </mat-form-field>
+                </section>
+                <!-- SSO login button text -->
+                <section>
+                    <mat-form-field>
+                        <mat-label>{{ 'Metadata of Service Provider (SP)' | translate }}</mat-label>
+                        <textarea matInput formControlName="saml_metadata_sp" [rows]="6" wrap="hard"></textarea>
+                    </mat-form-field>
+                </section>
+                <!-- SSO login button text -->
+                <section>
+                    <mat-form-field>
+                        <mat-label>{{ 'Private key of Service Provider (SP)' | translate }}</mat-label>
+                        <textarea matInput formControlName="saml_private_key" [rows]="6" wrap="hard"></textarea>
+                    </mat-form-field>
+                </section>
+            </div>
+        </mat-card-content>
     </mat-card>
 </form>

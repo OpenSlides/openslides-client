@@ -1,52 +1,54 @@
 <mat-card appearance="outlined" class="os-card">
-    <div class="action-title">
-        <h1>{{ 'Legal notice' | translate }}</h1>
-        <div *osOmlPerms="OML.can_manage_organization; and: isEditable">
-            <button (click)="isEditing = true" mat-icon-button *ngIf="!isEditing">
-                <mat-icon>edit</mat-icon>
-            </button>
+    <mat-card-content>
+        <div class="action-title">
+            <h1>{{ 'Legal notice' | translate }}</h1>
+            <div *osOmlPerms="OML.can_manage_organization; and: isEditable">
+                <button (click)="isEditing = true" mat-icon-button *ngIf="!isEditing">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <ng-container *ngIf="isEditing">
+                    <button (click)="leaveEditMode(true)" mat-icon-button>
+                        <mat-icon>done</mat-icon>
+                    </button>
+                    <button (click)="leaveEditMode(false)" mat-icon-button>
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+        <div class="underlined-links">
+            <ng-container *ngIf="!isEditing">
+                <div *ngIf="legalNotice" class="legal-notice-text" [innerHtml]="legalNotice | trust : 'html'"></div>
+                <div *ngIf="!legalNotice">
+                    {{ 'The event manager has not set up a legal notice yet.' | translate }}
+                </div>
+            </ng-container>
             <ng-container *ngIf="isEditing">
-                <button (click)="leaveEditMode(true)" mat-icon-button>
-                    <mat-icon>done</mat-icon>
-                </button>
-                <button (click)="leaveEditMode(false)" mat-icon-button>
-                    <mat-icon>close</mat-icon>
-                </button>
+                <div>
+                    <form [formGroup]="formGroup">
+                        <os-editor formControlName="legalNotice"></os-editor>
+                    </form>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="versionInfo | async as version">
+                <mat-divider></mat-divider>
+                <div class="version-text">
+                    OpenSlides Version:
+                    <a
+                        target="_blank"
+                        class="italic"
+                        href="https://support.openslides.com/help/de-de/45-uber-openslides/80-versionshistorie"
+                    >
+                        {{ version }}
+                    </a>
+                </div>
+                <a target="_blank" href="https://support.openslides.com/help/">
+                    <br />
+                    <os-icon-container icon="help">
+                        {{ 'OpenSlides help (FAQ)' | translate }}
+                    </os-icon-container>
+                </a>
             </ng-container>
         </div>
-    </div>
-    <div class="underlined-links">
-        <ng-container *ngIf="!isEditing">
-            <div *ngIf="legalNotice" class="legal-notice-text" [innerHtml]="legalNotice | trust : 'html'"></div>
-            <div *ngIf="!legalNotice">
-                {{ 'The event manager has not set up a legal notice yet.' | translate }}
-            </div>
-        </ng-container>
-        <ng-container *ngIf="isEditing">
-            <div>
-                <form [formGroup]="formGroup">
-                    <os-editor formControlName="legalNotice"></os-editor>
-                </form>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="versionInfo | async as version">
-            <mat-divider></mat-divider>
-            <div class="version-text">
-                OpenSlides Version:
-                <a
-                    target="_blank"
-                    class="italic"
-                    href="https://support.openslides.com/help/de-de/45-uber-openslides/80-versionshistorie"
-                >
-                    {{ version }}
-                </a>
-            </div>
-            <a target="_blank" href="https://support.openslides.com/help/">
-                <br />
-                <os-icon-container icon="help">
-                    {{ 'OpenSlides help (FAQ)' | translate }}
-                </os-icon-container>
-            </a>
-        </ng-container>
-    </div>
+    </mat-card-content>
 </mat-card>

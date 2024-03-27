@@ -5,101 +5,105 @@
     </div>
 </os-head-bar>
 <mat-card appearance="outlined" class="os-card" style="padding-right: 30px">
-    <div class="assign-meetings-element">
-        <h2>{{ 'Add to meetings' | translate }}: {{ user?.getFullName() }}</h2>
-        <div class="assign-meetings-subtext">
-            <p translate>
-                Please select your target meetings and state the name of the group, which the user should be assigned to
-                in each meeting.
-            </p>
-            <br />
-            <p>
-                <i>
-                    <span translate>Meetings selected</span>
-                    : {{ selectedMeetings?.length }}
-                </i>
-            </p>
-        </div>
-        <form [formGroup]="assignMeetingsForm">
-            <div class="assign-meetings-form form-wrapper">
-                <div class="long-child">
-                    <mat-form-field class="form-element">
-                        <mat-label>{{ 'Select meetings ...' | translate }}</mat-label>
-                        <os-list-search-selector
-                            formControlName="meeting_ids"
-                            [multiple]="true"
-                            [showChips]="false"
-                            [inputListValues]="meetingsObservable"
-                            [getItemAdditionalInfoFn]="getMeetingAdditionalInfoFn"
-                            [getAdditionallySearchedValuesFn]="getMeetingAdditionallySearchedFn"
-                            [showEntriesNumber]="8"
-                        ></os-list-search-selector>
-                    </mat-form-field>
+    <mat-card-content>
+        <div class="assign-meetings-element">
+            <h2>{{ 'Add to meetings' | translate }}: {{ user?.getFullName() }}</h2>
+            <div class="assign-meetings-subtext">
+                <p translate>
+                    Please select your target meetings and state the name of the group, which the user should be
+                    assigned to in each meeting.
+                </p>
+                <br />
+                <p>
+                    <i>
+                        <span translate>Meetings selected</span>
+                        : {{ selectedMeetings?.length }}
+                    </i>
+                </p>
+            </div>
+            <form [formGroup]="assignMeetingsForm">
+                <div class="assign-meetings-form form-wrapper">
+                    <div class="long-child">
+                        <mat-form-field class="form-element">
+                            <mat-label>{{ 'Select meetings ...' | translate }}</mat-label>
+                            <os-list-search-selector
+                                formControlName="meeting_ids"
+                                [multiple]="true"
+                                [showChips]="false"
+                                [inputListValues]="meetingsObservable"
+                                [getItemAdditionalInfoFn]="getMeetingAdditionalInfoFn"
+                                [getAdditionallySearchedValuesFn]="getMeetingAdditionallySearchedFn"
+                                [showEntriesNumber]="8"
+                            ></os-list-search-selector>
+                        </mat-form-field>
+                    </div>
+                    <div class="grid-child">
+                        <mat-form-field class="form-element">
+                            <mat-label>{{ 'Group name' | translate }}</mat-label>
+                            <input formControlName="group_name" matInput />
+                        </mat-form-field>
+                    </div>
+                    <div class="grid-child">
+                        <button
+                            mat-button
+                            (click)="assign()"
+                            [disabled]="waitingForResults || !assignMeetingsForm.valid || !canManage"
+                        >
+                            {{ 'Assign' | translate }}
+                        </button>
+                    </div>
                 </div>
-                <div class="grid-child">
-                    <mat-form-field class="form-element">
-                        <mat-label>{{ 'Group name' | translate }}</mat-label>
-                        <input formControlName="group_name" matInput />
-                    </mat-form-field>
-                </div>
-                <div class="grid-child">
-                    <button
-                        mat-button
-                        (click)="assign()"
-                        [disabled]="waitingForResults || !assignMeetingsForm.valid || !canManage"
-                    >
-                        {{ 'Assign' | translate }}
-                    </button>
+            </form>
+            <div class="potential-warning">
+                <div *ngIf="!!warningMessage">
+                    <mat-icon line-height="100%" inline color="warn">warning</mat-icon>
+                    <i class="foreground-warn">
+                        {{ warningMessage | translate }}
+                    </i>
                 </div>
             </div>
-        </form>
-        <div class="potential-warning">
-            <div *ngIf="!!warningMessage">
-                <mat-icon line-height="100%" inline color="warn">warning</mat-icon>
-                <i class="foreground-warn">
-                    {{ warningMessage | translate }}
-                </i>
-            </div>
         </div>
-    </div>
+    </mat-card-content>
 </mat-card>
 <mat-card appearance="outlined" *ngIf="hasResult || waitingForResults" class="os-card" style="padding-right: 30px">
-    <!-- Display results -->
-    <div class="assign-meetings-element">
-        <h2>{{ 'Results' | translate }}</h2>
-        <div class="assign-meetings-subtext">
-            <span>{{ 'Group name' | translate }}: '{{ lastGroupName || groupName }}'</span>
+    <mat-card-content>
+        <!-- Display results -->
+        <div class="assign-meetings-element">
+            <h2>{{ 'Results' | translate }}</h2>
+            <div class="assign-meetings-subtext">
+                <span>{{ 'Group name' | translate }}: '{{ lastGroupName || groupName }}'</span>
+            </div>
+            <table class="result-table">
+                <tr>
+                    <th class="verticalSplit">{{ 'Account successfully assigned' | translate }}</th>
+                    <th class="verticalSplit">{{ 'Group not found - assigned to default group' | translate }}</th>
+                    <th class="verticalSplit">
+                        {{ 'Group not found - account is already in meeting, nothing assigned' | translate }}
+                    </th>
+                </tr>
+                <tr>
+                    <td class="verticalSplit">
+                        <ng-container
+                            [ngTemplateOutlet]="tableData"
+                            [ngTemplateOutletContext]="{ $implicit: 'succeeded' }"
+                        ></ng-container>
+                    </td>
+                    <td class="verticalSplit">
+                        <ng-container
+                            [ngTemplateOutlet]="tableData"
+                            [ngTemplateOutletContext]="{ $implicit: 'standard_group' }"
+                        ></ng-container>
+                    </td>
+                    <td class="verticalSplit">
+                        <ng-container
+                            [ngTemplateOutlet]="tableData"
+                            [ngTemplateOutletContext]="{ $implicit: 'nothing' }"
+                        ></ng-container>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <table class="result-table">
-            <tr>
-                <th class="verticalSplit">{{ 'Account successfully assigned' | translate }}</th>
-                <th class="verticalSplit">{{ 'Group not found - assigned to default group' | translate }}</th>
-                <th class="verticalSplit">
-                    {{ 'Group not found - account is already in meeting, nothing assigned' | translate }}
-                </th>
-            </tr>
-            <tr>
-                <td class="verticalSplit">
-                    <ng-container
-                        [ngTemplateOutlet]="tableData"
-                        [ngTemplateOutletContext]="{ $implicit: 'succeeded' }"
-                    ></ng-container>
-                </td>
-                <td class="verticalSplit">
-                    <ng-container
-                        [ngTemplateOutlet]="tableData"
-                        [ngTemplateOutletContext]="{ $implicit: 'standard_group' }"
-                    ></ng-container>
-                </td>
-                <td class="verticalSplit">
-                    <ng-container
-                        [ngTemplateOutlet]="tableData"
-                        [ngTemplateOutletContext]="{ $implicit: 'nothing' }"
-                    ></ng-container>
-                </td>
-            </tr>
-        </table>
-    </div>
+    </mat-card-content>
 </mat-card>
 
 <ng-template #tableData let-key>

@@ -7,31 +7,33 @@
     </os-head-bar>
 
     <mat-card appearance="outlined" class="os-card spacer-bottom-60">
-        <div *ngIf="isMultiSelect">
-            <span>{{ sortSelector.multiSelectedIndex.length }}&nbsp;</span>
-            <span>{{ 'selected' | translate }}</span>
-            <button mat-button (click)="moveToPosition()">
-                <span>{{ 'move ...' | translate }}</span>
-            </button>
-        </div>
-        <os-sorting-list (sortEvent)="onListUpdate($event)" [input]="motionObservable" #sorter>
-            <ng-template let-motion>
-                <div class="single-motion-line">
-                    <span>
-                        {{ motion.getTitle() }}
-                    </span>
-                    <span>
-                        <mat-basic-chip
-                            class="bluegrey"
-                            disableRipple
-                            matTooltip="{{ 'Sequential number' | translate }}"
-                            matTooltipPosition="left"
-                        >
-                            {{ motion.sequential_number }}
-                        </mat-basic-chip>
-                    </span>
-                </div>
-            </ng-template>
-        </os-sorting-list>
+        <mat-card-content>
+            <div *ngIf="isMultiSelect">
+                <span>{{ sortSelector.multiSelectedIndex.length }}&nbsp;</span>
+                <span>{{ 'selected' | translate }}</span>
+                <button mat-button (click)="moveToPosition()">
+                    <span>{{ 'move ...' | translate }}</span>
+                </button>
+            </div>
+            <os-sorting-list (sortEvent)="onListUpdate($event)" [input]="motionObservable" #sorter>
+                <ng-template let-motion>
+                    <div class="single-motion-line">
+                        <span>
+                            {{ motion.getTitle() }}
+                        </span>
+                        <span>
+                            <mat-basic-chip
+                                class="bluegrey"
+                                disableRipple
+                                matTooltip="{{ 'Sequential number' | translate }}"
+                                matTooltipPosition="left"
+                            >
+                                {{ motion.sequential_number }}
+                            </mat-basic-chip>
+                        </span>
+                    </div>
+                </ng-template>
+            </os-sorting-list>
+        </mat-card-content>
     </mat-card>
 </os-detail-view>

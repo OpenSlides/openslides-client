@@ -1,29 +1,31 @@
 <mat-card appearance="outlined" class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'">
-    <div class="action-title">
-        <h1>{{ 'Privacy policy' | translate }}</h1>
-        <div *osOmlPerms="OML.can_manage_organization; and: isEditable">
-            <button (click)="isEditing = true" mat-icon-button *ngIf="!isEditing">
-                <mat-icon>edit</mat-icon>
-            </button>
-            <ng-container *ngIf="isEditing">
-                <button (click)="leaveEditMode(true)" mat-icon-button>
-                    <mat-icon>done</mat-icon>
+    <mat-card-content>
+        <div class="action-title">
+            <h1>{{ 'Privacy policy' | translate }}</h1>
+            <div *osOmlPerms="OML.can_manage_organization; and: isEditable">
+                <button (click)="isEditing = true" mat-icon-button *ngIf="!isEditing">
+                    <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="leaveEditMode(false)" mat-icon-button>
-                    <mat-icon>close</mat-icon>
-                </button>
-            </ng-container>
+                <ng-container *ngIf="isEditing">
+                    <button (click)="leaveEditMode(true)" mat-icon-button>
+                        <mat-icon>done</mat-icon>
+                    </button>
+                    <button (click)="leaveEditMode(false)" mat-icon-button>
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </ng-container>
+            </div>
         </div>
-    </div>
-    <ng-container *ngIf="!isEditing">
-        <div class="underlined-links" *ngIf="privacyPolicy" [innerHtml]="privacyPolicy | trust : 'html'"></div>
-        <div *ngIf="!privacyPolicy">
-            {{ 'The event manager has not set up a privacy policy yet.' | translate }}
-        </div>
-    </ng-container>
-    <ng-container *ngIf="isEditing">
-        <form [formGroup]="formGroup">
-            <os-editor formControlName="privacyPolicy"></os-editor>
-        </form>
-    </ng-container>
+        <ng-container *ngIf="!isEditing">
+            <div class="underlined-links" *ngIf="privacyPolicy" [innerHtml]="privacyPolicy | trust : 'html'"></div>
+            <div *ngIf="!privacyPolicy">
+                {{ 'The event manager has not set up a privacy policy yet.' | translate }}
+            </div>
+        </ng-container>
+        <ng-container *ngIf="isEditing">
+            <form [formGroup]="formGroup">
+                <os-editor formControlName="privacyPolicy"></os-editor>
+            </form>
+        </ng-container>
+    </mat-card-content>
 </mat-card>

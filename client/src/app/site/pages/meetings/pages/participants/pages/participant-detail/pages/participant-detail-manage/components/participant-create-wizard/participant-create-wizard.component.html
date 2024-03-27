@@ -37,45 +37,47 @@
             <ng-template matStepLabel>{{ 'Enter' | translate }}</ng-template>
             <ng-template matStepContent>
                 <mat-card appearance="outlined" class="os-card spacer-bottom-60">
-                    <div>
-                        <h2>{{ 'Personal information' | translate }}</h2>
-                        <div class="full-width first-line">
-                            <!-- First name -->
-                            <mat-form-field>
-                                <mat-label>{{ 'Given name' | translate }}</mat-label>
-                                <input type="text" osAutofocus matInput formControlName="first_name" />
-                            </mat-form-field>
+                    <mat-card-content>
+                        <div>
+                            <h2>{{ 'Personal information' | translate }}</h2>
+                            <div class="full-width first-line">
+                                <!-- First name -->
+                                <mat-form-field>
+                                    <mat-label>{{ 'Given name' | translate }}</mat-label>
+                                    <input type="text" osAutofocus matInput formControlName="first_name" />
+                                </mat-form-field>
 
-                            <!-- Last name -->
-                            <mat-form-field>
-                                <mat-label>{{ 'Surname' | translate }}</mat-label>
-                                <input type="text" matInput formControlName="last_name" />
+                                <!-- Last name -->
+                                <mat-form-field>
+                                    <mat-label>{{ 'Surname' | translate }}</mat-label>
+                                    <input type="text" matInput formControlName="last_name" />
+                                </mat-form-field>
+                            </div>
+                            <!-- E-Mail -->
+                            <mat-form-field class="full-width">
+                                <mat-label>{{ 'Email' | translate }}</mat-label>
+                                <input type="email" matInput autocomplete="off" name="email" formControlName="email" />
+                                <mat-error>{{ 'Please enter a valid email address!' | translate }}</mat-error>
+                            </mat-form-field>
+                            <!-- username -->
+                            <mat-form-field class="full-width">
+                                <mat-label>{{ 'Username' | translate }}</mat-label>
+                                <input type="text" matInput formControlName="username" />
+                                <button
+                                    matSuffix
+                                    type="button"
+                                    mat-button
+                                    mat-icon-button
+                                    [matTooltip]="'Leave blank to automatically generate the username.' | translate"
+                                >
+                                    <mat-icon>help</mat-icon>
+                                </button>
+                                <mat-error *ngIf="createUserForm.controls['username'].errors?.['noSpace']" translate>
+                                    Username may not contain spaces
+                                </mat-error>
                             </mat-form-field>
                         </div>
-                        <!-- E-Mail -->
-                        <mat-form-field class="full-width">
-                            <mat-label>{{ 'Email' | translate }}</mat-label>
-                            <input type="email" matInput autocomplete="off" name="email" formControlName="email" />
-                            <mat-error>{{ 'Please enter a valid email address!' | translate }}</mat-error>
-                        </mat-form-field>
-                        <!-- username -->
-                        <mat-form-field class="full-width">
-                            <mat-label>{{ 'Username' | translate }}</mat-label>
-                            <input type="text" matInput formControlName="username" />
-                            <button
-                                matSuffix
-                                type="button"
-                                mat-button
-                                mat-icon-button
-                                [matTooltip]="'Leave blank to automatically generate the username.' | translate"
-                            >
-                                <mat-icon>help</mat-icon>
-                            </button>
-                            <mat-error *ngIf="createUserForm.controls['username'].errors?.['noSpace']" translate>
-                                Username may not contain spaces
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
+                    </mat-card-content>
                 </mat-card>
             </ng-template>
         </mat-step>

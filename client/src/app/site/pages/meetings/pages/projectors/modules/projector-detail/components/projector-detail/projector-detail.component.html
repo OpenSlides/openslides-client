@@ -317,20 +317,22 @@
                         <mat-list>
                             <mat-list-item class="larger-mat-list-item">
                                 <mat-card appearance="outlined" class="wifi-card" style="width: 100%">
-                                    <div
-                                        class="wifi-button-area"
-                                        [ngClass]="{ 'spacer-bottom-10': !hasEnoughWiFiData }"
-                                    >
-                                        <os-projector-button
-                                            [object]="wifiDataBuildDesc()"
-                                            [projector]="projector"
-                                            [disabled]="noWiFiData"
-                                        ></os-projector-button>
-                                        <span>{{ 'Wifi access data' | translate }}</span>
-                                    </div>
-                                    <small class="wifi-help-text" *ngIf="!hasEnoughWiFiData" translate>
-                                        Attention: First enter the wifi data in [Settings > General]
-                                    </small>
+                                    <mat-card-content>
+                                        <div
+                                            class="wifi-button-area"
+                                            [ngClass]="{ 'spacer-bottom-10': !hasEnoughWiFiData }"
+                                        >
+                                            <os-projector-button
+                                                [object]="wifiDataBuildDesc()"
+                                                [projector]="projector"
+                                                [disabled]="noWiFiData"
+                                            ></os-projector-button>
+                                            <span>{{ 'Wifi access data' | translate }}</span>
+                                        </div>
+                                        <small class="wifi-help-text" *ngIf="!hasEnoughWiFiData" translate>
+                                            Attention: First enter the wifi data in [Settings > General]
+                                        </small>
+                                    </mat-card-content>
                                 </mat-card>
                             </mat-list-item>
                             <mat-list-item *ngFor="let message of messages" class="larger-mat-list-item">

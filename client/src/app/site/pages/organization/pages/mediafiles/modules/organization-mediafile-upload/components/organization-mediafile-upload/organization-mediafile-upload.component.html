@@ -13,14 +13,16 @@
 </os-head-bar>
 
 <mat-card appearance="outlined" class="os-card">
-    <os-media-upload-content
-        [parallel]="parallel"
-        [directoryId]="directoryId"
-        [directories]="directoriesObservable"
-        [uploadFn]="uploadFn"
-        (uploadSuccessEvent)="uploadSuccess($event)"
-        (errorEvent)="showError($event)"
-    ></os-media-upload-content>
+    <mat-card-content>
+        <os-media-upload-content
+            [parallel]="parallel"
+            [directoryId]="directoryId"
+            [directories]="directoriesObservable"
+            [uploadFn]="uploadFn"
+            (uploadSuccessEvent)="uploadSuccess($event)"
+            (errorEvent)="showError($event)"
+        ></os-media-upload-content>
+    </mat-card-content>
 </mat-card>
 
 <mat-menu #uploadMenu="matMenu">

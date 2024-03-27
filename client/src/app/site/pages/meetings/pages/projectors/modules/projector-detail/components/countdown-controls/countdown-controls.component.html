@@ -1,85 +1,89 @@
 <mat-card appearance="outlined" *ngIf="countdown">
-    <div class="grid-wrapper">
-        <div class="projector-button">
-            <os-projector-button [object]="countdown" [projector]="projector"></os-projector-button>
-        </div>
-
-        <div class="title">{{ countdown.getTitle() }}</div>
-
-        <div class="action-buttons">
-            <button
-                type="button"
-                class="small-mat-icon-button"
-                mat-icon-button
-                (click)="onBringDialog()"
-                matTooltip="{{ 'Open projection dialog' | translate }}"
-            >
-                <mat-icon>open_in_new</mat-icon>
-            </button>
-            <button
-                [matTooltip]="'Edit' | translate"
-                type="button"
-                class="small-mat-icon-button"
-                mat-icon-button
-                (click)="onEdit()"
-            >
-                <mat-icon>edit</mat-icon>
-            </button>
-            <div
-                *ngIf="isFixedCountdown"
-                class="small-mat-icon-button mat-icon-button-disabled disabled"
-                [matTooltip]="'It is not allowed to delete countdowns used for list of speakers or polls' | translate"
-            >
-                <mat-icon>close</mat-icon>
+    <mat-card-content>
+        <div class="grid-wrapper">
+            <div class="projector-button">
+                <os-projector-button [object]="countdown" [projector]="projector"></os-projector-button>
             </div>
-            <button
-                *ngIf="!isFixedCountdown"
-                type="button"
-                class="small-mat-icon-button"
-                mat-icon-button
-                (click)="onDelete()"
-                matTooltip="{{ 'Delete' | translate }}"
-            >
-                <mat-icon>close</mat-icon>
-            </button>
-        </div>
 
-        <div class="timer">
-            <os-countdown-time
-                class="larger-countdown"
-                [countdown]="countdown"
-                [warningTime]="warningTime"
-            ></os-countdown-time>
+            <div class="title">{{ countdown.getTitle() }}</div>
 
-            <div>
+            <div class="action-buttons">
                 <button
                     type="button"
                     class="small-mat-icon-button"
                     mat-icon-button
-                    [disabled]="!canStop()"
-                    (click)="stop($event)"
+                    (click)="onBringDialog()"
+                    matTooltip="{{ 'Open projection dialog' | translate }}"
                 >
-                    <mat-icon>stop</mat-icon>
+                    <mat-icon>open_in_new</mat-icon>
                 </button>
                 <button
+                    [matTooltip]="'Edit' | translate"
                     type="button"
                     class="small-mat-icon-button"
                     mat-icon-button
-                    (click)="start($event)"
-                    *ngIf="!countdown.running"
+                    (click)="onEdit()"
                 >
-                    <mat-icon>play_arrow</mat-icon>
+                    <mat-icon>edit</mat-icon>
                 </button>
+                <div
+                    *ngIf="isFixedCountdown"
+                    class="small-mat-icon-button mat-icon-button-disabled disabled"
+                    [matTooltip]="
+                        'It is not allowed to delete countdowns used for list of speakers or polls' | translate
+                    "
+                >
+                    <mat-icon>close</mat-icon>
+                </div>
                 <button
+                    *ngIf="!isFixedCountdown"
                     type="button"
                     class="small-mat-icon-button"
                     mat-icon-button
-                    (click)="pause($event)"
-                    *ngIf="countdown.running"
+                    (click)="onDelete()"
+                    matTooltip="{{ 'Delete' | translate }}"
                 >
-                    <mat-icon>pause</mat-icon>
+                    <mat-icon>close</mat-icon>
                 </button>
             </div>
+
+            <div class="timer">
+                <os-countdown-time
+                    class="larger-countdown"
+                    [countdown]="countdown"
+                    [warningTime]="warningTime"
+                ></os-countdown-time>
+
+                <div>
+                    <button
+                        type="button"
+                        class="small-mat-icon-button"
+                        mat-icon-button
+                        [disabled]="!canStop()"
+                        (click)="stop($event)"
+                    >
+                        <mat-icon>stop</mat-icon>
+                    </button>
+                    <button
+                        type="button"
+                        class="small-mat-icon-button"
+                        mat-icon-button
+                        (click)="start($event)"
+                        *ngIf="!countdown.running"
+                    >
+                        <mat-icon>play_arrow</mat-icon>
+                    </button>
+                    <button
+                        type="button"
+                        class="small-mat-icon-button"
+                        mat-icon-button
+                        (click)="pause($event)"
+                        *ngIf="countdown.running"
+                    >
+                        <mat-icon>pause</mat-icon>
+                    </button>
+                </div>
+            </div>
         </div>
-    </div>
+    </mat-card-content>
 </mat-card>

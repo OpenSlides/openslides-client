@@ -15,69 +15,71 @@
 </os-head-bar>
 
 <mat-card appearance="outlined" class="spacer-bottom-60">
-    <mat-accordion *ngFor="let appPermissions of permissionsPerApp">
-        <mat-expansion-panel class="mat-elevation-z0" [expanded]="true">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    {{ appPermissions.name | translate }}
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+    <mat-card-content>
+        <mat-accordion *ngFor="let appPermissions of permissionsPerApp">
+            <mat-expansion-panel class="mat-elevation-z0" [expanded]="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{ appPermissions.name | translate }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
 
-            <div class="scrollable-perm-matrix">
-                <table mat-table [dataSource]="getTableDataSource(appPermissions.permissions)">
-                    <ng-container matColumnDef="perm" sticky>
-                        <mat-header-cell *matHeaderCellDef>{{ 'Permissions' | translate }}</mat-header-cell>
-                        <mat-cell
-                            *matCellDef="let perm"
-                            class="raised-cell"
-                            #tooltip="matTooltip"
-                            [ngClass]="{ 'has-help-text': perm.help_text }"
-                            [matTooltip]="perm.help_text | translate"
-                            matTooltipClass="pre-wrap"
-                            matTooltipPosition="after"
-                            (mouseenter)="$event.stopImmediatePropagation()"
-                            (mouseleave)="tooltip.hide()"
-                            (click)="tooltip.toggle()"
-                        >
-                            {{ perm.display_name | translate }}
-                        </mat-cell>
-                    </ng-container>
-
-                    <div *ngFor="let group of groups; trackBy: trackByIndex">
-                        <ng-container [matColumnDef]="group.name">
-                            <mat-header-cell
-                                class="group-head-table-cell"
-                                *matHeaderCellDef
-                                (click)="selectGroup(group)"
+                <div class="scrollable-perm-matrix">
+                    <table mat-table [dataSource]="getTableDataSource(appPermissions.permissions)">
+                        <ng-container matColumnDef="perm" sticky>
+                            <mat-header-cell *matHeaderCellDef>{{ 'Permissions' | translate }}</mat-header-cell>
+                            <mat-cell
+                                *matCellDef="let perm"
+                                class="raised-cell"
+                                #tooltip="matTooltip"
+                                [ngClass]="{ 'has-help-text': perm.help_text }"
+                                [matTooltip]="perm.help_text | translate"
+                                matTooltipClass="pre-wrap"
+                                matTooltipPosition="after"
+                                (mouseenter)="$event.stopImmediatePropagation()"
+                                (mouseleave)="tooltip.hide()"
+                                (click)="tooltip.toggle()"
                             >
-                                <div class="inner-table">
-                                    {{ group.name }}
-                                </div>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let perm">
-                                <div class="inner-table">
-                                    <mat-checkbox
-                                        *ngIf="!group.isAdminGroup"
-                                        name="cb-{{ group.id }}-{{ perm.value }}"
-                                        [(ngModel)]="currentPermissions[group.id][perm.value]"
-                                        (change)="onChange(group, perm.value, $event.checked)"
-                                    ></mat-checkbox>
-                                    <mat-checkbox
-                                        *ngIf="group.isAdminGroup"
-                                        [checked]="true"
-                                        [disabled]="true"
-                                    ></mat-checkbox>
-                                </div>
+                                {{ perm.display_name | translate }}
                             </mat-cell>
                         </ng-container>
-                    </div>
 
-                    <mat-header-row *matHeaderRowDef="headerRowDef"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: headerRowDef"></mat-row>
-                </table>
-            </div>
-        </mat-expansion-panel>
-    </mat-accordion>
+                        <div *ngFor="let group of groups; trackBy: trackByIndex">
+                            <ng-container [matColumnDef]="group.name">
+                                <mat-header-cell
+                                    class="group-head-table-cell"
+                                    *matHeaderCellDef
+                                    (click)="selectGroup(group)"
+                                >
+                                    <div class="inner-table">
+                                        {{ group.name }}
+                                    </div>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let perm">
+                                    <div class="inner-table">
+                                        <mat-checkbox
+                                            *ngIf="!group.isAdminGroup"
+                                            name="cb-{{ group.id }}-{{ perm.value }}"
+                                            [(ngModel)]="currentPermissions[group.id][perm.value]"
+                                            (change)="onChange(group, perm.value, $event.checked)"
+                                        ></mat-checkbox>
+                                        <mat-checkbox
+                                            *ngIf="group.isAdminGroup"
+                                            [checked]="true"
+                                            [disabled]="true"
+                                        ></mat-checkbox>
+                                    </div>
+                                </mat-cell>
+                            </ng-container>
+                        </div>
+
+                        <mat-header-row *matHeaderRowDef="headerRowDef"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: headerRowDef"></mat-row>
+                    </table>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-card-content>
 </mat-card>
 
 <ng-template #groupEditDialog>

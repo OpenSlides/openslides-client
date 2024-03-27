@@ -13,67 +13,69 @@
 </os-head-bar>
 
 <mat-card appearance="outlined" class="os-card">
-    <form class="committee-form" [formGroup]="committeeForm" (ngSubmit)="onSubmit()" *ngIf="committeeForm">
-        <mat-form-field>
-            <mat-label>{{ 'Title' | translate }}</mat-label>
-            <input matInput formControlName="name" data-cy="committeeName" required osAutofocus />
-            <mat-error>{{ 'The title is required' | translate }}</mat-error>
-        </mat-form-field>
+    <mat-card-content>
+        <form class="committee-form" [formGroup]="committeeForm" (ngSubmit)="onSubmit()" *ngIf="committeeForm">
+            <mat-form-field>
+                <mat-label>{{ 'Title' | translate }}</mat-label>
+                <input matInput formControlName="name" data-cy="committeeName" required osAutofocus />
+                <mat-error>{{ 'The title is required' | translate }}</mat-error>
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'Description' | translate }}</mat-label>
-            <input matInput formControlName="description" data-cy="committeeDescription" />
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Description' | translate }}</mat-label>
+                <input matInput formControlName="description" data-cy="committeeDescription" />
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'Tags' | translate }}</mat-label>
-            <os-repo-search-selector
-                formControlName="organization_tag_ids"
-                [repo]="orgaTagRepo"
-                [multiple]="true"
-                (clickNotFound)="onOrgaTagNotFound($event)"
-            >
-                <ng-template osNotFoundDescription>
-                    {{ 'New tag' | translate }}
-                </ng-template>
-            </os-repo-search-selector>
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Tags' | translate }}</mat-label>
+                <os-repo-search-selector
+                    formControlName="organization_tag_ids"
+                    [repo]="orgaTagRepo"
+                    [multiple]="true"
+                    (clickNotFound)="onOrgaTagNotFound($event)"
+                >
+                    <ng-template osNotFoundDescription>
+                        {{ 'New tag' | translate }}
+                    </ng-template>
+                </os-repo-search-selector>
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'Committee managers' | translate }}</mat-label>
-            <os-account-search-selector formControlName="manager_ids"></os-account-search-selector>
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Committee managers' | translate }}</mat-label>
+                <os-account-search-selector formControlName="manager_ids"></os-account-search-selector>
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'Can forward motions to committee' | translate }}</mat-label>
-            <os-repo-search-selector
-                formControlName="forward_to_committee_ids"
-                [multiple]="true"
-                [repo]="committeeRepo"
-                [sortService]="committeeSortService"
-                [showChips]="false"
-                [lazyLoading]="false"
-                (selectionChanged)="onForwardingSelectionChanged($event)"
-            ></os-repo-search-selector>
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Can forward motions to committee' | translate }}</mat-label>
+                <os-repo-search-selector
+                    formControlName="forward_to_committee_ids"
+                    [multiple]="true"
+                    [repo]="committeeRepo"
+                    [sortService]="committeeSortService"
+                    [showChips]="false"
+                    [lazyLoading]="false"
+                    (selectionChanged)="onForwardingSelectionChanged($event)"
+                ></os-repo-search-selector>
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'Can receive motions from committee' | translate }}</mat-label>
-            <os-repo-search-selector
-                formControlName="receive_forwardings_from_committee_ids"
-                [multiple]="true"
-                [repo]="committeeRepo"
-                [sortService]="committeeSortService"
-                [showChips]="false"
-                [lazyLoading]="false"
-                [disableOptionWhenFn]="getDisableOptionWhenFn()"
-                [tooltipFn]="getTooltipFn()"
-            ></os-repo-search-selector>
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Can receive motions from committee' | translate }}</mat-label>
+                <os-repo-search-selector
+                    formControlName="receive_forwardings_from_committee_ids"
+                    [multiple]="true"
+                    [repo]="committeeRepo"
+                    [sortService]="committeeSortService"
+                    [showChips]="false"
+                    [lazyLoading]="false"
+                    [disableOptionWhenFn]="getDisableOptionWhenFn()"
+                    [tooltipFn]="getTooltipFn()"
+                ></os-repo-search-selector>
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'External ID' | translate }}</mat-label>
-            <input matInput formControlName="external_id" />
-        </mat-form-field>
-    </form>
+            <mat-form-field>
+                <mat-label>{{ 'External ID' | translate }}</mat-label>
+                <input matInput formControlName="external_id" />
+            </mat-form-field>
+        </form>
+    </mat-card-content>
 </mat-card>

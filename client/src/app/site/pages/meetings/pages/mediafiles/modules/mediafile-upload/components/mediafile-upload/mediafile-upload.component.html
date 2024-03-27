@@ -13,28 +13,30 @@
 </os-head-bar>
 
 <mat-card appearance="outlined" class="os-card spacer-bottom-60">
-    <os-media-upload-content
-        [parallel]="parallel"
-        [directoryId]="directoryId"
-        [directories]="directoriesObservable"
-        [uploadFn]="uploadFn"
-        (uploadSuccessEvent)="uploadSuccess($event)"
-        (errorEvent)="showError($event)"
-    >
-        <div *osScrollingTableCell="'access_groups'; row as file" class="cell-slot">
-            <form [formGroup]="file.form">
-                <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>{{ 'Access groups' | translate }}</mat-label>
-                    <os-list-search-selector
-                        formControlName="access_group_ids"
-                        [multiple]="true"
-                        [inputListValues]="availableGroups"
-                        [sortFn]="sortFn"
-                    ></os-list-search-selector>
-                </mat-form-field>
-            </form>
-        </div>
-    </os-media-upload-content>
+    <mat-card-content>
+        <os-media-upload-content
+            [parallel]="parallel"
+            [directoryId]="directoryId"
+            [directories]="directoriesObservable"
+            [uploadFn]="uploadFn"
+            (uploadSuccessEvent)="uploadSuccess($event)"
+            (errorEvent)="showError($event)"
+        >
+            <div *osScrollingTableCell="'access_groups'; row as file" class="cell-slot">
+                <form [formGroup]="file.form">
+                    <mat-form-field subscriptSizing="dynamic">
+                        <mat-label>{{ 'Access groups' | translate }}</mat-label>
+                        <os-list-search-selector
+                            formControlName="access_group_ids"
+                            [multiple]="true"
+                            [inputListValues]="availableGroups"
+                            [sortFn]="sortFn"
+                        ></os-list-search-selector>
+                    </mat-form-field>
+                </form>
+            </div>
+        </os-media-upload-content>
+    </mat-card-content>
 </mat-card>
 
 <mat-menu #uploadMenu="matMenu">
