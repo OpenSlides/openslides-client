@@ -114,7 +114,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         super();
 
         this.storage.get<{ [key: string]: boolean }>(`autopilot-disabled`).then(keys => {
-            this.disabledContentElements = keys;
+            this.disabledContentElements = keys || {};
         });
 
         this.subscriptions.push(
