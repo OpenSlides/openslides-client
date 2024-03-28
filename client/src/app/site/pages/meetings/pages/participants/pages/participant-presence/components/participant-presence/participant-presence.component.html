@@ -5,7 +5,7 @@
     </div>
 </os-head-bar>
 
-<mat-card appearance="outlined">
+<mat-card>
     <mat-card-content>
         <p>{{ 'Check in or check out participants based on their participant numbers:' | translate }}</p>
 
@@ -15,7 +15,6 @@
         </mat-form-field>
         <button mat-button (click)="changePresence()">{{ 'Change presence' | translate }}</button>
         <mat-card
-            appearance="outlined"
             *ngIf="lastChangedUser"
             [ngClass]="lastChangedUserPresent ? 'success' : 'warning'"
         >
@@ -26,7 +25,7 @@
                 <span>&nbsp;{{ lastChangedUserPresent ? ('present' | translate) : ('absent' | translate) }}</span>
             </mat-card-content>
         </mat-card>
-        <mat-card appearance="outlined" *ngIf="errorMsg" class="error">
+        <mat-card *ngIf="errorMsg" class="error">
             <mat-card-content>
                 {{ errorMsg | translate }}
             </mat-card-content>

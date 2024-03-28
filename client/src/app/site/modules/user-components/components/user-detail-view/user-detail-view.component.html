@@ -1,12 +1,12 @@
 <div class="content-container spacer-bottom-60">
     <ng-container *ngIf="isEditing">
         <ng-container *ngIf="useMatcard">
-            <mat-card appearance="outlined" class="os-card">
+            <mat-card class="os-card">
                 <mat-card-content>
                     <ng-container *ngTemplateOutlet="editTemplate; context: { form: personalInfoForm }"></ng-container>
                 </mat-card-content>
             </mat-card>
-            <mat-card appearance="outlined" class="os-card" *ngIf="editView">
+            <mat-card class="os-card" *ngIf="editView">
                 <mat-card-content>
                     <ng-container *ngTemplateOutlet="editView; context: { form: personalInfoForm }"></ng-container>
                 </mat-card-content>
@@ -23,14 +23,13 @@
     </ng-container>
     <ng-container *ngIf="!isEditing && user">
         <ng-container *ngIf="useMatcard">
-            <mat-card appearance="outlined" class="os-card">
+            <mat-card class="os-card">
                 <mat-card-content>
                     <ng-container *ngTemplateOutlet="showTemplate"></ng-container>
                 </mat-card-content>
             </mat-card>
             <ng-container *ngIf="showView">
                 <mat-card
-                    appearance="outlined"
                     [ngClass]="{ 'os-card': true, 'margin-bottom-60': isLast }"
                     *ngFor="let showViewElement of showView; last as isLast"
                 >

@@ -7,7 +7,7 @@
     <div class="col-wrapper">
         <div class="col-main">
             <!-- Title Card -->
-            <mat-card appearance="outlined" class="os-card" *ngIf="!!title">
+            <mat-card class="os-card" *ngIf="!!title">
                 <mat-card-content>
                     <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
                         <h1 class="line-and-icon">
@@ -96,7 +96,7 @@
             ></os-poll-collection>
 
             <!-- Projector -->
-            <mat-card appearance="outlined" class="os-card spacer-bottom-60">
+            <mat-card class="os-card spacer-bottom-60">
                 <mat-card-content>
                     <a [routerLink]="projectorUrl" [target]="projectionTarget" [state]="{ back: 'true' }">
                         <p class="subtitle-text">{{ projectorTitle | translate }}</p>
@@ -120,7 +120,7 @@
 </div>
 
 <ng-template #speakingTimes>
-    <mat-card appearance="outlined" class="os-card spacer-bottom-60">
+    <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
             <os-speaking-times
                 [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"

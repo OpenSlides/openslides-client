@@ -108,7 +108,7 @@
 </os-detail-view>
 
 <ng-template #metaInfoTemplate>
-    <mat-card appearance="outlined" class="os-card spacer-bottom-60" *ngIf="assignment">
+    <mat-card class="os-card spacer-bottom-60" *ngIf="assignment">
         <mat-card-content>
             <os-projectable-title *ngIf="!isEditing && assignment.getTitle" [model]="assignment"></os-projectable-title>
             <div *ngIf="assignment">
@@ -154,7 +154,7 @@
 </ng-template>
 
 <ng-template #candidatesTemplate>
-    <mat-card appearance="outlined" class="os-card spacer-bottom-60" *ngIf="assignment && !assignment.isFinished">
+    <mat-card class="os-card spacer-bottom-60" *ngIf="assignment && !assignment.isFinished">
         <mat-card-content>
             <ng-container>
                 <h3>{{ 'Candidates' | translate }}</h3>
@@ -218,7 +218,7 @@
 
 <!-- Form -->
 <ng-template #assignmentFormTemplate>
-    <mat-card appearance="outlined" class="os-form-card spacer-bottom-60">
+    <mat-card class="os-form-card spacer-bottom-60">
         <mat-card-content>
             <form class="content" [formGroup]="assignmentForm" (keydown)="onKeyDown($event)" tabindex="-1">
                 <div>

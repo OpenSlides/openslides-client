@@ -1,6 +1,5 @@
 <!-- Moderator Note-->
 <mat-card
-    appearance="outlined"
     class="spacer-bottom-60 card-padding"
     [ngClass]="isEditing ? 'os-form-card' : 'os-card'"
     *ngIf="agendaItem && canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))"

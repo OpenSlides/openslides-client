@@ -9,7 +9,7 @@
     <div class="meeting-spacer"></div>
 </div>
 
-<mat-card appearance="outlined" *ngIf="noMeetingsToShow && ready" class="no-content os-card">
+<mat-card *ngIf="noMeetingsToShow && ready" class="no-content os-card">
     <mat-card-content>
         <i>{{ 'No meetings available' | translate }}</i>
     </mat-card-content>
@@ -32,7 +32,7 @@
                 <span>{{ 'today' | translate }}</span>
             </div>
             <div class="meeting-list background-card">
-                <mat-card appearance="outlined" *ngIf="!currentMeetings.length">
+                <mat-card *ngIf="!currentMeetings.length">
                     <mat-card-content>
                         {{ 'No meetings available' | translate }}
                     </mat-card-content>
@@ -114,7 +114,7 @@
         [ngClass]="{ 'no-meetings': !meetingList.length }"
         [ngStyle]="{ height: getHeightByMeetings(meetingList) }"
     >
-        <mat-card appearance="outlined" *ngIf="!meetingList.length">
+        <mat-card *ngIf="!meetingList.length">
             <mat-card-content>
                 {{ 'No meetings available' | translate }}
             </mat-card-content>

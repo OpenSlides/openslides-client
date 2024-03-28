@@ -13,7 +13,7 @@
 </os-head-bar>
 
 <cdk-virtual-scroll-viewport class="statute-vscroll-wrapper" itemSize="50">
-    <mat-card appearance="outlined">
+    <mat-card>
         <mat-card-content>
             <mat-accordion>
                 <mat-expansion-panel *cdkVirtualFor="let statuteParagraph of statuteParagraphs" multiple="false">
@@ -22,7 +22,7 @@
                             {{ statuteParagraph.title }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <mat-card appearance="outlined">
+                    <mat-card>
                         <mat-card-title>{{ statuteParagraph.title }}</mat-card-title>
                         <mat-card-content>
                             <div [innerHTML]="statuteParagraph.text | trust : 'html'"></div>
@@ -42,7 +42,7 @@
     </mat-card>
 </cdk-virtual-scroll-viewport>
 
-<mat-card appearance="outlined" *ngIf="statuteParagraphs.length === 0">
+<mat-card *ngIf="statuteParagraphs.length === 0">
     <mat-card-content>
         <div class="no-content">{{ 'No statute paragraphs' | translate }}</div>
     </mat-card-content>

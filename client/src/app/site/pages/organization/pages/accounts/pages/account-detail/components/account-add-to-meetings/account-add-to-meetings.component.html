@@ -4,7 +4,7 @@
         <h2>{{ user?.getFullName() }}</h2>
     </div>
 </os-head-bar>
-<mat-card appearance="outlined" class="os-card" style="padding-right: 30px">
+<mat-card class="os-card" style="padding-right: 30px">
     <mat-card-content>
         <div class="assign-meetings-element">
             <h2>{{ 'Add to meetings' | translate }}: {{ user?.getFullName() }}</h2>
@@ -65,7 +65,7 @@
         </div>
     </mat-card-content>
 </mat-card>
-<mat-card appearance="outlined" *ngIf="hasResult || waitingForResults" class="os-card" style="padding-right: 30px">
+<mat-card *ngIf="hasResult || waitingForResults" class="os-card" style="padding-right: 30px">
     <mat-card-content>
         <!-- Display results -->
         <div class="assign-meetings-element">

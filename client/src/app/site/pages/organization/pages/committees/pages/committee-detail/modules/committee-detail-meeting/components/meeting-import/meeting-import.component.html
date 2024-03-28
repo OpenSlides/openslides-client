@@ -5,7 +5,7 @@
     </div>
 </os-head-bar>
 
-<mat-card appearance="outlined" class="os-card">
+<mat-card class="os-card">
     <mat-card-content>
         <os-file-upload [uploadFileFn]="getUploadFileFn()" (uploadSucceeded)="onUploadSucceeded()" [parallel]="true">
             <div *osScrollingTableCell="'title'; row as file">
