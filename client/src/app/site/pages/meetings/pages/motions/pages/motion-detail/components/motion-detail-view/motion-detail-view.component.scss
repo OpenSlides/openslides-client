@@ -173,25 +173,3 @@ span {
         }
     }
 }
-
-@media (max-width: 700px) {
-    //.motion-detail-nav-button {
-    //    min-width: 2px;
-    //    max-width: 4px;
-    //}
-
-    //.prev-next-motion-controls {
-    //    span {
-    //        width: 32px;
-    //    }
-    //}
-
-    //.right_arrow {
-    //    padding-right: 32px;
-    //}
-
-    .chevron_number {
-        visibility: hidden;
-        max-width: 0px !important;
-    }
-}
