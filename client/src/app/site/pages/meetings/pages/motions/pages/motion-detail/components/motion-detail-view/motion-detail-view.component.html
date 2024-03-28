@@ -31,22 +31,18 @@
                     [disabled]="!previousMotion"
                     class="motion-detail-nav-button"
                 >
-                    <os-icon-container icon="chevron_left">
-                        <span class="chevron_number">
-                            {{ previousMotion ? previousMotion.number : '' }}
-                        </span>
+                    <os-icon-container icon="chevron_left" [hide]="vp.isMobileSubject | async">
+                        {{ previousMotion ? previousMotion.number : '' }}
                     </os-icon-container>
                 </button>
                 <button
                     mat-button
                     (click)="navigateToMotion(nextMotion)"
                     [disabled]="!nextMotion"
-                    class="motion-detail-nav-button right_arrow"
+                    class="motion-detail-nav-button"
                 >
-                    <os-icon-container icon="chevron_right" [swap]="true">
-                        <span class="chevron_number">
-                            {{ nextMotion ? nextMotion.number : '' }}
-                        </span>
+                    <os-icon-container icon="chevron_right" [swap]="true" [hide]="vp.isMobileSubject | async">
+                        {{ nextMotion ? nextMotion.number : '' }}
                     </os-icon-container>
                 </button>
             </div>
