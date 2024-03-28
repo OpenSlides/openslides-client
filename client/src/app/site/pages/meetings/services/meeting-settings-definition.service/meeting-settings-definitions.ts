@@ -14,6 +14,8 @@ import { createEmailValidator } from 'src/app/infrastructure/utils/validators/em
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
 
+export type SettingsValueMap = { [key in keyof Settings]?: any };
+
 export type SettingsType =
     | 'string'
     | 'email'
@@ -44,7 +46,7 @@ export interface ChoicesFunctionDefinition<V> {
     labelKey: keyof V;
 }
 
-export interface SettingsItem<V = any> {
+export interface SettingsInput<V = any> {
     key: keyof Settings | (keyof Settings)[]; // Array can be used with fields that require multiple values (like then type === 'daterange')
     label: string;
     type?: SettingsType; // default: text
@@ -56,6 +58,7 @@ export interface SettingsItem<V = any> {
     // alternative to `choices`; overwrites `choices` if both are given
     choicesFunc?: ChoicesFunctionDefinition<V>;
     helpText?: string; // default: ""
+    indentation?: number; // default: 0. Indents the input field by the given amount to simulate nested settings
     validators?: ValidatorFn[]; // default: []
     automaticChangesSetting?: SettingsItemAutomaticChangeSetting<V>;
     useRelation?: boolean; // May be set to true for relation id fields to get the relation item(s) instead if the id(s)
@@ -69,6 +72,14 @@ export interface SettingsItem<V = any> {
      * @param value: The value used...
      */
     restrictionFn?: <T>(orgaSettings: OrganizationSettingsService, value: T) => any;
+    /**
+     * A function to conditionally disable the setting.
+     *
+     * @param settings All current settings values, mapped by their keys
+     * @returns whether to disable the setting or not
+     */
+    disable?: (settings: SettingsValueMap) => boolean;
+    hide?: boolean; // Hide the setting in the settings view
 }
 
 interface SettingsItemAutomaticChangeSetting<V> {
@@ -82,6 +93,21 @@ interface SettingsItemAutomaticChangeSetting<V> {
     getChangeFn: (currentValue: V, currentWatchPropertyValues: any[]) => V;
 }
 
+export enum SettingsHelpTextLinkType {
+    Meeting,
+    Organization,
+    External
+}
+
+export interface SettingsHelpText {
+    text?: string;
+    buttonLabel?: string;
+    buttonLink?: string;
+    buttonLinkType?: SettingsHelpTextLinkType;
+}
+
+export type SettingsItem = SettingsInput | SettingsHelpText;
+
 export interface SettingsGroup {
     label: string;
     icon: string;
@@ -91,6 +117,9 @@ export interface SettingsGroup {
     }[];
 }
 
+export function isSettingsInput(item: SettingsItem): item is SettingsInput {
+    return `key` in item;
+}
 export const SKIPPED_SETTINGS = [
     `motions_default_workflow_id`,
     `motions_default_amendment_workflow_id`,
@@ -103,7 +132,7 @@ function fillInSettingsDefaults(settingsGroups: SettingsGroup[]): SettingsGroup[
         group.subgroups.forEach(
             subgroup =>
                 (subgroup.settings = subgroup.settings.map(setting =>
-                    setting.type ? setting : { ...setting, type: `string` }
+                    !isSettingsInput(setting) || setting.type ? setting : { ...setting, type: `string` }
                 ))
         )
     );
@@ -366,8 +395,13 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
+                        key: `list_of_speakers_hide_contribution_count`,
+                        label: _(`Hide hint for multiple contributions`),
+                        type: `boolean`
+                    },
+                    {
                         key: `list_of_speakers_allow_multiple_speakers`,
-                        label: _(`Allow one participant to be on the LoS serveral times`),
+                        label: _(`Allow one participant multiple times on the same list`),
                         type: `boolean`
                     },
                     {
@@ -613,12 +647,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_enable_editor`,
-                        label: _(`Enable the ability to enter a participant as motion editor`),
+                        label: _(`Activate the selection field 'motion editor'`),
                         type: `boolean`
                     },
                     {
                         key: `motions_enable_working_group_speaker`,
-                        label: _(`Enable the ability to enter a participant as working group speaker for a motion`),
+                        label: _(`Activate the selection field 'spokesperson'`),
                         type: `boolean`
                     }
                 ]
@@ -662,7 +696,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `motions_statutes_enabled`,
                         label: _(`Activate statute amendments`),
-                        type: `boolean`
+                        type: `boolean`,
+                        hide: true
                     },
                     {
                         key: `motions_amendments_in_main_list`,

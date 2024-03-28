@@ -290,7 +290,7 @@
                     <!-- countdowns -->
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
-                            <span>{{ 'Countdowns/Timers' | translate }}</span>
+                            <span>{{ 'Timers' | translate }}</span>
                         </mat-expansion-panel-header>
                         <mat-list>
                             <mat-list-item *ngFor="let countdown of countdowns" class="larger-mat-list-item">
@@ -304,7 +304,7 @@
                         <mat-action-row>
                             <button type="button" mat-button (click)="createProjectorCountdown()">
                                 <mat-icon>add</mat-icon>
-                                <span>{{ 'Add countdown/timer' | translate }}</span>
+                                <span>{{ 'Add timer' | translate }}</span>
                             </button>
                         </mat-action-row>
                     </mat-expansion-panel>
@@ -362,7 +362,7 @@
                                     [object]="getCurrentLoSBuildDesc(false)"
                                     [projector]="projector"
                                 ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'Slide' | translate }}</span>
+                                <span class="spacer-left-10">{{ 'List of speakers' | translate }}</span>
                             </mat-list-item>
                         </mat-list>
 
@@ -373,7 +373,7 @@
                                     [object]="getCurrentLoSBuildDesc(true)"
                                     [projector]="projector"
                                 ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'Overlay' | translate }}</span>
+                                <span class="spacer-left-10">{{ 'List of speakers as overlay' | translate }}</span>
                             </mat-list-item>
                         </mat-list>
 
@@ -384,7 +384,7 @@
                                     [object]="getChyronBuildDesc()"
                                     [projector]="projector"
                                 ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'Chyron' | translate }}</span>
+                                <span class="spacer-left-10">{{ 'Chyron – current contribution' | translate }}</span>
                             </mat-list-item>
                         </mat-list>
 
@@ -395,7 +395,9 @@
                                     [object]="getCurrentStructureLevel()"
                                     [projector]="projector"
                                 ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'Current speaker' | translate }}</span>
+                                <span class="spacer-left-10">
+                                    {{ 'Speaking time – current contribution' | translate }}
+                                </span>
                             </mat-list-item>
                         </mat-list>
 
@@ -412,19 +414,21 @@
                                     [object]="getAllStructureLevel()"
                                     [projector]="projector"
                                 ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'All structure levels' | translate }}</span>
+                                <span class="spacer-left-10">
+                                    {{ 'Speaking times – overview structure levels' | translate }}
+                                </span>
                             </mat-list-item>
                         </mat-list>
                     </mat-expansion-panel>
 
                     <!-- Current slide -->
-                    <mat-expansion-panel *ngIf="hasSlide">
+                    <mat-expansion-panel *ngIf="hasSlide && getCurrentProjectionLoSToggleBuildDesc()">
                         <mat-expansion-panel-header>
                             <span>{{ 'Current slide' | translate }}</span>
                         </mat-expansion-panel-header>
 
                         <!-- Toggle -->
-                        <mat-list *ngIf="getCurrentProjectionLoSToggleBuildDesc()">
+                        <mat-list>
                             <mat-list-item>
                                 <os-projector-button
                                     [object]="getCurrentProjectionLoSToggleBuildDesc()"

@@ -83,6 +83,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.meetingSettingsService.get(`list_of_speakers_speaker_note_for_everyone`);
     }
 
+    public get hideSecondaryContributionsCount(): Observable<boolean> {
+        return this.meetingSettingsService.get(`list_of_speakers_hide_contribution_count`);
+    }
+
     public get title(): string {
         return this._listOfSpeakers?.getTitle() || ``;
     }
@@ -241,6 +245,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                     (!this.activeSpeaker?.point_of_order && this.activeSpeaker?.user_id === lastSpeaker.user_id);
             }
             canReaddLast = !isLastSpeakerWaiting || this.enableMultipleParticipants;
+            if (lastSpeaker.speech_state === `interposed_question` && !this.activeSpeaker) {
+                canReaddLast = false;
+            } else if (lastSpeaker.speech_state === `interposed_question` && this.activeSpeaker) {
+                canReaddLast = true;
+            }
         } else {
             canReaddLast = false;
         }
@@ -563,8 +572,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
         // convert begin time to date and sort
         this.finishedSpeakers.sort((a: ViewSpeaker, b: ViewSpeaker) => {
-            const aTime = new Date(a.begin_time).getTime();
-            const bTime = new Date(b.begin_time).getTime();
+            const aTime = new Date(a.end_time).getTime();
+            const bTime = new Date(b.end_time).getTime();
+            if (aTime === bTime) {
+                return a.weight - b.weight;
+            }
             return aTime - bTime;
         });
 

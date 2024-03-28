@@ -90,6 +90,7 @@ export class Settings {
     public list_of_speakers_show_amount_of_speakers_on_slide!: boolean;
     public list_of_speakers_present_users_only!: boolean;
     public list_of_speakers_show_first_contribution!: boolean;
+    public list_of_speakers_hide_contribution_count!: boolean;
     public list_of_speakers_enable_point_of_order_categories!: boolean;
     public list_of_speakers_enable_point_of_order_speakers!: boolean;
     public list_of_speakers_initially_closed!: boolean;
@@ -179,17 +180,17 @@ export class Settings {
     public assignment_poll_default_backend!: PollBackendDurationType;
 
     //topic poll
-    topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
+    public topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
 
     //default poll
-    poll_ballot_paper_selection: BallotPaperSelection;
-    poll_ballot_paper_number: number;
-    poll_sort_poll_result_by_votes: boolean;
-    poll_default_type: PollType;
-    poll_default_method: PollMethod;
-    poll_default_onehundred_percent_base: PollPercentBase;
-    poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
-    poll_default_backend: PollBackendDurationType;
+    public poll_ballot_paper_selection: BallotPaperSelection;
+    public poll_ballot_paper_number: number;
+    public poll_sort_poll_result_by_votes: boolean;
+    public poll_default_type: PollType;
+    public poll_default_method: PollMethod;
+    public poll_default_onehundred_percent_base: PollPercentBase;
+    public poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
+    public poll_default_backend: PollBackendDurationType;
 
     //SSO
     public external_id!: string;
@@ -338,11 +339,12 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_show_amount_of_speakers_on_slide`,
         `list_of_speakers_present_users_only`,
         `list_of_speakers_show_first_contribution`,
-        `list_of_speakers_enable_point_of_order_speakers`,
-        `list_of_speakers_enable_point_of_order_categories`,
-        `list_of_speakers_can_create_point_of_order_for_others`,
-        `list_of_speakers_closing_disables_point_of_order`,
+        `list_of_speakers_hide_contribution_count`,
         `list_of_speakers_allow_multiple_speakers`,
+        `list_of_speakers_enable_point_of_order_speakers`,
+        `list_of_speakers_can_create_point_of_order_for_others`,
+        `list_of_speakers_enable_point_of_order_categories`,
+        `list_of_speakers_closing_disables_point_of_order`,
         `list_of_speakers_enable_pro_contra_speech`,
         `list_of_speakers_can_set_contribution_self`,
         `list_of_speakers_speaker_note_for_everyone`,

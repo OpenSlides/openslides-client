@@ -8,7 +8,7 @@ export class MeetingHomeEditPage {
     public readonly saveButton: Locator;
     public readonly closeButton: Locator;
 
-    constructor(page: Page) {
+    public constructor(page: Page) {
         this.page = page;
         this.frontPageTitleInput = page.locator(`[formcontrolname=welcome_title]`);
         this.welcomeTextEditor = page.locator(`.editor-content .tiptap`);

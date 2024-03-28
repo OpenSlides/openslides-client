@@ -6,7 +6,7 @@ import { CollectionMapperService } from 'src/app/site/services/collection-mapper
 
 import { BaseSlideComponent } from '../../../../../base/base-slide-component';
 import { modifyAgendaItemNumber } from '../../../../../definitions';
-import { CommonListOfSpeakersSlideData } from '../common-list-of-speakers-slide-data';
+import { CommonListOfSpeakersSlideData, SlideSpeaker } from '../common-list-of-speakers-slide-data';
 
 @Component({
     selector: `os-common-list-of-speakers-slide`,
@@ -26,6 +26,17 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
         }
     }
 
+    public get interposedQuestions(): SlideSpeaker[] {
+        return this._interposedQuestions;
+    }
+
+    public get otherWaitingSpeakers(): SlideSpeaker[] {
+        return this._otherWaitingSpeakers;
+    }
+
+    private _interposedQuestions: SlideSpeaker[] = [];
+    private _otherWaitingSpeakers: SlideSpeaker[] = [];
+
     public constructor(private collectionMapperService: CollectionMapperService) {
         super();
     }
@@ -36,6 +47,12 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
             modifyAgendaItemNumber(value.data.title_information);
         }
         super.setData(value);
+        this._interposedQuestions = (this.data.data.waiting ?? []).filter(
+            speaker => speaker.speech_state === SpeechState.INTERPOSED_QUESTION
+        );
+        this._otherWaitingSpeakers = (this.data.data.waiting ?? []).filter(
+            speaker => speaker.speech_state !== SpeechState.INTERPOSED_QUESTION
+        );
 
         if (hasData && this.data.data.title_information) {
             const repo = this.collectionMapperService.getRepository(this.data.data.title_information.collection);

@@ -30,6 +30,12 @@
     @include mat.all-component-colors($openslides-dark-theme);
     @include os-component-themes($openslides-dark-theme);
     @include os-var-overwrites();
+
+    mat-form-field:focus-within {
+        mat-label{
+            color: white;
+        }
+    }
 }
 
 .mat-calendar-body-cell {

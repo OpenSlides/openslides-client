@@ -7,7 +7,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, merge, mergeMap, Subscription, tap } from 'rxjs';
@@ -42,8 +42,12 @@ export class SpeakingTimesComponent implements OnDestroy {
     @ViewChild(`totalTimeDialog`, { static: true })
     private totalTimeDialog: TemplateRef<string> | null = null;
 
+    @ViewChild(`addRemoveTimeDialog`, { static: true })
+    private addRemoveTimeDialog: TemplateRef<string> | null = null;
+
     private dialogRef: MatDialogRef<any> | null = null;
     public totalTimeForm: UntypedFormGroup;
+    public addTimeControl: UntypedFormControl;
     public currentEntry: any = null;
     public structureLevels: Map<Id, any> = new Map();
 
@@ -85,7 +89,7 @@ export class SpeakingTimesComponent implements OnDestroy {
         }
     }
 
-    constructor(
+    public constructor(
         private durationService: DurationService,
         private speakingTimesRepo: StructureLevelListOfSpeakersRepositoryService,
         private speakerRepo: SpeakerRepositoryService,
@@ -100,9 +104,10 @@ export class SpeakingTimesComponent implements OnDestroy {
         this.totalTimeForm = this.formBuilder.group({
             totalTime: [0, [Validators.required, Validators.pattern(/^\d+:\d{2}$/)]]
         });
+        this.addTimeControl = this.formBuilder.control([0, [Validators.required, Validators.pattern(/^\d+:\d{2}$/)]]);
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         for (const speakingTimeId of this.subscriptions.keys()) {
             this.subscriptions.get(speakingTimeId).unsubscribe();
         }
@@ -124,14 +129,82 @@ export class SpeakingTimesComponent implements OnDestroy {
         });
     }
 
-    public async distributOverhangTime(speakingTimeId: number): Promise<void> {
+    public structureLevelIsSpeaking(speakingTimeId: number): boolean {
+        const sllos = this.speakingTimesRepo.getViewModel(speakingTimeId);
+        return !!sllos.current_start_time;
+    }
+
+    public async resetTimer(speakingTimeId: number): Promise<void> {
+        let sllos = this.speakingTimesRepo.getViewModel(speakingTimeId);
+        if (sllos.initial_time === undefined) {
+            throw new Error(`Can't reset timer: Initial time not loaded.`);
+        }
+        const title = this.translateService.instant(`Reset timer`);
+        const content =
+            this.translateService.instant(
+                `Are you sure you want to reset the time to the last set value? It will be reset to:`
+            ) +
+            ` ` +
+            this.duration(sllos.initial_time);
+        if (await this.promptService.open(title, content)) {
+            sllos = this.speakingTimesRepo.getViewModel(speakingTimeId);
+            let initialTime = sllos.initial_time;
+            if (initialTime !== undefined) {
+                if (sllos.current_start_time) {
+                    initialTime = initialTime + Math.floor(Date.now() / 1000 - sllos.current_start_time);
+                }
+                this.speakingTimesRepo.update([{ id: speakingTimeId, remaining_time: initialTime }]);
+            }
+        }
+    }
+
+    public addRemoveTime(speakingTimeId: number): void {
+        this.currentEntry = this.structureLevels.get(speakingTimeId);
+        this.addTimeControl.setValue(this.duration(0));
+        const dialogSettings = infoDialogSettings;
+        this.dialogRef = this.dialog.open(this.addRemoveTimeDialog!, dialogSettings);
+    }
+
+    public doAddOrRemoveTime(add: boolean): void {
+        if (!this.addTimeControl.value || !this.addTimeControl.valid) {
+            return;
+        }
+        const sllos = this.speakingTimesRepo.getViewModel(this.currentEntry.id);
+        this.speakingTimesRepo.update([
+            {
+                id: this.currentEntry.id,
+                remaining_time:
+                    sllos.remaining_time +
+                    this.durationService.stringToDuration(this.addTimeControl.value, `m`, true) * (+add || -1)
+            }
+        ]);
+    }
+
+    public removeTime(): void {
+        if (!this.addTimeControl.value || !this.addTimeControl.valid) {
+            return;
+        }
+        const sllos = this.speakingTimesRepo.getViewModel(this.currentEntry.id);
+        this.speakingTimesRepo.update([
+            {
+                id: this.currentEntry.id,
+                initial_time:
+                    sllos.remaining_time - this.durationService.stringToDuration(this.addTimeControl.value, `m`, true)
+            }
+        ]);
+    }
+
+    public async distributeOverhangTime(speakingTimeId: number): Promise<void> {
         const entry = this.structureLevels.get(speakingTimeId);
         const countdownTime = entry.countdown.countdown_time;
         if (countdownTime < 0) {
             const title = this.translateService.instant(`Distribute overhang time`);
-            const content = this.translateService.instant(
-                `Are you sure you want to add ${Math.abs(countdownTime)}s onto every structure level?`
-            );
+            const content =
+                this.translateService.instant(
+                    `Are you sure you want to add the following time onto every structure level?`
+                ) +
+                ` ` +
+                this.duration(Math.abs(countdownTime));
             if (await this.promptService.open(title, content)) {
                 this.speakingTimesRepo.add_time([{ id: speakingTimeId }]);
             }

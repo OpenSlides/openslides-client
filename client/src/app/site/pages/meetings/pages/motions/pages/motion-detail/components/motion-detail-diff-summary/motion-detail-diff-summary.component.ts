@@ -4,6 +4,7 @@ import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/mod
 
 import { getRecommendationTypeName } from '../../../../definitions/recommendation-type-names';
 import { ViewUnifiedChangeType } from '../../../../modules/change-recommendations/definitions/index';
+import { ViewMotion } from '../../../../view-models';
 import { ViewMotionAmendedParagraph } from '../../../../view-models/view-motion-amended-paragraph';
 
 /**
@@ -30,6 +31,9 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
      * Get the {@link getRecommendationTypeName}-Function from Utils
      */
     public getRecommendationTypeName = getRecommendationTypeName;
+
+    @Input()
+    public motion: ViewMotion;
 
     @Input()
     public changes: ViewUnifiedChange[] = [];
