@@ -90,6 +90,7 @@ export class Settings {
     public list_of_speakers_show_amount_of_speakers_on_slide!: boolean;
     public list_of_speakers_present_users_only!: boolean;
     public list_of_speakers_show_first_contribution!: boolean;
+    public list_of_speakers_hide_contribution_count!: boolean;
     public list_of_speakers_enable_point_of_order_categories!: boolean;
     public list_of_speakers_enable_point_of_order_speakers!: boolean;
     public list_of_speakers_initially_closed!: boolean;
@@ -338,11 +339,12 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_show_amount_of_speakers_on_slide`,
         `list_of_speakers_present_users_only`,
         `list_of_speakers_show_first_contribution`,
-        `list_of_speakers_enable_point_of_order_speakers`,
-        `list_of_speakers_enable_point_of_order_categories`,
-        `list_of_speakers_can_create_point_of_order_for_others`,
-        `list_of_speakers_closing_disables_point_of_order`,
+        `list_of_speakers_hide_contribution_count`,
         `list_of_speakers_allow_multiple_speakers`,
+        `list_of_speakers_enable_point_of_order_speakers`,
+        `list_of_speakers_can_create_point_of_order_for_others`,
+        `list_of_speakers_enable_point_of_order_categories`,
+        `list_of_speakers_closing_disables_point_of_order`,
         `list_of_speakers_enable_pro_contra_speech`,
         `list_of_speakers_can_set_contribution_self`,
         `list_of_speakers_speaker_note_for_everyone`,

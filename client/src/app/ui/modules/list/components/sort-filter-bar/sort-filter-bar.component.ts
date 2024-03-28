@@ -4,6 +4,8 @@ import {
     EventEmitter,
     HostListener,
     Input,
+    OnDestroy,
+    OnInit,
     Output,
     ViewChild,
     ViewEncapsulation
@@ -11,6 +13,7 @@ import {
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDrawer } from '@angular/material/sidenav';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { OsFilterIndicator } from 'src/app/site/base/base-filter.service';
 import { OsSortingOption } from 'src/app/site/base/base-sort.service';
@@ -43,7 +46,7 @@ import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SortFilterBarComponent<V extends Identifiable> {
+export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy, OnInit {
     @ViewChild(`searchField`, { static: true })
     private readonly _searchFieldComponent!: RoundedInputComponent | undefined;
 
@@ -164,15 +167,34 @@ export class SortFilterBarComponent<V extends Identifiable> {
         this._sortOption = option;
     }
 
+    public searchEdit = false;
+
     private _sortOption: OsSortingOption<V>;
 
     private _searchField = ``;
+
+    private mobileSubscription: Subscription | null;
 
     public constructor(
         protected translate: TranslateService,
         public vp: ViewPortService,
         private bottomSheet: MatBottomSheet
     ) {}
+
+    public ngOnInit(): void {
+        this.mobileSubscription = this.vp.isMobileSubject.subscribe(v => {
+            if (v) {
+                this.searchEdit = false;
+            }
+        });
+    }
+
+    public ngOnDestroy(): void {
+        if (this.mobileSubscription) {
+            this.mobileSubscription.unsubscribe();
+            this.mobileSubscription = null;
+        }
+    }
 
     /**
      * on Click, remove Filter
@@ -242,6 +264,14 @@ export class SortFilterBarComponent<V extends Identifiable> {
         }
         const itemProperty = option.property as string;
         return itemProperty.charAt(0).toUpperCase() + itemProperty.slice(1);
+    }
+
+    public get showSearchIconOnly(): boolean {
+        return this.vp.isMobile && !this.searchEdit && !this.searchFieldInput;
+    }
+
+    public toggleSearchEdit(): void {
+        this.searchEdit = !this.searchEdit;
     }
 
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {

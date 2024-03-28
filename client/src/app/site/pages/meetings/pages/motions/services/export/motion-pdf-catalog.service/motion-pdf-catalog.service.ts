@@ -48,6 +48,7 @@ export class MotionPdfCatalogService {
         const hasContinuousText = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.ContinuousText);
         // Do not enforce page breaks when continuous text is selected.
         const enforcePageBreaks = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.AddBreaks) && !hasContinuousText;
+        const onlyChangedLines = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.OnlyChangedLines);
 
         for (let motionIndex = 0; motionIndex < motions.length; ++motionIndex) {
             let continuousText = hasContinuousText;
@@ -59,7 +60,8 @@ export class MotionPdfCatalogService {
                 const motionDocDef: any = this.motionPdfService.motionToDocDef({
                     motion: motions[motionIndex],
                     exportInfo: exportInfo,
-                    continuousText: continuousText
+                    continuousText: continuousText,
+                    onlyChangedLines
                 });
 
                 // add id field to the first page of a motion to make it findable over TOC

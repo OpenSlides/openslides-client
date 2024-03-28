@@ -10,7 +10,7 @@
                 <input formControlName="entry" matInput />
                 <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
             </mat-form-field>
-            <mat-icon>arrow_forward</mat-icon>
+            <mat-icon [class.grey-out]="disabled">arrow_forward</mat-icon>
             <mat-form-field>
                 <mat-label>{{ allocationLabel | translate }}</mat-label>
                 <input *ngIf="config && isNumberAllocation" formControlName="allocation" type="number" matInput />
@@ -23,6 +23,7 @@
                 (click)="onRemoveAllocation(i)"
                 matTooltip="{{ 'Cancel' | translate }}"
                 matTooltipPosition="left"
+                [disabled]="disabled"
             >
                 <mat-icon>close</mat-icon>
             </button>
@@ -31,7 +32,7 @@
 </form>
 
 <!-- Add new allocation button -->
-<button mat-button (click)="addNewAllocation()">
+<button mat-button (click)="addNewAllocation()" [disabled]="disabled">
     <mat-icon>add</mat-icon>
     {{ addButtonLabel | translate }}
 </button>
