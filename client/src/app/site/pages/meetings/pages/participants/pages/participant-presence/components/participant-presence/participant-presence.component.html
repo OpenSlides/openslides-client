@@ -14,10 +14,7 @@
             <input osAutofocus matInput formControlName="number" (keyup)="onKeyUp($event)" />
         </mat-form-field>
         <button mat-button (click)="changePresence()">{{ 'Change presence' | translate }}</button>
-        <mat-card
-            *ngIf="lastChangedUser"
-            [ngClass]="lastChangedUserPresent ? 'success' : 'warning'"
-        >
+        <mat-card *ngIf="lastChangedUser" [ngClass]="lastChangedUserPresent ? 'success' : 'warning'">
             <mat-card-content>
                 <span>{{ lastChangedUser.full_name }}&nbsp;</span>
                 <span>{{ 'is now' | translate }}</span>
