@@ -89,7 +89,7 @@
     </span>
     <br />
     <div>
-        <span id="code" class="foreground-warn" *ngFor="let entry of possibleFields; let last = last">
+        <span class="code foreground-warn" *ngFor="let entry of possibleFields; let last = last">
             {{ entry }}
             <span *ngIf="!last">,&nbsp;</span>
         </span>
