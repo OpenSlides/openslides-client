@@ -119,7 +119,7 @@
     </mat-card>
 
     <!-- Meetings -->
-    <div class="meeting-list">
+    <div>
         <mat-card appearance="outlined" class="os-card" *ngIf="!getMeetingsSorted(committee).length">
             <mat-card-content>
                 {{ 'No meetings available' | translate }}
@@ -127,7 +127,7 @@
         </mat-card>
         <os-committee-meeting-preview
             *ngFor="let meeting of getMeetingsSorted(committee)"
-            class="meeting-preview-card"
+            id="meeting-preview-card"
             [meeting]="meeting"
             [committee]="committee"
         ></os-committee-meeting-preview>

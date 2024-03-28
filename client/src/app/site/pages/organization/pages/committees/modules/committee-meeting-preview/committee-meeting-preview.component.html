@@ -1,4 +1,4 @@
-<mat-card appearance="outlined" class="meeting-prev">
+<mat-card appearance="outlined"  class="os-card">
     <mat-card-header
         [ngClass]="{ 'background-accent': meeting.isActive, 'background-dark-brighter': meeting.isArchived }"
     >
@@ -6,7 +6,7 @@
             {{ title }}
         </mat-card-title>
 
-        <span class="align-right align-center">
+        <span class="align-right">
             <mat-label class="archived-label" *ngIf="meeting.isArchived">{{ 'Archived' | translate }}</mat-label>
             <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id; nonAdminCheck: true">
                 <div *ngIf="isTemplateMeeting" class="template-indicator">
@@ -19,9 +19,9 @@
             </ng-container>
         </span>
     </mat-card-header>
-    <mat-card-content class="prev-content">
+    <mat-card-content id="prev-content">
         <!-- date location -->
-        <div class="date-loc">
+        <div>
             <!-- location -->
             <span>
                 {{ location }}
@@ -44,7 +44,7 @@
             </os-chip>
         </div>
     </mat-card-content>
-    <mat-card-actions class="prev-content">
+    <mat-card-actions id="prev-content">
         <a *ngIf="canEnter" mat-stroked-button color="accent" [routerLink]="meeting.getUrl()">
             {{ 'Open meeting' | translate }}
         </a>
@@ -60,7 +60,7 @@
 
     <mat-card-content>
         <!-- users -->
-        <div class="user-footer">
+        <div id="user-footer">
             <ng-container
                 *osOmlPerms="OML.can_manage_users; then canManageUsersTemplate; else canNotManageUsersTemplate"
             ></ng-container>

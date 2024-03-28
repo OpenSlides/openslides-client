@@ -1,24 +1,18 @@
-.meeting-prev {
-    margin: 0 auto;
-    padding: 0;
-    max-width: 800px;
-    position: relative;
-
-    .user-footer {
-        position: absolute;
-        right: 0.5em;
-        bottom: 0;
-    }
-
-    .smaller-badge-text {
-        .mat-badge-content {
-            font-size: 9px;
-        }
+.smaller-badge-text {
+    .mat-badge-content {
+        font-size: 9px;
     }
 }
 
-.prev-content {
+#user-footer {
+    position: absolute;
+    right: 0.5em;
+    bottom: 0;
+}
+
+#prev-content {
     padding: 0 20px;
+    margin-top: 14px;
 }
 
 .archived-label {
