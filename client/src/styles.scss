@@ -10,10 +10,10 @@
 //    `@include mat.legacy-typography-hierarchy(mat.define-typography-config());`
 /* TODO(mdc-migration): Remove all-legacy-component-typographies once all legacy components are migrated */
 @include mat.all-legacy-component-typographies(
-    mat.define-typography-config($font-family: "OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif")
+    mat.define-legacy-typography-config($font-family: "OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif")
 );
 @include mat.all-component-typographies(
-    mat.define-typography-config($font-family: "OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif")
+    mat.define-legacy-typography-config($font-family: "OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif")
 );
 /* TODO(mdc-migration): Remove legacy-core once all legacy components are migrated */
 @include mat.legacy-core();
