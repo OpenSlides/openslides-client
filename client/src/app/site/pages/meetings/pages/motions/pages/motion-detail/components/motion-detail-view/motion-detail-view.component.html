@@ -29,7 +29,8 @@
                     mat-button
                     (click)="navigateToMotion(previousMotion)"
                     [disabled]="!previousMotion"
-                    class="motion-detail-nav-button"
+                    class="nav-button-overflow"
+                    [ngClass]="{ 'motion-detail-nav-button': (vp.isMobileSubject | async) === false }"
                 >
                     <os-icon-container icon="chevron_left" [hide]="vp.isMobileSubject | async">
                         {{ previousMotion ? previousMotion.number : '' }}
@@ -39,7 +40,8 @@
                     mat-button
                     (click)="navigateToMotion(nextMotion)"
                     [disabled]="!nextMotion"
-                    class="motion-detail-nav-button"
+                    class="nav-button-overflow"
+                    [ngClass]="{ 'motion-detail-nav-button': (vp.isMobileSubject | async) === false }"
                 >
                     <os-icon-container icon="chevron_right" [swap]="true" [hide]="vp.isMobileSubject | async">
                         {{ nextMotion ? nextMotion.number : '' }}
