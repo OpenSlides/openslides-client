@@ -26,6 +26,14 @@
     }
 }
 
+mat-card mat-card-content h2 {
+    margin-top: 0 !important;
+}
+
+os-user-detail-view h2 {
+    margin-top: 0 !important;
+}
+
 .force-min-width {
     min-width: 110px;
 }
