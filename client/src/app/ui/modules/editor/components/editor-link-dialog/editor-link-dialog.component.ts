@@ -14,7 +14,8 @@ export interface EditorLinkDialogOutput {
 
 @Component({
     selector: `os-editor-link-dialog`,
-    templateUrl: `./editor-link-dialog.component.html`
+    templateUrl: `./editor-link-dialog.component.html`,
+    styleUrls: [`editor-link-dialog.component.scss`]
 })
 export class EditorLinkDialogComponent {
     public isUpdate: boolean;
@@ -28,7 +29,7 @@ export class EditorLinkDialogComponent {
         private dialogRef: MatDialogRef<EditorLinkDialogComponent>
     ) {
         this.link = data.link;
-        this.isUpdate = !!data.link;
+        this.isUpdate = !!data.link && !!data.link.href;
         if (!this.link.target) {
             this.link.target = `_self`;
         }

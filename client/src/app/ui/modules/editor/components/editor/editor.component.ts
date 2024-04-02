@@ -266,6 +266,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     public async setLinkDialog(): Promise<void> {
         this.dialog
             .open(EditorLinkDialogComponent, {
+                width: `400px`,
                 data: {
                     link: this.editor.getAttributes(`link`),
                     needsText: this.editor.state.selection.empty && !this.editor.isActive(`link`)
@@ -273,6 +274,10 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             })
             .afterClosed()
             .subscribe((result: EditorLinkDialogOutput) => {
+                if (!result) {
+                    return;
+                }
+
                 const chain = this.editor.chain().focus().extendMarkRange(`link`);
                 if (result.action === `remove-link`) {
                     chain.unsetLink().run();
@@ -304,6 +309,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     public async setImageDialog(): Promise<void> {
         this.dialog
             .open(EditorImageDialogComponent, {
+                width: `400px`,
                 data: {
                     image: {
                         src: this.editor.getAttributes(`image`)[`src`],
@@ -327,6 +333,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     public async setEmbedDialog(): Promise<void> {
         this.dialog
             .open(EditorEmbedDialogComponent, {
+                width: `400px`,
                 data: {
                     embed: {
                         src: this.editor.getAttributes(`iframe`)[`src`],

@@ -21,7 +21,7 @@ export class EditorHtmlDialogComponent {
     }
 
     // https://stackoverflow.com/a/60338028
-    public formatHtml(html: string) {
+    public formatHtml(html: string): string {
         const tab = `\t`;
         let result = ``;
         let indent = ``;
@@ -41,11 +41,11 @@ export class EditorHtmlDialogComponent {
         return result.substring(1, result.length - 3);
     }
 
-    public cancel() {
+    public cancel(): void {
         this.dialogRef.close({ action: `cancel` });
     }
 
-    public save() {
+    public save(): void {
         this.dialogRef.close({ action: `set`, html: this.data });
     }
 }

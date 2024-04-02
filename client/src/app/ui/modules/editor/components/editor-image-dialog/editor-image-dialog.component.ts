@@ -18,7 +18,8 @@ export interface EditorImageDialogOutput {
 
 @Component({
     selector: `os-editor-image-dialog`,
-    templateUrl: `./editor-image-dialog.component.html`
+    templateUrl: `./editor-image-dialog.component.html`,
+    styleUrls: [`editor-image-dialog.component.scss`]
 })
 export class EditorImageDialogComponent {
     public image: EditorImageData;
@@ -30,11 +31,11 @@ export class EditorImageDialogComponent {
         this.image = data.image;
     }
 
-    public cancel() {
+    public cancel(): void {
         this.dialogRef.close({ action: `cancel` });
     }
 
-    public save() {
+    public save(): void {
         this.dialogRef.close({ action: `set-image`, image: this.image });
     }
 }

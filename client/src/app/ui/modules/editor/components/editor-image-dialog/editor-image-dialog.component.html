@@ -22,6 +22,6 @@
     </div>
 </div>
 <div mat-dialog-actions>
+    <button mat-button color="accent" [disabled]="!image.src" (click)="save()" translate>Ok</button>
     <button mat-button (click)="cancel()" translate>Cancel</button>
-    <button mat-button [disabled]="!image.src" (click)="save()" translate>Ok</button>
 </div>

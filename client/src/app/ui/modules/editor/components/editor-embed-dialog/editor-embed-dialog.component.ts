@@ -17,7 +17,8 @@ export interface EditorEmbedDialogOutput {
 
 @Component({
     selector: `os-editor-image-dialog`,
-    templateUrl: `./editor-embed-dialog.component.html`
+    templateUrl: `./editor-embed-dialog.component.html`,
+    styleUrls: [`editor-embed-dialog.component.scss`]
 })
 export class EditorEmbedDialogComponent {
     public embed: EditorEmbedData;
@@ -29,11 +30,11 @@ export class EditorEmbedDialogComponent {
         this.embed = data.embed;
     }
 
-    public cancel() {
+    public cancel(): void {
         this.dialogRef.close({ action: `cancel` });
     }
 
-    public save() {
+    public save(): void {
         this.dialogRef.close({ action: `set-embed`, embed: this.embed });
     }
 }

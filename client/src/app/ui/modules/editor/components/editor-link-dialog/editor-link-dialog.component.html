@@ -25,7 +25,7 @@
     </div>
 </div>
 <div mat-dialog-actions>
-    <button *ngIf="isUpdate" mat-button (click)="removeLink()" translate>Remove link</button>
+    <button mat-button color="accent" [disabled]="!link.href" (click)="save()" translate>Ok</button>
+    <button *ngIf="isUpdate" mat-button color="warn" (click)="removeLink()" translate>Remove link</button>
     <button mat-button (click)="cancel()" translate>Cancel</button>
-    <button mat-button [disabled]="!link.href" (click)="save()" translate>Ok</button>
 </div>
