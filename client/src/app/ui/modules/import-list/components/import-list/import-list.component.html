@@ -124,8 +124,8 @@
         }}
     </span>
     <br />
-    <div class="foreground-warn">
-        <span class="code" *ngFor="let entry of possibleFields; let last = last">
+    <div class="code possible-fields-list foreground-warn">
+        <span *ngFor="let entry of possibleFields; let last = last">
             {{ entry | translate }}
             <span *ngIf="!last">,&nbsp;</span>
         </span>

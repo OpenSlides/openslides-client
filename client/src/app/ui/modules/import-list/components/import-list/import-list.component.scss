@@ -4,8 +4,10 @@
     --os-row-height: 50px;
 }
 
-.code {
-    display: inline-flex;
+.possible-fields-list {
+    span {
+        display: inline-flex;
+    }
 }
 
 pbl-ngrid-header-cell,
