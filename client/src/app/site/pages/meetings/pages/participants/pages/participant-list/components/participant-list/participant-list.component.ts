@@ -5,6 +5,7 @@ import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { UserStateField } from 'src/app/gateways/repositories/users';
@@ -15,6 +16,9 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { UserService } from 'src/app/site/services/user.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -130,11 +134,14 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         protected override translate: TranslateService,
         public repo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
+        private userRepo: UserControllerService,
+        private userService: UserService,
         private structureLevelRepo: StructureLevelControllerService,
         private choiceService: ChoiceService,
         public operator: OperatorService,
         public filterService: ParticipantListFilterService,
         public sortService: ParticipantListSortService,
+        public viewport: ViewPortService,
         private csvExport: ParticipantCsvExportService,
         private pdfExport: ParticipantPdfExportService,
         private infoDialog: ParticipantListInfoDialogService,
@@ -186,6 +193,16 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         this.router.navigate([`new`], { relativeTo: this.route });
     }
 
+    public canChangePassword(user: ViewUser): boolean {
+        const userOML = user?.organization_management_level;
+        const sufficientOML = userOML ? this.operator.hasOrganizationPermissions(userOML as OML) : true;
+        return (
+            !user?.saml_id &&
+            this.userService.isAllowed(`changePassword`, user.id === this.operator.user.id) &&
+            sufficientOML
+        );
+    }
+
     public isUserPresent(user: ViewUser): boolean {
         return user.isPresentInMeeting();
     }
@@ -207,11 +224,11 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      *
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
-    public async openEditInfo(user: ViewUser, ev: MouseEvent): Promise<void> {
+    public async openEditInfo(user: ViewUser, ev?: MouseEvent): Promise<void> {
         if (this.isMultiSelect || !this.operator.hasPerms(Permission.userCanUpdate)) {
             return;
         }
-        ev.stopPropagation();
+        ev?.stopPropagation();
         const dialogRef = await this.infoDialog.open({
             id: user.id,
             name: user.username,
@@ -361,24 +378,27 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         }
     }
 
-    public async switchParticipants(): Promise<void> {
-        const leftUser = this.selectedRows[0];
-        const rightUser = this.selectedRows[1];
+    public async switchParticipants(user: ViewUser): Promise<void> {
+        const leftUser = user;
         const dialogRef = this.dialog.open(ParticipantSwitchDialogComponent, {
             ...mediumDialogSettings,
-            data: { leftUser, rightUser }
+            data: { leftUser }
         });
         const response = await firstValueFrom(dialogRef.afterClosed());
         if (response) {
             try {
                 await this.repo
-                    .update(user => {
-                        const other = user.id === leftUser.id ? rightUser : leftUser;
-                        return {
-                            group_ids: other.group_ids(),
-                            number: other.number()
-                        };
-                    }, ...this.selectedRows)
+                    .update(
+                        user => {
+                            const other = user.id === leftUser.id ? response.rightUser : leftUser;
+                            return {
+                                group_ids: other.group_ids(),
+                                number: other.number()
+                            };
+                        },
+                        leftUser,
+                        <ViewUser>response.rightUser
+                    )
                     .resolve(false);
                 this.matSnackBar.open(
                     this.translate.instant(`Mandates switched sucessfully!`),
@@ -415,6 +435,23 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         if (isAllowed) {
             this.repo.setPresent(!this.isUserPresent(viewUser), viewUser).resolve();
         }
+    }
+
+    public async sendInvitationEmail(viewUser: ViewUser): Promise<void> {
+        const title = this.translate.instant(`Are you sure you want to send an invitation email?`);
+        const content = viewUser.full_name;
+        if (await this.prompt.open(title, content)) {
+            this.userRepo
+                .sendInvitationEmails([viewUser], this.activeMeetingIdService.meetingId)
+                .then(this.raiseError, this.raiseError);
+        }
+    }
+
+    /**
+     * Deletes user.
+     */
+    public async removeUserFromMeeting(user: ViewUser): Promise<void> {
+        await this.repo.removeUsersFromMeeting([user]);
     }
 
     /**

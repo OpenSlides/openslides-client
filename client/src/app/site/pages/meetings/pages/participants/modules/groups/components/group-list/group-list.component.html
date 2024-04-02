@@ -85,7 +85,7 @@
         <span *ngIf="!groupForm.value.name">{{ 'New group' | translate }}</span>
         <span *ngIf="groupForm.value.name">{{ 'Edit group' | translate }}</span>
     </h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form class="edit-form" [formGroup]="groupForm!" (keydown)="keyDownFunction($event)">
             <mat-form-field>
                 <mat-label>{{ 'Group name' | translate }}</mat-label>
@@ -100,8 +100,8 @@
                 <input type="text" matInput formControlName="external_id" />
             </mat-form-field>
         </form>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button
             type="submit"
             mat-button
@@ -124,5 +124,5 @@
         >
             <span>{{ 'Delete' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

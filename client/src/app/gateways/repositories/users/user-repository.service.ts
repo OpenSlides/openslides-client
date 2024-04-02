@@ -35,7 +35,7 @@ export interface AssignMeetingsPayload {
 }
 
 export interface NameInformation {
-    username: string;
+    id: Id;
     first_name?: string;
     last_name?: string;
 }
@@ -271,8 +271,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     private getName(user: NameInformation): string {
         const firstName = user.first_name?.trim() || ``;
         const lastName = user.last_name?.trim() || ``;
-        const userName = user.username?.trim() || ``;
-        const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
+        const name =
+            firstName || lastName ? `${firstName} ${lastName}` : this.translate.instant(`User`) + ` ${user.id}`;
         return name?.trim() || ``;
     }
 
@@ -298,7 +298,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         if (structureLevel) {
             additions.push(structureLevel.getTitle());
-        } else if (structureLevel !== null && user.structureLevels()) {
+        } else if (structureLevel !== null && user.structureLevels?.()) {
             additions.push(user.structureLevels());
         }
 

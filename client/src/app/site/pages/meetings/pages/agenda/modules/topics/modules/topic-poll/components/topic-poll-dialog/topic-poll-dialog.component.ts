@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';

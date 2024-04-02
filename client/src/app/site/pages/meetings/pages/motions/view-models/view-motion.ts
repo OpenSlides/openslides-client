@@ -152,6 +152,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.speakerAmount > 0;
     }
 
+    public get hasIdenticalMotions(): boolean {
+        return !!this.identical_motion_ids?.length;
+    }
+
     public get showPreamble(): boolean {
         return !this.state?.isFinalState ?? true;
     }
