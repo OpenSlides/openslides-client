@@ -80,6 +80,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     public get canManage(): boolean {
         return this.operator.hasPerms(Permission.userCanManage);
     }
+
     public get canUpdate(): boolean {
         return this.operator.hasPerms(Permission.userCanUpdate);
     }
