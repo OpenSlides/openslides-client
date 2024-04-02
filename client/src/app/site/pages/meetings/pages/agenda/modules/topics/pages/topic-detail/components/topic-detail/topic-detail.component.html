@@ -35,8 +35,7 @@
     </os-head-bar>
     <mat-card
         *ngIf="(topic || editTopic) && (hasLoaded | async)"
-        class="spacer-bottom-60"
-        [ngClass]="editTopic ? 'os-form-card' : 'os-card'"
+        class="spacer-bottom-60 os-card"
     >
         <mat-card-content>
             <ng-container *ngIf="!editTopic && topic">
