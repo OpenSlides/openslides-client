@@ -261,12 +261,12 @@ export class MotionPdfCatalogService {
         } else {
             state = this.motionService.getExtendedRecommendationLabel(motion);
         }
-        for (let i = 0; i < motion.submitters.length; ++i) {
-            submitterList +=
-                i !== motion.submitters.length - 1
-                    ? motion.submitters[i].getTitle() + `, `
-                    : motion.submitters[i].getTitle();
+        const submitters = motion.submitters.map(s => s.getTitle());
+        if (motion.additional_submitter) {
+            submitters.push(motion.additional_submitter);
         }
+        submitterList = submitters.join(`, `);
+
         return this.pdfService.createTocLine(
             {
                 identifier: `${motion.number ? motion.number : ``}`,
