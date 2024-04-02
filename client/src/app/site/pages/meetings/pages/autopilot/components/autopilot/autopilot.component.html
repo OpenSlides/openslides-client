@@ -5,9 +5,14 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <a type="button" routerLink="edit" mat-icon-button [matTooltip]="'Customize autopilot' | translate">
+        <button
+            type="button"
+            mat-icon-button
+            [matTooltip]="'Customize autopilot' | translate"
+            (click)="customizeAutopilot()"
+        >
             <mat-icon>settings</mat-icon>
-        </a>
+        </button>
     </ng-container>
 </os-head-bar>
 <div class="content-container">

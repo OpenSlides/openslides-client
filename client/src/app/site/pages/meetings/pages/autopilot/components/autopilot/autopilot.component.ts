@@ -1,5 +1,6 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
@@ -15,6 +16,8 @@ import { ListOfSpeakersControllerService } from '../../../agenda/modules/list-of
 import { HasPolls } from '../../../polls';
 import { ViewProjection, ViewProjector } from '../../../projectors';
 import { ProjectorControllerService } from '../../../projectors/services/projector-controller.service';
+import { AutopilotService } from '../../services/autopilot.service';
+import { AutopilotSettingsComponent } from '../autopilot-settings/autopilot-settings.component';
 
 @Component({
     selector: `os-autopilot`,
@@ -106,18 +109,19 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     public constructor(
         protected override translate: TranslateService,
         private operator: OperatorService,
+        private autopilotService: AutopilotService,
         projectorRepo: ProjectorControllerService,
         closService: CurrentListOfSpeakersService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
-        breakpoint: BreakpointObserver
+        breakpoint: BreakpointObserver,
+        private dialog: MatDialog
     ) {
         super();
 
-        this.storage.get<{ [key: string]: boolean }>(`autopilot-disabled`).then(keys => {
-            this.disabledContentElements = keys || {};
-        });
-
         this.subscriptions.push(
+            this.autopilotService.disabledContentElements.subscribe(keys => {
+                this.disabledContentElements = keys || {};
+            }),
             projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {
                 if (refProjector) {
                     this.projector = refProjector;
@@ -155,5 +159,9 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public get hasCurrentProjection(): boolean {
         return !!this._currentProjection;
+    }
+
+    public customizeAutopilot(): void {
+        this.dialog.open(AutopilotSettingsComponent);
     }
 }

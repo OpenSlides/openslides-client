@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { first } from 'rxjs';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
+import { AutopilotService } from '../../services/autopilot.service';
 
 @Component({
     selector: `os-autopilot-settings`,
@@ -22,12 +25,16 @@ export class AutopilotSettingsComponent extends BaseMeetingComponent implements 
 
     public disabledAutopilotContentElements: { [key: string]: boolean } = {};
 
-    public constructor(private cd: ChangeDetectorRef) {
+    public constructor(
+        private dialogRef: MatDialogRef<AutopilotSettingsComponent>,
+        private cd: ChangeDetectorRef,
+        private autopilotService: AutopilotService
+    ) {
         super();
     }
 
     public ngOnInit(): void {
-        this.storage.get<{ [key: string]: boolean }>(`autopilot-disabled`).then(keys => {
+        this.autopilotService.disabledContentElements.pipe(first()).subscribe(keys => {
             this.disabledAutopilotContentElements = Object.assign(
                 this.autopilotContentElements.mapToObject(el => ({ [el.key]: false })),
                 keys
@@ -41,8 +48,10 @@ export class AutopilotSettingsComponent extends BaseMeetingComponent implements 
     }
 
     public updateDisabled(key: string, status: boolean): void {
-        this.disabledAutopilotContentElements[key] = status;
-        this.cd.markForCheck();
-        this.storage.set(`autopilot-disabled`, this.disabledAutopilotContentElements);
+        this.autopilotService.updateContentElementVisibility(key, status);
+    }
+
+    public close(): void {
+        this.dialogRef.close();
     }
 }
