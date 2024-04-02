@@ -21,7 +21,7 @@
 }
 
 .os-card {
-    max-width: 802px;
+    max-width: 770px;
     margin-top: 20px !important;
     margin-bottom: 20px !important;
     margin-left: auto !important;
@@ -29,18 +29,11 @@
     font-size: 16px;
     .mat-mdc-form-field {
         width: 100%;
-        padding: 10px 0;
     }
-}
-
-.os-card {
-    margin-bottom: 20px !important;
-    /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
     .mat-select-arrow-wrapper {
         visibility: hidden;
     }
 }
-
 
 .os-form-card-mobile {
     margin-top: 20px !important;
