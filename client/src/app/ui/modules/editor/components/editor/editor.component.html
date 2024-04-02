@@ -30,6 +30,9 @@
                 [ngClass]="{ active: editor.isActive('heading', { level }) }"
                 (click)="editor.chain().focus().toggleHeading({ level }).run()"
             >
+                <mat-icon *ngIf="editor.isActive('heading')">
+                    {{ editor.isActive('heading', { level }) ? 'done' : '' }}
+                </mat-icon>
                 {{ 'Heading' | translate }} {{ level }}
             </button>
         </mat-menu>
