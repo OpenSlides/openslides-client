@@ -184,6 +184,7 @@
                 [value]="editor.getAttributes('textStyle')['color']"
                 (change)="updateFontColor($event)"
                 type="color"
+                list="text-colors"
             />
         </button>
         <div class="button-group">
@@ -202,6 +203,7 @@
                     [value]="editor.getAttributes('highlight')['color']"
                     (change)="updateHighlightColor($event)"
                     type="color"
+                    list="background-colors"
                 />
             </button>
         </div>
@@ -247,3 +249,11 @@
 
     <div #editorEl class="editor-content"></div>
 </div>
+
+<datalist id="text-colors">
+    <option *ngFor="let color of textColorSet" [value]="color"></option>
+</datalist>
+
+<datalist id="background-colors">
+    <option *ngFor="let color of backgroundColorSet" [value]="color"></option>
+</datalist>

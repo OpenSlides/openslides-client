@@ -41,6 +41,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
+import tinycolor from 'tinycolor2';
 
 import {
     EditorEmbedDialogComponent,
@@ -56,6 +57,8 @@ import { Highlight } from './extensions/highlight';
 import IFrame from './extensions/iframe';
 import { MSOfficePaste } from './extensions/office';
 import { OrderedList } from './extensions/ordered-list';
+
+const DEFAULT_COLOR_PALETE = [`#FF0000`, `#00FF00`, `#FFFF00`, `#00FFFF`, `#0000FF`, `#FF00FF`, `#FFFFFF`, `#000000`];
 
 @Component({
     selector: `os-editor`,
@@ -82,6 +85,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     public editorReady = false;
 
     public headingLevels: HeadingLevel[] = [1, 2, 3, 4, 5, 6];
+
+    public textColorSet = new Set(DEFAULT_COLOR_PALETE);
+    public backgroundColorSet = new Set(DEFAULT_COLOR_PALETE);
 
     public get selectedHeadingLevel(): HeadingLevel {
         if (this.editor.isActive(`heading`)) {
@@ -193,6 +199,23 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         }
 
         this.editor = new Editor(editorConfig);
+
+        // Add colors used in text to color palete
+        if (this.value) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(this.value, `text/html`);
+            const elements = doc.getElementsByTagName(`*`);
+            for (let i = 0; i < elements.length; i++) {
+                const el = <HTMLElement>elements[i];
+                if (el.style.color) {
+                    this.textColorSet.add(tinycolor(el.style.color).toHexString());
+                }
+
+                if (el.style.backgroundColor) {
+                    this.backgroundColorSet.add(tinycolor(el.style.backgroundColor).toHexString());
+                }
+            }
+        }
     }
 
     public override ngOnDestroy(): void {
