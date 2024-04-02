@@ -33,10 +33,7 @@
             </button>
         </div>
     </os-head-bar>
-    <mat-card
-        *ngIf="(topic || editTopic) && (hasLoaded | async)"
-        class="spacer-bottom-60 os-card"
-    >
+    <mat-card *ngIf="(topic || editTopic) && (hasLoaded | async)" class="spacer-bottom-60 os-card">
         <mat-card-content>
             <ng-container *ngIf="!editTopic && topic">
                 <os-projectable-title [model]="topic" [getTitleFn]="getTitleFn"></os-projectable-title>
