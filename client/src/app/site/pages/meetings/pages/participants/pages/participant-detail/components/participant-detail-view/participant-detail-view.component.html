@@ -82,7 +82,7 @@
 >
     <ng-template #editView let-form="form">
         <div [formGroup]="form">
-            <h2 class="h2-mat-card">{{ 'Meeting specific information' | translate }}</h2>
+            <h2>{{ 'Meeting specific information' | translate }}</h2>
             <!-- Present? -->
             <div [formGroup]="form">
                 <mat-checkbox
@@ -187,7 +187,7 @@
     </ng-template>
 
     <ng-template #showView>
-        <h2 class="h2-mat-card">{{ 'Meeting specific information' | translate }}</h2>
+        <h2>{{ 'Meeting specific information' | translate }}</h2>
         <div *ngIf="isAllowed('seePersonal') && user?.isLastEmailSent">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>
