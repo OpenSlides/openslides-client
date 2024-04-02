@@ -34,15 +34,19 @@ export class EditorLinkDialogComponent {
         }
     }
 
-    public removeLink() {
+    public removeLink(): void {
         this.dialogRef.close({ action: `remove-link` });
     }
 
-    public cancel() {
+    public cancel(): void {
         this.dialogRef.close({ action: `cancel` });
     }
 
-    public save() {
+    public save(): void {
+        if (this.link.href && !/^[a-zA-Z]+:\/\//.test(this.link.href)) {
+            this.link.href = `http://` + this.link.href;
+        }
+
         if (this.data.needsText) {
             this.dialogRef.close({ action: `set-link`, link: this.link, text: this.text || this.link });
         } else {
