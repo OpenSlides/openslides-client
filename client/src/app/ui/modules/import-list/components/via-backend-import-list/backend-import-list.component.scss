@@ -5,7 +5,9 @@
 }
 
 .code {
-    display: inline-flex;
+    span {
+        display: inline-flex;
+    }
 }
 
 pbl-ngrid-header-cell,

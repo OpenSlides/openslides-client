@@ -1,4 +1,4 @@
-<mat-card class="os-form-card import-table spacer-bottom-60">
+<mat-card class="os-card os-bigger-card import-table spacer-bottom-60">
     <mat-card-content>
         <mat-tab-group *ngIf="hasSeveralTabs()" (selectedTabChange)="onTabChange($event)">
             <!-- Tabs before CSV import tab -->
@@ -30,7 +30,7 @@
 
 <!-- preview table -->
 <ng-container *ngIf="dataSource | async">
-    <mat-card class="os-form-card spacer-bottom-60">
+    <mat-card class="os-card os-bigger-card spacer-bottom-60">
         <mat-card-content>
             <div class="action-title">
                 <h2 class="no-margin">{{ 'Summary' | translate }}</h2>
@@ -88,8 +88,8 @@
         }}
     </span>
     <br />
-    <div>
-        <span class="code foreground-warn" *ngFor="let entry of possibleFields; let last = last">
+    <div class="code">
+        <span class="foreground-warn" *ngFor="let entry of possibleFields; let last = last">
             {{ entry }}
             <span *ngIf="!last">,&nbsp;</span>
         </span>
