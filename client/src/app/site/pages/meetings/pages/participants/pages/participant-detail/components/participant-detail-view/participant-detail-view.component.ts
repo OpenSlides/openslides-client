@@ -9,10 +9,7 @@ import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import {
-    MEETING_RELATED_FORM_CONTROLS,
-    ParticipantControllerService
-} from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -75,7 +72,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             if (this._isUserInScope || (this.newUser && canUpdateUsers)) {
                 return true;
             } else if (canUpdateUsers) {
-                return MEETING_RELATED_FORM_CONTROLS.includes(controlName);
+                return controlName !== `is_present`;
             } else {
                 return PERSONAL_FORM_CONTROLS.includes(controlName);
             }
@@ -381,10 +378,14 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 ) ||
                 (await this.promptService.open(title, content))
             ) {
-                await this.repo
-                    .update(payload, this.user!)
-                    .concat(this.repo.setPresent(isPresent, this.user!))
-                    .resolve();
+                if (this.operator.hasPerms(Permission.userCanManagePresence)) {
+                    await this.repo
+                        .update(payload, this.user!)
+                        .concat(this.repo.setPresent(isPresent, this.user!))
+                        .resolve();
+                } else {
+                    await this.repo.update(payload, this.user!).resolve();
+                }
             }
         } else {
             await this.repo.updateSelf(this.personalInfoFormValue, this.user!);
