@@ -12,12 +12,12 @@ export class AutopilotService {
 
     public constructor(private storage: StorageService) {
         this.storage.get<{ [key: string]: boolean }>(`autopilot-disabled`).then(keys => {
-            this.disabledContentElementsSubject.next(keys);
+            this.disabledContentElementsSubject.next(keys || {});
         });
     }
 
     public async updateContentElementVisibility(key: string, status: boolean): Promise<void> {
-        const disabledContentElements = this.disabledContentElementsSubject.getValue();
+        const disabledContentElements = this.disabledContentElementsSubject.getValue() || {};
         disabledContentElements[key] = status;
         this.disabledContentElementsSubject.next(disabledContentElements);
         await this.storage.set(`autopilot-disabled`, disabledContentElements);
