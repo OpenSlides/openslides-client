@@ -98,6 +98,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         }
     }
 
+    public get numDisabledElements(): number {
+        return Object.values(this.disabledContentElements).filter(v => v).length;
+    }
+
     public structureLevelCountdownEnabled = false;
 
     public disabledContentElements: { [key: string]: boolean } = {};

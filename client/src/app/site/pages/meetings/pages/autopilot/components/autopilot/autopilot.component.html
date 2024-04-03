@@ -11,7 +11,14 @@
             [matTooltip]="'Customize autopilot' | translate"
             (click)="customizeAutopilot()"
         >
-            <mat-icon>settings</mat-icon>
+            <mat-icon
+                [matBadge]="numDisabledElements"
+                [matBadgeHidden]="numDisabledElements < 1"
+                matBadgeSize="small"
+                matBadgeColor="warn"
+            >
+                settings
+            </mat-icon>
         </button>
     </ng-container>
 </os-head-bar>

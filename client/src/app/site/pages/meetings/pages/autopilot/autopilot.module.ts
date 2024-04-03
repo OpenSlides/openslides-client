@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -51,6 +52,7 @@ import { PollCollectionComponent } from './components/poll-collection/poll-colle
         MatFormFieldModule,
         MatIconModule,
         MatDialogModule,
+        MatBadgeModule,
         ListOfSpeakersContentModule,
         HeadBarModule,
         CountdownTimeModule,
