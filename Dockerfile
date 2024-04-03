@@ -9,15 +9,15 @@ RUN npm ci
 
 COPY client /app/
 
+ARG VERSION=dev
+RUN if [ -n "$VERSION" ]; then echo "$VERSION ($(date +%Y-%m-%d))" > src/assets/version.txt; fi
+
 # compile the angular project
 RUN npm run build
 
 FROM nginx:latest
 COPY --from=build /app/dist/client /usr/share/nginx/html
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
-
-ARG VERSION=dev
-RUN if [ -n "$VERSION" ]; then echo "$VERSION ($(date +%Y-%m-%d))" > /usr/share/nginx/html/assets/version.txt; fi
 
 LABEL org.opencontainers.image.title="OpenSlides Client"
 LABEL org.opencontainers.image.description="Web client for OpenSlides which serves as the users main interaction point while using the OpenSlides system. "

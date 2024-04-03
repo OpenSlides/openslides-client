@@ -95,7 +95,13 @@
             </div>
             <div>
                 <!-- Strucuture Level -->
-                <mat-form-field class="form100 force-min-width">
+                <mat-form-field
+                    class="distance"
+                    [ngClass]="{
+                        form37: showVoteWeight,
+                        form70: !showVoteWeight
+                    }"
+                >
                     <mat-label>{{ 'Structure level' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="structure_level_ids"
