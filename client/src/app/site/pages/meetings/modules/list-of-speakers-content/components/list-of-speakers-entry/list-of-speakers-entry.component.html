@@ -5,6 +5,7 @@
             <button
                 *ngIf="!speaker.isSpeaking"
                 mat-icon-button
+                [color]="speakerIndex === 0 ? 'accent' : null"
                 class="speaker-control-button"
                 matTooltip="{{ (speaker.pause_time ? 'Resume speech' : 'Begin speech') | translate }}"
                 matTooltipPosition="above"
@@ -63,7 +64,7 @@
         <div class="speech-type">
             <ng-container [ngTemplateOutlet]="speechType"></ng-container>
 
-            <span
+            <ng-container
                 *ngIf="
                     canManage &&
                     !speaker.point_of_order &&
@@ -87,7 +88,7 @@
                 >
                     {{ 'First speech' | translate }}
                 </span>
-            </span>
+            </ng-container>
         </div>
     </div>
     <div *ngIf="!speaker.isFinished" class="speaker-appendix">
