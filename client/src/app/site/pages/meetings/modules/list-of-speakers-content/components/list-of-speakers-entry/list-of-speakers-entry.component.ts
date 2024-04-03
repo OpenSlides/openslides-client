@@ -50,7 +50,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     public speakerIndex: number = null;
 
     @Input()
-    public showcolor = false;
+    public showcolor = true;
 
     @Output()
     public startSpeech = new EventEmitter<void>();
