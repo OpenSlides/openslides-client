@@ -213,7 +213,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         } else if (this._allowSelfSetPresent && this.operator.operatorId === user.id) {
             return false;
         } else {
-            return !this.operator.hasPerms(Permission.userCanUpdate, Permission.userCanManagePresence);
+            return !this.operator.hasPerms(Permission.userCanManagePresence);
         }
     }
 
@@ -430,7 +430,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      */
     public setPresent(viewUser: ViewUser): void {
         const isAllowed =
-            this.operator.hasPerms(Permission.userCanUpdate, Permission.userCanManagePresence) ||
+            this.operator.hasPerms(Permission.userCanManagePresence) ||
             (this._allowSelfSetPresent && this.operator.operatorId === viewUser.id);
         if (isAllowed) {
             this.repo.setPresent(!this.isUserPresent(viewUser), viewUser).resolve();
