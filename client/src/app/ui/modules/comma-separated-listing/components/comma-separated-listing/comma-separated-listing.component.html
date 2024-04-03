@@ -3,7 +3,7 @@
         <ng-template [ngTemplateOutlet]="templateRef" [ngTemplateOutletContext]="{ $implicit: item }"></ng-template>
     </span>
     <span *ngIf="!templateRef" [innerHtml]="item"></span>
-    <span *ngIf="!isLast && !useMidpoint">,&ensp;</span>
+    <span *ngIf="!isLast && !useMidpoint">,&#32;</span>
     <span *ngIf="!isLast && useMidpoint">&ensp;&middot;&ensp;</span>
     <span *ngIf="isLast && ellipsed">…</span>
 </span>
