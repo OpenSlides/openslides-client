@@ -101,6 +101,13 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return collectionFromFqid(this.list_of_speakers?.content_object_id);
     }
 
+    public get contentSeqNum(): string {
+        if (!this.list_of_speakers?.content_object) {
+            return null;
+        }
+        return this.list_of_speakers?.content_object.getModel().sequential_number;
+    }
+
     public get topic(): string {
         const number = this.list_of_speakers?.content_object?.agenda_item?.item_number;
         const title = this.list_of_speakers?.content_object?.getTitle();
