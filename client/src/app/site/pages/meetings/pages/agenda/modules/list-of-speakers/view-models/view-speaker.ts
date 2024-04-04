@@ -124,6 +124,10 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
             : null;
     }
 
+    public get hasSpoken(): boolean {
+        return this.speaker.end_time ? true : false;
+    }
+
     public getBeginTimeAsDate(): Date | null {
         return this.speaker.begin_time ? new Date(this.speaker.begin_time * 1000) : null;
     }
