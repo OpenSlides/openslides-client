@@ -238,7 +238,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
     }
 
     public getNavDisplay(topic: ViewTopic | null): string | number {
-        if (!!topic) {
+        if (!!topic && !this.vp.isMobile) {
             return !!topic.agenda_item?.item_number ? topic.agenda_item.item_number : ``;
         }
         return ``;
