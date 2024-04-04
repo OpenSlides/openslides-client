@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
@@ -18,6 +18,7 @@ import { OrganizationSettingsService } from 'src/app/site/pages/organization/ser
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { AgendaItemControllerService } from '../../../../../../services';
 import { TopicPollService } from '../../../../modules/topic-poll/services/topic-poll.service';
@@ -112,7 +113,8 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         private topicPollService: TopicPollService,
         private pollController: PollControllerService,
         private topicPdfService: TopicPdfService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private treeService: TreeService
     ) {
         super();
         this.createForm();
@@ -134,12 +136,20 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
             }
         });
         this.subscriptions.push(
-            this.repo.getSortedViewModelListObservable().subscribe(list => {
-                if (list) {
-                    this._sortedTopics = list;
-                    this.setSurroundingTopics();
-                }
-            })
+            this.itemRepo
+                .getViewModelListObservable()
+                .pipe(map(agendaItems => this.treeService.makeFlatTree(agendaItems, `weight`, `parent_id`)))
+                .subscribe(list => {
+                    if (list) {
+                        this._sortedTopics = [];
+                        for (const agenda_item of list) {
+                            if (agenda_item.getContentObjectCollection() === `topic`) {
+                                this._sortedTopics.push(agenda_item.content_object);
+                            }
+                        }
+                        this.setSurroundingTopics();
+                    }
+                })
         );
     }
 
