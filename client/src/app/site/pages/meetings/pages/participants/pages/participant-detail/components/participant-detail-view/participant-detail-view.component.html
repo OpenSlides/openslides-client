@@ -115,8 +115,8 @@
                 <mat-form-field
                     [ngClass]="{
                         distance: showVoteWeight,
-                        form45: showVoteWeight,
-                        form100: !showVoteWeight
+                        form37: showVoteWeight,
+                        form25: !showVoteWeight
                     }"
                 >
                     <mat-label>{{ 'Participant number' | translate }}</mat-label>
@@ -124,7 +124,7 @@
                 </mat-form-field>
 
                 <!-- Vote weight -->
-                <mat-form-field class="form45 force-min-with" *ngIf="showVoteWeight">
+                <mat-form-field class="form16 force-min-with" *ngIf="showVoteWeight">
                     <mat-label>{{ 'Vote weight' | translate }}</mat-label>
                     <input type="number" matInput formControlName="vote_weight" />
                     <mat-error *ngIf="isVoteWeightError && form.controls['vote_weight'].value > 0" translate>
