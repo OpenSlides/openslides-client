@@ -9,6 +9,7 @@ import { SpeakerState } from '../../../../../../../../domain/models/speakers/spe
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 import { ViewPointOfOrderCategory } from './view-point-of-order-category';
+import { ViewMotion } from '../../../../motions';
 /**
  * Provides "safe" access to a speaker with all it's components
  */
@@ -59,9 +60,9 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
 
     public get numbering(): string {
         if (this.list_of_speakers?.content_object.collection === `motion`) {
-            return this.list_of_speakers?.content_object.getModel().number;
+            return (this.list_of_speakers?.content_object as ViewMotion).number;
         } else if (this.list_of_speakers?.content_object.collection === `topic`) {
-            return this.list_of_speakers?.content_object.agenda_item.getModel().item_number;
+            return this.list_of_speakers?.content_object.agenda_item.item_number;
         }
         return null;
     }
@@ -114,7 +115,7 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         if (!this.list_of_speakers?.content_object) {
             return null;
         }
-        return this.list_of_speakers?.content_object.getModel().sequential_number;
+        return this.list_of_speakers?.content_object[`sequential_number`];
     }
 
     public get topic(): string {
