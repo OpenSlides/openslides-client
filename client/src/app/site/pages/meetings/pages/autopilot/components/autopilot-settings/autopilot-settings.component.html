@@ -1,9 +1,9 @@
-<h1 mat-dialog-title translate>Disabled content elements</h1>
+<h1 mat-dialog-title translate>Enabled content elements</h1>
 <div mat-dialog-content>
     <div *ngFor="let option of autopilotContentElements" class="option">
         <mat-checkbox
             (ngModelChange)="updateDisabled(option.key, $event)"
-            [ngModel]="disabledAutopilotContentElements[option.key]"
+            [ngModel]="!disabledAutopilotContentElements[option.key]"
         >
             {{ option.description | translate }}
         </mat-checkbox>

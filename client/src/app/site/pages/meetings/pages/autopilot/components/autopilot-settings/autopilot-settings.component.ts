@@ -44,11 +44,11 @@ export class AutopilotSettingsComponent extends BaseMeetingComponent implements 
     }
 
     public isDisabled(key: string): boolean {
-        return this.disabledAutopilotContentElements[key];
+        return this.disabledAutopilotContentElements[key] === true;
     }
 
     public updateDisabled(key: string, status: boolean): void {
-        this.autopilotService.updateContentElementVisibility(key, status);
+        this.autopilotService.updateContentElementVisibility(key, !status);
     }
 
     public close(): void {
