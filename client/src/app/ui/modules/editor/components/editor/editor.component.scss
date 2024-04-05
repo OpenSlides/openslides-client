@@ -23,6 +23,10 @@
             &.color-selection {
                 position: relative;
             }
+            &:disabled {
+                cursor: default;
+            }
+            &:disabled,
             &.active {
                 background: rgba(0, 0, 0, 0.32);
             }

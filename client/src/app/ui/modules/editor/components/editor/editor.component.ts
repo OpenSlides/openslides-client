@@ -199,7 +199,15 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         }
 
         this.editor = new Editor(editorConfig);
+        this.updateColorSets();
+    }
 
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
+        this.editor.destroy();
+    }
+
+    public updateColorSets(): void {
         // Add colors used in text to color palete
         if (this.value) {
             const parser = new DOMParser();
@@ -216,11 +224,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 }
             }
         }
-    }
-
-    public override ngOnDestroy(): void {
-        super.ngOnDestroy();
-        this.editor.destroy();
     }
 
     public godButtonAction(): void {
