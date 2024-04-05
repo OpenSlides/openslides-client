@@ -57,11 +57,13 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         );
     }
 
-    public get agenda(): string {
-        if (!this.list_of_speakers?.content_object.getModel().agenda_item_id) {
-            return null;
+    public get numbering(): string {
+        if (this.list_of_speakers?.content_object.collection === `motion`) {
+            return this.list_of_speakers?.content_object.getModel().number;
+        } else if (this.list_of_speakers?.content_object.collection === `topic`) {
+            return this.list_of_speakers?.content_object.agenda_item.getModel().item_number;
         }
-        return this.list_of_speakers?.content_object.agenda_item.getModel().item_number;
+        return null;
     }
 
     public get name(): string {
