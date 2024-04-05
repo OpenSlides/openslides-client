@@ -19,14 +19,12 @@
     }
 }
 
-.meeting-list {
-    .meeting-preview-card {
-        display: block;
-    }
+.meeting-preview-card {
+    display: block;
+}
 
-    .meeting-preview-card + .meeting-preview-card {
-        margin-top: 2em;
-    }
+.meeting-preview-card + .meeting-preview-card {
+    margin-top: 2em;
 }
 
 .expandable-list {

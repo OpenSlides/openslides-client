@@ -156,8 +156,10 @@
             </div>
 
             <div *ngIf="editMotion">
-                <mat-card [ngClass]="vp.isMobile ? 'os-form-card-mobile' : 'os-form-card'">
-                    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                <mat-card [ngClass]="vp.isMobile ? 'os-form-card-mobile' : 'os-card'">
+                    <mat-card-content>
+                        <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                    </mat-card-content>
                 </mat-card>
             </div>
             <ng-container *ngIf="!editMotion">
@@ -176,7 +178,9 @@
 
         <!-- Content -->
         <mat-card class="os-card">
-            <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+            <mat-card-content>
+                <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+            </mat-card-content>
         </mat-card>
 
         <!-- Comments -->
@@ -201,7 +205,9 @@
         <div class="desktop-right">
             <!-- Content -->
             <mat-card class="os-card">
-                <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                <mat-card-content>
+                    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                </mat-card-content>
             </mat-card>
         </div>
     </div>

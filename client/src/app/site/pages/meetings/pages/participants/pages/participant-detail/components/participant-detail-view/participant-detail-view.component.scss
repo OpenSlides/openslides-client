@@ -1,6 +1,9 @@
 @import 'src/assets/styles/media-queries.scss';
 
 @include set-breakpoint-upper(xs) {
+    .form100 {
+        width: 100%;
+    }
     .form70 {
         width: 70%;
     }
@@ -16,6 +19,10 @@
     .form16 {
         width: 16%;
     }
+}
+
+os-user-detail-view h2 {
+    margin-top: 0 !important;
 }
 
 .force-min-width {

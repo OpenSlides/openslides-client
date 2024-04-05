@@ -34,5 +34,5 @@ run-check-prettifying:
 	docker run -t openslides-client-dev npm run prettify-check
 
 run-playwright:
-	docker-compose -f client/tests/docker-compose.test.yml build
-	docker-compose -f client/tests/docker-compose.test.yml up --exit-code-from playwright
+	docker compose -f client/tests/docker-compose.test.yml build
+	docker compose -f client/tests/docker-compose.test.yml up --exit-code-from playwright

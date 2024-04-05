@@ -317,20 +317,22 @@
                         <mat-list>
                             <mat-list-item class="larger-mat-list-item">
                                 <mat-card class="wifi-card" style="width: 100%">
-                                    <div
-                                        class="wifi-button-area"
-                                        [ngClass]="{ 'spacer-bottom-10': !hasEnoughWiFiData }"
-                                    >
-                                        <os-projector-button
-                                            [object]="wifiDataBuildDesc()"
-                                            [projector]="projector"
-                                            [disabled]="noWiFiData"
-                                        ></os-projector-button>
-                                        <span>{{ 'Wifi access data' | translate }}</span>
-                                    </div>
-                                    <small class="wifi-help-text" *ngIf="!hasEnoughWiFiData" translate>
-                                        Attention: First enter the wifi data in [Settings > General]
-                                    </small>
+                                    <mat-card-content>
+                                        <div
+                                            class="wifi-button-area"
+                                            [ngClass]="{ 'spacer-bottom-10': !hasEnoughWiFiData }"
+                                        >
+                                            <os-projector-button
+                                                [object]="wifiDataBuildDesc()"
+                                                [projector]="projector"
+                                                [disabled]="noWiFiData"
+                                            ></os-projector-button>
+                                            <span>{{ 'Wifi access data' | translate }}</span>
+                                        </div>
+                                        <small class="wifi-help-text" *ngIf="!hasEnoughWiFiData" translate>
+                                            Attention: First enter the wifi data in [Settings > General]
+                                        </small>
+                                    </mat-card-content>
                                 </mat-card>
                             </mat-list-item>
                             <mat-list-item *ngFor="let message of messages" class="larger-mat-list-item">
@@ -362,7 +364,7 @@
                                     [object]="getCurrentLoSBuildDesc(false)"
                                     [projector]="projector"
                                 ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'Slide' | translate }}</span>
+                                <span class="spacer-left-10">{{ 'List of speakers' | translate }}</span>
                             </mat-list-item>
                         </mat-list>
 
@@ -373,7 +375,7 @@
                                     [object]="getCurrentLoSBuildDesc(true)"
                                     [projector]="projector"
                                 ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'Overlay' | translate }}</span>
+                                <span class="spacer-left-10">{{ 'List of speakers as overlay' | translate }}</span>
                             </mat-list-item>
                         </mat-list>
 
@@ -384,7 +386,7 @@
                                     [object]="getChyronBuildDesc()"
                                     [projector]="projector"
                                 ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'Chyron' | translate }}</span>
+                                <span class="spacer-left-10">{{ 'Chyron – current contribution' | translate }}</span>
                             </mat-list-item>
                         </mat-list>
 
@@ -395,7 +397,9 @@
                                     [object]="getCurrentStructureLevel()"
                                     [projector]="projector"
                                 ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'Current speaker' | translate }}</span>
+                                <span class="spacer-left-10">
+                                    {{ 'Speaking time – current contribution' | translate }}
+                                </span>
                             </mat-list-item>
                         </mat-list>
 
@@ -412,19 +416,21 @@
                                     [object]="getAllStructureLevel()"
                                     [projector]="projector"
                                 ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'All structure levels' | translate }}</span>
+                                <span class="spacer-left-10">
+                                    {{ 'Speaking times – overview structure levels' | translate }}
+                                </span>
                             </mat-list-item>
                         </mat-list>
                     </mat-expansion-panel>
 
                     <!-- Current slide -->
-                    <mat-expansion-panel *ngIf="hasSlide">
+                    <mat-expansion-panel *ngIf="hasSlide && getCurrentProjectionLoSToggleBuildDesc()">
                         <mat-expansion-panel-header>
                             <span>{{ 'Current slide' | translate }}</span>
                         </mat-expansion-panel-header>
 
                         <!-- Toggle -->
-                        <mat-list *ngIf="getCurrentProjectionLoSToggleBuildDesc()">
+                        <mat-list>
                             <mat-list-item>
                                 <os-projector-button
                                     [object]="getCurrentProjectionLoSToggleBuildDesc()"

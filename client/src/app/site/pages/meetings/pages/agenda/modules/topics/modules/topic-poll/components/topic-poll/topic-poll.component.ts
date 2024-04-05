@@ -21,13 +21,6 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
         this.initializePoll(id);
     }
 
-    /**
-     * At the moment, we use a legacy card here. After using mdc card, we should rm the
-     * newCardWidth workaround.
-     */
-    @Input()
-    public newCardWidth = false;
-
     @Output()
     public readonly dialogOpened = new EventEmitter<void>();
 
