@@ -8,6 +8,10 @@
     height: 100%;
 }
 
+mat-card mat-card-content h3 {
+    margin-top: 0 !important;
+}
+
 .meta-info-grid {
     display: grid;
     grid-column-gap: 30px;
