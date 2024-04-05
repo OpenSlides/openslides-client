@@ -9,14 +9,16 @@
 <os-info-actions></os-info-actions>
 
 <mat-card class="os-card" *ngIf="canSeeStatistics">
-    <h2>{{ 'Statistics' | translate }}</h2>
+    <mat-card-content>
+        <h2>{{ 'Statistics' | translate }}</h2>
 
-    <ng-container *ngIf="osIsManager">
-        <div>
-            <h3>{{ 'Organization' | translate }}</h3>
-            <os-organization-statistics></os-organization-statistics>
-        </div>
-    </ng-container>
+        <ng-container *ngIf="osIsManager">
+            <div>
+                <h3>{{ 'Organization' | translate }}</h3>
+                <os-organization-statistics></os-organization-statistics>
+            </div>
+        </ng-container>
+    </mat-card-content>
 </mat-card>
 
 <os-privacy-policy-content [isEditable]="true" (update)="updatePrivacyPolicy($event)"></os-privacy-policy-content>

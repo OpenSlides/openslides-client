@@ -7,37 +7,41 @@
     </h1>
 
     <mat-card class="os-card">
-        <div>
-            <span>
-                {{ 'Your browser' | translate }}: {{ currentBrowser }} ({{ 'version' | translate }}:
-                {{ browserVersion }})
-            </span>
-            <br />
-            <span *ngIf="!!supportedVersion">{{ 'Minimal required version' | translate }}: {{ supportedVersion }}</span>
-        </div>
-
-        <div class="spacer-top-20" *ngIf="!supported">
-            <span>{{ 'Please update your browser or contact your system administration.' | translate }}</span>
-        </div>
-
-        <div class="spacer-top-20">
-            <p>
-                {{ 'OpenSlides recommends' | translate }}
-                <span *ngFor="let browser of recommendedBrowsers; last as isLast">
-                    <a [href]="browser.url">{{ browser.name }}</a>
-                    <span *ngIf="!isLast">&nbsp;{{ 'or' | translate }}&nbsp;</span>
-                    <span *ngIf="isLast">.</span>
+        <mat-card-content>
+            <div>
+                <span>
+                    {{ 'Your browser' | translate }}: {{ currentBrowser }} ({{ 'version' | translate }}:
+                    {{ browserVersion }})
                 </span>
-            </p>
-        </div>
+                <br />
+                <span *ngIf="!!supportedVersion">
+                    {{ 'Minimal required version' | translate }}: {{ supportedVersion }}
+                </span>
+            </div>
 
-        <a mat-stroked-button color="primary" routerLink=".." [queryParams]="{ checkBrowser: false }">
-            <span *ngIf="!supported">
-                {{ 'Login anyway' | translate }}
-            </span>
-            <span *ngIf="supported">
-                {{ 'Login' | translate }}
-            </span>
-        </a>
+            <div class="spacer-top-20" *ngIf="!supported">
+                <span>{{ 'Please update your browser or contact your system administration.' | translate }}</span>
+            </div>
+
+            <div class="spacer-top-20">
+                <p>
+                    {{ 'OpenSlides recommends' | translate }}
+                    <span *ngFor="let browser of recommendedBrowsers; last as isLast">
+                        <a [href]="browser.url">{{ browser.name }}</a>
+                        <span *ngIf="!isLast">&nbsp;{{ 'or' | translate }}&nbsp;</span>
+                        <span *ngIf="isLast">.</span>
+                    </span>
+                </p>
+            </div>
+
+            <a mat-stroked-button color="primary" routerLink=".." [queryParams]="{ checkBrowser: false }">
+                <span *ngIf="!supported">
+                    {{ 'Login anyway' | translate }}
+                </span>
+                <span *ngIf="supported">
+                    {{ 'Login' | translate }}
+                </span>
+            </a>
+        </mat-card-content>
     </mat-card>
 </main>
