@@ -254,18 +254,12 @@ export class MotionPdfCatalogService {
      * @returns {Array<Content>} An array containing the `DocDefinitions` for `pdf-make`.
      */
     private appendSubmittersAndRecommendation(motion: ViewMotion, style: StyleType = StyleType.DEFAULT): Content[] {
-        let submitterList = ``;
         let state = ``;
         if (motion.state!.isFinalState) {
             state = this.motionService.getExtendedStateLabel(motion);
         } else {
             state = this.motionService.getExtendedRecommendationLabel(motion);
         }
-        const submitters = motion.submitters.map(s => s.getTitle());
-        if (motion.additional_submitter) {
-            submitters.push(motion.additional_submitter);
-        }
-        submitterList = submitters.join(`, `);
 
         return this.pdfService.createTocLine(
             {
@@ -274,7 +268,7 @@ export class MotionPdfCatalogService {
                 pageReference: `${motion.id}`,
                 style
             },
-            this.pdfService.createTocLineInline(submitterList),
+            this.pdfService.createTocLineInline(motion.submitterNames.join(`, `)),
             this.pdfService.createTocLineInline(state, true)
         );
     }
