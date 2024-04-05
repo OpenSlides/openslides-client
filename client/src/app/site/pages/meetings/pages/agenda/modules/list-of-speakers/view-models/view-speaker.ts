@@ -7,9 +7,9 @@ import { Id } from '../../../../../../../../domain/definitions/key-types';
 import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';
 import { SpeakerState } from '../../../../../../../../domain/models/speakers/speaker-state';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
+import { ViewMotion } from '../../../../motions';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 import { ViewPointOfOrderCategory } from './view-point-of-order-category';
-import { ViewMotion } from '../../../../motions';
 /**
  * Provides "safe" access to a speaker with all it's components
  */
