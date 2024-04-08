@@ -83,7 +83,7 @@ export class WorkerHttpAuth {
         this.updateAuthentication();
     }
 
-    private destroy() {
+    private destroy(): void {
         clearTimeout(this._authTokenRefreshTimeout);
     }
 
@@ -152,11 +152,11 @@ export class WorkerHttpAuth {
         }
     }
 
-    private notifyTokenChange(subscription: string) {
+    private notifyTokenChange(subscription: string): void {
         WorkerHttpAuth.subscriptions.get(subscription)(this.authToken);
     }
 
-    private notifyUserChange(subscription: string) {
+    private notifyUserChange(subscription: string): void {
         WorkerHttpAuth.subscriptions.get(subscription)(this.authToken, this.currentUserId);
     }
 }

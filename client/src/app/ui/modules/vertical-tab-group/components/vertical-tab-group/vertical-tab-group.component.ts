@@ -89,7 +89,7 @@ export class VerticalTabGroupComponent {
         vp.isMobileSubject.subscribe(isMobile => (this._isMobile = isMobile));
     }
 
-    public changeTabSelection(index: number) {
+    public changeTabSelection(index: number): void {
         if (this.selectedTabLabelIndex !== index) {
             this.doUpdateCurrentContent(index);
         }

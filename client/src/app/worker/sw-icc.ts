@@ -7,7 +7,7 @@ const iccPool = new ICCStreamPool({
     method: `get`
 } as AutoupdateSetEndpointParams);
 
-export function initIccSw(broadcast: (s: string, a: string, c?: any) => void) {
+export function initIccSw(broadcast: (s: string, a: string, c?: any) => void): void {
     iccPool.registerBroadcast(broadcast);
 }
 

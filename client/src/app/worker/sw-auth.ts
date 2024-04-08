@@ -1,10 +1,10 @@
 import { Id } from '../domain/definitions/key-types';
 import { WorkerHttpAuth } from './http/auth';
 
-export function initAuthWorker(broadcast: (s: string, a: string, c?: any) => void) {
+export function initAuthWorker(broadcast: (s: string, a: string, c?: any) => void): void {
     WorkerHttpAuth.subscribe(`auth`, (token, uid?) => onAuthUpdate(token, uid));
 
-    function onAuthUpdate(token: string, userId?: Id) {
+    function onAuthUpdate(token: string, userId?: Id): void {
         if (userId !== undefined) {
             broadcast(`auth`, `new-user`, {
                 user: userId,

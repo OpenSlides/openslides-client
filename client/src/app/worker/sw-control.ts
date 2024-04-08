@@ -4,11 +4,11 @@ const startedAt = Date.now();
 const RESTART_LIMIT_TIME = 30 * 1000;
 let broadcast: (s: string, a: string, c?: any) => void;
 
-export function initControlMessageHandler(b: (s: string, a: string, c?: any) => void) {
+export function initControlMessageHandler(b: (s: string, a: string, c?: any) => void): void {
     broadcast = b;
 }
 
-export function controlGeneralMessageHandler(ctx: any, e: MessageEvent<WorkerMessage>) {
+export function controlGeneralMessageHandler(ctx: any, e: MessageEvent<WorkerMessage>): void {
     if (e.data?.nonce) {
         ctx.postMessage({ sender: `control`, action: `ack`, content: e.data.nonce });
     }
