@@ -37,45 +37,47 @@
             <ng-template matStepLabel>{{ 'Enter' | translate }}</ng-template>
             <ng-template matStepContent>
                 <mat-card class="os-card spacer-bottom-60">
-                    <div>
-                        <h2>{{ 'Personal information' | translate }}</h2>
-                        <div class="full-width first-line">
-                            <!-- First name -->
-                            <mat-form-field>
-                                <mat-label>{{ 'Given name' | translate }}</mat-label>
-                                <input type="text" osAutofocus matInput formControlName="first_name" />
-                            </mat-form-field>
+                    <mat-card-content>
+                        <div>
+                            <h2>{{ 'Personal information' | translate }}</h2>
+                            <div class="full-width first-line">
+                                <!-- First name -->
+                                <mat-form-field>
+                                    <mat-label>{{ 'Given name' | translate }}</mat-label>
+                                    <input type="text" osAutofocus matInput formControlName="first_name" />
+                                </mat-form-field>
 
-                            <!-- Last name -->
-                            <mat-form-field>
-                                <mat-label>{{ 'Surname' | translate }}</mat-label>
-                                <input type="text" matInput formControlName="last_name" />
+                                <!-- Last name -->
+                                <mat-form-field>
+                                    <mat-label>{{ 'Surname' | translate }}</mat-label>
+                                    <input type="text" matInput formControlName="last_name" />
+                                </mat-form-field>
+                            </div>
+                            <!-- E-Mail -->
+                            <mat-form-field class="full-width">
+                                <mat-label>{{ 'Email' | translate }}</mat-label>
+                                <input type="email" matInput autocomplete="off" name="email" formControlName="email" />
+                                <mat-error>{{ 'Please enter a valid email address!' | translate }}</mat-error>
+                            </mat-form-field>
+                            <!-- username -->
+                            <mat-form-field class="full-width">
+                                <mat-label>{{ 'Username' | translate }}</mat-label>
+                                <input type="text" matInput formControlName="username" />
+                                <button
+                                    matSuffix
+                                    type="button"
+                                    mat-button
+                                    mat-icon-button
+                                    [matTooltip]="'Leave blank to automatically generate the username.' | translate"
+                                >
+                                    <mat-icon>help</mat-icon>
+                                </button>
+                                <mat-error *ngIf="createUserForm.controls['username'].errors?.['noSpace']" translate>
+                                    Username may not contain spaces
+                                </mat-error>
                             </mat-form-field>
                         </div>
-                        <!-- E-Mail -->
-                        <mat-form-field class="full-width">
-                            <mat-label>{{ 'Email' | translate }}</mat-label>
-                            <input type="email" matInput autocomplete="off" name="email" formControlName="email" />
-                            <mat-error>{{ 'Please enter a valid email address!' | translate }}</mat-error>
-                        </mat-form-field>
-                        <!-- username -->
-                        <mat-form-field class="full-width">
-                            <mat-label>{{ 'Username' | translate }}</mat-label>
-                            <input type="text" matInput formControlName="username" />
-                            <button
-                                matSuffix
-                                type="button"
-                                mat-button
-                                mat-icon-button
-                                [matTooltip]="'Leave blank to automatically generate the username.' | translate"
-                            >
-                                <mat-icon>help</mat-icon>
-                            </button>
-                            <mat-error *ngIf="createUserForm.controls['username'].errors?.['noSpace']" translate>
-                                Username may not contain spaces
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
+                    </mat-card-content>
                 </mat-card>
             </ng-template>
         </mat-step>
@@ -134,7 +136,7 @@
                             </div>
                             <div>
                                 <!-- Strucuture Level -->
-                                <mat-form-field>
+                                <mat-form-field class="form100 force-min-width">
                                     <mat-label>{{ 'Structure level' | translate }}</mat-label>
                                     <os-list-search-selector
                                         formControlName="structure_level_ids"
@@ -148,8 +150,8 @@
                                 <mat-form-field
                                     [ngClass]="{
                                         distance: showVoteWeight,
-                                        form37: showVoteWeight,
-                                        form25: !showVoteWeight
+                                        form45: showVoteWeight,
+                                        form100: !showVoteWeight
                                     }"
                                 >
                                     <mat-label>{{ 'Participant number' | translate }}</mat-label>
@@ -158,7 +160,7 @@
 
                                 <!-- Vote weight -->
                                 <!-- TODO Input type should be number with limited decimal spaces -->
-                                <mat-form-field class="form16 force-min-with" *ngIf="showVoteWeight">
+                                <mat-form-field class="form45 force-min-with" *ngIf="showVoteWeight">
                                     <mat-label>{{ 'Vote weight' | translate }}</mat-label>
                                     <input type="number" matInput formControlName="vote_weight" />
                                     <mat-error
@@ -178,7 +180,7 @@
 
                             <div *ngIf="isAllowedFn('seeName')">
                                 <!-- Groups -->
-                                <mat-form-field>
+                                <mat-form-field class="form100 force-min-width">
                                     <mat-label>{{ 'Groups' | translate }}</mat-label>
                                     <os-list-search-selector
                                         formControlName="group_ids"
@@ -189,7 +191,7 @@
                                 </mat-form-field>
 
                                 <!-- Delegate Vote -->
-                                <mat-form-field *ngIf="showVoteDelegations">
+                                <mat-form-field class="form100 force-min-width" *ngIf="showVoteDelegations">
                                     <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
                                     <os-repo-search-selector
                                         formControlName="vote_delegations_from_ids"
@@ -201,7 +203,7 @@
                                 </mat-form-field>
 
                                 <!-- Delegate Vote -->
-                                <mat-form-field *ngIf="showVoteDelegations">
+                                <mat-form-field class="form100 force-min-width" *ngIf="showVoteDelegations">
                                     <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
                                     <os-repo-search-selector
                                         formControlName="vote_delegated_to_id"
@@ -223,7 +225,7 @@
 
                             <div *ngIf="isAllowedFn('update')">
                                 <!-- Comment -->
-                                <mat-form-field>
+                                <mat-form-field class="form100 force-min-width">
                                     <mat-label>{{ 'Comment' | translate }}</mat-label>
                                     <input matInput formControlName="comment" />
                                     <mat-hint>{{ 'Only for internal notes.' | translate }}</mat-hint>

@@ -177,20 +177,20 @@
         </div>
     </div>
 
-    <!-- Category form -->
-    <div class="content-field" *ngIf="newMotion && hasCategories">
-        <mat-form-field>
-            <mat-label>{{ 'Category' | translate }}</mat-label>
-            <os-repo-search-selector
-                formControlName="category_id"
-                [repo]="categoryRepo"
-                [excludeIds]="true"
-                [addClearSelection]="true"
-            ></os-repo-search-selector>
-        </mat-form-field>
-    </div>
-
     <div class="extra-data">
+        <!-- Category form -->
+        <div class="content-field" *ngIf="newMotion && hasCategories">
+            <mat-form-field>
+                <mat-label>{{ 'Category' | translate }}</mat-label>
+                <os-repo-search-selector
+                    formControlName="category_id"
+                    [repo]="categoryRepo"
+                    [excludeIds]="true"
+                    [addClearSelection]="true"
+                ></os-repo-search-selector>
+            </mat-form-field>
+        </div>
+
         <!-- Attachments -->
         <div *ngIf="hasAttachments || editMotion" class="content-field">
             <div *ngIf="!editMotion">

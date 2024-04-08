@@ -4,6 +4,7 @@ import {
     BehaviorSubject,
     combineLatest,
     distinctUntilChanged,
+    filter,
     map,
     merge,
     mergeMap,
@@ -153,6 +154,7 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
         );
 
         this.slides = combineLatest([this.projectorSubject, trigger$])
+            .pipe(filter(([projector, _]) => (projector?.current_projections || []).every(p => !!p.content)))
             .pipe(
                 map(([projector, _]) =>
                     (projector?.current_projections || []).map(

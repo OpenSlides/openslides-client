@@ -79,6 +79,14 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
                     { condition: `motion_block`, label: this.translate.instant(`Motion blocks`) },
                     { condition: `assignment`, label: this.translate.instant(`Elections`) }
                 ]
+            },
+            {
+                property: `hasSpoken`,
+                label: this.translate.instant(`Spoken`),
+                options: [
+                    { condition: true, label: this.translate.instant(`Has spoken`) },
+                    { condition: [false, null], label: this.translate.instant(`Has not spoken`) }
+                ]
             }
         ];
         return staticFilterOptions.concat(this.speakerStructureLevelFilterOptions);
