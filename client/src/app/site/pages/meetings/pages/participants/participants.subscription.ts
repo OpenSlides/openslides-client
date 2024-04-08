@@ -167,7 +167,7 @@ export const getSpeakersListSubscriptionConfig: SubscriptionConfigGenerator = (i
                         follow: [
                             {
                                 idField: `content_object_id`,
-                                fieldset: [`title`, `list_of_speakers_id`, ...MEETING_ROUTING_FIELDS],
+                                fieldset: [`title`, `number`, `list_of_speakers_id`, ...MEETING_ROUTING_FIELDS],
                                 follow: [
                                     {
                                         idField: `agenda_item_id`,

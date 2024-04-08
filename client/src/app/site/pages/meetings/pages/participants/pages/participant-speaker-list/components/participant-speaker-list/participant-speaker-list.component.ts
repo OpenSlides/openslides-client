@@ -85,7 +85,24 @@ export class ParticipantSpeakerListComponent extends BaseMeetingListViewComponen
         this.csvExport.export(this.listComponent.source);
     }
 
-    public getSpeakerIcon(speaker: ViewSpeaker) {
+    public getSpeakerIcon(speaker: ViewSpeaker): string {
         return modelIcons[speaker.contentType];
+    }
+
+    private getSpeakerContentType(speaker: ViewSpeaker): string {
+        return speaker.contentType;
+    }
+
+    protected viewModelUrl(speaker: ViewSpeaker): string {
+        if (this.getSpeakerContentType(speaker) === `topic`) {
+            return `/${this.activeMeetingId}/agenda/topics/${speaker.contentSeqNum}`;
+        } else if (this.getSpeakerContentType(speaker) === `motion`) {
+            return `/${this.activeMeetingId}/motions/${speaker.contentSeqNum}`;
+        } else if (this.getSpeakerContentType(speaker) === `motion_block`) {
+            return `/${this.activeMeetingId}/motions/blocks/${speaker.contentSeqNum}`;
+        } else if (this.getSpeakerContentType(speaker) === `assignment`) {
+            return `/${this.activeMeetingId}/assignments/${speaker.contentSeqNum}`;
+        }
+        return `/${this.activeMeetingId}`;
     }
 }
