@@ -72,7 +72,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             if (this._isUserInScope || (this.newUser && canUpdateUsers)) {
                 return true;
             } else if (canUpdateUsers) {
-                return controlName !== `is_present`;
+                return controlName === `is_present` ? this.operator.hasPerms(Permission.userCanManagePresence) : true;
             } else {
                 return PERSONAL_FORM_CONTROLS.includes(controlName);
             }
