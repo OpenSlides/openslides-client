@@ -119,7 +119,7 @@ export abstract class HttpStreamPool<T extends HttpStream> {
         }
 
         if (!this._waitEndpointHealthyPromise) {
-            this._waitEndpointHealthyPromise = (async () => {
+            this._waitEndpointHealthyPromise = (async (): Promise<boolean> => {
                 let wasUnhealty = false;
                 let timeout = 0;
                 while (!(await this.isEndpointHealthy())) {

@@ -61,7 +61,7 @@ export class TreeService {
         }
 
         let tree_weight = 1;
-        const inject = (nodes: T[], level = 0) => {
+        const inject = (nodes: T[], level = 0): void => {
             nodes.sort((nodeA, nodeB) => (nodeA[weightKey] as any) - (nodeB[weightKey] as any));
             for (const node of nodes) {
                 node.tree_weight = tree_weight++;
@@ -419,7 +419,7 @@ export class TreeService {
             }
         };
         return new Proxy(node, {
-            get: (target: FlatNode<T>, property: keyof Identifiable & Displayable & T) => {
+            get: (target: FlatNode<T>, property: keyof Identifiable & Displayable & T): any => {
                 const model = target.item;
                 if (property in target) {
                     return target[property];
@@ -433,7 +433,7 @@ export class TreeService {
                 }
                 return target[property];
             },
-            set: (target: FlatNode<T>, property: keyof Identifiable & Displayable & T, value: any) => {
+            set: (target: FlatNode<T>, property: keyof Identifiable & Displayable & T, value: any): boolean => {
                 const model = target.item;
                 if (model[property]) {
                     if (typeof value === `function`) {

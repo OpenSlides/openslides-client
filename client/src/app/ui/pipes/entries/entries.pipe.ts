@@ -40,7 +40,7 @@ export class EntriesPipe implements PipeTransform {
     }
 }
 
-const DefaultCompareFn = <K, V>(a: KeyValue<K, V>, b: KeyValue<K, V>) => {
+const DefaultCompareFn = <K, V>(a: KeyValue<K, V>, b: KeyValue<K, V>): number => {
     if (a === b) {
         return 0;
     }
