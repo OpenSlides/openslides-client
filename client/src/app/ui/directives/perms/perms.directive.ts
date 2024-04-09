@@ -1,4 +1,5 @@
 import { Directive, Input } from '@angular/core';
+import { DelegationSetting } from 'src/app/domain/definitions/delegation-setting';
 import { Permission } from 'src/app/domain/definitions/permission';
 
 import { BasePermsDirective } from './base-perms.directive';
@@ -34,6 +35,15 @@ export class PermsDirective extends BasePermsDirective<Permission> {
     }
 
     /**
+     * `*osPerms="...; delegationSettingAlternative:..."` turns into osPermsDelegationSettingAlternative during runtime.
+     */
+    @Input()
+    public set osPermsDelegationSettingAlternative(delegationSettingAlternative: [DelegationSetting, Permission]) {
+        this._delegationSettingAlternative = delegationSettingAlternative;
+        this.updatePermission();
+    }
+
+    /**
      * `*osPerms="...; and:..."` turns into osPermsAnd during runtime.
      */
     @Input()
@@ -41,11 +51,20 @@ export class PermsDirective extends BasePermsDirective<Permission> {
         this.setAndCondition(value);
     }
 
+    private _delegationSettingAlternative: [DelegationSetting, Permission] = null;
+
     /**
      * Compare the required permissions with the users permissions.
      * Returns true if the users permissions fit.
      */
     protected hasPermissions(): boolean {
-        return this.operator.hasPerms(...this.permissions);
+        let permissions = this.permissions;
+        if (
+            this._delegationSettingAlternative &&
+            !this.operator.isAllowedWithDelegation(this._delegationSettingAlternative[0])
+        ) {
+            permissions = [this._delegationSettingAlternative[1]];
+        }
+        return this.operator.hasPerms(...permissions);
     }
 }

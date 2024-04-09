@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, debounceTime, Observable, Subject } from 'rxjs';
+import { DelegationSetting } from 'src/app/domain/definitions/delegation-setting';
 import { UserFieldsets } from 'src/app/domain/fieldsets/user';
+import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
@@ -16,6 +18,7 @@ import { GroupControllerService } from '../pages/meetings/pages/participants';
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 import { NoActiveMeetingError } from '../pages/meetings/services/active-meeting-id.service';
 import { MeetingControllerService } from '../pages/meetings/services/meeting-controller.service';
+import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
 import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate';
@@ -221,7 +224,8 @@ export class OperatorService {
         private groupRepo: GroupControllerService,
         private autoupdateService: AutoupdateService,
         private modelRequestBuilder: ModelRequestBuilderService,
-        private meetingRepo: MeetingControllerService
+        private meetingRepo: MeetingControllerService,
+        private meetingSettings: MeetingSettingsService
     ) {
         this.setNotReady();
         // General environment in which the operator moves
@@ -535,6 +539,14 @@ export class OperatorService {
             return true;
         }
         return checkPerms.some(permission => groups.some(group => group.hasPermission(permission)));
+    }
+
+    public isAllowedWithDelegation(...appliedSettings: DelegationSetting[]): boolean {
+        return (
+            this.user.isPresentInMeeting(this.activeMeetingId) ||
+            !this.user.vote_delegated_to_id(this.activeMeetingId) ||
+            !appliedSettings.some(appliedSetting => this.meetingSettings.instant(appliedSetting as keyof Settings))
+        );
     }
 
     /**
