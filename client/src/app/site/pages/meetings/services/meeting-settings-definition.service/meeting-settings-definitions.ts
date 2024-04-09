@@ -451,7 +451,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 settings: [
                     {
                         text: _(
-                            `Für die Nutzung im Parlament bietet OpenSlides verschiedene Redelistenanpassungen. Hierzu zählen die Konfiguration von Redezeitkontingenten für parlamentarische Gruppierungen (bspw. Fraktionen, Koalitionen) sowie erweiterte Arten von Redebeiträgen wie Kurzinterventionen und (parlamentarische) Zwischenfragen.`
+                            `OpenSlides offers various speaking list customizations for use in parliament. These include the configuration of speaking time quotas for parliamentary groups (e.g. fractions, coalitions) as well as extended types of speeches such as short interventions and (parliamentary) interposed questions.`
                         )
                     },
                     {
