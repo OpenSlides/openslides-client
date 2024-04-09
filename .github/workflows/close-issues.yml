@@ -38,15 +38,15 @@ jobs:
               }
             }
           variables: |
-            owner: ${{ github.event.repository.owner.name }}
-            repo: ${{ github.event.repository.name }}
+            owner: ${{ github.repository_owner }}
+            name: ${{ github.event.repository.name }}
             number: ${{ github.event.pull_request.number }}
 
       - name: Close issues
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
-          issue_data="$(echo "${{ steps.get-issues.outputs.data }}" | jq -r '.data.repository.pullRequest.closingIssuesReferences.nodes[] | [.number,.repository.nameWithOwner] | @tsv')"
-          echo "$issue_data" | while read number nameWithOwner; do
+          issue_data="$(echo '${{ steps.get-issues.outputs.data }}' | jq -r '.repository.pullRequest.closingIssuesReferences.nodes[] | [.number,.repository.nameWithOwner] | @tsv')"
+          echo "$issue_data" | grep -v "^$" | while read number nameWithOwner; do
             gh issue close "$number" -r "$nameWithOwner"
           done
