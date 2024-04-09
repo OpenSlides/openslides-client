@@ -53,6 +53,9 @@
     margin: 10px 25px 0 25px;
     padding: 0 0.75em;
     border-radius: 4px;
+    @include desktop {
+        padding: 0 0.75em 0 calc(0.75em + 38px);
+    }
 }
 
 .current-speaker:has(+ .interposed-questions) {
