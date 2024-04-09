@@ -56,7 +56,7 @@ export class GlobalSearchService {
         };
     }
 
-    public getTitle(collection: string, content: any): any {
+    public getTitle(collection: string, content: any): string {
         if (collection === `user`) {
             const firstName = content.first_name?.trim() || ``;
             const lastName = content.last_name?.trim() || ``;
@@ -190,7 +190,7 @@ export class GlobalSearchService {
         };
     }
 
-    private getText(collection: string, result: GlobalSearchResponseEntry, results: GlobalSearchResponse): any {
+    private getText(collection: string, result: GlobalSearchResponseEntry, results: GlobalSearchResponse): string {
         const content = result.content;
         if (
             collection === Motion.COLLECTION &&
