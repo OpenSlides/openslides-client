@@ -181,82 +181,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 ]
             },
             {
-                label: _(`CSV export options`),
-                settings: [
-                    {
-                        key: `export_csv_separator`,
-                        label: _(`Separator used for all CSV exports and examples`),
-                        dontTranslateDefault: true
-                    },
-                    {
-                        key: `export_csv_encoding`,
-                        label: _(`Default encoding for all CSV exports`),
-                        type: `choice`,
-                        choices: {
-                            // matches ExportCsvEncoding
-                            'utf-8': `UTF-8`,
-                            'iso-8859-15': `ISO-8859-15`
-                        }
-                    }
-                ]
-            },
-            {
-                label: _(`PDF export options`),
-                settings: [
-                    {
-                        key: `export_pdf_pagenumber_alignment`,
-                        label: _(`Page number alignment in PDF`),
-                        type: `choice`,
-                        choices: {
-                            left: _(`Left`),
-                            center: _(`Center`),
-                            right: _(`Right`)
-                        }
-                    },
-                    {
-                        key: `export_pdf_fontsize`,
-                        label: _(`Font size in pt`),
-                        type: `integer`,
-                        validators: [Validators.min(10), Validators.max(12)],
-                        helpText: _(`Available sizes are 10, 11 and 12`)
-                    },
-                    {
-                        key: `export_pdf_line_height`,
-                        label: _(`Line spacing`),
-                        type: `integer`
-                    },
-                    {
-                        key: `export_pdf_page_margin_left`,
-                        label: _(`Page margin left in mm`),
-                        type: `integer`
-                    },
-                    {
-                        key: `export_pdf_page_margin_right`,
-                        label: _(`Page margin right in mm`),
-                        type: `integer`
-                    },
-                    {
-                        key: `export_pdf_page_margin_top`,
-                        label: _(`Page margin top in mm`),
-                        type: `integer`
-                    },
-                    {
-                        key: `export_pdf_page_margin_bottom`,
-                        label: _(`Page margin bottom in mm`),
-                        type: `integer`
-                    },
-                    {
-                        key: `export_pdf_pagesize`,
-                        label: _(`Page format`),
-                        type: `choice`,
-                        choices: {
-                            A4: `DIN A4`,
-                            A5: `DIN A5`
-                        }
-                    }
-                ]
-            },
-            {
                 label: _(`Wifi`),
                 settings: [
                     {
@@ -300,7 +224,9 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `agenda_number_prefix`,
                         label: _(`Numbering prefix for agenda items`),
                         helpText: _(`This prefix will be set if you run the automatic agenda numbering.`),
-                        validators: [Validators.maxLength(20)]
+                        validators: [Validators.maxLength(20)],
+                        indentation: 1,
+                        disable: settings => !settings.agenda_enable_numbering
                     },
                     {
                         key: `agenda_numeral_system`,
@@ -309,12 +235,14 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         choices: {
                             arabic: _(`Arabic`),
                             roman: _(`Roman`)
-                        }
+                        },
+                        indentation: 1,
+                        disable: settings => !settings.agenda_enable_numbering
                     }
                 ]
             },
             {
-                label: _(`Visibility`),
+                label: _(`View`),
                 settings: [
                     {
                         key: `agenda_item_creation`,
@@ -339,11 +267,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     },
                     {
-                        key: `agenda_show_internal_items_on_projector`,
-                        label: _(`Show internal items when projecting agenda`),
-                        type: `boolean`
-                    },
-                    {
                         key: `agenda_show_subtitles`,
                         label: _(`Show motion submitters in the agenda`),
                         type: `boolean`
@@ -351,7 +274,17 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 ]
             },
             {
-                label: _(`Voting and ballot papers`),
+                label: _(`Projection`),
+                settings: [
+                    {
+                        key: `agenda_show_internal_items_on_projector`,
+                        label: _(`Show internal items when projecting agenda`),
+                        type: `boolean`
+                    }
+                ]
+            },
+            {
+                label: _(`Vote`),
                 settings: [
                     {
                         key: `topic_poll_default_group_ids`,
@@ -370,13 +303,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 label: _(`General`),
                 settings: [
                     {
-                        key: `list_of_speakers_enable_pro_contra_speech`,
-                        label: _(`Enable forspeech / counter speech`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `list_of_speakers_can_set_contribution_self`,
-                        label: _(`Enable star icon usage by speakers`),
+                        key: `list_of_speakers_initially_closed`,
+                        label: _(`List of speakers is initially closed`),
                         type: `boolean`
                     },
                     {
@@ -385,8 +313,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
-                        key: `list_of_speakers_initially_closed`,
-                        label: _(`List of speakers is initially closed`),
+                        key: `list_of_speakers_allow_multiple_speakers`,
+                        label: _(`Allow one participant multiple times on the same list`),
                         type: `boolean`
                     },
                     {
@@ -398,54 +326,31 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `list_of_speakers_hide_contribution_count`,
                         label: _(`Hide hint for multiple contributions`),
                         type: `boolean`
-                    },
-                    {
-                        key: `list_of_speakers_allow_multiple_speakers`,
-                        label: _(`Allow one participant multiple times on the same list`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `list_of_speakers_enable_interposed_question`,
-                        label: _(`Enable interposed questions`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `list_of_speakers_intervention_time`,
-                        label: _(`Intervention speaking time in seconds`),
-                        type: `integer`,
-                        helpText: _(`Choose 0 to disable Intervention.`),
-                        validators: [Validators.min(0)]
-                    },
-                    {
-                        key: `list_of_speakers_default_structure_level_time`,
-                        label: _(`Default speaking time for structure levels in seconds`),
-                        helpText: _(
-                            `Choose a number greater than 0 to activate speaking times widget for structure level countdowns.`
-                        ),
-                        type: `integer`,
-                        validators: [Validators.min(0)]
                     }
                 ]
             },
             {
-                label: _(`Projector and countdown`),
+                label: _(`Speech type`),
                 settings: [
                     {
-                        key: `list_of_speakers_couple_countdown`,
-                        label: _(`Couple countdown with the list of speakers`),
-                        type: `boolean`,
-                        helpText: _(`[Begin speech] starts the countdown, [End speech] stops the countdown.`)
+                        key: `list_of_speakers_enable_pro_contra_speech`,
+                        label: _(`Enable forspeech / counter speech`),
+                        type: `boolean`
                     },
+                    {
+                        key: `list_of_speakers_can_set_contribution_self`,
+                        label: _(`Enable star icon usage by speakers`),
+                        type: `boolean`
+                    }
+                ]
+            },
+            {
+                label: _(`Projection`),
+                settings: [
                     {
                         key: `list_of_speakers_show_amount_of_speakers_on_slide`,
                         label: _(`Show the amount of speakers in subtitle of list of speakers slide`),
                         type: `boolean`
-                    },
-                    {
-                        key: `list_of_speakers_amount_last_on_projector`,
-                        label: _(`Number of last speakers to be shown on the projector`),
-                        type: `integer`,
-                        validators: [Validators.min(-1)]
                     },
                     {
                         key: `list_of_speakers_amount_next_on_projector`,
@@ -453,6 +358,23 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `integer`,
                         helpText: _(`Enter number of the next shown speakers. Choose -1 to show all next speakers.`),
                         validators: [Validators.min(-1)]
+                    },
+                    {
+                        key: `list_of_speakers_amount_last_on_projector`,
+                        label: _(`Number of last speakers to be shown on the projector`),
+                        type: `integer`,
+                        validators: [Validators.min(-1)]
+                    }
+                ]
+            },
+            {
+                label: _(`Countdown`),
+                settings: [
+                    {
+                        key: `list_of_speakers_couple_countdown`,
+                        label: _(`Couple countdown with the list of speakers`),
+                        type: `boolean`,
+                        helpText: _(`[Begin speech] starts the countdown, [End speech] stops the countdown.`)
                     },
                     {
                         key: `projector_countdown_warning_time`,
@@ -477,27 +399,35 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
-                        key: `list_of_speakers_can_create_point_of_order_for_others`,
-                        label: _(`Enable point of orders for other participants`),
-                        helpText: _(`Requires permission to manage lists of speakers`),
-                        type: `boolean`
-                    },
-                    {
                         key: `list_of_speakers_speaker_note_for_everyone`,
                         label: _(
                             `Everyone can see the request of a point of order (instead of managers for list of speakers only)`
                         ),
-                        type: `boolean`
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.list_of_speakers_enable_point_of_order_speakers
+                    },
+                    {
+                        key: `list_of_speakers_can_create_point_of_order_for_others`,
+                        label: _(`Enable point of orders for other participants`),
+                        helpText: _(`Requires permission to manage lists of speakers`),
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.list_of_speakers_enable_point_of_order_speakers
                     },
                     {
                         key: `list_of_speakers_closing_disables_point_of_order`,
                         label: _(`Disallow new point of order when list of speakers is closed`),
-                        type: `boolean`
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.list_of_speakers_enable_point_of_order_speakers
                     },
                     {
                         key: `list_of_speakers_enable_point_of_order_categories`,
                         label: _(`Enable specifications and ranking for possible motions`),
-                        type: `boolean`
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.list_of_speakers_enable_point_of_order_speakers
                     },
                     {
                         key: `point_of_order_category_ids`,
@@ -508,7 +438,40 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             [`text`, `entry`],
                             [`rank`, `allocation`]
                         ],
-                        pickKeys: [`id`, `text`, `rank`]
+                        pickKeys: [`id`, `text`, `rank`],
+                        indentation: 2,
+                        disable: settings =>
+                            !settings.list_of_speakers_enable_point_of_order_categories ||
+                            !settings.list_of_speakers_enable_point_of_order_speakers
+                    }
+                ]
+            },
+            {
+                label: _(`Parliament options`),
+                settings: [
+                    {
+                        text: _(
+                            `OpenSlides offers various speaking list customizations for use in parliament. These include the configuration of speaking time quotas for parliamentary groups (e.g. fractions, coalitions) as well as extended types of speeches such as short interventions and (parliamentary) interposed questions.`
+                        )
+                    },
+                    {
+                        key: `list_of_speakers_default_structure_level_time`,
+                        label: _(`Default speaking time contingent for political groups (structure levels) in seconds`),
+                        helpText: _(`Choose 0 to disable speaking times widget for structure level countdowns.`),
+                        type: `integer`,
+                        validators: [Validators.min(0)]
+                    },
+                    {
+                        key: `list_of_speakers_intervention_time`,
+                        label: _(`Intervention speaking time in seconds`),
+                        type: `integer`,
+                        helpText: _(`Choose 0 to disable Intervention.`),
+                        validators: [Validators.min(0)]
+                    },
+                    {
+                        key: `list_of_speakers_enable_interposed_question`,
+                        label: _(`Enable interposed questions`),
+                        type: `boolean`
                     }
                 ]
             }
@@ -519,7 +482,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
         icon: `assignment`,
         subgroups: [
             {
-                label: _(`General`),
+                label: _(`Workflow`),
                 settings: [
                     {
                         key: `motions_default_workflow_id`,
@@ -540,21 +503,43 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             idKey: `id`,
                             labelKey: `name`
                         }
-                    },
-                    {
-                        key: `motions_default_statute_amendment_workflow_id`,
-                        label: _(`Workflow of new statute amendments`),
-                        type: `choice`,
-                        choicesFunc: {
-                            collection: MotionWorkflow.COLLECTION,
-                            idKey: `id`,
-                            labelKey: `name`
-                        }
-                    },
+                    }
+                ]
+            },
+            {
+                label: _(`Formalities`),
+                settings: [
                     {
                         key: `motions_preamble`,
                         label: _(`Motion preamble`)
                     },
+                    {
+                        key: `motions_recommendations_by`,
+                        label: _(`Name of recommender`),
+                        helpText: _(
+                            `Will be displayed as label before selected recommendation. Use an empty value to disable the recommendation system.`
+                        )
+                    },
+                    {
+                        key: `motions_reason_required`,
+                        label: _(`Reason required for creating new motion`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_editor`,
+                        label: _(`Activate the selection field 'motion editor'`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_working_group_speaker`,
+                        label: _(`Activate the selection field 'spokesperson'`),
+                        type: `boolean`
+                    }
+                ]
+            },
+            {
+                label: _(`View`),
+                settings: [
                     {
                         key: `motions_default_line_numbering`,
                         label: _(`Default line numbering`),
@@ -571,15 +556,38 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Line length`),
                         type: `integer`,
                         helpText: _(
-                            `The maximum number of characters per line. Relevant when line numbering is enabled. Min: 40`
+                            `The maximum number of characters per line. Relevant when line numbering is enabled. Min: 40. Note: Check PDF export and font.`
                         ),
                         validators: [Validators.min(40)]
                     },
                     {
-                        key: `motions_reason_required`,
-                        label: _(`Reason required for creating new motion`),
+                        key: `motions_recommendation_text_mode`,
+                        label: _(`Default text version for change recommendations and projection of motions`),
+                        type: `choice`,
+                        choices: {
+                            // matches ChangeRecoMode
+                            original: _(`Original version`),
+                            changed: _(`Changed version`),
+                            diff: _(`Diff version`),
+                            agreed: _(`Final version`)
+                        }
+                    },
+                    {
+                        key: `motions_show_referring_motions`,
+                        label: _(`Show referring motions`),
                         type: `boolean`
                     },
+                    {
+                        key: `motions_show_sequential_number`,
+                        label: _(`Show the sequential number for a motion`),
+                        helpText: _(`In motion list, motion detail and PDF.`),
+                        type: `boolean`
+                    }
+                ]
+            },
+            {
+                label: _(`Projection`),
+                settings: [
                     {
                         key: `motions_enable_text_on_projector`,
                         label: _(`Show motion text on projector`),
@@ -596,70 +604,35 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
-                        key: `motions_show_referring_motions`,
-                        label: _(`Show referring motions`),
-                        type: `boolean`
-                    },
-                    {
                         key: `motions_enable_sidebox_on_projector`,
                         label: _(`Show meta information box beside the title on projector`),
                         type: `boolean`,
                         helpText: _(`If deactivated it is displayed below the title`)
                     },
                     {
-                        key: `motions_show_sequential_number`,
-                        label: _(`Show the sequential number for a motion`),
-                        helpText: _(`In motion list, motion detail and PDF.`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `motions_recommendations_by`,
-                        label: _(`Name of recommender`),
-                        helpText: _(
-                            `Will be displayed as label before selected recommendation. Use an empty value to disable the recommendation system.`
-                        )
-                    },
-                    {
-                        key: `motions_statute_recommendations_by`,
-                        label: _(`Name of recommender for statute amendments`),
-                        helpText: _(`Will be displayed as label before selected recommendation in statute amendments.`)
-                    },
-                    {
-                        key: `motions_recommendation_text_mode`,
-                        label: _(`Default text version for change recommendations and projection of motions`),
-                        type: `choice`,
-                        choices: {
-                            // matches ChangeRecoMode
-                            original: _(`Original version`),
-                            changed: _(`Changed version`),
-                            diff: _(`Diff version`),
-                            agreed: _(`Final version`)
-                        }
-                    },
-                    {
-                        key: `motions_default_sorting`,
-                        label: _(`Sort motions by`),
-                        type: `choice`,
-                        choices: {
-                            number: _(`Identifier`),
-                            weight: _(`Call list`)
-                        }
-                    },
-                    {
-                        key: `motions_enable_editor`,
-                        label: _(`Activate the selection field 'motion editor'`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `motions_enable_working_group_speaker`,
-                        label: _(`Activate the selection field 'spokesperson'`),
-                        type: `boolean`
+                        key: `motions_block_slide_columns`,
+                        label: _(`Maximum number of columns on motion block slide`),
+                        type: `integer`,
+                        validators: [Validators.min(1)]
                     }
                 ]
             },
             {
-                label: _(`Numbering`),
+                label: _(`Numbering and sorting`),
                 settings: [
+                    {
+                        key: `motions_number_with_blank`,
+                        label: _(`Allow blank in number`),
+                        type: `boolean`,
+                        helpText: _(`Blank between prefix and number, e.g. 'A 001'.`)
+                    },
+                    {
+                        key: `motions_number_min_digits`,
+                        label: _(`Minimum number of digits for motion identifier`),
+                        type: `integer`,
+                        helpText: _(`Uses leading zeros to sort motions correctly by identifier.`),
+                        validators: [Validators.min(1)]
+                    },
                     {
                         key: `motions_number_type`,
                         label: _(`Motion identifier`),
@@ -671,17 +644,13 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     },
                     {
-                        key: `motions_number_min_digits`,
-                        label: _(`Minimum number of digits for motion identifier`),
-                        type: `integer`,
-                        helpText: _(`Uses leading zeros to sort motions correctly by identifier.`),
-                        validators: [Validators.min(1)]
-                    },
-                    {
-                        key: `motions_number_with_blank`,
-                        label: _(`Allow blank in number`),
-                        type: `boolean`,
-                        helpText: _(`Blank between prefix and number, e.g. 'A 001'.`)
+                        key: `motions_default_sorting`,
+                        label: _(`Sort motions by`),
+                        type: `choice`,
+                        choices: {
+                            number: _(`Identifier`),
+                            weight: _(`Call list`)
+                        }
                     }
                 ]
             },
@@ -694,19 +663,31 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
-                        key: `motions_statutes_enabled`,
-                        label: _(`Activate statute amendments`),
-                        type: `boolean`,
-                        hide: true
-                    },
-                    {
                         key: `motions_amendments_in_main_list`,
                         label: _(`Show amendments together with motions`),
-                        type: `boolean`
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.motions_amendments_enabled
+                    },
+                    {
+                        key: `motions_amendments_multiple_paragraphs`,
+                        label: _(`Amendments can change multiple paragraphs`),
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.motions_amendments_enabled
+                    },
+                    {
+                        key: `motions_amendments_of_amendments`,
+                        label: _(`Allow amendments of amendments`),
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.motions_amendments_enabled
                     },
                     {
                         key: `motions_amendments_prefix`,
-                        label: _(`Prefix for the motion identifier of amendments`)
+                        label: _(`Prefix for the motion identifier of amendments`),
+                        indentation: 1,
+                        disable: settings => !settings.motions_amendments_enabled
                     },
                     {
                         key: `motions_amendments_text_mode`,
@@ -716,23 +697,21 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             freestyle: _(`Empty text field`),
                             fulltext: _(`Edit the whole motion text`),
                             paragraph: _(`Paragraph-based, Diff-enabled`)
-                        }
-                    },
-                    {
-                        key: `motions_amendments_multiple_paragraphs`,
-                        label: _(`Amendments can change multiple paragraphs`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `motions_amendments_of_amendments`,
-                        label: _(`Allow amendments of amendments`),
-                        type: `boolean`
+                        },
+                        indentation: 1,
+                        disable: settings => !settings.motions_amendments_enabled
                     }
                 ]
             },
             {
                 label: _(`Supporters`),
                 settings: [
+                    {
+                        text: _(`For activation:<br>
+                        1. Assign group permission (define the group that can support motions)<br>
+                        2. Adjust workflow (define state in which motions can be supported)<br>
+                        3. Enter minimum number (see next field)`)
+                    },
                     {
                         key: `motions_supporters_min_amount`,
                         label: _(`Number of (minimum) required supporters for a motion`),
@@ -743,7 +722,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 ]
             },
             {
-                label: _(`Voting and ballot papers`),
+                label: _(`Vote`),
                 settings: [
                     {
                         key: `motion_poll_default_type`,
@@ -759,16 +738,30 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     },
                     {
-                        key: `motion_poll_default_onehundred_percent_base`,
-                        label: _(`Default 100 % base of a voting result`),
-                        type: `choice`,
-                        choices: PollPercentBaseVerbose
-                    },
-                    {
                         key: `motion_poll_default_group_ids`,
                         label: _(`Default groups with voting rights`),
                         type: `groups`
                     },
+                    {
+                        key: `motion_poll_default_onehundred_percent_base`,
+                        label: _(`Default 100 % base`),
+                        type: `choice`,
+                        choices: PollPercentBaseVerbose
+                    },
+                    {
+                        key: `motion_poll_default_backend`,
+                        label: _(`Default voting duration`),
+                        type: `choice`,
+                        choices: PollBackendDurationChoices,
+                        helpText: _(
+                            `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
+                        )
+                    }
+                ]
+            },
+            {
+                label: _(`Ballot papers`),
+                settings: [
                     {
                         key: `motion_poll_ballot_paper_selection`,
                         label: _(`Number of ballot papers`),
@@ -784,49 +777,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Custom number of ballot papers`),
                         type: `integer`,
                         validators: [Validators.min(1)]
-                    },
-                    {
-                        key: `motion_poll_default_backend`,
-                        label: _(`Default voting duration`),
-                        type: `choice`,
-                        choices: PollBackendDurationChoices,
-                        helpText: _(
-                            `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
-                        )
-                    }
-                ]
-            },
-            {
-                label: _(`Projector`),
-                settings: [
-                    {
-                        key: `motions_block_slide_columns`,
-                        label: _(`Maximum number of columns on motion block slide`),
-                        type: `integer`,
-                        validators: [Validators.min(1)]
-                    }
-                ]
-            },
-            {
-                label: _(`PDF export`),
-                settings: [
-                    {
-                        key: `motions_export_title`,
-                        label: _(`Title for PDF documents of motions`)
-                    },
-                    {
-                        key: `motions_export_preamble`,
-                        label: _(`Preamble text for PDF documents of motions`)
-                    },
-                    {
-                        key: `motions_export_submitter_recommendation`,
-                        label: _(`Show submitters and recommendation/state in table of contents`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `motions_export_follow_recommendation`,
-                        label: _(`Show checkbox to record decision`),
-                        type: `boolean`
                     }
                 ]
             }
@@ -839,12 +789,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
             {
                 label: _(`Ballot`),
                 settings: [
-                    {
-                        key: `assignment_poll_default_method`,
-                        label: _(`Default election method`),
-                        type: `choice`,
-                        choices: AssignmentPollMethodVerbose
-                    },
                     {
                         key: `assignment_poll_default_type`,
                         label: _(`Default voting type`),
@@ -859,30 +803,21 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     },
                     {
-                        key: `assignment_poll_default_onehundred_percent_base`,
-                        label: _(`Default 100 % base of an election result`),
-                        type: `choice`,
-                        choices: PollPercentBaseVerbose
-                    },
-                    {
                         key: `assignment_poll_default_group_ids`,
                         label: _(`Default groups with voting rights`),
                         type: `groups`
                     },
                     {
-                        key: `assignment_poll_sort_poll_result_by_votes`,
-                        label: _(`Sort election results by amount of votes`),
-                        type: `boolean`
+                        key: `assignment_poll_default_method`,
+                        label: _(`Default election method`),
+                        type: `choice`,
+                        choices: AssignmentPollMethodVerbose
                     },
                     {
-                        key: `assignment_poll_add_candidates_to_list_of_speakers`,
-                        label: _(`Put all candidates on the list of speakers`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `assignment_poll_enable_max_votes_per_option`,
-                        label: _(`Allow to accumulate several votes on one candidate ("comulative voting")`),
-                        type: `boolean`
+                        key: `assignment_poll_default_onehundred_percent_base`,
+                        label: _(`Default 100 % base`),
+                        type: `choice`,
+                        choices: PollPercentBaseVerbose
                     },
                     {
                         key: `assignment_poll_default_backend`,
@@ -892,6 +827,26 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         helpText: _(
                             `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
                         )
+                    },
+                    {
+                        key: `assignment_poll_enable_max_votes_per_option`,
+                        label: _(`Allow to accumulate several votes on one candidate ("comulative voting")`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `assignment_poll_sort_poll_result_by_votes`,
+                        label: _(`Sort election results by amount of votes`),
+                        type: `boolean`
+                    }
+                ]
+            },
+            {
+                label: _(`List of speakers`),
+                settings: [
+                    {
+                        key: `assignment_poll_add_candidates_to_list_of_speakers`,
+                        label: _(`Put all candidates on the list of speakers`),
+                        type: `boolean`
                     }
                 ]
             },
@@ -913,19 +868,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Custom number of ballot papers`),
                         type: `integer`,
                         validators: [Validators.min(1)]
-                    }
-                ]
-            },
-            {
-                label: _(`PDF export`),
-                settings: [
-                    {
-                        key: `assignments_export_title`,
-                        label: _(`Title for PDF document (all elections)`)
-                    },
-                    {
-                        key: `assignments_export_preamble`,
-                        label: _(`Preamble text for PDF document (all elections)`)
                     }
                 ]
             }
@@ -953,24 +895,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_enable_vote_weight`,
                         label: _(`Activate vote weight`),
                         type: `boolean`
-                    },
-                    {
-                        key: `users_enable_vote_delegations`,
-                        label: _(`Activate vote delegations`),
-                        type: `boolean`
                     }
                 ]
             },
             {
-                label: _(`PDF export`),
+                label: _(`Vote delegation`),
                 settings: [
                     {
-                        key: `users_pdf_welcometitle`,
-                        label: _(`Title for access data and welcome PDF`)
-                    },
-                    {
-                        key: `users_pdf_welcometext`,
-                        label: _(`Help text for access data and welcome PDF`)
+                        key: `users_enable_vote_delegations`,
+                        label: _(`Activate vote delegations`),
+                        type: `boolean`
                     }
                 ]
             },
@@ -1089,7 +1023,9 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `applause_show_level`,
                         label: _(`Show applause amount`),
-                        type: `boolean`
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.applause_enable
                     },
                     {
                         key: `applause_type`,
@@ -1098,20 +1034,26 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         choices: {
                             'applause-type-bar': _(`Level indicator`),
                             'applause-type-particles': _(`Particles`)
-                        }
+                        },
+                        indentation: 1,
+                        disable: settings => !settings.applause_enable
                     },
                     {
                         key: `applause_particle_image_url`,
                         label: _(`Applause particle image URL`),
                         helpText: _(
                             `Shows the given image as applause particle. Recommended image format: 24x24px, PNG, JPG or SVG`
-                        )
+                        ),
+                        indentation: 1,
+                        disable: settings => !settings.applause_enable
                     },
                     {
                         key: `applause_min_amount`,
                         label: _(`Lowest applause amount`),
                         helpText: _(`Defines the minimum deflection which is required to recognize applause.`),
-                        type: `integer`
+                        type: `integer`,
+                        indentation: 1,
+                        disable: settings => !settings.applause_enable
                     },
                     {
                         key: `applause_max_amount`,
@@ -1119,13 +1061,148 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         helpText: _(
                             `Defines the maximum deflection. Entering zero will use the amount of present participants instead.`
                         ),
-                        type: `integer`
+                        type: `integer`,
+                        indentation: 1,
+                        disable: settings => !settings.applause_enable
                     },
                     {
                         key: `applause_timeout`,
                         label: _(`Applause interval in seconds`),
                         helpText: _(`Defines the time in which applause amounts are add up.`),
+                        type: `integer`,
+                        indentation: 1,
+                        disable: settings => !settings.applause_enable
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        label: _(`Export`),
+        icon: `archive`,
+        subgroups: [
+            {
+                label: _(`CSV options`),
+                settings: [
+                    {
+                        key: `export_csv_separator`,
+                        label: _(`Separator used for all CSV exports and examples`),
+                        dontTranslateDefault: true
+                    },
+                    {
+                        key: `export_csv_encoding`,
+                        label: _(`Default encoding for all CSV exports`),
+                        type: `choice`,
+                        choices: {
+                            // matches ExportCsvEncoding
+                            'utf-8': `UTF-8`,
+                            'iso-8859-15': `ISO-8859-15`
+                        }
+                    }
+                ]
+            },
+            {
+                label: _(`PDF options`),
+                settings: [
+                    {
+                        key: `export_pdf_pagenumber_alignment`,
+                        label: _(`Page number alignment in PDF`),
+                        type: `choice`,
+                        choices: {
+                            left: _(`Left`),
+                            center: _(`Center`),
+                            right: _(`Right`)
+                        }
+                    },
+                    {
+                        key: `export_pdf_fontsize`,
+                        label: _(`Font size in pt`),
+                        type: `integer`,
+                        validators: [Validators.min(10), Validators.max(12)],
+                        helpText: _(`Available sizes are 10, 11 and 12`)
+                    },
+                    {
+                        key: `export_pdf_line_height`,
+                        label: _(`Line spacing`),
                         type: `integer`
+                    },
+                    {
+                        key: `export_pdf_page_margin_left`,
+                        label: _(`Page margin left in mm`),
+                        type: `integer`
+                    },
+                    {
+                        key: `export_pdf_page_margin_right`,
+                        label: _(`Page margin right in mm`),
+                        type: `integer`
+                    },
+                    {
+                        key: `export_pdf_page_margin_top`,
+                        label: _(`Page margin top in mm`),
+                        type: `integer`
+                    },
+                    {
+                        key: `export_pdf_page_margin_bottom`,
+                        label: _(`Page margin bottom in mm`),
+                        type: `integer`
+                    },
+                    {
+                        key: `export_pdf_pagesize`,
+                        label: _(`Page format`),
+                        type: `choice`,
+                        choices: {
+                            A4: `DIN A4`,
+                            A5: `DIN A5`
+                        }
+                    }
+                ]
+            },
+            {
+                label: _(`Motions (PDF settings)`),
+                settings: [
+                    {
+                        key: `motions_export_title`,
+                        label: _(`Title for PDF documents of motions`)
+                    },
+                    {
+                        key: `motions_export_preamble`,
+                        label: _(`Preamble text for PDF documents of motions`)
+                    },
+                    {
+                        key: `motions_export_submitter_recommendation`,
+                        label: _(`Show submitters and recommendation/state in table of contents`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_export_follow_recommendation`,
+                        label: _(`Show checkbox to record decision`),
+                        type: `boolean`
+                    }
+                ]
+            },
+            {
+                label: _(`Elections (PDF settings)`),
+                settings: [
+                    {
+                        key: `assignments_export_title`,
+                        label: _(`Title for PDF document (all elections)`)
+                    },
+                    {
+                        key: `assignments_export_preamble`,
+                        label: _(`Preamble text for PDF document (all elections)`)
+                    }
+                ]
+            },
+            {
+                label: _(`Participants (PDF settings)`),
+                settings: [
+                    {
+                        key: `users_pdf_welcometitle`,
+                        label: _(`Title for access data and welcome PDF`)
+                    },
+                    {
+                        key: `users_pdf_welcometext`,
+                        label: _(`Help text for access data and welcome PDF`)
                     }
                 ]
             }
