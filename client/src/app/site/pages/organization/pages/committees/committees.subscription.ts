@@ -17,19 +17,7 @@ export const getCommitteeListSubscriptionConfig: SubscriptionConfigGenerator = (
             {
                 idField: `committee_ids`,
                 fieldset: `list`,
-                follow: [
-                    { idField: `user_ids`, fieldset: `accountList` },
-                    {
-                        idField: `meeting_ids`,
-                        fieldset: [`name`, `start_time`, `end_time`],
-                        follow: [
-                            {
-                                idField: `admin_group_id`,
-                                fieldset: [`meeting_user_ids`]
-                            }
-                        ]
-                    }
-                ]
+                follow: [{ idField: `user_ids`, fieldset: `accountList` }]
             }
         ]
     },
