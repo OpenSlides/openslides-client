@@ -33,6 +33,7 @@
             </button>
         </div>
     </os-head-bar>
+
     <mat-card *ngIf="(topic || editTopic) && (hasLoaded | async)" class="spacer-bottom-60 os-card">
         <mat-card-content>
             <ng-container *ngIf="!editTopic && topic">
@@ -104,6 +105,7 @@
         </mat-card-content>
     </mat-card>
 
+    <os-moderation-note [contentObject]="topic" *ngIf="!editTopic"></os-moderation-note>
     <div *ngIf="!editTopic" class="spacer-bottom-60">
         <ng-container *ngIf="topic && topic.poll_ids?.length">
             <ng-container *ngFor="let poll of topic.poll_ids | reverse; trackBy: trackById">

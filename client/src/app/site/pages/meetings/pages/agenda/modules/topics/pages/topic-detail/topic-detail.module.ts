@@ -10,6 +10,7 @@ import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-m
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { ListOfSpeakersContentModule } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/list-of-speakers-content.module';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { AttachmentControlModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/attachment-control';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -47,7 +48,8 @@ import { TopicDetailRoutingModule } from './topic-detail-routing.module';
         MatListModule,
         MatFormFieldModule,
         TopicPollModule,
-        RouterModule
+        RouterModule,
+        ListOfSpeakersContentModule
     ]
 })
 export class TopicDetailModule {}
