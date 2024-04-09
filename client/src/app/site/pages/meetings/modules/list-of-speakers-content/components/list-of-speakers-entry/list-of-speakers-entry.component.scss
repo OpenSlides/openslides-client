@@ -74,6 +74,7 @@
 .speaker-control-button {
     $speaker-control-button-size: 46px;
     $speaker-control-button-font-size: 38px;
+    $speaker-control-button-font-size-small: 24px;
     width: $speaker-control-button-size !important;
     height: $speaker-control-button-size !important;
     line-height: $speaker-control-button-size !important;
@@ -85,6 +86,13 @@
     }
     .material-icons {
         font-size: $speaker-control-button-font-size !important;
+    }
+
+    &.small-play-icon {
+        .mat-icon,
+        .material-icons {
+            font-size: $speaker-control-button-font-size-small !important;
+        }
     }
 
     // TODO: Replace after mdc-migration:
