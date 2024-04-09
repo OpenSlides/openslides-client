@@ -9,10 +9,7 @@ import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import {
-    MEETING_RELATED_FORM_CONTROLS,
-    ParticipantControllerService
-} from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -71,11 +68,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
     public get shouldEnableFormControlFn(): (controlName: string) => boolean {
         return controlName => {
-            const canManageUsers = this.isAllowed(`manage`);
-            if (this._isUserInScope || (this.newUser && canManageUsers)) {
+            const canUpdateUsers = this.isAllowed(`update`);
+            if (this._isUserInScope || (this.newUser && canUpdateUsers)) {
                 return true;
-            } else if (canManageUsers) {
-                return MEETING_RELATED_FORM_CONTROLS.includes(controlName);
+            } else if (canUpdateUsers) {
+                return controlName === `is_present` ? this.operator.hasPerms(Permission.userCanManagePresence) : true;
             } else {
                 return PERSONAL_FORM_CONTROLS.includes(controlName);
             }
@@ -353,7 +350,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     private async updateUser(): Promise<void> {
-        if (this.operator.hasPerms(Permission.userCanManage)) {
+        if (this.operator.hasPerms(Permission.userCanUpdate)) {
             this.checkForGroups(this.personalInfoFormValue);
             const isPresent = this.personalInfoFormValue.is_present || false;
             if (this.personalInfoFormValue.vote_delegated_to_id === 0) {
@@ -381,10 +378,14 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 ) ||
                 (await this.promptService.open(title, content))
             ) {
-                await this.repo
-                    .update(payload, this.user!)
-                    .concat(this.repo.setPresent(isPresent, this.user!))
-                    .resolve();
+                if (this.operator.hasPerms(Permission.userCanManagePresence)) {
+                    await this.repo
+                        .update(payload, this.user!)
+                        .concat(this.repo.setPresent(isPresent, this.user!))
+                        .resolve();
+                } else {
+                    await this.repo.update(payload, this.user!).resolve();
+                }
             }
         } else {
             await this.repo.updateSelf(this.personalInfoFormValue, this.user!);
