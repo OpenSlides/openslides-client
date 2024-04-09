@@ -603,7 +603,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Show recommendation on projector`),
                         type: `boolean`
                     },
-
                     {
                         key: `motions_enable_sidebox_on_projector`,
                         label: _(`Show meta information box beside the title on projector`),
