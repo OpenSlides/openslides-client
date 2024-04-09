@@ -323,7 +323,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
-                        key: `list_of_speakers_show_first_contribution`, //TODO`list_of_speakers_hide_contribution_count`,
+                        key: `list_of_speakers_hide_contribution_count`,
                         label: _(`Hide hint for multiple contributions`),
                         type: `boolean`
                     }
@@ -656,7 +656,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 ]
             },
             {
-                //TODO
                 label: _(`Amendments`),
                 settings: [
                     {
