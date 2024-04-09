@@ -23,13 +23,6 @@
             </mat-expansion-panel-header>
             <mat-list>
                 <mat-list-item *ngFor="let speaker of finishedSpeakers; let number = index">
-                    <div
-                        *ngIf="number < 1 || displayStartTime(speaker, finishedSpeakers[number - 1])"
-                        class="finished-speakers-start"
-                    >
-                        {{ 'Start time' | translate }}: {{ startTimeToString(speaker) }}
-                    </div>
-
                     <os-list-of-speakers-entry
                         [speaker]="speaker"
                         [speakerIndex]="number"

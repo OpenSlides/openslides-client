@@ -67,6 +67,7 @@
     }
 
     .duration {
+        display: inline;
         font-size: 14px;
     }
 }
@@ -77,6 +78,9 @@
 
 .speaker-appendix {
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    text-align: right;
 }
 
 .speaker-control-button {

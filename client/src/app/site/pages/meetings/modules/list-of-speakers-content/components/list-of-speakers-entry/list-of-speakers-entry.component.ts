@@ -145,6 +145,15 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     }
 
     /**
+     * returns a locale-specific version of the starting time for the given speaker item
+     *
+     * @returns a time string using the current language setting of the client
+     */
+    public get startTime(): string {
+        return this.speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang);
+    }
+
+    /**
      * Click on the X button - removes the speaker from the list of speakers
      *
      * @param speaker optional speaker to remove. If none is given,

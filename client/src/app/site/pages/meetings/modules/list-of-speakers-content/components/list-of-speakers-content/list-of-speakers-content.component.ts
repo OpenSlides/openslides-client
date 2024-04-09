@@ -12,7 +12,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { differenceInSeconds } from 'date-fns';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
@@ -482,10 +481,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             meeting_user_id: data.user?.meeting_user_id,
             structure_level_id: structureLevelId
         });
-    }
-
-    public displayStartTime(speaker: ViewSpeaker, prevSpeaker: ViewSpeaker): boolean {
-        return differenceInSeconds(speaker.getBeginTimeAsDate(), prevSpeaker.getEndTimeAsDate()) !== 0;
     }
 
     /**

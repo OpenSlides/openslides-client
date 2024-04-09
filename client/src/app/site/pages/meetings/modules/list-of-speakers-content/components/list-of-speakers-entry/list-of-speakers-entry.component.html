@@ -6,14 +6,16 @@
                 *ngIf="!speaker.isSpeaking"
                 mat-icon-button
                 [color]="speakerIndex === 0 ? 'accent' : null"
-                [ngClass]="{ 'small-play-icon': speakerIndex > 0 || speakerIndex !== 0 }"
+                [ngClass]="{ 'small-play-icon': (speakerIndex > 0 || speakerIndex !== 0) && !speaker.isCurrentSpeaker }"
                 class="speaker-control-button"
                 matTooltip="{{ (speaker.pause_time ? 'Resume speech' : 'Begin speech') | translate }}"
                 matTooltipPosition="above"
                 (click)="onStartButton()"
             >
-                <mat-icon *ngIf="speakerIndex === 0">play_circle_outline</mat-icon>
-                <mat-icon *ngIf="speakerIndex > 0 || speakerIndex !== 0">play_arrow</mat-icon>
+                <mat-icon *ngIf="speakerIndex === 0 || speaker.isCurrentSpeaker">play_circle_outline</mat-icon>
+                <mat-icon *ngIf="(speakerIndex > 0 || speakerIndex !== 0) && !speaker.isCurrentSpeaker">
+                    play_arrow
+                </mat-icon>
             </button>
 
             <!-- pause button -->
@@ -192,9 +194,13 @@
     </div>
     <div *ngIf="speaker.isFinished" class="speaker-appendix">
         <!-- Speaker countdown -->
-        <span class="duration">
-            {{ durationString }}
-        </span>
+        <div class="duration">
+            <div>{{ startTime }}</div>
+            <div>
+                <mat-icon inline class="inline-icon-text-align">schedule</mat-icon>
+                {{ durationString }}
+            </div>
+        </div>
 
         <ng-container *osPerms="permission.listOfSpeakersCanManage">
             <button
