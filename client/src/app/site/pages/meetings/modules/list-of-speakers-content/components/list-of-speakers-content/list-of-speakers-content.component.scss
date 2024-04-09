@@ -72,6 +72,12 @@
         font-size: 24px;
         line-height: 24px;
     }
+
+    .speech-type {
+        .user-subtitle, .icon {
+            color: #FFF;
+        }
+    }
 }
 
 .current-speaker:has(+ .interposed-questions) {
