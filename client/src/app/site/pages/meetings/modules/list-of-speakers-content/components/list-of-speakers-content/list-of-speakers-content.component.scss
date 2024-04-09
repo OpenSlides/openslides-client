@@ -56,6 +56,17 @@
     @include desktop {
         padding: 0 0.75em 0 calc(0.75em + 38px);
     }
+    // TODO: Replace after mdc-migration:
+    .speaker-control-button {
+        .mat-icon {
+            width: 42px !important;
+            height: 42px !important;
+            line-height: 42px !important;
+        }
+        .material-icons {
+            font-size: 42px !important;
+        }
+    }
 }
 
 .current-speaker:has(+ .interposed-questions) {

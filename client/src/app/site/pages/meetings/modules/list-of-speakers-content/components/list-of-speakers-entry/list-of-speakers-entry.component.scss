@@ -83,8 +83,8 @@
 
 .speaker-control-button {
     $speaker-control-button-size: 46px;
-    $speaker-control-button-font-size: 38px;
-    $speaker-control-button-font-size-small: 24px;
+    $speaker-control-button-font-size: 36px;
+    $speaker-control-button-font-size-small: 22px;
     width: $speaker-control-button-size !important;
     height: $speaker-control-button-size !important;
     line-height: $speaker-control-button-size !important;
@@ -99,7 +99,6 @@
     }
 
     &.small-play-icon {
-        .mat-icon,
         .material-icons {
             font-size: $speaker-control-button-font-size-small !important;
         }
