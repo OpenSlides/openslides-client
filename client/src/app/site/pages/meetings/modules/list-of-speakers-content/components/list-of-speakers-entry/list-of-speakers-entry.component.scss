@@ -14,7 +14,6 @@
     }
 
     .speaker-name {
-        margin: auto 0;
         font-size: 16px;
         font-weight: 500;
         .pronoun {
@@ -36,21 +35,32 @@
         padding: 0 8px;
     }
 
-    .speaker-info {
-        padding: 4px 0;
-    }
-
     .speaker-structure-level {
         font-size: 12px;
+    }
+
+    .speaker-info {
+        padding: 4px 0;
+        min-height: calc(2 * 18px + 24px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .speaker-name {
+        line-height: 24px;
     }
 
     .speaker-additional-info,
     .speech-type {
         font-size: 12px;
+        line-height: 18px;
         & > span:not(:last-of-type):after {
             content: ' · ';
         }
     }
+
+
 
     .countdown {
         font-size: 18px;

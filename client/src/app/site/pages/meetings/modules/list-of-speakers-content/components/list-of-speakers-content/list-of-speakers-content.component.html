@@ -49,6 +49,7 @@
         <div class="current-speaker background-accent" *ngIf="activeSpeaker">
             <os-list-of-speakers-entry
                 [speaker]="activeSpeaker"
+                [showcolor]="false"
                 (startSpeech)="onStartButton(activeSpeaker)"
                 (pauseSpeech)="onPauseButton(activeSpeaker)"
                 (stopSpeech)="onStopButton(activeSpeaker)"
