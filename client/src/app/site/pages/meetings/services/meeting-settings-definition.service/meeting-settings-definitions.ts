@@ -326,7 +326,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `list_of_speakers_show_first_contribution`, //TODO`list_of_speakers_hide_contribution_count`,
                         label: _(`Hide hint for multiple contributions`),
                         type: `boolean`
-                    },
+                    }
                 ]
             },
             {
@@ -341,7 +341,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `list_of_speakers_can_set_contribution_self`,
                         label: _(`Enable star icon usage by speakers`),
                         type: `boolean`
-                    },
+                    }
                 ]
             },
             {
@@ -364,7 +364,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Number of last speakers to be shown on the projector`),
                         type: `integer`,
                         validators: [Validators.min(-1)]
-                    },
+                    }
                 ]
             },
             {
@@ -440,7 +440,9 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         ],
                         pickKeys: [`id`, `text`, `rank`],
                         indentation: 2,
-                        disable: settings => !settings.list_of_speakers_enable_point_of_order_categories || !settings.list_of_speakers_enable_point_of_order_speakers
+                        disable: settings =>
+                            !settings.list_of_speakers_enable_point_of_order_categories ||
+                            !settings.list_of_speakers_enable_point_of_order_speakers
                     }
                 ]
             },
@@ -448,14 +450,14 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 label: _(`Parliament options`),
                 settings: [
                     {
-                        text: _(`Für die Nutzung im Parlament bietet OpenSlides verschiedene Redelistenanpassungen. Hierzu zählen die Konfiguration von Redezeitkontingenten für parlamentarische Gruppierungen (bspw. Fraktionen, Koalitionen) sowie erweiterte Arten von Redebeiträgen wie Kurzinterventionen und (parlamentarische) Zwischenfragen.`),
+                        text: _(
+                            `Für die Nutzung im Parlament bietet OpenSlides verschiedene Redelistenanpassungen. Hierzu zählen die Konfiguration von Redezeitkontingenten für parlamentarische Gruppierungen (bspw. Fraktionen, Koalitionen) sowie erweiterte Arten von Redebeiträgen wie Kurzinterventionen und (parlamentarische) Zwischenfragen.`
+                        )
                     },
                     {
                         key: `list_of_speakers_default_structure_level_time`,
                         label: _(`Default speaking time contingent for political groups (structure levels) in seconds`),
-                        helpText: _(
-                            `Choose 0 to disable speaking times widget for structure level countdowns.`
-                        ),
+                        helpText: _(`Choose 0 to disable speaking times widget for structure level countdowns.`),
                         type: `integer`,
                         validators: [Validators.min(0)]
                     },
@@ -472,7 +474,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     }
                 ]
-            },
+            }
         ]
     },
     {
@@ -501,12 +503,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             idKey: `id`,
                             labelKey: `name`
                         }
-                    },
+                    }
                 ]
             },
             {
-                    label: _(`Formalities`),
-                    settings: [
+                label: _(`Formalities`),
+                settings: [
                     {
                         key: `motions_preamble`,
                         label: _(`Motion preamble`)
@@ -536,8 +538,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 ]
             },
             {
-                    label: _(`Ansicht`),
-                    settings: [
+                label: _(`Ansicht`),
+                settings: [
                     {
                         key: `motions_default_line_numbering`,
                         label: _(`Default line numbering`),
@@ -574,7 +576,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `motions_show_referring_motions`,
                         label: _(`Show referring motions`),
                         type: `boolean`
-                    },                    
+                    },
                     {
                         key: `motions_show_sequential_number`,
                         label: _(`Show the sequential number for a motion`),
@@ -613,7 +615,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Maximum number of columns on motion block slide`),
                         type: `integer`,
                         validators: [Validators.min(1)]
-                    },
+                    }
                 ]
             },
             {
@@ -653,7 +655,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     }
                 ]
             },
-            { //TODO
+            {
+                //TODO
                 label: _(`Amendments`),
                 settings: [
                     {
@@ -699,7 +702,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         },
                         indentation: 1,
                         disable: settings => !settings.motions_amendments_enabled
-                    },
+                    }
                 ]
             },
             {
@@ -709,7 +712,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         text: _(`For activation:<br>
                         1. Assign group permission (define the group that can support motions)<br>
                         2. Adjust workflow (define state in which motions can be supported)<br>
-                        3. Enter minimum number (see next field)`),
+                        3. Enter minimum number (see next field)`)
                     },
                     {
                         key: `motions_supporters_min_amount`,
@@ -778,7 +781,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         validators: [Validators.min(1)]
                     }
                 ]
-            },
+            }
         ]
     },
     {
@@ -836,7 +839,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `assignment_poll_sort_poll_result_by_votes`,
                         label: _(`Sort election results by amount of votes`),
                         type: `boolean`
-                    },
+                    }
                 ]
             },
             {
@@ -846,8 +849,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `assignment_poll_add_candidates_to_list_of_speakers`,
                         label: _(`Put all candidates on the list of speakers`),
                         type: `boolean`
-                    },
-
+                    }
                 ]
             },
             {
@@ -870,7 +872,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         validators: [Validators.min(1)]
                     }
                 ]
-            },
+            }
         ]
     },
     {
@@ -895,7 +897,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_enable_vote_weight`,
                         label: _(`Activate vote weight`),
                         type: `boolean`
-                    },
+                    }
                 ]
             },
             {
@@ -1026,7 +1028,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`,
                         indentation: 1,
                         disable: settings => !settings.applause_enable
-
                     },
                     {
                         key: `applause_type`,
@@ -1184,14 +1185,14 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
             {
                 label: _(`Elections (PDF settings)`),
                 settings: [
-                        {
-                            key: `assignments_export_title`,
-                            label: _(`Title for PDF document (all elections)`)
-                        },
-                        {
-                            key: `assignments_export_preamble`,
-                            label: _(`Preamble text for PDF document (all elections)`)
-                        }
+                    {
+                        key: `assignments_export_title`,
+                        label: _(`Title for PDF document (all elections)`)
+                    },
+                    {
+                        key: `assignments_export_preamble`,
+                        label: _(`Preamble text for PDF document (all elections)`)
+                    }
                 ]
             },
             {
@@ -1206,7 +1207,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Help text for access data and welcome PDF`)
                     }
                 ]
-            },
+            }
         ]
     },
     {
