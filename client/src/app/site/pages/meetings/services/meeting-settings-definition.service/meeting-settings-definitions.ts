@@ -538,7 +538,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 ]
             },
             {
-                label: _(`Ansicht`),
+                label: _(`View`),
                 settings: [
                     {
                         key: `motions_default_line_numbering`,
