@@ -324,7 +324,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `list_of_speakers_hide_contribution_count`,
-                        label: _(`Hide hint for multiple contributions`),
+                        label: _(`Hide note on number of multiple contributions`),
                         type: `boolean`
                     }
                 ]
@@ -456,7 +456,9 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `list_of_speakers_default_structure_level_time`,
-                        label: _(`Default speaking time contingent for political groups (structure levels) in seconds`),
+                        label: _(
+                            `Default speaking time contingent for parliamentary groups (structure levels) in seconds`
+                        ),
                         helpText: _(`Choose 0 to disable speaking times widget for structure level countdowns.`),
                         type: `integer`,
                         validators: [Validators.min(0)]

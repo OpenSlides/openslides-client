@@ -82,7 +82,7 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
             },
             {
                 property: `hasSpoken`,
-                label: this.translate.instant(`Spoken`),
+                label: this.translate.instant(`Speaker`),
                 options: [
                     { condition: true, label: this.translate.instant(`Has spoken`) },
                     { condition: [false, null], label: this.translate.instant(`Has not spoken`) }
