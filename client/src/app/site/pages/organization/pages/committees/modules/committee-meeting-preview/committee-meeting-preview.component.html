@@ -1,12 +1,13 @@
-<mat-card class="meeting-prev">
+<mat-card class="os-card">
     <mat-card-header
+        class="os-mat-card-header"
         [ngClass]="{ 'background-accent': meeting.isActive, 'background-dark-brighter': meeting.isArchived }"
     >
         <mat-card-title class="break-word">
             {{ title }}
         </mat-card-title>
 
-        <span class="align-right align-center">
+        <span class="align-right">
             <mat-label class="archived-label" *ngIf="meeting.isArchived">{{ 'Archived' | translate }}</mat-label>
             <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id; nonAdminCheck: true">
                 <div *ngIf="isTemplateMeeting" class="template-indicator">
@@ -21,7 +22,7 @@
     </mat-card-header>
     <mat-card-content class="prev-content">
         <!-- date location -->
-        <div class="date-loc">
+        <div>
             <!-- location -->
             <span>
                 {{ location }}
@@ -58,12 +59,14 @@
         </span>
     </mat-card-actions>
 
-    <!-- users -->
-    <div class="user-footer">
-        <ng-container
-            *osOmlPerms="OML.can_manage_users; then canManageUsersTemplate; else canNotManageUsersTemplate"
-        ></ng-container>
-    </div>
+    <mat-card-content>
+        <!-- users -->
+        <div class="user-footer">
+            <ng-container
+                *osOmlPerms="OML.can_manage_users; then canManageUsersTemplate; else canNotManageUsersTemplate"
+            ></ng-container>
+        </div>
+    </mat-card-content>
 </mat-card>
 
 <ng-template #canNotManageUsersTemplate>

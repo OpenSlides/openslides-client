@@ -32,7 +32,7 @@ export class TreeService {
             id: item.id,
             item,
             children,
-            toString: function () {
+            toString: function (): string {
                 return this.item.toString();
             }
         };
@@ -357,7 +357,7 @@ export class TreeService {
             expandable: false,
             id: item.id,
             position: index + oldMaxPosition + 1,
-            toString: function () {
+            toString: function (): string {
                 return this.item.toString();
             }
         }));

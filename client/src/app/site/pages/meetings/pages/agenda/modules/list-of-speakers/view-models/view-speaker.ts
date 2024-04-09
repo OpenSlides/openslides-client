@@ -7,6 +7,7 @@ import { Id } from '../../../../../../../../domain/definitions/key-types';
 import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';
 import { SpeakerState } from '../../../../../../../../domain/models/speakers/speaker-state';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
+import { ViewMotion } from '../../../../motions';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 import { ViewPointOfOrderCategory } from './view-point-of-order-category';
 /**
@@ -55,6 +56,15 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
             this.state === SpeakerState.WAITING ||
             (this.state === SpeakerState.INTERPOSED_QUESTION && !this.speaker.begin_time)
         );
+    }
+
+    public get numbering(): string {
+        if (this.list_of_speakers?.content_object.collection === `motion`) {
+            return (this.list_of_speakers?.content_object as ViewMotion).number;
+        } else if (this.list_of_speakers?.content_object.collection === `topic`) {
+            return this.list_of_speakers?.content_object.agenda_item.item_number;
+        }
+        return null;
     }
 
     public get name(): string {
@@ -117,6 +127,13 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return collectionFromFqid(this.list_of_speakers?.content_object_id);
     }
 
+    public get contentSeqNum(): string {
+        if (!this.list_of_speakers?.content_object) {
+            return null;
+        }
+        return this.list_of_speakers?.content_object[`sequential_number`];
+    }
+
     public get topic(): string {
         const number = this.list_of_speakers?.content_object?.agenda_item?.item_number;
         const title = this.list_of_speakers?.content_object?.getTitle();
@@ -138,6 +155,10 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return this.speaker.end_time
             ? this.speaker.end_time - this.speaker.begin_time - (this.speaker.total_pause || 0)
             : null;
+    }
+
+    public get hasSpoken(): boolean {
+        return this.speaker.end_time ? true : false;
     }
 
     public getBeginTimeAsDate(): Date | null {

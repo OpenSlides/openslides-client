@@ -142,7 +142,7 @@ span {
 .mobile-view {
     .os-card {
         padding: 27px;
-        max-width: calc(100% - 54px);
+        max-width: 100%;
     }
 }
 
@@ -156,10 +156,12 @@ span {
     float: right;
 }
 
-.motion-detail-nav-button {
+button.motion-detail-nav-button {
     min-width: 110px;
     max-width: 20vw;
+}
 
+.nav-button-overflow {
     span {
         white-space: nowrap !important;
         text-overflow: ellipsis;

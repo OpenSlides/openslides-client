@@ -38,8 +38,7 @@
         <h2>{{ 'Organization specific information' | translate }}</h2>
         <div [formGroup]="form">
             <!-- Default Vote weight -->
-            <!-- TODO Input type should be number with limited decimal spaces -->
-            <mat-form-field class="form16 force-min-with">
+            <mat-form-field class="form100 force-min-with">
                 <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
                 <input type="number" matInput formControlName="default_vote_weight" />
                 <mat-error *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0" translate>
@@ -56,7 +55,7 @@
 
         <div [formGroup]="form">
             <div *osOmlPerms="OML.can_manage_users">
-                <mat-form-field>
+                <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Administration roles (at organization level)' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">
                         <mat-option [value]="null" *ngIf="!orgaManagementLevelChangeDisabled">-</mat-option>
@@ -71,7 +70,7 @@
                 </mat-form-field>
             </div>
             <div *osOmlPerms="OML.can_manage_organization">
-                <mat-form-field>
+                <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Committee admin' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="committee_management_ids"

@@ -1,166 +1,168 @@
 <mat-card class="os-card card-padding" [ngClass]="{ 'spacer-bottom-60': addBottomSpacer }">
-    <!-- Title -->
-    <os-projectable-title class="los-title" *ngIf="!explicitTitleContent" [model]="listOfSpeakers">
-        <mat-icon
-            append
-            *ngIf="closed"
-            style="margin-top: 8px"
-            class="primary-accent-by-theme"
-            matTooltip="{{ 'The list of speakers is closed.' | translate }}"
-        >
-            lock
-        </mat-icon>
-    </os-projectable-title>
-    <span *ngIf="explicitTitleContent">
-        <ng-container *ngTemplateOutlet="explicitTitleContent"></ng-container>
-    </span>
+    <mat-card-content>
+        <!-- Title -->
+        <os-projectable-title class="los-title" *ngIf="!explicitTitleContent" [model]="listOfSpeakers">
+            <mat-icon
+                append
+                *ngIf="closed"
+                style="margin-top: 8px"
+                class="primary-accent-by-theme"
+                matTooltip="{{ 'The list of speakers is closed.' | translate }}"
+            >
+                lock
+            </mat-icon>
+        </os-projectable-title>
+        <span *ngIf="explicitTitleContent">
+            <ng-container *ngTemplateOutlet="explicitTitleContent"></ng-container>
+        </span>
 
-    <!-- List of finished speakers -->
-    <mat-expansion-panel *ngIf="finishedSpeakers.length" class="finished-list">
-        <mat-expansion-panel-header>
-            <mat-panel-title>{{ 'Last speakers' | translate }}</mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-list>
-            <mat-list-item *ngFor="let speaker of finishedSpeakers; let number = index">
-                <div
-                    *ngIf="number < 1 || displayStartTime(speaker, finishedSpeakers[number - 1])"
-                    class="finished-speakers-start"
-                >
-                    {{ 'Start time' | translate }}: {{ startTimeToString(speaker) }}
-                </div>
+        <!-- List of finished speakers -->
+        <mat-expansion-panel *ngIf="finishedSpeakers.length" class="finished-list">
+            <mat-expansion-panel-header>
+                <mat-panel-title>{{ 'Last speakers' | translate }}</mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-list>
+                <mat-list-item *ngFor="let speaker of finishedSpeakers; let number = index">
+                    <div
+                        *ngIf="number < 1 || displayStartTime(speaker, finishedSpeakers[number - 1])"
+                        class="finished-speakers-start"
+                    >
+                        {{ 'Start time' | translate }}: {{ startTimeToString(speaker) }}
+                    </div>
 
-                <os-list-of-speakers-entry
-                    [speaker]="speaker"
-                    [speakerIndex]="number"
-                    (startSpeech)="onStartButton(activeSpeaker)"
-                    (pauseSpeech)="onPauseButton(activeSpeaker)"
-                    (stopSpeech)="onStopButton(activeSpeaker)"
-                />
-            </mat-list-item>
-        </mat-list>
-    </mat-expansion-panel>
+                    <os-list-of-speakers-entry
+                        [speaker]="speaker"
+                        [speakerIndex]="number"
+                        (startSpeech)="onStartButton(activeSpeaker)"
+                        (pauseSpeech)="onPauseButton(activeSpeaker)"
+                        (stopSpeech)="onStopButton(activeSpeaker)"
+                    />
+                </mat-list-item>
+            </mat-list>
+        </mat-expansion-panel>
 
-    <!-- horizontal separation line -->
-    <mat-divider *ngIf="finishedSpeakers && finishedSpeakers.length"></mat-divider>
-    <div *ngIf="finishedSpeakers && finishedSpeakers.length" class="spacer-bottom-40"></div>
+        <!-- horizontal separation line -->
+        <mat-divider *ngIf="finishedSpeakers && finishedSpeakers.length"></mat-divider>
+        <div *ngIf="finishedSpeakers && finishedSpeakers.length" class="spacer-bottom-40"></div>
 
-    <!-- Current Speaker -->
-    <div class="current-speaker background-accent" *ngIf="activeSpeaker">
-        <os-list-of-speakers-entry
-            [speaker]="activeSpeaker"
-            (startSpeech)="onStartButton(activeSpeaker)"
-            (pauseSpeech)="onPauseButton(activeSpeaker)"
-            (stopSpeech)="onStopButton(activeSpeaker)"
-        />
-    </div>
-
-    <div *ngIf="interposedQuestions.length" class="interposed-questions">
-        <div
-            *ngFor="let speaker of interposedQuestions; let i = index"
-            class="speaker"
-            [ngClass]="{
-                'current-speaker background-accent': speaker.isSpeaking,
-                backgroundColorLight: !speaker.isSpeaking
-            }"
-        >
+        <!-- Current Speaker -->
+        <div class="current-speaker background-accent" *ngIf="activeSpeaker">
             <os-list-of-speakers-entry
-                [speaker]="speaker"
-                (startSpeech)="onStartButton(speaker)"
-                (pauseSpeech)="onPauseButton(speaker)"
-                (stopSpeech)="onStopButton(speaker)"
+                [speaker]="activeSpeaker"
+                (startSpeech)="onStartButton(activeSpeaker)"
+                (pauseSpeech)="onPauseButton(activeSpeaker)"
+                (stopSpeech)="onStopButton(activeSpeaker)"
             />
         </div>
-    </div>
 
-    <!-- Waiting speakers -->
-    <div class="waiting-list" *ngIf="waitingSpeakers?.length">
-        <os-sorting-list
-            [live]="true"
-            [input]="waitingSpeakers"
-            [enable]="canManage && (isSortMode || !isMobile)"
-            [isPriorityItemFunction]="isPointOfOrderFn"
-            (sortEvent)="onSortingChanged($event)"
-        >
-            <!-- implicit speaker references into the component using ng-template slot -->
-            <ng-template let-speaker let-index="index">
+        <div *ngIf="interposedQuestions.length" class="interposed-questions">
+            <div
+                *ngFor="let speaker of interposedQuestions; let i = index"
+                class="speaker"
+                [ngClass]="{
+                    'current-speaker background-accent': speaker.isSpeaking,
+                    backgroundColorLight: !speaker.isSpeaking
+                }"
+            >
                 <os-list-of-speakers-entry
                     [speaker]="speaker"
-                    [speakerIndex]="index"
                     (startSpeech)="onStartButton(speaker)"
                     (pauseSpeech)="onPauseButton(speaker)"
                     (stopSpeech)="onStopButton(speaker)"
                 />
-            </ng-template>
-        </os-sorting-list>
-    </div>
+            </div>
+        </div>
 
-    <!-- Search for speakers -->
-    <div class="search-new-speaker-form" *ngIf="canManage">
-        <os-participant-search-selector
-            [nonSelectableUserIds]="nonAvailableUserIds"
-            placeholder="{{ 'Select speaker' | translate }}"
-            (userSelected)="addUserAsNewSpeaker($event)"
-        ></os-participant-search-selector>
-    </div>
+        <!-- Waiting speakers -->
+        <div class="waiting-list" *ngIf="waitingSpeakers?.length">
+            <os-sorting-list
+                [live]="true"
+                [input]="waitingSpeakers"
+                [enable]="canManage && (isSortMode || !isMobile)"
+                [isPriorityItemFunction]="isPointOfOrderFn"
+                (sortEvent)="onSortingChanged($event)"
+            >
+                <!-- implicit speaker references into the component using ng-template slot -->
+                <ng-template let-speaker let-index="index">
+                    <os-list-of-speakers-entry
+                        [speaker]="speaker"
+                        [speakerIndex]="index"
+                        (startSpeech)="onStartButton(speaker)"
+                        (pauseSpeech)="onPauseButton(speaker)"
+                        (stopSpeech)="onStopButton(speaker)"
+                    />
+                </ng-template>
+            </os-sorting-list>
+        </div>
 
-    <div class="centered-text" *osPerms="permission.listOfSpeakersCanBeSpeaker">
-        <span *ngIf="!canAddDueToPresence" translate>You have to be present to add yourself.</span>
-    </div>
+        <!-- Search for speakers -->
+        <div class="search-new-speaker-form" *ngIf="canManage">
+            <os-participant-search-selector
+                [nonSelectableUserIds]="nonAvailableUserIds"
+                placeholder="{{ 'Select speaker' | translate }}"
+                (userSelected)="addUserAsNewSpeaker($event)"
+            ></os-participant-search-selector>
+        </div>
 
-    <div class="add-self-buttons" *osPerms="permission.listOfSpeakersCanBeSpeaker">
-        <!-- Add me and remove me if OP has correct permission -->
+        <div class="centered-text" *osPerms="permission.listOfSpeakersCanBeSpeaker">
+            <span *ngIf="!canAddDueToPresence" translate>You have to be present to add yourself.</span>
+        </div>
 
-        <button
-            *ngIf="!isOpInWaitlist()"
-            mat-stroked-button
-            [disabled]="closed || !canAddDueToPresence"
-            (click)="addMyself()"
-        >
-            <mat-icon>add</mat-icon>
-            <span>{{ 'Add me' | translate }}</span>
-        </button>
+        <div class="add-self-buttons" *osPerms="permission.listOfSpeakersCanBeSpeaker">
+            <!-- Add me and remove me if OP has correct permission -->
 
-        <button *ngIf="isOpInWaitlist()" mat-stroked-button (click)="removeSpeaker()">
-            <mat-icon>remove</mat-icon>
-            <span>{{ 'Remove me' | translate }}</span>
-        </button>
+            <button
+                *ngIf="!isOpInWaitlist()"
+                mat-stroked-button
+                [disabled]="closed || !canAddDueToPresence"
+                (click)="addMyself()"
+            >
+                <mat-icon>add</mat-icon>
+                <span>{{ 'Add me' | translate }}</span>
+            </button>
 
-        <!-- Point Of order -->
-        <button
-            mat-stroked-button
-            color="warn"
-            (click)="addPointOfOrder()"
-            *ngIf="showPointOfOrders && !isOpInWaitlist(true)"
-            [disabled]="restrictPointOfOrderActions && closed"
-        >
-            <mat-icon>warning</mat-icon>
-            &nbsp;
-            <span>
-                {{ 'Point of order' | translate }}
-            </span>
-        </button>
-        <button
-            mat-stroked-button
-            color="warn"
-            (click)="removePointOfOrder()"
-            *ngIf="showPointOfOrders && isOpInWaitlist(true)"
-        >
-            <mat-icon>remove</mat-icon>
-            <span translate>Withdraw point of order</span>
-        </button>
+            <button *ngIf="isOpInWaitlist()" mat-stroked-button (click)="removeSpeaker()">
+                <mat-icon>remove</mat-icon>
+                <span>{{ 'Remove me' | translate }}</span>
+            </button>
 
-        <!-- Interposed question -->
-        <button
-            mat-stroked-button
-            (click)="addInterposedQuestion()"
-            *ngIf="showInterposedQuestions | async"
-            [disabled]="closed || !activeSpeaker"
-        >
-            <mat-icon>help</mat-icon>
-            &nbsp;
-            <span>
-                {{ 'Interposed question' | translate }}
-            </span>
-        </button>
-    </div>
+            <!-- Point Of order -->
+            <button
+                mat-stroked-button
+                color="warn"
+                (click)="addPointOfOrder()"
+                *ngIf="showPointOfOrders && !isOpInWaitlist(true)"
+                [disabled]="restrictPointOfOrderActions && closed"
+            >
+                <mat-icon>warning</mat-icon>
+                &nbsp;
+                <span>
+                    {{ 'Point of order' | translate }}
+                </span>
+            </button>
+            <button
+                mat-stroked-button
+                color="warn"
+                (click)="removePointOfOrder()"
+                *ngIf="showPointOfOrders && isOpInWaitlist(true)"
+            >
+                <mat-icon>remove</mat-icon>
+                <span translate>Withdraw point of order</span>
+            </button>
+
+            <!-- Interposed question -->
+            <button
+                mat-stroked-button
+                (click)="addInterposedQuestion()"
+                *ngIf="showInterposedQuestions | async"
+                [disabled]="closed || !activeSpeaker"
+            >
+                <mat-icon>help</mat-icon>
+                &nbsp;
+                <span>
+                    {{ 'Interposed question' | translate }}
+                </span>
+            </button>
+        </div>
+    </mat-card-content>
 </mat-card>

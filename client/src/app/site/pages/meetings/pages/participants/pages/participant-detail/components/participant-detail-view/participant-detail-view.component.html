@@ -39,12 +39,12 @@
             <span>{{ 'Change password' | translate }}</span>
         </button>
         <!-- invitation email -->
-        <button mat-menu-item *ngIf="isAllowed('manage') && user && user.email" (click)="sendInvitationEmail()">
+        <button mat-menu-item *ngIf="isAllowed('update') && user && user.email" (click)="sendInvitationEmail()">
             <mat-icon>mail</mat-icon>
             <span>{{ 'Send invitation email' | translate }}</span>
         </button>
         <!-- PDF -->
-        <button mat-menu-item *ngIf="isAllowed('manage')" (click)="onDownloadPdf()">
+        <button mat-menu-item *ngIf="isAllowed('update')" (click)="onDownloadPdf()">
             <mat-icon>picture_as_pdf</mat-icon>
             <span>{{ 'PDF' | translate }}</span>
         </button>
@@ -124,7 +124,6 @@
                 </mat-form-field>
 
                 <!-- Vote weight -->
-                <!-- TODO Input type should be number with limited decimal spaces -->
                 <mat-form-field class="form16 force-min-with" *ngIf="showVoteWeight">
                     <mat-label>{{ 'Vote weight' | translate }}</mat-label>
                     <input type="number" matInput formControlName="vote_weight" />
@@ -139,7 +138,7 @@
 
             <div *ngIf="isAllowed('seeName')">
                 <!-- Groups -->
-                <mat-form-field>
+                <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Groups' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="group_ids"
@@ -150,7 +149,7 @@
                 </mat-form-field>
 
                 <!-- Delegate Vote -->
-                <mat-form-field *ngIf="showVoteDelegations">
+                <mat-form-field class="form100 force-min-with" *ngIf="showVoteDelegations">
                     <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="vote_delegations_from_ids"
@@ -162,7 +161,7 @@
                 </mat-form-field>
 
                 <!-- Delegate Vote -->
-                <mat-form-field *ngIf="showVoteDelegations">
+                <mat-form-field class="form100 force-min-with" *ngIf="showVoteDelegations">
                     <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="vote_delegated_to_id"
@@ -182,9 +181,9 @@
                 <os-editor formControlName="about_me"></os-editor>
             </div>
 
-            <div *ngIf="isAllowed('manage')">
+            <div *ngIf="isAllowed('update')">
                 <!-- Comment -->
-                <mat-form-field>
+                <mat-form-field class="form100 force-min-width">
                     <mat-label>{{ 'Comment' | translate }}</mat-label>
                     <input matInput formControlName="comment" />
                     <mat-hint>{{ 'Only for internal notes.' | translate }}</mat-hint>
@@ -195,7 +194,7 @@
 
     <ng-template #showView>
         <h2>{{ 'Meeting specific information' | translate }}</h2>
-        <div *ngIf="isAllowed('seePersonal') && user?.isLastEmailSent">
+        <div *ngIf="isAllowed('seeSensitiveData') && user?.isLastEmailSent">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>
                 <span>{{ user.last_email_sent | localizedDate }}</span>
@@ -236,7 +235,7 @@
             <span>{{ 'Default group' | translate }}</span>
         </div>
 
-        <div *ngIf="isAllowed('manage') || ownPage">
+        <div *ngIf="isAllowed('update') || ownPage">
             <!-- Own Vote delegations -->
             <div *ngIf="user?.vote_delegated_to() && showVoteDelegations">
                 <h4>{{ 'Voting right delegated to (proxy)' | translate }}</h4>
@@ -264,7 +263,7 @@
             </div>
         </div>
 
-        <div *ngIf="isAllowed('manage')">
+        <div *ngIf="isAllowed('update')">
             <!-- Comment -->
             <div *ngIf="user?.comment()">
                 <h4>{{ 'Comment' | translate }}</h4>
