@@ -14,11 +14,11 @@ import { AutopilotService } from '../../services/autopilot.service';
 })
 export class AutopilotSettingsComponent extends BaseMeetingComponent implements OnInit {
     public readonly autopilotContentElements: { key: string; description: string }[] = [
-        { key: `title`, description: _(`Autopilot content title`) },
+        { key: `title`, description: _(`Title`) },
         { key: `list-of-speakers`, description: _(`List of speakers`) },
         { key: `moderation-note`, description: _(`Moderation note`) },
-        { key: `poll-finished`, description: _(`Poll results`) },
-        { key: `poll-running`, description: _(`Running poll`) },
+        { key: `poll-running`, description: _(`Voting`) },
+        { key: `poll-finished`, description: _(`Results`) },
         { key: `projector`, description: _(`Projector`) },
         { key: `speaking-times`, description: _(`Speaking times`) }
     ];
