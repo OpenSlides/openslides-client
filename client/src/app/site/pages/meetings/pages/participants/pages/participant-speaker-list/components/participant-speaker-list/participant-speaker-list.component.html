@@ -109,7 +109,7 @@
 </os-list>
 
 <mat-menu #speakerMenu="matMenu">
-    <button mat-menu-item *osPerms="permission.userCanManage" (click)="csvExportSpeakerList()">
+    <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="csvExportSpeakerList()">
         <mat-icon>archive</mat-icon>
         <span>{{ 'Export as CSV' | translate }}</span>
     </button>
