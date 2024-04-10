@@ -41,7 +41,7 @@ export class HttpSubscriptionPolling extends HttpSubscription {
             await new Promise<void>(resolve => {
                 const timeout = setTimeout(() => this.currentTimeoutResolver(), POLLING_INTERVAL);
 
-                this.currentTimeoutResolver = () => {
+                this.currentTimeoutResolver = (): void => {
                     this.currentTimeoutResolver = undefined;
                     clearTimeout(timeout);
                     resolve();
