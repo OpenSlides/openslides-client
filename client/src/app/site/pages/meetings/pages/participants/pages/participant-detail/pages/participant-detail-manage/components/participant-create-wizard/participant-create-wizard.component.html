@@ -225,7 +225,7 @@
 
                             <div *ngIf="isAllowedFn('update')">
                                 <!-- Comment -->
-                                <mat-form-field class="form100 force-min-width">
+                                <mat-form-field class="form100 force-min-width" subscriptSizing="dynamic">
                                     <mat-label>{{ 'Comment' | translate }}</mat-label>
                                     <input matInput formControlName="comment" />
                                     <mat-hint>{{ 'Only for internal notes.' | translate }}</mat-hint>

@@ -75,7 +75,7 @@
                 <h2>{{ 'Superadmin settings' | translate }}</h2>
                 <!-- System url -->
                 <section>
-                    <mat-form-field>
+                    <mat-form-field subscriptSizing="dynamic">
                         <mat-label>{{ 'OpenSlides URL' | translate }}</mat-label>
                         <input matInput formControlName="url" />
                         <mat-hint>
@@ -102,7 +102,7 @@
                     </mat-checkbox>
                 </section>
                 <section>
-                    <mat-form-field>
+                    <mat-form-field subscriptSizing="dynamic">
                         <mat-label>{{ 'Limit of active meetings' | translate }}</mat-label>
                         <input
                             matInput
@@ -116,7 +116,7 @@
                     </mat-form-field>
                 </section>
                 <section>
-                    <mat-form-field>
+                    <mat-form-field subscriptSizing="dynamic">
                         <mat-label>{{ 'Limit of active accounts' | translate }}</mat-label>
                         <input
                             matInput
@@ -152,7 +152,7 @@
                 </section>
                 <!-- JSON source attribute -->
                 <section>
-                    <mat-form-field>
+                    <mat-form-field subscriptSizing="dynamic">
                         <mat-label>{{ 'Attribute mapping (JSON)' | translate }}</mat-label>
                         <textarea matInput formControlName="saml_attr_mapping" [rows]="ssoConfigRows"></textarea>
                         <mat-hint>
