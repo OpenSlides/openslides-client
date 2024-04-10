@@ -1,4 +1,5 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { DelegationSetting } from 'src/app/domain/definitions/delegation-setting';
 import { Permission } from 'src/app/domain/definitions/permission';
 
@@ -7,7 +8,7 @@ import { BasePermsDirective } from './base-perms.directive';
 @Directive({
     selector: `[osPerms]`
 })
-export class PermsDirective extends BasePermsDirective<Permission> {
+export class PermsDirective extends BasePermsDirective<Permission> implements OnInit, OnDestroy {
     /**
      * The value defines the requires permissions as an array or a single permission.
      */
@@ -52,6 +53,23 @@ export class PermsDirective extends BasePermsDirective<Permission> {
     }
 
     private _delegationSettingAlternative: [DelegationSetting, Permission] = null;
+    private _delegationSettingSubscription: Subscription;
+
+    public override ngOnInit(): void {
+        // observe groups of operator, so the directive can actively react to changes
+        this._delegationSettingSubscription = this.operator.delegationSettingsUpdated.subscribe(() => {
+            this.updatePermission();
+        });
+        super.ngOnInit();
+    }
+
+    public override ngOnDestroy(): void {
+        if (this._delegationSettingSubscription) {
+            this._delegationSettingSubscription.unsubscribe();
+            this._delegationSettingSubscription = null;
+        }
+        super.ngOnDestroy();
+    }
 
     /**
      * Compare the required permissions with the users permissions.

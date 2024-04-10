@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, debounceTime, Observable, Subject } from 'rxjs';
-import { DelegationSetting } from 'src/app/domain/definitions/delegation-setting';
+import {
+    BehaviorSubject,
+    combineLatest,
+    debounceTime,
+    distinctUntilChanged,
+    Observable,
+    startWith,
+    Subject
+} from 'rxjs';
+import { DelegationSetting, delegationSettings } from 'src/app/domain/definitions/delegation-setting';
 import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
@@ -113,6 +121,10 @@ export class OperatorService {
         return this._operatorUpdatedSubject;
     }
 
+    public get delegationSettingsUpdated(): Observable<void> {
+        return this._delegationSettingsUpdatedSubject;
+    }
+
     public get operatorShortNameObservable(): Observable<string | null> {
         return this._operatorShortNameSubject;
     }
@@ -178,6 +190,8 @@ export class OperatorService {
     private readonly _operatorShortNameSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(
         null
     );
+
+    private readonly _delegationSettingsUpdatedSubject = new Subject<void>();
 
     private readonly _userSubject = new BehaviorSubject<ViewUser | null>(null);
     private readonly _operatorReadySubject = new BehaviorSubject<boolean>(false);
@@ -322,6 +336,13 @@ export class OperatorService {
                     this._groupsLoadedDeferred.resolve();
                 }
             });
+        combineLatest(
+            Object.values(delegationSettings).map(setting =>
+                this.meetingSettings.get(setting as keyof Settings).pipe(startWith(null))
+            )
+        )
+            .pipe(distinctUntilChanged())
+            .subscribe(() => this._delegationSettingsUpdatedSubject.next());
     }
 
     public isInMeeting(meetingId: Id): boolean {
@@ -544,7 +565,7 @@ export class OperatorService {
     public isAllowedWithDelegation(...appliedSettings: DelegationSetting[]): boolean {
         return (
             this.user.isPresentInMeeting(this.activeMeetingId) ||
-            !this.user.vote_delegated_to_id(this.activeMeetingId) ||
+            !this.user.getMeetingUser(this.activeMeetingId)?.vote_delegated_to_id ||
             !appliedSettings.some(appliedSetting => this.meetingSettings.instant(appliedSetting as keyof Settings))
         );
     }

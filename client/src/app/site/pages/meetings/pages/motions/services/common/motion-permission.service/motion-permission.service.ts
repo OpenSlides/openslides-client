@@ -62,14 +62,22 @@ export class MotionPermissionService {
     public isAllowed(action: string, motion?: ViewMotion): boolean {
         switch (action) {
             case `create`: {
-                return this.operator.hasPerms(Permission.motionCanCreate);
+                return this.operator.hasPerms(
+                    this.operator.isAllowedWithDelegation(`users_forbid_delegator_as_submitter`)
+                        ? Permission.motionCanCreate
+                        : Permission.motionCanManage
+                );
             }
             case `support`: {
                 if (!motion || !motion.state) {
                     return false;
                 }
                 return (
-                    this.operator.hasPerms(Permission.motionCanSupport) &&
+                    this.operator.hasPerms(
+                        this.operator.isAllowedWithDelegation(`users_forbid_delegator_as_supporter`)
+                            ? Permission.motionCanSupport
+                            : Permission.motionCanManage
+                    ) &&
                     this.configMinSupporters > 0 &&
                     motion.state?.allow_support &&
                     (!motion.submitters ||
@@ -82,6 +90,11 @@ export class MotionPermissionService {
                     return false;
                 }
                 return (
+                    this.operator.hasPerms(
+                        this.operator.isAllowedWithDelegation(`users_forbid_delegator_as_supporter`)
+                            ? Permission.motionCanSupport
+                            : Permission.motionCanManage
+                    ) &&
                     !!motion.state &&
                     motion.state.allow_support &&
                     motion.supporter_users &&
