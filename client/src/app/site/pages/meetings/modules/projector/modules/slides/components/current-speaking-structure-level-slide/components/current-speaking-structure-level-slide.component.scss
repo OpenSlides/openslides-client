@@ -1,7 +1,7 @@
 #structure-level-current {
     position: absolute;
     right: 0;
-    bottom: calc(50% - 125px);
+    top: calc(max(402px, 50%) - 250px);
     right: 0;
     z-index: 10;
     text-align: right;
