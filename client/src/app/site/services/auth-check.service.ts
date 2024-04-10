@@ -16,7 +16,7 @@ export class AuthCheckService {
     /**
      * The last url to be approved by the permission guard, will be automatically emptied after the first read.
      */
-    public get lastSuccessfulUrl() {
+    public get lastSuccessfulUrl(): string {
         const url = this._lastSuccessfulUrl;
         this._lastSuccessfulUrl = null;
         return url;
@@ -52,7 +52,7 @@ export class AuthCheckService {
         return (this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated;
     }
 
-    public async isAuthorizedToSeeOrganization() {
+    public async isAuthorizedToSeeOrganization(): Promise<boolean> {
         await this.operator.ready;
         try {
             return this.operator.knowsMultipleMeetings || this.operator.hasOrganizationPermissions();

@@ -4,7 +4,7 @@ import { autoupdateMessageHandler, initAutoupdateSw } from './sw-autoupdate';
 import { controlGeneralMessageHandler, controlMessageHandler, initControlMessageHandler } from './sw-control';
 import { iccMessageHandler, initIccSw } from './sw-icc';
 
-function registerMessageListener(ctx: any) {
+function registerMessageListener(ctx: any): void {
     const handlers = {
         autoupdate: autoupdateMessageHandler,
         icc: iccMessageHandler,
@@ -22,7 +22,7 @@ function registerMessageListener(ctx: any) {
     });
 }
 
-function initAll(broadcast: (s: string, a: string, c?: any) => void) {
+function initAll(broadcast: (s: string, a: string, c?: any) => void): void {
     initAuthWorker(broadcast);
     initAutoupdateSw(broadcast);
     initIccSw(broadcast);
@@ -30,7 +30,7 @@ function initAll(broadcast: (s: string, a: string, c?: any) => void) {
 }
 
 if ((<any>self).Window && self instanceof (<any>self).Window) {
-    function broadcast(sender: string, action: string, content?: any) {
+    function broadcast(sender: string, action: string, content?: any): void {
         self.postMessage({ sender, action, content });
     }
 
@@ -40,7 +40,7 @@ if ((<any>self).Window && self instanceof (<any>self).Window) {
     self.postMessage(`ready`);
 } else {
     const broadcastChannel = new BroadcastChannel(SW_BROADCAST_CHANNEL_NAME);
-    function broadcast(sender: string, action: string, content?: any) {
+    function broadcast(sender: string, action: string, content?: any): void {
         broadcastChannel.postMessage({ sender, action, content });
     }
 

@@ -463,7 +463,7 @@ export class OperatorService {
 
         if (operatorRequest && !this._currentOperatorDataSubscription) {
             // Do not wait for the subscription to be done...
-            (async () => {
+            (async (): Promise<void> => {
                 console.log(`operator: Do operator model request`, operatorRequest);
                 console.log(
                     `operator: configuration: meeting`,

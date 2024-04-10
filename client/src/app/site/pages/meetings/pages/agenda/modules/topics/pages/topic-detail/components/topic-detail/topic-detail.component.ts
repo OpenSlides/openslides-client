@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
@@ -16,7 +16,9 @@ import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-mo
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { AgendaItemControllerService } from '../../../../../../services';
 import { TopicPollService } from '../../../../modules/topic-poll/services/topic-poll.service';
@@ -77,11 +79,30 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     public getTitleFn = () => this.topic.getListTitle();
 
+    public get showNavigateButtons(): boolean {
+        return !!this.previousTopic || !!this.nextTopic;
+    }
+
+    public get nextTopic(): ViewTopic | null {
+        return this._nextTopic;
+    }
+
+    public get previousTopic(): ViewTopic | null {
+        return this._previousTopic;
+    }
+
+    private _nextTopic: ViewTopic | null = null;
+
+    private _previousTopic: ViewTopic | null = null;
+
+    private _sortedTopics: ViewTopic[] = [];
+
     /**
      * Constructor for the topic detail page.
      */
     public constructor(
         organizationSettingsService: OrganizationSettingsService,
+        public vp: ViewPortService,
         protected override translate: TranslateService,
         private formBuilder: UntypedFormBuilder,
         private repo: TopicControllerService,
@@ -92,7 +113,8 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         private topicPollService: TopicPollService,
         private pollController: PollControllerService,
         private topicPdfService: TopicPdfService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private treeService: TreeService
     ) {
         super();
         this.createForm();
@@ -113,6 +135,22 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
                 this.topicForm!.patchValue({ agenda_parent_id: Number(params[`parent`]) });
             }
         });
+        this.subscriptions.push(
+            this.itemRepo
+                .getViewModelListObservable()
+                .pipe(map(agendaItems => this.treeService.makeFlatTree(agendaItems, `weight`, `parent_id`)))
+                .subscribe(list => {
+                    if (list) {
+                        this._sortedTopics = [];
+                        for (const agenda_item of list) {
+                            if (agenda_item.getContentObjectCollection() === `topic`) {
+                                this._sortedTopics.push(agenda_item.content_object);
+                            }
+                        }
+                        this.setSurroundingTopics();
+                    }
+                })
+        );
     }
 
     /**
@@ -175,6 +213,45 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
             this.initTopicCreation();
         }
         setTimeout(() => this.hasLoaded.resolve(true));
+    }
+
+    /**
+     * Navigates the user to the given ViewTopic
+     *
+     * @param topic target
+     */
+    public navigateToTopic(topic: ViewTopic | null): void {
+        if (topic) {
+            this.router.navigate([this.activeMeetingId, `agenda`, `topics`, topic.sequential_number]);
+            // update the curret topic
+            this.topic = topic;
+            this.setSurroundingTopics();
+        }
+    }
+
+    public setSurroundingTopics(): void {
+        const indexOfCurrent = this._sortedTopics.findIndex(topic => topic === this.topic);
+        if (indexOfCurrent > 0) {
+            this._previousTopic = this._sortedTopics[indexOfCurrent - 1];
+        } else {
+            this._previousTopic = null;
+        }
+        if (indexOfCurrent > -1 && indexOfCurrent < this._sortedTopics.length - 1) {
+            this._nextTopic = this._sortedTopics[indexOfCurrent + 1];
+        } else {
+            this._nextTopic = null;
+        }
+    }
+
+    public get prevUrl(): any {
+        return `../..`;
+    }
+
+    public getNavDisplay(topic: ViewTopic | null): string | number {
+        if (!!topic && !this.vp.isMobile) {
+            return !!topic.agenda_item?.item_number ? topic.agenda_item.item_number : ``;
+        }
+        return ``;
     }
 
     private initTopicCreation(): void {
@@ -280,7 +357,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         this.setEditMode(false);
     }
 
-    public onDownloadPdf() {
+    public onDownloadPdf(): void {
         this.topicPdfService.exportSingleTopic(this.topic);
     }
 

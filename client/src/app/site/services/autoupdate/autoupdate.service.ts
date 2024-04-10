@@ -233,7 +233,7 @@ export class AutoupdateService {
         return {
             id,
             receivedData,
-            close: () => {
+            close: (): void => {
                 this.communication.close(id);
                 delete this._activeRequestObjects[id];
                 if (this._resolveDataReceived[id]) {

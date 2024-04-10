@@ -46,8 +46,8 @@ export abstract class HttpStream {
             payload: requestPayload
         };
         this.handlerConfig = {
-            onData: (data: unknown) => this.handleContent(data),
-            onError: (data: unknown) => this.handleError(data)
+            onData: (data: unknown): void => this.handleContent(data),
+            onError: (data: unknown): void => this.handleError(data)
         };
 
         this.resetReceivedData();

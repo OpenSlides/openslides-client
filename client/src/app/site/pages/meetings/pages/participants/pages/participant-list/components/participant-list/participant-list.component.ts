@@ -75,19 +75,18 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * @returns true if the presence view is available to administrators
      */
     public get presenceViewConfigured(): boolean {
-        return this._presenceViewConfigured && this.operator.hasPerms(Permission.userCanManage);
+        return this._presenceViewConfigured && this.operator.hasPerms(Permission.userCanUpdate);
     }
 
     private voteWeightEnabled = false;
     public voteDelegationEnabled = false;
 
-    /**
-     * Helper to check for main button permissions
-     *
-     * @returns true if the user should be able to create users
-     */
     public get canManage(): boolean {
         return this.operator.hasPerms(Permission.userCanManage);
+    }
+
+    public get canUpdate(): boolean {
+        return this.operator.hasPerms(Permission.userCanUpdate);
     }
 
     public get showVoteWeight(): boolean {
@@ -214,7 +213,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         } else if (this._allowSelfSetPresent && this.operator.operatorId === user.id) {
             return false;
         } else {
-            return !this.operator.hasPerms(Permission.userCanManage, Permission.userCanManagePresence);
+            return !this.operator.hasPerms(Permission.userCanManagePresence);
         }
     }
 
@@ -226,7 +225,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
     public async openEditInfo(user: ViewUser, ev?: MouseEvent): Promise<void> {
-        if (this.isMultiSelect || !this.operator.hasPerms(Permission.userCanManage)) {
+        if (this.isMultiSelect || !this.operator.hasPerms(Permission.userCanUpdate)) {
             return;
         }
         ev?.stopPropagation();
@@ -431,7 +430,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      */
     public setPresent(viewUser: ViewUser): void {
         const isAllowed =
-            this.operator.hasPerms(Permission.userCanManage, Permission.userCanManagePresence) ||
+            this.operator.hasPerms(Permission.userCanManagePresence) ||
             (this._allowSelfSetPresent && this.operator.operatorId === viewUser.id);
         if (isAllowed) {
             this.repo.setPresent(!this.isUserPresent(viewUser), viewUser).resolve();

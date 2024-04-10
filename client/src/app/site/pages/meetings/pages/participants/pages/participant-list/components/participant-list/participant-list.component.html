@@ -124,7 +124,7 @@
             </mat-icon>
 
             <!-- Has comment indicator -->
-            <div *osPerms="permission.userCanManage">
+            <div *osPerms="permission.userCanUpdate">
                 <mat-icon inline *ngIf="!!user.comment()" matTooltip="{{ user.comment() }}">comment</mat-icon>
             </div>
 
@@ -212,7 +212,7 @@
 
 <mat-menu #userMenu="matMenu">
     <div *ngIf="!isMultiSelect">
-        <button mat-menu-item *osPerms="permission.userCanManage" (click)="toggleMultiSelect()">
+        <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="toggleMultiSelect()">
             <mat-icon>library_add</mat-icon>
             <span>{{ 'Multiselect' | translate }}</span>
         </button>
@@ -228,13 +228,13 @@
         </button>
 
         <div *ngIf="presenceViewConfigured">
-            <button mat-menu-item *osPerms="permission.userCanManage" routerLink="presence">
+            <button mat-menu-item *osPerms="permission.userCanUpdate" routerLink="presence">
                 <mat-icon>transfer_within_a_station</mat-icon>
                 <span>{{ 'Presence' | translate }}</span>
             </button>
         </div>
 
-        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="speaker-list">
+        <button mat-menu-item *osPerms="permission.userCanUpdate" routerLink="speaker-list">
             <mat-icon>record_voice_over</mat-icon>
             <span translate>Contributions</span>
         </button>
@@ -244,12 +244,12 @@
             <span>{{ 'List of participants (PDF)' | translate }}</span>
         </button>
 
-        <button mat-menu-item *osPerms="permission.userCanManage" (click)="onDownloadAccessPdf()">
+        <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="onDownloadAccessPdf()">
             <mat-icon>picture_as_pdf</mat-icon>
             <span>{{ 'Access data (PDF)' | translate }}</span>
         </button>
 
-        <button mat-menu-item *osPerms="permission.userCanManage" (click)="csvExportUserList()">
+        <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="csvExportUserList()">
             <mat-icon>archive</mat-icon>
             <span>{{ 'Export as CSV' | translate }}</span>
         </button>
@@ -272,6 +272,7 @@
     <div *ngIf="isMultiSelect">
         <os-user-multiselect-actions
             [selectedUsers]="selectedRows"
+            [canUpdate]="canUpdate"
             [canManage]="canManage"
             (deleting)="removeUsersFromMeeting()"
             (selectAll)="selectAll()"
