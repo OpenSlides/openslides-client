@@ -29,7 +29,7 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
         this.updateFilterForRepo({
             repo: organizationTagRepo,
             filter: this.orgaTagFilterOptions,
-            noneOptionLabel: this.translate.instant(`No tags`)
+            noneOptionLabel: this.translate.instant(`not specified`)
         });
     }
 

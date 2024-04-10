@@ -23,20 +23,48 @@
 <div class="spacer-top-20"></div>
 
 <mat-card class="os-card spacer-bottom-60" *ngIf="settingsGroup">
-    <div id="wrapper">
-        <ng-container *ngFor="let subgroup of settingsGroup.subgroups; trackBy: trackByIndex">
-            <h3 class="accent" *ngIf="settingsGroup.subgroups.length > 1">{{ subgroup.label | translate }}</h3>
-            <ng-container *ngFor="let setting of subgroup.settings">
-                <os-meeting-settings-group-detail-field
-                    *ngIf="!setting.hide"
-                    #settingsFields
-                    (update)="updateSetting($event)"
-                    [setting]="setting"
-                    [value]="meeting && getDetailFieldValue(meeting, setting)"
-                ></os-meeting-settings-group-detail-field>
+    <mat-card-content>
+        <div id="wrapper">
+            <ng-container *ngFor="let subgroup of settingsGroup.subgroups; trackBy: trackByIndex">
+                <h3 class="accent" *ngIf="settingsGroup.subgroups.length > 1">{{ subgroup.label | translate }}</h3>
+                <ng-container *ngFor="let setting of subgroup.settings">
+                    <os-meeting-settings-group-detail-field
+                        #settingsFields
+                        *ngIf="isSettingsInput(setting) && !setting.hide"
+                        (update)="updateSetting($event)"
+                        [setting]="setting"
+                        [value]="meeting && getDetailFieldValue(meeting, setting)"
+                        [disabled]="isSettingDisabled(setting)"
+                    ></os-meeting-settings-group-detail-field>
+                    <div *ngIf="!isSettingsInput(setting)" class="settings-help-container">
+                        <span
+                            *ngIf="setting.text"
+                            class="settings-help-text"
+                            [innerHtml]="setting.text | translate"
+                        ></span>
+                        <ng-container *ngIf="setting.buttonLabel && setting.buttonLink">
+                            <a
+                                mat-stroked-button
+                                color="primary"
+                                *ngIf="hasExternalLink(setting)"
+                                [href]="getHelpLink(setting)"
+                            >
+                                {{ setting.buttonLabel | translate }}
+                            </a>
+                            <a
+                                mat-stroked-button
+                                color="primary"
+                                *ngIf="!hasExternalLink(setting)"
+                                [routerLink]="getHelpLink(setting)"
+                            >
+                                {{ setting.buttonLabel | translate }}
+                            </a>
+                        </ng-container>
+                    </div>
+                </ng-container>
             </ng-container>
-        </ng-container>
-    </div>
+        </div>
+    </mat-card-content>
 </mat-card>
 
 <mat-menu #settingsMenu="matMenu">

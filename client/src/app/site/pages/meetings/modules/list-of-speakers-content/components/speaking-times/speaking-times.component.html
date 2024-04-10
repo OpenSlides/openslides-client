@@ -38,15 +38,15 @@
             [disabled]="structureLevelIsSpeaking(structure_level.id)"
         >
             <mat-icon>edit</mat-icon>
-            <span>{{ 'Edit total time' | translate }}</span>
+            <span>{{ 'Edit' | translate }}</span>
         </button>
         <button mat-menu-item (click)="resetTimer(structure_level.id)">
             <mat-icon>replay</mat-icon>
-            <span>{{ 'Reset timer' | translate }}</span>
+            <span>{{ 'Reset' | translate }}</span>
         </button>
         <button mat-menu-item (click)="addRemoveTime(structure_level.id)">
-            <mat-icon>more_time</mat-icon>
-            <span>{{ 'Add/subtract time' | translate }}</span>
+            <mat-icon>timelapse</mat-icon>
+            <span>{{ 'Add/subtract' | translate }}</span>
         </button>
         <button
             mat-menu-item
@@ -69,7 +69,7 @@
                 <mat-label>{{ 'Total time' | translate }}</mat-label>
                 <input type="text" formControlName="totalTime" matInput required />
                 <mat-error>
-                    {{ 'A total time is required and must be in min:secs format.' | translate }}
+                    {{ 'A time is required and must be in min:secs format.' | translate }}
                 </mat-error>
             </mat-form-field>
         </form>
@@ -77,7 +77,7 @@
 
     <mat-dialog-actions>
         <button mat-button [disabled]="!totalTimeForm.valid" [mat-dialog-close]="true">
-            <span>{{ 'OK' | translate }}</span>
+            <span>{{ 'Reset' | translate }}</span>
         </button>
         <button mat-button [mat-dialog-close]="false">
             <span>{{ 'Cancel' | translate }}</span>
@@ -92,7 +92,7 @@
         <form (keydown)="onKeyDown($event)">
             <!-- total time -->
             <mat-form-field>
-                <mat-label>{{ 'Add or subtract time' | translate }}</mat-label>
+                <mat-label>{{ 'Time' | translate }}</mat-label>
                 <input type="text" [formControl]="addTimeControl" matInput required />
                 <mat-error>
                     {{ 'A time is required and must be in min:secs format.' | translate }}
@@ -108,7 +108,7 @@
             [disabled]="!addTimeControl.valid"
             [mat-dialog-close]="true"
         >
-            <span>{{ 'Add' | translate }}</span>
+            <span>{{ 'Add up' | translate }}</span>
         </button>
         <button
             mat-button

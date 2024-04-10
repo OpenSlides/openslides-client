@@ -20,6 +20,9 @@ export class UserMultiselectActionsComponent extends BaseComponent {
     public canManage = true;
 
     @Input()
+    public canUpdate = true;
+
+    @Input()
     public set selectedUsers(users: ViewUser[]) {
         if (users.length !== this._selectedUsers.length) {
             this.calculateMetaData(users);

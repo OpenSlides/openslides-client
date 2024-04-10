@@ -21,7 +21,6 @@ import { GetUserRelatedModelsPresenterService, GetUserScopePresenterService } fr
 import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import {
     ExtendedUserPatchFn,
-    FullNameInformation,
     RawUser,
     UserPatchFn,
     UserRepositoryService,
@@ -37,13 +36,13 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { CreateUserNameInformation, UserControllerService } from 'src/app/site/services/user-controller.service';
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 
 export const MEETING_RELATED_FORM_CONTROLS = [
-    `structure_level`,
+    `structure_level_ids`,
     `number`,
     `vote_weight`,
     `about_me`,
@@ -299,7 +298,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         return this.userController.getRandomPassword();
     }
 
-    public parseStringIntoUser(name: string): FullNameInformation {
+    public parseStringIntoUser(name: string): CreateUserNameInformation {
         return this.userController.parseStringIntoUser(name);
     }
 
@@ -319,12 +318,14 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             group_ids: [this.activeMeeting?.default_group_id]
         };
         const identifiable = (await this.create(newUserPayload))[0];
-        const getNameFn = () => this.userController.getShortName(newUser);
+        const getNameFn = (): string => this.userController.getShortName({ id: identifiable.id, ...newUser });
         return {
             id: identifiable.id,
             meeting_user_id: identifiable.meeting_user_id,
             ...newUser,
             fqid: `${User.COLLECTION}/${identifiable.id}`,
+            number: () => ``,
+            structureLevels: () => ``,
             getTitle: getNameFn,
             getListTitle: getNameFn
         };

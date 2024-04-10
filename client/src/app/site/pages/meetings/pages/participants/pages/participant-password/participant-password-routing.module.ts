@@ -14,7 +14,7 @@ const routes: Routes = [
     {
         path: `:id`,
         component: ParticipantPasswordComponent,
-        data: { meetingPermissions: [Permission.userCanManage] },
+        data: { meetingPermissions: [Permission.userCanUpdate] },
         canLoad: [PermissionGuard]
     }
 ];

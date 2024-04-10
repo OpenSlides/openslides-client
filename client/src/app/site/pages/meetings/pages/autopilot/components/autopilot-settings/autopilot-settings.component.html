@@ -1,0 +1,17 @@
+<h1 mat-dialog-title translate>Autopilot widgets</h1>
+<div mat-dialog-content>
+    <div *ngFor="let option of autopilotContentElements" class="option">
+        <mat-checkbox
+            (ngModelChange)="updateDisabled(option.key, $event)"
+            [ngModel]="!disabledAutopilotContentElements[option.key]"
+        >
+            {{ option.description | translate }}
+        </mat-checkbox>
+    </div>
+
+    <small translate>These settings are only applied locally on this device.</small>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="close()" translate>Close</button>
+</div>

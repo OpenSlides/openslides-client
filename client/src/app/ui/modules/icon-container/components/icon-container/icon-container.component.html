@@ -1,11 +1,15 @@
 <ng-container *ngIf="!swap && showIcon; then iconTemplate"></ng-container>
-<span
-    class="content-node"
-    [ngClass]="{ 'single-line': noWrap, 'break-lines': !noWrap, 'content-swapped': swap, 'fill-space': !noFill }"
->
-    <ng-content></ng-content>
-    <ng-content select="[afterContent]"></ng-content>
-</span>
+
+<ng-container *ngIf="!hide">
+    <span
+        class="content-node"
+        [ngClass]="{ 'single-line': noWrap, 'break-lines': !noWrap, 'content-swapped': swap, 'fill-space': !noFill }"
+    >
+        <ng-content></ng-content>
+        <ng-content select="[afterContent]"></ng-content>
+    </span>
+</ng-container>
+
 <ng-container *ngIf="swap && showIcon; then iconTemplate"></ng-container>
 
 <ng-template #iconTemplate>
