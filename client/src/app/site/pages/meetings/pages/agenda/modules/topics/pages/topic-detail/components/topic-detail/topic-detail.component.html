@@ -4,7 +4,8 @@
         mainButtonIcon="edit"
         [mainActionTooltip]="'Edit' | translate"
         [nav]="false"
-        [goBack]="true"
+        [goBack]="false"
+        [prevUrl]="prevUrl"
         [editMode]="editTopic"
         [isSaveButtonEnabled]="topicForm!.valid"
         [saveAction]="getSaveAction()"
@@ -17,6 +18,20 @@
                 <span *ngIf="editTopic && !newTopic">{{ 'Edit topic' | translate }}</span>
                 <span *ngIf="!newTopic && !editTopic && topic">{{ 'Topic' | translate }}</span>
             </h2>
+        </div>
+
+        <!-- Back and forth buttons -->
+        <div *ngIf="!editTopic && showNavigateButtons" class="extra-controls-slot">
+            <button mat-button (click)="navigateToTopic(previousTopic)" [disabled]="!previousTopic">
+                <os-icon-container icon="chevron_left">
+                    {{ getNavDisplay(previousTopic) }}
+                </os-icon-container>
+            </button>
+            <button mat-button (click)="navigateToTopic(nextTopic)" [disabled]="!nextTopic">
+                <os-icon-container icon="chevron_right" [swap]="true">
+                    {{ getNavDisplay(nextTopic) }}
+                </os-icon-container>
+            </button>
         </div>
 
         <!-- Menu -->
