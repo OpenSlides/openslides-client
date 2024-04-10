@@ -11,7 +11,7 @@ import { ViewListOfSpeakers, ViewTopic } from './modules';
 export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
 export const AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION = `agenda_list_minimal`;
 export const TOPIC_ITEM_SUBSCRIPTION = `topic_detail`;
-export const TOPIC_ITEM_DUBLICATE_SUBSCRIPTION = `topic_detail`;
+export const TOPIC_ITEM_DUPLICATE_SUBSCRIPTION = `topic_detail`;
 export const LIST_OF_SPEAKERS_SUBSCRIPTION = `los_detail`;
 
 export const agendaItemFollow: FollowList<any> = [
@@ -125,7 +125,7 @@ export const getTopicDuplicateSubscriptionConfig: SubscriptionConfigGenerator = 
         ids,
         fieldset: FULL_FIELDSET
     },
-    subscriptionName: TOPIC_ITEM_DUBLICATE_SUBSCRIPTION
+    subscriptionName: TOPIC_ITEM_DUPLICATE_SUBSCRIPTION
 });
 
 export const listOfSpeakersSpeakerCountSubscription = {
