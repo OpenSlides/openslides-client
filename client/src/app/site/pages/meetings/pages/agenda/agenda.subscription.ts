@@ -8,8 +8,6 @@ import { FollowList } from 'src/app/site/services/model-request-builder';
 import { pollModelRequest } from '../polls/polls.subscription';
 import { ViewListOfSpeakers, ViewTopic } from './modules';
 
-export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
-
 export const agendaItemFollow: FollowList<any> = [
     {
         idField: `list_of_speakers_id`,
@@ -43,6 +41,8 @@ export const agendaItemFollow: FollowList<any> = [
     }
 ];
 
+export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
+
 export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
@@ -59,6 +59,10 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                             {
                                 idField: `list_of_speakers_id`,
                                 ...listOfSpeakersSpeakerCountSubscription
+                            },
+                            {
+                                idField: `submitter_ids`,
+                                fieldset: FULL_FIELDSET
                             }
                         ]
                     }
