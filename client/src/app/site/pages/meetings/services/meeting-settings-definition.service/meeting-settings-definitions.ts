@@ -912,7 +912,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_forbid_delegator_in_list_of_speakers`,
                         label: _(`Restrict delegation principals from adding themselves to the list of speakers.`),
                         helpText: _(
-                            `Enabling this will cause non-present participants, whose voting rights have been delegated, to be unable to add themselves to any list of speakers unless they have managing rights.`
+                            `Enabling this will cause participants, whose voting rights have been delegated, to be unable to add themselves to any list of speakers unless they have managing rights.`
                         ),
                         type: `boolean`
                     },
@@ -920,7 +920,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_forbid_delegator_as_submitter`,
                         label: _(`Restrict delegation principals from creating motions.`),
                         helpText: _(
-                            `Enabling this will cause non-present participants, whose voting rights have been delegated, to be unable to create motions unless they have managing rights.`
+                            `Enabling this will cause participants, whose voting rights have been delegated, to be unable to create motions unless they have managing rights.`
                         ),
                         type: `boolean`
                     },
@@ -928,7 +928,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_forbid_delegator_as_supporter`,
                         label: _(`Restrict delegation principals from supporting motions.`),
                         helpText: _(
-                            `Enabling this will cause non-present participants, whose voting rights have been delegated, to be unable to support motions unless they have managing rights.`
+                            `Enabling this will cause participants, whose voting rights have been delegated, to be unable to support motions unless they have managing rights.`
                         ),
                         type: `boolean`
                     }

@@ -571,7 +571,6 @@ export class OperatorService {
 
     public isAllowedWithDelegation(...appliedSettings: DelegationSetting[]): boolean {
         return (
-            this.user.isPresentInMeeting(this.activeMeetingId) ||
             !this.user.getMeetingUser(this.activeMeetingId)?.vote_delegated_to_id ||
             !appliedSettings.some(appliedSetting => this.meetingSettings.instant(appliedSetting as keyof Settings))
         );

@@ -76,13 +76,11 @@ export class PermsDirective extends BasePermsDirective<Permission> implements On
      * Returns true if the users permissions fit.
      */
     protected hasPermissions(): boolean {
-        console.log(`HAS PERM`, this.permissions);
         let permissions = this.permissions;
         if (
             this._delegationSettingAlternative &&
             !this.operator.isAllowedWithDelegation(this._delegationSettingAlternative[0])
         ) {
-            console.log(`->`, this._delegationSettingAlternative[1]);
             permissions = [this._delegationSettingAlternative[1]];
         }
         return this.operator.hasPerms(...permissions);

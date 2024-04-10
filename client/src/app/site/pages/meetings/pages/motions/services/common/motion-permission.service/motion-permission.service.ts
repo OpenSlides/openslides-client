@@ -171,7 +171,11 @@ export class MotionPermissionService {
                     return false;
                 }
                 return (
-                    this.operator.hasPerms(Permission.motionCanCreateAmendments) &&
+                    this.operator.hasPerms(
+                        this.operator.isAllowedWithDelegation(`users_forbid_delegator_as_submitter`)
+                            ? Permission.motionCanCreateAmendments
+                            : Permission.motionCanManage
+                    ) &&
                     this._amendmentEnabled &&
                     (!motion.lead_motion_id || (!!motion.lead_motion_id && this._amendmentOfAmendmentEnabled))
                 );
