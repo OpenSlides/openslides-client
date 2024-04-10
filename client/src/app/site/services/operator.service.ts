@@ -11,6 +11,7 @@ import {
 import { DelegationSetting, delegationSettings } from 'src/app/domain/definitions/delegation-setting';
 import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
@@ -235,6 +236,7 @@ export class OperatorService {
         private authService: AuthService,
         private lifecycle: LifecycleService,
         private userRepo: UserRepositoryService,
+        private meetingUserRepo: MeetingUserRepositoryService,
         private groupRepo: GroupControllerService,
         private autoupdateService: AutoupdateService,
         private modelRequestBuilder: ModelRequestBuilderService,
@@ -294,6 +296,11 @@ export class OperatorService {
                 this.updateUser(user);
                 this._operatorShortNameSubject.next(this._shortName);
                 this._userSubject.next(user);
+                this._operatorUpdatedSubject.next();
+            }
+        });
+        this.meetingUserRepo.getGeneralViewModelObservable().subscribe(user => {
+            if (user !== undefined && this.operatorId === user.user_id) {
                 this._operatorUpdatedSubject.next();
             }
         });
