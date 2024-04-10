@@ -17,6 +17,8 @@ export abstract class HttpStream {
     private _receivedData: Promise<void>;
     private _receivedDataResolver: CallableFunction;
 
+    private _queryParams: URLSearchParams;
+
     protected readonly supportLongpolling: boolean = false;
     protected connectionMode: 'SSE' | 'LONGPOLLING' = `SSE`;
     protected subscription: HttpSubscription;
@@ -49,6 +51,7 @@ export abstract class HttpStream {
             onData: (data: unknown): void => this.handleContent(data),
             onError: (data: unknown): void => this.handleError(data)
         };
+        this._queryParams = queryParams;
 
         this.resetReceivedData();
         this.updateSubscription();
@@ -164,7 +167,12 @@ export abstract class HttpStream {
     }
 
     private updateSubscription(): void {
-        if ((<any>self).useLongpolling && this.supportLongpolling && this.connectionMode === `SSE`) {
+        if (
+            (<any>self).useLongpolling &&
+            this.supportLongpolling &&
+            this.connectionMode === `SSE` &&
+            (!this._queryParams.has(`single`) || this._queryParams.get(`single`) !== `1`)
+        ) {
             this.connectionMode = `LONGPOLLING`;
         } else if (this.subscription) {
             return;
