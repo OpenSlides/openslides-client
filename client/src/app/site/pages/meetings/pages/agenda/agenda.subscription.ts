@@ -9,6 +9,10 @@ import { pollModelRequest } from '../polls/polls.subscription';
 import { ViewListOfSpeakers, ViewTopic } from './modules';
 
 export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
+export const AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION = `agenda_list_minimal`;
+export const TOPIC_ITEM_SUBSCRIPTION = `topic_detail`;
+export const TOPIC_ITEM_DUPLICATE_SUBSCRIPTION = `topic_detail`;
+export const LIST_OF_SPEAKERS_SUBSCRIPTION = `los_detail`;
 
 export const agendaItemFollow: FollowList<any> = [
     {
@@ -59,6 +63,10 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                             {
                                 idField: `list_of_speakers_id`,
                                 ...listOfSpeakersSpeakerCountSubscription
+                            },
+                            {
+                                idField: `submitter_ids`,
+                                fieldset: FULL_FIELDSET
                             }
                         ]
                     }
@@ -69,8 +77,6 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
     },
     subscriptionName: AGENDA_LIST_ITEM_SUBSCRIPTION
 });
-
-export const AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION = `agenda_list_minimal`;
 
 export const getAgendaListMinimalSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -91,8 +97,6 @@ export const getAgendaListMinimalSubscriptionConfig: SubscriptionConfigGenerator
     },
     subscriptionName: AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION
 });
-
-export const TOPIC_ITEM_SUBSCRIPTION = `topic_detail`;
 
 export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {
@@ -121,7 +125,7 @@ export const getTopicDuplicateSubscriptionConfig: SubscriptionConfigGenerator = 
         ids,
         fieldset: FULL_FIELDSET
     },
-    subscriptionName: TOPIC_ITEM_SUBSCRIPTION
+    subscriptionName: TOPIC_ITEM_DUPLICATE_SUBSCRIPTION
 });
 
 export const listOfSpeakersSpeakerCountSubscription = {
@@ -139,8 +143,6 @@ export const listOfSpeakersSpeakerCountSubscription = {
         }
     ]
 };
-
-export const LIST_OF_SPEAKERS_SUBSCRIPTION = `los_detail`;
 
 export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
