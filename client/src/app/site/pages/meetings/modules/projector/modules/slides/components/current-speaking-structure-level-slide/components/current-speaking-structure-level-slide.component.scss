@@ -13,9 +13,12 @@
         font-size: 250px;
         font-weight: 500;
     }
+    #inner-type,
     #inner-name {
         font-size: 70px;
         opacity: 0.9;
+        display: flex;
+        justify-content: end;
     }
 
     .structure-level-color {
