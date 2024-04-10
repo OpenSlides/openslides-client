@@ -1,6 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, debounceTime, Observable, Subject } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    debounceTime,
+    distinctUntilChanged,
+    Observable,
+    startWith,
+    Subject
+} from 'rxjs';
+import { DelegationSetting, delegationSettings } from 'src/app/domain/definitions/delegation-setting';
 import { UserFieldsets } from 'src/app/domain/fieldsets/user';
+import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
@@ -16,6 +27,7 @@ import { GroupControllerService } from '../pages/meetings/pages/participants';
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 import { NoActiveMeetingError } from '../pages/meetings/services/active-meeting-id.service';
 import { MeetingControllerService } from '../pages/meetings/services/meeting-controller.service';
+import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
 import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate';
@@ -110,6 +122,10 @@ export class OperatorService {
         return this._operatorUpdatedSubject;
     }
 
+    public get delegationSettingsUpdated(): Observable<void> {
+        return this._delegationSettingsUpdatedSubject;
+    }
+
     public get operatorShortNameObservable(): Observable<string | null> {
         return this._operatorShortNameSubject;
     }
@@ -176,6 +192,8 @@ export class OperatorService {
         null
     );
 
+    private readonly _delegationSettingsUpdatedSubject = new Subject<void>();
+
     private readonly _userSubject = new BehaviorSubject<ViewUser | null>(null);
     private readonly _operatorReadySubject = new BehaviorSubject<boolean>(false);
 
@@ -218,10 +236,12 @@ export class OperatorService {
         private authService: AuthService,
         private lifecycle: LifecycleService,
         private userRepo: UserRepositoryService,
+        private meetingUserRepo: MeetingUserRepositoryService,
         private groupRepo: GroupControllerService,
         private autoupdateService: AutoupdateService,
         private modelRequestBuilder: ModelRequestBuilderService,
-        private meetingRepo: MeetingControllerService
+        private meetingRepo: MeetingControllerService,
+        private meetingSettings: MeetingSettingsService
     ) {
         this.setNotReady();
         // General environment in which the operator moves
@@ -279,6 +299,11 @@ export class OperatorService {
                 this._operatorUpdatedSubject.next();
             }
         });
+        this.meetingUserRepo.getGeneralViewModelObservable().subscribe(user => {
+            if (user !== undefined && this.operatorId === user.user_id) {
+                this._operatorUpdatedSubject.next();
+            }
+        });
         this.groupRepo.getGeneralViewModelObservable().subscribe(group => {
             if (!this.activeMeetingId || !group) {
                 return;
@@ -318,6 +343,13 @@ export class OperatorService {
                     this._groupsLoadedDeferred.resolve();
                 }
             });
+        combineLatest(
+            Object.values(delegationSettings).map(setting =>
+                this.meetingSettings.get(setting as keyof Settings).pipe(startWith(null))
+            )
+        )
+            .pipe(distinctUntilChanged())
+            .subscribe(() => this._delegationSettingsUpdatedSubject.next());
     }
 
     public isInMeeting(meetingId: Id): boolean {
@@ -535,6 +567,13 @@ export class OperatorService {
             return true;
         }
         return checkPerms.some(permission => groups.some(group => group.hasPermission(permission)));
+    }
+
+    public isAllowedWithDelegation(...appliedSettings: DelegationSetting[]): boolean {
+        return (
+            !this.user.getMeetingUser(this.activeMeetingId)?.vote_delegated_to_id ||
+            !appliedSettings.some(appliedSetting => this.meetingSettings.instant(appliedSetting as keyof Settings))
+        );
     }
 
     /**

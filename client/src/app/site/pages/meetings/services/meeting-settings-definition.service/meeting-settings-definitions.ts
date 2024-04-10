@@ -907,6 +907,21 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_enable_vote_delegations`,
                         label: _(`Activate vote delegations`),
                         type: `boolean`
+                    },
+                    {
+                        key: `users_forbid_delegator_in_list_of_speakers`,
+                        label: _(`Restrict delegation principals from adding themselves to the list of speakers`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `users_forbid_delegator_as_submitter`,
+                        label: _(`Restrict delegation principals from creating motions/amendments`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `users_forbid_delegator_as_supporter`,
+                        label: _(`Restrict delegation principals from supporting motions`),
+                        type: `boolean`
                     }
                 ]
             },
