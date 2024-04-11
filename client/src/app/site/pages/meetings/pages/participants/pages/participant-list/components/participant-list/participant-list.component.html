@@ -154,6 +154,7 @@
             [matMenuTriggerFor]="singleItemMenu"
             (click)="$event.stopPropagation()"
             [matMenuTriggerData]="{ user: user }"
+            *ngIf="canSeeSingleItemMenu(user) || (viewport.isMobileSubject | async)"
         >
             <mat-icon>more_vert</mat-icon>
         </button>
