@@ -10,6 +10,36 @@
     .vote-button {
         min-width: 50px;
         min-height: 50px;
+
+        .vote-button-content {
+            margin: auto;
+            display: grid;
+
+            .vote-button-circle,
+            .vote-button-cross {
+                grid-column: 1;
+                grid-row: 1;
+            }
+
+            .vote-button-circle {
+                z-index: 0;
+            }
+
+            .vote-button-cross {
+                z-index: 1;
+                height: 24px;
+                width: 24px;
+                opacity: 0;
+            }
+        }
+    }
+
+    .vote-button:hover {
+        .vote-button-content {
+            .vote-button-cross {
+                opacity: 1;
+            }
+        }
     }
 
     .vote-label {

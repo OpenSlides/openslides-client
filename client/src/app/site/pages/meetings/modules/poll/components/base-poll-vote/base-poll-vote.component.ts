@@ -17,6 +17,7 @@ import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/
 import { ViewOption, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
 
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { VoteControllerService } from '../../services/vote-controller.service';
@@ -25,9 +26,7 @@ import { VotingProhibition, VotingService } from '../../services/voting.service'
 export interface VoteOption {
     vote?: VoteValue;
     css?: string;
-    icon?: string;
     label: string;
-    style?: { [key: string]: string };
 }
 
 export interface PollVoteViewSettings {
@@ -39,6 +38,8 @@ export interface PollVoteViewSettings {
 
 @Directive()
 export abstract class BasePollVoteComponent<C extends PollContentObject = any> extends BaseComponent implements OnInit {
+    public readonly drawnCross = CustomIcon.DRAWN_CROSS;
+
     @Input()
     public set poll(value: ViewPoll<C>) {
         this._poll = value;
@@ -74,21 +75,17 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         {
             vote: `Y`,
             css: `voted-yes`,
-            icon: `check_circle_outline`,
             label: `Yes`
         },
         {
             vote: `N`,
             css: `voted-no`,
-            icon: `highlight_off`,
             label: `No`
         },
         {
             vote: `A`,
             css: `voted-abstain`,
-            icon: `pause_circle_outline`,
-            label: `Abstain`,
-            style: { transform: `rotate(90deg)` }
+            label: `Abstain`
         }
     ];
 
@@ -140,8 +137,6 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     protected cd = inject(ChangeDetectorRef);
     private pollRepo = inject(PollControllerService);
     private operator = inject(OperatorService);
-
-    private hovered: { [userId: number]: { [optionId: number]: { Y?: boolean; N?: boolean; A?: boolean } } } = {};
 
     public constructor(private meetingSettingsService: MeetingSettingsService) {
         super();
@@ -215,24 +210,6 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
             return `-`;
         }
         return this.poll.max_votes_amount - this.getVotesCount(user);
-    }
-
-    public setHover(isHovering: boolean, voteOption: VoteOption, option: ViewOption, user: ViewUser = this.user): void {
-        if (!this.hovered[user.id]) {
-            this.hovered[user.id] = {};
-        }
-        if (!this.hovered[user.id][option.id]) {
-            this.hovered[user.id][option.id] = {};
-        }
-        this.hovered[user.id][option.id][voteOption.vote] = isHovering;
-    }
-
-    public isHovered(voteOption: VoteOption, option: ViewOption, user: ViewUser = this.user): boolean {
-        return (
-            this.hovered[user.id] &&
-            this.hovered[user.id][option.id] &&
-            this.hovered[user.id][option.id][voteOption.vote]
-        );
     }
 
     public getFormControl(optionId: number): UntypedFormControl {

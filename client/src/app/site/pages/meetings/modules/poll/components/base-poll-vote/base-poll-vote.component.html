@@ -67,10 +67,16 @@
                                     class="vote-button"
                                     mat-raised-button
                                     (click)="saveGlobalVote(option.vote, delegation)"
-                                    [ngClass]="getGlobalCSSClass(option, delegation)"
                                     [disabled]="isDeliveringVote(delegation)"
                                 >
-                                    <mat-icon>{{ option.icon }}</mat-icon>
+                                    <div class="vote-button-content">
+                                        <os-custom-icon
+                                            [customIcon]="drawnCross"
+                                            class="vote-button-cross"
+                                            [ngClass]="getGlobalCSSClass(option, delegation)"
+                                        ></os-custom-icon>
+                                        <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
+                                    </div>
                                 </button>
                             </div>
                         </div>
@@ -185,28 +191,16 @@
                                         class="vote-button"
                                         mat-raised-button
                                         (click)="saveSingleVote(option.id, action.vote, delegation)"
-                                        (mouseenter)="setHover(true, action, option, delegation)"
-                                        (mouseleave)="setHover(false, action, option, delegation)"
                                         [disabled]="isDeliveringVote(delegation)"
-                                        [ngClass]="getActionButtonClass(action, option, delegation)"
                                     >
-                                        <mat-icon
-                                            *ngIf="
-                                                getActionButtonClass(action, option, delegation) ||
-                                                isHovered(action, option, delegation)
-                                            "
-                                            [ngStyle]="action.style"
-                                        >
-                                            {{ action.icon }}
-                                        </mat-icon>
-                                        <mat-icon
-                                            *ngIf="
-                                                !getActionButtonClass(action, option, delegation) &&
-                                                !isHovered(action, option, delegation)
-                                            "
-                                        >
-                                            radio_button_unchecked
-                                        </mat-icon>
+                                        <div class="vote-button-content">
+                                            <os-custom-icon
+                                                [customIcon]="drawnCross"
+                                                class="vote-button-cross"
+                                                [ngClass]="getActionButtonClass(action, option, delegation)"
+                                            ></os-custom-icon>
+                                            <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
+                                        </div>
                                     </button>
                                     <span *ngIf="settings.isSplitSingleOption" class="vote-label">
                                         {{ action.label | translate }}

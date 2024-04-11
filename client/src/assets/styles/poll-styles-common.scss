@@ -13,18 +13,18 @@
 }
 
 .voted-yes {
-    background-color: $votes-yes-color !important;
-    color: $vote-active-color;
+    color: $votes-yes-color;
+    opacity: 1 !important;
 }
 
 .voted-no {
-    background-color: $votes-no-color !important;
-    color: $vote-active-color;
+    color: $votes-no-color;
+    opacity: 1 !important;
 }
 
 .voted-abstain {
-    background-color: $votes-abstain-color !important;
-    color: $vote-active-color;
+    color: $votes-abstain-color;
+    opacity: 1 !important;
 }
 
 .start-poll-button {
