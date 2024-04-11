@@ -62,14 +62,17 @@
                             <span class="vote-option-title">
                                 {{ 'Global Approval' | translate }}
                             </span>
-                            <div *ngFor="let option of globalVoteActions">
+                            <div *ngFor="let option of globalVoteActions" class="vote-button-area">
                                 <button
                                     class="vote-button"
                                     mat-raised-button
                                     (click)="saveGlobalVote(option.vote, delegation)"
                                     [disabled]="isDeliveringVote(delegation)"
                                 >
-                                    <div class="vote-button-content">
+                                    <div
+                                        class="vote-button-content"
+                                        [ngClass]="getGlobalButtonContentClass(option, delegation)"
+                                    >
                                         <os-custom-icon
                                             [customIcon]="drawnCross"
                                             class="vote-button-cross"
@@ -193,7 +196,10 @@
                                         (click)="saveSingleVote(option.id, action.vote, delegation)"
                                         [disabled]="isDeliveringVote(delegation)"
                                     >
-                                        <div class="vote-button-content">
+                                        <div
+                                            class="vote-button-content"
+                                            [ngClass]="getActionButtonContentClass(action, option, delegation)"
+                                        >
                                             <os-custom-icon
                                                 [customIcon]="drawnCross"
                                                 class="vote-button-cross"

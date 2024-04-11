@@ -32,6 +32,15 @@
                 opacity: 0;
             }
         }
+
+        .button-content-opaque {
+            opacity: 0.5;
+        }
+    }
+
+    .vote-button-area {
+        display: inline-grid;
+        justify-content: center;
     }
 
     .vote-button:hover {
@@ -48,8 +57,6 @@
 
     .poll-option-title {
         text-align: center;
-        padding-right: 14px;
-        word-break: break-all;
     }
 }
 
@@ -74,21 +81,24 @@
 .yn-grid {
     @extend %vote-grid-base;
     grid-template-areas: 'name yes no';
-    grid-template-columns: auto 70px 70px;
+    grid-template-columns: auto var(--poll-option-title-width, 70px) var(--poll-option-title-width, 70px);
     // gap: 0 20px;
 }
 
 .yna-grid {
     @extend %vote-grid-base;
     grid-template-areas: 'name yes no abstain';
-    grid-template-columns: auto 70px 70px 70px;
+    grid-template-columns: auto var(--poll-option-title-width, 70px) var(--poll-option-title-width, 70px) var(
+            --poll-option-title-width,
+            70px
+        );
     // gap: 0 20px;
 }
 
 .single-vote-grid {
     @extend %vote-grid-base;
     grid-template-areas: 'name yes';
-    grid-template-columns: auto 70px;
+    grid-template-columns: auto var(--poll-option-title-width, 70px);
     // gap: 0 20px;
 }
 
@@ -101,7 +111,7 @@
 
 .global-option-grid {
     @extend %vote-grid-base;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto var(--poll-option-title-width, 70px);
 }
 
 .option-list-information-grid {

@@ -140,6 +140,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     public constructor(private meetingSettingsService: MeetingSettingsService) {
         super();
+        this.updatePollOptionTitleWidth();
         this.subscriptions.push(
             this.operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
                 if (user) {
@@ -158,6 +159,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                     this.cd.markForCheck();
                     this._isReady = true;
                 }
+            }),
+            this.translate.onLangChange.subscribe(() => {
+                this.updatePollOptionTitleWidth();
             })
         );
     }
@@ -165,6 +169,16 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     public ngOnInit(): void {
         this.defineVoteOptions();
         this.cd.markForCheck();
+    }
+
+    private updatePollOptionTitleWidth(): void {
+        document.documentElement.style.setProperty(
+            `--poll-option-title-width`,
+            `${Math.max(
+                Math.max(...this.voteOptions.map(option => this.translate.instant(option.label).length * 9)),
+                70
+            )}px`
+        );
     }
 
     public isDeliveringVote(user: ViewUser = this.user): boolean {
@@ -232,6 +246,16 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
             return this.translate.instant(`Too many votes on one option.`);
         }
         return ``;
+    }
+
+    public abstract getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser): string;
+
+    public getActionButtonContentClass(voteOption: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
+        return this.getActionButtonClass(voteOption, option, user) ? `` : `button-content-opaque`;
+    }
+
+    public getGlobalButtonContentClass(option: VoteOption, user: ViewUser = this.user): string {
+        return this.getGlobalCSSClass(option, user) ? `` : `button-content-opaque`;
     }
 
     protected isGlobalOptionSelected(user: ViewUser = this.user): boolean {
