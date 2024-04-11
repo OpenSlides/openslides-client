@@ -17,7 +17,7 @@
         </mat-form-field>
 
         <!-- Time field -->
-        <mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
             <mat-label>{{ 'Time' | translate }}</mat-label>
             <input matInput formControlName="duration" required />
             <mat-hint translate>If the value is set to 0 the time counts up as stopwatch.</mat-hint>

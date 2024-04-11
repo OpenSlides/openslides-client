@@ -44,7 +44,7 @@ export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAg
         this.updateFilterForRepo({
             repo: tagRepo,
             filter: this.tagFilterOptions,
-            noneOptionLabel: this.translate.instant(`No tags`)
+            noneOptionLabel: this.translate.instant(`not specified`)
         });
     }
 

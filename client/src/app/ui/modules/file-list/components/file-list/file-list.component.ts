@@ -90,6 +90,9 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     }
 
     @Input()
+    public isInMeeting = true;
+
+    @Input()
     public addBottomSpacer = false;
 
     /**
@@ -223,7 +226,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         }
     }
 
-    public onSelectedRowsChange(files: ViewMediafile[]) {
+    public onSelectedRowsChange(files: ViewMediafile[]): void {
         this.selected.emit({ files });
     }
 
@@ -295,7 +298,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     }
 
     private updateView(nextFiles: ViewMediafile[] = this.currentFileList): void {
-        const defaultSortFn = (fileA: ViewMediafile, fileB: ViewMediafile) => {
+        const defaultSortFn = (fileA: ViewMediafile, fileB: ViewMediafile): number => {
             if (fileA.is_directory && !fileB.is_directory) {
                 return -1;
             }

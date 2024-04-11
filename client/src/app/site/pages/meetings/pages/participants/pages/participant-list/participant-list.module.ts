@@ -16,6 +16,7 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { PipesModule } from 'src/app/ui/pipes';
 
+import { ParticipantSearchSelectorModule } from '../../../../modules/participant-search-selector';
 import { ParticipantExportModule } from '../../export/participant-export.module';
 import { ParticipantListComponent } from './components/participant-list/participant-list.component';
 import { ParticipantSwitchDialogComponent } from './components/participant-switch-dialog/participant-switch-dialog.component';
@@ -32,6 +33,7 @@ import { ParticipantListServiceModule } from './services/participant-list-servic
         ParticipantListServiceModule,
         ParticipantListInfoDialogModule,
         ParticipantExportModule,
+        ParticipantSearchSelectorModule,
         UserComponentsModule,
         ChoiceDialogModule,
         HeadBarModule,

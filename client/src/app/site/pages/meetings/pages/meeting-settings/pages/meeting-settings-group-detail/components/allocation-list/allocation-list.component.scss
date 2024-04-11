@@ -4,5 +4,9 @@
 
     mat-icon {
         margin: 0 8px;
+
+        &.grey-out {
+            color: rgba(0, 0, 0, 0.26);
+        }
     }
 }

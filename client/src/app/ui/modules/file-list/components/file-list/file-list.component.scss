@@ -51,9 +51,6 @@ $navbar-size: 40px;
 }
 
 .file-manager-table {
-    display: block;
-    height: calc(100vh - 130px);
-
     .file-title {
         font-weight: 500;
         font-size: 16px;
@@ -85,4 +82,10 @@ $navbar-size: 40px;
     .pbl-ngrid-row:last-of-type {
         margin-bottom: 60px !important;
     }
+}
+
+.detail-link:focus {
+    outline: none;
+    border: 0px solid;
+    background-color: rgba(0, 0, 0, 0.087);
 }

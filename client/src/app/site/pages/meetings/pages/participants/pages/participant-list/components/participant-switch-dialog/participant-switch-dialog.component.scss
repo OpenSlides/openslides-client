@@ -1,3 +1,16 @@
 .participant-switch-table {
     width: 100%;
+    th {
+        text-align: left;
+        padding-right: 12px;
+    }
+    td:last-of-type {
+        padding-right: 0;
+    }
+    td {
+        padding: 0 12px;
+    }
+    .warning-hint {
+        font-size: 10px;
+    }
 }

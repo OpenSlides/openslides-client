@@ -4,7 +4,8 @@
         mainButtonIcon="edit"
         [mainActionTooltip]="'Edit' | translate"
         [nav]="false"
-        [goBack]="true"
+        [goBack]="false"
+        [prevUrl]="prevUrl"
         [editMode]="editTopic"
         [isSaveButtonEnabled]="topicForm!.valid"
         [saveAction]="getSaveAction()"
@@ -17,6 +18,20 @@
                 <span *ngIf="editTopic && !newTopic">{{ 'Edit topic' | translate }}</span>
                 <span *ngIf="!newTopic && !editTopic && topic">{{ 'Topic' | translate }}</span>
             </h2>
+        </div>
+
+        <!-- Back and forth buttons -->
+        <div *ngIf="!editTopic && showNavigateButtons" class="extra-controls-slot">
+            <button mat-button (click)="navigateToTopic(previousTopic)" [disabled]="!previousTopic">
+                <os-icon-container icon="chevron_left">
+                    {{ getNavDisplay(previousTopic) }}
+                </os-icon-container>
+            </button>
+            <button mat-button (click)="navigateToTopic(nextTopic)" [disabled]="!nextTopic">
+                <os-icon-container icon="chevron_right" [swap]="true">
+                    {{ getNavDisplay(nextTopic) }}
+                </os-icon-container>
+            </button>
         </div>
 
         <!-- Menu -->
@@ -33,79 +48,79 @@
             </button>
         </div>
     </os-head-bar>
-    <mat-card
-        *ngIf="(topic || editTopic) && (hasLoaded | async)"
-        class="spacer-bottom-60"
-        [ngClass]="editTopic ? 'os-form-card' : 'os-card'"
-    >
-        <ng-container *ngIf="!editTopic && topic">
-            <os-projectable-title [model]="topic" [getTitleFn]="getTitleFn"></os-projectable-title>
-            <div>
-                <span *ngIf="topic.text">
-                    <!-- Render topic text as HTML -->
-                    <div class="underlined-links" [innerHTML]="topic.text | trust : 'html'"></div>
-                </span>
-            </div>
 
-            <div *ngIf="topic.hasAttachments()">
-                <h3>
-                    <span>{{ 'Attachments' | translate }}</span>
-                    :
-                    <mat-list dense>
-                        <mat-list-item *ngFor="let file of topic.attachments">
-                            <a [routerLink]="file.url" target="_blank">{{ file.getTitle() }}</a>
-                        </mat-list-item>
-                    </mat-list>
-                </h3>
-            </div>
-        </ng-container>
+    <mat-card *ngIf="(topic || editTopic) && (hasLoaded | async)" class="spacer-bottom-60 os-card">
+        <mat-card-content>
+            <ng-container *ngIf="!editTopic && topic">
+                <os-projectable-title [model]="topic" [getTitleFn]="getTitleFn"></os-projectable-title>
+                <div>
+                    <span *ngIf="topic.text">
+                        <!-- Render topic text as HTML -->
+                        <div class="underlined-links" [innerHTML]="topic.text | trust : 'html'"></div>
+                    </span>
+                </div>
 
-        <form *ngIf="editTopic && topicForm" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
-            <div>
-                <mat-form-field>
-                    <mat-label>{{ 'Title' | translate }}</mat-label>
-                    <input type="text" matInput osAutofocus required formControlName="title" />
-                    <mat-error *ngIf="topicForm!.invalid">{{ 'A name is required' | translate }}</mat-error>
-                </mat-form-field>
-            </div>
+                <div *ngIf="topic.hasAttachments()">
+                    <h3>
+                        <span>{{ 'Attachments' | translate }}</span>
+                        :
+                        <mat-list dense>
+                            <mat-list-item *ngFor="let file of topic.attachments">
+                                <a [routerLink]="file.url" target="_blank">{{ file.getTitle() }}</a>
+                            </mat-list-item>
+                        </mat-list>
+                    </h3>
+                </div>
+            </ng-container>
 
-            <!-- The editor -->
-            <div class="spacer-bottom-20">
-                <h4>{{ 'Text' | translate }}</h4>
-                <os-editor formControlName="text"></os-editor>
-            </div>
-
-            <!-- Attachments -->
-            <os-attachment-control formControlName="attachment_ids"></os-attachment-control>
-
-            <div *ngIf="newTopic">
-                <!-- Visibility -->
+            <form *ngIf="editTopic && topicForm" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
                 <div>
                     <mat-form-field>
-                        <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
-                        <mat-select formControlName="agenda_type">
-                            <mat-option *ngFor="let type of itemVisibility" [value]="type.key">
-                                <span>{{ type.name | translate }}</span>
-                            </mat-option>
-                        </mat-select>
+                        <mat-label>{{ 'Title' | translate }}</mat-label>
+                        <input type="text" matInput osAutofocus required formControlName="title" />
+                        <mat-error *ngIf="topicForm!.invalid">{{ 'A name is required' | translate }}</mat-error>
                     </mat-form-field>
                 </div>
 
-                <!-- Parent item -->
-                <div>
-                    <mat-form-field>
-                        <mat-label>{{ 'Parent agenda item' | translate }}</mat-label>
-                        <os-list-search-selector
-                            formControlName="agenda_parent_id"
-                            [includeNone]="true"
-                            [inputListValues]="itemObserver"
-                        ></os-list-search-selector>
-                    </mat-form-field>
+                <!-- The editor -->
+                <div class="spacer-bottom-20">
+                    <h4>{{ 'Text' | translate }}</h4>
+                    <os-editor formControlName="text"></os-editor>
                 </div>
-            </div>
-        </form>
+
+                <!-- Attachments -->
+                <os-attachment-control formControlName="attachment_ids"></os-attachment-control>
+
+                <div *ngIf="newTopic">
+                    <!-- Visibility -->
+                    <div>
+                        <mat-form-field>
+                            <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
+                            <mat-select formControlName="agenda_type">
+                                <mat-option *ngFor="let type of itemVisibility" [value]="type.key">
+                                    <span>{{ type.name | translate }}</span>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Parent item -->
+                    <div>
+                        <mat-form-field>
+                            <mat-label>{{ 'Parent agenda item' | translate }}</mat-label>
+                            <os-list-search-selector
+                                formControlName="agenda_parent_id"
+                                [includeNone]="true"
+                                [inputListValues]="itemObserver"
+                            ></os-list-search-selector>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+        </mat-card-content>
     </mat-card>
 
+    <os-moderation-note [contentObject]="topic" *ngIf="!editTopic"></os-moderation-note>
     <div *ngIf="!editTopic" class="spacer-bottom-60">
         <ng-container *ngIf="topic && topic.poll_ids?.length">
             <ng-container *ngFor="let poll of topic.poll_ids | reverse; trackBy: trackById">

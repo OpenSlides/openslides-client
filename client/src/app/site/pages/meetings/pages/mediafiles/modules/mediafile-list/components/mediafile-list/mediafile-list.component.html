@@ -36,7 +36,7 @@
 <os-file-list
     [currentDirectory]="directory"
     [isMultiSelect]="isMultiSelect"
-    [hiddenInMobile]="['info']"
+    [hiddenInMobile]="['edit']"
     [canEdit]="canEdit"
     [canAccessFileMenu]="canAccessFileMenu"
     [sourceFiles]="directoryObservable"
@@ -49,19 +49,7 @@
     (saved)="onSaveFile($event.update)"
     (deleted)="onDeleteFile($event.file)"
     (selected)="onSelect($event.files)"
->
-    <div
-        *osScrollingTableCell="'info'; row as mediafile; config: { width: 200 }"
-        class="fill clickable"
-        (click)="triggerEdit(mediafile)"
-    >
-        <os-icon-container *ngIf="mediafile.access_groups.length" icon="group">
-            <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
-                <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
-            </os-comma-separated-listing>
-        </os-icon-container>
-    </div>
-</os-file-list>
+></os-file-list>
 
 <!-- Visibility as button -->
 <ng-template #breadcrumbManageTemplate>

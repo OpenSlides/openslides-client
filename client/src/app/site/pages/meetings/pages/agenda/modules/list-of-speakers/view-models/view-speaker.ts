@@ -7,6 +7,7 @@ import { Id } from '../../../../../../../../domain/definitions/key-types';
 import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';
 import { SpeakerState } from '../../../../../../../../domain/models/speakers/speaker-state';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
+import { ViewMotion } from '../../../../motions';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 import { ViewPointOfOrderCategory } from './view-point-of-order-category';
 /**
@@ -57,6 +58,15 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         );
     }
 
+    public get numbering(): string {
+        if (this.list_of_speakers?.content_object.collection === `motion`) {
+            return (this.list_of_speakers?.content_object as ViewMotion).number;
+        } else if (this.list_of_speakers?.content_object.collection === `topic`) {
+            return this.list_of_speakers?.content_object.agenda_item.item_number;
+        }
+        return null;
+    }
+
     public get name(): string {
         return this.user ? this.user.getFullName(this.structure_level_list_of_speakers?.structure_level) : ``;
     }
@@ -67,6 +77,22 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         }
 
         return this.user ? this.user.getFullName(this.structure_level_list_of_speakers?.structure_level || null) : ``;
+    }
+
+    public getLOSStructureLevels(listAllStructureLevels: boolean): string {
+        if (listAllStructureLevels) {
+            return this.user?.structureLevels() || ``;
+        }
+
+        return this.structure_level_list_of_speakers?.structure_level?.getTitle() || ``;
+    }
+
+    public get user_short_name(): string {
+        return this.user ? this.user.short_name : ``;
+    }
+
+    public get user_pronoun(): string {
+        return this.user ? this.user.pronoun : ``;
     }
 
     public get user_title(): string {
@@ -101,6 +127,13 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return collectionFromFqid(this.list_of_speakers?.content_object_id);
     }
 
+    public get contentSeqNum(): string {
+        if (!this.list_of_speakers?.content_object) {
+            return null;
+        }
+        return this.list_of_speakers?.content_object[`sequential_number`];
+    }
+
     public get topic(): string {
         const number = this.list_of_speakers?.content_object?.agenda_item?.item_number;
         const title = this.list_of_speakers?.content_object?.getTitle();
@@ -122,6 +155,10 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return this.speaker.end_time
             ? this.speaker.end_time - this.speaker.begin_time - (this.speaker.total_pause || 0)
             : null;
+    }
+
+    public get hasSpoken(): boolean {
+        return this.speaker.end_time ? true : false;
     }
 
     public getBeginTimeAsDate(): Date | null {
