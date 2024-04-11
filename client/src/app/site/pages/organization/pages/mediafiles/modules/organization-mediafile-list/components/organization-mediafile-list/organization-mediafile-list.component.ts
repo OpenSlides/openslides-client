@@ -74,8 +74,8 @@ export class OrganizationMediafileListComponent
      */
     public fileEditForm: UntypedFormGroup | null = null;
 
-    public isUsedAsLogoFn = (file: ViewMediafile) => this.isUsedAs(file);
-    public isUsedAsFontFn = (_file: ViewMediafile) => false;
+    public isUsedAsLogoFn = (file: ViewMediafile): boolean => this.isUsedAs(file);
+    public isUsedAsFontFn = (_file: ViewMediafile): boolean => false;
 
     private folderSubscription: Subscription | null = null;
     private directorySubscription: Subscription | null = null;
