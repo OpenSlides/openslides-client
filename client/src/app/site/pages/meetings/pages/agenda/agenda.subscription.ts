@@ -66,7 +66,19 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                             },
                             {
                                 idField: `submitter_ids`,
-                                fieldset: FULL_FIELDSET
+                                fieldset: FULL_FIELDSET,
+                                follow: [
+                                    {
+                                        idField: `meeting_user_id`,
+                                        follow: [
+                                            {
+                                                idField: `user_id`,
+                                                fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                                            }
+                                        ],
+                                        ...MeetingUserFieldsets.FullNameSubscription
+                                    }
+                                ]
                             }
                         ]
                     }
