@@ -159,5 +159,18 @@ describe(`http subscription polling`, () => {
             expect(subscr.active).toBeFalsy();
             await subscr.stop();
         });
+
+        it(`stops on fetch error`, async () => {
+            fetchMock.mock(`end:/throws`, {
+                status: 502,
+                body: `Bad gateway`,
+                throws: new Error(`fetch error`)
+            });
+            const subscr = getHttpSubscriptionPollingInstance(`/throws?longpolling=1`);
+            try {
+                await subscr.start();
+            } catch (e) {}
+            expect(subscr.active).toBeFalsy();
+        });
     });
 });
