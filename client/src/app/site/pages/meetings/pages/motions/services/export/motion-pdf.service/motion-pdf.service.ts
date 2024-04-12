@@ -740,7 +740,10 @@ export class MotionPdfService {
     private createAttachments(motion: ViewMotion): object {
         let width = this.pdfDocumentService.pageSize === `A5` ? PDF_A5_POINTS_WIDTH : PDF_A4_POINTS_WIDTH;
         width = width - this.pdfDocumentService.pageMarginPointsLeft - this.pdfDocumentService.pageMarginPointsRight;
-        const instancUrl = this.organizationSettingsService.instant(`url`);
+        let instancUrl = this.organizationSettingsService.instant(`url`);
+        if (instancUrl.endsWith(`/`)) {
+            instancUrl = instancUrl.slice(0, -1);
+        }
 
         const attachments = [];
         attachments.push({
