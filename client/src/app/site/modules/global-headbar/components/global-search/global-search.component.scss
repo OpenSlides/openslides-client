@@ -34,10 +34,9 @@
 
 .search-results {
     position: relative;
-    max-width: calc(100% + 48px);
-    margin: 0 -24px -24px -24px;
+    max-width: 800px;
     padding: 0;
-    display: contents;
+    display: flex;
     max-height: auto;
 
     .info {
