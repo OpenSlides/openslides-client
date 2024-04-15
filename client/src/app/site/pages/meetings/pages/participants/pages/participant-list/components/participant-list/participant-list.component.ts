@@ -89,6 +89,10 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return this.operator.hasPerms(Permission.userCanUpdate);
     }
 
+    public get canSeeSensitiveData(): boolean {
+        return this.operator.hasPerms(Permission.userCanSeeSensitiveData);
+    }
+
     public get showVoteWeight(): boolean {
         return this._isElectronicVotingEnabled && this.voteWeightEnabled;
     }

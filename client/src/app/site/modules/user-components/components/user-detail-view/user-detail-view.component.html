@@ -178,7 +178,7 @@
                     &nbsp;
                     <span>({{ user.pronoun }})</span>
                 </ng-container>
-                <mat-icon *ngIf="!user.is_active && isAllowed('update')" matTooltip="{{ 'Inactive' | translate }}">
+                <mat-icon *ngIf="!user.is_active && isAllowed('seeSensitiveData')" matTooltip="{{ 'Inactive' | translate }}">
                     block
                 </mat-icon>
                 <mat-icon

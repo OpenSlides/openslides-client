@@ -165,6 +165,18 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 shouldHideFn: () => {
                     return !this._voteDelegationEnabled;
                 }
+            },
+            {
+                property: `is_active`,
+                shouldHideFn() {
+                    return !this.canSeeSensitiveData;
+                },
+            },
+            {
+                property: `hasSamlId`,
+                shouldHideFn() {
+                    return !this.canManage;
+                },
             }
         ];
     }
