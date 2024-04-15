@@ -29,7 +29,7 @@ export class ViewProjection extends BaseProjectableViewModel<Projection> {
         return this.content_object.getProjectorTitle(this.getModel());
     }
 
-    public override getTitle = () => this.getProjectorTitle().title;
+    public override getTitle = (): string => this.getProjectorTitle().title;
 
     public getSubtitle(): string {
         return this.getProjectorTitle().subtitle || ``;
