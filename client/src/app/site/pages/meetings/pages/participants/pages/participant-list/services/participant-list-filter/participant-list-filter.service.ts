@@ -170,13 +170,13 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 property: `is_active`,
                 shouldHideFn() {
                     return !this.canSeeSensitiveData;
-                },
+                }
             },
             {
                 property: `hasSamlId`,
                 shouldHideFn() {
                     return !this.canManage;
-                },
+                }
             }
         ];
     }
