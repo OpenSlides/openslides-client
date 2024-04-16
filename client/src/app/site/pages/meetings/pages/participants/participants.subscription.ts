@@ -1,5 +1,5 @@
 import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS, mergeSubscriptionFollow } from 'src/app/domain/fieldsets/misc';
 import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -138,16 +138,13 @@ export const getSpeakersListSubscriptionConfig: SubscriptionConfigGenerator = (i
                 idField: `speaker_ids`,
                 fieldset: FULL_FIELDSET,
                 follow: [
-                    {
-                        idField: `meeting_user_id`,
-                        follow: [
-                            {
-                                idField: `user_id`,
-                                ...UserFieldsets.FullNameSubscription
-                            }
-                        ],
-                        ...MeetingUserFieldsets.FullNameSubscription
-                    },
+                    mergeSubscriptionFollow(
+                        {
+                            idField: `meeting_user_id`,
+                            follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                        },
+                        { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
+                    ),
                     {
                         idField: `structure_level_list_of_speakers_id`,
                         fieldset: [],
