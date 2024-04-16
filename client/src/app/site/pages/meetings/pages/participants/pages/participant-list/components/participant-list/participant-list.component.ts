@@ -455,7 +455,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     public canSeeSingleItemMenu(user: ViewUser): boolean {
-        return this.operator.hasPerms(Permission.userCanManage) || this.canChangePassword(user);
+        return this.operator.hasPerms(Permission.userCanUpdate) || this.canChangePassword(user);
     }
 
     /**
