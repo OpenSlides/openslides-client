@@ -214,89 +214,58 @@
             <button
                 mat-ripple
                 type="button"
-                [matTooltip]="'Align left' | translate"
-                matTooltipPosition="above"
-                [ngClass]="{ active: editor.isActive({ textAlign: 'left' }) }"
-                (click)="editor.chain().focus().setTextAlign('left').run()"
+                [matTooltip]="'Insert/edit link' | translate"
+                [ngClass]="{ active: editor.isActive('link') }"
+                (click)="setLinkDialog()"
             >
-                <mat-icon>format_align_left</mat-icon>
+                <mat-icon>link</mat-icon>
             </button>
 
             <button
                 mat-ripple
                 type="button"
-                [matTooltip]="'Align center' | translate"
-                matTooltipPosition="above"
-                [ngClass]="{ active: editor.isActive({ textAlign: 'center' }) }"
-                (click)="editor.chain().focus().setTextAlign('center').run()"
+                [matTooltip]="'Insert/edit image' | translate"
+                [ngClass]="{ active: editor.isActive('image') }"
+                (click)="setImageDialog()"
             >
-                <mat-icon>format_align_center</mat-icon>
+                <mat-icon>image</mat-icon>
             </button>
 
             <button
+                *ngIf="allowEmbeds"
                 mat-ripple
                 type="button"
-                [matTooltip]="'Align right' | translate"
-                matTooltipPosition="above"
-                [ngClass]="{ active: editor.isActive({ textAlign: 'right' }) }"
-                (click)="editor.chain().focus().setTextAlign('right').run()"
+                [matTooltip]="'Insert/edit embed' | translate"
+                [ngClass]="{ active: editor.isActive('iframe') }"
+                (click)="setEmbedDialog()"
             >
-                <mat-icon>format_align_right</mat-icon>
+                <mat-icon>web_asset</mat-icon>
             </button>
         </div>
 
-        <button
-            mat-ripple
-            type="button"
-            [matTooltip]="'Insert/edit link' | translate"
-            [ngClass]="{ active: editor.isActive('link') }"
-            (click)="setLinkDialog()"
-        >
-            <mat-icon>link</mat-icon>
-        </button>
+        <div class="button-group">
+            <button
+                type="button"
+                mat-ripple
+                type="button"
+                [disabled]="!editor.can().undo()"
+                [matTooltip]="'Undo' | translate"
+                (click)="editor.chain().focus().undo().run()"
+            >
+                <mat-icon>undo</mat-icon>
+            </button>
 
-        <button
-            mat-ripple
-            type="button"
-            [matTooltip]="'Insert/edit image' | translate"
-            [ngClass]="{ active: editor.isActive('image') }"
-            (click)="setImageDialog()"
-        >
-            <mat-icon>image</mat-icon>
-        </button>
-
-        <button
-            *ngIf="allowEmbeds"
-            mat-ripple
-            type="button"
-            [matTooltip]="'Insert/edit embed' | translate"
-            [ngClass]="{ active: editor.isActive('iframe') }"
-            (click)="setEmbedDialog()"
-        >
-            <mat-icon>web_asset</mat-icon>
-        </button>
-
-        <button
-            type="button"
-            mat-ripple
-            type="button"
-            [disabled]="!editor.can().undo()"
-            [matTooltip]="'Undo' | translate"
-            (click)="editor.chain().focus().undo().run()"
-        >
-            <mat-icon>undo</mat-icon>
-        </button>
-
-        <button
-            type="button"
-            mat-ripple
-            type="button"
-            [disabled]="!editor.can().redo()"
-            [matTooltip]="'Redo' | translate"
-            (click)="editor.chain().focus().redo().run()"
-        >
-            <mat-icon>redo</mat-icon>
-        </button>
+            <button
+                type="button"
+                mat-ripple
+                type="button"
+                [disabled]="!editor.can().redo()"
+                [matTooltip]="'Redo' | translate"
+                (click)="editor.chain().focus().redo().run()"
+            >
+                <mat-icon>redo</mat-icon>
+            </button>
+        </div>
 
         <button type="button" mat-ripple [matTooltip]="'Source code' | translate" (click)="editCode()">
             <mat-icon>code</mat-icon>
