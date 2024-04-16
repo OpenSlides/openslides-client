@@ -58,7 +58,7 @@
                 <mat-icon matTooltip="{{ 'Is no natural person' | translate }}" *ngIf="!user.is_physical_person">
                     account_balance
                 </mat-icon>
-                <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canManage">
+                <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canSeeSensitiveData">
                     block
                 </mat-icon>
                 <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}" *ngIf="user.hasSamlId && canManage">
