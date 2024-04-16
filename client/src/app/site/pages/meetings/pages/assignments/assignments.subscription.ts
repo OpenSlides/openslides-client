@@ -7,6 +7,7 @@ import { listOfSpeakersSpeakerCountSubscription } from '../agenda/agenda.subscri
 import { pollModelRequest } from '../polls/polls.subscription';
 
 export const ASSIGNMENT_LIST_SUBSCRIPTION = `assignment_list`;
+export const ASSIGNMENT_LIST_MINIMAL_SUBSCRIPTION = `assignment_list_minimal`;
 
 export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -39,8 +40,6 @@ export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id:
     },
     subscriptionName: ASSIGNMENT_LIST_SUBSCRIPTION
 });
-
-export const ASSIGNMENT_LIST_MINIMAL_SUBSCRIPTION = `assignment_list_minimal`;
 
 export const getAssignmentListMinimalSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
