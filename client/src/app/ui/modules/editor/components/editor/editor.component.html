@@ -230,17 +230,6 @@
             >
                 <mat-icon>image</mat-icon>
             </button>
-
-            <button
-                *ngIf="allowEmbeds"
-                mat-ripple
-                type="button"
-                [matTooltip]="'Insert/edit embed' | translate"
-                [ngClass]="{ active: editor.isActive('iframe') }"
-                (click)="setEmbedDialog()"
-            >
-                <mat-icon>web_asset</mat-icon>
-            </button>
         </div>
 
         <div class="button-group">
