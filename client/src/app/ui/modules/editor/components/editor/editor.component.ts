@@ -53,6 +53,7 @@ import {
     EditorImageDialogOutput
 } from '../editor-image-dialog/editor-image-dialog.component';
 import { EditorLinkDialogComponent, EditorLinkDialogOutput } from '../editor-link-dialog/editor-link-dialog.component';
+import { ClearTextcolorPaste } from './extensions/clear-textcolor';
 import { Highlight } from './extensions/highlight';
 import IFrame from './extensions/iframe';
 import { MSOfficePaste } from './extensions/office';
@@ -157,6 +158,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             element: this.editorEl.nativeElement,
             extensions: [
                 MSOfficePaste,
+                ClearTextcolorPaste,
                 // Nodes
                 Document,
                 Blockquote,
