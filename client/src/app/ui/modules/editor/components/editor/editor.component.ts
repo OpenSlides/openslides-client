@@ -58,7 +58,33 @@ import IFrame from './extensions/iframe';
 import { MSOfficePaste } from './extensions/office';
 import { OrderedList } from './extensions/ordered-list';
 
-const DEFAULT_COLOR_PALETE = [`#FF0000`, `#00FF00`, `#FFFF00`, `#00FFFF`, `#0000FF`, `#FF00FF`, `#FFFFFF`, `#000000`];
+const DEFAULT_COLOR_PALETE = [
+    `#BFEDD2`,
+    `#FBEEB8`,
+    `#F8CAC6`,
+    `#ECCAFA`,
+    `#C2E0F4`,
+    `#2DC26B`,
+    `#F1C40F`,
+    `#E03E2D`,
+    `#B96AD9`,
+    `#3598DB`,
+    `#169179`,
+    `#E67E23`,
+    `#BA372A`,
+    `#843FA1`,
+    `#236FA1`,
+    `#ECF0F1`,
+    `#CED4D9`,
+    `#95A5A6`,
+    `#7E8C8D`,
+    `#34495E`,
+    `#000000`,
+    `#FFFFFF`,
+    `#A918BF`,
+    `#CE4040`,
+    `#44C8AC`
+];
 
 @Component({
     selector: `os-editor`,
@@ -208,6 +234,12 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public updateColorSets(): void {
+        // Safari and Firefox have their own color paletes so no presets necessary
+        if (navigator.userAgent.search(`Firefox`) > -1 || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+            this.textColorSet.clear();
+            this.backgroundColorSet.clear();
+        }
+
         // Add colors used in text to color palete
         if (this.value) {
             const parser = new DOMParser();
