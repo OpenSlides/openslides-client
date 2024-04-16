@@ -159,7 +159,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         private amendmentFilterService: AmendmentListFilterService,
         private cd: ChangeDetectorRef,
         private pdfExport: MotionPdfExportService,
-        private originUrlService : MotionDetailViewOriginUrlService
+        private originUrlService: MotionDetailViewOriginUrlService
     ) {
         super();
 
@@ -204,11 +204,11 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Does nothing on navigation between two motions.
      */
     private isNavigatedFromAmendments() {
-        let previousUrl = this.originUrlService.getPreviousUrl()
-        if (!!previousUrl ) {
-            if (previousUrl.endsWith("amendments")) {
+        const previousUrl = this.originUrlService.getPreviousUrl();
+        if (!!previousUrl) {
+            if (previousUrl.endsWith(`amendments`)) {
                 this._navigatedFromAmendmentList = true;
-            } else if (previousUrl.endsWith("motions")) {
+            } else if (previousUrl.endsWith(`motions`)) {
                 this._navigatedFromAmendmentList = false;
             }
         }
@@ -321,13 +321,13 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         const indexOfCurrent = this._sortedMotions.findIndex(motion => motion === this.motion);
         if (indexOfCurrent > 0) {
             this.previousMotion = this._sortedMotions[indexOfCurrent - 1];
-            this.substituteSurroundingMotions(indexOfCurrent, true)
+            this.substituteSurroundingMotions(indexOfCurrent, true);
         } else {
             this.previousMotion = null;
         }
         if (indexOfCurrent > -1 && indexOfCurrent < this._sortedMotions.length - 1) {
             this.nextMotion = this._sortedMotions[indexOfCurrent + 1];
-            this.substituteSurroundingMotions(indexOfCurrent, false)
+            this.substituteSurroundingMotions(indexOfCurrent, false);
         } else {
             this.nextMotion = null;
         }
@@ -339,7 +339,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * @param indexOfCurrent The index from the active motion.
      * @param previous Wether the method is called for the previous or the next motion.
      */
-    private substituteSurroundingMotions(indexOfCurrent:number, previous:boolean) {
+    private substituteSurroundingMotions(indexOfCurrent: number, previous: boolean) {
         if (this._amendmentsInMainList && this._navigatedFromAmendmentList) {
             let index = indexOfCurrent;
             if (!previous) {
@@ -363,7 +363,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
                     }
                 }
             }
-
         }
     }
 
