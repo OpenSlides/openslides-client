@@ -32,6 +32,7 @@ import { AmendmentListSortService } from '../../../../services/list/amendment-li
 import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service/motion-list-filter.service';
 import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
 import { MotionDetailViewService } from '../../services/motion-detail-view.service';
+import { MotionDetailViewOriginUrlService } from '../../services/motion-detail-view-originurl.service';
 
 @Component({
     selector: `os-motion-detail-view`,
@@ -138,6 +139,8 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     private _amendmentsInMainList = false;
 
+    private _navigatedFromAmendmentList = true;
+
     public constructor(
         protected override translate: TranslateService,
         public vp: ViewPortService,
@@ -155,7 +158,8 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         private amendmentSortService: AmendmentListSortService,
         private amendmentFilterService: AmendmentListFilterService,
         private cd: ChangeDetectorRef,
-        private pdfExport: MotionPdfExportService
+        private pdfExport: MotionPdfExportService,
+        private originUrlService : MotionDetailViewOriginUrlService
     ) {
         super();
 
@@ -193,6 +197,21 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     public getSaveAction(): () => Promise<void> {
         return () => this.saveMotion();
+    }
+
+    /**
+     * Sets @var this._navigatedFromAmendmentList on navigation from either of both lists.
+     * Does nothing on navigation between two motions.
+     */
+    private isNavigatedFromAmendments() {
+        let previousUrl = this.originUrlService.getPreviousUrl()
+        if (!!previousUrl ) {
+            if (previousUrl.endsWith("amendments")) {
+                this._navigatedFromAmendmentList = true;
+            } else if (previousUrl.endsWith("motions")) {
+                this._navigatedFromAmendmentList = false;
+            }
+        }
     }
 
     public goToHistory(): void {
@@ -302,13 +321,49 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         const indexOfCurrent = this._sortedMotions.findIndex(motion => motion === this.motion);
         if (indexOfCurrent > 0) {
             this.previousMotion = this._sortedMotions[indexOfCurrent - 1];
+            this.substituteSurroundingMotions(indexOfCurrent, true)
         } else {
             this.previousMotion = null;
         }
         if (indexOfCurrent > -1 && indexOfCurrent < this._sortedMotions.length - 1) {
             this.nextMotion = this._sortedMotions[indexOfCurrent + 1];
+            this.substituteSurroundingMotions(indexOfCurrent, false)
         } else {
             this.nextMotion = null;
+        }
+    }
+
+    /**
+     * Substitutes the previous or next motion.
+     * Fires if @var this._amendmentsInMainList as well as @var this._navigatedFromAmendmentList collide.
+     * @param indexOfCurrent The index from the active motion.
+     * @param previous Wether the method is called for the previous or the next motion.
+     */
+    private substituteSurroundingMotions(indexOfCurrent:number, previous:boolean) {
+        if (this._amendmentsInMainList && this._navigatedFromAmendmentList) {
+            let index = indexOfCurrent;
+            if (!previous) {
+                while (index < this._sortedMotions.length - 1) {
+                    index += 1;
+                    if (!!this._sortedMotions[index].hasLeadMotion) {
+                        this.nextMotion = this._sortedMotions[index];
+                        break;
+                    } else {
+                        this.nextMotion = null;
+                    }
+                }
+            } else {
+                while (0 < index) {
+                    index -= 1;
+                    if (!!this._sortedMotions[index].hasLeadMotion) {
+                        this.previousMotion = this._sortedMotions[index];
+                        break;
+                    } else {
+                        this.previousMotion = null;
+                    }
+                }
+            }
+
         }
     }
 
@@ -488,6 +543,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     private init(): void {
         this.cd.reattach();
 
+        this.isNavigatedFromAmendments();
         this.registerSubjects();
 
         // use the filter and the search service to get the current sorting
