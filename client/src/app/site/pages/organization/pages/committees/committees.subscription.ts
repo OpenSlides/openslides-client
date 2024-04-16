@@ -8,7 +8,7 @@ import { ViewMeeting } from '../../../meetings/view-models/view-meeting';
 import { ViewCommittee } from './view-models';
 
 export const COMMITTEE_LIST_SUBSCRIPTION = `committee_list`;
-export const COMMITTEE_LIST_MINIMAL_SUBSCRIPTION = `committee_list`;
+export const COMMITTEE_LIST_MINIMAL_SUBSCRIPTION = `committee_list_minimal`;
 export const COMMITTEE_DETAIL_SUBSCRIPTION = `committee_detail`;
 const MEETING_DETAIL_EDIT_SUBSCRIPTION = `committee_meeting_detail`;
 
