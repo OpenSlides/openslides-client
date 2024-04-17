@@ -7,10 +7,12 @@ import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/service
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { Permission } from 'src/app/domain/definitions/permission';
 
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 import { ParticipantListServiceModule } from '../participant-list-service.module';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Injectable({
     providedIn: ParticipantListServiceModule
@@ -41,7 +43,8 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         groupRepo: GroupControllerService,
         structureRepo: StructureLevelControllerService,
         private translate: TranslateService,
-        private meetingSettings: MeetingSettingsService
+        private meetingSettings: MeetingSettingsService,
+        private operator: OperatorService
     ) {
         super(store);
         this.updateFilterForRepo({
@@ -164,6 +167,30 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 property: `delegationType`,
                 shouldHideFn: (): boolean => {
                     return !this._voteDelegationEnabled;
+                }
+            },
+            {
+                property: `is_active`,
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanSeeSensitiveData)
+                }
+            },
+            {
+                property: `hasSamlId`,
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanManage);
+                }
+            },
+            {
+                property: `isLastEmailSent`,
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanSeeSensitiveData);
+                }
+            },
+            {
+                property: `isLastLogin`,
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanUpdate);
                 }
             }
         ];
