@@ -44,6 +44,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public state_extension!: string;
     public recommendation_extension!: string;
     public sort_weight!: number;
+    public additional_submitter!: string;
     /**
      * Client-calculated field: The tree_weight indicates the position of a motion in a list of
      * motions in regard to the call list.
@@ -117,6 +118,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `workflow_timestamp`,
         `start_line_number`,
         `forwarded`,
+        `additional_submitter`,
         `lead_motion_id`,
         `amendment_ids`,
         `sort_parent_id`,
@@ -126,6 +128,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `derived_motion_ids`,
         `all_origin_ids`,
         `all_derived_motion_ids`,
+        `identical_motion_ids`,
         `state_id`,
         `recommendation_id`,
         `state_extension_reference_ids`,
@@ -135,9 +138,9 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `category_id`,
         `block_id`,
         `submitter_ids`,
+        `supporter_meeting_user_ids`,
         `editor_ids`,
         `working_group_speaker_ids`,
-        `supporter_meeting_user_ids`,
         `poll_ids`,
         `change_recommendation_ids`,
         `statute_paragraph_id`,

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { modelIcons } from 'src/app/domain/definitions/model-icons';
-import { Permission } from 'src/app/domain/definitions/permission';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
@@ -31,13 +30,8 @@ export class ParticipantSpeakerListComponent extends BaseMeetingListViewComponen
      */
     public genderList = GENDERS;
 
-    /**
-     * Helper to check for main button permissions
-     *
-     * @returns true if the user should be able to create users
-     */
-    public get canManage(): boolean {
-        return this.operator.hasPerms(Permission.userCanManage);
+    public get structureLevelCountdownEnabled(): Observable<boolean> {
+        return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v > 0));
     }
 
     /**
@@ -81,7 +75,24 @@ export class ParticipantSpeakerListComponent extends BaseMeetingListViewComponen
         this.csvExport.export(this.listComponent.source);
     }
 
-    public getSpeakerIcon(speaker: ViewSpeaker) {
+    public getSpeakerIcon(speaker: ViewSpeaker): string {
         return modelIcons[speaker.contentType];
+    }
+
+    private getSpeakerContentType(speaker: ViewSpeaker): string {
+        return speaker.contentType;
+    }
+
+    protected viewModelUrl(speaker: ViewSpeaker): string {
+        if (this.getSpeakerContentType(speaker) === `topic`) {
+            return `/${this.activeMeetingId}/agenda/topics/${speaker.contentSeqNum}`;
+        } else if (this.getSpeakerContentType(speaker) === `motion`) {
+            return `/${this.activeMeetingId}/motions/${speaker.contentSeqNum}`;
+        } else if (this.getSpeakerContentType(speaker) === `motion_block`) {
+            return `/${this.activeMeetingId}/motions/blocks/${speaker.contentSeqNum}`;
+        } else if (this.getSpeakerContentType(speaker) === `assignment`) {
+            return `/${this.activeMeetingId}/assignments/${speaker.contentSeqNum}`;
+        }
+        return `/${this.activeMeetingId}`;
     }
 }

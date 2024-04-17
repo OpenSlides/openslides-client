@@ -32,7 +32,7 @@ export class VoteTokenSecretFieldComponent {
 
     private _token: string;
 
-    constructor(private controller: PollControllerService) {}
+    public constructor(private controller: PollControllerService) {}
 
     public toggleTokenReveal(reveal: boolean): void {
         this.revealed = reveal;

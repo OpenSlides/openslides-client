@@ -1,109 +1,118 @@
-<mat-card class="os-form-card import-table spacer-bottom-60">
-    <mat-tab-group *ngIf="hasSeveralTabs()" (selectedTabChange)="onTabChange($event)">
-        <!-- Tabs before CSV import tab -->
-        <mat-tab *ngFor="let tab of importListFirstTabs">
-            <ng-template matTabLabel>
-                <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
-            </ng-template>
-            <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
-        </mat-tab>
+<mat-card class="os-card import-table spacer-bottom-60">
+    <mat-card-content>
+        <mat-tab-group *ngIf="hasSeveralTabs()" (selectedTabChange)="onTabChange($event)">
+            <!-- Tabs before CSV import tab -->
+            <mat-tab *ngFor="let tab of importListFirstTabs">
+                <ng-template matTabLabel>
+                    <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
+            </mat-tab>
 
-        <!-- CSV import tab -->
-        <mat-tab label="{{ 'CSV import' | translate }}">
-            <ng-template matTabContent>
-                <ng-container *ngTemplateOutlet="defaultTabContent"></ng-container>
-            </ng-template>
-        </mat-tab>
+            <!-- CSV import tab -->
+            <mat-tab label="{{ 'CSV import' | translate }}">
+                <ng-template matTabContent>
+                    <ng-container *ngTemplateOutlet="defaultTabContent"></ng-container>
+                </ng-template>
+            </mat-tab>
 
-        <!-- Tabs after CSV import tab -->
-        <mat-tab *ngFor="let tab of importListLastTabs">
-            <ng-template matTabLabel>
-                <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
-            </ng-template>
-            <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
-        </mat-tab>
-    </mat-tab-group>
-    <ng-container *ngIf="!hasSeveralTabs(); then defaultTabContent"></ng-container>
+            <!-- Tabs after CSV import tab -->
+            <mat-tab *ngFor="let tab of importListLastTabs">
+                <ng-template matTabLabel>
+                    <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
+            </mat-tab>
+        </mat-tab-group>
+        <ng-container *ngIf="!hasSeveralTabs(); then defaultTabContent"></ng-container>
+    </mat-card-content>
 </mat-card>
 
 <!-- preview table -->
 <ng-container *ngIf="hasFile | async">
-    <mat-card class="os-form-card spacer-bottom-60">
-        <div class="action-title">
-            <h2 class="no-margin">{{ 'Summary' | translate }}</h2>
-            <button
-                mat-icon-button
-                (click)="enterFullscreen(fullscreenDialog)"
-                matTooltip="{{ 'Fullscreen' | translate }}"
-            >
-                <mat-icon>fullscreen</mat-icon>
-            </button>
-        </div>
-        <div>
+    <mat-card class="os-card spacer-bottom-60">
+        <mat-card-content>
+            <div class="action-title">
+                <h2 class="no-margin">{{ 'Summary' | translate }}</h2>
+                <button
+                    mat-icon-button
+                    (click)="enterFullscreen(fullscreenDialog)"
+                    matTooltip="{{ 'Fullscreen' | translate }}"
+                >
+                    <mat-icon>fullscreen</mat-icon>
+                </button>
+            </div>
             <div>
-                <ng-container *ngFor="let step of importingStepsObservable | async">
-                    <div
-                        class="import-list-summary flex-vertical-center"
-                        [ngClass]="{
-                            'green-text': step.phase === Phase.FINISHED,
-                            'red-warning-text': step.phase === Phase.ERROR
-                        }"
-                    >
-                        <ng-container *ngTemplateOutlet="phaseIcon; context: { phase: step.phase }"></ng-container>
-                        <ng-container *ngIf="step.phase !== Phase.ENQUEUED">
+                <div>
+                    <ng-container *ngFor="let step of importingStepsObservable | async">
+                        <div
+                            class="import-list-summary flex-vertical-center"
+                            [ngClass]="{
+                                'green-text': step.phase === Phase.FINISHED,
+                                'red-warning-text': step.phase === Phase.ERROR
+                            }"
+                        >
+                            <ng-container *ngTemplateOutlet="phaseIcon; context: { phase: step.phase }"></ng-container>
+                            <ng-container *ngIf="step.phase !== Phase.ENQUEUED">
+                                &nbsp;
+                                <span>{{ step.getModelsImportedAmount() }} {{ 'of' | translate }}</span>
+                            </ng-container>
                             &nbsp;
-                            <span>{{ step.getModelsImportedAmount() }} {{ 'of' | translate }}</span>
-                        </ng-container>
-                        &nbsp;
-                        <span>
-                            {{ step.getModelsToCreateAmount() }}
-                        </span>
-                        &nbsp;
-                        <span>{{ step.getDescription() | translate }}</span>
-                    </div>
-                </ng-container>
-            </div>
-            <!-- errors/duplicates -->
-            <div *ngIf="nonImportableCount" class="red-warning-text flex-vertical-center">
-                <mat-icon class="icon-16 margin-left-12 margin-right-12">warning</mat-icon>
-                <span>&nbsp;{{ nonImportableCount }}&nbsp;</span>
-                <span>{{ 'entries will be ommitted.' | translate }}</span>
-            </div>
-        </div>
-        <div class="margin-top-12 margin-bottom-12" *ngIf="newCount">
-            <span>{{ 'After verifiy the preview click on "import" please (see top right).' | translate }}</span>
-        </div>
-        <div
-            *ngIf="((leftExpectedHeaders | keyvalue).length > 0 || leftReceivedHeaders.length > 0) && newCount"
-            class="flex-vertical-center"
-        >
-            <div class="fake-button-no-touch">
-                <mat-icon>warning</mat-icon>
-            </div>
-            <div>
-                {{ 'There are some columns that do not match the template' | translate }}
-                <div class="flex-vertical-center">
-                    <span
-                        class="flex-vertical-center subtitle"
-                        *ngFor="let header of leftExpectedHeaders | keyvalue; let last = last"
-                    >
-                        {{ header.value }}
-                        <span *ngIf="!last">,&nbsp;</span>
-                    </span>
+                            <span>
+                                {{ step.getModelsToCreateAmount() }}
+                            </span>
+                            &nbsp;
+                            <span>{{ step.getDescription() | translate }}</span>
+                        </div>
+                    </ng-container>
+                </div>
+                <!-- errors/duplicates -->
+                <div *ngIf="nonImportableCount" class="red-warning-text flex-vertical-center">
+                    <mat-icon class="icon-16 margin-left-12 margin-right-12">warning</mat-icon>
+                    <span>&nbsp;{{ nonImportableCount }}&nbsp;</span>
+                    <span>{{ 'entries will be ommitted.' | translate }}</span>
                 </div>
             </div>
-        </div>
+            <div class="margin-top-12 margin-bottom-12" *ngIf="newCount">
+                <span>{{ 'After verifiy the preview click on "import" please (see top right).' | translate }}</span>
+            </div>
+            <div
+                *ngIf="((leftExpectedHeaders | keyvalue).length > 0 || leftReceivedHeaders.length > 0) && newCount"
+                class="flex-vertical-center"
+            >
+                <div class="fake-button-no-touch">
+                    <mat-icon>warning</mat-icon>
+                </div>
+                <div>
+                    {{ 'There are some columns that do not match the template' | translate }}
+                    <div class="flex-vertical-center">
+                        <span
+                            class="flex-vertical-center subtitle"
+                            *ngFor="let header of leftExpectedHeaders | keyvalue; let last = last"
+                        >
+                            {{ header.value }}
+                            <span *ngIf="!last">,&nbsp;</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
 
-        <mat-select *ngIf="nonImportableCount" class="filter-imports" [(value)]="shown" (selectionChange)="setFilter()">
-            <mat-option value="all">{{ 'Show all' | translate }}</mat-option>
-            <mat-option value="error">{{ 'Show errors only' | translate }}</mat-option>
-            <mat-option value="noerror">{{ 'Show correct entries only' | translate }}</mat-option>
-        </mat-select>
+            <mat-select
+                *ngIf="nonImportableCount"
+                class="filter-imports"
+                [(value)]="shown"
+                (selectionChange)="setFilter()"
+            >
+                <mat-option value="all">{{ 'Show all' | translate }}</mat-option>
+                <mat-option value="error">{{ 'Show errors only' | translate }}</mat-option>
+                <mat-option value="noerror">{{ 'Show correct entries only' | translate }}</mat-option>
+            </mat-select>
 
-        <h2>{{ 'Preview' | translate }}</h2>
-        <div>
-            <ng-container *ngTemplateOutlet="previewList"></ng-container>
-        </div>
+            <h2>{{ 'Preview' | translate }}</h2>
+            <div>
+                <ng-container *ngTemplateOutlet="previewList"></ng-container>
+            </div>
+        </mat-card-content>
     </mat-card>
 </ng-container>
 
@@ -115,7 +124,7 @@
         }}
     </span>
     <br />
-    <div class="code foreground-warn">
+    <div class="code possible-fields-list foreground-warn">
         <span *ngFor="let entry of possibleFields; let last = last">
             {{ entry | translate }}
             <span *ngIf="!last">,&nbsp;</span>
@@ -302,9 +311,9 @@
             <mat-icon>close</mat-icon>
         </button>
     </div>
-    <div mat-dialog-content>
+    <mat-dialog-content>
         <ng-container *ngTemplateOutlet="previewList"></ng-container>
-    </div>
+    </mat-dialog-content>
 </ng-template>
 
 <ng-template #phaseIcon let-phase="phase">

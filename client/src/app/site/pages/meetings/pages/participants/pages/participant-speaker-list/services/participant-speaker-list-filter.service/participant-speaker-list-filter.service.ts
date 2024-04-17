@@ -67,7 +67,7 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
                         condition: SpeechState.INTERPOSED_QUESTION,
                         label: this.translate.instant(`Interposed question`)
                     },
-                    { condition: null, label: this.translate.instant(`No speech type`) }
+                    { condition: null, label: this.translate.instant(`not specified`) }
                 ]
             },
             {
@@ -78,6 +78,14 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
                     { condition: `motion`, label: this.translate.instant(`Motions`) },
                     { condition: `motion_block`, label: this.translate.instant(`Motion blocks`) },
                     { condition: `assignment`, label: this.translate.instant(`Elections`) }
+                ]
+            },
+            {
+                property: `hasSpoken`,
+                label: this.translate.instant(`Speaker`),
+                options: [
+                    { condition: true, label: this.translate.instant(`Has spoken`) },
+                    { condition: [false, null], label: this.translate.instant(`Has not spoken`) }
                 ]
             }
         ];

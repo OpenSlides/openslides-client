@@ -70,7 +70,7 @@
     <h1 mat-dialog-title>
         <span>{{ 'Structure level' | translate }}</span>
     </h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form [formGroup]="structureLevelForm" (keydown)="onKeyDown($event)">
             <!-- Name -->
             <mat-form-field class="os-dialog-large">
@@ -89,14 +89,14 @@
                 <input formControlName="color" type="color" matInput />
             </mat-form-field>
         </form>
-    </div>
+    </mat-dialog-content>
 
-    <div mat-dialog-actions>
+    <mat-dialog-actions>
         <button mat-button [disabled]="!structureLevelForm.valid" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
         <button mat-button [mat-dialog-close]="false">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

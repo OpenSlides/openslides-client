@@ -1,5 +1,5 @@
 import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS, mergeSubscriptionFollow } from 'src/app/domain/fieldsets/misc';
 import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -11,6 +11,9 @@ export const PARTICIPANT_LIST_SUBSCRIPTION = `participant_list`;
 export const PARTICIPANT_VOTE_INFO_SUBSCRIPTION = `participant_vote_info_list`;
 export const PARTICIPANT_IS_PRESENT_LIST_SUBSCRIPTION = `participant_is_present_list`;
 export const PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL = `participant_list_minimal`;
+export const PARTICIPANT_DETAIL_SUBSCRIPTION = `participant_detail`;
+export const STRUCTURE_LEVEL_LIST_SUBSCRIPTION = `structure_level_list`;
+export const SPEAKERS_LIST_SUBSCRIPTION = `speakers_list`;
 
 export const getParticipantVoteInfoSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -97,8 +100,6 @@ export const getParticipantMinimalSubscriptionConfig: SubscriptionConfigGenerato
     subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
 });
 
-export const PARTICIPANT_DETAIL_SUBSCRIPTION = `participant_detail`;
-
 export const getParticipantDetailSubscription: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewUser,
@@ -114,8 +115,6 @@ export const getParticipantDetailSubscription: SubscriptionConfigGenerator = (id
     subscriptionName: PARTICIPANT_DETAIL_SUBSCRIPTION
 });
 
-export const STRUCTURE_LEVEL_LIST_SUBSCRIPTION = `structure_level_list`;
-
 export const getStructureLevelListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
@@ -130,8 +129,6 @@ export const getStructureLevelListSubscriptionConfig: SubscriptionConfigGenerato
     subscriptionName: STRUCTURE_LEVEL_LIST_SUBSCRIPTION
 });
 
-export const SPEAKERS_LIST_SUBSCRIPTION = `speakers_list`;
-
 export const getSpeakersListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
@@ -141,16 +138,13 @@ export const getSpeakersListSubscriptionConfig: SubscriptionConfigGenerator = (i
                 idField: `speaker_ids`,
                 fieldset: FULL_FIELDSET,
                 follow: [
-                    {
-                        idField: `meeting_user_id`,
-                        follow: [
-                            {
-                                idField: `user_id`,
-                                ...UserFieldsets.FullNameSubscription
-                            }
-                        ],
-                        ...MeetingUserFieldsets.FullNameSubscription
-                    },
+                    mergeSubscriptionFollow(
+                        {
+                            idField: `meeting_user_id`,
+                            follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                        },
+                        { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
+                    ),
                     {
                         idField: `structure_level_list_of_speakers_id`,
                         fieldset: [],
@@ -167,7 +161,7 @@ export const getSpeakersListSubscriptionConfig: SubscriptionConfigGenerator = (i
                         follow: [
                             {
                                 idField: `content_object_id`,
-                                fieldset: [`title`, `list_of_speakers_id`, ...MEETING_ROUTING_FIELDS],
+                                fieldset: [`title`, `number`, `list_of_speakers_id`, ...MEETING_ROUTING_FIELDS],
                                 follow: [
                                     {
                                         idField: `agenda_item_id`,

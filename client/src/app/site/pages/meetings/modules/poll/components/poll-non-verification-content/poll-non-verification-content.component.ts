@@ -16,7 +16,7 @@ export class PollNonVerificationContentComponent {
 
     public waiting = new BehaviorSubject<boolean>(false);
 
-    constructor(private decryptGateway: VoteDecryptGatewayService) {}
+    public constructor(private decryptGateway: VoteDecryptGatewayService) {}
 
     public async verifyPoll(): Promise<void> {
         if (!this.poll) {

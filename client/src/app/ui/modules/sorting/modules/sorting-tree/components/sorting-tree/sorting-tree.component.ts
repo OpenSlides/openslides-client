@@ -1007,5 +1007,5 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
     /**
      * Function to check if a node has children.
      */
-    public hasChild = (_: number, node: FlatNode<T>) => node.expandable;
+    public hasChild = (_: number, node: FlatNode<T>): boolean => node.expandable;
 }

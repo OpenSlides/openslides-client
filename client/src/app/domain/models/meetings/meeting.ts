@@ -90,13 +90,16 @@ export class Settings {
     public list_of_speakers_show_amount_of_speakers_on_slide!: boolean;
     public list_of_speakers_present_users_only!: boolean;
     public list_of_speakers_show_first_contribution!: boolean;
+    public list_of_speakers_hide_contribution_count!: boolean;
     public list_of_speakers_enable_point_of_order_categories!: boolean;
     public list_of_speakers_enable_point_of_order_speakers!: boolean;
     public list_of_speakers_initially_closed!: boolean;
     public list_of_speakers_enable_pro_contra_speech!: boolean;
     public list_of_speakers_can_set_contribution_self!: boolean;
+    public list_of_speakers_allow_multiple_speakers!: boolean;
     public list_of_speakers_speaker_note_for_everyone!: boolean;
     public list_of_speakers_closing_disables_point_of_order!: boolean;
+    public list_of_speakers_can_create_point_of_order_for_others!: boolean;
 
     public list_of_speakers_default_structure_level_time: number;
     public list_of_speakers_enable_interposed_question: boolean;
@@ -160,6 +163,9 @@ export class Settings {
     public users_email_replyto!: string;
     public users_email_subject!: string;
     public users_email_body!: string;
+    public users_forbid_delegator_in_list_of_speakers!: string;
+    public users_forbid_delegator_as_submitter!: string;
+    public users_forbid_delegator_as_supporter!: string;
 
     // Assignments
     public assignments_export_title!: string;
@@ -177,17 +183,17 @@ export class Settings {
     public assignment_poll_default_backend!: PollBackendDurationType;
 
     //topic poll
-    topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
+    public topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
 
     //default poll
-    poll_ballot_paper_selection: BallotPaperSelection;
-    poll_ballot_paper_number: number;
-    poll_sort_poll_result_by_votes: boolean;
-    poll_default_type: PollType;
-    poll_default_method: PollMethod;
-    poll_default_onehundred_percent_base: PollPercentBase;
-    poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
-    poll_default_backend: PollBackendDurationType;
+    public poll_ballot_paper_selection: BallotPaperSelection;
+    public poll_ballot_paper_number: number;
+    public poll_sort_poll_result_by_votes: boolean;
+    public poll_default_type: PollType;
+    public poll_default_method: PollMethod;
+    public poll_default_onehundred_percent_base: PollPercentBase;
+    public poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
+    public poll_default_backend: PollBackendDurationType;
 
     //SSO
     public external_id!: string;
@@ -336,7 +342,10 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_show_amount_of_speakers_on_slide`,
         `list_of_speakers_present_users_only`,
         `list_of_speakers_show_first_contribution`,
+        `list_of_speakers_hide_contribution_count`,
+        `list_of_speakers_allow_multiple_speakers`,
         `list_of_speakers_enable_point_of_order_speakers`,
+        `list_of_speakers_can_create_point_of_order_for_others`,
         `list_of_speakers_enable_point_of_order_categories`,
         `list_of_speakers_closing_disables_point_of_order`,
         `list_of_speakers_enable_pro_contra_speech`,
@@ -403,6 +412,9 @@ export class Meeting extends BaseModel<Meeting> {
         `users_email_subject`,
         `users_email_body`,
         `users_enable_vote_delegations`,
+        `users_forbid_delegator_in_list_of_speakers`,
+        `users_forbid_delegator_as_submitter`,
+        `users_forbid_delegator_as_supporter`,
         `assignments_export_title`,
         `assignments_export_preamble`,
         `assignment_poll_ballot_paper_selection`,

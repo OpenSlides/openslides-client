@@ -10,7 +10,7 @@
     </div>
     <!-- Expanding control -->
     <div class="small show-entire-text" *ngIf="canExpand && !disableExpandControl">
-        <a (click)="toggleExpansion()">
+        <a (click)="toggleExpansion()" tabindex="0" (keydown.enter)="toggleExpansion()">
             {{ isExpanded ? ('Hide more text' | translate) : ('Show full text' | translate) }}
         </a>
     </div>

@@ -13,7 +13,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
@@ -490,7 +490,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`\n `);
     }
 
-    private fillPreviewData(previews: BackendImportPreview[]) {
+    private fillPreviewData(previews: BackendImportPreview[]): void {
         if (!previews || !previews.length) {
             this._previewColumns = undefined;
             this._summary = undefined;

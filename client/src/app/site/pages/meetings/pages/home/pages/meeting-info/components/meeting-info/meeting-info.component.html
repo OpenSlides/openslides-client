@@ -9,16 +9,18 @@
 <os-info-actions></os-info-actions>
 
 <mat-card class="os-card" *ngIf="canSeeStatistics">
-    <h2>{{ 'Statistics' | translate }}</h2>
+    <mat-card-content>
+        <h2>{{ 'Statistics' | translate }}</h2>
 
-    <div *ngIf="osIsManager">
-        <h3>{{ 'Logged-in users' | translate }}</h3>
-        <os-count-users></os-count-users>
-    </div>
-    <div *ngIf="osIsMeetingAdmin">
-        <h3>{{ 'Requests to speak' | translate }}</h3>
-        <os-user-statistics></os-user-statistics>
-    </div>
+        <div *ngIf="osIsManager">
+            <h3>{{ 'Logged-in users' | translate }}</h3>
+            <os-count-users></os-count-users>
+        </div>
+        <div *ngIf="osIsMeetingAdmin">
+            <h3>{{ 'Requests to speak' | translate }}</h3>
+            <os-user-statistics></os-user-statistics>
+        </div>
+    </mat-card-content>
 </mat-card>
 
 <mat-card class="os-card">

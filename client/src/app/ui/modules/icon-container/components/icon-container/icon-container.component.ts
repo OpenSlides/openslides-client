@@ -50,6 +50,12 @@ export class IconContainerComponent {
     public swap = false;
 
     /**
+     * Hide span completely
+     */
+    @Input()
+    public hide = false;
+
+    /**
      * Boolean to decide, when to show the icon.
      */
     @Input()

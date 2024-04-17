@@ -51,11 +51,11 @@ export class CheckVoteValidityDialogComponent implements OnInit {
         });
     }
 
-    public get showOptionName() {
+    public get showOptionName(): boolean {
         return !this.poll.isMotionPoll;
     }
 
-    constructor(@Inject(MAT_DIALOG_DATA) private data: any) {}
+    public constructor(@Inject(MAT_DIALOG_DATA) private data: any) {}
 
     public ngOnInit(): void {
         this.token.valueChanges.subscribe(token => this.handleTokenUpdate(token));

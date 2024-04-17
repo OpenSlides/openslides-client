@@ -5,7 +5,7 @@ import { isProjectable, Projectable, ProjectionBuildDescriptor } from 'src/app/s
 
 @Injectable()
 export class ProjectableListService {
-    constructor(
+    public constructor(
         private activeMeetingService: ActiveMeetingService,
         private meetingSettingsService: MeetingSettingsService
     ) {}
@@ -19,6 +19,15 @@ export class ProjectableListService {
         return projectors.some(projector => {
             return projector.current_projections.some(projection => projection.isEqualToDescriptor(descriptor));
         });
+    }
+
+    public isProjectedOnReferenceProjector(model: ProjectionBuildDescriptor | Projectable | null): boolean {
+        if (!model) {
+            return false;
+        }
+        const descriptor = this.ensureDescriptor(model);
+        const projector = this.activeMeetingService.meeting?.reference_projector;
+        return projector?.current_projections.some(projection => projection.isEqualToDescriptor(descriptor));
     }
 
     private ensureDescriptor(obj: ProjectionBuildDescriptor | Projectable): ProjectionBuildDescriptor {

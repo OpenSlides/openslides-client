@@ -1,76 +1,82 @@
-<mat-card class="os-form-card import-table spacer-bottom-60">
-    <mat-tab-group *ngIf="hasSeveralTabs()" (selectedTabChange)="onTabChange($event)">
-        <!-- Tabs before CSV import tab -->
-        <mat-tab *ngFor="let tab of importListFirstTabs">
-            <ng-template matTabLabel>
-                <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
-            </ng-template>
-            <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
-        </mat-tab>
+<mat-card class="os-card import-table spacer-bottom-60">
+    <mat-card-content>
+        <mat-tab-group *ngIf="hasSeveralTabs()" (selectedTabChange)="onTabChange($event)">
+            <!-- Tabs before CSV import tab -->
+            <mat-tab *ngFor="let tab of importListFirstTabs">
+                <ng-template matTabLabel>
+                    <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
+            </mat-tab>
 
-        <!-- CSV import tab -->
-        <mat-tab label="{{ 'CSV import' | translate }}">
-            <ng-template matTabContent>
-                <ng-container *ngTemplateOutlet="defaultTabContent"></ng-container>
-            </ng-template>
-        </mat-tab>
+            <!-- CSV import tab -->
+            <mat-tab label="{{ 'CSV import' | translate }}">
+                <ng-template matTabContent>
+                    <ng-container *ngTemplateOutlet="defaultTabContent"></ng-container>
+                </ng-template>
+            </mat-tab>
 
-        <!-- Tabs after CSV import tab -->
-        <mat-tab *ngFor="let tab of importListLastTabs">
-            <ng-template matTabLabel>
-                <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
-            </ng-template>
-            <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
-        </mat-tab>
-    </mat-tab-group>
-    <ng-container *ngIf="!hasSeveralTabs(); then defaultTabContent"></ng-container>
+            <!-- Tabs after CSV import tab -->
+            <mat-tab *ngFor="let tab of importListLastTabs">
+                <ng-template matTabLabel>
+                    <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
+            </mat-tab>
+        </mat-tab-group>
+        <ng-container *ngIf="!hasSeveralTabs(); then defaultTabContent"></ng-container>
+    </mat-card-content>
 </mat-card>
 
 <!-- preview table -->
 <ng-container *ngIf="dataSource | async">
-    <mat-card class="os-form-card spacer-bottom-60">
-        <div class="action-title">
-            <h2 class="no-margin">{{ 'Summary' | translate }}</h2>
-            <button
-                mat-icon-button
-                (click)="enterFullscreen(fullscreenDialog)"
-                matTooltip="{{ 'Fullscreen' | translate }}"
-            >
-                <mat-icon>fullscreen</mat-icon>
-            </button>
-        </div>
-        <table *ngIf="!finishedSuccessfully">
-            <tr *ngFor="let point of summary">
-                <td>{{ getSummaryPointTitle(point.name) | translate }}:</td>
-                <td>&nbsp;{{ point.value }}</td>
-            </tr>
-        </table>
-        <div class="margin-top-12 margin-bottom-12" *ngIf="rows?.length">
-            <span *ngIf="finishedWithWarning">
-                {{
-                    'The import returned warnings. This does not mean that it failed, but some data may have been imported differently. Usually the warnings will be the same as during the preview, but as there is a possibility that new ones have arisen, the relevant rows will be displayed below.'
-                        | translate
-                }}
-            </span>
-            <span *ngIf="awaitingConfirm">
-                {{ 'After verifying the preview click on "import" please (see top right).' | translate }}
-            </span>
-            <span *ngIf="isImporting">{{ 'The import is in progress, please wait ...' | translate }}</span>
-            <span class="warn" *ngIf="hasErrors">
-                {{
-                    'The import can not proceed. There is likely a problem with the import data, please check the preview for details.'
-                        | translate
-                }}
-            </span>
-            <span class="green-text" *ngIf="finishedSuccessfully">{{ 'The import was successful.' | translate }}</span>
-        </div>
-
-        <ng-container *ngIf="!finishedSuccessfully">
-            <h2>{{ finishedWithWarning ? ('Rows with warnings' | translate) : ('Preview' | translate) }}</h2>
-            <div *ngIf="!isInFullscreen">
-                <ng-container *ngTemplateOutlet="previewList"></ng-container>
+    <mat-card class="os-card spacer-bottom-60">
+        <mat-card-content>
+            <div class="action-title">
+                <h2 class="no-margin">{{ 'Summary' | translate }}</h2>
+                <button
+                    mat-icon-button
+                    (click)="enterFullscreen(fullscreenDialog)"
+                    matTooltip="{{ 'Fullscreen' | translate }}"
+                >
+                    <mat-icon>fullscreen</mat-icon>
+                </button>
             </div>
-        </ng-container>
+            <table *ngIf="!finishedSuccessfully">
+                <tr *ngFor="let point of summary">
+                    <td>{{ getSummaryPointTitle(point.name) | translate }}:</td>
+                    <td>&nbsp;{{ point.value }}</td>
+                </tr>
+            </table>
+            <div class="margin-top-12 margin-bottom-12" *ngIf="rows?.length">
+                <span *ngIf="finishedWithWarning">
+                    {{
+                        'The import returned warnings. This does not mean that it failed, but some data may have been imported differently. Usually the warnings will be the same as during the preview, but as there is a possibility that new ones have arisen, the relevant rows will be displayed below.'
+                            | translate
+                    }}
+                </span>
+                <span *ngIf="awaitingConfirm">
+                    {{ 'After verifying the preview click on "import" please (see top right).' | translate }}
+                </span>
+                <span *ngIf="isImporting">{{ 'The import is in progress, please wait ...' | translate }}</span>
+                <span class="warn" *ngIf="hasErrors">
+                    {{
+                        'The import can not proceed. There is likely a problem with the import data, please check the preview for details.'
+                            | translate
+                    }}
+                </span>
+                <span class="green-text" *ngIf="finishedSuccessfully">
+                    {{ 'The import was successful.' | translate }}
+                </span>
+            </div>
+
+            <ng-container *ngIf="!finishedSuccessfully">
+                <h2>{{ finishedWithWarning ? ('Rows with warnings' | translate) : ('Preview' | translate) }}</h2>
+                <div *ngIf="!isInFullscreen">
+                    <ng-container *ngTemplateOutlet="previewList"></ng-container>
+                </div>
+            </ng-container>
+        </mat-card-content>
     </mat-card>
 </ng-container>
 
@@ -82,7 +88,7 @@
         }}
     </span>
     <br />
-    <div class="code">
+    <div class="code possible-fields-list">
         <span class="foreground-warn" *ngFor="let entry of possibleFields; let last = last">
             {{ entry }}
             <span *ngIf="!last">,&nbsp;</span>
@@ -279,16 +285,16 @@
             <mat-icon>close</mat-icon>
         </button>
     </div>
-    <div mat-dialog-content>
+    <mat-dialog-content>
         <ng-container *ngTemplateOutlet="previewList"></ng-container>
-    </div>
+    </mat-dialog-content>
 </ng-template>
 
 <ng-template #fieldsInfoDialog>
     <div mat-dialog-title class="action-title">
         <h1 class="dialog-title" translate>The fields are defined as follows</h1>
     </div>
-    <div mat-dialog-content>
+    <mat-dialog-content>
         <table>
             <tr *ngFor="let column of defaultColumns">
                 <td class="table-title-column">{{ column.property }}:</td>
@@ -306,10 +312,10 @@
                 </td>
             </tr>
         </table>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button mat-button mat-dialog-close>
             {{ 'Close' | translate }}
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

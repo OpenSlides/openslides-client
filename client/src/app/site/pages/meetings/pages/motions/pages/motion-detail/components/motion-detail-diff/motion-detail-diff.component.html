@@ -2,6 +2,7 @@
 <div class="motion-detail-diff">
     <os-motion-detail-diff-summary
         *ngIf="showSummary"
+        [motion]="motion"
         [changes]="changes"
         [scrollToChange]="scrollToChange"
         [elContainer]="nativeElement"

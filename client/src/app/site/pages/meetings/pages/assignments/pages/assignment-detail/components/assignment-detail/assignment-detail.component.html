@@ -109,173 +109,182 @@
 
 <ng-template #metaInfoTemplate>
     <mat-card class="os-card spacer-bottom-60" *ngIf="assignment">
-        <os-projectable-title *ngIf="!isEditing && assignment.getTitle" [model]="assignment"></os-projectable-title>
-        <div *ngIf="assignment">
-            <div
-                class="underlined-links"
-                *ngIf="assignment.assignment.description"
-                [innerHTML]="assignment.assignment.description | trust : 'html'"
-            ></div>
-        </div>
-        <div [ngClass]="{ 'meta-info-grid': assignment.open_posts }">
-            <div class="number-of-elected" *ngIf="assignment.open_posts">
-                <h4>{{ 'Number of persons to be elected' | translate }}</h4>
-                <span>{{ assignment.open_posts }}</span>
+        <mat-card-content>
+            <os-projectable-title *ngIf="!isEditing && assignment.getTitle" [model]="assignment"></os-projectable-title>
+            <div *ngIf="assignment">
+                <div
+                    class="underlined-links"
+                    *ngIf="assignment.assignment.description"
+                    [innerHTML]="assignment.assignment.description | trust : 'html'"
+                ></div>
             </div>
-            <div class="current-phase">
-                <h4>{{ 'Phase' | translate }}</h4>
+            <div [ngClass]="{ 'meta-info-grid': assignment.open_posts }">
+                <div class="number-of-elected" *ngIf="assignment.open_posts">
+                    <h4>{{ 'Number of persons to be elected' | translate }}</h4>
+                    <span>{{ assignment.open_posts }}</span>
+                </div>
+                <div class="current-phase">
+                    <h4>{{ 'Phase' | translate }}</h4>
 
-                <os-chip-select [canOpen]="hasPerms('manage')" chipClass="bluegrey">
-                    <button
-                        menu
-                        mat-menu-item
-                        *ngFor="let option of phaseOptions"
-                        (click)="onSetPhaseButton(option.value)"
-                    >
-                        {{ option.display_name | translate }}
-                    </button>
+                    <os-chip-select [canOpen]="hasPerms('manage')" chipClass="bluegrey">
+                        <button
+                            menu
+                            mat-menu-item
+                            *ngFor="let option of phaseOptions"
+                            (click)="onSetPhaseButton(option.value)"
+                        >
+                            {{ option.display_name | translate }}
+                        </button>
 
-                    {{ assignment.phaseString | translate }}
-                </os-chip-select>
+                        {{ assignment.phaseString | translate }}
+                    </os-chip-select>
+                </div>
             </div>
-        </div>
 
-        <div *ngIf="assignment.attachments?.length">
-            <h4>{{ 'Election documents' | translate }}</h4>
-            <mat-list dense class="election-document-list">
-                <mat-list-item *ngFor="let file of assignment.attachments">
-                    <a [routerLink]="file.url" target="_blank">{{ file.getTitle() }}</a>
-                </mat-list-item>
-            </mat-list>
-        </div>
+            <div *ngIf="assignment.attachments?.length">
+                <h4>{{ 'Election documents' | translate }}</h4>
+                <mat-list dense class="election-document-list">
+                    <mat-list-item *ngFor="let file of assignment.attachments">
+                        <a [routerLink]="file.url" target="_blank">{{ file.getTitle() }}</a>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+        </mat-card-content>
     </mat-card>
 </ng-template>
 
 <ng-template #candidatesTemplate>
     <mat-card class="os-card spacer-bottom-60" *ngIf="assignment && !assignment.isFinished">
-        <ng-container>
-            <h3>{{ 'Candidates' | translate }}</h3>
-            <div>
-                <div class="candidates-list" *ngIf="assignment?.candidates?.length">
-                    <os-sorting-list
-                        [input]="assignmentCandidates"
-                        [live]="true"
-                        [count]="assignment.number_poll_candidates"
-                        [enable]="hasPerms('manage')"
-                        (sortEvent)="onSortingChange($event)"
-                    >
-                        <!-- implicit item references into the component using ng-template slot -->
-                        <ng-template let-item>
-                            <div [ngClass]="{ 'single-candidate-line': true, 'deleted-candidate': !item.user }">
-                                <span>{{ item.getTitle() }}</span>
-                                <span *ngIf="hasPerms('manage')">
-                                    <button
-                                        mat-icon-button
-                                        matTooltip="{{ 'Remove candidate' | translate }}"
-                                        (click)="removeCandidate(item)"
-                                    >
-                                        <mat-icon>clear</mat-icon>
-                                    </button>
-                                </span>
-                            </div>
-                        </ng-template>
-                    </os-sorting-list>
-                </div>
-
-                <!-- Add Candidates -->
-                <div class="add-candidates">
-                    <!-- Search for candidates -->
-                    <div class="search-new-speaker-form" *ngIf="hasPerms('addOthers')">
-                        <os-participant-search-selector
-                            [nonSelectableUserIds]="candidateUserIds"
-                            placeholder="{{ 'Select or search new candidate ...' | translate }}"
-                            (userSelected)="addCandidate($event)"
-                        ></os-participant-search-selector>
+        <mat-card-content>
+            <ng-container>
+                <h3>{{ 'Candidates' | translate }}</h3>
+                <div>
+                    <div class="candidates-list" *ngIf="assignment?.candidates?.length">
+                        <os-sorting-list
+                            [input]="assignmentCandidates"
+                            [live]="true"
+                            [count]="assignment.number_poll_candidates"
+                            [enable]="hasPerms('manage')"
+                            (sortEvent)="onSortingChange($event)"
+                        >
+                            <!-- implicit item references into the component using ng-template slot -->
+                            <ng-template let-item>
+                                <div [ngClass]="{ 'single-candidate-line': true, 'deleted-candidate': !item.user }">
+                                    <span>{{ item.getTitle() }}</span>
+                                    <span *ngIf="hasPerms('manage')">
+                                        <button
+                                            mat-icon-button
+                                            matTooltip="{{ 'Remove candidate' | translate }}"
+                                            (click)="removeCandidate(item)"
+                                        >
+                                            <mat-icon>clear</mat-icon>
+                                        </button>
+                                    </span>
+                                </div>
+                            </ng-template>
+                        </os-sorting-list>
                     </div>
 
-                    <!-- Add me and remove me if OP has correct permission -->
-                    <div *ngIf="assignment && hasPerms('addSelf')">
-                        <div>
-                            <button mat-button color="accent" (click)="addSelf()" *ngIf="!isSelfCandidate">
-                                <mat-icon>add</mat-icon>
-                                <span>{{ 'Add me' | translate }}</span>
-                            </button>
-                            <button mat-button color="accent" (click)="removeSelf()" *ngIf="isSelfCandidate">
-                                <mat-icon>remove</mat-icon>
-                                <span>{{ 'Remove me' | translate }}</span>
-                            </button>
+                    <!-- Add Candidates -->
+                    <div class="add-candidates">
+                        <!-- Search for candidates -->
+                        <div class="search-new-speaker-form" *ngIf="hasPerms('addOthers')">
+                            <os-participant-search-selector
+                                [nonSelectableUserIds]="candidateUserIds"
+                                placeholder="{{ 'Select participant' | translate }}"
+                                (userSelected)="addCandidate($event)"
+                            ></os-participant-search-selector>
+                        </div>
+
+                        <!-- Add me and remove me if OP has correct permission -->
+                        <div *ngIf="assignment && hasPerms('addSelf')">
+                            <div>
+                                <button mat-button color="accent" (click)="addSelf()" *ngIf="!isSelfCandidate">
+                                    <mat-icon>add</mat-icon>
+                                    <span>{{ 'Add me' | translate }}</span>
+                                </button>
+                                <button mat-button color="accent" (click)="removeSelf()" *ngIf="isSelfCandidate">
+                                    <mat-icon>remove</mat-icon>
+                                    <span>{{ 'Remove me' | translate }}</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </ng-container>
+            </ng-container>
+        </mat-card-content>
     </mat-card>
 </ng-template>
 
 <!-- Form -->
 <ng-template #assignmentFormTemplate>
-    <mat-card class="os-form-card spacer-bottom-60">
-        <form class="content" [formGroup]="assignmentForm" (keydown)="onKeyDown($event)">
-            <div>
-                <!-- title -->
-                <mat-form-field class="full-width">
-                    <mat-label>{{ 'Title' | translate }}</mat-label>
-                    <input matInput formControlName="title" />
-                    <mat-error>{{ 'The title is required' | translate }}</mat-error>
-                </mat-form-field>
-            </div>
+    <mat-card class="os-card spacer-bottom-60">
+        <mat-card-content>
+            <form class="content" [formGroup]="assignmentForm" (keydown)="onKeyDown($event)" tabindex="-1">
+                <div>
+                    <!-- title -->
+                    <mat-form-field class="full-width">
+                        <mat-label>{{ 'Title' | translate }}</mat-label>
+                        <input matInput formControlName="title" />
+                        <mat-error>{{ 'The title is required' | translate }}</mat-error>
+                    </mat-form-field>
+                </div>
 
-            <!-- description: HTML Editor -->
-            <h4>{{ 'Description' | translate }}:</h4>
-            <os-editor formControlName="description"></os-editor>
+                <!-- description: HTML Editor -->
+                <h4>{{ 'Description' | translate }}:</h4>
+                <os-editor formControlName="description"></os-editor>
 
-            <!-- searchValueSelector: tags -->
-            <div class="content-field" *ngIf="tagsAvailable" [formGroup]="assignmentForm">
-                <mat-form-field>
-                    <mat-label>{{ 'Tags' | translate }}</mat-label>
-                    <os-list-search-selector
-                        formControlName="tag_ids"
-                        [multiple]="true"
-                        [inputListValues]="tagsObserver"
-                    ></os-list-search-selector>
-                </mat-form-field>
-            </div>
+                <!-- searchValueSelector: tags -->
+                <div class="content-field" *ngIf="tagsAvailable" [formGroup]="assignmentForm">
+                    <mat-form-field>
+                        <mat-label>{{ 'Tags' | translate }}</mat-label>
+                        <os-list-search-selector
+                            formControlName="tag_ids"
+                            [multiple]="true"
+                            [inputListValues]="tagsObserver"
+                        ></os-list-search-selector>
+                    </mat-form-field>
+                </div>
 
-            <os-attachment-control
-                formControlName="attachment_ids"
-                (errorHandler)="raiseError($event)"
-            ></os-attachment-control>
+                <os-attachment-control
+                    formControlName="attachment_ids"
+                    (errorHandler)="raiseError($event)"
+                ></os-attachment-control>
 
-            <os-agenda-content-object-form *ngIf="isCreating" [form]="assignmentForm"></os-agenda-content-object-form>
+                <os-agenda-content-object-form
+                    *ngIf="isCreating"
+                    [form]="assignmentForm"
+                ></os-agenda-content-object-form>
 
-            <!-- default_poll_description -->
-            <div>
-                <mat-form-field>
-                    <mat-label>{{ 'Hint on voting' | translate }}</mat-label>
-                    <input matInput formControlName="default_poll_description" />
-                </mat-form-field>
-            </div>
+                <!-- default_poll_description -->
+                <div>
+                    <mat-form-field>
+                        <mat-label>{{ 'Hint on voting' | translate }}</mat-label>
+                        <input matInput formControlName="default_poll_description" />
+                    </mat-form-field>
+                </div>
 
-            <!-- open posts: number -->
-            <div>
-                <mat-form-field>
-                    <mat-label>{{ 'Number of persons to be elected' | translate }}</mat-label>
-                    <input matInput formControlName="open_posts" type="number" />
-                    <mat-error *ngIf="assignmentForm.get('open_posts')?.hasError('required')">
-                        {{ 'This field is required.' | translate }}
-                    </mat-error>
-                    <mat-error *ngIf="assignmentForm.get('open_posts')?.hasError('min')">
-                        {{ 'The number has to be greater than 0.' | translate }}
-                    </mat-error>
-                </mat-form-field>
-            </div>
+                <!-- open posts: number -->
+                <div>
+                    <mat-form-field>
+                        <mat-label>{{ 'Number of persons to be elected' | translate }}</mat-label>
+                        <input matInput formControlName="open_posts" type="number" />
+                        <mat-error *ngIf="assignmentForm.get('open_posts')?.hasError('required')">
+                            {{ 'This field is required.' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="assignmentForm.get('open_posts')?.hasError('min')">
+                            {{ 'The number has to be greater than 0.' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
 
-            <!-- Number candidates -->
-            <div>
-                <mat-checkbox formControlName="number_poll_candidates">
-                    <span>{{ 'Number candidates' | translate }}</span>
-                </mat-checkbox>
-            </div>
-        </form>
+                <!-- Number candidates -->
+                <div>
+                    <mat-checkbox formControlName="number_poll_candidates">
+                        <span>{{ 'Number candidates' | translate }}</span>
+                    </mat-checkbox>
+                </div>
+            </form>
+        </mat-card-content>
     </mat-card>
 </ng-template>

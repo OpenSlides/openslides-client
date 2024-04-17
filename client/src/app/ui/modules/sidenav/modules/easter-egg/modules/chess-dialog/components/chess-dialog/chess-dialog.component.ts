@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Chess, EVENT_TYPE } from 'cm-chess/src/Chess';
 import { BORDER_TYPE, Chessboard, COLOR, FEN, INPUT_EVENT_TYPE } from 'cm-chessboard/src/Chessboard';
 import { PromotionDialog } from 'cm-chessboard/src/extensions/promotion-dialog/PromotionDialog';
@@ -71,7 +71,7 @@ export class ChessDialogComponent extends BaseGameDialogComponent implements OnI
             this.notifyService.sendToUsers(`chess_challenge`, { name: this.getPlayerName() }, this.config.userId);
             this.caption = this.translate.instant(`Waiting for response ...`);
             const handle = this.SM.waitForResponse.receivedACK.handle;
-            this.SM.waitForResponse.receivedACK.handle = (notify: NotifyResponse<{ name: string }>) => {
+            this.SM.waitForResponse.receivedACK.handle = (notify: NotifyResponse<{ name: string }>): State => {
                 if (notify.sender_user_id === this.config.userId) {
                     this.replyChannel = notify.sender_channel_id;
                     return handle(notify);

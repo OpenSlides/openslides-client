@@ -3,6 +3,7 @@
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 export const meetingSettingsDefaults: { [key: string]: any } = {
+    name: `Meeting title`,
     enable_anonymous: false,
     export_csv_separator: `;`,
     export_csv_encoding: `utf-8`,
@@ -27,6 +28,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     list_of_speakers_speaker_note_for_everyone: true,
     list_of_speakers_initially_closed: false,
     list_of_speakers_show_first_contribution: false,
+    list_of_speakers_hide_contribution_count: false,
     list_of_speakers_couple_countdown: true,
     list_of_speakers_show_amount_of_speakers_on_slide: true,
     list_of_speakers_amount_last_on_projector: 0,

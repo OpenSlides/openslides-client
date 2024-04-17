@@ -156,14 +156,26 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         return [
             {
                 property: `isVoteWeightOne`,
-                shouldHideFn: () => {
+                shouldHideFn: (): boolean => {
                     return !this._voteWeightEnabled;
                 }
             },
             {
                 property: `delegationType`,
-                shouldHideFn: () => {
+                shouldHideFn: (): boolean => {
                     return !this._voteDelegationEnabled;
+                }
+            },
+            {
+                property: `is_active`,
+                shouldHideFn() {
+                    return !this.canSeeSensitiveData;
+                }
+            },
+            {
+                property: `hasSamlId`,
+                shouldHideFn() {
+                    return !this.canManage;
                 }
             }
         ];

@@ -1,7 +1,7 @@
 <div class="settings-field-wrapper">
-    <div class="form-item">
+    <div class="form-item" [style.marginLeft.px]="setting.indentation * INDENTATION_PIXEL_AMOUNT">
         <form class="settings-form-group" [formGroup]="form">
-            <mat-form-field *ngIf="!isExcludedType(setting.type!)">
+            <mat-form-field *ngIf="!isExcludedType(setting.type!)" subscriptSizing="dynamic">
                 <!-- Decides which input-type to take (i.e) date, select, input) -->
                 <ng-container [ngSwitch]="setting.type">
                     <ng-container *ngSwitchCase="'choice'">

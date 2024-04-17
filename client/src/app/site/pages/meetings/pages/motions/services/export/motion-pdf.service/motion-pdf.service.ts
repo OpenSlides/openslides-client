@@ -37,12 +37,14 @@ interface CreateTextData {
     lnMode: LineNumberingMode;
     crMode: ChangeRecoMode;
     lineHeight: number;
+    onlyChangedLines?: boolean;
 }
 
 interface MotionToDocDefData {
     motion: ViewMotion;
     exportInfo?: MotionExportInfo;
     continuousText?: boolean;
+    onlyChangedLines?: boolean;
 }
 
 /**
@@ -99,7 +101,7 @@ export class MotionPdfService {
      * @param motion the motion to convert to pdf
      * @returns doc def for the motion
      */
-    public motionToDocDef({ motion, continuousText, exportInfo }: MotionToDocDefData): Content {
+    public motionToDocDef({ motion, continuousText, onlyChangedLines, exportInfo }: MotionToDocDefData): Content {
         let lnMode = exportInfo && exportInfo.lnMode ? exportInfo.lnMode : null;
         let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
         const infoToExport = exportInfo ? exportInfo.metaInfo : null;
@@ -151,7 +153,7 @@ export class MotionPdfService {
         }
 
         if (!contentToExport || contentToExport.includes(`text`)) {
-            if (motion.showPreamble && !continuousText) {
+            if (motion.showPreamble && !continuousText && !motion.hasLeadMotion) {
                 const preamble = this.createPreamble();
                 motionPdfContent.push(preamble);
             }
@@ -161,7 +163,8 @@ export class MotionPdfService {
                 lineLength,
                 lnMode,
                 crMode,
-                lineHeight
+                lineHeight,
+                onlyChangedLines
             });
             motionPdfContent.push(text);
         }
@@ -200,12 +203,15 @@ export class MotionPdfService {
      */
     private createTitle(motion: ViewMotion, crMode: ChangeRecoMode, lineLength: number): ContentText {
         // summary of change recommendations (for motion diff version only)
-        const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
-        const titleChange = changes.find(change => change?.isTitleChange())!;
-        const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
 
         const number = motion.number ? motion.number : ``;
-        const title = `${this.translate.instant(`Motion`)} ${number}: ${changedTitle}`;
+        let title = `${this.translate.instant(`Motion`)} ${number}`;
+        if (!motion.hasLeadMotion) {
+            const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
+            const titleChange = changes.find(change => change?.isTitleChange())!;
+            const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
+            title = title + `: ${changedTitle}`;
+        }
 
         return {
             text: title,
@@ -258,7 +264,7 @@ export class MotionPdfService {
 
         // submitters
         if (!infoToExport || infoToExport.includes(`submitters`)) {
-            const submitters = motion.submittersAsUsers.map(user => user.full_name).join(`, `);
+            const submitters = motion.mapSubmittersWithAdditional(user => user.full_name).join(`, `);
 
             metaTableBody.push([
                 {
@@ -275,7 +281,10 @@ export class MotionPdfService {
         if (!infoToExport || infoToExport.includes(`supporter_users`)) {
             const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
             if (minSupporters && motion.supporter_users.length > 0) {
-                const supporters = motion.supporter_users.map(supporter => supporter.full_name).join(`, `);
+                const supporters = motion.supporter_users
+                    .naturalSort(this.translate.currentLang, [`first_name`, `last_name`])
+                    .map(supporter => supporter.full_name)
+                    .join(`, `);
 
                 metaTableBody.push([
                     {
@@ -284,6 +293,45 @@ export class MotionPdfService {
                     },
                     {
                         text: supporters
+                    }
+                ]);
+            }
+        }
+        // editors
+        if (!infoToExport || infoToExport.includes(`editors`)) {
+            const motionEnableEditor = this.meetingSettingsService.instant(`motions_enable_editor`);
+            if (motionEnableEditor && motion.editors.length > 0) {
+                const editors = motion.editors.map(editor => editor.user.full_name).join(`, `);
+
+                metaTableBody.push([
+                    {
+                        text: `${this.translate.instant(`Motion editor`)}:`,
+                        style: `boldText`
+                    },
+                    {
+                        text: editors
+                    }
+                ]);
+            }
+        }
+
+        // working group speakers
+        if (!infoToExport || infoToExport.includes(`working_group_speakers`)) {
+            const motionEnableWorkingGroupSpeaker = this.meetingSettingsService.instant(
+                `motions_enable_working_group_speaker`
+            );
+            if (motionEnableWorkingGroupSpeaker && motion.working_group_speakers.length > 0) {
+                const working_group_speakers = motion.working_group_speakers
+                    .map(speaker => speaker.user.full_name)
+                    .join(`, `);
+
+                metaTableBody.push([
+                    {
+                        text: `${this.translate.instant(`Spokesperson`)}:`,
+                        style: `boldText`
+                    },
+                    {
+                        text: working_group_speakers
                     }
                 ]);
             }
@@ -600,7 +648,7 @@ export class MotionPdfService {
      * @param crMode determine the used change Recommendation mode
      * @returns doc def for the "the assembly may decide" preamble
      */
-    private createText({ crMode, lineHeight, lineLength, lnMode, motion }: CreateTextData): Content {
+    private createText({ crMode, lineHeight, lineLength, lnMode, motion, onlyChangedLines }: CreateTextData): Content {
         let htmlText = ``;
 
         if (motion.isParagraphBasedAmendment()) {
@@ -617,9 +665,9 @@ export class MotionPdfService {
                 );
                 for (const paragraph of amendmentParas) {
                     htmlText += `<h3>` + this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph) + `</h3>`;
-                    htmlText += `<div class="paragraphcontext">${paragraph.textPre}</div>`;
+                    htmlText += onlyChangedLines ? `` : `<div class="paragraphcontext">${paragraph.textPre}</div>`;
                     htmlText += paragraph.text;
-                    htmlText += `<div class="paragraphcontext">${paragraph.textPost}</div>`;
+                    htmlText += onlyChangedLines ? `` : `<div class="paragraphcontext">${paragraph.textPost}</div>`;
                 }
             } catch (e: any) {
                 htmlText += `<em style="color: red; font-weight: bold;">` + e.toString() + `</em>`;
@@ -823,7 +871,7 @@ export class MotionPdfService {
                 text: motion.sort_parent_id ? `` : motion.numberOrTitle
             },
             { text: motion.sort_parent_id ? motion.numberOrTitle : `` },
-            { text: motion.submitters.length ? motion.submittersAsUsers.map(s => s.short_name).join(`, `) : `` },
+            { text: motion.submitters.length ? motion.mapSubmittersWithAdditional(s => s.short_name).join(`, `) : `` },
             { text: motion.title },
             {
                 text: motion.recommendation ? this.motionService.getExtendedRecommendationLabel(motion) : ``

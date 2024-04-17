@@ -1,8 +1,4 @@
 @import 'src/assets/styles/variables.scss';
-.card-padding {
-    padding: 16px;
-}
-
 .los-title {
     display: block;
 }
@@ -13,7 +9,7 @@
 
     .mat-list-item {
         height: auto;
-        margin: 10px;
+        margin: 10px 0;
 
         .mat-list-item-content {
             display: block !important;
@@ -27,87 +23,72 @@
         grid-template-columns: min-content auto min-content min-content;
 
         .finished-speaker-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        }
-    }
-}
-
-.current-speaker,
-.interposed-questions .speaker {
-    display: table;
-    width: -webkit-fill-available;
-    height: 50px;
-    margin: 50px 25px 10px 25px;
-    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.25);
-    line-height: 1;
-
-    .prefix {
-        display: table-cell;
-        padding: 0 15px;
-        vertical-align: middle;
-        .mat-icon {
-            vertical-align: middle;
-        }
-    }
-
-    .name {
-        display: table-cell;
-        vertical-align: middle;
-        padding-left: 10px;
-        width: 100%;
-
-        .speaker-structure-level {
-            font-size: 12px;
-        }
-
-        .active-speaker-subtitle {
-            * {
-                font-weight: initial;
-                font-size: 95%;
+            display: flex;
+            .speaker-name {
+                flex-grow: 1;
             }
         }
     }
 
-    .suffix {
-        display: table-cell;
-        vertical-align: middle;
-        white-space: nowrap;
-        padding-right: 10px;
+    .finished-speakers-start {
+        text-align: right;
+        font-size: 14px;
+    }
+
+    .center-text {
+        margin: auto 0;
+    }
+
+    .single-speaker-line {
+        .speaker-index {
+            font-weight: normal;
+        }
+        .speaker-info {
+            padding: 2px 0;
+        }
     }
 }
 
 .current-speaker {
-    .name {
-        font-weight: bold;
+    margin: 10px 25px 0 25px;
+    padding: 0 0.75em;
+    border-radius: 4px;
+    @include desktop {
+        padding: 0 0.75em 0 calc(0.75em + 38px);
     }
+    // TODO: Replace after mdc-migration:
+    .speaker-control-button {
+        .mat-icon {
+            width: 42px !important;
+            height: 42px !important;
+            line-height: 42px !important;
+        }
+        .material-icons {
+            font-size: 42px !important;
+        }
+    }
+
+    .single-speaker-line .countdown {
+        font-size: 24px;
+        line-height: 24px;
+    }
+
+    .speech-type {
+        .user-subtitle,
+        .icon {
+            color: #fff;
+        }
+    }
+}
+
+.current-speaker:has(+ .interposed-questions) {
+    border-bottom-right-radius: 0;
+    margin-bottom: 0;
 }
 
 .waiting-list,
 .interposed-questions {
     padding: 10px 25px 0 25px;
-
-    .single-speaker-line {
-        display: grid;
-        grid-template-columns: auto min-content;
-        grid-column-gap: 0.5em;
-
-        .speaker-name {
-            margin: auto 0;
-        }
-
-        .speaker-controls {
-            margin-right: 0.5em;
-        }
-
-        .speaker-structure-level {
-            font-size: 12px;
-        }
-    }
-
-    .speaker-warning {
-        margin-right: 5px;
-    }
 }
 
 .interposed-questions {
@@ -115,9 +96,40 @@
     padding-left: 40px;
     margin-bottom: 20px;
     .speaker {
-        margin: 0px 0 5px 25px;
+        margin: 1px 0 0 25px;
         box-shadow: none;
+        padding: 0 0.75em;
     }
+
+    .current-speaker {
+        border-radius: 0;
+    }
+
+    .speaker:first-of-type {
+        border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+    }
+
+    @supports selector(:has(*)) {
+        .speaker:first-of-type {
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+            margin-top: 0;
+            border-top: transparent 1px solid;
+            &.current-speaker {
+                border-top-color: #fff;
+            }
+        }
+    }
+
+    .speaker:last-of-type {
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+}
+
+os-sorting-list .line {
+    border-radius: 4px;
 }
 
 .add-self-buttons {

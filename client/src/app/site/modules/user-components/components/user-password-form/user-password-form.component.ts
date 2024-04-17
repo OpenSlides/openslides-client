@@ -13,7 +13,7 @@ import { PasswordForm } from '../../definitions';
 })
 export class UserPasswordFormComponent implements OnInit, OnDestroy {
     @Input()
-    public canManage = false;
+    public canUpdate = false;
 
     @Input()
     public user: ViewUser | null = null;

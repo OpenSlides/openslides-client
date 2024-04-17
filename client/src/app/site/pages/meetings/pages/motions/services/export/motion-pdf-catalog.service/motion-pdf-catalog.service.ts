@@ -48,6 +48,7 @@ export class MotionPdfCatalogService {
         const hasContinuousText = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.ContinuousText);
         // Do not enforce page breaks when continuous text is selected.
         const enforcePageBreaks = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.AddBreaks) && !hasContinuousText;
+        const onlyChangedLines = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.OnlyChangedLines);
 
         for (let motionIndex = 0; motionIndex < motions.length; ++motionIndex) {
             let continuousText = hasContinuousText;
@@ -59,7 +60,8 @@ export class MotionPdfCatalogService {
                 const motionDocDef: any = this.motionPdfService.motionToDocDef({
                     motion: motions[motionIndex],
                     exportInfo: exportInfo,
-                    continuousText: continuousText
+                    continuousText: continuousText,
+                    onlyChangedLines
                 });
 
                 // add id field to the first page of a motion to make it findable over TOC
@@ -252,19 +254,13 @@ export class MotionPdfCatalogService {
      * @returns {Array<Content>} An array containing the `DocDefinitions` for `pdf-make`.
      */
     private appendSubmittersAndRecommendation(motion: ViewMotion, style: StyleType = StyleType.DEFAULT): Content[] {
-        let submitterList = ``;
         let state = ``;
         if (motion.state!.isFinalState) {
             state = this.motionService.getExtendedStateLabel(motion);
         } else {
             state = this.motionService.getExtendedRecommendationLabel(motion);
         }
-        for (let i = 0; i < motion.submitters.length; ++i) {
-            submitterList +=
-                i !== motion.submitters.length - 1
-                    ? motion.submitters[i].getTitle() + `, `
-                    : motion.submitters[i].getTitle();
-        }
+
         return this.pdfService.createTocLine(
             {
                 identifier: `${motion.number ? motion.number : ``}`,
@@ -272,7 +268,7 @@ export class MotionPdfCatalogService {
                 pageReference: `${motion.id}`,
                 style
             },
-            this.pdfService.createTocLineInline(submitterList),
+            this.pdfService.createTocLineInline(motion.submitterNames.join(`, `)),
             this.pdfService.createTocLineInline(state, true)
         );
     }

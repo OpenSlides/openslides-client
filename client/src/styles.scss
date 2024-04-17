@@ -59,7 +59,7 @@
 */
 /** Define the general style-rules */
 .mat-toolbar h2,
-.mat-dialog-title {
+.mat-mdc-dialog-title {
     font-family: OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif;
 }
 
@@ -73,12 +73,8 @@
     color: gray;
 }
 
-.mat-card {
+.mat-mdc-card {
     @extend .regular-shadow;
-}
-
-.mat-mdc-card-content > :first-of-type {
-    margin-top: 0;
 }
 
 /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */

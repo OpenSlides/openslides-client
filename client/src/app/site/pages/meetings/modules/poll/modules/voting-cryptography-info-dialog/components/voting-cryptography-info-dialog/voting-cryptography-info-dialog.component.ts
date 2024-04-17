@@ -25,7 +25,7 @@ export class VotingCryptographyInfoDialogComponent {
 
     private _poll: ViewPoll;
 
-    constructor(
+    public constructor(
         private pollRepo: PollControllerService,
         private decryptGateway: VoteDecryptGatewayService,
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll

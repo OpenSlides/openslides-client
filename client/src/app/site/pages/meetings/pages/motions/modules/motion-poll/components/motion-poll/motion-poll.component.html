@@ -1,105 +1,107 @@
 <mat-card class="motion-poll-wrapper" *ngIf="showPoll">
-    <!-- Poll Infos -->
-    <div class="poll-title-wrapper">
-        <!-- Title Area -->
-        <div class="poll-title-area">
-            <!-- Title -->
-            <span class="poll-title break-word">
-                <a [routerLink]="getDetailLink()">
-                    {{ poll.title | translate }}
-                </a>
+    <mat-card-content>
+        <!-- Poll Infos -->
+        <div class="poll-title-wrapper">
+            <!-- Title Area -->
+            <div class="poll-title-area">
+                <!-- Title -->
+                <span class="poll-title break-word">
+                    <a [routerLink]="getDetailLink()">
+                        {{ poll.title | translate }}
+                    </a>
+                </span>
+            </div>
+
+            <!-- Dot Menu -->
+            <span class="poll-actions" *osPerms="permission.motionCanManagePolls; or: canSeeCheckValidity">
+                <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
+                    <mat-icon class="icon-18">more_horiz</mat-icon>
+                </button>
             </span>
         </div>
 
-        <!-- Dot Menu -->
-        <span class="poll-actions" *osPerms="permission.motionCanManagePolls; or: canSeeCheckValidity">
-            <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
-                <mat-icon class="icon-18">more_horiz</mat-icon>
+        <!-- Subtitle -->
+        <div class="italic spacer-bottom-20">
+            <!-- Type and State -->
+            <div class="type-and-state italic spacer-bottom-20 break-word">
+                <ng-container *ngIf="poll.isEVoting">
+                    <span *osPerms="permission.motionCanManagePolls; or: poll.isCryptographic">
+                        <os-icon-container
+                            class="poll-type break-word"
+                            icon="info"
+                            color="primary"
+                            [swap]="true"
+                            [showIcon]="poll.isAnonymous || (poll.isCryptographic && !poll.votes_raw)"
+                            (iconAction)="openVotingWarning()"
+                        >
+                            {{ poll.typeVerbose | translate }}
+                        </os-icon-container>
+                        <os-icon-container
+                            class="poll-type break-word"
+                            *ngIf="poll.isCryptographic && poll.votes_raw"
+                            [ngStyle]="{ color: poll.verified ? 'green' : poll.verified === false ? 'red' : 'yellow' }"
+                            iconTooltip="{{
+                                poll.verified
+                                    ? 'Results verification success.'
+                                    : poll.verified === false
+                                    ? 'Result verification failed.'
+                                    : ('Result verification pending.' | translate)
+                            }}"
+                            [icon]="poll.verified ? 'verified_user' : poll.verified === false ? 'gpp_bad' : 'shield'"
+                            (iconAction)="openVotingWarning()"
+                        ></os-icon-container>
+                        <span *ngIf="poll.isAnonymous || poll.isCryptographic === false">&nbsp;</span>
+                        &middot;&nbsp;
+                    </span>
+                </ng-container>
+
+                <!-- State -->
+                <span class="break-word">
+                    {{ poll.stateVerbose | translate }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Change state button -->
+        <span *osPerms="permission.motionCanManagePolls; and: !hideChangeState">
+            <button
+                *ngIf="pollStateActions[poll.state]"
+                mat-stroked-button
+                [ngClass]="pollStateActions[poll.state].css"
+                (click)="nextPollState()"
+                [disabled]="stateChangePendingObservable | async"
+            >
+                <mat-icon>{{ pollStateActions[poll.state].icon }}</mat-icon>
+                <span class="next-state-label">
+                    <ng-container *ngIf="(stateChangePendingObservable | async) === false">
+                        {{ poll.nextStateActionVerbose | translate }}
+                    </ng-container>
+                    <ng-container *ngIf="stateChangePendingObservable | async">
+                        {{ 'In progress, please wait ...' | translate }}
+                    </ng-container>
+                </span>
             </button>
         </span>
-    </div>
 
-    <!-- Subtitle -->
-    <div class="italic spacer-bottom-20">
-        <!-- Type and State -->
-        <div class="type-and-state italic spacer-bottom-20 break-word">
-            <ng-container *ngIf="poll.isEVoting">
-                <span *osPerms="permission.motionCanManagePolls; or: poll.isCryptographic">
-                    <os-icon-container
-                        class="poll-type break-word"
-                        icon="info"
-                        color="primary"
-                        [swap]="true"
-                        [showIcon]="poll.isAnonymous || (poll.isCryptographic && !poll.votes_raw)"
-                        (iconAction)="openVotingWarning()"
-                    >
-                        {{ poll.typeVerbose | translate }}
-                    </os-icon-container>
-                    <os-icon-container
-                        class="poll-type break-word"
-                        *ngIf="poll.isCryptographic && poll.votes_raw"
-                        [ngStyle]="{ color: poll.verified ? 'green' : poll.verified === false ? 'red' : 'yellow' }"
-                        iconTooltip="{{
-                            poll.verified
-                                ? 'Results verification success.'
-                                : poll.verified === false
-                                ? 'Result verification failed.'
-                                : ('Result verification pending.' | translate)
-                        }}"
-                        [icon]="poll.verified ? 'verified_user' : poll.verified === false ? 'gpp_bad' : 'shield'"
-                        (iconAction)="openVotingWarning()"
-                    ></os-icon-container>
-                    <span *ngIf="poll.isAnonymous || poll.isCryptographic === false">&nbsp;</span>
-                    &middot;&nbsp;
-                </span>
-            </ng-container>
+        <!-- Results -->
+        <ng-container *ngIf="poll && !poll.stateHasVotes && poll.type !== 'analog'; else votingResult">
+            <os-poll-progress *ngIf="poll && poll.isStarted" [poll]="poll"></os-poll-progress>
+            <os-motion-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor()"></os-motion-poll-vote>
+            <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
+        </ng-container>
 
-            <!-- State -->
-            <span class="break-word">
-                {{ poll.stateVerbose | translate }}
-            </span>
+        <!-- Detail link -->
+        <div class="poll-detail-button-wrapper">
+            <a
+                mat-icon-button
+                [routerLink]="getDetailLink()"
+                matTooltip="{{ 'More' | translate }}"
+                *ngIf="poll.isPublished"
+            >
+                <mat-icon class="icon-18">visibility</mat-icon>
+            </a>
         </div>
-    </div>
-
-    <!-- Change state button -->
-    <span *osPerms="permission.motionCanManagePolls; and: !hideChangeState">
-        <button
-            *ngIf="pollStateActions[poll.state]"
-            mat-stroked-button
-            [ngClass]="pollStateActions[poll.state].css"
-            (click)="nextPollState()"
-            [disabled]="stateChangePendingObservable | async"
-        >
-            <mat-icon>{{ pollStateActions[poll.state].icon }}</mat-icon>
-            <span class="next-state-label">
-                <ng-container *ngIf="(stateChangePendingObservable | async) === false">
-                    {{ poll.nextStateActionVerbose | translate }}
-                </ng-container>
-                <ng-container *ngIf="stateChangePendingObservable | async">
-                    {{ 'In progress, please wait ...' | translate }}
-                </ng-container>
-            </span>
-        </button>
-    </span>
-
-    <!-- Results -->
-    <ng-container *ngIf="poll && !poll.stateHasVotes && poll.type !== 'analog'; else votingResult">
-        <os-poll-progress *ngIf="poll && poll.isStarted" [poll]="poll"></os-poll-progress>
-        <os-motion-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor()"></os-motion-poll-vote>
-        <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
-    </ng-container>
-
-    <!-- Detail link -->
-    <div class="poll-detail-button-wrapper">
-        <a
-            mat-icon-button
-            [routerLink]="getDetailLink()"
-            matTooltip="{{ 'More' | translate }}"
-            *ngIf="poll.isPublished"
-        >
-            <mat-icon class="icon-18">visibility</mat-icon>
-        </a>
-    </div>
+    </mat-card-content>
 </mat-card>
 
 <ng-template #votingResult>

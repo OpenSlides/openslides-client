@@ -12,7 +12,9 @@
     </os-head-bar>
 
     <mat-card class="os-card spacer-bottom-60">
-        <ng-container [ngTemplateOutlet]="viewTemplate"></ng-container>
+        <mat-card-content>
+            <ng-container [ngTemplateOutlet]="viewTemplate"></ng-container>
+        </mat-card-content>
     </mat-card>
 </os-detail-view>
 

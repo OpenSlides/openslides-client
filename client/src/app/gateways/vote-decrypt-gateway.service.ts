@@ -54,7 +54,7 @@ export class VoteDecryptGatewayService {
 
     private hasPublicMainKey = new Deferred();
 
-    constructor(private orgaController: OrganizationControllerService, private injector: Injector) {
+    public constructor(private orgaController: OrganizationControllerService, private injector: Injector) {
         this.orgaController.getViewModelObservable(ORGANIZATION_ID).subscribe(organization => {
             if (organization?.vote_decrypt_public_main_key) {
                 this._publicMainKey = uInt8Enc(organization?.vote_decrypt_public_main_key);

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PasswordForm, PasswordFormComponent } from 'src/app/site/modules/user-components';
@@ -173,7 +173,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
 
     public async saveUserChanges(): Promise<void> {
         if (this.self) {
-            if (this.operator.hasPerms(Permission.userCanManage) && this._isUserInScope) {
+            if (this.operator.hasPerms(Permission.userCanUpdate) && this._isUserInScope) {
                 await this.repo.update(this.userPersonalForm, this.self).resolve();
             } else {
                 await this.repo.updateSelf(this.userPersonalForm, this.self);

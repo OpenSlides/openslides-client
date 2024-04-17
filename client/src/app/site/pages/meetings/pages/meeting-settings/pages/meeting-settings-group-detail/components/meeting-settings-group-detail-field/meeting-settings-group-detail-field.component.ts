@@ -18,7 +18,7 @@ import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
-import { SettingsItem } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
+import { SettingsInput } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
@@ -49,6 +49,11 @@ export interface SettingsFieldUpdate {
 })
 export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent implements OnInit, OnDestroy {
     /**
+     * The amount of pixels to indent the field per indentation level.
+     */
+    public readonly INDENTATION_PIXEL_AMOUNT = 15;
+
+    /**
      * Option to show a green check-icon.
      */
     public updateSuccessIcon = false;
@@ -67,7 +72,23 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      * The settings item for this component.
      */
     @Input()
-    public setting!: SettingsItem;
+    public setting!: SettingsInput;
+
+    @Input()
+    public set disabled(disabled: boolean) {
+        this._disabled = disabled;
+        if (disabled) {
+            this.form?.disable();
+        } else {
+            this.form?.enable();
+        }
+    }
+
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+
+    private _disabled = false;
 
     /**
      * The current value of this component's setting.
@@ -93,7 +114,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             const time = this.form.get(`time`)!.value;
             return this.dateAndTimeToUnix(date, time);
         }
-        return value;
+        return value.value;
     }
 
     /**
@@ -205,6 +226,9 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 }
             ]
         });
+        if (this.disabled) {
+            this.form.disable();
+        }
         this.internalValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
         if ((this.setting.type === `datetime` || this.setting.type === `date`) && this.value) {
             const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(this.value as number));
@@ -233,7 +257,10 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 })
             )
             .subscribe(form => {
-                if (this._comparedForm || JSON.stringify(form.value) !== JSON.stringify(this._firstValue)) {
+                if (
+                    this._comparedForm ||
+                    (JSON.stringify(form.value) !== JSON.stringify(this._firstValue) && this.setting.type !== `groups`)
+                ) {
                     this.onChange(form.value);
                 }
             });
@@ -274,7 +301,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         });
     }
 
-    public getAllocationConfig(setting: SettingsItem<any>): AllocationListConfig {
+    public getAllocationConfig(setting: SettingsInput<any>): AllocationListConfig {
         return {
             ...(setting.type === `translations` ? this.TRANSLATION_CONFIG : this.RANKING_CONFIG),
             useIds: setting.useRelation

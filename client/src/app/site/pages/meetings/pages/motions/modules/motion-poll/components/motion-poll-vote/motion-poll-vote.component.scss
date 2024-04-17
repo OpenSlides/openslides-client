@@ -19,7 +19,8 @@
 .submit-vote-indicator {
     margin-top: 1em;
     text-align: center;
-    .mat-spinner {
+    .mat-mdc-progress-spinner {
+        display: block;
         margin: auto;
     }
 }

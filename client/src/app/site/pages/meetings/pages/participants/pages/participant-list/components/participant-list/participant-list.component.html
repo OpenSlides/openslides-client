@@ -29,6 +29,7 @@
     [multiSelect]="isMultiSelect"
     [hiddenInMobile]="['group', 'presence']"
     [addBottomSpacer]="hasInteractionState | async"
+    [alwaysShowMenu]="true"
     [(selectedRows)]="selectedRows"
 >
     <!-- extra content in the filter bar -->
@@ -57,7 +58,7 @@
                 <mat-icon matTooltip="{{ 'Is no natural person' | translate }}" *ngIf="!user.is_physical_person">
                     account_balance
                 </mat-icon>
-                <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canManage">
+                <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canSeeSensitiveData">
                     block
                 </mat-icon>
                 <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}" *ngIf="user.hasSamlId && canManage">
@@ -123,7 +124,7 @@
             </mat-icon>
 
             <!-- Has comment indicator -->
-            <div *osPerms="permission.userCanManage">
+            <div *osPerms="permission.userCanUpdate">
                 <mat-icon inline *ngIf="!!user.comment()" matTooltip="{{ user.comment() }}">comment</mat-icon>
             </div>
 
@@ -164,6 +165,7 @@
     <ng-template matMenuContent let-user="user">
         <!-- Presence -->
         <mat-checkbox
+            *ngIf="viewport.isMobileSubject | async"
             class="mat-menu-item"
             (change)="setPresent(user)"
             [checked]="isUserPresent(user)"
@@ -171,12 +173,46 @@
         >
             <span>{{ 'Present' | translate }}</span>
         </mat-checkbox>
+
+        <button *osPerms="permission.userCanManage" mat-menu-item (click)="openEditInfo(user)">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'Edit details' | translate }}</span>
+        </button>
+
+        <button *osPerms="permission.userCanManage" mat-menu-item (click)="switchParticipants(user)">
+            <mat-icon>swap_horiz</mat-icon>
+            <span>{{ 'Swap mandates' | translate }}</span>
+        </button>
+
+        <button
+            *ngIf="canChangePassword(user)"
+            mat-menu-item
+            [routerLink]="['/', activeMeetingId, 'participants', 'password', user.id]"
+        >
+            <mat-icon>security</mat-icon>
+            <span>{{ 'Change password' | translate }}</span>
+        </button>
+
+        <button *osPerms="permission.userCanManage" mat-menu-item (click)="sendInvitationEmail(user)">
+            <mat-icon>mail</mat-icon>
+            <span>{{ 'Send invitation email' | translate }}</span>
+        </button>
+
+        <button
+            *osPerms="permission.userCanManage"
+            mat-menu-item
+            class="red-warning-text"
+            (click)="removeUserFromMeeting(user)"
+        >
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
     </ng-template>
 </mat-menu>
 
 <mat-menu #userMenu="matMenu">
     <div *ngIf="!isMultiSelect">
-        <button mat-menu-item *osPerms="permission.userCanManage" (click)="toggleMultiSelect()">
+        <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="toggleMultiSelect()">
             <mat-icon>library_add</mat-icon>
             <span>{{ 'Multiselect' | translate }}</span>
         </button>
@@ -192,13 +228,13 @@
         </button>
 
         <div *ngIf="presenceViewConfigured">
-            <button mat-menu-item *osPerms="permission.userCanManage" routerLink="presence">
+            <button mat-menu-item *osPerms="permission.userCanUpdate" routerLink="presence">
                 <mat-icon>transfer_within_a_station</mat-icon>
                 <span>{{ 'Presence' | translate }}</span>
             </button>
         </div>
 
-        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="speaker-list">
+        <button mat-menu-item *osPerms="permission.userCanUpdate" routerLink="speaker-list">
             <mat-icon>record_voice_over</mat-icon>
             <span translate>Contributions</span>
         </button>
@@ -208,12 +244,12 @@
             <span>{{ 'List of participants (PDF)' | translate }}</span>
         </button>
 
-        <button mat-menu-item *osPerms="permission.userCanManage" (click)="onDownloadAccessPdf()">
+        <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="onDownloadAccessPdf()">
             <mat-icon>picture_as_pdf</mat-icon>
             <span>{{ 'Access data (PDF)' | translate }}</span>
         </button>
 
-        <button mat-menu-item *osPerms="permission.userCanManage" (click)="csvExportUserList()">
+        <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="csvExportUserList()">
             <mat-icon>archive</mat-icon>
             <span>{{ 'Export as CSV' | translate }}</span>
         </button>
@@ -236,6 +272,7 @@
     <div *ngIf="isMultiSelect">
         <os-user-multiselect-actions
             [selectedUsers]="selectedRows"
+            [canUpdate]="canUpdate"
             [canManage]="canManage"
             (deleting)="removeUsersFromMeeting()"
             (selectAll)="selectAll()"
@@ -246,18 +283,6 @@
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setGroupSelected()">
                 <mat-icon>people</mat-icon>
                 <span>{{ 'Add/remove groups ...' | translate }}</span>
-            </button>
-
-            <button
-                mat-menu-item
-                [disabled]="selectedRows.length !== 2"
-                [matTooltip]="
-                    (selectedRows.length !== 2 ? 'Select exactly two participants to swap mandates' : '') | translate
-                "
-                (click)="switchParticipants()"
-            >
-                <mat-icon>swap_horiz</mat-icon>
-                <span>{{ 'Swap mandates ...' | translate }}</span>
             </button>
 
             <button

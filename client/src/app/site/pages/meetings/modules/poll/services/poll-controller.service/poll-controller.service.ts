@@ -14,7 +14,7 @@ import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 
 import { ViewPoll } from '../../../../pages/polls';
 
-function getRandomString(length: number) {
+function getRandomString(length: number): string {
     return Array.from({ length: length }, () => Math.floor(Math.random() * 62))
         .map(num => (num < 10 ? num : String.fromCharCode(num < 36 ? num + 55 : num + 61)))
         .join(``);
@@ -30,7 +30,7 @@ export class PollControllerService extends BaseMeetingControllerService<ViewPoll
 
     private _tokens: { [poll_id: number]: { [user_id: number]: string } } = {};
 
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: PollRepositoryService,
         protected voteRepo: VoteRepositoryService,
