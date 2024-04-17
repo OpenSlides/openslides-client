@@ -63,7 +63,6 @@ export class VoteDecryptGatewayService {
         private modelRequestService: ModelRequestService
     ) {
         this.orgaController.getViewModelObservable(ORGANIZATION_ID).subscribe(organization => {
-            this.getPublicMainKey();
             if (organization?.vote_decrypt_public_main_key) {
                 this._publicMainKey = uInt8Enc(organization?.vote_decrypt_public_main_key);
                 console.log(`New public main key is loaded.`);
