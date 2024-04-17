@@ -320,14 +320,12 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     public setSurroundingMotions(): void {
         const indexOfCurrent = this._sortedMotions.findIndex(motion => motion === this.motion);
         if (indexOfCurrent > 0) {
-            this.previousMotion = this._sortedMotions[indexOfCurrent - 1];
-            this.substituteSurroundingMotions(indexOfCurrent, true);
+            this.previousMotion = this.findNextSuitableMotion(indexOfCurrent, -1);
         } else {
             this.previousMotion = null;
         }
         if (indexOfCurrent > -1 && indexOfCurrent < this._sortedMotions.length - 1) {
-            this.nextMotion = this._sortedMotions[indexOfCurrent + 1];
-            this.substituteSurroundingMotions(indexOfCurrent, false);
+            this.nextMotion = this.findNextSuitableMotion(indexOfCurrent, 1);
         } else {
             this.nextMotion = null;
         }
@@ -339,31 +337,17 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * @param indexOfCurrent The index from the active motion.
      * @param previous Wether the method is called for the previous or the next motion.
      */
-    private substituteSurroundingMotions(indexOfCurrent: number, previous: boolean) {
-        if (this._amendmentsInMainList && this._navigatedFromAmendmentList) {
-            let index = indexOfCurrent;
-            if (!previous) {
-                while (index < this._sortedMotions.length - 1) {
-                    index += 1;
-                    if (!!this._sortedMotions[index].hasLeadMotion) {
-                        this.nextMotion = this._sortedMotions[index];
-                        break;
-                    } else {
-                        this.nextMotion = null;
-                    }
-                }
-            } else {
-                while (0 < index) {
-                    index -= 1;
-                    if (!!this._sortedMotions[index].hasLeadMotion) {
-                        this.previousMotion = this._sortedMotions[index];
-                        break;
-                    } else {
-                        this.previousMotion = null;
-                    }
-                }
+    private findNextSuitableMotion(indexOfCurrent: number, step: number) {
+        if (!this._amendmentsInMainList || !this._navigatedFromAmendmentList) {
+            return this._sortedMotions[indexOfCurrent + step];
+        }
+
+        for (let i = indexOfCurrent + step; 0 <= i && i <= this._sortedMotions.length - 1; i += step) {
+            if (!!this._sortedMotions[i].hasLeadMotion) {
+                return this._sortedMotions[i];
             }
         }
+        return null;
     }
 
     /**
