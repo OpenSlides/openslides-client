@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
 import { OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
@@ -7,6 +8,7 @@ import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/service
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
@@ -41,7 +43,8 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         groupRepo: GroupControllerService,
         structureRepo: StructureLevelControllerService,
         private translate: TranslateService,
-        private meetingSettings: MeetingSettingsService
+        private meetingSettings: MeetingSettingsService,
+        private operator: OperatorService
     ) {
         super(store);
         this.updateFilterForRepo({
@@ -168,14 +171,26 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             },
             {
                 property: `is_active`,
-                shouldHideFn() {
-                    return !this.canSeeSensitiveData;
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanSeeSensitiveData);
                 }
             },
             {
                 property: `hasSamlId`,
-                shouldHideFn() {
-                    return !this.canManage;
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanManage);
+                }
+            },
+            {
+                property: `isLastEmailSent`,
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanSeeSensitiveData);
+                }
+            },
+            {
+                property: `isLastLogin`,
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanUpdate);
                 }
             }
         ];
