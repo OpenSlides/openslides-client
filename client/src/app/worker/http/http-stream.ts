@@ -146,7 +146,11 @@ export abstract class HttpStream {
             this._receivedDataResolver = undefined;
         }
 
-        if (data instanceof ErrorDescription || isCommunicationError(data) || isCommunicationErrorWrapper(data)) {
+        if (
+            data instanceof ErrorDescription ||
+            isCommunicationError(this.parse(data)) ||
+            isCommunicationErrorWrapper(this.parse(data))
+        ) {
             this.handleError(data);
         } else {
             data = this.parse(data);
