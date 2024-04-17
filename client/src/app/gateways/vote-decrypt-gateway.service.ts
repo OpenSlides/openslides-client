@@ -3,10 +3,15 @@ import { curve25519, utils, verify } from '@noble/ed25519';
 import { distinctUntilChanged, map, Subscription } from 'rxjs';
 
 import { PollType, VoteValue } from '../domain/models/poll';
-import { Deferred } from '../infrastructure/utils/promises';
 import { ViewPoll } from '../site/pages/meetings/pages/polls';
+import {
+    getVotePublicKeySubscriptionConfig,
+    ORGANIZATION_VOTE_PUBLIC_KEY_SUBSCRIPTION
+} from '../site/pages/organization/organization.subscription';
 import { ORGANIZATION_ID } from '../site/pages/organization/services/organization.service';
 import { OrganizationControllerService } from '../site/pages/organization/services/organization-controller.service';
+import { ModelData } from '../site/services/autoupdate/utils';
+import { ModelRequestService } from '../site/services/model-request.service';
 import { PollRepositoryService } from './repositories/polls/poll-repository.service';
 
 interface VoteVerificationData {
@@ -52,15 +57,17 @@ export class VoteDecryptGatewayService {
     private _lastVoteVerificationData: VoteVerificationData[] = [];
     private _verificationSubscription: Subscription;
 
-    private hasPublicMainKey = new Deferred();
-
-    public constructor(private orgaController: OrganizationControllerService, private injector: Injector) {
+    public constructor(
+        private orgaController: OrganizationControllerService,
+        private injector: Injector,
+        private modelRequestService: ModelRequestService
+    ) {
         this.orgaController.getViewModelObservable(ORGANIZATION_ID).subscribe(organization => {
+            this.getPublicMainKey();
             if (organization?.vote_decrypt_public_main_key) {
                 this._publicMainKey = uInt8Enc(organization?.vote_decrypt_public_main_key);
                 console.log(`New public main key is loaded.`);
                 this._publicMainKeyString = organization?.vote_decrypt_public_main_key;
-                this.hasPublicMainKey.resolve();
             }
         });
     }
@@ -69,7 +76,6 @@ export class VoteDecryptGatewayService {
      * Must be called once after the PollRepositoryService is initialized to ensure that the cryptographic poll results get verified.
      */
     public async initialize(): Promise<void> {
-        await this.hasPublicMainKey;
         if (this._verificationSubscription) {
             return;
         }
@@ -112,7 +118,6 @@ export class VoteDecryptGatewayService {
 
     public async encryptVote(poll: ViewPoll, vote: string): Promise<string> {
         console.log(`Encrypting vote...`);
-        await this.hasPublicMainKey;
         if (!poll.crypt_key || !poll.crypt_signature) {
             throw new Error(`Voting failed: Keys not fully loaded.`);
         }
@@ -122,7 +127,7 @@ export class VoteDecryptGatewayService {
         const cryptSignature = uInt8Enc(poll.crypt_signature);
 
         try {
-            if (!(await verify(cryptSignature, cryptKey, this._publicMainKey))) {
+            if (!(await verify(cryptSignature, cryptKey, (await this.getPublicMainKey()).raw))) {
                 throw new Error(`Voting failed: Cryptography keys could not be verified.`);
             }
         } catch (e) {
@@ -146,7 +151,6 @@ export class VoteDecryptGatewayService {
         const verificationData: VoteVerificationData[] = [
             { id: poll.id, signature: poll.votes_signature, raws: poll.votes_raw }
         ];
-        await this.hasPublicMainKey;
         await this.verify(verificationData);
     }
 
@@ -190,7 +194,7 @@ export class VoteDecryptGatewayService {
             const raws = uInt8Enc(date.raws, false);
             let resultVerificationErrors: string[] = [];
             try {
-                const verified = await verify(signature, raws, this._publicMainKey);
+                const verified = await verify(signature, raws, (await this.getPublicMainKey()).raw);
                 resultVerificationErrors = verified ? resultVerificationErrors : [`Signature verification failed`];
             } catch (e) {
                 resultVerificationErrors.push(`Signature verification failed with error: "${e.message}"`);
@@ -275,6 +279,25 @@ export class VoteDecryptGatewayService {
         const raw = rawArray[rawIndex];
         const cooked = cookedArray[cookedIndex];
         return { raw, cooked, comparison: raw?.token.localeCompare(cooked?.token) };
+    }
+
+    private async getPublicMainKey(): Promise<{ raw: Uint8Array; str: string }> {
+        this.modelRequestService.subscribeTo(getVotePublicKeySubscriptionConfig());
+        const data = await this.modelRequestService.subscriptionGotData(ORGANIZATION_VOTE_PUBLIC_KEY_SUBSCRIPTION);
+        if (data) {
+            if (data !== true && (<ModelData>data)[`organization`]) {
+                const key = (<ModelData>data)[`organization`][ORGANIZATION_ID][`vote_decrypt_public_main_key`];
+                this._publicMainKey = uInt8Enc(key);
+                this._publicMainKeyString = key;
+            }
+
+            return {
+                raw: this._publicMainKey,
+                str: this._publicMainKeyString
+            };
+        }
+
+        throw new Error(`Failed to retrieve public key`);
     }
 
     private getSortedVoteArrays(poll: ViewPoll): { rawsArray: CryptoVoteData[]; modelResultsArray: CryptoVoteData[] } {
