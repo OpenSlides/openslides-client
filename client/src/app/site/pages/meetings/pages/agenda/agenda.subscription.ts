@@ -1,5 +1,5 @@
 import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET, MEETING_ROUTING_FIELDS, mergeSubscriptionFollow } from 'src/app/domain/fieldsets/misc';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
 import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -23,21 +23,7 @@ export const agendaItemFollow: FollowList<any> = [
                 idField: `speaker_ids`,
                 fieldset: FULL_FIELDSET,
                 follow: [
-                    mergeSubscriptionFollow(
-                        {
-                            idField: `meeting_user_id`,
-                            follow: [
-                                mergeSubscriptionFollow(
-                                    { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
-                                    {
-                                        idField: `user_id`,
-                                        fieldset: [`meeting_user_ids`]
-                                    }
-                                )
-                            ]
-                        },
-                        { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
-                    ),
+                    { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription },
                     {
                         idField: `point_of_order_category_id`,
                         fieldset: FULL_FIELDSET
@@ -72,23 +58,7 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                             {
                                 idField: `submitter_ids`,
                                 fieldset: FULL_FIELDSET,
-                                follow: [
-                                    mergeSubscriptionFollow(
-                                        {
-                                            idField: `meeting_user_id`,
-                                            follow: [
-                                                mergeSubscriptionFollow(
-                                                    { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
-                                                    {
-                                                        idField: `user_id`,
-                                                        fieldset: [`meeting_user_ids`]
-                                                    }
-                                                )
-                                            ]
-                                        },
-                                        { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
-                                    )
-                                ]
+                                follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
                             }
                         ]
                     }

@@ -1,6 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET, mergeSubscriptionFollow } from 'src/app/domain/fieldsets/misc';
-import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
+import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
+import { MeetingUserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
@@ -72,65 +72,17 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     {
                         idField: `submitter_ids`,
                         fieldset: FULL_FIELDSET,
-                        follow: [
-                            mergeSubscriptionFollow(
-                                {
-                                    idField: `meeting_user_id`,
-                                    follow: [
-                                        mergeSubscriptionFollow(
-                                            { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
-                                            {
-                                                idField: `user_id`,
-                                                fieldset: [`meeting_user_ids`]
-                                            }
-                                        )
-                                    ]
-                                },
-                                { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
-                            )
-                        ]
+                        follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
                     },
                     {
                         idField: `editor_ids`,
                         fieldset: FULL_FIELDSET,
-                        follow: [
-                            mergeSubscriptionFollow(
-                                {
-                                    idField: `meeting_user_id`,
-                                    follow: [
-                                        mergeSubscriptionFollow(
-                                            { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
-                                            {
-                                                idField: `user_id`,
-                                                fieldset: [`meeting_user_ids`]
-                                            }
-                                        )
-                                    ]
-                                },
-                                { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
-                            )
-                        ]
+                        follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
                     },
                     {
                         idField: `working_group_speaker_ids`,
                         fieldset: FULL_FIELDSET,
-                        follow: [
-                            mergeSubscriptionFollow(
-                                {
-                                    idField: `meeting_user_id`,
-                                    follow: [
-                                        mergeSubscriptionFollow(
-                                            { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
-                                            {
-                                                idField: `user_id`,
-                                                fieldset: [`meeting_user_ids`]
-                                            }
-                                        )
-                                    ]
-                                },
-                                { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
-                            )
-                        ]
+                        follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
                     }
                 ]
             }

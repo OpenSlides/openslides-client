@@ -138,13 +138,7 @@ export const getSpeakersListSubscriptionConfig: SubscriptionConfigGenerator = (i
                 idField: `speaker_ids`,
                 fieldset: FULL_FIELDSET,
                 follow: [
-                    mergeSubscriptionFollow(
-                        {
-                            idField: `meeting_user_id`,
-                            follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
-                        },
-                        { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
-                    ),
+                    { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription },
                     {
                         idField: `structure_level_list_of_speakers_id`,
                         fieldset: [],

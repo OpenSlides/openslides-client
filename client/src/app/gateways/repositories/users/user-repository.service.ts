@@ -341,11 +341,21 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const meetingUserIdMap = new Map<Id, Id>();
         const getMeetingUserId = (meetingId: Id) => {
             if (!meetingUserIdMap.has(meetingId)) {
-                for (const meetingUser of this.relationManager.handleRelation(
+                const meetingUsers = this.relationManager.handleRelation(
                     viewModel.getModel(),
                     this.relationsByKey[`meeting_users`]
-                )) {
-                    meetingUserIdMap.set(meetingUser.meeting_id, meetingUser.id);
+                );
+
+                if (meetingUsers?.length) {
+                    for (const meetingUser of meetingUsers) {
+                        meetingUserIdMap.set(meetingUser.meeting_id, meetingUser.id);
+                    }
+                } else {
+                    for (const meetingUser of this.meetingUserRepo.getViewModelList()) {
+                        if (meetingUser.user_id === model.id) {
+                            meetingUserIdMap.set(meetingUser.meeting_id, meetingUser.id);
+                        }
+                    }
                 }
             }
 

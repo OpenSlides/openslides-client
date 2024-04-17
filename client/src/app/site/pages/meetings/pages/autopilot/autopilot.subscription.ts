@@ -61,13 +61,6 @@ export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfi
                                         {
                                             idField: `meeting_user_id`,
                                             follow: [
-                                                mergeSubscriptionFollow(
-                                                    { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
-                                                    {
-                                                        idField: `user_id`,
-                                                        fieldset: [`meeting_user_ids`]
-                                                    }
-                                                ),
                                                 {
                                                     idField: `structure_level_ids`,
                                                     fieldset: [`name`, `color`]
