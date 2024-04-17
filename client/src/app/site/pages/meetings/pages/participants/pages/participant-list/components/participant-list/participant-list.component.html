@@ -175,12 +175,12 @@
             <span>{{ 'Present' | translate }}</span>
         </mat-checkbox>
 
-        <button *osPerms="permission.userCanManage" mat-menu-item (click)="openEditInfo(user)">
+        <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="openEditInfo(user)">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit details' | translate }}</span>
         </button>
 
-        <button *osPerms="permission.userCanManage" mat-menu-item (click)="switchParticipants(user)">
+        <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="switchParticipants(user)">
             <mat-icon>swap_horiz</mat-icon>
             <span>{{ 'Swap mandates' | translate }}</span>
         </button>
@@ -194,7 +194,7 @@
             <span>{{ 'Change password' | translate }}</span>
         </button>
 
-        <button *osPerms="permission.userCanManage" mat-menu-item (click)="sendInvitationEmail(user)">
+        <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="sendInvitationEmail(user)">
             <mat-icon>mail</mat-icon>
             <span>{{ 'Send invitation email' | translate }}</span>
         </button>
