@@ -270,6 +270,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `agenda_show_subtitles`,
                         label: _(`Show motion submitters in the agenda`),
                         type: `boolean`
+                    },
+                    {
+                        key: `agenda_show_topic_navigation_on_detail_view`,
+                        label: _(`Show topic navigation in detail view`),
+                        type: `boolean`
                     }
                 ]
             },
