@@ -21,10 +21,10 @@ const routes: Routes = [
                 loadChildren: () => import(`./pages/agenda-sort/agenda-sort.module`).then(m => m.AgendaSortModule),
                 data: { meetingPermissions: [Permission.agendaItemCanManage] },
                 canLoad: [PermissionGuard]
-            }
+            },
+            { path: `topics`, loadChildren: () => import(`./modules/topics/topics.module`).then(m => m.TopicsModule) }
         ]
     },
-    { path: `topics`, loadChildren: () => import(`./modules/topics/topics.module`).then(m => m.TopicsModule) },
     {
         path: `speakers`,
         loadChildren: () =>

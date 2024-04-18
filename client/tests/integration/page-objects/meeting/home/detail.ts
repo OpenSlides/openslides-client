@@ -8,8 +8,8 @@ export class MeetingHomePage {
 
     public constructor(page: Page) {
         this.page = page;
-        this.frontPageTitle = page.locator(`mat-sidenav-content`).locator(`.app-content > h1`);
-        this.welcomeText = page.locator(`mat-sidenav-content`).locator(`.app-content > div`);
+        this.frontPageTitle = page.locator(`mat-sidenav-content`).locator(`#start-page-content > h1`);
+        this.welcomeText = page.locator(`mat-sidenav-content`).locator(`#start-page-content > div`);
         this.editButton = page.locator(`[data-cy=headbarMainButton]`);
     }
 

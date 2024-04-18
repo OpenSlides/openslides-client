@@ -12,6 +12,7 @@
             <ng-container *ngIf="motion.lead_motion && !isFinalEdit">
                 <os-motion-detail-diff-summary
                     *ngIf="changeRecoMode === ChangeRecoMode.Diff"
+                    [motion]="motion"
                     [changes]="changesForDiffMode"
                     [scrollToChange]="scrollToChange"
                     [elContainer]="nativeElement"

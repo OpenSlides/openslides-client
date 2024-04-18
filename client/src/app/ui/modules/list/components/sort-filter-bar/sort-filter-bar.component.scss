@@ -18,9 +18,6 @@ os-sort-filter-bar {
         display: flex;
         os-rounded-input {
             margin: 0 10px;
-            @include phone {
-                display: none;
-            }
         }
     }
 
@@ -61,5 +58,8 @@ os-sort-filter-bar {
             height: $size;
             width: $size;
         }
+    }
+    .upper {
+        font-weight: 400;
     }
 }

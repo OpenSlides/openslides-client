@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -28,25 +30,29 @@ import { InteractionServiceModule } from '../interaction/services/interaction-se
 import { AutopilotRoutingModule } from './autopilot-routing.module';
 import { AutopilotComponent } from './components/autopilot/autopilot.component';
 import { AutopilotMainComponent } from './components/autopilot-main/autopilot-main.component';
+import { AutopilotSettingsComponent } from './components/autopilot-settings/autopilot-settings.component';
 import { PollCollectionComponent } from './components/poll-collection/poll-collection.component';
 
 @NgModule({
-    declarations: [AutopilotMainComponent, AutopilotComponent, PollCollectionComponent],
+    declarations: [AutopilotMainComponent, AutopilotSettingsComponent, AutopilotComponent, PollCollectionComponent],
     imports: [
         CommonModule,
         RouterModule,
         AutopilotRoutingModule,
         PromptDialogModule,
         InteractionServiceModule,
+        FormsModule,
         ProjectorModule,
         DirectivesModule,
         MatCardModule,
+        MatCheckboxModule,
         MatProgressBarModule,
         MatTabsModule,
         MatTooltipModule,
         MatFormFieldModule,
         MatIconModule,
         MatDialogModule,
+        MatBadgeModule,
         ListOfSpeakersContentModule,
         HeadBarModule,
         CountdownTimeModule,

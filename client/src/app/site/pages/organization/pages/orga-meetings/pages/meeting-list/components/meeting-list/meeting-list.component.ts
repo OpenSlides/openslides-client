@@ -28,7 +28,7 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         }
     ];
 
-    public toRestrictFn = (restriction: ColumnRestriction<OML>) =>
+    public toRestrictFn = (restriction: ColumnRestriction<OML>): boolean =>
         !this.operator.hasOrganizationPermissions(restriction.permission);
 
     public constructor(

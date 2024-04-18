@@ -1,8 +1,8 @@
-mat-card.os-card.chat-group-list-card {
+.chat-group-list-card {
     padding: 0;
     max-width: 1000px;
     max-height: calc(100vh - 160px); // 160px is almost the summary of top bar and livestream header
-    height: 90vh;
+    height: 95%;
     margin-bottom: 350px !important;
 
     &.fit-height {
@@ -10,11 +10,18 @@ mat-card.os-card.chat-group-list-card {
     }
 
     .cdk-virtual-scroll-content-wrapper {
-        width: 100%;
+        width: 50%;
     }
 }
 
 .tab-label-notification-wrapper {
     top: -16px;
     left: -14px;
+}
+
+.padding-0 {
+    padding-top: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    padding-bottom: 0px !important;
 }

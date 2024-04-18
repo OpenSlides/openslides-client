@@ -6,18 +6,26 @@
 </os-head-bar>
 
 <mat-card>
-    <p>{{ 'Check in or check out participants based on their participant numbers:' | translate }}</p>
+    <mat-card-content>
+        <p>{{ 'Check in or check out participants based on their participant numbers:' | translate }}</p>
 
-    <mat-form-field [formGroup]="userForm">
-        <mat-label>{{ 'Enter participant number' | translate }}</mat-label>
-        <input osAutofocus matInput formControlName="number" (keyup)="onKeyUp($event)" />
-    </mat-form-field>
-    <button mat-button (click)="changePresence()">{{ 'Change presence' | translate }}</button>
-    <mat-card *ngIf="lastChangedUser" [ngClass]="lastChangedUserPresent ? 'success' : 'warning'">
-        <span>{{ lastChangedUser.full_name }}&nbsp;</span>
-        <span>{{ 'is now' | translate }}</span>
-        :
-        <span>&nbsp;{{ lastChangedUserPresent ? ('present' | translate) : ('absent' | translate) }}</span>
-    </mat-card>
-    <mat-card *ngIf="errorMsg" class="error">{{ errorMsg | translate }}</mat-card>
+        <mat-form-field [formGroup]="userForm" class="full-width">
+            <mat-label>{{ 'Enter participant number' | translate }}</mat-label>
+            <input osAutofocus matInput formControlName="number" (keyup)="onKeyUp($event)" />
+        </mat-form-field>
+        <button mat-button (click)="changePresence()">{{ 'Change presence' | translate }}</button>
+        <mat-card *ngIf="lastChangedUser" [ngClass]="lastChangedUserPresent ? 'success' : 'warning'">
+            <mat-card-content>
+                <span>{{ lastChangedUser.full_name }}&nbsp;</span>
+                <span>{{ 'is now' | translate }}</span>
+                :
+                <span>&nbsp;{{ lastChangedUserPresent ? ('present' | translate) : ('absent' | translate) }}</span>
+            </mat-card-content>
+        </mat-card>
+        <mat-card *ngIf="errorMsg" class="error">
+            <mat-card-content>
+                {{ errorMsg | translate }}
+            </mat-card-content>
+        </mat-card>
+    </mat-card-content>
 </mat-card>

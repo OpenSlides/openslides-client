@@ -40,5 +40,7 @@ export enum Permission {
     tagCanManage = `tag.can_manage`,
     userCanManage = `user.can_manage`,
     userCanManagePresence = `user.can_manage_presence`,
-    userCanSee = `user.can_see`
+    userCanSee = `user.can_see`,
+    userCanSeeSensitiveData = `user.can_see_sensitive_data`,
+    userCanUpdate = `user.can_update`
 }

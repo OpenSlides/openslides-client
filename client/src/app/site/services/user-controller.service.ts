@@ -8,7 +8,6 @@ import {
     AssignMeetingsResult,
     EmailSentResult,
     ExtendedUserPatchFn,
-    FullNameInformation,
     ShortNameInformation,
     UserPatchFn,
     UserRepositoryService
@@ -27,6 +26,14 @@ import { ControllerServiceCollectorService } from './controller-service-collecto
  * See {@link parseUserString} for implementations
  */
 type StringNamingSchema = 'lastCommaFirst' | 'firstSpaceLast';
+
+export interface CreateUserNameInformation {
+    username: string;
+    first_name?: string;
+    last_name?: string;
+    pronoun?: string;
+    title?: string;
+}
 
 @Injectable({
     providedIn: `root`
@@ -136,7 +143,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
     }
 
     /**
-     * Tries to convert a given string into an user (representated by a `FullNameInformation`-object).
+     * Tries to convert a given string into an user (representated by a `CreateUserNameInformation`-object).
      * Names that don't fit the scheme given will be entered into the first_name field.
      *
      * Naming schemes are:
@@ -147,17 +154,18 @@ export class UserControllerService extends BaseController<ViewUser, User> {
      *
      * @param inputUser A raw user string
      * @param schema optional hint on how to handle the strings.
-     * @returns A `FullNameInformation`-object.
+     * @returns A `CreateUserNameInformation`-object.
      */
-    public parseStringIntoUser(inputUser: string, schema: StringNamingSchema = `firstSpaceLast`): FullNameInformation {
-        const newUser: FullNameInformation = {
+    public parseStringIntoUser(
+        inputUser: string,
+        schema: StringNamingSchema = `firstSpaceLast`
+    ): CreateUserNameInformation {
+        const newUser: CreateUserNameInformation = {
             username: ``,
-            number: () => ``,
-            structureLevels: () => ``,
             first_name: ``,
             last_name: ``
         };
-        const assignName = (nameParts: string[]) => {
+        const assignName = (nameParts: string[]): void => {
             switch (nameParts.length) {
                 case 1:
                     newUser.first_name = nameParts[0];

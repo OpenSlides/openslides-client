@@ -424,12 +424,12 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
         }
     }
 
-    public isTrue(value: any) {
+    public isTrue(value: any): boolean {
         return [`true`, 1, true, `1`].includes(value);
     }
 
     private createColumns(): ImportListHeaderDefinition[] {
-        const getHeaderProp = (prop: string) => {
+        const getHeaderProp = (prop: string): string => {
             return prop.startsWith(`newEntry.`) ? prop.slice(`newEntry.`.length) : prop;
         };
         const definitions = this.columns ?? [this.headerDefinition];

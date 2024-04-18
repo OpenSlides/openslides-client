@@ -7,6 +7,7 @@ export enum ErrorType {
 export interface CommunicationError {
     type: string;
     msg: string;
+    data?: unknown;
 }
 
 export interface CommunicationErrorWrapper {
@@ -15,11 +16,11 @@ export interface CommunicationErrorWrapper {
 
 export function isCommunicationError(obj: any): obj is CommunicationError {
     const _obj = obj as CommunicationError;
-    return typeof obj === `object` && typeof _obj.msg === `string` && typeof _obj.type === `string`;
+    return obj && typeof obj === `object` && typeof _obj.msg === `string` && typeof _obj.type === `string`;
 }
 
 export function isCommunicationErrorWrapper(obj: any): obj is CommunicationErrorWrapper {
-    return typeof obj === `object` && isCommunicationError(obj.error);
+    return obj && typeof obj === `object` && isCommunicationError(obj.error);
 }
 
 export class ErrorDescription {

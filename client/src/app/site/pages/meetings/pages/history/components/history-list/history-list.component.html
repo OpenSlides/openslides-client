@@ -4,86 +4,88 @@
 </os-head-bar>
 
 <mat-card class="os-card spacer-bottom-60">
-    <div class="history-table-header">
-        <div>
-            <span [formGroup]="modelSelectForm">
-                <mat-form-field class="history-module-form-field">
-                    <mat-label>{{ 'Module' | translate }}</mat-label>
-                    <mat-select formControlName="collection">
-                        <mat-option *ngFor="let item of modelsRepoMap | keyvalue" [value]="item.key">
-                            {{ item.value.getVerboseName() }}
-                        </mat-option>
-                    </mat-select>
+    <mat-card-content>
+        <div class="history-table-header">
+            <div>
+                <span [formGroup]="modelSelectForm">
+                    <mat-form-field class="history-module-form-field">
+                        <mat-label>{{ 'Module' | translate }}</mat-label>
+                        <mat-select formControlName="collection">
+                            <mat-option *ngFor="let item of modelsRepoMap | keyvalue" [value]="item.key">
+                                {{ item.value.getVerboseName() }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="spacer-left-20 history-module-detail-form-field">
+                        <mat-label>{{ modelPlaceholder | translate }}</mat-label>
+                        <os-list-search-selector
+                            formControlName="id"
+                            [multiple]="false"
+                            [inputListValues]="models"
+                            [disabled]="!modelSelectForm.get('collection').value"
+                            (clickNotFound)="searchDeletedMotions($event)"
+                            (openedChange)="resetListValues($event)"
+                        >
+                            <!--
+                            <ng-template osSearchSelectorNotFoundTemplate>
+                                <div>
+                                    <mat-icon class="os-not-found-button-content">delete</mat-icon>
+                                    <span class="os-not-found-button-content">
+                                        {{ 'Search deleted' }} {{ (modelPlaceholder + "s").toLowerCase() | translate }}
+                                    </span>
+                                </div>
+                            </ng-template>
+                            -->
+                        </os-list-search-selector>
+                    </mat-form-field>
+                </span>
+                <span class="spacer-left-20">
+                    <button mat-button (click)="refresh()" *ngIf="currentFqid">
+                        <mat-icon>refresh</mat-icon>
+                        <span>{{ 'Refresh' | translate }}</span>
+                    </button>
+                </span>
+            </div>
+            <div>
+                <mat-form-field>
+                    <mat-label>{{ 'Search' | translate }}</mat-label>
+                    <input matInput (keyup)="applySearch($event.target)" />
+                    <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
-                <mat-form-field class="spacer-left-20">
-                    <mat-label>{{ modelPlaceholder | translate }}</mat-label>
-                    <os-list-search-selector
-                        formControlName="id"
-                        [multiple]="false"
-                        [inputListValues]="models"
-                        [disabled]="!modelSelectForm.get('collection').value"
-                        (clickNotFound)="searchDeletedMotions($event)"
-                        (openedChange)="resetListValues($event)"
-                    >
-                        <!--
-                        <ng-template osSearchSelectorNotFoundTemplate>
-                            <div>
-                                <mat-icon class="os-not-found-button-content">delete</mat-icon>
-                                <span class="os-not-found-button-content">
-                                    {{ 'Search deleted' }} {{ (modelPlaceholder + "s").toLowerCase() | translate }}
-                                </span>
-                            </div>
-                        </ng-template>
-                        -->
-                    </os-list-search-selector>
-                </mat-form-field>
-            </span>
-            <span class="spacer-left-20">
-                <button mat-button (click)="refresh()" *ngIf="currentFqid">
-                    <mat-icon>refresh</mat-icon>
-                    <span>{{ 'Refresh' | translate }}</span>
-                </button>
-            </span>
+            </div>
         </div>
-        <div>
-            <mat-form-field>
-                <mat-label>{{ 'Search' | translate }}</mat-label>
-                <input matInput (keyup)="applySearch($event.target)" />
-                <mat-icon matSuffix>search</mat-icon>
-            </mat-form-field>
-        </div>
-    </div>
 
-    <mat-table [dataSource]="dataSource" matSort class="os-headed-listview-table">
-        <!-- Timestamp -->
-        <ng-container matColumnDef="time">
-            <mat-header-cell *matHeaderCellDef>{{ 'Timestamp' | translate }}</mat-header-cell>
-            <mat-cell *matCellDef="let position">{{ position.timestamp | localizedDate }}</mat-cell>
-        </ng-container>
+        <mat-table [dataSource]="dataSource" matSort class="os-headed-listview-table">
+            <!-- Timestamp -->
+            <ng-container matColumnDef="time">
+                <mat-header-cell *matHeaderCellDef>{{ 'Timestamp' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let position">{{ position.timestamp | localizedDate }}</mat-cell>
+            </ng-container>
 
-        <!-- Info -->
-        <ng-container matColumnDef="info">
-            <mat-header-cell *matHeaderCellDef>{{ 'Comment' | translate }}</mat-header-cell>
-            <mat-cell *matCellDef="let position">
-                <div>
-                    <div *ngFor="let information of parseInformation(position)">
-                        {{ information }}
+            <!-- Info -->
+            <ng-container matColumnDef="info">
+                <mat-header-cell *matHeaderCellDef>{{ 'Comment' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let position">
+                    <div>
+                        <div *ngFor="let information of parseInformation(position)">
+                            {{ information }}
+                        </div>
                     </div>
-                </div>
-            </mat-cell>
-        </ng-container>
+                </mat-cell>
+            </ng-container>
 
-        <!-- User -->
-        <ng-container matColumnDef="user">
-            <mat-header-cell *matHeaderCellDef>{{ 'Changed by' | translate }}</mat-header-cell>
-            <mat-cell *matCellDef="let position">{{ position.user }}</mat-cell>
-        </ng-container>
+            <!-- User -->
+            <ng-container matColumnDef="user">
+                <mat-header-cell *matHeaderCellDef>{{ 'Changed by' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let position">{{ position.user }}</mat-cell>
+            </ng-container>
 
-        <mat-header-row *matHeaderRowDef="getRowDef()"></mat-header-row>
-        <mat-row
-            [ngClass]="{ 'links-disabled': !isSuperadmin }"
-            *matRowDef="let row; columns: getRowDef()"
-            (click)="onClickRow(row)"
-        ></mat-row>
-    </mat-table>
+            <mat-header-row *matHeaderRowDef="getRowDef()"></mat-header-row>
+            <mat-row
+                [ngClass]="{ 'links-disabled': !isSuperadmin }"
+                *matRowDef="let row; columns: getRowDef()"
+                (click)="onClickRow(row)"
+            ></mat-row>
+        </mat-table>
+    </mat-card-content>
 </mat-card>

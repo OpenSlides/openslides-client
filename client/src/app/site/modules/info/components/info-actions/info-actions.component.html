@@ -1,25 +1,29 @@
 <mat-card class="os-card">
-    <div>
-        <h2>{{ 'Troubleshooting' | translate }}</h2>
-        <button type="button" mat-stroked-button (click)="resetCache()">
-            {{ 'Reset cache' | translate }}
-        </button>
-    </div>
-    <div *osOmlPerms="OML.superadmin" class="superadmin-button">
-        <h3>{{ 'Superadmin actions' | translate }}</h3>
-        <button type="button" mat-stroked-button (click)="checkDatastore()">
-            {{ 'Check datastore' | translate }}
-        </button>
-    </div>
-    <div *osOmlPerms="OML.superadmin" class="superadmin-button">
-        <button
-            type="button"
-            mat-stroked-button
-            (click)="checkDatastore(true)"
-            matTooltip="{{ 'For large instances this may block the server to the point of unusability' | translate }}"
-            matTooltipPosition="right"
-        >
-            {{ 'Thoroughly check datastore (unsafe)' | translate }}
-        </button>
-    </div>
+    <mat-card-content>
+        <div>
+            <h2>{{ 'Troubleshooting' | translate }}</h2>
+            <button type="button" mat-stroked-button (click)="resetCache()">
+                {{ 'Reset cache' | translate }}
+            </button>
+        </div>
+        <div *osOmlPerms="OML.superadmin" class="superadmin-button">
+            <h3>{{ 'Superadmin actions' | translate }}</h3>
+            <button type="button" mat-stroked-button (click)="checkDatastore()">
+                {{ 'Check datastore' | translate }}
+            </button>
+        </div>
+        <div *osOmlPerms="OML.superadmin" class="superadmin-button">
+            <button
+                type="button"
+                mat-stroked-button
+                (click)="checkDatastore(true)"
+                matTooltip="{{
+                    'For large instances this may block the server to the point of unusability' | translate
+                }}"
+                matTooltipPosition="right"
+            >
+                {{ 'Thoroughly check datastore (unsafe)' | translate }}
+            </button>
+        </div>
+    </mat-card-content>
 </mat-card>

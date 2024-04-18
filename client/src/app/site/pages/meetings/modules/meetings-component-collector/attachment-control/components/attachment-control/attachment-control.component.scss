@@ -4,6 +4,7 @@
     .attachment-container {
         justify-content: space-between;
         display: flex;
+        margin-top: 10px;
 
         form {
             flex: 1;
@@ -13,7 +14,7 @@
             width: 95%;
         }
         .mat-icon-button {
-            top: 20px;
+            top: 10px;
         }
     }
 }

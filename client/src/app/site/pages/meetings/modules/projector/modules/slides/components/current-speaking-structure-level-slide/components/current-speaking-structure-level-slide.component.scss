@@ -1,7 +1,7 @@
 #structure-level-current {
     position: absolute;
     right: 0;
-    bottom: calc(50% - 125px);
+    top: calc(max(402px, 50%) - 250px);
     right: 0;
     z-index: 10;
     text-align: right;
@@ -13,9 +13,12 @@
         font-size: 250px;
         font-weight: 500;
     }
+    #inner-type,
     #inner-name {
         font-size: 70px;
         opacity: 0.9;
+        display: flex;
+        justify-content: end;
     }
 
     .structure-level-color {

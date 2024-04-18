@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';

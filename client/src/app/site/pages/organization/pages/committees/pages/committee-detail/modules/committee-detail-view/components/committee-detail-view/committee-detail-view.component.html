@@ -26,100 +26,104 @@
 
 <ng-container *ngIf="currentCommitteeObservable | async as committee">
     <mat-card class="committee-details os-card">
-        <!-- name -->
-        <h1>
-            {{ committee.name }}
-        </h1>
+        <mat-card-content>
+            <!-- name -->
+            <h1>
+                {{ committee.name }}
+            </h1>
 
-        <!-- desc -->
-        <div class="committee-description">
-            {{ committee.description }}
-        </div>
+            <!-- desc -->
+            <div class="committee-description">
+                {{ committee.description }}
+            </div>
 
-        <!-- forward motions to -->
-        <os-committee-meta-info
-            icon="file_upload"
-            title="{{ 'Forward motions to' | translate }}"
-            *ngIf="committee.forward_to_committees.length > 0 && isOrgaAdmin()"
-        >
-            <ul class="content-list expandable-list" [class.expanded]="forwardingExpanded">
-                <li *ngFor="let forwarding of sortCommitteesByName(committee.forward_to_committees)">
-                    <a *ngIf="canAccessCommittee(forwarding)" [routerLink]="['/', 'committees', forwarding.id]">
-                        {{ forwarding.name }}
-                    </a>
-                    <ng-container *ngIf="!canAccessCommittee(forwarding)">{{ forwarding.name }}</ng-container>
-                </li>
-            </ul>
-            <button *ngIf="committee.forward_to_committees.length > 1" mat-button (click)="toggleForwardingList()">
-                <ng-container *ngIf="!forwardingExpanded">
-                    {{ 'More' | translate }}
-                    <mat-icon>expand_more</mat-icon>
-                </ng-container>
-                <ng-container *ngIf="forwardingExpanded">
-                    {{ 'Less' | translate }}
-                    <mat-icon>expand_less</mat-icon>
-                </ng-container>
-            </button>
-        </os-committee-meta-info>
-
-        <!-- receive motions from -->
-        <os-committee-meta-info
-            icon="file_download"
-            title="{{ 'Receive motions from' | translate }}"
-            *ngIf="committee.receive_forwardings_from_committees.length > 0 && isOrgaAdmin()"
-        >
-            <ul class="content-list expandable-list" [class.expanded]="receiveExpanded">
-                <li *ngFor="let receive of sortCommitteesByName(committee.receive_forwardings_from_committees)">
-                    <a *ngIf="canAccessCommittee(receive)" [routerLink]="['/', 'committees', receive.id]">
-                        {{ receive.name }}
-                    </a>
-                    <span *ngIf="!canAccessCommittee(receive)">{{ receive.name }}</span>
-                </li>
-            </ul>
-            <button
-                *ngIf="committee.receive_forwardings_from_committees.length > 1"
-                mat-button
-                (click)="toggleReceiveList()"
+            <!-- forward motions to -->
+            <os-committee-meta-info
+                icon="file_upload"
+                title="{{ 'Forward motions to' | translate }}"
+                *ngIf="committee.forward_to_committees.length > 0 && isOrgaAdmin()"
             >
-                <ng-container *ngIf="!receiveExpanded">
-                    {{ 'More' | translate }}
-                    <mat-icon>expand_more</mat-icon>
-                </ng-container>
-                <ng-container *ngIf="receiveExpanded">
-                    {{ 'Less' | translate }}
-                    <mat-icon>expand_less</mat-icon>
-                </ng-container>
-            </button>
-        </os-committee-meta-info>
+                <ul class="content-list expandable-list" [class.expanded]="forwardingExpanded">
+                    <li *ngFor="let forwarding of sortCommitteesByName(committee.forward_to_committees)">
+                        <a *ngIf="canAccessCommittee(forwarding)" [routerLink]="['/', 'committees', forwarding.id]">
+                            {{ forwarding.name }}
+                        </a>
+                        <ng-container *ngIf="!canAccessCommittee(forwarding)">{{ forwarding.name }}</ng-container>
+                    </li>
+                </ul>
+                <button *ngIf="committee.forward_to_committees.length > 1" mat-button (click)="toggleForwardingList()">
+                    <ng-container *ngIf="!forwardingExpanded">
+                        {{ 'More' | translate }}
+                        <mat-icon>expand_more</mat-icon>
+                    </ng-container>
+                    <ng-container *ngIf="forwardingExpanded">
+                        {{ 'Less' | translate }}
+                        <mat-icon>expand_less</mat-icon>
+                    </ng-container>
+                </button>
+            </os-committee-meta-info>
 
-        <!-- Member amount -->
-        <os-committee-meta-info
-            icon="engineering"
-            title="{{ 'Committee admin' | translate }}"
-            *ngIf="canManageCommittee"
-        >
-            <ng-container *ngIf="committee.getManagers() as managers">
-                <os-comma-separated-listing [list]="managers">
-                    <ng-template let-manager>
-                        <ng-container *osOmlPerms="OML.can_manage_users">
-                            <a [routerLink]="['/', 'accounts', manager?.id]">{{ manager }}</a>
-                        </ng-container>
-                        <ng-container *osOmlPerms="OML.can_manage_users; complement: true">
-                            <span>{{ manager }}</span>
-                        </ng-container>
-                    </ng-template>
-                </os-comma-separated-listing>
-                <i class="red-warning-text" *ngIf="managers.length === 0">
-                    {{ 'This committee has no managers!' | translate }}
-                </i>
-            </ng-container>
-        </os-committee-meta-info>
+            <!-- receive motions from -->
+            <os-committee-meta-info
+                icon="file_download"
+                title="{{ 'Receive motions from' | translate }}"
+                *ngIf="committee.receive_forwardings_from_committees.length > 0 && isOrgaAdmin()"
+            >
+                <ul class="content-list expandable-list" [class.expanded]="receiveExpanded">
+                    <li *ngFor="let receive of sortCommitteesByName(committee.receive_forwardings_from_committees)">
+                        <a *ngIf="canAccessCommittee(receive)" [routerLink]="['/', 'committees', receive.id]">
+                            {{ receive.name }}
+                        </a>
+                        <span *ngIf="!canAccessCommittee(receive)">{{ receive.name }}</span>
+                    </li>
+                </ul>
+                <button
+                    *ngIf="committee.receive_forwardings_from_committees.length > 1"
+                    mat-button
+                    (click)="toggleReceiveList()"
+                >
+                    <ng-container *ngIf="!receiveExpanded">
+                        {{ 'More' | translate }}
+                        <mat-icon>expand_more</mat-icon>
+                    </ng-container>
+                    <ng-container *ngIf="receiveExpanded">
+                        {{ 'Less' | translate }}
+                        <mat-icon>expand_less</mat-icon>
+                    </ng-container>
+                </button>
+            </os-committee-meta-info>
+
+            <!-- Member amount -->
+            <os-committee-meta-info
+                icon="engineering"
+                title="{{ 'Committee admin' | translate }}"
+                *ngIf="canManageCommittee"
+            >
+                <ng-container *ngIf="committee.getManagers() as managers">
+                    <os-comma-separated-listing [list]="managers">
+                        <ng-template let-manager>
+                            <ng-container *osOmlPerms="OML.can_manage_users">
+                                <a [routerLink]="['/', 'accounts', manager?.id]">{{ manager }}</a>
+                            </ng-container>
+                            <ng-container *osOmlPerms="OML.can_manage_users; complement: true">
+                                <span>{{ manager }}</span>
+                            </ng-container>
+                        </ng-template>
+                    </os-comma-separated-listing>
+                    <i class="red-warning-text" *ngIf="managers.length === 0">
+                        {{ 'This committee has no managers!' | translate }}
+                    </i>
+                </ng-container>
+            </os-committee-meta-info>
+        </mat-card-content>
     </mat-card>
 
     <!-- Meetings -->
-    <div class="meeting-list">
+    <div>
         <mat-card class="os-card" *ngIf="!getMeetingsSorted(committee).length">
-            {{ 'No meetings available' | translate }}
+            <mat-card-content>
+                {{ 'No meetings available' | translate }}
+            </mat-card-content>
         </mat-card>
         <os-committee-meeting-preview
             *ngFor="let meeting of getMeetingsSorted(committee)"

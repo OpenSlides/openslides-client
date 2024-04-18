@@ -98,7 +98,7 @@ export class ModelRequestService {
             console.warn(`${subscriptionName}: Skipped invalid ids in configuration.`);
             modelRequest.ids = ids.filter(id => isValidId(id));
         }
-        const fn = async () => {
+        const fn = async (): Promise<void> => {
             const request = await this.modelRequestBuilder.build(modelRequest);
             const modelSubscription = await this.autoupdateService.subscribe(
                 request,

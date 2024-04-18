@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
+import { DelegationSetting } from 'src/app/domain/definitions/delegation-setting';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -29,10 +30,18 @@ export class BasePermsTestComponent<ComponentDataType extends object> {
         <div id="or" *osPerms="permission; or: conditionals.or"></div>
         <div id="and" *osPerms="permission; and: conditionals.and"></div>
         <div id="complement" *osPerms="permission; complement: conditionals.complement"></div>
+        <div
+            id="delegation"
+            *osPerms="
+                permission;
+                delegationSettingAlternative: ['users_forbid_delegator_in_list_of_speakers', altPermission]
+            "
+        ></div>
     `
 })
 class TestComponent extends BasePermsTestComponent<TestConditionalType> {
     public readonly permission = Permission.listOfSpeakersCanSee;
+    public readonly altPermission = Permission.listOfSpeakersCanManage;
 
     public constructor() {
         super({ and: true, or: true, complement: true });
@@ -44,16 +53,37 @@ class MockOperatorService {
         return this._operatorUpdatedSubject;
     }
 
+    public get delegationSettingsUpdated(): Observable<void> {
+        return this._delegationSettingsUpdatedSubject;
+    }
+
     private _operatorUpdatedSubject = new Subject<void>();
+    private _delegationSettingsUpdatedSubject = new Subject<void>();
     private _permList: Permission[] = [];
+    private _appliedSettings: DelegationSetting[] = [];
+    private _user_delegated = false;
 
     public hasPerms(...checkPerms: Permission[]): boolean {
         return checkPerms.some(perm => this._permList.includes(perm));
     }
 
+    public isAllowedWithDelegation(...appliedSettings: DelegationSetting[]): boolean {
+        return !appliedSettings.some(setting => this._appliedSettings.includes(setting)) || !this._user_delegated;
+    }
+
     public changeOperatorPermsForTest(newPermList: Permission[]): void {
         this._permList = newPermList;
         this._operatorUpdatedSubject.next();
+    }
+
+    public changeOperatorDelegationForTest(delegated: boolean): void {
+        this._user_delegated = delegated;
+        this._operatorUpdatedSubject.next();
+    }
+
+    public changeDelegatorSettingsForTest(appliedSettings: DelegationSetting[]): void {
+        this._appliedSettings = appliedSettings;
+        this._delegationSettingsUpdatedSubject.next();
     }
 }
 
@@ -115,6 +145,30 @@ describe(`PermsDirective`, () => {
         fixture.componentInstance.setTestComponentData({ and: true });
         update();
         expect(getElement(`#and`)).toBeTruthy();
+    });
+
+    it(`check if delegationSettingAlternative works`, async () => {
+        expect(getElement(`#delegation`)).toBeFalsy();
+        operatorService.changeOperatorPermsForTest([Permission.listOfSpeakersCanSee]);
+        update();
+        expect(getElement(`#delegation`)).toBeTruthy();
+        operatorService.changeOperatorDelegationForTest(true);
+        update();
+        expect(getElement(`#delegation`)).toBeTruthy();
+        operatorService.changeDelegatorSettingsForTest([`users_forbid_delegator_in_list_of_speakers`]);
+        update();
+        expect(getElement(`#delegation`)).toBeFalsy();
+        operatorService.changeDelegatorSettingsForTest([`users_forbid_delegator_as_submitter`]);
+        update();
+        expect(getElement(`#delegation`)).toBeTruthy();
+        operatorService.changeDelegatorSettingsForTest([`users_forbid_delegator_in_list_of_speakers`]);
+        operatorService.changeOperatorPermsForTest([Permission.listOfSpeakersCanManage]);
+        update();
+        expect(getElement(`#delegation`)).toBeTruthy();
+        operatorService.changeOperatorPermsForTest([Permission.listOfSpeakersCanSee]);
+        operatorService.changeOperatorDelegationForTest(false);
+        update();
+        expect(getElement(`#delegation`)).toBeTruthy();
     });
 
     it(`check if complement works`, async () => {

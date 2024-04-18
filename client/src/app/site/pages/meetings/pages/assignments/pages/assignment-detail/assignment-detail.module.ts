@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
 import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';

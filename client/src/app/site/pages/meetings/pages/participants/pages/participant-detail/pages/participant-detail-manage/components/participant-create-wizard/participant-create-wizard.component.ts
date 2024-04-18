@@ -73,8 +73,8 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public get shouldEnableFormControlFn(): (controlName: string) => boolean {
         return controlName => {
-            const canManageUsers = this.isAllowedFn(`manage`);
-            if (canManageUsers) {
+            const canUpdateUsers = this.isAllowedFn(`update`);
+            if (canUpdateUsers) {
                 if (this._isUserInScope || (this._isNewUser && !this._accountId)) {
                     return true;
                 } else {

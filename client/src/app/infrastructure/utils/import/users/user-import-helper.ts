@@ -1,8 +1,8 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { User } from 'src/app/domain/models/users/user';
-import { FullNameInformation } from 'src/app/gateways/repositories/users';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { CreateUserNameInformation } from 'src/app/site/services/user-controller.service';
 
 import { BaseBeforeImportHandler } from '../base-before-import-handler';
 import { BeforeFindAction, CsvMapping, ImportResolveInformation } from '../import-utils';
@@ -14,7 +14,7 @@ export interface UserSearchService {
 }
 
 interface UserImportHelperService {
-    parseStringIntoUser(toParse: string): FullNameInformation;
+    parseStringIntoUser(toParse: string): CreateUserNameInformation;
     getViewModelList(): ViewUser[];
 }
 

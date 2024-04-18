@@ -93,6 +93,9 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
         this._borderRadius = size + `-border-radius`;
     }
 
+    @Input()
+    public iconName = `search`;
+
     /**
      * EventHandler for the input-changes.
      */
@@ -110,6 +113,12 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
      */
     @Output()
     public clickSubmit = new EventEmitter<string>();
+
+    /**
+     * EventHandler for click Icon
+     */
+    @Output()
+    public clickIcon = new EventEmitter<string>();
 
     /**
      * Getter to get the border-radius as a string.
@@ -185,6 +194,10 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
         if (this.clearOnEscape && event.key === `Enter`) {
             this.send();
         }
+    }
+
+    public clickOnIcon(): void {
+        this.clickIcon.emit();
     }
 
     protected createForm(): UntypedFormControl {

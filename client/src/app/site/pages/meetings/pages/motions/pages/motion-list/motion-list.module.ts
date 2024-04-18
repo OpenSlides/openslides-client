@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { MatTooltipModule } from '@angular/material/tooltip';

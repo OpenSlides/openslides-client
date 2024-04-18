@@ -1,0 +1,180 @@
+@import 'src/assets/styles/variables.scss';
+
+.single-speaker-line {
+    display: flex;
+    align-items: center;
+
+    .speaker-info {
+        flex-grow: 1;
+    }
+
+    .speaker-controls {
+        flex-shrink: 1;
+        flex-wrap: nowrap;
+    }
+
+    .speaker-name {
+        font-size: 16px;
+        font-weight: 500;
+        .pronoun {
+            font-size: 12px;
+            font-weight: normal;
+        }
+    }
+
+    .speaking-indicator {
+        height: 24px;
+        width: 40px;
+        text-align: center;
+    }
+
+    .speaker-index {
+        font-weight: bold;
+        font-size: 16px;
+        min-width: 26px;
+        padding: 0 8px;
+    }
+
+    .speaker-structure-level {
+        font-size: 12px;
+    }
+
+    .speaker-info {
+        padding: 4px 0;
+        min-height: calc(2 * 18px + 24px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .speaker-name {
+        line-height: 24px;
+    }
+
+    .speaker-additional-info,
+    .speech-type {
+        font-size: 12px;
+        line-height: 18px;
+        & > span:not(:last-of-type):after {
+            content: ' · ';
+        }
+    }
+
+    .countdown {
+        font-size: 18px;
+        line-height: 18px;
+        vertical-align: middle;
+    }
+
+    .duration {
+        display: inline;
+        font-size: 14px;
+    }
+}
+
+.speaker-warning {
+    margin-right: 5px;
+}
+
+.speaker-appendix {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    text-align: right;
+    .countdown {
+        padding: 0 0.25em;
+    }
+}
+
+.speaker-control-button {
+    $speaker-control-button-size: 46px;
+    $speaker-control-button-font-size: 36px;
+    $speaker-control-button-font-size-small: 22px;
+    width: $speaker-control-button-size !important;
+    height: $speaker-control-button-size !important;
+    line-height: $speaker-control-button-size !important;
+
+    .mat-icon {
+        width: $speaker-control-button-font-size !important;
+        height: $speaker-control-button-font-size !important;
+        line-height: $speaker-control-button-font-size !important;
+    }
+    .material-icons {
+        font-size: $speaker-control-button-font-size !important;
+    }
+
+    &.small-play-icon {
+        .material-icons {
+            font-size: $speaker-control-button-font-size-small !important;
+        }
+    }
+
+    // TODO(mdc-migration): Replace after button migration:
+    /*
+    width: $speaker-control-button-size !important;
+    height: $speaker-control-button-size !important;
+    padding: 0px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+
+    & > *[role=img] {
+        width: $speaker-control-button-font-size;
+        height: $speaker-control-button-font-size;
+        font-size: $speaker-control-button-font-size;
+
+        svg {
+            width: $speaker-control-button-font-size;
+            height: $speaker-control-button-font-size;
+        }
+    }
+
+    .mat-mdc-button-touch-target {
+        width: $speaker-control-button-size !important;
+        height: $speaker-control-button-size !important;
+    }
+    */
+}
+
+.speaker-stop-button {
+    $speaker-control-button-size: 40px;
+    $speaker-control-button-font-size: 32px;
+    width: $speaker-control-button-size !important;
+    height: $speaker-control-button-size !important;
+    line-height: $speaker-control-button-size !important;
+
+    .mat-icon {
+        width: $speaker-control-button-font-size !important;
+        height: $speaker-control-button-font-size !important;
+        line-height: $speaker-control-button-font-size !important;
+    }
+    .material-icons {
+        font-size: $speaker-control-button-font-size !important;
+    }
+
+    // TODO(mdc-migration): Replace after button migration:
+    /*
+    width: $speaker-control-button-size !important;
+    height: $speaker-control-button-size !important;
+    padding: 0px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+
+    & > *[role=img] {
+        width: $speaker-control-button-font-size;
+        height: $speaker-control-button-font-size;
+        font-size: $speaker-control-button-font-size;
+
+        svg {
+            width: $speaker-control-button-font-size;
+            height: $speaker-control-button-font-size;
+        }
+    }
+
+    .mat-mdc-button-touch-target {
+        width: $speaker-control-button-size !important;
+        height: $speaker-control-button-size !important;
+    }
+    */
+}
