@@ -149,7 +149,6 @@
     <!-- Menu -->
     <div *osScrollingTableCell="'menu'; row as user; config: { width: 40 }" class="cell-slot fill">
         <button
-            *osPerms="permission.userCanUpdate"
             mat-icon-button
             [disabled]="isMultiSelect"
             [matMenuTriggerFor]="singleItemMenu"
