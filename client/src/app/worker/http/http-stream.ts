@@ -148,6 +148,8 @@ export abstract class HttpStream {
 
         if (data instanceof ErrorDescription || isCommunicationError(data) || isCommunicationErrorWrapper(data)) {
             this.handleError(data);
+        } else if (isCommunicationError(this.parse(data)) || isCommunicationErrorWrapper(this.parse(data))) {
+            this.handleError(this.parse(data));
         } else {
             data = this.parse(data);
             this.failedCounter = 0;
