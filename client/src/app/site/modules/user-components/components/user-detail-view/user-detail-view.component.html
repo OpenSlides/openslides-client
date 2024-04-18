@@ -185,7 +185,7 @@
                     block
                 </mat-icon>
                 <mat-icon
-                    *ngIf="!user.is_physical_person && isAllowed('update')"
+                    *ngIf="!user.is_physical_person"
                     matTooltip="{{ 'Is no natural person' | translate }}"
                 >
                     account_balance

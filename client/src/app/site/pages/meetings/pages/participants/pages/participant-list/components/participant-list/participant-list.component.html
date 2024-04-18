@@ -61,7 +61,10 @@
                 <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canSeeSensitiveData">
                     block
                 </mat-icon>
-                <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}" *ngIf="user.hasSamlId && canManage">
+                <mat-icon
+                    matTooltip="{{ 'Has SSO identification' | translate }}"
+                    *ngIf="user.hasSamlId && canSeeSensitiveData"
+                >
                     fingerprint
                 </mat-icon>
             </div>

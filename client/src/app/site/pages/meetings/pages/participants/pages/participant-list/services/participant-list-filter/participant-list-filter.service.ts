@@ -175,7 +175,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             {
                 property: `hasSamlId`,
                 shouldHideFn() {
-                    return !this.canManage;
+                    return !this.canSeeSensitiveData;
                 }
             }
         ];
