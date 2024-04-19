@@ -152,6 +152,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
 
+    private _voteDelegationEnabled = false;
+
     private get onlyPresentUsers(): boolean {
         return this.meetingSettingsService.instant(`list_of_speakers_present_users_only`) ?? false;
     }
@@ -168,6 +170,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private interactionService: InteractionService
     ) {
         super();
+        this.subscriptions.push(
+            this.meetingSettingsService
+                .get(`users_enable_vote_delegations`)
+                .subscribe(allowed => (this._voteDelegationEnabled = allowed))
+        );
     }
 
     public ngOnInit(): void {
