@@ -19,6 +19,7 @@ const subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
     required: [],
     requiredMeeting: [],
     sequentialnumbermapping: [],
+    detail: [],
     other: []
 };
 const openTimeouts = {
@@ -77,7 +78,7 @@ function openConnection(
     function getRequestCategory(
         description: string,
         _request: unknown
-    ): 'required' | 'requiredMeeting' | 'other' | 'sequentialnumbermapping' {
+    ): 'required' | 'requiredMeeting' | 'other' | 'sequentialnumbermapping' | null {
         const required = [`theme_list:subscription`, `operator:subscription`, `organization:subscription`];
         if (required.indexOf(description) !== -1) {
             return `required`;
@@ -90,6 +91,12 @@ function openConnection(
 
         if (description.startsWith(`SequentialNumberMappingService:prepare`)) {
             return `sequentialnumbermapping`;
+        }
+
+        // Subscriptions ending with a number nomally are used for detail subscriptions
+        // and should not be bundled
+        if (!isNaN(+description.substring(description.length - 13, description.length - 14))) {
+            return null;
         }
 
         return `other`;
@@ -123,16 +130,20 @@ function openConnection(
 
     const category = getRequestCategory(description, request);
     const subscription = new AutoupdateSubscription(streamId, queryParams, requestHash, request, description, [ctx]);
-    subscriptionQueues[category].push(subscription);
+    if (category) {
+        subscriptionQueues[category].push(subscription);
 
-    clearTimeout(openTimeouts[category]);
-    openTimeouts[category] = setTimeout(() => {
-        const queue = subscriptionQueues[category];
-        subscriptionQueues[category] = [];
-        openTimeouts[category] = undefined;
+        clearTimeout(openTimeouts[category]);
+        openTimeouts[category] = setTimeout(() => {
+            const queue = subscriptionQueues[category];
+            subscriptionQueues[category] = [];
+            openTimeouts[category] = undefined;
 
-        autoupdatePool.openNewStream(queue, queryParams);
-    }, 5);
+            autoupdatePool.openNewStream(queue, queryParams);
+        }, 5);
+    } else {
+        autoupdatePool.openNewStream([subscription], queryParams);
+    }
 }
 
 function closeConnection(ctx: MessagePort, params: AutoupdateCloseStreamParams): void {
