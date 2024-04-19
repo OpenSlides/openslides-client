@@ -354,6 +354,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
                     for (const meetingUser of this.meetingUserRepo.getViewModelList()) {
                         if (meetingUser.user_id === model.id) {
                             meetingUserIdMap.set(meetingUser.meeting_id, meetingUser.id);
+                            return meetingUser.id;
                         }
                     }
                 }
