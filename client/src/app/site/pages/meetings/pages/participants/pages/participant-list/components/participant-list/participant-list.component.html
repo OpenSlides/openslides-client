@@ -150,14 +150,21 @@
     </div>
 
     <!-- Menu -->
-    <div *osScrollingTableCell="'menu'; row as user; config: { width: 40 }" class="cell-slot fill">
+    <div
+        *osScrollingTableCell="
+            'menu';
+            row as user;
+            config: { width: 40 };
+            isHidden: !(canSeeItemMenu() || (viewport.isMobileSubject | async))
+        "
+        class="cell-slot"
+    >
         <button
             mat-icon-button
             [disabled]="isMultiSelect"
             [matMenuTriggerFor]="singleItemMenu"
             (click)="$event.stopPropagation()"
             [matMenuTriggerData]="{ user: user }"
-            *ngIf="canSeeSingleItemMenu(user) || (viewport.isMobileSubject | async)"
         >
             <mat-icon>more_vert</mat-icon>
         </button>

@@ -458,8 +458,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         await this.repo.removeUsersFromMeeting([user]);
     }
 
-    public canSeeSingleItemMenu(user: ViewUser): boolean {
-        return this.operator.hasPerms(Permission.userCanUpdate) || this.canChangePassword(user);
+    public canSeeItemMenu(): boolean {
+        return this.operator.hasPerms(Permission.userCanUpdate);
     }
 
     /**
