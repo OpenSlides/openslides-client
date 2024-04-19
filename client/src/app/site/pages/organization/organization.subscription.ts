@@ -10,6 +10,7 @@ import { ViewOrganization } from 'src/app/site/pages/organization/view-models/vi
 import { DEFAULT_FIELDSET } from '../../services/model-request-builder';
 
 export const ORGANIZATION_SUBSCRIPTION = `organization_detail`;
+export const ORGANIZATION_VOTE_PUBLIC_KEY_SUBSCRIPTION = `organization_vote_public_key`;
 
 export const getMeetingListSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {
@@ -37,6 +38,15 @@ export const getOrganizationSubscriptionConfig: SubscriptionConfigGenerator = ()
     },
     subscriptionName: ORGANIZATION_SUBSCRIPTION,
     isDelayed: false
+});
+
+export const getVotePublicKeySubscriptionConfig: SubscriptionConfigGenerator = () => ({
+    modelRequest: {
+        viewModelCtor: ViewOrganization,
+        ids: [ORGANIZATION_ID],
+        fieldset: [`vote_decrypt_public_main_key`]
+    },
+    subscriptionName: ORGANIZATION_VOTE_PUBLIC_KEY_SUBSCRIPTION
 });
 
 export const getMeetingCreateSubscriptionConfig: SubscriptionConfigGenerator = () => ({
