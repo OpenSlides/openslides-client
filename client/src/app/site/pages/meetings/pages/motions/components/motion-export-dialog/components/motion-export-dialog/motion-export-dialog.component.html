@@ -64,7 +64,11 @@
                     <mat-button-toggle *osPerms="permission.listOfSpeakersCanSee" value="speakers" #speakersButton>
                         <span>{{ 'Speakers' | translate }}</span>
                     </mat-button-toggle>
-                    <mat-button-toggle *ngIf="workingGroupSpeakerActive" value="working_group_speakers" #workingGroupSpeakerButton>
+                    <mat-button-toggle
+                        *ngIf="workingGroupSpeakerActive"
+                        value="working_group_speakers"
+                        #workingGroupSpeakerButton
+                    >
                         <span>{{ 'Spokesperson' | translate }}</span>
                     </mat-button-toggle>
                     <mat-button-toggle value="polls" #votingResultButton>
