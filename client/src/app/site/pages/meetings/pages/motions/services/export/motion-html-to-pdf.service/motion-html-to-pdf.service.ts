@@ -206,7 +206,7 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
         return newParagraph;
     }
 
-    protected override addChildNodeIntoParagraphs(paragraph: any[], data: ChildNodeParagraphPayload) {
+    protected override addChildNodeIntoParagraphs(paragraph: any[], data: ChildNodeParagraphPayload): void {
         const { child, parent, styles } = data;
         const parsedElement = this.parseElement(child, styles);
         const firstChild = parent.firstChild as Element;

@@ -99,7 +99,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public meetingForm!: UntypedFormGroup;
     public theDuplicateFromId: Id | null = null;
 
-    public sortFn: (valueA: Selectable, valueB: Selectable) => number = (a, b) => {
+    public sortFn: (valueA: Selectable, valueB: Selectable) => number = (a, b): number => {
         return a && typeof a.getTitle() === `string` ? a.getTitle().localeCompare(b.getTitle()) : -1;
     };
 

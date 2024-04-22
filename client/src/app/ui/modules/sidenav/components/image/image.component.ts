@@ -43,8 +43,8 @@ export class ImageComponent {
     }
 
     private addListenersToReader(fileReader: FileReader): void {
-        fileReader.onprogress = event => this.handleReaderEvent(event, fileReader);
-        fileReader.onload = event => this.handleReaderEvent(event, fileReader);
+        fileReader.onprogress = (event): void => this.handleReaderEvent(event, fileReader);
+        fileReader.onload = (event): void => this.handleReaderEvent(event, fileReader);
     }
 
     private startLoading(): void {

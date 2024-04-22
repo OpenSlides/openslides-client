@@ -357,7 +357,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         }
     }
 
-    protected override updatePoll() {
+    protected override updatePoll(): void {
         super.updatePoll();
         this.defineVoteOptions();
     }

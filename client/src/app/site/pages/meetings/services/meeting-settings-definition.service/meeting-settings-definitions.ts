@@ -165,7 +165,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `daterange`,
                         automaticChangesSetting: {
                             watchProperties: [`end_time`],
-                            getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]) => {
+                            getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]): number => {
                                 return currentValue &&
                                     currentWatchPropertyValues.length &&
                                     currentValue > currentWatchPropertyValues[0]
@@ -736,7 +736,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Default voting type`),
                         type: `choice`,
                         choices: PollTypeVerbose,
-                        restrictionFn: (orgaSettings, value: any) => {
+                        restrictionFn: (orgaSettings, value: any): any => {
                             const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
                             if (!isElectronicVotingEnabled && typeof value !== `string`) {
                                 return { analog: `analog` };
@@ -801,7 +801,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Default voting type`),
                         type: `choice`,
                         choices: PollTypeVerbose,
-                        restrictionFn: (orgaSettings, value: any) => {
+                        restrictionFn: (orgaSettings, value: any): any => {
                             const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
                             if (!isElectronicVotingEnabled && typeof value !== `string`) {
                                 return { analog: `analog` };
