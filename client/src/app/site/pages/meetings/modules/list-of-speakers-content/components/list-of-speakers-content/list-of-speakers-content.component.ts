@@ -76,6 +76,12 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.pointOfOrderEnabled && this.canAddDueToPresence;
     }
 
+    public get addSelf(): boolean {
+        return (
+            this.permission.listOfSpeakersCanBeSpeaker && !(this.voteDelegationEnabled && this.forbidDelegatorToAddSelf)
+        );
+    }
+
     public get showSpeakerNoteForEveryoneObservable(): Observable<boolean> {
         return this.meetingSettingsService.get(`list_of_speakers_speaker_note_for_everyone`);
     }
@@ -140,6 +146,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public pointOfOrderEnabled = false;
 
+    private voteDelegationEnabled = false;
+
+    private forbidDelegatorToAddSelf = false;
+
     public structureLevelCountdownEnabled = false;
 
     @Output()
@@ -151,8 +161,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     private _currentUser: ViewUser | null = null;
 
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
-
-    private _voteDelegationEnabled = false;
 
     private get onlyPresentUsers(): boolean {
         return this.meetingSettingsService.instant(`list_of_speakers_present_users_only`) ?? false;
@@ -170,11 +178,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private interactionService: InteractionService
     ) {
         super();
-        this.subscriptions.push(
-            this.meetingSettingsService
-                .get(`users_enable_vote_delegations`)
-                .subscribe(allowed => (this._voteDelegationEnabled = allowed))
-        );
     }
 
     public ngOnInit(): void {
@@ -528,6 +531,12 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             }),
             this.meetingSettingsService.get(`list_of_speakers_default_structure_level_time`).subscribe(time => {
                 this.structureLevelCountdownEnabled = time > 0;
+            }),
+            this.meetingSettingsService.get(`users_enable_vote_delegations`).subscribe(enabled => {
+                this.voteDelegationEnabled = enabled;
+            }),
+            this.meetingSettingsService.get(`users_forbid_delegator_in_list_of_speakers`).subscribe(enabled => {
+                this.forbidDelegatorToAddSelf = enabled;
             })
         );
     }
