@@ -95,7 +95,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         );
     }
 
-    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
     private _data: Partial<ViewPoll>;
 

@@ -40,7 +40,7 @@ export class CommentSectionListComponent extends BaseComponent implements OnInit
 
     public groups: Observable<ViewGroup[]>;
 
-    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
     public constructor(
         protected override translate: TranslateService,

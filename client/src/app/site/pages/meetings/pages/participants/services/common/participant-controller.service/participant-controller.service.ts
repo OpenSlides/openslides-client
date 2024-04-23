@@ -164,7 +164,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public update(patch: ExtendedUserPatchFn, ...users: ViewUser[]): Action<void> {
         if (typeof patch === `function`) {
-            const updatePatch = (user: ViewUser) => {
+            const updatePatch = (user: ViewUser): any => {
                 const participantPayload = patch(user);
                 return this.validatePayload(participantPayload);
             };

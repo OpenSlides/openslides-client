@@ -24,7 +24,7 @@ export class MotionPollDialogComponent extends BasePollDialogComponent implement
         super(pollData);
     }
 
-    public ngAfterViewInit() {
+    public ngAfterViewInit(): void {
         this.dialogVoteForm.get(`options.${this.pollData.content_object?.fqid}`)?.valueChanges.subscribe(data => {
             let newMajority = data[this.majority] === -1 ? this.majority : ``;
             for (const option of Object.keys(data)) {
