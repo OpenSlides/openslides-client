@@ -119,7 +119,7 @@
             <!-- Email-sent indicator -->
             <mat-icon
                 inline
-                *ngIf="user.isLastEmailSent"
+                *ngIf="user.isLastEmailSent && canSeeSensitiveData"
                 matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
                 matTooltipPosition="above"
             >
