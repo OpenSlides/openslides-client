@@ -165,7 +165,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `daterange`,
                         automaticChangesSetting: {
                             watchProperties: [`end_time`],
-                            getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]) => {
+                            getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]): number => {
                                 return currentValue &&
                                     currentWatchPropertyValues.length &&
                                     currentValue > currentWatchPropertyValues[0]
@@ -269,6 +269,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `agenda_show_subtitles`,
                         label: _(`Show motion submitters in the agenda`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `agenda_show_topic_navigation_on_detail_view`,
+                        label: _(`Show topic navigation in detail view`),
                         type: `boolean`
                     }
                 ]
@@ -731,7 +736,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Default voting type`),
                         type: `choice`,
                         choices: PollTypeVerbose,
-                        restrictionFn: (orgaSettings, value: any) => {
+                        restrictionFn: (orgaSettings, value: any): any => {
                             const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
                             if (!isElectronicVotingEnabled && typeof value !== `string`) {
                                 return { analog: `analog` };
@@ -796,7 +801,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Default voting type`),
                         type: `choice`,
                         choices: PollTypeVerbose,
-                        restrictionFn: (orgaSettings, value: any) => {
+                        restrictionFn: (orgaSettings, value: any): any => {
                             const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
                             if (!isElectronicVotingEnabled && typeof value !== `string`) {
                                 return { analog: `analog` };

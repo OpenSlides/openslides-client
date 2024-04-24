@@ -125,7 +125,13 @@ export class SequentialNumberMappingService {
     }
 
     private getSequentialNumberRequest(collection: string): SimplifiedModelRequest {
-        const createRoutingFollow = (idField: keyof ViewMeeting) => {
+        const createRoutingFollow = (
+            idField: keyof ViewMeeting
+        ): {
+            idField: keyof ViewMeeting;
+            fieldset: any[];
+            additionalFields: string[];
+        } => {
             return { idField, fieldset: [], additionalFields: SEQUENTIAL_NUMBER_REQUIRED_FIELDS };
         };
 

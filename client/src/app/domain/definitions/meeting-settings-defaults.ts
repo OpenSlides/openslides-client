@@ -20,6 +20,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     agenda_item_creation: `default_no`,
     agenda_new_items_default_visibility: `internal`,
     agenda_show_internal_items_on_projector: false,
+    agenda_show_topic_navigation_on_detail_view: false,
     agenda_show_subtitles: false,
     list_of_speakers_enable_point_of_order_speakers: true,
     list_of_speakers_enable_pro_contra_speech: false,

@@ -80,7 +80,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
     public getTitleFn = () => this.topic.getListTitle();
 
     public get showNavigateButtons(): boolean {
-        return !!this.previousTopic || !!this.nextTopic;
+        return this.enableNavigation && (!!this.previousTopic || !!this.nextTopic);
     }
 
     public get nextTopic(): ViewTopic | null {
@@ -96,6 +96,8 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
     private _previousTopic: ViewTopic | null = null;
 
     private _sortedTopics: ViewTopic[] = [];
+
+    private enableNavigation = false;
 
     /**
      * Constructor for the topic detail page.
@@ -149,7 +151,10 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
                         }
                         this.setSurroundingTopics();
                     }
-                })
+                }),
+            this.meetingSettingsService
+                .get(`agenda_show_topic_navigation_on_detail_view`)
+                .subscribe(show => (this.enableNavigation = show))
         );
     }
 
