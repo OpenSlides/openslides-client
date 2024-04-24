@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentTable, ContentText, TableCell } from 'pdfmake/interfaces';
@@ -740,10 +741,7 @@ export class MotionPdfService {
     private createAttachments(motion: ViewMotion): object {
         let width = this.pdfDocumentService.pageSize === `A5` ? PDF_A5_POINTS_WIDTH : PDF_A4_POINTS_WIDTH;
         width = width - this.pdfDocumentService.pageMarginPointsLeft - this.pdfDocumentService.pageMarginPointsRight;
-        let instancUrl = this.organizationSettingsService.instant(`url`);
-        if (instancUrl.endsWith(`/`)) {
-            instancUrl = instancUrl.slice(0, -1);
-        }
+        const instancUrl = this.organizationSettingsService.instant(`url`);
 
         const attachments = [];
         attachments.push({
@@ -766,8 +764,8 @@ export class MotionPdfService {
                 attachments.push({
                     ul: [
                         {
-                            text: attachment.getTitle() + `: ` + instancUrl + fileUrl,
-                            link: instancUrl + fileUrl,
+                            text: attachment.getTitle() + `: ` + Location.joinWithSlash(instancUrl, fileUrl),
+                            link: Location.joinWithSlash(instancUrl, fileUrl),
                             margin: [0, 0, 0, 5]
                         }
                     ]
