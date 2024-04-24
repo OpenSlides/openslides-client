@@ -27,6 +27,5 @@ function migrateListItems(doc: Document): void {
 export function diffDomTiptapMigration(docOld: Document, docNew: Document): void {
     if (docNew.querySelector(`li > p`)) {
         migrateListItems(docOld);
-        migrateListItems(docNew);
     }
 }

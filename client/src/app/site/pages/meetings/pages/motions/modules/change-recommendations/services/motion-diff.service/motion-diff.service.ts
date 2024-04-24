@@ -1342,12 +1342,11 @@ export class MotionDiffService {
                 const ln = htmlNewEl.body.querySelector(`.os-line-number`);
                 htmlNewEl.body.children[0].childNodes[0].before(ln);
                 htmlOldEl.body.children[0].querySelector(`.os-line-number`).remove();
+                htmlNew = htmlNewEl.body.innerHTML;
             }
         }
 
         diffDomTiptapMigration(htmlOldEl, htmlNewEl);
-
-        htmlNew = htmlNewEl.body.innerHTML;
         htmlOld = htmlOldEl.body.innerHTML;
 
         // os-split-after should not be considered for detecting changes in paragraphs, so we strip it here
