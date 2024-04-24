@@ -490,7 +490,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`\n `);
     }
 
-    private fillPreviewData(previews: BackendImportPreview[]) {
+    private fillPreviewData(previews: BackendImportPreview[]): void {
         if (!previews || !previews.length) {
             this._previewColumns = undefined;
             this._summary = undefined;

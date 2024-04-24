@@ -31,11 +31,16 @@
 
     <div *osScrollingTableCell="'info'; row as speaker; config: { width: 200 }" class="cell-slot fill">
         <div class="infoCell">
-            <div *ngIf="speaker.list_of_speakers?.content_object" class="spacer-top-5">
+            <a
+                [routerLink]="viewModelUrl(speaker) || null"
+                [state]="{ back: 'true' }"
+                *ngIf="speaker.list_of_speakers?.content_object"
+                class="spacer-top-5"
+            >
                 <os-icon-container [icon]="getSpeakerIcon(speaker)">
                     {{ speaker.topic }}
                 </os-icon-container>
-            </div>
+            </a>
             <div *ngIf="speaker.point_of_order" class="spacer-top-5">
                 <os-icon-container icon="warning" translate>Point of order</os-icon-container>
             </div>
@@ -104,7 +109,7 @@
 </os-list>
 
 <mat-menu #speakerMenu="matMenu">
-    <button mat-menu-item *osPerms="permission.userCanManage" (click)="csvExportSpeakerList()">
+    <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="csvExportSpeakerList()">
         <mat-icon>archive</mat-icon>
         <span>{{ 'Export as CSV' | translate }}</span>
     </button>

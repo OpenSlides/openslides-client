@@ -1734,7 +1734,7 @@ export class MotionDiffService {
 
                     const type =
                         ` data-change-type="` +
-                        ((type: ViewUnifiedChangeType) => {
+                        ((type: ViewUnifiedChangeType): 'amendment' | 'recommendation' | 'unknown' => {
                             switch (type) {
                                 case ViewUnifiedChangeType.TYPE_AMENDMENT:
                                     return `amendment`;

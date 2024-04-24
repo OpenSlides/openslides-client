@@ -79,7 +79,7 @@ export class ColorFormFieldComponent extends BaseFormControlComponent<string> {
         this.changed.emit(value);
     }
 
-    private setDefaultDisplayColor(col: string) {
+    private setDefaultDisplayColor(col: string): void {
         this._defaultDisplayColor.next(col);
         if (this.isEmpty) {
             this.contentForm.setValue(col);

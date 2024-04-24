@@ -7,6 +7,9 @@ import { BaseSimplifiedModelRequest } from 'src/app/site/services/model-request-
 import { ViewMeeting } from '../../view-models/view-meeting';
 import { ViewPoll } from './view-models';
 
+export const POLL_LIST_SUBSCRIPTION = `poll_list`;
+export const POLL_DETAIL_SUBSCRIPTION = `poll_detail`;
+
 export const pollModelRequest: BaseSimplifiedModelRequest = {
     fieldset: FULL_FIELDSET,
     follow: [
@@ -33,8 +36,6 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
     ]
 };
 
-export const POLL_LIST_SUBSCRIPTION = `poll_list`;
-
 export const getPollListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
@@ -43,8 +44,6 @@ export const getPollListSubscriptionConfig: SubscriptionConfigGenerator = (id: I
     },
     subscriptionName: POLL_LIST_SUBSCRIPTION
 });
-
-export const POLL_DETAIL_SUBSCRIPTION = `poll_detail`;
 
 export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {

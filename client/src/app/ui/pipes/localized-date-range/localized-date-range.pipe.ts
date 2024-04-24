@@ -79,7 +79,7 @@ export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform 
     // Individual formatting functions
     // --------------------------------------------------------------------------------------------------------------
 
-    private formatPPp = (startString: string, startArray: string[], endString: string, endArray: string[]) => {
+    private formatPPp = (startString: string, startArray: string[], endString: string, endArray: string[]): string => {
         if (startArray[3] !== endArray[3] && startArray.slice(0, 2).every((val, index) => val === endArray[index])) {
             return startString + ` - ` + endArray.slice(3).join(` `);
         }
@@ -91,7 +91,7 @@ export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform 
         startArray: string[],
         endString: string,
         endArray: string[]
-    ) => {
+    ): string => {
         if (startArray[2] !== endArray[2] || startString === endString) {
             return this.defaultTransformInterval(startString, endString);
         } else if (startArray[0] !== endArray[0]) {
@@ -100,7 +100,12 @@ export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform 
         return startArray[0] + ` ` + startArray[1] + ` - ` + endArray[1] + `, ` + startArray[2];
     };
 
-    private formatDMYPP = (startString: string, startArray: string[], endString: string, endArray: string[]) => {
+    private formatDMYPP = (
+        startString: string,
+        startArray: string[],
+        endString: string,
+        endArray: string[]
+    ): string => {
         if (startArray[2] !== endArray[2] || startString === endString) {
             return this.defaultTransformInterval(startString, endString);
         } else if (startArray[1] !== endArray[1]) {

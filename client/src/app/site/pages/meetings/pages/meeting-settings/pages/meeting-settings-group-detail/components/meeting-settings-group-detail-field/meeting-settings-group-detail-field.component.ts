@@ -138,7 +138,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     /** used by the groups config type */
     public groupObservable: Observable<ViewGroup[]> | null = null;
 
-    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
     public get watchProperties(): (keyof Settings)[] {
         return this.setting.automaticChangesSetting?.watchProperties;
@@ -147,7 +147,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     public get getChangeFn(): (currentValue: any, currentWatchPropertyValues: any[]) => any {
         return (
             this.setting.automaticChangesSetting?.getChangeFn ??
-            ((currentValue, _currentWatchPropertyValues) => currentValue)
+            ((currentValue, _currentWatchPropertyValues): any => currentValue)
         );
     }
 
@@ -437,12 +437,6 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         return excluded.includes(type);
     }
 
-    /**
-     * Amends the application-wide tinyMCE settings with update triggers that
-     * send updated values only after leaving focus (Blur) or closing the editor (Remove)
-     *
-     * @returns an instance of tinyMCE settings with additional setup definitions
-     */
     public onEditorBlur(): void {
         if (this.value !== this.internalValue) {
             this.sendUpdate(this.value);

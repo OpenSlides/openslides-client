@@ -82,6 +82,7 @@ export class Settings {
     public agenda_item_creation!: AgendaItemCreation;
     public agenda_new_items_default_visibility!: AgendaItemType;
     public agenda_show_internal_items_on_projector!: boolean;
+    public agenda_show_topic_navigation_on_detail_view!: boolean;
 
     // List of speakers
     public list_of_speakers_amount_last_on_projector!: number;
@@ -163,6 +164,9 @@ export class Settings {
     public users_email_replyto!: string;
     public users_email_subject!: string;
     public users_email_body!: string;
+    public users_forbid_delegator_in_list_of_speakers!: string;
+    public users_forbid_delegator_as_submitter!: string;
+    public users_forbid_delegator_as_supporter!: string;
 
     // Assignments
     public assignments_export_title!: string;
@@ -333,6 +337,7 @@ export class Meeting extends BaseModel<Meeting> {
         `agenda_item_creation`,
         `agenda_new_items_default_visibility`,
         `agenda_show_internal_items_on_projector`,
+        `agenda_show_topic_navigation_on_detail_view`,
         `list_of_speakers_amount_last_on_projector`,
         `list_of_speakers_amount_next_on_projector`,
         `list_of_speakers_couple_countdown`,
@@ -409,6 +414,9 @@ export class Meeting extends BaseModel<Meeting> {
         `users_email_subject`,
         `users_email_body`,
         `users_enable_vote_delegations`,
+        `users_forbid_delegator_in_list_of_speakers`,
+        `users_forbid_delegator_as_submitter`,
+        `users_forbid_delegator_as_supporter`,
         `assignments_export_title`,
         `assignments_export_preamble`,
         `assignment_poll_ballot_paper_selection`,

@@ -44,6 +44,11 @@ export class ModerationNoteComponent extends BaseMeetingComponent implements OnI
         }
     }
 
+    @Input()
+    public set contentObject(contentObject: BaseViewModel) {
+        this._contentObject = contentObject;
+    }
+
     public get moderatorNotes(): Observable<string> {
         return this.agendaItemRepo
             .getViewModelObservable(this._contentObject?.getModel().agenda_item_id)

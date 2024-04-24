@@ -42,7 +42,7 @@ export class ColorService {
     }
 
     public getRandomHtmlColor(): HtmlColor {
-        const singleValue = () => {
+        const singleValue = (): string => {
             const nextValue = Math.round(Math.random() * 255).toString(16);
             return nextValue.length === 2 ? nextValue : `0${nextValue}`;
         };

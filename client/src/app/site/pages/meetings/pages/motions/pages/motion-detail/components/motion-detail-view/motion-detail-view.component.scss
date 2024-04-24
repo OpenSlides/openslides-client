@@ -156,10 +156,12 @@ span {
     float: right;
 }
 
-.motion-detail-nav-button {
+button.motion-detail-nav-button {
     min-width: 110px;
     max-width: 20vw;
+}
 
+.nav-button-overflow {
     span {
         white-space: nowrap !important;
         text-overflow: ellipsis;

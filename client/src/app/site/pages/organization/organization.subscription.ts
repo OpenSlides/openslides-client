@@ -9,6 +9,8 @@ import { ViewOrganization } from 'src/app/site/pages/organization/view-models/vi
 
 import { DEFAULT_FIELDSET } from '../../services/model-request-builder';
 
+export const ORGANIZATION_SUBSCRIPTION = `organization_detail`;
+
 export const getMeetingListSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {
         viewModelCtor: ViewOrganization,
@@ -21,8 +23,6 @@ export const getMeetingListSubscriptionConfig: SubscriptionConfigGenerator = () 
     },
     subscriptionName: MEETING_LIST_SUBSCRIPTION
 });
-
-export const ORGANIZATION_SUBSCRIPTION = `organization_detail`;
 
 export const getOrganizationSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {

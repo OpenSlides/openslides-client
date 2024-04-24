@@ -29,13 +29,13 @@ const openTimeouts = {
 };
 
 let debugCommandsRegistered = false;
-function registerDebugCommands() {
+function registerDebugCommands(): void {
     if (debugCommandsRegistered) {
         return;
     }
 
     debugCommandsRegistered = true;
-    (<any>self).printAutoupdateState = function () {
+    (<any>self).printAutoupdateState = function (): void {
         console.log(`AU POOL INFO`);
         console.log(`Currently open:`, autoupdatePool.activeStreams.length);
         console.group(`Streams`);
@@ -65,7 +65,7 @@ function registerDebugCommands() {
         console.groupEnd();
     };
 
-    (<any>self).disableAutoupdateCompression = function () {
+    (<any>self).disableAutoupdateCompression = function (): void {
         autoupdatePool.disableCompression();
     };
 }
@@ -167,6 +167,10 @@ if (!environment.production) {
     registerDebugCommands();
 }
 
+export function initAutoupdateSw(broadcast: (s: string, a: string, c?: any) => void): void {
+    autoupdatePool.registerBroadcast(broadcast);
+}
+
 export function autoupdateMessageHandler(ctx: any, e: any): void {
     const msg = e.data?.msg;
     const params = msg?.params;
@@ -180,9 +184,6 @@ export function autoupdateMessageHandler(ctx: any, e: any): void {
             break;
         case `cleanup-cache`:
             cleanupStream(params);
-            break;
-        case `auth-change`:
-            autoupdatePool.updateAuthentication();
             break;
         case `set-endpoint`:
             autoupdatePool.setEndpoint(params);

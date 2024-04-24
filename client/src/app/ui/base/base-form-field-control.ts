@@ -175,9 +175,9 @@ export abstract class BaseFormFieldControlComponent<T>
 
     public abstract onContainerClick(event: MouseEvent): void;
 
-    protected _onChange = (_value: T | null) => {};
+    protected _onChange = (_value: T | null): void => {};
 
-    protected _onTouched = (_value: T | null) => {};
+    protected _onTouched = (_value: T | null): void => {};
 
     protected abstract initializeForm(): void;
 

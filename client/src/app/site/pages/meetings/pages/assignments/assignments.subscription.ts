@@ -1,4 +1,5 @@
 import { Id } from 'src/app/domain/definitions/key-types';
+import { mergeSubscriptionFollow } from 'src/app/domain/fieldsets/misc';
 import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -7,6 +8,7 @@ import { listOfSpeakersSpeakerCountSubscription } from '../agenda/agenda.subscri
 import { pollModelRequest } from '../polls/polls.subscription';
 
 export const ASSIGNMENT_LIST_SUBSCRIPTION = `assignment_list`;
+export const ASSIGNMENT_LIST_MINIMAL_SUBSCRIPTION = `assignment_list_minimal`;
 
 export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -23,24 +25,27 @@ export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id:
             {
                 idField: `assignment_candidate_ids`,
                 follow: [
-                    {
-                        idField: `meeting_user_id`,
-                        follow: [
-                            {
-                                idField: `user_id`,
-                                fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
-                            }
-                        ],
-                        ...MeetingUserFieldsets.FullNameSubscription
-                    }
+                    mergeSubscriptionFollow(
+                        {
+                            idField: `meeting_user_id`,
+                            follow: [
+                                mergeSubscriptionFollow(
+                                    { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
+                                    {
+                                        idField: `user_id`,
+                                        fieldset: [`meeting_user_ids`]
+                                    }
+                                )
+                            ]
+                        },
+                        { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
+                    )
                 ]
             }
         ]
     },
     subscriptionName: ASSIGNMENT_LIST_SUBSCRIPTION
 });
-
-export const ASSIGNMENT_LIST_MINIMAL_SUBSCRIPTION = `assignment_list_minimal`;
 
 export const getAssignmentListMinimalSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
