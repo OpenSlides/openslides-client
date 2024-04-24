@@ -17,7 +17,11 @@ export const getCommitteeListSubscriptionConfig: SubscriptionConfigGenerator = (
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
         follow: [
-            { idField: `committee_ids`, fieldset: `list`, follow: [{ idField: `user_ids`, fieldset: `accountList` }] }
+            {
+                idField: `committee_ids`,
+                fieldset: `list`,
+                follow: [{ idField: `user_ids`, fieldset: `accountList` }]
+            }
         ]
     },
     subscriptionName: COMMITTEE_LIST_SUBSCRIPTION
@@ -43,7 +47,7 @@ export const getCommitteeListMinimalSubscriptionConfig: SubscriptionConfigGenera
             }
         ]
     },
-    subscriptionName: COMMITTEE_LIST_SUBSCRIPTION
+    subscriptionName: COMMITTEE_LIST_MINIMAL_SUBSCRIPTION
 });
 
 export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
