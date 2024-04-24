@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
 
+import { BaseMeetingModelRequestHandler } from '../../../../base/base-meeting-model-request-handler.component';
 import {
     getMotionBlockSubscriptionConfig,
     getMotionListSubscriptionConfig,
@@ -13,18 +15,13 @@ import {
     templateUrl: `./motion-main.component.html`,
     styleUrls: [`./motion-main.component.scss`]
 })
-export class MotionMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onNextMeetingId(id: number | null): void {
-        if (id) {
-            this.updateSubscribeTo(
-                [
-                    getMotionListSubscriptionConfig(id),
-                    getMotionBlockSubscriptionConfig(id),
-                    getMotionWorkflowSubscriptionConfig(id),
-                    getMotionsSubmodelSubscriptionConfig(id)
-                ],
-                { hideWhenMeetingChanged: true }
-            );
-        }
+export class MotionMainComponent extends BaseMeetingModelRequestHandler {
+    protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {
+        return [
+            getMotionListSubscriptionConfig(id),
+            getMotionBlockSubscriptionConfig(id),
+            getMotionWorkflowSubscriptionConfig(id),
+            getMotionsSubmodelSubscriptionConfig(id)
+        ];
     }
 }
