@@ -741,7 +741,7 @@ export class MotionPdfService {
     private createAttachments(motion: ViewMotion): object {
         let width = this.pdfDocumentService.pageSize === `A5` ? PDF_A5_POINTS_WIDTH : PDF_A4_POINTS_WIDTH;
         width = width - this.pdfDocumentService.pageMarginPointsLeft - this.pdfDocumentService.pageMarginPointsRight;
-        const instancUrl = this.organizationSettingsService.instant(`url`);
+        const instanceUrl = this.organizationSettingsService.instant(`url`);
 
         const attachments = [];
         attachments.push({
@@ -761,11 +761,12 @@ export class MotionPdfService {
                     margin: [0, 0, 0, 10]
                 });
             } else {
+                const link = Location.joinWithSlash(instanceUrl, fileUrl);
                 attachments.push({
                     ul: [
                         {
-                            text: attachment.getTitle() + `: ` + Location.joinWithSlash(instancUrl, fileUrl),
-                            link: Location.joinWithSlash(instancUrl, fileUrl),
+                            text: attachment.getTitle() + `: ` + link,
+                            link: link,
                             margin: [0, 0, 0, 5]
                         }
                     ]
