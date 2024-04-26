@@ -11,7 +11,11 @@
     right: 30px;
     bottom: 0;
 
-    .jitsi-fake-dialog {
+    mat-card-content {
+        height: 90%;
+    }
+
+    mat-card {
         padding: 0 5px 5px 5px;
         pointer-events: all;
         display: flex;
@@ -21,12 +25,7 @@
 
         .jitsi-iframe-wrapper {
             flex: 1;
-        }
-
-        .jitsi-dialog-actions {
-            .right {
-                float: right;
-            }
+            height: 100% !important;
         }
     }
 }
