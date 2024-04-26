@@ -65,9 +65,17 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
 
     public additionalInputControl: UntypedFormControl;
 
+    @Input()
+    public secondSelectorLabel: string;
+
+    @Input()
+    public secondSelectorValues: Selectable[];
+
     public get intermediateModels(): V[] {
         return this.getIntermediateModels(this.motion);
     }
+
+    public secondSelectorFormControl: UntypedFormControl;
 
     /**
      * The current list of intermediate models.
@@ -117,6 +125,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
 
     public ngOnInit(): void {
         this.additionalInputControl = this.fb.control(``);
+        this.secondSelectorFormControl = this.fb.control(``);
         this.subscriptions.push(
             this.editSubject.subscribe(ids => (this.editUserIds = ids.map(model => model.user_id ?? model.id)))
         );
@@ -151,12 +160,11 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
             )
         );
         if (this.useAdditionalInput) {
-            actions.push(
-                this.motionController.update(
-                    { [this.additionalInputField]: this.additionalInputControl.value },
-                    this.motion
-                )
-            );
+            const value = this.additionalInputControl.value
+                ? this.additionalInputControl.value + ` ` + this.secondSelectorSelectedValue
+                : this.secondSelectorSelectedValue;
+            actions.push(this.motionController.update({ [this.additionalInputField]: value }, this.motion));
+            this.secondSelectorFormControl.setValue(null);
         }
 
         await Action.from(...actions).resolve();
@@ -269,5 +277,14 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         }
         const models = this.editSubject.value;
         this.editSubject.next(models.concat(model));
+    }
+
+    private get secondSelectorSelectedValue(): string {
+        if (!this.secondSelectorFormControl.value) {
+            return ``;
+        }
+        const searchId = +this.secondSelectorFormControl.value;
+        const foundEntry = this.secondSelectorValues.find(entry => entry.id === searchId);
+        return !!foundEntry ? foundEntry.getTitle() : ``;
     }
 }
