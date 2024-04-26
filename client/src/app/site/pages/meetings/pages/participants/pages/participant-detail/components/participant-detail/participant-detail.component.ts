@@ -9,9 +9,15 @@ import { getParticipantDetailSubscription } from '../../../../participants.subsc
     styleUrls: [`./participant-detail.component.scss`]
 })
 export class ParticipantDetailComponent extends BaseModelRequestHandlerComponent {
+    protected override onShouldCreateModelRequests(params?: any): void {
+        if (params[`id`]) {
+            this.subscribeTo(getParticipantDetailSubscription(+params[`id`]), { hideWhenDestroyed: true });
+        }
+    }
+
     protected override onParamsChanged(params: any, oldParams: any): void {
         if (params[`id`] && params[`id`] !== oldParams[`id`]) {
-            this.subscribeTo(getParticipantDetailSubscription(+params[`id`]), { hideWhenDestroyed: true });
+            this.updateSubscribeTo(getParticipantDetailSubscription(+params[`id`]), { hideWhenDestroyed: true });
         }
     }
 }
