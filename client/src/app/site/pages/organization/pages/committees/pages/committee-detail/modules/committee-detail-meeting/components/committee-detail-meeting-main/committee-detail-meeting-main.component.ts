@@ -13,11 +13,12 @@ import { getCommitteeMeetingDetailSubscriptionConfig } from '../../../../../../c
 export class CommitteeDetailMeetingMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: Id | null): void {
         if (id) {
-            this.subscribeTo(getCommitteeMeetingDetailSubscriptionConfig(id), { hideWhenDestroyed: true });
+            this.updateSubscribeTo(getCommitteeMeetingDetailSubscriptionConfig(id), { hideWhenDestroyed: true });
         }
     }
 
-    protected override onShouldCreateModelRequests(): void {
+    protected override onShouldCreateModelRequests(_params: any, meetingId: Id): void {
         this.subscribeTo(getMeetingCreateSubscriptionConfig());
+        this.subscribeTo(getCommitteeMeetingDetailSubscriptionConfig(meetingId), { hideWhenDestroyed: true });
     }
 }

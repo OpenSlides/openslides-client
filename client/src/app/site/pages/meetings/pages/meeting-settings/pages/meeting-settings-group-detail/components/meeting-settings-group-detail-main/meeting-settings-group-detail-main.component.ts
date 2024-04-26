@@ -17,7 +17,15 @@ export class MeetingSettingsGroupDetailMainComponent extends BaseModelRequestHan
             params[`group`] === MOTIONS_SETTINGS_GROUP &&
             params[`meetingId`] !== oldParams[`meetingId`]
         ) {
-            this.subscribeTo(getMotionWorkflowSubscriptionConfig(+params[`meetingId`]), {
+            this.updateSubscribeTo(getMotionWorkflowSubscriptionConfig(+params[`meetingId`]), {
+                hideWhenMeetingChanged: true
+            });
+        }
+    }
+
+    protected override onShouldCreateModelRequests(params?: any, meetingId?: number): void {
+        if (params[`group`] && params[`group`] === MOTIONS_SETTINGS_GROUP && meetingId) {
+            this.subscribeTo(getMotionWorkflowSubscriptionConfig(meetingId), {
                 hideWhenMeetingChanged: true
             });
         }
