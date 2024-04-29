@@ -92,6 +92,7 @@ $navbar-size: 40px;
 
 .detail-link {
     os-icon-container {
-        flex-direction: row-reverse;
+        width: fit-content;
+        margin-left: auto;
     }
 }
