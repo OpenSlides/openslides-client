@@ -36,6 +36,7 @@ export interface AssignMeetingsPayload {
 
 export interface NameInformation {
     id: Id;
+    username: string;
     first_name?: string;
     last_name?: string;
 }
@@ -101,7 +102,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `first_name`,
             `last_name`,
             `pronoun`,
-            `username` /* Required! To getShortName */,
+            `username` /* Required! To getFilledUsername */,
             `gender`,
             `default_vote_weight`,
             `is_physical_person`,
@@ -263,7 +264,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return partialPayload;
     }
 
-    public getTitle = (viewUser: ViewUser) => this.getFullName(viewUser);
+    public getTitle = (viewUser: ViewUser) => this.getFilledUsername(viewUser);
 
     /**
      * getter for the name
@@ -274,6 +275,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const name =
             firstName || lastName ? `${firstName} ${lastName}` : this.translate.instant(`User`) + ` ${user.id}`;
         return name?.trim() || ``;
+    }
+
+    /**
+     * getter for the username
+     * called if the username holds all information
+     */
+    private getFilledUsername(user: NameInformation): string {
+        return user.username?.trim() || ``;
     }
 
     /**
