@@ -313,7 +313,9 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
                 this.changeRecoRepo.getViewModelListObservable(),
                 this.meetingSettingsService.get(`motions_recommendation_text_mode`)
             ]).subscribe(([_, mode]) => {
-                if (mode) {
+                if (this.motion.modified_final_version) {
+                    this.setChangeRecoMode(ChangeRecoMode.ModifiedFinal);
+                } else if (mode) {
                     this.setChangeRecoMode(this.determineCrMode(mode as ChangeRecoMode));
                 }
             })
