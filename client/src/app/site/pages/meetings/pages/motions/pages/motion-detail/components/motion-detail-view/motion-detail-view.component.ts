@@ -139,7 +139,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     private _amendmentsInMainList = false;
 
-    private _navigatedFromAmendmentList = true;
+    private _navigatedFromAmendmentList = false;
 
     public constructor(
         protected override translate: TranslateService,
@@ -332,10 +332,11 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     }
 
     /**
-     * Substitutes the previous or next motion.
-     * Fires if @var this._amendmentsInMainList as well as @var this._navigatedFromAmendmentList collide.
+     * Finds the next suitable motion.
+     * If @var this._amendmentsInMainList as well as @var this._navigatedFromAmendmentList collide 
+     * iterates over the next or previous motions to find the first with lead motion.
      * @param indexOfCurrent The index from the active motion.
-     * @param previous Wether the method is called for the previous or the next motion.
+     * @param step Stepwidth to iterate eiter over the previous or next motions.
      */
     private findNextSuitableMotion(indexOfCurrent: number, step: number) {
         if (!this._amendmentsInMainList || !this._navigatedFromAmendmentList) {
