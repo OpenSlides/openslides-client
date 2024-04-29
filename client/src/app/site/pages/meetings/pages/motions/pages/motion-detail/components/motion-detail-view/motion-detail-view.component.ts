@@ -333,7 +333,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     /**
      * Finds the next suitable motion.
-     * If @var this._amendmentsInMainList as well as @var this._navigatedFromAmendmentList collide 
+     * If @var this._amendmentsInMainList as well as @var this._navigatedFromAmendmentList collide
      * iterates over the next or previous motions to find the first with lead motion.
      * @param indexOfCurrent The index from the active motion.
      * @param step Stepwidth to iterate eiter over the previous or next motions.
