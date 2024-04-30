@@ -311,7 +311,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
                 .subscribe(mode => this.setLineNumberingMode(mode)),
             combineLatest([
                 this.changeRecoRepo.getViewModelListObservable().pipe(takeUntil(timer(1000))),
-                this.meetingSettingsService.get(`motions_recommendation_text_mode`).pipe(distinctUntilChanged())
+                this.meetingSettingsService.get(`motions_recommendation_text_mode`)
             ]).subscribe(([_, mode]) => {
                 if (!this.isEditingFinalVersion && mode) {
                     this.setChangeRecoMode(this.determineCrMode(mode as ChangeRecoMode));
