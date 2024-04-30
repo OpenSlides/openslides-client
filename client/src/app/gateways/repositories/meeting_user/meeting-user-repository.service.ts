@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
@@ -16,6 +17,8 @@ export type MeetingUserPatchFn =
 })
 export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<ViewMeetingUser, MeetingUser> {
     public override readonly resetOnMeetingChange = false;
+
+    private meetingUserIdMap: Map<Id, Map<Id, Id>> = new Map();
 
     public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MeetingUser);
@@ -66,4 +69,40 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
     public getTitle = (viewUser: ViewMeetingUser) => viewUser.user?.getTitle() ?? `Unknown`;
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Participants` : `Participant`);
+
+    public getMeetingUserId(userId: Id, meetingId: Id): Id | null {
+        if (this.meetingUserIdMap.has(userId) && this.meetingUserIdMap.get(userId).has(meetingId)) {
+            return this.meetingUserIdMap.get(userId).get(meetingId);
+        }
+
+        return null;
+    }
+
+    public override deleteModels(ids: Id[]): void {
+        ids.forEach(id => {
+            const user = this.viewModelStore[id];
+            if (user && user.user_id && user.meeting_id) {
+                const meetingUserId = this.meetingUserIdMap.get(user.user_id)?.get(user.meeting_id);
+                if (meetingUserId === user.id) {
+                    this.meetingUserIdMap.get(user.user_id).delete(user.meeting_id);
+                }
+            }
+        });
+        super.deleteModels(ids);
+    }
+
+    protected override clearViewModelStore(): void {
+        super.clearViewModelStore();
+        this.meetingUserIdMap = new Map();
+    }
+
+    protected override onCreateViewModel(meetingUser: ViewMeetingUser): void {
+        if (meetingUser.user_id && meetingUser.meeting_id) {
+            if (!this.meetingUserIdMap.has(meetingUser.user_id)) {
+                this.meetingUserIdMap.set(meetingUser.user_id, new Map());
+            }
+
+            this.meetingUserIdMap.get(meetingUser.user_id).set(meetingUser.meeting_id, meetingUser.id);
+        }
+    }
 }
