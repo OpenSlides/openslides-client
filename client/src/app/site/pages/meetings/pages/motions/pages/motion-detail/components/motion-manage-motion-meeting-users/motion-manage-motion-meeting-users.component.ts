@@ -71,11 +71,13 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
     @Input()
     public secondSelectorValues: Selectable[];
 
+    public secondSelectorFormControl: UntypedFormControl;
+
+    private secondSelectorDisabledIds: number[] = [];
+
     public get intermediateModels(): V[] {
         return this.getIntermediateModels(this.motion);
     }
-
-    public secondSelectorFormControl: UntypedFormControl;
 
     /**
      * The current list of intermediate models.
@@ -129,6 +131,13 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         this.subscriptions.push(
             this.editSubject.subscribe(ids => (this.editUserIds = ids.map(model => model.user_id ?? model.id)))
         );
+        this.subscriptions.push(
+            this.secondSelectorFormControl.valueChanges.subscribe(value => {
+                if (value) {
+                    this.changeSecondSelector();
+                }
+            })
+        );
     }
 
     public async onSave(): Promise<void> {
@@ -160,9 +169,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
             )
         );
         if (this.useAdditionalInput) {
-            const value = this.additionalInputControl.value
-                ? this.additionalInputControl.value + ` ` + this.secondSelectorSelectedValue
-                : this.secondSelectorSelectedValue;
+            const value = this.additionalInputControl.value;
             actions.push(this.motionController.update({ [this.additionalInputField]: value }, this.motion));
             this.secondSelectorFormControl.setValue(null);
         }
@@ -228,6 +235,16 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         }
     }
 
+    public getDisabledFn(): (Selectable) => boolean {
+        return (value: Selectable) => this.secondSelectorDisabledIds.includes(value.id);
+    }
+
+    public openedChange(opened: boolean): void {
+        if (!opened) {
+            this.secondSelectorDisabledIds = [];
+        }
+    }
+
     private updateData(models: V[]): void {
         if (!this.isEditMode) {
             this.editSubject.next(models);
@@ -279,6 +296,9 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         this.editSubject.next(models.concat(model));
     }
 
+    /**
+     * helpers for second Selector
+     */
     private get secondSelectorSelectedValue(): string {
         if (!this.secondSelectorFormControl.value) {
             return ``;
@@ -286,5 +306,14 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         const searchId = +this.secondSelectorFormControl.value;
         const foundEntry = this.secondSelectorValues.find(entry => entry.id === searchId);
         return !!foundEntry ? foundEntry.getTitle() : ``;
+    }
+
+    private changeSecondSelector(): void {
+        const value = this.additionalInputControl.value
+            ? this.additionalInputControl.value + ` · ` + this.secondSelectorSelectedValue
+            : this.secondSelectorSelectedValue;
+        this.secondSelectorDisabledIds.push(+this.secondSelectorFormControl.value);
+        this.secondSelectorFormControl.setValue(null);
+        this.additionalInputControl.setValue(value);
     }
 }

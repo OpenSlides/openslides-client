@@ -75,6 +75,9 @@
             <os-list-search-selector
                 [formControl]="secondSelectorFormControl"
                 [inputListValues]="secondSelectorValues"
+                [keepOpen]="true"
+                [disableOptionWhenFn]="getDisabledFn()"
+                (openedChange)="openedChange($event)"
             ></os-list-search-selector>
         </mat-form-field>
     </div>
