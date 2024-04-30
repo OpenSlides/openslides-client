@@ -3,7 +3,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest, distinctUntilChanged, Subscription, takeUntil, timer } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -310,8 +310,8 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
                 .get(`motions_default_line_numbering`)
                 .subscribe(mode => this.setLineNumberingMode(mode)),
             combineLatest([
-                this.changeRecoRepo.getViewModelListObservable(),
-                this.meetingSettingsService.get(`motions_recommendation_text_mode`)
+                this.changeRecoRepo.getViewModelListObservable().pipe(takeUntil(timer(1000))),
+                this.meetingSettingsService.get(`motions_recommendation_text_mode`).pipe(distinctUntilChanged())
             ]).subscribe(([_, mode]) => {
                 if (!this.isEditingFinalVersion && mode) {
                     this.setChangeRecoMode(this.determineCrMode(mode as ChangeRecoMode));
