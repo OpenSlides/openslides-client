@@ -2,6 +2,11 @@
     width: 800px;
     max-width: 100%;
     min-height: fit-content;
+
+    &::before {
+        height: 0;
+    }
+
     .search-top-form {
         display: flex;
         .search-input-container {
@@ -126,7 +131,7 @@
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    margin-top: 12px;
+    margin: 12px 0;
     padding: 0 50px;
     justify-content: space-between;
     .filter {
