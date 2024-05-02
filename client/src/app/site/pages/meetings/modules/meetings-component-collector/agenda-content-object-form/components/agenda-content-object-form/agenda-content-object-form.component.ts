@@ -2,8 +2,9 @@ import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { BaseMeetingModelRequestHandler } from 'src/app/site/pages/meetings/base/base-meeting-model-request-handler.component';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import { getAgendaListMinimalSubscriptionConfig } from 'src/app/site/pages/meetings/pages/agenda/agenda.subscription';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -16,7 +17,7 @@ import { AgendaContentObjectFormService } from '../../services/agenda-content-ob
     styleUrls: [`./agenda-content-object-form.component.scss`]
 })
 export class AgendaContentObjectFormComponent
-    extends BaseModelRequestHandlerComponent
+    extends BaseMeetingModelRequestHandler
     implements AfterViewInit, OnDestroy
 {
     @Input()
@@ -92,10 +93,8 @@ export class AgendaContentObjectFormComponent
         super.ngOnDestroy();
     }
 
-    protected override onNextMeetingId(id: number | null): void {
-        if (id) {
-            this.subscribeTo(getAgendaListMinimalSubscriptionConfig(id), { hideWhenDestroyed: true });
-        }
+    protected getSubscriptions(meetingId: number): SubscriptionConfig<any>[] {
+        return [getAgendaListMinimalSubscriptionConfig(meetingId)];
     }
 
     private setupSubscription(): void {

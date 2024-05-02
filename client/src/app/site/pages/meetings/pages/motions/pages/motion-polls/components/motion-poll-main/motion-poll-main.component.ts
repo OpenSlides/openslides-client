@@ -16,6 +16,25 @@ export class MotionPollMainComponent extends BaseModelRequestHandlerComponent {
         super();
     }
 
+    protected override onShouldCreateModelRequests(params?: any, meetingId?: number): void {
+        if (params[`id`]) {
+            this.sequentialNumberMappingService
+                .getIdBySequentialNumber({
+                    collection: ViewPoll.COLLECTION,
+                    meetingId,
+                    sequentialNumber: +params[`id`]
+                })
+                .then(id => {
+                    if (id) {
+                        this.subscribeTo(getPollDetailSubscriptionConfig(id), { hideWhenDestroyed: true });
+                        this.subscribeTo(getParticipantMinimalSubscriptionConfig(+params[`meetingId`]), {
+                            hideWhenDestroyed: true
+                        });
+                    }
+                });
+        }
+    }
+
     protected override onParamsChanged(params: any, oldParams: any): void {
         if (params[`id`] !== oldParams[`id`]) {
             this.sequentialNumberMappingService
@@ -26,8 +45,8 @@ export class MotionPollMainComponent extends BaseModelRequestHandlerComponent {
                 })
                 .then(id => {
                     if (id) {
-                        this.subscribeTo(getPollDetailSubscriptionConfig(id), { hideWhenDestroyed: true });
-                        this.subscribeTo(getParticipantMinimalSubscriptionConfig(+params[`meetingId`]), {
+                        this.updateSubscribeTo(getPollDetailSubscriptionConfig(id), { hideWhenDestroyed: true });
+                        this.updateSubscribeTo(getParticipantMinimalSubscriptionConfig(+params[`meetingId`]), {
                             hideWhenDestroyed: true
                         });
                     }
