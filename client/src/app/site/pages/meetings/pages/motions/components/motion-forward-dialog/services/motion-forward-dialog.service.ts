@@ -88,7 +88,6 @@ export class MotionForwardDialogService extends BaseDialogService<
         const dialogRef = await this.open(toForward);
         const dialogData = (await firstValueFrom(dialogRef.afterClosed())) as MotionForwardDialogReturnData;
         const toMeetingIds = dialogData.meetingIds as Ids;
-        console.log(`XXX`, dialogData.stuffA, dialogData.stuffB, dialogData.stuffC);
         if (toMeetingIds) {
             try {
                 const motionIds = toForward.map(motion => motion.id);
@@ -96,7 +95,12 @@ export class MotionForwardDialogService extends BaseDialogService<
                 const forwardMotions = toForward.map(motion =>
                     this.formatService.formatMotionForForward(this.repo.getViewModel(motion.id))
                 );
-                const result = await this.repo.createForwarded(toMeetingIds, ...forwardMotions);
+                const result = await this.repo.createForwarded(
+                    toMeetingIds,
+                    dialogData.useOriginalSubmitter,
+                    dialogData.useOriginalNumber,
+                    ...forwardMotions
+                );
                 this.snackbar.open(this.createForwardingSuccessMessage(motions.length, result), `Ok`);
             } catch (e: any) {
                 this.snackbar.open(e.toString(), `Ok`);

@@ -14,26 +14,13 @@
     </span>
     <table class="motion-forward-table">
         <tr>
-            <td class="motion-forward-name">{{ 'Motion version' | translate }}</td>
-            <td>
-                <mat-radio-group class="motion-forward-radio-group">
-                    <mat-radio-button value="1">
-                        {{ 'Orginal motion text with amendments/change recommendations' | translate }}
-                    </mat-radio-button>
-                    <mat-radio-button value="2">
-                        {{ 'Final version (note: if Editorial final version is available, use this one)' | translate }}
-                    </mat-radio-button>
-                </mat-radio-group>
-            </td>
-        </tr>
-        <tr>
             <td class="motion-forward-name">{{ 'Submitter' | translate }}</td>
             <td>
-                <mat-radio-group class="motion-forward-radio-group">
-                    <mat-radio-button value="1">
+                <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalSubmitter">
+                    <mat-radio-button value="true">
                         {{ 'original submitter name' | translate }}
                     </mat-radio-button>
-                    <mat-radio-button value="2">
+                    <mat-radio-button value="false">
                         {{ 'committee name' | translate }}
                     </mat-radio-button>
                 </mat-radio-group>
@@ -42,11 +29,11 @@
         <tr>
             <td class="motion-forward-name">{{ 'Identifier' | translate }}</td>
             <td>
-                <mat-radio-group class="motion-forward-radio-group">
-                    <mat-radio-button value="1">
+                <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalNumber">
+                    <mat-radio-button value="true">
                         {{ 'original identifier' | translate }}
                     </mat-radio-button>
-                    <mat-radio-button value="2">
+                    <mat-radio-button value="false">
                         {{ 'without identifier' | translate }}
                     </mat-radio-button>
                 </mat-radio-group>

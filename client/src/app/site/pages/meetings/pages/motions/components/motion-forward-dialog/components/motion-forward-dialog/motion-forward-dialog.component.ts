@@ -10,9 +10,8 @@ import { ViewMotion } from '../../../../view-models';
 
 export interface MotionForwardDialogReturnData {
     meetingIds: Ids;
-    stuffA: boolean;
-    stuffB: boolean;
-    stuffC: boolean;
+    useOriginalSubmitter: boolean;
+    useOriginalNumber: boolean;
 }
 
 @Component({
@@ -32,6 +31,9 @@ export class MotionForwardDialogComponent implements OnInit {
         return this.activeMeeting.meeting?.committee?.name;
     }
 
+    public useOriginalSubmitter = `true`;
+    public useOriginalNumber = `true`;
+
     private readonly committeesSubject = new BehaviorSubject<GetForwardingMeetingsPresenter[]>([]);
 
     public constructor(
@@ -50,9 +52,8 @@ export class MotionForwardDialogComponent implements OnInit {
     public onSaveClicked(): void {
         this.dialogRef.close({
             meetingIds: Array.from(this.selectedMeetings),
-            stuffA: true,
-            stuffB: false,
-            stuffC: true
+            useOriginalSubmitter: this.useOriginalSubmitter === `true`,
+            useOriginalNumber: this.useOriginalNumber === `true`
         });
     }
 
