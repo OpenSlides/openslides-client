@@ -105,7 +105,7 @@ export class VotingService {
         }
     }
 
-    public getVotingProhibitionReasonVerboseFromName(reasonName: string) {
+    public getVotingProhibitionReasonVerboseFromName(reasonName: string): string {
         return VotingProhibitionVerbose[VotingProhibition[reasonName]] ?? _(`There is an unknown voting problem.`);
     }
 }

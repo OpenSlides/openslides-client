@@ -203,7 +203,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Sets @var this._navigatedFromAmendmentList on navigation from either of both lists.
      * Does nothing on navigation between two motions.
      */
-    private isNavigatedFromAmendments() {
+    private isNavigatedFromAmendments(): void {
         const previousUrl = this.originUrlService.getPreviousUrl();
         if (!!previousUrl) {
             if (previousUrl.endsWith(`amendments`)) {
@@ -338,7 +338,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * @param indexOfCurrent The index from the active motion.
      * @param step Stepwidth to iterate eiter over the previous or next motions.
      */
-    private findNextSuitableMotion(indexOfCurrent: number, step: number) {
+    private findNextSuitableMotion(indexOfCurrent: number, step: number): ViewMotion {
         if (!this._amendmentsInMainList || !this._navigatedFromAmendmentList) {
             return this._sortedMotions[indexOfCurrent + step];
         }

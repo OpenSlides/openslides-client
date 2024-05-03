@@ -20,7 +20,7 @@ export class MotionBlockSortService extends BaseSortListService<ViewMotionBlock>
         {
             property: `motions`,
             label: `Amount of motions`,
-            sortFn: (aBlock, bBlock, ascending) =>
+            sortFn: (aBlock, bBlock, ascending): number =>
                 ascending
                     ? aBlock.motions.length - bBlock.motions.length
                     : bBlock.motions.length - aBlock.motions.length,
