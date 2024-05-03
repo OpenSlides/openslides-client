@@ -13,7 +13,6 @@ export interface SubscribeToConfig {
     modelRequest: SimplifiedModelRequest;
     subscriptionName: string;
     hideWhen?: Observable<boolean> | null;
-    isDelayed?: boolean;
 }
 
 export const SUBSCRIPTION_SUFFIX = `:subscription`;
@@ -83,12 +82,7 @@ export class ModelRequestService {
         return await this.autoupdateService.single(request, `${subscriptionName}:single`);
     }
 
-    private async makeSubscription({
-        modelRequest,
-        subscriptionName,
-        hideWhen,
-        isDelayed = true
-    }: SubscribeToConfig): Promise<void> {
+    private async makeSubscription({ modelRequest, subscriptionName, hideWhen }: SubscribeToConfig): Promise<void> {
         const ids = modelRequest.ids;
         const invalidIds = ids.filter(id => !isValidId(id));
         if (invalidIds.length === ids.length) {
@@ -109,10 +103,7 @@ export class ModelRequestService {
                 this.setCloseFn(subscriptionName, hideWhen);
             }
         };
-        if (isDelayed) {
-            // const delay = Math.floor(Math.random() * 390 + 110); // [110, 500]
-            await new Promise(r => setTimeout(r, 0));
-        }
+
         await fn();
     }
 
