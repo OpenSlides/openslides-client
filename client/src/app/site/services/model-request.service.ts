@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { concatMap, Observable, of, Subscription, timer } from 'rxjs';
-import { Ids } from 'src/app/domain/definitions/key-types';
+import { Observable, Subscription } from 'rxjs';
 import { isValidId } from 'src/app/infrastructure/utils';
-import { DataStoreService } from 'src/app/site/services/data-store.service';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 import { AutoupdateService, ModelSubscription } from './autoupdate';
@@ -13,6 +11,7 @@ export interface SubscribeToConfig {
     modelRequest: SimplifiedModelRequest;
     subscriptionName: string;
     hideWhen?: Observable<boolean> | null;
+    unusedWhen?: Observable<boolean> | null;
 }
 
 export const SUBSCRIPTION_SUFFIX = `:subscription`;
@@ -26,8 +25,7 @@ export class ModelRequestService {
 
     public constructor(
         private autoupdateService: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService,
-        private DS: DataStoreService
+        private modelRequestBuilder: ModelRequestBuilderService
     ) {}
 
     /**
@@ -51,22 +49,7 @@ export class ModelRequestService {
             return;
         }
         modelRequest.fieldset = modelRequest.fieldset || [];
-        if (modelRequest.lazyLoad) {
-            const parentModel = this.DS.get(modelRequest.viewModelCtor, modelRequest.lazyLoad.specificId);
-            const availableIds = parentModel[modelRequest.lazyLoad.keyOfParent] as Ids;
-            if (!availableIds || !availableIds?.length) {
-                console.warn(
-                    `Either there are no child models for ${modelRequest.viewModelCtor.name}:${modelRequest.lazyLoad.keyOfParent} yet or they weren't requested`
-                );
-                await this.makeSubscription({ modelRequest, subscriptionName, ...config });
-            } else if (availableIds.length > 20) {
-                this.lazyLoadSubscription({ modelRequest, subscriptionName, ...config }, availableIds);
-            } else {
-                await this.makeSubscription({ modelRequest, subscriptionName, ...config });
-            }
-        } else {
-            await this.makeSubscription({ modelRequest, subscriptionName, ...config });
-        }
+        await this.makeSubscription({ modelRequest, subscriptionName, ...config });
     }
 
     public async subscriptionGotData(subscriptionName: string): Promise<boolean | ModelData> {
@@ -134,26 +117,6 @@ export class ModelRequestService {
             this._observableSubscriptionMap[subscriptionName].unsubscribe();
             delete this._observableSubscriptionMap[subscriptionName];
         }
-    }
-
-    private async lazyLoadSubscription(
-        { modelRequest, subscriptionName, ...config }: SubscribeToConfig,
-        availableIds: Ids
-    ): Promise<void> {
-        const childModelRequest = {
-            viewModelCtor: modelRequest.lazyLoad.ownViewModelCtor,
-            ids: availableIds.slice(0, 20),
-            fieldset: modelRequest.lazyLoad.fieldset
-        };
-        const childSubscriptionName = `${subscriptionName}_1`;
-        this.makeSubscription({
-            modelRequest: childModelRequest,
-            subscriptionName: childSubscriptionName,
-            hideWhen: timer(3000).pipe(concatMap(() => of(true)))
-        });
-        setTimeout(async () => {
-            this.makeSubscription({ modelRequest, subscriptionName, ...config });
-        }, Math.floor(Math.random() * 2000) + 2000);
     }
 
     private setCloseFn(requestFamilyName: string, observable: Observable<boolean>): void {

@@ -30,9 +30,6 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
     public pipeFn: OperatorFunction<any, any> = map(items => items);
 
     @Input()
-    public lazyLoading = true;
-
-    @Input()
     public subscriptionConfig: SubscribeToConfig = null;
 
     @Input()

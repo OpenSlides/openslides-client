@@ -7,7 +7,6 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { SubscribeToConfig } from '../../services/model-request.service';
 import { OpenSlidesRouterService } from '../../services/openslides-router.service';
-import { WindowVisibilityService } from '../../services/window-visibility.service';
 
 export interface ModelRequestConfig extends SubscribeToConfig {}
 
