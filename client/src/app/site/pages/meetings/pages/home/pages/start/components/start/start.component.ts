@@ -59,7 +59,7 @@ export class StartComponent extends BaseMeetingComponent implements OnInit {
      */
     public editStartPage(): void {
         Object.keys(this.startForm.controls).forEach(control => {
-            this.startForm.patchValue({ [control]: this.meetingSettingService.instant(control as keyof Settings) });
+            this.startForm.patchValue({ [control]: this.meetingSettingsService.instant(control as keyof Settings) });
         });
         this.isEditing = true;
     }
