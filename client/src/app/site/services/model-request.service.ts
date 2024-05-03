@@ -46,13 +46,8 @@ export class ModelRequestService {
     public async subscribeTo({ modelRequest, subscriptionName, ...config }: SubscribeToConfig): Promise<void> {
         if (this._modelSubscriptionMap.has(subscriptionName)) {
             const subscription = this._modelSubscriptionMap.get(subscriptionName);
-            if (subscription.unusedSubscription.closed && config.unusedWhen) {
-                subscription.unusedSubscription = config.unusedWhen
-                    ?.pipe(
-                        filter(v => v),
-                        first()
-                    )
-                    .subscribe();
+            if (subscription.unusedSubscription.closed) {
+                subscription.unusedSubscription = this.getUnusedSubscription(config.unusedWhen);
             }
 
             console.warn(`A subscription already made for ${subscriptionName}. Aborting.`);
@@ -149,12 +144,16 @@ export class ModelRequestService {
         this._modelSubscriptionMap.set(subscriptionName, {
             modelSubscription,
             hideSubscription: hideWhen?.pipe(filter(v => v)).subscribe(() => this.closeSubscription(subscriptionName)),
-            unusedSubscription: unusedWhen
-                ?.pipe(
-                    filter(v => v),
-                    first()
-                )
-                .subscribe()
+            unusedSubscription: this.getUnusedSubscription(unusedWhen)
         });
+    }
+
+    private getUnusedSubscription(unusedWhen: Observable<boolean>): Subscription {
+        return unusedWhen
+            ?.pipe(
+                filter(v => v),
+                first()
+            )
+            .subscribe();
     }
 }
