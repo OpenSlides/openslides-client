@@ -69,6 +69,19 @@
         </mat-form-field>
     </div>
 
+    <div *ngIf="useAdditionalInput" class="text-field-container">
+        <mat-form-field>
+            <mat-label>{{ secondSelectorLabel }}</mat-label>
+            <os-list-search-selector
+                [formControl]="secondSelectorFormControl"
+                [inputListValues]="secondSelectorValues"
+                [keepOpen]="true"
+                [disableOptionWhenFn]="getDisabledFn()"
+                (openedChange)="openedChange($event)"
+            ></os-list-search-selector>
+        </mat-form-field>
+    </div>
+
     <p>
         <button type="button" mat-button (click)="onSave()">
             <span>{{ 'Save' | translate }}</span>
