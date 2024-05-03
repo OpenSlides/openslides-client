@@ -25,7 +25,7 @@ export class MeetingSettingsService {
         this.activeMeetingService.meetingObservable.subscribe(meeting => {
             if (meeting) {
                 for (const key of Object.keys(this.settingSubjects)) {
-                    if (!(this.settingSubjects[key].getValue() === meeting[key as keyof ViewMeeting])) {
+                    if (this.settingSubjects[key].getValue() !== meeting[key as keyof ViewMeeting]) {
                         this.settingSubjects[key].next(meeting[key as keyof ViewMeeting]);
                     }
                 }
