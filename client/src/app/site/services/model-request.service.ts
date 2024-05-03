@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { filter, Observable, Subscription } from 'rxjs';
+import { filter, first, Observable, Subscription } from 'rxjs';
 import { isValidId } from 'src/app/infrastructure/utils';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
-import { AutoupdateService, ModelSubscription } from './autoupdate';
+import { AU_PAUSE_ON_INACTIVITY_TIMEOUT, AutoupdateService, ModelSubscription } from './autoupdate';
 import { ModelData } from './autoupdate/utils';
 import { SimplifiedModelRequest } from './model-request-builder';
+import { WindowVisibilityService } from './window-visibility.service';
 
 export interface SubscribeToConfig {
     modelRequest: SimplifiedModelRequest;
@@ -30,12 +31,30 @@ export class ModelRequestService {
 
     public constructor(
         private autoupdateService: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService
-    ) {}
+        private modelRequestBuilder: ModelRequestBuilderService,
+        private visibilityService: WindowVisibilityService
+    ) {
+        this.visibilityService.hiddenFor(Math.max(0, AU_PAUSE_ON_INACTIVITY_TIMEOUT - 500)).subscribe(() => {
+            for (const key of this._modelSubscriptionMap.keys()) {
+                if (this._modelSubscriptionMap.get(key).unusedSubscription?.closed) {
+                    this.closeSubscription(key);
+                }
+            }
+        });
+    }
 
     public async subscribeTo({ modelRequest, subscriptionName, ...config }: SubscribeToConfig): Promise<void> {
         if (this._modelSubscriptionMap.has(subscriptionName)) {
-            // TODO: Check and update unused subscription
+            const subscription = this._modelSubscriptionMap.get(subscriptionName);
+            if (subscription.unusedSubscription.closed && config.unusedWhen) {
+                subscription.unusedSubscription = config.unusedWhen
+                    ?.pipe(
+                        filter(v => v),
+                        first()
+                    )
+                    .subscribe();
+            }
+
             console.warn(`A subscription already made for ${subscriptionName}. Aborting.`);
             return;
         }
@@ -106,7 +125,12 @@ export class ModelRequestService {
         }
     }
 
-    private async makeSubscription({ modelRequest, subscriptionName, hideWhen }: SubscribeToConfig): Promise<void> {
+    private async makeSubscription({
+        modelRequest,
+        subscriptionName,
+        hideWhen,
+        unusedWhen
+    }: SubscribeToConfig): Promise<void> {
         const ids = modelRequest.ids;
         const invalidIds = ids.filter(id => !isValidId(id));
         if (invalidIds.length === ids.length) {
@@ -124,7 +148,13 @@ export class ModelRequestService {
         );
         this._modelSubscriptionMap.set(subscriptionName, {
             modelSubscription,
-            hideSubscription: hideWhen?.pipe(filter(v => v)).subscribe(() => this.closeSubscription(subscriptionName))
+            hideSubscription: hideWhen?.pipe(filter(v => v)).subscribe(() => this.closeSubscription(subscriptionName)),
+            unusedSubscription: unusedWhen
+                ?.pipe(
+                    filter(v => v),
+                    first()
+                )
+                .subscribe()
         });
     }
 }
