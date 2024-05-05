@@ -36,7 +36,7 @@ export interface ProjectionDialogConfig {
 })
 export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public projectors: ViewProjector[] = [];
-    private selectedProjectors: ViewProjector[] = [];
+    private selectedProjectors: ViewProjector[] = null;
     public optionValues: any = {};
     public options!: SlideOptions;
     public descriptor: ProjectionBuildDescriptor;
@@ -59,7 +59,9 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
                 this.projectors = projectors.filter(p => this.allowReferenceProjector || !p.isReferenceProjector);
 
                 // TODO: Maybe watch. But this may not be necessary for the short living time of this dialog.
-                this.selectedProjectors = this.projectorService.getProjectorsWhichAreProjecting(this.descriptor);
+                if (this.selectedProjectors === null) {
+                    this.selectedProjectors = this.projectorService.getProjectorsWhichAreProjecting(this.descriptor);
+                }
 
                 // Add default projector, if the projectable is not projected on it.
                 if (this.descriptor?.projectionDefault) {
