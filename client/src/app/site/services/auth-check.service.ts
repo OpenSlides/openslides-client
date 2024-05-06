@@ -31,7 +31,7 @@ export class AuthCheckService {
     public constructor(
         private operator: OperatorService,
         private activeMeeting: ActiveMeetingService,
-        private meetingSettingsService: MeetingSettingsService,
+        private meetingSettingService: MeetingSettingsService,
         private osRouter: OpenSlidesRouterService
     ) {}
 
@@ -97,6 +97,6 @@ export class AuthCheckService {
         if (!meetingSetting) {
             return true;
         }
-        return this.meetingSettingsService.instant(meetingSetting) as boolean;
+        return this.meetingSettingService.instant(meetingSetting) as boolean;
     }
 }
