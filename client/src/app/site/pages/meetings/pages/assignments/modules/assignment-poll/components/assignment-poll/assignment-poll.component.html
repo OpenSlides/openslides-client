@@ -98,7 +98,7 @@
             </div>
 
             <!-- Chart / Table -->
-            <div *ngIf="poll.stateHasVotes" class="poll-result-wrapper">
+            <div *ngIf="poll.stateHasVotes" class="poll-result-wrapper" [routerLink]="getDetailLink()">
                 <os-assignment-poll-detail-content
                     *ngIf="!poll.isCryptographic || poll.verified"
                     [poll]="poll"

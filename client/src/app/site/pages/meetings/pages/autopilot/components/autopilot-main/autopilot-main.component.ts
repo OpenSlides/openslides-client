@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { distinctUntilChanged, map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
 import { ProjectorRepositoryService } from 'src/app/gateways/repositories/projectors/projector-repository.service';
 import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { BaseMeetingModelRequestHandler } from 'src/app/site/pages/meetings/base/base-meeting-model-request-handler.component';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 
 import {
@@ -17,7 +18,7 @@ import {
     templateUrl: `./autopilot-main.component.html`,
     styleUrls: [`./autopilot-main.component.scss`]
 })
-export class AutopilotMainComponent extends BaseModelRequestHandlerComponent {
+export class AutopilotMainComponent extends BaseMeetingModelRequestHandler {
     private currentSubscriptions: Id[] = [];
 
     public constructor(
@@ -83,11 +84,7 @@ export class AutopilotMainComponent extends BaseModelRequestHandlerComponent {
         );
     }
 
-    protected override onNextMeetingId(id: number | null): void {
-        if (id) {
-            this.subscribeTo(getAutopilotSubscriptionConfig(id), {
-                hideWhenMeetingChanged: true
-            });
-        }
+    protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {
+        return [getAutopilotSubscriptionConfig(id)];
     }
 }

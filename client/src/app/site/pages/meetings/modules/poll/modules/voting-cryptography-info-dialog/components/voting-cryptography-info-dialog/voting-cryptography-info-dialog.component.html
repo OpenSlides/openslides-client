@@ -2,7 +2,7 @@
     <span>{{ 'This poll is cryptographic' | translate }}</span>
 </h1>
 
-<div mat-dialog-content>
+<mat-dialog-content>
     <span>
         {{
             'For this poll all votes are encrypted using Diffie-Hellman encryption with X25519 and AES256-GCM (see the OpenSlides wiki for further information). Therefore your vote will not be tracable for anyone else.'
@@ -53,13 +53,13 @@
             &nbsp;{{ 'Verifying results...' | translate }}
         </div>
     </ng-container>
-</div>
+</mat-dialog-content>
 
-<div mat-dialog-actions>
+<mat-dialog-actions>
     <button type="button" mat-button [mat-dialog-close]="null">
         <span>{{ 'Ok' | translate }}</span>
     </button>
     <button mat-button *ngIf="poll.votes_raw" [disabled]="!poll.votes_signature" (click)="verifyPoll()">
         {{ 'Verify results' | translate }}
     </button>
-</div>
+</mat-dialog-actions>

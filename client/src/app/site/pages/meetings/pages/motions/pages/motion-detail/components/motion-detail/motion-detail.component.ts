@@ -28,34 +28,40 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
         super();
     }
 
-    protected override onParamsChanged(params: any, oldParams: any): void {
-        if (params[`id`] !== oldParams[`id`] || params[`meetingId`] !== oldParams[`meetingId`]) {
-            this.sequentialNumberMapping
-                .getIdBySequentialNumber({
-                    collection: Motion.COLLECTION,
-                    meetingId: params[`meetingId`],
-                    sequentialNumber: +params[`id`]
-                })
-                .then(id => {
-                    if (id && this._currentMotionId !== id) {
-                        this._currentMotionId = id;
-                        this._watchingMap = {};
-                        this.loadMotionDetail();
-                    }
-                });
+    protected override onShouldCreateModelRequests(params: any, meetingId: Id): void {
+        if (params[`id`] && meetingId) {
+            this.loadMotionDetail(meetingId, +params[`id`]);
         }
     }
 
-    private loadMotionDetail(): void {
-        this.updateSubscribeTo(getMotionDetailSubscriptionConfig(this._currentMotionId));
-        this.updateSubscription(
-            MOTION_DETAIL_SUBSCRIPTION,
-            this.repo.getViewModelObservable(this._currentMotionId!).subscribe(motion => {
-                if (motion) {
-                    this.watchForChanges(motion, `all_origin_ids`, `derived_motion_ids`);
-                }
+    protected override onParamsChanged(params: any, oldParams: any): void {
+        if (params[`id`] !== oldParams[`id`] || params[`meetingId`] !== oldParams[`meetingId`]) {
+            this.loadMotionDetail(+params[`meetingId`], +params[`id`]);
+        }
+    }
+
+    private loadMotionDetail(meetingId: Id, motionId: Id): void {
+        this.sequentialNumberMapping
+            .getIdBySequentialNumber({
+                collection: Motion.COLLECTION,
+                meetingId,
+                sequentialNumber: motionId
             })
-        );
+            .then(id => {
+                if (id && this._currentMotionId !== id) {
+                    this._currentMotionId = id;
+                    this._watchingMap = {};
+                    this.updateSubscribeTo(getMotionDetailSubscriptionConfig(this._currentMotionId));
+                    this.updateSubscription(
+                        MOTION_DETAIL_SUBSCRIPTION,
+                        this.repo.getViewModelObservable(this._currentMotionId!).subscribe(motion => {
+                            if (motion) {
+                                this.watchForChanges(motion, `all_origin_ids`, `derived_motion_ids`);
+                            }
+                        })
+                    );
+                }
+            });
     }
 
     private watchForChanges(motion: ViewMotion, ...fields: (keyof Motion)[]): void {

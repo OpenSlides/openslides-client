@@ -235,10 +235,13 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     }
 
     private onCreateViewModel(viewModel: ViewMotion): void {
-        viewModel.getParagraphTitleByParagraph = (paragraph: DiffLinesInParagraph) =>
+        viewModel.getParagraphTitleByParagraph = (paragraph: DiffLinesInParagraph): string =>
             this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph);
         if (viewModel.lead_motion && viewModel.isParagraphBasedAmendment()) {
-            viewModel.getAmendmentParagraphLines = (recoMode: ChangeRecoMode, includeUnchanged = false) => {
+            viewModel.getAmendmentParagraphLines = (
+                recoMode: ChangeRecoMode,
+                includeUnchanged = false
+            ): DiffLinesInParagraph[] => {
                 const changeRecos = viewModel.change_recommendations.filter(changeReco => changeReco.showInFinalView());
                 return this.motionLineNumbering.getAmendmentParagraphLines(
                     viewModel,
@@ -249,9 +252,9 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
                 );
             };
         } else {
-            viewModel.getAmendmentParagraphLines = () => [];
+            viewModel.getAmendmentParagraphLines = (): DiffLinesInParagraph[] => [];
         }
-        viewModel.getExtendedStateLabel = () => this.getExtendedStateLabel(viewModel);
-        viewModel.getExtendedRecommendationLabel = () => this.getExtendedRecommendationLabel(viewModel);
+        viewModel.getExtendedStateLabel = (): string => this.getExtendedStateLabel(viewModel);
+        viewModel.getExtendedRecommendationLabel = (): string => this.getExtendedRecommendationLabel(viewModel);
     }
 }

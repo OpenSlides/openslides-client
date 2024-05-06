@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
 
+import { BaseMeetingModelRequestHandler } from '../../../../base/base-meeting-model-request-handler.component';
 import { getPollListSubscriptionConfig } from '../../polls.subscription';
 
 @Component({
@@ -8,10 +10,8 @@ import { getPollListSubscriptionConfig } from '../../polls.subscription';
     templateUrl: `./poll-main.component.html`,
     styleUrls: [`./poll-main.component.scss`]
 })
-export class PollMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onNextMeetingId(id: number | null): void {
-        if (id) {
-            this.subscribeTo(getPollListSubscriptionConfig(id), { hideWhenMeetingChanged: true });
-        }
+export class PollMainComponent extends BaseMeetingModelRequestHandler {
+    protected override getSubscriptions(id: Id): SubscriptionConfig<any>[] {
+        return [getPollListSubscriptionConfig(id)];
     }
 }

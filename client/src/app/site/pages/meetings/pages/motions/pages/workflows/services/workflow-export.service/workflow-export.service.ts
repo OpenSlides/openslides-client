@@ -33,7 +33,7 @@ export class WorkflowExportService {
             `allow_motion_forwarding`
         ];
         const json = [];
-        const getNextWorkflowJson = (workflow: ViewMotionWorkflow) => {
+        const getNextWorkflowJson = (workflow: ViewMotionWorkflow): any => {
             const nextWorkflow = workflowKeysToCopy.mapToObject<any>(key => ({ [key]: workflow[key] }));
             nextWorkflow[`states`] = [];
             for (const state of workflow.states) {

@@ -2,10 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { Selectable } from 'src/app/domain/interfaces';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
+import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presenter/get-forwarding-committees-presenter.service';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -110,11 +112,17 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this._referencedMotions;
     }
 
+    public get forwardingCommittees(): Selectable[] {
+        return this._forwardingCommittees;
+    }
+
     private _referencingMotions: ViewMotion[];
 
     private _referencedMotions: ViewMotion[];
 
     private _forwardingAvailable = false;
+
+    private _forwardingCommittees: (Selectable & { name: string; toString: any })[] = [];
 
     public get supportersObservable(): Observable<ViewUser[]> {
         return this._supportersSubject;
@@ -136,7 +144,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         public motionSubmitterRepo: MotionSubmitterControllerService,
         public motionEditorRepo: MotionEditorControllerService,
         public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService,
-        private participantSort: ParticipantListSortService
+        private participantSort: ParticipantListSortService,
+        private presenter: GetForwardingCommitteesPresenterService
     ) {
         super();
 
@@ -155,6 +164,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         this.subscriptions.push(
             this.participantSort.getSortedViewModelListObservable().subscribe(() => this.updateSupportersSubject())
         );
+        this.checkPresenter();
     }
 
     public override ngOnDestroy(): void {
@@ -374,6 +384,24 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
             }
             this.recommenderSubscription = this.meetingSettingsService.get(configKey).subscribe(recommender => {
                 this.recommender = recommender;
+            });
+        }
+    }
+
+    private async checkPresenter(): Promise<void> {
+        const meetingId = this.activeMeetingService.meetingId;
+        const committees =
+            this.operator.hasPerms(Permission.motionCanManage) && !!meetingId
+                ? await this.presenter.call({ meeting_id: meetingId })
+                : [];
+        this._forwardingCommittees = [];
+        for (let n = 0; n < committees.length; n++) {
+            this._forwardingCommittees.push({
+                id: n + 1,
+                name: committees[n],
+                getTitle: () => committees[n],
+                getListTitle: () => ``,
+                toString: () => committees[n]
             });
         }
     }

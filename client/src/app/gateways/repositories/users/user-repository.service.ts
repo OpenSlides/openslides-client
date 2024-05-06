@@ -338,26 +338,17 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     protected override createViewModel(model: User): ViewUser {
         const viewModel = super.createViewModel(model);
 
-        const meetingUserIdMap = new Map<Id, Id>();
-        const getMeetingUserId = (meetingId: Id) => {
-            if (!meetingUserIdMap.has(meetingId)) {
-                for (const meetingUser of this.relationManager.handleRelation(
-                    viewModel.getModel(),
-                    this.relationsByKey[`meeting_users`]
-                )) {
-                    meetingUserIdMap.set(meetingUser.meeting_id, meetingUser.id);
-                }
-            }
-
-            return meetingUserIdMap.get(meetingId);
-        };
-
-        viewModel.getName = () => this.getName(viewModel);
-        viewModel.getShortName = () => this.getShortName(viewModel);
-        viewModel.getFullName = (structureLevel?: ViewStructureLevel) => this.getFullName(viewModel, structureLevel);
-        viewModel.getMeetingUser = (meetingId: Id) => this.getMeetingUser(getMeetingUserId, meetingId);
-        viewModel.getLevelAndNumber = () => this.getLevelAndNumber(viewModel);
-        viewModel.getEnsuredActiveMeetingId = () => this.activeMeetingIdService.meetingId;
+        viewModel.getName = (): string => this.getName(viewModel);
+        viewModel.getShortName = (): string => this.getShortName(viewModel);
+        viewModel.getFullName = (structureLevel?: ViewStructureLevel): string =>
+            this.getFullName(viewModel, structureLevel);
+        viewModel.getMeetingUser = (meetingId: Id): ViewMeetingUser =>
+            this.getMeetingUser(
+                (meetingId: Id): Id => this.meetingUserRepo.getMeetingUserId(model.id, meetingId),
+                meetingId
+            );
+        viewModel.getLevelAndNumber = (): string => this.getLevelAndNumber(viewModel);
+        viewModel.getEnsuredActiveMeetingId = (): Id => this.activeMeetingIdService.meetingId;
         return viewModel;
     }
 

@@ -10,6 +10,8 @@
             additionalInputField="additional_submitter"
             additionalInputLabel="{{ 'Extension' | translate }}"
             [additionalInputValue]="motion?.additional_submitter"
+            secondSelectorLabel="{{ 'Committees' | translate }}"
+            [secondSelectorValues]="forwardingCommittees"
         ></os-motion-manage-motion-meeting-users>
     </div>
 </div>

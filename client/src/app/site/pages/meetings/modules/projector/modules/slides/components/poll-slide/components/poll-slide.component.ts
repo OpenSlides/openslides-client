@@ -120,6 +120,8 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
         const getOptionTitle: () => OptionTitle = () => {
             if (data.text) {
                 return { title: data.text };
+            } else if (data.content_object && data.content_object.collection === `user`) {
+                return { title: (<any>data.content_object).username };
             } else if (data.content_object) {
                 modifyAgendaItemNumber(data.content_object!);
                 const repo = this.collectionMapperService.getRepository(data.content_object!.collection);

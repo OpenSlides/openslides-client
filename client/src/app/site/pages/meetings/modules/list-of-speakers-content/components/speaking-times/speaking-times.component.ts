@@ -83,7 +83,9 @@ export class SpeakingTimesComponent implements OnDestroy {
                         )
                     )
                     .subscribe(speaker => {
-                        this.updateSpeakingTime(speaker.structure_level_list_of_speakers);
+                        if (speaker) {
+                            this.updateSpeakingTime(speaker.structure_level_list_of_speakers);
+                        }
                     })
             );
         }

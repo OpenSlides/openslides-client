@@ -349,7 +349,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         this.updateCandidatesArray();
     }
 
-    private updateCandidatesArray() {
+    private updateCandidatesArray(): void {
         this.candidateUserIds = this._assignment.candidatesAsUsers.map(user => user.id);
     }
 

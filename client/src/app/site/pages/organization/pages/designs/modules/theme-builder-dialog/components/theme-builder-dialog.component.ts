@@ -100,7 +100,7 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
         return GENERAL_DEFAULT_COLORS[key];
     }
 
-    private generateHeadbarColorFromPrimaryHex(hex: string) {
+    private generateHeadbarColorFromPrimaryHex(hex: string): string {
         return this.colorService.generateColorPaletteByHex(hex).find(def => def.name === `900`).hex;
     }
 
