@@ -46,46 +46,46 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
         const staticFilterOptions: OsFilter<ViewSpeaker>[] = [
             {
                 property: `gender`,
-                label: this.translate.instant(`Gender`),
+                label: `Gender`,
                 options: [
-                    { condition: GENDER_FITLERABLE[0], label: this.translate.instant(GENDERS[0]) },
-                    { condition: GENDER_FITLERABLE[1], label: this.translate.instant(GENDERS[1]) },
-                    { condition: GENDER_FITLERABLE[2], label: this.translate.instant(GENDERS[2]) },
-                    { condition: GENDER_FITLERABLE[3], label: this.translate.instant(GENDERS[3]) },
-                    { condition: null, label: this.translate.instant(`not specified`) }
+                    { condition: GENDER_FITLERABLE[0], label: GENDERS[0] },
+                    { condition: GENDER_FITLERABLE[1], label: GENDERS[1] },
+                    { condition: GENDER_FITLERABLE[2], label: GENDERS[2] },
+                    { condition: GENDER_FITLERABLE[3], label: GENDERS[3] },
+                    { condition: null, label: `not specified` }
                 ]
             },
             {
                 property: `speech_state`,
-                label: this.translate.instant(`Speech type`),
+                label: `Speech type`,
                 options: [
-                    { condition: SpeechState.PRO, label: this.translate.instant(`Forspeech`) },
-                    { condition: SpeechState.CONTRA, label: this.translate.instant(`Contra speech`) },
-                    { condition: SpeechState.CONTRIBUTION, label: this.translate.instant(`Contribution`) },
-                    { condition: SpeechState.INTERVENTION, label: this.translate.instant(`Intervention`) },
+                    { condition: SpeechState.PRO, label: `Forspeech` },
+                    { condition: SpeechState.CONTRA, label: `Contra speech` },
+                    { condition: SpeechState.CONTRIBUTION, label: `Contribution` },
+                    { condition: SpeechState.INTERVENTION, label: `Intervention` },
                     {
                         condition: SpeechState.INTERPOSED_QUESTION,
-                        label: this.translate.instant(`Interposed question`)
+                        label: `Interposed question`
                     },
-                    { condition: null, label: this.translate.instant(`not specified`) }
+                    { condition: null, label: `not specified` }
                 ]
             },
             {
                 property: `contentType`,
-                label: this.translate.instant(`Module`),
+                label: `Module`,
                 options: [
-                    { condition: `topic`, label: this.translate.instant(`Agenda`) },
-                    { condition: `motion`, label: this.translate.instant(`Motions`) },
-                    { condition: `motion_block`, label: this.translate.instant(`Motion blocks`) },
-                    { condition: `assignment`, label: this.translate.instant(`Elections`) }
+                    { condition: `topic`, label: `Agenda` },
+                    { condition: `motion`, label: `Motions` },
+                    { condition: `motion_block`, label: `Motion blocks` },
+                    { condition: `assignment`, label: `Elections` }
                 ]
             },
             {
                 property: `hasSpoken`,
-                label: this.translate.instant(`Speaker`),
+                label: `Speaker`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Has spoken`) },
-                    { condition: [false, null], label: this.translate.instant(`Has not spoken`) }
+                    { condition: true, label: `Has spoken` },
+                    { condition: [false, null], label: `Has not spoken` }
                 ]
             }
         ];
