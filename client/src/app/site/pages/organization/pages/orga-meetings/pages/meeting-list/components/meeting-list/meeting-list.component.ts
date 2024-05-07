@@ -9,6 +9,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { ColumnRestriction } from 'src/app/ui/modules/list';
 
+import { MeetingCsvExportService } from '../../services/meeting-export.service';
 import { MeetingListFilterService } from '../../services/meeting-list-filter/meeting-list-filter.service';
 import { MeetingListSortService } from '../../services/meeting-list-sort/meeting-list-sort.service';
 
@@ -37,6 +38,7 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         public operator: OperatorService,
         public filterService: MeetingListFilterService,
         public sortService: MeetingListSortService,
+        private csvExport: MeetingCsvExportService,
         private choiceService: ChoiceService
     ) {
         super();
@@ -55,6 +57,10 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
 
     public getCommitteeForMeetingUrl(meeting: ViewMeeting): string | null {
         return `/committees/` + meeting.committee_id + ``;
+    }
+
+    public csvExportMeetingList(): void {
+        this.csvExport.export(this.listComponent.source);
     }
 
     public async doDelete(meeting?: ViewMeeting): Promise<void> {
