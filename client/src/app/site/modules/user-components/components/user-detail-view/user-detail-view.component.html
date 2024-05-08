@@ -232,7 +232,7 @@
             </div>
 
             <!-- Membership number-->
-            <div *ngIf="user.member_number && isAllowed('seePersonal')">
+            <div *ngIf="user.member_number">
                 <h4>{{ 'Membership number' | translate }}</h4>
                 <span>{{ user.member_number }}</span>
             </div>
