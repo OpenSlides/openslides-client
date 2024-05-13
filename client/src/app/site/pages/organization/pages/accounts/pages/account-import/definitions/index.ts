@@ -4,5 +4,6 @@ import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.con
 
 export const accountHeadersAndVerboseNames: { [key in keyof User]?: string } = {
     ...userHeadersAndVerboseNames,
-    default_vote_weight: _(`Vote weight`)
+    default_vote_weight: _(`Vote weight`),
+    member_number: _(`Member number`)
 };
