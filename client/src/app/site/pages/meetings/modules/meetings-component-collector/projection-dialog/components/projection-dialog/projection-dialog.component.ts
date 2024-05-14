@@ -1,6 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import {
     getProjectorListMinimalSubscriptionConfig,
@@ -36,7 +37,7 @@ export interface ProjectionDialogConfig {
 })
 export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public projectors: ViewProjector[] = [];
-    private selectedProjectors: ViewProjector[] = null;
+    private selectedProjectors: Id[] = null;
     public optionValues: any = {};
     public options!: SlideOptions;
     public descriptor: ProjectionBuildDescriptor;
@@ -72,7 +73,9 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
 
             // TODO: Maybe watch. But this may not be necessary for the short living time of this dialog.
             if (this.selectedProjectors === null) {
-                this.selectedProjectors = this.projectorService.getProjectorsWhichAreProjecting(this.descriptor);
+                this.selectedProjectors = this.projectorService
+                    .getProjectorsWhichAreProjecting(this.descriptor)
+                    .map(p => p.id);
             }
 
             // Add default projector, if the projectable is not projected on it.
@@ -83,10 +86,10 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
 
                 for (const defaultProjector of defaultProjectors) {
                     if (
-                        !this.selectedProjectors.includes(defaultProjector) &&
+                        !this.selectedProjectors.includes(defaultProjector.id) &&
                         (this.allowReferenceProjector || !defaultProjector.isReferenceProjector)
                     ) {
-                        this.selectedProjectors.push(defaultProjector);
+                        this.selectedProjectors.push(defaultProjector.id);
                     }
                 }
             }
@@ -99,20 +102,26 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
             if (this.descriptor) {
                 this.options = this.descriptor.slideOptions!;
             }
+
+            this._subscriptions.push(
+                this.projectorService.getViewModelListObservable().subscribe(projectors => {
+                    this.projectors = projectors.filter(p => this.allowReferenceProjector || !p.isReferenceProjector);
+                })
+            );
         });
     }
 
     public toggleProjector(projector: ViewProjector): void {
-        const index = this.selectedProjectors.indexOf(projector);
+        const index = this.selectedProjectors.indexOf(projector.id);
         if (index < 0) {
-            this.selectedProjectors.push(projector);
+            this.selectedProjectors.push(projector.id);
         } else {
             this.selectedProjectors.splice(index, 1);
         }
     }
 
     public isProjectorSelected(projector: ViewProjector): boolean {
-        return this.selectedProjectors.includes(projector);
+        return this.selectedProjectors.includes(projector.id);
     }
 
     public isProjectedOn(projector: ViewProjector): boolean {
@@ -131,7 +140,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
         this.dialogRef.close({
             action: `project`,
             resultDescriptor: this.descriptor,
-            projectors: this.selectedProjectors,
+            projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
             options: this.optionValues
         });
     }
@@ -140,7 +149,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
         this.dialogRef.close({
             action: `addToPreview`,
             resultDescriptor: this.descriptor,
-            projectors: this.selectedProjectors,
+            projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
             options: this.optionValues
         });
     }
