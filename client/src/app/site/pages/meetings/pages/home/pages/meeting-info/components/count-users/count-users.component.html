@@ -2,7 +2,7 @@
     <span *ngIf="!stats">{{ 'Count logged-in users' | translate }}</span>
     <span *ngIf="stats">{{ 'Re-count logged-in users' | translate }}</span>
 </button>
-<div *ngIf="stats && stats.length >= 2">
+<div *ngIf="stats && stats.length >= 3">
     <div class="connection-selection">
         <mat-button-toggle-group [(ngModel)]="displayMode">
             <mat-button-toggle [value]="2" translate>All</mat-button-toggle>
