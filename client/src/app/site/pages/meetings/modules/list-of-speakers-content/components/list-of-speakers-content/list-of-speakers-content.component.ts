@@ -69,7 +69,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public get showInterposedQuestions(): Observable<boolean> {
-        return this.meetingSettingService.get(`list_of_speakers_enable_interposed_question`);
+        return this.meetingSettingsService.get(`list_of_speakers_enable_interposed_question`);
     }
 
     public get showPointOfOrders(): boolean {

@@ -179,7 +179,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     private fb = inject(UntypedFormBuilder);
     public groupRepo = inject(GroupControllerService);
     private dialog = inject(VotingPrivacyWarningDialogService);
-    protected meetingSettingService = inject(MeetingSettingsService);
+    protected meetingSettingsService = inject(MeetingSettingsService);
     /**
      * Constructor. Retrieves necessary metadata from the pollService,
      * injects the poll itself
@@ -257,9 +257,9 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         const pollType = this.data.content_object?.collection as PollClassType;
         if (!this.data.backend) {
             if (pollType !== `topic`) {
-                this.data.backend = this.meetingSettingService.instant(`${pollType}_poll_default_backend`);
+                this.data.backend = this.meetingSettingsService.instant(`${pollType}_poll_default_backend`);
             } else {
-                this.data.backend = this.meetingSettingService.instant(`poll_default_backend`);
+                this.data.backend = this.meetingSettingsService.instant(`poll_default_backend`);
             }
         }
     }

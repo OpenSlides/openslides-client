@@ -266,7 +266,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Goes to the amendment creation wizard. Executed via click.
      */
     public createAmendment(): void {
-        const amendmentTextMode = this.meetingSettingService.instant(`motions_amendments_text_mode`);
+        const amendmentTextMode = this.meetingSettingsService.instant(`motions_amendments_text_mode`);
         if (amendmentTextMode === `paragraph`) {
             this.router.navigate([`create-amendment`], { relativeTo: this.route });
         } else {
@@ -513,7 +513,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
             const defaultTitle = `${this.translate.instant(`Amendment to`)} ${parentMotion.numberOrTitle}`;
             motion.title = defaultTitle;
             motion.category_id = parentMotion.category_id;
-            const amendmentTextMode = this.meetingSettingService.instant(`motions_amendments_text_mode`);
+            const amendmentTextMode = this.meetingSettingsService.instant(`motions_amendments_text_mode`);
             if (amendmentTextMode === `fulltext`) {
                 motion.text = parentMotion.text;
             }
