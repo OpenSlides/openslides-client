@@ -202,7 +202,7 @@ class PdfCreator {
         });
 
         // the result of the worker
-        this._pdfWorker.onmessage = ({ data }) => {
+        this._pdfWorker.onmessage = ({ data }): void => {
             // if the worker returns a numbers, is always the progress
             if (typeof data === `number`) {
                 // update progress

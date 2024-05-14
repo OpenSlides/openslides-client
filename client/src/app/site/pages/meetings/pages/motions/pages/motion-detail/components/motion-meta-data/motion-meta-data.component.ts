@@ -84,7 +84,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
     ];
 
-    public motionTransformFn = (value: ViewMotion) => `[${value.fqid}]`;
+    public motionTransformFn = (value: ViewMotion): string => `[${value.fqid}]`;
 
     /**
      * All amendments to this motion

@@ -28,7 +28,9 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
         return this._tableData;
     }
 
-    public get colors() {
+    public get colors(): {
+        backgroundColor: string[];
+    } {
         return this.chartColors[0];
     }
 

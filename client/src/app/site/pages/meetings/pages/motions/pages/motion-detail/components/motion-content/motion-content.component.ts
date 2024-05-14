@@ -420,7 +420,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.updateMotionNumbersSubject();
     }
 
-    private updateMotionNumbersSubject(motions?: ViewMotion[]) {
+    private updateMotionNumbersSubject(motions?: ViewMotion[]): void {
         this._motionNumbersSubject.next(
             (motions ?? this.motionController.getViewModelList())
                 .filter(

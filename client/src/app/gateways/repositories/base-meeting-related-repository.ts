@@ -55,7 +55,8 @@ export abstract class BaseMeetingRelatedRepository<V extends BaseViewModel, M ex
 
     protected override createViewModel(model: M): V {
         const viewModel = super.createViewModel(model);
-        viewModel.getActiveMeetingId = () => this.repositoryMeetingServiceCollector.activeMeetingIdService.meetingId;
+        viewModel.getActiveMeetingId = (): number =>
+            this.repositoryMeetingServiceCollector.activeMeetingIdService.meetingId;
         return viewModel;
     }
 }

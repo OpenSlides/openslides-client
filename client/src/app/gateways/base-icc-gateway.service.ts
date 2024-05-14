@@ -72,7 +72,7 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
             msgSub.unsubscribe();
             onClosedSub.unsubscribe();
         });
-        this.connectionClosingFn = () => {
+        this.connectionClosingFn = (): void => {
             onReastartSub.unsubscribe();
             msgSub.unsubscribe();
             onClosedSub.unsubscribe();

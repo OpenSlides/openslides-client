@@ -245,7 +245,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
                 const script = document.createElement(`script`);
                 script.type = `text/javascript`;
                 script.src = `https://demo.nanocosmos.de/nanoplayer/api/release/nanoplayer.4.min.js`;
-                script.onload = () => {
+                script.onload = (): void => {
                     // @ts-ignore
                     this.nanoPlayer = new NanoPlayer(`nanocosmosPlayer`);
                     resolve();
