@@ -33,6 +33,7 @@
                         [ngClass]="rowClass"
                         [ngStyle]="getNgStyle(isLast)"
                         (click)="onRowClick($event, item)"
+                        tabindex="-1"
                     >
                         <div *ngIf="isSelectionMode" class="selection-cell scrolling-table-cell flex-vertical-center">
                             <mat-checkbox

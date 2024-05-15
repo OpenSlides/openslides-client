@@ -73,7 +73,7 @@
                 </div>
             </ng-container>
 
-            <form *ngIf="editTopic && topicForm" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
+            <form *ngIf="editTopic && topicForm" [formGroup]="topicForm" (keydown)="onKeyDown($event)" tabindex="-1">
                 <div>
                     <mat-form-field>
                         <mat-label>{{ 'Title' | translate }}</mat-label>
