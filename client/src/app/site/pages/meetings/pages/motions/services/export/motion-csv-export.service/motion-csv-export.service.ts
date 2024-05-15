@@ -134,7 +134,7 @@ export class MotionCsvExportService {
                         : this.commentRepo.getViewModel(commentId)!.getTitle();
                 return {
                     label,
-                    map: (motion: ViewMotion) => {
+                    map: (motion: ViewMotion): string => {
                         if (commentId === PERSONAL_NOTE_ID) {
                             return motion && motion.getPersonalNote()! && motion.getPersonalNote()!.note;
                         } else {

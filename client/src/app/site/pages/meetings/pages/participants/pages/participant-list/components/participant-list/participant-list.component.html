@@ -50,7 +50,13 @@
                         <div *ngIf="user.pronoun">({{ user.pronoun }})</div>
                     </ng-container>
                 </div>
-                <div class="user-subtitle" *ngIf="showVoteWeight">
+                <div class="user-subtitle" *ngIf="canSeeSensitiveData && showVoteWeight">
+                    {{ user.username }} &middot; {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
+                </div>
+                <div class="user-subtitle" *ngIf="canSeeSensitiveData && !showVoteWeight">
+                    {{ user.username }}
+                </div>
+                <div class="user-subtitle" *ngIf="!canSeeSensitiveData && showVoteWeight">
                     {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
                 </div>
             </div>
@@ -119,7 +125,7 @@
             <!-- Email-sent indicator -->
             <mat-icon
                 inline
-                *ngIf="user.isLastEmailSent"
+                *ngIf="user.isLastEmailSent && canSeeSensitiveData"
                 matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
                 matTooltipPosition="above"
             >
@@ -152,12 +158,12 @@
     <!-- Menu -->
     <div *osScrollingTableCell="'menu'; row as user; config: { width: 40 }" class="cell-slot fill">
         <button
-            *osPerms="permission.userCanUpdate"
             mat-icon-button
             [disabled]="isMultiSelect"
             [matMenuTriggerFor]="singleItemMenu"
             (click)="$event.stopPropagation()"
             [matMenuTriggerData]="{ user: user }"
+            *ngIf="canSeeSingleItemMenu(user) || (viewport.isMobileSubject | async)"
         >
             <mat-icon>more_vert</mat-icon>
         </button>

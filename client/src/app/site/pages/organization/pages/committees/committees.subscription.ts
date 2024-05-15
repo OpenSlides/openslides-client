@@ -8,19 +8,24 @@ import { ViewMeeting } from '../../../meetings/view-models/view-meeting';
 import { ViewCommittee } from './view-models';
 
 export const COMMITTEE_LIST_SUBSCRIPTION = `committee_list`;
+export const COMMITTEE_LIST_MINIMAL_SUBSCRIPTION = `committee_list_minimal`;
+export const COMMITTEE_DETAIL_SUBSCRIPTION = `committee_detail`;
+const MEETING_DETAIL_EDIT_SUBSCRIPTION = `committee_meeting_detail`;
 
 export const getCommitteeListSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
         follow: [
-            { idField: `committee_ids`, fieldset: `list`, follow: [{ idField: `user_ids`, fieldset: `accountList` }] }
+            {
+                idField: `committee_ids`,
+                fieldset: `list`,
+                follow: [{ idField: `user_ids`, fieldset: `accountList` }]
+            }
         ]
     },
     subscriptionName: COMMITTEE_LIST_SUBSCRIPTION
 });
-
-export const COMMITTEE_LIST_MINIMAL_SUBSCRIPTION = `committee_list`;
 
 export const getCommitteeListMinimalSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {
@@ -42,10 +47,8 @@ export const getCommitteeListMinimalSubscriptionConfig: SubscriptionConfigGenera
             }
         ]
     },
-    subscriptionName: COMMITTEE_LIST_SUBSCRIPTION
+    subscriptionName: COMMITTEE_LIST_MINIMAL_SUBSCRIPTION
 });
-
-export const COMMITTEE_DETAIL_SUBSCRIPTION = `committee_detail`;
 
 export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -65,8 +68,6 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
     },
     subscriptionName: COMMITTEE_DETAIL_SUBSCRIPTION
 });
-
-const MEETING_DETAIL_EDIT_SUBSCRIPTION = `committee_meeting_detail`;
 
 export const getCommitteeMeetingDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {

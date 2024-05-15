@@ -46,7 +46,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         is_present: [``]
     };
 
-    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
     public get randomPasswordFn(): () => string {
         return () => this.getRandomPassword();
@@ -378,7 +378,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 ) ||
                 (await this.promptService.open(title, content))
             ) {
-                if (this.operator.hasPerms(Permission.userCanManagePresence)) {
+                if (
+                    this.operator.hasPerms(Permission.userCanManagePresence) &&
+                    this.personalInfoFormValue.is_present !== undefined
+                ) {
                     await this.repo
                         .update(payload, this.user!)
                         .concat(this.repo.setPresent(isPresent, this.user!))

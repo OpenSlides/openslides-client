@@ -213,7 +213,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
         this._handleResolvePromise = new Promise(async res => {
             let cb: CallableFunction;
             if (stream.failedConnects >= HTTP_POOL_CONFIG.RETRY_AMOUNT) {
-                cb = (s: AutoupdateStream) => {
+                cb = (s: AutoupdateStream): void => {
                     for (const subscription of s.subscriptions) {
                         subscription.sendError({
                             reason: `Repeated failure or client error`,
@@ -222,16 +222,16 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
                     }
                 };
             } else if (await this.waitUntilEndpointHealthy()) {
-                cb = async (s: AutoupdateStream) => {
+                cb = async (s: AutoupdateStream): Promise<void> => {
                     await this.connectStream(s);
                 };
             } else if (await WorkerHttpAuth.update()) {
-                cb = async (s: AutoupdateStream) => {
+                cb = async (s: AutoupdateStream): Promise<void> => {
                     s.failedCounter++;
                     await this.connectStream(s);
                 };
             } else {
-                cb = (s: AutoupdateStream) => {
+                cb = (s: AutoupdateStream): void => {
                     for (const subscription of s.subscriptions) {
                         subscription.sendError({
                             reason: `Logout`,

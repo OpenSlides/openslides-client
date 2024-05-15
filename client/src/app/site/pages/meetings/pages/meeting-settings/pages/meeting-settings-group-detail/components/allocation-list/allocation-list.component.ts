@@ -145,7 +145,7 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
     /**
      * Helper function to determine which information to give to the parent form
      */
-    private propagateChange = (_: any) => {};
+    private propagateChange = (_: any): void => {};
 
     /**
      * The value from the FormControl

@@ -9,10 +9,16 @@ import { pollModelRequest } from '../polls/polls.subscription';
 import { ViewMotionWorkflow } from './modules';
 import { ViewMotion } from './view-models';
 
-export const MOTION_LIST_SUBSCRIPTION = `motion_list`;
-export const MOTION_LIST_MINIMAL_SUBSCRIPTION = `motion_list_minimal`;
+export const AMENDMENT_LIST_SUBSCRIPTION = `amendment_list`;
+export const MOTION_ADDITIONAL_DETAIL_SUBSCRIPTION = `motion_additional_detail`;
 export const MOTION_BLOCK_SUBSCRIPTION = `motion_block_list`;
+export const MOTION_DETAIL_SUBSCRIPTION = `motion_detail`;
+export const MOTION_FORWARD_DATA_SUBSCRIPTION = `motion_forward_data`;
+export const MOTION_LIST_MINIMAL_SUBSCRIPTION = `motion_list_minimal`;
+export const MOTION_LIST_SUBSCRIPTION = `motion_list`;
 export const MOTION_SUBMODELS_SUBSCRIPTION = `motion_submodel_list`;
+export const MOTION_WORKFLOW_DETAIL_SUBSCRIPTION = `motion_workflow_detail`;
+export const MOTION_WORKFLOW_SUBSCRIPTION = `motion_workflow_list`;
 
 export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -100,8 +106,6 @@ export const getMotionBlockSubscriptionConfig: SubscriptionConfigGenerator = (id
     subscriptionName: MOTION_BLOCK_SUBSCRIPTION
 });
 
-export const MOTION_WORKFLOW_SUBSCRIPTION = `motion_workflow_list`;
-
 export const getMotionWorkflowSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
@@ -111,7 +115,6 @@ export const getMotionWorkflowSubscriptionConfig: SubscriptionConfigGenerator = 
     subscriptionName: MOTION_WORKFLOW_SUBSCRIPTION
 });
 
-export const MOTION_WORKFLOW_DETAIL_SUBSCRIPTION = `motion_workflow_detail`;
 export const getMotionWorkflowDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         ids: [id],
@@ -153,8 +156,6 @@ export const getMotionsSubmodelSubscriptionConfig: SubscriptionConfigGenerator =
     subscriptionName: MOTION_SUBMODELS_SUBSCRIPTION
 });
 
-export const MOTION_ADDITIONAL_DETAIL_SUBSCRIPTION = `motion_additional_detail`;
-
 export const getMotionAdditionalDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {
         ids,
@@ -164,8 +165,6 @@ export const getMotionAdditionalDetailSubscriptionConfig: SubscriptionConfigGene
     },
     subscriptionName: MOTION_ADDITIONAL_DETAIL_SUBSCRIPTION
 });
-
-export const MOTION_DETAIL_SUBSCRIPTION = `motion_detail`;
 
 export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {
@@ -224,8 +223,6 @@ export const getMotionListMinimalSubscriptionConfig: SubscriptionConfigGenerator
     subscriptionName: MOTION_LIST_MINIMAL_SUBSCRIPTION
 });
 
-export const AMENDMENT_LIST_SUBSCRIPTION = `amendment_list`;
-
 export const getAmendmentListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
@@ -249,8 +246,6 @@ export const getAmendmentListSubscriptionConfig: SubscriptionConfigGenerator = (
     },
     subscriptionName: AMENDMENT_LIST_SUBSCRIPTION
 });
-
-export const MOTION_FORWARD_DATA_SUBSCRIPTION = `motion_forward_data`;
 
 export const getMotionForwardDataSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {

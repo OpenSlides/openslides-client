@@ -59,7 +59,7 @@ export class AmendmentControllerService {
 
     public getSortedViewModelListObservableFor(motion: Identifiable, key = `default`): Observable<ViewMotion[]> {
         return this.getSortedViewModelListObservable(key).pipe(
-            map(_motions => _motions.filter(_motion => _motion.lead_motion_id === motion.id))
+            map(_motions => _motions.filter(_motion => _motion.hasLeadMotion === true))
         );
     }
 

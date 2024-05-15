@@ -15,7 +15,7 @@ export class OverlayService {
         const componentRef = this.domService.attachComponent(OverlayComponent);
         const _config = {
             ...config,
-            onCloseFn: () => {
+            onCloseFn: (): void => {
                 config.onCloseFn?.();
                 this.domService.dispose(componentRef);
             }

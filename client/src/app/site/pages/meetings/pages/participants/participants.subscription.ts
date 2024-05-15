@@ -11,6 +11,9 @@ export const PARTICIPANT_LIST_SUBSCRIPTION = `participant_list`;
 export const PARTICIPANT_VOTE_INFO_SUBSCRIPTION = `participant_vote_info_list`;
 export const PARTICIPANT_IS_PRESENT_LIST_SUBSCRIPTION = `participant_is_present_list`;
 export const PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL = `participant_list_minimal`;
+export const PARTICIPANT_DETAIL_SUBSCRIPTION = `participant_detail`;
+export const STRUCTURE_LEVEL_LIST_SUBSCRIPTION = `structure_level_list`;
+export const SPEAKERS_LIST_SUBSCRIPTION = `speakers_list`;
 
 export const getParticipantVoteInfoSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -96,8 +99,6 @@ export const getParticipantMinimalSubscriptionConfig: SubscriptionConfigGenerato
     subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
 });
 
-export const PARTICIPANT_DETAIL_SUBSCRIPTION = `participant_detail`;
-
 export const getParticipantDetailSubscription: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewUser,
@@ -113,8 +114,6 @@ export const getParticipantDetailSubscription: SubscriptionConfigGenerator = (id
     subscriptionName: PARTICIPANT_DETAIL_SUBSCRIPTION
 });
 
-export const STRUCTURE_LEVEL_LIST_SUBSCRIPTION = `structure_level_list`;
-
 export const getStructureLevelListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
@@ -128,8 +127,6 @@ export const getStructureLevelListSubscriptionConfig: SubscriptionConfigGenerato
     },
     subscriptionName: STRUCTURE_LEVEL_LIST_SUBSCRIPTION
 });
-
-export const SPEAKERS_LIST_SUBSCRIPTION = `speakers_list`;
 
 export const getSpeakersListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {

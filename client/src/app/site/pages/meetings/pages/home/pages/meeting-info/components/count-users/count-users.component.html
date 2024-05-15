@@ -2,18 +2,26 @@
     <span *ngIf="!stats">{{ 'Count logged-in users' | translate }}</span>
     <span *ngIf="stats">{{ 'Re-count logged-in users' | translate }}</span>
 </button>
-<div *ngIf="stats">
+<div *ngIf="stats && stats.length >= 3">
+    <div class="connection-selection">
+        <mat-button-toggle-group [(ngModel)]="displayMode">
+            <mat-button-toggle [value]="2" translate>All</mat-button-toggle>
+            <mat-button-toggle [value]="0" translate>SSE</mat-button-toggle>
+            <mat-button-toggle [value]="1" translate>Longpolling</mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+
     <i>{{ 'last updated' | translate }}: {{ lastUpdated / 1000 | localizedDate : 'PPpp' }}</i>
     <p>
-        {{ userIds().length }} {{ 'logged-in users' | translate }} ({{ stats.activeUserHandles }}
+        {{ userIds().length }} {{ 'logged-in users' | translate }} ({{ activeUserHandles }}
         {{ 'connections' | translate }})
     </p>
     {{ 'Groups' | translate }}:
     <ul>
         <li *ngFor="let groupId of groupIds()">
-            <strong>{{ stats.groups[groupId].name | translate }}:</strong>
+            <strong>{{ selectedStats.groups[groupId].name | translate }}:</strong>
             {{ userInGroupIds(groupId).length }} {{ 'logged-in users' | translate }} ({{
-                stats.groups[groupId].userHandleCount
+                selectedStats.groups[groupId].userHandleCount
             }}
             {{ 'connections' | translate }})
         </li>
