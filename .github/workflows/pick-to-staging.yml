@@ -1,7 +1,7 @@
 name: Cherry pick staging PRs merged into main
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - closed
     branches:
