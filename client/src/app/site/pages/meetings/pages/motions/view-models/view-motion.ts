@@ -324,10 +324,6 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return !!(this.tags && this.tags.length > 0);
     }
 
-    public isStatuteAmendment(): boolean {
-        return !!this.statute_paragraph_id;
-    }
-
     /**
      * Determine if the motion is in its final workflow state
      */
@@ -335,12 +331,20 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.state ? this.state.isFinalState : false;
     }
 
+    public isAmendment(): boolean {
+        return this.lead_motion_id && this.lead_motion_id > 0;
+    }
+
     /**
      * It's a paragraph-based amendments if only one paragraph is to be changed,
      * specified by -array
      */
     public isParagraphBasedAmendment(): boolean {
-        return this.lead_motion_id && this.lead_motion_id > 0;
+        return this.amendment_paragraph_numbers?.length > 0;
+    }
+
+    public isStatuteAmendment(): boolean {
+        return !!this.statute_paragraph_id;
     }
 
     public override getProjectionBuildDescriptor(
@@ -369,7 +373,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public getProjectiondefault(): ProjectiondefaultValue {
-        if (this.isParagraphBasedAmendment()) {
+        if (this.isAmendment()) {
             return PROJECTIONDEFAULT.amendment;
         } else {
             return PROJECTIONDEFAULT.motion;

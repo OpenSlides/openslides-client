@@ -97,7 +97,9 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     }
 
     public amendment_paragraph_text(paragraphNumber: number): string | null {
-        return this.amendment_paragraphs[paragraphNumber] ?? null;
+        return this.amendment_paragraphs && this.amendment_paragraphs[paragraphNumber]
+            ? this.amendment_paragraphs[paragraphNumber]
+            : null;
     }
 
     public static readonly REQUESTABLE_FIELDS: (keyof Motion)[] = [
