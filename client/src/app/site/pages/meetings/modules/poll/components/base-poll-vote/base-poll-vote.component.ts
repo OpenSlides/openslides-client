@@ -292,7 +292,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     public getGlobalCSSClass(option: VoteOption, user: ViewUser = this.user): string {
         if (this.voteRequestData[user.id]?.value === option.vote) {
-            return option.css;
+            return `button-content-not-opaque`;
         }
         return ``;
     }

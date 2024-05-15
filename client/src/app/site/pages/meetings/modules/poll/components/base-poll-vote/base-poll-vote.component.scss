@@ -36,6 +36,10 @@
         .button-content-opaque {
             opacity: 0.5;
         }
+
+        .button-content-not-opaque {
+            opacity: 1 !important;
+        }
     }
 
     .vote-button-area {
@@ -44,10 +48,8 @@
     }
 
     .vote-button:hover {
-        .vote-button-content {
-            .vote-button-cross {
-                opacity: 1;
-            }
+        .button-content-opaque {
+            opacity: 1
         }
     }
 
