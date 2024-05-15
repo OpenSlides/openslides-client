@@ -55,7 +55,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     };
 
     public get randomPasswordFn(): (() => string) | null {
-        return this._accountId ? null : () => this.repo.getRandomPassword();
+        return this._accountId ? null : (): string => this.repo.getRandomPassword();
     }
 
     public get isAllowedFn(): (permission: string) => boolean {
@@ -142,7 +142,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public flickerSubject = new BehaviorSubject<boolean>(false);
 
-    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
     private readonly _currentStepIndexSubject = new BehaviorSubject<number>(0);
 

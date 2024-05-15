@@ -48,7 +48,7 @@ interface HistoryPresenterResponse {
 
 const HISTORY_ENDPOINT = `/system/autoupdate/history_information`;
 
-const getUniqueItems = (positions: Position[]) => {
+const getUniqueItems = (positions: Position[]): Position[] => {
     const positionMap: { [positionNumber: number]: Position } = {};
     for (const position of positions) {
         positionMap[position.position] = position;

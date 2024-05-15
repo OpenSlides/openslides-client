@@ -41,7 +41,7 @@ export class SingleOptionChartTableComponent {
         this.cd.markForCheck();
     }
 
-    public get pollService() {
+    public get pollService(): PollService {
         return this._pollService || this.defaultPollService;
     }
 

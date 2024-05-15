@@ -31,7 +31,7 @@ export class ParticipantSpeakerListComponent extends BaseMeetingListViewComponen
     public genderList = GENDERS;
 
     public get structureLevelCountdownEnabled(): Observable<boolean> {
-        return this.meetingSettingService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v > 0));
+        return this.meetingSettingsService.get(`list_of_speakers_default_structure_level_time`).pipe(map(v => v > 0));
     }
 
     /**

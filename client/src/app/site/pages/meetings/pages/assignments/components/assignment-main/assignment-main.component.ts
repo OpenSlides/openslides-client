@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
 
+import { BaseMeetingModelRequestHandler } from '../../../../base/base-meeting-model-request-handler.component';
 import { getAssignmentSubscriptionConfig } from '../../assignments.subscription';
 
 @Component({
@@ -8,10 +10,8 @@ import { getAssignmentSubscriptionConfig } from '../../assignments.subscription'
     templateUrl: `./assignment-main.component.html`,
     styleUrls: [`./assignment-main.component.scss`]
 })
-export class AssignmentMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onNextMeetingId(id: number | null): void {
-        if (id) {
-            this.subscribeTo(getAssignmentSubscriptionConfig(id), { hideWhenMeetingChanged: true });
-        }
+export class AssignmentMainComponent extends BaseMeetingModelRequestHandler {
+    protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {
+        return [getAssignmentSubscriptionConfig(id)];
     }
 }

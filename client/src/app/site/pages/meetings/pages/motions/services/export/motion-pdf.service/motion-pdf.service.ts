@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentTable, ContentText, TableCell } from 'pdfmake/interfaces';
@@ -281,7 +282,10 @@ export class MotionPdfService {
         if (!infoToExport || infoToExport.includes(`supporter_users`)) {
             const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
             if (minSupporters && motion.supporter_users.length > 0) {
-                const supporters = motion.supporter_users.map(supporter => supporter.full_name).join(`, `);
+                const supporters = motion.supporter_users
+                    .naturalSort(this.translate.currentLang, [`first_name`, `last_name`])
+                    .map(supporter => supporter.full_name)
+                    .join(`, `);
 
                 metaTableBody.push([
                     {
@@ -740,7 +744,7 @@ export class MotionPdfService {
     private createAttachments(motion: ViewMotion): object {
         let width = this.pdfDocumentService.pageSize === `A5` ? PDF_A5_POINTS_WIDTH : PDF_A4_POINTS_WIDTH;
         width = width - this.pdfDocumentService.pageMarginPointsLeft - this.pdfDocumentService.pageMarginPointsRight;
-        const instancUrl = this.organizationSettingsService.instant(`url`);
+        const instanceUrl = this.organizationSettingsService.instant(`url`);
 
         const attachments = [];
         attachments.push({
@@ -760,11 +764,12 @@ export class MotionPdfService {
                     margin: [0, 0, 0, 10]
                 });
             } else {
+                const link = Location.joinWithSlash(instanceUrl, fileUrl);
                 attachments.push({
                     ul: [
                         {
-                            text: attachment.getTitle() + `: ` + instancUrl + fileUrl,
-                            link: instancUrl + fileUrl,
+                            text: attachment.getTitle() + `: ` + link,
+                            link: link,
                             margin: [0, 0, 0, 5]
                         }
                     ]

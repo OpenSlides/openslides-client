@@ -89,6 +89,10 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return this.operator.hasPerms(Permission.userCanUpdate);
     }
 
+    public get canSeeSensitiveData(): boolean {
+        return this.operator.hasPerms(Permission.userCanSeeSensitiveData);
+    }
+
     public get showVoteWeight(): boolean {
         return this._isElectronicVotingEnabled && this.voteWeightEnabled;
     }
@@ -452,6 +456,10 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      */
     public async removeUserFromMeeting(user: ViewUser): Promise<void> {
         await this.repo.removeUsersFromMeeting([user]);
+    }
+
+    public canSeeSingleItemMenu(user: ViewUser): boolean {
+        return this.operator.hasPerms(Permission.userCanUpdate) || this.canChangePassword(user);
     }
 
     /**

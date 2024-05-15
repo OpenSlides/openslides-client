@@ -146,7 +146,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     public ngOnInit(): void {
         super.setTitle(`History`);
 
-        this.dataSource.filterPredicate = (position: HistoryPosition, filter: string) => {
+        this.dataSource.filterPredicate = (position: HistoryPosition, filter: string): boolean => {
             filter = filter ? filter.toLowerCase() : ``;
 
             if (!position) {
@@ -351,8 +351,8 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             meeting_id: this.activeMeeting.id
         });
         Object.values(result).forEach(model => {
-            model.getTitle = () => this.modelsRepoMap[this.currentCollection].getTitle(model);
-            model.getListTitle = () => this.modelsRepoMap[this.currentCollection].getListTitle(model);
+            model.getTitle = (): string => this.modelsRepoMap[this.currentCollection].getTitle(model);
+            model.getListTitle = (): string => this.modelsRepoMap[this.currentCollection].getListTitle(model);
         });
         this.models = Object.values(result);
     }

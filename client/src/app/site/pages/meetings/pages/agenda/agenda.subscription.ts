@@ -23,16 +23,7 @@ export const agendaItemFollow: FollowList<any> = [
                 idField: `speaker_ids`,
                 fieldset: FULL_FIELDSET,
                 follow: [
-                    {
-                        idField: `meeting_user_id`,
-                        follow: [
-                            {
-                                idField: `user_id`,
-                                fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
-                            }
-                        ],
-                        ...MeetingUserFieldsets.FullNameSubscription
-                    },
+                    { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription },
                     {
                         idField: `point_of_order_category_id`,
                         fieldset: FULL_FIELDSET
@@ -67,21 +58,7 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                             {
                                 idField: `submitter_ids`,
                                 fieldset: FULL_FIELDSET,
-                                follow: [
-                                    {
-                                        idField: `meeting_user_id`,
-                                        follow: [
-                                            {
-                                                idField: `user_id`,
-                                                fieldset: [
-                                                    ...UserFieldsets.FullNameSubscription.fieldset,
-                                                    `meeting_user_ids`
-                                                ]
-                                            }
-                                        ],
-                                        ...MeetingUserFieldsets.FullNameSubscription
-                                    }
-                                ]
+                                follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
                             }
                         ]
                     }

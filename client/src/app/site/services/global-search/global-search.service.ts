@@ -166,7 +166,20 @@ export class GlobalSearchService {
         results[addToFqid].matched_by_fqids.push(fqid);
     }
 
-    private getResult(fqid: Fqid, results: GlobalSearchResponse) {
+    private getResult(
+        fqid: Fqid,
+        results: GlobalSearchResponse
+    ): {
+        title: string;
+        text: string;
+        obj: any;
+        fqid: string;
+        collection: string;
+        url: string;
+        meeting: any;
+        committee: any;
+        score: number;
+    } {
         const content = results[fqid].content;
         const collection = collectionFromFqid(fqid);
         const id = content.sequential_number || idFromFqid(fqid);

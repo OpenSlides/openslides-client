@@ -20,24 +20,30 @@ export class ListOfSpeakersMainComponent extends BaseModelRequestHandlerComponen
 
     protected override onParamsChanged(params: any, oldParams: any): void {
         if (params[`id`] !== oldParams[`id`] || params[`meetingId`] !== oldParams[`meetingId`]) {
-            this.sequentialNumberMapping
-                .getIdBySequentialNumber({
-                    collection: ListOfSpeakers.COLLECTION,
-                    meetingId: params[`meetingId`],
-                    sequentialNumber: +params[`id`]
-                })
-                .then(id => {
-                    if (id && this._currentLOSId !== id) {
-                        this._currentLOSId = id;
-                        this.loadLOSDetail();
-                    }
-                });
+            this.loadLOSDetail(+params[`id`], +params[`meetingId`]);
         }
     }
 
-    private loadLOSDetail(): void {
-        this.updateSubscribeTo(getListOfSpeakersDetailSubscriptionConfig(this._currentLOSId), {
-            hideWhenDestroyed: true
-        });
+    protected override onShouldCreateModelRequests(params: any, meetingId: Id): void {
+        if (params[`id`] && meetingId) {
+            this.loadLOSDetail(+params[`id`], meetingId);
+        }
+    }
+
+    private loadLOSDetail(id: Id, meetingId: Id): void {
+        this.sequentialNumberMapping
+            .getIdBySequentialNumber({
+                collection: ListOfSpeakers.COLLECTION,
+                meetingId: meetingId,
+                sequentialNumber: id
+            })
+            .then(id => {
+                if (id && this._currentLOSId !== id) {
+                    this._currentLOSId = id;
+                    this.updateSubscribeTo(getListOfSpeakersDetailSubscriptionConfig(this._currentLOSId), {
+                        hideWhenDestroyed: true
+                    });
+                }
+            });
     }
 }

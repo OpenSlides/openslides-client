@@ -23,12 +23,6 @@ export interface CountUserStatistics {
     };
 }
 
-export const DEFAULT_COUNT_USERS_OBJECT: CountUserStatistics = {
-    activeUserHandles: 0,
-    activeUsers: {},
-    groups: {}
-};
-
 const CONNECTION_COUNT_PATH = `/system/${AUTOUPDATE_DEFAULT_ENDPOINT}/connection_count`;
 
 @Injectable({
@@ -39,7 +33,6 @@ export class CountUsersStatisticsService {
         return this._lastUpdated;
     }
 
-    private currentCount: CountUserStatistics;
     private _lastUpdated: number;
 
     public constructor(private http: HttpService, private userRepo: UserRepositoryService) {}
@@ -47,45 +40,54 @@ export class CountUsersStatisticsService {
     /**
      * Starts counting users.
      *
-     * @returns a 2-tuple: A token to stop the counting with `stopCounting` and
-     * an observable where the statistics are published.
+     * @returns a 2-tuple of count user statistics
      */
-    public async countUsers(): Promise<CountUserStatistics> {
-        const raw = await this.http.get<{ [key: string]: number }>(CONNECTION_COUNT_PATH);
+    public async countUsers(): Promise<CountUserStatistics[]> {
+        const raw = await this.http.get<{ [key: number]: { [id: string]: number } }>(CONNECTION_COUNT_PATH);
         this._lastUpdated = Date.now();
-        const entries = Object.entries(raw).filter(
-            entry => entry[1] > 0 && this.userRepo.getViewModel(+entry[0])?.getMeetingUser()
-        );
-        const users = Object.fromEntries(entries);
-        const result = {
-            activeUserHandles: entries
-                .map(entry => entry[1])
-                .reduce((previousValue, currentValue) => (previousValue ?? 0) + currentValue),
-            activeUsers: users,
-            groups: {}
-        };
-        entries.forEach(entry => {
-            const userId = !!entry[0] ? +entry[0] : 0;
+        const result: CountUserStatistics[] = [];
+        raw[2] = {};
+        for (let i = 0; i < 2; i++) {
+            for (const id of Object.keys(raw[i])) {
+                raw[2][id] = raw[2][id] || 0;
+                raw[2][id] += raw[i][id];
+            }
+        }
 
-            const user = this.userRepo.getViewModel(userId);
+        for (let i = 0; i < 3; i++) {
+            const entries = Object.entries(raw[i]).filter(
+                entry => entry[1] > 0 && this.userRepo.getViewModel(+entry[0])?.getMeetingUser()
+            );
+            const users = Object.fromEntries(entries);
+            result[i] = {
+                activeUserHandles: entries
+                    .map(entry => entry[1])
+                    .reduce((previousValue, currentValue) => (previousValue ?? 0) + currentValue, 0),
+                activeUsers: users,
+                groups: {}
+            };
+            entries.forEach(entry => {
+                const userId = !!entry[0] ? +entry[0] : 0;
 
-            // Add to group stats
-            const groups = user ? user.groups() : [];
-            groups.forEach(group => {
-                if (!result.groups[group.id]) {
-                    result.groups[group.id] = {
-                        name: group.name,
-                        users: {},
-                        userHandleCount: 0,
-                        meeting_id: group.meeting_id
-                    };
-                }
-                result.groups[group.id].userHandleCount += entry[1];
-                result.groups[group.id].users[userId] = result.activeUsers[userId];
+                const user = this.userRepo.getViewModel(userId);
+
+                // Add to group stats
+                const groups = user ? user.groups() : [];
+                groups.forEach(group => {
+                    if (!result[i].groups[group.id]) {
+                        result[i].groups[group.id] = {
+                            name: group.name,
+                            users: {},
+                            userHandleCount: 0,
+                            meeting_id: group.meeting_id
+                        };
+                    }
+                    result[i].groups[group.id].userHandleCount += entry[1];
+                    result[i].groups[group.id].users[userId] = result[i].activeUsers[userId];
+                });
             });
-        });
+        }
 
-        this.currentCount = result;
-        return this.currentCount;
+        return result;
     }
 }

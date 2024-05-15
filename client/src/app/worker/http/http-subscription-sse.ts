@@ -9,7 +9,12 @@ export class HttpSubscriptionSSE extends HttpSubscription {
     public async start(): Promise<void> {
         this._active = true;
 
-        await this.doRequest();
+        try {
+            await this.doRequest();
+        } catch (e) {
+            this._active = false;
+            throw e;
+        }
 
         if (this.abortResolver) {
             this.abortResolver();

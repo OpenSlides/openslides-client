@@ -95,7 +95,7 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
                 permissionRelatedId: ORGANIZATION_ID,
                 permissionScope: UserScope.ORGANIZATION
             })[0];
-            const getTitle = (user: Partial<User>) => `${user.first_name ?? ``} ${user.last_name ?? ``}`;
+            const getTitle = (user: Partial<User>): string => `${user.first_name ?? ``} ${user.last_name ?? ``}`;
             this.filteredItemsSubject.next(
                 result.map(entry => ({
                     id: entry.id,

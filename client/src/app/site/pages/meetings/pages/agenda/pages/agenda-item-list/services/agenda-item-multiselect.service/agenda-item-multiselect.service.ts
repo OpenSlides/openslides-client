@@ -65,14 +65,20 @@ export class AgendaItemMultiselectService {
         }
     }
 
-    private async addTags(agendaItems: ViewAgendaItem[], selectedChoice: ChoiceAnswer<ViewTag>) {
+    private async addTags(
+        agendaItems: ViewAgendaItem[],
+        selectedChoice: ChoiceAnswer<ViewTag>
+    ): Promise<Promise<void>[]> {
         return agendaItems.map(agendaItem => {
             const tagIds = new Set((agendaItem.tag_ids || []).concat(selectedChoice.ids));
             return this.repo.update({ tag_ids: Array.from(tagIds) }, agendaItem);
         });
     }
 
-    private async removeTags(agendaItems: ViewAgendaItem[], selectedChoice: ChoiceAnswer<ViewTag>) {
+    private async removeTags(
+        agendaItems: ViewAgendaItem[],
+        selectedChoice: ChoiceAnswer<ViewTag>
+    ): Promise<Promise<void>[]> {
         return agendaItems.map(agendaItem => {
             const remainingTagIds = new Set(
                 agendaItem.tag_ids.filter(tagId => selectedChoice.ids.indexOf(tagId) === -1)
@@ -81,7 +87,7 @@ export class AgendaItemMultiselectService {
         });
     }
 
-    private async clearTags(agendaItems: ViewAgendaItem[]) {
+    private async clearTags(agendaItems: ViewAgendaItem[]): Promise<Promise<void>[]> {
         return agendaItems.map(agendaItem => this.repo.update({ tag_ids: [] }, agendaItem));
     }
 }

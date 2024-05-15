@@ -75,7 +75,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public get submitterNames(): string[] {
-        return this.mapSubmittersWithAdditional(submitter => submitter.getTitle());
+        return this.mapSubmittersWithAdditional(submitter => submitter?.getTitle());
     }
 
     public get editorUserIds(): Id[] {
@@ -324,15 +324,15 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return !!(this.tags && this.tags.length > 0);
     }
 
-    public isStatuteAmendment(): boolean {
-        return !!this.statute_paragraph_id;
-    }
-
     /**
      * Determine if the motion is in its final workflow state
      */
     public isInFinalState(): boolean {
         return this.state ? this.state.isFinalState : false;
+    }
+
+    public isAmendment(): boolean {
+        return this.lead_motion_id && this.lead_motion_id > 0;
     }
 
     /**
@@ -341,6 +341,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
      */
     public isParagraphBasedAmendment(): boolean {
         return this.amendment_paragraph_numbers?.length > 0;
+    }
+
+    public isStatuteAmendment(): boolean {
+        return !!this.statute_paragraph_id;
     }
 
     public override getProjectionBuildDescriptor(
@@ -369,7 +373,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public getProjectiondefault(): ProjectiondefaultValue {
-        if (this.isParagraphBasedAmendment()) {
+        if (this.isAmendment()) {
             return PROJECTIONDEFAULT.amendment;
         } else {
             return PROJECTIONDEFAULT.motion;

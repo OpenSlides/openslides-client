@@ -138,7 +138,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     /** used by the groups config type */
     public groupObservable: Observable<ViewGroup[]> | null = null;
 
-    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
     public get watchProperties(): (keyof Settings)[] {
         return this.setting.automaticChangesSetting?.watchProperties;
@@ -147,7 +147,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     public get getChangeFn(): (currentValue: any, currentWatchPropertyValues: any[]) => any {
         return (
             this.setting.automaticChangesSetting?.getChangeFn ??
-            ((currentValue, _currentWatchPropertyValues) => currentValue)
+            ((currentValue, _currentWatchPropertyValues): any => currentValue)
         );
     }
 
@@ -445,7 +445,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      */
     public getTinyMceSettings(): object {
         return {
-            setup: (editor: any) => {
+            setup: (editor: any): void => {
                 editor.on(`Blur`, (ev: any) => {
                     if (ev.target.getContent() !== this.internalValue) {
                         this.sendUpdate(ev.target.getContent());

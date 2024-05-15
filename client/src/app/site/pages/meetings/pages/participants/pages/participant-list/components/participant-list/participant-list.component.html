@@ -50,7 +50,13 @@
                         <div *ngIf="user.pronoun">({{ user.pronoun }})</div>
                     </ng-container>
                 </div>
-                <div class="user-subtitle" *ngIf="showVoteWeight">
+                <div class="user-subtitle" *ngIf="canSeeSensitiveData && showVoteWeight">
+                    {{ user.username }} &middot; {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
+                </div>
+                <div class="user-subtitle" *ngIf="canSeeSensitiveData && !showVoteWeight">
+                    {{ user.username }}
+                </div>
+                <div class="user-subtitle" *ngIf="!canSeeSensitiveData && showVoteWeight">
                     {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
                 </div>
             </div>
@@ -58,10 +64,13 @@
                 <mat-icon matTooltip="{{ 'Is no natural person' | translate }}" *ngIf="!user.is_physical_person">
                     account_balance
                 </mat-icon>
-                <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canManage">
+                <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canSeeSensitiveData">
                     block
                 </mat-icon>
-                <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}" *ngIf="user.hasSamlId && canManage">
+                <mat-icon
+                    matTooltip="{{ 'Has SSO identification' | translate }}"
+                    *ngIf="user.hasSamlId && canSeeSensitiveData"
+                >
                     fingerprint
                 </mat-icon>
             </div>
@@ -116,7 +125,7 @@
             <!-- Email-sent indicator -->
             <mat-icon
                 inline
-                *ngIf="user.isLastEmailSent"
+                *ngIf="user.isLastEmailSent && canSeeSensitiveData"
                 matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
                 matTooltipPosition="above"
             >
@@ -154,6 +163,7 @@
             [matMenuTriggerFor]="singleItemMenu"
             (click)="$event.stopPropagation()"
             [matMenuTriggerData]="{ user: user }"
+            *ngIf="canSeeSingleItemMenu(user) || (viewport.isMobileSubject | async)"
         >
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -174,12 +184,12 @@
             <span>{{ 'Present' | translate }}</span>
         </mat-checkbox>
 
-        <button *osPerms="permission.userCanManage" mat-menu-item (click)="openEditInfo(user)">
+        <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="openEditInfo(user)">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit details' | translate }}</span>
         </button>
 
-        <button *osPerms="permission.userCanManage" mat-menu-item (click)="switchParticipants(user)">
+        <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="switchParticipants(user)">
             <mat-icon>swap_horiz</mat-icon>
             <span>{{ 'Swap mandates' | translate }}</span>
         </button>
@@ -193,7 +203,7 @@
             <span>{{ 'Change password' | translate }}</span>
         </button>
 
-        <button *osPerms="permission.userCanManage" mat-menu-item (click)="sendInvitationEmail(user)">
+        <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="sendInvitationEmail(user)">
             <mat-icon>mail</mat-icon>
             <span>{{ 'Send invitation email' | translate }}</span>
         </button>

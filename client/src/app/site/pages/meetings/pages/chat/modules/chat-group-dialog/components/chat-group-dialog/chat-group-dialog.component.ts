@@ -22,7 +22,7 @@ export class ChatGroupDialogComponent implements OnInit {
 
     public readonly groupsObservable = this.groupsRepo.getViewModelListObservable();
 
-    public sortFn = (groupA: ViewGroup, groupB: ViewGroup) => groupA.weight - groupB.weight;
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
     public constructor(
         private groupsRepo: GroupControllerService,
