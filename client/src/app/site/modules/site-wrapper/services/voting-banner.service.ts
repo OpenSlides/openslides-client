@@ -6,7 +6,6 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ActivePollsService } from 'src/app/site/pages/meetings/services/active-polls.service';
@@ -34,7 +33,6 @@ export class VotingBannerService {
     public constructor(
         private banner: BannerService,
         private translate: TranslateService,
-        private historyService: HistoryService,
         private votingService: VotingService,
         private activeMeeting: ActiveMeetingService,
         private sendVotesService: VoteControllerService,
@@ -73,7 +71,7 @@ export class VotingBannerService {
         }
 
         // display no banner if in history mode or there are no polls to vote
-        if ((this.historyService.isInHistoryMode() && this.currentBanner) || !this.pollsToVote.length) {
+        if (!this.pollsToVote.length) {
             this.sliceBanner();
             return;
         }

@@ -84,7 +84,6 @@
             <mat-row
                 [ngClass]="{ 'links-disabled': !isSuperadmin }"
                 *matRowDef="let row; columns: getRowDef()"
-                (click)="onClickRow(row)"
             ></mat-row>
         </mat-table>
     </mat-card-content>
