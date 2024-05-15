@@ -69,6 +69,8 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
     public secondSelectorLabel: string;
 
     @Input()
+    public loadSecondSelectorValues: () => Promise<Selectable[]>;
+
     public secondSelectorValues: Selectable[];
 
     public secondSelectorFormControl: UntypedFormControl;
@@ -98,6 +100,11 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         this._editMode = value;
         this._addUsersSet.clear();
         this._removeUsersMap = {};
+        if (value && this.loadSecondSelectorValues) {
+            this.loadSecondSelectorValues().then(items => {
+                this.secondSelectorValues = items;
+            });
+        }
     }
 
     public get isEditMode(): boolean {
@@ -235,7 +242,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         }
     }
 
-    public getDisabledFn(): (Selectable) => boolean {
+    public getDisabledFn(): (v: Selectable) => boolean {
         return (value: Selectable) => this.secondSelectorDisabledIds.includes(value.id);
     }
 
@@ -246,7 +253,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
     }
 
     public get isSecondSelectorValuesFilled(): boolean {
-        return this.secondSelectorValues.length > 0;
+        return this.secondSelectorValues && this.secondSelectorValues.length > 0;
     }
 
     private updateData(models: V[]): void {
