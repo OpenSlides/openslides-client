@@ -51,7 +51,7 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
     }
 
     public titleCanBeChanged(): boolean {
-        if (this.motion.isStatuteAmendment() || this.motion.isParagraphBasedAmendment()) {
+        if (this.motion.isAmendment()) {
             return false;
         }
         return this.changeRecoMode === ChangeRecoMode.Original || this.changeRecoMode === ChangeRecoMode.Diff;
