@@ -245,6 +245,10 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         }
     }
 
+    public get isSecondSelectorValuesFilled(): boolean {
+        return this.secondSelectorValues.length > 0;
+    }
+
     private updateData(models: V[]): void {
         if (!this.isEditMode) {
             this.editSubject.next(models);
