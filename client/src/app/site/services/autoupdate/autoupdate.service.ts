@@ -27,10 +27,6 @@ export const AUTOUPDATE_DEFAULT_ENDPOINT = `autoupdate`;
 
 interface AutoupdateConnectConfig {
     /**
-     * Selects one position for a model. This implies `single: 1`.
-     */
-    position?: number;
-    /**
      * Selects the last n updates to the requested fields. `true` is equivalent to `n = 1`.
      */
     single?: true | number;
