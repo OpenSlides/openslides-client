@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { InfoModule } from 'src/app/site/modules/info';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
@@ -19,7 +21,9 @@ import { MeetingInfoRoutingModule } from './meeting-info-routing.module';
         CommonModule,
         MeetingInfoRoutingModule,
         MatCardModule,
+        MatButtonToggleModule,
         HeadBarModule,
+        FormsModule,
         ListModule,
         DirectivesModule,
         OpenSlidesTranslationModule.forChild(),
