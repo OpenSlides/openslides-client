@@ -13,7 +13,8 @@ export const participantsExportExample: any = [
         pronoun: `Er`,
         default_structure_level: `Berlin`,
         default_vote_weight: 1.0,
-        group_ids: `Delegates, Staff`
+        group_ids: `Delegates, Staff`,
+        member_number: `123`
     },
     {
         first_name: `John`,
@@ -26,7 +27,8 @@ export const participantsExportExample: any = [
         email: `john.doe@email.com`,
         username: `jdoe`,
         gender: `diverse`,
-        default_vote_weight: 2.0
+        default_vote_weight: 2.0,
+        member_number: `135`
     },
     {
         first_name: `Julia`,
@@ -34,12 +36,14 @@ export const participantsExportExample: any = [
         default_structure_level: `London`,
         username: `jbloggs`,
         gender: `female`,
-        default_vote_weight: 1.5
+        default_vote_weight: 1.5,
+        member_number: `234`
     },
     {
         last_name: `Executive Board`,
         is_present_in_meeting_ids: true,
         username: `executive`,
-        default_vote_weight: 2.5
+        default_vote_weight: 2.5,
+        member_number: `55444`
     }
 ];
