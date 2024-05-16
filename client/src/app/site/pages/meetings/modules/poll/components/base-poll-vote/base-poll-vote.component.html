@@ -29,7 +29,6 @@
             </p>
             <div>
                 <div *ngIf="poll.type !== PollType.Analog">
-
                     <!-- Leftover votes -->
                     <div class="option-list-information-grid" *ngIf="showAvailableVotes && !settings.hideLeftoverVotes">
                         <b>{{ poll.option_ids.length }} {{ optionPluralLabel | translate }}</b>
