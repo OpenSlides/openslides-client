@@ -297,6 +297,17 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         return ``;
     }
 
+    public getGlobalOptionName(option: VoteOption): string {
+        switch (option.label) {
+            case `Yes`:
+                return `General approval`;
+            case `No`:
+                return `General rejection`;
+            default:
+                return `General ` + option.label.toLowerCase();
+        }
+    }
+
     public saveMultipleVotes(optionId: number, event: any, user: ViewUser = this.user): void {
         let vote = parseInt(event.target.value, 10);
 
