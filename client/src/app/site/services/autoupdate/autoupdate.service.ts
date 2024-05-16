@@ -235,6 +235,9 @@ export class AutoupdateService {
             this._resolveDataReceived[id] = resolve;
             rejectReceivedData = reject;
         });
+        receivedData.catch((e: Error) => {
+            console.warn(`[autoupdate] stream was closed before it received data:`, e.message);
+        });
 
         return {
             id,
@@ -243,10 +246,11 @@ export class AutoupdateService {
                 this.communication.close(id);
                 delete this._activeRequestObjects[id];
                 if (this._resolveDataReceived[id]) {
-                    rejectReceivedData();
+                    rejectReceivedData(new Error(`Connection canceled`));
+                    delete this._resolveDataReceived[id];
                 }
 
-                console.debug(`[autoupdate] stream closed: `, description);
+                console.debug(`[autoupdate] stream closed:`, description);
             }
         };
     }
