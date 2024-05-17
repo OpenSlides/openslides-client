@@ -1,7 +1,6 @@
 @import 'src/assets/styles/variables.scss';
 @import 'src/assets/styles/mixins/detail-view-appearance.scss';
 
-
 @include detail-view-appearance;
 
 .diff-box {
@@ -89,5 +88,3 @@
     margin-right: 0;
     margin-top: 3px;
 }
-
-
