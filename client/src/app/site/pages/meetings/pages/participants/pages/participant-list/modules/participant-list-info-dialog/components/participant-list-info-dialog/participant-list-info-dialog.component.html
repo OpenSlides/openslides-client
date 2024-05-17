@@ -15,6 +15,7 @@
         <os-list-search-selector
             [(ngModel)]="infoDialog.vote_delegations_from_ids"
             [multiple]="true"
+            [sortFn]="false"
             [inputListValues]="otherParticipantsObservable"
         ></os-list-search-selector>
     </mat-form-field>
@@ -23,6 +24,7 @@
         <os-list-search-selector
             [(ngModel)]="infoDialog.vote_delegated_to_id"
             [multiple]="false"
+            [sortFn]="false"
             [includeNone]="true"
             [inputListValues]="otherParticipantsObservable"
         ></os-list-search-selector>
