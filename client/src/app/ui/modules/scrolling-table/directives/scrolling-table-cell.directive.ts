@@ -1,5 +1,6 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Directive, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { ScrollingTableManageService } from '../services';
 import { ScrollingTableCellDefConfig } from './scrolling-table-cell-config';
@@ -22,8 +23,14 @@ export class ScrollingTableCellDirective implements OnInit, ScrollingTableCellDe
     }
 
     @Input()
-    public set osScrollingTableCellIsHidden(isHidden: boolean) {
-        this._isHidden = isHidden;
+    public set osScrollingTableCellIsHidden(isHidden: boolean | Observable<boolean>) {
+        if (typeof isHidden == `boolean`) {
+            this._isHidden = isHidden;
+        } else {
+            isHidden.subscribe(isMobileView => {
+                this._isHidden = !isMobileView;
+            });
+        }
     }
 
     @Input()

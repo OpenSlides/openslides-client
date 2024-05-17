@@ -155,7 +155,7 @@
             'menu';
             row as user;
             config: { width: 40 };
-            isHidden: !(canSeeItemMenu() || (viewport.isMobileSubject | async))
+            isHidden: !canSeeItemMenu() && viewport.isMobileSubject
         "
         class="cell-slot"
     >
