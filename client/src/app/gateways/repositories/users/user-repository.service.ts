@@ -287,9 +287,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return `${title} ${name}`.trim();
     }
 
-    private getFullName(user: FullNameInformation, structureLevel?: ViewStructureLevel): string {
+    private getFullName(user: ViewUser, structureLevel?: ViewStructureLevel): string {
         let fullName = this.getShortName(user);
         const additions: string[] = [];
+        const meetingUser = user.getMeetingUser();
 
         // addition: add pronoun, structure level and number
         if (user.pronoun) {
@@ -298,11 +299,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         if (structureLevel) {
             additions.push(structureLevel.getTitle());
-        } else if (structureLevel !== null && user.structureLevels?.()) {
-            additions.push(user.structureLevels());
+        } else if (structureLevel !== null && meetingUser) {
+            const structureLevels = meetingUser.structureLevels();
+            if (structureLevels) {
+                additions.push(structureLevels);
+            }
         }
 
-        const number = user.number ? user.number() : null;
+        const number = meetingUser?.number ? meetingUser.number : null;
         if (number) {
             additions.push(`${this.translate.instant(`No.`)} ${number}`);
         }
