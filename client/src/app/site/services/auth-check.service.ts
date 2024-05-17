@@ -3,9 +3,13 @@ import { Data } from '@angular/router';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
+import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
+import { AutoupdateService } from './autoupdate';
+import { ModelRequestBuilderService } from './model-request-builder';
 import { OpenSlidesRouterService } from './openslides-router.service';
 import { OperatorService } from './operator.service';
 
@@ -31,7 +35,10 @@ export class AuthCheckService {
     public constructor(
         private operator: OperatorService,
         private activeMeeting: ActiveMeetingService,
+        private meetingRepo: MeetingRepositoryService,
         private meetingSettingsService: MeetingSettingsService,
+        private autoupdate: AutoupdateService,
+        private modelRequestBuilder: ModelRequestBuilderService,
         private osRouter: OpenSlidesRouterService
     ) {}
 
@@ -74,6 +81,17 @@ export class AuthCheckService {
         if (Number.isNaN(Number(meetingIdString))) {
             return false;
         }
+        if (!this.meetingRepo.getViewModel(+meetingIdString)) {
+            await this.autoupdate.single(
+                await this.modelRequestBuilder.build({
+                    ids: [+meetingIdString],
+                    viewModelCtor: ViewMeeting,
+                    fieldset: [`enable_anonymous`, `name`]
+                }),
+                `meeting_single`
+            );
+        }
+
         await this.operator.ready;
         return this.operator.isInMeeting(Number(meetingIdString)) || this.operator.isSuperAdmin;
     }

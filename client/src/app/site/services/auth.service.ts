@@ -80,6 +80,7 @@ export class AuthService {
      * Required, if anyone signs in as guest.
      */
     public async login(username: string, password: string, meetingId: number | null = null): Promise<void> {
+        this.logoutAnonymous();
         try {
             const response = await this.authAdapter.login({ username, password });
             if (response?.success) {
@@ -93,6 +94,12 @@ export class AuthService {
         } catch (e) {
             throw e;
         }
+    }
+
+    public async anonLogin(meetingId: number | null = null): Promise<void> {
+        sessionStorage.setItem(`anonymous-auth`, `1`);
+        this.redirectUser(meetingId);
+        return;
     }
 
     public async startSamlLogin(): Promise<string> {
@@ -155,8 +162,12 @@ export class AuthService {
         this.lifecycleService.bootup();
     }
 
+    public async logoutAnonymous(): Promise<void> {
+        sessionStorage.removeItem(`anonymous-auth`);
+    }
+
     public isAuthenticated(): boolean {
-        return !!this.authTokenService.accessToken;
+        return !!this.authTokenService.accessToken || sessionStorage.getItem(`anonymous-auth`) === `1`;
     }
 
     /**

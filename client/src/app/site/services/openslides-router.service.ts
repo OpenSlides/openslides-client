@@ -87,7 +87,7 @@ export class OpenSlidesRouterService {
         const url = this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
 
         // Navigate to login if the user is not already there
-        if (!url.startsWith(`/${UrlTarget.LOGIN}`)) {
+        if (!url.startsWith(`/${UrlTarget.LOGIN}`) && !new RegExp(`^\/[0-9]+\/${UrlTarget.LOGIN}`).test(url)) {
             this.router.navigate([`/`, UrlTarget.LOGIN]);
         }
     }

@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Observable, Subscription } from 'rxjs';
+import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { fadeInAnim } from 'src/app/infrastructure/animations';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -11,6 +12,8 @@ import { OrganizationService } from 'src/app/site/pages/organization/services/or
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 import { AuthService } from 'src/app/site/services/auth.service';
+import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
@@ -33,9 +36,7 @@ interface LoginValues {
     animations: [fadeInAnim]
 })
 export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
-    public get meetingObservable(): Observable<ViewMeeting | null> {
-        return this.activeMeetingService.meetingObservable;
-    }
+    public meeting: Meeting;
 
     public get organizationObservable(): Observable<ViewOrganization | null> {
         return this.orgaService.organizationObservable;
@@ -92,6 +93,8 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     public constructor(
         protected override translate: TranslateService,
         private authService: AuthService,
+        private autoupdate: AutoupdateService,
+        private modelRequestBuilder: ModelRequestBuilderService,
         private operator: OperatorService,
         private route: ActivatedRoute,
         private formBuilder: UntypedFormBuilder,
@@ -126,7 +129,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         });
         this.route.params.subscribe(params => {
             if (params[`meetingId`]) {
-                this.checkIfGuestsEnabled(params[`meetingId`]);
+                this.loadMeeting(params[`meetingId`]);
             }
         });
 
@@ -176,6 +179,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     }
 
     public async guestLogin(): Promise<void> {
+        await this.authService.anonLogin();
         this.router.navigate([`${this.currentMeetingId}/`]);
     }
 
@@ -213,9 +217,22 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         }
     }
 
-    private checkIfGuestsEnabled(meetingId: string): void {
+    private async loadMeeting(meetingId: string): Promise<void> {
         this.currentMeetingId = Number(meetingId);
-        this.meetingSettingsService.get(`enable_anonymous`).subscribe(isEnabled => (this.guestsEnabled = isEnabled));
+        const resp = await this.autoupdate.single(
+            await this.modelRequestBuilder.build({
+                ids: [this.currentMeetingId],
+                viewModelCtor: ViewMeeting,
+                fieldset: [`enable_anonymous`, `name`]
+            }),
+            `meeting_login`
+        );
+        if (!resp || !resp[`meeting`] || !resp[`meeting`][this.currentMeetingId]) {
+            return;
+        }
+
+        this.meeting = new Meeting(resp[`meeting`][this.currentMeetingId]);
+        this.guestsEnabled = this.meeting.enable_anonymous;
     }
 
     private checkDevice(): void {
