@@ -1,7 +1,5 @@
 <div class="form-wrapper">
-    <ng-container
-        *ngIf="{ organization: organizationObservable | async } as observables"
-    >
+    <ng-container *ngIf="{ organization: organizationObservable | async } as observables">
         <div class="header-name" *ngIf="meeting || observables.organization" [@fadeIn]>
             <!-- Meeting's name -->
             <h1 *ngIf="meeting && meeting.name">{{ meeting.name }}</h1>
