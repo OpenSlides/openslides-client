@@ -13,6 +13,7 @@ import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { ArchiveStatusService } from './archive-status.service';
 import { MeetingControllerService } from './meeting-controller.service';
 import { MeetingSettingsDefinitionService } from './meeting-settings-definition.service';
+import { AuthService } from 'src/app/site/services/auth.service';
 
 @Injectable({
     providedIn: `root`
@@ -49,6 +50,7 @@ export class ActiveMeetingService {
         private lifecycle: LifecycleService,
         private bannerService: BannerService,
         private archiveService: ArchiveStatusService,
+        private authService: AuthService,
         private modelRequestService: ModelRequestService,
         private router: Router,
         private translate: TranslateService,
@@ -94,7 +96,7 @@ export class ActiveMeetingService {
 
     private setupActiveMeeting(meeting: ViewMeeting | null): void {
         this._meetingSubject.next(meeting);
-        if (meeting?.isArchived) {
+        if (meeting?.isArchived && !!this.authService.authToken) {
             this.archiveService.isArchivedEvent.next(true);
             this._currentArchivedBanner = this.createArchivedBanner();
             this.bannerService.addBanner(this._currentArchivedBanner);
