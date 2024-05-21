@@ -62,6 +62,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     public voteDelegationEnabled: Observable<boolean> =
         this.meetingSettingsService.get(`users_enable_vote_delegations`);
 
+    public forbidDelegationToVote: Observable<boolean> =
+        this.meetingSettingsService.get(`users_forbid_delegator_to_vote`);
+
     private _isReady = false;
     private _poll!: ViewPoll<C>;
     private _delegationsMap: { [userId: number]: ViewUser } = {};
