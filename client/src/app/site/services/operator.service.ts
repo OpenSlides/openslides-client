@@ -58,6 +58,10 @@ export class OperatorService {
         return this.isAnonymous || !this.authService.authToken ? null : this.authService.authToken.userId;
     }
 
+    public get isAnonymousLoggedIn(): boolean {
+        return this.authService.isAuthenticated() && this.isAnonymous;
+    }
+
     public get isAnonymous(): boolean {
         return !this.authService.authToken;
     }
@@ -141,7 +145,7 @@ export class OperatorService {
     public get user(): ViewUser {
         if (!this._userSubject.value && !this.isAnonymous && this.isAuthenticated) {
             throw new Error(`Operator has not fully loaded yet.`);
-        } else if (this.isAnonymous && sessionStorage.getItem(`anonymous-auth`) === `1`) {
+        } else if (this.isAnonymousLoggedIn) {
             return this.defaultAnonUser;
         }
         return this._userSubject.value;

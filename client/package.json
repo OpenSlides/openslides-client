@@ -72,6 +72,7 @@
     "ng-particles": "~2.42.4",
     "ng2-charts": "^4.0.1",
     "ng2-pdf-viewer": "^9.1.5",
+    "ngx-cookie-service": "^16.1.0",
     "ngx-date-fns": "^10.0.1",
     "ngx-device-detector": "^6.0.2",
     "ngx-file-drop": "^14.0.1",

@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 
@@ -51,6 +52,7 @@ export class AuthService {
         private authTokenService: AuthTokenService,
         private sharedWorker: SharedWorkerService,
         private updateService: UpdateService,
+        private cookie: CookieService,
         private DS: DataStoreService
     ) {
         this.authTokenService.accessTokenObservable.subscribe(token => {
@@ -97,7 +99,9 @@ export class AuthService {
     }
 
     public async anonLogin(meetingId: number | null = null): Promise<void> {
-        sessionStorage.setItem(`anonymous-auth`, `1`);
+        this.cookie.set(`anonymous-auth`, ``, {
+            sameSite: `Strict`
+        });
         this.redirectUser(meetingId);
         return;
     }
@@ -163,11 +167,11 @@ export class AuthService {
     }
 
     public async logoutAnonymous(): Promise<void> {
-        sessionStorage.removeItem(`anonymous-auth`);
+        this.cookie.delete(`anonymous-auth`);
     }
 
     public isAuthenticated(): boolean {
-        return !!this.authTokenService.accessToken || sessionStorage.getItem(`anonymous-auth`) === `1`;
+        return !!this.authTokenService.accessToken || this.cookie.check(`anonymous-auth`);
     }
 
     /**
