@@ -109,7 +109,7 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
     /**
      * Constructor to create the NotifyService.
      */
-    public constructor(private operator: OperatorService) {
+    public constructor() {
         super();
         this.setupConnections();
     }
