@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Data } from '@angular/router';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
@@ -54,9 +55,20 @@ export class AuthCheckService {
         return hasPerm && hasSetting;
     }
 
-    public async isAuthenticated(): Promise<boolean> {
+    public async isAuthenticated(info?: number | string): Promise<boolean> {
+        let meetingIdString = info;
+        if (typeof info === `string`) {
+            meetingIdString = this.osRouter.getMeetingId(info);
+        }
+
         await this.operator.ready;
-        return (this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated;
+        let meeting = this.activeMeeting.meeting;
+        if (!Number.isNaN(Number(meetingIdString)) && meetingIdString > 0) {
+            await this.fetchMeetingIfNotExists(+meetingIdString);
+            meeting = this.meetingRepo.getViewModel(+meetingIdString);
+        }
+
+        return (this.operator.isAnonymous && meeting?.enable_anonymous) || this.operator.isAuthenticated;
     }
 
     public async isAuthorizedToSeeOrganization(): Promise<boolean> {
@@ -81,19 +93,23 @@ export class AuthCheckService {
         if (Number.isNaN(Number(meetingIdString))) {
             return false;
         }
-        if (!this.meetingRepo.getViewModel(+meetingIdString)) {
+        await this.fetchMeetingIfNotExists(+meetingIdString);
+
+        await this.operator.ready;
+        return this.operator.isInMeeting(Number(meetingIdString)) || this.operator.isSuperAdmin;
+    }
+
+    private async fetchMeetingIfNotExists(meetingId: Id): Promise<void> {
+        if (!this.meetingRepo.getViewModel(meetingId)) {
             await this.autoupdate.single(
                 await this.modelRequestBuilder.build({
-                    ids: [+meetingIdString],
+                    ids: [meetingId],
                     viewModelCtor: ViewMeeting,
                     fieldset: [`enable_anonymous`, `name`]
                 }),
                 `meeting_single`
             );
         }
-
-        await this.operator.ready;
-        return this.operator.isInMeeting(Number(meetingIdString)) || this.operator.isSuperAdmin;
     }
 
     private async hasPerms(basePerm: Permission | Permission[], omlPerm?: OML | OML[]): Promise<boolean> {

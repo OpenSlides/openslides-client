@@ -29,7 +29,7 @@ export class PermissionGuard {
         } else if (!(await this.authCheck.hasAccessToMeeting(url))) {
             return await this.reroute.handleForbiddenRoute(route.data, segments, url);
         }
-        if (!(await this.authCheck.isAuthenticated())) {
+        if (!(await this.authCheck.isAuthenticated(url))) {
             return this.reroute.toLogin();
         }
         if (route.data && !(await this.authCheck.isAuthorized(route.data))) {
