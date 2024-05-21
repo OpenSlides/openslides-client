@@ -24,11 +24,11 @@ export class ScrollingTableCellDirective implements OnInit, OnDestroy, Scrolling
 
     @Input()
     public set osScrollingTableCellIsHidden(isHidden: boolean | Observable<boolean>) {
-        if (this.inputSubscription) {
-            this.inputSubscription.unsubscribe();
+        if (this.isHiddenSubscription) {
+            this.isHiddenSubscription.unsubscribe();
         }
         if (typeof isHidden == `boolean`) {
-            this.inputSubscription = null;
+            this.isHiddenSubscription = null;
             this._isHidden = isHidden;
         } else {
             isHidden.subscribe(isMobileView => {
@@ -92,7 +92,7 @@ export class ScrollingTableCellDirective implements OnInit, OnDestroy, Scrolling
     private _property = ``;
     private _labelString = ``;
     private _isDefault = false;
-    private inputSubscription: Subscription | null = null;
+    private isHiddenSubscription: Subscription | null = null;
 
     public constructor(
         public readonly template: TemplateRef<any>,
@@ -109,8 +109,8 @@ export class ScrollingTableCellDirective implements OnInit, OnDestroy, Scrolling
     }
 
     public ngOnDestroy(): void {
-        if (this.inputSubscription) {
-            this.inputSubscription.unsubscribe();
+        if (this.isHiddenSubscription) {
+            this.isHiddenSubscription.unsubscribe();
         }
     }
 
