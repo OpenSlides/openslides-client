@@ -353,8 +353,12 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                 .getViewModelObservable(this.motion.id)
                 .pipe(
                     map(motion => [
-                        motion.referenced_in_motion_recommendation_extensions,
-                        motion.recommendation_extension_references as ViewMotion[]
+                        motion.referenced_in_motion_recommendation_extensions
+                            ? motion.referenced_in_motion_recommendation_extensions
+                            : null,
+                        motion.recommendation_extension_references
+                            ? (motion.recommendation_extension_references as ViewMotion[])
+                            : null
                     ]),
                     distinctUntilChanged((p, c) => [...Array(2).keys()].every(i => p[i].equals(c[i]))),
                     map(arr =>
