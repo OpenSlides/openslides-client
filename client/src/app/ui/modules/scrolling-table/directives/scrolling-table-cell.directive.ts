@@ -27,9 +27,11 @@ export class ScrollingTableCellDirective implements OnInit, ScrollingTableCellDe
         if (typeof isHidden == `boolean`) {
             this._isHidden = isHidden;
         } else {
-            isHidden.subscribe(isMobileView => {
-                this._isHidden = !isMobileView;
-            });
+            isHidden
+                .subscribe(isMobileView => {
+                    this._isHidden = !isMobileView;
+                })
+                .unsubscribe();
         }
     }
 
