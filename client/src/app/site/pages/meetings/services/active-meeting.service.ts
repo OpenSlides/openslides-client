@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, first, firstValueFrom, map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BannerDefinition, BannerService } from 'src/app/site/modules/site-wrapper/services/banner.service';
+import { AuthService } from 'src/app/site/services/auth.service';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 
 import { LifecycleService } from '../../../services/lifecycle.service';
@@ -13,7 +14,6 @@ import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { ArchiveStatusService } from './archive-status.service';
 import { MeetingControllerService } from './meeting-controller.service';
 import { MeetingSettingsDefinitionService } from './meeting-settings-definition.service';
-import { AuthService } from 'src/app/site/services/auth.service';
 
 @Injectable({
     providedIn: `root`
