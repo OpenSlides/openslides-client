@@ -167,10 +167,10 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
             },
             {
                 property: `hasMemberNumber`,
-                label: this.translate.instant(`Member number`),
+                label: `Member number`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Has a member number`) },
-                    { condition: [false, null], label: this.translate.instant(`Has no member number`) }
+                    { condition: true, label: `Has a member number` },
+                    { condition: [false, null], label: `Has no member number` }
                 ]
             }
         ];
