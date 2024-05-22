@@ -302,6 +302,10 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
         // restore selection or set default
         this.store.get<MotionExportInfo>(`motion_export_selection`).then(restored => {
             if (restored) {
+                if (!this.workingGroupSpeakerActive && restored.metaInfo?.includes(`working_group_speakers`)) {
+                    restored.metaInfo.splice(restored.metaInfo.indexOf(`working_group_speakers`));
+                }
+
                 this.exportForm.patchValue(restored);
             } else {
                 this.exportForm.patchValue(this.defaults);
