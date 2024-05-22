@@ -81,10 +81,7 @@
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="getRowDef()"></mat-header-row>
-            <mat-row
-                [ngClass]="{ 'links-disabled': !isSuperadmin }"
-                *matRowDef="let row; columns: getRowDef()"
-            ></mat-row>
+            <mat-row *matRowDef="let row; columns: getRowDef()"></mat-row>
         </mat-table>
     </mat-card-content>
 </mat-card>

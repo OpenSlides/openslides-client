@@ -70,7 +70,7 @@ export class VotingBannerService {
             this.pollsToVote = [];
         }
 
-        // display no banner if in history mode or there are no polls to vote
+        // display no banner if no polls to vote
         if (!this.pollsToVote.length) {
             this.sliceBanner();
             return;
