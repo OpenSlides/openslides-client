@@ -3,7 +3,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { djb2hash, splitStringKeepSeperator } from 'src/app/infrastructure/utils';
 import * as DomHelpers from 'src/app/infrastructure/utils/dom-helpers';
-import { diffDomTiptapMigration } from 'src/app/ui/modules/editor/components/editor/helpers/migrate-diff';
 
 import {
     CommonAncestorData,
@@ -1334,21 +1333,23 @@ export class MotionDiffService {
         // TODO: This is a workaround to make sure the first element of a amendment
         //       has a line number for correct display of amendments in front of list
         //       or block elements
-        const parser = new DOMParser();
-        const htmlNewEl = parser.parseFromString(htmlNew, `text/html`);
-        const htmlOldEl = parser.parseFromString(htmlOld, `text/html`);
-        if (htmlNewEl.body.children[0] && !htmlNewEl.body.children[0].querySelector(`.os-line-number`)) {
-            if (htmlNewEl.body.querySelector(`.os-line-number`) && htmlOldEl.body.querySelector(`.os-line-number`)) {
-                const ln = htmlNewEl.body.querySelector(`.os-line-number`);
-                htmlNewEl.body.children[0].childNodes[0].before(ln);
-                htmlOldEl.body.children[0].querySelector(`.os-line-number`).remove();
+        const htmlOldEl = document.createElement(`template`);
+        const htmlNewEl = document.createElement(`template`);
+        htmlNewEl.innerHTML = htmlNew;
+        htmlOldEl.innerHTML = htmlOld;
+        if (htmlNewEl.content.children[0] && !htmlNewEl.content.children[0].querySelector(`.os-line-number`)) {
+            if (
+                htmlNewEl.content.querySelector(`.os-line-number`) &&
+                htmlOldEl.content.querySelector(`.os-line-number`)
+            ) {
+                const ln = htmlNewEl.content.querySelector(`.os-line-number`);
+                htmlNewEl.content.children[0].childNodes[0].before(ln);
+                htmlOldEl.content.children[0].querySelector(`.os-line-number`).remove();
+
+                htmlNew = htmlNewEl.innerHTML;
+                htmlOld = htmlOldEl.innerHTML;
             }
         }
-
-        diffDomTiptapMigration(htmlOldEl, htmlNewEl);
-
-        htmlNew = htmlNewEl.body.innerHTML;
-        htmlOld = htmlOldEl.body.innerHTML;
 
         // os-split-after should not be considered for detecting changes in paragraphs, so we strip it here
         // and add it afterwards.
