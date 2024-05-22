@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { StorageService } from 'src/app/gateways/storage.service';
 import { PasswordForm, PasswordFormComponent } from 'src/app/site/modules/user-components';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
@@ -21,7 +23,8 @@ interface MenuItem {
 enum MenuItems {
     CHANGE_PASSWORD = `Change password`,
     SHOW_PROFILE = `My profile`,
-    SHOW_MEETINGS = `My meetings`
+    SHOW_MEETINGS = `My meetings`,
+    CLIENT_SETTINGS = `Settings`
 }
 
 @Component({
@@ -42,6 +45,9 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         },
         {
             name: MenuItems.CHANGE_PASSWORD
+        },
+        {
+            name: MenuItems.CLIENT_SETTINGS
         }
     ];
 
@@ -89,6 +95,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     public isUserPasswordValid = false;
     public userPersonalForm: any;
     public userPasswordForm!: PasswordForm;
+    public clientSettingsForm!: UntypedFormGroup;
 
     private _self: ViewUser | null = null;
     private _isUserInScope = false;
@@ -102,7 +109,9 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         private userService: UserService,
         private snackbar: MatSnackBar,
         private authService: AuthService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private fb: UntypedFormBuilder,
+        private store: StorageService
     ) {
         super();
     }
@@ -112,6 +121,17 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
             this.repo.getViewModelObservable(this.operator.operatorId!).subscribe(user => (this._self = user)),
             this.operator.operatorUpdated.subscribe(() => this.updateIsUserInScope())
         );
+
+        this.clientSettingsForm = this.fb.group({
+            disablePauseAuConnections: [false]
+        });
+
+        this.store.get(`clientSettings`).then((val: any) => {
+            if (val) {
+                this.clientSettingsForm.patchValue(val);
+                this.clientSettingsForm.markAsUntouched();
+            }
+        });
     }
 
     /**
@@ -143,7 +163,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         const meetingIds = this.self.ensuredMeetingIds;
         return meetingIds
             .map(id => this.meetingRepo.getViewModel(id) as ViewMeeting)
-            .sort((meetingA, meetingB) => meetingA.name.localeCompare(meetingB.name));
+            .sort((meetingA, meetingB) => meetingA.name.localeCompare(meetingB?.name));
     }
 
     public getGroupsForMeeting(meeting: ViewMeeting): ViewGroup[] {
@@ -181,6 +201,11 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         }
         this.isUserFormValid = false;
         this.isEditing = false;
+    }
+
+    public async saveClientSettings(): Promise<void> {
+        this.store.set(`clientSettings`, this.clientSettingsForm.getRawValue());
+        this.clientSettingsForm.markAsPristine();
     }
 
     private async updateIsUserInScope(): Promise<void> {

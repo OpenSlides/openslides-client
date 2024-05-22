@@ -14,6 +14,10 @@ export class MotionPermissionService {
     private _amendmentEnabled = false;
     private _amendmentOfAmendmentEnabled = false;
 
+    private _delegationEnabled = false;
+    private _forbidDelegatorCreateMotions = false;
+    private _forbidDelegatorSupportMotions = false;
+
     public constructor(private operator: OperatorService, private meetingSettingsService: MeetingSettingsService) {
         // load config variables
         this.meetingSettingsService
@@ -25,6 +29,15 @@ export class MotionPermissionService {
         this.meetingSettingsService
             .get(`motions_amendments_of_amendments`)
             .subscribe(enabled => (this._amendmentOfAmendmentEnabled = enabled));
+        this.meetingSettingsService.get(`users_enable_vote_delegations`).subscribe(enabled => {
+            this._delegationEnabled = enabled;
+        });
+        this.meetingSettingsService.get(`users_forbid_delegator_as_submitter`).subscribe(enabled => {
+            this._forbidDelegatorCreateMotions = enabled;
+        });
+        this.meetingSettingsService.get(`users_forbid_delegator_as_supporter`).subscribe(enabled => {
+            this._forbidDelegatorSupportMotions = enabled;
+        });
     }
 
     /**
@@ -63,7 +76,7 @@ export class MotionPermissionService {
         switch (action) {
             case `create`: {
                 return this.operator.hasPerms(
-                    this.operator.isAllowedWithDelegation(`users_forbid_delegator_as_submitter`)
+                    !(this._delegationEnabled && this._forbidDelegatorCreateMotions)
                         ? Permission.motionCanCreate
                         : Permission.motionCanManage
                 );
@@ -74,7 +87,7 @@ export class MotionPermissionService {
                 }
                 return (
                     this.operator.hasPerms(
-                        this.operator.isAllowedWithDelegation(`users_forbid_delegator_as_supporter`)
+                        !(this._delegationEnabled && this._forbidDelegatorSupportMotions)
                             ? Permission.motionCanSupport
                             : Permission.motionCanManage
                     ) &&
@@ -91,7 +104,7 @@ export class MotionPermissionService {
                 }
                 return (
                     this.operator.hasPerms(
-                        this.operator.isAllowedWithDelegation(`users_forbid_delegator_as_supporter`)
+                        !(this._delegationEnabled && this._forbidDelegatorSupportMotions)
                             ? Permission.motionCanSupport
                             : Permission.motionCanManage
                     ) &&
@@ -172,7 +185,7 @@ export class MotionPermissionService {
                 }
                 return (
                     this.operator.hasPerms(
-                        this.operator.isAllowedWithDelegation(`users_forbid_delegator_as_submitter`)
+                        !(this._delegationEnabled && this._forbidDelegatorCreateMotions)
                             ? Permission.motionCanCreateAmendments
                             : Permission.motionCanManage
                     ) &&

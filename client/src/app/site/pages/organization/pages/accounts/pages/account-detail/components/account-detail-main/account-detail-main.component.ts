@@ -12,6 +12,13 @@ export class AccountDetailMainComponent extends BaseModelRequestHandlerComponent
     protected override onParamsChanged(params: any, oldParams: any): void {
         if (params[`id`] !== oldParams[`id`]) {
             const id = +params[`id`];
+            this.updateSubscribeTo(getAccountDetailSubscriptionConfig(id), { hideWhenDestroyed: true });
+        }
+    }
+
+    protected override onShouldCreateModelRequests(params: any): void {
+        if (params[`id`]) {
+            const id = +params[`id`];
             this.subscribeTo(getAccountDetailSubscriptionConfig(id), { hideWhenDestroyed: true });
         }
     }

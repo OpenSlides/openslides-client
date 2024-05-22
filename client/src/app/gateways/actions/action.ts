@@ -58,4 +58,4 @@ export class Action<T = void> {
     }
 }
 
-export const createEmptyAction = () => new Action(async () => []);
+export const createEmptyAction = (): Action<any> => new Action(async () => []);

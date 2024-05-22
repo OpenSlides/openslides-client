@@ -88,7 +88,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
         this.optionTypeText = true;
     }
 
-    public ngAfterViewInit() {
+    public ngAfterViewInit(): void {
         if (this.scrollFrame) {
             this.scrollContainer = this.scrollFrame.nativeElement;
             this.itemElements.changes.subscribe(_ => this.onItemElementsChanged());

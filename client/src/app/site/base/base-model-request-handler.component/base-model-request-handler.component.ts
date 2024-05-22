@@ -1,6 +1,6 @@
 import { Directive, EventEmitter, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { combineLatest, map, Observable, startWith } from 'rxjs';
+import { combineLatest, firstValueFrom, map, Observable, skip, startWith } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -8,12 +8,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { SubscribeToConfig } from '../../services/model-request.service';
 import { OpenSlidesRouterService } from '../../services/openslides-router.service';
 
-export interface ModelRequestConfig extends SubscribeToConfig {
-    /**
-     * If `true` it fires a request after a timeout. Defaults to `true`.
-     */
-    isDelayed?: boolean;
-}
+export interface ModelRequestConfig extends SubscribeToConfig {}
 
 interface HidingConfig {
     /**
@@ -53,9 +48,13 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
         this.openslidesRouter = inject(OpenSlidesRouterService);
     }
 
-    public ngOnInit(): void {
+    public async ngOnInit(): Promise<void> {
+        const currentParams = await firstValueFrom(this.openslidesRouter.currentParamMap);
+        this._currentParams = currentParams;
+        this._currentMeetingId = Number(currentParams[`meetingId`]) || null;
+
         this.subscriptions.push(
-            this.openslidesRouter.currentParamMap.subscribe(event => {
+            this.openslidesRouter.currentParamMap.pipe(skip(1)).subscribe(event => {
                 const nextMeetingId = Number(event[`meetingId`]) || null;
                 if (nextMeetingId !== this._currentMeetingId) {
                     this._currentMeetingId = nextMeetingId;
@@ -79,7 +78,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
     }
 
     protected onBeforeModelRequests(): void | Promise<void> {}
-    protected onShouldCreateModelRequests(): void {}
+    protected onShouldCreateModelRequests(_params?: any, _meetingId?: Id | null): void {}
     protected onNextMeetingId(_id: Id | null): void {}
     protected onParamsChanged(_params: any, _oldParams?: any): void {}
 
@@ -94,7 +93,12 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
             if (!this._openedSubscriptions.includes(subscriptionName)) {
                 this._openedSubscriptions.push(subscriptionName);
                 const observable = this.createHideWhenObservable(hideWhen || {}, config.hideWhen);
-                await this.modelRequestService.subscribeTo({ subscriptionName, modelRequest, hideWhen: observable });
+                await this.modelRequestService.subscribeTo({
+                    subscriptionName,
+                    modelRequest,
+                    hideWhen: observable,
+                    unusedWhen: this._destroyed.pipe(startWith(false))
+                });
             }
         }
     }
@@ -125,7 +129,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
 
     private async initModelSubscriptions(): Promise<void> {
         await this.onBeforeModelRequests();
-        this.onShouldCreateModelRequests();
+        this.onShouldCreateModelRequests(this._currentParams, this._currentMeetingId);
     }
 
     private createHideWhenObservable(

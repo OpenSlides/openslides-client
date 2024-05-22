@@ -164,9 +164,9 @@ export class Settings {
     public users_email_replyto!: string;
     public users_email_subject!: string;
     public users_email_body!: string;
-    public users_forbid_delegator_in_list_of_speakers!: string;
-    public users_forbid_delegator_as_submitter!: string;
-    public users_forbid_delegator_as_supporter!: string;
+    public users_forbid_delegator_in_list_of_speakers!: boolean;
+    public users_forbid_delegator_as_submitter!: boolean;
+    public users_forbid_delegator_as_supporter!: boolean;
 
     // Assignments
     public assignments_export_title!: string;

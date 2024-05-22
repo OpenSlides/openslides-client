@@ -231,7 +231,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         this.handleVotingMethodYOrN(maxVotesAmount, tmpVoteRequest, user);
     }
 
-    public handleVotingMethodYOrN(maxVotesAmount: number, tmpVoteRequest: any, user: ViewUser = this.user) {
+    public handleVotingMethodYOrN(maxVotesAmount: number, tmpVoteRequest: any, user: ViewUser = this.user): void {
         // check if you can still vote
         const countedVotes = Object.keys(tmpVoteRequest).filter(key => tmpVoteRequest[key]).length;
         if (countedVotes <= maxVotesAmount) {
@@ -347,7 +347,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         }
     }
 
-    protected override updatePoll() {
+    protected override updatePoll(): void {
         super.updatePoll();
         this.defineVoteOptions();
     }

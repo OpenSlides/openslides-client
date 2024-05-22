@@ -1,6 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET, MEETING_ROUTING_FIELDS, mergeSubscriptionFollow } from 'src/app/domain/fieldsets/misc';
-import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
+import { MeetingUserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
@@ -32,13 +32,12 @@ export const getParticipantVoteInfoSubscriptionConfig: SubscriptionConfigGenerat
                             `is_physical_person`,
                             `is_active`,
                             `meeting_ids`,
-                            `meeting_user_ids`,
                             `is_present_in_meeting_ids`
                         ]
                     },
                     {
                         idField: `vote_delegated_to_id`,
-                        follow: [{ idField: `user_id`, fieldset: [`is_present_in_meeting_ids`, `meeting_user_ids`] }],
+                        follow: [{ idField: `user_id`, fieldset: [`is_present_in_meeting_ids`] }],
                         fieldset: [`meeting_id`]
                     }
                 ]
@@ -138,13 +137,7 @@ export const getSpeakersListSubscriptionConfig: SubscriptionConfigGenerator = (i
                 idField: `speaker_ids`,
                 fieldset: FULL_FIELDSET,
                 follow: [
-                    mergeSubscriptionFollow(
-                        {
-                            idField: `meeting_user_id`,
-                            follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
-                        },
-                        { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
-                    ),
+                    { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription },
                     {
                         idField: `structure_level_list_of_speakers_id`,
                         fieldset: [],

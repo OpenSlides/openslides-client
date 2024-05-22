@@ -1,3 +1,7 @@
+@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+
+@include detail-view-appearance;
+
 .diff-box {
     position: relative;
     border-radius: 3px;

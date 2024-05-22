@@ -1,5 +1,6 @@
 import { TemplatePortal } from '@angular/cdk/portal';
-import { Directive, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 
 import { ScrollingTableManageService } from '../services';
 import { ScrollingTableCellDefConfig } from './scrolling-table-cell-config';
@@ -9,7 +10,7 @@ import { ScrollingTableCellPosition } from './scrolling-table-cell-position';
 @Directive({
     selector: `[osScrollingTableCell]`
 })
-export class ScrollingTableCellDirective implements OnInit, ScrollingTableCellDefinition {
+export class ScrollingTableCellDirective implements OnInit, OnDestroy, ScrollingTableCellDefinition {
     @Input()
     public set osScrollingTableCell(property: string) {
         this._property = property;
@@ -22,8 +23,18 @@ export class ScrollingTableCellDirective implements OnInit, ScrollingTableCellDe
     }
 
     @Input()
-    public set osScrollingTableCellIsHidden(isHidden: boolean) {
-        this._isHidden = isHidden;
+    public set osScrollingTableCellIsHidden(isHidden: boolean | Observable<boolean>) {
+        if (this.isHiddenSubscription) {
+            this.isHiddenSubscription.unsubscribe();
+        }
+        if (typeof isHidden == `boolean`) {
+            this.isHiddenSubscription = null;
+            this._isHidden = isHidden;
+        } else {
+            isHidden.subscribe(isMobileView => {
+                this._isHidden = !isMobileView;
+            });
+        }
     }
 
     @Input()
@@ -81,6 +92,7 @@ export class ScrollingTableCellDirective implements OnInit, ScrollingTableCellDe
     private _property = ``;
     private _labelString = ``;
     private _isDefault = false;
+    private isHiddenSubscription: Subscription | null = null;
 
     public constructor(
         public readonly template: TemplateRef<any>,
@@ -93,6 +105,12 @@ export class ScrollingTableCellDirective implements OnInit, ScrollingTableCellDe
             this.manageService.appendCellDefinition(this);
         } else {
             this.manageService.updateCellDefinition(this);
+        }
+    }
+
+    public ngOnDestroy(): void {
+        if (this.isHiddenSubscription) {
+            this.isHiddenSubscription.unsubscribe();
         }
     }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { firstValueFrom } from 'rxjs';
 import { ModelRequest } from 'src/app/domain/interfaces/model-request';
+import { StorageService } from 'src/app/gateways/storage.service';
 
 import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService } from '../../../gateways/http-stream';
@@ -68,7 +69,7 @@ export const OUT_OF_SYNC_BANNER: BannerDefinition = {
     icon: `sync_disabled`
 };
 
-const PAUSE_ON_INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 Minutes
+export const AU_PAUSE_ON_INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 Minutes
 
 @Injectable({
     providedIn: `root`
@@ -85,7 +86,8 @@ export class AutoupdateService {
         private communication: AutoupdateCommunicationService,
         private bannerService: BannerService,
         private visibilityService: WindowVisibilityService,
-        private lifecycle: LifecycleService
+        private lifecycle: LifecycleService,
+        private store: StorageService
     ) {
         this.setAutoupdateConfig(null);
         this.httpEndpointService.registerEndpoint(
@@ -102,8 +104,12 @@ export class AutoupdateService {
         });
 
         firstValueFrom(this.lifecycle.appLoaded).then(() =>
-            this.visibilityService.hiddenFor(PAUSE_ON_INACTIVITY_TIMEOUT).subscribe(() => {
-                this.pauseUntilVisible();
+            this.visibilityService.hiddenFor(AU_PAUSE_ON_INACTIVITY_TIMEOUT).subscribe(() => {
+                this.store.get(`clientSettings`).then((settings: any) => {
+                    if (!settings || !settings?.disablePauseAuConnections) {
+                        this.pauseUntilVisible();
+                    }
+                });
             })
         );
 
@@ -229,6 +235,9 @@ export class AutoupdateService {
             this._resolveDataReceived[id] = resolve;
             rejectReceivedData = reject;
         });
+        receivedData.catch((e: Error) => {
+            console.warn(`[autoupdate] stream was closed before it received data:`, e.message);
+        });
 
         return {
             id,
@@ -237,10 +246,11 @@ export class AutoupdateService {
                 this.communication.close(id);
                 delete this._activeRequestObjects[id];
                 if (this._resolveDataReceived[id]) {
-                    rejectReceivedData();
+                    rejectReceivedData(new Error(`Connection canceled`));
+                    delete this._resolveDataReceived[id];
                 }
 
-                console.debug(`[autoupdate] stream closed: `, description);
+                console.debug(`[autoupdate] stream closed:`, description);
             }
         };
     }
