@@ -1,7 +1,9 @@
+@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+
 .motion-text {
     ins,
     .insert {
-        color: green;
+        color: green !important;
         text-decoration: underline;
         a {
             color: green;
@@ -10,7 +12,7 @@
 
     del,
     .delete {
-        color: red;
+        color: red !important;
         text-decoration: line-through;
         a {
             color: red;
@@ -130,4 +132,6 @@
     &.amendment-context .paragraphcontext {
         opacity: 1;
     }
+
+    @include detail-view-appearance;
 }
