@@ -299,8 +299,15 @@ export class OperatorService {
                 this._operatorUpdatedSubject.next();
             }
         });
-        this.meetingUserRepo.getGeneralViewModelObservable().subscribe(user => {
-            if (user !== undefined && this.operatorId === user.user_id) {
+        this.meetingUserRepo.getGeneralViewModelObservable().subscribe(mUser => {
+            if (mUser !== undefined && this.operatorId === mUser.user_id) {
+                const user = mUser.user;
+                if (user) {
+                    this._shortName = this.userRepo.getShortName(user);
+                    this.updateUser(user);
+                    this._operatorShortNameSubject.next(this._shortName);
+                    this._userSubject.next(user);
+                }
                 this._operatorUpdatedSubject.next();
             }
         });
