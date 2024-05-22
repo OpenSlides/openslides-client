@@ -3,4 +3,5 @@ export interface CurrentSpeakerChyronSlideData {
     current_speaker_level?: string;
     background_color: string;
     font_color: string;
+    title_information?: any;
 }

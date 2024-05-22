@@ -1,6 +1,7 @@
 @import 'src/assets/styles/fonts.scss';
 
-#chyron {
+#chyron,
+#chyron_new {
     position: absolute;
     left: 50px;
     bottom: 20px;
@@ -18,7 +19,7 @@
         padding-right: 20px;
         padding-top: 10px;
         padding-bottom: 10px;
-        height: 60px;
+        height: 40px;
         display: table-cell;
 
         #inner-name {
@@ -29,5 +30,28 @@
             margin-top: 5px;
             font-size: 70%;
         }
+    }
+}
+
+#chyron_agenda_item {
+    position: absolute;
+    left: 50px;
+    bottom: 100px;
+    right: 0;
+    z-index: 10;
+    height: 80px;
+    font-size: 32px;
+    text-align: left;
+    line-height: 1;
+    opacity: 1;
+
+    #inner {
+        vertical-align: middle;
+        padding-left: 18px;
+        padding-right: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        height: 40px;
+        display: table-cell;
     }
 }
