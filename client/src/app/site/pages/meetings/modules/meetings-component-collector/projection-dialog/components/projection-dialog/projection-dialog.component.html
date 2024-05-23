@@ -27,7 +27,7 @@
 
     <div *ngIf="options && options.length">
         <div *ngFor="let option of options">
-            <div *ngIf="isDecisionOption(option)" class="spacer-top-10 spacer-left-10">
+            <div *ngIf="isDecisionOption(option)" class="spacer-left-10">
                 <mat-checkbox
                     [checked]="optionValues[option.key]"
                     (change)="optionValues[option.key] = !optionValues[option.key]"

@@ -10,20 +10,8 @@ h3 {
 
 /* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
 mat-dialog-content {
-    overflow: inherit;
-    min-width: auto;
-
-    .content-wrapper {
-        max-height: 400px;
-        overflow: auto;
-    }
-
     div.projectors {
-        padding: 15px 0;
-        /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
-        mat-checkbox {
-            padding: 0 10px;
-        }
+        padding: 10px 0;
 
         .right {
             float: right;
