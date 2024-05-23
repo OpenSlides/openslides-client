@@ -5,11 +5,13 @@
     opacity: 0.5;
 }
 
-.motion-text, .motion-text-diff, .reason-text {
+.motion-text,
+.motion-text-diff,
+.reason-text {
     .detail-view-text {
         @include detail-view-appearance;
     }
-} 
+}
 
 #sidebox {
     width: 260px;
