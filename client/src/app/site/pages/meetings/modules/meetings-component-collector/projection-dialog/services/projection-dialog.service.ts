@@ -38,6 +38,8 @@ export class ProjectionDialogService {
                 await this.projectorRepo.project(resultDescriptor, projectors, options);
             } else if (action === `addToPreview`) {
                 await this.projectorRepo.addToPreview(resultDescriptor, projectors, options);
+            } else if (action === `toggle`) {
+                await this.projectorRepo.toggle(resultDescriptor, projectors, options);
             } else {
                 throw new Error(`Unknown projector action ` + action);
             }

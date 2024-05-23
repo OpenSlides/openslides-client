@@ -28,6 +28,7 @@ import { ProjectionDialogReturnType } from '../../definitions';
 export interface ProjectionDialogConfig {
     descriptor: ProjectionBuildDescriptor;
     allowReferenceProjector: boolean;
+    toggleActionData?: ViewProjector;
 }
 
 @Component({
@@ -42,6 +43,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public options!: SlideOptions;
     public descriptor: ProjectionBuildDescriptor;
     public allowReferenceProjector = true;
+    public useToggleAction = false;
     private _projectorSubscription: string;
     private _subscriptions: Subscription[] = [];
 
@@ -54,6 +56,10 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     ) {
         this.descriptor = isProjectionBuildDescriptor(data) ? data : data.descriptor;
         this.allowReferenceProjector = !isProjectionBuildDescriptor(data) && data.allowReferenceProjector;
+        this.useToggleAction = !isProjectionBuildDescriptor(data) && !!data.toggleActionData;
+        if (this.useToggleAction && !isProjectionBuildDescriptor(data)) {
+            this.selectedProjectors = [data.toggleActionData.id];
+        }
     }
 
     public ngOnDestroy(): void {
@@ -148,6 +154,15 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public onAddToPreview(): void {
         this.dialogRef.close({
             action: `addToPreview`,
+            resultDescriptor: this.descriptor,
+            projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
+            options: this.optionValues
+        });
+    }
+
+    public onToggle(): void {
+        this.dialogRef.close({
+            action: `toggle`,
             resultDescriptor: this.descriptor,
             projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
             options: this.optionValues
