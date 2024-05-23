@@ -42,6 +42,7 @@ os-user-detail-view h2 {
     padding-right: 5%;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
 mat-checkbox {
     margin-right: 10px;
 }

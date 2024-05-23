@@ -34,13 +34,14 @@
     .filter-menu--option-row {
         height: 24px;
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
     mat-checkbox {
         // adds breaks to mat-checkboxes with long labels
+        /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
         .mat-checkbox-layout {
             white-space: normal;
         }
-
+        /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
         .mat-checkbox-label {
             white-space: nowrap;
             overflow: hidden;
@@ -49,6 +50,7 @@
         }
 
         // rather than center the checkbox, put the checkbox in the first line
+        /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
         .mat-checkbox-inner-container {
             margin-top: 3px;
         }

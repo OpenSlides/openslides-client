@@ -8,7 +8,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { MatLegacyCheckbox as MatCheckbox } from '@angular/material/legacy-checkbox';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { OsFilterOption, OsFilterOptions } from 'src/app/site/base/base-filter.service';
 
