@@ -8,8 +8,8 @@
 }
 
 .os-headed-listview-table {
-    .links-disabled {
-        pointer-events: none;
+    mat-row:hover {
+        cursor: auto;
     }
 }
 
