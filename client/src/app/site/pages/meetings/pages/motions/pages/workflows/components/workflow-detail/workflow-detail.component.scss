@@ -5,12 +5,6 @@
 }
 
 table {
-    .mat-mdc-header-cell,
-    .mat-mdc-cell {
-        min-width: 200px;
-        position: relative;
-    }
-
     .has-help-text {
         cursor: help;
         &:hover {
