@@ -47,7 +47,7 @@ export class AuthGuard {
         } else if (!(await this.authCheck.hasAccessToMeeting(state.url))) {
             return false;
         }
-        if (!(await this.authCheck.isAuthenticated())) {
+        if (!(await this.authCheck.isAuthenticated(state.url))) {
             return this.reroute.toLogin();
         }
         return await this.authCheck.isAuthorized(route.data);

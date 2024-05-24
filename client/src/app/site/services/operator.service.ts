@@ -11,6 +11,7 @@ import {
 import { DelegationSetting, delegationSettings } from 'src/app/domain/definitions/delegation-setting';
 import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { User } from 'src/app/domain/models/users/user';
 import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -55,6 +56,10 @@ function getUserCML(user: ViewUser): { [id: number]: string } | null {
 export class OperatorService {
     public get operatorId(): number | null {
         return this.isAnonymous || !this.authService.authToken ? null : this.authService.authToken.userId;
+    }
+
+    public get isAnonymousLoggedIn(): boolean {
+        return this.authService.isAuthenticated() && this.isAnonymous;
     }
 
     public get isAnonymous(): boolean {
@@ -130,9 +135,18 @@ export class OperatorService {
         return this._operatorShortNameSubject;
     }
 
+    private defaultAnonUser = new ViewUser(
+        new User({
+            id: 0,
+            first_name: `Guest`
+        })
+    );
+
     public get user(): ViewUser {
-        if (!this._userSubject.value) {
+        if (!this._userSubject.value && !this.isAnonymous && this.isAuthenticated) {
             throw new Error(`Operator has not fully loaded yet.`);
+        } else if (this.isAnonymousLoggedIn) {
+            return this.defaultAnonUser;
         }
         return this._userSubject.value;
     }
@@ -353,7 +367,8 @@ export class OperatorService {
     }
 
     public isInMeeting(meetingId: Id): boolean {
-        return this.user.meeting_ids?.includes(meetingId) || false;
+        const meeting = this.meetingRepo.getViewModel(meetingId);
+        return (meeting.enable_anonymous && this.isAnonymous) || this.user.meeting_ids?.includes(meetingId) || false;
     }
 
     private updateUser(user: ViewUser): void {

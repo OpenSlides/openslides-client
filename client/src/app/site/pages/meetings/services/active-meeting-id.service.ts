@@ -53,7 +53,9 @@ export class ActiveMeetingIdService {
             .subscribe(event => {
                 const parts = (event as RoutesRecognized).url.split(`/`);
                 let meetingId = null;
-                if (parts.length >= 2) {
+                if (parts.length >= 3 && parts[1] === `login`) {
+                    meetingId = parts[2];
+                } else if (parts.length >= 2) {
                     meetingId = parts[1];
                 }
                 this.setMeetingId(meetingId);

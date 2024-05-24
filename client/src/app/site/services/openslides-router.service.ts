@@ -87,8 +87,12 @@ export class OpenSlidesRouterService {
         const url = this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
 
         // Navigate to login if the user is not already there
-        if (!url.startsWith(`/${UrlTarget.LOGIN}`)) {
-            this.router.navigate([`/`, UrlTarget.LOGIN]);
+        if (!url.startsWith(`/${UrlTarget.LOGIN}`) && !new RegExp(`^\/[0-9]+\/${UrlTarget.LOGIN}`).test(url)) {
+            if (this.getCurrentMeetingId()) {
+                this.router.navigate([`/`, this.getCurrentMeetingId(), UrlTarget.LOGIN]);
+            } else {
+                this.router.navigate([`/`, UrlTarget.LOGIN]);
+            }
         }
     }
 
@@ -100,11 +104,13 @@ export class OpenSlidesRouterService {
         return !urlSegments[0] || Number.isNaN(Number(urlSegments[0]));
     }
 
-    /**
-     * Checks if the operator is in a specified meeting
-     * @param info a string containing the meetingId of the meeting that is to be checked, or a full url (from which a meetingId can be extracted)
-     * @returns the meetingId from the url or (if info is not a url) Number(info), NaN if no number can be extracted
-     */
+    public getCurrentMeetingId(): number {
+        const url = this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
+        const segments = url.split(`/`);
+        const meetingIdString = segments.length > 1 ? segments[1] : segments[0];
+        return Number(meetingIdString) || null;
+    }
+
     public getMeetingId(info: string): number {
         const segments = info.split(`/`);
         const meetingIdString = segments.length > 1 ? segments[1] : segments[0];
