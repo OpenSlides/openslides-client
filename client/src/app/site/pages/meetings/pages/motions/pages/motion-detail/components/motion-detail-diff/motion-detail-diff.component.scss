@@ -1,6 +1,9 @@
 @import 'src/assets/styles/mixins/detail-view-appearance.scss';
 
-@include detail-view-appearance;
+
+.underlined-links {
+    @include detail-view-appearance;
+}
 
 .diff-box {
     position: relative;
