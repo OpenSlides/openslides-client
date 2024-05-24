@@ -246,7 +246,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             reason: partialMotion.reason,
             number: partialMotion.number,
             state_extension: partialMotion.state_extension,
-            statute_paragraph_id: partialMotion.statute_paragraph_id,
             sort_parent_id: partialMotion.sort_parent_id,
             supporter_meeting_user_ids: partialMotion.supporter_meeting_user_ids,
             ...createAgendaItem(partialMotion, false)
