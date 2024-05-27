@@ -268,7 +268,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.addNewUserToFormCtrl(newUserObj, `supporters_id`);
     }
 
-    public getDefaultWorkflowKeyOfSettingsByParagraph(): keyof Settings {
+    public getDefaultWorkflowKeyOfSettingsByParagraph(_paragraph: string): keyof Settings {
         let configKey: keyof Settings = `motions_default_workflow_id`;
         if (!!this.route.snapshot.queryParams[`parent`]) {
             configKey = `motions_default_amendment_workflow_id`;
