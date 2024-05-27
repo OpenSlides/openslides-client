@@ -5,6 +5,7 @@
 // Determine the distance between the top edge to the start of the table content
 $text-margin-top: 10px;
 
+/* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
 .mat-button-toggle-group {
     line-height: normal;
     vertical-align: middle;

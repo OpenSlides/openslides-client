@@ -60,7 +60,7 @@
     .fake-disabled {
         background: mat.get-color-from-palette($background, unselected-chip) !important;
         opacity: 1 !important;
-
+        /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
         .mat-button-wrapper {
             .mat-icon {
                 color: mat.get-color-from-palette($foreground, disabled-button) !important;

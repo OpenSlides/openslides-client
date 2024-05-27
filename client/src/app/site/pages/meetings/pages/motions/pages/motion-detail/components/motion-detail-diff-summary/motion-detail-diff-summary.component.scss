@@ -36,7 +36,7 @@
     height: 24px !important;
     width: 24px !important;
     line-height: 24px !important;
-
+    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
     .mat-button-wrapper {
         vertical-align: top;
         line-height: initial;
