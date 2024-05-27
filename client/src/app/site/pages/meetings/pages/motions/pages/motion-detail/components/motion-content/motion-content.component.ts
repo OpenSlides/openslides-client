@@ -448,9 +448,4 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
         return this.fb.group(motionFormControls);
     }
-
-    private getWorkflowIdForCreateFormByParagraph(paragraph?: number): number {
-        const configKey = this.getDefaultWorkflowKeyOfSettingsByParagraph(paragraph);
-        return +this.meetingSettingsService.instant(configKey)!;
-    }
 }

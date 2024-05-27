@@ -233,26 +233,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.createAction(AmendmentAction.CREATE_PARAGRAPHBASED_AMENDMENT, payload);
     }
 
-    public createStatuteAmendment(partialMotion: Partial<Motion & { workflow_id: Id }>): Action<CreateResponse> {
-        const payload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
-            title: partialMotion.title,
-            text: partialMotion.text,
-            origin_id: partialMotion.origin_id,
-            submitter_ids: partialMotion.submitter_ids,
-            workflow_id: partialMotion.workflow_id,
-            category_id: partialMotion.category_id,
-            attachment_ids: partialMotion.attachment_ids,
-            reason: partialMotion.reason,
-            number: partialMotion.number,
-            state_extension: partialMotion.state_extension,
-            sort_parent_id: partialMotion.sort_parent_id,
-            supporter_meeting_user_ids: partialMotion.supporter_meeting_user_ids,
-            ...createAgendaItem(partialMotion, false)
-        };
-        return this.createAction(AmendmentAction.CREATE_STATUTEBASED_AMENDMENT, payload);
-    }
-
     public getTitle = (viewMotion: ViewMotion) => {
         if (viewMotion.number) {
             return `${viewMotion.number}: ${viewMotion.title}`;
