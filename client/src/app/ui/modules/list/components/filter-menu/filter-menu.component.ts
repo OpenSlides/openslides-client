@@ -38,7 +38,7 @@ export class FilterMenuComponent<V extends Identifiable> implements OnInit {
     /**
      * The height of one row in an action list
      */
-    public readonly ROW_HEIGHT = 24;
+    public readonly ROW_HEIGHT = 30;
 
     /**
      * An event emitter to submit a desire to close this component
