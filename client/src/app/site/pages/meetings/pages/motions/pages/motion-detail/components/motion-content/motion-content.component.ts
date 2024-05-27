@@ -3,7 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, map, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions/motion';
@@ -122,6 +122,13 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     public set canSaveParagraphBasedAmendment(can: boolean) {
         this._canSaveParagraphBasedAmendment = can;
+        this.propagateChanges();
+    }
+
+    public set paragraphBasedAmendmentContent(content: {
+        amendment_paragraphs: { [paragraph_number: number]: UnsafeHtml };
+    }) {
+        this._paragraphBasedAmendmentContent = content;
         this.propagateChanges();
     }
 
@@ -268,7 +275,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.addNewUserToFormCtrl(newUserObj, `supporters_id`);
     }
 
-    public getDefaultWorkflowKeyOfSettingsByParagraph(_paragraph: string): keyof Settings {
+    public getDefaultWorkflowKeyOfSettingsByParagraph(_paragraph: number): keyof Settings {
         let configKey: keyof Settings = `motions_default_workflow_id`;
         if (!!this.route.snapshot.queryParams[`parent`]) {
             configKey = `motions_default_amendment_workflow_id`;
