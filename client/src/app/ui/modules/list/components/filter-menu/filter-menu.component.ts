@@ -8,7 +8,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { MatLegacyCheckbox as MatCheckbox } from '@angular/material/legacy-checkbox';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { OsFilterOption, OsFilterOptions } from 'src/app/site/base/base-filter.service';
 
@@ -38,7 +38,7 @@ export class FilterMenuComponent<V extends Identifiable> implements OnInit {
     /**
      * The height of one row in an action list
      */
-    public readonly ROW_HEIGHT = 24;
+    public readonly ROW_HEIGHT = 30;
 
     /**
      * An event emitter to submit a desire to close this component
