@@ -294,15 +294,15 @@
                         <mat-expansion-panel-header>
                             <span>{{ 'Timers' | translate }}</span>
                         </mat-expansion-panel-header>
-                        <mat-list>
-                            <mat-list-item *ngFor="let countdown of countdowns" class="larger-mat-list-item">
+                        <div class="card-list">
+                            <div *ngFor="let countdown of countdowns" class="card-list-item">
                                 <os-countdown-controls
                                     class="dynamic-list-entry"
                                     [countdown]="countdown"
                                     [projector]="projector"
                                 ></os-countdown-controls>
-                            </mat-list-item>
-                        </mat-list>
+                            </div>
+                        </div>
                         <mat-action-row>
                             <button type="button" mat-button (click)="createProjectorCountdown()">
                                 <mat-icon>add</mat-icon>
@@ -316,8 +316,8 @@
                         <mat-expansion-panel-header>
                             <span>{{ 'Messages' | translate }}</span>
                         </mat-expansion-panel-header>
-                        <mat-list>
-                            <mat-list-item class="larger-mat-list-item">
+                        <div class="card-list">
+                            <div class="card-list-item">
                                 <mat-card class="wifi-card" style="width: 100%">
                                     <mat-card-content>
                                         <div
@@ -336,15 +336,15 @@
                                         </small>
                                     </mat-card-content>
                                 </mat-card>
-                            </mat-list-item>
-                            <mat-list-item *ngFor="let message of messages" class="larger-mat-list-item">
+                            </div>
+                            <div *ngFor="let message of messages" class="card-list-item">
                                 <os-message-controls
                                     class="dynamic-list-entry"
                                     [message]="message"
                                     [projector]="projector"
                                 ></os-message-controls>
-                            </mat-list-item>
-                        </mat-list>
+                            </div>
+                        </div>
                         <mat-action-row>
                             <button type="button" mat-button (click)="createProjectorMessage()">
                                 <mat-icon>add</mat-icon>

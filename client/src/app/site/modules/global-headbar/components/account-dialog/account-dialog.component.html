@@ -7,18 +7,17 @@
 <mat-divider></mat-divider>
 <mat-dialog-content class="account-dialog-container">
     <div class="account-dialog-menu-items">
-        <mat-selection-list [multiple]="false">
+        <mat-nav-list>
             <ng-container *ngFor="let item of filteredMenuItems">
-                <mat-list-option
-                    [value]="item"
-                    [selected]="activeMenuItem === item.name"
+                <mat-list-item
+                    [activated]="activeMenuItem === item.name"
                     (click)="activeMenuItem = item.name"
                 >
                     {{ item.name | translate }}
-                </mat-list-option>
+                </mat-list-item>
                 <mat-divider></mat-divider>
             </ng-container>
-        </mat-selection-list>
+        </mat-nav-list>
     </div>
     <mat-divider [vertical]="true"></mat-divider>
     <div class="account-dialog-content">

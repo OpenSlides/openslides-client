@@ -131,6 +131,12 @@
     }
 }
 
+.card-list {
+    .card-list-item:not(:last-of-type) {
+        margin-bottom: 8px;
+    }
+}
+
 .drop-list-entry:last-child {
     border: none;
 }
