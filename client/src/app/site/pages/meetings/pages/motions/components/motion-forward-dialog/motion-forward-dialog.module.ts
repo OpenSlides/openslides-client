@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { MeetingTimeModule } from 'src/app/ui/modules/meeting-time/meeting-time.module';

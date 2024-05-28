@@ -1,5 +1,5 @@
 <ng-container *ngIf="chips.length">
-    <mat-chip-list
+    <mat-chip-listbox
         class="mat-chip-list-stacked"
         [matMenuTriggerFor]="canOpen ? menu : null"
         [ngClass]="{ 'menu-handle': canOpen }"
@@ -7,7 +7,7 @@
         <mat-basic-chip *ngFor="let chip of chips" [class]="chipClass || 'grey'" disableRipple>
             <ng-content *ngTemplateOutlet="chip.template"></ng-content>
         </mat-basic-chip>
-    </mat-chip-list>
+    </mat-chip-listbox>
 </ng-container>
 <ng-container *ngIf="chips.length < 1">
     <mat-basic-chip

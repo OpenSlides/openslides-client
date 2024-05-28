@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
 import { ProjectorCountdownDialogComponent } from './components/projector-countdown-dialog/projector-countdown-dialog.component';

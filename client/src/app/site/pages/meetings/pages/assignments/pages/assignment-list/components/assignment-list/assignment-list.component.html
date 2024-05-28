@@ -38,11 +38,11 @@
             <div class="title-line ellipsis-overflow">
                 {{ assignment.getListTitle() }}
             </div>
-            <mat-chip-list class="ellipsis-overflow" *ngIf="vp.isMobile">
-                <mat-chip color="primary" selected>
+            <mat-chip-listbox class="ellipsis-overflow" *ngIf="vp.isMobile">
+                <mat-chip-option color="primary" selected>
                     {{ assignment.phaseString | translate }}
-                </mat-chip>
-            </mat-chip-list>
+                </mat-chip-option>
+            </mat-chip-listbox>
         </div>
     </div>
 
@@ -51,20 +51,20 @@
         *osScrollingTableCell="'phase'; row as assignment; config: { width: 180 }"
         class="cell-slot fill mat-chip-wrapper"
     >
-        <mat-chip-list>
-            <mat-chip color="primary" selected>
+        <mat-chip-listbox>
+            <mat-chip-option color="primary" selected>
                 {{ assignment.phaseString | translate }}
-            </mat-chip>
-        </mat-chip-list>
+            </mat-chip-option>
+        </mat-chip-listbox>
     </div>
 
     <!-- Candidates -->
     <div *osScrollingTableCell="'candidates'; row as assignment; config: { width: 40 }" class="cell-slot fill">
-        <mat-chip-list>
-            <mat-chip color="accent" selected matTooltip="{{ 'Number of candidates' | translate }}">
+        <mat-chip-listbox>
+            <mat-chip-option color="accent" selected matTooltip="{{ 'Number of candidates' | translate }}">
                 {{ getCandidateAmount(assignment) }}
-            </mat-chip>
-        </mat-chip-list>
+            </mat-chip-option>
+        </mat-chip-listbox>
     </div>
 
     <!-- Menu -->

@@ -1,4 +1,6 @@
-.mat-basic-chip .mat-chip-ripple {
+
+/* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
+.mat-mdc-basic-chip .mat-chip-ripple {
     top: 0;
     left: 0;
     right: 0;
