@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
+import { MatTableModule } from '@angular/material/table';
 
 import { ScrollingTableComponent } from './components/scrolling-table/scrolling-table.component';
 import { ScrollingTableCellDirective } from './directives/scrolling-table-cell.directive';

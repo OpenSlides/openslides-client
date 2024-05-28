@@ -5,12 +5,6 @@
 }
 
 table {
-    .mat-header-cell,
-    .mat-cell {
-        min-width: 200px;
-        position: relative;
-    }
-
     .has-help-text {
         cursor: help;
         &:hover {
