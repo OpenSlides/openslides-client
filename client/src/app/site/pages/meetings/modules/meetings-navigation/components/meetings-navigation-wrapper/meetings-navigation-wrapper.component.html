@@ -1,17 +1,17 @@
 <os-sidenav #sideNav>
     <ng-template osSidenavDrawerContent>
         <!-- navigation -->
-        <mat-nav-list class="main-nav">
+        <div class="main-nav">
             <ng-container *ngIf="showMeetingNav">
                 <a
                     [@navItemAnim]
-                    mat-list-item
+                    mat-menu-item
                     (click)="mobileAutoCloseNav()"
                     [routerLink]="['/']"
-                    class="meetingNavRow"
+                    class="foreground-icon nav-item"
                 >
-                    <mat-icon>apps</mat-icon>
-                    <span>{{ 'Dashboard' | translate }}</span>
+                    <mat-icon matListItemIcon>apps</mat-icon>
+                    <span matListItemTitle class="nav-row-text">{{ 'Dashboard' | translate }}</span>
                 </a>
                 <mat-divider></mat-divider>
             </ng-container>
@@ -20,16 +20,16 @@
                     <a
                         [@navItemAnim]
                         *osPerms="entry.permission"
-                        mat-list-item
-                        class="foreground-icon"
+                        mat-menu-item
+                        class="foreground-icon nav-item"
                         [ngStyle]="getCustomStyleForEntry(entry)"
                         (click)="mobileAutoCloseNav()"
                         [routerLink]="entry.route"
                         routerLinkActive="active"
                         [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
                     >
-                        <mat-icon>{{ entry.icon }}</mat-icon>
-                        <span>{{ entry.displayName | translate }}</span>
+                        <mat-icon matListItemIcon>{{ entry.icon }}</mat-icon>
+                        <span matListItemTitle class="nav-row-text">{{ entry.displayName | translate }}</span>
                     </a>
                 </span>
             </ng-container>
@@ -42,13 +42,14 @@
                 <a
                     [@navItemAnim]
                     *ngIf="chat.canSee"
-                    class="foreground-icon"
-                    mat-list-item
+                    class="foreground-icon nav-item"
+                    mat-menu-item
                     (click)="mobileAutoCloseNav()"
                     routerLink="chat"
                     routerLinkActive="active"
                 >
                     <mat-icon
+                        matListItemIcon
                         [matBadgeHidden]="chat.notifications === 0"
                         [matBadge]="chat.notifications"
                         matBadgeColor="accent"
@@ -56,12 +57,12 @@
                     >
                         sms
                     </mat-icon>
-                    <span>
+                    <span matListItemTitle class="nav-row-text">
                         {{ 'Chat' | translate }}
                     </span>
                 </a>
             </ng-container>
-        </mat-nav-list>
+        </div>
     </ng-template>
     <ng-template osSidenavMainContent>
         <div class="content">

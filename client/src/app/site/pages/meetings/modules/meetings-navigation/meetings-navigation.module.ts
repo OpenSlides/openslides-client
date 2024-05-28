@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 import { GlobalHeadbarModule } from 'src/app/site/modules/global-headbar';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
@@ -24,7 +25,8 @@ const EXPORTS = [MeetingsNavigationWrapperComponent];
         GlobalHeadbarModule,
         InteractionModule,
         OpenSlidesTranslationModule.forChild(),
-        MatListModule,
+        MatMenuModule,
+        MatDividerModule,
         MatIconModule,
         MatBadgeModule,
         RouterModule
