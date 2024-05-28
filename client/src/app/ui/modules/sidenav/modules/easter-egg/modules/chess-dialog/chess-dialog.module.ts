@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { PromptDialogModule, PromptService } from 'src/app/ui/modules/prompt-dialog';
 

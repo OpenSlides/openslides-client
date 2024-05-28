@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatRippleModule } from '@angular/material/core';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatRippleModule } from '@angular/material/core';
 
 import { ChipComponent } from './components/chip/chip.component';
 
