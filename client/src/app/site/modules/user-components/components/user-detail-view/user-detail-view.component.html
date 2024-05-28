@@ -113,7 +113,6 @@
                     *ngIf="isNewUser"
                     matSuffix
                     type="button"
-                    mat-button
                     mat-icon-button
                     [matTooltip]="'Leave blank to automatically generate the username.' | translate"
                     matTooltipPosition="above"
@@ -138,7 +137,6 @@
                     *ngIf="isNewUser && generatePasswordFn"
                     matSuffix
                     type="button"
-                    mat-button
                     mat-icon-button
                     [disabled]="!generatePasswordFn"
                     (click)="setRandomPassword()"
@@ -150,7 +148,6 @@
                     *ngIf="isNewUser"
                     matSuffix
                     type="button"
-                    mat-button
                     mat-icon-button
                     [matTooltip]="'Leave blank to automatically generate the password.' | translate"
                 >

@@ -9,10 +9,7 @@
     <div class="account-dialog-menu-items">
         <mat-nav-list>
             <ng-container *ngFor="let item of filteredMenuItems">
-                <mat-list-item
-                    [activated]="activeMenuItem === item.name"
-                    (click)="activeMenuItem = item.name"
-                >
+                <mat-list-item [activated]="activeMenuItem === item.name" (click)="activeMenuItem = item.name">
                     {{ item.name | translate }}
                 </mat-list-item>
                 <mat-divider></mat-divider>
