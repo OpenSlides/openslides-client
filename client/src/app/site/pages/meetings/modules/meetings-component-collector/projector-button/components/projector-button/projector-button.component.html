@@ -6,7 +6,7 @@
         [disabled]="disabled"
         [ngClass]="{ 'projector-inactive': !isProjected }"
     >
-        <ng-container *ngTemplateOutlet="content"></ng-container>
+        <mat-icon>videocam</mat-icon>
     </button>
     <button
         *ngIf="!menuItem && blendIn"
@@ -15,7 +15,7 @@
         [disabled]="disabled"
         class="blend-in"
     >
-        <ng-container *ngTemplateOutlet="content"></ng-container>
+        <mat-icon>videocam</mat-icon>
     </button>
     <button
         *ngIf="menuItem"
