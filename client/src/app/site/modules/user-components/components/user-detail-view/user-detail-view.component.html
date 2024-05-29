@@ -159,6 +159,13 @@
             </mat-form-field>
         </div>
 
+        <div *ngIf="isAllowed('update')">
+            <mat-form-field class="width-16p force-min-width">
+                <mat-label>{{ 'Membership number' | translate }}</mat-label>
+                <input type="text" matInput formControlName="member_number" />
+            </mat-form-field>
+        </div>
+
         <div *ngIf="isAllowed('seeName')">
             <mat-checkbox formControlName="is_active" *ngIf="!isSelf">{{ 'active' | translate }}</mat-checkbox>
             <mat-checkbox formControlName="is_physical_person">{{ 'natural person' | translate }}</mat-checkbox>
@@ -221,6 +228,12 @@
             <div *ngIf="user.default_password && !user.saml_id && isAllowed('update')">
                 <h4>{{ 'Initial password' | translate }}</h4>
                 <span>{{ user.default_password }}</span>
+            </div>
+
+            <!-- Membership number-->
+            <div *ngIf="user.member_number">
+                <h4>{{ 'Membership number' | translate }}</h4>
+                <span>{{ user.member_number }}</span>
             </div>
 
             <!-- SAML id -->
