@@ -107,7 +107,9 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         header_font_color: _(`Header font color`),
         header_h1_color: _(`Headline color`),
         chyron_background_color: _(`Chyron background color`),
-        chyron_font_color: _(`Chyron font color`)
+        chyron_font_color: _(`Chyron font color`),
+        chyron_background_color_2: _(`Chyron second background color`),
+        chyron_font_color_2: _(`Chyron second font color`)
     };
 
     private get _aspectRatioControl(): AbstractControl {
@@ -150,6 +152,8 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             header_h1_color: [``, Validators.required],
             chyron_background_color: [``, Validators.required],
             chyron_font_color: [``, Validators.required],
+            chyron_background_color_2: [``, Validators.required],
+            chyron_font_color_2: [``, Validators.required],
             show_header_footer: [],
             show_title: [],
             show_logo: [],

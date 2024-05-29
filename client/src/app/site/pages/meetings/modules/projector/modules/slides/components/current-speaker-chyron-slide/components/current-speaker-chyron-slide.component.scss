@@ -1,7 +1,8 @@
 @import 'src/assets/styles/fonts.scss';
 
-#chyron,
-#chyron_new {
+#chyron_speaker {
+    background-color: var(--chyron-background-color);
+    color: var(--chyron-font-color);
     position: absolute;
     left: 50px;
     bottom: 20px;
@@ -34,6 +35,8 @@
 }
 
 #chyron_agenda_item {
+    background-color: var(--chyron-background-color-2);
+    color: var(--chyron-font-color-2);
     position: absolute;
     left: 50px;
     bottom: 100px;

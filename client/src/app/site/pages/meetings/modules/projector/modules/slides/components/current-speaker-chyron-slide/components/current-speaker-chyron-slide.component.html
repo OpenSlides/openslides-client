@@ -1,29 +1,25 @@
 <div
-    id="chyron_agenda_item"
-    *ngIf="data && data.options['agenda_item']"
+    [id]="data.options['chyron_type'] === 'new' ? 'chyron_new' : 'chyron'"
     [ngStyle]="{
-        'background-color': projector?.chyron_background_color || data.data.background_color,
-        color: projector?.chyron_font_color || data.data.font_color
+        '--chyron-background-color': projector?.chyron_background_color || data.data.background_color,
+        '--chyron-font-color': projector?.chyron_font_color || data.data.font_color,
+        '--chyron-background-color-2': projector?.chyron_background_color_2 || data.data.background_color_2,
+        '--chyron-font-color-2': projector?.chyron_font_color_2 || data.data.font_color_2
     }"
 >
-    <span id="inner">{{ data.data.title_information?.title }}</span>
-</div>
+    <div id="chyron_agenda_item" *ngIf="data && data.options['agenda_item']">
+        <span id="inner">{{ data.data.title_information?.title }}</span>
+    </div>
 
-<div
-    id="chyron"
-    *ngIf="data && data.options['chyron_type'] !== 'none'"
-    [ngStyle]="{
-        'background-color': projector?.chyron_background_color || data.data.background_color,
-        color: projector?.chyron_font_color || data.data.font_color
-    }"
->
-    <span *ngIf="data.options['chyron_type'] === 'old'" id="inner">
-        <div id="inner-name">{{ data.data.current_speaker_name }}</div>
-        <div id="inner-level">{{ data.data.current_speaker_level }}</div>
-    </span>
-    <span *ngIf="data.options['chyron_type'] === 'new'" id="inner">
-        <os-comma-separated-listing
-            [list]="[data.data.current_speaker_name, data.data.current_speaker_level]"
-        ></os-comma-separated-listing>
-    </span>
+    <div id="chyron_speaker" *ngIf="data && data.options['chyron_type'] !== 'none'">
+        <span *ngIf="data.options['chyron_type'] === 'old'" id="inner">
+            <div id="inner-name">{{ data.data.current_speaker_name }}</div>
+            <div id="inner-level">{{ data.data.current_speaker_level }}</div>
+        </span>
+        <span *ngIf="data.options['chyron_type'] === 'new'" id="inner">
+            <os-comma-separated-listing
+                [list]="[data.data.current_speaker_name, data.data.current_speaker_level]"
+            ></os-comma-separated-listing>
+        </span>
+    </div>
 </div>

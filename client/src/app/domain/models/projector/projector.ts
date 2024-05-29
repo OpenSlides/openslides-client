@@ -25,6 +25,8 @@ export class Projector extends BaseModel<Projector> {
     public header_h1_color!: string;
     public chyron_background_color!: string;
     public chyron_font_color!: string;
+    public chyron_background_color_2!: string;
+    public chyron_font_color_2!: string;
     public show_header_footer!: boolean;
     public show_title!: boolean;
     public show_logo!: boolean;
@@ -87,7 +89,9 @@ export class Projector extends BaseModel<Projector> {
         `header_font_color`,
         `header_h1_color`,
         `chyron_background_color`,
+        `chyron_background_color_2`,
         `chyron_font_color`,
+        `chyron_font_color_2`,
         `show_header_footer`,
         `show_title`,
         `show_logo`,
