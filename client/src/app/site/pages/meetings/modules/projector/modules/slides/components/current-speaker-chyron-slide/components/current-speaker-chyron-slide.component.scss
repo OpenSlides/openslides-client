@@ -1,20 +1,25 @@
 @import 'src/assets/styles/fonts.scss';
 
-#chyron_speaker {
-    background-color: var(--chyron-background-color);
-    color: var(--chyron-font-color);
+#chyron,
+#chyron_new {
     position: absolute;
     left: 50px;
     bottom: 20px;
     right: 0;
     z-index: 10;
-    height: 80px;
-    font-size: 32px;
+}
+
+#chyron_agenda_item,
+#chyron_speaker {
     text-align: left;
     line-height: 1;
     opacity: 1;
 
-    #inner {
+    .inner {
+        background-color: var(--chyron-background-color);
+        color: var(--chyron-font-color);
+        display: inline-block;
+
         vertical-align: middle;
         padding-left: 18px;
         padding-right: 20px;
@@ -22,39 +27,33 @@
         padding-bottom: 10px;
         height: 40px;
         display: table-cell;
+    }
+}
 
-        #inner-name {
+#chyron_agenda_item {
+    font-size: 28px;
+    .inner {
+        background-color: var(--chyron-background-color-2);
+        color: var(--chyron-font-color-2);
+    }
+}
+
+#chyron_speaker {
+    font-size: 32px;
+    .inner {
+        .name {
             font-family: customChyronNameFont, $font-chyronname;
         }
 
-        #inner-level {
+        .level {
             margin-top: 5px;
             font-size: 70%;
         }
     }
 }
 
-#chyron_agenda_item {
-    background-color: var(--chyron-background-color-2);
-    color: var(--chyron-font-color-2);
-    position: absolute;
-    left: 50px;
-    bottom: 100px;
-    right: 0;
-    z-index: 10;
-    height: 80px;
-    font-size: 32px;
-    text-align: left;
-    line-height: 1;
-    opacity: 1;
-
-    #inner {
-        vertical-align: middle;
-        padding-left: 18px;
-        padding-right: 20px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        height: 40px;
-        display: table-cell;
+#chyron_new {
+    #chyron_speaker {
+        min-height: 80px;
     }
 }
