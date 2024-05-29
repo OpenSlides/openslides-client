@@ -1,3 +1,5 @@
+@import 'src/assets/styles/mixins/button.scss';
+
 .text-field-container {
     display: grid;
 
@@ -7,14 +9,7 @@
 }
 
 .small-button {
-    width: 20px;
-    height: 20px;
-
-    line-height: inherit;
-
-    mat-icon {
-        font-size: 100%;
-    }
+    @include custom-size-button(20px, 14px);
 }
 
 .single-line {

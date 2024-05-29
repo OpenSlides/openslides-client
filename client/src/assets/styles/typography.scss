@@ -1,3 +1,5 @@
+@import 'src/assets/styles/mixins/button.scss';
+
 * {
     font-family: OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif;
 }
@@ -37,8 +39,8 @@ h4 {
     font-size: 100%;
     margin-bottom: 5px;
 
-    .mat-mdc-icon-button mat-icon {
-        font-size: 16px;
+    .mat-mdc-icon-button {
+        @include custom-size-button(20px, 14px);
     }
 }
 
