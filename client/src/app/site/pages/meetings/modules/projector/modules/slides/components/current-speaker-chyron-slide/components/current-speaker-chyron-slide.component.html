@@ -17,9 +17,7 @@
             <div class="level">{{ data.data.current_speaker_level }}</div>
         </span>
         <span *ngIf="data.options['chyron_type'] === 'new'" class="inner">
-            <os-comma-separated-listing
-                [list]="[data.data.current_speaker_name, data.data.current_speaker_level]"
-            ></os-comma-separated-listing>
+            <os-comma-separated-listing [list]="getSpeaker()"></os-comma-separated-listing>
         </span>
     </div>
 </div>
