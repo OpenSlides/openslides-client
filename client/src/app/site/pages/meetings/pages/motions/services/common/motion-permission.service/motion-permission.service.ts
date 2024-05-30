@@ -76,7 +76,11 @@ export class MotionPermissionService {
         switch (action) {
             case `create`: {
                 return this.operator.hasPerms(
-                    !(this._delegationEnabled && this._forbidDelegatorCreateMotions)
+                    !(
+                        this._delegationEnabled &&
+                        this._forbidDelegatorCreateMotions &&
+                        this.operator.user.isVoteRightDelegated
+                    )
                         ? Permission.motionCanCreate
                         : Permission.motionCanManage
                 );
@@ -87,7 +91,11 @@ export class MotionPermissionService {
                 }
                 return (
                     this.operator.hasPerms(
-                        !(this._delegationEnabled && this._forbidDelegatorSupportMotions)
+                        !(
+                            this._delegationEnabled &&
+                            this._forbidDelegatorSupportMotions &&
+                            this.operator.user.isVoteRightDelegated
+                        )
                             ? Permission.motionCanSupport
                             : Permission.motionCanManage
                     ) &&
@@ -104,7 +112,11 @@ export class MotionPermissionService {
                 }
                 return (
                     this.operator.hasPerms(
-                        !(this._delegationEnabled && this._forbidDelegatorSupportMotions)
+                        !(
+                            this._delegationEnabled &&
+                            this._forbidDelegatorSupportMotions &&
+                            this.operator.user.isVoteRightDelegated
+                        )
                             ? Permission.motionCanSupport
                             : Permission.motionCanManage
                     ) &&
@@ -185,7 +197,11 @@ export class MotionPermissionService {
                 }
                 return (
                     this.operator.hasPerms(
-                        !(this._delegationEnabled && this._forbidDelegatorCreateMotions)
+                        !(
+                            this._delegationEnabled &&
+                            this._forbidDelegatorCreateMotions &&
+                            this.operator.user.isVoteRightDelegated
+                        )
                             ? Permission.motionCanCreateAmendments
                             : Permission.motionCanManage
                     ) &&
