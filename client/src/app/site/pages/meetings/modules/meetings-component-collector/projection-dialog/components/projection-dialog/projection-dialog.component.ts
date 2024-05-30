@@ -28,7 +28,7 @@ import { ProjectionDialogReturnType } from '../../definitions';
 export interface ProjectionDialogConfig {
     descriptor: ProjectionBuildDescriptor;
     allowReferenceProjector: boolean;
-    toggleActionData?: ViewProjector;
+    hideActionData?: ViewProjector;
 }
 
 @Component({
@@ -56,9 +56,9 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     ) {
         this.descriptor = isProjectionBuildDescriptor(data) ? data : data.descriptor;
         this.allowReferenceProjector = !isProjectionBuildDescriptor(data) && data.allowReferenceProjector;
-        this.useHideAction = !isProjectionBuildDescriptor(data) && !!data.toggleActionData;
+        this.useHideAction = !isProjectionBuildDescriptor(data) && !!data.hideActionData;
         if (this.useHideAction && !isProjectionBuildDescriptor(data)) {
-            this.selectedProjectors = [data.toggleActionData.id];
+            this.selectedProjectors = [data.hideActionData.id];
         }
     }
 
