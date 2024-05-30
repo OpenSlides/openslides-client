@@ -11,7 +11,7 @@
         <span class="inner">{{ data.data.title_information?.title }}</span>
     </div>
 
-    <div id="chyron_speaker" *ngIf="data && data.options['chyron_type'] !== 'none'">
+    <div id="chyron_speaker" *ngIf="data && data.options['chyron_type'] !== 'none' && data.data.current_speaker_name">
         <span *ngIf="data.options['chyron_type'] === 'old'" class="inner">
             <div class="name">{{ data.data.current_speaker_name }}</div>
             <div class="level">{{ data.data.current_speaker_level }}</div>
