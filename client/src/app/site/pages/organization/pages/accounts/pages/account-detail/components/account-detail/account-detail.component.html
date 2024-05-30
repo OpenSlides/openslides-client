@@ -37,23 +37,7 @@
     <ng-template #editView let-form="form">
         <h2>{{ 'Organization specific information' | translate }}</h2>
         <div [formGroup]="form">
-            <!-- Default Vote weight -->
-            <mat-form-field class="form100 force-min-with">
-                <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
-                <input type="number" matInput formControlName="default_vote_weight" />
-                <mat-error *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0" translate>
-                    Please select a vote weight greater than or equal to 0.000001
-                </mat-error>
-                <mat-error
-                    *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value <= 0"
-                    translate
-                >
-                    Please select a vote weight greater than zero.
-                </mat-error>
-            </mat-form-field>
-        </div>
-
-        <div [formGroup]="form">
+            <!-- Administration roles (at organization level) -->
             <div *osOmlPerms="OML.can_manage_users">
                 <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Administration roles (at organization level)' | translate }}</mat-label>
@@ -69,6 +53,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+            <!-- Committee admin -->
             <div *osOmlPerms="OML.can_manage_organization">
                 <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Committee admin' | translate }}</mat-label>
@@ -83,6 +68,22 @@
                     ></os-repo-search-selector>
                 </mat-form-field>
             </div>
+        </div>
+        <!-- Default Vote weight -->
+        <div [formGroup]="form">
+            <mat-form-field class="form100 force-min-with">
+                <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
+                <input type="number" matInput formControlName="default_vote_weight" />
+                <mat-error *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0" translate>
+                    Please select a vote weight greater than or equal to 0.000001
+                </mat-error>
+                <mat-error
+                    *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value <= 0"
+                    translate
+                >
+                    Please select a vote weight greater than zero.
+                </mat-error>
+            </mat-form-field>
         </div>
     </ng-template>
 
