@@ -6,7 +6,7 @@
     <div class="element-name" *ngIf="descriptor">
         {{ descriptor.getDialogTitle() }}
     </div>
-    <div class="content-wrapper" *ngIf="!useToggleAction">
+    <div class="content-wrapper" *ngIf="!useHideAction">
         <div
             class="projectors"
             *ngFor="let projector of projectors"
@@ -49,7 +49,7 @@
 
 <mat-dialog-actions>
     <button mat-button osAutofocus (click)="onProject()" color="accent">{{ 'Project' | translate }}</button>
-    <button mat-button *ngIf="!useToggleAction" (click)="onAddToPreview()">{{ 'Add to queue' | translate }}</button>
-    <button mat-button *ngIf="useToggleAction" (click)="onToggle()">{{ 'Toggle' | translate }}</button>
+    <button mat-button *ngIf="!useHideAction" (click)="onAddToPreview()">{{ 'Add to queue' | translate }}</button>
+    <button mat-button *ngIf="useHideAction" (click)="onHide()">{{ 'Hide' | translate }}</button>
     <button mat-button (click)="onCancel()">{{ 'Cancel' | translate }}</button>
 </mat-dialog-actions>
