@@ -193,8 +193,8 @@
 
 <ng-template #showTemplate>
     <h2>{{ 'Personal information' | translate }}</h2>
-    <!-- User name -->
     <ng-container *ngIf="user">
+        <!-- Displayed name -->
         <div *ngIf="isAllowed('seeName')">
             <h4>{{ 'Name' | translate }}</h4>
             <span class="state-icons">
@@ -221,39 +221,33 @@
             </span>
         </div>
 
-        <!-- Mail -->
-        <div *ngIf="isAllowed('seeSensitiveData')">
-            <div *ngIf="user.email">
-                <h4>{{ 'Email' | translate }}</h4>
-                <span>{{ user.email }}</span>
-            </div>
-        </div>
-
         <!-- Gender -->
         <div *ngIf="user.gender">
             <h4>{{ 'Gender' | translate }}</h4>
             <span>{{ user.gender | translate }}</span>
         </div>
 
+        <!-- Mail -->
         <div *ngIf="isAllowed('seeSensitiveData')">
-            <!-- Username -->
-            <div *ngIf="user.username">
-                <h4>{{ 'Username' | translate }}</h4>
-                <span>{{ user.username }}</span>
+            <div *ngIf="user.email">
+                <h4>{{ 'Email' | translate }}</h4>
+                <span>{{ user.email }}</span>
             </div>
-
-            <!-- Initial Password -->
-            <div *ngIf="user.default_password && !user.saml_id && isAllowed('update')">
-                <h4>{{ 'Initial password' | translate }}</h4>
-                <span>{{ user.default_password }}</span>
-            </div>
-
             <!-- Membership number-->
             <div *ngIf="user.member_number">
                 <h4>{{ 'Membership number' | translate }}</h4>
                 <span>{{ user.member_number }}</span>
             </div>
-
+            <!-- Username -->
+            <div *ngIf="user.username">
+                <h4>{{ 'Username' | translate }}</h4>
+                <span>{{ user.username }}</span>
+            </div>
+            <!-- Initial Password -->
+            <div *ngIf="user.default_password && !user.saml_id && isAllowed('update')">
+                <h4>{{ 'Initial password' | translate }}</h4>
+                <span>{{ user.default_password }}</span>
+            </div>
             <!-- SAML id -->
             <div *ngIf="user.saml_id">
                 <h4>{{ 'SSO Identification' | translate }}</h4>
