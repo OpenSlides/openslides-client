@@ -52,6 +52,14 @@ export class MotionPermissionService {
         );
     }
 
+    public canDoActionWhileDelegationEnabled(isAdditionalDelegationSettingEnabled: boolean): boolean {
+        return !(
+            this.operator.user.isVoteRightDelegated &&
+            this._delegationEnabled &&
+            isAdditionalDelegationSettingEnabled
+        );
+    }
+
     /**
      * Determine if the user (Operator) has the correct permission to perform the given action.
      *
@@ -76,11 +84,7 @@ export class MotionPermissionService {
         switch (action) {
             case `create`: {
                 return this.operator.hasPerms(
-                    !(
-                        this._delegationEnabled &&
-                        this._forbidDelegatorCreateMotions &&
-                        this.operator.user.isVoteRightDelegated
-                    )
+                    this.canDoActionWhileDelegationEnabled(this._forbidDelegatorCreateMotions)
                         ? Permission.motionCanCreate
                         : Permission.motionCanManage
                 );
@@ -91,11 +95,7 @@ export class MotionPermissionService {
                 }
                 return (
                     this.operator.hasPerms(
-                        !(
-                            this._delegationEnabled &&
-                            this._forbidDelegatorSupportMotions &&
-                            this.operator.user.isVoteRightDelegated
-                        )
+                        this.canDoActionWhileDelegationEnabled(this._forbidDelegatorSupportMotions)
                             ? Permission.motionCanSupport
                             : Permission.motionCanManage
                     ) &&
@@ -112,11 +112,7 @@ export class MotionPermissionService {
                 }
                 return (
                     this.operator.hasPerms(
-                        !(
-                            this._delegationEnabled &&
-                            this._forbidDelegatorSupportMotions &&
-                            this.operator.user.isVoteRightDelegated
-                        )
+                        this.canDoActionWhileDelegationEnabled(this._forbidDelegatorSupportMotions)
                             ? Permission.motionCanSupport
                             : Permission.motionCanManage
                     ) &&
@@ -197,11 +193,7 @@ export class MotionPermissionService {
                 }
                 return (
                     this.operator.hasPerms(
-                        !(
-                            this._delegationEnabled &&
-                            this._forbidDelegatorCreateMotions &&
-                            this.operator.user.isVoteRightDelegated
-                        )
+                        this.canDoActionWhileDelegationEnabled(this._forbidDelegatorCreateMotions)
                             ? Permission.motionCanCreateAmendments
                             : Permission.motionCanManage
                     ) &&
