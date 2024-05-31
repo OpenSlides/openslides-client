@@ -78,7 +78,7 @@
         <!-- Second line -->
         <div class="personal-info-area">
             <!-- Gender -->
-            <mat-form-field class="form48 force-min-width">
+            <mat-form-field class="form58 force-min-width">
                 <mat-label>{{ 'Gender' | translate }}</mat-label>
                 <mat-select formControlName="gender">
                     <mat-option [value]="null">-</mat-option>
@@ -88,7 +88,7 @@
                 </mat-select>
             </mat-form-field>
             <!-- Pronoun -->
-            <mat-form-field class="form48 force-min-width">
+            <mat-form-field class="form37 force-min-width">
                 <mat-label>{{ 'Pronoun' | translate }}</mat-label>
                 <input type="text" matInput formControlName="pronoun" />
                 <mat-error>{{ 'max. 32 characters allowed' | translate }}</mat-error>
@@ -100,7 +100,7 @@
             <!-- E-Mail -->
             <mat-form-field
                 [ngClass]="{
-                    form48: isAllowed('update'),
+                    form58: isAllowed('update'),
                     form100: !isAllowed('update')
                 }"
                 class="force-min-width"
@@ -113,7 +113,7 @@
             </mat-form-field>
             <!-- Member Number -->
             <ng-container *ngIf="isAllowed('update')">
-                <mat-form-field class="form48 force-min-width">
+                <mat-form-field class="form37 force-min-width">
                     <mat-label>{{ 'Membership number' | translate }}</mat-label>
                     <input type="text" matInput formControlName="member_number" />
                 </mat-form-field>
@@ -126,7 +126,7 @@
             <ng-container *ngIf="isAllowed('seePersonal')">
                 <mat-form-field
                     [ngClass]="{
-                        form48: isAllowed('update'),
+                        form58: isAllowed('update'),
                         form100: !isAllowed('update')
                     }"
                     class="force-min-width"
@@ -155,7 +155,7 @@
 
             <!-- Initial Password -->
             <ng-container *ngIf="isAllowed('update') && !user?.saml_id">
-                <mat-form-field class="form48 force-min-width">
+                <mat-form-field class="form37 force-min-width">
                     <mat-label>{{ 'Initial password' | translate }}</mat-label>
                     <input matInput autocomplete="off" formControlName="default_password" />
                     <button
