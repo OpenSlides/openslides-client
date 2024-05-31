@@ -7,12 +7,13 @@
     bottom: 20px;
     right: 0;
     z-index: 10;
+    margin-right: 50px;
 }
 
 #chyron_agenda_item,
 #chyron_speaker {
     text-align: left;
-    line-height: 1;
+    line-height: 1.25;
     opacity: 1;
 
     .inner {
@@ -22,7 +23,7 @@
 
         vertical-align: middle;
         padding-left: 18px;
-        padding-right: 20px;
+        padding-right: 18px;
         padding-top: 10px;
         padding-bottom: 10px;
         height: 40px;
@@ -31,11 +32,12 @@
 }
 
 #chyron_agenda_item {
-    font-size: 28px;
+    font-size: 24px;
     .inner {
         background-color: var(--chyron-background-color-2);
         color: var(--chyron-font-color-2);
     }
+    margin-bottom: -1px;
 }
 
 #chyron_speaker {
