@@ -8,7 +8,11 @@
     }"
 >
     <div id="chyron_agenda_item" *ngIf="data && data.options['agenda_item'] && data.data.title_information">
-        <span class="inner">{{ data.data.title_information?.title }}</span>
+        <span class="inner">
+            {{ data.data.title_information?.agenda_item_number }}
+            {{ !!data.data.title_information?.agenda_item_number ? '&middot;' : '' }}
+            {{ data.data.title_information?.title }}
+        </span>
     </div>
 
     <div id="chyron_speaker" *ngIf="data && data.options['chyron_type'] !== 'none' && data.data.current_speaker_name">
