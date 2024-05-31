@@ -102,7 +102,7 @@
             <span *ngIf="!canAddDueToPresence" translate>You have to be present to add yourself.</span>
         </div>
 
-        <div class="add-self-buttons" *ngIf="addSelf && !isOpInWaitlist(true)">
+        <div class="add-self-buttons" *ngIf="addSelf">
             <!-- Add me and remove me if OP has correct permission -->
 
             <button
