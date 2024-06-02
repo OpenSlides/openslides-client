@@ -163,7 +163,7 @@ test.describe(`Testing the sign in and out process`, () => {
         await expect(page).not.toHaveURL(`/login`);
         await page.locator(`os-account-button > div`).click();
         await page.getByText(`Logout`).first().click();
-        await expect(page).toHaveURL(`/login`);
+        await expect(page).toHaveURL(`/${DEFAULT_MEETING_ID}/login`);
     });
 
     test(`sign in after logout`, async ({ page }) => {
@@ -176,14 +176,16 @@ test.describe(`Testing the sign in and out process`, () => {
         };
         loginDelegate();
         await expect(page).not.toHaveURL(`/login`);
+        await expect(page).not.toHaveURL(`/${DEFAULT_MEETING_ID}/login`);
         await expect(page).toHaveURL(`/${DEFAULT_MEETING_ID}`);
 
         await page.locator(`os-account-button > div`).click();
         await page.getByText(`Logout`).first().click();
-        await expect(page).toHaveURL(`/login`);
+        await expect(page).toHaveURL(`/${DEFAULT_MEETING_ID}/login`);
 
         loginDelegate();
         await expect(page).not.toHaveURL(`/login`);
+        await expect(page).not.toHaveURL(`/${DEFAULT_MEETING_ID}/login`);
         await expect(page).toHaveURL(`/${DEFAULT_MEETING_ID}`);
     });
 

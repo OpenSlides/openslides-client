@@ -72,7 +72,7 @@
             </button>
         </div>
 
-        <div *ngIf="!user">
+        <div *ngIf="!isLoggedIn">
             <button (click)="login()" mat-menu-item>
                 <mat-icon class="menu-icon">login</mat-icon>
                 <span class="menu-text">{{ 'Login' | translate }}</span>

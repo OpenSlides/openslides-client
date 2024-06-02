@@ -75,6 +75,10 @@ export class RerouteService {
     }
 
     public toLogin(): UrlTree {
+        if (this.osRouter.getCurrentMeetingId()) {
+            return this.router.createUrlTree([this.osRouter.getCurrentMeetingId(), `login`]);
+        }
+
         return this.router.createUrlTree([`login`]);
     }
 }

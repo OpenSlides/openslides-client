@@ -3,6 +3,7 @@ import { filter, Observable } from 'rxjs';
 
 import { SharedWorkerService } from '../openslides-main-module/services/shared-worker.service';
 import { ActiveMeetingIdService } from '../site/pages/meetings/services/active-meeting-id.service';
+import { OperatorService } from '../site/services/operator.service';
 import { WorkerResponse } from '../worker/interfaces';
 import { HttpService } from './http.service';
 
@@ -33,6 +34,7 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
 
     private httpService = inject(HttpService);
     protected activeMeetingIdService = inject(ActiveMeetingIdService);
+    protected operator = inject(OperatorService);
     private sharedWorker = inject(SharedWorkerService);
 
     /**
@@ -41,7 +43,7 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
      */
     protected setupConnections(): void {
         this.activeMeetingIdService.meetingIdObservable.subscribe(meetingId => {
-            if (meetingId) {
+            if (meetingId && !this.operator.isAnonymous) {
                 this.connect(meetingId);
             } else {
                 this.disconnect();

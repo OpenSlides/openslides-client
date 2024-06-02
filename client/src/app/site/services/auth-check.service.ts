@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Data } from '@angular/router';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
+import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
+import { AutoupdateService } from './autoupdate';
+import { ModelRequestBuilderService } from './model-request-builder';
 import { OpenSlidesRouterService } from './openslides-router.service';
 import { OperatorService } from './operator.service';
 
@@ -31,7 +36,10 @@ export class AuthCheckService {
     public constructor(
         private operator: OperatorService,
         private activeMeeting: ActiveMeetingService,
+        private meetingRepo: MeetingRepositoryService,
         private meetingSettingsService: MeetingSettingsService,
+        private autoupdate: AutoupdateService,
+        private modelRequestBuilder: ModelRequestBuilderService,
         private osRouter: OpenSlidesRouterService
     ) {}
 
@@ -47,9 +55,20 @@ export class AuthCheckService {
         return hasPerm && hasSetting;
     }
 
-    public async isAuthenticated(): Promise<boolean> {
+    public async isAuthenticated(info?: number | string): Promise<boolean> {
+        let meetingIdString = info;
+        if (typeof info === `string`) {
+            meetingIdString = this.osRouter.getMeetingId(info);
+        }
+
         await this.operator.ready;
-        return (this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated;
+        let meeting = this.activeMeeting.meeting;
+        if (!Number.isNaN(Number(meetingIdString)) && meetingIdString > 0) {
+            await this.fetchMeetingIfNotExists(+meetingIdString);
+            meeting = this.meetingRepo.getViewModel(+meetingIdString);
+        }
+
+        return (this.operator.isAnonymous && meeting?.enable_anonymous) || this.operator.isAuthenticated;
     }
 
     public async isAuthorizedToSeeOrganization(): Promise<boolean> {
@@ -74,8 +93,23 @@ export class AuthCheckService {
         if (Number.isNaN(Number(meetingIdString))) {
             return false;
         }
+        await this.fetchMeetingIfNotExists(+meetingIdString);
+
         await this.operator.ready;
         return this.operator.isInMeeting(Number(meetingIdString)) || this.operator.isSuperAdmin;
+    }
+
+    private async fetchMeetingIfNotExists(meetingId: Id): Promise<void> {
+        if (!this.meetingRepo.getViewModel(meetingId)) {
+            await this.autoupdate.single(
+                await this.modelRequestBuilder.build({
+                    ids: [meetingId],
+                    viewModelCtor: ViewMeeting,
+                    fieldset: [`enable_anonymous`, `name`]
+                }),
+                `meeting_single`
+            );
+        }
     }
 
     private async hasPerms(basePerm: Permission | Permission[], omlPerm?: OML | OML[]): Promise<boolean> {

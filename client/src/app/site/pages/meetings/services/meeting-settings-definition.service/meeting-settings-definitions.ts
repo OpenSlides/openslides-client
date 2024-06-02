@@ -145,6 +145,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
         icon: `home`,
         subgroups: [
             {
+                label: _(`System`),
+                settings: [
+                    {
+                        key: `enable_anonymous`,
+                        label: _(`Allow access for anonymous guest users`),
+                        type: `boolean`
+                    }
+                ]
+            },
+            {
                 label: _(`Meeting information`),
                 settings: [
                     {
