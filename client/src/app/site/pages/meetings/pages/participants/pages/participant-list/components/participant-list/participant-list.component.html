@@ -52,9 +52,13 @@
                 </div>
                 <div class="user-subtitle" *ngIf="canSeeSensitiveData && showVoteWeight">
                     {{ user.username }} &middot; {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
+                    <ng-container *ngIf="user.email">&middot; {{ user.email }}&nbsp;</ng-container>
+                    <ng-container *ngIf="user.member_number">&middot; {{ user.member_number }}</ng-container>
                 </div>
                 <div class="user-subtitle" *ngIf="canSeeSensitiveData && !showVoteWeight">
                     {{ user.username }}
+                    <ng-container *ngIf="user.email">&middot; {{ user.email }}&nbsp;</ng-container>
+                    <ng-container *ngIf="user.member_number">&middot; {{ user.member_number }}</ng-container>
                 </div>
                 <div class="user-subtitle" *ngIf="!canSeeSensitiveData && showVoteWeight">
                     {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
