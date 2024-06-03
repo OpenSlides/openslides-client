@@ -83,6 +83,9 @@ export class MotionXlsxExportService {
         const properties: string[] = infoToExport.includes(`speakers`)
             ? sortMotionPropertyList([`number`, `title`].concat(infoToExport)).concat(`speakers`)
             : sortMotionPropertyList([`number`, `title`].concat(infoToExport));
+        if (infoToExport.includes(`working_group_speakers`)) {
+            properties.push(`working_group_speakers`);
+        }
 
         const worksheet = workbook.addWorksheet(this.translate.instant(`Motions`), {
             pageSetup: {
@@ -113,6 +116,9 @@ export class MotionXlsxExportService {
                         break;
                     case `speakers`:
                         propertyHeader = _(`Open requests to speak`);
+                        break;
+                    case `working_group_speakers`:
+                        propertyHeader = _(`Spokesperson`);
                         break;
                     default:
                         propertyHeader = property.charAt(0).toUpperCase() + property.slice(1).replace(`_`, ` `);
