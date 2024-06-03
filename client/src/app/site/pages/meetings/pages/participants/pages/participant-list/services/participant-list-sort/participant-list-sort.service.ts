@@ -25,12 +25,14 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
         { property: [`first_name`, `last_name`], label: _(`Given name`) },
         { property: [`last_name`, `first_name`], label: _(`Surname`) },
         { property: `is_present_in_meeting_ids`, label: _(`Presence`) },
+        { property: `member_number`, label: _(`Membership Number`) },
         { property: `is_active`, label: _(`Is active`) },
         { property: `is_physical_person`, label: _(`Is a natural person`) },
         { property: `number`, label: _(`Participant number`), foreignBaseKeys: { meeting_user: [`number`] } },
         { property: `voteWeight`, label: _(`Vote weight`), foreignBaseKeys: { meeting_user: [`vote_weight`] } },
         { property: `comment`, baseKeys: [], foreignBaseKeys: { meeting_user: [`comment`] } },
         { property: `last_email_sent`, label: _(`Last email sent`) },
+        { property: `hasEmail`, label: _(`Has email`) },
         { property: `last_login`, label: _(`Last login`) }
     ];
 
