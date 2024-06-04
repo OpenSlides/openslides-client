@@ -1,4 +1,6 @@
 @import 'src/assets/styles/variables.scss';
+@import 'src/assets/styles/mixins/button.scss';
+
 .los-title {
     display: block;
 }
@@ -56,15 +58,9 @@
     @include desktop {
         padding: 0 0.75em 0 calc(0.75em + 38px);
     }
-    // TODO: Replace after mdc-migration:
-    .speaker-control-button {
-        .mat-icon {
-            width: 42px !important;
-            height: 42px !important;
-            line-height: 42px !important;
-        }
-        .material-icons {
-            font-size: 42px !important;
+    .speaker-start {
+        .mat-mdc-icon-button.speaker-control-button {
+            @include custom-size-button(46px, 42px);
         }
     }
 
