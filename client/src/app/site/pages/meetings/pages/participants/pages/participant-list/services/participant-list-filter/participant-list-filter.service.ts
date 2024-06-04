@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
@@ -129,25 +130,25 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 property: `hasSamlId`,
                 label: `SSO`,
                 options: [
-                    { condition: true, label: `Has SSO identification` },
-                    { condition: [false, null], label: `Has no SSO identification` }
+                    { condition: true, label: _(`Has SSO identification`) },
+                    { condition: [false, null], label: _(`Has no SSO identification`) }
                 ]
             },
             {
                 property: `delegationType`,
-                label: `Delegation of vote`,
+                label: _(`Delegation of vote`),
                 options: [
                     {
                         condition: DelegationType.Transferred,
-                        label: `Voting right received from (principals)`
+                        label: _(`Principals`)
                     },
                     {
                         condition: DelegationType.Received,
-                        label: `Voting right delegated to (proxy)`
+                        label: _(`Proxy holders`)
                     },
                     {
                         condition: DelegationType.Neither,
-                        label: `No delegation of vote`
+                        label: _(`No delegation of vote`)
                     }
                 ]
             }

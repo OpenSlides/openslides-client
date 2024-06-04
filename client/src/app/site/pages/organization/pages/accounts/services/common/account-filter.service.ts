@@ -167,10 +167,10 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
             },
             {
                 property: `hasMemberNumber`,
-                label: `Member number`,
+                label: `Membership number`,
                 options: [
-                    { condition: true, label: `Has a member number` },
-                    { condition: [false, null], label: `Has no member number` }
+                    { condition: true, label: `Has a membership number` },
+                    { condition: [false, null], label: `Has no membership number` }
                 ]
             }
         ];
