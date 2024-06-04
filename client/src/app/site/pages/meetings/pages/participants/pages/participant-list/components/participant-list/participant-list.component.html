@@ -50,12 +50,16 @@
                         <div *ngIf="user.pronoun">({{ user.pronoun }})</div>
                     </ng-container>
                 </div>
-                <div class="user-subtitle" *ngIf="canSeeSensitiveData && showVoteWeight">
-                    {{ user.username }}
-                    <ng-container *ngIf="user.email">&middot; {{ user.email }}&nbsp;</ng-container>
-                    <ng-container *ngIf="user.member_number">&middot; {{ user.member_number }}</ng-container>
-                    &middot; {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
-                </div>
+                <ng-container class="user-subtitle" *ngIf="canSeeSensitiveData && showVoteWeight">
+                    <div>
+                        {{ user.username }}
+                        <ng-container *ngIf="user.email">&middot; {{ user.email }}&nbsp;</ng-container>
+                        <ng-container *ngIf="user.member_number">&middot; {{ user.member_number }}</ng-container>
+                    </div>
+                    <div>
+                        {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
+                    </div>
+                </ng-container>
                 <div class="user-subtitle" *ngIf="canSeeSensitiveData && !showVoteWeight">
                     {{ user.username }}
                     <ng-container *ngIf="user.email">&middot; {{ user.email }}&nbsp;</ng-container>
