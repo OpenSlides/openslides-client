@@ -139,9 +139,14 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
     public async project(
         descriptor: ProjectionBuildDescriptor,
         projectors: ViewProjector[],
-        options: object | null
+        options: object | null,
+        mode?: 'DEFAULT' | 'UPDATE_ONLY_SELECTED'
     ): Promise<void> {
         const payload = this.createProjectPayload(descriptor, projectors, options);
+        if (mode) {
+            payload.mode = mode;
+        }
+
         return await this.sendActionToBackend(ProjectorAction.PROJECT, payload);
     }
 

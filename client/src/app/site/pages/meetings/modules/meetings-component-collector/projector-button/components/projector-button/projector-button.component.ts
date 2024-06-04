@@ -74,7 +74,7 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         if (this.useToggleDialog) {
             this.projectionDialogService.openProjectDialogFor({
                 descriptor,
-                hideActionData: this.projector,
+                projector: this.projector,
                 allowReferenceProjector: true
             });
         } else if (this.projector) {

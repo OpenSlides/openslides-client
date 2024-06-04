@@ -32,10 +32,11 @@ export class ProjectionDialogService {
             restoreFocus: false
         });
         const response = await firstValueFrom(dialogRef.afterClosed());
+        console.log(response);
         if (response) {
-            const { action, resultDescriptor, projectors, options }: ProjectionDialogReturnType = response;
+            const { action, resultDescriptor, projectors, options, mode }: ProjectionDialogReturnType = response;
             if (action === `project`) {
-                await this.projectorRepo.project(resultDescriptor, projectors, options);
+                await this.projectorRepo.project(resultDescriptor, projectors, options, mode);
             } else if (action === `addToPreview`) {
                 await this.projectorRepo.addToPreview(resultDescriptor, projectors, options);
             } else if (action === `hide`) {

@@ -6,4 +6,5 @@ export interface ProjectionDialogReturnType {
     resultDescriptor: ProjectionBuildDescriptor;
     projectors: ViewProjector[];
     options: object | null;
+    mode?: 'DEFAULT' | 'UPDATE_ONLY_SELECTED';
 }
