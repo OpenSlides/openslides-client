@@ -100,6 +100,22 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 ]
             },
             {
+                property: `hasEmail`,
+                label: `Email address`,
+                options: [
+                    { condition: true, label: `Has an email address` },
+                    { condition: [false, null], label: `Has no email address` }
+                ]
+            },
+            {
+                property: `hasMemberNumber`,
+                label: `Member number`,
+                options: [
+                    { condition: true, label: `Has a member number` },
+                    { condition: [false, null], label: `Has no member number` }
+                ]
+            },
+            {
                 property: `isLastLogin`,
                 label: `Last login`,
                 options: [
@@ -178,6 +194,18 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             },
             {
                 property: `hasSamlId`,
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanSeeSensitiveData);
+                }
+            },
+            {
+                property: `hasEmail`,
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanSeeSensitiveData);
+                }
+            },
+            {
+                property: `hasMemberNumber`,
                 shouldHideFn: (): boolean => {
                     return !this.operator.hasPerms(Permission.userCanSeeSensitiveData);
                 }
