@@ -198,6 +198,18 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 }
             },
             {
+                property: `hasEmail`,
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanSeeSensitiveData);
+                }
+            },
+            {
+                property: `hasMemberNumber`,
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanSeeSensitiveData);
+                }
+            },
+            {
                 property: `isLastEmailSent`,
                 shouldHideFn: (): boolean => {
                     return !this.operator.hasPerms(Permission.userCanSeeSensitiveData);
