@@ -11,6 +11,8 @@
         <span class="inner">
             {{ data.data.title_information?.agenda_item_number }}
             {{ !!data.data.title_information?.agenda_item_number ? '&middot;' : '' }}
+            {{ data.data.title_information?.number }}
+            {{ !!data.data.title_information?.number ? '&middot;' : '' }}
             {{ data.data.title_information?.title }}
         </span>
     </div>
