@@ -78,7 +78,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public get addSelf(): boolean {
         return (
-            this.permission.listOfSpeakersCanBeSpeaker && !(this.voteDelegationEnabled && this.forbidDelegatorToAddSelf)
+            this.permission.listOfSpeakersCanBeSpeaker &&
+            !(this.voteDelegationEnabled && this.forbidDelegatorToAddSelf && this.operator.user.isVoteRightDelegated)
         );
     }
 
@@ -541,11 +542,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         );
     }
 
-    private findOperatorSpeaker(pointOfOrder?: boolean): ViewSpeaker | undefined {
-        return this.waitingSpeakers
-            .sort((a, b) => b.id - a.id)
-            .find(
-                speaker => speaker.user_id === this.operator.operatorId && !!speaker.point_of_order === !!pointOfOrder
-            );
+    private findOperatorSpeaker(pointOfOrder?: boolean): ViewSpeaker | null {
+        const opSpeakers = this.waitingSpeakers.filter(
+            speaker => speaker.user_id === this.operator.operatorId && !!speaker.point_of_order === !!pointOfOrder
+        );
+
+        return opSpeakers.reduce((acc, curr) => (curr?.weight > acc?.weight ? curr : opSpeakers[0]), null);
     }
 }

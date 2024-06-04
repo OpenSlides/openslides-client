@@ -56,6 +56,7 @@
 <ng-template #editTemplate>
     <form [formGroup]="personalInfoForm">
         <h2>{{ 'Personal information' | translate }}</h2>
+        <!-- First line -->
         <div class="personal-info-area">
             <!-- Title -->
             <mat-form-field class="form16 force-min-width">
@@ -63,37 +64,21 @@
                 <input type="text" matInput formControlName="title" />
             </mat-form-field>
             <!-- First name -->
-            <mat-form-field class="form37 force-min-width">
+            <mat-form-field class="form38 force-min-width">
                 <mat-label>{{ 'Given name' | translate }}</mat-label>
                 <input type="text" osAutofocus matInput formControlName="first_name" />
             </mat-form-field>
-
             <!-- Last name -->
-            <mat-form-field class="form37 force-min-width">
+            <mat-form-field class="form38 force-min-width">
                 <mat-label>{{ 'Surname' | translate }}</mat-label>
                 <input type="text" matInput formControlName="last_name" />
             </mat-form-field>
         </div>
 
+        <!-- Second line -->
         <div class="personal-info-area">
-            <!-- E-Mail -->
-            <mat-form-field class="width-58p force-min-width">
-                <mat-label>{{ 'Email' | translate }}</mat-label>
-                <input type="email" matInput autocomplete="off" name="email" formControlName="email" />
-                <mat-error *ngIf="personalInfoForm.get('email')?.hasError('email')">
-                    {{ 'Please enter a valid email address!' | translate }}
-                </mat-error>
-            </mat-form-field>
-
-            <!-- Pronoun -->
-            <mat-form-field class="width-16p force-min-width">
-                <mat-label>{{ 'Pronoun' | translate }}</mat-label>
-                <input type="text" matInput formControlName="pronoun" />
-                <mat-error>{{ 'max. 32 characters allowed' | translate }}</mat-error>
-            </mat-form-field>
-
             <!-- Gender -->
-            <mat-form-field class="width-16p force-min-width">
+            <mat-form-field class="form58 force-min-width">
                 <mat-label>{{ 'Gender' | translate }}</mat-label>
                 <mat-select formControlName="gender">
                     <mat-option [value]="null">-</mat-option>
@@ -102,58 +87,98 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-        </div>
-
-        <!-- username -->
-        <div *ngIf="isAllowed('seePersonal')">
-            <mat-form-field class="full-width">
-                <mat-label>{{ 'Username' | translate }}</mat-label>
-                <input type="text" matInput formControlName="username" />
-                <button
-                    *ngIf="isNewUser"
-                    matSuffix
-                    type="button"
-                    mat-icon-button
-                    [matTooltip]="'Leave blank to automatically generate the username.' | translate"
-                    matTooltipPosition="above"
-                >
-                    <mat-icon>help</mat-icon>
-                </button>
-                <mat-error *ngIf="personalInfoForm.controls['username'].errors?.['required']" translate>
-                    You have to enter at least one character
-                </mat-error>
-                <mat-error *ngIf="personalInfoForm.controls['username'].errors?.['noSpace']" translate>
-                    Username may not contain spaces
-                </mat-error>
+            <!-- Pronoun -->
+            <mat-form-field class="form38 force-min-width">
+                <mat-label>{{ 'Pronoun' | translate }}</mat-label>
+                <input type="text" matInput formControlName="pronoun" />
+                <mat-error>{{ 'max. 32 characters allowed' | translate }}</mat-error>
             </mat-form-field>
         </div>
 
-        <div *ngIf="isAllowed('update') && !user?.saml_id">
+        <!-- Third line -->
+        <div class="personal-info-area">
+            <!-- E-Mail -->
+            <mat-form-field
+                [ngClass]="{
+                    form58: isAllowed('update'),
+                    form100: !isAllowed('update')
+                }"
+                class="force-min-width"
+            >
+                <mat-label>{{ 'Email' | translate }}</mat-label>
+                <input type="email" matInput autocomplete="off" name="email" formControlName="email" />
+                <mat-error *ngIf="personalInfoForm.get('email')?.hasError('email')">
+                    {{ 'Please enter a valid email address!' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <!-- Member Number -->
+            <ng-container *ngIf="isAllowed('update')">
+                <mat-form-field class="form38 force-min-width">
+                    <mat-label>{{ 'Membership number' | translate }}</mat-label>
+                    <input type="text" matInput formControlName="member_number" />
+                </mat-form-field>
+            </ng-container>
+        </div>
+
+        <!-- Fourth line -->
+        <div class="personal-info-area">
+            <!-- username -->
+            <ng-container *ngIf="isAllowed('seePersonal')">
+                <mat-form-field
+                    [ngClass]="{
+                        form58: isAllowed('update'),
+                        form100: !isAllowed('update')
+                    }"
+                    class="force-min-width"
+                >
+                    <mat-label>{{ 'Username' | translate }}</mat-label>
+                    <input type="text" matInput formControlName="username" />
+                    <button
+                        *ngIf="isNewUser"
+                        matSuffix
+                        type="button"
+                        mat-icon-button
+                        [matTooltip]="'Leave blank to automatically generate the username.' | translate"
+                        matTooltipPosition="above"
+                    >
+                        <mat-icon>help</mat-icon>
+                    </button>
+                    <mat-error *ngIf="personalInfoForm.controls['username'].errors?.['required']" translate>
+                        You have to enter at least one character
+                    </mat-error>
+                    <mat-error *ngIf="personalInfoForm.controls['username'].errors?.['noSpace']" translate>
+                        Username may not contain spaces
+                    </mat-error>
+                </mat-form-field>
+            </ng-container>
+
             <!-- Initial Password -->
-            <mat-form-field class="full-width">
-                <mat-label>{{ 'Initial password' | translate }}</mat-label>
-                <input matInput autocomplete="off" formControlName="default_password" />
-                <button
-                    *ngIf="isNewUser && generatePasswordFn"
-                    matSuffix
-                    type="button"
-                    mat-icon-button
-                    [disabled]="!generatePasswordFn"
-                    (click)="setRandomPassword()"
-                    [matTooltip]="'Generate password' | translate"
-                >
-                    <mat-icon>autorenew</mat-icon>
-                </button>
-                <button
-                    *ngIf="isNewUser"
-                    matSuffix
-                    type="button"
-                    mat-icon-button
-                    [matTooltip]="'Leave blank to automatically generate the password.' | translate"
-                >
-                    <mat-icon>help</mat-icon>
-                </button>
-            </mat-form-field>
+            <ng-container *ngIf="isAllowed('update') && !user?.saml_id">
+                <mat-form-field class="form38 force-min-width">
+                    <mat-label>{{ 'Initial password' | translate }}</mat-label>
+                    <input matInput autocomplete="off" formControlName="default_password" />
+                    <button
+                        *ngIf="isNewUser && generatePasswordFn"
+                        matSuffix
+                        type="button"
+                        mat-icon-button
+                        [disabled]="!generatePasswordFn"
+                        (click)="setRandomPassword()"
+                        [matTooltip]="'Generate password' | translate"
+                    >
+                        <mat-icon>autorenew</mat-icon>
+                    </button>
+                    <button
+                        *ngIf="isNewUser"
+                        matSuffix
+                        type="button"
+                        mat-icon-button
+                        [matTooltip]="'Leave blank to automatically generate the password.' | translate"
+                    >
+                        <mat-icon>help</mat-icon>
+                    </button>
+                </mat-form-field>
+            </ng-container>
         </div>
 
         <div *ngIf="isAllowed('seeName')">
@@ -165,8 +190,8 @@
 
 <ng-template #showTemplate>
     <h2>{{ 'Personal information' | translate }}</h2>
-    <!-- User name -->
     <ng-container *ngIf="user">
+        <!-- Displayed name -->
         <div *ngIf="isAllowed('seeName')">
             <h4>{{ 'Name' | translate }}</h4>
             <span class="state-icons">
@@ -193,33 +218,33 @@
             </span>
         </div>
 
-        <!-- Mail -->
-        <div *ngIf="isAllowed('seeSensitiveData')">
-            <div *ngIf="user.email">
-                <h4>{{ 'Email' | translate }}</h4>
-                <span>{{ user.email }}</span>
-            </div>
-        </div>
-
         <!-- Gender -->
         <div *ngIf="user.gender">
             <h4>{{ 'Gender' | translate }}</h4>
             <span>{{ user.gender | translate }}</span>
         </div>
 
+        <!-- Mail -->
         <div *ngIf="isAllowed('seeSensitiveData')">
+            <div *ngIf="user.email">
+                <h4>{{ 'Email' | translate }}</h4>
+                <span>{{ user.email }}</span>
+            </div>
+            <!-- Membership number-->
+            <div *ngIf="user.member_number">
+                <h4>{{ 'Membership number' | translate }}</h4>
+                <span>{{ user.member_number }}</span>
+            </div>
             <!-- Username -->
             <div *ngIf="user.username">
                 <h4>{{ 'Username' | translate }}</h4>
                 <span>{{ user.username }}</span>
             </div>
-
             <!-- Initial Password -->
             <div *ngIf="user.default_password && !user.saml_id && isAllowed('update')">
                 <h4>{{ 'Initial password' | translate }}</h4>
                 <span>{{ user.default_password }}</span>
             </div>
-
             <!-- SAML id -->
             <div *ngIf="user.saml_id">
                 <h4>{{ 'SSO Identification' | translate }}</h4>

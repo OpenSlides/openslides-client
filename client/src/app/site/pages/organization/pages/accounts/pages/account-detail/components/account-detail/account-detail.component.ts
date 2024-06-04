@@ -279,13 +279,13 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     private async createUser(): Promise<void> {
-        const payload = this.getPartialUserPayload();
+        const payload = this.getPartialUserPayload(true);
         const identifiable = (await this.userController.create(payload))[0];
         this.router.navigate([`..`, identifiable.id], { relativeTo: this.route });
     }
 
     private async updateUser(): Promise<void> {
-        const payload = this.getPartialUserPayload();
+        const payload = this.getPartialUserPayload(false);
         if (
             !(
                 this.user.id === this.operator.operatorId &&
@@ -303,10 +303,17 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         }
     }
 
-    private getPartialUserPayload(): any {
+    private getPartialUserPayload(isCreate: boolean): any {
         const payload = this.personalInfoFormValue;
         if (!this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
             payload[`committee_management_ids`] = undefined;
+        }
+        if (payload.member_number === ``) {
+            if (isCreate) {
+                delete payload.member_number;
+            } else {
+                payload.member_number = null;
+            }
         }
         return payload;
     }

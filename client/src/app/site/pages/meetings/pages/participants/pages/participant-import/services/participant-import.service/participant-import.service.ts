@@ -28,7 +28,8 @@ export class ParticipantImportService extends BaseBackendImportService {
         DuplicateImport: `Entry cannot be imported twice. This line will be ommitted`,
         ParsingErrors: `Some csv values could not be read correctly.`,
         FailedImport: `Imported user could not be imported.`,
-        vote_weight: `The vote weight has too many decimal places (max.: 6).`
+        vote_weight: `The vote weight has too many decimal places (max.: 6).`,
+        member_number: `The member number already exists in this meeting`
     };
 
     public override readonly verboseSummaryTitles: { [title: string]: string } = {

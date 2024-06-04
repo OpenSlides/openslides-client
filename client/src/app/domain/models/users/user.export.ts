@@ -10,4 +10,5 @@ export interface UserExport {
     gender?: string;
     default_vote_weight?: string | number;
     pronoun?: string;
+    member_number?: string;
 }
