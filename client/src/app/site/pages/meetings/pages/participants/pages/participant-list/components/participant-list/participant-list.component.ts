@@ -116,10 +116,13 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return this.structureLevelRepo.getViewModelListStructureLevel().length > 0;
     }
 
-    /**
-     * Define extra filter properties
-     */
-    public filterProps = [`full_name`, `groups`, `number`, `delegationName`, `structure_levels`, `member_number`];
+    protected get filterProps(): string[] {
+        if (this.canSeeSensitiveData) {
+            return [`full_name`, `groups`, `number`, `delegationName`, `structure_levels`, `member_number`, `email`];
+        } else {
+            return [`full_name`, `groups`, `number`, `delegationName`, `structure_levels`];
+        }
+    }  
 
     public get hasInteractionState(): Observable<boolean> {
         return this.interactionService.isConfStateNone.pipe(map(isNone => !isNone));
