@@ -71,7 +71,7 @@
         <span>{{ 'Structure level' | translate }}</span>
     </h1>
     <mat-dialog-content class="os-form-card-mobile">
-        <form [formGroup]="structureLevelForm" (keydown)="onKeyDown($event)">
+        <form [formGroup]="structureLevelForm" (keydown)="onKeyDown($event)" tabindex="-1">
             <!-- Name -->
             <mat-form-field class="os-dialog-large">
                 <mat-label>{{ 'Name' | translate }}</mat-label>

@@ -47,6 +47,7 @@
                             class="paragraph-row background-hover"
                             [class.outlined-hover]="isParagraphSelected(paragraph)"
                             (click)="onParagraphClicked(paragraph)"
+                            tabindex="-1"
                         >
                             <mat-checkbox
                                 *ngIf="multipleParagraphsAllowed"

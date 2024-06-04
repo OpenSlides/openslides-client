@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { GENDERS } from 'src/app/domain/models/users/user';
@@ -13,6 +13,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../../../structure-levels/view-models';
+import { ParticipantListSortService } from '../../../../services/participant-list-sort/participant-list-sort.service';
 import { InfoDialog } from '../../services/participant-list-info-dialog.service';
 
 @Component({
@@ -20,7 +21,7 @@ import { InfoDialog } from '../../services/participant-list-info-dialog.service'
     templateUrl: `./participant-list-info-dialog.component.html`,
     styleUrls: [`./participant-list-info-dialog.component.scss`]
 })
-export class ParticipantListInfoDialogComponent extends BaseUiComponent implements OnInit {
+export class ParticipantListInfoDialogComponent extends BaseUiComponent implements OnInit, OnDestroy {
     public readonly genders = GENDERS;
 
     public get groupsObservable(): Observable<ViewGroup[]> {
@@ -49,6 +50,7 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     public constructor(
         @Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog,
         private participantRepo: ParticipantControllerService,
+        private userSortService: ParticipantListSortService,
         private groupRepo: GroupControllerService,
         private structureLevelRepo: StructureLevelControllerService,
         private userService: UserService,
@@ -58,12 +60,13 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     }
 
     public ngOnInit(): void {
+        this.userSortService.initSorting();
         this._currentUser = this.participantRepo.getViewModel(this.infoDialog.id);
         this.updateIsUserInScope();
         this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
         this.subscriptions.push(
             this.participantRepo
-                .getViewModelListObservable()
+                .getSortedViewModelListObservable(this.userSortService.repositorySortingKey)
                 .subscribe(participants =>
                     this._otherParticipantsSubject.next(
                         participants
@@ -75,6 +78,11 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
                 .get(`users_enable_vote_delegations`)
                 .subscribe(enabled => (this._voteDelegationEnabled = enabled))
         );
+    }
+
+    public override ngOnDestroy(): void {
+        this.userSortService.exitSortService();
+        super.ngOnDestroy();
     }
 
     private async updateIsUserInScope(): Promise<void> {

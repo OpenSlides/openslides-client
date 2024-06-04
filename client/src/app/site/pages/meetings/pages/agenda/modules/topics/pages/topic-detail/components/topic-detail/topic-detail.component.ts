@@ -77,7 +77,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     private _topicId: Id | null = null;
 
-    public getTitleFn = () => this.topic.getListTitle();
+    public getTitleFn = (): string => this.topic.getListTitle();
 
     public get showNavigateButtons(): boolean {
         return this.enableNavigation && (!!this.previousTopic || !!this.nextTopic);

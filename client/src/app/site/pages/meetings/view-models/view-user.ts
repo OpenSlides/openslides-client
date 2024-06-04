@@ -104,6 +104,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.isPresentInMeeting();
     }
 
+    public get hasMemberNumber(): boolean {
+        return !!this.member_number;
+    }
+
     // Will be set by the repository
     public getName!: () => string;
     public getShortName!: () => string;
@@ -245,9 +249,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public structureLevels(meetingId?: Id): string {
-        return this.structure_levels(meetingId)
-            .map(sl => sl.name)
-            .join(`, `);
+        return this.getMeetingUser(meetingId)?.structureLevels();
     }
 
     public get isVoteWeightOne(): boolean {

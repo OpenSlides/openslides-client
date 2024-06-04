@@ -164,6 +164,14 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                         label: this.translate.instant(`Same email`)
                     }
                 ]
+            },
+            {
+                property: `hasMemberNumber`,
+                label: `Member number`,
+                options: [
+                    { condition: true, label: `Has a member number` },
+                    { condition: [false, null], label: `Has no member number` }
+                ]
             }
         ];
         return staticFilterDefinitions.concat(nonStaticFilterDefinitions);

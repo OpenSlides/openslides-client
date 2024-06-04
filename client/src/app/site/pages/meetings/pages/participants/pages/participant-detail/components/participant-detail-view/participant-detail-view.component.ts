@@ -340,6 +340,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     private async createUser(): Promise<void> {
         const partialUser = { ...this.personalInfoFormValue };
 
+        if (partialUser.member_number === ``) {
+            delete partialUser.member_number;
+        }
         if (partialUser.is_present) {
             partialUser.is_present_in_meeting_ids = [this.activeMeetingId];
         }
@@ -367,6 +370,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                           .filter(id => !!id)
                     : []
             };
+            if (payload.member_number === ``) {
+                payload.member_number = null;
+            }
             const title = _(`This action will remove you from one or more groups.`);
             const content = _(
                 `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`
@@ -378,7 +384,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 ) ||
                 (await this.promptService.open(title, content))
             ) {
-                if (this.operator.hasPerms(Permission.userCanManagePresence)) {
+                if (
+                    this.operator.hasPerms(Permission.userCanManagePresence) &&
+                    this.personalInfoFormValue.is_present !== undefined
+                ) {
                     await this.repo
                         .update(payload, this.user!)
                         .concat(this.repo.setPresent(isPresent, this.user!))

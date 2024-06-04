@@ -164,9 +164,10 @@ export class Settings {
     public users_email_replyto!: string;
     public users_email_subject!: string;
     public users_email_body!: string;
-    public users_forbid_delegator_in_list_of_speakers!: string;
-    public users_forbid_delegator_as_submitter!: string;
-    public users_forbid_delegator_as_supporter!: string;
+    public users_forbid_delegator_in_list_of_speakers!: boolean;
+    public users_forbid_delegator_as_submitter!: boolean;
+    public users_forbid_delegator_as_supporter!: boolean;
+    public users_forbid_delegator_to_vote!: boolean;
 
     // Assignments
     public assignments_export_title!: string;
@@ -417,6 +418,7 @@ export class Meeting extends BaseModel<Meeting> {
         `users_forbid_delegator_in_list_of_speakers`,
         `users_forbid_delegator_as_submitter`,
         `users_forbid_delegator_as_supporter`,
+        `users_forbid_delegator_to_vote`,
         `assignments_export_title`,
         `assignments_export_preamble`,
         `assignment_poll_ballot_paper_selection`,

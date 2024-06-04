@@ -63,7 +63,7 @@
 <ng-template #totalTimeDialog>
     <h2 mat-dialog-title>{{ currentEntry.name }}</h2>
     <mat-dialog-content class="os-form-card-mobile">
-        <form [formGroup]="totalTimeForm" (keydown)="onKeyDown($event)">
+        <form [formGroup]="totalTimeForm" (keydown)="onKeyDown($event)" tabindex="-1">
             <!-- total time -->
             <mat-form-field>
                 <mat-label>{{ 'Total time' | translate }}</mat-label>
@@ -77,7 +77,7 @@
 
     <mat-dialog-actions>
         <button mat-button [disabled]="!totalTimeForm.valid" [mat-dialog-close]="true">
-            <span>{{ 'Reset' | translate }}</span>
+            <span>{{ 'OK' | translate }}</span>
         </button>
         <button mat-button [mat-dialog-close]="false">
             <span>{{ 'Cancel' | translate }}</span>
@@ -89,7 +89,7 @@
 <ng-template #addRemoveTimeDialog>
     <h2 mat-dialog-title>{{ currentEntry.name }}</h2>
     <div class="os-form-card-mobile" mat-dialog-content>
-        <form (keydown)="onKeyDown($event)">
+        <form (keydown)="onKeyDown($event)" tabindex="-1">
             <!-- total time -->
             <mat-form-field>
                 <mat-label>{{ 'Time' | translate }}</mat-label>

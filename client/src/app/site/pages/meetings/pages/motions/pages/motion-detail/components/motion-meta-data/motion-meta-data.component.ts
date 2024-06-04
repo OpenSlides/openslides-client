@@ -84,7 +84,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
     ];
 
-    public motionTransformFn = (value: ViewMotion) => `[${value.fqid}]`;
+    public motionTransformFn = (value: ViewMotion): string => `[${value.fqid}]`;
 
     /**
      * All amendments to this motion
@@ -112,17 +112,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this._referencedMotions;
     }
 
-    public get forwardingCommittees(): Selectable[] {
-        return this._forwardingCommittees;
-    }
+    public loadForwardingCommittees: () => Promise<Selectable[]>;
 
     private _referencingMotions: ViewMotion[];
 
     private _referencedMotions: ViewMotion[];
 
     private _forwardingAvailable = false;
-
-    private _forwardingCommittees: (Selectable & { name: string; toString: any })[] = [];
 
     public get supportersObservable(): Observable<ViewUser[]> {
         return this._supportersSubject;
@@ -149,9 +145,12 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     ) {
         super();
 
-        if (operator.hasPerms(Permission.motionCanManage)) {
+        if (operator.hasPerms(Permission.motionCanManageMetadata)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
                 this._forwardingAvailable = forwardingAvailable;
+                this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
+                    return (await this.checkPresenter()) as Selectable[];
+                };
             });
         } else {
             this._forwardingAvailable = false;
@@ -164,7 +163,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         this.subscriptions.push(
             this.participantSort.getSortedViewModelListObservable().subscribe(() => this.updateSupportersSubject())
         );
-        this.checkPresenter();
     }
 
     public override ngOnDestroy(): void {
@@ -388,15 +386,15 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
     }
 
-    private async checkPresenter(): Promise<void> {
+    private async checkPresenter(): Promise<(Selectable & { name: string; toString: any })[]> {
         const meetingId = this.activeMeetingService.meetingId;
         const committees =
-            this.operator.hasPerms(Permission.motionCanManage) && !!meetingId
+            this.operator.hasPerms(Permission.motionCanManageMetadata) && !!meetingId
                 ? await this.presenter.call({ meeting_id: meetingId })
                 : [];
-        this._forwardingCommittees = [];
+        const forwardingCommittees: (Selectable & { name: string; toString: any })[] = [];
         for (let n = 0; n < committees.length; n++) {
-            this._forwardingCommittees.push({
+            forwardingCommittees.push({
                 id: n + 1,
                 name: committees[n],
                 getTitle: () => committees[n],
@@ -404,5 +402,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                 toString: () => committees[n]
             });
         }
+
+        return forwardingCommittees;
     }
 }

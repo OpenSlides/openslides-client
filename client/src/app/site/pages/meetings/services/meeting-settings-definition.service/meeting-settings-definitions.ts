@@ -914,19 +914,32 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
+                        key: `users_forbid_delegator_to_vote`,
+                        label: _(`Restrict delegation principals from voting`),
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.users_enable_vote_delegations
+                    },
+                    {
                         key: `users_forbid_delegator_in_list_of_speakers`,
                         label: _(`Restrict delegation principals from adding themselves to the list of speakers`),
-                        type: `boolean`
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.users_enable_vote_delegations
                     },
                     {
                         key: `users_forbid_delegator_as_submitter`,
                         label: _(`Restrict delegation principals from creating motions/amendments`),
-                        type: `boolean`
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.users_enable_vote_delegations
                     },
                     {
                         key: `users_forbid_delegator_as_supporter`,
                         label: _(`Restrict delegation principals from supporting motions`),
-                        type: `boolean`
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.users_enable_vote_delegations
                     }
                 ]
             },

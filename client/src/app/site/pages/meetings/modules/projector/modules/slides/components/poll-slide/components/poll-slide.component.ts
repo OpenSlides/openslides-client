@@ -86,7 +86,7 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
     }
 
     private createPollData(data: PollSlideData): PollData {
-        const getContentObjectTitle = () => {
+        const getContentObjectTitle = (): string => {
             if (data.title_information) {
                 modifyAgendaItemNumber(data.title_information);
                 const repo = this.collectionMapperService.getRepository(data.title_information.collection);

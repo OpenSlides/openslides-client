@@ -101,7 +101,7 @@
         <span>{{ 'Edit details for' | translate }} {{ selectedCategory.prefixedName }}</span>
     </h1>
     <mat-dialog-content class="os-form-card-mobile">
-        <form class="edit-form" [formGroup]="editForm" (ngSubmit)="save()" (keydown)="onKeyDown($event)">
+        <form class="edit-form" [formGroup]="editForm" (ngSubmit)="save()" (keydown)="onKeyDown($event)" tabindex="-1">
             <mat-form-field>
                 <mat-label>{{ 'Prefix' | translate }}</mat-label>
                 <input matInput osAutofocus formControlName="prefix" />

@@ -420,7 +420,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.updateMotionNumbersSubject();
     }
 
-    private updateMotionNumbersSubject(motions?: ViewMotion[]) {
+    private updateMotionNumbersSubject(motions?: ViewMotion[]): void {
         this._motionNumbersSubject.next(
             (motions ?? this.motionController.getViewModelList())
                 .filter(
@@ -488,7 +488,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             agenda_parent_id: [],
             submitter_ids: [[]],
             supporter_user_ids: [[]],
-            workflow_id: [+this.meetingSettingService.instant(`motions_default_workflow_id`)],
+            workflow_id: [+this.meetingSettingsService.instant(`motions_default_workflow_id`)],
             tag_ids: [[]],
             statute_amendment: [``], // Internal value for the checkbox, not saved to the model
             statute_paragraph_id: [],

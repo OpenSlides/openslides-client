@@ -18,13 +18,6 @@ export abstract class BaseMeetingComponent extends BaseComponent {
         return this.activeMeetingService.meeting;
     }
 
-    /**
-     * @deprecated Typo: use `meetingSettingsService` instead
-     */
-    protected get meetingSettingService(): MeetingSettingsService {
-        return this.componentServiceCollector.meetingSettingsService;
-    }
-
     protected get meetingSettingsService(): MeetingSettingsService {
         return this.componentServiceCollector.meetingSettingsService;
     }

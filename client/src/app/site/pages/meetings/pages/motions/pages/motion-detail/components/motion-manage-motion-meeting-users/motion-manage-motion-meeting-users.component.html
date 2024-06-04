@@ -69,7 +69,7 @@
         </mat-form-field>
     </div>
 
-    <div *ngIf="useAdditionalInput" class="text-field-container">
+    <div *ngIf="useAdditionalInput && loadSecondSelectorValues" class="text-field-container">
         <mat-form-field>
             <mat-label>{{ secondSelectorLabel }}</mat-label>
             <os-list-search-selector

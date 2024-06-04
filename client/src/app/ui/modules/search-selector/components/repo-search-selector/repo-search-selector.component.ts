@@ -30,9 +30,6 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
     public pipeFn: OperatorFunction<any, any> = map(items => items);
 
     @Input()
-    public lazyLoading = true;
-
-    @Input()
     public subscriptionConfig: SubscribeToConfig = null;
 
     @Input()
@@ -51,7 +48,7 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
 
     public constructor(
         @Optional() @Self() ngControl: NgControl,
-        private meetingSettingService: MeetingSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private modelRequestService: ModelRequestService
     ) {
         super(ngControl);
@@ -83,7 +80,7 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
         this.initItems();
         if (this.defaultDataConfigKey) {
             this.subscriptions.push(
-                this.meetingSettingService.get(this.defaultDataConfigKey).subscribe(value => {
+                this.meetingSettingsService.get(this.defaultDataConfigKey).subscribe(value => {
                     if (this.empty) {
                         this.value = value as any;
                     }
