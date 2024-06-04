@@ -6,8 +6,8 @@
     <div class="connection-selection">
         <mat-button-toggle-group [(ngModel)]="displayMode">
             <mat-button-toggle [value]="2" translate>All</mat-button-toggle>
-            <mat-button-toggle [value]="0" translate>SSE</mat-button-toggle>
-            <mat-button-toggle [value]="1" translate>Longpolling</mat-button-toggle>
+            <mat-button-toggle [value]="0" translate>Normal (http/2)</mat-button-toggle>
+            <mat-button-toggle [value]="1" translate>Fallback</mat-button-toggle>
         </mat-button-toggle-group>
     </div>
 
