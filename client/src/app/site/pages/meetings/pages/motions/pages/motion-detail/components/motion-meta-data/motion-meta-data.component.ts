@@ -336,7 +336,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     private async updateSupportersSubject(): Promise<void> {
-        this._supportersSubject.next(await this.participantSort.sort(this.motion.supporter_users));
+        this._supportersSubject.next(await this.participantSort.sort(this.motion.supporters));
     }
 
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
