@@ -40,8 +40,7 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
 
     private _voteWeightEnabled: boolean;
 
-    public constructor(private meetingSettings: MeetingSettingsService, 
-        private operator: OperatorService) {
+    public constructor(private meetingSettings: MeetingSettingsService, private operator: OperatorService) {
         super({
             sortProperty: [`first_name`, `last_name`],
             sortAscending: true

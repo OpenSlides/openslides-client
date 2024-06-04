@@ -122,7 +122,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         } else {
             return [`full_name`, `groups`, `number`, `delegationName`, `structure_levels`];
         }
-    }  
+    }
 
     public get hasInteractionState(): Observable<boolean> {
         return this.interactionService.isConfStateNone.pipe(map(isNone => !isNone));
