@@ -1,3 +1,5 @@
+@import 'src/assets/styles/mixins/button.scss';
+
 .change-recommendation-summary {
     border-radius: 3px;
     padding: 0.5em 0 0 0.5em;
@@ -32,13 +34,6 @@
     }
 }
 
-.smaller-icon-button {
-    height: 24px !important;
-    width: 24px !important;
-    line-height: 24px !important;
-    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
-    .mat-button-wrapper {
-        vertical-align: top;
-        line-height: initial;
-    }
+.mat-mdc-icon-button.smaller-icon-button {
+    @include custom-size-button(24px, 14px);
 }

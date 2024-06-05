@@ -60,13 +60,10 @@
     .fake-disabled {
         background: mat.get-color-from-palette($background, unselected-chip) !important;
         opacity: 1 !important;
-        /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
-        .mat-button-wrapper {
-            .mat-icon {
-                color: mat.get-color-from-palette($foreground, disabled-button) !important;
-                svg path {
-                    fill: mat.get-color-from-palette($foreground, disabled-button) !important;
-                }
+        .mat-icon {
+            color: mat.get-color-from-palette($foreground, disabled-button) !important;
+            svg path {
+                fill: mat.get-color-from-palette($foreground, disabled-button) !important;
             }
         }
     }
@@ -112,8 +109,8 @@
     .user-subtitle {
         color: mat.get-color-from-palette($foreground, secondary-text);
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
-    mat-card-header {
+
+    .mat-mdc-card-header {
         background-color: mat.get-color-from-palette($background, app-bar);
     }
 
