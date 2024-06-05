@@ -1226,17 +1226,31 @@ msgstr ""
 msgid "Choose 0 to disable the supporting system."
 msgstr ""
 
-msgid "Chyron background color"
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "Chyron"
 msgstr ""
 
-msgid "Chyron font color"
+#: /app/src/app/site/pages/meetings/pages/projectors/components/projector-edit-dialog/components/projector-edit-dialog/projector-edit-dialog.component.ts
+msgid "Chyron agenda item, background color"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/components/projector-edit-dialog/components/projector-edit-dialog/projector-edit-dialog.component.ts
+msgid "Chyron agenda item, font color"
 msgstr ""
 
 msgid "Chyron speaker name"
 msgstr ""
 
-#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
-msgid "Chyron – current contribution"
+#: /app/src/app/site/pages/meetings/pages/projectors/components/projector-edit-dialog/components/projector-edit-dialog/projector-edit-dialog.component.ts
+msgid "Chyron speaker, background color"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/components/projector-edit-dialog/components/projector-edit-dialog/projector-edit-dialog.component.ts
+msgid "Chyron speaker, font color"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "Classic"
 msgstr ""
 
 msgid "Clear"
@@ -1443,6 +1457,10 @@ msgid "Creation"
 msgstr ""
 
 msgid "Creation date"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "Current agenda item"
 msgstr ""
 
 msgid "Current date"
@@ -2254,6 +2272,10 @@ msgstr ""
 msgid "Has changed vote weight"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service.ts
+msgid "Has email"
+msgstr ""
+
 msgid "Has forwardings"
 msgstr ""
 
@@ -2336,6 +2358,10 @@ msgid "Help text for access data and welcome PDF"
 msgstr ""
 
 msgid "Hidden item"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/components/projection-dialog/projection-dialog.component.html
+msgid "Hide"
 msgstr ""
 
 #: /app/src/app/ui/modules/sidenav/components/sidenav/sidenav.component.html
@@ -2858,6 +2884,10 @@ msgstr ""
 msgid "Moderation note"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "Modern"
+msgstr ""
+
 #: /app/src/app/site/pages/organization/pages/designs/pages/theme-list/components/theme-list/theme-list.component.html
 msgid "Modify design"
 msgstr ""
@@ -3280,6 +3310,10 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "Off"
+msgstr ""
+
 msgid "Offline mode"
 msgstr ""
 
@@ -3287,6 +3321,10 @@ msgid "Ok"
 msgstr ""
 
 msgid "Old password"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "On"
 msgstr ""
 
 msgid "One email was send sucessfully."
