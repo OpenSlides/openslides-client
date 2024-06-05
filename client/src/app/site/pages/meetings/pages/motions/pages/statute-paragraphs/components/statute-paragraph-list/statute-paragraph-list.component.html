@@ -5,11 +5,11 @@
     </div>
 
     <!-- Use the menu slot for an add button -->
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button type="button" mat-icon-button [matMenuTriggerFor]="commentMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 </os-head-bar>
 
 <cdk-virtual-scroll-viewport class="statute-vscroll-wrapper" itemSize="50">

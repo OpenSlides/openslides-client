@@ -50,11 +50,11 @@
             </div>
 
             <!-- Menu -->
-            <div class="menu-slot">
+            <ng-container class="menu-slot">
                 <button type="button" mat-icon-button [matMenuTriggerFor]="motionExtraMenu" *ngIf="motion">
                     <mat-icon>more_vert</mat-icon>
                 </button>
-            </div>
+            </ng-container>
 
             <mat-menu #motionExtraMenu="matMenu">
                 <!-- List of speakers -->

@@ -21,7 +21,7 @@
         </div>
 
         <!-- Menu -->
-        <div class="menu-slot">
+        <ng-container class="menu-slot">
             <button
                 *osPerms="permission.projectorCanManage"
                 type="button"
@@ -30,7 +30,7 @@
             >
                 <mat-icon>more_vert</mat-icon>
             </button>
-        </div>
+        </ng-container>
 
         <mat-menu #projectorExtraMenu="matMenu">
             <!-- Button for set reference projector -->

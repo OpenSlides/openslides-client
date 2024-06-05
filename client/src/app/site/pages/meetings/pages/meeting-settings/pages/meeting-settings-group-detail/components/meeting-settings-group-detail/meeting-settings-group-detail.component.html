@@ -7,7 +7,7 @@
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button
             mat-button
             [disabled]="!hasChanges() || hasErrors()"
@@ -17,7 +17,7 @@
             <strong class="upper">{{ 'Save' | translate }}</strong>
         </button>
         <button type="button" mat-icon-button [matMenuTriggerFor]="settingsMenu"><mat-icon>more_vert</mat-icon></button>
-    </div>
+    </ng-container>
 </os-head-bar>
 
 <div class="spacer-top-20"></div>
