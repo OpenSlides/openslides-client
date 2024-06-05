@@ -21,6 +21,7 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     /**
      * The object to project.
      */
+
     private _object: ProjectionBuildDescriptor | Projectable | null = null;
 
     public get object(): ProjectionBuildDescriptor | Projectable {
@@ -58,6 +59,9 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     @Input()
     public allowReferenceProjector = true;
 
+    @Input()
+    public useToggleDialog = false;
+
     /**
      * If this is re-defined, it will replace the usual click functionality.
      */
@@ -67,7 +71,13 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
             return;
         }
         const descriptor = this.projectorService.ensureDescriptor(this.object);
-        if (this.projector) {
+        if (this.useToggleDialog) {
+            this.projectionDialogService.openProjectDialogFor({
+                descriptor,
+                projector: this.projector,
+                allowReferenceProjector: true
+            });
+        } else if (this.projector) {
             this.projectorService.toggle(descriptor, [this.projector]);
         } else {
             // open the projection dialog

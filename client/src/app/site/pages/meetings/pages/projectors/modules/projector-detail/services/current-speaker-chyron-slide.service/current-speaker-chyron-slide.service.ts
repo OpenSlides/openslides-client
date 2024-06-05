@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
@@ -28,7 +29,20 @@ export class CurrentSpeakerChyronSlideService {
             type: MeetingProjectionType.CurrentSpeakerChyron,
             projectionDefault: PROJECTIONDEFAULT.currentListOfSpeakers,
             stable: true,
-            getDialogTitle: () => `Current speaker chyron`
+            getDialogTitle: () => `Current speaker chyron`,
+            slideOptions: [
+                {
+                    key: `chyron_type`,
+                    displayName: _(`Chyron Type`),
+                    choices: [
+                        { value: `old`, displayName: _(`Old Chyron`) },
+                        { value: `new`, displayName: _(`New Chyron`) },
+                        { value: `none`, displayName: _(`None`) }
+                    ],
+                    default: `old`
+                },
+                { key: `agenda_item`, displayName: _(`Show Agenda Item`), default: false }
+            ]
         };
     }
 

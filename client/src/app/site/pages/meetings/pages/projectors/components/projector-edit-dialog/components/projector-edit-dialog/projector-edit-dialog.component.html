@@ -138,9 +138,9 @@
                 </ng-template>
 
                 <ng-template
-                    *ngFor="let field of colorFields | keyvalue"
+                    *ngFor="let colorPair of colorFields"
                     [ngTemplateOutlet]="colorFormField"
-                    [ngTemplateOutletContext]="{ title: field.value, form: field.key }"
+                    [ngTemplateOutletContext]="{ title: colorPair[1], form: colorPair[0] }"
                 ></ng-template>
             </div>
         </mat-dialog-content>
