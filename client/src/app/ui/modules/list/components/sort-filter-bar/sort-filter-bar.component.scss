@@ -19,6 +19,9 @@ os-sort-filter-bar {
         os-rounded-input {
             margin: 0 10px;
         }
+        .mat-mdc-button {
+            height: 100%;
+        }
     }
 
     .active-filter {
