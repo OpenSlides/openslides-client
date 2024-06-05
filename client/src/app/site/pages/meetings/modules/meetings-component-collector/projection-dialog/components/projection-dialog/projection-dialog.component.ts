@@ -28,6 +28,7 @@ import { ProjectionDialogReturnType } from '../../definitions';
 export interface ProjectionDialogConfig {
     descriptor: ProjectionBuildDescriptor;
     allowReferenceProjector: boolean;
+    projector?: ViewProjector;
 }
 
 @Component({
@@ -42,6 +43,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public options!: SlideOptions;
     public descriptor: ProjectionBuildDescriptor;
     public allowReferenceProjector = true;
+    public projectorSelectable = false;
     private _projectorSubscription: string;
     private _subscriptions: Subscription[] = [];
 
@@ -54,6 +56,10 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     ) {
         this.descriptor = isProjectionBuildDescriptor(data) ? data : data.descriptor;
         this.allowReferenceProjector = !isProjectionBuildDescriptor(data) && data.allowReferenceProjector;
+        this.projectorSelectable = isProjectionBuildDescriptor(data) || !data.projector;
+        if (!this.projectorSelectable && !isProjectionBuildDescriptor(data)) {
+            this.selectedProjectors = [data.projector.id];
+        }
     }
 
     public ngOnDestroy(): void {
@@ -72,14 +78,14 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
             this.projectors = projectors.filter(p => this.allowReferenceProjector || !p.isReferenceProjector);
 
             // TODO: Maybe watch. But this may not be necessary for the short living time of this dialog.
-            if (this.selectedProjectors === null) {
+            if (this.selectedProjectors === null && this.projectorSelectable) {
                 this.selectedProjectors = this.projectorService
                     .getProjectorsWhichAreProjecting(this.descriptor)
                     .map(p => p.id);
             }
 
             // Add default projector, if the projectable is not projected on it.
-            if (this.descriptor?.projectionDefault) {
+            if (this.descriptor?.projectionDefault && this.projectorSelectable) {
                 const defaultProjectors: ViewProjector[] = this.activeMeetingService.meeting!.default_projectors(
                     this.descriptor.projectionDefault
                 );
@@ -141,13 +147,23 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
             action: `project`,
             resultDescriptor: this.descriptor,
             projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
-            options: this.optionValues
+            options: this.optionValues,
+            mode: this.projectorSelectable ? `DEFAULT` : `UPDATE_ONLY_SELECTED`
         });
     }
 
     public onAddToPreview(): void {
         this.dialogRef.close({
             action: `addToPreview`,
+            resultDescriptor: this.descriptor,
+            projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
+            options: this.optionValues
+        });
+    }
+
+    public onHide(): void {
+        this.dialogRef.close({
+            action: `hide`,
             resultDescriptor: this.descriptor,
             projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
             options: this.optionValues
