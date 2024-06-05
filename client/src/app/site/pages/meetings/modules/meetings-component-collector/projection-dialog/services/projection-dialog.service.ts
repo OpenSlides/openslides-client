@@ -34,9 +34,10 @@ export class ProjectionDialogService {
         const response = await firstValueFrom(dialogRef.afterClosed());
         console.log(response);
         if (response) {
-            const { action, resultDescriptor, projectors, options, mode }: ProjectionDialogReturnType = response;
+            const { action, resultDescriptor, projectors, options, keepActiveProjections }: ProjectionDialogReturnType =
+                response;
             if (action === `project`) {
-                await this.projectorRepo.project(resultDescriptor, projectors, options, mode);
+                await this.projectorRepo.project(resultDescriptor, projectors, options, keepActiveProjections);
             } else if (action === `addToPreview`) {
                 await this.projectorRepo.addToPreview(resultDescriptor, projectors, options);
             } else if (action === `hide`) {
