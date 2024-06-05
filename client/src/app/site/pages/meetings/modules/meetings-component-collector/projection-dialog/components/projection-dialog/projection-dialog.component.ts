@@ -148,7 +148,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
             resultDescriptor: this.descriptor,
             projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
             options: this.optionValues,
-            mode: this.projectorSelectable ? `DEFAULT` : `UPDATE_ONLY_SELECTED`
+            keepActiveProjections: !this.projectorSelectable
         });
     }
 
