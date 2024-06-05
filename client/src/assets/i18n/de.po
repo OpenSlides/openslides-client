@@ -1326,17 +1326,26 @@ msgstr ""
 msgid "Choose 0 to disable the supporting system."
 msgstr "Zum Deaktivieren des Unterstützersystems '0' eingeben."
 
-msgid "Chyron background color"
-msgstr "Hintergrundfarbe Bauchbinde"
+msgid "Chyron"
+msgstr "Bauchbinde"
 
-msgid "Chyron font color"
-msgstr "Schriftfarbe Bauchbinde"
+msgid "Chyron agenda item, background color"
+msgstr "Bauchbinde TOP, Hintergrundfarbe"
+
+msgid "Chyron agenda item, font color"
+msgstr "Bauchbinde TOP, Schriftfarbe"
 
 msgid "Chyron speaker name"
 msgstr "Bauchbinden-Rednername"
 
-msgid "Chyron – current contribution"
-msgstr "Bauchbinde – aktuelle Wortmeldung"
+msgid "Chyron speaker, background color"
+msgstr "Bauchbinde Rednername, Hintergrundfarbe"
+
+msgid "Chyron speaker, font color"
+msgstr "Bauchbinde Rednername, Schriftfarbe"
+
+msgid "Classic"
+msgstr "Klassisch"
 
 msgid "Clear"
 msgstr "Bereinigen"
@@ -1535,6 +1544,9 @@ msgstr "Erstellung"
 
 msgid "Creation date"
 msgstr "Erstellungsdatum"
+
+msgid "Current agenda item"
+msgstr "Aktueller Tagesordnungspunkt"
 
 msgid "Current date"
 msgstr "Aktuelles Datum"
@@ -2376,6 +2388,9 @@ msgstr "Hat eine E-Mail-Adresse"
 msgid "Has changed vote weight"
 msgstr "Stimmgewicht verändert"
 
+msgid "Has email"
+msgstr "Hat E-Mail"
+
 msgid "Has forwardings"
 msgstr "Hat Weiterleitungen"
 
@@ -2456,6 +2471,9 @@ msgstr "Hilfetext für das Zugangsdaten- und Willkommens-PDF"
 
 msgid "Hidden item"
 msgstr "Versteckter Eintrag"
+
+msgid "Hide"
+msgstr "Ausblenden"
 
 msgid "Hide main menu"
 msgstr "Hauptmenü ausblenden"
@@ -2971,6 +2989,9 @@ msgstr "Minimale Anzahl an Ziffern im Antragsbezeichner"
 msgid "Moderation note"
 msgstr "Sprechzettel"
 
+msgid "Modern"
+msgstr "Modern"
+
 msgid "Modify design"
 msgstr "Design ändern"
 
@@ -3383,6 +3404,9 @@ msgstr "Nummerierungssystem für Tagesordnungspunkte"
 msgid "OK"
 msgstr "OK"
 
+msgid "Off"
+msgstr "Aus"
+
 msgid "Offline mode"
 msgstr "Offline-Modus"
 
@@ -3391,6 +3415,9 @@ msgstr "Ok"
 
 msgid "Old password"
 msgstr "Altes Passwort"
+
+msgid "On"
+msgstr "An"
 
 msgid "One email was send sucessfully."
 msgstr "Eine E-Mail wurde erfolgreich versandt."

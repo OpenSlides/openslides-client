@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
 import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
@@ -13,7 +14,8 @@ import { ProjectorDetailServiceModule } from '../projector-detail-service.module
 export class CurrentSpeakerChyronSlideService {
     public constructor(
         private activeMeetingIdService: ActiveMeetingIdService,
-        private repo: ProjectorControllerService
+        private repo: ProjectorControllerService,
+        private translate: TranslateService
     ) {}
 
     /**
@@ -29,19 +31,27 @@ export class CurrentSpeakerChyronSlideService {
             type: MeetingProjectionType.CurrentSpeakerChyron,
             projectionDefault: PROJECTIONDEFAULT.currentListOfSpeakers,
             stable: true,
-            getDialogTitle: () => `Current speaker chyron`,
+            getDialogTitle: () => this.translate.instant(`Chyron`),
             slideOptions: [
                 {
                     key: `chyron_type`,
-                    displayName: _(`Chyron Type`),
+                    displayName: _(`Current speaker`),
                     choices: [
-                        { value: `old`, displayName: _(`Old Chyron`) },
-                        { value: `new`, displayName: _(`New Chyron`) },
-                        { value: `none`, displayName: _(`None`) }
+                        { value: `old`, displayName: _(`Classic`) },
+                        { value: `new`, displayName: _(`Modern`) },
+                        { value: `none`, displayName: _(`Off`) }
                     ],
                     default: `old`
                 },
-                { key: `agenda_item`, displayName: _(`Show Agenda Item`), default: false }
+                {
+                    key: `agenda_item`,
+                    displayName: _(`Current agenda item`),
+                    choices: [
+                        { value: true, displayName: _(`On`) },
+                        { value: false, displayName: _(`Off`) }
+                    ],
+                    default: false
+                }
             ]
         };
     }
