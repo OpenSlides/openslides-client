@@ -106,10 +106,10 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         [`header_background_color`, _(`Header background color`)],
         [`header_font_color`, _(`Header font color`)],
         [`header_h1_color`, _(`Headline color`)],
-        [`chyron_background_color`, _(`Chyron background color`)],
-        [`chyron_font_color`, _(`Chyron font color`)],
-        [`chyron_background_color_2`, _(`Chyron second background color`)],
-        [`chyron_font_color_2`, _(`Chyron second font color`)]
+        [`chyron_background_color`, _(`Chyron speaker, background color`)],
+        [`chyron_font_color`, _(`Chyron speaker, font color`)],
+        [`chyron_background_color_2`, _(`Chyron agenda item, background color`)],
+        [`chyron_font_color_2`, _(`Chyron agenda item, font color`)]
     ];
 
     private get _aspectRatioControl(): AbstractControl {
