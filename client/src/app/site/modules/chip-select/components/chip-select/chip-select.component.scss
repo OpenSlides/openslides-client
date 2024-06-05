@@ -1,11 +1,7 @@
-/* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
-/* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
-.mat-chip-list-stacked {
-    .mat-mdc-chip {
-        margin: 4px 4px 4px 4px;
-    }
+.mat-mdc-chip.chip-stacked {
+    margin: 4px 4px 4px 4px;
 }
 
-.menu-handle {
+.mat-mdc-chip.menu-handle span {
     cursor: pointer;
 }
