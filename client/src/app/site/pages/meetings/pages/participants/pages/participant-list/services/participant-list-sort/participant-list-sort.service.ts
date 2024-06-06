@@ -59,7 +59,7 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
         return [
             {
                 property: `vote_weight`,
-                shouldHideFn: () => !this._voteWeightEnabled && !this.operator.hasPerms(Permission.userCanUpdate)
+                shouldHideFn: () => !this._voteWeightEnabled
             },
             {
                 property: `member_number`,
