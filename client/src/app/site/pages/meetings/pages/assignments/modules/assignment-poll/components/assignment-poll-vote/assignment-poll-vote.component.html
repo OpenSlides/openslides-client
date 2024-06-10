@@ -16,13 +16,13 @@
 </ng-container>
 
 <ng-template #votingArea let-delegation="delegation">
-    <h4 *ngIf="delegation" class="assignment-delegation-title">
+    <h4 *ngIf="delegation && canSeePoll(delegation)" class="assignment-delegation-title">
         <span>{{ 'Voting right for' | translate }}</span>
         <span>&nbsp;{{ delegation.getFullName() }}</span>
     </h4>
 
     <ng-container *ngIf="{ canVote: canVoteForObservable(delegation) | async } as voting">
-        <ng-container *ngIf="voting.canVote">
+        <ng-container *ngIf="canSeePoll(delegation)">
             <!-- Poll hint -->
             <p *ngIf="pollHint">
                 <i>{{ pollHint }}</i>
@@ -166,7 +166,7 @@
         </ng-container>
 
         <ng-container
-            *ngIf="!voting.canVote"
+            *ngIf="!canSeePoll(delegation)"
             [ngTemplateOutlet]="cannotVote"
             [ngTemplateOutletContext]="{ delegation: delegation }"
         ></ng-container>

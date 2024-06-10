@@ -65,6 +65,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     public forbidDelegationToVote: Observable<boolean> =
         this.meetingSettingsService.get(`users_forbid_delegator_to_vote`);
 
+    private voteDelegationEnabledBoolean: boolean
+    private forbidDelegationToVoteBoolean: boolean
+
     private _isReady = false;
     private _poll!: ViewPoll<C>;
     private _delegationsMap: { [userId: number]: ViewUser } = {};
@@ -78,6 +81,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     public constructor(private meetingSettingsService: MeetingSettingsService) {
         super();
+        this.subscribeToSettings()
         this.subscriptions.push(
             this.operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
                 if (
@@ -112,6 +116,17 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
             this._canVoteForSubjectMap[user.id] = new BehaviorSubject(this.canVote(user));
         }
         return this._canVoteForSubjectMap[user.id];
+    }
+
+    public canSeePoll(user: ViewUser = this.user): boolean {
+        this.voteDelegationEnabled.subscribe(enabled => this.voteDelegationEnabledBoolean = enabled)
+        this.forbidDelegationToVote.subscribe(enabled => this.forbidDelegationToVoteBoolean = enabled)
+        if(user === this.user) {
+            return !(this.user.isVoteRightDelegated && this.voteDelegationEnabledBoolean && this.forbidDelegationToVoteBoolean);
+        }
+        else {
+            return (this.voteDelegationEnabledBoolean);
+        }
     }
 
     public getVotingError(user: ViewUser = this.user): string {
@@ -183,6 +198,16 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
             !this.isDeliveringVote(user) &&
             !this.hasAlreadyVoted(user) &&
             this.hasAlreadyVoted(user) !== undefined
+        );
+    }
+    private subscribeToSettings(): void {
+        this.subscriptions.push(
+            this.meetingSettingsService.get(`users_enable_vote_delegations`).subscribe(enabled => {
+                this.voteDelegationEnabledBoolean = enabled;
+            }),
+            this.meetingSettingsService.get(`users_forbid_delegator_in_list_of_speakers`).subscribe(enabled => {
+                this.forbidDelegationToVoteBoolean = enabled;
+            })
         );
     }
 }
