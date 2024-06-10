@@ -1,6 +1,6 @@
 <h1 mat-dialog-title *ngIf="item">{{ 'Edit details for' | translate }} {{ item.getTitle() }}</h1>
 <mat-dialog-content>
-    <form class="item-dialog-form" [formGroup]="agendaInfoForm" (keydown)="onKeyDown($event)">
+    <form class="item-dialog-form" [formGroup]="agendaInfoForm" (keydown)="onKeyDown($event)" tabindex="-1">
         <!-- Tag -->
         <mat-form-field *ngIf="isTagAvailable()">
             <mat-label>{{ 'Tags' | translate }}</mat-label>

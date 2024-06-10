@@ -25,7 +25,7 @@ export class SpeakerUserSelectDialogComponent {
         public userRepo: UserRepositoryService
     ) {}
 
-    public setCurrentUser(selection: UserSelectionData) {
+    public setCurrentUser(selection: UserSelectionData): void {
         if (selection.userId) {
             const meeting_user = this.userRepo
                 .getViewModel(selection.userId)

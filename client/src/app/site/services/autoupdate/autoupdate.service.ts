@@ -27,10 +27,6 @@ export const AUTOUPDATE_DEFAULT_ENDPOINT = `autoupdate`;
 
 interface AutoupdateConnectConfig {
     /**
-     * Selects one position for a model. This implies `single: 1`.
-     */
-    position?: number;
-    /**
      * Selects the last n updates to the requested fields. `true` is equivalent to `n = 1`.
      */
     single?: true | number;
@@ -235,6 +231,9 @@ export class AutoupdateService {
             this._resolveDataReceived[id] = resolve;
             rejectReceivedData = reject;
         });
+        receivedData.catch((e: Error) => {
+            console.warn(`[autoupdate] stream was closed before it received data:`, e.message);
+        });
 
         return {
             id,
@@ -243,10 +242,11 @@ export class AutoupdateService {
                 this.communication.close(id);
                 delete this._activeRequestObjects[id];
                 if (this._resolveDataReceived[id]) {
-                    rejectReceivedData();
+                    rejectReceivedData(new Error(`Connection canceled`));
+                    delete this._resolveDataReceived[id];
                 }
 
-                console.debug(`[autoupdate] stream closed: `, description);
+                console.debug(`[autoupdate] stream closed:`, description);
             }
         };
     }

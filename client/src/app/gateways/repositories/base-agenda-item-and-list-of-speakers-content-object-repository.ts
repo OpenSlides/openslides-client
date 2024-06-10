@@ -37,16 +37,16 @@ export abstract class BaseAgendaItemAndListOfSpeakersContentObjectRepository<
         return numberPrefix + this.getTitle(viewModel);
     }
 
-    public getListOfSpeakersTitle = (viewModel: V) => this.getAgendaListTitle(viewModel).title;
+    public getListOfSpeakersTitle = (viewModel: V): string => this.getAgendaListTitle(viewModel).title;
 
-    public getListOfSpeakersSlideTitle = (viewModel: V) => this.getAgendaSlideTitle(viewModel);
+    public getListOfSpeakersSlideTitle = (viewModel: V): string => this.getAgendaSlideTitle(viewModel);
 
     protected override createViewModel(model: M): V {
         const viewModel = super.createViewModel(model);
-        viewModel.getAgendaListTitle = () => this.getAgendaListTitle(viewModel);
-        viewModel.getAgendaSlideTitle = () => this.getAgendaSlideTitle(viewModel);
-        viewModel.getListOfSpeakersTitle = () => this.getListOfSpeakersTitle(viewModel);
-        viewModel.getListOfSpeakersSlideTitle = () => this.getListOfSpeakersSlideTitle(viewModel);
+        viewModel.getAgendaListTitle = (): AgendaListTitle => this.getAgendaListTitle(viewModel);
+        viewModel.getAgendaSlideTitle = (): string => this.getAgendaSlideTitle(viewModel);
+        viewModel.getListOfSpeakersTitle = (): string => this.getListOfSpeakersTitle(viewModel);
+        viewModel.getListOfSpeakersSlideTitle = (): string => this.getListOfSpeakersSlideTitle(viewModel);
         return viewModel;
     }
 }

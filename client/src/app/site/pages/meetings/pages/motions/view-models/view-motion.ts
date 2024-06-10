@@ -232,11 +232,11 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return status;
     }
 
-    public get supporter_users(): ViewUser[] {
+    public get supporters(): ViewUser[] {
         return this.supporter_meeting_users?.flatMap(user => user.user ?? []);
     }
 
-    public get supporter_user_ids(): number[] {
+    public get supporter_ids(): number[] {
         return this.supporter_meeting_users?.flatMap(user => user.user_id ?? []);
     }
 

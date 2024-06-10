@@ -480,8 +480,8 @@ export class LineNumberingService {
         let currLineStart = 0;
         let i = 0;
         let firstTextNode = true;
-        const addLine = (text: string) => {
-            let lineNode;
+        const addLine = (text: string): HTMLSpanElement | Text => {
+            let lineNode: HTMLSpanElement | Text;
             if (firstTextNode) {
                 if (highlight === (this.currentLineNumber as number) - 1) {
                     lineNode = document.createElement(`span`);
@@ -511,7 +511,7 @@ export class LineNumberingService {
             out.push(lineNode);
             return lineNode;
         };
-        const addLinebreakToPreviousNode = (lineNode: Element, offset: number) => {
+        const addLinebreakToPreviousNode = (lineNode: Element, offset: number): void => {
             const firstText = lineNode.nodeValue!.substr(0, offset + 1);
             const secondText = lineNode.nodeValue!.substr(offset + 1);
             const lineBreak = this.createLineBreak();
@@ -938,7 +938,7 @@ export class LineNumberingService {
      * @param {Element} lineNumber
      */
     private splitInlineElementsAtLineBreak(lineNumber: Element): void {
-        const parentIsInline = (el: Element) => isInlineElement(el.parentElement!);
+        const parentIsInline = (el: Element): boolean => isInlineElement(el.parentElement!);
         while (parentIsInline(lineNumber)) {
             const parent: Element = lineNumber.parentElement as Element;
             const beforeParent: Element = <Element>parent.cloneNode(false);

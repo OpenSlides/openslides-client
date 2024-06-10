@@ -37,7 +37,7 @@
     ></os-motion-detail-diff>
 </ng-container>
 
-<form class="motion-content" [formGroup]="contentForm" (keydown)="onKeyDown($event)">
+<form class="motion-content" [formGroup]="contentForm" (keydown)="onKeyDown($event)" tabindex="-1">
     <!-- Selecting statute paragraphs for amendment -->
     <div class="statute-amendment-selector" *ngIf="newMotion && statuteParagraphs.length && statutesEnabled">
         <mat-checkbox formControlName="statute_amendment" (change)="onStatuteAmendmentChange($event)">
@@ -222,7 +222,7 @@
                 <mat-form-field>
                     <mat-label>{{ 'Supporters' | translate }}</mat-label>
                     <os-repo-search-selector
-                        formControlName="supporter_user_ids"
+                        formControlName="supporter_ids"
                         [multiple]="true"
                         [repo]="participantRepo"
                         [sortService]="participantSortService"

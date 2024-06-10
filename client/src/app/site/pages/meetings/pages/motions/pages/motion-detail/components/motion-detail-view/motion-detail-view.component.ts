@@ -203,7 +203,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Sets @var this._navigatedFromAmendmentList on navigation from either of both lists.
      * Does nothing on navigation between two motions.
      */
-    private isNavigatedFromAmendments() {
+    private isNavigatedFromAmendments(): void {
         const previousUrl = this.originUrlService.getPreviousUrl();
         if (!!previousUrl) {
             if (previousUrl.endsWith(`amendments`)) {
@@ -266,7 +266,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Goes to the amendment creation wizard. Executed via click.
      */
     public createAmendment(): void {
-        const amendmentTextMode = this.meetingSettingService.instant(`motions_amendments_text_mode`);
+        const amendmentTextMode = this.meetingSettingsService.instant(`motions_amendments_text_mode`);
         if (amendmentTextMode === `paragraph`) {
             this.router.navigate([`create-amendment`], { relativeTo: this.route });
         } else {
@@ -338,7 +338,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * @param indexOfCurrent The index from the active motion.
      * @param step Stepwidth to iterate eiter over the previous or next motions.
      */
-    private findNextSuitableMotion(indexOfCurrent: number, step: number) {
+    private findNextSuitableMotion(indexOfCurrent: number, step: number): ViewMotion {
         if (!this._amendmentsInMainList || !this._navigatedFromAmendmentList) {
             return this._sortedMotions[indexOfCurrent + step];
         }
@@ -513,7 +513,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
             const defaultTitle = `${this.translate.instant(`Amendment to`)} ${parentMotion.numberOrTitle}`;
             motion.title = defaultTitle;
             motion.category_id = parentMotion.category_id;
-            const amendmentTextMode = this.meetingSettingService.instant(`motions_amendments_text_mode`);
+            const amendmentTextMode = this.meetingSettingsService.instant(`motions_amendments_text_mode`);
             if (amendmentTextMode === `fulltext`) {
                 motion.text = parentMotion.text;
             }

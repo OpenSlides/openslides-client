@@ -84,7 +84,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
     ];
 
-    public motionTransformFn = (value: ViewMotion) => `[${value.fqid}]`;
+    public motionTransformFn = (value: ViewMotion): string => `[${value.fqid}]`;
 
     /**
      * All amendments to this motion
@@ -145,7 +145,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     ) {
         super();
 
-        if (operator.hasPerms(Permission.motionCanManage)) {
+        if (operator.hasPerms(Permission.motionCanManageMetadata)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
                 this._forwardingAvailable = forwardingAvailable;
                 this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
@@ -336,7 +336,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     private async updateSupportersSubject(): Promise<void> {
-        this._supportersSubject.next(await this.participantSort.sort(this.motion.supporter_users));
+        this._supportersSubject.next(await this.participantSort.sort(this.motion.supporters));
     }
 
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
@@ -389,7 +389,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     private async checkPresenter(): Promise<(Selectable & { name: string; toString: any })[]> {
         const meetingId = this.activeMeetingService.meetingId;
         const committees =
-            this.operator.hasPerms(Permission.motionCanManage) && !!meetingId
+            this.operator.hasPerms(Permission.motionCanManageMetadata) && !!meetingId
                 ? await this.presenter.call({ meeting_id: meetingId })
                 : [];
         const forwardingCommittees: (Selectable & { name: string; toString: any })[] = [];
