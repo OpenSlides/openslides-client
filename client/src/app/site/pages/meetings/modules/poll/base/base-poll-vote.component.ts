@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
-import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
+import { BehaviorSubject, debounceTime, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import {
     IdentifiedVotingData,
@@ -65,8 +65,8 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     public forbidDelegationToVote: Observable<boolean> =
         this.meetingSettingsService.get(`users_forbid_delegator_to_vote`);
 
-    private voteDelegationEnabledBoolean: boolean
-    private forbidDelegationToVoteBoolean: boolean
+    private voteDelegationEnabledSubscription: Subscription | null = null;
+    private forbidDelegationToVoteSubscription: Subscription | null = null;
 
     private _isReady = false;
     private _poll!: ViewPoll<C>;
@@ -81,7 +81,6 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     public constructor(private meetingSettingsService: MeetingSettingsService) {
         super();
-        this.subscribeToSettings()
         this.subscriptions.push(
             this.operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
                 if (
@@ -119,13 +118,18 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     }
 
     public canSeePoll(user: ViewUser = this.user): boolean {
-        this.voteDelegationEnabled.subscribe(enabled => this.voteDelegationEnabledBoolean = enabled)
-        this.forbidDelegationToVote.subscribe(enabled => this.forbidDelegationToVoteBoolean = enabled)
-        if(user === this.user) {
-            return !(this.user.isVoteRightDelegated && this.voteDelegationEnabledBoolean && this.forbidDelegationToVoteBoolean);
+        if (this.voteDelegationEnabledSubscription || this.forbidDelegationToVoteSubscription) {
+            this.voteDelegationEnabledSubscription.unsubscribe();
+            this.forbidDelegationToVoteSubscription.unsubscribe();
         }
-        else {
-            return (this.voteDelegationEnabledBoolean);
+        let voteDelegationEnabledBoolean: boolean;
+        let forbidDelegationToVoteBoolean: boolean;
+        this.voteDelegationEnabled.subscribe(enabled => (voteDelegationEnabledBoolean = enabled));
+        this.forbidDelegationToVote.subscribe(enabled => (forbidDelegationToVoteBoolean = enabled));
+        if (user === this.user) {
+            return !(this.user.isVoteRightDelegated && voteDelegationEnabledBoolean && forbidDelegationToVoteBoolean);
+        } else {
+            return voteDelegationEnabledBoolean;
         }
     }
 
@@ -198,16 +202,6 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
             !this.isDeliveringVote(user) &&
             !this.hasAlreadyVoted(user) &&
             this.hasAlreadyVoted(user) !== undefined
-        );
-    }
-    private subscribeToSettings(): void {
-        this.subscriptions.push(
-            this.meetingSettingsService.get(`users_enable_vote_delegations`).subscribe(enabled => {
-                this.voteDelegationEnabledBoolean = enabled;
-            }),
-            this.meetingSettingsService.get(`users_forbid_delegator_in_list_of_speakers`).subscribe(enabled => {
-                this.forbidDelegationToVoteBoolean = enabled;
-            })
         );
     }
 }
