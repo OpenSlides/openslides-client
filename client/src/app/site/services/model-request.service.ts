@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { filter, first, firstValueFrom, Observable, Subscription } from 'rxjs';
+import { filter, first, Observable, Subscription } from 'rxjs';
 import { isValidId } from 'src/app/infrastructure/utils';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 import { AU_PAUSE_ON_INACTIVITY_TIMEOUT, AutoupdateService, ModelSubscription } from './autoupdate';
 import { ModelData } from './autoupdate/utils';
-import { LifecycleService } from './lifecycle.service';
 import { SimplifiedModelRequest } from './model-request-builder';
 import { WindowVisibilityService } from './window-visibility.service';
 
@@ -33,18 +32,15 @@ export class ModelRequestService {
     public constructor(
         private autoupdateService: AutoupdateService,
         private modelRequestBuilder: ModelRequestBuilderService,
-        private visibilityService: WindowVisibilityService,
-        private lifecycle: LifecycleService
+        private visibilityService: WindowVisibilityService
     ) {
-        firstValueFrom(this.lifecycle.appLoaded).then(() =>
-            this.visibilityService.hiddenFor(Math.max(0, AU_PAUSE_ON_INACTIVITY_TIMEOUT - 500)).subscribe(() => {
-                for (const key of this._modelSubscriptionMap.keys()) {
-                    if (this._modelSubscriptionMap.get(key).unusedSubscription?.closed) {
-                        this.closeSubscription(key);
-                    }
+        this.visibilityService.hiddenFor(Math.max(0, AU_PAUSE_ON_INACTIVITY_TIMEOUT - 500)).subscribe(() => {
+            for (const key of this._modelSubscriptionMap.keys()) {
+                if (this._modelSubscriptionMap.get(key).unusedSubscription?.closed) {
+                    this.closeSubscription(key);
                 }
-            })
-        );
+            }
+        });
     }
 
     public async subscribeTo({ modelRequest, subscriptionName, ...config }: SubscribeToConfig): Promise<void> {
