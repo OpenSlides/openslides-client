@@ -39,7 +39,7 @@ export class GlobalHeadbarComponent {
         });
     }
 
-    public get longpolling(): boolean {
+    public get showLongpollingIcon(): boolean {
         return this.headbarService.longpolling;
     }
 }
