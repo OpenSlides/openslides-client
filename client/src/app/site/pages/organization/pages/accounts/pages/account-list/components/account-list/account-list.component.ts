@@ -117,4 +117,24 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     public getOmlByUser(user: ViewUser): string {
         return getOmlVerboseName(user.organization_management_level as keyof OMLMapping);
     }
+
+    public async mergeUsersTogether(): Promise<void> {
+        const title = this.translate.instant(`Merge users`);
+        const MERGE = _(`Merge`);
+        const actions = [MERGE];
+        const result = await this.choiceService.open<ViewUser>({
+            title,
+            choices: this.selectedRows,
+            multiSelect: false,
+            actions,
+            content: this.translate.instant(`Attention: With merging not selected accounts will be removed.`)
+        });
+        if (result) {
+            if (result.action === MERGE && result.firstId) {
+                const id = result.firstId;
+                const user_ids = this.selectedRows.map(view => view.id).filter(sRid => sRid !== id);
+                this.controller.mergeTogether([{ id: id, user_ids: user_ids }]).resolve();
+            }
+        }
+    }
 }
