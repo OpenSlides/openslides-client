@@ -44,11 +44,20 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     @Output()
     public changeEvent: EventEmitter<void> = new EventEmitter();
 
+    private _projector: ViewProjector | null = null;
+
+    public get projector(): ViewProjector | null {
+        return this._projector;
+    }
+
     /**
      * Pre-define projection target
      */
     @Input()
-    public projector: ViewProjector | null = null;
+    public set projector(projector: ViewProjector | null) {
+        this._projector = projector;
+        this.updateIsProjected();
+    }
 
     @Input()
     public blendIn = false;
@@ -147,7 +156,6 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         if (!this.object) {
             this._isProjected = false;
         }
-
         this._isProjected = this.projector
             ? this.projectorService.isProjectedOn(this.object, this.projector)
             : this.projectorService.isProjected(this.object);
