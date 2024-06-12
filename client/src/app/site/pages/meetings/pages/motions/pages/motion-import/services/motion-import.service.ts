@@ -95,7 +95,7 @@ export class MotionImportService extends BaseImportService<ViewMotion> {
             [SUPPORTER_PROPERTY]: new UserImportHelper({
                 repo: this.userRepo,
                 verboseName: `Supporters`,
-                property: `supporter_user_ids`,
+                property: `supporter_ids`,
                 importedAs: SUPPORTER_PROPERTY
             })
         };
