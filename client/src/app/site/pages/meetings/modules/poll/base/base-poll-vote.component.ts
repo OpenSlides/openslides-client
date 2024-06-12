@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
-import { BehaviorSubject, debounceTime, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import {
     IdentifiedVotingData,
@@ -65,8 +65,8 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     public forbidDelegationToVote: Observable<boolean> =
         this.meetingSettingsService.get(`users_forbid_delegator_to_vote`);
 
-    private voteDelegationEnabledSubscription: Subscription | null = null;
-    private forbidDelegationToVoteSubscription: Subscription | null = null;
+    private voteDelegationEnabledBoolean: boolean;
+    private forbidDelegationToVoteBoolean: boolean;
 
     private _isReady = false;
     private _poll!: ViewPoll<C>;
@@ -98,7 +98,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                     this.cd.markForCheck();
                     this._isReady = true;
                 }
-            })
+            }),
+            this.voteDelegationEnabled.subscribe(enabled => (this.voteDelegationEnabledBoolean = enabled)),
+            this.forbidDelegationToVote.subscribe(enabled => (this.forbidDelegationToVoteBoolean = enabled))
         );
     }
 
@@ -118,18 +120,10 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     }
 
     public canSeePoll(user: ViewUser = this.user): boolean {
-        if (this.voteDelegationEnabledSubscription || this.forbidDelegationToVoteSubscription) {
-            this.voteDelegationEnabledSubscription.unsubscribe();
-            this.forbidDelegationToVoteSubscription.unsubscribe();
-        }
-        let voteDelegationEnabledBoolean: boolean;
-        let forbidDelegationToVoteBoolean: boolean;
-        this.voteDelegationEnabled.subscribe(enabled => (voteDelegationEnabledBoolean = enabled));
-        this.forbidDelegationToVote.subscribe(enabled => (forbidDelegationToVoteBoolean = enabled));
         if (user === this.user) {
-            return !(this.user.isVoteRightDelegated && voteDelegationEnabledBoolean && forbidDelegationToVoteBoolean);
+            return !(this.user.isVoteRightDelegated && this.voteDelegationEnabledBoolean && this.forbidDelegationToVoteBoolean);
         } else {
-            return voteDelegationEnabledBoolean;
+            return this.voteDelegationEnabledBoolean;
         }
     }
 
