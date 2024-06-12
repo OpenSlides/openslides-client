@@ -360,70 +360,61 @@
                         </mat-expansion-panel-header>
 
                         <!-- Slide-->
-                        <mat-list *ngIf="projectorCount > 1 && !projector.isReferenceProjector">
-                            <mat-list-item>
-                                <os-projector-button
-                                    [object]="getCurrentLoSBuildDesc(false)"
-                                    [projector]="projector"
-                                ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'List of speakers' | translate }}</span>
-                            </mat-list-item>
-                        </mat-list>
+                        <div *ngIf="projectorCount > 1 && !projector.isReferenceProjector" class="projectable-entry">
+                            <os-projector-button
+                                [object]="getCurrentLoSBuildDesc(false)"
+                                [projector]="projector"
+                            ></os-projector-button>
+                            <span class="spacer-left-10">{{ 'List of speakers' | translate }}</span>
+                        </div>
 
                         <!-- Overlay -->
-                        <mat-list>
-                            <mat-list-item>
-                                <os-projector-button
-                                    [object]="getCurrentLoSBuildDesc(true)"
-                                    [projector]="projector"
-                                ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'List of speakers as overlay' | translate }}</span>
-                            </mat-list-item>
-                        </mat-list>
+                        <div class="projectable-entry">
+                            <os-projector-button
+                                [object]="getCurrentLoSBuildDesc(true)"
+                                [projector]="projector"
+                            ></os-projector-button>
+                            <span class="spacer-left-10">{{ 'List of speakers as overlay' | translate }}</span>
+                        </div>
 
                         <!-- Chyron -->
-                        <mat-list>
-                            <mat-list-item>
-                                <os-projector-button
-                                    [object]="getChyronBuildDesc()"
-                                    [projector]="projector"
-                                    [useToggleDialog]="true"
-                                ></os-projector-button>
-                                <span class="spacer-left-10">{{ 'Chyron – current contribution' | translate }}</span>
-                            </mat-list-item>
-                        </mat-list>
+                        <div class="projectable-entry">
+                            <os-projector-button
+                                [object]="getChyronBuildDesc()"
+                                [projector]="projector"
+                                [useToggleDialog]="true"
+                            ></os-projector-button>
+                            <span class="spacer-left-10">{{ 'Chyron – current contribution' | translate }}</span>
+                        </div>
 
                         <!-- Strucutre level current speaker -->
-                        <mat-list>
-                            <mat-list-item *ngIf="isStructureLevelCountdownEnabled()">
-                                <os-projector-button
-                                    [object]="getCurrentStructureLevel()"
-                                    [projector]="projector"
-                                ></os-projector-button>
-                                <span class="spacer-left-10">
-                                    {{ 'Speaking time – current contribution' | translate }}
-                                </span>
-                            </mat-list-item>
-                        </mat-list>
+                        <div *ngIf="isStructureLevelCountdownEnabled()" class="projectable-entry">
+                            <os-projector-button
+                                [object]="getCurrentStructureLevel()"
+                                [projector]="projector"
+                            ></os-projector-button>
+                            <span class="spacer-left-10">
+                                {{ 'Speaking time – current contribution' | translate }}
+                            </span>
+                        </div>
 
                         <!-- All structure level -->
-                        <mat-list>
-                            <mat-list-item
-                                *ngIf="
-                                    projectorCount > 1 &&
-                                    !projector.isReferenceProjector &&
-                                    isStructureLevelCountdownEnabled()
-                                "
-                            >
-                                <os-projector-button
-                                    [object]="getAllStructureLevel()"
-                                    [projector]="projector"
-                                ></os-projector-button>
-                                <span class="spacer-left-10">
-                                    {{ 'Speaking times – overview structure levels' | translate }}
-                                </span>
-                            </mat-list-item>
-                        </mat-list>
+                        <div
+                            *ngIf="
+                                projectorCount > 1 &&
+                                !projector.isReferenceProjector &&
+                                isStructureLevelCountdownEnabled()
+                            "
+                            class="projectable-entry"
+                        >
+                            <os-projector-button
+                                [object]="getAllStructureLevel()"
+                                [projector]="projector"
+                            ></os-projector-button>
+                            <span class="spacer-left-10">
+                                {{ 'Speaking times – overview structure levels' | translate }}
+                            </span>
+                        </div>
                     </mat-expansion-panel>
 
                     <!-- Current slide -->
@@ -433,21 +424,19 @@
                         </mat-expansion-panel-header>
 
                         <!-- Toggle -->
-                        <mat-list>
-                            <mat-list-item>
-                                <os-projector-button
-                                    [object]="getCurrentProjectionLoSToggleBuildDesc()"
-                                    [projector]="projector"
-                                ></os-projector-button>
-                                <span class="spacer-left-10">
-                                    {{
-                                        currentProjectionIsLoS
-                                            ? ('Toggle to parent item' | translate)
-                                            : ('Toggle to list of speakers' | translate)
-                                    }}
-                                </span>
-                            </mat-list-item>
-                        </mat-list>
+                        <div class="projectable-entry">
+                            <os-projector-button
+                                [object]="getCurrentProjectionLoSToggleBuildDesc()"
+                                [projector]="projector"
+                            ></os-projector-button>
+                            <span class="spacer-left-10">
+                                {{
+                                    currentProjectionIsLoS
+                                        ? ('Toggle to parent item' | translate)
+                                        : ('Toggle to list of speakers' | translate)
+                                }}
+                            </span>
+                        </div>
                     </mat-expansion-panel>
 
                     <!-- History -->

@@ -85,7 +85,7 @@
     </os-projector-button>
 
     <button mat-menu-item (click)="setLosClosed(!isListOfSpeakersClosed)">
-        <mat-icon>{{ isListOfSpeakersClosed ? 'lock_open' : 'lock'}}</mat-icon>
+        <mat-icon>{{ isListOfSpeakersClosed ? 'lock_open' : 'lock' }}</mat-icon>
         <span *ngIf="!isListOfSpeakersClosed">{{ 'Close list of speakers' | translate }}</span>
         <span *ngIf="isListOfSpeakersClosed">{{ 'Open list of speakers' | translate }}</span>
     </button>
