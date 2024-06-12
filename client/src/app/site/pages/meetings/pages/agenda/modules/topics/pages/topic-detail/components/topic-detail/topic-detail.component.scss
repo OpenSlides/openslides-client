@@ -9,6 +9,6 @@
     }
 }
 
-.underlined-links ::ng-deep {
+:host ::ng-deep .underlined-links {
     @include detail-view-appearance;
 }
