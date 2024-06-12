@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
-import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
@@ -57,11 +57,11 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
 
-    @ContentChildren(ImportListFirstTabDirective, { read: MatTab })
-    public importListFirstTabs!: QueryList<MatTab>;
+    @ContentChildren(ImportListFirstTabDirective)
+    public importListFirstTabs!: QueryList<ImportListFirstTabDirective>;
 
-    @ContentChildren(ImportListLastTabDirective, { read: MatTab })
-    public importListLastTabs!: QueryList<MatTab>;
+    @ContentChildren(ImportListLastTabDirective)
+    public importListLastTabs!: QueryList<ImportListLastTabDirective>;
 
     @ContentChild(ImportListStatusTemplateDirective, { read: TemplateRef })
     public importListStateTemplate: TemplateRef<any>;
