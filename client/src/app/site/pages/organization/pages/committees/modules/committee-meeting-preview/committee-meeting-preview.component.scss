@@ -1,3 +1,5 @@
+@import 'src/assets/styles/mixins/button.scss';
+
 .smaller-badge-text {
     .mat-badge-content {
         font-size: 9px;
@@ -16,7 +18,7 @@
 }
 
 .archived-label {
-    padding: 6px;
+    padding: 4px;
     border: 1px solid;
     border-radius: 4px;
 }
@@ -33,4 +35,12 @@
 .os-mat-card-header {
     padding-top: 6px;
     padding-right: 0;
+}
+
+.committee-card-menu {
+    display: flex;
+    align-items: center;
+    .mat-mdc-icon-button {
+        @include custom-size-button(40px, 24px);
+    }
 }
