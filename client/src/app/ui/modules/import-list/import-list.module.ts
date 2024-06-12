@@ -10,7 +10,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { EditorModule } from 'src/app/ui/modules/editor/editor.module';
 import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';
+import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
 import { OpenSlidesTranslationModule } from '../../../site/modules/translations';
 import { ImportListComponent } from './components/import-list/import-list.component';
@@ -31,6 +33,8 @@ const DECLARATIONS = [
     exports: [...DECLARATIONS, MatTabsModule, ScrollingTableModule],
     declarations: DECLARATIONS,
     imports: [
+        EditorModule,
+        PipesModule,
         CommonModule,
         MatCardModule,
         MatTabsModule,

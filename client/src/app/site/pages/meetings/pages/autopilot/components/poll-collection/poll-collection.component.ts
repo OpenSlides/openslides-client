@@ -106,7 +106,7 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         const model = contentObject.getVerboseName();
         const pollTitle = poll.getTitle();
 
-        if (this.showExtendedTitle && contentObject.fqid !== this.currentProjection.fqid) {
+        if (this.showExtendedTitle && contentObject?.fqid !== this.currentProjection?.fqid) {
             return `(${model}) ${listTitle} - ${pollTitle}`;
         } else {
             return pollTitle;

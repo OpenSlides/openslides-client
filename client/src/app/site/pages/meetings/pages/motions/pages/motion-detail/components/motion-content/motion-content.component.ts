@@ -49,7 +49,7 @@ interface MotionFormFields {
 }
 
 type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any } & {
-    supporter_user_ids?: any;
+    supporter_ids?: any;
 };
 
 @Component({
@@ -487,7 +487,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             attachment_ids: [[]],
             agenda_parent_id: [],
             submitter_ids: [[]],
-            supporter_user_ids: [[]],
+            supporter_ids: [[]],
             workflow_id: [+this.meetingSettingsService.instant(`motions_default_workflow_id`)],
             tag_ids: [[]],
             statute_amendment: [``], // Internal value for the checkbox, not saved to the model
