@@ -31,7 +31,7 @@ export class ScrollingTableCellDirective implements OnInit, OnDestroy, Scrolling
             this.isHiddenSubscription = null;
             this._isHidden = isHidden;
         } else {
-            isHidden.subscribe(isMobileView => {
+            this.isHiddenSubscription = isHidden.subscribe(isMobileView => {
                 this._isHidden = !isMobileView;
             });
         }
