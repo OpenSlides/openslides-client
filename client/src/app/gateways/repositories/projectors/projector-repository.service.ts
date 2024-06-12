@@ -140,11 +140,11 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
         descriptor: ProjectionBuildDescriptor,
         projectors: ViewProjector[],
         options: object | null,
-        mode?: 'DEFAULT' | 'UPDATE_ONLY_SELECTED'
+        keepActiveProjections?: boolean
     ): Promise<void> {
         const payload = this.createProjectPayload(descriptor, projectors, options);
-        if (mode) {
-            payload.mode = mode;
+        if (keepActiveProjections) {
+            payload.keep_active_projections = keepActiveProjections;
         }
 
         return await this.sendActionToBackend(ProjectorAction.PROJECT, payload);
