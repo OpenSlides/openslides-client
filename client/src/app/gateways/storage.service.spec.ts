@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { LocalStorage } from '@ngx-pwa/local-storage';
+import { StorageMap } from '@ngx-pwa/local-storage';
 import { interval, map, Observable, takeWhile } from 'rxjs';
 
 import { StorageService } from './storage.service';
@@ -17,16 +17,16 @@ class MockLocalStorage {
         this.tick.subscribe(current => (this.current = current));
     }
 
-    public setItem(key: string, item: any): Observable<boolean> {
+    public set(key: string, item: any): Observable<boolean> {
         this.storage[key] = item;
         return this.getObservable(() => true);
     }
 
-    public getItem<T>(key: string): Observable<T> {
+    public get<T>(key: string): Observable<T> {
         return this.getObservable(() => this.storage[key] as T);
     }
 
-    public removeItem(key: string): Observable<boolean> {
+    public delete(key: string): Observable<boolean> {
         delete this.storage[key];
         return this.getObservable(() => true);
     }
@@ -57,10 +57,10 @@ describe(`StorageService`, () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [StorageService, { provide: LocalStorage, useClass: MockLocalStorage }]
+            providers: [StorageService, { provide: StorageMap, useClass: MockLocalStorage }]
         });
         service = TestBed.inject(StorageService);
-        localStorage = TestBed.inject(LocalStorage) as unknown as MockLocalStorage;
+        localStorage = TestBed.inject(StorageMap) as unknown as MockLocalStorage;
     });
 
     it(`check if set works`, async () => {
