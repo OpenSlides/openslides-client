@@ -114,7 +114,11 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     public canSeePoll(user: ViewUser = this.user): boolean {
         if (user === this.user) {
-            return !(this.user.isVoteRightDelegated && this.voteDelegationEnabledBoolean && this.forbidDelegationToVoteBoolean);
+            return !(
+                this.user.isVoteRightDelegated &&
+                this.voteDelegationEnabledBoolean &&
+                this.forbidDelegationToVoteBoolean
+            );
         } else {
             return this.voteDelegationEnabledBoolean;
         }
