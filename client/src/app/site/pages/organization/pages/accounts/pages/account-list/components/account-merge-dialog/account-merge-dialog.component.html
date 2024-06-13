@@ -1,0 +1,20 @@
+<div mat-dialog-title>{{ 'Merge users' | translate }}</div>
+<mat-dialog-content>
+    <mat-radio-group (change)="onChange($event)">
+        <mat-list *ngFor="let u of data.choices">
+            <mat-list-item>
+                <mat-radio-button [value]="u.id">{{ u.name }}</mat-radio-button>
+                <mat-icon *ngIf="isCrossedOut(u)">block</mat-icon>
+            </mat-list-item>
+        </mat-list>
+    </mat-radio-group>
+    <div class="error-color">{{ 'Attention: Not selected users will be merged and then removed.' | translate }}</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="closeDialog(true)">
+        <span>{{ 'Merge' | translate }}</span>
+    </button>
+    <button mat-button (click)="closeDialog(false)">
+        <span>{{ 'Cancel' | translate }}</span>
+    </button>
+</mat-dialog-actions>
