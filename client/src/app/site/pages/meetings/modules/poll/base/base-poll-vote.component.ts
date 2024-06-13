@@ -112,13 +112,6 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         return this.alreadyVoted[user?.id];
     }
 
-    public canVoteForObservable(user: ViewUser = this.user): Observable<boolean> {
-        if (!this._canVoteForSubjectMap[user.id]) {
-            this._canVoteForSubjectMap[user.id] = new BehaviorSubject(this.canVote(user));
-        }
-        return this._canVoteForSubjectMap[user.id];
-    }
-
     public canSeePoll(user: ViewUser = this.user): boolean {
         if (user === this.user) {
             return !(this.user.isVoteRightDelegated && this.voteDelegationEnabledBoolean && this.forbidDelegationToVoteBoolean);
