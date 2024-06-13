@@ -112,7 +112,7 @@
         </li>
     </ul>
     <p *ngIf="additionalInfo">
-        {{ additionalInfo }}
+        <span [innerHTML]="additionalInfo | trust : 'html'"></span>
     </p>
     <button mat-button color="accent" (click)="downloadCsvExample()">
         {{ 'Download CSV example file' | translate }}

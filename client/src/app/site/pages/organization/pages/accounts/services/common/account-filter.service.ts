@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
@@ -22,7 +21,6 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
 
     public constructor(
         store: ActiveFiltersService,
-        private translate: TranslateService,
         private operator: OperatorService,
         private controller: UserControllerService
     ) {
@@ -48,18 +46,18 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 ? [
                       {
                           property: `isInActiveMeeting`,
-                          label: this.translate.instant(`Active meetings`),
+                          label: `Active meetings`,
                           options: [
-                              { condition: true, label: this.translate.instant(`Is in active meetings`) },
-                              { condition: [false, null], label: this.translate.instant(`Is not in active meetings`) }
+                              { condition: true, label: `Is in active meetings` },
+                              { condition: [false, null], label: `Is not in active meetings` }
                           ]
                       },
                       {
                           property: `isInArchivedMeeting`,
-                          label: this.translate.instant(`Archived meetings`),
+                          label: `Archived meetings`,
                           options: [
-                              { condition: true, label: this.translate.instant(`Is in archived meetings`) },
-                              { condition: [false, null], label: this.translate.instant(`Is not in archived meetings`) }
+                              { condition: true, label: `Is in archived meetings` },
+                              { condition: [false, null], label: `Is not in archived meetings` }
                           ]
                       }
                   ]
@@ -68,109 +66,109 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
         const staticFilterDefinitions: OsFilter<ViewUser>[] = [
             {
                 property: `is_active`,
-                label: this.translate.instant(`Active`),
+                label: `Active`,
                 options: [
                     { condition: true, label: `Is active` },
-                    { condition: [false, null], label: this.translate.instant(`Is not active`) }
+                    { condition: [false, null], label: `Is not active` }
                 ]
             },
             {
                 property: `is_physical_person`,
-                label: this.translate.instant(`Natural person`),
+                label: `Natural person`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Is a natural person`) },
-                    { condition: [false, null], label: this.translate.instant(`Is no natural person`) }
+                    { condition: true, label: `Is a natural person` },
+                    { condition: [false, null], label: `Is no natural person` }
                 ]
             },
             {
                 property: `gender`,
-                label: this.translate.instant(`Gender`),
+                label: `Gender`,
                 options: [
-                    { condition: `female`, label: this.translate.instant(`female`) },
-                    { condition: `male`, label: this.translate.instant(`male`) },
-                    { condition: `diverse`, label: this.translate.instant(`diverse`) },
-                    { condition: `non-binary`, label: this.translate.instant(`non-binary`) },
-                    { condition: null, label: this.translate.instant(`not specified`) }
+                    { condition: `female`, label: `female` },
+                    { condition: `male`, label: `male` },
+                    { condition: `diverse`, label: `diverse` },
+                    { condition: `non-binary`, label: `non-binary` },
+                    { condition: null, label: `not specified` }
                 ]
             },
             {
                 property: `hasEmail`,
-                label: this.translate.instant(`Email address`),
+                label: `Email address`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Has an email address`) },
-                    { condition: [false, null], label: this.translate.instant(`Has no email address`) }
+                    { condition: true, label: `Has an email address` },
+                    { condition: [false, null], label: `Has no email address` }
                 ]
             },
             {
                 property: `isLastEmailSent`,
-                label: this.translate.instant(`Last email sent`),
+                label: `Last email sent`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Got an email`) },
-                    { condition: [false, null], label: this.translate.instant(`Didn't get an email`) }
+                    { condition: true, label: `Got an email` },
+                    { condition: [false, null], label: `Didn't get an email` }
                 ]
             },
             {
                 property: `isLastLogin`,
-                label: this.translate.instant(`Last login`),
+                label: `Last login`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Has logged in`) },
-                    { condition: [false, null], label: this.translate.instant(`Has not logged in yet`) }
+                    { condition: true, label: `Has logged in` },
+                    { condition: [false, null], label: `Has not logged in yet` }
                 ]
             },
             {
                 property: `organization_management_level`,
-                label: this.translate.instant(`Administration roles`),
+                label: `Administration roles`,
                 options: [
-                    { condition: `superadmin`, label: this.translate.instant(`Superadmin`) },
-                    { condition: `can_manage_organization`, label: this.translate.instant(`Organization admin`) },
-                    { condition: `can_manage_users`, label: this.translate.instant(`Account admin`) },
-                    { condition: null, label: this.translate.instant(`No admin role`) }
+                    { condition: `superadmin`, label: `Superadmin` },
+                    { condition: `can_manage_organization`, label: `Organization admin` },
+                    { condition: `can_manage_users`, label: `Account admin` },
+                    { condition: null, label: `No admin role` }
                 ]
             },
             {
                 property: `isCommitteeManager`,
-                label: this.translate.instant(`Committee admin`),
+                label: `Committee admin`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Is committee admin`) },
-                    { condition: [false, null], label: this.translate.instant(`No committee admin`) }
+                    { condition: true, label: `Is committee admin` },
+                    { condition: [false, null], label: `No committee admin` }
                 ]
             },
             {
                 property: `isVoteWeightOne`,
-                label: this.translate.instant(`Vote weight`),
+                label: `Vote weight`,
                 options: [
-                    { condition: [false, null], label: this.translate.instant(`Has changed vote weight`) },
-                    { condition: true, label: this.translate.instant(`Has unchanged vote weight`) }
+                    { condition: [false, null], label: `Has changed vote weight` },
+                    { condition: true, label: `Has unchanged vote weight` }
                 ]
             },
             {
                 property: `hasSamlId`,
-                label: this.translate.instant(`SSO`),
+                label: `SSO`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Has SSO identification`) },
-                    { condition: [false, null], label: this.translate.instant(`Has no SSO identification`) }
+                    { condition: true, label: `Has SSO identification` },
+                    { condition: [false, null], label: `Has no SSO identification` }
                 ]
             },
             {
                 property: `getDuplicateStatusInMap`,
-                label: this.translate.instant(`Duplicates`),
+                label: `Duplicates`,
                 options: [
                     {
                         condition: [DuplicateStatus.All, DuplicateStatus.SameName],
-                        label: this.translate.instant(`Same first/last name`)
+                        label: `Same first/last name`
                     },
                     {
                         condition: [DuplicateStatus.All, DuplicateStatus.SameEmail],
-                        label: this.translate.instant(`Same email`)
+                        label: `Same email`
                     }
                 ]
             },
             {
                 property: `hasMemberNumber`,
-                label: `Member number`,
+                label: `Membership number`,
                 options: [
-                    { condition: true, label: `Has a member number` },
-                    { condition: [false, null], label: `Has no member number` }
+                    { condition: true, label: `Has a membership number` },
+                    { condition: [false, null], label: `Has no membership number` }
                 ]
             }
         ];

@@ -44,6 +44,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public descriptor: ProjectionBuildDescriptor;
     public allowReferenceProjector = true;
     public projectorSelectable = false;
+    private currentProjectionOptions: { [key: string]: any } = {};
     private _projectorSubscription: string;
     private _subscriptions: Subscription[] = [];
 
@@ -59,6 +60,15 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
         this.projectorSelectable = isProjectionBuildDescriptor(data) || !data.projector;
         if (!this.projectorSelectable && !isProjectionBuildDescriptor(data)) {
             this.selectedProjectors = [data.projector.id];
+        }
+
+        const projector = !isProjectionBuildDescriptor(data) && data.projector;
+        if (projector) {
+            const projections = this.projectorService.getMatchingProjectionsFromProjector(this.descriptor, projector);
+
+            if (projections.length === 1) {
+                this.currentProjectionOptions = projections[0].options || {};
+            }
         }
     }
 
@@ -102,7 +112,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
 
             // Set option defaults
             this.descriptor?.slideOptions?.forEach(option => {
-                this.optionValues[option.key] = option.default;
+                this.optionValues[option.key] = this.currentProjectionOptions[option.key] || option.default;
             });
 
             if (this.descriptor) {

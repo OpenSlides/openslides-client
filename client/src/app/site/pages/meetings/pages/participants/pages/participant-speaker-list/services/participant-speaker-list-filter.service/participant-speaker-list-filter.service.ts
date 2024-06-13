@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
 import { OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
@@ -25,17 +24,13 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
         options: []
     };
 
-    public constructor(
-        store: MeetingActiveFiltersService,
-        structureRepo: StructureLevelControllerService,
-        private translate: TranslateService
-    ) {
+    public constructor(store: MeetingActiveFiltersService, structureRepo: StructureLevelControllerService) {
         super(store);
 
         this.updateFilterForRepo({
             repo: structureRepo,
             filter: this.speakerStructureLevelFilterOptions,
-            noneOptionLabel: this.translate.instant(`No structure level`)
+            noneOptionLabel: `No structure level`
         });
     }
 

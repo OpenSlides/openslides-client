@@ -279,10 +279,10 @@ export class MotionPdfService {
         }
 
         // supporters
-        if (!infoToExport || infoToExport.includes(`supporter_users`)) {
+        if (!infoToExport || infoToExport.includes(`supporters`)) {
             const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
-            if (minSupporters && motion.supporter_users.length > 0) {
-                const supporters = motion.supporter_users
+            if (minSupporters && motion.supporters.length > 0) {
+                const supporters = motion.supporters
                     .naturalSort(this.translate.currentLang, [`first_name`, `last_name`])
                     .map(supporter => supporter.full_name)
                     .join(`, `);

@@ -8,8 +8,8 @@ export interface SlideDecisionOption extends BaseSlideOption {
 }
 
 export interface SlideChoiceOption extends BaseSlideOption {
-    default: string;
-    choices: { value: string; displayName: string }[];
+    default: string | boolean;
+    choices: { value: string | boolean; displayName: string }[];
 }
 
 export type SlideOption = SlideDecisionOption | SlideChoiceOption;

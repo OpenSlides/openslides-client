@@ -13,20 +13,20 @@ import { MeetingListServiceModule } from './meeting-list-service.module';
 })
 export class MeetingCsvExportService {
     private meetingHeadersAndVerboseNames = {
-        name: _(`Meeting name`),
-        committeeName: _(`Committee name`),
-        location: _(`Location`),
+        name: _(`Meeting`),
+        committeeName: _(`Committee`),
+        location: _(`Event location`),
         start_time: {
-            label: _(`Start`),
+            label: _(`Start date`),
             map: (model: ViewMeeting): string => this.meetingRepo.parseUnixToMeetingTime(model?.start_time * 1000)
         },
         end_time: {
-            label: _(`End`),
+            label: _(`End date`),
             map: (model: ViewMeeting): string => this.meetingRepo.parseUnixToMeetingTime(model?.end_time * 1000)
         },
         description: _(`Description`),
-        userAmount: _(`User amount`),
-        motionsAmount: _(`Motion amount`)
+        userAmount: _(`Participants`),
+        motionsAmount: _(`Motions`)
     };
 
     public constructor(
