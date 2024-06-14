@@ -55,6 +55,12 @@
                                 matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
                                 matTooltipPosition="left"
                             ></os-icon-container>
+                            <os-icon-container
+                                *ngIf="user?.isLastLogin"
+                                icon="person"
+                                matTooltip="{{ 'Last login' | translate }} {{ user.last_login | localizedDate }}"
+                                matTooltipPosition="left"
+                            ></os-icon-container>
                         </div>
                     </div>
                 </mat-radio-button>
