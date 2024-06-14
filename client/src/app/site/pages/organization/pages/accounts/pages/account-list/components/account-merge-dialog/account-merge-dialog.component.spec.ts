@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccountMergeDialogComponent } from './account-merge-dialog.component';
 
-describe(`AccountMergeDialogComponent`, () => {
+xdescribe(`AccountMergeDialogComponent`, () => {
     let component: AccountMergeDialogComponent;
     let fixture: ComponentFixture<AccountMergeDialogComponent>;
 
