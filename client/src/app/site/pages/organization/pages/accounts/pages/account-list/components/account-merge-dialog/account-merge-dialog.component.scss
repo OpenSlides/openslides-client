@@ -1,3 +1,19 @@
 .error-color {
     color: red;
 }
+
+.nameCell {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 260px;
+}
+
+.iconCell {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 60px;
+}
+
+.meta-info {
+    font-size: 12px;
+}

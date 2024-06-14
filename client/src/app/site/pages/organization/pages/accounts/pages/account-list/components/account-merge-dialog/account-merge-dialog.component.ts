@@ -18,8 +18,12 @@ export class AccountMergeDialogComponent {
 
     public selectedUserId: number;
 
+    public get sortedUsers(): ViewUser[] {
+        return this.data.choices.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
     public isCrossedOut(user: ViewUser): boolean {
-        if (this.selectedUserId === null) {
+        if (!this.selectedUserId) {
             return false;
         }
         return this.selectedUserId !== user.id;

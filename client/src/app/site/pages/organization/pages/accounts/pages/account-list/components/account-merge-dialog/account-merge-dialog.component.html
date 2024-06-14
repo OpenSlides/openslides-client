@@ -1,10 +1,63 @@
 <div mat-dialog-title>{{ 'Merge users' | translate }}</div>
 <mat-dialog-content>
     <mat-radio-group (change)="onChange($event)">
-        <mat-list *ngFor="let u of data.choices">
+        <mat-list *ngFor="let user of sortedUsers">
             <mat-list-item>
-                <mat-radio-button [value]="u.id">{{ u.name }}</mat-radio-button>
-                <mat-icon *ngIf="isCrossedOut(u)">block</mat-icon>
+                <mat-radio-button [value]="user.id">
+                    <div class="flex-vertical-center overflow-hidden" style="width: 320px">
+                        <div class="nameCell overflow-hidden">
+                            <div class="title-line title-box">
+                                <span class="ellipsis-overflow">
+                                    {{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')' : '') }}
+                                </span>
+                                <div style="float: right; display: inline-flex">
+                                    &nbsp;
+                                    <os-icon-container
+                                        icon="account_balance"
+                                        *ngIf="!user.is_physical_person"
+                                        matTooltip="{{ 'Is no natural person' | translate }}"
+                                    ></os-icon-container>
+                                    <os-icon-container
+                                        icon="block"
+                                        *ngIf="!user.is_active"
+                                        matTooltip="{{ 'Inactive' | translate }}"
+                                    ></os-icon-container>
+                                    <os-icon-container
+                                        icon="fingerprint"
+                                        *ngIf="user.hasSamlId"
+                                        matTooltip="{{ 'Has SSO identification' | translate }}"
+                                    ></os-icon-container>
+                                    <os-icon-container *ngIf="isCrossedOut(user)" icon="block"></os-icon-container>
+                                </div>
+                            </div>
+                            <div class="meta-info user-subtitle ellipsis-overflow">
+                                {{ user.saml_id || user.username }}
+                                <ng-container *ngIf="user.email">&middot; {{ user.email }}&nbsp;</ng-container>
+                                <ng-container *ngIf="user.member_number">
+                                    &middot; {{ user.member_number }}
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div class="iconCell">
+                            <os-icon-container
+                                *ngIf="!!user.meetings?.length"
+                                icon="event_available"
+                                matTooltip="{{ 'Meetings' | translate }}"
+                                matTooltipPosition="left"
+                                [showIcon]="true"
+                                [noWrap]="true"
+                            >
+                                {{ user.meetings.length }}
+                            </os-icon-container>
+                            <os-icon-container
+                                icon="mail"
+                                *ngIf="user.isLastEmailSent"
+                                matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
+                                matTooltipPosition="left"
+                            ></os-icon-container>
+                        </div>
+                    </div>
+                </mat-radio-button>
             </mat-list-item>
         </mat-list>
     </mat-radio-group>
