@@ -22,6 +22,16 @@ export class AccountMergeDialogComponent {
         return this.data.choices.sort((a, b) => a.name.localeCompare(b.name));
     }
 
+    public userMeetings(user: ViewUser): string {
+        if (user.meetings.length > 10) {
+            const res = user.meetings.map(a => a.name).slice(0, 10);
+            res.push(`...`);
+            return res.join(`, `);
+        } else {
+            return user.meetings.map(a => a.name).join(`, `);
+        }
+    }
+
     public isCrossedOut(user: ViewUser): boolean {
         if (!this.selectedUserId) {
             return false;

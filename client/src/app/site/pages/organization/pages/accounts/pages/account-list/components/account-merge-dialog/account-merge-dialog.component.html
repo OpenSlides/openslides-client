@@ -42,7 +42,7 @@
                             <os-icon-container
                                 *ngIf="!!user.meetings?.length"
                                 icon="event_available"
-                                matTooltip="{{ 'Meetings' | translate }}"
+                                [matTooltip]="userMeetings(user)"
                                 matTooltipPosition="left"
                                 [showIcon]="true"
                                 [noWrap]="true"
