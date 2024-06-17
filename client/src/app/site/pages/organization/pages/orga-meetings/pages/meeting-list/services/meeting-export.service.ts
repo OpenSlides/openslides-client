@@ -40,9 +40,10 @@ export class MeetingCsvExportService {
             meetings,
             Object.keys(this.meetingHeadersAndVerboseNames).map(key => {
                 if (typeof this.meetingHeadersAndVerboseNames[key] !== `string`) {
-                    return this.meetingHeadersAndVerboseNames[key];
+                    const res = this.meetingHeadersAndVerboseNames[key];
+                    res.label = this.translate.instant(res.label);
+                    return res;
                 }
-
                 return {
                     property: key,
                     label: this.translate.instant(this.meetingHeadersAndVerboseNames[key])
