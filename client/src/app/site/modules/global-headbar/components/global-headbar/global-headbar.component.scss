@@ -27,3 +27,19 @@
     font-weight: 400;
     font-size: 14px;
 }
+
+.fake-fab-button {
+    $button-size: 20px;
+    width: $button-size;
+    height: $button-size;
+    line-height: $button-size;
+    text-align: center;
+    cursor: pointer;
+    background: orange;
+    border-radius: 50%;
+}
+
+.longpolling-adjust-icon {
+    margin-left: -1px;
+    margin-top: -2px;
+}

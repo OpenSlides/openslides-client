@@ -10,8 +10,10 @@
         </button>
         <!-- Button to view the own account -->
         <os-account-button></os-account-button>
-        <div class="flex-center" *ngIf="showLongpollingIcon">
-            <mat-icon color="warn" matTooltip="Fallback Mode">sync_problem</mat-icon>
+        <div class="fake-fab-button flex-center" *ngIf="showLongpollingIcon">
+            <div class="longpolling-adjust-icon">
+                <mat-icon color="white" matTooltip="Fallback Mode">sync_problem</mat-icon>
+            </div>
         </div>
     </div>
 </mat-toolbar>
