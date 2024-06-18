@@ -8,7 +8,10 @@
                     <div class="flex-vertical-center overflow-hidden" style="width: 320px">
                         <div class="nameCell overflow-hidden">
                             <div class="title-line title-box">
-                                <span class="ellipsis-overflow">
+                                <span class="ellipsis-overflow" *ngIf="!isCrossedOut(user)">
+                                    {{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')' : '') }}
+                                </span>
+                                <span class="ellipsis-overflow crossed-out" *ngIf="isCrossedOut(user)">
                                     {{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')' : '') }}
                                 </span>
                                 <div style="float: right; display: inline-flex">
@@ -28,7 +31,6 @@
                                         *ngIf="user.hasSamlId"
                                         matTooltip="{{ 'Has SSO identification' | translate }}"
                                     ></os-icon-container>
-                                    <os-icon-container *ngIf="isCrossedOut(user)" icon="block"></os-icon-container>
                                 </div>
                             </div>
                             <div class="meta-info user-subtitle ellipsis-overflow">
@@ -69,7 +71,7 @@
             </mat-list-item>
         </mat-list>
     </mat-radio-group>
-    <div class="error-color">{{ 'Attention: Not selected users will be merged and then removed.' | translate }}</div>
+    <div class="error-color">{{ 'Attention: Not selected accounts will be merged and then removed.' | translate }}</div>
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button (click)="closeDialog(true)">
