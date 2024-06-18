@@ -34,6 +34,7 @@
 .timer {
     grid-area: controls;
     display: flex;
+    justify-content: space-between;
 }
 
 .larger-countdown {
