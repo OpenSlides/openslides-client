@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -135,7 +135,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     public async openMergeDialog(): Promise<number | null> {
         const data = { choices: this.selectedRows };
         const dialogRef = this.dialog.open(AccountMergeDialogComponent, {
-            ...infoDialogSettings,
+            ...mediumDialogSettings,
             data: data
         });
         return firstValueFrom(dialogRef.afterClosed());
