@@ -3,7 +3,7 @@
     <div>{{ 'Please select a primary account.' | translate }}</div>
     <mat-radio-group (change)="onChange($event)">
         <mat-list *ngFor="let user of possibleChoices">
-            <mat-list-item>
+            <mat-list-item style="height: 60px">
                 <mat-radio-button [value]="user.id">
                     <div class="flex-vertical-center overflow-hidden" style="width: 720px">
                         <div class="nameCell overflow-hidden">
@@ -40,10 +40,12 @@
                                     &middot; {{ user.member_number }}
                                 </ng-container>
                             </div>
+                            <div class="meta-info user-subtitle ellipsis-overflow" *ngIf="user?.isLastLogin">
+                                {{ 'Last login' | translate }} {{ user.last_login | localizedDate }}
+                            </div>
                         </div>
                         <div class="iconCell">
                             <os-icon-container
-                                *ngIf="!!user.meetings?.length"
                                 icon="event_available"
                                 [matTooltip]="userMeetings(user)"
                                 matTooltipPosition="left"
@@ -57,12 +59,6 @@
                                 icon="mail"
                                 *ngIf="user.isLastEmailSent"
                                 matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
-                                matTooltipPosition="left"
-                            ></os-icon-container>
-                            <os-icon-container
-                                *ngIf="user?.isLastLogin"
-                                icon="person"
-                                matTooltip="{{ 'Last login' | translate }} {{ user.last_login | localizedDate }}"
                                 matTooltipPosition="left"
                             ></os-icon-container>
                         </div>
