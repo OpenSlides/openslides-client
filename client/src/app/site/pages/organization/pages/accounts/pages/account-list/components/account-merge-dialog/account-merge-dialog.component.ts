@@ -14,12 +14,14 @@ export class AccountMergeDialogComponent {
     public constructor(
         public dialogRef: MatDialogRef<AccountMergeDialogComponent, AccountMergeDialogAnswer>,
         @Inject(MAT_DIALOG_DATA) public data: AccountMergeDialogData
-    ) {}
+    ) {
+        this.data.choices.sort((a, b) => a.name.localeCompare(b.name));
+    }
 
     public selectedUserId: number;
 
-    public get sortedUsers(): ViewUser[] {
-        return this.data.choices.sort((a, b) => a.name.localeCompare(b.name));
+    public get possibleChoices(): ViewUser[] {
+        return this.data.choices;
     }
 
     public userMeetings(user: ViewUser): string {

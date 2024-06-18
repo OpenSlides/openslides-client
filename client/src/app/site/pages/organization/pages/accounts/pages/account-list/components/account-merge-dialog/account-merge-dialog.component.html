@@ -2,7 +2,7 @@
 <mat-dialog-content>
     <div>{{ 'Please select a primary account.' | translate }}</div>
     <mat-radio-group (change)="onChange($event)">
-        <mat-list *ngFor="let user of sortedUsers">
+        <mat-list *ngFor="let user of possibleChoices">
             <mat-list-item>
                 <mat-radio-button [value]="user.id">
                     <div class="flex-vertical-center overflow-hidden" style="width: 320px">
