@@ -2,15 +2,16 @@
     <button
         *ngIf="!menuItem && !blendIn"
         mat-mini-fab
+        [color]="isProjected ? 'accent' : 'basic'"
         (click)="onClick($event)"
         [disabled]="disabled"
-        [ngClass]="{ 'projector-inactive': !isProjected }"
     >
         <mat-icon>videocam</mat-icon>
     </button>
     <button
         *ngIf="!menuItem && blendIn"
         mat-icon-button
+        [color]="isProjected ? 'accent' : 'basic'"
         (click)="onClick($event)"
         [disabled]="disabled"
         class="blend-in"
@@ -22,7 +23,6 @@
         mat-menu-item
         (click)="onClick()"
         [disabled]="disabled"
-        [ngClass]="{ 'projector-inactive': !isProjected }"
     >
         <mat-icon>videocam</mat-icon>
         <span #ref><ng-content></ng-content></span>
