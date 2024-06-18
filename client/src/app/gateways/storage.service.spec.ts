@@ -7,8 +7,6 @@ import { StorageService } from './storage.service';
 class MockLocalStorage {
     public storage: { [key: string]: any } = {};
 
-    public returnFalse = false;
-
     private tick = interval(2);
 
     private current = 0;
@@ -40,13 +38,7 @@ class MockLocalStorage {
         const current = this.current;
         return this.tick.pipe(
             takeWhile(time => time < current + 10),
-            map(getValueFn),
-            map(val => {
-                if (typeof val === `boolean` && this.returnFalse) {
-                    return false;
-                }
-                return val;
-            })
+            map(getValueFn)
         ) as Observable<T>;
     }
 }
@@ -125,12 +117,5 @@ describe(`StorageService`, () => {
         expect(localStorage.storage).toEqual({
             anotherExample: `Another something text`
         });
-    });
-
-    it(`check error cases`, async () => {
-        localStorage.returnFalse = true;
-        await expectAsync(service.set(`example`, `Something new`)).toBeRejectedWithError(`Could not set the item.`);
-        await expectAsync(service.remove(`example`)).toBeRejectedWithError(`Could not delete the item.`);
-        await expectAsync(service.clear()).toBeRejectedWithError(`Could not clear the storage.`);
     });
 });

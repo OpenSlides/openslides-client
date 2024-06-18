@@ -23,10 +23,7 @@ export class StorageService {
         if (item === null || item === undefined) {
             await this.remove(key); // You cannot do a setItem with null or undefined...
         } else {
-            const isSuccessfullyAdded = await lastValueFrom(this.storage.set(key, item));
-            if (!isSuccessfullyAdded) {
-                throw new Error(`Could not set the item.`);
-            }
+            await lastValueFrom(this.storage.set(key, item));
         }
     }
 
@@ -45,9 +42,7 @@ export class StorageService {
      * @param key The key to remove the value from
      */
     public async remove(key: string): Promise<void> {
-        if (!(await lastValueFrom(this.storage.delete(key)))) {
-            throw new Error(`Could not delete the item.`);
-        }
+        await lastValueFrom(this.storage.delete(key));
     }
 
     /**
@@ -58,9 +53,7 @@ export class StorageService {
         for (const key of this.noClearKeys) {
             savedData[key] = await this.get(key);
         }
-        if (!(await lastValueFrom(this.storage.clear()))) {
-            throw new Error(`Could not clear the storage.`);
-        }
+        await lastValueFrom(this.storage.clear());
         for (const key of this.noClearKeys) {
             await this.set(key, savedData[key]);
         }
