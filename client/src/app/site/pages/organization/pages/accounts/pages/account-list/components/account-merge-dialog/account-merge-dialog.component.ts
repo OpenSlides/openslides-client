@@ -28,9 +28,9 @@ export class AccountMergeDialogComponent {
         if (user.meetings.length > 10) {
             const res = user.meetings.map(a => a.name).slice(0, 10);
             res.push(`...`);
-            return res.join(`, `);
+            return res.join(`\n`);
         } else {
-            return user.meetings.map(a => a.name).join(`, `);
+            return user.meetings.map(a => a.name).join(`\n`);
         }
     }
 
