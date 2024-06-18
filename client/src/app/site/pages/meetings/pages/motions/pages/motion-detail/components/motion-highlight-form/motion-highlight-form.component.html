@@ -11,7 +11,7 @@
                 (keydown)="onKeyDown($event)"
                 [(ngModel)]="highlightedLineTyping"
             />
-            <mat-error *ngIf="highlightedLineTyping && highlightedLineTyping > 10">
+            <mat-error *ngIf="highlightedLineTyping && +highlightedLineTyping > 10">
                 {{ 'Invalid line number' | translate }}
             </mat-error>
             <button
