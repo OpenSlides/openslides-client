@@ -3,7 +3,7 @@
     <div>{{ 'Please select a primary account.' | translate }}</div>
     <mat-radio-group (change)="onChange($event)">
         <mat-list *ngFor="let user of possibleChoices">
-            <mat-list-item style="height: 60px">
+            <mat-list-item class="merge-user-item" style="height: 60px">
                 <mat-radio-button [value]="user.id">
                     <div class="flex-vertical-center overflow-hidden" style="width: 720px">
                         <div class="nameCell overflow-hidden">
