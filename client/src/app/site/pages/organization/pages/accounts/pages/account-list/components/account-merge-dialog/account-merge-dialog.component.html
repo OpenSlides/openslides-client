@@ -70,7 +70,7 @@
     <div class="error-color">{{ 'Attention: Not selected accounts will be merged and then removed.' | translate }}</div>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button (click)="closeDialog(true)">
+    <button mat-button (click)="closeDialog(true)" [disabled]="!selectedUserId">
         <span>{{ 'Merge' | translate }}</span>
     </button>
     <button mat-button (click)="closeDialog(false)">
