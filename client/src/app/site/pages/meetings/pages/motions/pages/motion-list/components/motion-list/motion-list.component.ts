@@ -58,12 +58,6 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     public selectedMotion: ViewMotion | null = null;
 
     /**
-     * Value of the configuration variable `motions_statutes_enabled` - are statutes enabled?
-     * @TODO replace by direct access to config variable, once it's available from the templates
-     */
-    public statutesEnabled = false;
-
-    /**
      * Value of the configuration variable `motions_amendments_enabled` - are amendments enabled?
      */
     public amendmentsEnabled = false;
@@ -165,9 +159,6 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         super.setTitle(`Motions`);
 
         this.subscriptions.push(
-            this.meetingSettingsService
-                .get(`motions_statutes_enabled`)
-                .subscribe(enabled => (this.statutesEnabled = enabled)),
             this.meetingSettingsService
                 .get(`motions_amendments_enabled`)
                 .subscribe(enabled => (this.amendmentsEnabled = enabled)),
