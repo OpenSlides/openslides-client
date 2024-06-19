@@ -2,6 +2,10 @@
     color: red;
 }
 
+.mat-column-button {
+    width: 60px;
+}
+
 .nameCell {
     display: flex;
     flex-direction: column;
@@ -20,10 +24,4 @@
 
 .crossed-out {
     text-decoration: line-through;
-}
-
-.merge-user-item {
-    border-bottom-color: rgba(0, 0, 0, 0.12);
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
 }

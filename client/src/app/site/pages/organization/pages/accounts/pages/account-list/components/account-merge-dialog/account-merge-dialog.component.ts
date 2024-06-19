@@ -19,6 +19,7 @@ export class AccountMergeDialogComponent {
     }
 
     public selectedUserId: number;
+    public displayedColumns = [`button`, `name`, `icon`];
 
     public get possibleChoices(): ViewUser[] {
         return this.data.choices;
