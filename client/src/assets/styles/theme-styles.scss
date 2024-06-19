@@ -12,6 +12,20 @@
     .mat-mdc-progress-bar {
         --mdc-linear-progress-track-color: var(--theme-primary-100);
     }
+
+    .mat-mdc-fab.mat-primary, .mat-mdc-mini-fab.mat-primary {
+        --mdc-fab-icon-color: var(--theme-primary-contrast-500);
+        --mat-mdc-fab-color: var(--theme-primary-contrast-500);
+    }
+
+    .mat-mdc-fab.mat-accent, .mat-mdc-mini-fab.mat-accent {
+        --mdc-fab-icon-color: var(--theme-accent-contrast-500);
+        --mat-mdc-fab-color: var(--theme-accent-contrast-500);
+    }
+
+    --mat-menu-item-label-text-size: 14px;
+    --mdc-typography-button-letter-spacing: normal;
+    --mdc-dialog-supporting-text-tracking: normal;
 }
 
 @include mat.all-component-themes($openslides-light-theme);
@@ -19,6 +33,8 @@
 .openslides-light-theme {
     @include os-component-themes($openslides-light-theme);
     @include os-var-overwrites();
+
+    --mat-menu-item-icon-color: rgba(0, 0, 0, 0.54);
 }
 
 .openslides-dark-theme {
