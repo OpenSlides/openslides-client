@@ -13,12 +13,24 @@
                 <td mat-cell *matCellDef="let user">
                     <div class="nameCell overflow-hidden">
                         <div class="title-line title-box">
-                            <span class="ellipsis-overflow" *ngIf="!isCrossedOut(user)">
-                                {{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')' : '') }}
-                            </span>
-                            <span class="ellipsis-overflow crossed-out" *ngIf="isCrossedOut(user)">
-                                {{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')' : '') }}
-                            </span>
+                            <div *ngIf="!isCrossedOut(user)">
+                                <span class="ellipsis-overflow">{{ user.short_name }}</span>
+                                <span class="meta-info user-subtitle" *ngIf="!!user.gender">
+                                    &middot;&nbsp;{{ user.gender }}
+                                </span>
+                                <span class="meta-info user-subtitle" *ngIf="!!user.pronoun">
+                                    &middot;&nbsp;{{ user.pronoun }}
+                                </span>
+                            </div>
+                            <div *ngIf="isCrossedOut(user)">
+                                <span class="ellipsis-overflow crossed-out">{{ user.short_name }}</span>
+                                <span class="meta-info user-subtitle" *ngIf="!!user.gender">
+                                    &middot;&nbsp;{{ user.gender }}
+                                </span>
+                                <span class="meta-info user-subtitle" *ngIf="!!user.pronoun">
+                                    &middot;&nbsp;{{ user.pronoun }}
+                                </span>
+                            </div>
                             <div style="float: right; display: inline-flex">
                                 &nbsp;
                                 <os-icon-container
