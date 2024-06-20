@@ -35,11 +35,12 @@
     line-height: $button-size;
     text-align: center;
     cursor: pointer;
-    background: orange;
+    background: var(--theme-warn-500);
     border-radius: 50%;
 }
 
 .longpolling-adjust-icon {
     margin-left: -1px;
     margin-top: -2px;
+    transform: scale(0.75);
 }
