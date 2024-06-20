@@ -85,7 +85,9 @@
     @extend %vote-grid-base;
     grid-template-areas: 'name yes no';
     grid-template-columns: auto var(--poll-option-title-width, 70px) var(--poll-option-title-width, 70px);
-    // gap: 0 20px;
+    @media (max-width: 700px) {
+        grid-template-areas: 'name name name' '. yes no';
+    }
 }
 
 .yna-grid {
@@ -95,21 +97,27 @@
             --poll-option-title-width,
             70px
         );
-    // gap: 0 20px;
+    @media (max-width: 700px) {
+        grid-template-areas: 'name name name name' '. yes no abstain';
+    }
 }
 
 .single-vote-grid {
     @extend %vote-grid-base;
     grid-template-areas: 'name yes';
     grid-template-columns: auto var(--poll-option-title-width, 70px);
-    // gap: 0 20px;
+    @media (max-width: 700px) {
+        grid-template-areas: 'name name' '. yes';
+    }
 }
 
 .single-multi-vote-grid {
     @extend %vote-grid-base;
     grid-template-areas: 'name yes';
     grid-template-columns: auto 120px;
-    // gap: 0 20px;
+    @media (max-width: 700px) {
+        grid-template-areas: 'name name' '. yes';
+    }
 }
 
 .global-option-grid {
@@ -147,6 +155,18 @@
         margin-top: auto;
         margin-bottom: auto;
     }
+}
+
+.option0 {
+    grid-area: yes;
+}
+
+.option1 {
+    grid-area: no;
+}
+
+.option2 {
+    grid-area: abstain;
 }
 
 .strike-text {

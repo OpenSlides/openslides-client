@@ -92,6 +92,7 @@
                         >
                             <div
                                 class="vote-option-title"
+                                id="name"
                                 *ngIf="!settings.isSplitSingleOption && !option.isListOption"
                                 [ngClass]="{ 'strike-text no': shouldStrikeOptionText(option, delegation) }"
                             >
@@ -106,7 +107,11 @@
                                 </span>
                                 <i *ngIf="!option.content_object && !option.text">{{ noDataLabel | translate }}</i>
                             </div>
-                            <div class="vote-option-title" *ngIf="!settings.isSplitSingleOption && option.isListOption">
+                            <div
+                                class="vote-option-title"
+                                id="name"
+                                *ngIf="!settings.isSplitSingleOption && option.isListOption"
+                            >
                                 <span *ngIf="option.content_object">
                                     <span>{{ option.content_object.getTitle() | translate }}</span>
                                 </span>
@@ -115,7 +120,8 @@
                             <ng-container *ngIf="!poll.max_votes_per_option || poll.max_votes_per_option <= 1">
                                 <div
                                     class="vote-button-area"
-                                    *ngFor="let action of voteActions.length ? voteActions : voteOptions"
+                                    *ngFor="let action of voteActions.length ? voteActions : voteOptions; index as i"
+                                    [ngClass]="'option' + i"
                                 >
                                     <button
                                         class="vote-button"
