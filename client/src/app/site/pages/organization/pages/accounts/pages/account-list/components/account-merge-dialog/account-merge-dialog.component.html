@@ -55,9 +55,9 @@
                     <div class="iconCell">
                         <os-icon-container
                             icon="event_available"
-                            [matTooltip]="userMeetings(user)"
-                            matTooltipPosition="left"
-                            matTooltipClass="pre-wrap"
+                            [iconTooltip]="userMeetings(user)"
+                            iconTooltipPosition="left"
+                            iconTooltipClass="pre-wrap"
                             [showIcon]="true"
                             [noWrap]="true"
                         >
@@ -66,8 +66,8 @@
                         <os-icon-container
                             icon="mail"
                             *ngIf="user.isLastEmailSent"
-                            matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
-                            matTooltipPosition="left"
+                            iconTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
+                            iconTooltipPosition="left"
                         ></os-icon-container>
                     </div>
                 </td>
