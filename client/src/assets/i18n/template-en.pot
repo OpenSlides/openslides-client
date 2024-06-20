@@ -266,6 +266,10 @@ msgstr ""
 msgid "Alignment"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/home/pages/meeting-info/components/count-users/count-users.component.html
+msgid "All"
+msgstr ""
+
 msgid "All casted ballots"
 msgstr ""
 
@@ -1127,9 +1131,6 @@ msgstr ""
 msgid "Cannot forward motions"
 msgstr ""
 
-msgid "Cannot navigate to the selected history element."
-msgstr ""
-
 msgid "Cannot receive motions"
 msgstr ""
 
@@ -1225,17 +1226,31 @@ msgstr ""
 msgid "Choose 0 to disable the supporting system."
 msgstr ""
 
-msgid "Chyron background color"
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "Chyron"
 msgstr ""
 
-msgid "Chyron font color"
+#: /app/src/app/site/pages/meetings/pages/projectors/components/projector-edit-dialog/components/projector-edit-dialog/projector-edit-dialog.component.ts
+msgid "Chyron agenda item, background color"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/components/projector-edit-dialog/components/projector-edit-dialog/projector-edit-dialog.component.ts
+msgid "Chyron agenda item, font color"
 msgstr ""
 
 msgid "Chyron speaker name"
 msgstr ""
 
-#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
-msgid "Chyron – current contribution"
+#: /app/src/app/site/pages/meetings/pages/projectors/components/projector-edit-dialog/components/projector-edit-dialog/projector-edit-dialog.component.ts
+msgid "Chyron speaker, background color"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/components/projector-edit-dialog/components/projector-edit-dialog/projector-edit-dialog.component.ts
+msgid "Chyron speaker, font color"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "Classic"
 msgstr ""
 
 msgid "Clear"
@@ -1275,9 +1290,6 @@ msgid "Close edit mode"
 msgstr ""
 
 msgid "Close list of speakers"
-msgstr ""
-
-msgid "Closed items"
 msgstr ""
 
 msgid "Code"
@@ -1447,6 +1459,10 @@ msgstr ""
 msgid "Creation date"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "Current agenda item"
+msgstr ""
+
 msgid "Current date"
 msgstr ""
 
@@ -1584,6 +1600,7 @@ msgstr ""
 msgid "Defines which states can be selected next in the workflow."
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-filter/participant-list-filter.service.ts
 msgid "Delegation of vote"
 msgstr ""
 
@@ -1630,6 +1647,10 @@ msgstr ""
 msgid "Diff version"
 msgstr ""
 
+#: /app/src/app/site/modules/global-headbar/components/account-dialog/account-dialog.component.html
+msgid "Disable connection closing on inactivity"
+msgstr ""
+
 msgid "Disabled (no percents)"
 msgstr ""
 
@@ -1650,6 +1671,10 @@ msgid "Divergent:"
 msgstr ""
 
 msgid "Do not forget to save your changes!"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid "Do not show recommendations publicly"
 msgstr ""
 
 #: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service.ts
@@ -1986,12 +2011,11 @@ msgid ""
 "list of speakers only)"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-import/components/participant-import-list/participant-import-list.component.html
 msgid ""
-"Existing accounts can be reused by entering email (with given name and "
-"surname) OR by entering the username in the csv file."
-msgstr ""
-
-msgid "Exit"
+"Existing accounts can be reused or updated by using: <ul><li>Membership "
+"number <i>(recommended)</i><li>Username<li>Email address AND first name AND "
+"last name"
 msgstr ""
 
 msgid "Exit conference room"
@@ -2031,6 +2055,10 @@ msgid "Extension"
 msgstr ""
 
 msgid "External ID"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/home/pages/meeting-info/components/count-users/count-users.component.html
+msgid "Fallback"
 msgstr ""
 
 #: /app/src/app/site/services/autoupdate/autoupdate-communication.service.ts
@@ -2244,6 +2272,10 @@ msgstr ""
 msgid "Has changed vote weight"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service.ts
+msgid "Has email"
+msgstr ""
+
 msgid "Has forwardings"
 msgstr ""
 
@@ -2270,10 +2302,6 @@ msgstr ""
 msgid "Has not logged in yet"
 msgstr ""
 
-#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-speaker-list/services/participant-speaker-list-filter.service/participant-speaker-list-filter.service.ts
-msgid "Has not spoken"
-msgstr ""
-
 #: /app/src/app/site/pages/meetings/modules/poll/services/entitled-user-filter.service.ts
 msgid "Has not voted"
 msgstr ""
@@ -2282,10 +2310,6 @@ msgid "Has notes"
 msgstr ""
 
 msgid "Has speakers"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-speaker-list/services/participant-speaker-list-filter.service/participant-speaker-list-filter.service.ts
-msgid "Has spoken"
 msgstr ""
 
 msgid "Has unchanged vote weight"
@@ -2334,6 +2358,10 @@ msgid "Help text for access data and welcome PDF"
 msgstr ""
 
 msgid "Hidden item"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/components/projection-dialog/projection-dialog.component.html
+msgid "Hide"
 msgstr ""
 
 #: /app/src/app/ui/modules/sidenav/components/sidenav/sidenav.component.html
@@ -2511,9 +2539,6 @@ msgstr ""
 msgid "Invite to conference room"
 msgstr ""
 
-msgid "Is a committee"
-msgstr ""
-
 msgid "Is a natural person"
 msgstr ""
 
@@ -2565,9 +2590,6 @@ msgid "Is no amendment and has no amendments"
 msgstr ""
 
 msgid "Is no natural person"
-msgstr ""
-
-msgid "Is not a committee"
 msgstr ""
 
 msgid "Is not a template"
@@ -2823,6 +2845,11 @@ msgstr ""
 msgid "Meetings selected"
 msgstr ""
 
+#: /app/src/app/site/modules/user-components/components/user-detail-view/user-detail-view.component.html
+#: /app/src/app/site/modules/user-components/components/user-detail-view/user-detail-view.component.html
+msgid "Membership number"
+msgstr ""
+
 msgid "Message"
 msgstr ""
 
@@ -2855,6 +2882,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/moderation-note/moderation-note.component.html
 msgid "Moderation note"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "Modern"
 msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/designs/pages/theme-list/components/theme-list/theme-list.component.html
@@ -3119,6 +3150,7 @@ msgstr ""
 msgid "No data"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-filter/participant-list-filter.service.ts
 msgid "No delegation of vote"
 msgstr ""
 
@@ -3188,6 +3220,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/services/motion-forward-dialog.service.ts
 msgid "None of the selected motions can be forwarded."
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/home/pages/meeting-info/components/count-users/count-users.component.html
+msgid "Normal (http/2)"
 msgstr ""
 
 msgid "Not found"
@@ -3274,6 +3310,10 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "Off"
+msgstr ""
+
 msgid "Offline mode"
 msgstr ""
 
@@ -3281,6 +3321,10 @@ msgid "Ok"
 msgstr ""
 
 msgid "Old password"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "On"
 msgstr ""
 
 msgid "One email was send sucessfully."
@@ -3314,9 +3358,6 @@ msgstr ""
 
 #: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.html
 msgid "Open a meeting to play chess"
-msgstr ""
-
-msgid "Open items"
 msgstr ""
 
 msgid "Open list of speakers"
@@ -3660,6 +3701,10 @@ msgstr ""
 msgid "Primary color"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-filter/participant-list-filter.service.ts
+msgid "Principals"
+msgstr ""
+
 msgid "Privacy Policy"
 msgstr ""
 
@@ -3714,6 +3759,10 @@ msgid "Projectors"
 msgstr ""
 
 msgid "Pronoun"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-filter/participant-list-filter.service.ts
+msgid "Proxy holders"
 msgstr ""
 
 msgid "Public"
@@ -3926,6 +3975,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
 msgid "Restrict delegation principals from supporting motions"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Restrict delegation principals from voting"
 msgstr ""
 
 msgid "Restrictions"
@@ -4239,10 +4292,6 @@ msgstr ""
 msgid "Show recommendation on projector"
 msgstr ""
 
-#: /app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
-msgid "Show recommendations not public"
-msgstr ""
-
 msgid "Show referring motions"
 msgstr ""
 
@@ -4265,6 +4314,10 @@ msgid "Show this text on the login page"
 msgstr ""
 
 msgid "Show title"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Show topic navigation in detail view"
 msgstr ""
 
 msgid ""
@@ -4670,7 +4723,7 @@ msgid "These participants will be removed:"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/autopilot/components/autopilot-settings/autopilot-settings.component.html
-msgid "These settings are only applied locally on this device."
+msgid "These settings are only applied locally on this browser."
 msgstr ""
 
 msgid "This account has relations to meetings or committees"
@@ -5209,9 +5262,6 @@ msgstr ""
 
 #: /app/src/app/site/services/autoupdate/autoupdate-communication.service.ts
 msgid "You are using an incompatible client version."
-msgstr ""
-
-msgid "You are using the history mode of OpenSlides. Changes will not be saved."
 msgstr ""
 
 msgid "You can change this option only in the forwarding section."

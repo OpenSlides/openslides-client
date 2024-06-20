@@ -53,7 +53,6 @@
                     [repo]="committeeRepo"
                     [sortService]="committeeSortService"
                     [showChips]="false"
-                    [lazyLoading]="false"
                     (selectionChanged)="onForwardingSelectionChanged($event)"
                 ></os-repo-search-selector>
             </mat-form-field>
@@ -66,7 +65,6 @@
                     [repo]="committeeRepo"
                     [sortService]="committeeSortService"
                     [showChips]="false"
-                    [lazyLoading]="false"
                     [disableOptionWhenFn]="getDisableOptionWhenFn()"
                     [tooltipFn]="getTooltipFn()"
                 ></os-repo-search-selector>

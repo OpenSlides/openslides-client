@@ -54,7 +54,7 @@ export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableV
 
     @Input()
     public override toHideFn = (): string[] => {
-        let columnsToHide: string[];
+        const columnsToHide: string[] = [];
 
         // hide the projector columns
         if (this.multiSelect || this.isMobile || !this.allowProjector) {

@@ -1,4 +1,5 @@
 @import 'src/assets/styles/media-queries.scss';
+@import 'src/assets/styles/mixins/detail-view-appearance.scss';
 
 @include set-breakpoint-upper(xs) {
     .form100 {
@@ -43,4 +44,8 @@ mat-checkbox {
     mat-icon {
         margin-left: 5px;
     }
+}
+
+.underlined-links ::ng-deep {
+    @include detail-view-appearance;
 }

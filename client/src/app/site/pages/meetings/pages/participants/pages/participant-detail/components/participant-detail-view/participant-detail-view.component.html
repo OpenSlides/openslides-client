@@ -235,24 +235,21 @@
             <span>{{ 'Default group' | translate }}</span>
         </div>
 
-        <div *ngIf="isAllowed('update') || ownPage">
-            <!-- Own Vote delegations -->
-            <div *ngIf="user?.vote_delegated_to() && showVoteDelegations">
-                <h4>{{ 'Voting right delegated to (proxy)' | translate }}</h4>
-                <span>{{ user!.vote_delegated_to() }}</span>
-            </div>
+        <!-- Own Vote delegations -->
+        <div *ngIf="user?.vote_delegated_to() && showVoteDelegations">
+            <h4>{{ 'Voting right delegated to (proxy)' | translate }}</h4>
+            <span>{{ user!.vote_delegated_to() }}</span>
+        </div>
 
-            <!-- Received Vote delegations -->
-            <div *ngIf="showVoteDelegations && user!.vote_delegations_from().length > 0">
-                <h4>{{ 'Voting right received from (principals)' | translate }}</h4>
-                <span>{{ user!.vote_delegations_from() }}</span>
-            </div>
-
-            <!-- Vote weight -->
-            <div *ngIf="showVoteWeight">
-                <h4>{{ 'Vote weight' | translate }}</h4>
-                <span>{{ user?.vote_weight() }}</span>
-            </div>
+        <!-- Received Vote delegations -->
+        <div *ngIf="showVoteDelegations && user!.vote_delegations_from().length > 0">
+            <h4>{{ 'Voting right received from (principals)' | translate }}</h4>
+            <span>{{ user!.vote_delegations_from() }}</span>
+        </div>
+        <!-- Vote weight -->
+        <div *ngIf="showVoteWeight">
+            <h4>{{ 'Vote weight' | translate }}</h4>
+            <span>{{ user?.vote_weight() }}</span>
         </div>
 
         <div *ngIf="isAllowed('seeName')">

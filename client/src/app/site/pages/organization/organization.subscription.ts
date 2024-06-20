@@ -35,8 +35,7 @@ export const getOrganizationSubscriptionConfig: SubscriptionConfigGenerator = ()
             { idField: `theme_id`, fieldset: DEFAULT_FIELDSET }
         ]
     },
-    subscriptionName: ORGANIZATION_SUBSCRIPTION,
-    isDelayed: false
+    subscriptionName: ORGANIZATION_SUBSCRIPTION
 });
 
 export const getMeetingCreateSubscriptionConfig: SubscriptionConfigGenerator = () => ({

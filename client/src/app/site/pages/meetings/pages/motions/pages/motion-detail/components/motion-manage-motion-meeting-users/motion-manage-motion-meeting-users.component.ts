@@ -71,7 +71,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
     @Input()
     public loadSecondSelectorValues: () => Promise<Selectable[]>;
 
-    public secondSelectorValues: Selectable[];
+    public secondSelectorValues: Selectable[] = [];
 
     public secondSelectorFormControl: UntypedFormControl;
 

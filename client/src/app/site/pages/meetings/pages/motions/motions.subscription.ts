@@ -149,7 +149,6 @@ export const getMotionsSubmodelSubscriptionConfig: SubscriptionConfigGenerator =
                     `write_group_ids`
                 ]
             },
-            { idField: `motion_statute_paragraph_ids`, fieldset: FULL_FIELDSET },
             { idField: `tag_ids`, fieldset: [`name`, `meeting_id`] }
         ]
     },

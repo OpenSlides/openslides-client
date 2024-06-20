@@ -118,6 +118,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     public voteDelegationEnabled: Observable<boolean> =
         this.meetingSettingsService.get(`users_enable_vote_delegations`);
 
+    public forbidDelegationToVote: Observable<boolean> =
+        this.meetingSettingsService.get(`users_forbid_delegator_to_vote`);
+
     protected voteRequestData: IdentifiedVotingData = {};
 
     protected alreadyVoted: { [userId: number]: boolean } = {};
@@ -143,7 +146,10 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         this.updatePollOptionTitleWidth();
         this.subscriptions.push(
             this.operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
-                if (user) {
+                if (
+                    user &&
+                    (!user.getMeetingUser()?.vote_delegated_to_id || user.getMeetingUser()?.vote_delegated_to)
+                ) {
                     this.user = user;
                     this.delegations = user.vote_delegations_from();
                     this.voteRequestData[this.user.id] = { value: {} } as VotingData;

@@ -19,6 +19,10 @@ export class ViewMeetingUser extends BaseViewModel<MeetingUser> {
     public get meeting_user(): MeetingUser {
         return this._model;
     }
+
+    public structureLevels(): string {
+        return (this.structure_levels || []).map(sl => sl.name).join(`, `);
+    }
 }
 interface IMeetingUserRelations {
     user: ViewUser;

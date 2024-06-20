@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { firstValueFrom } from 'rxjs';
 import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 import { StorageService } from 'src/app/gateways/storage.service';
 
@@ -10,7 +9,6 @@ import { EndpointConfiguration } from '../../../gateways/http-stream/endpoint-co
 import { HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
 import { Mutex } from '../../../infrastructure/utils/promises';
 import { BannerDefinition, BannerService } from '../../modules/site-wrapper/services/banner.service';
-import { LifecycleService } from '../lifecycle.service';
 import { ModelRequestObject } from '../model-request-builder';
 import { ViewModelStoreUpdateService } from '../view-model-store-update.service';
 import { WindowVisibilityService } from '../window-visibility.service';
@@ -26,10 +24,6 @@ export interface ModelSubscription {
 export const AUTOUPDATE_DEFAULT_ENDPOINT = `autoupdate`;
 
 interface AutoupdateConnectConfig {
-    /**
-     * Selects one position for a model. This implies `single: 1`.
-     */
-    position?: number;
     /**
      * Selects the last n updates to the requested fields. `true` is equivalent to `n = 1`.
      */
@@ -86,7 +80,6 @@ export class AutoupdateService {
         private communication: AutoupdateCommunicationService,
         private bannerService: BannerService,
         private visibilityService: WindowVisibilityService,
-        private lifecycle: LifecycleService,
         private store: StorageService
     ) {
         this.setAutoupdateConfig(null);
@@ -103,15 +96,13 @@ export class AutoupdateService {
             this.pauseUntilVisible();
         });
 
-        firstValueFrom(this.lifecycle.appLoaded).then(() =>
-            this.visibilityService.hiddenFor(AU_PAUSE_ON_INACTIVITY_TIMEOUT).subscribe(() => {
-                this.store.get(`clientSettings`).then((settings: any) => {
-                    if (!settings || !settings?.disablePauseAuConnections) {
-                        this.pauseUntilVisible();
-                    }
-                });
-            })
-        );
+        this.visibilityService.hiddenFor(AU_PAUSE_ON_INACTIVITY_TIMEOUT).subscribe(() => {
+            this.store.get(`clientSettings`).then((settings: any) => {
+                if (!settings || !settings?.disablePauseAuConnections) {
+                    this.pauseUntilVisible();
+                }
+            });
+        });
 
         window.addEventListener(`unload`, () => {
             for (const id of Object.keys(this._activeRequestObjects)) {
@@ -235,6 +226,9 @@ export class AutoupdateService {
             this._resolveDataReceived[id] = resolve;
             rejectReceivedData = reject;
         });
+        receivedData.catch((e: Error) => {
+            console.warn(`[autoupdate] stream was closed before it received data:`, e.message);
+        });
 
         return {
             id,
@@ -243,10 +237,11 @@ export class AutoupdateService {
                 this.communication.close(id);
                 delete this._activeRequestObjects[id];
                 if (this._resolveDataReceived[id]) {
-                    rejectReceivedData();
+                    rejectReceivedData(new Error(`Connection canceled`));
+                    delete this._resolveDataReceived[id];
                 }
 
-                console.debug(`[autoupdate] stream closed: `, description);
+                console.debug(`[autoupdate] stream closed:`, description);
             }
         };
     }
