@@ -14,5 +14,5 @@ export const userHeadersAndVerboseNames: { [key in keyof User]?: any } = {
     is_active: _(`Active`),
     is_physical_person: _(`Natural person`),
     saml_id: _(`SSO identification`),
-    member_number: _(`Member number`)
+    member_number: _(`Membership number`)
 };

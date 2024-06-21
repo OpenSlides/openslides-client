@@ -41,7 +41,7 @@
     }
 
     .width-#{$i}p {
-        width: calc(#{$i}% + 0px);
+        width: calc(#{$i}#{'%'} + 0px);
     }
 }
 

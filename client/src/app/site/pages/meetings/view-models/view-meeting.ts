@@ -27,7 +27,6 @@ import {
     ViewMotionComment,
     ViewMotionCommentSection,
     ViewMotionState,
-    ViewMotionStatuteParagraph,
     ViewMotionSubmitter,
     ViewMotionWorkflow,
     ViewPersonalNote,
@@ -138,7 +137,6 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
 interface IMeetingRelations {
     motions_default_workflow: ViewMotionWorkflow;
     motions_default_amendment_workflow: ViewMotionWorkflow;
-    motions_default_statute_amendment_workflow: ViewMotionWorkflow;
     motion_poll_default_groups: ViewGroup[];
     assignment_poll_default_groups: ViewGroup[];
     topic_poll_default_groups: ViewGroup[];
@@ -166,7 +164,6 @@ interface IMeetingRelations {
     motion_change_recommendations: ViewMotionChangeRecommendation[];
     motion_workflows: ViewMotionWorkflow[];
     motion_states: ViewMotionState[];
-    motion_statute_paragraphs: ViewMotionStatuteParagraph[];
     forwarded_motions: ViewMotion[];
     polls: ViewPoll[];
     poll_candidates: ViewPollCandidate[];

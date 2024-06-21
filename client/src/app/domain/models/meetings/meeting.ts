@@ -109,7 +109,6 @@ export class Settings {
     // Motions
     public motions_default_workflow_id!: Id; // workflow/default_workflow_meeting_id;
     public motions_default_amendment_workflow_id!: Id; // workflow/default_amendment_workflow_meeting_id;
-    public motions_default_statute_amendment_workflow_id!: Id; // workflow/default_statute_amendment_workflow_meeting_id;
     public motions_preamble!: string;
     public motions_default_line_numbering!: LineNumberingMode;
     public motions_line_length!: number;
@@ -121,13 +120,11 @@ export class Settings {
     public motions_show_referring_motions!: boolean;
     public motions_show_sequential_number!: boolean;
     public motions_recommendations_by!: string;
-    public motions_statute_recommendations_by!: string;
     public motions_recommendation_text_mode!: ChangeRecoMode;
     public motions_default_sorting!: string;
     public motions_number_type!: string;
     public motions_number_min_digits!: number;
     public motions_number_with_blank!: boolean;
-    public motions_statutes_enabled!: boolean;
     public motions_amendments_enabled!: boolean;
     public motions_amendments_in_main_list!: boolean;
     public motions_amendments_of_amendments!: boolean;
@@ -233,7 +230,6 @@ export class Meeting extends BaseModel<Meeting> {
     public motion_change_recommendation_ids!: Id[]; // (motion_change_recommendation/meeting_id)[];
     public motion_workflow_ids!: Id[]; // (motion_workflow/meeting_id)[];
     public motion_state_ids!: Id[]; // (motion_state/meeting_id)[];
-    public motion_statute_paragraph_ids!: Id[]; // (motion_statute_paragraph/meeting_id)[];
     public forwarded_motion_ids!: Id[];
     public poll_ids!: Id[]; // (poll/meeting_id)[];
     public option_ids!: Id[]; // (option/meeting_id)[];
@@ -360,7 +356,6 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_intervention_time`,
         `motions_default_workflow_id`,
         `motions_default_amendment_workflow_id`,
-        `motions_default_statute_amendment_workflow_id`,
         `motions_preamble`,
         `motions_default_line_numbering`,
         `motions_line_length`,
@@ -373,13 +368,11 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_show_sequential_number`,
         `motions_recommendations_by`,
         `motions_block_slide_columns`,
-        `motions_statute_recommendations_by`,
         `motions_recommendation_text_mode`,
         `motions_default_sorting`,
         `motions_number_type`,
         `motions_number_min_digits`,
         `motions_number_with_blank`,
-        `motions_statutes_enabled`,
         `motions_amendments_enabled`,
         `motions_amendments_in_main_list`,
         `motions_amendments_of_amendments`,
@@ -459,7 +452,6 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_category_ids`,
         `motion_block_ids`,
         `motion_workflow_ids`,
-        `motion_statute_paragraph_ids`,
         `motion_comment_ids`,
         `motion_submitter_ids`,
         `motion_editor_ids`,
