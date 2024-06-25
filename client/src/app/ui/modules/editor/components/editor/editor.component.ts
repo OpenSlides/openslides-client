@@ -165,7 +165,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 BulletList,
                 HardBreak,
                 Heading,
-                Image,
+                Image.configure({
+                    inline: true
+                }),
                 ListItem,
                 OrderedList,
                 Paragraph,
