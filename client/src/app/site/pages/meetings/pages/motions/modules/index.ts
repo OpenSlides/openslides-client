@@ -4,7 +4,6 @@ export * from './comments';
 export * from './motion-blocks';
 export * from './personal-notes';
 export * from './states';
-export * from './statute-paragraphs';
 export * from './submitters';
 export * from './tags';
 export * from './workflows';

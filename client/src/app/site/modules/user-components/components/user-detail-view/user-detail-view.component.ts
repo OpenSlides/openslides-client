@@ -311,6 +311,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             email: [``, [createEmailValidator()]],
             last_email_sent: [``],
             default_password: [``],
+            member_number: [``],
             is_active: [true],
             is_physical_person: [true],
             ...this._additionalFormControls

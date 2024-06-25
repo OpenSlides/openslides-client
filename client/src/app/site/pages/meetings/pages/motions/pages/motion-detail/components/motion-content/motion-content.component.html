@@ -1,5 +1,5 @@
 <!-- Regular motions or traditional amendments -->
-<ng-container *ngIf="!editMotion && !motion?.isStatuteAmendment() && !motion?.isParagraphBasedAmendment()">
+<ng-container *ngIf="!editMotion && !motion?.isParagraphBasedAmendment()">
     <!-- Text (hide preamble, if diff mode. The preample is included in the motion-detail-diff component) -->
     <span *ngIf="showPreamble && changeRecoMode !== ChangeRecoMode.Diff" class="text-prefix-label">
         {{ preamble }}
@@ -38,22 +38,6 @@
 </ng-container>
 
 <form class="motion-content" [formGroup]="contentForm" tabindex="-1">
-    <!-- Selecting statute paragraphs for amendment -->
-    <div class="statute-amendment-selector" *ngIf="newMotion && statuteParagraphs.length && statutesEnabled">
-        <mat-checkbox formControlName="statute_amendment" (change)="onStatuteAmendmentChange($event)">
-            {{ 'Statute amendment' | translate }}
-        </mat-checkbox>
-
-        <mat-form-field *ngIf="contentForm.value.statute_amendment">
-            <mat-label>{{ 'Statute paragraph' | translate }}</mat-label>
-            <mat-select formControlName="statute_paragraph_id" (valueChange)="onStatuteParagraphChange($event)">
-                <mat-option *ngFor="let paragraph of statuteParagraphs" [value]="paragraph.id">
-                    {{ paragraph.title }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-
     <!-- Submitter -->
     <div *ngIf="newMotion" class="content-field">
         <ng-container *ngIf="canChangeMetadata">
@@ -95,13 +79,6 @@
             </mat-form-field>
         </div>
     </div>
-
-    <!-- formatted statute amendment -->
-    <div
-        class="motion-text line-numbers-none underlined-links"
-        *ngIf="!editMotion && motion?.isStatuteAmendment()"
-        [innerHTML]="getFormattedStatuteAmendment() | trust : 'html'"
-    ></div>
 
     <!-- The HTML Editor for motions and traditional amendments -->
     <ng-container *ngIf="editMotion && !isParagraphBasedAmendment">
@@ -213,7 +190,7 @@
                 <mat-form-field>
                     <mat-label>{{ 'Supporters' | translate }}</mat-label>
                     <os-repo-search-selector
-                        formControlName="supporter_user_ids"
+                        formControlName="supporter_ids"
                         [multiple]="true"
                         [repo]="participantRepo"
                         [sortService]="participantSortService"

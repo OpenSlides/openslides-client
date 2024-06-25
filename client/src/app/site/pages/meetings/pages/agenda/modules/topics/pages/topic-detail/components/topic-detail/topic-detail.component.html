@@ -56,7 +56,7 @@
                 <div>
                     <span *ngIf="topic.text">
                         <!-- Render topic text as HTML -->
-                        <div class="underlined-links" [innerHTML]="topic.text | trust : 'html'"></div>
+                        <div class="detail-view" [innerHTML]="topic.text | trust : 'html'"></div>
                     </span>
                 </div>
 

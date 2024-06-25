@@ -7,7 +7,6 @@ import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
 import { MotionCommentSection } from 'src/app/domain/models/motions/motion-comment-section';
 import { MotionEditor } from 'src/app/domain/models/motions/motion-editor';
 import { MotionState } from 'src/app/domain/models/motions/motion-state';
-import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
 import { MotionSubmitter } from 'src/app/domain/models/motions/motion-submitter';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
 import { MotionWorkingGroupSpeaker } from 'src/app/domain/models/motions/motion-working-group-speaker';
@@ -22,7 +21,6 @@ import {
     MotionEditorRepositoryService,
     MotionRepositoryService,
     MotionStateRepositoryService,
-    MotionStatuteParagraphRepositoryService,
     MotionSubmitterRepositoryService,
     MotionWorkflowRepositoryService,
     MotionWorkingGroupSpeakerRepositoryService
@@ -38,7 +36,6 @@ import {
     ViewMotionComment,
     ViewMotionCommentSection,
     ViewMotionState,
-    ViewMotionStatuteParagraph,
     ViewMotionSubmitter,
     ViewMotionWorkflow,
     ViewPersonalNote,
@@ -105,11 +102,6 @@ export const MotionsAppConfig: AppConfig = {
             model: MotionBlock,
             viewModel: ViewMotionBlock,
             repository: MotionBlockRepositoryService
-        },
-        {
-            model: MotionStatuteParagraph,
-            viewModel: ViewMotionStatuteParagraph,
-            repository: MotionStatuteParagraphRepositoryService
         },
         {
             model: Tag,

@@ -37,23 +37,7 @@
     <ng-template #editView let-form="form">
         <h2>{{ 'Organization specific information' | translate }}</h2>
         <div [formGroup]="form">
-            <!-- Default Vote weight -->
-            <mat-form-field class="form100 force-min-with">
-                <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
-                <input type="number" matInput formControlName="default_vote_weight" />
-                <mat-error *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0" translate>
-                    Please select a vote weight greater than or equal to 0.000001
-                </mat-error>
-                <mat-error
-                    *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value <= 0"
-                    translate
-                >
-                    Please select a vote weight greater than zero.
-                </mat-error>
-            </mat-form-field>
-        </div>
-
-        <div [formGroup]="form">
+            <!-- Administration roles (at organization level) -->
             <div *osOmlPerms="OML.can_manage_users">
                 <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Administration roles (at organization level)' | translate }}</mat-label>
@@ -69,6 +53,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+            <!-- Committee admin -->
             <div *osOmlPerms="OML.can_manage_organization">
                 <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Committee admin' | translate }}</mat-label>
@@ -84,28 +69,44 @@
                 </mat-form-field>
             </div>
         </div>
+        <!-- Default Vote weight -->
+        <div [formGroup]="form">
+            <mat-form-field class="form100 force-min-with">
+                <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
+                <input type="number" matInput formControlName="default_vote_weight" />
+                <mat-error *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0" translate>
+                    Please select a vote weight greater than or equal to 0.000001
+                </mat-error>
+                <mat-error
+                    *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value <= 0"
+                    translate
+                >
+                    Please select a vote weight greater than zero.
+                </mat-error>
+            </mat-form-field>
+        </div>
     </ng-template>
 
     <ng-template #showView let-user="user">
         <h2>{{ 'Organization specific information' | translate }}</h2>
-
-        <div *ngIf="user.default_vote_weight || user.default_vote_weight === 0">
-            <h4>{{ 'Default vote weight' | translate }}</h4>
-            <span>{{ user.default_vote_weight }}</span>
-        </div>
-
         <!-- Organization management level -->
         <div *ngIf="user.organization_management_level">
             <h4>{{ 'Administration roles (at organization level)' | translate }}</h4>
             <span>{{ getOmlVerboseName(user.organization_management_level) | translate }}</span>
         </div>
-
+        <!-- Default vote weight -->
+        <div *ngIf="user.default_vote_weight || user.default_vote_weight === 0">
+            <h4>{{ 'Default vote weight' | translate }}</h4>
+            <span>{{ user.default_vote_weight }}</span>
+        </div>
+        <!-- Last email sent -->
         <div *ngIf="user?.isLastEmailSent">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>
                 <span>{{ user.last_email_sent | localizedDate }}</span>
             </div>
         </div>
+        <!-- Last login -->
         <div>
             <div *ngIf="user?.isLastLogin">
                 <h4>{{ 'Last login' | translate }}</h4>
