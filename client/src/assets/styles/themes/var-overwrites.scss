@@ -21,6 +21,14 @@
         --mdc-protected-button-label-text-color: var(--theme-accent-contrast-500);
     }
 
+    .mat-mdc-unelevated-button.mat-primary {
+        --mdc-filled-button-label-text-color: var(--theme-primary-contrast-500);
+    }
+
+    .mat-mdc-unelevated-button.mat-accent {
+        --mdc-filled-button-label-text-color: var(--theme-accent-contrast-500);
+    }
+
     .mat-mdc-button.mat-unthemed {
         --mdc-text-button-label-text-color: inherit;
     }
