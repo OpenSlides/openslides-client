@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscriber } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -23,8 +22,8 @@ import {
     AutoupdateStatus
 } from 'src/app/worker/autoupdate/interfaces-autoupdate';
 
+import { GlobalHeadbarService } from '../../modules/global-headbar/global-headbar.service';
 import { SpinnerService } from '../../modules/global-spinner';
-import { BannerService } from '../../modules/site-wrapper/services/banner.service';
 import { UpdateService } from '../../modules/site-wrapper/services/update.service';
 import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';
@@ -52,7 +51,7 @@ export class AutoupdateCommunicationService {
         private translate: TranslateService,
         private connectionStatusService: ConnectionStatusService,
         private updateService: UpdateService,
-        private bannerService: BannerService
+        private headbarService: GlobalHeadbarService
     ) {
         this.autoupdateDataObservable = new Observable(dataSubscription => {
             this.sharedWorker.listenTo(`autoupdate`).subscribe(msg => {
@@ -287,11 +286,7 @@ export class AutoupdateCommunicationService {
 
     private handleSetConnectionMode(mode: string): void {
         if (mode === `longpolling`) {
-            this.bannerService.addBanner({
-                type: `fallback_mode`,
-                text: _(`Fallback mode`),
-                icon: `warning`
-            });
+            this.headbarService.longpolling = true;
         }
     }
 

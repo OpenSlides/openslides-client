@@ -256,7 +256,7 @@
             <!-- About me -->
             <div *ngIf="user?.about_me()">
                 <h4>{{ 'About me' | translate }}</h4>
-                <div class="underlined-links" [innerHTML]="user!.about_me() | trust : 'html'"></div>
+                <div class="detail-view" [innerHTML]="user!.about_me() | trust : 'html'"></div>
             </div>
         </div>
 
