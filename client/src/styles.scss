@@ -1,11 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
-@include mat.all-component-typographies(
-    mat.define-typography-config($font-family: "OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif")
-);
-@include mat.core();
 
-/** theming */
+/** angular material theming */
 @import './assets/styles/theme-styles.scss';
 
 /** Useful default classes */

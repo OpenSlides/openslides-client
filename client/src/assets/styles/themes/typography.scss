@@ -1,0 +1,7 @@
+$font-family: OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif;
+
+$default-typography: mat.define-typography-config(
+    $font-family: $font-family,
+    $button: mat.define-typography-level(14px, 14px, 500, $letter-spacing: normal)
+    // $input: mat.define-typography-level(15px)
+);

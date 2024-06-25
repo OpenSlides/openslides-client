@@ -1,7 +1,8 @@
 @import 'src/assets/styles/mixins/button.scss';
+@import 'src/assets/styles/themes/typography.scss';
 
 * {
-    font-family: OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif;
+    font-family: $font-family;
 }
 
 body {
