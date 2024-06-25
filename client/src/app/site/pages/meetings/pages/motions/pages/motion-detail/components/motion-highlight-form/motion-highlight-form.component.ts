@@ -82,10 +82,6 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         return true;
     }
 
-    public get isStatuteAmendment(): boolean {
-        return (!!this.isExisting && this.motion?.isStatuteAmendment()) || false;
-    }
-
     public get isParagraphBasedAmendment(): boolean {
         return (this.isExisting && this.motion?.isParagraphBasedAmendment()) || false;
     }
