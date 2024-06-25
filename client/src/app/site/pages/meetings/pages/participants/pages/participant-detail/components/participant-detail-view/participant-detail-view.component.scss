@@ -46,6 +46,6 @@ mat-checkbox {
     }
 }
 
-.underlined-links ::ng-deep {
+:host ::ng-deep .detail-view {
     @include detail-view-appearance;
 }
