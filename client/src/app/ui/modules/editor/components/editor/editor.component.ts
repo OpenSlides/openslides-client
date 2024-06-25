@@ -409,6 +409,20 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     protected updateForm(value: string | null): void {
-        this.contentForm.setValue(value);
+        const html = value?.replace(/(<ul[^>]*>)(.*?)(<\/ul>)||(<li[^>]*>)(.*?)(<\/li>)/g, res => {
+            if (res) {
+                return res.replace(/(<li[^>]*>)(.*?)(<\/li[^>]*>)/g, response => {
+                    if (response.match(/<\/?p[^>]*>/g)?.length == 2) {
+                        return response.replace(/<\/?p[^>]*>/g, ``);
+                    } else if (response) {
+                        return response;
+                    }
+                    return ``;
+                });
+            }
+            return ``;
+        });
+
+        this.contentForm.setValue(html);
     }
 }
