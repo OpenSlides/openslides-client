@@ -13,6 +13,29 @@
         --mat-mdc-fab-color: var(--theme-accent-contrast-500);
     }
 
+    .mat-mdc-raised-button.mat-primary {
+        --mdc-protected-button-label-text-color: var(--theme-primary-contrast-500);
+    }
+
+    .mat-mdc-raised-button.mat-accent {
+        --mdc-protected-button-label-text-color: var(--theme-accent-contrast-500);
+    }
+
+    .mat-mdc-button.mat-unthemed {
+        --mdc-text-button-label-text-color: inherit;
+    }
+
+    --mat-table-header-headline-weight: 500;
+    --mat-table-header-headline-size: 12px;
+    --mat-table-header-headline-color: rgba(0, 0, 0, 0.55);
+
     --mat-menu-item-label-text-size: 14px;
+
     --mdc-dialog-supporting-text-tracking: normal;
+
+    --mdc-checkbox-selected-checkmark-color: var(--theme-primary-contrast-500);
+
+    .mat-mdc-chip, .mat-mdc-basic-chip {
+        font-weight: 500;
+    }
 }
