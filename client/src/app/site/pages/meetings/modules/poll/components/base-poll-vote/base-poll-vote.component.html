@@ -62,13 +62,14 @@
                                 (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option > 1
                         }"
                     >
-                        <div *ngIf="showAvailableVotes"></div>
-                        <b *ngIf="!showAvailableVotes">
+                        <div *ngIf="showAvailableVotes" class="grid-name-area"></div>
+                        <b *ngIf="!showAvailableVotes" class="grid-name-area">
                             {{ poll.option_ids.length }} {{ optionPluralLabel | translate }}
                         </b>
                         <b
                             class="poll-option-title"
-                            *ngFor="let action of voteActions.length ? voteActions : voteOptions"
+                            *ngFor="let action of voteActions.length ? voteActions : voteOptions; index as i"
+                            [ngClass]="'option' + i"
                         >
                             {{ action.label | translate }}
                         </b>
@@ -91,8 +92,7 @@
                             }"
                         >
                             <div
-                                class="vote-option-title"
-                                id="name"
+                                class="vote-option-title grid-name-area"
                                 *ngIf="!settings.isSplitSingleOption && !option.isListOption"
                                 [ngClass]="{ 'strike-text no': shouldStrikeOptionText(option, delegation) }"
                             >

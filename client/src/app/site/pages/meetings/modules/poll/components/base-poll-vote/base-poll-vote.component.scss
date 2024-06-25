@@ -147,8 +147,11 @@
     }
 }
 
-.vote-option-title {
+.grid-name-area {
     grid-area: name;
+}
+
+.vote-option-title {
     display: flex;
     span,
     i {
