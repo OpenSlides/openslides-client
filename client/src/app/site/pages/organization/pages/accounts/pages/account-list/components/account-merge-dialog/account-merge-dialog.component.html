@@ -88,6 +88,9 @@
         </table>
     </mat-radio-group>
     <div class="error-color">{{ 'Attention: Not selected accounts will be merged and then deleted.' | translate }}</div>
+    <div class="error-color">
+        {{ 'Attention: Data loss is possible, if two users are in the same meeting.' | translate }}
+    </div>
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button (click)="closeDialog(true)" [disabled]="!selectedUserId">
