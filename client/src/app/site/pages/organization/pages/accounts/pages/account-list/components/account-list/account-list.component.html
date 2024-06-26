@@ -40,7 +40,7 @@
 >
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="['/accounts/', user.id]" *ngIf="!isMultiSelect"></a>
+        <a class="detail-link" [routerLink]="['/accounts', user.id]" *ngIf="!isMultiSelect"></a>
         <div class="flex-vertical-center overflow-hidden">
             <div class="nameCell overflow-hidden">
                 <div class="title-line title-box">
