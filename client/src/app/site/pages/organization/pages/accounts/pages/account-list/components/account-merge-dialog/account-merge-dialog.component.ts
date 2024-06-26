@@ -16,10 +16,20 @@ export class AccountMergeDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: AccountMergeDialogData
     ) {
         this.data.choices.sort((a, b) => a.name.localeCompare(b.name));
+        const meetingIdsVisited: number[] = [];
+        for (const user of this.data.choices) {
+            for (const meeting of user.meetings) {
+                if (meetingIdsVisited.includes(meeting.id)) {
+                    this.showMeetingsCollide = true;
+                }
+                meetingIdsVisited.push(meeting.id);
+            }
+        }
     }
 
     public selectedUserId: number;
     public displayedColumns = [`button`, `name`, `icon`];
+    public showMeetingsCollide = false;
 
     public get possibleChoices(): ViewUser[] {
         return this.data.choices;
