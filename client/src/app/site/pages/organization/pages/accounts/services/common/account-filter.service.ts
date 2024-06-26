@@ -30,13 +30,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
         return super.outputObservable.pipe(
             map(output => {
                 if (this.meetingSubscription) {
-                    const newOutput = [];
-                    for (const i in output) {
-                        if (this.userInMeetingMap.has(output[i].id)) {
-                            newOutput.push(output[i]);
-                        }
-                    }
-                    return newOutput;
+                    return output.filter(m => this.userInMeetingMap.has(m.id));
                 }
 
                 return output;
@@ -48,13 +42,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
         return super.getViewModelListObservable().pipe(
             map(output => {
                 if (this.meetingSubscription) {
-                    const newOutput = [];
-                    for (const i in output) {
-                        if (this.userInMeetingMap.has(output[i].id)) {
-                            newOutput.push(output[i]);
-                        }
-                    }
-                    return newOutput;
+                    return output.filter(m => this.userInMeetingMap.has(m.id));
                 }
 
                 return output;
