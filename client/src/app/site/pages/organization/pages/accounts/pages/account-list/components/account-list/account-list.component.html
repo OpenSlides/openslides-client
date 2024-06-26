@@ -6,7 +6,10 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ 'Accounts' | translate }}</h2>
+        <h2>
+            {{ 'Accounts' | translate }}
+            <span *ngIf="meeting | async as m">({{ m.name }})</span>
+        </h2>
     </div>
 
     <!-- Menu -->

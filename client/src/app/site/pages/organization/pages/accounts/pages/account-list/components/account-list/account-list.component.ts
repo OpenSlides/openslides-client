@@ -2,13 +2,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -29,17 +31,20 @@ const ACCOUNT_LIST_STORAGE_INDEX = `account_list`;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountListComponent extends BaseListViewComponent<ViewUser> {
+    public meeting: Observable<ViewMeeting> = null;
+
     public get isMobile(): boolean {
         return this.vp.isMobile;
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public readonly controller: AccountControllerService,
         public readonly filterService: AccountFilterService,
         public readonly sortService: AccountSortService,
         private route: ActivatedRoute,
+        private autoupdateService: AutoupdateService,
+        private modelRequestBuilder: ModelRequestBuilderService,
         private exporter: AccountExportService,
         private meetingRepo: MeetingControllerService,
         private choiceService: ChoiceService,
@@ -52,6 +57,24 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         super.setTitle(`Accounts`);
         this.canMultiSelect = true;
         this.listStorageIndex = ACCOUNT_LIST_STORAGE_INDEX;
+        this.subscriptions.push(
+            this.route.params.subscribe(async params => {
+                if (params[`id`] && !this.meetingRepo.getViewModel(+params[`id`])) {
+                    this.autoupdateService.single(
+                        await this.modelRequestBuilder.build({
+                            ids: [+params[`id`]],
+                            viewModelCtor: ViewMeeting,
+                            fieldset: [`user_ids`, `name`]
+                        }),
+                        `user_ids:meeting`
+                    );
+                }
+                this.filterService.filterMeeting(params[`id`] || null);
+                if (params[`id`]) {
+                    this.meeting = this.meetingRepo.getViewModelObservable(+params[`id`]);
+                }
+            })
+        );
     }
 
     public createNewMember(): void {
