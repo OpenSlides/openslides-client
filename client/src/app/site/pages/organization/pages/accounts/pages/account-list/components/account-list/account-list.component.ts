@@ -9,8 +9,6 @@ import { BaseListViewComponent } from 'src/app/site/base/base-list-view.componen
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { AutoupdateService } from 'src/app/site/services/autoupdate';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -43,8 +41,6 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         public readonly filterService: AccountFilterService,
         public readonly sortService: AccountSortService,
         private route: ActivatedRoute,
-        private autoupdateService: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService,
         private exporter: AccountExportService,
         private meetingRepo: MeetingControllerService,
         private choiceService: ChoiceService,
@@ -59,16 +55,6 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         this.listStorageIndex = ACCOUNT_LIST_STORAGE_INDEX;
         this.subscriptions.push(
             this.route.params.subscribe(async params => {
-                if (params[`id`] && !this.meetingRepo.getViewModel(+params[`id`])) {
-                    this.autoupdateService.single(
-                        await this.modelRequestBuilder.build({
-                            ids: [+params[`id`]],
-                            viewModelCtor: ViewMeeting,
-                            fieldset: [`user_ids`, `name`]
-                        }),
-                        `user_ids:meeting`
-                    );
-                }
                 this.filterService.filterMeeting(params[`id`] || null);
                 if (params[`id`]) {
                     this.meeting = this.meetingRepo.getViewModelObservable(+params[`id`]);
