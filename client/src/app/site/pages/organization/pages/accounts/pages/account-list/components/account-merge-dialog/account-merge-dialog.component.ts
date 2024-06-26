@@ -21,8 +21,12 @@ export class AccountMergeDialogComponent {
             for (const meeting of user.meetings) {
                 if (meetingIdsVisited.includes(meeting.id)) {
                     this.showMeetingsCollide = true;
+                    break;
                 }
                 meetingIdsVisited.push(meeting.id);
+            }
+            if (this.showMeetingsCollide) {
+                break;
             }
         }
     }
