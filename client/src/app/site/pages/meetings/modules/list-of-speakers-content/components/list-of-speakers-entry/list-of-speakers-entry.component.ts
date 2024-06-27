@@ -1,5 +1,6 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,
@@ -23,6 +24,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
+import { ParticipantControllerService } from '../../../../pages/participants/services/common/participant-controller.service';
 import {
     getLosFirstContributionSubscriptionConfig,
     LOS_FIRST_CONTRIBUTION_SUBSCRIPTION
@@ -44,7 +46,21 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     public listElement!: SortingListComponent;
 
     @Input({ required: true })
-    public speaker: ViewSpeaker;
+    public set speaker(speaker: ViewSpeaker) {
+        if (speaker.user_id && this.speaker?.meeting_user_id !== speaker.meeting_user_id) {
+            this.subscriptions.push(
+                this.participantRepo.getViewModelObservable(speaker.meeting_user_id).subscribe(() => {
+                    this.cd.markForCheck();
+                })
+            );
+        }
+
+        this._speaker = speaker;
+    }
+
+    public get speaker(): ViewSpeaker {
+        return this._speaker;
+    }
 
     @Input()
     public speakerIndex: number = null;
@@ -102,17 +118,20 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     private interventionEnabled = false;
 
     private canMarkSelf = false;
+    private _speaker: ViewSpeaker;
 
     public constructor(
         protected override translate: TranslateService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
+        private participantRepo: ParticipantControllerService,
         private speakerRepo: SpeakerControllerService,
         public operator: OperatorService,
         private promptService: PromptService,
         private dialog: PointOfOrderDialogService,
         private durationService: DurationService,
         private speakerUserSelectDialog: SpeakerUserSelectDialogService,
-        private interactionService: InteractionService
+        private interactionService: InteractionService,
+        private cd: ChangeDetectorRef
     ) {
         super();
     }
