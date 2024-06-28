@@ -9,6 +9,7 @@ import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ActivePollsService } from 'src/app/site/pages/meetings/services/active-polls.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BannerDefinition, BannerService } from './banner.service';
@@ -37,7 +38,8 @@ export class VotingBannerService {
         private activeMeeting: ActiveMeetingService,
         private sendVotesService: VoteControllerService,
         private operator: OperatorService,
-        private activePolls: ActivePollsService
+        private activePolls: ActivePollsService,
+        private meetingSettingsService: MeetingSettingsService
     ) {
         combineLatest([
             this.activeMeeting.meetingIdObservable.pipe(distinctUntilChanged()),
@@ -48,7 +50,9 @@ export class VotingBannerService {
 
                     return prevStarted.length === currStarted.length && currStarted.equals(prevStarted);
                 })
-            )
+            ),
+            this.meetingSettingsService.get(`users_enable_vote_delegations`).pipe(distinctUntilChanged()),
+            this.meetingSettingsService.get(`users_forbid_delegator_to_vote`).pipe(distinctUntilChanged())
         ]).subscribe(([_, polls]) => this.updateVotablePollSubscription(polls));
     }
 
@@ -60,7 +64,7 @@ export class VotingBannerService {
         });
     }
 
-    private updateBanner(polls: ViewPoll[], voted: { [key: Id]: Id[] }) {
+    private updateBanner(polls: ViewPoll[], voted: { [key: Id]: Id[] }): void {
         if (this.activeMeeting.meetingId) {
             const checkUsers = [this.operator.user, ...(this.operator.user.vote_delegations_from() || [])];
             this.pollsToVote = polls.filter(

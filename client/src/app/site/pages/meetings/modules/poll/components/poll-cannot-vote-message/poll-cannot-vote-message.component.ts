@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { debounceTime } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
@@ -42,6 +42,14 @@ export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
                 if (user) {
                     this.user = user;
                 }
+                this.cd.markForCheck();
+            })
+        );
+        this.subscriptions.push(
+            combineLatest([
+                this.meetingSettingsService.get(`users_enable_vote_delegations`).pipe(distinctUntilChanged()),
+                this.meetingSettingsService.get(`users_forbid_delegator_to_vote`).pipe(distinctUntilChanged())
+            ]).subscribe(_ => {
                 this.cd.markForCheck();
             })
         );
