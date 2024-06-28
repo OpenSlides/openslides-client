@@ -87,7 +87,7 @@ export class MotionForwardDialogService extends BaseDialogService<
         }
         const dialogRef = await this.open(toForward);
         const dialogData = (await firstValueFrom(dialogRef.afterClosed())) as MotionForwardDialogReturnData;
-        const toMeetingIds = dialogData.meetingIds as Ids;
+        const toMeetingIds = dialogData?.meetingIds as Ids;
         if (toMeetingIds) {
             try {
                 const motionIds = toForward.map(motion => motion.id);
