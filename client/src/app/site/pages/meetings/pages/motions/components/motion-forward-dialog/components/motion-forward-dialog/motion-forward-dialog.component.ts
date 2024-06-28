@@ -12,6 +12,7 @@ export interface MotionForwardDialogReturnData {
     meetingIds: Ids;
     useOriginalSubmitter: boolean;
     useOriginalNumber: boolean;
+    useOriginalVersion: boolean;
 }
 
 @Component({
@@ -33,6 +34,7 @@ export class MotionForwardDialogComponent implements OnInit {
 
     public useOriginalSubmitter = `true`;
     public useOriginalNumber = `true`;
+    public useOriginalVersion = `true`;
 
     private readonly committeesSubject = new BehaviorSubject<GetForwardingMeetingsPresenter[]>([]);
 
@@ -53,7 +55,8 @@ export class MotionForwardDialogComponent implements OnInit {
         this.dialogRef.close({
             meetingIds: Array.from(this.selectedMeetings),
             useOriginalSubmitter: this.useOriginalSubmitter === `true`,
-            useOriginalNumber: this.useOriginalNumber === `true`
+            useOriginalNumber: this.useOriginalNumber === `true`,
+            useOriginalVersion: this.useOriginalVersion === `true`
         });
     }
 

@@ -4,26 +4,32 @@
 </div>
 <mat-dialog-content>
     <span *ngIf="data.motion.length === 1">
-        {{ 'State' | translate }}:
         <b>{{ data.motion[0].state.name }} {{ data.motion[0].state_extension }}</b>
     </span>
-    <br *ngIf="data.motion.length === 1 && activeMeetingCommitteeName" />
-    <span *ngIf="activeMeetingCommitteeName">
-        {{ 'Submitter (in target meeting)' | translate }}:
-        <b>{{ activeMeetingCommitteeName }}</b>
-    </span>
-    <table mat-table [dataSource]="['submitter', 'identifier']">
+    <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting']">
         <!-- Label in front-->
         <ng-container matColumnDef="label">
             <td mat-cell *matCellDef="let rowName">
+                <span *ngIf="rowName === 'motion_version'">{{ 'Motion version' | translate }}</span>
                 <span *ngIf="rowName === 'submitter'">{{ 'Submitter' | translate }}</span>
                 <span *ngIf="rowName === 'identifier'">{{ 'Identifier' | translate }}</span>
+                <span *ngIf="rowName === 'meeting'">{{ 'Meetings' | translate }}</span>
             </td>
         </ng-container>
 
         <!-- radio checks -->
         <ng-container matColumnDef="radio">
             <td mat-cell *matCellDef="let rowName">
+                <span *ngIf="rowName === 'motion_version'">
+                    <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalVersion">
+                        <mat-radio-button value="true">
+                            {{ 'Original motion text with amendments/change recommendations' | translate }}
+                        </mat-radio-button>
+                        <mat-radio-button value="false">
+                            {{ 'Final version' | translate }}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </span>
                 <span *ngIf="rowName === 'submitter'">
                     <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalSubmitter">
                         <mat-radio-button value="true">
@@ -44,36 +50,35 @@
                         </mat-radio-button>
                     </mat-radio-group>
                 </span>
+                <span class="motion-forward-meeting-list" *ngIf="rowName === 'meeting'">
+                    <ng-container *ngFor="let committee of committeesObservable | async">
+                        <div *ngIf="committee.meetings?.length">
+                            <h4>{{ committee.name }}</h4>
+                            <div *ngFor="let meeting of committee.meetings">
+                                <mat-checkbox
+                                    [disabled]="isActiveMeeting(meeting) || hasAlreadyBeenForwardedTo(meeting)"
+                                    [value]="meeting.id"
+                                    [(ngModel)]="checkboxStateMap[meeting.id]"
+                                    (change)="onChangeCheckbox($event)"
+                                >
+                                    {{ meeting.name }}
+                                    <span *ngIf="meeting.start_time || meeting.end_time">
+                                        &nbsp;&middot;&nbsp;
+                                        <os-meeting-time
+                                            [startTime]="meeting.start_time"
+                                            [endTime]="meeting.end_time"
+                                        ></os-meeting-time>
+                                    </span>
+                                </mat-checkbox>
+                            </div>
+                        </div>
+                    </ng-container>
+                </span>
             </td>
         </ng-container>
 
         <tr mat-row *matRowDef="let myRowData; columns: ['label', 'radio']"></tr>
     </table>
-
-    <div class="motion-forward-meeting-list">
-        <ng-container *ngFor="let committee of committeesObservable | async">
-            <div *ngIf="committee.meetings?.length">
-                <h4>{{ committee.name }}</h4>
-                <div *ngFor="let meeting of committee.meetings">
-                    <mat-checkbox
-                        [disabled]="isActiveMeeting(meeting) || hasAlreadyBeenForwardedTo(meeting)"
-                        [value]="meeting.id"
-                        [(ngModel)]="checkboxStateMap[meeting.id]"
-                        (change)="onChangeCheckbox($event)"
-                    >
-                        {{ meeting.name }}
-                        <span *ngIf="meeting.start_time || meeting.end_time">
-                            &nbsp;&middot;&nbsp;
-                            <os-meeting-time
-                                [startTime]="meeting.start_time"
-                                [endTime]="meeting.end_time"
-                            ></os-meeting-time>
-                        </span>
-                    </mat-checkbox>
-                </div>
-            </div>
-        </ng-container>
-    </div>
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button [disabled]="!selectedMeetings?.size" color="primary" (click)="onSaveClicked()">
