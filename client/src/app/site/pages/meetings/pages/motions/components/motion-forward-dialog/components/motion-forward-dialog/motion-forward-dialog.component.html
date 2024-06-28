@@ -1,11 +1,11 @@
 <div mat-dialog-title>
     {{ data.motion.length > 1 ? 'Forward motions' : ('Forwarding of motion' | translate) }}
-    <span *ngIf="data.motion.length === 1">{{ data.motion[0].number }}</span>
 </div>
 <mat-dialog-content>
-    <span *ngIf="data.motion.length === 1">
-        <b>{{ data.motion[0].state.name }} {{ data.motion[0].state_extension }}</b>
-    </span>
+    <div *ngIf="data.motion.length === 1" style="margin-bottom: 4px">
+        {{ 'State' | translate }}:
+        <b>{{ data.motion[0].state.name }}</b>
+    </div>
     <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting']">
         <!-- Label in front-->
         <ng-container matColumnDef="label">
@@ -37,6 +37,9 @@
                         </mat-radio-button>
                         <mat-radio-button value="false">
                             {{ 'committee name' | translate }}
+                            <span *ngIf="activeMeetingCommitteeName">
+                                <b>({{ activeMeetingCommitteeName }})</b>
+                            </span>
                         </mat-radio-button>
                     </mat-radio-group>
                 </span>
@@ -44,6 +47,9 @@
                     <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalNumber">
                         <mat-radio-button value="true">
                             {{ 'original identifier' | translate }}
+                            <span *ngIf="data.motion.length === 1">
+                                <b>{{ data.motion[0].number }}</b>
+                            </span>
                         </mat-radio-button>
                         <mat-radio-button value="false">
                             {{ 'without identifier' | translate }}
