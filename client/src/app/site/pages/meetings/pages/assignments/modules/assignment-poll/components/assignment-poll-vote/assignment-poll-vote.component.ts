@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { PollMethod } from 'src/app/domain/models/poll/poll-constants';
 import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
@@ -17,7 +17,8 @@ import { UnknownUserLabel } from '../../services/assignment-poll.service';
 @Component({
     selector: `os-assignment-poll-vote`,
     templateUrl: `../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.html`,
-    styleUrls: [`../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.scss`]
+    styleUrls: [`../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssignment> {
     public unknownUserLabel = UnknownUserLabel;

@@ -63,7 +63,7 @@
                         }"
                     >
                         <div *ngIf="showAvailableVotes" class="grid-name-area"></div>
-                        <b *ngIf="!showAvailableVotes" class="grid-name-area">
+                        <b *ngIf="!showAvailableVotes && poll.option_ids" class="grid-name-area">
                             {{ poll.option_ids.length }} {{ optionPluralLabel | translate }}
                         </b>
                         <b
