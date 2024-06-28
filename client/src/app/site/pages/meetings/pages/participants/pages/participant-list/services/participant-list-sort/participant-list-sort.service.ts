@@ -58,8 +58,8 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
     protected override getHideSortingOptionSettings(): OsHideSortingOptionSetting<ViewUser>[] {
         return [
             {
-                property: `vote_weight`,
-                shouldHideFn: () => !this._voteWeightEnabled && !this.operator.hasPerms(Permission.userCanUpdate)
+                property: `voteWeight`,
+                shouldHideFn: () => !this._voteWeightEnabled
             },
             {
                 property: `member_number`,
