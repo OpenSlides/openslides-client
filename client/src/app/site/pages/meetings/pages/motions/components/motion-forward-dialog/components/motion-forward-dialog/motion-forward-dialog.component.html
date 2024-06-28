@@ -2,7 +2,7 @@
     {{ data.motion.length > 1 ? 'Forward motions' : ('Forwarding of motion' | translate) }}
 </div>
 <mat-dialog-content>
-    <div *ngIf="data.motion.length === 1" style="margin-bottom: 4px">
+    <div class="state-margin" *ngIf="data.motion.length === 1">
         {{ 'State' | translate }}:
         <b>{{ data.motion[0].state.name }}</b>
     </div>
