@@ -13,5 +13,6 @@ export const userHeadersAndVerboseNames: { [key in keyof User]?: any } = {
     default_password: _(`Initial password`),
     is_active: _(`Active`),
     is_physical_person: _(`Natural person`),
-    saml_id: _(`SSO identification`)
+    saml_id: _(`SSO identification`),
+    member_number: _(`Membership number`)
 };

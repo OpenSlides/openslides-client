@@ -13,7 +13,7 @@ import { MeetingCsvExportService } from '../../services/meeting-export.service';
 import { MeetingListFilterService } from '../../services/meeting-list-filter/meeting-list-filter.service';
 import { MeetingListSortService } from '../../services/meeting-list-sort/meeting-list-sort.service';
 
-const MEETING_LIST_STORAGE_INDEX = `committee_list`;
+const MEETING_LIST_STORAGE_INDEX = `meeting_list`;
 
 @Component({
     selector: `os-meeting-list`,

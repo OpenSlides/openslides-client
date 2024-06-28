@@ -38,4 +38,8 @@ export class GlobalHeadbarComponent {
             }
         });
     }
+
+    public get showLongpollingIcon(): boolean {
+        return this.headbarService.longpolling;
+    }
 }
