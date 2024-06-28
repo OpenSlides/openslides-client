@@ -116,6 +116,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         if (los) {
             this._listOfSpeakers = los;
             this.updateSpeakers();
+            this.cd.markForCheck();
         }
     }
 
