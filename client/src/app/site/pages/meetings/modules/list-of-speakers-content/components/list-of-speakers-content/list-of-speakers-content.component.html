@@ -12,9 +12,9 @@
                 lock
             </mat-icon>
         </os-projectable-title>
-        <span *ngIf="explicitTitleContent">
+        <ng-container *ngIf="explicitTitleContent">
             <ng-container *ngTemplateOutlet="explicitTitleContent"></ng-container>
-        </span>
+        </ng-container>
 
         <!-- List of finished speakers -->
         <mat-expansion-panel *ngIf="finishedSpeakers.length" class="finished-list">

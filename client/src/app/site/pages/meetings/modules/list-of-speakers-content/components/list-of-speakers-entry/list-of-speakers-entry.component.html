@@ -12,9 +12,8 @@
                 matTooltipPosition="above"
                 (click)="onStartButton()"
             >
-                <mat-icon *ngIf="speakerIndex === 0 || speaker.isCurrentSpeaker">play_circle_outline</mat-icon>
-                <mat-icon *ngIf="(speakerIndex > 0 || speakerIndex !== 0) && !speaker.isCurrentSpeaker">
-                    play_arrow
+                <mat-icon>
+                    {{ speakerIndex === 0 || speaker.isCurrentSpeaker ? 'play_circle_outline' : 'play_arrow' }}
                 </mat-icon>
             </button>
 

@@ -126,7 +126,7 @@
             <ng-container *ngIf="isAllowed('seePersonal')">
                 <mat-form-field
                     [ngClass]="{
-                        form58: isAllowed('update'),
+                        form48: isAllowed('update'),
                         form100: !isAllowed('update')
                     }"
                     class="force-min-width"
@@ -137,7 +137,6 @@
                         *ngIf="isNewUser"
                         matSuffix
                         type="button"
-                        mat-button
                         mat-icon-button
                         [matTooltip]="'Leave blank to automatically generate the username.' | translate"
                         matTooltipPosition="above"
@@ -155,14 +154,13 @@
 
             <!-- Initial Password -->
             <ng-container *ngIf="isAllowed('update') && !user?.saml_id">
-                <mat-form-field class="form38 force-min-width">
+                <mat-form-field class="form48 force-min-width">
                     <mat-label>{{ 'Initial password' | translate }}</mat-label>
                     <input matInput autocomplete="off" formControlName="default_password" />
                     <button
                         *ngIf="isNewUser && generatePasswordFn"
                         matSuffix
                         type="button"
-                        mat-button
                         mat-icon-button
                         [disabled]="!generatePasswordFn"
                         (click)="setRandomPassword()"
@@ -174,7 +172,6 @@
                         *ngIf="isNewUser"
                         matSuffix
                         type="button"
-                        mat-button
                         mat-icon-button
                         [matTooltip]="'Leave blank to automatically generate the password.' | translate"
                     >

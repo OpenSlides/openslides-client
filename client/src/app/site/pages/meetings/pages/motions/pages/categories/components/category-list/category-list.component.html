@@ -10,11 +10,11 @@
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot" *osPerms="permission.motionCanManage">
+    <ng-container class="menu-slot" *osPerms="permission.motionCanManage">
         <button type="button" mat-icon-button [matMenuTriggerFor]="categoryMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 </os-head-bar>
 
 <os-projectable-list

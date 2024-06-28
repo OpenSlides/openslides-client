@@ -18,7 +18,7 @@
                     <mat-action-list class="filtermenu-expanded">
                         <cdk-virtual-scroll-viewport [itemSize]="ROW_HEIGHT">
                             <ng-container *cdkVirtualFor="let option of filter.options">
-                                <div class="filter-menu--option-row flex-vertical-center">
+                                <div class="filter-menu-option-row flex-vertical-center">
                                     <mat-checkbox
                                         #filterCheckBox
                                         *ngIf="isFilter(option)"

@@ -20,6 +20,13 @@
 }
 
 .control-group {
+    padding-left: 5px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.back-n-forth-controls {
     .button-size {
         padding-left: 5px;
         display: inline-block;
@@ -38,12 +45,12 @@
     margin-bottom: 20px;
     box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.25);
 
-    .emelent-grid {
+    .element-grid {
         display: grid;
         width: 100%;
         grid-gap: 5px;
         grid-template-columns: min-content 1fr min-content;
-        .mat-icon-button {
+        .mat-mdc-icon-button {
             display: inherit;
         }
         .current-element-text {
@@ -124,6 +131,12 @@
     }
 }
 
+.card-list {
+    .card-list-item:not(:last-of-type) {
+        margin-bottom: 8px;
+    }
+}
+
 .drop-list-entry:last-child {
     border: none;
 }
@@ -154,4 +167,10 @@
 
 .wifi-help-text {
     color: grey;
+}
+
+.projectable-entry {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
 }

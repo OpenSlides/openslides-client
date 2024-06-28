@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { MediaUploadContentModule } from 'src/app/ui/modules/media-upload-content/media-upload-content.module';

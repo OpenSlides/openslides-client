@@ -28,6 +28,14 @@
         &:hover {
             text-decoration: solid underline mat.get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.175em;
         }
+
+        a.mat-mdc-button-base {
+            text-decoration: inherit;
+        }
+    }
+
+    a.mat-mdc-button-base {
+        color: inherit;
     }
 
     .accentuated-background, .accentuated-background button {
@@ -70,13 +78,10 @@
     .fake-disabled {
         background: mat.get-color-from-palette($background, unselected-chip) !important;
         opacity: 1 !important;
-
-        .mat-button-wrapper {
-            .mat-icon {
-                color: mat.get-color-from-palette($foreground, disabled-button) !important;
-                svg path {
-                    fill: mat.get-color-from-palette($foreground, disabled-button) !important;
-                }
+        .mat-icon {
+            color: mat.get-color-from-palette($foreground, disabled-button) !important;
+            svg path {
+                fill: mat.get-color-from-palette($foreground, disabled-button) !important;
             }
         }
     }
@@ -91,7 +96,7 @@
     }
 
     /* motion list/detail view */
-    .mat-chip-list.user .mat-chip {
+    .mat-mdc-chip-list.user .mat-chip {
         color: mat.get-color-from-palette($foreground, text);
         background: mat.get-color-from-palette($background, card);
         border-color: mat.get-color-from-palette($background, selected-button);
@@ -122,8 +127,8 @@
     .user-subtitle {
         color: mat.get-color-from-palette($foreground, secondary-text);
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
-    mat-card-header {
+
+    .mat-mdc-card-header {
         background-color: mat.get-color-from-palette($background, app-bar);
     }
 

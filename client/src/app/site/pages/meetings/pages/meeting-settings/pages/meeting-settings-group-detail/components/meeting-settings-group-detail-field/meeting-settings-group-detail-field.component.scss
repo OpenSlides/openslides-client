@@ -48,6 +48,12 @@
 
     /* Spacing between config entries */
     .settings-form-group {
-        margin-bottom: 15px;
+        margin-bottom: 16px;
+        &.checkbox-setting {
+            margin-bottom: 8px;
+            .settings-form-group {
+                margin-bottom: 8px;
+            }
+        }
     }
 }

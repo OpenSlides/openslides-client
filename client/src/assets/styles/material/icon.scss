@@ -4,19 +4,8 @@ mat-icon {
 
 // for aligning text lines with an icon and or link
 .line-and-icon {
-    display: block;
-    line-height: 40px;
-    h2,
-    span,
-    a {
-        vertical-align: bottom;
-    }
-
-    .mat-icon-button,
-    .mat-icon {
-        margin: auto 0;
-        vertical-align: middle;
-    }
+    display: flex;
+    align-items: center;
 }
 
 .icon-as-block.mat-icon {

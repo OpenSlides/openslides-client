@@ -152,7 +152,7 @@
             <button mat-button color="accent" (click)="fileInput.click()">
                 <span>{{ 'Select file' | translate }}</span>
             </button>
-            <div *ngIf="!finishedSuccessfully && (rawFileObservable | async) as file">
+            <div *ngIf="!finishedSuccessfully && (rawFileObservable | async) as file" class="import-file-handle">
                 {{ file.name }}
                 <button mat-icon-button (click)="removeSelectedFile()">
                     <mat-icon>close</mat-icon>

@@ -1,8 +1,9 @@
 .filter-menu-content-wrapper {
-    overflow-y: scroll;
-    height: 100%;
+    overflow-y: auto;
+    height: calc(100% - 42px);
+
     div.indent {
-        margin-left: 24px;
+        margin-left: 18px;
 
         mat-action-list,
         cdk-virtual-scroll-viewport {
@@ -21,8 +22,8 @@
 
     .filter-subtitle {
         flex: 1;
-        margin-top: 5px;
-        margin-bottom: 5px;
+        margin-top: 12px !important;
+        margin-bottom: 0px !important;
         opacity: 0.9;
         font-style: italic;
     }
@@ -31,26 +32,7 @@
         margin-left: 20px;
     }
 
-    .filter-menu--option-row {
-        height: 24px;
-    }
-
     mat-checkbox {
-        // adds breaks to mat-checkboxes with long labels
-        .mat-checkbox-layout {
-            white-space: normal;
-        }
-
-        .mat-checkbox-label {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 290px;
-        }
-
-        // rather than center the checkbox, put the checkbox in the first line
-        .mat-checkbox-inner-container {
-            margin-top: 3px;
-        }
+        height: 30px;
     }
 }

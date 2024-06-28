@@ -22,7 +22,7 @@ $os-outline: mat.get-color-from-palette(mat.$grey-palette, 300);
  *  The components will get a value from this map.
  */
 $background-dark: map-get($openslides-dark-theme, background);
-$background-dark: map_merge(
+$background-dark: map-merge(
     $background-dark,
     (
         background: $os-background

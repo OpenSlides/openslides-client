@@ -56,6 +56,16 @@ $os-grey: #e0e0e0;
     color: rgba(0, 0, 0, 0.87) !important;
 }
 
+.bg-primary {
+    background-color: var(--theme-primary-500) !important;
+    color: var(--theme-primary-contrast-500) !important;
+}
+
+.bg-accent {
+    background-color: var(--theme-accent-500) !important;
+    color: var(--theme-accent-contrast-500) !important;
+}
+
 // TODO: Update naming of text color helper classes to match a pattern
 .red-warning-text {
     color: red !important;

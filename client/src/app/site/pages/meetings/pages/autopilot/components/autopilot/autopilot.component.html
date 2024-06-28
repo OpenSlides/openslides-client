@@ -29,7 +29,7 @@
             <mat-card class="os-card" *ngIf="!!title && disabledContentElements['title'] !== true">
                 <mat-card-content>
                     <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
-                        <h1 class="line-and-icon">
+                        <h1>
                             {{ title | translate }}
                         </h1>
                     </a>
@@ -46,7 +46,7 @@
                 (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
             >
                 <ng-template osListOfSpeakersContentTitle>
-                    <p class="line-and-icon subtitle-text">
+                    <div class="line-and-icon subtitle-text">
                         <a [routerLink]="closUrl" *ngIf="closUrl">
                             {{ 'List of speakers' | translate }}
                         </a>
@@ -94,7 +94,7 @@
                                 <mat-icon>undo</mat-icon>
                             </button>
                         </ng-container>
-                    </p>
+                    </div>
                 </ng-template>
             </os-list-of-speakers-content>
 

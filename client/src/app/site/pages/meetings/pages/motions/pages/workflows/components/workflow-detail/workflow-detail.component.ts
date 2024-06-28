@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
-import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -142,7 +142,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
             name: _(`Recommendation label`),
             help_text: _(
                 `Defines the wording of the recommendation that belongs to this state.
-Example: State = Accepted / Recommendation = Acceptance. 
+Example: State = Accepted / Recommendation = Acceptance.
 
 To activate the recommendation system, a recommender (for example, a motion committee) must be defined under > [Settings] > [Motions] > [Name of recommender].
 Example recommender: motion committee
@@ -184,10 +184,10 @@ In combination with motion blocks, the recommendation of multiple motions can be
         {
             name: _(`Allow forwarding of motions`),
             help_text: _(
-                `Enables the forwarding of motions to other meetings within the OpenSlides instance in the selected state. 
+                `Enables the forwarding of motions to other meetings within the OpenSlides instance in the selected state.
 
 Prerequisites:
-1. forwarding hierarchy must be set at the organizational level in the committee. 
+1. forwarding hierarchy must be set at the organizational level in the committee.
 2. target meeting must be created.
 3. user must have group permission for forwarding.`
             ),
