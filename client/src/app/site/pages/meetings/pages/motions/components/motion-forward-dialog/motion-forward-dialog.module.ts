@@ -7,6 +7,7 @@ import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { MeetingTimeModule } from 'src/app/ui/modules/meeting-time/meeting-time.module';
 
@@ -24,6 +25,7 @@ import { MotionForwardDialogComponent } from './components/motion-forward-dialog
         FormsModule,
         IconContainerModule,
         MeetingTimeModule,
+        CommaSeparatedListingModule,
         OpenSlidesTranslationModule.forChild()
     ]
 })
