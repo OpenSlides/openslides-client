@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { DuplicateStatus, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -16,19 +18,67 @@ type Name = string;
 export class AccountFilterService extends BaseFilterListService<ViewUser> {
     protected storageKey = `MemberList`;
 
+    private meetingSubscription: Subscription;
     private userEmailMap = new Map<Email, Id[]>();
     private userNameMap = new Map<Name, Id[]>();
+    private userInMeetingMap = new Map<Id, void>();
+
+    /**
+     * @return Observable data for the filtered output subject
+     */
+    public override get outputObservable(): Observable<ViewUser[]> {
+        return super.outputObservable.pipe(
+            map(output => {
+                if (this.meetingSubscription) {
+                    return output.filter(m => this.userInMeetingMap.has(m.id));
+                }
+
+                return output;
+            })
+        );
+    }
+
+    public override getViewModelListObservable(): Observable<ViewUser[]> {
+        return super.getViewModelListObservable().pipe(
+            map(output => {
+                if (this.meetingSubscription) {
+                    return output.filter(m => this.userInMeetingMap.has(m.id));
+                }
+
+                return output;
+            })
+        );
+    }
 
     public constructor(
         store: ActiveFiltersService,
         private operator: OperatorService,
-        private controller: UserControllerService
+        private controller: UserControllerService,
+        private meetingRepo: MeetingControllerService
     ) {
         super(store);
 
         this.controller.getViewModelListObservable().subscribe(users => {
             this.updateUserMaps(users);
         });
+    }
+
+    public filterMeeting(id: Id): void {
+        if (this.meetingSubscription) {
+            this.meetingSubscription.unsubscribe();
+            this.meetingSubscription = null;
+        }
+
+        if (id) {
+            this.meetingSubscription = this.meetingRepo.getViewModelObservable(id).subscribe(meeting => {
+                this.userInMeetingMap.clear();
+                if (meeting && meeting.user_ids) {
+                    for (const id of meeting.user_ids) {
+                        this.userInMeetingMap.set(id);
+                    }
+                }
+            });
+        }
     }
 
     private updateUserMaps(users: ViewUser[]): void {
