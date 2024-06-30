@@ -34,12 +34,15 @@
                     <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalSubmitter">
                         <mat-radio-button value="true">
                             {{ 'original submitter name' | translate }}
-                            <span *ngIf="data.motion.length === 1">
+                            <span *ngIf="data.motion.length === 1 && data.motion[0].submitterNames.length > 0">
                                 <os-comma-separated-listing [list]="data.motion[0].submitterNames">
                                     <ng-template let-submitter>
                                         <b>{{ submitter }}</b>
                                     </ng-template>
                                 </os-comma-separated-listing>
+                            </span>
+                            <span *ngIf="data.motion.length === 1 && data.motion[0].submitterNames.length === 0">
+                                <b>{{ showActiveMeetingName() }}</b>
                             </span>
                         </mat-radio-button>
                         <mat-radio-button value="false">

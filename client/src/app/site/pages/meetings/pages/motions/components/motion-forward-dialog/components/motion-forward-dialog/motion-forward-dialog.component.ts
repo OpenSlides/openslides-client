@@ -76,6 +76,10 @@ export class MotionForwardDialogComponent implements OnInit {
         return false;
     }
 
+    public showActiveMeetingName(): string {
+        return this.activeMeeting?.meeting?.name;
+    }
+
     private initStateMap(): void {
         const meetings = this.committeesSubject.value.flatMap(committee => committee.meetings)!;
         for (const meeting of meetings) {
