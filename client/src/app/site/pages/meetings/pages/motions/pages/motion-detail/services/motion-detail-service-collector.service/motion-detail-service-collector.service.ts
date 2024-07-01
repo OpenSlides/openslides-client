@@ -4,7 +4,6 @@ import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/
 import { MotionCategoryControllerService } from '../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
 import { MotionChangeRecommendationControllerService } from '../../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
 import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
-import { MotionStatuteParagraphControllerService } from '../../../../modules/statute-paragraphs/services/motion-statute-paragraph-controller.service/motion-statute-paragraph-controller.service';
 import { TagControllerService } from '../../../../modules/tags/services/tag-controller.service/tag-controller.service';
 import { MotionWorkflowControllerService } from '../../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
@@ -21,7 +20,6 @@ export class MotionDetailServiceCollectorService {
     public constructor(
         public changeRecoRepo: MotionChangeRecommendationControllerService,
         public participantRepo: ParticipantControllerService,
-        public statuteRepo: MotionStatuteParagraphControllerService,
         public motionRepo: MotionControllerService,
         public amendmentRepo: AmendmentControllerService,
         public workflowRepo: MotionWorkflowControllerService,

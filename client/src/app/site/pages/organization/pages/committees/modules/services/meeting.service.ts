@@ -19,12 +19,8 @@ export class MeetingService {
     ) {}
 
     public async navigateToMeetingUsers(meeting: ViewMeeting): Promise<void> {
-        await this.router.navigate([`accounts`]);
+        await this.router.navigate([`accounts`, `meeting`, meeting.id]);
         this.accountFilterService.clearAllFilters();
-        this.accountFilterService.toggleFilterOption(`id`, {
-            condition: meeting.calculated_user_ids,
-            label: meeting.name
-        });
     }
 
     public async exportMeeting(meeting: ViewMeeting): Promise<void> {

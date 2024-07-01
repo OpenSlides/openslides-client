@@ -23,7 +23,7 @@ export function mergeSubscriptionFollow(
     rq1: Follow | BaseSimplifiedModelRequest,
     rq2: Follow | BaseSimplifiedModelRequest
 ): Follow {
-    const merged: Follow = structuredClone(rq1);
+    const merged = <Follow>structuredClone(rq1);
     if (rq1.fieldset && rq2.fieldset && (typeof rq1.fieldset === `string` || typeof rq2.fieldset === `string`)) {
         throw new Error(`Fieldset type mismatch`);
     }
@@ -37,7 +37,7 @@ export function mergeSubscriptionFollow(
     if (!merged.follow && rq2.follow) {
         merged.follow = rq2.follow;
     } else if (rq2.follow) {
-        const rq2Follows: FollowList<unknown> = structuredClone(rq2.follow);
+        const rq2Follows = <FollowList<unknown>>structuredClone(rq2.follow);
         for (let follow of merged.follow) {
             const field = typeof follow === `string` ? follow : follow.idField;
             const rq2FollowIdx = rq2Follows.findIndex(v => (typeof v === `string` ? v : v.idField) === field);

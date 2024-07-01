@@ -1,7 +1,14 @@
 <div class="os-datetimepicker-container">
     <mat-form-field class="datepicker-form-field">
         <mat-label *ngIf="title">{{ title | translate }}</mat-label>
-        <input matInput [matDatepicker]="picker" [formControl]="contentForm" (click)="picker.open()" readonly />
+        <input
+            matInput
+            [matDatepicker]="picker"
+            [formControl]="contentForm"
+            (click)="picker.open()"
+            (keydown)="onKeyPressed($event)"
+            readonly
+        />
         <mat-hint *ngIf="hintText">{{ hintText | translate }}</mat-hint>
         <div class="suffix-wrapper" matSuffix>
             <mat-icon class="red-warning-text" *ngIf="showUpdateSuccessIcon">check_circle</mat-icon>

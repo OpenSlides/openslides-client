@@ -31,12 +31,6 @@ const routes: Routes = [
                 data: { meetingPermissions: [Permission.motionCanSee] }
             },
             {
-                path: `statute-paragraphs`,
-                loadChildren: () =>
-                    import(`./pages/statute-paragraphs/statute-paragraphs.module`).then(m => m.StatuteParagraphsModule),
-                data: { meetingPermissions: [Permission.motionCanManage] }
-            },
-            {
                 path: `workflows`,
                 loadChildren: () => import(`./pages/workflows/workflows.module`).then(m => m.WorkflowsModule),
                 data: { meetingPermissions: [Permission.motionCanManage] }

@@ -8,6 +8,7 @@ import { CellFillingDefinition, XlsxExportService } from 'src/app/gateways/expor
 import { reconvertChars, stripHtmlTags } from 'src/app/infrastructure/utils';
 
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
+import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers';
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { InfoToExport, sortMotionPropertyList } from '../definitions';
@@ -170,6 +171,10 @@ export class MotionXlsxExportService {
                             return this.motionService.getExtendedStateLabel(motion);
                         case `recommendation`:
                             return this.motionService.getExtendedRecommendationLabel(motion);
+                        case `working_group_speakers`:
+                            return (motionProp as Array<ViewMotionWorkingGroupSpeaker>)
+                                .sort((a, b) => a.weight - b.weight)
+                                .join(`, `);
                         default:
                             return motionProp.toString();
                     }

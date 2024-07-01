@@ -3,10 +3,8 @@
         <mat-tab-group *ngIf="hasSeveralTabs()" (selectedTabChange)="onTabChange($event)">
             <!-- Tabs before CSV import tab -->
             <mat-tab *ngFor="let tab of importListFirstTabs">
-                <ng-template matTabLabel>
-                    <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
-                </ng-template>
-                <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
+                <ng-template matTabLabel>{{ tab.label }}</ng-template>
+                <ng-container *ngTemplateOutlet="tab.templateRef"></ng-container>
             </mat-tab>
 
             <!-- CSV import tab -->
@@ -18,10 +16,8 @@
 
             <!-- Tabs after CSV import tab -->
             <mat-tab *ngFor="let tab of importListLastTabs">
-                <ng-template matTabLabel>
-                    <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
-                </ng-template>
-                <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
+                <ng-template matTabLabel>{{ tab.label }}</ng-template>
+                <ng-container *ngTemplateOutlet="tab.templateRef"></ng-container>
             </mat-tab>
         </mat-tab-group>
         <ng-container *ngIf="!hasSeveralTabs(); then defaultTabContent"></ng-container>
@@ -112,7 +108,7 @@
         </li>
     </ul>
     <p *ngIf="additionalInfo">
-        {{ additionalInfo }}
+        <span [innerHTML]="additionalInfo | trust : 'html'"></span>
     </p>
     <button mat-button color="accent" (click)="downloadCsvExample()">
         {{ 'Download CSV example file' | translate }}
