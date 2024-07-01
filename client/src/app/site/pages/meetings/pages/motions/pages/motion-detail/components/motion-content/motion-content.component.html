@@ -37,7 +37,7 @@
     ></os-motion-detail-diff>
 </ng-container>
 
-<form class="motion-content" [formGroup]="contentForm" (keydown)="onKeyDown($event)" tabindex="-1">
+<form class="motion-content" [formGroup]="contentForm" tabindex="-1">
     <!-- Submitter -->
     <div *ngIf="newMotion" class="content-field">
         <ng-container *ngIf="canChangeMetadata">
@@ -85,11 +85,7 @@
         <h3 *ngIf="preamble">
             <span>{{ preamble }}</span>
         </h3>
-        <os-editor
-            formControlName="text"
-            [required]="!isParagraphBasedAmendment"
-            [customSettings]="tinyMceConfig"
-        ></os-editor>
+        <os-editor formControlName="text" [required]="!isParagraphBasedAmendment"></os-editor>
         <div
             *ngIf="
                 contentForm.get('text')?.invalid && (contentForm.get('text')?.dirty || contentForm.get('text')?.touched)
@@ -136,12 +132,7 @@
         ></div>
 
         <!-- The HTML Editor -->
-        <os-editor
-            *ngIf="editMotion"
-            formControlName="reason"
-            [required]="reasonRequired"
-            [customSettings]="tinyMceConfig"
-        ></os-editor>
+        <os-editor *ngIf="editMotion" formControlName="reason" [required]="reasonRequired"></os-editor>
         <div
             *ngIf="
                 reasonRequired &&

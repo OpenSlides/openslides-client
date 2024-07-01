@@ -39,7 +39,6 @@ OpenSlides uses the following software or parts of them:
 - [@pebula/ngrid-material@4.0.0](undefined), License: UNKNOWN
 - [@pebula/ngrid@4.0.0](https://github.com/shlomiassaf/ngrid), License: MIT
 - [@pebula/utils@1.0.2](undefined), License: UNKNOWN
-- [@tinymce/tinymce-angular@5.0.1](https://github.com/tinymce/tinymce-angular), License: Apache-2.0
 - [@videojs/http-streaming@2.13.1](https://github.com/videojs/http-streaming), License: Apache-2.0
 - [acorn@8.7.0](https://github.com/acornjs/acorn), License: MIT
 - [broadcast-channel@4.10.0](https://github.com/pubkey/broadcast-channel), License: MIT
@@ -63,7 +62,6 @@ OpenSlides uses the following software or parts of them:
 - [pdfmake@0.2.4](https://github.com/bpampuch/pdfmake), License: MIT
 - [rxjs@7.5.4](https://github.com/reactivex/rxjs), License: Apache-2.0
 - [tinycolor2@1.4.2](https://github.com/bgrins/TinyColor), License: MIT
-- [tinymce@5.10.3](https://github.com/tinymce/tinymce), License: LGPL-2.1
 - [ts-dedent@2.2.0](https://github.com/tamino-martinius/node-ts-dedent), License: MIT
 - [tslib@2.3.1](https://github.com/Microsoft/tslib), License: 0BSD
 - [tsparticles@1.41.4](https://github.com/matteobruni/tsparticles), License: MIT

@@ -19,6 +19,7 @@
 .openslides-light-theme {
     /*TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated */
     @include mat.all-legacy-component-themes($openslides-light-theme);
+    @include mat.all-component-themes($openslides-light-theme);
     @include os-component-themes($openslides-light-theme);
     @include os-var-overwrites();
 }

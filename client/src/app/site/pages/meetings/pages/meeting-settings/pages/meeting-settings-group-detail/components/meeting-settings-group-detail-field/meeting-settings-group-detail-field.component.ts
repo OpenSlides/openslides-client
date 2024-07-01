@@ -437,22 +437,10 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         return excluded.includes(type);
     }
 
-    /**
-     * Amends the application-wide tinyMCE settings with update triggers that
-     * send updated values only after leaving focus (Blur) or closing the editor (Remove)
-     *
-     * @returns an instance of tinyMCE settings with additional setup definitions
-     */
-    public getTinyMceSettings(): object {
-        return {
-            setup: (editor: any): void => {
-                editor.on(`Blur`, (ev: any) => {
-                    if (ev.target.getContent() !== this.internalValue) {
-                        this.sendUpdate(ev.target.getContent());
-                    }
-                });
-            }
-        };
+    public onEditorBlur(): void {
+        if (this.value !== this.internalValue) {
+            this.sendUpdate(this.value);
+        }
     }
 
     /**
