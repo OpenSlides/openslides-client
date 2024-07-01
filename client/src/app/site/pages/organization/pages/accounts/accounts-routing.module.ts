@@ -14,6 +14,10 @@ const routes: Routes = [
                 loadChildren: () => import(`./pages/account-list/account-list.module`).then(m => m.AccountListModule)
             },
             {
+                path: `meeting/:id`,
+                loadChildren: () => import(`./pages/account-list/account-list.module`).then(m => m.AccountListModule)
+            },
+            {
                 path: `create`,
                 loadChildren: () =>
                     import(`./pages/account-detail/account-detail.module`).then(m => m.AccountDetailModule)

@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
@@ -11,7 +12,6 @@ import { BaseListViewComponent } from 'src/app/site/base/base-list-view.componen
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -33,12 +33,13 @@ const ACCOUNT_LIST_STORAGE_INDEX = `account_list`;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountListComponent extends BaseListViewComponent<ViewUser> {
+    public meeting: Observable<ViewMeeting> = null;
+
     public get isMobile(): boolean {
         return this.vp.isMobile;
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public readonly controller: AccountControllerService,
         public readonly filterService: AccountFilterService,
@@ -57,6 +58,14 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         super.setTitle(`Accounts`);
         this.canMultiSelect = true;
         this.listStorageIndex = ACCOUNT_LIST_STORAGE_INDEX;
+        this.subscriptions.push(
+            this.route.params.subscribe(async params => {
+                this.filterService.filterMeeting(params[`id`] || null);
+                if (params[`id`]) {
+                    this.meeting = this.meetingRepo.getViewModelObservable(+params[`id`]);
+                }
+            })
+        );
     }
 
     public createNewMember(): void {

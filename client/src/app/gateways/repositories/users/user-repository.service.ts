@@ -329,11 +329,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     }
 
     private getLevelAndNumber(user: LevelAndNumberInformation): string {
-        if (user.number()) {
-            return `${this.translate.instant(`No.`)} ${user.number()}`;
-        } else {
-            return ``;
+        const strings: string[] = [];
+        if (user.structureLevels()) {
+            strings.push(user.structureLevels());
         }
+        if (user.number()) {
+            strings.push(`${this.translate.instant(`No.`)} ${user.number()}`);
+        }
+        return strings.join(` · `);
     }
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Participants` : `Participant`);

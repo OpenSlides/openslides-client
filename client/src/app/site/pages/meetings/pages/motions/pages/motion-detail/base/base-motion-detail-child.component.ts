@@ -10,7 +10,6 @@ import { MotionCategoryControllerService } from '../../../modules/categories/ser
 import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
 import { ViewUnifiedChange } from '../../../modules/change-recommendations/view-models/view-unified-change';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
-import { MotionStatuteParagraphControllerService } from '../../../modules/statute-paragraphs/services';
 import { TagControllerService } from '../../../modules/tags/services';
 import { MotionWorkflowControllerService } from '../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
 import { AmendmentControllerService } from '../../../services/common/amendment-controller.service';
@@ -118,10 +117,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
         return this.motionServiceCollector.tagRepo;
     }
 
-    protected get statuteRepo(): MotionStatuteParagraphControllerService {
-        return this.motionServiceCollector.statuteRepo;
-    }
-
     protected get changeRecoRepo(): MotionChangeRecommendationControllerService {
         return this.motionServiceCollector.changeRecoRepo;
     }
@@ -144,7 +139,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
 
     public multipleParagraphsAllowed = false;
     public reasonRequired = false;
-    public statutesEnabled = false;
     public minSupporters = 0;
     public preamble = ``;
     public showReferringMotions = false;
@@ -267,9 +261,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
                 .get(`motions_supporters_min_amount`)
                 .subscribe(value => (this.minSupporters = value)),
             this.meetingSettingsService.get(`motions_preamble`).subscribe(value => (this.preamble = value)),
-            this.meetingSettingsService
-                .get(`motions_statutes_enabled`)
-                .subscribe(value => (this.statutesEnabled = value)),
             this.meetingSettingsService.get(`motions_amendments_multiple_paragraphs`).subscribe(allowed => {
                 this.multipleParagraphsAllowed = allowed;
             }),
