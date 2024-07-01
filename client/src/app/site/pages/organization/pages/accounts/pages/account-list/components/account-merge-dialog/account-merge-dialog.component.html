@@ -90,6 +90,8 @@
     <div class="error-color">{{ 'Attention: Not selected accounts will be merged and then deleted.' | translate }}</div>
     <div class="error-color" *ngIf="showMeetingsCollide">
         {{ 'Warning: Data loss is possible, because two users are in the same meeting.' | translate }}
+        {{ 'Meetings effected:' | translate }}
+        {{ countMeetingsCollide }}
     </div>
 </mat-dialog-content>
 <mat-dialog-actions>

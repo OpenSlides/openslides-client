@@ -17,23 +17,28 @@ export class AccountMergeDialogComponent {
     ) {
         this.data.choices.sort((a, b) => a.name.localeCompare(b.name));
         const meetingIdsVisited: number[] = [];
+
         for (const user of this.data.choices) {
             for (const meeting of user.meetings) {
                 if (meetingIdsVisited.includes(meeting.id)) {
-                    this.showMeetingsCollide = true;
-                    break;
+                    this._meetingsCollide.add(meeting.id);
                 }
                 meetingIdsVisited.push(meeting.id);
-            }
-            if (this.showMeetingsCollide) {
-                break;
             }
         }
     }
 
     public selectedUserId: number;
     public displayedColumns = [`button`, `name`, `icon`];
-    public showMeetingsCollide = false;
+    private _meetingsCollide = new Set<number>();
+
+    public get showMeetingsCollide(): boolean {
+        return this._meetingsCollide.size > 0;
+    }
+
+    public get countMeetingsCollide(): number {
+        return this._meetingsCollide.size;
+    }
 
     public get possibleChoices(): ViewUser[] {
         return this.data.choices;
