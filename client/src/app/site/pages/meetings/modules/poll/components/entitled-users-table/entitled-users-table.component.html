@@ -25,14 +25,13 @@
                         </div>
                         <div *ngIf="entry.vote_delegated_to_user_id && entry.delegation_user_merged_into_id">
                             <span>
-                                ({{ 'represented by old account of' | translate }})
-                                {{ entry.delegation_user_merged_into?.getShortName() }}
+                                {{ entry.delegation_user_merged_into }}
                             </span>
                         </div>
                     </div>
                 </div>
                 <div *ngIf="!entry.user && entry.user_merged_into_id">
-                    {{ 'Old account of' | translate }} {{ entry.user_merged_into?.getShortName() }}
+                    {{ entry.user_merged_into }}
                     <div class="user-subtitle">
                         <!-- Delegation -->
                         <div *ngIf="entry.vote_delegated_to_user_id && !entry.delegation_user_merged_into_id">
@@ -43,8 +42,7 @@
                         </div>
                         <div *ngIf="entry.vote_delegated_to_user_id && entry.delegation_user_merged_into_id">
                             <span>
-                                ({{ 'represented by old account of' | translate }})
-                                {{ entry.delegation_user_merged_into?.getShortName() }}
+                                {{ entry.delegation_user_merged_into }}
                             </span>
                         </div>
                     </div>

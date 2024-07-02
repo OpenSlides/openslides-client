@@ -47,8 +47,8 @@ export class EntitledUsersTableComponent {
     public filterPropsEntitledUsersTable = [
         `user.full_name`,
         `vote_delegated_to.full_name`,
-        `user_merged_into.full_name`,
-        `delegation_user_merged_into.full_name`,
+        `user_merged_into`,
+        `delegation_user_merged_into`,
         `voted_verbose`
     ];
 
