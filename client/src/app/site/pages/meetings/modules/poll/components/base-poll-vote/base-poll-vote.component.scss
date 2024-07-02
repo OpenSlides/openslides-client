@@ -131,19 +131,13 @@
 }
 
 .split-grid {
-    display: grid;
-    grid-gap: 20px;
-    margin-top: 2em;
+    @extend %vote-grid-base;
+    grid-template-areas: 'yes no abstain';
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-
-    .vote-button-area {
-        display: inline-grid;
-        grid-gap: 1em;
-        margin: auto;
-
-        .vote-label {
-            text-align: center;
-        }
+    .vote-label {
+        padding-top: 5px;
+        margin: 0;
+        text-align: center;
     }
 }
 
