@@ -6,4 +6,6 @@ export interface EntitledUsersTableEntry extends EntitledUsersEntry, Identifiabl
     user?: ViewUser;
     voted_verbose: string;
     vote_delegated_to?: ViewUser | null;
+    user_merged_into?: ViewUser | null;
+    delegation_user_merged_into?: ViewUser | null;
 }

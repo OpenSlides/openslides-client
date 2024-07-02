@@ -31,16 +31,6 @@ export class EntitledUsersTableComponent {
         return this._entitledUsersObservable;
     }
 
-    public userMergedIntoName(entry: EntitledUsersTableEntry): string {
-        return entry.user_merged_into_id ? this.controller.getViewModel(entry.user_merged_into_id)?.getShortName() : ``;
-    }
-
-    public delegatedMergedIntoName(entry: EntitledUsersTableEntry): string {
-        return entry.delegation_user_merged_into_id
-            ? this.controller.getViewModel(entry.delegation_user_merged_into_id)?.getShortName()
-            : ``;
-    }
-
     private _entitledUsersObservable!: Observable<EntitledUsersTableEntry[]>;
 
     @Input()
@@ -54,7 +44,14 @@ export class EntitledUsersTableComponent {
 
     public readonly permission = Permission;
 
-    public filterPropsEntitledUsersTable = [`user.full_name`, `vote_delegated_to.full_name`, `voted_verbose`];
+    public filterPropsEntitledUsersTable = [
+        `user.full_name`,
+        `vote_delegated_to.full_name`,
+        `user_merged_into.full_name`,
+        `delegation_user_merged_into.full_name`,
+        `voted_verbose`
+    ];
+
     public constructor(
         private controller: ParticipantControllerService,
         public filter: EntitledUsersListFilterService
