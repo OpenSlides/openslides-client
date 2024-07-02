@@ -136,11 +136,15 @@
     @extend %vote-grid-base;
     grid-template-areas: 'yes no abstain';
     grid-template-columns: auto-fit auto-fit auto-fit;
-    @media (max-width: 325px) or ((max-width: 1380px) and (min-width: 960.1px)) {
+    @media (max-width: 296px) or ((max-width: 1164px) and (min-width: 959.1px)) {
         grid-template-areas: 'yes' 'no' 'abstain';
         grid-template-columns: auto-fit;
     }
-    @media ((max-width: 960px) and (min-width: 325.1px)) {
+    @media ((max-width: 416px) and (min-width: 296.1px)) or ((max-width: 1564px) and (min-width: 1164.1px)) {
+        grid-template-areas: 'yes no' 'abstain .';
+        grid-template-columns: auto-fit auto-fit;
+    }
+    @media ((max-width: 959px) and (min-width: 416.1px)) {
         grid-template-areas: 'yes no abstain';
         grid-template-columns: auto-fit auto-fit auto-fit;
     }
