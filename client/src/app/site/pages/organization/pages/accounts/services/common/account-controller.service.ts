@@ -96,4 +96,8 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
     public import(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
         return this.repo.accountImport(payload);
     }
+
+    public mergeTogether(payload: { id: number; user_ids: number[] }[]): Action<void> {
+        return this.repo.mergeTogether(payload);
+    }
 }

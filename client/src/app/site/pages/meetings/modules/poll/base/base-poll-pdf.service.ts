@@ -626,17 +626,26 @@ export abstract class BasePollPdfService {
         for (const date of usersData.sort((entryA, entryB) =>
             entryA.user?.getName().localeCompare(entryB.user?.getName())
         )) {
+            const name = date.user_merged_into_id
+                ? `${this.translate.instant(`Old account of`)} ` +
+                  this.getUserNameForExport(this.userRepo.getViewModel(date.user_merged_into_id))
+                : this.getUserNameForExport(date.user);
+            let represented = ``;
+            if (date.vote_delegated_to_user_id && !date.delegation_user_merged_into_id) {
+                represented =
+                    `\n${this.translate.instant(`represented by`)} ` +
+                    this.getUserNameForExport(date.vote_delegated_to);
+            } else if (date.vote_delegated_to_user_id && date.delegation_user_merged_into_id) {
+                represented =
+                    `\n${this.translate.instant(`represented by old account of`)} ` +
+                    this.getUserNameForExport(this.userRepo.getViewModel(date.delegation_user_merged_into_id));
+            }
             const tableLine = [
                 {
                     text: index
                 },
                 {
-                    text:
-                        this.getUserNameForExport(date.user) +
-                        (date.vote_delegated_to
-                            ? `\n${this.translate.instant(`represented by`)} ` +
-                              this.getUserNameForExport(date.vote_delegated_to)
-                            : ``)
+                    text: name + represented
                 },
                 {
                     text: this.translate.instant(date.voted ? `Yes` : `No`)

@@ -1,0 +1,27 @@
+.error-color {
+    color: red;
+}
+
+.mat-column-button {
+    width: 60px;
+}
+
+.nameCell {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 620px;
+}
+
+.iconCell {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100px;
+}
+
+.meta-info {
+    font-size: 12px;
+}
+
+.crossed-out {
+    text-decoration: line-through;
+}

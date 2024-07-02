@@ -70,13 +70,14 @@ export class HistoryPresenterService {
             .flatMap(positions => getUniqueItems(positions))
             .sort((positionA, positionB) => positionB.timestamp - positionA.timestamp)
             .map(position => {
+                const userView = this.userRepo.getViewModel(position.user_id);
                 return new HistoryPosition({
                     ...position,
                     information: Array.isArray(position.information)
                         ? position.information
                         : position?.information[fqid],
                     fqid,
-                    user: this.userRepo.getViewModel(position.user_id)?.getFullName()
+                    user: userView?.getFullName() ? userView.getFullName() : `user/${position.user_id}`
                 });
             });
     }

@@ -177,6 +177,10 @@
                 <mat-icon>block</mat-icon>
                 <span>{{ 'Enable/disable accounts' | translate }} ...</span>
             </button>
+            <button mat-menu-item [disabled]="selectedRows.length < 2" (click)="mergeUsersTogether()">
+                <mat-icon>merge</mat-icon>
+                <span>{{ 'Merge users together' | translate }} ...</span>
+            </button>
         </os-user-multiselect-actions>
     </div>
 </mat-menu>

@@ -74,6 +74,12 @@ export class IconContainerComponent {
     public iconTooltipPosition: TooltipPosition = `below`;
 
     /**
+     * Optional string for tooltip class
+     */
+    @Input()
+    public iconTooltipClass = ``;
+
+    /**
      * Uses a css class for nowrap
      */
     @Input()

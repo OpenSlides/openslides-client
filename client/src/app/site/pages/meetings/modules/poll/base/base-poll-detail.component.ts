@@ -230,6 +230,12 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
             if (entry.vote_delegated_to_user_id) {
                 userIds.add(entry.vote_delegated_to_user_id);
             }
+            if (entry.user_merged_into_id) {
+                userIds.add(entry.user_merged_into_id);
+            }
+            if (entry.delegation_user_merged_into_id) {
+                userIds.add(entry.delegation_user_merged_into_id);
+            }
         }
         this.subscriptions.push(
             (this.entitledUsersSubscription = this.userRepo
@@ -248,6 +254,16 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                             voted_verbose: `voted:${entry.voted}`,
                             vote_delegated_to: entry.vote_delegated_to_user_id
                                 ? users.find(user => user.id === entry.vote_delegated_to_user_id)
+                                : null,
+                            user_merged_into: entry.user_merged_into_id
+                                ? `${this.translate.instant(`Old account of`)} ${users
+                                      .find(user => user.id === entry.user_merged_into_id)
+                                      ?.getShortName()}`
+                                : null,
+                            delegation_user_merged_into: entry.delegation_user_merged_into_id
+                                ? `(${this.translate.instant(`represented by old account of`)}) ${users
+                                      .find(user => user.id === entry.delegation_user_merged_into_id)
+                                      ?.getShortName()}`
                                 : null
                         });
                     }
