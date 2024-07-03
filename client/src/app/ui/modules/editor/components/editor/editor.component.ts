@@ -42,6 +42,7 @@ import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
+import ImageResize from 'tiptap-extension-resize-image';
 
 import {
     EditorEmbedDialogComponent,
@@ -168,6 +169,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 Image.configure({
                     inline: true
                 }),
+                ImageResize,
                 ListItem,
                 OrderedList,
                 Paragraph,
