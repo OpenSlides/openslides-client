@@ -3,6 +3,7 @@ $font-family: OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif;
 $default-typography: mat.define-typography-config(
     $font-family: $font-family,
     $subtitle-2: mat.define-typography-level(15px, 15px, 400),
+    $body-2: mat.define-typography-level(14px, 24px, 400, $letter-spacing: normal),
     $body-1: mat.define-typography-level(15px, 15px, 400),
     $button: mat.define-typography-level(14px, 14px, 500, $letter-spacing: normal),
 );

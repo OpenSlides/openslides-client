@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 
 @import '../color-palettes/os-dynamic-palette';
+@import './typography.scss';
 
 $openslides-primary: mat.define-palette($dynamic-theme-primary);
 $openslides-accent: mat.define-palette($dynamic-theme-accent);
@@ -12,6 +13,7 @@ $openslides-light-theme: mat.define-light-theme((
         accent: $openslides-accent,
         warn: $openslides-warn,
     ),
+    typography: $default-typography
 ));
 
 $os-outline: mat.get-color-from-palette(mat.$grey-palette, 300);
