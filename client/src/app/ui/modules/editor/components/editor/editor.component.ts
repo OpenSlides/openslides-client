@@ -169,7 +169,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 Image.configure({
                     inline: true
                 }),
-                ImageResize,
+                ImageResize.configure({
+                    inline: true
+                }),
                 ListItem,
                 OrderedList,
                 Paragraph,
