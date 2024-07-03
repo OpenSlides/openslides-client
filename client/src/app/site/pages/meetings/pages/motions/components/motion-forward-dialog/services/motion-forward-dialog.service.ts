@@ -99,6 +99,7 @@ export class MotionForwardDialogService extends BaseDialogService<
                     toMeetingIds,
                     dialogData.useOriginalSubmitter,
                     dialogData.useOriginalNumber,
+                    dialogData.useOriginalVersion,
                     ...forwardMotions
                 );
                 this.snackbar.open(this.createForwardingSuccessMessage(motions.length, result), `Ok`);

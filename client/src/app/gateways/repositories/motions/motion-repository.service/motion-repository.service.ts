@@ -60,6 +60,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         meetingIds: Id[],
         useOriginalSubmitter: boolean,
         useOriginalNumber: boolean,
+        useOriginalVersion: boolean,
         ...motions: any[]
     ): Promise<{ success: number; partial: number }> {
         const payloads: any[][] = [];
@@ -70,6 +71,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
                         meeting_id: id,
                         use_original_submitter: useOriginalSubmitter,
                         use_original_number: useOriginalNumber,
+                        with_amendments: useOriginalVersion,
                         ...motion
                     };
                 })
