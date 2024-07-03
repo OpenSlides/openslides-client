@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
@@ -8,7 +8,8 @@ export type AccountMergeDialogAnswer = number | null;
 @Component({
     selector: `os-account-merge-dialog`,
     templateUrl: `./account-merge-dialog.component.html`,
-    styleUrls: [`./account-merge-dialog.component.scss`]
+    styleUrls: [`./account-merge-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountMergeDialogComponent {
     public constructor(

@@ -20,7 +20,7 @@
                         <!-- Delegation -->
                         <div *ngIf="entry.vote_delegated_to_user_id && !entry.delegation_user_merged_into_id">
                             <span>
-                                ({{ 'represented by' | translate }} {{ entry.vote_delegated_to.getShortName().trim() }})
+                                ({{ 'represented by' | translate }} {{ entry.vote_delegated_to.getShortName() }})
                             </span>
                         </div>
                         <div *ngIf="entry.vote_delegated_to_user_id && entry.delegation_user_merged_into_id">
@@ -36,8 +36,7 @@
                         <!-- Delegation -->
                         <div *ngIf="entry.vote_delegated_to_user_id && !entry.delegation_user_merged_into_id">
                             <span>
-                                ({{ 'represented by' | translate }}
-                                {{ entry.vote_delegated_to?.getShortName().trim() }})
+                                ({{ 'represented by' | translate }} {{ entry.vote_delegated_to?.getShortName() }})
                             </span>
                         </div>
                         <div *ngIf="entry.vote_delegated_to_user_id && entry.delegation_user_merged_into_id">
