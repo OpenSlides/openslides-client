@@ -151,6 +151,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
                 }
             })
         );
+        this.cd.markForCheck();
     }
 
     /**
