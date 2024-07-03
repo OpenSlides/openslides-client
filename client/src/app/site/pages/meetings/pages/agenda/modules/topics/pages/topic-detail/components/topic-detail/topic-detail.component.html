@@ -56,7 +56,7 @@
                 <div>
                     <span *ngIf="topic.text">
                         <!-- Render topic text as HTML -->
-                        <div class="underlined-links" [innerHTML]="topic.text | trust : 'html'"></div>
+                        <div class="detail-view" [innerHTML]="topic.text | trust : 'html'"></div>
                     </span>
                 </div>
 
@@ -73,7 +73,7 @@
                 </div>
             </ng-container>
 
-            <form *ngIf="editTopic && topicForm" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
+            <form *ngIf="editTopic && topicForm" [formGroup]="topicForm" (keydown)="onKeyDown($event)" tabindex="-1">
                 <div>
                     <mat-form-field>
                         <mat-label>{{ 'Title' | translate }}</mat-label>

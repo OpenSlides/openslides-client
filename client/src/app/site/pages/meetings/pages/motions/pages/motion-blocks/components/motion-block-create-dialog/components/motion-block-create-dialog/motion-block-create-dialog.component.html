@@ -1,6 +1,6 @@
 <!-- Template for new motion block dialog -->
 <h1 mat-dialog-title>{{ 'New motion block' | translate }}</h1>
-<form [formGroup]="createBlockForm" (keydown)="onKeyDown($event)">
+<form [formGroup]="createBlockForm" (keydown)="onKeyDown($event)" tabindex="-1">
     <mat-dialog-content>
         <!-- Title -->
         <mat-form-field>

@@ -19,6 +19,7 @@ import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/p
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
+import { CustomIconModule } from 'src/app/ui/modules/custom-icon';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules';
@@ -43,6 +44,7 @@ import { TopicPollServiceModule } from './services/topic-poll-service.module';
         TopicPollFormComponent
     ],
     imports: [
+        CustomIconModule,
         CommonModule,
         CommaSeparatedListingModule,
         TopicPollServiceModule,

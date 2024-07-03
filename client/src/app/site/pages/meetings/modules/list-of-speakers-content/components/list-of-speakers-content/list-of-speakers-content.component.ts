@@ -69,11 +69,18 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public get showInterposedQuestions(): Observable<boolean> {
-        return this.meetingSettingService.get(`list_of_speakers_enable_interposed_question`);
+        return this.meetingSettingsService.get(`list_of_speakers_enable_interposed_question`);
     }
 
     public get showPointOfOrders(): boolean {
         return this.pointOfOrderEnabled && this.canAddDueToPresence;
+    }
+
+    public get addSelf(): boolean {
+        return (
+            this.permission.listOfSpeakersCanBeSpeaker &&
+            !(this.voteDelegationEnabled && this.forbidDelegatorToAddSelf && this.operator.user.isVoteRightDelegated)
+        );
     }
 
     public get showSpeakerNoteForEveryoneObservable(): Observable<boolean> {
@@ -139,6 +146,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public enableMultipleParticipants = false;
 
     public pointOfOrderEnabled = false;
+
+    private voteDelegationEnabled = false;
+
+    private forbidDelegatorToAddSelf = false;
 
     public structureLevelCountdownEnabled = false;
 
@@ -521,15 +532,21 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             }),
             this.meetingSettingsService.get(`list_of_speakers_default_structure_level_time`).subscribe(time => {
                 this.structureLevelCountdownEnabled = time > 0;
+            }),
+            this.meetingSettingsService.get(`users_enable_vote_delegations`).subscribe(enabled => {
+                this.voteDelegationEnabled = enabled;
+            }),
+            this.meetingSettingsService.get(`users_forbid_delegator_in_list_of_speakers`).subscribe(enabled => {
+                this.forbidDelegatorToAddSelf = enabled;
             })
         );
     }
 
-    private findOperatorSpeaker(pointOfOrder?: boolean): ViewSpeaker | undefined {
-        return this.waitingSpeakers
-            .sort((a, b) => b.id - a.id)
-            .find(
-                speaker => speaker.user_id === this.operator.operatorId && !!speaker.point_of_order === !!pointOfOrder
-            );
+    private findOperatorSpeaker(pointOfOrder?: boolean): ViewSpeaker | null {
+        const opSpeakers = this.waitingSpeakers.filter(
+            speaker => speaker.user_id === this.operator.operatorId && !!speaker.point_of_order === !!pointOfOrder
+        );
+
+        return opSpeakers.reduce((acc, curr) => (curr?.weight > acc?.weight ? curr : opSpeakers[0]), null);
     }
 }

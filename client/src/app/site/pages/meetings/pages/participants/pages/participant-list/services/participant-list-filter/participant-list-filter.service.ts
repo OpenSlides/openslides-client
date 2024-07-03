@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
@@ -70,84 +71,100 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 property: `isPresentInMeeting`,
                 label: `Presence`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Is present`) },
-                    { condition: [false, null], label: this.translate.instant(`Is not present`) }
+                    { condition: true, label: `Is present` },
+                    { condition: [false, null], label: `Is not present` }
                 ]
             },
             {
                 property: `is_active`,
-                label: this.translate.instant(`Active`),
+                label: `Active`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Is active`) },
-                    { condition: [false, null], label: this.translate.instant(`Is not active`) }
+                    { condition: true, label: `Is active` },
+                    { condition: [false, null], label: `Is not active` }
                 ]
             },
             {
                 property: `is_physical_person`,
-                label: this.translate.instant(`Committee`),
+                label: `Committee`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Is not a committee`) },
-                    { condition: [false, null], label: this.translate.instant(`Is a committee`) }
+                    { condition: true, label: `Is not a committee` },
+                    { condition: [false, null], label: `Is a committee` }
                 ]
             },
             {
                 property: `isLastEmailSent`,
-                label: this.translate.instant(`Last email sent`),
+                label: `Last email sent`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Got an email`) },
-                    { condition: [false, null], label: this.translate.instant(`Didn't get an email`) }
+                    { condition: true, label: `Got an email` },
+                    { condition: [false, null], label: `Didn't get an email` }
+                ]
+            },
+            {
+                property: `hasEmail`,
+                label: `Email address`,
+                options: [
+                    { condition: true, label: `Has an email address` },
+                    { condition: [false, null], label: `Has no email address` }
+                ]
+            },
+            {
+                property: `hasMemberNumber`,
+                label: `Member number`,
+                options: [
+                    { condition: true, label: `Has a member number` },
+                    { condition: [false, null], label: `Has no member number` }
                 ]
             },
             {
                 property: `isLastLogin`,
-                label: this.translate.instant(`Last login`),
+                label: `Last login`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Has logged in`) },
-                    { condition: [false, null], label: this.translate.instant(`Has not logged in yet`) }
+                    { condition: true, label: `Has logged in` },
+                    { condition: [false, null], label: `Has not logged in yet` }
                 ]
             },
             {
                 property: `isVoteWeightOne`,
-                label: this.translate.instant(`Vote weight`),
+                label: `Vote weight`,
                 options: [
-                    { condition: [false, null], label: this.translate.instant(`Has changed vote weight`) },
-                    { condition: true, label: this.translate.instant(`Has unchanged vote weight`) }
+                    { condition: [false, null], label: `Has changed vote weight` },
+                    { condition: true, label: `Has unchanged vote weight` }
                 ]
             },
             {
                 property: `gender`,
-                label: this.translate.instant(`Gender`),
+                label: `Gender`,
                 options: [
-                    { condition: GENDER_FITLERABLE[0], label: this.translate.instant(GENDERS[0]) },
-                    { condition: GENDER_FITLERABLE[1], label: this.translate.instant(GENDERS[1]) },
-                    { condition: GENDER_FITLERABLE[2], label: this.translate.instant(GENDERS[2]) },
-                    { condition: GENDER_FITLERABLE[3], label: this.translate.instant(GENDERS[3]) },
-                    { condition: null, label: this.translate.instant(`not specified`) }
+                    { condition: GENDER_FITLERABLE[0], label: GENDERS[0] },
+                    { condition: GENDER_FITLERABLE[1], label: GENDERS[1] },
+                    { condition: GENDER_FITLERABLE[2], label: GENDERS[2] },
+                    { condition: GENDER_FITLERABLE[3], label: GENDERS[3] },
+                    { condition: null, label: `not specified` }
                 ]
             },
             {
                 property: `hasSamlId`,
-                label: this.translate.instant(`SSO`),
+                label: `SSO`,
                 options: [
-                    { condition: true, label: this.translate.instant(`Has SSO identification`) },
-                    { condition: [false, null], label: this.translate.instant(`Has no SSO identification`) }
+                    { condition: true, label: _(`Has SSO identification`) },
+                    { condition: [false, null], label: _(`Has no SSO identification`) }
                 ]
             },
             {
                 property: `delegationType`,
-                label: this.translate.instant(`Delegation of vote`),
+                label: _(`Delegation of vote`),
                 options: [
                     {
                         condition: DelegationType.Transferred,
-                        label: this.translate.instant(`Voting right received from (principals)`)
+                        label: _(`Principals`)
                     },
                     {
                         condition: DelegationType.Received,
-                        label: this.translate.instant(`Voting right delegated to (proxy)`)
+                        label: _(`Proxy holders`)
                     },
                     {
                         condition: DelegationType.Neither,
-                        label: this.translate.instant(`No delegation of vote`)
+                        label: _(`No delegation of vote`)
                     }
                 ]
             }
@@ -177,6 +194,18 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             },
             {
                 property: `hasSamlId`,
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanSeeSensitiveData);
+                }
+            },
+            {
+                property: `hasEmail`,
+                shouldHideFn: (): boolean => {
+                    return !this.operator.hasPerms(Permission.userCanSeeSensitiveData);
+                }
+            },
+            {
+                property: `hasMemberNumber`,
                 shouldHideFn: (): boolean => {
                     return !this.operator.hasPerms(Permission.userCanSeeSensitiveData);
                 }

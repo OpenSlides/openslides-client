@@ -81,7 +81,6 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public working_group_speaker_ids: Id[]; // motion_working_group_speaker/motion_id;
     public poll_ids!: Id[]; // (motion_poll/motion_id)[];
     public change_recommendation_ids!: Id[]; // (motion_change_recommendation/motion_id)[];
-    public statute_paragraph_id!: Id; // motion_statute_paragraph/motion_ids;
     public comment_ids!: Id[]; // (motion_comment/motion_id)[];
 
     public get firstLine(): number {
@@ -97,7 +96,9 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     }
 
     public amendment_paragraph_text(paragraphNumber: number): string | null {
-        return this.amendment_paragraphs[paragraphNumber] ?? null;
+        return this.amendment_paragraphs && this.amendment_paragraphs[paragraphNumber]
+            ? this.amendment_paragraphs[paragraphNumber]
+            : null;
     }
 
     public static readonly REQUESTABLE_FIELDS: (keyof Motion)[] = [
@@ -143,7 +144,6 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `working_group_speaker_ids`,
         `poll_ids`,
         `change_recommendation_ids`,
-        `statute_paragraph_id`,
         `comment_ids`,
         `agenda_item_id`,
         `list_of_speakers_id`,

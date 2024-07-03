@@ -22,7 +22,7 @@ import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
 import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
 import { HasPolls, VotingTextContext } from '../../polls';
 import { DiffLinesInParagraph } from '../definitions';
-import { ViewMotionChangeRecommendation, ViewMotionStatuteParagraph, ViewMotionWorkflow } from '../modules';
+import { ViewMotionChangeRecommendation, ViewMotionWorkflow } from '../modules';
 import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
 import { ViewMotionComment } from '../modules/comments/view-models/view-motion-comment';
 import { ViewMotionCommentSection } from '../modules/comments/view-models/view-motion-comment-section';
@@ -232,11 +232,11 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return status;
     }
 
-    public get supporter_users(): ViewUser[] {
+    public get supporters(): ViewUser[] {
         return this.supporter_meeting_users?.flatMap(user => user.user ?? []);
     }
 
-    public get supporter_user_ids(): number[] {
+    public get supporter_ids(): number[] {
         return this.supporter_meeting_users?.flatMap(user => user.user_id ?? []);
     }
 
@@ -324,15 +324,15 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return !!(this.tags && this.tags.length > 0);
     }
 
-    public isStatuteAmendment(): boolean {
-        return !!this.statute_paragraph_id;
-    }
-
     /**
      * Determine if the motion is in its final workflow state
      */
     public isInFinalState(): boolean {
         return this.state ? this.state.isFinalState : false;
+    }
+
+    public isAmendment(): boolean {
+        return this.lead_motion_id && this.lead_motion_id > 0;
     }
 
     /**
@@ -369,7 +369,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public getProjectiondefault(): ProjectiondefaultValue {
-        if (this.isParagraphBasedAmendment()) {
+        if (this.isAmendment()) {
             return PROJECTIONDEFAULT.amendment;
         } else {
             return PROJECTIONDEFAULT.motion;
@@ -399,7 +399,6 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     editors: ViewMotionEditor[];
     working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     change_recommendations: ViewMotionChangeRecommendation[];
-    statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];
 }
 

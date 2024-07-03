@@ -83,7 +83,9 @@ export class SpeakingTimesComponent implements OnDestroy {
                         )
                     )
                     .subscribe(speaker => {
-                        this.updateSpeakingTime(speaker.structure_level_list_of_speakers);
+                        if (speaker) {
+                            this.updateSpeakingTime(speaker.structure_level_list_of_speakers);
+                        }
                     })
             );
         }
@@ -226,7 +228,7 @@ export class SpeakingTimesComponent implements OnDestroy {
         }
     }
 
-    private updateSpeakingTime(speakingTime: ViewStructureLevelListOfSpeakers) {
+    private updateSpeakingTime(speakingTime: ViewStructureLevelListOfSpeakers): void {
         if (speakingTime) {
             if (speakingTime.isInactive) {
                 this.structureLevels.delete(speakingTime.id);

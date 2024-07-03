@@ -64,8 +64,8 @@ export abstract class BaseAgendaItemContentObjectRepository<
      */
     protected override createViewModel(model: M): V {
         const viewModel = super.createViewModel(model);
-        viewModel.getAgendaListTitle = () => this.getAgendaListTitle(viewModel);
-        viewModel.getAgendaSlideTitle = () => this.getAgendaSlideTitle(viewModel);
+        viewModel.getAgendaListTitle = (): AgendaListTitle => this.getAgendaListTitle(viewModel);
+        viewModel.getAgendaSlideTitle = (): string => this.getAgendaSlideTitle(viewModel);
         return viewModel;
     }
 }

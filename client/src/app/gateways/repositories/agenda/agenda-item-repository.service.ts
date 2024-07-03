@@ -25,7 +25,7 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
         this.setSortFunction((a, b) => a.tree_weight - b.tree_weight); // leave the sorting as it is
     }
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Items` : `Item`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Items` : `Item`);
 
     private getAgendaTitle(viewAgendaItem: ViewAgendaItem): AgendaListTitle {
         if (viewAgendaItem.content_object) {
@@ -36,9 +36,9 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
         return { title: `-` }; // Default: Clarify which is the default
     }
 
-    public getTitle = (viewAgendaItem: ViewAgendaItem) => this.getAgendaTitle(viewAgendaItem).title;
+    public getTitle = (viewAgendaItem: ViewAgendaItem): string => this.getAgendaTitle(viewAgendaItem).title;
 
-    public getSubtitle = (viewAgendaItem: ViewAgendaItem) => this.getAgendaTitle(viewAgendaItem).subtitle;
+    public getSubtitle = (viewAgendaItem: ViewAgendaItem): string => this.getAgendaTitle(viewAgendaItem).subtitle;
 
     public getItemNumberPrefix(viewModel: HasAgendaItem): string {
         return viewModel.agenda_item && viewModel.agenda_item.item_number
@@ -128,7 +128,7 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
      */
     protected override createViewModel(model: AgendaItem): ViewAgendaItem {
         const viewModel = super.createViewModel(model);
-        viewModel.getSubtitle = () => this.getSubtitle(viewModel) as string;
+        viewModel.getSubtitle = (): string => this.getSubtitle(viewModel) as string;
         return viewModel;
     }
 

@@ -21,7 +21,7 @@ export class MotionDetailViewOriginUrlService {
             });
     }
 
-    public getPreviousUrl() {
+    public getPreviousUrl(): string {
         return this.previousUrl;
     }
 }

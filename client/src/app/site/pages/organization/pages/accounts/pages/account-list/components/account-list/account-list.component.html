@@ -1,4 +1,6 @@
 <os-head-bar
+    [nav]="meeting === null"
+    [goBack]="meeting !== null"
     [hasMainButton]="true"
     [mainActionTooltip]="'New account' | translate"
     (mainEvent)="createNewMember()"
@@ -6,7 +8,10 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ 'Accounts' | translate }}</h2>
+        <h2>
+            {{ 'Accounts' | translate }}
+            <span *ngIf="meeting | async as m">({{ m.name }})</span>
+        </h2>
     </div>
 
     <!-- Menu -->
@@ -35,7 +40,7 @@
 >
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
+        <a class="detail-link" [routerLink]="['/accounts', user.id]" *ngIf="!isMultiSelect"></a>
         <div class="flex-vertical-center overflow-hidden">
             <div class="nameCell overflow-hidden">
                 <div class="title-line title-box">
@@ -63,7 +68,8 @@
                 </div>
                 <div class="meta-info user-subtitle ellipsis-overflow">
                     {{ user.saml_id || user.username }}
-                    <ng-container *ngIf="user.email">· {{ user.email }}</ng-container>
+                    <ng-container *ngIf="user.email">&middot; {{ user.email }}&nbsp;</ng-container>
+                    <ng-container *ngIf="user.member_number">&middot; {{ user.member_number }}</ng-container>
                 </div>
             </div>
         </div>
@@ -119,11 +125,11 @@
 
 <mat-menu #singleMenu="matMenu">
     <ng-template matMenuContent let-member="member">
-        <a mat-menu-item [routerLink]="[member.id, 'edit']">
+        <a mat-menu-item [routerLink]="['/accounts', member.id, 'edit']">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <a mat-menu-item [routerLink]="[member.id, 'meetings']" *osOmlPerms="OML.can_manage_users">
+        <a mat-menu-item [routerLink]="['/accounts', member.id, 'meetings']" *osOmlPerms="OML.can_manage_users">
             <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </a>
@@ -146,7 +152,7 @@
                 <span>{{ 'Export as CSV' | translate }}</span>
             </button>
 
-            <button mat-menu-item routerLink="import">
+            <button mat-menu-item routerLink="/accounts/import">
                 <mat-icon>cloud_upload</mat-icon>
                 <span>{{ 'Import' | translate }}</span>
             </button>

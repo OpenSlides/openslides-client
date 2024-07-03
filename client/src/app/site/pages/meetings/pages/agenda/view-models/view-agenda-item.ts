@@ -33,7 +33,12 @@ export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
         return type ? type.name : ``;
     }
 
-    public override getProjectorTitle = (_projection: Projection) => {
+    public override getProjectorTitle = (
+        _projection: Projection
+    ): {
+        title: string;
+        subtitle: string;
+    } => {
         const subtitle = this.item.comment || undefined;
         return { title: this.getTitle(), subtitle };
     };

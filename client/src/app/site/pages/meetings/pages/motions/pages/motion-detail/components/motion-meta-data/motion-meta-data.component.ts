@@ -2,10 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { Selectable } from 'src/app/domain/interfaces';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
+import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presenter/get-forwarding-committees-presenter.service';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -82,7 +84,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
     ];
 
-    public motionTransformFn = (value: ViewMotion) => `[${value.fqid}]`;
+    public motionTransformFn = (value: ViewMotion): string => `[${value.fqid}]`;
 
     /**
      * All amendments to this motion
@@ -110,6 +112,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this._referencedMotions;
     }
 
+    public loadForwardingCommittees: () => Promise<Selectable[]>;
+
     private _referencingMotions: ViewMotion[];
 
     private _referencedMotions: ViewMotion[];
@@ -136,13 +140,17 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         public motionSubmitterRepo: MotionSubmitterControllerService,
         public motionEditorRepo: MotionEditorControllerService,
         public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService,
-        private participantSort: ParticipantListSortService
+        private participantSort: ParticipantListSortService,
+        private presenter: GetForwardingCommitteesPresenterService
     ) {
         super();
 
-        if (operator.hasPerms(Permission.motionCanManage)) {
+        if (operator.hasPerms(Permission.motionCanManageMetadata)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
                 this._forwardingAvailable = forwardingAvailable;
+                this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
+                    return (await this.checkPresenter()) as Selectable[];
+                };
             });
         } else {
             this._forwardingAvailable = false;
@@ -328,7 +336,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     private async updateSupportersSubject(): Promise<void> {
-        this._supportersSubject.next(await this.participantSort.sort(this.motion.supporter_users));
+        this._supportersSubject.next(await this.participantSort.sort(this.motion.supporters));
     }
 
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
@@ -345,8 +353,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                 .getViewModelObservable(this.motion.id)
                 .pipe(
                     map(motion => [
-                        motion.referenced_in_motion_recommendation_extensions,
-                        motion.recommendation_extension_references as ViewMotion[]
+                        motion?.referenced_in_motion_recommendation_extensions,
+                        motion?.recommendation_extension_references as ViewMotion[]
                     ]),
                     distinctUntilChanged((p, c) => [...Array(2).keys()].every(i => p[i].equals(c[i]))),
                     map(arr =>
@@ -366,9 +374,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      */
     private setupRecommender(): void {
         if (this.motion) {
-            const configKey: keyof Settings = this.motion.isStatuteAmendment()
-                ? `motions_statute_recommendations_by`
-                : `motions_recommendations_by`;
+            const configKey: keyof Settings = `motions_recommendations_by`;
             if (this.recommenderSubscription) {
                 this.recommenderSubscription.unsubscribe();
             }
@@ -376,5 +382,25 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                 this.recommender = recommender;
             });
         }
+    }
+
+    private async checkPresenter(): Promise<(Selectable & { name: string; toString: any })[]> {
+        const meetingId = this.activeMeetingService.meetingId;
+        const committees =
+            this.operator.hasPerms(Permission.motionCanManageMetadata) && !!meetingId
+                ? await this.presenter.call({ meeting_id: meetingId })
+                : [];
+        const forwardingCommittees: (Selectable & { name: string; toString: any })[] = [];
+        for (let n = 0; n < committees.length; n++) {
+            forwardingCommittees.push({
+                id: n + 1,
+                name: committees[n],
+                getTitle: () => committees[n],
+                getListTitle: () => ``,
+                toString: () => committees[n]
+            });
+        }
+
+        return forwardingCommittees;
     }
 }

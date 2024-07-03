@@ -10,6 +10,8 @@
             additionalInputField="additional_submitter"
             additionalInputLabel="{{ 'Extension' | translate }}"
             [additionalInputValue]="motion?.additional_submitter"
+            secondSelectorLabel="{{ 'Committees' | translate }}"
+            [loadSecondSelectorValues]="loadForwardingCommittees"
         ></os-motion-manage-motion-meeting-users>
     </div>
 </div>
@@ -43,7 +45,7 @@
     </button>
     <!-- show supporters (TODO: open in dialog) -->
     <button type="button" *ngIf="motion.hasSupporters()" (click)="openSupportersDialog()" mat-button>
-        {{ motion.supporter_users.length }} {{ 'supporters' | translate }}
+        {{ motion.supporters.length }} {{ 'supporters' | translate }}
     </button>
     <p *ngIf="showSupporters" class="supporters">
         <os-comma-separated-listing [list]="supportersObservable | async">

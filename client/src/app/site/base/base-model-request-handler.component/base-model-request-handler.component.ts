@@ -8,12 +8,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { SubscribeToConfig } from '../../services/model-request.service';
 import { OpenSlidesRouterService } from '../../services/openslides-router.service';
 
-export interface ModelRequestConfig extends SubscribeToConfig {
-    /**
-     * If `true` it fires a request after a timeout. Defaults to `true`.
-     */
-    isDelayed?: boolean;
-}
+export interface ModelRequestConfig extends SubscribeToConfig {}
 
 interface HidingConfig {
     /**
@@ -98,7 +93,12 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
             if (!this._openedSubscriptions.includes(subscriptionName)) {
                 this._openedSubscriptions.push(subscriptionName);
                 const observable = this.createHideWhenObservable(hideWhen || {}, config.hideWhen);
-                await this.modelRequestService.subscribeTo({ subscriptionName, modelRequest, hideWhen: observable });
+                await this.modelRequestService.subscribeTo({
+                    subscriptionName,
+                    modelRequest,
+                    hideWhen: observable,
+                    unusedWhen: this._destroyed.pipe(startWith(false))
+                });
             }
         }
     }

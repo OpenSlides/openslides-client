@@ -43,16 +43,14 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     }
 
     public update(
-        update?: NullablePartial<Motion & { workflow_id: Id; supporter_user_ids: Id[] }>,
+        update?: NullablePartial<Motion & { workflow_id: Id; supporter_ids: Id[] }>,
         ...motions: (Motion & { workflow_id: Id })[]
     ): Action<void> {
-        if (update.supporter_user_ids) {
+        if (update.supporter_ids) {
             update.supporter_meeting_user_ids = (update.supporter_meeting_user_ids ?? []).concat(
-                update.supporter_user_ids
-                    .map(id => this.userRepo.getViewModel(id)?.getMeetingUser()?.id)
-                    .filter(id => !!id)
+                update.supporter_ids.map(id => this.userRepo.getViewModel(id)?.getMeetingUser()?.id).filter(id => !!id)
             );
-            delete update.supporter_user_ids;
+            delete update.supporter_ids;
         }
         if (update) {
             return this.repo.update(update, ...motions);

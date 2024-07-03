@@ -47,8 +47,8 @@ export abstract class BaseListOfSpeakersContentObjectRepository<
      */
     protected override createViewModel(model: M): V {
         const viewModel = super.createViewModel(model);
-        viewModel.getListOfSpeakersTitle = () => this.getListOfSpeakersTitle(viewModel);
-        viewModel.getListOfSpeakersSlideTitle = () => this.getListOfSpeakersSlideTitle(viewModel);
+        viewModel.getListOfSpeakersTitle = (): string => this.getListOfSpeakersTitle(viewModel);
+        viewModel.getListOfSpeakersSlideTitle = (): string => this.getListOfSpeakersSlideTitle(viewModel);
         return viewModel;
     }
 }
