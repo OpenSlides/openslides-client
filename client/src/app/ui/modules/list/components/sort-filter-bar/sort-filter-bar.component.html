@@ -122,7 +122,7 @@
 
 <!-- non-mobile sorting menu -->
 <mat-menu #menu>
-    <div *ngIf="hasSorting">
+    <ng-container *ngIf="hasSorting">
         <!-- <mat-list-item> -->
         <button mat-menu-item *ngIf="defaultOption" (click)="sortOption = defaultOption">
             <mat-icon>{{ getSortIcon(defaultOption) }}</mat-icon>
@@ -137,5 +137,5 @@
                 <span>{{ sortService.getSortLabel(option) | translate }}</span>
             </button>
         </mat-list-item>
-    </div>
+    </ng-container>
 </mat-menu>
