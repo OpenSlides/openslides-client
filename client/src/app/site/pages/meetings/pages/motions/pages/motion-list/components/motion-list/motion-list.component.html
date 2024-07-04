@@ -98,7 +98,7 @@
                     </span>
 
                     <span *ngIf="showSequential">
-                        <span *ngIf="motion.submitters.length">&middot;&nbsp;</span>
+                        <span *ngIf="motion.submitterNames.length">&middot;&nbsp;</span>
                         <span>{{ 'Sequential number' | translate }}</span>
                         {{ motion.sequential_number }}
                     </span>
@@ -283,12 +283,6 @@
             <button mat-menu-item routerLink="call-list">
                 <mat-icon>sort</mat-icon>
                 <span>{{ 'Call list' | translate }}</span>
-            </button>
-
-            <!-- Statutes -->
-            <button mat-menu-item routerLink="statute-paragraphs" *ngIf="statutesEnabled">
-                <mat-icon>gavel</mat-icon>
-                <span>{{ 'Statute' | translate }}</span>
             </button>
 
             <!-- Comments -->

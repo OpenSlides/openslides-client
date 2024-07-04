@@ -303,15 +303,6 @@ export class MotionSlideComponent
     }
 
     /**
-     * Returns true, if this is a statute amendment
-     *
-     * @returns {boolean}
-     */
-    public isStatuteAmendment(): boolean {
-        return !!this.data.data.base_statute;
-    }
-
-    /**
      * Returns true, if this is an paragraph-based amendment
      *
      * @returns {boolean}
@@ -425,16 +416,6 @@ export class MotionSlideComponent
             .filter((para: DiffLinesInParagraph | null) => para !== null) as DiffLinesInParagraph[];
 
         return amendmentParagraphs;
-    }
-
-    /**
-     * get the diff html from the statute amendment, as SafeHTML for [innerHTML]
-     *
-     * @returns safe html strings
-     */
-    public getFormattedStatuteAmendment(): string {
-        const diffHtml = this.diff.diff(this.data.data.base_statute.text, this.data.data.text);
-        return this.lineNumbering.insertLineBreaksWithoutNumbers(diffHtml, this.lineLength, true);
     }
 
     /**

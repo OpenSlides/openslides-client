@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { NgControl, UntypedFormGroup } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 
@@ -22,8 +22,8 @@ export class DaterangepickerComponent extends BaseDatepickerComponent {
 
     private currentValue: any;
 
-    public constructor(element: ElementRef<HTMLElement>, @Optional() @Self() ngControl: NgControl) {
-        super(element, ngControl);
+    public constructor(@Optional() @Self() ngControl: NgControl) {
+        super(ngControl);
     }
 
     protected createForm(): UntypedFormGroup {
