@@ -81,6 +81,10 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
             {
                 property: `last_login`,
                 shouldHideFn: () => !this.operator.hasPerms(Permission.userCanUpdate)
+            },
+            {
+                property: `is_locked_out`,
+                shouldHideFn: () => !this.operator.hasPerms(Permission.userCanSeeSensitiveData)
             }
         ];
     }
