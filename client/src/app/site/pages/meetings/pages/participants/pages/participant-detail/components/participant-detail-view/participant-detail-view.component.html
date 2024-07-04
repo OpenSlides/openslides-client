@@ -93,6 +93,16 @@
                     <span>{{ 'present' | translate }}</span>
                 </mat-checkbox>
             </div>
+            <!-- Locked out? -->
+            <div [formGroup]="form">
+                <mat-checkbox
+                    formControlName="is_locked_out"
+                    matTooltip="{{ 'Lock out user from this meeting.' | translate }}"
+                    matTooltipPosition="right"
+                >
+                    <span>{{ 'locked out' | translate }}</span>
+                </mat-checkbox>
+            </div>
             <div>
                 <!-- Strucuture Level -->
                 <mat-form-field
@@ -272,6 +282,14 @@
             <span>{{ (user?.isPresentInMeeting() ? 'Is present' : 'Is not present') | translate }}</span>
             <mat-icon class="margin-4">
                 {{ user!.isPresentInMeeting() ? 'check_box' : 'check_box_outline_blank' }}
+            </mat-icon>
+        </div>
+
+        <!-- Locked out? -->
+        <div *ngIf="isAllowed('seeSensitiveData')" class="flex-vertical-center margin-top-12">
+            <span>{{ (user?.isLockedOutOfMeeting() ? 'Is locked out' : 'Is not locked out') | translate }}</span>
+            <mat-icon class="margin-4">
+                {{ user!.isLockedOutOfMeeting() ? 'check_box' : 'check_box_outline_blank' }}
             </mat-icon>
         </div>
     </ng-template>

@@ -43,7 +43,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         group_ids: [``],
         vote_delegations_from_ids: [``],
         vote_delegated_to_id: [``],
-        is_present: [``]
+        is_present: [``],
+        is_locked_out: [``]
     };
 
     public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
@@ -60,6 +61,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return (controlName, user) => {
             if (controlName === `is_present` && user) {
                 return user.isPresentInMeeting();
+            }
+            if (controlName === `is_locked_out` && user) {
+                return user.isLockedOutOfMeeting();
             }
             const value = user?.[controlName as keyof ViewUser] || null;
             return typeof value === `function` ? value.bind(user)(this.activeMeetingId!) : value;
@@ -395,6 +399,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 } else {
                     await this.repo.update(payload, this.user!).resolve();
                 }
+                // TODO add the locked out action here.
             }
         } else {
             await this.repo.updateSelf(this.personalInfoFormValue, this.user!);

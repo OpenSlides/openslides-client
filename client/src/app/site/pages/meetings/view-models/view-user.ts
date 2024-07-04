@@ -104,6 +104,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.isPresentInMeeting();
     }
 
+    public get is_locked_out(): boolean {
+        return this.isLockedOutOfMeeting();
+    }
+
     public get hasMemberNumber(): boolean {
         return !!this.member_number;
     }
@@ -132,6 +136,20 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
             meetingId = this.getEnsuredActiveMeetingId();
         }
         return this.is_present_in_meeting_ids?.includes(meetingId) || false;
+    }
+
+    /**
+     * @param meetingId The meeting id. If not provided, tha active meeting id is used.
+     * If there is no active meeting, an error will be thrown.
+     * @returns if the user is present in the given meeting
+     */
+    public isLockedOutOfMeeting(meetingId?: Id): boolean {
+        if (!meetingId) {
+            meetingId = this.getEnsuredActiveMeetingId();
+        }
+        // TODO use the right field.
+        // return this.is_locked_out_of_meeting_ids?.includes(meetingId) || false;
+        return [1, 2, 3, 4, 5].includes(meetingId) || false;
     }
 
     public get hasMultipleMeetings(): boolean {
