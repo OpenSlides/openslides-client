@@ -25,9 +25,14 @@ export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid:
 export type GeneralUser = ViewUser & ViewMeetingUser;
 
 /**
- * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.
+ * Unified type name for state fields like `is_active`, `is_physical_person`, `is_present_in_meetings`
+ * and 'is_locked_out_of_meetings'.
  */
-export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person';
+export type UserStateField =
+    | 'is_active'
+    | 'is_present_in_meetings'
+    | 'is_physical_person'
+    | 'is_locked_out_of_meetings';
 
 export interface AssignMeetingsPayload {
     meeting_ids: Id[];

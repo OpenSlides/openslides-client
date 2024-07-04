@@ -27,7 +27,7 @@
     [sortService]="sortService"
     [filterProps]="filterProps"
     [multiSelect]="isMultiSelect"
-    [hiddenInMobile]="['group', 'presence']"
+    [hiddenInMobile]="['group', 'presence', 'lockedout']"
     [addBottomSpacer]="hasInteractionState | async"
     [alwaysShowMenu]="true"
     [(selectedRows)]="selectedRows"
@@ -72,6 +72,9 @@
                     account_balance
                 </mat-icon>
                 <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canSeeSensitiveData">
+                    block
+                </mat-icon>
+                <mat-icon matTooltip="{{ 'Locked out' | translate }}" *ngIf="user.is_locked_out && canSeeSensitiveData">
                     block
                 </mat-icon>
                 <mat-icon
@@ -151,15 +154,25 @@
     </div>
 
     <!-- Presence column -->
-    <div *osScrollingTableCell="'presence'; row as user; config: { width: 100 }" class="cell-slot fill">
-        <mat-checkbox
-            class="checkbox-ripple-padding"
-            (change)="setPresent(user)"
-            [checked]="isUserPresent(user)"
-            [disabled]="isPresentToggleDisabled(user)"
-        >
-            <span>{{ 'Present' | translate }}</span>
-        </mat-checkbox>
+    <div *osScrollingTableCell="'presence'; row as user; config: { width: 140 }" class="cell-slot fill">
+        <div class="icon-group">
+            <mat-checkbox
+                class="checkbox-ripple-padding"
+                (change)="setPresent(user)"
+                [checked]="isUserPresent(user)"
+                [disabled]="isPresentToggleDisabled(user)"
+            >
+                <span>{{ 'Present' | translate }}</span>
+            </mat-checkbox>
+            <mat-checkbox
+                class="checkbox-ripple-padding"
+                (change)="setLockout(user)"
+                [checked]="isUserLockedOut(user)"
+                [disabled]="isLockedOutToggleDisabled()"
+            >
+                <span>{{ 'Locked Out' | translate }}</span>
+            </mat-checkbox>
+        </div>
     </div>
 
     <!-- Menu -->
@@ -333,6 +346,11 @@
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="changePhysicalStateOfSelectedUsers()">
                 <mat-icon>sync</mat-icon>
                 <span>{{ 'Set natural person ...' | translate }}</span>
+            </button>
+
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeLockedOutStateOfSelectedUsers()">
+                <mat-icon>check_box</mat-icon>
+                <span>{{ 'Set lockout ...' | translate }}</span>
             </button>
 
             <mat-divider></mat-divider>

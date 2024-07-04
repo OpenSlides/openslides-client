@@ -210,11 +210,23 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return user.isPresentInMeeting();
     }
 
+    public isUserLockedOut(user: ViewUser): boolean {
+        return user.isLockedOutOfMeeting();
+    }
+
     public isPresentToggleDisabled(user: ViewUser): boolean {
         if (this.isMultiSelect) {
             return true;
         } else if (this._allowSelfSetPresent && this.operator.operatorId === user.id) {
             return false;
+        } else {
+            return !this.operator.hasPerms(Permission.userCanManagePresence);
+        }
+    }
+
+    public isLockedOutToggleDisabled(): boolean {
+        if (this.isMultiSelect) {
+            return true;
         } else {
             return !this.operator.hasPerms(Permission.userCanManagePresence);
         }
@@ -426,6 +438,10 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         await this.setStateSelected(`is_physical_person`);
     }
 
+    public async changeLockedOutStateOfSelectedUsers(): Promise<void> {
+        await this.setStateSelected(`is_locked_out_of_meetings`);
+    }
+
     /**
      * Sets the user present
      *
@@ -437,6 +453,16 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             (this._allowSelfSetPresent && this.operator.operatorId === viewUser.id);
         if (isAllowed) {
             this.repo.setPresent(!this.isUserPresent(viewUser), viewUser).resolve();
+        }
+    }
+
+    /**
+     * Sets the lockout
+     */
+    public setLockout(viewUser: ViewUser): void {
+        const isAllowed = this.operator.hasPerms(Permission.userCanManage);
+        if (isAllowed) {
+            console.log(`XXX setLockout`, viewUser);
         }
     }
 
@@ -484,6 +510,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             case `is_physical_person`:
                 actions = [_(`natural person`), _(`no natural person`)];
                 break;
+            case `is_locked_out_of_meetings`:
+                actions = [_(`locked out`), _(`no locked out`)];
         }
         const content = _(`Set status for selected participants:`);
 
@@ -492,6 +520,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             const value = selectedChoice.action === actions[0];
             if (field === `is_present_in_meetings`) {
                 await this.repo.setPresent(value, ...this.selectedRows).resolve();
+            } else if (field === `is_locked_out_of_meetings`) {
+                console.log(`XXX, lockout`);
+                // TODO add the right action call here. e.g. this.repo.setLockedOut
             } else {
                 await this.repo.setState(field, value, ...this.selectedRows);
             }
