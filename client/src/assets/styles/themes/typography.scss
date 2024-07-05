@@ -32,7 +32,7 @@ $default-typography: mat.define-typography-config(
     $headline-5: typography-config-level(headline5),
     $headline-6: typography-config-level(headline6),
     $subtitle-1: typography-config-level(subtitle1),
-    $subtitle-2: typography-config-level(subtitle2, $font-weight: 400),
+    $subtitle-2: typography-config-level(subtitle2, $font-size: 15px, $font-weight: 400),
     $body-1: typography-config-level(body1, $font-size: 15, $font-weight: 400),
     $body-2: typography-config-level(body2, $font-weight: 400),
     $caption: typography-config-level(caption),
