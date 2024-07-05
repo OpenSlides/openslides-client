@@ -6,24 +6,9 @@
 @import 'themes/default-light.scss';
 @import 'themes/default-dark.scss';
 @import 'themes/var-overwrites.scss';
-@import 'themes/typography.scss';
 
 /** Global component style definition */
 @import 'global-components-style.scss';
-
-$openslides-light-theme: map-merge(
-    $openslides-light-theme,
-    (
-        typography: $default-typography
-    )
-);
-
-$openslides-dark-theme: map-merge(
-    $openslides-dark-theme,
-    (
-        typography: $default-typography
-    )
-);
 
 @include mat.all-component-themes($openslides-light-theme);
 
