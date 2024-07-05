@@ -114,7 +114,7 @@ describe(`CsvExportForBackendService`, () => {
 
     it(`test dummy export method with default settings`, () => {
         service.dummyCSVExport(
-            { proper: `Fancy`, tea: `Tea`, strength: `Muscle` },
+            Object.keys({ proper: `Fancy`, tea: `Tea`, strength: `Muscle` }),
             toDummyExport,
             `dummyAssortmentOfTeas`
         );
