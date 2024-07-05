@@ -52,14 +52,10 @@
                     </li>
                 </ul>
                 <button *ngIf="committee.forward_to_committees.length > 1" mat-button (click)="toggleForwardingList()">
-                    <ng-container *ngIf="!forwardingExpanded">
-                        {{ 'More' | translate }}
-                        <mat-icon>expand_more</mat-icon>
-                    </ng-container>
-                    <ng-container *ngIf="forwardingExpanded">
-                        {{ 'Less' | translate }}
-                        <mat-icon>expand_less</mat-icon>
-                    </ng-container>
+                    <ng-container *ngIf="!forwardingExpanded">{{ 'More' | translate }}</ng-container>
+                    <mat-icon *ngIf="!forwardingExpanded">expand_more</mat-icon>
+                    <ng-container *ngIf="forwardingExpanded">{{ 'Less' | translate }}</ng-container>
+                    <mat-icon *ngIf="forwardingExpanded">expand_less</mat-icon>
                 </button>
             </os-committee-meta-info>
 
@@ -84,12 +80,12 @@
                 >
                     <ng-container *ngIf="!receiveExpanded">
                         {{ 'More' | translate }}
-                        <mat-icon>expand_more</mat-icon>
                     </ng-container>
                     <ng-container *ngIf="receiveExpanded">
                         {{ 'Less' | translate }}
-                        <mat-icon>expand_less</mat-icon>
                     </ng-container>
+                    <mat-icon *ngIf="!receiveExpanded">expand_more</mat-icon>
+                    <mat-icon *ngIf="receiveExpanded">expand_less</mat-icon>
                 </button>
             </os-committee-meta-info>
 

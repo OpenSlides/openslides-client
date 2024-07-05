@@ -34,10 +34,6 @@
         }
     }
 
-    a.mat-mdc-button-base {
-        color: inherit;
-    }
-
     .accentuated-background, .accentuated-background button {
         background-color: if($is-dark-theme, lighten(mat.get-color-from-palette($background, background), 4%), darken(mat.get-color-from-palette($background, background), 4%));
     }
