@@ -11,6 +11,10 @@
     }
 }
 
+.mat-expansion-panel:not(.previous-slides) {
+    --mat-expansion-container-text-size: 16px;
+}
+
 .column-left {
     /* Do not let the a tag ruin the projector */
     a {
@@ -44,6 +48,7 @@
 .current-element {
     margin-bottom: 20px;
     box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.25);
+    --mdc-list-list-item-label-text-size: 16px;
 
     .element-grid {
         display: grid;
@@ -77,11 +82,6 @@
         }
     }
 
-    .mat-expansion-panel-header {
-        padding: 0 5px 0 0 !important;
-        height: 36px !important;
-    }
-
     .mat-action-row {
         border-top-style: none;
         padding: 0;
@@ -104,7 +104,6 @@
         padding: 0 10px;
         line-height: 0px;
         vertical-align: middle;
-        width: 25px;
         color: slategrey;
         cursor: move;
 
