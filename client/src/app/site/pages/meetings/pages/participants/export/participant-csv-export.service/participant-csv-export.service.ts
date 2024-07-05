@@ -5,7 +5,10 @@ import { CsvColumnDefinitionProperty, CsvColumnsDefinition } from 'src/app/gatew
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { MeetingCsvExportForBackendService } from '../../../../services/export/meeting-csv-export-for-backend.service';
-import { participantHeadersAndVerboseNames } from '../../pages/participant-import/definitions';
+import {
+    participantColumnsWeight,
+    participantHeadersAndVerboseNames
+} from '../../pages/participant-import/definitions';
 import { ParticipantExportModule } from '../participant-export.module';
 import { participantsExportExample } from '../participants-export-example';
 
@@ -45,11 +48,13 @@ export class ParticipantCsvExportService {
     public export(participants: ViewUser[]): void {
         this.csvExport.export(
             participants,
-            Object.keys(participantHeadersAndVerboseNames).map(key => {
-                return {
-                    property: key
-                } as CsvColumnDefinitionProperty<ViewUser>;
-            }) as CsvColumnsDefinition<ViewUser>,
+            Object.keys(participantHeadersAndVerboseNames)
+                .sort((a, b) => participantColumnsWeight[a] - participantColumnsWeight[b])
+                .map(key => {
+                    return {
+                        property: key
+                    } as CsvColumnDefinitionProperty<ViewUser>;
+                }) as CsvColumnsDefinition<ViewUser>,
             this.translate.instant(`Participants`) + `.csv`
         );
     }
@@ -57,7 +62,9 @@ export class ParticipantCsvExportService {
     public exportCsvExample(): void {
         const rows: UserExport[] = participantsExportExample;
         this.csvExport.dummyCSVExport<UserExport>(
-            participantHeadersAndVerboseNames,
+            Object.keys(participantHeadersAndVerboseNames).sort(
+                (a, b) => participantColumnsWeight[a] - participantColumnsWeight[b]
+            ),
             rows,
             `${this.translate.instant(`participants-example`)}.csv`
         );

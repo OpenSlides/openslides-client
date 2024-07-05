@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BaseViaBackendImportListMeetingComponent } from 'src/app/site/base/base-via-backend-import-list-meeting.component';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
-import { participantHeadersAndVerboseNames } from '../../definitions';
+import { participantColumnsWeight, participantHeadersAndVerboseNames } from '../../definitions';
 import { ParticipantImportService } from '../../services';
 
 @Component({
@@ -12,13 +12,17 @@ import { ParticipantImportService } from '../../services';
     styleUrls: [`./participant-import-list.component.scss`]
 })
 export class ParticipantImportListComponent extends BaseViaBackendImportListMeetingComponent {
-    public possibleFields = Object.keys(participantHeadersAndVerboseNames);
+    public possibleFields = Object.keys(participantHeadersAndVerboseNames).sort(
+        (a, b) => participantColumnsWeight[a] - participantColumnsWeight[b]
+    );
 
-    public columns: ImportListHeaderDefinition[] = Object.keys(participantHeadersAndVerboseNames).map(header => ({
-        property: header,
-        label: (<any>participantHeadersAndVerboseNames)[header],
-        isTableColumn: true
-    }));
+    public columns: ImportListHeaderDefinition[] = Object.keys(participantHeadersAndVerboseNames)
+        .sort((a, b) => participantColumnsWeight[a] - participantColumnsWeight[b])
+        .map(header => ({
+            property: header,
+            label: (<any>participantHeadersAndVerboseNames)[header],
+            isTableColumn: true
+        }));
 
     /**
      * Constructor for list view bases

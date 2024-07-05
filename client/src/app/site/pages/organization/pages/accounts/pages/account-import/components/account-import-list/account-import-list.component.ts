@@ -5,7 +5,7 @@ import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-ba
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
-import { accountHeadersAndVerboseNames } from '../../definitions';
+import { accountColumnsWeight, accountHeadersAndVerboseNames } from '../../definitions';
 import { AccountImportService } from '../../services/account-import.service/account-import.service';
 
 @Component({
@@ -14,14 +14,18 @@ import { AccountImportService } from '../../services/account-import.service/acco
     styleUrls: [`./account-import-list.component.scss`]
 })
 export class AccountImportListComponent extends BaseViaBackendImportListComponent {
-    public possibleFields = Object.keys(accountHeadersAndVerboseNames);
+    public possibleFields = Object.keys(accountHeadersAndVerboseNames).sort(
+        (a, b) => accountColumnsWeight[a] - accountColumnsWeight[b]
+    );
 
-    public columns: ImportListHeaderDefinition[] = Object.keys(accountHeadersAndVerboseNames).map(header => ({
-        property: header,
-        label: (<any>accountHeadersAndVerboseNames)[header],
-        isTableColumn: true,
-        customInfo: header === `gender` ? this.getTranslatedGenderInfoObservable() : undefined
-    }));
+    public columns: ImportListHeaderDefinition[] = Object.keys(accountHeadersAndVerboseNames)
+        .sort((a, b) => accountColumnsWeight[a] - accountColumnsWeight[b])
+        .map(header => ({
+            property: header,
+            label: (<any>accountHeadersAndVerboseNames)[header],
+            isTableColumn: true,
+            customInfo: header === `gender` ? this.getTranslatedGenderInfoObservable() : undefined
+        }));
 
     public constructor(
         protected override translate: TranslateService,
