@@ -73,11 +73,12 @@
 
     .fake-disabled {
         background: mat.get-color-from-palette($background, unselected-chip) !important;
+        color: mat.get-color-from-palette($foreground, disabled-button);
         opacity: 1 !important;
         .mat-icon {
-            color: mat.get-color-from-palette($foreground, disabled-button) !important;
+            color: adjust-color(mat.get-color-from-palette($foreground, disabled-button), $alpha: 0.28) !important;
             svg path {
-                fill: mat.get-color-from-palette($foreground, disabled-button) !important;
+                fill: mat.get-color-from-palette($foreground, disabled-button adjust-color(mat.get-color-from-palette($foreground, disabled-button), $alpha: 0.28)) !important;
             }
         }
     }
