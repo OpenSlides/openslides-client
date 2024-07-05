@@ -101,7 +101,7 @@ export class CsvExportForBackendService {
         }
     }
 
-    public dummyCSVExport<I>(headers: (keyof I)[], rows: I[], filename: string): void {
+    public dummyCSVExport<I>(headers: string[], rows: I[], filename: string): void {
         const separator = DEFAULT_COLUMN_SEPARATOR;
         const encoding: `utf-8` | `iso-8859-15` = DEFAULT_ENCODING as any;
         const headerRow = [headers.join(separator)];
