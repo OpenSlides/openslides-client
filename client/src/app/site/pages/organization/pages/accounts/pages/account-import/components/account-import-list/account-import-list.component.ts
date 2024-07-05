@@ -18,14 +18,12 @@ export class AccountImportListComponent extends BaseViaBackendImportListComponen
         (a, b) => accountColumnsWeight[a] - accountColumnsWeight[b]
     );
 
-    public columns: ImportListHeaderDefinition[] = Object.keys(accountHeadersAndVerboseNames)
-        .sort((a, b) => accountColumnsWeight[a] - accountColumnsWeight[b])
-        .map(header => ({
-            property: header,
-            label: (<any>accountHeadersAndVerboseNames)[header],
-            isTableColumn: true,
-            customInfo: header === `gender` ? this.getTranslatedGenderInfoObservable() : undefined
-        }));
+    public columns: ImportListHeaderDefinition[] = this.possibleFields.map(header => ({
+        property: header,
+        label: (<any>accountHeadersAndVerboseNames)[header],
+        isTableColumn: true,
+        customInfo: header === `gender` ? this.getTranslatedGenderInfoObservable() : undefined
+    }));
 
     public constructor(
         protected override translate: TranslateService,

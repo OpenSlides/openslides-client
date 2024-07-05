@@ -43,18 +43,20 @@ export class ParticipantCsvExportService {
     //     ]
     // ]);
 
+    public columns = Object.keys(participantHeadersAndVerboseNames).sort(
+        (a, b) => participantColumnsWeight[a] - participantColumnsWeight[b]
+    );
+
     public constructor(private csvExport: MeetingCsvExportForBackendService, private translate: TranslateService) {}
 
     public export(participants: ViewUser[]): void {
         this.csvExport.export(
             participants,
-            Object.keys(participantHeadersAndVerboseNames)
-                .sort((a, b) => participantColumnsWeight[a] - participantColumnsWeight[b])
-                .map(key => {
-                    return {
-                        property: key
-                    } as CsvColumnDefinitionProperty<ViewUser>;
-                }) as CsvColumnsDefinition<ViewUser>,
+            this.columns.map(key => {
+                return {
+                    property: key
+                } as CsvColumnDefinitionProperty<ViewUser>;
+            }) as CsvColumnsDefinition<ViewUser>,
             this.translate.instant(`Participants`) + `.csv`
         );
     }
@@ -62,9 +64,7 @@ export class ParticipantCsvExportService {
     public exportCsvExample(): void {
         const rows: UserExport[] = participantsExportExample;
         this.csvExport.dummyCSVExport<UserExport>(
-            Object.keys(participantHeadersAndVerboseNames).sort(
-                (a, b) => participantColumnsWeight[a] - participantColumnsWeight[b]
-            ),
+            this.columns,
             rows,
             `${this.translate.instant(`participants-example`)}.csv`
         );

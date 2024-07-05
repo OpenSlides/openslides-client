@@ -12,13 +12,15 @@ import { AccountExportServiceModule } from '../account-export-service.module';
     providedIn: AccountExportServiceModule
 })
 export class AccountExportService {
+    public columns = Object.keys(accountHeadersAndVerboseNames).sort(
+        (a, b) => accountColumnsWeight[a] - accountColumnsWeight[b]
+    );
+
     public constructor(private csvExportService: CsvExportForBackendService, private translate: TranslateService) {}
 
     public downloadCsvImportExample(): void {
         this.csvExportService.dummyCSVExport<UserExport>(
-            Object.keys(accountHeadersAndVerboseNames).sort(
-                (a, b) => accountColumnsWeight[a] - accountColumnsWeight[b]
-            ),
+            this.columns,
             AccountCsvExportExample,
             `${this.translate.instant(`account-example`)}.csv`
         );
@@ -27,11 +29,9 @@ export class AccountExportService {
     public downloadAccountCsvFile(dataSource: ViewUser[]): void {
         this.csvExportService.export(
             dataSource,
-            Object.keys(accountHeadersAndVerboseNames)
-                .map(key => ({
-                    property: key as keyof ViewUser
-                }))
-                .sort((a, b) => accountColumnsWeight[a.property] - accountColumnsWeight[b.property]),
+            this.columns.map(key => ({
+                property: key as keyof ViewUser
+            })),
             `${this.translate.instant(`Accounts`)}.csv`
         );
     }
