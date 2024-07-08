@@ -130,12 +130,6 @@
     grid-template-columns: max-content auto max-content;
 }
 
-.split-grid {
-    @extend %vote-grid-base;
-    grid-template-areas: 'name yes' 'name no' 'name abstain';
-    grid-template-columns: auto var(--poll-option-title-width, 70px);
-}
-
 .grid-name-area {
     grid-area: name;
 }

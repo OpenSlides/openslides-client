@@ -168,14 +168,14 @@
                                 </mat-error>
                             </mat-form-field>
                         </div>
-                        <div *ngIf="settings.isSplitSingleOption" class="split-grid">
-                            <ng-container *ngFor="let action of voteActions; index as i">
-                                <div class="vote-option-title">
+                        <div *ngIf="settings.isSplitSingleOption">
+                            <div *ngFor="let action of voteActions; index as i" class="single-vote-grid">
+                                <div class="vote-option-title grid-name-area">
                                     <span>
                                         {{ voteActions[i]?.label | translate }}
                                     </span>
                                 </div>
-                                <div class="vote-button-area" [ngClass]="'option' + i">
+                                <div class="vote-button-area option0">
                                     <button
                                         class="vote-button"
                                         mat-raised-button
@@ -195,7 +195,7 @@
                                         </div>
                                     </button>
                                 </div>
-                            </ng-container>
+                            </div>
                         </div>
                     </ng-container>
 
