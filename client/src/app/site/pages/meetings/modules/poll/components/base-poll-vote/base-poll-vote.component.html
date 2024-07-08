@@ -76,6 +76,7 @@
                     </div>
                     <ng-container *ngFor="let option of poll.options; let i = index">
                         <div
+                            *ngIf="!settings.isSplitSingleOption"
                             [ngClass]="{
                                 'yna-grid': !settings.isSplitSingleOption && poll.isMethodYNA,
                                 'yn-grid': !settings.isSplitSingleOption && poll.isMethodYN,
@@ -116,7 +117,12 @@
                                 </span>
                             </div>
 
-                            <ng-container *ngIf="!settings.isSplitSingleOption &&(!poll.max_votes_per_option || poll.max_votes_per_option <= 1)">
+                            <ng-container
+                                *ngIf="
+                                    !settings.isSplitSingleOption &&
+                                    (!poll.max_votes_per_option || poll.max_votes_per_option <= 1)
+                                "
+                            >
                                 <div
                                     class="vote-button-area"
                                     *ngFor="let action of voteActions.length ? voteActions : voteOptions; index as i"
@@ -162,44 +168,35 @@
                                 </mat-error>
                             </mat-form-field>
                         </div>
-                    </ng-container>
-                    <ng-container *ngIf="settings.isSplitSingleOption">
-                        <ng-container *ngFor="let option of poll.options">
+                        <div *ngIf="settings.isSplitSingleOption" class="split-grid">
                             <ng-container *ngFor="let action of voteActions; index as i">
-                                <div class="split-grid">
-                                    <div class="vote-option-title  grid-name-area"
-                                     *ngIf="settings.isSplitSingleOption">
-                                    <div>
+                                <div class="vote-option-title">
+                                    <span>
                                         {{ voteActions[i]?.label | translate }}
-                                    </div>
-                                    <div
-                                        class="vote-button-area"
-                                        *ngFor="let action of voteActions.length ? voteActions : voteOptions; index as i"
-                                        [ngClass]="'option' + i"
-                                    >
-                                        <button
-                                            class="vote-button"
-                                            mat-raised-button
-                                            (click)="saveSingleVote(option.id, action.vote, delegation)"
-                                            [disabled]="isDeliveringVote(delegation)"
-                                        >
-                                            <div
-                                                class="vote-button-content"
-                                                [ngClass]="getActionButtonContentClass(action, option, delegation)"
-                                            >
-                                                <os-custom-icon
-                                                    [customIcon]="drawnCross"
-                                                    class="vote-button-cross"
-                                                    [ngClass]="getActionButtonClass(action, option, delegation)"
-                                                ></os-custom-icon>
-                                                <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
-                                            </div>
-                                        </button>
-                                    </div>
+                                    </span>
                                 </div>
+                                <div class="vote-button-area" [ngClass]="'option' + i">
+                                    <button
+                                        class="vote-button"
+                                        mat-raised-button
+                                        (click)="saveSingleVote(option.id, action.vote, delegation)"
+                                        [disabled]="isDeliveringVote(delegation)"
+                                    >
+                                        <div
+                                            class="vote-button-content"
+                                            [ngClass]="getActionButtonContentClass(action, option, delegation)"
+                                        >
+                                            <os-custom-icon
+                                                [customIcon]="drawnCross"
+                                                class="vote-button-cross"
+                                                [ngClass]="getActionButtonClass(action, option, delegation)"
+                                            ></os-custom-icon>
+                                            <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
+                                        </div>
+                                    </button>
                                 </div>
                             </ng-container>
-                        </ng-container>
+                        </div>
                     </ng-container>
 
                     <div
