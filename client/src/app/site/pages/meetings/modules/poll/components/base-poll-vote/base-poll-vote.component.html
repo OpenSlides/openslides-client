@@ -169,7 +169,11 @@
                             </mat-form-field>
                         </div>
                         <div *ngIf="settings.isSplitSingleOption">
-                            <div *ngFor="let action of voteActions; index as i" class="single-vote-grid">
+                            <div
+                                *ngFor="let action of voteActions; index as i"
+                                class="single-vote-grid"
+                                [ngClass]="{ 'accentuated-background': i % 2 === 1 }"
+                            >
                                 <div class="vote-option-title grid-name-area">
                                     <span>
                                         {{ voteActions[i]?.label | translate }}
