@@ -63,7 +63,12 @@
         <!-- users -->
         <div class="user-footer">
             <ng-container
-                *osOmlPerms="OML.can_manage_users; then canManageUsersTemplate; else canNotManageUsersTemplate"
+                *osOmlPerms="
+                    OML.can_manage_users;
+                    allowCommitteeAdmin: true;
+                    then: canManageUsersTemplate;
+                    else: canNotManageUsersTemplate
+                "
             ></ng-container>
         </div>
     </mat-card-content>

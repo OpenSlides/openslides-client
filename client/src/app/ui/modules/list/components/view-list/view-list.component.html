@@ -10,6 +10,7 @@
             [searchService]="searchService!"
             [searchFieldInput]="searchFieldValue"
             [showSpacer]="addBottomSpacer"
+            [fakeFilters]="fakeFilters"
             (searchFieldChanged)="searchFilterUpdated.emit($event)"
         >
             <div class="extra-info-slot">

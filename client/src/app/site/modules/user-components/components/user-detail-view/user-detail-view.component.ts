@@ -80,6 +80,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public useMatcard = true;
 
     @Input()
+    public useAdditionalEditTemplate = true;
+
+    @Input()
     public set additionalFormControls(controls: any) {
         this._additionalFormControls = controls;
         this.prepareForm();
@@ -314,7 +317,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             member_number: [``],
             is_active: [true],
             is_physical_person: [true],
-            ...this._additionalFormControls
+            ...(this.useAdditionalEditTemplate ? this._additionalFormControls : {})
         };
     }
 

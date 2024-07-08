@@ -9,8 +9,17 @@
     </div>
 
     <!-- Current filters -->
-    <div class="current-filters h-scroller" *ngIf="filterService">
-        <div *ngFor="let filter of filterService.filterStack">
+    <div class="current-filters h-scroller" *ngIf="filterService || fakeFilters">
+        <div *ngFor="let filterdata of fakeFilters | keyvalue">
+            <button mat-stroked-button (mouseup)="filterdata.value()" (click)="filterdata.value()">
+                <os-icon-container icon="close" class="active-filter">
+                    <span class="active-filter">
+                        {{ filterdata.key | translate }}
+                    </span>
+                </os-icon-container>
+            </button>
+        </div>
+        <div *ngFor="let filter of filterService?.filterStack || []">
             <button
                 mat-stroked-button
                 (mouseup)="removeFilterFromStack(filter)"

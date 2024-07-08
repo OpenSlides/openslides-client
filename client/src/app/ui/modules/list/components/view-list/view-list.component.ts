@@ -124,6 +124,13 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     public addBottomSpacer = false;
 
     /**
+     * Will show fake filter buttons with the string keys as content in bar.
+     * Closing them will cause the callback function to be called.
+     */
+    @Input()
+    public fakeFilters: Observable<{ [key: string]: () => void }> = null;
+
+    /**
      * Double binding the selected rows
      */
     @Output() public selectedRowsChange = new EventEmitter<V[]>();

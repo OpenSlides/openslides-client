@@ -30,6 +30,7 @@
     [additionalFormControls]="additionalFormControls"
     [generatePasswordFn]="getRandomPasswordFn()"
     [user]="user"
+    [useAdditionalEditTemplate]="!!organizationManagementLevels.length"
     (changeEvent)="personalInfoFormValue = $event"
     (validEvent)="isFormValid = $event"
     (errorEvent)="formErrors = $event"
@@ -38,7 +39,7 @@
         <h2>{{ 'Organization specific information' | translate }}</h2>
         <div [formGroup]="form">
             <!-- Administration roles (at organization level) -->
-            <div *osOmlPerms="OML.can_manage_users">
+            <div *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
                 <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Administration roles (at organization level)' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">
@@ -217,7 +218,7 @@
         <mat-icon>security</mat-icon>
         <span>{{ 'Change password' | translate }}</span>
     </button>
-    <ng-container *osOmlPerms="OML.can_manage_users">
+    <ng-container *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
         <button mat-menu-item [routerLink]="['/', 'accounts', user?.id, 'meetings']">
             <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>

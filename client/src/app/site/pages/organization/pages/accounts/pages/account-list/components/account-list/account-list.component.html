@@ -37,6 +37,7 @@
     [sortService]="sortService"
     [alwaysShowMenu]="true"
     [vScrollFixed]="60"
+    [fakeFilters]="fakeFilters"
 >
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
@@ -99,7 +100,7 @@
         <div class="flex-center">
             <os-icon-container
                 icon="engineering"
-                *osOmlPerms="OML.can_manage_users; and: !!getOmlByUser(user)"
+                *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true; and: !!getOmlByUser(user)"
                 [matTooltipDisabled]="!isMobile"
                 matTooltipPosition="left"
                 matTooltip="{{ getOmlByUser(user) | translate }}"
@@ -112,9 +113,9 @@
     </div>
 
     <!-- Menu column -->
-    <ng-container *osOmlPerms="OML.can_manage_users">
+    <ng-container *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
         <div *osScrollingTableCell="'menu'; row as user; config: { width: 40 }" class="cell-slot fill">
-            <div>
+            <div *osOmlPerms="user.organization_management_level">
                 <button mat-icon-button [matMenuTriggerFor]="singleMenu" [matMenuTriggerData]="{ member: user }">
                     <mat-icon>more_vert</mat-icon>
                 </button>
@@ -129,7 +130,11 @@
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <a mat-menu-item [routerLink]="['/accounts', member.id, 'meetings']" *osOmlPerms="OML.can_manage_users">
+        <a
+            mat-menu-item
+            [routerLink]="['/accounts', member.id, 'meetings']"
+            *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true"
+        >
             <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </a>
@@ -146,7 +151,7 @@
             <mat-icon>library_add</mat-icon>
             <span>{{ 'Multiselect' | translate }}</span>
         </button>
-        <ng-container *osOmlPerms="OML.can_manage_users">
+        <ng-container *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
             <button mat-menu-item (click)="csvExportMemberList()">
                 <mat-icon>archive</mat-icon>
                 <span>{{ 'Export as CSV' | translate }}</span>

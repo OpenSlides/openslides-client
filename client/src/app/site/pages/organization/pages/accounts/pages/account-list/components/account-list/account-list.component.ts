@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
@@ -58,6 +58,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
                 this.filterService.filterMeeting(params[`id`] || null);
                 if (params[`id`]) {
                     this.meeting = this.meetingRepo.getViewModelObservable(+params[`id`]);
+                    console.log(`meeting`, params[`id`], this.meeting);
                 }
             })
         );
@@ -69,6 +70,24 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
 
     public navigateToMember(account: ViewUser): void {
         this.router.navigate([account.id, `edit`], { relativeTo: this.route });
+    }
+
+    public navigateToBaseList(): void {
+        this.router.navigate([`..`, `..`], { relativeTo: this.route });
+    }
+
+    public get fakeFilters(): Observable<{ [key: string]: () => void }> {
+        if (this.meeting) {
+            return this.meeting.pipe(
+                map(meeting => {
+                    if (meeting) {
+                        return { [meeting.name]: () => this.navigateToBaseList() };
+                    }
+                    return {};
+                })
+            );
+        }
+        return null;
     }
 
     public async deleteUsers(accounts: ViewUser[] = this.selectedRows): Promise<void> {
