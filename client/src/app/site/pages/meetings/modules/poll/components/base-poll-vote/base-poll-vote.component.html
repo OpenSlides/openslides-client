@@ -71,7 +71,9 @@
                             *ngFor="let action of voteActions.length ? voteActions : voteOptions; index as i"
                             [ngClass]="'option' + i"
                         >
-                            {{ action.label | translate }}
+                            <ng-container *ngIf="!poll.isTopicPoll">
+                                {{ action.label | translate }}
+                            </ng-container>
                         </b>
                     </div>
                     <ng-container *ngFor="let option of poll.options; let i = index">
