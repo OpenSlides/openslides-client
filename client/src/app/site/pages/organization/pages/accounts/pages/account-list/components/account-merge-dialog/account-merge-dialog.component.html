@@ -1,0 +1,104 @@
+<div mat-dialog-title>{{ 'Merge users' | translate }}</div>
+<mat-dialog-content>
+    <div>{{ 'Please select a primary account.' | translate }}</div>
+    <mat-radio-group (change)="onChange($event)">
+        <table mat-table [dataSource]="possibleChoices">
+            <ng-container matColumnDef="button">
+                <td mat-cell *matCellDef="let user">
+                    <div class="buttonCell"><mat-radio-button [value]="user.id"></mat-radio-button></div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <td mat-cell *matCellDef="let user">
+                    <div class="nameCell overflow-hidden">
+                        <div class="title-line title-box">
+                            <div *ngIf="!isCrossedOut(user)">
+                                <span class="ellipsis-overflow">{{ user.short_name }}</span>
+                                <span class="meta-info user-subtitle" *ngIf="!!user.gender">
+                                    &middot;&nbsp;{{ user.gender }}
+                                </span>
+                                <span class="meta-info user-subtitle" *ngIf="!!user.pronoun">
+                                    &middot;&nbsp;{{ user.pronoun }}
+                                </span>
+                            </div>
+                            <div *ngIf="isCrossedOut(user)">
+                                <span class="ellipsis-overflow crossed-out">{{ user.short_name }}</span>
+                                <span class="meta-info user-subtitle" *ngIf="!!user.gender">
+                                    &middot;&nbsp;{{ user.gender }}
+                                </span>
+                                <span class="meta-info user-subtitle" *ngIf="!!user.pronoun">
+                                    &middot;&nbsp;{{ user.pronoun }}
+                                </span>
+                            </div>
+                            <div style="float: right; display: inline-flex">
+                                &nbsp;
+                                <os-icon-container
+                                    icon="account_balance"
+                                    *ngIf="!user.is_physical_person"
+                                    matTooltip="{{ 'Is no natural person' | translate }}"
+                                ></os-icon-container>
+                                <os-icon-container
+                                    icon="block"
+                                    *ngIf="!user.is_active"
+                                    matTooltip="{{ 'Inactive' | translate }}"
+                                ></os-icon-container>
+                                <os-icon-container
+                                    icon="fingerprint"
+                                    *ngIf="user.hasSamlId"
+                                    matTooltip="{{ 'Has SSO identification' | translate }}"
+                                ></os-icon-container>
+                            </div>
+                        </div>
+                        <div class="meta-info user-subtitle ellipsis-overflow">
+                            {{ user.saml_id || user.username }}
+                            <ng-container *ngIf="user.email">&middot; {{ user.email }}&nbsp;</ng-container>
+                            <ng-container *ngIf="user.member_number">&middot; {{ user.member_number }}</ng-container>
+                        </div>
+                        <div class="meta-info user-subtitle ellipsis-overflow" *ngIf="user?.isLastLogin">
+                            {{ 'Last login' | translate }} {{ user.last_login | localizedDate }}
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="icon">
+                <td mat-cell *matCellDef="let user">
+                    <div class="iconCell">
+                        <os-icon-container
+                            icon="event_available"
+                            [iconTooltip]="userMeetings(user)"
+                            iconTooltipPosition="left"
+                            iconTooltipClass="pre-wrap"
+                            [showIcon]="true"
+                            [noWrap]="true"
+                        >
+                            {{ user.meetings.length }}
+                        </os-icon-container>
+                        <os-icon-container
+                            icon="mail"
+                            *ngIf="user.isLastEmailSent"
+                            iconTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
+                            iconTooltipPosition="left"
+                        ></os-icon-container>
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+    </mat-radio-group>
+    <div class="error-color">{{ 'Attention: Not selected accounts will be merged and then deleted.' | translate }}</div>
+    <div class="error-color" *ngIf="showMeetingsCollide">
+        {{ 'Warning: Data loss is possible, because two users are in the same meeting.' | translate }}
+        {{ 'Meetings effected:' | translate }}
+        {{ countMeetingsCollide }}
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="closeDialog(true)" [disabled]="!selectedUserId">
+        <span>{{ 'Merge' | translate }}</span>
+    </button>
+    <button mat-button (click)="closeDialog(false)">
+        <span>{{ 'Cancel' | translate }}</span>
+    </button>
+</mat-dialog-actions>
