@@ -1,7 +1,7 @@
 <ng-container *ngFor="let entry of menuEntries">
     <span>
         <a
-            *osOmlPerms="entry.permission!"
+            *osOmlPerms="entry.permission!; allowCommitteeAdmin: entry.optionalCML === CML.can_manage"
             mat-menu-item
             class="management-router-link"
             [ngStyle]="getCustomStyleForEntry(entry)"
