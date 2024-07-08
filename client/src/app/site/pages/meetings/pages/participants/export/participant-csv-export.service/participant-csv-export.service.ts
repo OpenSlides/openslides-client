@@ -5,10 +5,7 @@ import { CsvColumnDefinitionProperty, CsvColumnsDefinition } from 'src/app/gatew
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { MeetingCsvExportForBackendService } from '../../../../services/export/meeting-csv-export-for-backend.service';
-import {
-    participantColumnsWeight,
-    participantHeadersAndVerboseNames
-} from '../../pages/participant-import/definitions';
+import { participantColumns } from '../../pages/participant-import/definitions';
 import { ParticipantExportModule } from '../participant-export.module';
 import { participantsExportExample } from '../participants-export-example';
 
@@ -43,16 +40,12 @@ export class ParticipantCsvExportService {
     //     ]
     // ]);
 
-    public columns = Object.keys(participantHeadersAndVerboseNames).sort(
-        (a, b) => participantColumnsWeight[a] - participantColumnsWeight[b]
-    );
-
     public constructor(private csvExport: MeetingCsvExportForBackendService, private translate: TranslateService) {}
 
     public export(participants: ViewUser[]): void {
         this.csvExport.export(
             participants,
-            this.columns.map(key => {
+            participantColumns.map(key => {
                 return {
                     property: key
                 } as CsvColumnDefinitionProperty<ViewUser>;
@@ -64,7 +57,7 @@ export class ParticipantCsvExportService {
     public exportCsvExample(): void {
         const rows: UserExport[] = participantsExportExample;
         this.csvExport.dummyCSVExport<UserExport>(
-            this.columns,
+            participantColumns,
             rows,
             `${this.translate.instant(`participants-example`)}.csv`
         );

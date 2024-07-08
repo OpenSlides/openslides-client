@@ -5,22 +5,18 @@ import { CsvExportForBackendService } from 'src/app/gateways/export/csv-export.s
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { AccountCsvExportExample } from '../../export/csv-export-example';
-import { accountColumnsWeight, accountHeadersAndVerboseNames } from '../../pages/account-import/definitions';
+import { accountColumns } from '../../pages/account-import/definitions';
 import { AccountExportServiceModule } from '../account-export-service.module';
 
 @Injectable({
     providedIn: AccountExportServiceModule
 })
 export class AccountExportService {
-    public columns = Object.keys(accountHeadersAndVerboseNames).sort(
-        (a, b) => accountColumnsWeight[a] - accountColumnsWeight[b]
-    );
-
     public constructor(private csvExportService: CsvExportForBackendService, private translate: TranslateService) {}
 
     public downloadCsvImportExample(): void {
         this.csvExportService.dummyCSVExport<UserExport>(
-            this.columns,
+            accountColumns,
             AccountCsvExportExample,
             `${this.translate.instant(`account-example`)}.csv`
         );
@@ -29,7 +25,7 @@ export class AccountExportService {
     public downloadAccountCsvFile(dataSource: ViewUser[]): void {
         this.csvExportService.export(
             dataSource,
-            this.columns.map(key => ({
+            accountColumns.map(key => ({
                 property: key as keyof ViewUser
             })),
             `${this.translate.instant(`Accounts`)}.csv`

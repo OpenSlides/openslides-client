@@ -7,18 +7,18 @@ export const accountHeadersAndVerboseNames: { [key in keyof User]?: any } = {
     default_vote_weight: _(`Vote weight`)
 };
 
-export const accountColumnsWeight: { [key in keyof User]?: any } = {
-    title: 1,
-    first_name: 2,
-    last_name: 3,
-    email: 4,
-    member_number: 5,
-    default_vote_weight: 6,
-    gender: 7,
-    pronoun: 8,
-    username: 9,
-    default_password: 10,
-    is_active: 11,
-    is_physical_person: 12,
-    saml_id: 13
-};
+export const accountColumns: (keyof User)[] = [
+    `title`,
+    `first_name`,
+    `last_name`,
+    `email`,
+    `member_number`,
+    `default_vote_weight`,
+    `gender`,
+    `pronoun`,
+    `username`,
+    `default_password`,
+    `is_active`,
+    `is_physical_person`,
+    `saml_id`
+];
