@@ -9,7 +9,7 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
     providedIn: `root`
 })
 export class MeetingListSortService extends BaseSortListService<ViewMeeting> {
-    protected storageKey = `CommitteeList`;
+    protected storageKey = `MeetingList`;
 
     protected repositoryToken: ProviderToken<BaseRepository<any, any>> = MeetingRepositoryService;
 

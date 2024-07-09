@@ -285,7 +285,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         if (!user) {
             return false;
         }
-        return this.vote_delegations_from_ids().includes(user.id);
+        return this.vote_delegations_from_ids()?.includes(user.id);
     }
 
     public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser {

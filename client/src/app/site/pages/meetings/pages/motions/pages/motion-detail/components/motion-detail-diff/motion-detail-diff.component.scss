@@ -1,6 +1,6 @@
 @import 'src/assets/styles/mixins/detail-view-appearance.scss';
 
-.underlined-links {
+:host ::ng-deep .underlined-links {
     @include detail-view-appearance;
 }
 

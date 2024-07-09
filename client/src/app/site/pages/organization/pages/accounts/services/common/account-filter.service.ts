@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { DuplicateStatus, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -16,19 +19,67 @@ type Name = string;
 export class AccountFilterService extends BaseFilterListService<ViewUser> {
     protected storageKey = `MemberList`;
 
+    private meetingSubscription: Subscription;
     private userEmailMap = new Map<Email, Id[]>();
     private userNameMap = new Map<Name, Id[]>();
+    private userInMeetingMap = new Map<Id, void>();
+
+    /**
+     * @return Observable data for the filtered output subject
+     */
+    public override get outputObservable(): Observable<ViewUser[]> {
+        return super.outputObservable.pipe(
+            map(output => {
+                if (this.meetingSubscription) {
+                    return output.filter(m => this.userInMeetingMap.has(m.id));
+                }
+
+                return output;
+            })
+        );
+    }
+
+    public override getViewModelListObservable(): Observable<ViewUser[]> {
+        return super.getViewModelListObservable().pipe(
+            map(output => {
+                if (this.meetingSubscription) {
+                    return output.filter(m => this.userInMeetingMap.has(m.id));
+                }
+
+                return output;
+            })
+        );
+    }
 
     public constructor(
         store: ActiveFiltersService,
         private operator: OperatorService,
-        private controller: UserControllerService
+        private controller: UserControllerService,
+        private meetingRepo: MeetingControllerService
     ) {
         super(store);
 
         this.controller.getViewModelListObservable().subscribe(users => {
             this.updateUserMaps(users);
         });
+    }
+
+    public filterMeeting(id: Id): void {
+        if (this.meetingSubscription) {
+            this.meetingSubscription.unsubscribe();
+            this.meetingSubscription = null;
+        }
+
+        if (id) {
+            this.meetingSubscription = this.meetingRepo.getViewModelObservable(id).subscribe(meeting => {
+                this.userInMeetingMap.clear();
+                if (meeting && meeting.user_ids) {
+                    for (const id of meeting.user_ids) {
+                        this.userInMeetingMap.set(id);
+                    }
+                }
+            });
+        }
     }
 
     private updateUserMaps(users: ViewUser[]): void {
@@ -46,18 +97,18 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 ? [
                       {
                           property: `isInActiveMeeting`,
-                          label: `Active meetings`,
+                          label: _(`Active meetings`),
                           options: [
-                              { condition: true, label: `Is in active meetings` },
-                              { condition: [false, null], label: `Is not in active meetings` }
+                              { condition: true, label: _(`Is in active meetings`) },
+                              { condition: [false, null], label: _(`Is not in active meetings`) }
                           ]
                       },
                       {
                           property: `isInArchivedMeeting`,
-                          label: `Archived meetings`,
+                          label: _(`Archived meetings`),
                           options: [
-                              { condition: true, label: `Is in archived meetings` },
-                              { condition: [false, null], label: `Is not in archived meetings` }
+                              { condition: true, label: _(`Is in archived meetings`) },
+                              { condition: [false, null], label: _(`Is not in archived meetings`) }
                           ]
                       }
                   ]
@@ -66,60 +117,60 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
         const staticFilterDefinitions: OsFilter<ViewUser>[] = [
             {
                 property: `is_active`,
-                label: `Active`,
+                label: _(`Active`),
                 options: [
-                    { condition: true, label: `Is active` },
-                    { condition: [false, null], label: `Is not active` }
+                    { condition: true, label: _(`Is active`) },
+                    { condition: [false, null], label: _(`Is not active`) }
                 ]
             },
             {
                 property: `is_physical_person`,
-                label: `Natural person`,
+                label: _(`Natural person`),
                 options: [
-                    { condition: true, label: `Is a natural person` },
-                    { condition: [false, null], label: `Is no natural person` }
+                    { condition: true, label: _(`Is a natural person`) },
+                    { condition: [false, null], label: _(`Is no natural person`) }
                 ]
             },
             {
                 property: `gender`,
-                label: `Gender`,
+                label: _(`Gender`),
                 options: [
-                    { condition: `female`, label: `female` },
-                    { condition: `male`, label: `male` },
-                    { condition: `diverse`, label: `diverse` },
-                    { condition: `non-binary`, label: `non-binary` },
-                    { condition: null, label: `not specified` }
+                    { condition: `female`, label: _(`female`) },
+                    { condition: `male`, label: _(`male`) },
+                    { condition: `diverse`, label: _(`diverse`) },
+                    { condition: `non-binary`, label: _(`non-binary`) },
+                    { condition: null, label: _(`not specified`) }
                 ]
             },
             {
                 property: `hasEmail`,
-                label: `Email address`,
+                label: _(`Email address`),
                 options: [
-                    { condition: true, label: `Has an email address` },
-                    { condition: [false, null], label: `Has no email address` }
+                    { condition: true, label: _(`Has an email address`) },
+                    { condition: [false, null], label: _(`Has no email address`) }
                 ]
             },
             {
                 property: `isLastEmailSent`,
-                label: `Last email sent`,
+                label: _(`Last email sent`),
                 options: [
-                    { condition: true, label: `Got an email` },
-                    { condition: [false, null], label: `Didn't get an email` }
+                    { condition: true, label: _(`Got an email`) },
+                    { condition: [false, null], label: _(`Didn't get an email`) }
                 ]
             },
             {
                 property: `isLastLogin`,
-                label: `Last login`,
+                label: _(`Last login`),
                 options: [
-                    { condition: true, label: `Has logged in` },
-                    { condition: [false, null], label: `Has not logged in yet` }
+                    { condition: true, label: _(`Has logged in`) },
+                    { condition: [false, null], label: _(`Has not logged in yet`) }
                 ]
             },
             {
                 property: `organization_management_level`,
-                label: `Administration roles`,
+                label: _(`Administration roles`),
                 options: [
-                    { condition: `superadmin`, label: `Superadmin` },
+                    { condition: `superadmin`, label: _(`Superadmin`) },
                     { condition: `can_manage_organization`, label: `Organization admin` },
                     { condition: `can_manage_users`, label: `Account admin` },
                     { condition: null, label: `No admin role` }
@@ -127,48 +178,48 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
             },
             {
                 property: `isCommitteeManager`,
-                label: `Committee admin`,
+                label: _(`Committee admin`),
                 options: [
-                    { condition: true, label: `Is committee admin` },
-                    { condition: [false, null], label: `No committee admin` }
+                    { condition: true, label: _(`Is committee admin`) },
+                    { condition: [false, null], label: _(`No committee admin`) }
                 ]
             },
             {
                 property: `isVoteWeightOne`,
-                label: `Vote weight`,
+                label: _(`Vote weight`),
                 options: [
-                    { condition: [false, null], label: `Has changed vote weight` },
-                    { condition: true, label: `Has unchanged vote weight` }
+                    { condition: [false, null], label: _(`Has changed vote weight`) },
+                    { condition: true, label: _(`Has unchanged vote weight`) }
                 ]
             },
             {
                 property: `hasSamlId`,
-                label: `SSO`,
+                label: _(`SSO`),
                 options: [
-                    { condition: true, label: `Has SSO identification` },
-                    { condition: [false, null], label: `Has no SSO identification` }
+                    { condition: true, label: _(`Has SSO identification`) },
+                    { condition: [false, null], label: _(`Has no SSO identification`) }
                 ]
             },
             {
                 property: `getDuplicateStatusInMap`,
-                label: `Duplicates`,
+                label: _(`Duplicates`),
                 options: [
                     {
                         condition: [DuplicateStatus.All, DuplicateStatus.SameName],
-                        label: `Same first/last name`
+                        label: _(`Same given and surname`)
                     },
                     {
                         condition: [DuplicateStatus.All, DuplicateStatus.SameEmail],
-                        label: `Same email`
+                        label: _(`Same email`)
                     }
                 ]
             },
             {
                 property: `hasMemberNumber`,
-                label: `Membership number`,
+                label: _(`Membership number`),
                 options: [
-                    { condition: true, label: `Has a membership number` },
-                    { condition: [false, null], label: `Has no membership number` }
+                    { condition: true, label: _(`Has a membership number`) },
+                    { condition: [false, null], label: _(`Has no membership number`) }
                 ]
             }
         ];

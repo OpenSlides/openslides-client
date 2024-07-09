@@ -22,7 +22,7 @@ import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
 import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
 import { HasPolls, VotingTextContext } from '../../polls';
 import { DiffLinesInParagraph } from '../definitions';
-import { ViewMotionChangeRecommendation, ViewMotionStatuteParagraph, ViewMotionWorkflow } from '../modules';
+import { ViewMotionChangeRecommendation, ViewMotionWorkflow } from '../modules';
 import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
 import { ViewMotionComment } from '../modules/comments/view-models/view-motion-comment';
 import { ViewMotionCommentSection } from '../modules/comments/view-models/view-motion-comment-section';
@@ -343,10 +343,6 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.amendment_paragraph_numbers?.length > 0;
     }
 
-    public isStatuteAmendment(): boolean {
-        return !!this.statute_paragraph_id;
-    }
-
     public override getProjectionBuildDescriptor(
         meetingSettingsService: MeetingSettingsService
     ): ProjectionBuildDescriptor {
@@ -403,7 +399,6 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     editors: ViewMotionEditor[];
     working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     change_recommendations: ViewMotionChangeRecommendation[];
-    statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];
 }
 

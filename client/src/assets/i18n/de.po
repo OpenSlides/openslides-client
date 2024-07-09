@@ -1,6 +1,7 @@
 # 
 # Translators:
 # Joshua Sangmeister <joshua.sangmeister@gmail.com>, 2024
+# Katharina <karmitt2@web.de>, 2024
 # Emanuel Schütze <emanuel.schuetze@intevation.de>, 2024
 # 
 msgid ""
@@ -110,9 +111,6 @@ msgstr "Zugangsdaten"
 
 msgid "Account"
 msgstr "Account"
-
-msgid "Account admin"
-msgstr "Accountadmin"
 
 msgid "Account successfully assigned"
 msgstr "Account erfolgreich zugewiesen"
@@ -562,9 +560,6 @@ msgstr "Soll dieser Projektor wirklich gelöscht werden?"
 msgid "Are you sure you want to delete this state?"
 msgstr "Soll dieser Status wirklich gelöscht werden?"
 
-msgid "Are you sure you want to delete this statute paragraph?"
-msgstr "Soll dieser Satzungsabschnitt wirklich gelöscht werden?"
-
 msgid "Are you sure you want to delete this structure level?"
 msgstr "Soll diese Gliederungsebene wirklich gelöscht werden?"
 
@@ -700,10 +695,10 @@ msgid "Assign"
 msgstr "Zuweisen"
 
 msgid "At least"
-msgstr "Mindestens"
+msgstr "mindestens"
 
 msgid "At most"
-msgstr "Höchstens"
+msgstr "höchstens"
 
 msgid "Attachments"
 msgstr "Anhänge"
@@ -721,6 +716,11 @@ msgid "Attention: First enter the wifi data in [Settings > General]"
 msgstr ""
 "Achtung: Zunächst unter [Einstellungen > Allgemein] die WLAN-Daten "
 "eintragen."
+
+msgid "Attention: Not selected accounts will be merged and then deleted."
+msgstr ""
+"Achtung: Nicht ausgewählte Konten werden zusammengeführt und anschließend "
+"gelöscht."
 
 msgid "Attention: This action cannot be undone!"
 msgstr "Achtung: Diese Aktion kann nicht rückgängig gemacht werden!"
@@ -1033,9 +1033,6 @@ msgstr "Kann aufgrund von Fehlern nicht importieren werden"
 msgid "Can put oneself on the list of speakers"
 msgstr "Darf sich selbst auf die Redeliste setzen"
 
-msgid "Can receive motions"
-msgstr "Darf Anträge erhalten"
-
 msgid "Can receive motions from committee"
 msgstr "Darf Anträge erhalten von Gremium"
 
@@ -1228,12 +1225,6 @@ msgstr "Kandidat*innen"
 
 msgid "Cannot do that in demo mode!"
 msgstr "Diese Aktion ist im Demo-Modus nicht möglich!"
-
-msgid "Cannot forward motions"
-msgstr "Darf keine Anträge weiterleiten"
-
-msgid "Cannot receive motions"
-msgstr "Darf keine Anträge erhalten"
 
 msgid "Categories"
 msgstr "Sachgebiete"
@@ -1890,9 +1881,6 @@ msgstr "Warteschlange bearbeiten"
 msgid "Edit state"
 msgstr "Status bearbeiten"
 
-msgid "Edit statute paragraph"
-msgstr "Satzungsabschnitt bearbeiten"
-
 msgid "Edit tag"
 msgstr "Schlagwort bearbeiten"
 
@@ -2179,9 +2167,6 @@ msgstr "Externe ID"
 msgid "Fallback"
 msgstr "Fallback"
 
-msgid "Fallback mode"
-msgstr "Fallback-Modus"
-
 msgid "Favorites"
 msgstr "Favoriten"
 
@@ -2271,9 +2256,6 @@ msgstr "Fürrede"
 
 msgid "Forward"
 msgstr "Weiterleiten"
-
-msgid "Forward motions"
-msgstr "Anträge weiterleiten"
 
 msgid "Forward motions to"
 msgstr "Anträge weiterleiten an"
@@ -2379,6 +2361,9 @@ msgstr "Gast"
 msgid "Has SSO identification"
 msgstr "Hat SSO-Kennung"
 
+msgid "Has a membership number"
+msgstr "Hat eine Mitgliedsnummer"
+
 msgid "Has amendments"
 msgstr "Hat Änderungsanträge"
 
@@ -2408,6 +2393,9 @@ msgstr "Hat keine E-Mail-Adresse"
 
 msgid "Has no identical motions"
 msgstr "Hat keine wortgleichen Anträge"
+
+msgid "Has no membership number"
+msgstr "Hat keine Mitgliedsnummer"
 
 msgid "Has no speakers"
 msgstr "Keine Wortmeldungen vorhanden"
@@ -2557,9 +2545,6 @@ msgstr "Anträge importieren"
 msgid "Import participants"
 msgstr "Teilnehmende importieren"
 
-msgid "Import statute"
-msgstr "Satzung importieren"
-
 msgid "Import successful"
 msgstr "Import erfolgreich"
 
@@ -2641,6 +2626,9 @@ msgstr "Ungültige Stimmen"
 msgid "Invite to conference room"
 msgstr "In den Konferenzraum einladen"
 
+msgid "Is a committee"
+msgstr "Ist ein Gremium"
+
 msgid "Is a natural person"
 msgstr "Ist eine natürliche Person"
 
@@ -2696,6 +2684,9 @@ msgstr "Ist kein Änderungsantrag und hat keine Änderungsanträge"
 
 msgid "Is no natural person"
 msgstr "Ist keine natürliche Person"
+
+msgid "Is not a committee"
+msgstr "Ist kein Gremium"
 
 msgid "Is not a template"
 msgstr "Ist keine öffentliche Vorlage"
@@ -2948,11 +2939,20 @@ msgstr "Veranstaltungstitel"
 msgid "Meetings"
 msgstr "Veranstaltungen"
 
+msgid "Meetings effected:"
+msgstr "Betroffene Veranstaltungen:"
+
 msgid "Meetings selected"
 msgstr "Anzahl der ausgewählte Veranstaltungen"
 
 msgid "Membership number"
 msgstr "Mitgliedsnummer"
+
+msgid "Merge"
+msgstr "Zusammenführen"
+
+msgid "Merge accounts"
+msgstr "Accounts zusammenführen"
 
 msgid "Message"
 msgstr "Mitteilung"
@@ -3193,9 +3193,6 @@ msgstr "Neuer Projektor"
 msgid "New state"
 msgstr "Neuer Status"
 
-msgid "New statute paragraph"
-msgstr "Neuer Satzungsabschnitt"
-
 msgid "New tag"
 msgstr "Neues Schlagwort"
 
@@ -3216,9 +3213,6 @@ msgstr "Nächste Zustände"
 
 msgid "No"
 msgstr "Nein"
-
-msgid "No admin role"
-msgstr "Keine Adminrolle"
 
 msgid "No category"
 msgstr "Kein Sachgebiet"
@@ -3288,12 +3282,6 @@ msgstr "Keine Ergebnisse gefunden."
 
 msgid "No results yet."
 msgstr "Noch keine Ergebnisse."
-
-msgid "No statute paragraphs"
-msgstr "Keine Satzungsabschnitte vorhanden"
-
-msgid "No structure level"
-msgstr "Keine Gliederungsebene"
 
 msgid "No verbose name is defined"
 msgstr "Es ist kein ausführlicher Name definiert"
@@ -3404,6 +3392,9 @@ msgstr "Nummerierungssystem für Tagesordnungspunkte"
 msgid "OK"
 msgstr "OK"
 
+msgid "OR"
+msgstr "ODER"
+
 msgid "Off"
 msgstr "Aus"
 
@@ -3412,6 +3403,9 @@ msgstr "Offline-Modus"
 
 msgid "Ok"
 msgstr "Ok"
+
+msgid "Old account of"
+msgstr "Alter Account von"
 
 msgid "Old password"
 msgstr "Altes Passwort"
@@ -3497,9 +3491,6 @@ msgstr "Organisation"
 
 msgid "Organization Management Level changed"
 msgstr "Administrationsrolle geändert"
-
-msgid "Organization admin"
-msgstr "Organisationsadmin"
 
 msgid "Organization language"
 msgstr "Organisationssprache"
@@ -3722,6 +3713,9 @@ msgstr "Bitte geben Sie Ihr neues Passwort ein"
 msgid "Please join the conference room now!"
 msgstr "Bitte kommen Sie jetzt in den Konferenzraum!"
 
+msgid "Please select a primary account."
+msgstr "Bitte wählen Sie einen primären Account aus."
+
 msgid "Please select a vote weight greater than or equal to 0.000001"
 msgstr "Bitte ein Stimmgewicht größer oder gleich 0,000001 wählen."
 
@@ -3889,9 +3883,6 @@ msgstr "Begründung erforderlich zur Erstellung neuer Anträge"
 
 msgid "Receipt of contributions"
 msgstr "Eingang der Wortmeldungen"
-
-msgid "Receive motions"
-msgstr "Anträge erhalten"
 
 msgid "Receive motions from"
 msgstr "Anträge erhalten von"
@@ -4100,7 +4091,7 @@ msgstr "SSO-Kennung"
 msgid "Same email"
 msgstr "Gleiche E-Mail-Adresse"
 
-msgid "Same first/last name"
+msgid "Same given and surname"
 msgstr "Gleicher Vor- und Nachname"
 
 msgid "Save"
@@ -4521,21 +4512,6 @@ msgstr "Status gesetzt auf {}"
 
 msgid "Statistics"
 msgstr "Statistiken"
-
-msgid "Statute"
-msgstr "Satzung"
-
-msgid "Statute amendment"
-msgstr "Satzungsänderungsantrag"
-
-msgid "Statute amendment for"
-msgstr "Satzungsänderungsantrag zu"
-
-msgid "Statute paragraph"
-msgstr "Satzungsabschnitt"
-
-msgid "Statute paragraphs"
-msgstr "Satzung"
 
 msgid "Stop"
 msgstr "Beenden"
@@ -5313,6 +5289,12 @@ msgstr ""
 "Achtung! Mindestens einer der ausgewählten Anträge hat Änderungsanträge, "
 "diese werden ebenfalls gelöscht. Möchten Sie trotzdem löschen?"
 
+msgid ""
+"Warning: Data loss is possible because accounts are in the same meeting."
+msgstr ""
+"Warnung: Es kann zu Datenverlusten kommen, da sich Accounts in der gleichen "
+"Veranstaltung befinden."
+
 msgid "Warning: This projector will be set to visible"
 msgstr "Warnung: Dieser Projektor wird auf sichtbar gesetzt"
 
@@ -5448,16 +5430,6 @@ msgstr ""
 "voreingestellt für neue Anträge ist. Bitte legen Sie zunächst in den "
 "Einstellungen einen anderen Arbeitsablauf als Standard fest und versuchen "
 "Sie erneut, den Arbeitsablauf zu löschen."
-
-msgid ""
-"You cannot delete the workflow as long as it is selected as default workflow"
-" for new statute amendments in the settings. Please set another workflow as "
-"default in the settings and try to delete the workflow again."
-msgstr ""
-"Sie können den Arbeitsablauf nicht löschen, solange er in den Einstellungen "
-"voreingestellt für neue Satzungsänderungsanträge ist. Bitte legen Sie "
-"zunächst in den Einstellungen einen anderen Arbeitsablauf als Standard fest "
-"und versuchen Sie erneut, den Arbeitsablauf zu löschen."
 
 msgid "You cannot delete yourself."
 msgstr "Sie dürfen sich nicht selbst löschen."
@@ -5794,6 +5766,9 @@ msgstr "Gruppe(n) entfernen"
 msgid "represented by"
 msgstr "vertreten durch"
 
+msgid "represented by old account of"
+msgstr "vertreten durch alten Account von"
+
 msgid "reset"
 msgstr "zurückgesetzt"
 
@@ -5832,6 +5807,9 @@ msgstr "Version"
 
 msgid "votes per candidate"
 msgstr "Stimmen pro Kandidat*in"
+
+msgid "votes per option"
+msgstr "Stimmen pro Option"
 
 msgid "will be created"
 msgstr "werden erstellt"

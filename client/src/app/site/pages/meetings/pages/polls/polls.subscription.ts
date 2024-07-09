@@ -77,5 +77,5 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
             }
         ]
     },
-    subscriptionName: POLL_DETAIL_SUBSCRIPTION
+    subscriptionName: `${POLL_DETAIL_SUBSCRIPTION}_${ids.join(`_`)}`
 });

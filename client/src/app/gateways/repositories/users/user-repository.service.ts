@@ -329,11 +329,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     }
 
     private getLevelAndNumber(user: LevelAndNumberInformation): string {
-        if (user.number()) {
-            return `${this.translate.instant(`No.`)} ${user.number()}`;
-        } else {
-            return ``;
+        const strings: string[] = [];
+        if (user.structureLevels()) {
+            strings.push(user.structureLevels());
         }
+        if (user.number()) {
+            strings.push(`${this.translate.instant(`No.`)} ${user.number()}`);
+        }
+        return strings.join(` · `);
     }
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Participants` : `Participant`);
@@ -503,6 +506,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
     public participantImport(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
         return this.createAction<BackendImportRawPreview | void>(UserAction.PARTICIPANT_IMPORT, payload);
+    }
+
+    public mergeTogether(payload: { id: number; user_ids: number[] }[]): Action<void> {
+        return this.createAction(UserAction.MERGE_TOGETHER, payload);
     }
 
     private sanitizePayload(payload: any): any {
