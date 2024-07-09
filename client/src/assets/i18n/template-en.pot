@@ -231,6 +231,10 @@ msgid ""
 "affect the import."
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Administration roles"
+msgstr ""
+
 msgid "Administration roles (at organization level)"
 msgstr ""
 
@@ -410,6 +414,10 @@ msgid "Archive"
 msgstr ""
 
 msgid "Archived"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Archived meetings"
 msgstr ""
 
 msgid ""
@@ -1624,6 +1632,10 @@ msgstr ""
 msgid "Designates whether this user is in the room."
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Didn't get an email"
+msgstr ""
+
 msgid "Diff version"
 msgstr ""
 
@@ -1701,6 +1713,10 @@ msgid "Duplicate"
 msgstr ""
 
 msgid "Duplicate from"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Duplicates"
 msgstr ""
 
 msgid "Duration"
@@ -1809,6 +1825,10 @@ msgid "Element"
 msgstr ""
 
 msgid "Email"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Email address"
 msgstr ""
 
 msgid "Email body"
@@ -2191,6 +2211,10 @@ msgstr ""
 msgid "Go to line"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Got an email"
+msgstr ""
+
 msgid "Group"
 msgstr ""
 
@@ -2224,7 +2248,19 @@ msgstr ""
 msgid "Has SSO identification"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Has a membership number"
+msgstr ""
+
 msgid "Has amendments"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Has an email address"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Has changed vote weight"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service.ts
@@ -2238,14 +2274,30 @@ msgstr ""
 msgid "Has identical motions"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Has logged in"
+msgstr ""
+
 msgid "Has no SSO identification"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Has no email address"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
 msgid "Has no identical motions"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Has no membership number"
+msgstr ""
+
 msgid "Has no speakers"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Has not logged in yet"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/modules/poll/services/entitled-user-filter.service.ts
@@ -2256,6 +2308,10 @@ msgid "Has notes"
 msgstr ""
 
 msgid "Has speakers"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Has unchanged vote weight"
 msgstr ""
 
 msgid "Has voted"
@@ -2479,6 +2535,10 @@ msgstr ""
 msgid "Invite to conference room"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-filter/participant-list-filter.service.ts
+msgid "Is a committee"
+msgstr ""
+
 msgid "Is a natural person"
 msgstr ""
 
@@ -2511,7 +2571,19 @@ msgstr ""
 msgid "Is candidate"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Is committee admin"
+msgstr ""
+
 msgid "Is favorite"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Is in active meetings"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Is in archived meetings"
 msgstr ""
 
 msgid "Is manager"
@@ -2523,13 +2595,29 @@ msgstr ""
 msgid "Is no natural person"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-filter/participant-list-filter.service.ts
+msgid "Is not a committee"
+msgstr ""
+
 msgid "Is not a template"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Is not active"
 msgstr ""
 
 msgid "Is not archived"
 msgstr ""
 
 msgid "Is not favorite"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Is not in active meetings"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Is not in archived meetings"
 msgstr ""
 
 msgid "Is not present"
@@ -3070,6 +3158,10 @@ msgid "No chat groups available"
 msgstr ""
 
 msgid "No comment"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "No committee admin"
 msgstr ""
 
 msgid "No data"
@@ -3932,11 +4024,23 @@ msgstr ""
 msgid "Rows with warnings"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "SSO"
+msgstr ""
+
 msgid "SSO Identification"
 msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/definitions/index.ts
 msgid "SSO identification"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Same email"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Same given and surname"
 msgstr ""
 
 msgid "Save"
@@ -4432,6 +4536,10 @@ msgid "Summary of changes"
 msgstr ""
 
 msgid "Summary of changes:"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Superadmin"
 msgstr ""
 
 msgid "Superadmin actions"
