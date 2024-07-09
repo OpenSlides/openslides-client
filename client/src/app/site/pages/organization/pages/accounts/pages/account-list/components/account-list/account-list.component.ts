@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
-import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
+import { getOmlVerboseName, OML } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
@@ -33,6 +33,10 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
 
     public get isMobile(): boolean {
         return this.vp.isMobile;
+    }
+
+    public get isUserManager(): boolean {
+        return this.operator.hasOrganizationPermissions(OML.can_manage_users);
     }
 
     public constructor(

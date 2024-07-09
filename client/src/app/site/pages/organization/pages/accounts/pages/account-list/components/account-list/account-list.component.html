@@ -1,7 +1,7 @@
 <os-head-bar
     [nav]="meeting === null"
     [goBack]="meeting !== null"
-    [hasMainButton]="true"
+    [hasMainButton]="isUserManager"
     [mainActionTooltip]="'New account' | translate"
     (mainEvent)="createNewMember()"
     [multiSelectMode]="isMultiSelect"
@@ -10,7 +10,6 @@
     <div class="title-slot">
         <h2>
             {{ 'Accounts' | translate }}
-            <span *ngIf="meeting | async as m">({{ m.name }})</span>
         </h2>
     </div>
 
@@ -131,11 +130,7 @@
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <a
-            mat-menu-item
-            [routerLink]="['/accounts', member.id, 'meetings']"
-            *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true"
-        >
+        <a mat-menu-item [routerLink]="['/accounts', member.id, 'meetings']" *osOmlPerms="OML.can_manage_users">
             <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </a>

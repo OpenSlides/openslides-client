@@ -73,31 +73,6 @@ export class UserService {
     }
 
     /**
-     * Checks, if the passed users (given by their ids) are in the same scope as the operator and returns the result.
-     *
-     * @param userIds The id of every user to check
-     *
-     * @returns A boolean whether every given user is in the same scope as the operator, if there are no users or only the operator is given, it will always be true
-     */
-    public async isUserInSameScope(...userIds: Id[]): Promise<boolean> {
-        userIds = userIds.filter(id => id !== this.operator.operatorId);
-        if (!userIds.length) {
-            return true;
-        }
-        const result = await this.presenter.call({ user_ids: [...userIds, this.operator.operatorId!] });
-        const ownScope = result[this.operator.operatorId!];
-        return !Object.keys(result)
-            .map(userId => parseInt(userId, 10))
-            .some(userId => {
-                const toCompare = result[userId];
-                return (
-                    this.presenter.compareScope(ownScope, toCompare) === -1 ||
-                    (ownScope.collection === toCompare.collection && ownScope.id !== toCompare.id)
-                );
-            });
-    }
-
-    /**
      * Checks, if the operator has the correct perms to edit the passed users (given by their ids) in accordance with their scopes.
      * May not return true if a meeting scope outside of the current meeting is returned, even if the operator has the correct permission.
      *
@@ -112,6 +87,9 @@ export class UserService {
             .every(userId => {
                 const toCompare = result[userId];
                 let hasPerms = this.operator.hasOrganizationPermissions(toCompare.user_oml || OML.can_manage_users);
+                if (!hasPerms && toCompare.committee_ids.length) {
+                    hasPerms = true;
+                }
                 if (!hasPerms && toCompare.collection === UserScope.COMMITTEE) {
                     hasPerms = hasPerms || this.operator.hasCommitteePermissions(toCompare.id, CML.can_manage);
                 }
