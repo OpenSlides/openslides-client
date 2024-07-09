@@ -87,7 +87,12 @@ export class UserService {
             .every(userId => {
                 const toCompare = result[userId];
                 let hasPerms = this.operator.hasOrganizationPermissions(toCompare.user_oml || OML.can_manage_users);
-                if (!hasPerms && toCompare.committee_ids.length) {
+                if (
+                    !hasPerms &&
+                    toCompare.collection === UserScope.ORGANIZATION &&
+                    !toCompare.user_oml &&
+                    toCompare.committee_ids.intersect(this.operator.user.committee_management_ids || [])
+                ) {
                     hasPerms = true;
                 }
                 if (!hasPerms && toCompare.collection === UserScope.COMMITTEE) {
