@@ -27,12 +27,13 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     ) {
         super(repositoryServiceCollector, Mediafile);
 
-        this.viewModelSortFn = (a: ViewMediafile, b: ViewMediafile) => this.languageCollator.compare(a.title, b.title);
+        this.viewModelSortFn = (a: ViewMediafile, b: ViewMediafile): number =>
+            this.languageCollator.compare(a.title, b.title);
     }
 
-    public getTitle = (viewMediafile: ViewMediafile) => viewMediafile.title;
+    public getTitle = (viewMediafile: ViewMediafile): string => viewMediafile.title;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Files` : `File`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Files` : `File`);
 
     public override getFieldsets(): Fieldsets<Mediafile> {
         const fileSelectionFields: TypedFieldset<Mediafile> = [`title`, `is_directory`];
@@ -117,8 +118,8 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
      */
     protected override createViewModel(model: Mediafile): ViewMediafile {
         const viewModel = super.createViewModel(model);
-        viewModel.getEnsuredActiveMeetingId = () => this.activeMeetingIdService.meetingId;
-        viewModel.getProjectedContentObjects = () =>
+        viewModel.getEnsuredActiveMeetingId = (): number => this.activeMeetingIdService.meetingId;
+        viewModel.getProjectedContentObjects = (): string[] =>
             this.projectionRepo.getViewModelList().map(p => p.content_object_id);
         return viewModel;
     }

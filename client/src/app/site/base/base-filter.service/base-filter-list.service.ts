@@ -290,7 +290,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                 map(viewModels => {
                     let filterProperties: (OsFilterOption | string)[] = [];
                     if (viewModels && viewModels.length) {
-                        let models: FilterModel[] = viewModels.filter(filterFn ?? (() => true));
+                        let models: FilterModel[] = viewModels.filter(filterFn ?? ((): boolean => true));
                         if (mapFn) {
                             models = Object.values(models.map(mapFn).mapToObject(model => ({ [model.id]: model })));
                         }

@@ -227,7 +227,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
      * strings
      */
     public constructor(private importServiceCollector: ImportServiceCollectorService) {
-        this._reader.onload = (event: FileReaderProgressEvent) => {
+        this._reader.onload = (event: FileReaderProgressEvent): void => {
             this.parseInput(event.target?.result as string);
         };
         this.init();
@@ -468,7 +468,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
             _handler:
                 | StaticAdditionalImportHandlerConfig<MainModel, SideModel>
                 | BaseAdditionalImportHandler<MainModel, SideModel>
-        ) => {
+        ): BaseAdditionalImportHandler<MainModel, SideModel> => {
             if (_handler instanceof BaseAdditionalImportHandler) {
                 return _handler;
             } else {
