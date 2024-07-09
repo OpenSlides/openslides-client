@@ -13,7 +13,7 @@ export class OptionRepositoryService extends BaseMeetingRelatedRepository<ViewOp
         super(repositoryServiceCollector, Option);
     }
 
-    public getTitle = (_viewOption: ViewOption) => `Option`;
+    public getTitle = (_viewOption: ViewOption): string => `Option`;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Options` : `Option`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Options` : `Option`);
 }

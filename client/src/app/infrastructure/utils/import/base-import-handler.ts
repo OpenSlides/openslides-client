@@ -58,7 +58,7 @@ export abstract class BaseImportHandler<MainModel = any, SideModel = any> implem
             translateFn: config.translateFn
         });
         this._fixedChunkSize = config.fixedChunkSize ?? 100;
-        this._transformFn = config.transformFn ?? (models => models as any);
+        this._transformFn = config.transformFn ?? ((models): any => models as any);
     }
 
     public startImport(): void {

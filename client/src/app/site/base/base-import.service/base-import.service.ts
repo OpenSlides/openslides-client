@@ -468,7 +468,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
             _handler:
                 | StaticAdditionalImportHandlerConfig<MainModel, SideModel>
                 | BaseAdditionalImportHandler<MainModel, SideModel>
-        ) => {
+        ): BaseAdditionalImportHandler<MainModel, SideModel> => {
             if (_handler instanceof BaseAdditionalImportHandler) {
                 return _handler;
             } else {

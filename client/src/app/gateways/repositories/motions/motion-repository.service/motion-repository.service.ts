@@ -233,7 +233,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.createAction(AmendmentAction.CREATE_PARAGRAPHBASED_AMENDMENT, payload);
     }
 
-    public getTitle = (viewMotion: ViewMotion) => {
+    public getTitle = (viewMotion: ViewMotion): string => {
         if (viewMotion.number) {
             return `${viewMotion.number}: ${viewMotion.title}`;
         } else {
@@ -241,7 +241,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         }
     };
 
-    public getNumberOrTitle = (viewMotion: ViewMotion) => {
+    public getNumberOrTitle = (viewMotion: ViewMotion): string => {
         if (viewMotion.number) {
             return viewMotion.number;
         } else {
@@ -249,7 +249,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         }
     };
 
-    public override getAgendaSlideTitle = (viewMotion: ViewMotion) => {
+    public override getAgendaSlideTitle = (viewMotion: ViewMotion): string => {
         const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewMotion);
         // if the number is set, the title will be 'Motion <number>'.
         if (viewMotion.number) {
@@ -259,7 +259,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         }
     };
 
-    public override getAgendaListTitle = (viewMotion: ViewMotion) => {
+    public override getAgendaListTitle = (viewMotion: ViewMotion): AgendaListTitle => {
         const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewMotion);
         // Append the verbose name only, if not the special format 'Motion <number>' is used.
         let title: string;
@@ -276,9 +276,14 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return agendaTitle;
     };
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Motions` : `Motion`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Motions` : `Motion`);
 
-    public getProjectorTitle = (viewMotion: ViewMotion) => {
+    public getProjectorTitle = (
+        viewMotion: ViewMotion
+    ): {
+        title: string;
+        subtitle: string;
+    } => {
         const subtitle =
             viewMotion.agenda_item && viewMotion.agenda_item.comment ? viewMotion.agenda_item.comment : undefined;
         return { title: this.getTitle(viewMotion), subtitle };
@@ -287,8 +292,11 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     protected override createViewModel(model: Motion): ViewMotion {
         const viewModel = super.createViewModel(model);
 
-        viewModel.getNumberOrTitle = () => this.getNumberOrTitle(viewModel);
-        viewModel.getProjectorTitle = () => this.getProjectorTitle(viewModel);
+        viewModel.getNumberOrTitle = (): string => this.getNumberOrTitle(viewModel);
+        viewModel.getProjectorTitle = (): {
+            title: string;
+            subtitle: string;
+        } => this.getProjectorTitle(viewModel);
 
         return viewModel;
     }

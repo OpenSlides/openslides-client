@@ -176,8 +176,8 @@ class PdfCreator {
         this._document = config.document;
         this._filename = config.filename;
         this._loadFonts = config.loadFonts;
-        this._loadImages = config.loadImages || (() => ({}));
-        this._createVfs = config.createVfs || (() => ({}));
+        this._loadImages = config.loadImages || ((): any => ({}));
+        this._createVfs = config.createVfs || ((): any => ({}));
         this._progressService = config.progressService;
         this._progressSnackBarService = config.progressSnackBarService;
         this._settings = config.settings;
