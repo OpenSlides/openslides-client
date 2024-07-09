@@ -20,4 +20,7 @@ export class ListComponent<V extends Identifiable> extends BaseListComponent<V> 
      */
     @Input()
     public fakeFilters: Observable<{ [key: string]: () => void }> = null;
+
+    @Input()
+    public totalCount: number | Observable<number>;
 }

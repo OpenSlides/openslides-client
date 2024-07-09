@@ -1,5 +1,5 @@
 <os-head-bar
-    [hasMainButton]="true"
+    [hasMainButton]="canEdit"
     mainButtonIcon="edit"
     [mainActionTooltip]="'Edit account' | translate"
     (mainEvent)="editMember()"
@@ -17,7 +17,7 @@
     </div>
 
     <!-- Menu -->
-    <ng-container class="menu-slot">
+    <ng-container class="menu-slot" *osOmlPerms="userOML">
         <button type="button" mat-icon-button [matMenuTriggerFor]="userExtraMenu">
             <mat-icon>more_vert</mat-icon>
         </button>

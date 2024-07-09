@@ -38,6 +38,7 @@
     [alwaysShowMenu]="true"
     [vScrollFixed]="60"
     [fakeFilters]="fakeFilters"
+    [totalCount]="controller.getViewModelList().length"
 >
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">

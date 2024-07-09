@@ -10,7 +10,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { delay, find, map, Observable, of } from 'rxjs';
+import { BehaviorSubject, delay, find, map, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 
@@ -130,6 +130,19 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     @Input()
     public fakeFilters: Observable<{ [key: string]: () => void }> = null;
 
+    @Input()
+    public set totalCount(value: number | Observable<number>) {
+        if (value === undefined) {
+            this._totalCountObservable = null;
+        } else if (value instanceof Observable) {
+            this._totalCountObservable = value;
+        } else {
+            this._totalCountObservable = new BehaviorSubject(value);
+        }
+    }
+
+    private _totalCountObservable: Observable<number> = null;
+
     /**
      * Double binding the selected rows
      */
@@ -146,7 +159,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     }
 
     public get totalCountObservable(): Observable<number> {
-        return this._source.pipe(map(items => items.length));
+        return this._totalCountObservable ?? this._source.pipe(map(items => items.length));
     }
 
     public get source(): V[] {

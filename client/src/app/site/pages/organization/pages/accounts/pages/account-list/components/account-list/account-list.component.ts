@@ -58,7 +58,6 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
                 this.filterService.filterMeeting(params[`id`] || null);
                 if (params[`id`]) {
                     this.meeting = this.meetingRepo.getViewModelObservable(+params[`id`]);
-                    console.log(`meeting`, params[`id`], this.meeting);
                 }
             })
         );
@@ -73,7 +72,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     }
 
     public navigateToBaseList(): void {
-        this.router.navigate([`..`, `..`], { relativeTo: this.route });
+        this.router.navigate([`/accounts`]);
     }
 
     public get fakeFilters(): Observable<{ [key: string]: () => void }> {

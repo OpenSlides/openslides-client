@@ -89,6 +89,17 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return Object.values(this._tableData).filter(row => row[`is_manager`] === true).length;
     }
 
+    public get userOML(): OML {
+        return this.user.organization_management_level as OML;
+    }
+
+    public get canEdit(): boolean {
+        if (!this.userOML) {
+            return true;
+        }
+        return this.operator.hasOrganizationPermissions(this.userOML);
+    }
+
     public tableDataAscOrderCompare = <T>(a: KeyValue<string, T>, b: KeyValue<string, T>): number => {
         const aName = a.value[`committee_name`] ?? a.value[`meeting_name`] ?? ``;
         const bName = b.value[`committee_name`] ?? b.value[`meeting_name`] ?? ``;
