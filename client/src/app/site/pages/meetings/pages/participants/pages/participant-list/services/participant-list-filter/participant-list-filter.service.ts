@@ -109,9 +109,9 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             },
             {
                 property: `hasMemberNumber`,
-                label: `Member number`,
+                label: `Membership number`,
                 options: [
-                    { condition: true, label: `Has a member number` },
+                    { condition: true, label: `Has a membership number` },
                     { condition: [false, null], label: `Has no member number` }
                 ]
             },

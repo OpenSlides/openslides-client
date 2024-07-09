@@ -205,7 +205,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 options: [
                     {
                         condition: [DuplicateStatus.All, DuplicateStatus.SameName],
-                        label: `Same first/last name`
+                        label: `Same given/surname`
                     },
                     {
                         condition: [DuplicateStatus.All, DuplicateStatus.SameEmail],
