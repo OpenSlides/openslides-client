@@ -90,7 +90,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public get userOML(): OML {
-        return this.user.organization_management_level as OML;
+        return this.user?.organization_management_level as OML;
     }
 
     public get canEdit(): boolean {
