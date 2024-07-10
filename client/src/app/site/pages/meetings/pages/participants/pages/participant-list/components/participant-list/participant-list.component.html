@@ -74,9 +74,6 @@
                 <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canSeeSensitiveData">
                     block
                 </mat-icon>
-                <mat-icon matTooltip="{{ 'Locked out' | translate }}" *ngIf="user.is_locked_out && canSeeSensitiveData">
-                    block
-                </mat-icon>
                 <mat-icon
                     matTooltip="{{ 'Has SSO identification' | translate }}"
                     *ngIf="user.hasSamlId && canSeeSensitiveData"
@@ -164,14 +161,11 @@
             >
                 <span>{{ 'Present' | translate }}</span>
             </mat-checkbox>
-            <mat-checkbox
-                class="checkbox-ripple-padding"
-                (change)="setLockout(user)"
-                [checked]="isUserLockedOut(user)"
-                [disabled]="isLockedOutToggleDisabled()"
-            >
-                <span>{{ 'Locked Out' | translate }}</span>
-            </mat-checkbox>
+            <div style="padding-left: 12px">
+                <os-icon-container icon="event_busy" color="warn" [hide]="!user.is_locked_out">
+                    {{ 'Locked out' | translate }}
+                </os-icon-container>
+            </div>
         </div>
     </div>
 
