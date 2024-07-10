@@ -24,9 +24,9 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         super(repositoryServiceCollector, Speaker);
     }
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Speakers` : `Speaker`);
+    public getVerboseName = (plural = false): any => this.translate.instant(plural ? `Speakers` : `Speaker`);
 
-    public getTitle = (viewSpeaker: ViewSpeaker) =>
+    public getTitle = (viewSpeaker: ViewSpeaker): any =>
         viewSpeaker.user ? viewSpeaker.user.getFullName() : this.translate.instant(`Deleted user`);
 
     public create(

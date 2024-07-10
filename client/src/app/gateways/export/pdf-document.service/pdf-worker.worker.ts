@@ -61,7 +61,7 @@ function addPageNumbers(data: any): void {
     // to allow page numbers in every page, after the initial "%PAGENR%" placeholder was reset
     let countPageNumbers = false;
 
-    data.doc.footer = (currentPage: any, pageCount: any) => {
+    data.doc.footer = (currentPage: any, pageCount: any): any => {
         const footer = data.doc.tmpfooter;
 
         // if the tmpfooter starts with an image, the pagenumber will be found in column 1

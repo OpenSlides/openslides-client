@@ -21,10 +21,10 @@ export class ListOfSpeakersRepositoryService extends BaseMeetingRelatedRepositor
         super(repositoryServiceCollector, ListOfSpeakers);
     }
 
-    public getVerboseName = (plural = false) =>
+    public getVerboseName = (plural = false): string =>
         this.translate.instant(plural ? `Lists of speakers` : `List of speakers`);
 
-    public override getTitle = (viewListOfSpeakers: ViewListOfSpeakers) => {
+    public override getTitle = (viewListOfSpeakers: ViewListOfSpeakers): string => {
         if (viewListOfSpeakers?.content_object) {
             return viewListOfSpeakers.content_object.getListOfSpeakersTitle();
         }

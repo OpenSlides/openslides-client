@@ -130,7 +130,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     /**
      * Updates every time when there's a new sortDefinition. Emits said sortDefinition.
      */
-    public get sortingUpdatedObservable() {
+    public get sortingUpdatedObservable(): Observable<OsSortingDefinition<V>> {
         return this.sortDefinitionSubject.pipe(
             distinctUntilChanged((prev, curr) => {
                 return JSON.stringify(prev) === JSON.stringify(curr);
