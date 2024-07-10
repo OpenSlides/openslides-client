@@ -8,7 +8,8 @@ export interface EditorHtmlDialogOutput {
 
 @Component({
     selector: `os-editor-html-dialog`,
-    templateUrl: `./editor-html-dialog.component.html`
+    templateUrl: `./editor-html-dialog.component.html`,
+    styleUrls: [`./editor-html-dialog.component.scss`]
 })
 export class EditorHtmlDialogComponent {
     public isUpdate: boolean;
