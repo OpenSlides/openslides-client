@@ -55,7 +55,7 @@
 
                     <!-- Options and Actions -->
                     <div
-                        *ngIf="settings.isSplitSingleOption && displayed_in_autopilot"
+                        *ngIf="!(settings.isSplitSingleOption && !displayed_in_autopilot)"
                         [ngClass]="{
                             'yna-grid': poll.isMethodYNA || (settings.isSplitSingleOption && displayed_in_autopilot),
                             'yn-grid': poll.isMethodYN,
