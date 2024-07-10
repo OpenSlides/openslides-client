@@ -27,7 +27,7 @@ export class TopicExportService {
         ];
 
         this.csvExportService.dummyCSVExport<TopicExport>(
-            topicHeadersAndVerboseNames,
+            Object.keys(topicHeadersAndVerboseNames),
             rows,
             `${this.translate.instant(`Agenda`)}-${this.translate.instant(`example`)}.csv`
         );
