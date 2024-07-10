@@ -17,12 +17,15 @@
     @include os-var-overwrites();
 
     --mat-menu-item-icon-color: rgba(0, 0, 0, 0.54);
+    --mat-table-header-headline-color: rgba(0, 0, 0, 0.55);
 }
 
 .openslides-dark-theme {
     @include mat.all-component-colors($openslides-dark-theme);
     @include os-component-themes($openslides-dark-theme);
     @include os-var-overwrites();
+
+    --mat-table-header-headline-color: rgba(255, 255, 255, 0.70);
 
     mat-form-field:focus-within {
         mat-label{
