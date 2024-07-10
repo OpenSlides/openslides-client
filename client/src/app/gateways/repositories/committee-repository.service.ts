@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
@@ -27,9 +28,9 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
         super(repositoryServiceCollector, Committee);
     }
 
-    public getTitle = (viewCommittee: ViewCommittee) => viewCommittee.name;
+    public getTitle = (viewCommittee: ViewCommittee): string => viewCommittee.name;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Committees` : `Committee`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Committees` : `Committee`);
 
     public override getFieldsets(): Fieldsets<Committee> {
         const nameFields: TypedFieldset<Committee> = [`name`];
@@ -61,7 +62,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
     }
 
     public update(update?: any, ...committees: ViewCommittee[]): Action<void> {
-        const createPayload = (id: Id, model: Partial<Committee>) => ({
+        const createPayload = (id: Id, model: Partial<Committee>): any => ({
             id,
             name: model.name,
             default_meeting_id: model.default_meeting_id,
@@ -107,8 +108,8 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
 
     protected override createViewModel(model: Committee): ViewCommittee {
         const viewModel = super.createViewModel(model);
-        viewModel.getViewUser = (id: Id) => this.userRepo.getViewModel(id);
-        viewModel.canAccess = () =>
+        viewModel.getViewUser = (id: Id): ViewUser => this.userRepo.getViewModel(id);
+        viewModel.canAccess = (): boolean =>
             this.operator.hasCommitteePermissions(model.id, CML.can_manage) ||
             this.operator.hasOrganizationPermissions(OML.can_manage_users) ||
             this.operator.isInCommitteesNonAdminCheck(model);

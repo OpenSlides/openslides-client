@@ -16,12 +16,12 @@ export class ProjectionRepositoryService extends BaseMeetingRelatedRepository<Vi
         super(repositoryServiceCollector, Projection);
     }
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Projections` : `Projection`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Projections` : `Projection`);
 
-    public getTitle = (viewProjection: ViewProjection) =>
+    public getTitle = (viewProjection: ViewProjection): string =>
         viewProjection.content_object?.getProjectorTitle(viewProjection.projection).title;
 
-    public getSubtitle = (viewProjection: ViewProjection) =>
+    public getSubtitle = (viewProjection: ViewProjection): string =>
         viewProjection.content_object?.getProjectorTitle(viewProjection.projection).subtitle || ``;
 
     public override getFieldsets(): Fieldsets<Projection> {
@@ -63,7 +63,7 @@ export class ProjectionRepositoryService extends BaseMeetingRelatedRepository<Vi
 
     protected override createViewModel(model: Projection): ViewProjection {
         const viewModel = super.createViewModel(model);
-        viewModel.getSubtitle = () => this.getSubtitle(viewModel);
+        viewModel.getSubtitle = (): string => this.getSubtitle(viewModel);
         return viewModel;
     }
 }

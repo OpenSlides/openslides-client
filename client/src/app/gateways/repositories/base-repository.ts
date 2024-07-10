@@ -680,7 +680,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     private createViewModelProxy(model?: M): V {
         let viewModel = new this.baseViewModelCtor(model);
         viewModel = new Proxy(viewModel, {
-            get: (target: V, property) => {
+            get: (target: V, property): any => {
                 // target is our viewModel and property the requested value: viewModel[property]
                 let result: any; // This is what we have to resolve: viewModel[property] -> result
                 const _model: M = target.getModel();

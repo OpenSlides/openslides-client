@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { Observable } from 'rxjs';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
+import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -19,6 +22,7 @@ import { AccountControllerService } from '../../../../services/common/account-co
 import { AccountFilterService } from '../../../../services/common/account-filter.service';
 import { AccountListSearchService } from '../../services/account-list-search/account-list-search.service';
 import { AccountSortService } from '../../services/account-list-sort.service/account-sort.service';
+import { AccountMergeDialogComponent } from '../account-merge-dialog/account-merge-dialog.component';
 
 const ACCOUNT_LIST_STORAGE_INDEX = `account_list`;
 
@@ -47,7 +51,8 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         private userController: UserControllerService,
         public searchService: AccountListSearchService,
         private operator: OperatorService,
-        private vp: ViewPortService
+        private vp: ViewPortService,
+        private dialog: MatDialog
     ) {
         super();
         super.setTitle(`Accounts`);
@@ -125,5 +130,23 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
 
     public getOmlByUser(user: ViewUser): string {
         return getOmlVerboseName(user.organization_management_level as keyof OMLMapping);
+    }
+
+    public async mergeUsersTogether(): Promise<void> {
+        const result = await this.openMergeDialog();
+        if (result) {
+            const id = result;
+            const user_ids = this.selectedRows.map(view => view.id).filter(sRid => sRid !== id);
+            this.controller.mergeTogether([{ id: id, user_ids: user_ids }]).resolve();
+        }
+    }
+
+    public async openMergeDialog(): Promise<number | null> {
+        const data = { choices: this.selectedRows };
+        const dialogRef = this.dialog.open(AccountMergeDialogComponent, {
+            ...mediumDialogSettings,
+            data: data
+        });
+        return firstValueFrom(dialogRef.afterClosed());
     }
 }
