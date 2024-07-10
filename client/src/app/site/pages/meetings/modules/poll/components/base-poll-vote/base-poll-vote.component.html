@@ -55,9 +55,9 @@
 
                     <!-- Options and Actions -->
                     <div
-                        *ngIf="!settings.isSplitSingleOption"
+                        *ngIf="settings.isSplitSingleOption && displayed_in_autopilot"
                         [ngClass]="{
-                            'yna-grid': poll.isMethodYNA,
+                            'yna-grid': poll.isMethodYNA || (settings.isSplitSingleOption && displayed_in_autopilot),
                             'yn-grid': poll.isMethodYN,
                             'single-vote-grid': (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option <= 1,
                             'single-multi-vote-grid':
@@ -65,7 +65,14 @@
                         }"
                     >
                         <div *ngIf="showAvailableVotes" class="grid-name-area"></div>
-                        <b *ngIf="!showAvailableVotes && poll.option_ids" class="grid-name-area">
+                        <b
+                            *ngIf="
+                                !showAvailableVotes &&
+                                poll.option_ids &&
+                                !(settings.isSplitSingleOption && displayed_in_autopilot)
+                            "
+                            class="grid-name-area"
+                        >
                             {{ poll.option_ids.length }} {{ optionPluralLabel | translate }}
                         </b>
                         <b
@@ -80,9 +87,11 @@
                     </div>
                     <ng-container *ngFor="let option of poll.options; let i = index">
                         <div
-                            *ngIf="!settings.isSplitSingleOption"
                             [ngClass]="{
-                                'yna-grid': !settings.isSplitSingleOption && poll.isMethodYNA,
+                                'split-grid': settings.isSplitSingleOption && !displayed_in_autopilot,
+                                'yna-grid':
+                                    (!settings.isSplitSingleOption && poll.isMethodYNA) ||
+                                    (settings.isSplitSingleOption && displayed_in_autopilot),
                                 'yn-grid': !settings.isSplitSingleOption && poll.isMethodYN,
                                 'single-vote-grid':
                                     !settings.isSplitSingleOption &&
@@ -121,12 +130,42 @@
                                 </span>
                             </div>
 
-                            <ng-container
-                                *ngIf="
-                                    !settings.isSplitSingleOption &&
-                                    (!poll.max_votes_per_option || poll.max_votes_per_option <= 1)
-                                "
-                            >
+                            <ng-container *ngIf="!poll.max_votes_per_option || poll.max_votes_per_option <= 1">
+                                <div
+                                    class="vote-button-area"
+                                    *ngFor="let action of voteActions.length ? voteActions : voteOptions; index as i"
+                                    [ngClass]="'option' + i"
+                                >
+                                    <button
+                                        class="vote-button"
+                                        mat-raised-button
+                                        (click)="saveSingleVote(option.id, action.vote, delegation)"
+                                        [disabled]="isDeliveringVote(delegation)"
+                                    >
+                                        <div
+                                            class="vote-button-content"
+                                            [ngClass]="getActionButtonContentClass(action, option, delegation)"
+                                        >
+                                            <os-custom-icon
+                                                [customIcon]="drawnCross"
+                                                class="vote-button-cross"
+                                                [ngClass]="getActionButtonClass(action, option, delegation)"
+                                            ></os-custom-icon>
+                                            <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
+                                        </div>
+                                    </button>
+                                    <span
+                                        *ngIf="settings.isSplitSingleOption && !displayed_in_autopilot"
+                                        class="vote-label"
+                                    >
+                                        {{ action.label | translate }}
+                                    </span>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="settings.isSplitSingleOption && displayed_in_autopilot">
+                                <b *ngIf="!showAvailableVotes && poll.option_ids" class="grid-name-area">
+                                    {{ poll.title }}
+                                </b>
                                 <div
                                     class="vote-button-area"
                                     *ngFor="let action of voteActions.length ? voteActions : voteOptions; index as i"
@@ -171,39 +210,6 @@
                                     {{ getErrorInVoteEntry(option.id) }}
                                 </mat-error>
                             </mat-form-field>
-                        </div>
-                        <div *ngIf="settings.isSplitSingleOption">
-                            <div
-                                *ngFor="let action of voteActions; index as i"
-                                class="single-vote-grid"
-                                [ngClass]="{ 'accentuated-background': i % 2 === 1 }"
-                            >
-                                <div class="vote-option-title grid-name-area">
-                                    <span>
-                                        {{ voteActions[i]?.label | translate }}
-                                    </span>
-                                </div>
-                                <div class="vote-button-area option0">
-                                    <button
-                                        class="vote-button"
-                                        mat-raised-button
-                                        (click)="saveSingleVote(option.id, action.vote, delegation)"
-                                        [disabled]="isDeliveringVote(delegation)"
-                                    >
-                                        <div
-                                            class="vote-button-content"
-                                            [ngClass]="getActionButtonContentClass(action, option, delegation)"
-                                        >
-                                            <os-custom-icon
-                                                [customIcon]="drawnCross"
-                                                class="vote-button-cross"
-                                                [ngClass]="getActionButtonClass(action, option, delegation)"
-                                            ></os-custom-icon>
-                                            <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
-                                        </div>
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </ng-container>
 
