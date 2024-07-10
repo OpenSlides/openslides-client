@@ -2,7 +2,11 @@
     display: flex;
     align-items: center;
 
-    mat-icon {
+    .delete-button {
+        margin-left: 4px;
+    }
+
+    .sep-line {
         margin: 0 8px;
 
         &.grey-out {
