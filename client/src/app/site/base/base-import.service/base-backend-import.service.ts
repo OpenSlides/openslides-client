@@ -160,7 +160,7 @@ export abstract class BaseBackendImportService implements BackendImportService {
      * strings
      */
     public constructor(private importServiceCollector: ImportServiceCollectorService) {
-        this._reader.onload = (event: FileReaderProgressEvent) => {
+        this._reader.onload = (event: FileReaderProgressEvent): void => {
             this.parseInput(event.target?.result as string);
         };
     }

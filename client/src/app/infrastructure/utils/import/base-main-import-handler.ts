@@ -59,8 +59,8 @@ export abstract class BaseMainImportHandler<MainModel extends ImportIdentifiable
     public constructor(config: MainImportHandlerConfig<MainModel>) {
         super(config);
         this._createFn = config.createFn;
-        this._updateFn = config.updateFn || (async () => {});
-        this._resolveEntryFn = config.resolveEntryFn ?? (model => model.model);
+        this._updateFn = config.updateFn || (async (): Promise<void> => {});
+        this._resolveEntryFn = config.resolveEntryFn ?? ((model): MainModel => model.model);
     }
 
     public abstract override pipeModels(models: ImportModel<MainModel>[]): void | Promise<void>;
@@ -132,7 +132,16 @@ export abstract class BaseMainImportHandler<MainModel extends ImportIdentifiable
         models: { model: MainModel; index: number }[],
         fn: (entries: MainModel[]) => Promise<ImportIdentifiable[] | void>
     ): Promise<ImportResponse[]> {
-        const request = async (data: { model: MainModel; index: number }[]) => {
+        const request = async (
+            data: { model: MainModel; index: number }[]
+        ): Promise<
+            {
+                index: number;
+                identifiable: {
+                    id: number;
+                };
+            }[]
+        > => {
             const defaultIdentifiables = data.map(date => ({ id: date.model.id }));
             const returnValue = (await fn(data.map(date => date.model))) || defaultIdentifiables;
             this.modelsImported = this.modelsImported.concat(data as any);
@@ -141,7 +150,7 @@ export abstract class BaseMainImportHandler<MainModel extends ImportIdentifiable
                 identifiable: date || { id: data[index].model.id }
             }));
         };
-        const sendSingleRequest = async (date: { model: MainModel; index: number }) => {
+        const sendSingleRequest = async (date: { model: MainModel; index: number }): Promise<ImportResponse[]> => {
             let response: ImportResponse[] = [];
             try {
                 response = (await request([date])).map(receivedValue => ({ errors: [], ...receivedValue }));

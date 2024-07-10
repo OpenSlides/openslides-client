@@ -54,7 +54,7 @@ export class WaitForActionBannerComponent extends BaseUiComponent {
         this.waitService.stopWaiting(all);
     }
 
-    private nextDataArray() {
+    private nextDataArray(): void {
         this._dataArraySubject.next(this._currentData.get(this.waitService.currentReason));
     }
 }

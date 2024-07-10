@@ -40,7 +40,7 @@ const VoteServiceErrorMap: ErrorMap = new ErrorMap([
     [/is not allowed to vote/, _(`You do not have the permission to vote.`)]
 ]);
 
-const MatchAllErrorMap: ErrorMap = new ErrorMap([[/(.*)/, input => new MapError(input)]]);
+const MatchAllErrorMap: ErrorMap = new ErrorMap([[/(.*)/, (input): MapError => new MapError(input)]]);
 const MeetingCreateErrorMap: ErrorMap = new ErrorMap([
     [
         /Only one of start_time and end_time is not allowed./,

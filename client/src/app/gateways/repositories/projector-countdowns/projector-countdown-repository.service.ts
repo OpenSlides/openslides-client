@@ -22,12 +22,12 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
         super(repositoryServiceCollector, ProjectorCountdown);
     }
 
-    public getTitle = (viewProjectorCountdown: ViewProjectorCountdown) =>
+    public getTitle = (viewProjectorCountdown: ViewProjectorCountdown): string =>
         viewProjectorCountdown.description
             ? `${viewProjectorCountdown.title} (${viewProjectorCountdown.description})`
             : viewProjectorCountdown.title;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Countdowns` : `Countdown`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Countdowns` : `Countdown`);
 
     public async create(payload: any): Promise<Identifiable> {
         return await this.sendActionToBackend(ProjectorCountdownAction.CREATE, payload);
