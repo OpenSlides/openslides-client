@@ -21,9 +21,9 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
         super(repositoryServiceCollector, Projector);
     }
 
-    public getTitle = (viewProjector: ViewProjector) => viewProjector.name;
+    public getTitle = (viewProjector: ViewProjector): string => viewProjector.name;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Projectors` : `Projector`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Projectors` : `Projector`);
 
     public async create(partialProjector: Partial<Projector> & { name: string }): Promise<Identifiable> {
         const payload: any = {

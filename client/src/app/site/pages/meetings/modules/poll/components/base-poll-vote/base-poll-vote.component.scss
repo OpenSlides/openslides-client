@@ -1,0 +1,222 @@
+@import 'src/assets/styles/poll-colors.scss';
+@import 'src/assets/styles/poll-styles-common.scss';
+
+%vote-grid-base {
+    display: grid;
+    grid-gap: 10px;
+    padding: 10px;
+    margin: 0 10px;
+
+    .vote-button {
+        min-width: 50px;
+        height: 50px;
+        margin: auto;
+
+        .vote-button-content {
+            margin: auto;
+            display: grid;
+
+            .vote-button-circle,
+            .vote-button-cross {
+                grid-column: 1;
+                grid-row: 1;
+            }
+
+            .vote-button-circle {
+                z-index: 0;
+            }
+
+            .vote-button-cross {
+                z-index: 1;
+                height: 24px;
+                width: 24px;
+                opacity: 0;
+            }
+        }
+
+        .button-content-opaque {
+            opacity: 0.5;
+        }
+
+        .button-content-not-opaque {
+            opacity: 1 !important;
+        }
+    }
+
+    .vote-button-area {
+        display: inline-grid;
+        justify-content: center;
+    }
+
+    .vote-button:hover {
+        .button-content-opaque {
+            opacity: 1;
+        }
+    }
+
+    .vote-label {
+        margin-left: 10px;
+    }
+
+    .poll-option-title {
+        text-align: center;
+    }
+}
+
+.or-divider-grid {
+    @extend %vote-grid-base;
+    grid-template-areas: 'left or right';
+    grid-template-columns: auto min-content auto;
+
+    .hr-wrapper {
+        height: 100%;
+    }
+}
+
+.poll-vote-delegation {
+    margin-top: 1em;
+
+    .poll-delegation-title {
+        font-weight: 500;
+    }
+}
+
+.yn-grid {
+    @extend %vote-grid-base;
+    grid-template-areas: 'name yes no';
+    grid-template-columns: auto var(--poll-option-title-width, 70px) var(--poll-option-title-width, 70px);
+    @media (max-width: 700px) {
+        grid-template-areas: 'name name name' '. yes no';
+    }
+}
+
+.yna-grid {
+    @extend %vote-grid-base;
+    grid-template-areas: 'name yes no abstain';
+    grid-template-columns: auto var(--poll-option-title-width, 70px) var(--poll-option-title-width, 70px) var(
+            --poll-option-title-width,
+            70px
+        );
+    @media (max-width: 700px) {
+        grid-template-areas: 'name name name name' '. yes no abstain';
+    }
+}
+
+.single-vote-grid {
+    @extend %vote-grid-base;
+    grid-template-areas: 'name yes';
+    grid-template-columns: auto var(--poll-option-title-width, 70px);
+    @media (max-width: 700px) {
+        grid-template-areas: 'name name' '. yes';
+    }
+}
+
+.single-multi-vote-grid {
+    @extend %vote-grid-base;
+    grid-template-areas: 'name yes';
+    grid-template-columns: auto 120px;
+    @media (max-width: 700px) {
+        grid-template-areas: 'name name' '. yes';
+    }
+}
+
+.global-option-grid {
+    @extend %vote-grid-base;
+    grid-template-columns: auto var(--poll-option-title-width, 70px);
+}
+
+.option-list-information-grid {
+    @extend %vote-grid-base;
+    grid-template-columns: max-content auto max-content;
+}
+
+.split-grid {
+    margin: 0;
+    padding: 10px 0;
+    @extend %vote-grid-base;
+    grid-template-areas: 'yes no abstain';
+    grid-template-columns: auto-fit auto-fit auto-fit;
+    @media (max-width: 296px) or ((max-width: 1164px) and (min-width: 959.1px)) {
+        grid-template-areas: 'yes' 'no' 'abstain';
+        grid-template-columns: auto-fit;
+    }
+    @media ((max-width: 416px) and (min-width: 296.1px)) or ((max-width: 1564px) and (min-width: 1164.1px)) {
+        grid-template-areas: 'yes no' 'abstain .';
+        grid-template-columns: auto-fit auto-fit;
+    }
+    @media ((max-width: 959px) and (min-width: 416.1px)) {
+        grid-template-areas: 'yes no abstain';
+        grid-template-columns: auto-fit auto-fit auto-fit;
+    }
+    .vote-label {
+        padding-top: 5px;
+        margin: 0;
+        text-align: center;
+    }
+}
+
+.grid-name-area {
+    grid-area: name;
+}
+
+.vote-option-title {
+    display: flex;
+    span,
+    i {
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+}
+
+.option0 {
+    grid-area: yes;
+}
+
+.option1 {
+    grid-area: no;
+}
+
+.option2 {
+    grid-area: abstain;
+}
+
+.strike-text {
+    text-decoration: line-through;
+}
+
+.centered-button-wrapper {
+    display: flex;
+    text-align: center;
+    margin-top: 20px;
+    > * {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .vote-submitted {
+        color: $votes-yes-color;
+        font-size: 200%;
+        overflow: visible;
+    }
+}
+
+.vote-input {
+    width: 120px;
+}
+
+.mat-divider-horizontal {
+    position: initial;
+}
+
+.submit-vote-indicator {
+    text-align: center;
+    .mat-mdc-progress-spinner {
+        display: block;
+        margin: auto;
+        margin-left: 100px;
+    }
+}
+
+.text-right {
+    text-align: right;
+}

@@ -19,7 +19,7 @@ export class StaticMainImportHandler<ToCreate extends ImportIdentifiable> extend
 
     public constructor(config: StaticMainImportConfig<ToCreate>) {
         super(config);
-        this._shouldCreateModelFn = config.shouldCreateModelFn ?? (model => !model.hasDuplicates);
+        this._shouldCreateModelFn = config.shouldCreateModelFn ?? ((model): boolean => !model.hasDuplicates);
     }
 
     public pipeModels(models: ImportModel<ToCreate>[]): void | Promise<void> {

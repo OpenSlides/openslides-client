@@ -10,8 +10,8 @@ import {
 
 import { BaseViewModel } from './base-view-model';
 
-const createStorageOffsetIndex = (prefix: string) => `${prefix}:offset`;
-const createStorageSearchIndex = (prefix: string) => `${prefix}:search`;
+const createStorageOffsetIndex = (prefix: string): string => `${prefix}:offset`;
+const createStorageSearchIndex = (prefix: string): string => `${prefix}:search`;
 
 @Directive()
 export abstract class BaseListViewComponent<V extends BaseViewModel> extends BaseComponent implements AfterViewInit {
