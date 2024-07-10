@@ -1,7 +1,7 @@
 <os-head-bar
     [nav]="meeting === null"
     [goBack]="meeting !== null"
-    [hasMainButton]="isUserManager"
+    [hasMainButton]="isUserManager && meeting === null"
     [mainActionTooltip]="'New account' | translate"
     (mainEvent)="createNewMember()"
     [multiSelectMode]="isMultiSelect"
@@ -41,7 +41,7 @@
 >
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="['/accounts', user.id]" *ngIf="!isMultiSelect"></a>
+        <a class="detail-link" [routerLink]="[user.id]" *ngIf="!isMultiSelect"></a>
         <div class="flex-vertical-center overflow-hidden">
             <div class="nameCell overflow-hidden">
                 <div class="title-line title-box">
@@ -126,11 +126,11 @@
 
 <mat-menu #singleMenu="matMenu">
     <ng-template matMenuContent let-member="member">
-        <a mat-menu-item [routerLink]="['/accounts', member.id, 'edit']">
+        <a mat-menu-item [routerLink]="[member.id, 'edit']">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <a mat-menu-item [routerLink]="['/accounts', member.id, 'meetings']" *osOmlPerms="OML.can_manage_users">
+        <a mat-menu-item [routerLink]="[member.id, 'meetings']" *osOmlPerms="OML.can_manage_users">
             <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </a>
@@ -147,17 +147,20 @@
             <mat-icon>library_add</mat-icon>
             <span>{{ 'Multiselect' | translate }}</span>
         </button>
-        <ng-container *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
-            <button mat-menu-item (click)="csvExportMemberList()">
-                <mat-icon>archive</mat-icon>
-                <span>{{ 'Export as CSV' | translate }}</span>
-            </button>
 
-            <button mat-menu-item routerLink="/accounts/import">
-                <mat-icon>cloud_upload</mat-icon>
-                <span>{{ 'Import' | translate }}</span>
-            </button>
-        </ng-container>
+        <button
+            mat-menu-item
+            *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true"
+            (click)="csvExportMemberList()"
+        >
+            <mat-icon>archive</mat-icon>
+            <span>{{ 'Export as CSV' | translate }}</span>
+        </button>
+
+        <button mat-menu-item *osOmlPerms="OML.can_manage_users; and: meeting === null" routerLink="/accounts/import">
+            <mat-icon>cloud_upload</mat-icon>
+            <span>{{ 'Import' | translate }}</span>
+        </button>
     </div>
     <div *ngIf="isMultiSelect">
         <os-user-multiselect-actions

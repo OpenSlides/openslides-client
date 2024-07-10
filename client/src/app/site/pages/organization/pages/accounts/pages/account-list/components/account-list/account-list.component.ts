@@ -59,9 +59,9 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         this.listStorageIndex = ACCOUNT_LIST_STORAGE_INDEX;
         this.subscriptions.push(
             this.route.params.subscribe(async params => {
-                this.filterService.filterMeeting(params[`id`] || null);
-                if (params[`id`]) {
-                    this.meeting = this.meetingRepo.getViewModelObservable(+params[`id`]);
+                this.filterService.filterMeeting(params[`meetingId`] || null);
+                if (params[`meetingId`]) {
+                    this.meeting = this.meetingRepo.getViewModelObservable(+params[`meetingId`]);
                 }
             })
         );
