@@ -6,7 +6,7 @@ export const Highlight = OriginalHighlight.extend({
             ...this.parent(),
             {
                 tag: `span`,
-                getAttrs: node => !!(node as HTMLElement).style?.backgroundColor && null
+                getAttrs: (node): false | Attr => !!(node as HTMLElement).style?.backgroundColor && null
             }
         ];
     }

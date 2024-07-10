@@ -64,8 +64,8 @@ export function parseRomanNumber(roman: string): number {
  *
  * Example: a -> 1, ab -> 28, ...
  */
-export function parseLetterNumber(str: string) {
-    const alphaVal = (s: string) => s.toLowerCase().charCodeAt(0) - 97 + 1;
+export function parseLetterNumber(str: string): number {
+    const alphaVal = (s: string): number => s.toLowerCase().charCodeAt(0) - 97 + 1;
     let value = 0;
     let i = str.length;
     while (i--) {

@@ -13,7 +13,7 @@ export const MSOfficePaste = Extension.create({
 
 const OfficePastePlugin = new Plugin({
     props: {
-        transformPastedHTML(html: string) {
+        transformPastedHTML(html: string): string {
             console.log([html]);
             if (html.indexOf(`microsoft-com`) !== -1 && html.indexOf(`office`) !== -1) {
                 html = transformLists(html);
@@ -134,7 +134,7 @@ function parseMsoListAttribute(attr: string): [id: string, level: number] {
 }
 
 const listTypeRegex = /<!--\[if \!supportLists\]-->((.|\n)*)<!--\[endif\]-->/m;
-function getListPrefix(el: HTMLElement) {
+function getListPrefix(el: HTMLElement): string {
     const matches = el.innerHTML.match(listTypeRegex);
     if (matches?.length) {
         const parser = new DOMParser();
@@ -150,7 +150,7 @@ function parseStyleAttribute(el: Element): { [prop: string]: string } {
     return Object.fromEntries(styleRaw.split(`;`).map(line => line.split(`:`).map(v => v.trim())));
 }
 
-function createListElement(el: HTMLElement) {
+function createListElement(el: HTMLElement): HTMLElement {
     const listInfo = getListInfo(getListPrefix(el));
     const list = document.createElement(listInfo.type);
     if (listInfo.countType) {
@@ -170,7 +170,7 @@ const listOrderRegex = {
     letterUpper: /[A-Z]+\./
 };
 
-function getListInfo(prefix: string) {
+function getListInfo(prefix: string): { type: string; start: number; countType: string } {
     let type = `ul`;
     let countType: string | null = null;
     let start = 1;

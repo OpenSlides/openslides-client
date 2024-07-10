@@ -6,13 +6,13 @@ export const OrderedList = OriginalOrderedList.extend({
             ...this.parent,
             start: {
                 default: null,
-                parseHTML: element => {
+                parseHTML: (element): string => {
                     return element.getAttribute(`start`);
                 }
             },
             type: {
                 default: null,
-                parseHTML: element => {
+                parseHTML: (element): string => {
                     return element.getAttribute(`type`);
                 }
             }
