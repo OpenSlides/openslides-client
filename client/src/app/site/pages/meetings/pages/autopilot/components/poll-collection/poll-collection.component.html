@@ -28,7 +28,11 @@
             <os-poll-progress *ngIf="poll.canBeVotedFor()" [poll]="poll"></os-poll-progress>
 
             <div *ngIf="poll.isMotionPoll">
-                <os-motion-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor() && !last"></os-motion-poll-vote>
+                <os-motion-poll-vote
+                    [poll]="poll"
+                    [displayInAutopilot]="displayInAutopilot"
+                    *ngIf="poll.canBeVotedFor() && !last"
+                ></os-motion-poll-vote>
                 <os-motion-poll-detail-content [poll]="lastPublishedPoll" *ngIf="last"></os-motion-poll-detail-content>
             </div>
 

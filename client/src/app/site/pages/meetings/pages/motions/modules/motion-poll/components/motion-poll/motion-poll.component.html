@@ -70,7 +70,11 @@
         <!-- Results -->
         <ng-container *ngIf="poll && !poll.stateHasVotes && poll.type !== 'analog'; else votingResult">
             <os-poll-progress *ngIf="poll && poll.isStarted" [poll]="poll"></os-poll-progress>
-            <os-motion-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor()"></os-motion-poll-vote>
+            <os-motion-poll-vote
+                [poll]="poll"
+                [displayInAutopilot]="false"
+                *ngIf="poll.canBeVotedFor()"
+            ></os-motion-poll-vote>
             <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
         </ng-container>
 
