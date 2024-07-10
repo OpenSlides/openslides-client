@@ -224,11 +224,13 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         }
     }
 
-    public isLockedOutToggleDisabled(): boolean {
+    public isLockedOutToggleDisabled(user: ViewUser): boolean {
         if (this.isMultiSelect) {
             return true;
+        } else if (this.operator.operatorId === user.id) {
+            return true;
         } else {
-            return !this.operator.hasPerms(Permission.userCanManagePresence);
+            return !this.operator.hasPerms(Permission.userCanManage);
         }
     }
 

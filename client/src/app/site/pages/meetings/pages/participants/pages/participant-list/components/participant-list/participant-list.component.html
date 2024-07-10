@@ -210,6 +210,16 @@
             <span>{{ 'Edit details' | translate }}</span>
         </button>
 
+        <button
+            *osPerms="permission.userCanManage"
+            [disabled]="isLockedOutToggleDisabled(user)"
+            mat-menu-item
+            (click)="setLockout(user)"
+        >
+            <mat-icon>event_busy</mat-icon>
+            <span>{{ 'Toggle lockout' | translate }}</span>
+        </button>
+
         <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="switchParticipants(user)">
             <mat-icon>swap_horiz</mat-icon>
             <span>{{ 'Swap mandates' | translate }}</span>
@@ -343,7 +353,7 @@
             </button>
 
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeLockedOutStateOfSelectedUsers()">
-                <mat-icon>check_box</mat-icon>
+                <mat-icon>event_busy</mat-icon>
                 <span>{{ 'Set lockout ...' | translate }}</span>
             </button>
 
