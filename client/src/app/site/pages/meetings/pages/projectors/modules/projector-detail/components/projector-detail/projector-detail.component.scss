@@ -171,5 +171,7 @@
 .projectable-entry {
     display: flex;
     align-items: center;
-    margin-bottom: 8px;
+    &:not(:last-of-type) {
+        margin-bottom: 16px;
+    }
 }
