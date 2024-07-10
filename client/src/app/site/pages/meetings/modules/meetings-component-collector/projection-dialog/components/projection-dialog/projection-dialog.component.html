@@ -15,11 +15,13 @@
             <mat-checkbox [checked]="isProjectorSelected(projector)" (change)="toggleProjector(projector)">
                 {{ projector.name }}
             </mat-checkbox>
-            <span *ngIf="isProjectedOn(projector)" class="right">
-                <mat-icon matTooltip="{{ 'Is already projected' | translate }}" matTooltipPosition="above">
-                    videocam
-                </mat-icon>
-            </span>
+            <mat-icon
+                *ngIf="isProjectedOn(projector)"
+                matTooltip="{{ 'Is already projected' | translate }}"
+                matTooltipPosition="above"
+            >
+                videocam
+            </mat-icon>
         </div>
     </div>
 
