@@ -59,7 +59,7 @@ export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
         return this.votingService.getVotingProhibitionReasonVerbose(this.poll, user) || ``;
     }
 
-    public getVotingErrorFromName(errorName: string) {
+    public getVotingErrorFromName(errorName: string): string {
         return this.votingService.getVotingProhibitionReasonVerboseFromName(errorName) || ``;
     }
 }

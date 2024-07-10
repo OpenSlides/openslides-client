@@ -33,20 +33,22 @@
                     <div class="option-list-information-grid" *ngIf="showAvailableVotes && !settings.hideLeftoverVotes">
                         <b>{{ poll.option_ids.length }} {{ optionPluralLabel | translate }}</b>
                         <div></div>
-                        <b>
+                        <b class="text-right">
                             {{ 'Available votes' | translate }}:
                             <b>{{ getVotesAvailable(delegation) }}/{{ poll.max_votes_amount }}</b>
 
                             <span *ngIf="poll.min_votes_amount > 1">
-                                ({{ 'At least' | translate }}
+                                <br />
+                                {{ 'At least' | translate }}
                                 <b>{{ poll.min_votes_amount }}</b>
-                                )
+                                {{ 'Votes' | translate }}
                             </span>
 
                             <span *ngIf="poll.max_votes_per_option > 1">
-                                ({{ 'At most' | translate }}
+                                <br />
+                                {{ 'At most' | translate }}
                                 <b>{{ poll.max_votes_per_option }}</b>
-                                {{ maxVotesPerOptionSuffix | translate }})
+                                {{ maxVotesPerOptionSuffix | translate }}
                             </span>
                         </b>
                     </div>

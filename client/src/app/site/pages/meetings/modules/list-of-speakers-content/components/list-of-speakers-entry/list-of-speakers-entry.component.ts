@@ -89,7 +89,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         return this.canManage && this.isCallEnabled;
     }
 
-    public isPointOfOrderFn = () => this.speaker.point_of_order;
+    public isPointOfOrderFn = (): boolean => this.speaker.point_of_order;
 
     public isCallEnabled = false;
     public pointOfOrderCategoriesEnabled = false;
