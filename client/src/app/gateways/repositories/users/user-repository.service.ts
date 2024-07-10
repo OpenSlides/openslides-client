@@ -513,6 +513,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction<BackendImportRawPreview | void>(UserAction.PARTICIPANT_IMPORT, payload);
     }
 
+    public mergeTogether(payload: { id: number; user_ids: number[] }[]): Action<void> {
+        return this.createAction(UserAction.MERGE_TOGETHER, payload);
+    }
+
     private sanitizePayload(payload: any): any {
         const temp = { ...payload };
         for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field))) {

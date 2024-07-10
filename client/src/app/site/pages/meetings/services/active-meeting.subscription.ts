@@ -9,7 +9,7 @@ import { ViewMeeting } from '../view-models/view-meeting';
 
 export const ACTIVE_MEETING_SUBSCRIPTION = `active_meeting`;
 
-export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[] = []) {
+export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[] = []): any {
     return {
         modelRequest: {
             viewModelCtor: ViewMeeting,

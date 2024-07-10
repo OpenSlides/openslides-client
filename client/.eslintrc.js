@@ -67,7 +67,7 @@ module.exports = {
                 '@typescript-eslint/adjacent-overload-signatures': ['error'],
                 '@typescript-eslint/ban-types': ['error'],
                 '@typescript-eslint/explicit-member-accessibility': ['error'],
-                '@typescript-eslint/explicit-function-return-type': ['warn'],
+                '@typescript-eslint/explicit-function-return-type': ['error'],
 
                 'jsdoc/require-example': ['off'],
                 'jsdoc/newline-after-description': ['off'],
