@@ -19,17 +19,13 @@
 }
 
 .os-search-selector--chip-wrapper {
-    height: 3em;
     line-height: 3em;
+    overflow: auto;
 
     .os-search-selector--chip-container {
         padding: 5px;
         width: max-content;
         height: 100%;
-
-        .mat-mdc-chip {
-            max-width: 150px;
-        }
     }
 }
 
