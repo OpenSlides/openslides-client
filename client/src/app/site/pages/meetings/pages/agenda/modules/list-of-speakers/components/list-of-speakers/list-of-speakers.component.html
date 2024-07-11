@@ -13,7 +13,7 @@
                 <span *ngIf="isCurrentListOfSpeakers">{{ 'Current list of speakers' | translate }}</span>
             </h2>
         </div>
-        <div class="menu-slot" *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]">
+        <ng-container class="menu-slot" *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]">
             <button
                 type="button"
                 mat-icon-button
@@ -26,7 +26,7 @@
             <button type="button" mat-icon-button [matMenuTriggerFor]="speakerMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
-        </div>
+        </ng-container>
     </os-head-bar>
 
     <os-list-of-speakers-content
@@ -85,14 +85,9 @@
     </os-projector-button>
 
     <button mat-menu-item (click)="setLosClosed(!isListOfSpeakersClosed)">
-        <ng-container *ngIf="isListOfSpeakersClosed">
-            <mat-icon>lock_open</mat-icon>
-            <span>{{ 'Open list of speakers' | translate }}</span>
-        </ng-container>
-        <ng-container *ngIf="!isListOfSpeakersClosed">
-            <mat-icon>lock</mat-icon>
-            <span>{{ 'Close list of speakers' | translate }}</span>
-        </ng-container>
+        <mat-icon>{{ isListOfSpeakersClosed ? 'lock_open' : 'lock' }}</mat-icon>
+        <span *ngIf="!isListOfSpeakersClosed">{{ 'Close list of speakers' | translate }}</span>
+        <span *ngIf="isListOfSpeakersClosed">{{ 'Open list of speakers' | translate }}</span>
     </button>
 
     <mat-divider></mat-divider>

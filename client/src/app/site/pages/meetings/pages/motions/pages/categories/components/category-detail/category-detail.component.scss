@@ -24,11 +24,6 @@
     }
 }
 
-.chip-container {
-    display: block;
-    min-height: 0; // default is inherit, will appear on the top edge of the cell
-}
-
 .os-headed-listview-table {
     // Title
     .mat-column-title {
@@ -43,12 +38,6 @@
     // Recommendation
     .mat-column-recommendation {
         flex: 2 0 0;
-    }
-
-    // Remove
-    .mat-column-remove {
-        flex: 1 0 0;
-        justify-content: flex-end !important;
     }
 }
 

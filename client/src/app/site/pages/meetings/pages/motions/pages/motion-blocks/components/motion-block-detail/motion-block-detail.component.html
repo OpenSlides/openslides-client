@@ -23,11 +23,11 @@
         </div>
 
         <!-- Menu -->
-        <div class="menu-slot">
+        <ng-container class="menu-slot">
             <button type="button" mat-icon-button [matMenuTriggerFor]="motionBlockMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
-        </div>
+        </ng-container>
 
         <!-- Extra Controls -->
         <div class="extra-controls-slot" *ngIf="!vp.isMobile">

@@ -501,8 +501,8 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
         } else {
             this._otherMainImportHelper.push(
                 new StaticMainImportHandler({
-                    translateFn: key => this.translate.instant(key),
-                    resolveEntryFn: importModel => this.resolveEntry(importModel),
+                    translateFn: (key): string => this.translate.instant(key),
+                    resolveEntryFn: (importModel): MainModel => this.resolveEntry(importModel),
                     ...handler
                 })
             );
@@ -648,8 +648,8 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
             shouldCreateModelFn,
             createFn,
             updateFn,
-            translateFn: key => this.translate.instant(key),
-            resolveEntryFn: importModel => this.resolveEntry(importModel)
+            translateFn: (key): string => this.translate.instant(key),
+            resolveEntryFn: (importModel): MainModel => this.resolveEntry(importModel)
         });
         this.updateSummary();
     }

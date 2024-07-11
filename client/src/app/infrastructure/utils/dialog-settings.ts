@@ -17,7 +17,7 @@ export const largeDialogSettings = {
  * `width='804px'`
  */
 export const mediumDialogSettings = {
-    width: `804px`,
+    width: `824px`,
     ...generalSettings
 };
 

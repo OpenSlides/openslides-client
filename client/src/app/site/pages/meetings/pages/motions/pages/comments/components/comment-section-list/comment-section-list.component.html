@@ -10,11 +10,11 @@
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button type="button" mat-icon-button [matMenuTriggerFor]="commentListMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 </os-head-bar>
 
 <div class="head-spacer"></div>
@@ -72,10 +72,10 @@
                 {{ 'No groups selected' | translate }}
             </div>
             <mat-action-row>
-                <button mat-button (click)="openDialog(section)" mat-icon-button>
+                <button mat-icon-button (click)="openDialog(section)">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-button (click)="onDeleteButton(section)" mat-icon-button>
+                <button mat-icon-button (click)="onDeleteButton(section)">
                     <mat-icon>delete</mat-icon>
                 </button>
             </mat-action-row>

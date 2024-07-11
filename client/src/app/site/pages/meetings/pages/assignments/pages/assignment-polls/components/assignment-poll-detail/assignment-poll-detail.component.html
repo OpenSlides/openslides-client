@@ -4,11 +4,11 @@
             <h2 *ngIf="!!poll">{{ poll.title }}</h2>
         </div>
 
-        <div class="menu-slot" *osPerms="permission.assignmentCanManage">
+        <ng-container class="menu-slot" *osPerms="permission.assignmentCanManage">
             <button type="button" mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
-        </div>
+        </ng-container>
     </os-head-bar>
 
     <mat-card class="os-card spacer-bottom-60">

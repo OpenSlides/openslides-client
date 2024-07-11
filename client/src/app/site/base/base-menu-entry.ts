@@ -37,7 +37,7 @@ export interface BaseMenuEntry<P = any> {
 
 export function getCustomStyleForEntry(entry: BaseMenuEntry): { [key: string]: any } {
     if (entry.customHeight) {
-        return { height: entry.customHeight, lineHeight: entry.customHeight };
+        return { minHeight: entry.customHeight, height: entry.customHeight, lineHeight: entry.customHeight };
     }
     return {};
 }

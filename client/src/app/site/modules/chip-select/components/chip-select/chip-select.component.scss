@@ -1,9 +1,10 @@
-.mat-chip-list-stacked {
-    .mat-chip {
-        margin: 4px 4px 4px 4px;
-    }
+.mat-mdc-chip.chip-stacked {
+    margin: 4px 4px 4px 4px;
 }
 
-.menu-handle {
-    cursor: pointer;
+.mat-mdc-chip.menu-handle {
+    &,
+    ::ng-deep span {
+        cursor: pointer !important;
+    }
 }
