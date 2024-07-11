@@ -17,7 +17,7 @@ interface TopicExport {
     providedIn: TopicImportServiceModule
 })
 export class TopicExportService {
-    constructor(private csvExportService: CsvExportForBackendService, private translate: TranslateService) {}
+    public constructor(private csvExportService: CsvExportForBackendService, private translate: TranslateService) {}
 
     public downloadCsvImportExample(): void {
         const rows: TopicExport[] = [
@@ -27,7 +27,7 @@ export class TopicExportService {
         ];
 
         this.csvExportService.dummyCSVExport<TopicExport>(
-            topicHeadersAndVerboseNames,
+            Object.keys(topicHeadersAndVerboseNames),
             rows,
             `${this.translate.instant(`Agenda`)}-${this.translate.instant(`example`)}.csv`
         );

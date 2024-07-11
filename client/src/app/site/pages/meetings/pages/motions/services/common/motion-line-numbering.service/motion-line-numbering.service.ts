@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 
 import { DiffLinesInParagraph } from '../../../definitions';
-import { ViewMotionChangeRecommendation, ViewMotionStatuteParagraph, ViewUnifiedChange } from '../../../modules';
+import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../../modules';
 import {
     LineNumberedString,
     LineNumberingService,
@@ -94,20 +94,6 @@ export class MotionLineNumberingService {
                     });
             }
         }
-    }
-
-    public formatStatuteAmendment(
-        paragraphs: ViewMotionStatuteParagraph[],
-        amendment: ViewMotion,
-        lineLength: number
-    ): string {
-        const origParagraph = paragraphs.find(paragraph => paragraph.id === amendment.statute_paragraph_id);
-        if (origParagraph) {
-            let diffHtml = this.diffService.diff(origParagraph.text, amendment.text);
-            diffHtml = this.lineNumberingService.insertLineBreaksWithoutNumbers(diffHtml, lineLength, true);
-            return diffHtml;
-        }
-        return ``;
     }
 
     /**

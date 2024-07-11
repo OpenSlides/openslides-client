@@ -14,10 +14,10 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
     ViewMotionCommentSection,
     MotionCommentSection
 > {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionCommentSection);
 
-        this.viewModelSortFn = (a: ViewMotionCommentSection, b: ViewMotionCommentSection) => {
+        this.viewModelSortFn = (a: ViewMotionCommentSection, b: ViewMotionCommentSection): number => {
             if (a.weight === b.weight) {
                 return a.id - b.id;
             } else {
@@ -26,9 +26,10 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
         };
     }
 
-    public getTitle = (viewMotionCommentSection: ViewMotionCommentSection) => viewMotionCommentSection.name;
+    public getTitle = (viewMotionCommentSection: ViewMotionCommentSection): string => viewMotionCommentSection.name;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Comment sections` : `Comment section`);
+    public getVerboseName = (plural = false): string =>
+        this.translate.instant(plural ? `Comment sections` : `Comment section`);
 
     public async create(partialModel: Partial<MotionCommentSection>): Promise<Identifiable> {
         const payload = {

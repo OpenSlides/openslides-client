@@ -9,7 +9,7 @@ import {
     TemplateRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { map, Observable, OperatorFunction } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Identifiable } from 'src/app/domain/interfaces';

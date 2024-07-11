@@ -19,7 +19,9 @@ export type InfoToExport =
     | 'submitters_verbose'
     | 'supporters_verbose'
     | 'submitters_username'
-    | 'supporters_username';
+    | 'supporters_username'
+    | 'editors'
+    | 'working_group_speakers';
 
 /**
  * Determines the possible file format of a motion export

@@ -54,6 +54,7 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
         // Cleanup of dirty html would happen here
         if (this.lineNumberingMode === LineNumberingMode.None) {
             htmlText = htmlText.replace(/\s+<br class="os-line-break">/g, ` `);
+            htmlText = htmlText.replace(/<br class="os-line-break">/g, ``);
         } else {
             htmlText = htmlText.replace(/\s+<br class="os-line-break">/g, `<br class="os-line-break">`);
         }
@@ -206,7 +207,7 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
         return newParagraph;
     }
 
-    protected override addChildNodeIntoParagraphs(paragraph: any[], data: ChildNodeParagraphPayload) {
+    protected override addChildNodeIntoParagraphs(paragraph: any[], data: ChildNodeParagraphPayload): void {
         const { child, parent, styles } = data;
         const parsedElement = this.parseElement(child, styles);
         const firstChild = parent.firstChild as Element;

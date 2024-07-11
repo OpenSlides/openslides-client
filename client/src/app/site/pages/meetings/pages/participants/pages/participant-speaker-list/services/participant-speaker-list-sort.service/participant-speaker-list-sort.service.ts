@@ -22,8 +22,13 @@ export class ParticipantSpeakerListSortService extends BaseSortListService<ViewS
      */
     private speakerSortOptions: OsSortingOption<ViewSpeaker>[] = [
         { property: `id`, label: _(`Receipt of contributions`) },
-        { property: `begin_time`, label: _(`Speak start time`) },
-        { property: `name`, label: _(`Speaker`) }
+        { property: `begin_time`, label: _(`Speech start time`) },
+        { property: `name`, label: _(`Speaker`) },
+        {
+            property: `numbering`,
+            label: _(`Numbering`),
+            foreignBaseKeys: { agenda_item: [`item_number`], motion: [`number`] }
+        }
     ];
 
     public constructor() {

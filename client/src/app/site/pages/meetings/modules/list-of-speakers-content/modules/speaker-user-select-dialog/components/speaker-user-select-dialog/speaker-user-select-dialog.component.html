@@ -6,7 +6,7 @@
     <mat-dialog-content>
         <os-participant-search-selector
             [nonSelectableUserIds]="nonAvailableUserIds"
-            placeholder="{{ 'Select or search new speaker ...' | translate }}"
+            placeholder="{{ 'Select speaker' | translate }}"
             (userSelected)="setCurrentUser($event)"
         ></os-participant-search-selector>
     </mat-dialog-content>

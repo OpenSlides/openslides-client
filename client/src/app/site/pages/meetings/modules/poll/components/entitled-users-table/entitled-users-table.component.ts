@@ -44,8 +44,18 @@ export class EntitledUsersTableComponent {
 
     public readonly permission = Permission;
 
-    public filterPropsEntitledUsersTable = [`user.full_name`, `vote_delegated_to.full_name`, `voted_verbose`];
-    constructor(private controller: ParticipantControllerService, public filter: EntitledUsersListFilterService) {}
+    public filterPropsEntitledUsersTable = [
+        `user.full_name`,
+        `vote_delegated_to.full_name`,
+        `user_merged_into`,
+        `delegation_user_merged_into`,
+        `voted_verbose`
+    ];
+
+    public constructor(
+        private controller: ParticipantControllerService,
+        public filter: EntitledUsersListFilterService
+    ) {}
 
     private getNameFromEntry(entry: EntitledUsersTableEntry): string {
         return (entry.user ?? this.controller.getViewModel(entry.user_id))?.getShortName();

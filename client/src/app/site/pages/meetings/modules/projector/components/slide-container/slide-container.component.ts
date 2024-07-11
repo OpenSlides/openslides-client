@@ -1,4 +1,4 @@
-import { Component, ComponentRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 
 import { SlideData } from '../../../../pages/projectors/definitions';
@@ -138,7 +138,11 @@ export class SlideContainerComponent {
         'margin-top': `50px`
     };
 
-    public constructor(private slideManager: SlideManagerService) {}
+    public constructor(
+        private slideManager: SlideManagerService,
+        private vc: ViewContainerRef,
+        private cd: ChangeDetectorRef
+    ) {}
 
     /**
      * Updates the 'margin-top' attribute in the slide styles. Propages the sroll to
@@ -189,12 +193,19 @@ export class SlideContainerComponent {
         this.slideOptions.scaleable = options.scaleable;
         this.slideOptions.scrollable = options.scrollable;
         this.slideManager.getSlideType(slideName).then(type => {
-            this.slide!.clear();
-            this.slideRef = this.slide!.createComponent(type);
+            this.cd.detach();
+            this.slideRef = this.vc.createComponent(type);
             this.setDataForComponent();
             this.setProjectorForComponent();
+            this.slideRef.changeDetectorRef.detectChanges();
             this.updateScale();
             this.updateScroll();
+            this.slideRef.changeDetectorRef.detectChanges();
+
+            this.slide.clear();
+            this.slide.insert(this.slideRef.hostView);
+            this.cd.reattach();
+            this.cd.detectChanges();
         });
     }
 

@@ -21,7 +21,7 @@ interface AgendaTreePdfEntry {
     providedIn: AgendaItemListServiceModule
 })
 export class AgendaItemExportService {
-    constructor(
+    public constructor(
         private translate: TranslateService,
         private csvExportService: MeetingCsvExportForBackendService,
         private pdfExportService: MeetingPdfExportService,
@@ -32,10 +32,10 @@ export class AgendaItemExportService {
         this.csvExportService.export(
             source,
             [
-                { label: `title`, map: viewItem => viewItem.getTitle() },
+                { label: `title`, map: (viewItem): string => viewItem.getTitle() },
                 {
                     label: `text`,
-                    map: viewItem =>
+                    map: (viewItem): string =>
                         viewItem.content_object?.getCSVExportText ? viewItem.content_object.getCSVExportText() : ``
                 },
                 { label: `agenda_duration`, property: `duration` },

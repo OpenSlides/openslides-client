@@ -1,9 +1,11 @@
 /** Imports the material-design-theming */
 @use '@angular/material' as mat;
+@include mat.core();
 
 // /** Import brand theme */
 @import 'themes/default-light.scss';
 @import 'themes/default-dark.scss';
+@import 'themes/var-overwrites.scss';
 
 /** Global component style definition */
 @import 'global-components-style.scss';
@@ -11,16 +13,25 @@
 @include mat.all-component-themes($openslides-light-theme);
 
 .openslides-light-theme {
-    /*TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated */
-    @include mat.all-legacy-component-themes($openslides-light-theme);
     @include os-component-themes($openslides-light-theme);
+    @include os-var-overwrites();
+
+    --mat-menu-item-icon-color: rgba(0, 0, 0, 0.54);
+    --mat-table-header-headline-color: rgba(0, 0, 0, 0.55);
 }
 
 .openslides-dark-theme {
-    /*TODO(mdc-migration): Remove all-legacy-component-colors once all legacy components are migrated */
-    @include mat.all-legacy-component-colors($openslides-dark-theme);
     @include mat.all-component-colors($openslides-dark-theme);
     @include os-component-themes($openslides-dark-theme);
+    @include os-var-overwrites();
+
+    --mat-table-header-headline-color: rgba(255, 255, 255, 0.70);
+
+    mat-form-field:focus-within {
+        mat-label{
+            color: white;
+        }
+    }
 }
 
 .mat-calendar-body-cell {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -134,7 +134,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
                             }
                         ],
                         projectionDefault: PROJECTIONDEFAULT.agendaItemList,
-                        getDialogTitle: () => this.translate.instant(`Agenda`)
+                        getDialogTitle: (): string => this.translate.instant(`Agenda`)
                     };
                 } else {
                     this.itemListSlide = null;

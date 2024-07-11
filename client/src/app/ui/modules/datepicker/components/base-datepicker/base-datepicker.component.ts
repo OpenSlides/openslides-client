@@ -1,12 +1,11 @@
-import { Directive, ElementRef, Input, Optional, Self, ViewChild } from '@angular/core';
-import { NgControl } from '@angular/forms';
+import { Directive, Input, ViewChild } from '@angular/core';
 import { MatDatepicker, MatDateRangePicker } from '@angular/material/datepicker';
-import { distinctUntilChanged, map } from 'rxjs';
+import { KeyCode } from 'src/app/infrastructure/utils/key-code';
 import { BaseFormFieldControlComponent } from 'src/app/ui/base/base-form-field-control';
 
 @Directive()
 export abstract class BaseDatepickerComponent extends BaseFormFieldControlComponent<any> {
-    @ViewChild(`picker`) picker: MatDateRangePicker<Date> | MatDatepicker<Date>;
+    @ViewChild(`picker`) public picker: MatDateRangePicker<Date> | MatDatepicker<Date>;
 
     public readonly controlType = `os-datepicker`;
 
@@ -25,23 +24,13 @@ export abstract class BaseDatepickerComponent extends BaseFormFieldControlCompon
     @Input()
     public showUpdateSuccessIcon = false;
 
-    constructor(element: ElementRef<HTMLElement>, @Optional() @Self() ngControl: NgControl) {
-        super(ngControl);
-
-        this.fm
-            .monitor(element.nativeElement, true)
-            .pipe(
-                map(origin => !!origin),
-                distinctUntilChanged()
-            )
-            .subscribe(focused => {
-                if (focused) {
-                    this.picker.open();
-                }
-            });
-    }
-
     public onContainerClick(_event: MouseEvent): void {}
+
+    public onKeyPressed(event: KeyboardEvent): void {
+        if (event.code === KeyCode.ENTER) {
+            this.picker.open();
+        }
+    }
 
     protected initializeForm(): void {}
 }

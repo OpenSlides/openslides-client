@@ -25,7 +25,7 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         return this.motion.lead_motion!;
     }
 
-    public getTitleFn = () => this.getTitleWithChanges();
+    public getTitleFn = (): string => this.getTitleWithChanges();
 
     private get personalNote(): PersonalNote | null {
         return this.motion.getPersonalNote();
@@ -51,7 +51,7 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
     }
 
     public titleCanBeChanged(): boolean {
-        if (this.motion.isStatuteAmendment() || this.motion.isParagraphBasedAmendment()) {
+        if (this.motion.isAmendment()) {
             return false;
         }
         return this.changeRecoMode === ChangeRecoMode.Original || this.changeRecoMode === ChangeRecoMode.Diff;

@@ -17,6 +17,8 @@
                         [ngClass]="{ 'background-primary': index === selectedTabLabelIndex }"
                         [ngStyle]="{ height: labelHeight }"
                         (click)="changeTabSelection(index); openContent()"
+                        (keydown.enter)="changeTabSelection(index); openContent()"
+                        tabindex="0"
                     >
                         <ng-template [cdkPortalOutlet]="tabLabel"></ng-template>
                         <mat-icon *ngIf="isMobile" class="margin-right-8">arrow_forward_ios</mat-icon>

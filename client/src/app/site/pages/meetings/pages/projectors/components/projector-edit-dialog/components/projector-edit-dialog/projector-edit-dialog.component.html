@@ -4,7 +4,7 @@
 
 <div class="settings-grid">
     <form [formGroup]="updateForm" (ngSubmit)="onSubmitProjector()">
-        <div mat-dialog-content *ngIf="projector">
+        <mat-dialog-content *ngIf="projector">
             <!-- Name field -->
             <mat-form-field>
                 <mat-label>{{ 'Name' | translate }}</mat-label>
@@ -117,37 +117,32 @@
             <div class="spacer-top-10">
                 <!-- Template to streamline all the color forms -->
                 <ng-template #colorFormField let-title="title" let-form="form">
-                    <div class="grid-form">
-                        <div class="grid-start">
-                            <mat-form-field class="color-picker-form">
-                                <span>{{ title | translate }}</span>
-                                <input matInput [formControlName]="form" type="color" />
-                            </mat-form-field>
-                        </div>
-                        <div class="grid-end">
-                            <button
-                                type="button"
-                                mat-icon-button
-                                matTooltip="{{ 'Reset' | translate }}"
-                                (click)="resetField(form)"
-                            >
-                                <mat-icon>replay</mat-icon>
-                            </button>
-                        </div>
-                    </div>
+                    <mat-form-field class="color-picker-form">
+                        <mat-label>{{ title | translate }}</mat-label>
+                        <input matInput [formControlName]="form" type="color" />
+                        <button
+                            matSuffix
+                            type="button"
+                            mat-icon-button
+                            matTooltip="{{ 'Reset' | translate }}"
+                            (click)="resetField(form)"
+                        >
+                            <mat-icon>replay</mat-icon>
+                        </button>
+                    </mat-form-field>
                 </ng-template>
 
                 <ng-template
-                    *ngFor="let field of colorFields | keyvalue"
+                    *ngFor="let colorPair of colorFields"
                     [ngTemplateOutlet]="colorFormField"
-                    [ngTemplateOutletContext]="{ title: field.value, form: field.key }"
+                    [ngTemplateOutletContext]="{ title: colorPair[1], form: colorPair[0] }"
                 ></ng-template>
             </div>
-        </div>
+        </mat-dialog-content>
 
         <!-- Actions -->
-        <div mat-dialog-actions>
-            <mat-divider></mat-divider>
+        <mat-dialog-actions>
+            <mat-divider class="padding-bottom-16"></mat-divider>
             <button type="submit" mat-button color="accent">
                 <span>{{ 'Save' | translate }}</span>
             </button>
@@ -157,12 +152,12 @@
             <button type="button" mat-button (click)="applyChanges()">
                 <span>{{ 'Apply' | translate }}</span>
             </button>
-        </div>
+        </mat-dialog-actions>
     </form>
-    <div *ngIf="previewProjector">
+    <mat-dialog-content *ngIf="previewProjector">
         <h3>{{ 'Preview' | translate }}</h3>
         <div class="preview-container">
             <os-projector #preview *ngIf="previewProjector" [projector]="previewProjector"></os-projector>
         </div>
-    </div>
+    </mat-dialog-content>
 </div>

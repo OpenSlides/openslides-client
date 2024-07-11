@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
@@ -99,7 +99,7 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
                 this.activeMeeting.meetingIdObservable.pipe(filter(id => id !== undefined))
             );
             const meetings =
-                this.operator.hasPerms(Permission.motionCanManage) && !!meetingId
+                this.operator.hasPerms(Permission.motionCanManageMetadata) && !!meetingId
                     ? await this.presenter.call({ meeting_id: meetingId })
                     : [];
             this._forwardingMeetings = meetings;
@@ -109,9 +109,9 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
                     return {
                         id: committee.id,
                         name: committee.name,
-                        getTitle: () => committee.name,
-                        getListTitle: () => ``,
-                        toString: () => committee.name
+                        getTitle: (): string => committee.name,
+                        getListTitle: (): string => ``,
+                        toString: (): string => committee.name
                     };
                 })
             );

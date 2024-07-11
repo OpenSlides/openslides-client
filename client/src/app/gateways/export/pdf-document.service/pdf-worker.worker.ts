@@ -4,15 +4,15 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 
 const osTableLayout = {
     switchColorTableLayout: {
-        hLineWidth: (rowIndex: any) => rowIndex === 1,
-        vLineWidth: () => 0,
-        fillColor: (rowIndex: any) => (rowIndex % 2 === 0 ? `#EEEEEE` : null)
+        hLineWidth: (rowIndex: any): boolean => rowIndex === 1,
+        vLineWidth: (): number => 0,
+        fillColor: (rowIndex: any): string => (rowIndex % 2 === 0 ? `#EEEEEE` : null)
     },
     metaboxLayout: {
-        fillColor: () => `#dddddd`,
-        hLineWidth: (i: any, node: any) => (i === 0 || i === node.table.body.length ? 0 : 0.5),
-        vLineWidth: () => 0,
-        hLineColor: () => `white`
+        fillColor: (): string => `#dddddd`,
+        hLineWidth: (i: any, node: any): 0 | 0.5 => (i === 0 || i === node.table.body.length ? 0 : 0.5),
+        vLineWidth: (): number => 0,
+        hLineColor: (): string => `white`
     }
 };
 
@@ -61,7 +61,7 @@ function addPageNumbers(data: any): void {
     // to allow page numbers in every page, after the initial "%PAGENR%" placeholder was reset
     let countPageNumbers = false;
 
-    data.doc.footer = (currentPage: any, pageCount: any) => {
+    data.doc.footer = (currentPage: any, pageCount: any): any => {
         const footer = data.doc.tmpfooter;
 
         // if the tmpfooter starts with an image, the pagenumber will be found in column 1

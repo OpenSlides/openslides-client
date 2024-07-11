@@ -19,7 +19,12 @@
         <table [class]="disableBoard ? 'disabled' : ''" id="c4">
             <tr *ngFor="let row of [5, 4, 3, 2, 1, 0]">
                 <td *ngFor="let col of [0, 1, 2, 3, 4, 5, 6]">
-                    <div [class]="getCoinClass(row, col)" (click)="clickField(col)"></div>
+                    <div
+                        [class]="getCoinClass(row, col)"
+                        (click)="clickField(col)"
+                        (keydown.enter)="clickField(col)"
+                        tabindex="0"
+                    ></div>
                 </td>
             </tr>
         </table>

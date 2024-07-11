@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LocalStorage } from '@ngx-pwa/local-storage';
+import { StorageMap } from '@ngx-pwa/local-storage';
 import { lastValueFrom, Observable } from 'rxjs';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { lastValueFrom, Observable } from 'rxjs';
 export class StorageService {
     private noClearKeys: string[] = [];
 
-    public constructor(private localStorage: LocalStorage) {}
+    public constructor(private storage: StorageMap) {}
 
     public addNoClearKey(key: string): void {
         this.noClearKeys.push(key);
@@ -23,10 +23,7 @@ export class StorageService {
         if (item === null || item === undefined) {
             await this.remove(key); // You cannot do a setItem with null or undefined...
         } else {
-            const isSuccessfullyAdded = await lastValueFrom(this.localStorage.setItem(key, item));
-            if (!isSuccessfullyAdded) {
-                throw new Error(`Could not set the item.`);
-            }
+            await lastValueFrom(this.storage.set(key, item));
         }
     }
 
@@ -37,7 +34,7 @@ export class StorageService {
      * @returns The requested value to the key
      */
     public get<T>(key: string): Promise<T | undefined> {
-        return lastValueFrom(this.localStorage.getItem<T>(key) as Observable<T>);
+        return lastValueFrom(this.storage.get(key) as Observable<T>);
     }
 
     /**
@@ -45,9 +42,7 @@ export class StorageService {
      * @param key The key to remove the value from
      */
     public async remove(key: string): Promise<void> {
-        if (!(await lastValueFrom(this.localStorage.removeItem(key)))) {
-            throw new Error(`Could not delete the item.`);
-        }
+        await lastValueFrom(this.storage.delete(key));
     }
 
     /**
@@ -58,9 +53,7 @@ export class StorageService {
         for (const key of this.noClearKeys) {
             savedData[key] = await this.get(key);
         }
-        if (!(await lastValueFrom(this.localStorage.clear()))) {
-            throw new Error(`Could not clear the storage.`);
-        }
+        await lastValueFrom(this.storage.clear());
         for (const key of this.noClearKeys) {
             await this.set(key, savedData[key]);
         }

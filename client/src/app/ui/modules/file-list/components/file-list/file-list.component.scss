@@ -12,7 +12,7 @@ $navbar-size: 40px;
     white-space: nowrap;
     display: flex;
 
-    .mat-button {
+    .mat-mdc-button {
         padding: 0;
     }
 }
@@ -25,7 +25,7 @@ $navbar-size: 40px;
     }
 }
 
-.folder {
+.mat-mdc-button.folder {
     height: $navbar-size;
     > .content-node {
         white-space: nowrap;
@@ -51,9 +51,6 @@ $navbar-size: 40px;
 }
 
 .file-manager-table {
-    display: block;
-    height: calc(100vh - 130px);
-
     .file-title {
         font-weight: 500;
         font-size: 16px;
@@ -84,5 +81,12 @@ $navbar-size: 40px;
 
     .pbl-ngrid-row:last-of-type {
         margin-bottom: 60px !important;
+    }
+}
+
+.detail-link {
+    os-icon-container {
+        width: fit-content;
+        margin-left: auto;
     }
 }

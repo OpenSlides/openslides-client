@@ -28,7 +28,7 @@ export class AssignmentSortListService extends BaseSortListService<ViewAssignmen
         { property: `id`, label: `Creation date` }
     ];
 
-    constructor() {
+    public constructor() {
         super({
             sortProperty: `title`,
             sortAscending: true

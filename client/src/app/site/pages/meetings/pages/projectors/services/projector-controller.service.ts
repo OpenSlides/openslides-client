@@ -78,9 +78,10 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
     public project(
         descriptor: ProjectionBuildDescriptor,
         projectors: ViewProjector[],
-        options: any = null
+        options: any = null,
+        keepActiveProjections?: boolean
     ): Promise<void> {
-        return this.repo.project(descriptor, projectors, options);
+        return this.repo.project(descriptor, projectors, options, keepActiveProjections);
     }
 
     public addToPreview(

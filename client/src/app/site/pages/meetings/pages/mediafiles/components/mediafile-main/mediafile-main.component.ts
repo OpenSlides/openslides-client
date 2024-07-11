@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
 
+import { BaseMeetingModelRequestHandler } from '../../../../base/base-meeting-model-request-handler.component';
 import { getMediafilesSubscriptionConfig } from '../../mediafiles.subscription';
 
 @Component({
@@ -8,10 +10,8 @@ import { getMediafilesSubscriptionConfig } from '../../mediafiles.subscription';
     templateUrl: `./mediafile-main.component.html`,
     styleUrls: [`./mediafile-main.component.scss`]
 })
-export class MediafileMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onNextMeetingId(id: number | null): void {
-        if (id) {
-            this.subscribeTo(getMediafilesSubscriptionConfig(id), { hideWhenMeetingChanged: true });
-        }
+export class MediafileMainComponent extends BaseMeetingModelRequestHandler {
+    protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {
+        return [getMediafilesSubscriptionConfig(id)];
     }
 }

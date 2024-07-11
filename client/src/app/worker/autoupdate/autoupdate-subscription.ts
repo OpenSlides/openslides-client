@@ -13,7 +13,7 @@ export class AutoupdateSubscription {
         return this._request;
     }
 
-    constructor(
+    public constructor(
         public id: number,
         public url: string,
         public requestHash: string,

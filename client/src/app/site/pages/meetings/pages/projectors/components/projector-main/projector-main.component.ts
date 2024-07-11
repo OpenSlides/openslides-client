@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
 
+import { BaseMeetingModelRequestHandler } from '../../../../base/base-meeting-model-request-handler.component';
 import { getProjectorListSubscriptionConfig } from '../../projectors.subscription';
 
 @Component({
@@ -8,10 +10,8 @@ import { getProjectorListSubscriptionConfig } from '../../projectors.subscriptio
     templateUrl: `./projector-main.component.html`,
     styleUrls: [`./projector-main.component.scss`]
 })
-export class ProjectorMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onNextMeetingId(id: number | null): void {
-        if (id) {
-            this.subscribeTo(getProjectorListSubscriptionConfig(id), { hideWhenMeetingChanged: true });
-        }
+export class ProjectorMainComponent extends BaseMeetingModelRequestHandler {
+    protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {
+        return [getProjectorListSubscriptionConfig(id)];
     }
 }

@@ -1,8 +1,11 @@
-import { Directive } from '@angular/core';
+import { Directive, Input, TemplateRef } from '@angular/core';
 
 @Directive({
     selector: `[osImportListFirstTab]`
 })
 export class ImportListFirstTabDirective {
-    constructor() {}
+    @Input()
+    public label: string;
+
+    public constructor(public templateRef: TemplateRef<unknown>) {}
 }

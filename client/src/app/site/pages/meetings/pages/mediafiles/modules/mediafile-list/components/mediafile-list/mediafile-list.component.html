@@ -36,7 +36,7 @@
 <os-file-list
     [currentDirectory]="directory"
     [isMultiSelect]="isMultiSelect"
-    [hiddenInMobile]="['info']"
+    [hiddenInMobile]="['edit']"
     [canEdit]="canEdit"
     [canAccessFileMenu]="canAccessFileMenu"
     [sourceFiles]="directoryObservable"
@@ -49,19 +49,7 @@
     (saved)="onSaveFile($event.update)"
     (deleted)="onDeleteFile($event.file)"
     (selected)="onSelect($event.files)"
->
-    <div
-        *osScrollingTableCell="'info'; row as mediafile; config: { width: 200 }"
-        class="fill clickable"
-        (click)="triggerEdit(mediafile)"
-    >
-        <os-icon-container *ngIf="mediafile.access_groups.length" icon="group">
-            <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
-                <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
-            </os-comma-separated-listing>
-        </os-icon-container>
-    </div>
-</os-file-list>
+></os-file-list>
 
 <!-- Visibility as button -->
 <ng-template #breadcrumbManageTemplate>
@@ -162,7 +150,7 @@
 <!-- File edit dialog -->
 <ng-template #fileEditDialog>
     <h1 mat-dialog-title>{{ 'Edit details for' | translate }}</h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile padding-top-bottom-0">
         <form class="edit-file-form" [formGroup]="fileEditForm!">
             <mat-form-field>
                 <mat-label>{{ 'New file name' | translate }}</mat-label>
@@ -180,8 +168,8 @@
                 ></os-list-search-selector>
             </mat-form-field>
         </form>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button
             type="submit"
             mat-button
@@ -194,13 +182,13 @@
         <button type="button" mat-button [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>
 
 <!-- New folder dialog -->
 <ng-template #newFolderDialog>
     <h1 mat-dialog-title>{{ 'New directory' | translate }}</h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form class="edit-file-form" [formGroup]="newDirectoryForm">
             <p>{{ 'Please enter a name for the new directory:' | translate }}</p>
             <mat-form-field>
@@ -218,13 +206,13 @@
                 ></os-list-search-selector>
             </mat-form-field>
         </form>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button type="submit" mat-button [disabled]="!newDirectoryForm.valid" color="accent" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
         <button type="button" mat-button [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

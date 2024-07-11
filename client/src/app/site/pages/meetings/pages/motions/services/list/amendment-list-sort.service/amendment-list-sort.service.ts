@@ -26,7 +26,7 @@ export class AmendmentListSortService extends MotionListBaseSortService {
         }
     ];
 
-    constructor() {
+    public constructor() {
         super({
             sortProperty: `parentAndLineNumber`,
             sortAscending: true

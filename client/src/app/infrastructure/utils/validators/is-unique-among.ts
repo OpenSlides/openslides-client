@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 export function isUniqueAmong<T>(
     preExistingValues: T[] | BehaviorSubject<T[]>,
-    isEqualFn: (a: T, b: T) => boolean = (a, b) => a === b,
+    isEqualFn: (a: T, b: T) => boolean = (a, b): boolean => a === b,
     ignoredValues: T[] = []
 ): ValidatorFn {
     return (formControl: AbstractControl): { [key: string]: any } | null => {

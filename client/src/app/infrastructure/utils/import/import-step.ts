@@ -34,7 +34,7 @@ export class ImportStepDescriptor {
     public constructor({ verboseNameFn, labelFn, translateFn }: ImportStepDescriptorConfig) {
         this._verboseNameFn = verboseNameFn;
         this._labelFn = labelFn;
-        this._translateFn = translateFn ?? (key => key);
+        this._translateFn = translateFn ?? ((key): string => key);
     }
 
     public getDescription(phase: ImportStepPhase, plural?: boolean): string {

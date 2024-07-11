@@ -12,12 +12,12 @@ import { ChatGroupAction } from './chat-group.action';
     providedIn: `root`
 })
 export class ChatGroupRepositoryService extends BaseMeetingRelatedRepository<ViewChatGroup, ChatGroup> {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, ChatGroup);
     }
 
-    public getVerboseName = (plural?: boolean) => (plural ? `Chat groups` : `Chat group`);
-    public getTitle = (viewModel: ViewChatGroup) => viewModel.name;
+    public getVerboseName = (plural?: boolean): string => (plural ? `Chat groups` : `Chat group`);
+    public getTitle = (viewModel: ViewChatGroup): string => viewModel.name;
 
     public create(...data: Partial<ChatGroup>[]): Promise<Identifiable[]> {
         const payload: any[] = data.map(partialChatGroup => partialChatGroup);

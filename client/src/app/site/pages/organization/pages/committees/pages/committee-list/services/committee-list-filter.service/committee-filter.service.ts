@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
@@ -15,21 +14,17 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
 
     private orgaTagFilterOptions: OsFilter<ViewCommittee> = {
         property: `organization_tag_ids`,
-        label: this.translate.instant(`Tags`),
+        label: `Tags`,
         isAndConnected: true,
         options: []
     };
 
-    public constructor(
-        organizationTagRepo: OrganizationTagControllerService,
-        store: ActiveFiltersService,
-        private translate: TranslateService
-    ) {
+    public constructor(organizationTagRepo: OrganizationTagControllerService, store: ActiveFiltersService) {
         super(store);
         this.updateFilterForRepo({
             repo: organizationTagRepo,
             filter: this.orgaTagFilterOptions,
-            noneOptionLabel: this.translate.instant(`No tags`)
+            noneOptionLabel: `not specified`
         });
     }
 
@@ -37,18 +32,18 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
         return [
             {
                 property: `hasForwardings`,
-                label: this.translate.instant(`Forward motions`),
+                label: `Forward motions`,
                 options: [
-                    { label: this.translate.instant(`Can forward motions`), condition: true },
-                    { label: this.translate.instant(`Cannot forward motions`), condition: [false, null] }
+                    { label: `Can forward motions`, condition: true },
+                    { label: `Cannot forward motions`, condition: [false, null] }
                 ]
             },
             {
                 property: `hasReceivings`,
-                label: this.translate.instant(`Receive motions`),
+                label: `Receive motions`,
                 options: [
-                    { label: this.translate.instant(`Can receive motions`), condition: true },
-                    { label: this.translate.instant(`Cannot receive motions`), condition: [false, null] }
+                    { label: `Can receive motions`, condition: true },
+                    { label: `Cannot receive motions`, condition: [false, null] }
                 ]
             },
             this.orgaTagFilterOptions

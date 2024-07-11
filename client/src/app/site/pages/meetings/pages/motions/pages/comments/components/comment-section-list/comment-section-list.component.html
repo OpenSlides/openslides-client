@@ -10,11 +10,11 @@
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button type="button" mat-icon-button [matMenuTriggerFor]="commentListMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 </os-head-bar>
 
 <div class="head-spacer"></div>
@@ -72,10 +72,10 @@
                 {{ 'No groups selected' | translate }}
             </div>
             <mat-action-row>
-                <button mat-button (click)="openDialog(section)" mat-icon-button>
+                <button mat-icon-button (click)="openDialog(section)">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-button (click)="onDeleteButton(section)" mat-icon-button>
+                <button mat-icon-button (click)="onDeleteButton(section)">
                     <mat-icon>delete</mat-icon>
                 </button>
             </mat-action-row>
@@ -102,8 +102,8 @@
         <span *ngIf="currentComment">{{ 'Edit comment field' | translate }}</span>
         <span *ngIf="!currentComment">{{ 'New comment field' | translate }}</span>
     </h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
-        <form [formGroup]="commentFieldForm" (keydown)="onKeyDown($event)">
+    <mat-dialog-content class="os-form-card-mobile">
+        <form [formGroup]="commentFieldForm" (keydown)="onKeyDown($event)" tabindex="-1">
             <p>
                 <mat-form-field>
                     <mat-label>{{ 'Name' | translate }}</mat-label>
@@ -141,13 +141,13 @@
                 </mat-checkbox>
             </p>
         </form>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button [disabled]="commentFieldForm.invalid" mat-button [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
         <button mat-button [mat-dialog-close]="false">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

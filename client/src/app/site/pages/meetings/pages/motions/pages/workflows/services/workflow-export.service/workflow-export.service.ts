@@ -12,7 +12,7 @@ import { MotionWorkflowServiceModule } from '../motion-workflow-service.module';
     providedIn: MotionWorkflowServiceModule
 })
 export class WorkflowExportService {
-    constructor(private translate: TranslateService, private stateRepo: MotionStateControllerService) {}
+    public constructor(private translate: TranslateService, private stateRepo: MotionStateControllerService) {}
 
     public exportWorkflows(...workflows: ViewMotionWorkflow[]): void {
         const workflowKeysToCopy: (keyof MotionWorkflow)[] = [`name`];
@@ -33,7 +33,7 @@ export class WorkflowExportService {
             `allow_motion_forwarding`
         ];
         const json = [];
-        const getNextWorkflowJson = (workflow: ViewMotionWorkflow) => {
+        const getNextWorkflowJson = (workflow: ViewMotionWorkflow): any => {
             const nextWorkflow = workflowKeysToCopy.mapToObject<any>(key => ({ [key]: workflow[key] }));
             nextWorkflow[`states`] = [];
             for (const state of workflow.states) {

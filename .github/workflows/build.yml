@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - 'feature/**'
+      - 'staging/**'
 
 env:
   NG_CLI_ANALYTICS: ci
@@ -21,46 +22,53 @@ jobs:
           path: "."
           ref: main
           submodules: "recursive"
+
       - name: Checkout latest commits
         env:
           BRANCH: ${{ github.event.pull_request.head.repo.owner.login == 'OpenSlides' && contains(github.head_ref, 'feature/') && github.head_ref || github.base_ref }}
         run: git submodule foreach 'git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" && ((git fetch origin ${{ env.BRANCH }} && git checkout ${{ env.BRANCH }}) || (git checkout main && git pull origin main)) && git submodule update --init'
+
       - name: Delete the client folder
         run: rm -r openslides-client
+
       - name: Clone openslides-client
         uses: actions/checkout@v3
         with:
           path: "./openslides-client"
-      - name: Copy example data
-        run: cp openslides-backend/global/data/example-data.json openslides-datastore-service/cli/
+
+      - name: Use example data instead of initial data
+        working-directory: "./openslides-backend/global/data/"
+        run: cp example-data.json initial-data.json
+
       - name: Start setup
         working-directory: "./dev/localprod"
         run: |
           ./setup.sh
-          sed -i '/x-default-environment/a \ \ DATASTORE_INITIAL_DATA_FILE: cli/example-data.json' docker-compose.yml
-          docker-compose build --parallel
-          docker-compose up -d
+          echo -n "admin" > secrets/superadmin
+          docker compose build --parallel
+          docker compose up -d
+
       - name: Wait for dev setup
         uses: iFaxity/wait-on-action@v1.1.0
         with:
           resource: https://localhost:8000
           timeout: 30000
-      - name: Setup initial data
-        working-directory: "./dev/localprod"
-        run: docker-compose exec -T datastoreWriter python cli/create_initial_data.py
-      - name: Start tests 
+
+      - name: Start tests
         working-directory: "./openslides-client"
         run: make run-playwright
+
       - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: playwright-report
           path: "./openslides-client/client/tests/playwright-report/"
           retention-days: 7
+
       - name: Shut down setup
         if: always()
         working-directory: "./dev/localprod"
-        run: docker-compose down --volumes --remove-orphans
+        run: docker compose down --volumes --remove-orphans
 
   build-and-test-dev-image:
     runs-on: ubuntu-latest

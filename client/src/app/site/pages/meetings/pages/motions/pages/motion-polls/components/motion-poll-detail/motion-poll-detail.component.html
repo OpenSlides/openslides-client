@@ -4,15 +4,17 @@
             <h2 *ngIf="poll">{{ 'Motion' | translate }} {{ poll.title }}</h2>
         </div>
 
-        <div class="menu-slot" *osPerms="permission.motionCanManagePolls">
+        <ng-container class="menu-slot" *osPerms="permission.motionCanManagePolls">
             <button type="button" mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
-        </div>
+        </ng-container>
     </os-head-bar>
 
     <mat-card class="os-card spacer-bottom-60">
-        <ng-container [ngTemplateOutlet]="viewTemplate"></ng-container>
+        <mat-card-content>
+            <ng-container [ngTemplateOutlet]="viewTemplate"></ng-container>
+        </mat-card-content>
     </mat-card>
 </os-detail-view>
 

@@ -40,12 +40,6 @@ export interface BaseSimplifiedModelRequest<M = any> {
 export interface SimplifiedModelRequest<M extends BaseViewModel = any> extends BaseSimplifiedModelRequest<M> {
     viewModelCtor: ViewModelConstructor<M>;
     ids: Id[];
-    lazyLoad?: {
-        specificId: Id;
-        ownViewModelCtor: ViewModelConstructor<M>;
-        keyOfParent: string;
-        fieldset?: string;
-    };
 }
 
 export interface Follow<M = any> extends BaseSimplifiedModelRequest<M> {

@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { FormsModule } from '@angular/forms';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
 import { InfoModule } from 'src/app/site/modules/info';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -19,7 +21,9 @@ import { MeetingInfoRoutingModule } from './meeting-info-routing.module';
         CommonModule,
         MeetingInfoRoutingModule,
         MatCardModule,
+        MatButtonToggleModule,
         HeadBarModule,
+        FormsModule,
         ListModule,
         DirectivesModule,
         OpenSlidesTranslationModule.forChild(),

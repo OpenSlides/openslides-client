@@ -4,11 +4,9 @@
     --os-row-height: 50px;
 }
 
-mat-card.import-table {
-    .code {
-        span {
-            display: inline-flex;
-        }
+.possible-fields-list {
+    span {
+        display: inline-flex;
     }
 }
 
@@ -51,6 +49,12 @@ pbl-ngrid-cell {
 
 .import-list-preview-row {
     font-size: 14px;
+}
+
+.import-file-handle {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
 }
 
 @keyframes rotation {

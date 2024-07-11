@@ -32,7 +32,10 @@ enum Player {
 @Component({
     selector: `os-video-player`,
     templateUrl: `./video-player.component.html`,
-    styleUrls: [`./video-player.component.scss`],
+    styleUrls: [
+        `./video-player.component.scss`,
+        `../../../../../../../../../../../node_modules/video.js/dist/video-js.css`
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -245,7 +248,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
                 const script = document.createElement(`script`);
                 script.type = `text/javascript`;
                 script.src = `https://demo.nanocosmos.de/nanoplayer/api/release/nanoplayer.4.min.js`;
-                script.onload = () => {
+                script.onload = (): void => {
                     // @ts-ignore
                     this.nanoPlayer = new NanoPlayer(`nanocosmosPlayer`);
                     resolve();

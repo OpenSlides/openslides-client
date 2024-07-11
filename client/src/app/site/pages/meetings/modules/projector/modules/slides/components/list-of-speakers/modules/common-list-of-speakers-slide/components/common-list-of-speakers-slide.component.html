@@ -22,14 +22,27 @@
 
     <!-- Current speaker -->
     <div *ngIf="data.data.current" class="currentSpeaker">
-        <mat-icon class="micicon">mic</mat-icon>
+        <mat-icon class="micicon" *ngIf="!data.data.current.pause_time">mic</mat-icon>
         <ng-container *ngTemplateOutlet="speakerTemplate; context: { speaker: data.data.current }"></ng-container>
     </div>
 
+    <!-- Interposed questions -->
+    <div class="interposed-questions" *ngIf="interposedQuestions && interposedQuestions">
+        <ol>
+            <li
+                *ngFor="let speaker of interposedQuestions"
+                [ngClass]="{ currentSpeaker: speaker.begin_time && !speaker.pause_time }"
+            >
+                <mat-icon *ngIf="speaker.begin_time && !speaker.pause_time" class="micicon">mic</mat-icon>
+                <ng-container *ngTemplateOutlet="speakerTemplate; context: { speaker: speaker }"></ng-container>
+            </li>
+        </ol>
+    </div>
+
     <!-- Next speakers -->
-    <div *ngIf="data.data.waiting && data.data.waiting.length">
+    <div *ngIf="otherWaitingSpeakers && otherWaitingSpeakers.length">
         <ol class="nextSpeakers">
-            <li *ngFor="let speaker of data.data.waiting">
+            <li *ngFor="let speaker of otherWaitingSpeakers">
                 <ng-container *ngTemplateOutlet="speakerTemplate; context: { speaker: speaker }"></ng-container>
             </li>
         </ol>
@@ -40,21 +53,41 @@
     <h3>{{ 'List of speakers' | translate }}</h3>
 
     <div *ngIf="data.data.current" class="currentSpeaker one-line">
-        <mat-icon>mic</mat-icon>
+        <mat-icon *ngIf="!data.data.current.pause_time">mic</mat-icon>
         <ng-container *ngTemplateOutlet="speakerTemplate; context: { speaker: data.data.current }"></ng-container>
     </div>
 
-    <ol *ngIf="data.data.waiting && data.data.waiting.length" class="nextSpeakers">
-        <li *ngFor="let speaker of data.data.waiting" class="one-line">
+    <!-- Interposed questions -->
+    <div class="interposed-questions">
+        <ol *ngIf="interposedQuestions && interposedQuestions.length">
+            <li
+                *ngFor="let speaker of interposedQuestions"
+                class="one-line"
+                [ngClass]="{ currentSpeaker: speaker.begin_time && !speaker.pause_time }"
+            >
+                <mat-icon *ngIf="speaker.begin_time && !speaker.pause_time" class="micicon">mic</mat-icon>
+                <ng-container *ngTemplateOutlet="speakerTemplate; context: { speaker: speaker }"></ng-container>
+            </li>
+        </ol>
+    </div>
+
+    <!-- Next speakers -->
+    <ol *ngIf="otherWaitingSpeakers && otherWaitingSpeakers.length" class="nextSpeakers">
+        <li *ngFor="let speaker of otherWaitingSpeakers" class="one-line">
             <ng-container *ngTemplateOutlet="speakerTemplate; context: { speaker: speaker }"></ng-container>
         </li>
     </ol>
 </div>
 
 <ng-template let-speaker="speaker" #speakerTemplate>
-    {{ speaker.user }}
+    <ng-container *ngIf="speaker.user">{{ speaker.user }}</ng-container>
+    <i *ngIf="!speaker.user && speaker.speech_state === SpeechState.INTERPOSED_QUESTION">
+        {{ 'Unknown user' | translate }}
+    </i>
     <mat-icon *ngIf="speaker.speech_state === SpeechState.CONTRIBUTION">star</mat-icon>
     <mat-icon *ngIf="speaker.speech_state === SpeechState.PRO" class="green-text">add_circle</mat-icon>
     <mat-icon *ngIf="speaker.speech_state === SpeechState.CONTRA" class="red-warning-text">remove_circle</mat-icon>
     <mat-icon *ngIf="speaker.point_of_order" color="warn">warning</mat-icon>
+    <mat-icon *ngIf="speaker.speech_state === SpeechState.INTERPOSED_QUESTION">help</mat-icon>
+    <mat-icon *ngIf="speaker.speech_state === SpeechState.INTERVENTION">error</mat-icon>
 </ng-template>

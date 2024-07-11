@@ -2,7 +2,7 @@
     {{ data.motion.length > 1 ? 'Forward motions' : ('Forwarding of motion' | translate) }}
     <span *ngIf="data.motion.length === 1">{{ data.motion[0].number }}</span>
 </div>
-<div mat-dialog-content>
+<mat-dialog-content>
     <span *ngIf="data.motion.length === 1">
         {{ 'State' | translate }}:
         <b>{{ data.motion[0].state.name }} {{ data.motion[0].state_extension }}</b>
@@ -36,10 +36,10 @@
             </div>
         </ng-container>
     </div>
-</div>
-<div mat-dialog-actions>
+</mat-dialog-content>
+<mat-dialog-actions>
     <button mat-button [disabled]="!selectedMeetings?.size" color="primary" (click)="onSaveClicked()">
         {{ 'Forward' | translate }}
     </button>
     <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>
-</div>
+</mat-dialog-actions>

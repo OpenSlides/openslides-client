@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import {
@@ -40,7 +40,7 @@ export class MotionListInfoDialogComponent {
     public readonly selectedMotion: ViewMotion;
 
     public constructor(
-        @Inject(MAT_DIALOG_DATA) readonly config: MotionListInfoDialogConfig,
+        @Inject(MAT_DIALOG_DATA) public readonly config: MotionListInfoDialogConfig,
         repo: MotionControllerService,
         private categoryRepo: MotionCategoryControllerService,
         private blockRepo: MotionBlockControllerService,

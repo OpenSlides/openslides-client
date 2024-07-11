@@ -1,8 +1,6 @@
 <!-- Template for dialog for quick editing -->
-<h1 mat-dialog-title>
-    <span>{{ 'Edit details for' | translate }} {{ infoDialog.title }}</span>
-</h1>
-<div class="os-form-card-mobile" mat-dialog-content>
+<h1 mat-dialog-title>{{ 'Edit details for' | translate }} {{ infoDialog.title }}</h1>
+<mat-dialog-content class="os-form-card-mobile">
     <!-- Category -->
     <ng-container *ngIf="categoriesObservable | async as categories">
         <mat-form-field *ngIf="categories.length > 0">
@@ -58,13 +56,13 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-</div>
+</mat-dialog-content>
 
-<div mat-dialog-actions>
+<mat-dialog-actions>
     <button type="submit" mat-button color="accent" [mat-dialog-close]="infoDialog">
         <span>{{ 'Save' | translate }}</span>
     </button>
     <button type="button" mat-button [mat-dialog-close]="null">
         <span>{{ 'Cancel' | translate }}</span>
     </button>
-</div>
+</mat-dialog-actions>

@@ -31,7 +31,13 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
     }
 
     public bulkAddUserToMeeting(users: ViewUser[], ...meetings: ViewMeeting[]): Action<void> {
-        const patchFn = (user: ViewUser) => {
+        const patchFn = (
+            user: ViewUser
+        ): {
+            id: number;
+            meeting_id: number;
+            group_ids: number[];
+        }[] => {
             return meetings.map(meeting => {
                 const groupIds: number[] = user.group_ids(meeting.id);
                 return {
@@ -50,7 +56,13 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
         users: ViewUser[],
         ...meetings: Identifiable[]
     ): Promise<Action<void> | void> {
-        const patchFn = (user: ViewUser) => {
+        const patchFn = (
+            user: ViewUser
+        ): {
+            id: number;
+            meeting_id: number;
+            group_ids: any[];
+        }[] => {
             return meetings.map(meeting => ({ id: user.id, meeting_id: meeting.id, group_ids: [] }));
         };
         const title = _(`This action will remove you from one or more meetings.`);
@@ -83,5 +95,9 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
 
     public import(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
         return this.repo.accountImport(payload);
+    }
+
+    public mergeTogether(payload: { id: number; user_ids: number[] }[]): Action<void> {
+        return this.repo.mergeTogether(payload);
     }
 }

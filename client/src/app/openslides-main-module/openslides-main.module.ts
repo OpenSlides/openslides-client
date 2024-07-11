@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -34,7 +34,7 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
         HttpClientModule,
         OpenSlidesTranslationModule.forRoot(),
         ...NOT_LAZY_LOADED_MODULES,
-        ServiceWorkerModule.register(`ngsw-worker.js`, {
+        ServiceWorkerModule.register(`sw.js`, {
             enabled: environment.production,
             // Register the ServiceWorker as soon as the application is stable
             // or after 30 seconds (whichever comes first).

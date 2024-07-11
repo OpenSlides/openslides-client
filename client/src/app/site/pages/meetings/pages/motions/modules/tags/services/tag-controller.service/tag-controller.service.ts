@@ -11,7 +11,7 @@ import { ViewTag } from '../../view-models';
     providedIn: `root`
 })
 export class TagControllerService extends BaseMeetingControllerService<ViewTag, Tag> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: TagRepositoryService
     ) {

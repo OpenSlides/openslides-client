@@ -1,8 +1,16 @@
 @import 'src/assets/styles/media-queries.scss';
 
 @include set-breakpoint-upper(xs) {
+    .form100 {
+        width: 100%;
+    }
+
     .form70 {
         width: 70%;
+    }
+
+    .form45 {
+        width: 45%;
     }
 
     .form37 {
@@ -18,16 +26,20 @@
     }
 }
 
+mat-card mat-card-content h2 {
+    margin-top: 0 !important;
+}
+
+os-user-detail-view h2 {
+    margin-top: 0 !important;
+}
+
 .force-min-width {
     min-width: 110px;
 }
 
 .distance {
     padding-right: 5%;
-}
-
-mat-checkbox {
-    margin-right: 10px;
 }
 
 .state-icons {

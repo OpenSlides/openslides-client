@@ -32,7 +32,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
      */
     protected sortProperty: SortProperty = `number`;
 
-    constructor(
+    public constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         agendaItemRepo: AgendaItemRepositoryService,
         private treeService: TreeService
@@ -242,28 +242,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.createAction(AmendmentAction.CREATE_PARAGRAPHBASED_AMENDMENT, payload);
     }
 
-    public createStatuteAmendment(partialMotion: Partial<Motion & { workflow_id: Id }>): Action<CreateResponse> {
-        const payload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
-            title: partialMotion.title,
-            text: partialMotion.text,
-            origin_id: partialMotion.origin_id,
-            submitter_ids: partialMotion.submitter_ids,
-            workflow_id: partialMotion.workflow_id,
-            category_id: partialMotion.category_id,
-            attachment_ids: partialMotion.attachment_ids,
-            reason: partialMotion.reason,
-            number: partialMotion.number,
-            state_extension: partialMotion.state_extension,
-            statute_paragraph_id: partialMotion.statute_paragraph_id,
-            sort_parent_id: partialMotion.sort_parent_id,
-            supporter_meeting_user_ids: partialMotion.supporter_meeting_user_ids,
-            ...createAgendaItem(partialMotion, false)
-        };
-        return this.createAction(AmendmentAction.CREATE_STATUTEBASED_AMENDMENT, payload);
-    }
-
-    public getTitle = (viewMotion: ViewMotion) => {
+    public getTitle = (viewMotion: ViewMotion): string => {
         if (viewMotion.number) {
             return `${viewMotion.number}: ${viewMotion.title}`;
         } else {
@@ -271,7 +250,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         }
     };
 
-    public getNumberOrTitle = (viewMotion: ViewMotion) => {
+    public getNumberOrTitle = (viewMotion: ViewMotion): string => {
         if (viewMotion.number) {
             return viewMotion.number;
         } else {
@@ -279,7 +258,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         }
     };
 
-    public override getAgendaSlideTitle = (viewMotion: ViewMotion) => {
+    public override getAgendaSlideTitle = (viewMotion: ViewMotion): string => {
         const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewMotion);
         // if the number is set, the title will be 'Motion <number>'.
         if (viewMotion.number) {
@@ -289,7 +268,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         }
     };
 
-    public override getAgendaListTitle = (viewMotion: ViewMotion) => {
+    public override getAgendaListTitle = (viewMotion: ViewMotion): AgendaListTitle => {
         const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewMotion);
         // Append the verbose name only, if not the special format 'Motion <number>' is used.
         let title: string;
@@ -306,9 +285,14 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return agendaTitle;
     };
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Motions` : `Motion`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Motions` : `Motion`);
 
-    public getProjectorTitle = (viewMotion: ViewMotion) => {
+    public getProjectorTitle = (
+        viewMotion: ViewMotion
+    ): {
+        title: string;
+        subtitle: string;
+    } => {
         const subtitle =
             viewMotion.agenda_item && viewMotion.agenda_item.comment ? viewMotion.agenda_item.comment : undefined;
         return { title: this.getTitle(viewMotion), subtitle };
@@ -317,8 +301,11 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     protected override createViewModel(model: Motion): ViewMotion {
         const viewModel = super.createViewModel(model);
 
-        viewModel.getNumberOrTitle = () => this.getNumberOrTitle(viewModel);
-        viewModel.getProjectorTitle = () => this.getProjectorTitle(viewModel);
+        viewModel.getNumberOrTitle = (): string => this.getNumberOrTitle(viewModel);
+        viewModel.getProjectorTitle = (): {
+            title: string;
+            subtitle: string;
+        } => this.getProjectorTitle(viewModel);
 
         return viewModel;
     }

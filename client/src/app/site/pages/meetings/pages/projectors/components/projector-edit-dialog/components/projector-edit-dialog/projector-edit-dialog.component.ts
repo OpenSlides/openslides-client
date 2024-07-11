@@ -8,10 +8,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import {
-    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-    MatLegacyDialogRef as MatDialogRef
-} from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime } from 'rxjs';
@@ -103,15 +100,17 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      */
     public readonly projectiondefaultKeys = PROJECTIONDEFAULT;
 
-    public readonly colorFields = {
-        color: _(`Foreground color`),
-        background_color: _(`Background color`),
-        header_background_color: _(`Header background color`),
-        header_font_color: _(`Header font color`),
-        header_h1_color: _(`Headline color`),
-        chyron_background_color: _(`Chyron background color`),
-        chyron_font_color: _(`Chyron font color`)
-    };
+    public readonly colorFields = [
+        [`background_color`, _(`Background color`)],
+        [`color`, _(`Foreground color`)],
+        [`header_background_color`, _(`Header background color`)],
+        [`header_font_color`, _(`Header font color`)],
+        [`header_h1_color`, _(`Headline color`)],
+        [`chyron_background_color`, _(`Chyron speaker, background color`)],
+        [`chyron_font_color`, _(`Chyron speaker, font color`)],
+        [`chyron_background_color_2`, _(`Chyron agenda item, background color`)],
+        [`chyron_font_color_2`, _(`Chyron agenda item, font color`)]
+    ];
 
     private get _aspectRatioControl(): AbstractControl {
         return this.updateForm.get(ASPECT_RATIO_FORM_KEY)!;
@@ -153,6 +152,8 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             header_h1_color: [``, Validators.required],
             chyron_background_color: [``, Validators.required],
             chyron_font_color: [``, Validators.required],
+            chyron_background_color_2: [``, Validators.required],
+            chyron_font_color_2: [``, Validators.required],
             show_header_footer: [],
             show_title: [],
             show_logo: [],

@@ -15,7 +15,7 @@ export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeaker
     ViewMotionBlock,
     MotionBlock
 > {
-    constructor(
+    public constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         agendaItemRepo: AgendaItemRepositoryService
     ) {
@@ -42,9 +42,10 @@ export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeaker
         return this.sendBulkActionToBackend(MotionBlockAction.DELETE, payload);
     }
 
-    public getTitle = (viewMotionBlock: ViewMotionBlock) => viewMotionBlock.title;
+    public getTitle = (viewMotionBlock: ViewMotionBlock): string => viewMotionBlock.title;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Motion blocks` : `Motion block`);
+    public getVerboseName = (plural = false): string =>
+        this.translate.instant(plural ? `Motion blocks` : `Motion block`);
 
     /**
      * Sets the default sorting (e.g. in dropdowns and for new users) to 'title'

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -131,7 +131,7 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
     /**
      * This function ensures that a selected user is quickly removed from the selection list
      */
-    private removeUserFromSelectorList(userId: number) {
+    private removeUserFromSelectorList(userId: number): void {
         this._filteredUsersSubject.next(
             this._filteredUsersSubject.value.filter(user => {
                 return user.id !== userId;
@@ -143,7 +143,7 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
      * Sets the current value of the filteredUsersSubject to an Array that holds exactly every single user,
      * who should be available for selection (i.e. who is not included in nonSelectableUsersSubject.value)
      */
-    private filterUsers() {
+    private filterUsers(): void {
         const notAvailable = this._nonSelectableUserIds;
         const availableUsers = this._users.filter(user => !notAvailable.includes(user.id));
         this._filteredUsersSubject.next(availableUsers);

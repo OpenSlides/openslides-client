@@ -70,8 +70,10 @@
         ></a>
         <a
             class="detail-link"
-            (click)="changeDirectory(mediafile.id)"
             *ngIf="mediafile.is_directory && !isMultiSelect"
+            (click)="changeDirectory(mediafile.id)"
+            (keydown.enter)="changeDirectory(mediafile.id)"
+            tabindex="0"
         ></a>
         <mat-icon class="grey-icon foreground-icon">{{ mediafile.getIcon() }}</mat-icon>
     </div>
@@ -86,8 +88,10 @@
         ></a>
         <a
             class="detail-link"
-            (click)="changeDirectory(mediafile.id)"
             *ngIf="mediafile.is_directory && !isMultiSelect"
+            (click)="changeDirectory(mediafile.id)"
+            (keydown.enter)="changeDirectory(mediafile.id)"
+            tabindex="0"
         ></a>
         <div class="innerTable overflow-hidden">
             <div class="file-title ellipsis-overflow">
@@ -96,6 +100,27 @@
             <div class="foreground-icon" *ngIf="!mediafile.is_directory">
                 <span>{{ mediafile.create_timestamp | time }} · {{ mediafile.filesize | readableBytes }}</span>
             </div>
+        </div>
+    </div>
+
+    <div *osScrollingTableCell="'edit'; row as mediafile" class="fill detail-link">
+        <div
+            *ngIf="canEdit"
+            class="fill detail-link"
+            tabindex="0"
+            (click)="onEditFile(mediafile, fileEditDialog)"
+            (keydown.enter)="onEditFile(mediafile, fileEditDialog)"
+        >
+            <ng-container *ngIf="isInMeeting">
+                <os-icon-container icon="group">
+                    <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
+                        <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
+                    </os-comma-separated-listing>
+                </os-icon-container>
+            </ng-container>
+            <ng-container *ngIf="!isInMeeting">
+                <os-icon-container icon="edit"></os-icon-container>
+            </ng-container>
         </div>
     </div>
 
@@ -162,7 +187,7 @@
 <!-- File edit dialog -->
 <ng-template #fileEditDialog>
     <h1 mat-dialog-title>{{ 'Edit details for' | translate }}</h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form class="edit-file-form" [formGroup]="fileEditForm">
             <mat-form-field>
                 <mat-label>{{ 'New file name' | translate }}</mat-label>
@@ -170,8 +195,8 @@
                 <mat-error *ngIf="fileEditForm.invalid">{{ 'Required' | translate }}</mat-error>
             </mat-form-field>
         </form>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button
             type="submit"
             mat-button
@@ -184,7 +209,7 @@
         <button type="button" mat-button [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>
 
 <!-- Move dialog -->
@@ -192,7 +217,7 @@
     <h1 mat-dialog-title>
         <span>{{ 'Move into directory' | translate }}</span>
     </h1>
-    <div class="os-form-card-mobile" [formGroup]="moveForm" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile" [formGroup]="moveForm">
         <p>{{ 'Please select the directory:' | translate }}</p>
         <mat-form-field>
             <mat-label>{{ 'Upload to' | translate }}</mat-label>
@@ -203,13 +228,13 @@
                 [inputListValues]="filteredDirectoryBehaviorSubject"
             ></os-list-search-selector>
         </mat-form-field>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button type="submit" mat-button color="accent" [mat-dialog-close]="true">
             <span>{{ 'Move' | translate }}</span>
         </button>
         <button type="button" mat-button [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

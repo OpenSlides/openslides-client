@@ -5,7 +5,7 @@ os-sort-filter-bar {
     .filter-menu-head {
         padding-left: 5px;
 
-        .mat-button {
+        .mat-mdc-button {
             margin: 0 auto;
         }
     }
@@ -18,9 +18,10 @@ os-sort-filter-bar {
         display: flex;
         os-rounded-input {
             margin: 0 10px;
-            @include phone {
-                display: none;
-            }
+        }
+        .mat-mdc-button {
+            height: 100%;
+            padding: 0 16px;
         }
     }
 
@@ -61,5 +62,8 @@ os-sort-filter-bar {
             height: $size;
             width: $size;
         }
+    }
+    .upper {
+        font-weight: 400;
     }
 }

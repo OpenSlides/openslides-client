@@ -24,9 +24,9 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         super(repositoryServiceCollector, Speaker);
     }
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Speakers` : `Speaker`);
+    public getVerboseName = (plural = false): any => this.translate.instant(plural ? `Speakers` : `Speaker`);
 
-    public getTitle = (viewSpeaker: ViewSpeaker) =>
+    public getTitle = (viewSpeaker: ViewSpeaker): any =>
         viewSpeaker.user ? viewSpeaker.user.getFullName() : this.translate.instant(`Deleted user`);
 
     public create(
@@ -74,6 +74,9 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
             id: viewModel.id,
             speech_state
         };
+        if (speech_state !== null) {
+            payload.point_of_order = false;
+        }
         return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
     }
 
@@ -143,6 +146,9 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
             id: speaker.id,
             ...data
         };
+        if (data.point_of_order) {
+            payload.speech_state = null;
+        }
         return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
     }
 }

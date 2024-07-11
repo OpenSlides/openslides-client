@@ -49,12 +49,12 @@ export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableV
     public getSpeakerButtonObject: ((viewModel: V) => BaseViewModel & HasListOfSpeakers) | null = null;
 
     @Input()
-    public override toRestrictFn = (restriction: ColumnRestriction<Permission>) =>
+    public override toRestrictFn = (restriction: ColumnRestriction<Permission>): boolean =>
         !this.operator.hasPerms(restriction.permission);
 
     @Input()
-    public override toHideFn = () => {
-        const columnsToHide = [];
+    public override toHideFn = (): string[] => {
+        const columnsToHide: string[] = [];
 
         // hide the projector columns
         if (this.multiSelect || this.isMobile || !this.allowProjector) {
@@ -90,7 +90,8 @@ export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableV
 
     public readonly permission = Permission;
 
-    public readonly isProjectedFn = (model: BaseProjectableViewModel) => this.service.isProjected(model);
+    public readonly isProjectedFn = (model: BaseProjectableViewModel): boolean =>
+        this.service.isProjectedOnReferenceProjector(model);
 
     public constructor(
         private operator: OperatorService,

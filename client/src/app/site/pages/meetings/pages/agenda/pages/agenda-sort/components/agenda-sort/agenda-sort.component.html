@@ -16,7 +16,7 @@
         </div>
         <div>
             <button mat-button (click)="resetFilters()">
-                <mat-icon inline>cancel</mat-icon>
+                <mat-icon>cancel</mat-icon>
                 <span>{{ 'Visibility' | translate }}</span>
             </button>
         </div>
@@ -27,38 +27,42 @@
             <div class="filter-hint hint">{{ 'Visibility' | translate }}</div>
             <mat-selection-list #visibilities (selectionChange)="onFilterChange(visibilities.selectedOptions.selected)">
                 <mat-list-option *ngFor="let option of filterOptions" [value]="option.id" [selected]="option.state">
-                    <mat-icon matListIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
+                    <mat-icon matListItemIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
                         {{ getIcon(option.id) }}
                     </mat-icon>
-                    <p matLine>{{ option.label | translate }}</p>
+                    <div matListItemTitle>
+                        {{ option.label | translate }}
+                    </div>
                 </mat-list-option>
             </mat-selection-list>
         </mat-menu>
     </div>
 </div>
 <mat-card class="spacer-bottom-60">
-    <div class="current-nodes">
-        {{ seenNodes[0] }}
-        <span>{{ 'of' | translate }}</span>
-        {{ seenNodes[1] }}
-        <span>{{ 'items' | translate }}</span>
-    </div>
-    <os-sorting-tree
-        #osSortedTree
-        (hasChanged)="receiveChanges($event)"
-        (visibleNodes)="onChangeAmountOfItems($event)"
-        [model]="itemsObservable"
-        [stateChange]="changeState"
-        [filterChange]="changeFilter"
-        parentKey="parent_id"
-        weightKey="weight"
-    >
-        <ng-template #innerNode class="sorting-tree-node" let-item="item">
-            <span class="sort-node-title">{{ item.getTitle() }}</span>
-            <span class="sort-node-icon">
-                {{ item.verboseType | translate }}
-                <mat-icon>{{ getIcon(item.type) }}</mat-icon>
-            </span>
-        </ng-template>
-    </os-sorting-tree>
+    <mat-card-content>
+        <div class="current-nodes">
+            {{ seenNodes[0] }}
+            <span>{{ 'of' | translate }}</span>
+            {{ seenNodes[1] }}
+            <span>{{ 'items' | translate }}</span>
+        </div>
+        <os-sorting-tree
+            #osSortedTree
+            (hasChanged)="receiveChanges($event)"
+            (visibleNodes)="onChangeAmountOfItems($event)"
+            [model]="itemsObservable"
+            [stateChange]="changeState"
+            [filterChange]="changeFilter"
+            parentKey="parent_id"
+            weightKey="weight"
+        >
+            <ng-template #innerNode class="sorting-tree-node" let-item="item">
+                <span class="sort-node-title">{{ item.getTitle() }}</span>
+                <span class="sort-node-icon">
+                    {{ item.verboseType | translate }}
+                    <mat-icon>{{ getIcon(item.type) }}</mat-icon>
+                </span>
+            </ng-template>
+        </os-sorting-tree>
+    </mat-card-content>
 </mat-card>

@@ -1,25 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
-// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
-//  The following line adds:
-//    1. Default typography styles for all components
-//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
-//  If you specify typography styles for the components you use elsewhere, you should delete this line.
-//  If you don't need the default component typographies but still want the hierarchy styles,
-//  you can delete this line and instead use:
-//    `@include mat.legacy-typography-hierarchy(mat.define-typography-config());`
-/* TODO(mdc-migration): Remove all-legacy-component-typographies once all legacy components are migrated */
-@include mat.all-legacy-component-typographies(
-    mat.define-legacy-typography-config($font-family: "OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif")
-);
-@include mat.all-component-typographies(
-    mat.define-legacy-typography-config($font-family: "OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif")
-);
-/* TODO(mdc-migration): Remove legacy-core once all legacy components are migrated */
-@include mat.legacy-core();
-@include mat.core();
 
-/** theming */
+/** angular material theming */
 @import './assets/styles/theme-styles.scss';
 
 /** Useful default classes */
@@ -28,9 +10,6 @@
 /** fonts */
 @import 'assets/styles/fonts.scss';
 @import '~material-design-icons-iconfont/dist/material-design-icons.css';
-
-/** Videojs */
-@import '~video.js/dist/video-js.css';
 
 /** Load projector specific SCSS values */
 @import 'assets/styles/projector.scss';
@@ -59,7 +38,7 @@
 */
 /** Define the general style-rules */
 .mat-toolbar h2,
-.mat-dialog-title {
+.mat-mdc-dialog-title {
     font-family: OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif;
 }
 
@@ -73,12 +52,8 @@
     color: gray;
 }
 
-.mat-card {
+.mat-mdc-card {
     @extend .regular-shadow;
-}
-
-.mat-mdc-card-content > :first-of-type {
-    margin-top: 0;
 }
 
 /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
@@ -137,7 +112,7 @@
     border-radius: 0 !important;
 }
 
-.mat-menu-panel {
+.mat-mdc-menu-panel {
     max-width: initial !important;
 }
 
@@ -161,8 +136,8 @@
     }
 }
 
-.mat-chip,
-.mat-basic-chip {
+.mat-mdc-chip,
+.mat-mdc-basic-chip {
     font-size: 12px;
     min-height: 22px !important;
     border-radius: 5px !important;
@@ -172,19 +147,19 @@
     display: inline-flex;
 }
 
-.mat-chip:focus,
-.mat-basic-chip:focus {
+.mat-mdc-chip:focus,
+.mat-mdc-basic-chip:focus {
     outline: none;
 }
-button.mat-menu-item.selected {
+button.mat-mdc-menu-item.selected {
     font-weight: bold !important;
 }
 
-.mat-menu-item .mat-icon {
+.mat-mdc-menu-item .mat-icon {
     margin-right: 8px !important;
 }
 
-.mat-mini-fab.large {
+.mat-mdc-mini-fab.large {
     width: 24px;
     height: 24px;
     line-height: 24px;
@@ -263,18 +238,6 @@ button.mat-menu-item.selected {
     table {
         width: 100%;
         overflow: scroll;
-    }
-
-    .mat-header-cell {
-        min-width: 100px;
-        flex: 2;
-        padding-right: 8px;
-    }
-    .mat-cell {
-        min-width: 100px;
-        flex: 2;
-        padding-top: 2px;
-        padding-right: 8px;
     }
     .selection {
         min-width: 80px;

@@ -50,6 +50,12 @@ export class IconContainerComponent {
     public swap = false;
 
     /**
+     * Hide span completely
+     */
+    @Input()
+    public hide = false;
+
+    /**
      * Boolean to decide, when to show the icon.
      */
     @Input()
@@ -66,6 +72,12 @@ export class IconContainerComponent {
      */
     @Input()
     public iconTooltipPosition: TooltipPosition = `below`;
+
+    /**
+     * Optional string for tooltip class
+     */
+    @Input()
+    public iconTooltipClass = ``;
 
     /**
      * Uses a css class for nowrap

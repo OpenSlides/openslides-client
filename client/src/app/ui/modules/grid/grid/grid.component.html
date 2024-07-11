@@ -4,7 +4,7 @@
 </div>
 
 <div class="os-grid" [ngClass]="{ 'no-space': noSpace }">
-    <div *ngFor="let tile of tiles" [ngClass]="tile.classes" (click)="tile.onClick($event)">
+    <div *ngFor="let tile of tiles" [ngClass]="tile.classes" (click)="tile.onClick($event)" tabindex="-1">
         <div class="tile-placeholder" [ngStyle]="{ marginTop: rowHeight }"></div>
         <div class="tile-content stretch-to-fill-parent">
             <ng-container *ngTemplateOutlet="tile.implicitContent; context: { $implicit: tile.data }"></ng-container>

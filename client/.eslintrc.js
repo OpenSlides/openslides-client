@@ -66,6 +66,8 @@ module.exports = {
                 '@typescript-eslint/no-this-alias': ['error'],
                 '@typescript-eslint/adjacent-overload-signatures': ['error'],
                 '@typescript-eslint/ban-types': ['error'],
+                '@typescript-eslint/explicit-member-accessibility': ['error'],
+                '@typescript-eslint/explicit-function-return-type': ['error'],
 
                 'jsdoc/require-example': ['off'],
                 'jsdoc/newline-after-description': ['off'],
@@ -78,13 +80,18 @@ module.exports = {
                 '@typescript-eslint/ban-ts-comment': ['warn'],
                 '@typescript-eslint/no-explicit-any': ['off'],
                 '@typescript-eslint/no-non-null-assertion': ['off'],
-                'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }]
+                'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }],
+
+                // Currently used by view models
+                '@typescript-eslint/no-unsafe-declaration-merging': ['off']
             }
         },
         {
             files: ['*.spec.ts'],
             rules: {
                 'no-restricted-globals': ['error', 'fdescribe', 'fit'],
+                '@typescript-eslint/explicit-member-accessibility': ['off'],
+                '@typescript-eslint/explicit-function-return-type': ['off'],
             }
         },
         {

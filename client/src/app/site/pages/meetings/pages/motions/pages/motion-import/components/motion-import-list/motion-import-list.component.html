@@ -4,7 +4,7 @@
         <h2>{{ 'Import motions' | translate }}</h2>
     </div>
 
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button *ngIf="canImport" mat-button (click)="doImport()">
             <span class="upper">{{ 'Import' | translate }}</span>
         </button>
@@ -21,7 +21,7 @@
             </mat-icon>
         </div>
         <os-spinner *ngIf="isImporting" [width]="30" [height]="30" [showText]="false"></os-spinner>
-    </div>
+    </ng-container>
 </os-head-bar>
 
 <os-backend-import-list

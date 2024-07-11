@@ -44,7 +44,7 @@ export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAg
         this.updateFilterForRepo({
             repo: tagRepo,
             filter: this.tagFilterOptions,
-            noneOptionLabel: this.translate.instant(`No tags`)
+            noneOptionLabel: `not specified`
         });
     }
 
@@ -57,8 +57,8 @@ export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAg
                 label: `Status`,
                 property: `closed`,
                 options: [
-                    { label: this.translate.instant(`Open items`), condition: [false, null] },
-                    { label: this.translate.instant(`Closed items`), condition: true }
+                    { label: `Open items`, condition: [false, null] },
+                    { label: `Closed items`, condition: true }
                 ]
             },
             this.tagFilterOptions,
@@ -68,13 +68,13 @@ export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAg
                 options: this.createVisibilityFilterOptions()
             },
             {
-                label: this.translate.instant(`Module`),
+                label: `Module`,
                 property: `getContentObjectCollection`,
                 options: [
-                    { label: this.translate.instant(`Topics`), condition: Topic.COLLECTION },
-                    { label: this.translate.instant(`Motions`), condition: Motion.COLLECTION },
-                    { label: this.translate.instant(`Motion blocks`), condition: MotionBlock.COLLECTION },
-                    { label: this.translate.instant(`Elections`), condition: Assignment.COLLECTION }
+                    { label: `Topics`, condition: Topic.COLLECTION },
+                    { label: `Motions`, condition: Motion.COLLECTION },
+                    { label: `Motion blocks`, condition: MotionBlock.COLLECTION },
+                    { label: `Elections`, condition: Assignment.COLLECTION }
                 ]
             }
         ];

@@ -106,7 +106,7 @@ export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotio
                             this.tagFilterOptions.some(tagfilter => tagfilter.id === tag.id && tagfilter.state === true)
                     }));
                     this.tagFilterOptions.push({
-                        label: this.translate.instant(`No tags`),
+                        label: this.translate.instant(`not specified`),
                         id: 0,
                         state:
                             this.tagFilterOptions &&

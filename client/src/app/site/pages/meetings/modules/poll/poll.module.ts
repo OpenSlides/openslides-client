@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
-import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -19,6 +20,7 @@ import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { ChartComponent } from './components/chart/chart.component';
 import { CheckInputComponent } from './components/check-input/check-input.component';
 import { EntitledUsersTableComponent } from './components/entitled-users-table/entitled-users-table.component';
+import { PollCannotVoteMessageComponent } from './components/poll-cannot-vote-message/poll-cannot-vote-message.component';
 import { PollProgressComponent } from './components/poll-progress/poll-progress.component';
 import { SingleOptionChartTableComponent } from './components/single-option-chart-table/single-option-chart-table.component';
 import { VotesTableComponent } from './components/votes-table/votes-table.component';
@@ -34,7 +36,8 @@ const COMPONENTS = [
     CheckInputComponent,
     EntitledUsersTableComponent,
     SingleOptionChartTableComponent,
-    VotesTableComponent
+    VotesTableComponent,
+    PollCannotVoteMessageComponent
 ];
 
 @NgModule({
@@ -57,6 +60,7 @@ const COMPONENTS = [
         ListModule,
         DirectivesModule,
         SearchSelectorModule,
+        MatProgressSpinnerModule,
         OpenSlidesTranslationModule.forChild()
     ],
     exports: [...PIPES, ...MODULES, ...COMPONENTS],

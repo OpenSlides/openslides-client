@@ -12,13 +12,13 @@ import { MotionStateAction } from './motion-state.action';
     providedIn: `root`
 })
 export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<ViewMotionState, MotionState> {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionState);
     }
 
-    public getTitle = (viewMotionState: ViewMotionState) => viewMotionState.name;
+    public getTitle = (viewMotionState: ViewMotionState): string => viewMotionState.name;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Workflows` : `Workflow`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Workflows` : `Workflow`);
 
     public async create(model: Partial<MotionState>): Promise<Identifiable> {
         const payload = {

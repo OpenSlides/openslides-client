@@ -8,12 +8,48 @@
                 [unstyled]="true"
                 [countdown]="{
                     running: !!data.data.current_start_time,
+                    default_time: data.data.remaining_time === undefined ? 0 : null,
                     countdown_time: data.data.current_start_time
-                        ? data.data.current_start_time + data.data.remaining_time
+                        ? data.data.current_start_time + (data.data.remaining_time || 0)
                         : data.data.remaining_time
                 }"
             ></os-countdown-time>
         </div>
         <div id="inner-name">{{ data.data.name }}</div>
+
+        <div *ngIf="data.data.point_of_order" id="inner-type">
+            <mat-icon inline>warning</mat-icon>
+            {{ 'Point of order' | translate }}
+        </div>
+
+        <!-- Pro Speech -->
+        <div *ngIf="data.data.speech_state === SpeechState.PRO" id="inner-type">
+            <mat-icon inline>add_circle</mat-icon>
+            {{ 'Forspeech' | translate }}
+        </div>
+
+        <!-- Contra Speech -->
+        <div *ngIf="data.data.speech_state === SpeechState.CONTRA" id="inner-type">
+            <mat-icon inline>remove_circle</mat-icon>
+            {{ 'Counter speech' | translate }}
+        </div>
+
+        <!-- Marked -->
+        <div *ngIf="data.data.speech_state === SpeechState.CONTRIBUTION" id="inner-type">
+            <mat-icon inline>star</mat-icon>
+            {{ 'Contribution' | translate }}
+        </div>
+
+        <!-- Interposed question -->
+        <div *ngIf="data.data.speech_state === SpeechState.INTERPOSED_QUESTION" id="inner-type">
+            <mat-icon inline>help</mat-icon>
+            {{ 'Interposed question' | translate }}
+        </div>
+
+        <!-- Intervention -->
+        <div *ngIf="data.data.speech_state === SpeechState.INTERVENTION" id="inner-type">
+            <mat-icon inline>error</mat-icon>
+            {{ 'Intervention' | translate }}
+        </div>
     </span>
 </div>
