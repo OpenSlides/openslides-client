@@ -8,13 +8,13 @@
         </div>
 
         <!-- Menu -->
-        <div class="menu-slot">
+        <ng-container class="menu-slot">
             <div *osPerms="permission.motionCanManage">
                 <button type="button" mat-icon-button [matMenuTriggerFor]="categoryMenu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
             </div>
-        </div>
+        </ng-container>
     </os-head-bar>
 
     <mat-card class="os-card spacer-bottom-60">

@@ -122,20 +122,18 @@
 
 <!-- non-mobile sorting menu -->
 <mat-menu #menu>
-    <div *ngIf="hasSorting">
-        <!-- <mat-list-item> -->
+    <ng-container *ngIf="hasSorting">
         <button mat-menu-item *ngIf="defaultOption" (click)="sortOption = defaultOption">
             <mat-icon>{{ getSortIcon(defaultOption) }}</mat-icon>
             <span>{{ sortService.getSortLabel(defaultOption) | translate }}&emsp;</span>
             <small class="subtitle">({{ 'Default' | translate }})</small>
         </button>
+
         <mat-divider *ngIf="defaultOption"></mat-divider>
-        <!-- </mat-list-item> -->
-        <mat-list-item *ngFor="let option of sortOptionsWithoutDefault" (click)="sortOption = option">
-            <button mat-menu-item>
-                <mat-icon>{{ getSortIcon(option) }}</mat-icon>
-                <span>{{ sortService.getSortLabel(option) | translate }}</span>
-            </button>
-        </mat-list-item>
-    </div>
+
+        <button *ngFor="let option of sortOptionsWithoutDefault" (click)="sortOption = option" mat-menu-item>
+            <mat-icon>{{ getSortIcon(option) }}</mat-icon>
+            <span>{{ sortService.getSortLabel(option) | translate }}</span>
+        </button>
+    </ng-container>
 </mat-menu>
