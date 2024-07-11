@@ -229,6 +229,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             return true;
         } else if (this.operator.operatorId === user.id) {
             return true;
+        } else if (user.organization_management_level) {
+            return true;
         } else {
             return !this.operator.hasPerms(Permission.userCanManage);
         }
