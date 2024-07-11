@@ -317,7 +317,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             member_number: [``],
             is_active: [true],
             is_physical_person: [true],
-            ...(this.useAdditionalEditTemplate ? this._additionalFormControls : {})
+            ...this._additionalFormControls
         };
     }
 
@@ -347,7 +347,12 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         };
     }
 
-    private getChangedValues(data: { [key: string]: any }): { [key: string]: any } {
+    private getChangedValues(formData: { [key: string]: any }): { [key: string]: any } {
+        const data = this.useAdditionalEditTemplate
+            ? formData
+            : Object.keys(formData).mapToObject(key =>
+                  Object.keys(this._additionalFormControls ?? {}).includes(key) ? {} : { [key]: formData[key] }
+              );
         const newData = {};
         if (this.user) {
             Object.keys(data).forEach(key => {

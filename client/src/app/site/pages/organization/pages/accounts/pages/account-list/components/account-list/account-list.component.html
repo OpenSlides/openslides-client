@@ -181,7 +181,12 @@
                 <mat-icon>block</mat-icon>
                 <span>{{ 'Enable/disable accounts' | translate }} ...</span>
             </button>
-            <button mat-menu-item [disabled]="selectedRows.length < 2" (click)="mergeUsersTogether()">
+            <button
+                *osOmlPerms="OML.can_manage_users"
+                mat-menu-item
+                [disabled]="selectedRows.length < 2"
+                (click)="mergeUsersTogether()"
+            >
                 <mat-icon>merge</mat-icon>
                 <span>{{ 'Merge accounts' | translate }} ...</span>
             </button>
