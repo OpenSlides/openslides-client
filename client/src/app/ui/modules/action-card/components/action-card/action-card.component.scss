@@ -1,13 +1,14 @@
+@import 'src/assets/styles/mixins/button.scss';
+
 .meta-text-block {
     padding: 0px;
     margin: 20px 0;
     min-width: 200px;
 
-    .mat-icon-button mat-icon {
-        font-size: 18px;
+    .mat-mdc-icon-button {
+        @include custom-size-button(34px, 18px);
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
-    mat-card-header {
+    .mat-mdc-card-header {
         font-size: 16px;
         font-weight: 400;
 
@@ -23,7 +24,7 @@
             }
         }
     }
-    mat-card-content {
+    .mat-mdc-card-content {
         padding-top: 16px;
     }
 }

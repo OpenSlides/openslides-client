@@ -95,7 +95,7 @@ test.describe('Testing accounts', () => {
         const delAccount = await createAccount(context, `TestDeleteAccount_${Date.now().toString()}`);
         const listComponent = new ListComponent(page);
         await listComponent.openRowMenu(listComponent.getRowByText(delAccount.name));
-        await page.locator('.mat-menu-content button', { hasText: `Delete` }).first().click();
+        await page.locator('.mat-mdc-menu-content button', { hasText: `Delete` }).first().click();
         await page.locator('os-user-delete-dialog button', { hasText: `Yes, delete` }).first().click();
         await expect(listComponent.getRowByText(delAccount.name)).toBeHidden();
         await logout(context);

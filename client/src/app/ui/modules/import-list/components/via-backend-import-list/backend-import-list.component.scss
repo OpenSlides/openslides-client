@@ -51,6 +51,12 @@ pbl-ngrid-cell {
     font-size: 14px;
 }
 
+.import-file-handle {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+}
+
 @keyframes rotation {
     from {
         transform: rotate(0deg);

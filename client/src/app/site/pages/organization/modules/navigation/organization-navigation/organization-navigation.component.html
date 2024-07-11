@@ -3,7 +3,7 @@
         <a
             *osOmlPerms="entry.permission!; allowCommitteeAdmin: entry.optionalCML === CML.can_manage"
             mat-menu-item
-            class="management-router-link"
+            class="management-router-link foreground-icon"
             [ngStyle]="getCustomStyleForEntry(entry)"
             (click)="closeSidenavOnMobile()"
             [routerLink]="entry.route"

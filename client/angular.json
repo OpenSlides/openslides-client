@@ -59,8 +59,8 @@
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "4kb",
-                                    "maximumError": "10kb"
+                                    "maximumWarning": "10kb",
+                                    "maximumError": "50kb"
                                 }
                             ],
                             "fileReplacements": [
@@ -90,10 +90,10 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "configurations": {
                         "production": {
-                            "browserTarget": "client:build:production"
+                            "buildTarget": "client:build:production"
                         },
                         "development": {
-                            "browserTarget": "client:build:development"
+                            "buildTarget": "client:build:development"
                         }
                     },
                     "defaultConfiguration": "development"
@@ -101,7 +101,7 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "client:build"
+                        "buildTarget": "client:build"
                     }
                 },
                 "test": {
