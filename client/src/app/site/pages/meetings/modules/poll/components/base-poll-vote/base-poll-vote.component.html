@@ -163,9 +163,6 @@
                                 </div>
                             </ng-container>
                             <ng-container *ngIf="settings.isSplitSingleOption && displayed_in_autopilot">
-                                <b *ngIf="!showAvailableVotes && poll.option_ids" class="grid-name-area">
-                                    {{ poll.title }}
-                                </b>
                                 <div
                                     class="vote-button-area"
                                     *ngFor="let action of voteActions.length ? voteActions : voteOptions; index as i"
