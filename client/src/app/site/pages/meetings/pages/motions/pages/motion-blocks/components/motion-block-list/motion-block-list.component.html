@@ -1,7 +1,7 @@
 <os-head-bar
-    [nav]="false"
     [hasMainButton]="canEdit"
     [mainActionTooltip]="'New motion block' | translate"
+    [nav]="false"
     (mainEvent)="onPlusButton()"
 >
     <!-- Title -->
@@ -11,13 +11,13 @@
 </os-head-bar>
 
 <os-projectable-list
-    [vScrollFixed]="64"
+    [filterProps]="filterProps"
     [listObservableProvider]="repo"
+    [multiSelect]="isMultiSelect"
     [showFilterBar]="true"
     [sortService]="sortService"
-    [multiSelect]="isMultiSelect"
+    [vScrollFixed]="64"
     [(selectedRows)]="selectedRows"
-    [filterProps]="filterProps"
 >
     <!-- Title column -->
     <div *osScrollingTableCell="'title'; value as title; row as block; rowContext as rowContext" class="cell-slot fill">
@@ -30,17 +30,17 @@
     -->
         <div class="innerTable overflow-hidden">
             <os-icon-container
-                [noWrap]="true"
-                [icon]="getIndicatingIcon(block)"
                 size="large"
+                [icon]="getIndicatingIcon(block)"
                 [iconTooltip]="getIndicatingTooltip(block) | translate"
+                [noWrap]="true"
             >
                 <os-icon-container
-                    [noWrap]="true"
                     icon="lock"
                     size="large"
-                    [showIcon]="block.isFinished && block.internal"
                     [iconTooltip]="'Internal' | translate"
+                    [noWrap]="true"
+                    [showIcon]="block.isFinished && block.internal"
                 >
                     <div class="ellipsis-overflow">
                         {{ title }}
@@ -52,7 +52,7 @@
 
     <!-- Amount -->
     <div *osScrollingTableCell="'amount'; row as block; config: { width: 60 }" class="cell-slot fill">
-        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}" matTooltipPosition="left">
+        <span class="os-amount-chip" matTooltipPosition="left" matTooltip="{{ 'Motions' | translate }}">
             {{ getMotionAmount(block) }}
         </span>
     </div>
@@ -65,9 +65,9 @@
         <button
             mat-icon-button
             [disabled]="isMultiSelect"
+            [matMenuTriggerData]="{ block: block }"
             [matMenuTriggerFor]="singleItemMenu"
             (click)="$event.stopPropagation()"
-            [matMenuTriggerData]="{ block: block }"
         >
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -76,8 +76,8 @@
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
-    <ng-template matMenuContent let-block="block">
-        <os-projector-button [object]="block" [menuItem]="true"></os-projector-button>
-        <os-speaker-button [object]="block" [menuItem]="true"></os-speaker-button>
+    <ng-template let-block="block" matMenuContent>
+        <os-projector-button [menuItem]="true" [object]="block"></os-projector-button>
+        <os-speaker-button [menuItem]="true" [object]="block"></os-speaker-button>
     </ng-template>
 </mat-menu>

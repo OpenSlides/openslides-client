@@ -1,7 +1,7 @@
 <div *osPerms="permission.userCanSee">
     @if (isViewingThis) {
         <div>
-            <os-list [listObservable]="votesDataObservable" [filterProps]="filterProps" [fullScreen]="false">
+            <os-list [filterProps]="filterProps" [fullScreen]="false" [listObservable]="votesDataObservable">
                 <!-- Content -->
                 <div *osScrollingTableCell="'user'; row as vote">
                     <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
@@ -64,6 +64,6 @@
         </div>
     }
 </div>
-<div class="no-can-see-users" *osPerms="permission.userCanSee; complement: true">
+<div *osPerms="permission.userCanSee; complement: true" class="no-can-see-users">
     <i>{{ 'You are not allowed to see all entitled users.' | translate }}</i>
 </div>

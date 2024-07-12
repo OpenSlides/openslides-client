@@ -11,21 +11,21 @@
                 <mat-form-field>
                     <mat-label>{{ allocationLabel | translate }}</mat-label>
                     @if (config && isNumberAllocation) {
-                        <input formControlName="allocation" type="number" matInput />
+                        <input formControlName="allocation" matInput type="number" />
                     }
                     @if (config && !isNumberAllocation) {
-                        <input formControlName="allocation" type="text" matInput />
+                        <input formControlName="allocation" matInput type="text" />
                     }
                     <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
                 </mat-form-field>
                 <button
-                    mat-icon-button
                     class="delete-button"
-                    type="button"
-                    (click)="onRemoveAllocation(i)"
-                    matTooltip="{{ 'Cancel' | translate }}"
+                    mat-icon-button
                     matTooltipPosition="left"
+                    type="button"
                     [disabled]="disabled"
+                    matTooltip="{{ 'Cancel' | translate }}"
+                    (click)="onRemoveAllocation(i)"
                 >
                     <mat-icon>close</mat-icon>
                 </button>
@@ -35,7 +35,7 @@
 </form>
 
 <!-- Add new allocation button -->
-<button mat-button (click)="addNewAllocation()" [disabled]="disabled">
+<button mat-button [disabled]="disabled" (click)="addNewAllocation()">
     <mat-icon>add</mat-icon>
     {{ addButtonLabel | translate }}
 </button>

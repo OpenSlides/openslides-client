@@ -4,15 +4,15 @@
             <h1>{{ 'Legal notice' | translate }}</h1>
             <div *osOmlPerms="OML.can_manage_organization; and: isEditable">
                 @if (!isEditing) {
-                    <button (click)="isEditing = true" mat-icon-button>
+                    <button mat-icon-button (click)="isEditing = true">
                         <mat-icon>edit</mat-icon>
                     </button>
                 }
                 @if (isEditing) {
-                    <button (click)="leaveEditMode(true)" mat-icon-button>
+                    <button mat-icon-button (click)="leaveEditMode(true)">
                         <mat-icon>done</mat-icon>
                     </button>
-                    <button (click)="leaveEditMode(false)" mat-icon-button>
+                    <button mat-icon-button (click)="leaveEditMode(false)">
                         <mat-icon>close</mat-icon>
                     </button>
                 }
@@ -41,14 +41,14 @@
                 <div class="version-text">
                     OpenSlides Version:
                     <a
-                        target="_blank"
                         class="italic"
                         href="https://support.openslides.com/help/de-de/45-uber-openslides/80-versionshistorie"
+                        target="_blank"
                     >
                         {{ version }}
                     </a>
                 </div>
-                <a target="_blank" href="https://support.openslides.com/help/">
+                <a href="https://support.openslides.com/help/" target="_blank">
                     <br />
                     <os-icon-container icon="help">
                         {{ 'OpenSlides help (FAQ)' | translate }}

@@ -1,9 +1,9 @@
 <mat-select
     #matSelect
+    [errorStateMatcher]="errorStateMatcher"
     [formControl]="contentForm"
     [multiple]="multiple"
     [panelClass]="{ 'os-search-selector-wider': wider, 'os-search-selector-panel': true }"
-    [errorStateMatcher]="errorStateMatcher"
     (openedChange)="onOpenChanged($event)"
 >
     <!-- Custom display of selected items -->
@@ -24,8 +24,8 @@
     @if (matSelect.panelOpen) {
         <div #searchSelectorInput class="os-search-selector--input-wrapper">
             <input
-                osAutofocus
                 class="background-card"
+                osAutofocus
                 [formControl]="searchValueForm"
                 placeholder="{{ 'Search' | translate }}"
                 (keydown)="onSearchKeydown($event)"
@@ -39,9 +39,9 @@
                     @for (item of selectedItems; track item) {
                         <mat-chip-option
                             class="one-line"
+                            [disableRipple]="true"
                             [removable]="true"
                             (removed)="onChipRemove(item.id)"
-                            [disableRipple]="true"
                         >
                             <span class="one-line">
                                 {{ item.getTitle() }}
@@ -62,11 +62,11 @@
         </button>
     }
     <cdk-virtual-scroll-viewport
-        [ngStyle]="{ height: panelHeight + 'px' }"
         class="vscroll-viewport"
-        minBufferPx="400"
         maxBufferPx="600"
+        minBufferPx="400"
         [itemSize]="50"
+        [ngStyle]="{ height: panelHeight + 'px' }"
     >
         @if ((filteredItemsObservable | async)?.length === 0) {
             <mat-option class="os-search-selector--no-options" disabled>
@@ -77,14 +77,14 @@
             <mat-option>-</mat-option>
         }
         <mat-option
-            #currentOption
             *cdkVirtualFor="let selectableItem of filteredItemsObservable | async"
-            [value]="selectableItem.id"
+            #currentOption
+            matTooltipPosition="left"
             [disabled]="disableOptionWhenFn(selectableItem) || selectableItem.disabled"
             [matTooltip]="tooltipFn(selectableItem, currentOption)"
-            matTooltipPosition="left"
-            (onSelectionChange)="onSelectionChange(selectableItem, $event)"
+            [value]="selectableItem.id"
             (click)="keepOpen ? matSelect.open() : null"
+            (onSelectionChange)="onSelectionChange(selectableItem, $event)"
         >
             <ng-container *ngTemplateOutlet="optionContent; context: { item: selectableItem }"></ng-container>
         </mat-option>
@@ -93,14 +93,14 @@
     <!-- Ensure that selected options are always loaded, so that the mat-trigger is shown-->
     @if (multiple) {
         @if (selectedItems.length) {
-            <mat-option class="selected-options-hidden" [value]="selectedItems[0].id" disabled>
+            <mat-option class="selected-options-hidden" disabled [value]="selectedItems[0].id">
                 <ng-container *ngTemplateOutlet="optionContent; context: { item: selectedItems[0] }"></ng-container>
             </mat-option>
         }
     }
     @if (!multiple) {
         @if (contentForm.value) {
-            <mat-option class="selected-options-hidden" [value]="contentForm.value" disabled>
+            <mat-option class="selected-options-hidden" disabled [value]="contentForm.value">
                 <ng-container
                     *ngTemplateOutlet="optionContent; context: { item: getItemById(contentForm.value) }"
                 ></ng-container>

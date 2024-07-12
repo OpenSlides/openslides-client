@@ -9,17 +9,17 @@
                     <div class="buttons">
                         @if (isEditing) {
                             <button
-                                mat-icon-button
                                 color="warn"
-                                (click)="saveChangesModerationNote()"
+                                mat-icon-button
                                 matTooltip="{{ 'Save' | translate }}"
+                                (click)="saveChangesModerationNote()"
                             >
                                 <mat-icon>done</mat-icon>
                             </button>
                             <button
                                 mat-icon-button
-                                (click)="toggleEditModeratorNote()"
                                 matTooltip="{{ 'Cancel edit' | translate }}"
+                                (click)="toggleEditModeratorNote()"
                             >
                                 <mat-icon>close</mat-icon>
                             </button>
@@ -27,8 +27,8 @@
                         @if (!isEditing) {
                             <button
                                 mat-icon-button
-                                (click)="toggleEditModeratorNote()"
                                 matTooltip="{{ 'Edit moderation note' | translate }}"
+                                (click)="toggleEditModeratorNote()"
                             >
                                 <mat-icon>edit</mat-icon>
                             </button>

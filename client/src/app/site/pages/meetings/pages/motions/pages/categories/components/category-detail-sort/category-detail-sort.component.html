@@ -1,5 +1,5 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
-    <os-head-bar [editMode]="hasChanged" (saveEvent)="sendUpdate()" (mainEvent)="onCancel()" [nav]="false">
+    <os-head-bar [editMode]="hasChanged" [nav]="false" (mainEvent)="onCancel()" (saveEvent)="sendUpdate()">
         <!-- Title -->
         <div class="title-slot">
             @if (category) {
@@ -19,7 +19,7 @@
                     </button>
                 </div>
             }
-            <os-sorting-list (sortEvent)="onListUpdate($event)" [input]="motionObservable" #sorter>
+            <os-sorting-list #sorter [input]="motionObservable" (sortEvent)="onListUpdate($event)">
                 <ng-template let-motion>
                     <div class="single-motion-line">
                         <span>
@@ -29,8 +29,8 @@
                             <mat-basic-chip
                                 class="bluegrey"
                                 disableRipple
-                                matTooltip="{{ 'Sequential number' | translate }}"
                                 matTooltipPosition="left"
+                                matTooltip="{{ 'Sequential number' | translate }}"
                             >
                                 {{ motion.sequential_number }}
                             </mat-basic-chip>

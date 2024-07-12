@@ -14,11 +14,11 @@
                         <span *osPerms="permission.assignmentCanManage; and: poll.isEVoting">
                             <os-icon-container
                                 class="poll-type"
+                                color="primary"
                                 icon="info"
                                 size="large"
-                                color="primary"
-                                [swap]="true"
                                 [showIcon]="poll.isAnonymous"
+                                [swap]="true"
                                 (iconAction)="openVotingWarning()"
                             >
                                 {{ poll.typeVerbose | translate }}
@@ -36,8 +36,8 @@
                     <div class="poll-menu">
                         <!-- Buttons -->
                         <button
-                            mat-icon-button
                             *osPerms="[permission.projectorCanManage, permission.assignmentCanManage]"
+                            mat-icon-button
                             [matMenuTriggerFor]="pollItemMenu"
                             (click)="$event.stopPropagation()"
                         >
@@ -49,9 +49,9 @@
                         @if (pollStateActions[poll.state]) {
                             <button
                                 mat-stroked-button
+                                [disabled]="stateChangePendingObservable | async"
                                 [ngClass]="pollStateActions[poll.state].css"
                                 (click)="nextPollState()"
-                                [disabled]="stateChangePendingObservable | async"
                             >
                                 <mat-icon>{{ pollStateActions[poll.state]?.icon }}</mat-icon>
                                 <span class="next-state-label">
@@ -88,9 +88,9 @@
                 @if (showMetaInfo || poll.isListPoll) {
                     <os-assignment-poll-meta-info
                         [poll]="poll"
+                        [shortenList]="poll.isListPoll && !poll.canBeVotedFor()"
                         [showCandidates]="showCandidatesInMetaInfo"
                         [showStats]="showMetaInfo"
-                        [shortenList]="poll.isListPoll && !poll.canBeVotedFor()"
                     ></os-assignment-poll-meta-info>
                 }
             </div>
@@ -106,7 +106,7 @@
         </button>
     </div>
     <div *osPerms="permission.projectorCanManage">
-        <os-projector-button [object]="poll" [menuItem]="true"></os-projector-button>
+        <os-projector-button [menuItem]="true" [object]="poll"></os-projector-button>
     </div>
     <div *osPerms="permission.assignmentCanManage">
         <button mat-menu-item (click)="printBallot()">
@@ -123,7 +123,7 @@
         </button>
 
         <!-- Delete button -->
-        <button mat-menu-item class="red-warning-text" (click)="deletePoll()">
+        <button class="red-warning-text" mat-menu-item (click)="deletePoll()">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>

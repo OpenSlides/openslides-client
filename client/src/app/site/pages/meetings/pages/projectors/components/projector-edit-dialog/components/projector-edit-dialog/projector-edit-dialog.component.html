@@ -38,9 +38,9 @@
                             <mat-form-field>
                                 <mat-label>{{ 'Custom aspect ratio' | translate }}</mat-label>
                                 <input
+                                    formControlName="aspectRatio"
                                     matInput
                                     type="text"
-                                    formControlName="aspectRatio"
                                     [value]="previewProjector!.aspectRatio"
                                     (change)="setCustomAspectRatio()"
                                 />
@@ -52,20 +52,20 @@
                     <mat-slider
                         class="grid-start"
                         [discrete]="true"
-                        [min]="minWidth"
                         [max]="maxResolution"
+                        [min]="minWidth"
                         [step]="resolutionChangeStep"
                     >
-                        <input matSliderThumb formControlName="width" [value]="updateForm.value.width" />
+                        <input formControlName="width" matSliderThumb [value]="updateForm.value.width" />
                     </mat-slider>
                     <div class="grid-end">
                         <mat-form-field>
                             <input
+                                formControlName="width"
                                 matInput
                                 type="number"
-                                formControlName="width"
-                                [min]="minWidth"
                                 [max]="maxResolution"
+                                [min]="minWidth"
                                 [step]="resolutionChangeStep"
                                 [value]="updateForm.value.width"
                             />
@@ -110,14 +110,14 @@
                 <!-- colors -->
                 <div class="spacer-top-10">
                     <!-- Template to streamline all the color forms -->
-                    <ng-template #colorFormField let-title="title" let-form="form">
+                    <ng-template #colorFormField let-form="form" let-title="title">
                         <mat-form-field class="color-picker-form">
                             <mat-label>{{ title | translate }}</mat-label>
-                            <input matInput [formControlName]="form" type="color" />
+                            <input matInput type="color" [formControlName]="form" />
                             <button
+                                mat-icon-button
                                 matSuffix
                                 type="button"
-                                mat-icon-button
                                 matTooltip="{{ 'Reset' | translate }}"
                                 (click)="resetField(form)"
                             >
@@ -138,13 +138,13 @@
         <!-- Actions -->
         <mat-dialog-actions>
             <mat-divider class="padding-bottom-16"></mat-divider>
-            <button type="submit" mat-button color="accent">
+            <button color="accent" mat-button type="submit">
                 <span>{{ 'Save' | translate }}</span>
             </button>
-            <button type="button" mat-button [mat-dialog-close]="null">
+            <button mat-button type="button" [mat-dialog-close]="null">
                 <span>{{ 'Cancel' | translate }}</span>
             </button>
-            <button type="button" mat-button (click)="applyChanges()">
+            <button mat-button type="button" (click)="applyChanges()">
                 <span>{{ 'Apply' | translate }}</span>
             </button>
         </mat-dialog-actions>

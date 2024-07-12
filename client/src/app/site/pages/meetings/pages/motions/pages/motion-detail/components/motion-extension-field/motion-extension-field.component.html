@@ -7,20 +7,20 @@
         <ng-container [ngTemplateOutlet]="triggerTemplate"></ng-container>
     </mat-menu>
     <os-icon-container
-        iconTooltip="{{ 'Edit' | translate }}"
         icon="create"
-        [swap]="true"
+        iconTooltip="{{ 'Edit' | translate }}"
         [noFill]="true"
         [showIcon]="!editMode && canBeEdited && hasExtension"
+        [swap]="true"
         (iconAction)="changeEditMode()"
     >
         @if (canBeEdited) {
-            <mat-basic-chip [matMenuTriggerFor]="triggerMenu" [ngClass]="classes" class="pointer" disableRipple>
+            <mat-basic-chip class="pointer" disableRipple [matMenuTriggerFor]="triggerMenu" [ngClass]="classes">
                 {{ chipValue || '–' | translate }}
             </mat-basic-chip>
         }
         @if (!canBeEdited) {
-            <mat-basic-chip [ngClass]="classes" disableRipple>
+            <mat-basic-chip disableRipple [ngClass]="classes">
                 {{ chipValue | translate }}
             </mat-basic-chip>
         }
@@ -36,24 +36,24 @@
         <mat-form-field>
             <mat-label>{{ extensionLabel }}</mat-label>
             <input
-                matInput
                 autocomplete="off"
+                matInput
                 osAutofocus
                 [(ngModel)]="inputControl"
-                (keydown)="keyDownFunction($event)"
                 (change)="inputChanged()"
+                (keydown)="keyDownFunction($event)"
             />
         </mat-form-field>
         @for (list of searchLists; track list; let i = $index) {
             <mat-form-field [formGroup]="extensionFieldForm">
                 <mat-label>{{ list.label ?? '' | translate }}</mat-label>
                 <os-list-search-selector
+                    [disableOptionWhenFn]="getIsDisabled(i)"
                     formControlName="{{ 'list' + i + '' }}"
                     [inputListValues]="list.observable"
-                    [disableOptionWhenFn]="getIsDisabled(i)"
                     [keepOpen]="list.keepOpen"
-                    (openedChange)="openedChange($event, i)"
                     [wider]="list.wider"
+                    (openedChange)="openedChange($event, i)"
                 ></os-list-search-selector>
             </mat-form-field>
         }

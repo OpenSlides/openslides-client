@@ -1,4 +1,4 @@
-<os-head-bar [nav]="false" [editMode]="hasChanged" (mainEvent)="onCancel()" (saveEvent)="onSave()">
+<os-head-bar [editMode]="hasChanged" [nav]="false" (mainEvent)="onCancel()" (saveEvent)="onSave()">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Sort agenda' | translate }}</h2>
@@ -29,8 +29,8 @@
             <div class="filter-hint hint">{{ 'Visibility' | translate }}</div>
             <mat-selection-list #visibilities (selectionChange)="onFilterChange(visibilities.selectedOptions.selected)">
                 @for (option of filterOptions; track option) {
-                    <mat-list-option [value]="option.id" [selected]="option.state">
-                        <mat-icon matListItemIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
+                    <mat-list-option [selected]="option.state" [value]="option.id">
+                        <mat-icon matListItemIcon matTooltipPosition="left" matTooltip="{{ option.label | translate }}">
                             {{ getIcon(option.id) }}
                         </mat-icon>
                         <div matListItemTitle>
@@ -52,13 +52,13 @@
         </div>
         <os-sorting-tree
             #osSortedTree
-            (hasChanged)="receiveChanges($event)"
-            (visibleNodes)="onChangeAmountOfItems($event)"
-            [model]="itemsObservable"
-            [stateChange]="changeState"
-            [filterChange]="changeFilter"
             parentKey="parent_id"
             weightKey="weight"
+            [filterChange]="changeFilter"
+            [model]="itemsObservable"
+            [stateChange]="changeState"
+            (hasChanged)="receiveChanges($event)"
+            (visibleNodes)="onChangeAmountOfItems($event)"
         >
             <ng-template #innerNode class="sorting-tree-node" let-item="item">
                 <span class="sort-node-title">{{ item.getTitle() }}</span>

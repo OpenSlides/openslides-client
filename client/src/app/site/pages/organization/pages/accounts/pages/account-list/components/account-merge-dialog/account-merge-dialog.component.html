@@ -4,13 +4,13 @@
     <mat-radio-group (change)="onChange($event)">
         <table mat-table [dataSource]="possibleChoices">
             <ng-container matColumnDef="button">
-                <td mat-cell *matCellDef="let user">
+                <td *matCellDef="let user" mat-cell>
                     <div class="buttonCell"><mat-radio-button [value]="user.id"></mat-radio-button></div>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="name">
-                <td mat-cell *matCellDef="let user">
+                <td *matCellDef="let user" mat-cell>
                     <div class="nameCell overflow-hidden">
                         <div class="title-line title-box">
                             @if (!isCrossedOut(user)) {
@@ -77,31 +77,31 @@
             </ng-container>
 
             <ng-container matColumnDef="icon">
-                <td mat-cell *matCellDef="let user">
+                <td *matCellDef="let user" mat-cell>
                     <div class="iconCell">
                         <os-icon-container
                             icon="event_available"
-                            [iconTooltip]="userMeetings(user)"
-                            iconTooltipPosition="left"
                             iconTooltipClass="pre-wrap"
-                            [showIcon]="true"
+                            iconTooltipPosition="left"
+                            [iconTooltip]="userMeetings(user)"
                             [noWrap]="true"
+                            [showIcon]="true"
                         >
                             {{ user.meetings.length }}
                         </os-icon-container>
                         @if (user.isLastEmailSent) {
                             <os-icon-container
                                 icon="mail"
+                                iconTooltipPosition="left"
                                 iconTooltip="{{ 'Email sent' | translate }} ({{
                                     user.last_email_sent | localizedDate
                                 }})"
-                                iconTooltipPosition="left"
                             ></os-icon-container>
                         }
                     </div>
                 </td>
             </ng-container>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
         </table>
     </mat-radio-group>
     <div class="error-color">{{ 'Attention: Not selected accounts will be merged and then deleted.' | translate }}</div>
@@ -115,7 +115,7 @@
     }
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button (click)="closeDialog(true)" [disabled]="!selectedUserId">
+    <button mat-button [disabled]="!selectedUserId" (click)="closeDialog(true)">
         <span>{{ 'Merge' | translate }}</span>
     </button>
     <button mat-button (click)="closeDialog(false)">

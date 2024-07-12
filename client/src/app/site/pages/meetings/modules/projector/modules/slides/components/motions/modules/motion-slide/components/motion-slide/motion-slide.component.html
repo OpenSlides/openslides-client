@@ -40,7 +40,7 @@
                 }
                 <!-- Metainfo as table -->
                 @if (showMetaTable) {
-                    <table class="metatable spacer-top-20" cellpadding="0" cellspacing="0">
+                    <table cellpadding="0" cellspacing="0" class="metatable spacer-top-20">
                         <!-- Submitters -->
                         @if (getSubmittersObservable() | async; as submitters) {
                             @if (submitters.length > 0) {
@@ -95,8 +95,8 @@
                     @if (!isParagraphBasedAmendment()) {
                         <div
                             class="motion-text underlined-links"
-                            [class.line-numbers-none]="isLineNumberingNone()"
                             [class.line-numbers-inline]="isLineNumberingInline()"
+                            [class.line-numbers-none]="isLineNumberingNone()"
                             [class.line-numbers-outside]="isLineNumberingOutside()"
                         >
                             @if (getTitleChangingObject() && crMode === 'diff') {
@@ -121,8 +121,8 @@
                             @if (data.data.text) {
                                 <div
                                     class="motion-text underlined-links"
-                                    [class.line-numbers-none]="isLineNumberingNone()"
                                     [class.line-numbers-inline]="isLineNumberingInline()"
+                                    [class.line-numbers-none]="isLineNumberingNone()"
                                     [class.line-numbers-outside]="isLineNumberingOutside()"
                                     [innerHtml]="getTextBasedAmendmentLines() | trust: 'html'"
                                 ></div>
@@ -130,8 +130,8 @@
                             @for (paragraph of getAmendedParagraphs(); track paragraph) {
                                 <div
                                     class="motion-text motion-text-diff amendment-view underlined-links"
-                                    [class.line-numbers-none]="isLineNumberingNone()"
                                     [class.line-numbers-inline]="isLineNumberingInline()"
+                                    [class.line-numbers-none]="isLineNumberingNone()"
                                     [class.line-numbers-outside]="isLineNumberingOutside()"
                                 >
                                     @if (paragraph.diffLineTo === paragraph.diffLineFrom) {

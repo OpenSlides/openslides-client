@@ -8,7 +8,7 @@
             <div class="disconnected">
                 <div>
                     <div>{{ 'A conference is already running in your OpenSlides session.' | translate }}</div>
-                    <button mat-button color="warn" (click)="forceStart()">
+                    <button color="warn" mat-button (click)="forceStart()">
                         <span>{{ 'Reenter to conference room' | translate }}</span>
                     </button>
                 </div>
@@ -51,7 +51,7 @@
             <div class="control-buttons">
                 <!-- Hangup -->
                 @if (showHangUp) {
-                    <button mat-mini-fab color="warn" (click)="hangUp()" matTooltip="{{ 'Leave' | translate }}">
+                    <button color="warn" mat-mini-fab matTooltip="{{ 'Leave' | translate }}" (click)="hangUp()">
                         <mat-icon>call_end</mat-icon>
                     </button>
                 }
@@ -59,11 +59,11 @@
                 <!-- Enter jitsi manually -->
                 @if (!isJoined) {
                     <button
-                        mat-mini-fab
                         color="accent"
-                        (click)="callRoom()"
+                        mat-mini-fab
                         [disabled]="(canEnterCall | async) === false || isConnecting"
                         matTooltip="{{ 'Enter conference room' | translate }}"
+                        (click)="callRoom()"
                     >
                         <mat-icon>call</mat-icon>
                     </button>
@@ -74,8 +74,8 @@
                 <ng-container *osPerms="permission.meetingCanSeeLivestream">
                     @if (hasLiveStreamUrl | async) {
                         <button
-                            mat-icon-button
                             color="primary"
+                            mat-icon-button
                             matTooltip="{{ 'Continue livestream' | translate }}"
                             (click)="viewStream()"
                         >

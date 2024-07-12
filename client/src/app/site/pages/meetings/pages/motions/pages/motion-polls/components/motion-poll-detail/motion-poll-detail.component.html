@@ -6,8 +6,8 @@
             }
         </div>
 
-        <ng-container class="menu-slot" *osPerms="permission.motionCanManagePolls">
-            <button type="button" mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
+        <ng-container *osPerms="permission.motionCanManagePolls" class="menu-slot">
+            <button mat-icon-button type="button" [matMenuTriggerFor]="pollDetailMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
         </ng-container>
@@ -41,9 +41,9 @@
                 <mat-tab label="{{ 'Single votes' | translate }}">
                     <div class="named-result-table">
                         <os-votes-table
-                            [votesDataObservable]="votesDataObservable"
                             [isViewingThis]="isViewingVoteslist"
                             [parent]="self"
+                            [votesDataObservable]="votesDataObservable"
                         ></os-votes-table>
                     </div>
                 </mat-tab>
@@ -62,17 +62,17 @@
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
     <os-projector-button
+        *osPerms="permission.projectorCanManage"
         [menuItem]="true"
         [object]="poll"
-        *osPerms="permission.projectorCanManage"
     ></os-projector-button>
     <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="openDialog()">
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <button
-        mat-menu-item
         *osPerms="permission.motionCanManagePolls; and: poll && poll.type === 'named'"
+        mat-menu-item
         (click)="pseudoanonymizePoll()"
     >
         <mat-icon>warning</mat-icon>

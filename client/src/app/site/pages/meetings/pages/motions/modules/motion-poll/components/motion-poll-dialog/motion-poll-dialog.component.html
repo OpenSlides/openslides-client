@@ -1,10 +1,10 @@
 <mat-dialog-content>
     <os-motion-poll-form
-        [pollClassType]="pollClassType.Motion"
-        [data]="pollData"
-        [pollService]="motionPollService"
-        [percentBases]="PercentBaseVerbose"
         #pollForm
+        [data]="pollData"
+        [percentBases]="PercentBaseVerbose"
+        [pollClassType]="pollClassType.Motion"
+        [pollService]="motionPollService"
     ></os-motion-poll-form>
     @if (pollForm.contentForm.get('type')!.value === 'analog') {
         <div class="os-form-card-mobile">
@@ -15,11 +15,11 @@
                             @for (field of analogVoteFields; track field) {
                                 <div [formGroupName]="option.fqid">
                                     <os-check-input
-                                        [placeholder]="voteValueVerbose[field] | translate"
-                                        [checkboxValue]="-1"
                                         inputType="number"
                                         [checkboxLabel]="'majority' | translate"
+                                        [checkboxValue]="-1"
                                         [formControlName]="field"
+                                        [placeholder]="voteValueVerbose[field] | translate"
                                         [radioGroupValue]="majority"
                                     ></os-check-input>
                                 </div>
@@ -28,19 +28,19 @@
                     }
                 </div>
                 <os-check-input
-                    [placeholder]="'Valid votes' | translate"
-                    inputType="number"
                     formControlName="votesvalid"
+                    inputType="number"
+                    [placeholder]="'Valid votes' | translate"
                 ></os-check-input>
                 <os-check-input
-                    [placeholder]="'Invalid votes' | translate"
-                    inputType="number"
                     formControlName="votesinvalid"
+                    inputType="number"
+                    [placeholder]="'Invalid votes' | translate"
                 ></os-check-input>
                 <os-check-input
-                    [placeholder]="'Total votes cast' | translate"
-                    inputType="number"
                     formControlName="votescast"
+                    inputType="number"
+                    [placeholder]="'Total votes cast' | translate"
                 ></os-check-input>
             </form>
         </div>
@@ -58,7 +58,7 @@
     }
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button (click)="submitPoll()" [disabled]="!formsValid">
+    <button mat-button [disabled]="!formsValid" (click)="submitPoll()">
         <span>{{ 'Save' | translate }}</span>
     </button>
     <button mat-button [mat-dialog-close]="false">

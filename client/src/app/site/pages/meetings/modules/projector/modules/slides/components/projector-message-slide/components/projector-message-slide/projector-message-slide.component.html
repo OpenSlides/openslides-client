@@ -1,6 +1,6 @@
 @if (data) {
     <div id="background">
-        <div id="message" class="underlined-links">
+        <div class="underlined-links" id="message">
             <div [innerHTML]="data.data.message | trust: 'html'"></div>
         </div>
     </div>

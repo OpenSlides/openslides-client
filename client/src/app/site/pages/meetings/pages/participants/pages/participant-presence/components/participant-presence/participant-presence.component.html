@@ -9,9 +9,9 @@
     <mat-card-content>
         <p>{{ 'Check in or check out participants based on their participant numbers:' | translate }}</p>
 
-        <mat-form-field [formGroup]="userForm" class="full-width">
+        <mat-form-field class="full-width" [formGroup]="userForm">
             <mat-label>{{ 'Enter participant number' | translate }}</mat-label>
-            <input osAutofocus matInput formControlName="number" (keyup)="onKeyUp($event)" />
+            <input formControlName="number" matInput osAutofocus (keyup)="onKeyUp($event)" />
         </mat-form-field>
         <button mat-button (click)="changePresence()">{{ 'Change presence' | translate }}</button>
         @if (lastChangedUser) {

@@ -1,12 +1,12 @@
 <mat-dialog-content>
     <os-assignment-poll-form
-        [pollClassType]="pollClassType.Assignment"
+        #pollForm
         [data]="pollData"
+        [percentBases]="AssignmentPollPercentBaseVerbose"
+        [pollClassType]="pollClassType.Assignment"
+        [pollMethods]="AssignmentPollMethodVerbose"
         [pollOptionAmount]="getOptionAmount()"
         [pollService]="assignmentPollService"
-        [pollMethods]="AssignmentPollMethodVerbose"
-        [percentBases]="AssignmentPollPercentBaseVerbose"
-        #pollForm
     ></os-assignment-poll-form>
 
     <!-- Analog voting -->
@@ -32,11 +32,11 @@
                             @for (value of analogVoteFields; track value) {
                                 <div [formGroupName]="calculateOptionKey(option)">
                                     <os-check-input
-                                        [placeholder]="voteValueVerbose[value] | translate"
-                                        [checkboxValue]="-1"
                                         inputType="number"
                                         [checkboxLabel]="'majority' | translate"
+                                        [checkboxValue]="-1"
                                         [formControlName]="value"
+                                        [placeholder]="voteValueVerbose[value] | translate"
                                     ></os-check-input>
                                 </div>
                             }
@@ -72,7 +72,7 @@
 <!-- Actions -->
 <mat-dialog-actions>
     <!-- Save Button -->
-    <button mat-button (click)="submitPoll()" [disabled]="!formsValid">
+    <button mat-button [disabled]="!formsValid" (click)="submitPoll()">
         <span>{{ 'Save' | translate }}</span>
     </button>
 

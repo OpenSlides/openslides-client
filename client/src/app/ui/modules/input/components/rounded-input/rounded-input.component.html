@@ -6,11 +6,11 @@
     }
     <input
         #osInput
-        [placeholder]="placeholder"
-        [ngClass]="['rounded-input', 'background-default', size, borderRadius, hasChildren ? 'children-bottom' : '']"
         [formControl]="dedicatedContentForm"
-        (keyup)="keyPressed($event)"
+        [ngClass]="['rounded-input', 'background-default', size, borderRadius, hasChildren ? 'children-bottom' : '']"
+        [placeholder]="placeholder"
         (blur)="blur()"
+        (keyup)="keyPressed($event)"
     />
     @if (!!contentForm.value) {
         <div

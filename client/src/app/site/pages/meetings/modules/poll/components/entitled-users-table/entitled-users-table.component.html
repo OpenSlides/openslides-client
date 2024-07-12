@@ -2,10 +2,10 @@
     @if (isViewingThis) {
         <div>
             <os-list
-                [listObservable]="entitledUsersObservable"
                 [filterProps]="filterPropsEntitledUsersTable"
-                [fullScreen]="false"
                 [filterService]="filter"
+                [fullScreen]="false"
+                [listObservable]="entitledUsersObservable"
             >
                 <!-- Content -->
                 <div *osScrollingTableCell="'user_id'; row as entry">
@@ -82,6 +82,6 @@
         </div>
     }
 </div>
-<div class="no-can-see-users" *osPerms="permission.userCanSee; complement: true">
+<div *osPerms="permission.userCanSee; complement: true" class="no-can-see-users">
     <i>{{ 'You are not allowed to see all entitled users.' | translate }}</i>
 </div>

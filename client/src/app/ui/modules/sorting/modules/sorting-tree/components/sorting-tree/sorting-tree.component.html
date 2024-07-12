@@ -1,40 +1,40 @@
 <cdk-tree
     #osTree="cdkDropList"
-    [dataSource]="dataSource"
-    [treeControl]="treeControl"
     cdkDropList
     [cdkDropListData]="osTreeData"
+    [dataSource]="dataSource"
+    [treeControl]="treeControl"
     (cdkDropListSorted)="sortItems($event)"
 >
     <cdk-tree-node
+        *cdkTreeNodeDef="let node"
         cdkDrag
         [cdkDragData]="node"
-        (cdkDragDropped)="onDrop(node)"
-        (mousedown)="mouseDown($event)"
-        (mouseup)="mouseUp()"
-        (touchstart)="touchStart($event)"
-        (touchend)="mouseUp()"
-        (cdkDragStarted)="startsDrag($event)"
-        (cdkDragMoved)="moveItem($event)"
-        *cdkTreeNodeDef="let node"
         [style.display]="shouldRender(node) ? 'flex' : 'none'"
         [style.padding-left]="node.level * 40 + 'px'"
+        (cdkDragDropped)="onDrop(node)"
+        (cdkDragMoved)="moveItem($event)"
+        (cdkDragStarted)="startsDrag($event)"
+        (mousedown)="mouseDown($event)"
+        (mouseup)="mouseUp()"
+        (touchend)="mouseUp()"
+        (touchstart)="touchStart($event)"
     >
         <div class="sorting-tree-node-container backgroundColorLight background-default">
-            <span class="flex-center" cdkDragHandle>
+            <span cdkDragHandle class="flex-center">
                 <mat-icon>drag_indicator</mat-icon>
             </span>
             @if (hasChild) {
                 <button
-                    mat-icon-button
                     cdkTreeNodeToggle
+                    mat-icon-button
                     [attr.aria-label]="'toggle ' + node.filename"
-                    (click)="handleClick(node)"
                     [style.visibility]="node.expandable ? 'visible' : 'hidden'"
+                    (click)="handleClick(node)"
                 >
                     <mat-icon
-                        [style.transform]="node.isExpanded ? 'rotate(90deg)' : 'rotate(0deg)'"
                         class="mat-icon-rtl-mirror"
+                        [style.transform]="node.isExpanded ? 'rotate(90deg)' : 'rotate(0deg)'"
                     >
                         chevron_right
                     </mat-icon>
@@ -42,6 +42,6 @@
             }
             <ng-container [ngTemplateOutlet]="innerNode" [ngTemplateOutletContext]="{ item: node.item }"></ng-container>
         </div>
-        <div [style.margin-left]="placeholderLevel * 40 + 'px'" *cdkDragPlaceholder></div>
+        <div *cdkDragPlaceholder [style.margin-left]="placeholderLevel * 40 + 'px'"></div>
     </cdk-tree-node>
 </cdk-tree>

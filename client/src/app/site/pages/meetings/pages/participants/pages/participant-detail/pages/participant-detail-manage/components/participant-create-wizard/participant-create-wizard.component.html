@@ -15,7 +15,7 @@
     <div class="extra-controls-slot">
         @if ((currentStepIndexObservable | async) !== FILL_FORM_PARTICIPANT_STEP) {
             <div>
-                <button type="button" mat-button (click)="matStepper.previous()">
+                <button mat-button type="button" (click)="matStepper.previous()">
                     <span class="upper">{{ 'Previous' | translate }}</span>
                 </button>
             </div>
@@ -48,29 +48,29 @@
                                 <!-- First name -->
                                 <mat-form-field>
                                     <mat-label>{{ 'Given name' | translate }}</mat-label>
-                                    <input type="text" osAutofocus matInput formControlName="first_name" />
+                                    <input formControlName="first_name" matInput osAutofocus type="text" />
                                 </mat-form-field>
 
                                 <!-- Last name -->
                                 <mat-form-field>
                                     <mat-label>{{ 'Surname' | translate }}</mat-label>
-                                    <input type="text" matInput formControlName="last_name" />
+                                    <input formControlName="last_name" matInput type="text" />
                                 </mat-form-field>
                             </div>
                             <!-- E-Mail -->
                             <mat-form-field class="full-width">
                                 <mat-label>{{ 'Email' | translate }}</mat-label>
-                                <input type="email" matInput autocomplete="off" name="email" formControlName="email" />
+                                <input autocomplete="off" formControlName="email" matInput name="email" type="email" />
                                 <mat-error>{{ 'Please enter a valid email address!' | translate }}</mat-error>
                             </mat-form-field>
                             <!-- username -->
                             <mat-form-field class="full-width">
                                 <mat-label>{{ 'Username' | translate }}</mat-label>
-                                <input type="text" matInput formControlName="username" />
+                                <input formControlName="username" matInput type="text" />
                                 <button
+                                    mat-icon-button
                                     matSuffix
                                     type="button"
-                                    mat-icon-button
                                     [matTooltip]="'Leave blank to automatically generate the username.' | translate"
                                 >
                                     <mat-icon>help</mat-icon>
@@ -97,7 +97,7 @@
                                         <div>{{ user.first_name }}&nbsp;{{ user.last_name }}</div>
                                         <div class="subtitle">{{ user.email }}&nbsp;{{ user.username }}</div>
                                     </div>
-                                    <button mat-flat-button color="primary" (click)="onAccountSelected(user)">
+                                    <button color="primary" mat-flat-button (click)="onAccountSelected(user)">
                                         {{ 'Select' | translate }}
                                     </button>
                                 </div>
@@ -114,17 +114,17 @@
             <ng-template matStepLabel>{{ 'Creation' | translate }}</ng-template>
             <ng-template matStepContent>
                 <os-user-detail-view
-                    [user]="user"
-                    [isNewUser]="isNewUser"
-                    [isEditing]="true"
                     [additionalFormControls]="additionalFormControls"
-                    [isAllowedFn]="isAllowedFn"
                     [generatePasswordFn]="randomPasswordFn"
+                    [isAllowedFn]="isAllowedFn"
+                    [isEditing]="true"
+                    [isNewUser]="isNewUser"
                     [patchFormValueFn]="patchFormValueFn"
                     [shouldEnableFormControlFn]="shouldEnableFormControlFn"
+                    [user]="user"
                     (changeEvent)="personalInfoFormValue = $event"
-                    (validEvent)="isFormValid = $event"
                     (errorEvent)="formErrors = $event"
+                    (validEvent)="isFormValid = $event"
                 >
                     <ng-template #editView let-form="form">
                         @if ((flicker | async) === false) {
@@ -134,8 +134,8 @@
                                 <div [formGroup]="form">
                                     <mat-checkbox
                                         formControlName="is_present"
-                                        matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
                                         matTooltipPosition="right"
+                                        matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
                                     >
                                         <span>{{ 'present' | translate }}</span>
                                     </mat-checkbox>
@@ -146,9 +146,9 @@
                                         <mat-label>{{ 'Structure level' | translate }}</mat-label>
                                         <os-list-search-selector
                                             formControlName="structure_level_ids"
-                                            [multiple]="true"
                                             [includeNone]="true"
                                             [inputListValues]="structureLevelObservable"
+                                            [multiple]="true"
                                         ></os-list-search-selector>
                                     </mat-form-field>
                                     <!-- Participant Number -->
@@ -160,14 +160,14 @@
                                         }"
                                     >
                                         <mat-label>{{ 'Participant number' | translate }}</mat-label>
-                                        <input type="text" matInput formControlName="number" />
+                                        <input formControlName="number" matInput type="text" />
                                     </mat-form-field>
                                     <!-- Vote weight -->
                                     <!-- TODO Input type should be number with limited decimal spaces -->
                                     @if (showVoteWeight) {
                                         <mat-form-field class="form45 force-min-with">
                                             <mat-label>{{ 'Vote weight' | translate }}</mat-label>
-                                            <input type="number" matInput formControlName="vote_weight" />
+                                            <input formControlName="vote_weight" matInput type="number" />
                                             @if (isVoteWeightError && form.controls['vote_weight'].value > 0) {
                                                 <mat-error translate>
                                                     Please select a vote weight greater than or equal to 0.000001
@@ -188,8 +188,8 @@
                                             <mat-label>{{ 'Groups' | translate }}</mat-label>
                                             <os-list-search-selector
                                                 formControlName="group_ids"
-                                                [multiple]="true"
                                                 [inputListValues]="groupsObservable"
+                                                [multiple]="true"
                                                 [sortFn]="sortFn"
                                             ></os-list-search-selector>
                                         </mat-form-field>
@@ -201,9 +201,9 @@
                                                 </mat-label>
                                                 <os-repo-search-selector
                                                     formControlName="vote_delegations_from_ids"
+                                                    [multiple]="true"
                                                     [repo]="repo"
                                                     [sortService]="sortService"
-                                                    [multiple]="true"
                                                     [subscriptionConfig]="participantSubscriptionConfig"
                                                 ></os-repo-search-selector>
                                             </mat-form-field>
@@ -216,10 +216,10 @@
                                                 </mat-label>
                                                 <os-repo-search-selector
                                                     formControlName="vote_delegated_to_id"
+                                                    [includeNone]="true"
+                                                    [multiple]="false"
                                                     [repo]="repo"
                                                     [sortService]="sortService"
-                                                    [multiple]="false"
-                                                    [includeNone]="true"
                                                     [subscriptionConfig]="participantSubscriptionConfig"
                                                 ></os-repo-search-selector>
                                             </mat-form-field>
@@ -239,7 +239,7 @@
                                         <!-- Comment -->
                                         <mat-form-field class="form100 force-min-width" subscriptSizing="dynamic">
                                             <mat-label>{{ 'Comment' | translate }}</mat-label>
-                                            <input matInput formControlName="comment" />
+                                            <input formControlName="comment" matInput />
                                             <mat-hint>{{ 'Only for internal notes.' | translate }}</mat-hint>
                                         </mat-form-field>
                                     </div>

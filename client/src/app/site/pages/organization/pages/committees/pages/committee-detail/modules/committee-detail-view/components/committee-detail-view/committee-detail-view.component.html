@@ -1,8 +1,8 @@
 <os-head-bar
     [customMenu]="true"
-    [nav]="false"
     [hasMainButton]="canManageMeetingsInCommittee"
     [mainActionTooltip]="'New meeting' | translate"
+    [nav]="false"
     (mainEvent)="onCreateMeeting()"
 >
     <!-- Title -->
@@ -13,7 +13,7 @@
     <!-- Menu -->
     <ng-container class="menu-slot">
         @if (isOrgaAdmin()) {
-            <button type="button" mat-icon-button data-cy="committeeMenuTrigger" [matMenuTriggerFor]="committeeMenu">
+            <button data-cy="committeeMenuTrigger" mat-icon-button type="button" [matMenuTriggerFor]="committeeMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
         }
@@ -140,8 +140,8 @@
         @for (meeting of getMeetingsSorted(committee); track meeting) {
             <os-committee-meeting-preview
                 class="meeting-preview-card"
-                [meeting]="meeting"
                 [committee]="committee"
+                [meeting]="meeting"
             ></os-committee-meeting-preview>
         }
     </div>
@@ -154,8 +154,8 @@
                 *osOmlPerms="OML.can_manage_organization"
                 data-cy="committeeEditAnchor"
                 mat-menu-item
-                [routerLink]="['/', 'committees', 'edit-committee']"
                 [queryParams]="{ committeeId: committeeId }"
+                [routerLink]="['/', 'committees', 'edit-committee']"
             >
                 <mat-icon>edit</mat-icon>
                 <span>{{ 'Edit committee' | translate }}</span>
@@ -170,7 +170,7 @@
             }
             <ng-container *osOmlPerms="OML.can_manage_organization">
                 <mat-divider></mat-divider>
-                <button mat-menu-item class="red-warning-text" (click)="onDeleteCommittee(committee)">
+                <button class="red-warning-text" mat-menu-item (click)="onDeleteCommittee(committee)">
                     <mat-icon>delete</mat-icon>
                     <span>{{ 'Delete' | translate }}</span>
                 </button>

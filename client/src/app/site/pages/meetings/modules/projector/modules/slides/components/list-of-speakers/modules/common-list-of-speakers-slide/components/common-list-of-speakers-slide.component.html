@@ -114,7 +114,7 @@
     </div>
 }
 
-<ng-template let-speaker="speaker" #speakerTemplate>
+<ng-template #speakerTemplate let-speaker="speaker">
     @if (speaker.user) {
         {{ speaker.user }}
     }

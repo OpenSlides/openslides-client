@@ -1,13 +1,13 @@
 <mat-form-field appearance="outline" class="chat-form-field full-width" (keydown)="onKeyDown($event)">
     @if (currentMessage) {
-        <div matPrefix class="chat-form-field-prefix flex-vertical-center">
+        <div class="chat-form-field-prefix flex-vertical-center" matPrefix>
             {{ 'Edit' | translate }}
             <button mat-icon-button type="button" [disableRipple]="true" (click)="cancelEditingChatMessage()">
                 <mat-icon>close</mat-icon>
             </button>
         </div>
     }
-    <input #chatinput autocomplete="off" type="text" matInput [formControl]="messageForm" />
+    <input #chatinput autocomplete="off" matInput type="text" [formControl]="messageForm" />
     @if (chatinput.value!.length >= CHAT_MESSAGE_MAX_LENGTH - 100) {
         <mat-hint align="end">
             <span>{{ chatinput.value?.length || 0 }}/{{ CHAT_MESSAGE_MAX_LENGTH }}</span>
@@ -17,12 +17,12 @@
         </mat-hint>
     }
     <button
+        color="accent"
         mat-icon-button
         matSuffix
         type="button"
-        color="accent"
-        matTooltip=" {{ 'Send' | translate }}"
         [disabled]="!isMessageFormValid"
+        matTooltip=" {{ 'Send' | translate }}"
         (click)="sendChatMessage()"
     >
         <mat-icon>send</mat-icon>

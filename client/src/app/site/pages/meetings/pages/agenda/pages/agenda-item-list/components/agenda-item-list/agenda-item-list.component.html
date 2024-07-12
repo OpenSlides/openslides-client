@@ -1,8 +1,8 @@
 <os-head-bar
     [hasMainButton]="canManage"
     [mainActionTooltip]="'New topic' | translate"
-    (mainEvent)="onPlusButton()"
     [multiSelectMode]="isMultiSelect"
+    (mainEvent)="onPlusButton()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -10,7 +10,7 @@
     </div>
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="agendaMenu"><mat-icon>more_vert</mat-icon></button>
+        <button mat-icon-button type="button" [matMenuTriggerFor]="agendaMenu"><mat-icon>more_vert</mat-icon></button>
     </ng-container>
 
     <!-- Multiselect info -->
@@ -21,23 +21,23 @@
 </os-head-bar>
 
 <os-projectable-list
-    [listObservable]="agendaItemsObservable"
-    [vScrollFixed]="76"
-    [filterService]="filterService"
-    [multiSelect]="isMultiSelect"
-    [hiddenInMobile]="['info']"
     [alwaysShowMenu]="canManage"
-    [showMenu]="canSeeMenu"
     [filterProps]="filterProps"
-    [(selectedRows)]="selectedRows"
+    [filterService]="filterService"
     [getSpeakerButtonObject]="getSpeakerButtonObject"
+    [hiddenInMobile]="['info']"
+    [listObservable]="agendaItemsObservable"
+    [multiSelect]="isMultiSelect"
+    [showMenu]="canSeeMenu"
+    [vScrollFixed]="76"
+    [(selectedRows)]="selectedRows"
 >
     <!-- Title column -->
     <div *osScrollingTableCell="'title'; row as item; rowContext as rowContext" class="cell-slot fill">
         @if (!isMultiSelect) {
             <os-detail-view-navigator [model]="item.content_object"></os-detail-view-navigator>
         }
-        <div [ngStyle]="{ 'margin-left': item.level * 25 + 'px' }" class="innerTable">
+        <div class="innerTable" [ngStyle]="{ 'margin-left': item.level * 25 + 'px' }">
             <!-- Title line -->
             <div class="title-line ellipsis-overflow">
                 <!-- Is Closed -->
@@ -63,7 +63,7 @@
             <!-- Comment line -->
             @if (item.comment) {
                 <div class="subtitle ellipsis-overflow">
-                    <os-icon-container size="small" icon="comment" [noWrap]="true">
+                    <os-icon-container icon="comment" size="small" [noWrap]="true">
                         {{ item.comment }}
                     </os-icon-container>
                 </div>
@@ -113,9 +113,9 @@
         <button
             mat-icon-button
             [disabled]="isMultiSelect"
+            [matMenuTriggerData]="{ item: item }"
             [matMenuTriggerFor]="singleItemMenu"
             (click)="$event.stopPropagation()"
-            [matMenuTriggerData]="{ item: item }"
         >
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -145,19 +145,19 @@
                 </button>
             </div>
             <!-- Project agenda -->
-            <os-projector-button [object]="itemListSlide" [menuItem]="true"></os-projector-button>
+            <os-projector-button [menuItem]="true" [object]="itemListSlide"></os-projector-button>
             <!-- Tags -->
             <button
+                *osPerms="permission.tagCanManage"
                 mat-menu-item
                 [routerLink]="['/', activeMeetingId, 'motions', 'tags']"
-                *osPerms="permission.tagCanManage"
             >
                 <mat-icon>local_offer</mat-icon>
                 <span>{{ 'Tags' | translate }}</span>
             </button>
             <mat-divider></mat-divider>
             <!-- CSV export -->
-            <button mat-menu-item *osPerms="permission.agendaItemCanManage" (click)="csvExportItemList()">
+            <button *osPerms="permission.agendaItemCanManage" mat-menu-item (click)="csvExportItemList()">
                 <mat-icon>archive</mat-icon>
                 <span>{{ 'Export as CSV' | translate }}</span>
             </button>
@@ -168,8 +168,8 @@
             </button>
             <!-- Import -->
             <button
-                mat-menu-item
                 *osPerms="permission.agendaItemCanManage"
+                mat-menu-item
                 [routerLink]="['/', activeMeetingId, 'agenda', 'topics', 'import']"
             >
                 <mat-icon>cloud_upload</mat-icon>
@@ -177,7 +177,7 @@
             </button>
             <div *osPerms="permission.agendaItemCanManage">
                 <mat-divider></mat-divider>
-                <button mat-menu-item class="red-warning-text" (click)="deleteAllSpeakersOfAllListsOfSpeakers()">
+                <button class="red-warning-text" mat-menu-item (click)="deleteAllSpeakersOfAllListsOfSpeakers()">
                     <mat-icon>delete</mat-icon>
                     <span>{{ 'Clear all list of speakers' | translate }}</span>
                 </button>
@@ -266,12 +266,12 @@
 </mat-menu>
 
 <mat-menu #singleItemMenu="matMenu">
-    <ng-template matMenuContent let-item="item">
+    <ng-template let-item="item" matMenuContent>
         <!-- Mobile entries -->
         @if (vp.isMobile) {
             <div>
-                <os-projector-button [object]="item.content_object" [menuItem]="true"></os-projector-button>
-                <os-speaker-button [object]="item.content_object" [menuItem]="true"></os-speaker-button>
+                <os-projector-button [menuItem]="true" [object]="item.content_object"></os-projector-button>
+                <os-speaker-button [menuItem]="true" [object]="item.content_object"></os-speaker-button>
             </div>
         }
 
@@ -310,7 +310,7 @@
                 </button>
             }
             @if (isTopic(item.content_object)) {
-                <button mat-menu-item class="red-warning-text" (click)="deleteTopic(item)">
+                <button class="red-warning-text" mat-menu-item (click)="deleteTopic(item)">
                     <mat-icon>delete</mat-icon>
                     <span>{{ 'Delete' | translate }}</span>
                 </button>

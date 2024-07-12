@@ -1,4 +1,4 @@
-<os-action-card [showActionRow]="true" icon="speaker_notes" [disableExpandControl]="isEditing">
+<os-action-card icon="speaker_notes" [disableExpandControl]="isEditing" [showActionRow]="true">
     <!-- Title row -->
     <ng-container class="meta-text-block-title">
         <span>{{ 'Personal note' | translate }}</span>
@@ -7,26 +7,26 @@
     <!-- Actions -->
     <ng-container class="meta-text-block-action-row">
         @if (!isEditing) {
-            <button mat-icon-button (click)="editPersonalNote()" matTooltip="{{ 'Edit' | translate }}">
+            <button mat-icon-button matTooltip="{{ 'Edit' | translate }}" (click)="editPersonalNote()">
                 <mat-icon>edit</mat-icon>
             </button>
         }
         @if (!isEditing && (personalNoteObservable | async)) {
             <button
                 mat-icon-button
-                (click)="printPersonalNote()"
                 matTooltip="{{ 'Export personal note only' | translate }}"
+                (click)="printPersonalNote()"
             >
                 <mat-icon>picture_as_pdf</mat-icon>
             </button>
         }
         @if (isEditing) {
-            <button mat-icon-button color="warn" (click)="savePersonalNote()" matTooltip="{{ 'Save' | translate }}">
+            <button color="warn" mat-icon-button matTooltip="{{ 'Save' | translate }}" (click)="savePersonalNote()">
                 <mat-icon>done</mat-icon>
             </button>
         }
         @if (isEditing) {
-            <button mat-icon-button (click)="leaveEditMode()" matTooltip="{{ 'Cancel edit' | translate }}">
+            <button mat-icon-button matTooltip="{{ 'Cancel edit' | translate }}" (click)="leaveEditMode()">
                 <mat-icon>close</mat-icon>
             </button>
         }

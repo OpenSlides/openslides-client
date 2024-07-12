@@ -1,4 +1,4 @@
-<os-head-bar [nav]="false" [editMode]="hasChanged" (mainEvent)="onCancel()" (saveEvent)="onSave()">
+<os-head-bar [editMode]="hasChanged" [nav]="false" (mainEvent)="onCancel()" (saveEvent)="onSave()">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Call list' | translate }}</h2>
@@ -6,7 +6,7 @@
 
     <!-- Export menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="mainMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="mainMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -34,8 +34,8 @@
                 <button mat-button [matMenuTriggerFor]="catFilterMenu">
                     <span
                         class="upper"
-                        [matBadge]="activeCatFilterCount > 0 ? activeCatFilterCount : null"
                         matBadgeColor="accent"
+                        [matBadge]="activeCatFilterCount > 0 ? activeCatFilterCount : null"
                         [matBadgeOverlap]="false"
                     >
                         {{ 'Categories' | translate }}
@@ -48,8 +48,8 @@
                 <button mat-button [matMenuTriggerFor]="tagFilterMenu">
                     <span
                         class="upper"
-                        [matBadge]="activeTagFilterCount > 0 ? activeTagFilterCount : null"
                         matBadgeColor="accent"
+                        [matBadge]="activeTagFilterCount > 0 ? activeTagFilterCount : null"
                         [matBadgeOverlap]="false"
                     >
                         {{ 'Tags' | translate }}
@@ -91,11 +91,11 @@
             #osSortedTree
             parentKey="sort_parent_id"
             weightKey="sort_weight"
-            (visibleNodes)="onChangeAmountOfItems($event)"
-            (hasChanged)="receiveChanges($event)"
-            [model]="motionsObservable"
             [filterChange]="changeFilter"
+            [model]="motionsObservable"
             [sortingDefinition]="forceSort"
+            (hasChanged)="receiveChanges($event)"
+            (visibleNodes)="onChangeAmountOfItems($event)"
         >
             <ng-template #innerNode let-item="item">
                 <div class="line">

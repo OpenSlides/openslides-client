@@ -3,33 +3,33 @@
         <os-detail-view-navigator [model]="listOfSpeakers">
             @if (!menuItem) {
                 <button
-                    type="button"
+                    class="anchor-button"
                     mat-icon-button
+                    type="button"
+                    [disabled]="disabled"
                     matTooltip="{{
                         (listOfSpeakers.closed ? 'The list of speakers is closed.' : 'List of speakers') | translate
                     }}"
-                    [disabled]="disabled"
-                    class="anchor-button"
                 >
                     <mat-icon
+                        matBadgeColor="accent"
                         [matBadge]="
                             canSee && listOfSpeakers.waitingSpeakerAmount > 0
                                 ? listOfSpeakers.waitingSpeakerAmount
                                 : null
                         "
-                        matBadgeColor="accent"
                     >
                         {{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}
                     </mat-icon>
                 </button>
             }
             @if (menuItem) {
-                <button type="button" mat-menu-item>
+                <button mat-menu-item type="button">
                     <mat-icon>{{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}</mat-icon>
                     <span>{{ 'List of speakers' | translate }}</span>
                     <span>&nbsp;</span>
                     @if (canSee && listOfSpeakers.waitingSpeakerAmount > 0) {
-                        <mat-basic-chip disableRipple class="lightblue">
+                        <mat-basic-chip class="lightblue" disableRipple>
                             <span>{{ listOfSpeakers.waitingSpeakerAmount }}</span>
                         </mat-basic-chip>
                     }
