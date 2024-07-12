@@ -1,4 +1,4 @@
-<os-head-bar [nav]="false" [goBack]="true">
+<os-head-bar [goBack]="true" [nav]="false">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'New file' | translate }}</h2>
@@ -15,12 +15,12 @@
 <mat-card class="os-card spacer-bottom-60">
     <mat-card-content>
         <os-media-upload-content
-            [parallel]="parallel"
-            [directoryId]="directoryId"
             [directories]="directoriesObservable"
+            [directoryId]="directoryId"
+            [parallel]="parallel"
             [uploadFn]="uploadFn"
-            (uploadSuccessEvent)="uploadSuccess($event)"
             (errorEvent)="showError($event)"
+            (uploadSuccessEvent)="uploadSuccess($event)"
         >
             <div *osScrollingTableCell="'access_groups'; row as file" class="cell-slot">
                 <form [formGroup]="file.form">
@@ -28,8 +28,8 @@
                         <mat-label>{{ 'Access groups' | translate }}</mat-label>
                         <os-list-search-selector
                             formControlName="access_group_ids"
-                            [multiple]="true"
                             [inputListValues]="availableGroups"
+                            [multiple]="true"
                             [sortFn]="sortFn"
                         ></os-list-search-selector>
                     </mat-form-field>

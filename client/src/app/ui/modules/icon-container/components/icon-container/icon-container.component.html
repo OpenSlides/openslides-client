@@ -1,6 +1,18 @@
-<ng-container *ngIf="!swap && showIcon; then iconTemplate"></ng-container>
-
-<ng-container *ngIf="!hide">
+@if (!swap && showIcon) {
+    <mat-icon
+        [color]="color"
+        [inline]="inline"
+        [matTooltip]="iconTooltip"
+        [matTooltipClass]="iconTooltipClass"
+        [matTooltipPosition]="iconTooltipPosition"
+        [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
+        [ngStyle]="{ transform: getRotation() }"
+        (click)="iconClick()"
+    >
+        {{ icon }}
+    </mat-icon>
+}
+@if (!hide) {
     <span
         class="content-node"
         [ngClass]="{ 'single-line': noWrap, 'break-lines': !noWrap, 'content-swapped': swap, 'fill-space': !noFill }"
@@ -8,21 +20,18 @@
         <ng-content></ng-content>
         <ng-content select="[afterContent]"></ng-content>
     </span>
-</ng-container>
-
-<ng-container *ngIf="swap && showIcon; then iconTemplate"></ng-container>
-
-<ng-template #iconTemplate>
+}
+@if (swap && showIcon) {
     <mat-icon
+        [color]="color"
         [inline]="inline"
         [matTooltip]="iconTooltip"
-        [matTooltipPosition]="iconTooltipPosition"
         [matTooltipClass]="iconTooltipClass"
+        [matTooltipPosition]="iconTooltipPosition"
         [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
         [ngStyle]="{ transform: getRotation() }"
         (click)="iconClick()"
-        [color]="color"
     >
         {{ icon }}
     </mat-icon>
-</ng-template>
+}

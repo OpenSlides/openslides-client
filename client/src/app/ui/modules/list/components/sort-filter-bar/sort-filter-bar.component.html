@@ -9,131 +9,147 @@
     </div>
 
     <!-- Current filters -->
-    <div class="current-filters h-scroller" *ngIf="filterService">
-        <div *ngFor="let filter of filterService.filterStack">
-            <button
-                mat-stroked-button
-                (mouseup)="removeFilterFromStack(filter)"
-                (click)="removeFilterFromStack(filter)"
-            >
-                <os-icon-container icon="close" class="active-filter">
-                    <span class="active-filter">
-                        {{ filter.option.label | translate }}
-                    </span>
-                </os-icon-container>
-            </button>
+    @if (filterService) {
+        <div class="current-filters h-scroller">
+            @for (filter of filterService.filterStack; track filter) {
+                <div>
+                    <button
+                        mat-stroked-button
+                        (click)="removeFilterFromStack(filter)"
+                        (mouseup)="removeFilterFromStack(filter)"
+                    >
+                        <os-icon-container class="active-filter" icon="close">
+                            <span class="active-filter">
+                                {{ filter.option.label | translate }}
+                            </span>
+                        </os-icon-container>
+                    </button>
+                </div>
+            }
         </div>
-    </div>
+    }
 
     <!-- Actions -->
     <div class="action-buttons">
         <!-- Sort Button -->
-        <button mat-button *ngIf="(vp.isMobileSubject | async) && hasSorting" (click)="openSortDropDown()">
-            <mat-icon
-                matBadge="&#8288;"
-                matBadgeColor="accent"
-                [matBadgeHidden]="!hasSortOptionSelected"
-                [matBadgeOverlap]="false"
-                matBadgeSize="small"
-            >
-                sort
-            </mat-icon>
-        </button>
-        <button
-            mat-button
-            *ngIf="(vp.isMobileSubject | async) === false && hasSorting"
-            [matTooltip]="getSortLabel(sortOption) | translate"
-            [matMenuTriggerFor]="menu"
-        >
-            <mat-icon>sort</mat-icon>
-            <span
-                matBadge="&#8288;"
-                matBadgeColor="accent"
-                [matBadgeHidden]="!hasSortOptionSelected"
-                [matBadgeOverlap]="false"
-                matBadgeSize="small"
-                class="upper"
-            >
-                {{ 'Sort' | translate }}
-            </span>
-        </button>
+        @if ((vp.isMobileSubject | async) && hasSorting) {
+            <button mat-button (click)="openSortDropDown()">
+                <mat-icon
+                    matBadge="&#8288;"
+                    matBadgeColor="accent"
+                    matBadgeSize="small"
+                    [matBadgeHidden]="!hasSortOptionSelected"
+                    [matBadgeOverlap]="false"
+                >
+                    sort
+                </mat-icon>
+            </button>
+        }
+        @if ((vp.isMobileSubject | async) === false && hasSorting) {
+            <button mat-button [matMenuTriggerFor]="menu" [matTooltip]="getSortLabel(sortOption) | translate">
+                <mat-icon>sort</mat-icon>
+                <span
+                    class="upper"
+                    matBadge="&#8288;"
+                    matBadgeColor="accent"
+                    matBadgeSize="small"
+                    [matBadgeHidden]="!hasSortOptionSelected"
+                    [matBadgeOverlap]="false"
+                >
+                    {{ 'Sort' | translate }}
+                </span>
+            </button>
+        }
 
         <!-- Filter button -->
-        <button mat-button *ngIf="hasFilters" (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()">
-            <mat-icon
-                [matBadge]="filterAmount"
-                matBadgeColor="accent"
-                [matBadgeHidden]="filterAmount === 0 || (vp.isMobileSubject | async) === false"
-                [matBadgeOverlap]="false"
-                matBadgeSize="small"
-            >
-                filter_list
-            </mat-icon>
-            <span
-                class="upper"
-                *ngIf="(vp.isMobileSubject | async) === false"
-                [matBadge]="filterAmount"
-                matBadgeColor="accent"
-                [matBadgeHidden]="filterAmount === 0"
-                [matBadgeOverlap]="false"
-                matBadgeSize="small"
-            >
-                {{ 'Filter' | translate }}
-            </span>
-        </button>
+        @if (hasFilters) {
+            <button mat-button (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()">
+                <mat-icon
+                    matBadgeColor="accent"
+                    matBadgeSize="small"
+                    [matBadge]="filterAmount"
+                    [matBadgeHidden]="filterAmount === 0 || (vp.isMobileSubject | async) === false"
+                    [matBadgeOverlap]="false"
+                >
+                    filter_list
+                </mat-icon>
+                @if ((vp.isMobileSubject | async) === false) {
+                    <span
+                        class="upper"
+                        matBadgeColor="accent"
+                        matBadgeSize="small"
+                        [matBadge]="filterAmount"
+                        [matBadgeHidden]="filterAmount === 0"
+                        [matBadgeOverlap]="false"
+                    >
+                        {{ 'Filter' | translate }}
+                    </span>
+                }
+            </button>
+        }
 
         <!-- Search bar -->
-        <os-rounded-input
-            #searchField
-            *ngIf="searchService && !showSearchIconOnly"
-            placeholder="{{ 'Search' | translate }}"
-            [size]="'small'"
-            [fullWidth]="false"
-            [(ngModel)]="searchFieldInput"
-            iconName="manage_search"
-            (clickIcon)="toggleSearchEdit()"
-        ></os-rounded-input>
-        <button mat-button *ngIf="showSearchIconOnly" (click)="toggleSearchEdit()">
-            <mat-icon>manage_search</mat-icon>
-        </button>
+        @if (searchService && !showSearchIconOnly) {
+            <os-rounded-input
+                #searchField
+                iconName="manage_search"
+                [fullWidth]="false"
+                placeholder="{{ 'Search' | translate }}"
+                [size]="'small'"
+                [(ngModel)]="searchFieldInput"
+                (clickIcon)="toggleSearchEdit()"
+            ></os-rounded-input>
+        }
+        @if (showSearchIconOnly) {
+            <button mat-button (click)="toggleSearchEdit()">
+                <mat-icon>manage_search</mat-icon>
+            </button>
+        }
     </div>
 </div>
 
 <!-- Header for the filter side bar -->
-<mat-drawer autoFocus="false" #filterMenu mode="push" position="end">
+<mat-drawer #filterMenu autoFocus="false" mode="push" position="end">
     <div class="custom-table-header filter-menu-head" (click)="this.filterMenu.toggle()">
         <span>
             <mat-icon>keyboard_arrow_right</mat-icon>
         </span>
 
-        <button mat-button (click)="onClearAllButton($event)" *ngIf="filterAmount">
-            <os-icon-container icon="clear">
-                <span>{{ 'Clear all filters' | translate }}</span>
-            </os-icon-container>
-        </button>
+        @if (filterAmount) {
+            <button mat-button (click)="onClearAllButton($event)">
+                <os-icon-container icon="clear">
+                    <span>{{ 'Clear all filters' | translate }}</span>
+                </os-icon-container>
+            </button>
+        }
     </div>
-    <os-filter-menu
-        *ngIf="filterService"
-        (dismissed)="this.filterMenu.close()"
-        [service]="filterService"
-        [showSpacer]="showSpacer"
-    ></os-filter-menu>
+    @if (filterService) {
+        <os-filter-menu
+            [service]="filterService"
+            [showSpacer]="showSpacer"
+            (dismissed)="this.filterMenu.close()"
+        ></os-filter-menu>
+    }
 </mat-drawer>
 
 <!-- non-mobile sorting menu -->
 <mat-menu #menu>
-    <ng-container *ngIf="hasSorting">
-        <button mat-menu-item *ngIf="defaultOption" (click)="sortOption = defaultOption">
-            <mat-icon>{{ getSortIcon(defaultOption) }}</mat-icon>
-            <span>{{ sortService.getSortLabel(defaultOption) | translate }}&emsp;</span>
-            <small class="subtitle">({{ 'Default' | translate }})</small>
-        </button>
-
-        <mat-divider *ngIf="defaultOption"></mat-divider>
-
-        <button *ngFor="let option of sortOptionsWithoutDefault" (click)="sortOption = option" mat-menu-item>
-            <mat-icon>{{ getSortIcon(option) }}</mat-icon>
-            <span>{{ sortService.getSortLabel(option) | translate }}</span>
-        </button>
-    </ng-container>
+    @if (hasSorting) {
+        @if (defaultOption) {
+            <button mat-menu-item (click)="sortOption = defaultOption">
+                <mat-icon>{{ getSortIcon(defaultOption) }}</mat-icon>
+                <span>{{ sortService.getSortLabel(defaultOption) | translate }}&emsp;</span>
+                <small class="subtitle">({{ 'Default' | translate }})</small>
+            </button>
+        }
+        @if (defaultOption) {
+            <mat-divider></mat-divider>
+        }
+        @for (option of sortOptionsWithoutDefault; track option) {
+            <button mat-menu-item (click)="sortOption = option">
+                <mat-icon>{{ getSortIcon(option) }}</mat-icon>
+                <span>{{ sortService.getSortLabel(option) | translate }}</span>
+            </button>
+        }
+    }
 </mat-menu>

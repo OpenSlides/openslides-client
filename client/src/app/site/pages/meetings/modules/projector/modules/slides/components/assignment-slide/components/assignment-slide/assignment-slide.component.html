@@ -1,22 +1,32 @@
-<div *ngIf="data?.data">
-    <div class="slidetitle">
-        <h1>{{ data.data.title }}</h1>
-        <h2>{{ 'Election' | translate }}</h2>
+@if (data?.data) {
+    <div>
+        <div class="slidetitle">
+            <h1>{{ data.data.title }}</h1>
+            <h2>{{ 'Election' | translate }}</h2>
+        </div>
+        @if (data.data.description) {
+            <div [innerHTML]="data.data.description | trust: 'html'"></div>
+        }
+        <h3>{{ 'Candidates' | translate }}</h3>
+        @if (data.data.candidates && data.data.candidates.length) {
+            @if (data.data.number_poll_candidates) {
+                <ol>
+                    @for (candidate of data.data.candidates; track candidate) {
+                        <li>
+                            {{ candidate }}
+                        </li>
+                    }
+                </ol>
+            }
+            @if (!data.data.number_poll_candidates) {
+                <ul>
+                    @for (candidate of data.data.candidates; track candidate) {
+                        <li>
+                            {{ candidate }}
+                        </li>
+                    }
+                </ul>
+            }
+        }
     </div>
-
-    <div *ngIf="data.data.description" [innerHTML]="data.data.description | trust : 'html'"></div>
-
-    <h3>{{ 'Candidates' | translate }}</h3>
-    <ng-container *ngIf="data.data.candidates && data.data.candidates.length">
-        <ol *ngIf="data.data.number_poll_candidates">
-            <li *ngFor="let candidate of data.data.candidates">
-                {{ candidate }}
-            </li>
-        </ol>
-        <ul *ngIf="!data.data.number_poll_candidates">
-            <li *ngFor="let candidate of data.data.candidates">
-                {{ candidate }}
-            </li>
-        </ul>
-    </ng-container>
-</div>
+}

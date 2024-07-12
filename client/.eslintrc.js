@@ -101,11 +101,15 @@ module.exports = {
                 'plugin:@angular-eslint/template/accessibility'
             ],
             rules: {
+                '@angular-eslint/template/attributes-order': ['error', {
+                    alphabetical: true
+                }],
                 // Should be switched to error
                 '@angular-eslint/template/click-events-have-key-events': ['warn'],
                 '@angular-eslint/template/interactive-supports-focus': ['warn'],
                 '@angular-eslint/template/elements-content': ['warn'],
-                '@angular-eslint/template/alt-text': ['warn']
+                '@angular-eslint/template/alt-text': ['warn'],
+                '@angular-eslint/template/prefer-control-flow': ['warn']
             }
         },
         {

@@ -25,7 +25,10 @@ export class MotionPollVoteComponent extends BasePollVoteComponent {
         isSplitSingleOption: true
     };
 
-    public constructor(private promptService: PromptService, meetingSettingsService: MeetingSettingsService) {
+    public constructor(
+        private promptService: PromptService,
+        meetingSettingsService: MeetingSettingsService
+    ) {
         super(meetingSettingsService);
     }
 

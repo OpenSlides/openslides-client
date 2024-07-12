@@ -1,72 +1,74 @@
-<div class="interaction-bar-wrapper" *ngIf="(isConfStateNone | async) === false">
-    <ng-container *ngIf="isConfStateJitsi | async">
-        <ng-container *ngIf="(isJoined | async) && (showCallDialog | async) === false">
-            <!-- show dialog -->
-            <button
-                mat-mini-fab
-                class="action-bar-shadow background-default"
-                matTooltip="{{ 'Show conference room' | translate }}"
-                (click)="maximizeCallDialog()"
-                @fadeIn
-            >
-                <mat-icon
-                    color="primary"
-                    [@fadeInOut]="meetingActiveAnimHelper"
-                    (@fadeInOut.done)="triggerCallHiddenAnimation()"
+@if ((isConfStateNone | async) === false) {
+    <div class="interaction-bar-wrapper">
+        @if (isConfStateJitsi | async) {
+            @if ((isJoined | async) && (showCallDialog | async) === false) {
+                <!-- show dialog -->
+                <button
+                    class="action-bar-shadow background-default"
+                    mat-mini-fab
+                    @fadeIn
+                    matTooltip="{{ 'Show conference room' | translate }}"
+                    (click)="maximizeCallDialog()"
                 >
-                    fullscreen
-                </mat-icon>
+                    <mat-icon
+                        color="primary"
+                        [@fadeInOut]="meetingActiveAnimHelper"
+                        (@fadeInOut.done)="triggerCallHiddenAnimation()"
+                    >
+                        fullscreen
+                    </mat-icon>
+                </button>
+            }
+        }
+        @if ((showLiveConf | async) && (isConfStateStream | async)) {
+            <!-- Enter conference from stream -->
+            @if (canEnterCall | async) {
+                <button
+                    class="action-bar-shadow background-default"
+                    mat-mini-fab
+                    matTooltip="{{ canEnterTooltip | translate }}"
+                    (click)="enterConferenceRoom()"
+                >
+                    <mat-icon color="primary">phone</mat-icon>
+                </button>
+            }
+            @if ((canEnterCall | async) === false) {
+                <a
+                    class="action-bar-shadow fake-disabled"
+                    mat-mini-fab
+                    matTooltip="{{ cannotEnterTooltip | translate }}"
+                    [routerLink]="['/', activeMeetingId, 'autopilot']"
+                >
+                    <mat-icon color="primary">phone</mat-icon>
+                </a>
+            }
+        }
+        <!-- Call support button -->
+        @if (showHelpDesk | async) {
+            <button
+                class="action-bar-shadow background-default"
+                mat-mini-fab
+                @fadeIn
+                matTooltip="{{ 'Help desk' | translate }}"
+                (click)="enterSupportRoom()"
+            >
+                <mat-icon color="primary">help_outline</mat-icon>
             </button>
-        </ng-container>
-    </ng-container>
-
-    <ng-container *ngIf="(showLiveConf | async) && (isConfStateStream | async)">
-        <!-- Enter conference from stream -->
-        <button
-            (click)="enterConferenceRoom()"
-            mat-mini-fab
-            class="action-bar-shadow background-default"
-            matTooltip="{{ canEnterTooltip | translate }}"
-            *ngIf="canEnterCall | async"
-        >
-            <mat-icon color="primary">phone</mat-icon>
-        </button>
-
-        <a
-            [routerLink]="['/', activeMeetingId, 'autopilot']"
-            mat-mini-fab
-            class="action-bar-shadow fake-disabled"
-            matTooltip="{{ cannotEnterTooltip | translate }}"
-            *ngIf="(canEnterCall | async) === false"
-        >
-            <mat-icon color="primary">phone</mat-icon>
-        </a>
-    </ng-container>
-
-    <!-- Call support button -->
-    <button
-        mat-mini-fab
-        class="action-bar-shadow background-default"
-        (click)="enterSupportRoom()"
-        matTooltip="{{ 'Help desk' | translate }}"
-        *ngIf="showHelpDesk | async"
-        @fadeIn
-    >
-        <mat-icon color="primary">help_outline</mat-icon>
-    </button>
-
-    <!-- applause button -->
-    <button
-        mat-mini-fab
-        class="action-bar-shadow background-default"
-        matTooltip="{{ 'Give applause' | translate }}"
-        [disabled]="sendsApplause | async"
-        [matBadge]="applauseLevel | async"
-        [matBadgeHidden]="(showApplauseLevel | async) === false"
-        (click)="sendApplause()"
-        *ngIf="showApplause | async"
-        @fadeIn
-    >
-        <mat-icon class="svg-primary" svgIcon="clapping_hands"></mat-icon>
-    </button>
-</div>
+        }
+        <!-- applause button -->
+        @if (showApplause | async) {
+            <button
+                class="action-bar-shadow background-default"
+                mat-mini-fab
+                @fadeIn
+                [disabled]="sendsApplause | async"
+                [matBadge]="applauseLevel | async"
+                [matBadgeHidden]="(showApplauseLevel | async) === false"
+                matTooltip="{{ 'Give applause' | translate }}"
+                (click)="sendApplause()"
+            >
+                <mat-icon class="svg-primary" svgIcon="clapping_hands"></mat-icon>
+            </button>
+        }
+    </div>
+}

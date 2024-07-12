@@ -17,7 +17,10 @@ export class PollListFilterService extends BaseMeetingFilterListService<ViewPoll
      */
     protected storageKey = `PollList`;
 
-    public constructor(store: MeetingActiveFiltersService, private translate: TranslateService) {
+    public constructor(
+        store: MeetingActiveFiltersService,
+        private translate: TranslateService
+    ) {
         super(store);
     }
 

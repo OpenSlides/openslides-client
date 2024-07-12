@@ -1,38 +1,55 @@
 <div class="video-wrapper">
-    <div class="player-container" [ngClass]="{ hide: !isUrlOnline && usingVjs }" *ngIf="isStable">
-        <div *ngIf="usingVjs">
-            <video #vjs class="video-js" controls preload="none"></video>
+    @if (isStable) {
+        <div class="player-container" [ngClass]="{ hide: !isUrlOnline && usingVjs }">
+            @if (usingVjs) {
+                <div>
+                    <video #vjs class="video-js" controls preload="none"></video>
+                </div>
+            }
+            @if (!usingVjs) {
+                <div class="iframe-player">
+                    @if (usingYouTube) {
+                        <iframe
+                            allow="autoplay; encrypted-media"
+                            allowfullscreen
+                            class="player"
+                            frameborder="0"
+                            type="text/html"
+                            [src]="youTubeVideoUrl | trust: 'resourceUrl'"
+                        ></iframe>
+                    }
+                    @if (usingNanocosmos) {
+                        <div class="player" id="nanocosmosPlayer"></div>
+                    }
+                </div>
+            }
+            @if (usingVjs && !isUrlOnline) {
+                <div class="is-offline-wrapper">
+                    @if (!posterUrl) {
+                        <p>
+                            {{ 'Currently no livestream available.' | translate }}
+                        </p>
+                        <button color="primary" mat-raised-button (click)="onRefreshVideo()">
+                            <mat-icon>refresh</mat-icon>
+                            &nbsp;
+                            <span>{{ 'Refresh' | translate }}</span>
+                        </button>
+                    }
+                    @if (posterUrl) {
+                        <div class="offlineposter">
+                            <button
+                                color="accent"
+                                mat-mini-fab
+                                matTooltip="{{ 'Refresh' | translate }}"
+                                (click)="onRefreshVideo()"
+                            >
+                                <mat-icon>refresh</mat-icon>
+                            </button>
+                            <img [src]="posterUrl" />
+                        </div>
+                    }
+                </div>
+            }
         </div>
-        <div *ngIf="!usingVjs" class="iframe-player">
-            <iframe
-                *ngIf="usingYouTube"
-                class="player"
-                type="text/html"
-                frameborder="0"
-                allow="autoplay; encrypted-media"
-                allowfullscreen
-                [src]="youTubeVideoUrl | trust : 'resourceUrl'"
-            ></iframe>
-
-            <div *ngIf="usingNanocosmos" id="nanocosmosPlayer" class="player"></div>
-        </div>
-        <div *ngIf="usingVjs && !isUrlOnline" class="is-offline-wrapper">
-            <ng-container *ngIf="!posterUrl">
-                <p>
-                    {{ 'Currently no livestream available.' | translate }}
-                </p>
-                <button mat-raised-button (click)="onRefreshVideo()" color="primary">
-                    <mat-icon>refresh</mat-icon>
-                    &nbsp;
-                    <span>{{ 'Refresh' | translate }}</span>
-                </button>
-            </ng-container>
-            <div *ngIf="posterUrl" class="offlineposter">
-                <button mat-mini-fab (click)="onRefreshVideo()" color="accent" matTooltip="{{ 'Refresh' | translate }}">
-                    <mat-icon>refresh</mat-icon>
-                </button>
-                <img [src]="posterUrl" />
-            </div>
-        </div>
-    </div>
+    }
 </div>
