@@ -1,21 +1,25 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
-    <os-head-bar [editMode]="hasChanged" (saveEvent)="sendUpdate()" (mainEvent)="onCancel()" [nav]="false">
+    <os-head-bar [editMode]="hasChanged" [nav]="false" (mainEvent)="onCancel()" (saveEvent)="sendUpdate()">
         <!-- Title -->
         <div class="title-slot">
-            <h2 *ngIf="category">{{ 'Sort motions' | translate }} ({{ category.prefixedName }})</h2>
+            @if (category) {
+                <h2>{{ 'Sort motions' | translate }} ({{ category.prefixedName }})</h2>
+            }
         </div>
     </os-head-bar>
 
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <div *ngIf="isMultiSelect">
-                <span>{{ sortSelector.multiSelectedIndex.length }}&nbsp;</span>
-                <span>{{ 'selected' | translate }}</span>
-                <button mat-button (click)="moveToPosition()">
-                    <span>{{ 'move ...' | translate }}</span>
-                </button>
-            </div>
-            <os-sorting-list (sortEvent)="onListUpdate($event)" [input]="motionObservable" #sorter>
+            @if (isMultiSelect) {
+                <div>
+                    <span>{{ sortSelector.multiSelectedIndex.length }}&nbsp;</span>
+                    <span>{{ 'selected' | translate }}</span>
+                    <button mat-button (click)="moveToPosition()">
+                        <span>{{ 'move ...' | translate }}</span>
+                    </button>
+                </div>
+            }
+            <os-sorting-list #sorter [input]="motionObservable" (sortEvent)="onListUpdate($event)">
                 <ng-template let-motion>
                     <div class="single-motion-line">
                         <span>
@@ -25,8 +29,8 @@
                             <mat-basic-chip
                                 class="bluegrey"
                                 disableRipple
-                                matTooltip="{{ 'Sequential number' | translate }}"
                                 matTooltipPosition="left"
+                                matTooltip="{{ 'Sequential number' | translate }}"
                             >
                                 {{ motion.sequential_number }}
                             </mat-basic-chip>

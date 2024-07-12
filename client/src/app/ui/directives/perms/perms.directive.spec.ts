@@ -26,16 +26,16 @@ export class BasePermsTestComponent<ComponentDataType extends object> {
 
 @Component({
     template: `
-        <div id="normal" *osPerms="permission"></div>
-        <div id="or" *osPerms="permission; or: conditionals.or"></div>
-        <div id="and" *osPerms="permission; and: conditionals.and"></div>
-        <div id="complement" *osPerms="permission; complement: conditionals.complement"></div>
+        <div *osPerms="permission" id="normal"></div>
+        <div *osPerms="permission; or: conditionals.or" id="or"></div>
+        <div *osPerms="permission; and: conditionals.and" id="and"></div>
+        <div *osPerms="permission; complement: conditionals.complement" id="complement"></div>
         <div
-            id="delegation"
             *osPerms="
                 permission;
                 delegationSettingAlternative: ['users_forbid_delegator_in_list_of_speakers', altPermission]
             "
+            id="delegation"
         ></div>
     `
 })

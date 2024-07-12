@@ -1,3 +1,5 @@
-<div (osResized)="updateParticleContainer($event)" *ngIf="isStable | async" class="particle-wrapper">
-    <Particles id="particles" [options]="options" (particlesLoaded)="particlesLoaded($event)"></Particles>
-</div>
+@if (isStable | async) {
+    <div class="particle-wrapper" (osResized)="updateParticleContainer($event)">
+        <Particles id="particles" [options]="options" (particlesLoaded)="particlesLoaded($event)"></Particles>
+    </div>
+}

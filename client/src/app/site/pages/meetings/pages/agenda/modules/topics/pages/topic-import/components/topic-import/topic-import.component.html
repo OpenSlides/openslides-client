@@ -1,37 +1,42 @@
-<os-head-bar [nav]="false" prevUrl="../..">
+<os-head-bar prevUrl="../.." [nav]="false">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Import topics' | translate }}</h2>
     </div>
 
     <ng-container class="menu-slot">
-        <button *ngIf="canImport" mat-button (click)="doImport()">
-            <span class="upper">{{ 'Import' | translate }}</span>
-        </button>
-        <div *ngIf="finishedSuccessfully || hasErrors" style="padding-top: 6px">
-            <mat-icon *ngIf="finishedSuccessfully" matTooltip="{{ 'Import successful' | translate }}">done</mat-icon>
-            <mat-icon
-                *ngIf="finishedWithWarnings"
-                matTooltip="{{ 'Import successful with some warnings' | translate }}"
-            >
-                done
-            </mat-icon>
-            <mat-icon *ngIf="hasErrors" matTooltip="{{ 'Can not import because of errors' | translate }}">
-                block
-            </mat-icon>
-        </div>
-        <os-spinner *ngIf="isImporting" [width]="30" [height]="30" [showText]="false"></os-spinner>
+        @if (canImport) {
+            <button mat-button (click)="doImport()">
+                <span class="upper">{{ 'Import' | translate }}</span>
+            </button>
+        }
+        @if (finishedSuccessfully || hasErrors) {
+            <div style="padding-top: 6px">
+                @if (finishedSuccessfully) {
+                    <mat-icon matTooltip="{{ 'Import successful' | translate }}">done</mat-icon>
+                }
+                @if (finishedWithWarnings) {
+                    <mat-icon matTooltip="{{ 'Import successful with some warnings' | translate }}">done</mat-icon>
+                }
+                @if (hasErrors) {
+                    <mat-icon matTooltip="{{ 'Can not import because of errors' | translate }}">block</mat-icon>
+                }
+            </div>
+        }
+        @if (isImporting) {
+            <os-spinner [height]="30" [showText]="false" [width]="30"></os-spinner>
+        }
     </ng-container>
 </os-head-bar>
 
 <os-backend-import-list
+    modelName="Topic"
+    [defaultColumns]="columns"
     [importer]="importer"
     [possibleFields]="possibleFields"
-    [defaultColumns]="columns"
-    modelName="Topic"
     (selectedTabChanged)="selectedTabIndex = $event"
 >
-    <ng-template [label]="'Text import' | translate" osImportListFirstTab>
+    <ng-template osImportListFirstTab [label]="'Text import' | translate">
         <div [formGroup]="textAreaForm">
             <div>
                 <div>{{ 'Paste/write your topics in this textbox.' | translate }}</div>
@@ -40,17 +45,17 @@
             <mat-form-field>
                 <mat-label>{{ 'Insert topics here' | translate }}</mat-label>
                 <textarea
+                    cdkAutosizeMaxRows="10"
+                    cdkAutosizeMinRows="3"
+                    cdkTextareaAutosize
+                    formControlName="inputtext"
                     matInput
                     osAutofocus
-                    formControlName="inputtext"
-                    cdkTextareaAutosize
-                    cdkAutosizeMinRows="3"
-                    cdkAutosizeMaxRows="10"
                 ></textarea>
             </mat-form-field>
         </div>
         <div>
-            <button mat-button color="accent" (click)="parseTextArea()">
+            <button color="accent" mat-button (click)="parseTextArea()">
                 <span>{{ 'Preview' | translate }}</span>
             </button>
         </div>

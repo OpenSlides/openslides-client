@@ -1,46 +1,52 @@
 <div class="upload-area">
     <div class="upload-area--top-content">
-        <input hidden type="file" #fileInput (change)="onSelectFile($event)" multiple />
+        <input #fileInput hidden multiple type="file" (change)="onSelectFile($event)" />
 
         <div class="selection-area">
             <ngx-file-drop
-                (onFileDrop)="onDropFile($event)"
-                (click)="fileInput.click()"
-                dropZoneLabel="{{ 'Drop files into this area OR click here to select files' | translate }}"
                 contentClassName="file-drop-content-style"
                 dropZoneClassName="file-drop-zone-style"
+                dropZoneLabel="{{ 'Drop files into this area OR click here to select files' | translate }}"
+                (click)="fileInput.click()"
+                (onFileDrop)="onDropFile($event)"
             ></ngx-file-drop>
         </div>
 
         <!-- Additional content -->
         <ng-container *ngTemplateOutlet="additionalContent"></ng-container>
     </div>
-    <div [hidden]="isEmpty" class="upload-area--bottom-content">
+    <div class="upload-area--bottom-content" [hidden]="isEmpty">
         <ng-container *ngTemplateOutlet="tableTemplate"></ng-container>
     </div>
 </div>
 
 <!-- Upload and clear buttons -->
 <div class="action-buttons">
-    <button type="button" mat-raised-button (click)="onUploadButton()" color="accent" [disabled]="isUploadDisabled">
+    <button color="accent" mat-raised-button type="button" [disabled]="isUploadDisabled" (click)="onUploadButton()">
         <span>{{ 'Upload' | translate }}</span>
     </button>
-    <button type="button" mat-raised-button (click)="onClearButton()" [disabled]="isUploadDisabled">
+    <button mat-raised-button type="button" [disabled]="isUploadDisabled" (click)="onClearButton()">
         <span>{{ 'Clear list' | translate }}</span>
     </button>
 </div>
 
-<mat-card class="os-card" *ngIf="showProgress">
-    <mat-card-content>
-        <mat-progress-bar *ngIf="!parallel" mode="determinate" [value]="progressObservable | async"></mat-progress-bar>
-        <mat-progress-bar *ngIf="parallel" mode="buffer"></mat-progress-bar>
-    </mat-card-content>
-</mat-card>
+@if (showProgress) {
+    <mat-card class="os-card">
+        <mat-card-content>
+            @if (!parallel) {
+                <mat-progress-bar mode="determinate" [value]="progressObservable | async"></mat-progress-bar>
+            }
+            @if (parallel) {
+                <mat-progress-bar mode="buffer"></mat-progress-bar>
+            }
+        </mat-card-content>
+    </mat-card>
+}
 
 <ng-template #tableTemplate>
-    <os-scrolling-table vScrollFixed="50" [showHeader]="true" [dataSource]="dataSource" [tableHeight]="tableHeight">
+    <os-scrolling-table vScrollFixed="50" [dataSource]="dataSource" [showHeader]="true" [tableHeight]="tableHeight">
         <div *osScrollingTableCell="'remove'; row as file; config: { width: 24 }">
-            <button mat-icon-button (click)="onRemoveButton(file)" matTooltip="{{ 'Remove file' | translate }}">
+            <button mat-icon-button matTooltip="{{ 'Remove file' | translate }}" (click)="onRemoveButton(file)">
                 <mat-icon>close</mat-icon>
             </button>
         </div>

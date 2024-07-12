@@ -35,7 +35,11 @@ export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
         return this.user?.isPresentInMeeting();
     }
 
-    public constructor(operator: OperatorService, private votingService: VotingService, private cd: ChangeDetectorRef) {
+    public constructor(
+        operator: OperatorService,
+        private votingService: VotingService,
+        private cd: ChangeDetectorRef
+    ) {
         super();
         this.subscriptions.push(
             operator.userObservable.pipe(debounceTime(50)).subscribe(user => {

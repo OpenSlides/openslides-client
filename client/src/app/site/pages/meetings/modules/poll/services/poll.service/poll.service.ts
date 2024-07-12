@@ -98,7 +98,7 @@ export abstract class PollService {
                                 icon: key.icon,
                                 hide: key.hide,
                                 showPercent: key.showPercent
-                            } as VotingResult)
+                            }) as VotingResult
                     ),
                     votingOption: title.title
                 };
@@ -184,7 +184,7 @@ export abstract class PollService {
                                 showPercent: key.showPercent
                             } as VotingResult
                         ]
-                    } as PollTableData)
+                    }) as PollTableData
             );
     }
 
@@ -344,7 +344,7 @@ export abstract class PollService {
                         hoverBackgroundColor: this.themeService.getPollColor(key),
                         barThickness: PollChartBarThickness,
                         maxBarThickness: PollChartBarThickness
-                    } as ChartDate)
+                    }) as ChartDate
             )
             .filter(chartDate => !!chartDate.data[0] || !!chartDate.data[1]);
 
