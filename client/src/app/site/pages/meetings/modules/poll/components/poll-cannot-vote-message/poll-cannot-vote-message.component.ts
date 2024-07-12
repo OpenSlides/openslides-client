@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { debounceTime } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
@@ -35,7 +35,11 @@ export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
         return this.user?.isPresentInMeeting();
     }
 
-    public constructor(operator: OperatorService, private votingService: VotingService, private cd: ChangeDetectorRef) {
+    public constructor(
+        operator: OperatorService,
+        private votingService: VotingService,
+        private cd: ChangeDetectorRef
+    ) {
         super();
         this.subscriptions.push(
             operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
@@ -45,13 +49,21 @@ export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
                 this.cd.markForCheck();
             })
         );
+        this.subscriptions.push(
+            combineLatest([
+                this.meetingSettingsService.get(`users_enable_vote_delegations`).pipe(distinctUntilChanged()),
+                this.meetingSettingsService.get(`users_forbid_delegator_to_vote`).pipe(distinctUntilChanged())
+            ]).subscribe(_ => {
+                this.cd.markForCheck();
+            })
+        );
     }
 
     public getVotingError(user: ViewUser = this.user): string {
         return this.votingService.getVotingProhibitionReasonVerbose(this.poll, user) || ``;
     }
 
-    public getVotingErrorFromName(errorName: string) {
+    public getVotingErrorFromName(errorName: string): string {
         return this.votingService.getVotingProhibitionReasonVerboseFromName(errorName) || ``;
     }
 }

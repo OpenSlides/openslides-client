@@ -1,30 +1,31 @@
 <mat-drawer-container class="list-view-frame">
     <div class="list-view-table-wrapper">
-        <os-sort-filter-bar
-            *ngIf="showFilterBar"
-            class="sort-filter-bar"
-            [totalCount]="totalCountObservable | async"
-            [filterCount]="currentCountObservable | async"
-            [filterService]="filterService!"
-            [sortService]="sortService!"
-            [searchService]="searchService!"
-            [searchFieldInput]="searchFieldValue"
-            [showSpacer]="addBottomSpacer"
-            (searchFieldChanged)="searchFilterUpdated.emit($event)"
-        >
-            <div class="extra-info-slot">
-                <ng-content select=".filter-bar-info-slot"></ng-content>
-            </div>
-        </os-sort-filter-bar>
+        @if (showFilterBar) {
+            <os-sort-filter-bar
+                class="sort-filter-bar"
+                [filterCount]="currentCountObservable | async"
+                [filterService]="filterService!"
+                [searchFieldInput]="searchFieldValue"
+                [searchService]="searchService!"
+                [showSpacer]="addBottomSpacer"
+                [sortService]="sortService!"
+                [totalCount]="totalCountObservable | async"
+                (searchFieldChanged)="searchFilterUpdated.emit($event)"
+            >
+                <div class="extra-info-slot">
+                    <ng-content select=".filter-bar-info-slot"></ng-content>
+                </div>
+            </os-sort-filter-bar>
+        }
 
         <os-scrolling-table
+            [addBottomSpacer]="addBottomSpacer"
             [dataSource]="dataListObservable"
             [fullDataSource]="dataFullListObservable"
-            [rowHeight]="vScrollFixed"
-            [tableHeight]="fullScreen ? undefined : '50vh'"
             [hiddenColumns]="hiddenColumns"
+            [rowHeight]="vScrollFixed"
             [selectionMode]="multiSelect"
-            [addBottomSpacer]="addBottomSpacer"
+            [tableHeight]="fullScreen ? undefined : '50vh'"
             (selectionChanged)="selectedRowsChange.emit($event.selectedRows)"
         >
             <div *osScrollingTableNoData class="no-data-placeholder subtitle">{{ 'No data' | translate }}</div>

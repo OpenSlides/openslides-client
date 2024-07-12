@@ -113,11 +113,7 @@ describe(`CsvExportForBackendService`, () => {
     });
 
     it(`test dummy export method with default settings`, () => {
-        service.dummyCSVExport(
-            { proper: `Fancy`, tea: `Tea`, strength: `Muscle` },
-            toDummyExport,
-            `dummyAssortmentOfTeas`
-        );
+        service.dummyCSVExport([`proper`, `tea`, `strength`], toDummyExport, `dummyAssortmentOfTeas`);
         expect(exportService.lastSavedFiles.length).toBe(1);
         expect(exportService.lastSavedFiles[0]).toEqual({
             file: `proper,tea,strength\r\n"1","Earl Grey","5"\r\n,"Herbal tea",`,

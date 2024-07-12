@@ -27,21 +27,8 @@
     .sort-drawer-content {
         text-align: left;
 
-        .mat-button {
+        .mat-mdc-button {
             margin-left: 8px;
-        }
-
-        .sort-grid {
-            display: inline-grid;
-            grid-template-columns: auto;
-            grid-template-rows: 20px 30px;
-            margin: 8px;
-            vertical-align: top;
-            line-height: 1.5;
-
-            mat-checkbox:not(:last-child) {
-                margin-right: 8px;
-            }
         }
     }
 

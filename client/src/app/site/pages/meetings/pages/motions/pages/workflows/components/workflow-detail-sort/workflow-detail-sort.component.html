@@ -1,5 +1,5 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
-    <os-head-bar [nav]="false" [editMode]="hasChanges" (saveEvent)="save()" (mainEvent)="onCancel()">
+    <os-head-bar [editMode]="hasChanges" [nav]="false" (mainEvent)="onCancel()" (saveEvent)="save()">
         <div class="title-slot">
             <h2>{{ 'Sort workflow' | translate }}</h2>
         </div>
@@ -7,11 +7,13 @@
 
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <os-sorting-list [input]="workflowStatesObservable" (sortEvent)="onSorting($event)" #sorter>
-                <ng-template let-state let-index="index">
+            <os-sorting-list #sorter [input]="workflowStatesObservable" (sortEvent)="onSorting($event)">
+                <ng-template let-index="index" let-state>
                     <div class="action-title">
                         <div>{{ state.name }}</div>
-                        <div *ngIf="index === 0">{{ 'First state' | translate }}</div>
+                        @if (index === 0) {
+                            <div>{{ 'First state' | translate }}</div>
+                        }
                     </div>
                 </ng-template>
             </os-sorting-list>

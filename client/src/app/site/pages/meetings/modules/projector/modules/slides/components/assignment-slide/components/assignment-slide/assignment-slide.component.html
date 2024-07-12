@@ -1,8 +1,35 @@
-<div *ngIf="data?.data">
-    <div class="slidetitle">
-        <h1>{{ data.data.title }}</h1>
-        <h2>{{ 'Election' | translate }}</h2>
+@if (data?.data) {
+    <div>
+        <div class="slidetitle">
+            <h1>{{ data.data.title }}</h1>
+            <h2>{{ 'Election' | translate }}</h2>
+        </div>
+        @if (data.data.description) {
+            <div [innerHTML]="data.data.description | trust: 'html'"></div>
+        }
+        <h3>{{ 'Candidates' | translate }}</h3>
+        @if (data.data.candidates && data.data.candidates.length) {
+            @if (data.data.number_poll_candidates) {
+                <ol>
+                    @for (candidate of data.data.candidates; track candidate) {
+                        <li>
+                            {{ candidate }}
+                        </li>
+                    }
+                </ol>
+            }
+            @if (!data.data.number_poll_candidates) {
+                <ul>
+                    @for (candidate of data.data.candidates; track candidate) {
+                        <li>
+                            {{ candidate }}
+                        </li>
+                    }
+                </ul>
+            }
+        }
     </div>
+<<<<<<< HEAD
 
     <div
         class="detail-view-text"
@@ -24,3 +51,6 @@
         </ul>
     </ng-container>
 </div>
+=======
+}
+>>>>>>> upstream/main

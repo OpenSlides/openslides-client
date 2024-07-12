@@ -16,10 +16,10 @@ type TestConditionalType = {
 
 @Component({
     template: `
-        <div id="normal" *osOmlPerms="permission"></div>
-        <div id="or" *osOmlPerms="permission; or: conditionals.or"></div>
-        <div id="and" *osOmlPerms="permission; and: conditionals.and"></div>
-        <div id="complement" *osOmlPerms="permission; complement: conditionals.complement"></div>
+        <div *osOmlPerms="permission" id="normal"></div>
+        <div *osOmlPerms="permission; or: conditionals.or" id="or"></div>
+        <div *osOmlPerms="permission; and: conditionals.and" id="and"></div>
+        <div *osOmlPerms="permission; complement: conditionals.complement" id="complement"></div>
         <ng-container *osOmlPerms="permission; then thenTemplate; else elseTemplate"></ng-container>
         <ng-template #thenTemplate>
             <div id="then"></div>

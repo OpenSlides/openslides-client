@@ -1,14 +1,14 @@
 <os-head-bar
-    [hasMainButton]="true"
     mainButtonIcon="edit"
-    [mainActionTooltip]="'Edit account' | translate"
-    (mainEvent)="editMember()"
-    [goBack]="false"
-    [nav]="false"
     [editMode]="isEditingUser"
+    [goBack]="false"
+    [hasMainButton]="true"
     [isSaveButtonEnabled]="isFormValid"
+    [mainActionTooltip]="'Edit account' | translate"
+    [nav]="false"
     [saveAction]="getSaveAction()"
     (cancelEditEvent)="onCancel()"
+    (mainEvent)="editMember()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -18,21 +18,21 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="userExtraMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="userExtraMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
 </os-head-bar>
 
 <os-user-detail-view
-    [isEditing]="isEditingUser"
-    [isNewUser]="isNewUser"
     [additionalFormControls]="additionalFormControls"
     [generatePasswordFn]="getRandomPasswordFn()"
+    [isEditing]="isEditingUser"
+    [isNewUser]="isNewUser"
     [user]="user"
     (changeEvent)="personalInfoFormValue = $event"
-    (validEvent)="isFormValid = $event"
     (errorEvent)="formErrors = $event"
+    (validEvent)="isFormValid = $event"
 >
     <ng-template #editView let-form="form">
         <h2>{{ 'Organization specific information' | translate }}</h2>
@@ -42,11 +42,11 @@
                 <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Administration roles (at organization level)' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">
-                        <mat-option [value]="null" *ngIf="!orgaManagementLevelChangeDisabled">-</mat-option>
+                        <mat-option *ngIf="!orgaManagementLevelChangeDisabled" [value]="null">-</mat-option>
                         <mat-option
                             *ngFor="let level of organizationManagementLevels"
-                            [value]="level"
                             [disabled]="orgaManagementLevelChangeDisabled"
+                            [value]="level"
                         >
                             {{ getOmlVerboseName(level) | translate }}
                         </mat-option>
@@ -60,9 +60,9 @@
                     <os-repo-search-selector
                         formControlName="committee_management_ids"
                         [multiple]="true"
-                        [subscriptionConfig]="committeeSubscriptionConfig"
                         [repo]="committeeController"
                         [sortService]="committeeSortService"
+                        [subscriptionConfig]="committeeSubscriptionConfig"
                         [transformPropagateFn]="getTransformPropagateFn()"
                         [transformSetFn]="getTransformSetFn()"
                     ></os-repo-search-selector>
@@ -73,7 +73,7 @@
         <div [formGroup]="form">
             <mat-form-field class="form100 force-min-with">
                 <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
-                <input type="number" matInput formControlName="default_vote_weight" />
+                <input formControlName="default_vote_weight" matInput type="number" />
                 <mat-error *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0" translate>
                     Please select a vote weight greater than or equal to 0.000001
                 </mat-error>
@@ -132,7 +132,7 @@
                         <span translate>Committees</span>
                         ({{ user.committee_ids?.length }})
                     </th>
-                    <th class="admin-column" *ngIf="comitteeAdministrationAmount">
+                    <th *ngIf="comitteeAdministrationAmount" class="admin-column">
                         ({{ comitteeAdministrationAmount }})
                     </th>
                     <th>
@@ -141,18 +141,18 @@
                     </th>
                     <th translate>Groups</th>
                 </tr>
-                <ng-container *ngFor="let row of tableData | keyvalue : tableDataAscOrderCompare; last as lastLine">
+                <ng-container *ngFor="let row of tableData | keyvalue: tableDataAscOrderCompare; last as lastLine">
                     <!-- Handle committees without meetings-->
                     <ng-container *ngIf="!getNumberOfKeys(row.value.meetings)">
                         <tr [ngClass]="getCellClass(true, true, lastLine)">
                             <td>
                                 <a [routerLink]="'/committees/' + row.key + ''">{{ row.value.committee_name }}</a>
                             </td>
-                            <td class="admin-column" *ngIf="comitteeAdministrationAmount">
+                            <td *ngIf="comitteeAdministrationAmount" class="admin-column">
                                 <mat-icon
+                                    *ngIf="row.value.is_manager"
                                     matTooltip="{{ 'Committee admin' | translate }}"
                                     [matTooltipPosition]="'left'"
-                                    *ngIf="row.value.is_manager"
                                 >
                                     engineering
                                 </mat-icon>
@@ -163,7 +163,7 @@
                     <!-- Handle committees with meetings-->
                     <tr
                         *ngFor="
-                            let meeting_row of row.value.meetings | keyvalue : tableDataAscOrderCompare;
+                            let meeting_row of row.value.meetings | keyvalue: tableDataAscOrderCompare;
                             first as isFirst;
                             last as isLast
                         "
@@ -173,14 +173,14 @@
                             <a [routerLink]="'/committees/' + row.key + ''">{{ row.value.committee_name }}</a>
                         </td>
                         <td
-                            class="admin-column"
                             *ngIf="isFirst && comitteeAdministrationAmount"
+                            class="admin-column"
                             [attr.rowspan]="getNumberOfKeys(row.value.meetings)"
                         >
                             <mat-icon
+                                *ngIf="row.value.is_manager"
                                 matTooltip="{{ 'Committee admin' | translate }}"
                                 [matTooltipPosition]="'left'"
-                                *ngIf="row.value.is_manager"
                             >
                                 engineering
                             </mat-icon>
@@ -223,12 +223,12 @@
             <span>{{ 'Add to meetings' | translate }}</span>
         </button>
         <!-- invitation email -->
-        <button mat-menu-item *ngIf="user?.email" (click)="sendInvitationEmail()">
+        <button *ngIf="user?.email" mat-menu-item (click)="sendInvitationEmail()">
             <mat-icon>mail</mat-icon>
             <span>{{ 'Send invitation email' | translate }}</span>
         </button>
         <mat-divider></mat-divider>
-        <button (click)="deleteUser()" mat-menu-item class="red-warning-text">
+        <button class="red-warning-text" mat-menu-item (click)="deleteUser()">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>

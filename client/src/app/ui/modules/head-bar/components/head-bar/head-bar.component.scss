@@ -13,17 +13,14 @@
 
     .toolbar-left {
         display: flex;
+        align-items: center;
         min-width: 0;
-        button {
-            margin: 12px 0;
-        }
         .toolbar-left-text {
             margin-left: 10px;
             width: 100%;
             overflow: hidden;
 
             .title-slot {
-                margin: 16px 0;
                 display: block;
                 h2 {
                     overflow: hidden;

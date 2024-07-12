@@ -1,39 +1,29 @@
 <ng-container *osPerms="permission.projectorCanManage">
-    <button
-        *ngIf="!menuItem && !blendIn"
-        mat-mini-fab
-        (click)="onClick($event)"
-        [disabled]="disabled"
-        [ngClass]="{ 'projector-inactive': !isProjected }"
-    >
-        <ng-container *ngTemplateOutlet="content"></ng-container>
-    </button>
-    <button
-        *ngIf="!menuItem && blendIn"
-        mat-icon-button
-        (click)="onClick($event)"
-        [disabled]="disabled"
-        class="blend-in"
-    >
-        <ng-container *ngTemplateOutlet="content"></ng-container>
-    </button>
-    <button
-        *ngIf="menuItem"
-        mat-menu-item
-        (click)="onClick()"
-        [disabled]="disabled"
-        [ngClass]="{ 'projector-inactive': !isProjected }"
-    >
-        <ng-container *ngTemplateOutlet="content"></ng-container>
-    </button>
+    @if (!menuItem && !blendIn) {
+        <button mat-mini-fab [color]="isProjected ? 'accent' : 'basic'" [disabled]="disabled" (click)="onClick($event)">
+            <mat-icon>videocam</mat-icon>
+        </button>
+    }
+    @if (!menuItem && blendIn) {
+        <button
+            class="blend-in"
+            mat-icon-button
+            [color]="isProjected ? 'accent' : 'basic'"
+            [disabled]="disabled"
+            (click)="onClick($event)"
+        >
+            <mat-icon>videocam</mat-icon>
+        </button>
+    }
+    @if (menuItem) {
+        <button mat-menu-item [disabled]="disabled" (click)="onClick()">
+            <mat-icon>videocam</mat-icon>
+            <span #ref><ng-content></ng-content></span>
+            @if (!ref.innerHTML.trim()) {
+                <span>
+                    {{ 'Project' | translate }}
+                </span>
+            }
+        </button>
+    }
 </ng-container>
-
-<ng-template #content>
-    <mat-icon>videocam</mat-icon>
-    <ng-container *ngIf="menuItem">
-        <span #ref><ng-content></ng-content></span>
-        <span *ngIf="!ref.innerHTML.trim()">
-            {{ 'Project' | translate }}
-        </span>
-    </ng-container>
-</ng-template>

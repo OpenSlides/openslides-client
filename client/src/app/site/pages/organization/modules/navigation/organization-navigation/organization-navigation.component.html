@@ -1,18 +1,20 @@
-<ng-container *ngFor="let entry of menuEntries">
+@for (entry of menuEntries; track entry) {
     <span>
         <a
             *osOmlPerms="entry.permission!"
+            class="management-router-link foreground-icon"
             mat-menu-item
-            class="management-router-link"
-            [ngStyle]="getCustomStyleForEntry(entry)"
-            (click)="closeSidenavOnMobile()"
-            [routerLink]="entry.route"
             routerLinkActive="foreground-active"
+            [ngStyle]="getCustomStyleForEntry(entry)"
+            [routerLink]="entry.route"
             [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
+            (click)="closeSidenavOnMobile()"
         >
             <mat-icon>{{ entry.icon }}</mat-icon>
             <span>{{ entry.displayName | translate }}</span>
         </a>
     </span>
-    <mat-divider *ngIf="entry.hasDividerBelow"></mat-divider>
-</ng-container>
+    @if (entry.hasDividerBelow) {
+        <mat-divider></mat-divider>
+    }
+}

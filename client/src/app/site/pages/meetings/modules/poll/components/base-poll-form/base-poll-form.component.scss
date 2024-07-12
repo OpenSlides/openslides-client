@@ -9,7 +9,7 @@
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     }
 
-    .mat-checkbox {
+    .mat-mdc-checkbox {
         margin-right: 2em;
     }
 
@@ -21,10 +21,6 @@
         grid-column: 2 / 4;
         grid-row: 2 / 3;
     }
-}
-
-.mat-divider {
-    margin-bottom: 16px;
 }
 
 .percent-base-panel {

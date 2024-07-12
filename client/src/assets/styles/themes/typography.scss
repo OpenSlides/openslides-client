@@ -1,0 +1,41 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@use '@material/typography' as mdc-typography;
+
+$font-family: OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif;
+
+@function typography-config-level($mdc-level, $letter-spacing: normal, $font-size: null, $line-height: null, $font-weight: null) {
+  $mdc-level-config: map.get(mdc-typography.$styles, $mdc-level);
+
+  @return mat.define-typography-level(
+    $font-size: null-fallback($font-size, map.get($mdc-level-config, font-size)),
+    $line-height: null-fallback($line-height, map.get($mdc-level-config, line-height)),
+    $font-weight: null-fallback($font-weight, map.get($mdc-level-config, font-weight)),
+    $letter-spacing: null-fallback($letter-spacing, map.get($mdc-level-config, letter-spacing))
+  );
+}
+
+@function null-fallback($value, $default-value) {
+  @if $value == null {
+    @return $default-value;
+  } @else {
+    @return $value;
+  }
+}
+
+$default-typography: mat.define-typography-config(
+    $font-family: $font-family,
+    $headline-1: typography-config-level(headline1),
+    $headline-2: typography-config-level(headline2),
+    $headline-3: typography-config-level(headline3),
+    $headline-4: typography-config-level(headline4),
+    $headline-5: typography-config-level(headline5),
+    $headline-6: typography-config-level(headline6),
+    $subtitle-1: typography-config-level(subtitle1),
+    $subtitle-2: typography-config-level(subtitle2, $font-size: 15px, $font-weight: 400),
+    $body-1: typography-config-level(body1, $font-size: 15, $font-weight: 400),
+    $body-2: typography-config-level(body2, $font-weight: 400),
+    $caption: typography-config-level(caption),
+    $button: typography-config-level(button),
+    $overline: typography-config-level(overline)
+);

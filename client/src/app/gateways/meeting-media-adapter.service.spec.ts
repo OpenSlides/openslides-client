@@ -8,7 +8,10 @@ import { MeetingMediaAdapterService } from './meeting-media-adapter.service';
 import { MeetingAction } from './repositories/meetings';
 
 class MockAction<T> {
-    public constructor(public requests: ActionRequest[], public handle_separately: boolean) {}
+    public constructor(
+        public requests: ActionRequest[],
+        public handle_separately: boolean
+    ) {}
 
     public async resolve(): Promise<T[] | void> {
         return;

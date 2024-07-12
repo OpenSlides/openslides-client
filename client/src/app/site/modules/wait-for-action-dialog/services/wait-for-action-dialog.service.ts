@@ -153,11 +153,11 @@ export class WaitForActionDialogService {
         this.newCurrentReason();
     }
 
-    private async openDialog() {
+    private async openDialog(): Promise<void> {
         this.bannerService.addBanner({ component: WaitForActionBannerComponent });
     }
 
-    private closeDialog() {
+    private closeDialog(): void {
         this.bannerService.removeBanner({ component: WaitForActionBannerComponent });
     }
 

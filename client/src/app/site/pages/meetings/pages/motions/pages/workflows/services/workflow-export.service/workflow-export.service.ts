@@ -12,7 +12,10 @@ import { MotionWorkflowServiceModule } from '../motion-workflow-service.module';
     providedIn: MotionWorkflowServiceModule
 })
 export class WorkflowExportService {
-    public constructor(private translate: TranslateService, private stateRepo: MotionStateControllerService) {}
+    public constructor(
+        private translate: TranslateService,
+        private stateRepo: MotionStateControllerService
+    ) {}
 
     public exportWorkflows(...workflows: ViewMotionWorkflow[]): void {
         const workflowKeysToCopy: (keyof MotionWorkflow)[] = [`name`];

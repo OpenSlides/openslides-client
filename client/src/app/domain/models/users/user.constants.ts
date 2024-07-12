@@ -7,12 +7,12 @@ export const userHeadersAndVerboseNames: { [key in keyof User]?: any } = {
     first_name: _(`Given name`),
     last_name: _(`Surname`),
     email: _(`Email`),
+    member_number: _(`Member number`),
     pronoun: _(`Pronoun`),
     gender: _(`Gender`),
     username: _(`Username`),
     default_password: _(`Initial password`),
     is_active: _(`Active`),
     is_physical_person: _(`Natural person`),
-    saml_id: _(`SSO identification`),
-    member_number: _(`Membership number`)
+    saml_id: _(`SSO identification`)
 };

@@ -19,5 +19,5 @@ export class MotionSubmitterRepositoryService extends BaseMotionMeetingUserRepos
         super(repositoryServiceCollector, MotionSubmitter, MotionSubmitterAction);
     }
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Submitters` : `Submitter`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Submitters` : `Submitter`);
 }

@@ -1,140 +1,171 @@
-<div *ngIf="data && projector">
-    <div
-        id="sidebox"
-        *ngIf="data.data.show_sidebox"
-        [ngStyle]="{ 'margin-top': projector.show_header_footer ? '144px' : '94px' }"
-    >
-        <!-- Submitters -->
-        <ng-container *ngIf="getSubmittersObservable() | async as submitters">
-            <h3 *ngIf="submitters.length > 0">{{ 'Submitters' | translate }}</h3>
-            <os-comma-separated-listing [list]="submitters"></os-comma-separated-listing>
-        </ng-container>
-
-        <!-- Recommendation -->
-        <div *ngIf="recommender && recommendationLabel">
-            <h3>{{ recommender }}</h3>
-            {{ recommendationLabel }}
-        </div>
-    </div>
-
-    <div [ngStyle]="{ width: data.data.show_sidebox ? 'calc(100% - 250px)' : '100%' }">
-        <!-- Title -->
-        <div class="spacer" [ngStyle]="{ height: projector.show_header_footer ? '50px' : '0' }"></div>
-        <div [ngClass]="{ slidetitle: data.data.show_sidebox }">
-            <h1 class="projector_h1">
-                <span *ngIf="data.data.number">{{ data.data.number }}:</span>
-                {{ getTitleWithChanges() }}
-            </h1>
-            <!-- recommendation referencing motions -->
-            <h2 *ngIf="data.data.show_sidebox && data.data.recommendation_referencing_motions" class="projector_h2">
-                <span>{{ 'Referring motions' | translate }}</span>
-                :
-                <os-comma-separated-listing [list]="referencingMotions">
-                    <ng-template let-information>{{ getNumberOrTitle(information) }}</ng-template>
-                </os-comma-separated-listing>
-            </h2>
-
-            <!-- Metainfo as table -->
-            <table *ngIf="showMetaTable" class="metatable spacer-top-20" cellpadding="0" cellspacing="0">
+@if (data && projector) {
+    <div>
+        @if (data.data.show_sidebox) {
+            <div id="sidebox" [ngStyle]="{ 'margin-top': projector.show_header_footer ? '144px' : '94px' }">
                 <!-- Submitters -->
-                <ng-container *ngIf="getSubmittersObservable() | async as submitters">
-                    <tr *ngIf="submitters.length > 0">
-                        <td class="min">
-                            <b>{{ 'Submitters' | translate }}:</b>
-                        </td>
-                        <td>
-                            <os-comma-separated-listing [list]="submitters"></os-comma-separated-listing>
-                        </td>
-                    </tr>
-                </ng-container>
+                @if (getSubmittersObservable() | async; as submitters) {
+                    @if (submitters.length > 0) {
+                        <h3>{{ 'Submitters' | translate }}</h3>
+                    }
+                    <os-comma-separated-listing [list]="submitters"></os-comma-separated-listing>
+                }
                 <!-- Recommendation -->
-                <tr *ngIf="recommender && recommendationLabel" class="topline">
-                    <td class="min">
-                        <b>{{ recommender }}:</b>
-                    </td>
-                    <td>
+                @if (recommender && recommendationLabel) {
+                    <div>
+                        <h3>{{ recommender }}</h3>
                         {{ recommendationLabel }}
-                    </td>
-                </tr>
+                    </div>
+                }
+            </div>
+        }
+        <div [ngStyle]="{ width: data.data.show_sidebox ? 'calc(100% - 250px)' : '100%' }">
+            <!-- Title -->
+            <div class="spacer" [ngStyle]="{ height: projector.show_header_footer ? '50px' : '0' }"></div>
+            <div [ngClass]="{ slidetitle: data.data.show_sidebox }">
+                <h1 class="projector_h1">
+                    @if (data.data.number) {
+                        <span>{{ data.data.number }}:</span>
+                    }
+                    {{ getTitleWithChanges() }}
+                </h1>
                 <!-- recommendation referencing motions -->
-                <tr *ngIf="data.data.recommendation_referencing_motions" class="topline">
-                    <td class="min">
-                        <b>{{ 'Referring motions' | translate }}:</b>
-                    </td>
-                    <td>
+                @if (data.data.show_sidebox && data.data.recommendation_referencing_motions) {
+                    <h2 class="projector_h2">
+                        <span>{{ 'Referring motions' | translate }}</span>
+                        :
                         <os-comma-separated-listing [list]="referencingMotions">
                             <ng-template let-information>{{ getNumberOrTitle(information) }}</ng-template>
                         </os-comma-separated-listing>
-                    </td>
-                </tr>
-            </table>
+                    </h2>
+                }
+                <!-- Metainfo as table -->
+                @if (showMetaTable) {
+                    <table cellpadding="0" cellspacing="0" class="metatable spacer-top-20">
+                        <!-- Submitters -->
+                        @if (getSubmittersObservable() | async; as submitters) {
+                            @if (submitters.length > 0) {
+                                <tr>
+                                    <td class="min">
+                                        <b>{{ 'Submitters' | translate }}:</b>
+                                    </td>
+                                    <td>
+                                        <os-comma-separated-listing [list]="submitters"></os-comma-separated-listing>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        <!-- Recommendation -->
+                        @if (recommender && recommendationLabel) {
+                            <tr class="topline">
+                                <td class="min">
+                                    <b>{{ recommender }}:</b>
+                                </td>
+                                <td>
+                                    {{ recommendationLabel }}
+                                </td>
+                            </tr>
+                        }
+                        <!-- recommendation referencing motions -->
+                        @if (data.data.recommendation_referencing_motions) {
+                            <tr class="topline">
+                                <td class="min">
+                                    <b>{{ 'Referring motions' | translate }}:</b>
+                                </td>
+                                <td>
+                                    <os-comma-separated-listing [list]="referencingMotions">
+                                        <ng-template let-information>{{ getNumberOrTitle(information) }}</ng-template>
+                                    </os-comma-separated-listing>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
         </div>
-    </div>
-
-    <div id="text-wrapper" *ngIf="showText">
-        <div id="text" [ngStyle]="textDivStyles">
-            <!-- Text -->
-            <span *ngIf="isParagraphBasedAmendment() || formattedMotionTextPlain" class="text-prefix-label">
-                {{ preamble }}
-            </span>
-
-            <!-- Regular motions or traditional amendments -->
-            <ng-container *ngIf="!isParagraphBasedAmendment()">
-                <div
-                    class="motion-text underlined-links"
-                    [class.line-numbers-none]="isLineNumberingNone()"
-                    [class.line-numbers-inline]="isLineNumberingInline()"
-                    [class.line-numbers-outside]="isLineNumberingOutside()"
-                >
-                    <div *ngIf="getTitleChangingObject() && crMode === 'diff'">
-                        <div class="bold">{{ 'Changed title' | translate }}:</div>
-                        <div [innerHTML]="getFormattedTitleDiff() | trust : 'html'"></div>
-                    </div>
-                    <div
-                        class="detail-view-text"
-                        *ngIf="formattedMotionTextPlain"
-                        [innerHTML]="formattedMotionTextPlain | trust : 'html'"
-                    ></div>
-                </div>
-            </ng-container>
-
-            <!-- Amendment text -->
-            <section class="text-holder" *ngIf="isParagraphBasedAmendment()">
-                <div class="alert alert-info" *ngIf="getAmendedParagraphs().length === 0 && !data.data.text">
-                    <span>{{ 'No changes at the text.' | translate }}</span>
-                </div>
-                <div
-                    class="motion-text underlined-links"
-                    [class.line-numbers-none]="isLineNumberingNone()"
-                    [class.line-numbers-inline]="isLineNumberingInline()"
-                    [class.line-numbers-outside]="isLineNumberingOutside()"
-                    *ngIf="data.data.text"
-                    [innerHtml]="getTextBasedAmendmentLines() | trust : 'html'"
-                ></div>
-                <div
-                    *ngFor="let paragraph of getAmendedParagraphs()"
-                    class="motion-text motion-text-diff amendment-view underlined-links"
-                    [class.line-numbers-none]="isLineNumberingNone()"
-                    [class.line-numbers-inline]="isLineNumberingInline()"
-                    [class.line-numbers-outside]="isLineNumberingOutside()"
-                >
-                    <h3 *ngIf="paragraph.diffLineTo === paragraph.diffLineFrom" class="amendment-line-header">
-                        <span>{{ 'Line' | translate }}</span>
-                        {{ paragraph.diffLineFrom }}:
-                    </h3>
-                    <h3 *ngIf="paragraph.diffLineTo !== paragraph.diffLineFrom" class="amendment-line-header">
-                        <span>{{ 'Line' | translate }}</span>
-                        {{ paragraph.diffLineFrom }} - {{ paragraph.diffLineTo }}:
-                    </h3>
-                    <div class="detail-view-text" [innerHtml]="paragraph.text | trust : 'html'"></div>
+        @if (showText) {
+            <div id="text-wrapper">
+                <div id="text" [ngStyle]="textDivStyles">
+                    <!-- Text -->
+                    @if (isParagraphBasedAmendment() || formattedMotionTextPlain) {
+                        <span class="text-prefix-label">
+                            {{ preamble }}
+                        </span>
+                    }
+                    <!-- Regular motions or traditional amendments -->
+                    @if (!isParagraphBasedAmendment()) {
+                        <div
+                            class="motion-text underlined-links"
+                            [class.line-numbers-inline]="isLineNumberingInline()"
+                            [class.line-numbers-none]="isLineNumberingNone()"
+                            [class.line-numbers-outside]="isLineNumberingOutside()"
+                        >
+                            @if (getTitleChangingObject() && crMode === 'diff') {
+                                <div>
+                                    <div class="bold">{{ 'Changed title' | translate }}:</div>
+                                    <div [innerHTML]="getFormattedTitleDiff() | trust: 'html'"></div>
+                                </div>
+                            }
+                            @if (formattedMotionTextPlain) {
+                                <div [innerHTML]="formattedMotionTextPlain | trust: 'html'"></div>
+                            }
+                        </div>
+                    }
+                    <!-- Amendment text -->
+                    @if (isParagraphBasedAmendment()) {
+                        <section class="text-holder">
+                            @if (getAmendedParagraphs().length === 0 && !data.data.text) {
+                                <div class="alert alert-info">
+                                    <span>{{ 'No changes at the text.' | translate }}</span>
+                                </div>
+                            }
+                            @if (data.data.text) {
+                                <div
+                                    class="motion-text underlined-links"
+                                    [class.line-numbers-inline]="isLineNumberingInline()"
+                                    [class.line-numbers-none]="isLineNumberingNone()"
+                                    [class.line-numbers-outside]="isLineNumberingOutside()"
+                                    [innerHtml]="getTextBasedAmendmentLines() | trust: 'html'"
+                                ></div>
+                            }
+                            @for (paragraph of getAmendedParagraphs(); track paragraph) {
+                                <div
+                                    class="motion-text motion-text-diff amendment-view underlined-links"
+                                    [class.line-numbers-inline]="isLineNumberingInline()"
+                                    [class.line-numbers-none]="isLineNumberingNone()"
+                                    [class.line-numbers-outside]="isLineNumberingOutside()"
+                                >
+                                    @if (paragraph.diffLineTo === paragraph.diffLineFrom) {
+                                        <h3 class="amendment-line-header">
+                                            <span>{{ 'Line' | translate }}</span>
+                                            {{ paragraph.diffLineFrom }}:
+                                        </h3>
+                                    }
+                                    @if (paragraph.diffLineTo !== paragraph.diffLineFrom) {
+                                        <h3 class="amendment-line-header">
+                                            <span>{{ 'Line' | translate }}</span>
+                                            {{ paragraph.diffLineFrom }} - {{ paragraph.diffLineTo }}:
+                                        </h3>
+                                    }
+                                    <div [innerHtml]="paragraph.text | trust: 'html'"></div>
+                                </div>
+                            }
+                        </section>
+                    }
+                    <!-- Reason -->
+                    @if (data.data.reason) {
+                        <div>
+                            <h3>{{ 'Reason' | translate }}</h3>
+                            <div [innerHTML]="data.data.reason | trust: 'html'"></div>
+                        </div>
+                    }
                 </div>
             </section>
 
             <!-- Reason -->
-            <div class="reason-text" *ngIf="data.data.reason">
+            <div *ngIf="data.data.reason">
                 <h3>{{ 'Reason' | translate }}</h3>
-                <div class="detail-view-text" [innerHTML]="data.data.reason | trust : 'html'"></div>
+                <div [innerHTML]="data.data.reason | trust : 'html'"></div>
             </div>
-        </div>
+        }
     </div>
-</div>
+}

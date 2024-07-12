@@ -10,17 +10,17 @@
     <mat-dialog-actions>
         <!-- Submit countdown button -->
         <button
-            type="submit"
-            mat-button
             color="accent"
-            [mat-dialog-close]="messageForm.value"
+            mat-button
+            type="submit"
             [disabled]="!messageForm.valid"
+            [mat-dialog-close]="messageForm.value"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
 
         <!-- Cancel countdown button -->
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>
