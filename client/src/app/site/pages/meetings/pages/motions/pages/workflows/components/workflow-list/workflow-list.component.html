@@ -1,9 +1,9 @@
 <os-head-bar
     [nav]="false"
     [hasMainButton]="true"
-    (mainEvent)="onNewButton(newWorkflowDialog)"
     [mainActionTooltip]="'New category' | translate"
     [multiSelectMode]="isMultiSelect"
+    (mainEvent)="onNewButton(newWorkflowDialog)"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -49,8 +49,8 @@
         <button
             type="button"
             mat-icon-button
-            (click)="onDeleteWorkflow(workflow)"
             matTooltip="{{ 'Delete' | translate }}"
+            (click)="onDeleteWorkflow(workflow)"
         >
             <mat-icon color="warn">delete</mat-icon>
         </button>
@@ -65,7 +65,7 @@
     <mat-dialog-content class="os-form-card-mobile">
         <p>{{ 'Please enter a name for the new workflow:' | translate }}</p>
         <mat-form-field>
-            <input matInput osAutofocus [(ngModel)]="newWorkflowTitle" required />
+            <input matInput osAutofocus required [(ngModel)]="newWorkflowTitle" />
         </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>

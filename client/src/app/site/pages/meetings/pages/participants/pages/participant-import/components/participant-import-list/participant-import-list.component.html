@@ -14,6 +14,7 @@
 </os-head-bar>
 
 <os-backend-import-list
+    modelName="Participant"
     [defaultColumns]="columns"
     [importer]="importer"
     [possibleFields]="possibleFields"
@@ -21,5 +22,4 @@
         'Existing accounts can be reused or updated by using: <ul><li>Membership number <i>(recommended)</i><li>Username<li>Email address AND first name AND last name'
             | translate
     }}"
-    modelName="Participant"
 ></os-backend-import-list>

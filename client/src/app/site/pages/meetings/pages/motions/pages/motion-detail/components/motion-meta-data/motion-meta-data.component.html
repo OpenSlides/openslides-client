@@ -3,12 +3,12 @@
     <div>
         <div class="remove-top-margin">
             <os-motion-manage-motion-meeting-users
+                field="submitters"
+                additionalInputField="additional_submitter"
                 [motion]="motion"
                 [repo]="motionSubmitterRepo"
-                field="submitters"
                 title="{{ 'Submitters' | translate }}"
                 [useAdditionalInput]="true"
-                additionalInputField="additional_submitter"
                 additionalInputLabel="{{ 'Extension' | translate }}"
                 [additionalInputValue]="motion?.additional_submitter"
                 secondSelectorLabel="{{ 'Committees' | translate }}"
@@ -33,14 +33,14 @@
         }
         <!-- unsupport button -->
         @if (perms.isAllowed('unsupport', motion)) {
-            <button type="button" (click)="unsupport()" mat-stroked-button color="accent">
+            <button type="button" mat-stroked-button color="accent" (click)="unsupport()">
                 <mat-icon>thumb_down</mat-icon>
                 {{ 'Unsupport' | translate }}
             </button>
         }
         <!-- show supporters (TODO: open in dialog) -->
         @if (motion.hasSupporters()) {
-            <button type="button" (click)="openSupportersDialog()" mat-button>
+            <button type="button" mat-button (click)="openSupportersDialog()">
                 {{ motion.supporters.length }} {{ 'supporters' | translate }}
             </button>
         }
@@ -56,18 +56,18 @@
 
 <div *osMeetingSetting="'motions_enable_editor'; and: perms.isAllowed('change_metadata')">
     <os-motion-manage-motion-meeting-users
+        field="editors"
         [motion]="motion"
         [repo]="motionEditorRepo"
-        field="editors"
         title="{{ 'Motion editor' | translate }}"
     ></os-motion-manage-motion-meeting-users>
 </div>
 
 <div *osMeetingSetting="'motions_enable_working_group_speaker'; and: perms.isAllowed('change_metadata')">
     <os-motion-manage-motion-meeting-users
+        field="working_group_speakers"
         [motion]="motion"
         [repo]="motionWorkingGroupSpeakerRepo"
-        field="working_group_speakers"
         title="{{ 'Spokesperson' | translate }}"
     ></os-motion-manage-motion-meeting-users>
 </div>
@@ -130,7 +130,7 @@
         </os-motion-extension-field>
         <!-- Forward to meeting -->
         @if (showForwardButton) {
-            <button mat-stroked-button (click)="forwardMotionToMeetings()" class="spacer-top-10">
+            <button mat-stroked-button class="spacer-top-10" (click)="forwardMotionToMeetings()">
                 <mat-icon>forward</mat-icon>
                 <span>{{ 'Forward' | translate }}</span>
             </button>
@@ -166,8 +166,8 @@
             extensionLabel="{{ 'Extension' | translate }}"
             [searchLists]="searchLists"
             [listValueTransformFns]="[motionTransformFn]"
-            (succeeded)="setRecommendationExtension($event)"
             [internal]="motion?.state?.is_internal"
+            (succeeded)="setRecommendationExtension($event)"
         >
             <span class="trigger-menu">
                 @for (recommendation of getPossibleRecommendations(); track recommendation) {
@@ -202,7 +202,7 @@
             </div>
         }
         @if (canFollowRecommendation()) {
-            <button mat-stroked-button (click)="onFollowRecButton()" class="spacer-top-10">
+            <button mat-stroked-button class="spacer-top-10" (click)="onFollowRecButton()">
                 <span>{{ 'Follow recommendation' | translate }}</span>
             </button>
         }
@@ -332,9 +332,9 @@
 
 <!-- Workflow timestamp -->
 <os-motion-manage-timestamp
+    field="workflow_timestamp"
     title="{{ 'Submission date' | translate }}"
     [motion]="motion"
-    field="workflow_timestamp"
 ></os-motion-manage-timestamp>
 
 <!-- Created timestamp -->
@@ -389,7 +389,7 @@
 <!-- motion polls -->
 <os-motion-manage-polls [motion]="motion" [hideAdd]="true"></os-motion-manage-polls>
 
-<ng-template let-motion="motion" #meetingLink>
+<ng-template #meetingLink let-motion="motion">
     »
     @if (canAccess(motion)) {
         <span>

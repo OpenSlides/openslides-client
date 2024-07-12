@@ -10,13 +10,13 @@
 </os-head-bar>
 
 <os-list
-    [listObservable]="repo.getViewModelListObservable()"
-    [(selectedRows)]="selectedRows"
-    [multiSelect]="isMultiSelect"
     listStorageKey="themes"
+    [listObservable]="repo.getViewModelListObservable()"
+    [multiSelect]="isMultiSelect"
     [filterProps]="['name']"
     [vScrollFixed]="60"
     [alwaysShowMenu]="true"
+    [(selectedRows)]="selectedRows"
 >
     <div
         *osScrollingTableCell="'name'; row as theme"
@@ -59,7 +59,7 @@
 </os-list>
 
 <mat-menu #themeMenu="matMenu">
-    <ng-template matMenuContent let-theme="theme">
+    <ng-template let-theme="theme" matMenuContent>
         <button mat-menu-item (click)="openThemeBuilderDialog(theme)">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>

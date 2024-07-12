@@ -17,13 +17,13 @@
                 }
             </h2>
         </div>
-        <ng-container class="menu-slot" *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]">
+        <ng-container *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]" class="menu-slot">
             <button
                 type="button"
                 mat-icon-button
                 matTooltip="{{ 'Re-add last speaker' | translate }}"
-                (click)="readdLastSpeaker()"
                 [disabled]="!canReaddLastSpeaker"
+                (click)="readdLastSpeaker()"
             >
                 <mat-icon>undo</mat-icon>
             </button>
@@ -104,9 +104,9 @@
 
     <button
         mat-menu-item
-        (click)="clearPreviousSpeakerList()"
-        [disabled]="isPreviousListOfSpeakersEmpty"
         class="red-warning-text"
+        [disabled]="isPreviousListOfSpeakersEmpty"
+        (click)="clearPreviousSpeakerList()"
     >
         <mat-icon>delete</mat-icon>
         <span>{{ 'Remove all previous speakers' | translate }}</span>
@@ -114,15 +114,15 @@
 
     <button
         mat-menu-item
-        (click)="clearNextSpeakerList()"
-        [disabled]="isNextListOfSpeakersEmpty"
         class="red-warning-text"
+        [disabled]="isNextListOfSpeakersEmpty"
+        (click)="clearNextSpeakerList()"
     >
         <mat-icon>delete</mat-icon>
         <span>{{ 'Remove all next speakers' | translate }}</span>
     </button>
 
-    <button mat-menu-item (click)="clearSpeakerList()" [disabled]="isListOfSpeakersEmpty" class="red-warning-text">
+    <button mat-menu-item class="red-warning-text" [disabled]="isListOfSpeakersEmpty" (click)="clearSpeakerList()">
         <mat-icon>delete</mat-icon>
         <span>{{ 'Remove all speakers' | translate }}</span>
     </button>

@@ -29,7 +29,7 @@
                         <p>
                             {{ 'Currently no livestream available.' | translate }}
                         </p>
-                        <button mat-raised-button (click)="onRefreshVideo()" color="primary">
+                        <button mat-raised-button color="primary" (click)="onRefreshVideo()">
                             <mat-icon>refresh</mat-icon>
                             &nbsp;
                             <span>{{ 'Refresh' | translate }}</span>
@@ -39,9 +39,9 @@
                         <div class="offlineposter">
                             <button
                                 mat-mini-fab
-                                (click)="onRefreshVideo()"
                                 color="accent"
                                 matTooltip="{{ 'Refresh' | translate }}"
+                                (click)="onRefreshVideo()"
                             >
                                 <mat-icon>refresh</mat-icon>
                             </button>

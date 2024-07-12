@@ -1,4 +1,4 @@
-<os-head-bar [nav]="false" prevUrl="../..">
+<os-head-bar prevUrl="../.." [nav]="false">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Import topics' | translate }}</h2>
@@ -30,13 +30,13 @@
 </os-head-bar>
 
 <os-backend-import-list
+    modelName="Topic"
     [importer]="importer"
     [possibleFields]="possibleFields"
     [defaultColumns]="columns"
-    modelName="Topic"
     (selectedTabChanged)="selectedTabIndex = $event"
 >
-    <ng-template [label]="'Text import' | translate" osImportListFirstTab>
+    <ng-template osImportListFirstTab [label]="'Text import' | translate">
         <div [formGroup]="textAreaForm">
             <div>
                 <div>{{ 'Paste/write your topics in this textbox.' | translate }}</div>

@@ -5,7 +5,7 @@
                 [ngClass]="isFullscreen ? 'fullscreen' : 'nofullscreen'"
                 [ngStyle]="{ background: isFullscreen ? '#000' : '#ffffff' }"
             >
-                <img [src]="url | trust: 'url'" alt="" />
+                <img alt="" [src]="url | trust: 'url'" />
             </div>
         }
         @if (isPdf && url) {

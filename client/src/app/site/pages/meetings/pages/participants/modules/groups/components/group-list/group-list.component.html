@@ -1,11 +1,11 @@
 <os-head-bar
     [hasMainButton]="true"
     [mainActionTooltip]="'New group' | translate"
-    (mainEvent)="setEditMode(!editGroup)"
     [nav]="false"
     [editMode]="hasChanges"
     [isSaveButtonEnabled]="hasChanges"
     [saveAction]="getSaveAction()"
+    (mainEvent)="setEditMode(!editGroup)"
     (cancelEditEvent)="discardChanges()"
 >
     <!-- Title -->
@@ -30,12 +30,12 @@
                                 <mat-header-cell *matHeaderCellDef>{{ 'Permissions' | translate }}</mat-header-cell>
                                 <mat-cell
                                     *matCellDef="let perm"
-                                    class="raised-cell"
                                     #tooltip="matTooltip"
-                                    [ngClass]="{ 'has-help-text': perm.help_text }"
-                                    [matTooltip]="perm.help_text | translate"
+                                    class="raised-cell"
                                     matTooltipClass="pre-wrap"
                                     matTooltipPosition="after"
+                                    [ngClass]="{ 'has-help-text': perm.help_text }"
+                                    [matTooltip]="perm.help_text | translate"
                                     (mouseenter)="$event.stopImmediatePropagation()"
                                     (mouseleave)="tooltip.hide()"
                                     (click)="tooltip.toggle()"
@@ -47,8 +47,8 @@
                                 <div>
                                     <ng-container [matColumnDef]="group.name">
                                         <mat-header-cell
-                                            class="group-head-table-cell"
                                             *matHeaderCellDef
+                                            class="group-head-table-cell"
                                             (click)="selectGroup(group)"
                                         >
                                             <div class="inner-table">
@@ -115,8 +115,8 @@
         <button
             type="submit"
             mat-button
-            [disabled]="!groupForm?.valid"
             color="accent"
+            [disabled]="!groupForm?.valid"
             (click)="saveGroup(groupForm?.value)"
         >
             <span>{{ 'Save' | translate }}</span>
@@ -126,10 +126,10 @@
         </button>
         @if (selectedGroup) {
             <button
-                [disabled]="isProtected(selectedGroup)"
                 type="button"
                 mat-button
                 color="warn"
+                [disabled]="isProtected(selectedGroup)"
                 (click)="deleteSelectedGroup()"
             >
                 <span>{{ 'Delete' | translate }}</span>

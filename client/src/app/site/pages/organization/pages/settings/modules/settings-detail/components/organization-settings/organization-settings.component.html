@@ -67,7 +67,7 @@
                 </div>
             </mat-card-content>
         </mat-card>
-        <mat-card class="os-card margin-bottom-60" *osOmlPerms="OML.superadmin">
+        <mat-card *osOmlPerms="OML.superadmin" class="os-card margin-bottom-60">
             <mat-card-content>
                 <div class="superadmin-place">
                     <h2>{{ 'Superadmin settings' | translate }}</h2>
@@ -107,8 +107,8 @@
                                 type="number"
                                 formControlName="limit_of_meetings"
                                 min="0"
-                                [osOnlyNumber]="true"
                                 required
+                                [osOnlyNumber]="true"
                             />
                             <mat-hint>{{ '"0" means an unlimited number of active meetings' | translate }}</mat-hint>
                         </mat-form-field>
@@ -121,8 +121,8 @@
                                 type="number"
                                 formControlName="limit_of_users"
                                 min="0"
-                                [osOnlyNumber]="true"
                                 required
+                                [osOnlyNumber]="true"
                             />
                             <mat-hint>{{ '"0" means an unlimited number of active accounts' | translate }}</mat-hint>
                         </mat-form-field>
@@ -130,7 +130,7 @@
                 </div>
             </mat-card-content>
         </mat-card>
-        <mat-card class="os-card margin-bottom-60" *osOmlPerms="OML.superadmin">
+        <mat-card *osOmlPerms="OML.superadmin" class="os-card margin-bottom-60">
             <mat-card-content>
                 <div class="saml-settings-form">
                     <h2>{{ 'Single Sign-On settings' | translate }}</h2>
@@ -164,21 +164,21 @@
                     <section>
                         <mat-form-field>
                             <mat-label>{{ 'Metadata of Identity Provider (IdP)' | translate }}</mat-label>
-                            <textarea matInput formControlName="saml_metadata_idp" [rows]="6" wrap="hard"></textarea>
+                            <textarea matInput formControlName="saml_metadata_idp" wrap="hard" [rows]="6"></textarea>
                         </mat-form-field>
                     </section>
                     <!-- SSO login button text -->
                     <section>
                         <mat-form-field>
                             <mat-label>{{ 'Metadata of Service Provider (SP)' | translate }}</mat-label>
-                            <textarea matInput formControlName="saml_metadata_sp" [rows]="6" wrap="hard"></textarea>
+                            <textarea matInput formControlName="saml_metadata_sp" wrap="hard" [rows]="6"></textarea>
                         </mat-form-field>
                     </section>
                     <!-- SSO login button text -->
                     <section>
                         <mat-form-field>
                             <mat-label>{{ 'Private key of Service Provider (SP)' | translate }}</mat-label>
-                            <textarea matInput formControlName="saml_private_key" [rows]="6" wrap="hard"></textarea>
+                            <textarea matInput formControlName="saml_private_key" wrap="hard" [rows]="6"></textarea>
                         </mat-form-field>
                     </section>
                 </div>

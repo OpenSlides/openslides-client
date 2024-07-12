@@ -139,11 +139,11 @@
                 <span>{{ 'Archive' | translate }}</span>
             </button>
         }
-        <button mat-menu-item *osOmlPerms="OML.superadmin; and: meeting.isArchived" (click)="onUnarchive()">
+        <button *osOmlPerms="OML.superadmin; and: meeting.isArchived" mat-menu-item (click)="onUnarchive()">
             <mat-icon>unarchive</mat-icon>
             <span>{{ 'Activate' | translate }}</span>
         </button>
-        <button mat-menu-item *osOmlPerms="OML.superadmin" (click)="exportMeeting()">
+        <button *osOmlPerms="OML.superadmin" mat-menu-item (click)="exportMeeting()">
             <mat-icon>file_download</mat-icon>
             <span>{{ 'Export' | translate }}</span>
         </button>

@@ -10,7 +10,7 @@
     </div>
 
     <!-- Menu -->
-    <ng-container class="menu-slot" *osPerms="permission.motionCanManage">
+    <ng-container *osPerms="permission.motionCanManage" class="menu-slot">
         <button type="button" mat-icon-button [matMenuTriggerFor]="categoryMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -33,7 +33,7 @@
 
     <!-- Amount -->
     <div *osScrollingTableCell="'amount'; row as category; config: { width: 45 }" class="cell-slot fill">
-        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}" matTooltipPosition="left">
+        <span class="os-amount-chip" matTooltipPosition="left" matTooltip="{{ 'Motions' | translate }}">
             {{ getMotionAmount(category) }}
         </span>
     </div>
@@ -52,7 +52,7 @@
         <span>{{ 'New category' | translate }}</span>
     </h1>
     <mat-dialog-content class="os-form-card-mobile">
-        <form [formGroup]="createForm" (keydown)="onKeyDown($event)" tabindex="-1">
+        <form tabindex="-1" [formGroup]="createForm" (keydown)="onKeyDown($event)">
             <!-- Prefix -->
             <p>
                 <mat-form-field>

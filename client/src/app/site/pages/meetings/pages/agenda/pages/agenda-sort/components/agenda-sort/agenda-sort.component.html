@@ -30,7 +30,7 @@
             <mat-selection-list #visibilities (selectionChange)="onFilterChange(visibilities.selectedOptions.selected)">
                 @for (option of filterOptions; track option) {
                     <mat-list-option [value]="option.id" [selected]="option.state">
-                        <mat-icon matListItemIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
+                        <mat-icon matListItemIcon matTooltipPosition="left" matTooltip="{{ option.label | translate }}">
                             {{ getIcon(option.id) }}
                         </mat-icon>
                         <div matListItemTitle>
@@ -52,15 +52,15 @@
         </div>
         <os-sorting-tree
             #osSortedTree
-            (hasChanged)="receiveChanges($event)"
-            (visibleNodes)="onChangeAmountOfItems($event)"
+            parentKey="parent_id"
+            weightKey="weight"
             [model]="itemsObservable"
             [stateChange]="changeState"
             [filterChange]="changeFilter"
-            parentKey="parent_id"
-            weightKey="weight"
+            (hasChanged)="receiveChanges($event)"
+            (visibleNodes)="onChangeAmountOfItems($event)"
         >
-            <ng-template #innerNode class="sorting-tree-node" let-item="item">
+            <ng-template #innerNode let-item="item" class="sorting-tree-node">
                 <span class="sort-node-title">{{ item.getTitle() }}</span>
                 <span class="sort-node-icon">
                     {{ item.verboseType | translate }}

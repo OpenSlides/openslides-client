@@ -1,8 +1,8 @@
 <os-head-bar
     [hasMainButton]="canManage"
     [mainActionTooltip]="'New participant' | translate"
-    (mainEvent)="onPlusButton()"
     [multiSelectMode]="isMultiSelect"
+    (mainEvent)="onPlusButton()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -129,8 +129,8 @@
             @if (user.vote_delegated_to() && voteDelegationEnabled) {
                 <div
                     class="spacer-top-5"
-                    matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}"
                     matTooltipPosition="left"
+                    matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}"
                 >
                     <os-icon-container icon="forward" [noWrap]="true">{{ user.vote_delegated_to() }}</os-icon-container>
                 </div>
@@ -138,8 +138,8 @@
             @if (user.vote_delegations_from_ids()?.length && voteDelegationEnabled) {
                 <div
                     class="spacer-top-5"
-                    matTooltip="{{ 'Voting right received from (principals)' | translate }}"
                     matTooltipPosition="left"
+                    matTooltip="{{ 'Voting right received from (principals)' | translate }}"
                 >
                     <os-icon-container icon="work" [noWrap]="true">
                         {{ user.vote_delegations_from() }}
@@ -156,8 +156,8 @@
             @if (user.isLastEmailSent && canSeeSensitiveData) {
                 <mat-icon
                     inline
-                    matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
                     matTooltipPosition="above"
+                    matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
                 >
                     mail
                 </mat-icon>
@@ -180,9 +180,9 @@
     <div *osScrollingTableCell="'presence'; row as user; config: { width: 130 }" class="cell-slot fill">
         <mat-checkbox
             class="checkbox-ripple-padding"
-            (change)="setPresent(user)"
             [checked]="isUserPresent(user)"
             [disabled]="isPresentToggleDisabled(user)"
+            (change)="setPresent(user)"
         >
             <span>{{ 'Present' | translate }}</span>
         </mat-checkbox>
@@ -202,8 +202,8 @@
             mat-icon-button
             [disabled]="isMultiSelect"
             [matMenuTriggerFor]="singleItemMenu"
-            (click)="$event.stopPropagation()"
             [matMenuTriggerData]="{ user: user }"
+            (click)="$event.stopPropagation()"
         >
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -212,14 +212,14 @@
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
-    <ng-template matMenuContent let-user="user">
+    <ng-template let-user="user" matMenuContent>
         <!-- Presence -->
         @if (viewport.isMobileSubject | async) {
             <mat-checkbox
                 class="mat-menu-item"
-                (change)="setPresent(user)"
                 [checked]="isUserPresent(user)"
                 [disabled]="isPresentToggleDisabled(user)"
+                (change)="setPresent(user)"
             >
                 <span>{{ 'Present' | translate }}</span>
             </mat-checkbox>
@@ -262,27 +262,27 @@
 <mat-menu #userMenu="matMenu">
     @if (!isMultiSelect) {
         <div>
-            <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="toggleMultiSelect()">
+            <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="toggleMultiSelect()">
                 <mat-icon>library_add</mat-icon>
                 <span>{{ 'Multiselect' | translate }}</span>
             </button>
-            <button mat-menu-item *osPerms="permission.userCanManage" routerLink="groups">
+            <button *osPerms="permission.userCanManage" mat-menu-item routerLink="groups">
                 <mat-icon>people</mat-icon>
                 <span>{{ 'Groups' | translate }}</span>
             </button>
-            <button mat-menu-item *osPerms="permission.userCanManage" routerLink="structure-levels">
+            <button *osPerms="permission.userCanManage" mat-menu-item routerLink="structure-levels">
                 <mat-icon>flag</mat-icon>
                 <span>{{ 'Structure levels' | translate }}</span>
             </button>
             @if (presenceViewConfigured) {
                 <div>
-                    <button mat-menu-item *osPerms="permission.userCanUpdate" routerLink="presence">
+                    <button *osPerms="permission.userCanUpdate" mat-menu-item routerLink="presence">
                         <mat-icon>transfer_within_a_station</mat-icon>
                         <span>{{ 'Presence' | translate }}</span>
                     </button>
                 </div>
             }
-            <button mat-menu-item *osPerms="permission.userCanUpdate" routerLink="speaker-list">
+            <button *osPerms="permission.userCanUpdate" mat-menu-item routerLink="speaker-list">
                 <mat-icon>record_voice_over</mat-icon>
                 <span translate>Contributions</span>
             </button>
@@ -290,15 +290,15 @@
                 <mat-icon>picture_as_pdf</mat-icon>
                 <span>{{ 'List of participants (PDF)' | translate }}</span>
             </button>
-            <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="onDownloadAccessPdf()">
+            <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="onDownloadAccessPdf()">
                 <mat-icon>picture_as_pdf</mat-icon>
                 <span>{{ 'Access data (PDF)' | translate }}</span>
             </button>
-            <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="csvExportUserList()">
+            <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="csvExportUserList()">
                 <mat-icon>archive</mat-icon>
                 <span>{{ 'Export as CSV' | translate }}</span>
             </button>
-            <button mat-menu-item *osPerms="permission.userCanManage" routerLink="import">
+            <button *osPerms="permission.userCanManage" mat-menu-item routerLink="import">
                 <mat-icon>cloud_upload</mat-icon>
                 <span>{{ 'Import' | translate }}</span>
             </button>

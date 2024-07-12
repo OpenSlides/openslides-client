@@ -51,7 +51,7 @@
             <div class="control-buttons">
                 <!-- Hangup -->
                 @if (showHangUp) {
-                    <button mat-mini-fab color="warn" (click)="hangUp()" matTooltip="{{ 'Leave' | translate }}">
+                    <button mat-mini-fab color="warn" matTooltip="{{ 'Leave' | translate }}" (click)="hangUp()">
                         <mat-icon>call_end</mat-icon>
                     </button>
                 }
@@ -61,9 +61,9 @@
                     <button
                         mat-mini-fab
                         color="accent"
-                        (click)="callRoom()"
                         [disabled]="(canEnterCall | async) === false || isConnecting"
                         matTooltip="{{ 'Enter conference room' | translate }}"
+                        (click)="callRoom()"
                     >
                         <mat-icon>call</mat-icon>
                     </button>

@@ -1,8 +1,8 @@
 <os-head-bar
     [hasMainButton]="canManageAssignments"
     [mainActionTooltip]="'New election' | translate"
-    (mainEvent)="onPlusButton()"
     [multiSelectMode]="isMultiSelect"
+    (mainEvent)="onPlusButton()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -71,8 +71,8 @@
             mat-icon-button
             [disabled]="isMultiSelect"
             [matMenuTriggerFor]="singleItemMenu"
-            (click)="$event.stopPropagation()"
             [matMenuTriggerData]="{ assignment: assignment }"
+            (click)="$event.stopPropagation()"
         >
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -81,7 +81,7 @@
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
-    <ng-template matMenuContent let-assignment="assignment">
+    <ng-template let-assignment="assignment" matMenuContent>
         <os-projector-button [object]="assignment" [menuItem]="true"></os-projector-button>
         <os-speaker-button [object]="assignment" [menuItem]="true"></os-speaker-button>
     </ng-template>
@@ -90,7 +90,7 @@
 <mat-menu #assignmentMenu="matMenu">
     @if (!isMultiSelect) {
         <div>
-            <button mat-menu-item *osPerms="permission.assignmentCanManage" (click)="toggleMultiSelect()">
+            <button *osPerms="permission.assignmentCanManage" mat-menu-item (click)="toggleMultiSelect()">
                 <mat-icon>library_add</mat-icon>
                 <span>{{ 'Multiselect' | translate }}</span>
             </button>
@@ -125,9 +125,9 @@
             </button>
             <mat-divider></mat-divider>
             <button
+                *osPerms="permission.assignmentCanManage"
                 mat-menu-item
                 class="red-warning-text"
-                *osPerms="permission.assignmentCanManage"
                 [disabled]="!selectedRows.length"
                 (click)="deleteSelected()"
             >

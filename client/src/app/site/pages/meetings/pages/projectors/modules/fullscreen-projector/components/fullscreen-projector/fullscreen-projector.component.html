@@ -1,4 +1,4 @@
-<div id="container" #container (osResized)="updateProjectorDimensions()">
+<div #container id="container" (osResized)="updateProjectorDimensions()">
     <div id="projector" class="nocursor" [ngStyle]="projectorStyle">
         @if (projector) {
             <os-projector [projector]="projector"></os-projector>

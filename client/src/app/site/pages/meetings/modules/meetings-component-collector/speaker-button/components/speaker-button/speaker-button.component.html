@@ -5,19 +5,19 @@
                 <button
                     type="button"
                     mat-icon-button
+                    class="anchor-button"
                     matTooltip="{{
                         (listOfSpeakers.closed ? 'The list of speakers is closed.' : 'List of speakers') | translate
                     }}"
                     [disabled]="disabled"
-                    class="anchor-button"
                 >
                     <mat-icon
+                        matBadgeColor="accent"
                         [matBadge]="
                             canSee && listOfSpeakers.waitingSpeakerAmount > 0
                                 ? listOfSpeakers.waitingSpeakerAmount
                                 : null
                         "
-                        matBadgeColor="accent"
                     >
                         {{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}
                     </mat-icon>

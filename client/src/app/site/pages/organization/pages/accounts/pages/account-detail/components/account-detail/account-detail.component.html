@@ -1,13 +1,13 @@
 <os-head-bar
-    [hasMainButton]="true"
     mainButtonIcon="edit"
+    [hasMainButton]="true"
     [mainActionTooltip]="'Edit account' | translate"
-    (mainEvent)="editMember()"
     [goBack]="false"
     [nav]="false"
     [editMode]="isEditingUser"
     [isSaveButtonEnabled]="isFormValid"
     [saveAction]="getSaveAction()"
+    (mainEvent)="editMember()"
     (cancelEditEvent)="onCancel()"
 >
     <!-- Title -->
@@ -42,7 +42,7 @@
                 <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Administration roles (at organization level)' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">
-                        <mat-option [value]="null" *ngIf="!orgaManagementLevelChangeDisabled">-</mat-option>
+                        <mat-option *ngIf="!orgaManagementLevelChangeDisabled" [value]="null">-</mat-option>
                         <mat-option
                             *ngFor="let level of organizationManagementLevels"
                             [value]="level"
@@ -132,7 +132,7 @@
                         <span translate>Committees</span>
                         ({{ user.committee_ids?.length }})
                     </th>
-                    <th class="admin-column" *ngIf="comitteeAdministrationAmount">
+                    <th *ngIf="comitteeAdministrationAmount" class="admin-column">
                         ({{ comitteeAdministrationAmount }})
                     </th>
                     <th>
@@ -148,11 +148,11 @@
                             <td>
                                 <a [routerLink]="'/committees/' + row.key + ''">{{ row.value.committee_name }}</a>
                             </td>
-                            <td class="admin-column" *ngIf="comitteeAdministrationAmount">
+                            <td *ngIf="comitteeAdministrationAmount" class="admin-column">
                                 <mat-icon
+                                    *ngIf="row.value.is_manager"
                                     matTooltip="{{ 'Committee admin' | translate }}"
                                     [matTooltipPosition]="'left'"
-                                    *ngIf="row.value.is_manager"
                                 >
                                     engineering
                                 </mat-icon>
@@ -173,14 +173,14 @@
                             <a [routerLink]="'/committees/' + row.key + ''">{{ row.value.committee_name }}</a>
                         </td>
                         <td
-                            class="admin-column"
                             *ngIf="isFirst && comitteeAdministrationAmount"
+                            class="admin-column"
                             [attr.rowspan]="getNumberOfKeys(row.value.meetings)"
                         >
                             <mat-icon
+                                *ngIf="row.value.is_manager"
                                 matTooltip="{{ 'Committee admin' | translate }}"
                                 [matTooltipPosition]="'left'"
-                                *ngIf="row.value.is_manager"
                             >
                                 engineering
                             </mat-icon>
@@ -223,12 +223,12 @@
             <span>{{ 'Add to meetings' | translate }}</span>
         </button>
         <!-- invitation email -->
-        <button mat-menu-item *ngIf="user?.email" (click)="sendInvitationEmail()">
+        <button *ngIf="user?.email" mat-menu-item (click)="sendInvitationEmail()">
             <mat-icon>mail</mat-icon>
             <span>{{ 'Send invitation email' | translate }}</span>
         </button>
         <mat-divider></mat-divider>
-        <button (click)="deleteUser()" mat-menu-item class="red-warning-text">
+        <button mat-menu-item class="red-warning-text" (click)="deleteUser()">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>

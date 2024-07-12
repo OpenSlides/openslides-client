@@ -5,9 +5,9 @@
         }
         <mat-date-range-input
             [formGroup]="contentForm"
+            [rangePicker]="picker"
             (click)="picker.open()"
             (keydown)="onKeyPressed($event)"
-            [rangePicker]="picker"
         >
             <input matStartDate readonly formControlName="start" [placeholder]="'Start date' | translate" />
             <input matEndDate readonly formControlName="end" [placeholder]="'End date' | translate" />
@@ -26,7 +26,7 @@
         }
         <mat-date-range-picker #picker>
             <mat-datepicker-actions>
-                <button mat-button (click)="updateForm({ start: null, end: null })" matDatepickerCancel color="warn">
+                <button mat-button matDatepickerCancel color="warn" (click)="updateForm({ start: null, end: null })">
                     {{ 'Clear' | translate }}
                 </button>
                 <button mat-button matDatepickerCancel>{{ 'Cancel' | translate }}</button>

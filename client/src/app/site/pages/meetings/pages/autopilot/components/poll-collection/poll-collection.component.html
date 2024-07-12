@@ -17,7 +17,7 @@
     <mat-card class="os-card">
         <mat-card-content>
             <p>
-                <a [routerLink]="poll.getDetailStateUrl()" [state]="{ back: 'true' }" class="subtitle-text">
+                <a class="subtitle-text" [routerLink]="poll.getDetailStateUrl()" [state]="{ back: 'true' }">
                     {{ getPollVoteTitle(poll) }}
                 </a>
                 <br />

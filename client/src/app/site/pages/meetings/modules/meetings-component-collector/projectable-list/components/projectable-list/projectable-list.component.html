@@ -34,7 +34,7 @@
             (changeEvent)="viewUpdateEvent()"
         ></os-projector-button>
         <!-- Projector indicator -->
-        <div class="projector-button" *osPerms="permission.projectorCanManage; complement: true">
+        <div *osPerms="permission.projectorCanManage; complement: true" class="projector-button">
             @if (isProjectedFn(viewModel)) {
                 <mat-icon color="accent" matTooltip="{{ 'Currently projected' | translate }}">videocam</mat-icon>
             }

@@ -17,7 +17,7 @@
                             {{ projector.name }}
                         </mat-checkbox>
                         @if (isProjectedOn(projector)) {
-                            <mat-icon matTooltip="{{ 'Is already projected' | translate }}" matTooltipPosition="above">
+                            <mat-icon matTooltipPosition="above" matTooltip="{{ 'Is already projected' | translate }}">
                                 videocam
                             </mat-icon>
                         }
@@ -62,7 +62,7 @@
 }
 
 <mat-dialog-actions>
-    <button mat-button osAutofocus (click)="onProject()" color="accent">{{ 'Project' | translate }}</button>
+    <button mat-button osAutofocus color="accent" (click)="onProject()">{{ 'Project' | translate }}</button>
     @if (projectorSelectable) {
         <button mat-button (click)="onAddToPreview()">{{ 'Add to queue' | translate }}</button>
     }

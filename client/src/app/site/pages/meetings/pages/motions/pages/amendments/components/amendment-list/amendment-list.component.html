@@ -128,8 +128,8 @@
                 mat-icon-button
                 [disabled]="isMultiSelect"
                 [matMenuTriggerFor]="singleItemMenu"
-                (click)="$event.stopPropagation()"
                 [matMenuTriggerData]="{ motion: motion }"
+                (click)="$event.stopPropagation()"
             >
                 <mat-icon>more_vert</mat-icon>
             </button>
@@ -139,7 +139,7 @@
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
-    <ng-template matMenuContent let-motion="motion">
+    <ng-template let-motion="motion" matMenuContent>
         <os-projector-button [object]="motion" [menuItem]="true"></os-projector-button>
         <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
     </ng-template>

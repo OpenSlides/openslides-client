@@ -6,13 +6,13 @@
                 @if (!speaker.isSpeaking) {
                     <button
                         mat-icon-button
+                        class="speaker-control-button"
+                        matTooltipPosition="above"
                         [color]="speakerIndex === 0 ? 'accent' : null"
                         [ngClass]="{
                             'small-play-icon': (speakerIndex > 0 || speakerIndex !== 0) && !speaker.isCurrentSpeaker
                         }"
-                        class="speaker-control-button"
                         matTooltip="{{ (speaker.pause_time ? 'Resume speech' : 'Begin speech') | translate }}"
-                        matTooltipPosition="above"
                         (click)="onStartButton()"
                     >
                         <mat-icon>
@@ -25,8 +25,8 @@
                     <button
                         mat-icon-button
                         class="speaker-control-button"
-                        matTooltip="{{ 'Pause speech' | translate }}"
                         matTooltipPosition="above"
+                        matTooltip="{{ 'Pause speech' | translate }}"
                         (click)="onPauseButton()"
                     >
                         <mat-icon>pause_circle_outline</mat-icon>
@@ -60,7 +60,7 @@
             </div>
         }
         @if (!speaker.meeting_user_id && canManage) {
-            <span class="select-speaker-button" (click)="updateSpeakerMeetingUser()" translate>Select speaker</span>
+            <span class="select-speaker-button" translate (click)="updateSpeakerMeetingUser()">Select speaker</span>
         }
 
         <div class="speaker-additional-info">
@@ -121,8 +121,8 @@
                         @if (enableProContraSpeech && !speaker.point_of_order) {
                             <button
                                 mat-icon-button
-                                (click)="onProContraButtons(true)"
                                 matTooltip="{{ 'Forspeech' | translate }}"
+                                (click)="onProContraButtons(true)"
                             >
                                 @if (speaker.speech_state !== SpeechState.PRO) {
                                     <mat-icon class="user-subtitle">add_circle_outline</mat-icon>
@@ -136,8 +136,8 @@
                         @if (enableProContraSpeech && !speaker.point_of_order) {
                             <button
                                 mat-icon-button
-                                (click)="onProContraButtons(false)"
                                 matTooltip="{{ 'Counter speech' | translate }}"
+                                (click)="onProContraButtons(false)"
                             >
                                 @if (speaker.speech_state !== SpeechState.CONTRA) {
                                     <mat-icon class="user-subtitle">remove_circle_outline</mat-icon>
@@ -151,8 +151,8 @@
                         @if (canMarkSpeaker() && !speaker.point_of_order) {
                             <button
                                 mat-icon-button
-                                (click)="onMarkButton()"
                                 matTooltip="{{ 'Contribution' | translate }}"
+                                (click)="onMarkButton()"
                             >
                                 @if (speaker.speech_state === SpeechState.CONTRIBUTION) {
                                     <mat-icon>star</mat-icon>
@@ -189,8 +189,8 @@
                 <button
                     mat-icon-button
                     class="speaker-stop-button"
-                    matTooltip="{{ 'End speech' | translate }}"
                     matTooltipPosition="above"
+                    matTooltip="{{ 'End speech' | translate }}"
                     (click)="onStopButton()"
                 >
                     <mat-icon>stop_circle</mat-icon>
@@ -228,8 +228,8 @@
                 @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id) {
                     <button
                         mat-icon-button
-                        matTooltip="{{ 'Select speaker' | translate }}"
                         matTooltipPosition="left"
+                        matTooltip="{{ 'Select speaker' | translate }}"
                         (click)="updateSpeakerMeetingUser()"
                     >
                         <mat-icon>person_add</mat-icon>
@@ -238,10 +238,10 @@
             </ng-container>
             <ng-container>
                 <button
-                    mat-icon-button
-                    matTooltip="{{ 'Remove' | translate }}"
-                    matTooltipPosition="left"
                     *osPerms="permission.listOfSpeakersCanManage"
+                    mat-icon-button
+                    matTooltipPosition="left"
+                    matTooltip="{{ 'Remove' | translate }}"
                     (click)="removeSpeaker()"
                 >
                     <mat-icon>close</mat-icon>
@@ -439,7 +439,7 @@
     ) {
         <span>
             @if (speaker.point_of_order) {
-                <mat-icon inline color="{{ !!showcolor ? 'warn' : null }}" class="inline-icon-text-align">
+                <mat-icon inline class="inline-icon-text-align" color="{{ !!showcolor ? 'warn' : null }}">
                     warning
                 </mat-icon>
             }

@@ -1,4 +1,4 @@
-<os-head-bar (mainEvent)="goBack()" [nav]="false">
+<os-head-bar [nav]="false" (mainEvent)="goBack()">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ user?.getFullName() }}</h2>
@@ -46,8 +46,8 @@
                     <div class="grid-child">
                         <button
                             mat-button
-                            (click)="assign()"
                             [disabled]="waitingForResults || !assignMeetingsForm.valid || !canManage"
+                            (click)="assign()"
                         >
                             {{ 'Assign' | translate }}
                         </button>

@@ -28,8 +28,8 @@
                         <button
                             class="custom-actions-button"
                             mat-button
-                            (click)="closeDialog(true, button)"
                             [disabled]="!hasSelection"
+                            (click)="closeDialog(true, button)"
                         >
                             <span>{{ button | translate }}</span>
                         </button>
@@ -40,7 +40,7 @@
             @if (!data?.actions) {
                 <div>
                     @if (!data.multiSelect || data?.choices) {
-                        <button mat-button (click)="closeDialog(true)" [disabled]="!hasSelection">
+                        <button mat-button [disabled]="!hasSelection" (click)="closeDialog(true)">
                             <span>OK</span>
                         </button>
                     }

@@ -5,14 +5,14 @@
             <div class="action-title">
                 <span>
                     <a
+                        *osPerms="permission.listOfSpeakersCanManage"
                         mat-icon-button
                         type="button"
                         color="primary"
-                        matTooltip="{{ 'Open Jitsi in new tab' | translate }}"
                         target="_blank"
-                        (click)="hangUp()"
+                        matTooltip="{{ 'Open Jitsi in new tab' | translate }}"
                         [href]="jitsiMeetUrl | async"
-                        *osPerms="permission.listOfSpeakersCanManage"
+                        (click)="hangUp()"
                     >
                         <mat-icon>open_in_new</mat-icon>
                     </a>
@@ -50,7 +50,7 @@
                     </button>
                 </span>
             </div>
-            <div class="jitsi-iframe-wrapper" #jitsi></div>
+            <div #jitsi class="jitsi-iframe-wrapper"></div>
         </mat-card-content>
     </mat-card>
 </div>

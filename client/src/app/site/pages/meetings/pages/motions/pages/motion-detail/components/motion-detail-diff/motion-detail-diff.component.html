@@ -17,7 +17,7 @@
         @if (getTitleChangingObject(); as changedTitle) {
             <div>
                 <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix outlined-hover outlined-border">
-                    <div class="action-row" *osPerms="permission.motionCanManage">
+                    <div *osPerms="permission.motionCanManage" class="action-row">
                         @if (isRecommendation(changedTitle)) {
                             <button
                                 mat-icon-button
@@ -75,8 +75,8 @@
                     }
                     <div class="action-row">
                         <button
-                            mat-icon-button
                             *osPerms="permission.motionCanManage; and: isRecommendation(change)"
+                            mat-icon-button
                             type="button"
                             [matMenuTriggerFor]="changeRecommendationMenu"
                             [matMenuTriggerData]="{ change: change }"
@@ -136,7 +136,7 @@
     </div>
 
     <mat-menu #amendmentMenu="matMenu">
-        <ng-template matMenuContent let-change="change">
+        <ng-template let-change="change" matMenuContent>
             <a
                 type="button"
                 mat-menu-item
@@ -186,7 +186,7 @@
     </mat-menu>
 
     <mat-menu #changeRecommendationMenu="matMenu">
-        <ng-template matMenuContent let-change="change">
+        <ng-template let-change="change" matMenuContent>
             <button type="button" mat-menu-item (click)="setAcceptanceValue(change, 'accepted')">
                 <mat-icon>thumb_up</mat-icon>
                 <span>{{ 'Accept' | translate }}</span>

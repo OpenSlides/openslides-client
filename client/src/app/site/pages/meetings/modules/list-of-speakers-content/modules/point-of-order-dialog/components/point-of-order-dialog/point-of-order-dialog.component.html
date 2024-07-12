@@ -18,7 +18,7 @@
         }
         <mat-form-field>
             <mat-label>{{ 'Request' | translate }}</mat-label>
-            <input matInput osAutofocus [maxLength]="MAX_LENGTH" formControlName="note" />
+            <input matInput osAutofocus formControlName="note" [maxLength]="MAX_LENGTH" />
         </mat-form-field>
         {{ editForm.value.note.length }} / {{ MAX_LENGTH }}
     </mat-dialog-content>

@@ -10,9 +10,9 @@
     <div>
         <div class="connection-selection">
             <mat-button-toggle-group [(ngModel)]="displayMode">
-                <mat-button-toggle [value]="2" translate>All</mat-button-toggle>
-                <mat-button-toggle [value]="0" translate>Normal (http/2)</mat-button-toggle>
-                <mat-button-toggle [value]="1" translate>Fallback</mat-button-toggle>
+                <mat-button-toggle translate [value]="2">All</mat-button-toggle>
+                <mat-button-toggle translate [value]="0">Normal (http/2)</mat-button-toggle>
+                <mat-button-toggle translate [value]="1">Fallback</mat-button-toggle>
             </mat-button-toggle-group>
         </div>
         <i>{{ 'last updated' | translate }}: {{ lastUpdated / 1000 | localizedDate: 'PPpp' }}</i>

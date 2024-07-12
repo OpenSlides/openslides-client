@@ -5,11 +5,11 @@
         }
         <input
             matInput
+            readonly
             [matDatepicker]="picker"
             [formControl]="contentForm"
             (click)="picker.open()"
             (keydown)="onKeyPressed($event)"
-            readonly
         />
         @if (hintText) {
             <mat-hint>{{ hintText | translate }}</mat-hint>
@@ -25,7 +25,7 @@
         }
         <mat-datepicker #picker>
             <mat-datepicker-actions>
-                <button mat-button (click)="updateForm(null)" matDatepickerCancel color="warn">
+                <button mat-button matDatepickerCancel color="warn" (click)="updateForm(null)">
                     {{ 'Clear' | translate }}
                 </button>
                 <button mat-button matDatepickerCancel>{{ 'Cancel' | translate }}</button>

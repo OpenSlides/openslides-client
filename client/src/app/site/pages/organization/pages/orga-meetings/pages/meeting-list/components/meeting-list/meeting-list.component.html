@@ -6,7 +6,7 @@
 
     <!-- Menu -->
     <!-- Only organization managers can do something -->
-    <ng-container class="menu-slot" *osOmlPerms="OML.superadmin">
+    <ng-container *osOmlPerms="OML.superadmin" class="menu-slot">
         <button type="button" mat-icon-button [matMenuTriggerFor]="meetingMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -29,8 +29,8 @@
     [hiddenInMobile]="['archived', 'description', 'meta', 'menu', 'committee']"
     [sortService]="sortService"
     [filterService]="filterService"
-    [(selectedRows)]="selectedRows"
     [vScrollFixed]="70"
+    [(selectedRows)]="selectedRows"
 >
     <div *osScrollingTableCell="'name'; row as meeting" class="cell-slot fill">
         @if (!isMultiSelect && meeting.canAccess()) {
@@ -48,13 +48,13 @@
 
                     <!-- Is Template -->
                     <span
-                        class="icon-prefix"
                         *osCmlPerms="
                             CML.can_manage;
                             committeeId: meeting.committee_id;
                             nonAdminCheck: true;
                             and: meeting.isTemplate
                         "
+                        class="icon-prefix"
                     >
                         <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
                     </span>
@@ -120,9 +120,9 @@
             @if (meeting.userAmount) {
                 <div>
                     <os-icon-container
-                        iconTooltip="{{ 'Participants' | translate }}"
                         iconTooltipPosition="right"
                         icon="group"
+                        iconTooltip="{{ 'Participants' | translate }}"
                     >
                         {{ meeting.userAmount }}
                     </os-icon-container>
@@ -131,9 +131,9 @@
             @if (meeting.motionsAmount) {
                 <div>
                     <os-icon-container
-                        iconTooltip="{{ 'Motions' | translate }}"
                         iconTooltipPosition="right"
                         icon="assignment"
+                        iconTooltip="{{ 'Motions' | translate }}"
                     >
                         {{ meeting.motionsAmount }}
                     </os-icon-container>
@@ -146,11 +146,11 @@
         <button
             *osCmlPerms="CML.can_manage; committeeId: meeting.committee?.id; nonAdminCheck: true"
             mat-icon-button
+            data-cy="meetingListSingleMenuTrigger"
             [disabled]="isMultiSelect"
             [matMenuTriggerFor]="singleMeetingMenu"
             [matMenuTriggerData]="{ meeting: meeting }"
             (click)="$event.stopPropagation()"
-            data-cy="meetingListSingleMenuTrigger"
         >
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -158,7 +158,7 @@
 </os-list>
 
 <mat-menu #singleMeetingMenu="matMenu">
-    <ng-template matMenuContent let-meeting="meeting">
+    <ng-template let-meeting="meeting" matMenuContent>
         @if (!meeting.isArchived) {
             <button mat-menu-item type="button" data-cy="meetingListSingleEditButton" (click)="editSingle(meeting)">
                 <mat-icon>edit</mat-icon>
@@ -207,7 +207,7 @@
             </button>
             <ng-container *osOmlPerms="OML.superadmin">
                 <mat-divider></mat-divider>
-                <button mat-menu-item [disabled]="!selectedRows.length" class="red-warning-text" (click)="doDelete()">
+                <button mat-menu-item class="red-warning-text" [disabled]="!selectedRows.length" (click)="doDelete()">
                     <mat-icon>delete</mat-icon>
                     <span>{{ 'Delete' | translate }}</span>
                 </button>

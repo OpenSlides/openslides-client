@@ -1,6 +1,6 @@
 <os-head-bar
-    [hasMainButton]="isAllowed('changePersonal') && !!user"
     mainButtonIcon="edit"
+    [hasMainButton]="isAllowed('changePersonal') && !!user"
     [mainActionTooltip]="'Edit' | translate"
     [nav]="false"
     [goBack]="!isAllowed('seeOtherUsers')"
@@ -92,8 +92,8 @@
                 <div [formGroup]="form">
                     <mat-checkbox
                         formControlName="is_present"
-                        matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
                         matTooltipPosition="right"
+                        matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
                     >
                         <span>{{ 'present' | translate }}</span>
                     </mat-checkbox>

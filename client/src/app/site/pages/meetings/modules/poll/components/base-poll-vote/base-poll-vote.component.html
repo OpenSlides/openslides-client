@@ -152,16 +152,16 @@
                                             <button
                                                 class="vote-button"
                                                 mat-raised-button
-                                                (click)="saveSingleVote(option.id, action.vote, delegation)"
                                                 [disabled]="isDeliveringVote(delegation)"
+                                                (click)="saveSingleVote(option.id, action.vote, delegation)"
                                             >
                                                 <div
                                                     class="vote-button-content"
                                                     [ngClass]="getActionButtonContentClass(action, option, delegation)"
                                                 >
                                                     <os-custom-icon
-                                                        [customIcon]="drawnCross"
                                                         class="vote-button-cross"
+                                                        [customIcon]="drawnCross"
                                                         [ngClass]="getActionButtonClass(action, option, delegation)"
                                                     ></os-custom-icon>
                                                     <mat-icon class="vote-button-circle">
@@ -182,12 +182,12 @@
                                         <input
                                             type="number"
                                             matInput
-                                            [formControl]="getFormControl(option.id)"
-                                            (change)="saveMultipleVotes(option.id, $event, delegation)"
                                             min="0"
-                                            max="{{ poll.max_votes_per_option }}"
                                             value="0"
                                             required
+                                            [formControl]="getFormControl(option.id)"
+                                            max="{{ poll.max_votes_per_option }}"
+                                            (change)="saveMultipleVotes(option.id, $event, delegation)"
                                         />
                                         <mat-error>
                                             {{ getErrorInVoteEntry(option.id) }}
@@ -228,16 +228,16 @@
                                         <button
                                             class="vote-button"
                                             mat-raised-button
-                                            (click)="saveGlobalVote(option.vote, delegation)"
                                             [disabled]="isDeliveringVote(delegation)"
+                                            (click)="saveGlobalVote(option.vote, delegation)"
                                         >
                                             <div
                                                 class="vote-button-content"
                                                 [ngClass]="getGlobalButtonContentClass(option, delegation)"
                                             >
                                                 <os-custom-icon
-                                                    [customIcon]="drawnCross"
                                                     class="vote-button-cross"
+                                                    [customIcon]="drawnCross"
                                                     [ngClass]="getGlobalCSSClass(option, delegation)"
                                                 ></os-custom-icon>
                                                 <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
@@ -273,8 +273,8 @@
         <button
             mat-flat-button
             color="accent"
-            (click)="submitVote(delegation)"
             [disabled]="getVotesCount(delegation) < minVotes"
+            (click)="submitVote(delegation)"
         >
             <mat-icon>how_to_vote</mat-icon>
             <span>

@@ -13,8 +13,8 @@
         <button
             mat-button
             [disabled]="!hasChanges() || hasErrors()"
-            (click)="saveAll()"
             matTooltip="{{ 'Save all changes' | translate }}"
+            (click)="saveAll()"
         >
             <strong class="upper">{{ 'Save' | translate }}</strong>
         </button>
@@ -36,10 +36,10 @@
                         @if (isSettingsInput(setting) && !setting.hide) {
                             <os-meeting-settings-group-detail-field
                                 #settingsFields
-                                (update)="updateSetting($event)"
                                 [setting]="setting"
                                 [value]="meeting && getDetailFieldValue(meeting, setting)"
                                 [disabled]="isSettingDisabled(setting)"
+                                (update)="updateSetting($event)"
                             ></os-meeting-settings-group-detail-field>
                         }
                         @if (!isSettingsInput(setting)) {

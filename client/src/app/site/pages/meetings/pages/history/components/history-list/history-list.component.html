@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <mat-table [dataSource]="dataSource" matSort class="os-headed-listview-table">
+        <mat-table matSort class="os-headed-listview-table" [dataSource]="dataSource">
             <!-- Timestamp -->
             <ng-container matColumnDef="time">
                 <mat-header-cell *matHeaderCellDef>{{ 'Timestamp' | translate }}</mat-header-cell>

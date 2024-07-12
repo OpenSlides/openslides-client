@@ -1,7 +1,7 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar
-        [hasMainButton]="isAllowed('edit') && !!topic"
         mainButtonIcon="edit"
+        [hasMainButton]="isAllowed('edit') && !!topic"
         [mainActionTooltip]="'Edit' | translate"
         [nav]="false"
         [goBack]="false"
@@ -29,12 +29,12 @@
         <!-- Back and forth buttons -->
         @if (!editTopic && showNavigateButtons) {
             <div class="extra-controls-slot">
-                <button mat-button (click)="navigateToTopic(previousTopic)" [disabled]="!previousTopic">
+                <button mat-button [disabled]="!previousTopic" (click)="navigateToTopic(previousTopic)">
                     <os-icon-container icon="chevron_left">
                         {{ getNavDisplay(previousTopic) }}
                     </os-icon-container>
                 </button>
-                <button mat-button (click)="navigateToTopic(nextTopic)" [disabled]="!nextTopic">
+                <button mat-button [disabled]="!nextTopic" (click)="navigateToTopic(nextTopic)">
                     <os-icon-container icon="chevron_right" [swap]="true">
                         {{ getNavDisplay(nextTopic) }}
                     </os-icon-container>
@@ -44,12 +44,12 @@
 
         <!-- Menu -->
         <div
-            class="menu-slot"
             *osPerms="[
                 permission.agendaItemCanManage,
                 permission.listOfSpeakersCanSee,
                 permission.listOfSpeakersCanBeSpeaker
             ]"
+            class="menu-slot"
         >
             @if (topic) {
                 <button type="button" mat-icon-button [matMenuTriggerFor]="topicExtraMenu">
@@ -80,7 +80,7 @@
                                 <mat-list dense>
                                     @for (file of topic.attachments; track file) {
                                         <mat-list-item>
-                                            <a [routerLink]="file.url" target="_blank">{{ file.getTitle() }}</a>
+                                            <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
                                         </mat-list-item>
                                     }
                                 </mat-list>
@@ -89,7 +89,7 @@
                     }
                 }
                 @if (editTopic && topicForm) {
-                    <form [formGroup]="topicForm" (keydown)="onKeyDown($event)" tabindex="-1">
+                    <form tabindex="-1" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
                         <div>
                             <mat-form-field>
                                 <mat-label>{{ 'Title' | translate }}</mat-label>

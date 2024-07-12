@@ -83,8 +83,8 @@
                     <mat-label>{{ 'Encoding of the file' | translate }}</mat-label>
                     <mat-select
                         class="selection"
-                        (selectionChange)="selectEncoding($event)"
                         [value]="encodings[0].value"
+                        (selectionChange)="selectEncoding($event)"
                     >
                         @for (option of encodings; track option) {
                             <mat-option [value]="option.value">
@@ -95,7 +95,7 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{ 'Column separator' | translate }}</mat-label>
-                    <mat-select class="selection" (selectionChange)="selectColSep($event)" value="">
+                    <mat-select class="selection" value="" (selectionChange)="selectColSep($event)">
                         @for (option of columnSeparators; track option) {
                             <mat-option [value]="option.value">
                                 {{ option.label | translate }}
@@ -105,7 +105,7 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{ 'Text separator' | translate }}</mat-label>
-                    <mat-select class="selection" (selectionChange)="selectTextSep($event)" value='"'>
+                    <mat-select class="selection" value='"' (selectionChange)="selectTextSep($event)">
                         @for (option of textSeparators; track option) {
                             <mat-option [value]="option.value">
                                 {{ option.label | translate }}
@@ -117,11 +117,11 @@
             <div>
                 <div class="flex-vertical-center">
                     <input
+                        #fileInput
                         id="user-import-file-input"
                         type="file"
                         class="hidden-input"
                         accept="text"
-                        #fileInput
                         (change)="onSelectFile($event)"
                     />
                     <button mat-button color="accent" (click)="fileInput.click()">
@@ -149,8 +149,8 @@
                 <h2 class="no-margin">{{ 'Summary' | translate }}</h2>
                 <button
                     mat-icon-button
-                    (click)="enterFullscreen(fullscreenDialog)"
                     matTooltip="{{ 'Fullscreen' | translate }}"
+                    (click)="enterFullscreen(fullscreenDialog)"
                 >
                     <mat-icon>fullscreen</mat-icon>
                 </button>
@@ -284,7 +284,7 @@
     <div class="wrapper import-list-wrapper">
         <mat-form-field>
             <mat-label>{{ 'Encoding of the file' | translate }}</mat-label>
-            <mat-select class="selection" (selectionChange)="selectEncoding($event)" [value]="encodings[0].value">
+            <mat-select class="selection" [value]="encodings[0].value" (selectionChange)="selectEncoding($event)">
                 @for (option of encodings; track option) {
                     <mat-option [value]="option.value">
                         {{ option.label | translate }}
@@ -294,7 +294,7 @@
         </mat-form-field>
         <mat-form-field>
             <mat-label>{{ 'Column separator' | translate }}</mat-label>
-            <mat-select class="selection" (selectionChange)="selectColSep($event)" value="">
+            <mat-select class="selection" value="" (selectionChange)="selectColSep($event)">
                 @for (option of columnSeparators; track option) {
                     <mat-option [value]="option.value">
                         {{ option.label | translate }}
@@ -304,7 +304,7 @@
         </mat-form-field>
         <mat-form-field>
             <mat-label>{{ 'Text separator' | translate }}</mat-label>
-            <mat-select class="selection" (selectionChange)="selectTextSep($event)" value='"'>
+            <mat-select class="selection" value='"' (selectionChange)="selectTextSep($event)">
                 @for (option of textSeparators; track option) {
                     <mat-option [value]="option.value">
                         {{ option.label | translate }}
@@ -316,11 +316,11 @@
     <div>
         <div class="flex-vertical-center">
             <input
+                #fileInput
                 id="user-import-file-input"
                 type="file"
                 class="hidden-input"
                 accept="text"
-                #fileInput
                 (change)="onSelectFile($event)"
             />
             <button mat-button color="accent" (click)="fileInput.click()">
@@ -367,7 +367,7 @@
                     {{ entry[def] | translate }}
                 }
                 @if (type === 'boolean') {
-                    <mat-checkbox [checked]="isTrue(entry[def])" disabled></mat-checkbox>
+                    <mat-checkbox disabled [checked]="isTrue(entry[def])"></mat-checkbox>
                 }
                 @if (isObject(entry[def])) {
                     <ng-container *ngTemplateOutlet="modelNameTemplate; context: { model: entry[def] }"></ng-container>
@@ -383,10 +383,10 @@
         style="height: 500px"
         class="import-list-preview-table"
         tableHeight="500px"
+        rowClass="import-list-preview-row"
         [rowHeight]="50"
         [dataSource]="dataSource"
         [showHeader]="true"
-        rowClass="import-list-preview-row"
     >
         <div
             *osScrollingTableCell="'status'; row as row; config: { width: 25, position: START_POSITION }"

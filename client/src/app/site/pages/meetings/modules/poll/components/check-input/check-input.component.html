@@ -5,10 +5,10 @@
     </mat-form-field>
     @if (checkboxLabel) {
         <mat-checkbox
+            tabindex="-1"
             [name]="'checkbox'"
             [ngModel]="isChecked"
             (change)="checkboxStateChanged($event.checked)"
-            tabindex="-1"
         >
             {{ checkboxLabel }}
         </mat-checkbox>

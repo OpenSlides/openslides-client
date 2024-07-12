@@ -117,7 +117,7 @@
             </div>
         }
 
-        <div class="centered-text" *osPerms="permission.listOfSpeakersCanBeSpeaker">
+        <div *osPerms="permission.listOfSpeakersCanBeSpeaker" class="centered-text">
             @if (!canAddDueToPresence) {
                 <span translate>You have to be present to add yourself.</span>
             }
@@ -143,8 +143,8 @@
                     <button
                         mat-stroked-button
                         color="warn"
-                        (click)="addPointOfOrder()"
                         [disabled]="restrictPointOfOrderActions && closed"
+                        (click)="addPointOfOrder()"
                     >
                         <mat-icon>warning</mat-icon>
                         &nbsp;
@@ -161,7 +161,7 @@
                 }
                 <!-- Interposed question -->
                 @if (showInterposedQuestions | async) {
-                    <button mat-stroked-button (click)="addInterposedQuestion()" [disabled]="closed || !activeSpeaker">
+                    <button mat-stroked-button [disabled]="closed || !activeSpeaker" (click)="addInterposedQuestion()">
                         <mat-icon>help</mat-icon>
                         &nbsp;
                         <span>

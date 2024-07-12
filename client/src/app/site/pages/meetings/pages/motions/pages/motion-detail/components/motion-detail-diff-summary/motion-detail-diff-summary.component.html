@@ -1,7 +1,7 @@
 <!-- A summary of all changes -->
 @if (changes?.length) {
     <div class="change-recommendation-summary outlined-border">
-        <strong [matBadge]="changes.length" matBadgeOverlap="false">
+        <strong matBadgeOverlap="false" [matBadge]="changes.length">
             {{ 'Summary of changes' | translate }}&nbsp;
         </strong>
         <cdk-virtual-scroll-viewport
@@ -48,9 +48,9 @@
                         @if (isAmendment(change)) {
                             <a
                                 mat-icon-button
+                                class="smaller-icon-button amendment-link"
                                 [routerLink]="change.amendment.getDetailStateUrl()"
                                 [state]="{ back: 'true' }"
-                                class="smaller-icon-button amendment-link"
                             >
                                 <mat-icon>arrow_forward</mat-icon>
                             </a>

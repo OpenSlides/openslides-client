@@ -1,8 +1,8 @@
 <os-head-bar
     [hasMainButton]="perms.isAllowed('create')"
     [mainActionTooltip]="'New motion' | translate"
-    (mainEvent)="onPlusButton()"
     [multiSelectMode]="isMultiSelect"
+    (mainEvent)="onPlusButton()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -26,12 +26,12 @@
         @if (hasCategories && !isMultiSelect) {
             <div>
                 @if (selectedView === 'list') {
-                    <button mat-button (click)="onChangeView('tiles')" matTooltip="{{ 'Tile view' | translate }}">
+                    <button mat-button matTooltip="{{ 'Tile view' | translate }}" (click)="onChangeView('tiles')">
                         <mat-icon>view_module</mat-icon>
                     </button>
                 }
                 @if (selectedView === 'tiles') {
-                    <button mat-button (click)="onChangeView('list')" matTooltip="{{ 'List view' | translate }}">
+                    <button mat-button matTooltip="{{ 'List view' | translate }}" (click)="onChangeView('list')">
                         <mat-icon>view_headline</mat-icon>
                     </button>
                 }
@@ -240,8 +240,8 @@
                 mat-icon-button
                 [disabled]="isMultiSelect"
                 [matMenuTriggerFor]="singleItemMenu"
-                (click)="$event.stopPropagation()"
                 [matMenuTriggerData]="{ motion: motion }"
+                (click)="$event.stopPropagation()"
             >
                 <mat-icon>more_vert</mat-icon>
             </button>
@@ -410,8 +410,8 @@
                 mat-icon-button
                 [disabled]="isMultiSelect"
                 [matMenuTriggerFor]="singleItemMenu"
-                (click)="$event.stopPropagation()"
                 [matMenuTriggerData]="{ motion: motion }"
+                (click)="$event.stopPropagation()"
             >
                 <mat-icon>more_vert</mat-icon>
             </button>
@@ -421,7 +421,7 @@
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
-    <ng-template matMenuContent let-motion="motion">
+    <ng-template let-motion="motion" matMenuContent>
         <os-projector-button [object]="motion" [menuItem]="true"></os-projector-button>
         <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
     </ng-template>
@@ -493,7 +493,7 @@
                         <span>{{ 'Workflows' | translate }}</span>
                     </button>
                     <!-- Tags -->
-                    <button mat-menu-item routerLink="tags" *osPerms="permission.tagCanManage">
+                    <button *osPerms="permission.tagCanManage" mat-menu-item routerLink="tags">
                         <mat-icon>local_offer</mat-icon>
                         <span>{{ 'Tags' | translate }}</span>
                     </button>

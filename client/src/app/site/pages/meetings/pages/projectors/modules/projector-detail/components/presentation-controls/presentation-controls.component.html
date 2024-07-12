@@ -27,16 +27,16 @@
                             <button
                                 type="button"
                                 mat-icon-button
-                                (click)="pdfBackward(projection)"
                                 [disabled]="getPage(projection) <= 1"
+                                (click)="pdfBackward(projection)"
                             >
                                 <mat-icon>arrow_back</mat-icon>
                             </button>
                             <button
                                 type="button"
                                 mat-icon-button
-                                (click)="pdfForward(projection)"
                                 [disabled]="getPage(projection) >= getPagesAmountFor(projection)"
+                                (click)="pdfForward(projection)"
                             >
                                 <mat-icon>arrow_forward</mat-icon>
                             </button>

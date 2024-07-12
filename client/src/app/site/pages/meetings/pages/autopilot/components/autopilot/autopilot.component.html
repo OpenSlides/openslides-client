@@ -12,10 +12,10 @@
             (click)="customizeAutopilot()"
         >
             <mat-icon
-                [matBadge]="numDisabledElements"
-                [matBadgeHidden]="numDisabledElements < 1"
                 matBadgeSize="small"
                 matBadgeColor="warn"
+                [matBadge]="numDisabledElements"
+                [matBadgeHidden]="numDisabledElements < 1"
             >
                 settings
             </mat-icon>
@@ -67,8 +67,8 @@
                         <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
                             @if (isLosClosed) {
                                 <mat-icon
-                                    matTooltip="{{ 'The list of speakers is closed.' | translate }}"
                                     matTooltipPosition="above"
+                                    matTooltip="{{ 'The list of speakers is closed.' | translate }}"
                                 >
                                     lock
                                 </mat-icon>
@@ -79,16 +79,16 @@
                             <button mat-icon-button class="title-action" (click)="toggleListOfSpeakersOpen()">
                                 @if (isLosClosed) {
                                     <mat-icon
-                                        matTooltip="{{ 'Open list of speakers' | translate }}"
                                         matTooltipPosition="above"
+                                        matTooltip="{{ 'Open list of speakers' | translate }}"
                                     >
                                         lock
                                     </mat-icon>
                                 }
                                 @if (!isLosClosed) {
                                     <mat-icon
-                                        matTooltip="{{ 'Close list of speakers' | translate }}"
                                         matTooltipPosition="above"
+                                        matTooltip="{{ 'Close list of speakers' | translate }}"
                                     >
                                         lock_open
                                     </mat-icon>
@@ -98,10 +98,10 @@
                             <button
                                 mat-icon-button
                                 class="title-action"
-                                (click)="readdLastSpeaker()"
-                                matTooltip="{{ 'Re-add last speaker' | translate }}"
                                 matTooltipPosition="above"
+                                matTooltip="{{ 'Re-add last speaker' | translate }}"
                                 [disabled]="!canReaddLastSpeaker"
+                                (click)="readdLastSpeaker()"
                             >
                                 <mat-icon>undo</mat-icon>
                             </button>

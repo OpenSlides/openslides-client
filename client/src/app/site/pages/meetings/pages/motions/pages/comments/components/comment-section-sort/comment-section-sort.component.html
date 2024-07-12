@@ -9,7 +9,7 @@
 <mat-card class="os-card spacer-bottom-60">
     <mat-card-content>
         <!-- The sorting component -->
-        <os-sorting-list (sortEvent)="onSortingChange($event)" [live]="true" [input]="comments" #sorter>
+        <os-sorting-list #sorter [live]="true" [input]="comments" (sortEvent)="onSortingChange($event)">
             <ng-template let-comment>
                 <span>
                     {{ comment.getTitle() }}

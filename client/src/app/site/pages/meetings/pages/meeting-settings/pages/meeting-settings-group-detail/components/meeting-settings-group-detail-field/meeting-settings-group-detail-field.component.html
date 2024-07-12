@@ -122,8 +122,8 @@
                                     <mat-form-field>
                                         <input
                                             matInput
-                                            [format]="24"
                                             formControlName="time"
+                                            [format]="24"
                                             [ngxTimepicker]="timepicker"
                                         />
                                         <div class="suffix-wrapper" matSuffix>
@@ -171,8 +171,8 @@
                     @if (setting.type === 'translations' || setting.type === 'ranking') {
                         <div>
                             <os-allocation-list
-                                [config]="getAllocationConfig(setting)"
                                 formControlName="value"
+                                [config]="getAllocationConfig(setting)"
                             ></os-allocation-list>
                         </div>
                     }

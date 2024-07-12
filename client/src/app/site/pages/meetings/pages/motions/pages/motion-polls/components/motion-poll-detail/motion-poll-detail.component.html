@@ -6,7 +6,7 @@
             }
         </div>
 
-        <ng-container class="menu-slot" *osPerms="permission.motionCanManagePolls">
+        <ng-container *osPerms="permission.motionCanManagePolls" class="menu-slot">
             <button type="button" mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
@@ -62,17 +62,17 @@
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
     <os-projector-button
+        *osPerms="permission.projectorCanManage"
         [menuItem]="true"
         [object]="poll"
-        *osPerms="permission.projectorCanManage"
     ></os-projector-button>
     <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="openDialog()">
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <button
-        mat-menu-item
         *osPerms="permission.motionCanManagePolls; and: poll && poll.type === 'named'"
+        mat-menu-item
         (click)="pseudoanonymizePoll()"
     >
         <mat-icon>warning</mat-icon>

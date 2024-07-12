@@ -42,7 +42,7 @@
                             <mat-header-cell *matHeaderCellDef>
                                 <span>{{ 'State' | translate }}</span>
                             </mat-header-cell>
-                            <mat-cell class="chip-container" *matCellDef="let motion">
+                            <mat-cell *matCellDef="let motion" class="chip-container">
                                 <mat-basic-chip disableRipple [ngClass]="motion.stateCssColor">
                                     {{ getStateLabel(motion) }}
                                 </mat-basic-chip>
@@ -53,7 +53,7 @@
                             <mat-header-cell *matHeaderCellDef>
                                 <span>{{ 'Recommendation' | translate }}</span>
                             </mat-header-cell>
-                            <mat-cell class="chip-container" *matCellDef="let motion">
+                            <mat-cell *matCellDef="let motion" class="chip-container">
                                 @if (motion.recommendation) {
                                     <mat-basic-chip disableRipple class="bluegrey">
                                         {{ getRecommendationLabel(motion) }}
@@ -103,7 +103,7 @@
         <span>{{ 'Edit details for' | translate }} {{ selectedCategory.prefixedName }}</span>
     </h1>
     <mat-dialog-content class="os-form-card-mobile">
-        <form class="edit-form" [formGroup]="editForm" (ngSubmit)="save()" (keydown)="onKeyDown($event)" tabindex="-1">
+        <form class="edit-form" tabindex="-1" [formGroup]="editForm" (ngSubmit)="save()" (keydown)="onKeyDown($event)">
             <mat-form-field>
                 <mat-label>{{ 'Prefix' | translate }}</mat-label>
                 <input matInput osAutofocus formControlName="prefix" />
@@ -116,7 +116,7 @@
         </form>
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button type="submit" mat-button [disabled]="!editForm.valid" color="accent" (click)="save()">
+        <button type="submit" mat-button color="accent" [disabled]="!editForm.valid" (click)="save()">
             <span>{{ 'Save' | translate }}</span>
         </button>
         <button type="button" mat-button [mat-dialog-close]="null">

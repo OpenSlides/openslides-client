@@ -34,8 +34,8 @@
                 <button mat-button [matMenuTriggerFor]="catFilterMenu">
                     <span
                         class="upper"
-                        [matBadge]="activeCatFilterCount > 0 ? activeCatFilterCount : null"
                         matBadgeColor="accent"
+                        [matBadge]="activeCatFilterCount > 0 ? activeCatFilterCount : null"
                         [matBadgeOverlap]="false"
                     >
                         {{ 'Categories' | translate }}
@@ -48,8 +48,8 @@
                 <button mat-button [matMenuTriggerFor]="tagFilterMenu">
                     <span
                         class="upper"
-                        [matBadge]="activeTagFilterCount > 0 ? activeTagFilterCount : null"
                         matBadgeColor="accent"
+                        [matBadge]="activeTagFilterCount > 0 ? activeTagFilterCount : null"
                         [matBadgeOverlap]="false"
                     >
                         {{ 'Tags' | translate }}
@@ -91,11 +91,11 @@
             #osSortedTree
             parentKey="sort_parent_id"
             weightKey="sort_weight"
-            (visibleNodes)="onChangeAmountOfItems($event)"
-            (hasChanged)="receiveChanges($event)"
             [model]="motionsObservable"
             [filterChange]="changeFilter"
             [sortingDefinition]="forceSort"
+            (visibleNodes)="onChangeAmountOfItems($event)"
+            (hasChanged)="receiveChanges($event)"
         >
             <ng-template #innerNode let-item="item">
                 <div class="line">

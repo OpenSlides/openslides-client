@@ -33,8 +33,8 @@
                             [includeNone]="true"
                             [ngModel]="theDuplicateFromId"
                             [ngModelOptions]="{ standalone: true }"
-                            (ngModelChange)="onUpdateDuplicateFrom($event)"
                             [sortFn]="false"
+                            (ngModelChange)="onUpdateDuplicateFrom($event)"
                         ></os-list-search-selector>
                         <mat-hint>
                             {{
@@ -77,9 +77,9 @@
             <mat-form-field *osCmlPerms="CML.can_manage; committeeId: committee?.id">
                 <mat-label>{{ 'Tags' | translate }}</mat-label>
                 <os-repo-search-selector
+                    formControlName="organization_tag_ids"
                     [repo]="orgaTagRepo"
                     [multiple]="true"
-                    formControlName="organization_tag_ids"
                     (clickNotFound)="onOrgaTagNotFound($event)"
                 >
                     <ng-template osNotFoundDescription>
@@ -95,7 +95,7 @@
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="os-card" *osOmlPerms="OML.superadmin; and: !isCreateView">
+    <mat-card *osOmlPerms="OML.superadmin; and: !isCreateView" class="os-card">
         <mat-card-content>
             <div class="superadmin-place">
                 <h2>{{ 'Superadmin settings' | translate }}</h2>

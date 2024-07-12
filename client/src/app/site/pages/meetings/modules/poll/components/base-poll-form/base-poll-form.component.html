@@ -9,7 +9,7 @@
         </mat-form-field>
     </form>
 
-    <form [formGroup]="contentForm" class="poll-preview-meta-info-form">
+    <form class="poll-preview-meta-info-form" [formGroup]="contentForm">
         @if (!data || !data.state || data.isCreated) {
             <div class="info-grid">
                 <!-- Poll Type -->

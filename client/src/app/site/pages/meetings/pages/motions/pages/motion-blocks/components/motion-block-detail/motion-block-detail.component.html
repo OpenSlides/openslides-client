@@ -4,20 +4,20 @@
         <div class="title-slot">
             @if (block) {
                 <os-icon-container
-                    [noWrap]="true"
                     icon="check"
                     size="large"
+                    [noWrap]="true"
                     [showIcon]="block.isFinished"
                     [iconTooltip]="'Finished' | translate"
                 >
                     <os-icon-container
-                        [noWrap]="true"
                         icon="lock"
                         size="large"
+                        [noWrap]="true"
                         [showIcon]="block.internal"
                         [iconTooltip]="'Internal' | translate"
                     >
-                        <os-projectable-title [model]="block" titleStyle="h2"></os-projectable-title>
+                        <os-projectable-title titleStyle="h2" [model]="block"></os-projectable-title>
                     </os-icon-container>
                 </os-icon-container>
             }
@@ -36,8 +36,8 @@
                 <button
                     *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
                     mat-button
-                    (click)="onFollowRecButton()"
                     [disabled]="isFollowButtonDisabledObservable() | async"
+                    (click)="onFollowRecButton()"
                 >
                     <os-icon-container icon="done_all" class="follow-all-icon">
                         <div>{{ 'Follow recommendations for all motions' | translate }}</div>
@@ -148,8 +148,8 @@
                 mat-icon-button
                 [disabled]="isMultiSelect"
                 [matMenuTriggerFor]="singleItemMenu"
-                (click)="$event.stopPropagation()"
                 [matMenuTriggerData]="{ motion: motion }"
+                (click)="$event.stopPropagation()"
             >
                 <mat-icon>more_vert</mat-icon>
             </button>
@@ -159,14 +159,14 @@
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
-    <ng-template matMenuContent let-motion="motion">
+    <ng-template let-motion="motion" matMenuContent>
         <os-projector-button [object]="motion" [menuItem]="true"></os-projector-button>
         <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
         <button
+            *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
             mat-menu-item
             class="red-warning-text"
             (click)="onRemoveMotionButton(motion)"
-            *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
         >
             <mat-icon>close</mat-icon>
             <span>{{ 'Remove from motion block' | translate }}</span>
@@ -181,8 +181,8 @@
             <button
                 *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
                 mat-menu-item
-                (click)="onFollowRecButton()"
                 [disabled]="isFollowButtonDisabledObservable() | async"
+                (click)="onFollowRecButton()"
             >
                 <mat-icon>done_all</mat-icon>
                 <span>{{ 'Follow recommendations for all motions' | translate }}</span>

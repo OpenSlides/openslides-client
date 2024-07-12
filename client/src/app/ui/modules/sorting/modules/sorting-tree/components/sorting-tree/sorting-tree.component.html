@@ -1,14 +1,17 @@
 <cdk-tree
     #osTree="cdkDropList"
+    cdkDropList
     [dataSource]="dataSource"
     [treeControl]="treeControl"
-    cdkDropList
     [cdkDropListData]="osTreeData"
     (cdkDropListSorted)="sortItems($event)"
 >
     <cdk-tree-node
+        *cdkTreeNodeDef="let node"
         cdkDrag
         [cdkDragData]="node"
+        [style.display]="shouldRender(node) ? 'flex' : 'none'"
+        [style.padding-left]="node.level * 40 + 'px'"
         (cdkDragDropped)="onDrop(node)"
         (mousedown)="mouseDown($event)"
         (mouseup)="mouseUp()"
@@ -16,9 +19,6 @@
         (touchend)="mouseUp()"
         (cdkDragStarted)="startsDrag($event)"
         (cdkDragMoved)="moveItem($event)"
-        *cdkTreeNodeDef="let node"
-        [style.display]="shouldRender(node) ? 'flex' : 'none'"
-        [style.padding-left]="node.level * 40 + 'px'"
     >
         <div class="sorting-tree-node-container backgroundColorLight background-default">
             <span class="flex-center" cdkDragHandle>
@@ -29,12 +29,12 @@
                     mat-icon-button
                     cdkTreeNodeToggle
                     [attr.aria-label]="'toggle ' + node.filename"
-                    (click)="handleClick(node)"
                     [style.visibility]="node.expandable ? 'visible' : 'hidden'"
+                    (click)="handleClick(node)"
                 >
                     <mat-icon
-                        [style.transform]="node.isExpanded ? 'rotate(90deg)' : 'rotate(0deg)'"
                         class="mat-icon-rtl-mirror"
+                        [style.transform]="node.isExpanded ? 'rotate(90deg)' : 'rotate(0deg)'"
                     >
                         chevron_right
                     </mat-icon>
@@ -42,6 +42,6 @@
             }
             <ng-container [ngTemplateOutlet]="innerNode" [ngTemplateOutletContext]="{ item: node.item }"></ng-container>
         </div>
-        <div [style.margin-left]="placeholderLevel * 40 + 'px'" *cdkDragPlaceholder></div>
+        <div *cdkDragPlaceholder [style.margin-left]="placeholderLevel * 40 + 'px'"></div>
     </cdk-tree-node>
 </cdk-tree>

@@ -3,8 +3,8 @@
     @for (option of autopilotContentElements; track option) {
         <div class="option">
             <mat-checkbox
-                (ngModelChange)="updateDisabled(option.key, $event)"
                 [ngModel]="!disabledAutopilotContentElements[option.key]"
+                (ngModelChange)="updateDisabled(option.key, $event)"
             >
                 {{ option.description | translate }}
             </mat-checkbox>
@@ -15,5 +15,5 @@
 </div>
 
 <div mat-dialog-actions>
-    <button mat-button (click)="close()" translate>Close</button>
+    <button mat-button translate (click)="close()">Close</button>
 </div>

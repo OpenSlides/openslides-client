@@ -3,7 +3,7 @@
     <div class="custom-table-header">
         <!-- Scrollable folder bar -->
         <span class="folder-nav-bar h-scroller">
-            <button class="folder" mat-button (click)="changeDirectory(null)" [disabled]="isMultiSelect">
+            <button class="folder" mat-button [disabled]="isMultiSelect" (click)="changeDirectory(null)">
                 <mat-icon class="grey-icon foreground-icon">home</mat-icon>
             </button>
             @for (directory of directoryChain; track directory; let last = $last) {
@@ -15,8 +15,8 @@
                         <button
                             class="folder"
                             mat-button
-                            (click)="changeDirectory(directory.id)"
                             [disabled]="isMultiSelect"
+                            (click)="changeDirectory(directory.id)"
                         >
                             <span class="folder-text">
                                 {{ directory.getTitle() }}
@@ -31,7 +31,7 @@
                             [matMenuTriggerData]="{ mediafile: directory }"
                             [disabled]="isMultiSelect"
                         >
-                            <os-icon-container icon="arrow_drop_down" [swap]="true" size="large" [noWrap]="true">
+                            <os-icon-container icon="arrow_drop_down" size="large" [swap]="true" [noWrap]="true">
                                 {{ directory.getTitle() }}
                             </os-icon-container>
                         </button>
@@ -74,9 +74,9 @@
         @if (mediafile.is_directory && !isMultiSelect) {
             <a
                 class="detail-link"
+                tabindex="0"
                 (click)="changeDirectory(mediafile.id)"
                 (keydown.enter)="changeDirectory(mediafile.id)"
-                tabindex="0"
             ></a>
         }
         <mat-icon class="grey-icon foreground-icon">{{ mediafile.getIcon() }}</mat-icon>
@@ -90,9 +90,9 @@
         @if (mediafile.is_directory && !isMultiSelect) {
             <a
                 class="detail-link"
+                tabindex="0"
                 (click)="changeDirectory(mediafile.id)"
                 (keydown.enter)="changeDirectory(mediafile.id)"
-                tabindex="0"
             ></a>
         }
         <div class="innerTable overflow-hidden">
@@ -137,10 +137,10 @@
     <!-- Indicator column -->
     <div *osScrollingTableCell="'indicator'; row as mediafile; config: { width: 40 }" class="fill clickable">
         @if (mediafile.isFont() && isUsedAsFontFn(mediafile)) {
-            <mat-icon [matTooltip]="'File is being used' | translate" class="foreground-icon">text_fields</mat-icon>
+            <mat-icon class="foreground-icon" [matTooltip]="'File is being used' | translate">text_fields</mat-icon>
         }
         @if (mediafile.isImage() && isUsedAsLogoFn(mediafile)) {
-            <mat-icon [matTooltip]="'File is being used' | translate" class="foreground-icon">insert_photo</mat-icon>
+            <mat-icon class="foreground-icon" [matTooltip]="'File is being used' | translate">insert_photo</mat-icon>
         }
     </div>
 
@@ -161,7 +161,7 @@
 
 <!-- Menu for single files in the list -->
 <mat-menu #singleMediafileMenu="matMenu">
-    <ng-template matMenuContent let-mediafile="mediafile">
+    <ng-template let-mediafile="mediafile" matMenuContent>
         <!-- Space for custom content -->
         <ng-container *ngTemplateOutlet="fileMenuTemplate; context: { mediafile: mediafile }"></ng-container>
 
@@ -202,8 +202,8 @@
         <button
             type="submit"
             mat-button
-            [disabled]="!fileEditForm.valid"
             color="accent"
+            [disabled]="!fileEditForm.valid"
             [mat-dialog-close]="fileEditForm.value"
         >
             <span>{{ 'Save' | translate }}</span>

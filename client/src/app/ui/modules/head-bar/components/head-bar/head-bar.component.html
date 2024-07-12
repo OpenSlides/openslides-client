@@ -1,5 +1,5 @@
 <ng-template #headbarContent>
-    <mat-toolbar color="primary" [ngClass]="multiSelectMode ? 'multi-select' : ''" class="sticky-toolbar">
+    <mat-toolbar color="primary" class="sticky-toolbar" [ngClass]="multiSelectMode ? 'multi-select' : ''">
         <div class="toolbar-left">
             @if (!editMode) {
                 @if (!showBackButton) {
@@ -59,10 +59,10 @@
             @if (hasMainButton && !editMode && !vp.isMobile && !multiSelectMode) {
                 <button
                     mat-icon-button
-                    [disabled]="!isMainButtonEnabled"
-                    (click)="sendMainEvent()"
-                    matTooltip="{{ mainActionTooltip | translate }}"
                     data-cy="headbarMainButton"
+                    [disabled]="!isMainButtonEnabled"
+                    matTooltip="{{ mainActionTooltip | translate }}"
+                    (click)="sendMainEvent()"
                 >
                     <mat-icon>{{ mainButtonIcon }}</mat-icon>
                 </button>
@@ -95,8 +95,8 @@
             mat-fab
             class="head-button"
             [disabled]="!isMainButtonEnabled"
-            (click)="sendMainEvent()"
             matTooltip="{{ mainActionTooltip | translate }}"
+            (click)="sendMainEvent()"
         >
             @if (mainButtonIcon === 'add_circle') {
                 <mat-icon>add</mat-icon>

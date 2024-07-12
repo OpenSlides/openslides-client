@@ -1,15 +1,15 @@
 <os-detail-view [collection]="collection" (idFound)="onIdFound($event)">
     @if (hasLoaded | async) {
         <os-head-bar
-            [hasMainButton]="perms.isAllowed('can_create_amendments', motion)"
             mainActionTooltip="New amendment"
+            [hasMainButton]="perms.isAllowed('can_create_amendments', motion)"
             [nav]="false"
             [editMode]="editMotion"
             [isSaveButtonEnabled]="canSave"
             [saveAction]="getSaveAction()"
+            [goBack]="motion?.hasLeadMotion"
             (mainEvent)="createAmendment()"
             (cancelEditEvent)="leaveEditMotion()"
-            [goBack]="motion?.hasLeadMotion"
         >
             <!-- Title -->
             <div class="title-slot">
@@ -39,10 +39,10 @@
                 <div class="extra-controls-slot prev-next-motion-controls">
                     <button
                         mat-button
-                        (click)="navigateToMotion(previousMotion)"
-                        [disabled]="!previousMotion"
                         class="nav-button-overflow"
+                        [disabled]="!previousMotion"
                         [ngClass]="{ 'motion-detail-nav-button': (vp.isMobileSubject | async) === false }"
+                        (click)="navigateToMotion(previousMotion)"
                     >
                         <os-icon-container icon="chevron_left" [hide]="vp.isMobileSubject | async">
                             {{ previousMotion ? previousMotion.number : '' }}
@@ -50,10 +50,10 @@
                     </button>
                     <button
                         mat-button
-                        (click)="navigateToMotion(nextMotion)"
-                        [disabled]="!nextMotion"
                         class="nav-button-overflow"
+                        [disabled]="!nextMotion"
                         [ngClass]="{ 'motion-detail-nav-button': (vp.isMobileSubject | async) === false }"
+                        (click)="navigateToMotion(nextMotion)"
                     >
                         <os-icon-container icon="chevron_right" [swap]="true" [hide]="vp.isMobileSubject | async">
                             {{ nextMotion ? nextMotion.number : '' }}

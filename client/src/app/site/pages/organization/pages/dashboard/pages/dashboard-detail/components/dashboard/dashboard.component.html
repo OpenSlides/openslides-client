@@ -115,7 +115,7 @@
     </div>
 }
 
-<ng-template let-meetingList="meetingList" let-context="context" #meetingListTemplate>
+<ng-template #meetingListTemplate let-meetingList="meetingList" let-context="context">
     <div
         class="meeting-list"
         [ngClass]="{ 'no-meetings': !meetingList.length }"
@@ -129,7 +129,7 @@
             </mat-card>
         }
         @if (!!meetingList.length) {
-            <cdk-virtual-scroll-viewport [itemSize]="60" class="meeting-list-viewport">
+            <cdk-virtual-scroll-viewport class="meeting-list-viewport" [itemSize]="60">
                 <ng-container *cdkVirtualFor="let meeting of meetingList; let odd = odd; let last = last">
                     <div
                         [ngClass]="{
@@ -149,13 +149,13 @@
     </div>
 </ng-template>
 
-<ng-template let-meeting="meeting" let-context="context" #meetingTemplate>
+<ng-template #meetingTemplate let-meeting="meeting" let-context="context">
     <div class="meeting-box" [ngClass]="context?.wrapperCssClass">
         <a
-            [routerLink]="meeting.id"
-            [ngClass]="context?.cssClass"
             class="meeting-box-left flex-vertical-center"
             matRipple
+            [routerLink]="meeting.id"
+            [ngClass]="context?.cssClass"
         >
             <div class="one-line">
                 <div class="meeting-box--mid one-line">

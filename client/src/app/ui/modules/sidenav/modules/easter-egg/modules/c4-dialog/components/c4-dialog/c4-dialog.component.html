@@ -16,16 +16,16 @@
                 <span>{{ opponentName }}</span>
             </div>
         }
-        <table [class]="disableBoard ? 'disabled' : ''" id="c4">
+        <table id="c4" [class]="disableBoard ? 'disabled' : ''">
             @for (row of [5, 4, 3, 2, 1, 0]; track row) {
                 <tr>
                     @for (col of [0, 1, 2, 3, 4, 5, 6]; track col) {
                         <td>
                             <div
+                                tabindex="0"
                                 [class]="getCoinClass(row, col)"
                                 (click)="clickField(col)"
                                 (keydown.enter)="clickField(col)"
-                                tabindex="0"
                             ></div>
                         </td>
                     }
@@ -34,7 +34,7 @@
         </table>
         <div class="center">
             @if (state === 'start') {
-                <button (click)="handleEvent('searchClicked')" mat-raised-button color="accent">
+                <button mat-raised-button color="accent" (click)="handleEvent('searchClicked')">
                     {{ 'Search player' | translate }}
                 </button>
             }

@@ -1,8 +1,8 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar
+        saveText="Create"
         [nav]="false"
         [editMode]="true"
-        saveText="Create"
         [isSaveButtonEnabled]="matStepper.selectedIndex === 1 && contentForm.valid"
         [saveAction]="getSaveAction()"
         (cancelEditEvent)="cancelCreation()"
@@ -49,9 +49,9 @@
                         @for (paragraph of paragraphs; track paragraph; let i = $index) {
                             <section
                                 class="paragraph-row background-hover"
+                                tabindex="-1"
                                 [class.outlined-hover]="isParagraphSelected(paragraph)"
                                 (click)="onParagraphClicked(paragraph)"
-                                tabindex="-1"
                             >
                                 @if (multipleParagraphsAllowed) {
                                     <mat-checkbox

@@ -43,7 +43,7 @@
     }
 }
 
-<form class="motion-content" [formGroup]="contentForm" (keydown)="onKeyDown($event)" tabindex="-1">
+<form class="motion-content" tabindex="-1" [formGroup]="contentForm" (keydown)="onKeyDown($event)">
     <!-- Submitter -->
     @if (newMotion) {
         <div class="content-field">
@@ -198,7 +198,7 @@
                         <mat-list dense>
                             @for (file of motion?.attachments; track file) {
                                 <mat-list-item>
-                                    <a [routerLink]="file.url" target="_blank">{{ file.title }}</a>
+                                    <a target="_blank" [routerLink]="file.url">{{ file.title }}</a>
                                 </mat-list-item>
                             }
                         </mat-list>

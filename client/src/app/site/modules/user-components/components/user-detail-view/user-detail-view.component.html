@@ -103,11 +103,11 @@
         <div class="personal-info-area">
             <!-- E-Mail -->
             <mat-form-field
+                class="force-min-width"
                 [ngClass]="{
                     form58: isAllowed('update'),
                     form100: !isAllowed('update')
                 }"
-                class="force-min-width"
             >
                 <mat-label>{{ 'Email' | translate }}</mat-label>
                 <input type="email" matInput autocomplete="off" name="email" formControlName="email" />
@@ -131,11 +131,11 @@
             <!-- username -->
             @if (isAllowed('seePersonal')) {
                 <mat-form-field
+                    class="force-min-width"
                     [ngClass]="{
                         form48: isAllowed('update'),
                         form100: !isAllowed('update')
                     }"
-                    class="force-min-width"
                 >
                     <mat-label>{{ 'Username' | translate }}</mat-label>
                     <input type="text" matInput formControlName="username" />
@@ -144,8 +144,8 @@
                             matSuffix
                             type="button"
                             mat-icon-button
-                            [matTooltip]="'Leave blank to automatically generate the username.' | translate"
                             matTooltipPosition="above"
+                            [matTooltip]="'Leave blank to automatically generate the username.' | translate"
                         >
                             <mat-icon>help</mat-icon>
                         </button>
@@ -170,8 +170,8 @@
                             type="button"
                             mat-icon-button
                             [disabled]="!generatePasswordFn"
-                            (click)="setRandomPassword()"
                             [matTooltip]="'Generate password' | translate"
+                            (click)="setRandomPassword()"
                         >
                             <mat-icon>autorenew</mat-icon>
                         </button>

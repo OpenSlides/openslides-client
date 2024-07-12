@@ -1,8 +1,8 @@
 <os-head-bar
     [hasMainButton]="true"
     [mainActionTooltip]="'New tag' | translate"
-    (mainEvent)="createOrganizationTag()"
     [multiSelectMode]="isMultiSelect"
+    (mainEvent)="createOrganizationTag()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -22,13 +22,13 @@
 </os-head-bar>
 
 <os-list
-    [listObservable]="repo.getViewModelListObservable()"
-    [(selectedRows)]="selectedRows"
-    [multiSelect]="isMultiSelect"
     listStorageKey="orgaTags"
+    [listObservable]="repo.getViewModelListObservable()"
+    [multiSelect]="isMultiSelect"
     [vScrollFixed]="60"
     [filterProps]="['name']"
     [hiddenInMobile]="['info', 'menu']"
+    [(selectedRows)]="selectedRows"
 >
     <div *osScrollingTableCell="'name'; row as orgaTag" class="cell-slot fill">
         <div>

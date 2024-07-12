@@ -1,8 +1,8 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     @if (hasLoaded | async) {
         <os-head-bar
-            [hasMainButton]="hasPerms('manage') && !!assignment"
             mainButtonIcon="edit"
+            [hasMainButton]="hasPerms('manage') && !!assignment"
             [mainActionTooltip]="'Edit' | translate"
             [nav]="false"
             [editMode]="isEditing"
@@ -133,7 +133,7 @@
                     }
                     <div class="current-phase">
                         <h4>{{ 'Phase' | translate }}</h4>
-                        <os-chip-select [canOpen]="hasPerms('manage')" chipClass="bluegrey">
+                        <os-chip-select chipClass="bluegrey" [canOpen]="hasPerms('manage')">
                             @for (option of phaseOptions; track option) {
                                 <button menu mat-menu-item (click)="onSetPhaseButton(option.value)">
                                     {{ option.display_name | translate }}
@@ -149,7 +149,7 @@
                         <mat-list dense class="election-document-list">
                             @for (file of assignment.attachments; track file) {
                                 <mat-list-item>
-                                    <a [routerLink]="file.url" target="_blank">{{ file.getTitle() }}</a>
+                                    <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
                                 </mat-list-item>
                             }
                         </mat-list>
@@ -244,7 +244,7 @@
 <ng-template #assignmentFormTemplate>
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <form class="content" [formGroup]="assignmentForm" (keydown)="onKeyDown($event)" tabindex="-1">
+            <form class="content" tabindex="-1" [formGroup]="assignmentForm" (keydown)="onKeyDown($event)">
                 <div>
                     <!-- title -->
                     <mat-form-field class="full-width">

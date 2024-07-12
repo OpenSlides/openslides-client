@@ -4,11 +4,11 @@
         <div class="main-nav">
             @if (showMeetingNav) {
                 <a
-                    [@navItemAnim]
                     mat-menu-item
-                    (click)="mobileAutoCloseNav()"
-                    [routerLink]="['/']"
                     class="foreground-icon nav-item dashboard-entry"
+                    [@navItemAnim]
+                    [routerLink]="['/']"
+                    (click)="mobileAutoCloseNav()"
                 >
                     <mat-icon matListItemIcon>apps</mat-icon>
                     <span matListItemTitle class="nav-row-text">{{ 'Dashboard' | translate }}</span>
@@ -18,15 +18,15 @@
             @for (entry of mainMenuEntries; track entry) {
                 <span>
                     <a
-                        [@navItemAnim]
                         *osPerms="entry.permission"
                         mat-menu-item
                         class="foreground-icon nav-item"
-                        [ngStyle]="getCustomStyleForEntry(entry)"
-                        (click)="mobileAutoCloseNav()"
-                        [routerLink]="entry.route"
                         routerLinkActive="active"
+                        [@navItemAnim]
+                        [ngStyle]="getCustomStyleForEntry(entry)"
+                        [routerLink]="entry.route"
                         [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
+                        (click)="mobileAutoCloseNav()"
                     >
                         <mat-icon matListItemIcon>{{ entry.icon }}</mat-icon>
                         <span matListItemTitle class="nav-row-text">{{ entry.displayName | translate }}</span>
@@ -39,19 +39,19 @@
             ) {
                 @if (chat.canSee) {
                     <a
-                        [@navItemAnim]
                         class="foreground-icon nav-item"
                         mat-menu-item
-                        (click)="mobileAutoCloseNav()"
                         routerLink="chat"
                         routerLinkActive="active"
+                        [@navItemAnim]
+                        (click)="mobileAutoCloseNav()"
                     >
                         <mat-icon
                             matListItemIcon
-                            [matBadgeHidden]="chat.notifications === 0"
-                            [matBadge]="chat.notifications"
                             matBadgeColor="accent"
                             matBadgeOverlap="false"
+                            [matBadgeHidden]="chat.notifications === 0"
+                            [matBadge]="chat.notifications"
                         >
                             sms
                         </mat-icon>

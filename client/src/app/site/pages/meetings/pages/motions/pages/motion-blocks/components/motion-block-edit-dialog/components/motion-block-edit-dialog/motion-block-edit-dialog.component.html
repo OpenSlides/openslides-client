@@ -2,10 +2,10 @@
 <mat-dialog-content class="os-form-card-mobile">
     <form
         class="edit-form"
+        tabindex="-1"
         [formGroup]="blockEditForm"
         (ngSubmit)="saveBlock()"
         (keydown)="onKeyDown($event)"
-        tabindex="-1"
     >
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
@@ -15,7 +15,7 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button type="submit" mat-button [disabled]="!blockEditForm.valid" color="accent" (click)="saveBlock()">
+    <button type="submit" mat-button color="accent" [disabled]="!blockEditForm.valid" (click)="saveBlock()">
         <span>{{ 'Save' | translate }}</span>
     </button>
     <button type="button" mat-button [mat-dialog-close]="null">

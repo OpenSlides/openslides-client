@@ -32,7 +32,7 @@
     <div *osScrollingTableCell="'info'; row as speaker; config: { width: 200 }" class="cell-slot fill">
         <div class="infoCell">
             @if (speaker.list_of_speakers?.content_object) {
-                <a [routerLink]="viewModelUrl(speaker) || null" [state]="{ back: 'true' }" class="spacer-top-5">
+                <a class="spacer-top-5" [routerLink]="viewModelUrl(speaker) || null" [state]="{ back: 'true' }">
                     <os-icon-container [icon]="getSpeakerIcon(speaker)">
                         {{ speaker.topic }}
                     </os-icon-container>
@@ -118,7 +118,7 @@
 </os-list>
 
 <mat-menu #speakerMenu="matMenu">
-    <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="csvExportSpeakerList()">
+    <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="csvExportSpeakerList()">
         <mat-icon>archive</mat-icon>
         <span>{{ 'Export as CSV' | translate }}</span>
     </button>

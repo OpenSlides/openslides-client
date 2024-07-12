@@ -13,7 +13,7 @@
                     </span>
                 </div>
                 <!-- Dot Menu -->
-                <span class="poll-actions" *osPerms="permission.motionCanManagePolls">
+                <span *osPerms="permission.motionCanManagePolls" class="poll-actions">
                     <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
                         <mat-icon class="icon-18">more_horiz</mat-icon>
                     </button>
@@ -51,8 +51,8 @@
                     <button
                         mat-stroked-button
                         [ngClass]="pollStateActions[poll.state].css"
-                        (click)="nextPollState()"
                         [disabled]="stateChangePendingObservable | async"
+                        (click)="nextPollState()"
                     >
                         <mat-icon>{{ pollStateActions[poll.state].icon }}</mat-icon>
                         <span class="next-state-label">
@@ -98,7 +98,7 @@
 
 <ng-template #emptyTemplate>
     <span *osPerms="permission.motionCanManagePolls; and: poll.type === 'analog'">
-        <button mat-stroked-button (click)="dialogOpened.emit()" matTooltip="{{ 'Edit' | translate }}">
+        <button mat-stroked-button matTooltip="{{ 'Edit' | translate }}" (click)="dialogOpened.emit()">
             <mat-icon>edit</mat-icon>
         </button>
         <div>
@@ -121,9 +121,9 @@
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <os-projector-button
+        *osPerms="permission.projectorCanManage"
         [menuItem]="true"
         [object]="poll"
-        *osPerms="permission.projectorCanManage"
     ></os-projector-button>
     <button mat-menu-item (click)="downloadPdf()">
         <mat-icon>picture_as_pdf</mat-icon>

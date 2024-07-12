@@ -41,8 +41,8 @@
     <ng-template let-structure_level="structure_level" matMenuContent>
         <button
             mat-menu-item
-            (click)="setTotalTime(structure_level.id)"
             [disabled]="structureLevelIsSpeaking(structure_level.id)"
+            (click)="setTotalTime(structure_level.id)"
         >
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
@@ -57,8 +57,8 @@
         </button>
         <button
             mat-menu-item
-            (click)="distributeOverhangTime(structure_level.id)"
             [disabled]="!isInOvertimeAndNotSpeaking(structure_level.id)"
+            (click)="distributeOverhangTime(structure_level.id)"
         >
             <mat-icon>more_time</mat-icon>
             <span>{{ 'Distribute overhang time' | translate }}</span>
@@ -70,7 +70,7 @@
 <ng-template #totalTimeDialog>
     <h2 mat-dialog-title>{{ currentEntry.name }}</h2>
     <mat-dialog-content class="os-form-card-mobile">
-        <form [formGroup]="totalTimeForm" (keydown)="onKeyDown($event)" tabindex="-1">
+        <form tabindex="-1" [formGroup]="totalTimeForm" (keydown)="onKeyDown($event)">
             <!-- total time -->
             <mat-form-field>
                 <mat-label>{{ 'Total time' | translate }}</mat-label>
@@ -96,11 +96,11 @@
 <ng-template #addRemoveTimeDialog>
     <h2 mat-dialog-title>{{ currentEntry.name }}</h2>
     <div class="os-form-card-mobile" mat-dialog-content>
-        <form (keydown)="onKeyDown($event)" tabindex="-1">
+        <form tabindex="-1" (keydown)="onKeyDown($event)">
             <!-- total time -->
             <mat-form-field>
                 <mat-label>{{ 'Time' | translate }}</mat-label>
-                <input type="text" [formControl]="addTimeControl" matInput required />
+                <input type="text" matInput required [formControl]="addTimeControl" />
                 <mat-error>
                     {{ 'A time is required and must be in min:secs format.' | translate }}
                 </mat-error>
@@ -111,17 +111,17 @@
     <div mat-dialog-actions>
         <button
             mat-button
-            (click)="doAddOrRemoveTime(true)"
             [disabled]="!addTimeControl.valid"
             [mat-dialog-close]="true"
+            (click)="doAddOrRemoveTime(true)"
         >
             <span>{{ 'Add up' | translate }}</span>
         </button>
         <button
             mat-button
-            (click)="doAddOrRemoveTime(false)"
             [disabled]="!addTimeControl.valid"
             [mat-dialog-close]="true"
+            (click)="doAddOrRemoveTime(false)"
         >
             <span>{{ 'Subtract' | translate }}</span>
         </button>

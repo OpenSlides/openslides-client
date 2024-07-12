@@ -16,11 +16,11 @@
             <button
                 type="button"
                 mat-stroked-button
-                (click)="checkDatastore(true)"
+                matTooltipPosition="right"
                 matTooltip="{{
                     'For large instances this may block the server to the point of unusability' | translate
                 }}"
-                matTooltipPosition="right"
+                (click)="checkDatastore(true)"
             >
                 {{ 'Thoroughly check datastore (unsafe)' | translate }}
             </button>

@@ -7,7 +7,7 @@
 
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <os-sorting-list [input]="workflowStatesObservable" (sortEvent)="onSorting($event)" #sorter>
+            <os-sorting-list #sorter [input]="workflowStatesObservable" (sortEvent)="onSorting($event)">
                 <ng-template let-state let-index="index">
                     <div class="action-title">
                         <div>{{ state.name }}</div>

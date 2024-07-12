@@ -113,7 +113,7 @@
                     <ng-template #colorFormField let-title="title" let-form="form">
                         <mat-form-field class="color-picker-form">
                             <mat-label>{{ title | translate }}</mat-label>
-                            <input matInput [formControlName]="form" type="color" />
+                            <input matInput type="color" [formControlName]="form" />
                             <button
                                 matSuffix
                                 type="button"

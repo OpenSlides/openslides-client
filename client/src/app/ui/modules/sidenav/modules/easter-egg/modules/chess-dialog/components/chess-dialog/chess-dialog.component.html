@@ -12,7 +12,7 @@
     <div #chessboard class="spacer-top-5"></div>
     @if (inMeeting && state === 'start') {
         <div class="center spacer-top-5">
-            <button (click)="handleEvent('searchClicked')" mat-raised-button color="accent">
+            <button mat-raised-button color="accent" (click)="handleEvent('searchClicked')">
                 {{ 'Search player' | translate }}
             </button>
         </div>

@@ -22,10 +22,10 @@
                     mat-icon-button
                     class="delete-button"
                     type="button"
-                    (click)="onRemoveAllocation(i)"
-                    matTooltip="{{ 'Cancel' | translate }}"
                     matTooltipPosition="left"
+                    matTooltip="{{ 'Cancel' | translate }}"
                     [disabled]="disabled"
+                    (click)="onRemoveAllocation(i)"
                 >
                     <mat-icon>close</mat-icon>
                 </button>
@@ -35,7 +35,7 @@
 </form>
 
 <!-- Add new allocation button -->
-<button mat-button (click)="addNewAllocation()" [disabled]="disabled">
+<button mat-button [disabled]="disabled" (click)="addNewAllocation()">
     <mat-icon>add</mat-icon>
     {{ addButtonLabel | translate }}
 </button>

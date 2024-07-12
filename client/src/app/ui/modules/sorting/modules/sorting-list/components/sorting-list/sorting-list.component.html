@@ -6,9 +6,9 @@
     }
     @for (item of sortedItems; track item; let i = $index) {
         <div
-            [ngClass]="isSelectedRow(i) ? 'backgroundColorSelected' : 'backgroundColorLight'"
             class="line margin-bottom-5"
             cdkDrag
+            [ngClass]="isSelectedRow(i) ? 'backgroundColorSelected' : 'backgroundColorLight'"
             (click)="onItemClick($event, i)"
             (cdkDragStarted)="dragStarted(i)"
         >
@@ -32,7 +32,7 @@
                 ></ng-template>
             </div>
             <!-- Drag prev -->
-            <div class="line" *cdkDragPreview>
+            <div *cdkDragPreview class="line">
                 @if (multiSelectedIndex.length > 0) {
                     <div class="spacer.left-10">
                         {{ multiSelectedIndex.length }}&nbsp;

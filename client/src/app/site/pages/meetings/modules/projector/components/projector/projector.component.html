@@ -1,4 +1,4 @@
-<div id="container" class="projector-container" (osResized)="onResized()" #container>
+<div #container id="container" class="projector-container" (osResized)="onResized()">
     <div id="projector" class="projector">
         @if (isOffline) {
             <div id="offline-indicator">
@@ -10,7 +10,7 @@
                 <!-- projector logo -->
                 @if (projectorLogoObservable | async; as projectorLogo) {
                     @if (projector.show_logo) {
-                        <img src="{{ projectorLogo }}" class="projector-logo-main" />
+                        <img class="projector-logo-main" src="{{ projectorLogo }}" />
                     }
                 }
                 @if (projector.show_title) {

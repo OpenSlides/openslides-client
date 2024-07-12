@@ -42,8 +42,8 @@
         @if ({ writePermissions: hasWritePermissionsObservable | async }; as has) {
             <cdk-virtual-scroll-viewport
                 [itemSize]="70"
-                (scrolledIndexChange)="onScrolledIndexChanged()"
                 [ngClass]="{ 'has-write-permissions': has.writePermissions }"
+                (scrolledIndexChange)="onScrolledIndexChanged()"
             >
                 <div *cdkVirtualFor="let message of group.chat_messages">
                     <os-chat-group-detail-message
@@ -58,26 +58,26 @@
 }
 @if (hasWritePermissionsObservable | async) {
     <os-chat-group-detail-message-form
+        [currentMessage]="toEditChatMessageObservable | async"
         (messageSent)="sendChatMessage($event)"
         (editingCanceled)="cancelEditingChatMessage()"
-        [currentMessage]="toEditChatMessageObservable | async"
     ></os-chat-group-detail-message-form>
 }
 
 <!-- The menu content -->
 <mat-menu #chatGroupMenu="matMenu">
-    <ng-template matMenuContent let-chatGroup="chatGroup">
+    <ng-template let-chatGroup="chatGroup" matMenuContent>
         <button mat-menu-item (click)="editChatGroup(chatGroup)">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </button>
         <!-- clear history -->
-        <button mat-menu-item (click)="clearChatGroup(chatGroup)" class="red-warning-text">
+        <button mat-menu-item class="red-warning-text" (click)="clearChatGroup(chatGroup)">
             <mat-icon>format_clear</mat-icon>
             <span>{{ 'Clear' | translate }}</span>
         </button>
         <!-- delete -->
-        <button mat-menu-item (click)="deleteChatGroup(chatGroup)" class="red-warning-text">
+        <button mat-menu-item class="red-warning-text" (click)="deleteChatGroup(chatGroup)">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>

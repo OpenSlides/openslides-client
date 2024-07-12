@@ -1,6 +1,6 @@
 <mat-form-field class="color-picker-form">
     <mat-label>{{ title | translate }}</mat-label>
-    <input matInput [formControl]="formControl" type="color" />
+    <input matInput type="color" [formControl]="formControl" />
     <button matSuffix type="button" mat-icon-button matTooltip="{{ 'Reset' | translate }}" (click)="onReset()">
         <mat-icon>replay</mat-icon>
     </button>

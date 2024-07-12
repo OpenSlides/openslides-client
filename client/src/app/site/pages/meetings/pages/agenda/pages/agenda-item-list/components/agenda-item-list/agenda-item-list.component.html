@@ -1,8 +1,8 @@
 <os-head-bar
     [hasMainButton]="canManage"
     [mainActionTooltip]="'New topic' | translate"
-    (mainEvent)="onPlusButton()"
     [multiSelectMode]="isMultiSelect"
+    (mainEvent)="onPlusButton()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -29,15 +29,15 @@
     [alwaysShowMenu]="canManage"
     [showMenu]="canSeeMenu"
     [filterProps]="filterProps"
-    [(selectedRows)]="selectedRows"
     [getSpeakerButtonObject]="getSpeakerButtonObject"
+    [(selectedRows)]="selectedRows"
 >
     <!-- Title column -->
     <div *osScrollingTableCell="'title'; row as item; rowContext as rowContext" class="cell-slot fill">
         @if (!isMultiSelect) {
             <os-detail-view-navigator [model]="item.content_object"></os-detail-view-navigator>
         }
-        <div [ngStyle]="{ 'margin-left': item.level * 25 + 'px' }" class="innerTable">
+        <div class="innerTable" [ngStyle]="{ 'margin-left': item.level * 25 + 'px' }">
             <!-- Title line -->
             <div class="title-line ellipsis-overflow">
                 <!-- Is Closed -->
@@ -114,8 +114,8 @@
             mat-icon-button
             [disabled]="isMultiSelect"
             [matMenuTriggerFor]="singleItemMenu"
-            (click)="$event.stopPropagation()"
             [matMenuTriggerData]="{ item: item }"
+            (click)="$event.stopPropagation()"
         >
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -148,16 +148,16 @@
             <os-projector-button [object]="itemListSlide" [menuItem]="true"></os-projector-button>
             <!-- Tags -->
             <button
+                *osPerms="permission.tagCanManage"
                 mat-menu-item
                 [routerLink]="['/', activeMeetingId, 'motions', 'tags']"
-                *osPerms="permission.tagCanManage"
             >
                 <mat-icon>local_offer</mat-icon>
                 <span>{{ 'Tags' | translate }}</span>
             </button>
             <mat-divider></mat-divider>
             <!-- CSV export -->
-            <button mat-menu-item *osPerms="permission.agendaItemCanManage" (click)="csvExportItemList()">
+            <button *osPerms="permission.agendaItemCanManage" mat-menu-item (click)="csvExportItemList()">
                 <mat-icon>archive</mat-icon>
                 <span>{{ 'Export as CSV' | translate }}</span>
             </button>
@@ -168,8 +168,8 @@
             </button>
             <!-- Import -->
             <button
-                mat-menu-item
                 *osPerms="permission.agendaItemCanManage"
+                mat-menu-item
                 [routerLink]="['/', activeMeetingId, 'agenda', 'topics', 'import']"
             >
                 <mat-icon>cloud_upload</mat-icon>
@@ -266,7 +266,7 @@
 </mat-menu>
 
 <mat-menu #singleItemMenu="matMenu">
-    <ng-template matMenuContent let-item="item">
+    <ng-template let-item="item" matMenuContent>
         <!-- Mobile entries -->
         @if (vp.isMobile) {
             <div>

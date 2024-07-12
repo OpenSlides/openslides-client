@@ -7,8 +7,8 @@
                     mat-mini-fab
                     class="action-bar-shadow background-default"
                     matTooltip="{{ 'Show conference room' | translate }}"
-                    (click)="maximizeCallDialog()"
                     @fadeIn
+                    (click)="maximizeCallDialog()"
                 >
                     <mat-icon
                         color="primary"
@@ -24,19 +24,19 @@
             <!-- Enter conference from stream -->
             @if (canEnterCall | async) {
                 <button
-                    (click)="enterConferenceRoom()"
                     mat-mini-fab
                     class="action-bar-shadow background-default"
                     matTooltip="{{ canEnterTooltip | translate }}"
+                    (click)="enterConferenceRoom()"
                 >
                     <mat-icon color="primary">phone</mat-icon>
                 </button>
             }
             @if ((canEnterCall | async) === false) {
                 <a
-                    [routerLink]="['/', activeMeetingId, 'autopilot']"
                     mat-mini-fab
                     class="action-bar-shadow fake-disabled"
+                    [routerLink]="['/', activeMeetingId, 'autopilot']"
                     matTooltip="{{ cannotEnterTooltip | translate }}"
                 >
                     <mat-icon color="primary">phone</mat-icon>
@@ -48,9 +48,9 @@
             <button
                 mat-mini-fab
                 class="action-bar-shadow background-default"
-                (click)="enterSupportRoom()"
                 matTooltip="{{ 'Help desk' | translate }}"
                 @fadeIn
+                (click)="enterSupportRoom()"
             >
                 <mat-icon color="primary">help_outline</mat-icon>
             </button>
@@ -64,8 +64,8 @@
                 [disabled]="sendsApplause | async"
                 [matBadge]="applauseLevel | async"
                 [matBadgeHidden]="(showApplauseLevel | async) === false"
-                (click)="sendApplause()"
                 @fadeIn
+                (click)="sendApplause()"
             >
                 <mat-icon class="svg-primary" svgIcon="clapping_hands"></mat-icon>
             </button>

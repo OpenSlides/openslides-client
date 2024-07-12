@@ -1,4 +1,4 @@
-<div class="flex-center" [matMenuTriggerFor]="userMenu" data-cy="accountButton">
+<div class="flex-center" data-cy="accountButton" [matMenuTriggerFor]="userMenu">
     <div class="operator-information flex-center">
         <div class="first-line one-line">
             {{ username }}
@@ -24,11 +24,11 @@
                 <div>
                     <button
                         mat-icon-button
-                        (click)="toggleDarkMode($event)"
+                        matTooltipPosition="left"
                         matTooltip="{{
                             ((isDarkModeActiveObservable | async) ? 'Light mode' : 'Dark mode') | translate
                         }}"
-                        matTooltipPosition="left"
+                        (click)="toggleDarkMode($event)"
                     >
                         <mat-icon>
                             {{ (isDarkModeActiveObservable | async) ? 'light_mode' : 'dark_mode' }}
@@ -41,8 +41,8 @@
                 <div>
                     <!-- present toggle -->
                     @if (isAllowedSelfSetPresent && hasActiveMeeting) {
-                        <button [ngClass]="{ active: isPresent }" mat-menu-item (click)="toggleOperatorPresence()">
-                            <mat-icon [color]="isPresent ? 'accent' : ''" class="menu-icon">
+                        <button mat-menu-item [ngClass]="{ active: isPresent }" (click)="toggleOperatorPresence()">
+                            <mat-icon class="menu-icon" [color]="isPresent ? 'accent' : ''">
                                 {{ isPresent ? 'check_box' : 'check_box_outline_blank' }}
                             </mat-icon>
                             <span class="menu-text">{{ 'Present' | translate }}</span>
@@ -54,7 +54,7 @@
         <mat-divider></mat-divider>
 
         <!-- select language -->
-        <button mat-menu-item #languageTrigger [matMenuTriggerFor]="languageMenu">
+        <button #languageTrigger mat-menu-item [matMenuTriggerFor]="languageMenu">
             <mat-icon class="menu-icon">language</mat-icon>
             <span class="menu-text">{{ getCurrentLanguageName() }}</span>
         </button>
@@ -67,7 +67,7 @@
                     <span class="menu-text">{{ 'My account' | translate }}</span>
                 </button>
                 <!-- logout -->
-                <button (click)="logout()" mat-menu-item data-cy="accountLogoutButton">
+                <button mat-menu-item data-cy="accountLogoutButton" (click)="logout()">
                     <mat-icon class="menu-icon">logout</mat-icon>
                     <span class="menu-text">{{ 'Logout' | translate }}</span>
                 </button>
@@ -75,7 +75,7 @@
         }
         @if (!user) {
             <div>
-                <button (click)="login()" mat-menu-item>
+                <button mat-menu-item (click)="login()">
                     <mat-icon class="menu-icon">login</mat-icon>
                     <span class="menu-text">{{ 'Login' | translate }}</span>
                 </button>

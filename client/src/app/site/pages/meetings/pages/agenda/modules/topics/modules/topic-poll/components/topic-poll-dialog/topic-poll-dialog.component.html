@@ -1,13 +1,13 @@
 <mat-dialog-content>
     <!-- Settings -->
     <os-topic-poll-form
+        #pollForm
         [pollClassType]="pollClassType.Topic"
         [data]="pollData"
         [pollService]="topicPollService"
         [pollMethods]="PollMethodVerbose"
         [percentBases]="PollPercentBaseVerbose"
         [pollTypes]="PollTypes"
-        #pollForm
     ></os-topic-poll-form>
 
     <!-- Options -->
@@ -16,7 +16,7 @@
             <ng-container>
                 <h3>{{ 'Options' | translate }}</h3>
                 <div>
-                    <div class="option-list" (scroll)="scrolled($event)" #scrollframe>
+                    <div #scrollframe class="option-list" (scroll)="scrolled($event)">
                         @if (newOptions.length) {
                             <os-sorting-list
                                 [input]="optionsSubject"
@@ -25,7 +25,7 @@
                             >
                                 <!-- implicit item references into the component using ng-template slot -->
                                 <ng-template let-item>
-                                    <div class="single-option-line" #item>
+                                    <div #item class="single-option-line">
                                         <span>{{ item.getTitle() }}</span>
                                         <span class="delete-button">
                                             <button
@@ -46,7 +46,7 @@
                         <div>
                             <mat-form-field>
                                 <mat-label>{{ 'New option' | translate }}</mat-label>
-                                <input require matInput [(ngModel)]="optionInput" type="text" />
+                                <input require matInput type="text" [(ngModel)]="optionInput" />
                                 <mat-error>{{ 'This field is required.' | translate }}</mat-error>
                             </mat-form-field>
                         </div>
@@ -56,8 +56,8 @@
                                 <button
                                     mat-button
                                     color="accent"
-                                    (click)="addNewOption()"
                                     [disabled]="optionInput === ''"
+                                    (click)="addNewOption()"
                                 >
                                     <mat-icon>add</mat-icon>
                                     <span>{{ 'Add option' | translate }}</span>
@@ -83,7 +83,7 @@
 <mat-dialog-actions>
     <!-- Save Button -->
     @if (pollForm && dialogVoteForm && pollForm.contentForm) {
-        <button mat-button (click)="submitPoll()" [disabled]="!formsValid || (!hasEnoughOptions() && !isEdit)">
+        <button mat-button [disabled]="!formsValid || (!hasEnoughOptions() && !isEdit)" (click)="submitPoll()">
             <span>{{ 'Save' | translate }}</span>
         </button>
     }

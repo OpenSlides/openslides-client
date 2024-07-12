@@ -12,11 +12,11 @@
     <!-- Menu -->
     <ng-container class="menu-slot">
         <button
+            *osPerms="permission.mediafileCanManage; and: !isMultiSelect"
             type="button"
             mat-icon-button
             [matTooltip]="'New folder' | translate"
             (click)="createNewFolder(newFolderDialog)"
-            *osPerms="permission.mediafileCanManage; and: !isMultiSelect"
         >
             <mat-icon>create_new_folder</mat-icon>
         </button>
@@ -146,8 +146,8 @@
                 <span>{{ 'Download' | translate }}</span>
             </button>
             <button
-                mat-menu-item
                 *osPerms="permission.mediafileCanManage"
+                mat-menu-item
                 [disabled]="!selectedRows.length"
                 (click)="onMove(selectedRows)"
             >
@@ -156,8 +156,8 @@
             </button>
             <mat-divider></mat-divider>
             <button
-                mat-menu-item
                 *osPerms="permission.mediafileCanManage"
+                mat-menu-item
                 [disabled]="!selectedRows.length"
                 (click)="deleteSelected()"
             >
@@ -196,8 +196,8 @@
         <button
             type="submit"
             mat-button
-            [disabled]="!fileEditForm?.valid"
             color="accent"
+            [disabled]="!fileEditForm?.valid"
             [mat-dialog-close]="fileEditForm?.value"
         >
             <span>{{ 'Save' | translate }}</span>
@@ -231,7 +231,7 @@
         </form>
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button type="submit" mat-button [disabled]="!newDirectoryForm.valid" color="accent" [mat-dialog-close]="true">
+        <button type="submit" mat-button color="accent" [disabled]="!newDirectoryForm.valid" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
         <button type="button" mat-button [mat-dialog-close]="null">

@@ -3,9 +3,9 @@
         @for (chip of chips; track chip) {
             <mat-basic-chip
                 class="chip-stacked"
+                disableRipple
                 [ngClass]="{ 'menu-handle': canOpen }"
                 [class]="chipClass || 'grey'"
-                disableRipple
             >
                 <ng-content *ngTemplateOutlet="chip.template"></ng-content>
             </mat-basic-chip>
