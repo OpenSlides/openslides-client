@@ -10,10 +10,10 @@
     </div>
     <!-- Expanding control -->
     @if (canExpand && !disableExpandControl) {
-    <div class="small show-entire-text">
-        <a tabindex="0" (click)="toggleExpansion()" (keydown.enter)="toggleExpansion()">
-            {{ isExpanded ? ('Hide more text' | translate) : ('Show full text' | translate) }}
-        </a>
-    </div>
+        <div class="small show-entire-text">
+            <a tabindex="0" (click)="toggleExpansion()" (keydown.enter)="toggleExpansion()">
+                {{ isExpanded ? ('Hide more text' | translate) : ('Show full text' | translate) }}
+            </a>
+        </div>
     }
 </div>

@@ -27,15 +27,19 @@
         <div class="col-main">
             <!-- Title Card -->
             @if (!!title && disabledContentElements['title'] !== true) {
-            <mat-card class="os-card">
-                <mat-card-content>
-                    <a [routerLink]="viewModelUrl || null" [state]="{ back: 'true' }" [target]="lowerProjectionTarget">
-                        <h1>
-                            {{ title | translate }}
-                        </h1>
-                    </a>
-                </mat-card-content>
-            </mat-card>
+                <mat-card class="os-card">
+                    <mat-card-content>
+                        <a
+                            [routerLink]="viewModelUrl || null"
+                            [state]="{ back: 'true' }"
+                            [target]="lowerProjectionTarget"
+                        >
+                            <h1>
+                                {{ title | translate }}
+                            </h1>
+                        </a>
+                    </mat-card-content>
+                </mat-card>
             }
 
             <!-- List of speakers -->
@@ -50,42 +54,44 @@
                 <ng-template osListOfSpeakersContentTitle>
                     <div class="line-and-icon subtitle-text">
                         @if (closUrl) {
-                        <a [routerLink]="closUrl">
-                            {{ 'List of speakers' | translate }}
-                        </a>
-                        } @if (!closUrl) {
-                        <span>
-                            {{ 'List of speakers' | translate }}
-                        </span>
+                            <a [routerLink]="closUrl">
+                                {{ 'List of speakers' | translate }}
+                            </a>
+                        }
+                        @if (!closUrl) {
+                            <span>
+                                {{ 'List of speakers' | translate }}
+                            </span>
                         }
 
                         <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
                             @if (isLosClosed) {
-                            <mat-icon
-                                matTooltipPosition="above"
-                                matTooltip="{{ 'The list of speakers is closed.' | translate }}"
-                            >
-                                lock
-                            </mat-icon>
+                                <mat-icon
+                                    matTooltipPosition="above"
+                                    matTooltip="{{ 'The list of speakers is closed.' | translate }}"
+                                >
+                                    lock
+                                </mat-icon>
                             }
                         </ng-container>
 
                         <ng-container *osPerms="permission.listOfSpeakersCanManage">
                             <button class="title-action" mat-icon-button (click)="toggleListOfSpeakersOpen()">
                                 @if (isLosClosed) {
-                                <mat-icon
-                                    matTooltipPosition="above"
-                                    matTooltip="{{ 'Open list of speakers' | translate }}"
-                                >
-                                    lock
-                                </mat-icon>
-                                } @if (!isLosClosed) {
-                                <mat-icon
-                                    matTooltipPosition="above"
-                                    matTooltip="{{ 'Close list of speakers' | translate }}"
-                                >
-                                    lock_open
-                                </mat-icon>
+                                    <mat-icon
+                                        matTooltipPosition="above"
+                                        matTooltip="{{ 'Open list of speakers' | translate }}"
+                                    >
+                                        lock
+                                    </mat-icon>
+                                }
+                                @if (!isLosClosed) {
+                                    <mat-icon
+                                        matTooltipPosition="above"
+                                        matTooltip="{{ 'Close list of speakers' | translate }}"
+                                    >
+                                        lock_open
+                                    </mat-icon>
                                 }
                             </button>
 
@@ -105,57 +111,71 @@
             </os-list-of-speakers-content>
 
             <ng-container *osPerms="permission.listOfSpeakersCanSee">
-                @if ( structureLevelCountdownEnabled && listOfSpeakers && (showRightCol | async) === false &&
-                disabledContentElements['speaking-times'] !== true ) {
-                <div>
-                    <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
-                </div>
+                @if (
+                    structureLevelCountdownEnabled &&
+                    listOfSpeakers &&
+                    (showRightCol | async) === false &&
+                    disabledContentElements['speaking-times'] !== true
+                ) {
+                    <div>
+                        <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
+                    </div>
                 }
             </ng-container>
 
             <!-- Moderator Note-->
             @if (hasCurrentProjection && disabledContentElements['moderation-note'] !== true) {
-            <div>
-                <os-moderation-note [listOfSpeakers]="listOfSpeakers"></os-moderation-note>
-            </div>
+                <div>
+                    <os-moderation-note [listOfSpeakers]="listOfSpeakers"></os-moderation-note>
+                </div>
             }
 
             <!-- Poll-Collection -->
-            @if ( showPollCollection && (disabledContentElements['poll-finished'] !== true ||
-            disabledContentElements['poll-running'] !== true) ) {
-            <os-poll-collection
-                [currentProjection]="projectedViewModel"
-                [disableFinished]="disabledContentElements['poll-finished'] === true"
-                [disableRunning]="disabledContentElements['poll-running'] === true"
-                [displayInAutopilot]="true"
-            ></os-poll-collection>
+            @if (
+                showPollCollection &&
+                (disabledContentElements['poll-finished'] !== true || disabledContentElements['poll-running'] !== true)
+            ) {
+                <os-poll-collection
+                    [currentProjection]="projectedViewModel"
+                    [disableFinished]="disabledContentElements['poll-finished'] === true"
+                    [disableRunning]="disabledContentElements['poll-running'] === true"
+                    [displayInAutopilot]="true"
+                ></os-poll-collection>
             }
 
             <!-- Projector -->
             @if (disabledContentElements['projector'] !== true) {
-            <mat-card class="os-card spacer-bottom-60">
-                <mat-card-content>
-                    <a [routerLink]="projectorUrl" [state]="{ back: 'true' }" [target]="projectionTarget">
-                        <p class="subtitle-text">{{ projectorTitle | translate }}</p>
-                    </a>
-                    <a [routerLink]="viewModelUrl || null" [state]="{ back: 'true' }" [target]="lowerProjectionTarget">
-                        <div class="projector">
-                            @if (projector) {
-                            <os-projector [projector]="projector"></os-projector>
-                            }
-                        </div>
-                    </a>
-                </mat-card-content>
-            </mat-card>
+                <mat-card class="os-card spacer-bottom-60">
+                    <mat-card-content>
+                        <a [routerLink]="projectorUrl" [state]="{ back: 'true' }" [target]="projectionTarget">
+                            <p class="subtitle-text">{{ projectorTitle | translate }}</p>
+                        </a>
+                        <a
+                            [routerLink]="viewModelUrl || null"
+                            [state]="{ back: 'true' }"
+                            [target]="lowerProjectionTarget"
+                        >
+                            <div class="projector">
+                                @if (projector) {
+                                    <os-projector [projector]="projector"></os-projector>
+                                }
+                            </div>
+                        </a>
+                    </mat-card-content>
+                </mat-card>
             }
         </div>
 
         <ng-container *osPerms="permission.listOfSpeakersCanSee">
-            @if ( disabledContentElements['speaking-times'] !== true && structureLevelCountdownEnabled && listOfSpeakers
-            && showRightCol | async ) {
-            <div class="col-right">
-                <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
-            </div>
+            @if (
+                disabledContentElements['speaking-times'] !== true &&
+                    structureLevelCountdownEnabled &&
+                    listOfSpeakers &&
+                    showRightCol | async
+            ) {
+                <div class="col-right">
+                    <ng-container [ngTemplateOutlet]="speakingTimes"></ng-container>
+                </div>
             }
         </ng-container>
     </div>

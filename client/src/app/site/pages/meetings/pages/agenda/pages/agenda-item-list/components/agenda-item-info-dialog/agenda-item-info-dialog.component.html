@@ -1,20 +1,20 @@
 @if (item) {
-<h1 mat-dialog-title>{{ 'Edit details for' | translate }} {{ item.getTitle() }}</h1>
+    <h1 mat-dialog-title>{{ 'Edit details for' | translate }} {{ item.getTitle() }}</h1>
 }
 <mat-dialog-content>
     <form class="item-dialog-form" tabindex="-1" [formGroup]="agendaInfoForm" (keydown)="onKeyDown($event)">
         <!-- Tag -->
         @if (isTagAvailable()) {
-        <mat-form-field>
-            <mat-label>{{ 'Tags' | translate }}</mat-label>
-            <mat-select formControlName="tag_ids" multiple>
-                @for (tag of tags; track tag) {
-                <mat-option [value]="tag.id">
-                    {{ tag.getTitle() }}
-                </mat-option>
-                }
-            </mat-select>
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Tags' | translate }}</mat-label>
+                <mat-select formControlName="tag_ids" multiple>
+                    @for (tag of tags; track tag) {
+                        <mat-option [value]="tag.id">
+                            {{ tag.getTitle() }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
         }
 
         <!-- Visibility -->
@@ -22,9 +22,9 @@
             <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
             <mat-select formControlName="type">
                 @for (type of itemVisibility; track type) {
-                <mat-option [value]="type.key">
-                    <span>{{ type.name | translate }}</span>
-                </mat-option>
+                    <mat-option [value]="type.key">
+                        <span>{{ type.name | translate }}</span>
+                    </mat-option>
                 }
             </mat-select>
         </mat-form-field>
@@ -34,9 +34,9 @@
             <mat-label>{{ 'Duration' | translate }}</mat-label>
             <input formControlName="durationText" matInput type="string" />
             @if (agendaInfoForm.invalid) {
-            <mat-error>
-                {{ 'Your input does not match the following structure: "hh:mm"' | translate }}
-            </mat-error>
+                <mat-error>
+                    {{ 'Your input does not match the following structure: "hh:mm"' | translate }}
+                </mat-error>
             }
         </mat-form-field>
 

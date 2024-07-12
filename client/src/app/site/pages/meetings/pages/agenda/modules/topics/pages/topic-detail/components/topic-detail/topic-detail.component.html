@@ -15,29 +15,31 @@
         <div class="title-slot">
             <h2>
                 @if (newTopic) {
-                <span>{{ 'New topic' | translate }}</span>
-                } @if (editTopic && !newTopic) {
-                <span>{{ 'Edit topic' | translate }}</span>
-                } @if (!newTopic && !editTopic && topic) {
-                <span>{{ 'Topic' | translate }}</span>
+                    <span>{{ 'New topic' | translate }}</span>
+                }
+                @if (editTopic && !newTopic) {
+                    <span>{{ 'Edit topic' | translate }}</span>
+                }
+                @if (!newTopic && !editTopic && topic) {
+                    <span>{{ 'Topic' | translate }}</span>
                 }
             </h2>
         </div>
 
         <!-- Back and forth buttons -->
         @if (!editTopic && showNavigateButtons) {
-        <div class="extra-controls-slot">
-            <button mat-button [disabled]="!previousTopic" (click)="navigateToTopic(previousTopic)">
-                <os-icon-container icon="chevron_left">
-                    {{ getNavDisplay(previousTopic) }}
-                </os-icon-container>
-            </button>
-            <button mat-button [disabled]="!nextTopic" (click)="navigateToTopic(nextTopic)">
-                <os-icon-container icon="chevron_right" [swap]="true">
-                    {{ getNavDisplay(nextTopic) }}
-                </os-icon-container>
-            </button>
-        </div>
+            <div class="extra-controls-slot">
+                <button mat-button [disabled]="!previousTopic" (click)="navigateToTopic(previousTopic)">
+                    <os-icon-container icon="chevron_left">
+                        {{ getNavDisplay(previousTopic) }}
+                    </os-icon-container>
+                </button>
+                <button mat-button [disabled]="!nextTopic" (click)="navigateToTopic(nextTopic)">
+                    <os-icon-container icon="chevron_right" [swap]="true">
+                        {{ getNavDisplay(nextTopic) }}
+                    </os-icon-container>
+                </button>
+            </div>
         }
 
         <!-- Menu -->
@@ -50,110 +52,117 @@
             class="menu-slot"
         >
             @if (topic) {
-            <button mat-icon-button type="button" [matMenuTriggerFor]="topicExtraMenu">
-                <mat-icon>more_vert</mat-icon>
-            </button>
+                <button mat-icon-button type="button" [matMenuTriggerFor]="topicExtraMenu">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
             }
         </div>
     </os-head-bar>
 
     @if ((topic || editTopic) && (hasLoaded | async)) {
-    <mat-card class="spacer-bottom-60 os-card">
-        <mat-card-content>
-            @if (!editTopic && topic) {
-            <os-projectable-title [getTitleFn]="getTitleFn" [model]="topic"></os-projectable-title>
-            <div>
-                @if (topic.text) {
-                <span>
-                    <!-- Render topic text as HTML -->
-                    <div class="detail-view" [innerHTML]="topic.text | trust : 'html'"></div>
-                </span>
-                }
-            </div>
-            @if (topic.hasAttachments()) {
-            <div>
-                <h3>
-                    <span>{{ 'Attachments' | translate }}</span>
-                    :
-                    <mat-list dense>
-                        @for (file of topic.attachments; track file) {
-                        <mat-list-item>
-                            <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
-                        </mat-list-item>
-                        }
-                    </mat-list>
-                </h3>
-            </div>
-            } } @if (editTopic && topicForm) {
-            <form tabindex="-1" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
-                <div>
-                    <mat-form-field>
-                        <mat-label>{{ 'Title' | translate }}</mat-label>
-                        <input formControlName="title" matInput osAutofocus required type="text" />
-                        @if (topicForm!.invalid) {
-                        <mat-error>{{ 'A name is required' | translate }}</mat-error>
-                        }
-                    </mat-form-field>
-                </div>
-                <!-- The editor -->
-                <div class="spacer-bottom-20">
-                    <h4>{{ 'Text' | translate }}</h4>
-                    <os-editor formControlName="text"></os-editor>
-                </div>
-                <!-- Attachments -->
-                <os-attachment-control formControlName="attachment_ids"></os-attachment-control>
-                @if (newTopic) {
-                <div>
-                    <!-- Visibility -->
+        <mat-card class="spacer-bottom-60 os-card">
+            <mat-card-content>
+                @if (!editTopic && topic) {
+                    <os-projectable-title [getTitleFn]="getTitleFn" [model]="topic"></os-projectable-title>
                     <div>
-                        <mat-form-field>
-                            <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
-                            <mat-select formControlName="agenda_type">
-                                @for (type of itemVisibility; track type) {
-                                <mat-option [value]="type.key">
-                                    <span>{{ type.name | translate }}</span>
-                                </mat-option>
+                        @if (topic.text) {
+                            <span>
+                                <!-- Render topic text as HTML -->
+                                <div class="detail-view" [innerHTML]="topic.text | trust: 'html'"></div>
+                            </span>
+                        }
+                    </div>
+                    @if (topic.hasAttachments()) {
+                        <div>
+                            <h3>
+                                <span>{{ 'Attachments' | translate }}</span>
+                                :
+                                <mat-list dense>
+                                    @for (file of topic.attachments; track file) {
+                                        <mat-list-item>
+                                            <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
+                                        </mat-list-item>
+                                    }
+                                </mat-list>
+                            </h3>
+                        </div>
+                    }
+                }
+                @if (editTopic && topicForm) {
+                    <form tabindex="-1" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
+                        <div>
+                            <mat-form-field>
+                                <mat-label>{{ 'Title' | translate }}</mat-label>
+                                <input formControlName="title" matInput osAutofocus required type="text" />
+                                @if (topicForm!.invalid) {
+                                    <mat-error>{{ 'A name is required' | translate }}</mat-error>
                                 }
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <!-- Parent item -->
-                    <div>
-                        <mat-form-field>
-                            <mat-label>{{ 'Parent agenda item' | translate }}</mat-label>
-                            <os-list-search-selector
-                                formControlName="agenda_parent_id"
-                                [includeNone]="true"
-                                [inputListValues]="itemObserver"
-                            ></os-list-search-selector>
-                        </mat-form-field>
-                    </div>
-                </div>
+                            </mat-form-field>
+                        </div>
+                        <!-- The editor -->
+                        <div class="spacer-bottom-20">
+                            <h4>{{ 'Text' | translate }}</h4>
+                            <os-editor formControlName="text"></os-editor>
+                        </div>
+                        <!-- Attachments -->
+                        <os-attachment-control formControlName="attachment_ids"></os-attachment-control>
+                        @if (newTopic) {
+                            <div>
+                                <!-- Visibility -->
+                                <div>
+                                    <mat-form-field>
+                                        <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
+                                        <mat-select formControlName="agenda_type">
+                                            @for (type of itemVisibility; track type) {
+                                                <mat-option [value]="type.key">
+                                                    <span>{{ type.name | translate }}</span>
+                                                </mat-option>
+                                            }
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <!-- Parent item -->
+                                <div>
+                                    <mat-form-field>
+                                        <mat-label>{{ 'Parent agenda item' | translate }}</mat-label>
+                                        <os-list-search-selector
+                                            formControlName="agenda_parent_id"
+                                            [includeNone]="true"
+                                            [inputListValues]="itemObserver"
+                                        ></os-list-search-selector>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        }
+                    </form>
                 }
-            </form>
+            </mat-card-content>
+        </mat-card>
+    }
+    @if (!editTopic) {
+        <os-moderation-note [contentObject]="topic"></os-moderation-note>
+    }
+    @if (!editTopic) {
+        <div class="spacer-bottom-60">
+            @if (topic && topic.poll_ids?.length) {
+                @for (poll of topic.poll_ids | reverse; track trackById($index, poll)) {
+                    <os-topic-poll [pollId]="poll" (dialogOpened)="openDialog(poll)"></os-topic-poll>
+                }
             }
-        </mat-card-content>
-    </mat-card>
-    } @if (!editTopic) {
-    <os-moderation-note [contentObject]="topic"></os-moderation-note>
-    } @if (!editTopic) {
-    <div class="spacer-bottom-60">
-        @if (topic && topic.poll_ids?.length) { @for (poll of topic.poll_ids | reverse; track trackById($index, poll)) {
-        <os-topic-poll [pollId]="poll" (dialogOpened)="openDialog(poll)"></os-topic-poll>
-        } } @if (topic && isEVotingEnabled) {
-        <div class="create-poll-button">
-            <button
-                *osPerms="[permission.pollCanManage, permission.agendaItemCanManage]"
-                create-poll-button
-                mat-stroked-button
-                (click)="openDialog()"
-            >
-                <mat-icon class="main-nav-color">add</mat-icon>
-                <span>{{ 'New vote' | translate }}</span>
-            </button>
+            @if (topic && isEVotingEnabled) {
+                <div class="create-poll-button">
+                    <button
+                        *osPerms="[permission.pollCanManage, permission.agendaItemCanManage]"
+                        create-poll-button
+                        mat-stroked-button
+                        (click)="openDialog()"
+                    >
+                        <mat-icon class="main-nav-color">add</mat-icon>
+                        <span>{{ 'New vote' | translate }}</span>
+                    </button>
+                </div>
+            }
         </div>
-        }
-    </div>
     }
 </os-detail-view>
 

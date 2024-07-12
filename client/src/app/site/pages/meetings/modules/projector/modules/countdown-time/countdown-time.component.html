@@ -1,32 +1,37 @@
 @if (!unstyled) {
-<div
-    class="countdown-time-wrapper"
-    [ngClass]="{
-        'negative-time': seconds <= 0 && (countdown.default_time !== 0 || seconds < 0),
-        'warning-time': seconds <= warningTime && seconds > 0,
-        'stretch-to-fill-parent': fullscreen
-    }"
->
-    @if (showTimeIndicator) {
-    <div class="time-indicator-wrapper" [ngClass]="{ 'only-time-indicator': !showCountdown && showTimeIndicator }">
-        <div id="timeIndicator"></div>
+    <div
+        class="countdown-time-wrapper"
+        [ngClass]="{
+            'negative-time': seconds <= 0 && (countdown.default_time !== 0 || seconds < 0),
+            'warning-time': seconds <= warningTime && seconds > 0,
+            'stretch-to-fill-parent': fullscreen
+        }"
+    >
+        @if (showTimeIndicator) {
+            <div
+                class="time-indicator-wrapper"
+                [ngClass]="{ 'only-time-indicator': !showCountdown && showTimeIndicator }"
+            >
+                <div id="timeIndicator"></div>
+            </div>
+        }
+        @if (showCountdown) {
+            <div class="countdown-wrapper" [ngClass]="{ 'only-countdown': showCountdown && !showTimeIndicator }">
+                <span id="countdown">
+                    {{ time }}
+                </span>
+            </div>
+        }
     </div>
-    } @if (showCountdown) {
-    <div class="countdown-wrapper" [ngClass]="{ 'only-countdown': showCountdown && !showTimeIndicator }">
-        <span id="countdown">
-            {{ time }}
-        </span>
-    </div>
-    }
-</div>
-} @if (unstyled) {
-<span
-    id="countdown"
-    [ngClass]="{
-        'negative-time': seconds <= 0 && (countdown.default_time !== 0 || seconds < 0),
-        'warning-time': seconds <= warningTime && seconds > 0
-    }"
->
-    {{ time }}
-</span>
+}
+@if (unstyled) {
+    <span
+        id="countdown"
+        [ngClass]="{
+            'negative-time': seconds <= 0 && (countdown.default_time !== 0 || seconds < 0),
+            'warning-time': seconds <= warningTime && seconds > 0
+        }"
+    >
+        {{ time }}
+    </span>
 }

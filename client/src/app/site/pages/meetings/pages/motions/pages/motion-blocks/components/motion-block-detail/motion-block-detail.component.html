@@ -3,23 +3,23 @@
         <!-- Title -->
         <div class="title-slot">
             @if (block) {
-            <os-icon-container
-                icon="check"
-                size="large"
-                [iconTooltip]="'Finished' | translate"
-                [noWrap]="true"
-                [showIcon]="block.isFinished"
-            >
                 <os-icon-container
-                    icon="lock"
+                    icon="check"
                     size="large"
-                    [iconTooltip]="'Internal' | translate"
+                    [iconTooltip]="'Finished' | translate"
                     [noWrap]="true"
-                    [showIcon]="block.internal"
+                    [showIcon]="block.isFinished"
                 >
-                    <os-projectable-title titleStyle="h2" [model]="block"></os-projectable-title>
+                    <os-icon-container
+                        icon="lock"
+                        size="large"
+                        [iconTooltip]="'Internal' | translate"
+                        [noWrap]="true"
+                        [showIcon]="block.internal"
+                    >
+                        <os-projectable-title titleStyle="h2" [model]="block"></os-projectable-title>
+                    </os-icon-container>
                 </os-icon-container>
-            </os-icon-container>
             }
         </div>
 
@@ -32,18 +32,18 @@
 
         <!-- Extra Controls -->
         @if (!vp.isMobile) {
-        <div class="extra-controls-slot">
-            <button
-                *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
-                mat-button
-                [disabled]="isFollowButtonDisabledObservable() | async"
-                (click)="onFollowRecButton()"
-            >
-                <os-icon-container class="follow-all-icon" icon="done_all">
-                    <div>{{ 'Follow recommendations for all motions' | translate }}</div>
-                </os-icon-container>
-            </button>
-        </div>
+            <div class="extra-controls-slot">
+                <button
+                    *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
+                    mat-button
+                    [disabled]="isFollowButtonDisabledObservable() | async"
+                    (click)="onFollowRecButton()"
+                >
+                    <os-icon-container class="follow-all-icon" icon="done_all">
+                        <div>{{ 'Follow recommendations for all motions' | translate }}</div>
+                    </os-icon-container>
+                </button>
+            </div>
         }
     </os-head-bar>
 
@@ -57,31 +57,31 @@
         <!-- Title column -->
         <div *osScrollingTableCell="'title'; row as motion; rowContext as rowContext" class="cell-slot fill">
             @if (!isMultiSelect) {
-            <a class="detail-link" [routerLink]="motion.getDetailStateUrl()" [state]="{ back: 'true' }"></a>
+                <a class="detail-link" [routerLink]="motion.getDetailStateUrl()" [state]="{ back: 'true' }"></a>
             }
             <div class="column-title innerTable overflow-hidden">
                 <div class="title-line ellipsis-overflow">
                     <!-- Is Favorite -->
                     @if (motion.isFavorite) {
-                    <span class="favorite-star">
-                        <mat-icon inline>star</mat-icon>
-                    </span>
+                        <span class="favorite-star">
+                            <mat-icon inline>star</mat-icon>
+                        </span>
                     }
 
                     <!-- Has File -->
                     @if (motion.hasAttachments()) {
-                    <span class="icon-prefix">
-                        <mat-icon>attach_file</mat-icon>
-                    </span>
+                        <span class="icon-prefix">
+                            <mat-icon>attach_file</mat-icon>
+                        </span>
                     }
 
                     <!-- The title -->
                     <span class="ellipsis-overflow">
                         @if (motion.number) {
-                        <span>
-                            {{ motion.number }}
-                            <span>&middot;</span>
-                        </span>
+                            <span>
+                                {{ motion.number }}
+                                <span>&middot;</span>
+                            </span>
                         }
                         {{ motion.title }}
                     </span>
@@ -90,36 +90,37 @@
                 <!-- Submitters -->
                 <div class="submitters-line ellipsis-overflow">
                     @if (motion.submitters.length) {
-                    <span>
-                        <span>{{ 'by' | translate }}</span>
-                        {{ motion.submitters }}
-                    </span>
-                    } @if (showSequential) {
-                    <span>
-                        @if (motion.submitters.length) {
-                        <span>&middot;&thinsp;</span>
-                        }
-                        <span>{{ 'Sequential number' | translate }}</span>
-                        {{ motion.sequential_number }}
-                    </span>
+                        <span>
+                            <span>{{ 'by' | translate }}</span>
+                            {{ motion.submitters }}
+                        </span>
+                    }
+                    @if (showSequential) {
+                        <span>
+                            @if (motion.submitters.length) {
+                                <span>&middot;&thinsp;</span>
+                            }
+                            <span>{{ 'Sequential number' | translate }}</span>
+                            {{ motion.sequential_number }}
+                        </span>
                     }
                 </div>
 
                 <!-- Workflow state -->
                 <div class="ellipsis-overflow white">
                     @if (motion.state) {
-                    <mat-basic-chip [disabled]="true" [ngClass]="motion.stateCssColor">
-                        {{ getStateLabel(motion) }}
-                    </mat-basic-chip>
+                        <mat-basic-chip [disabled]="true" [ngClass]="motion.stateCssColor">
+                            {{ getStateLabel(motion) }}
+                        </mat-basic-chip>
                     }
                 </div>
 
                 <!-- Recommendation column -->
                 <div class="ellipsis-overflow white spacer-top-3">
                     @if (!!motion.recommendation) {
-                    <mat-basic-chip class="bluegrey" [disabled]="true">
-                        {{ getRecommendationLabel(motion) }}
-                    </mat-basic-chip>
+                        <mat-basic-chip class="bluegrey" [disabled]="true">
+                            {{ getRecommendationLabel(motion) }}
+                        </mat-basic-chip>
                     }
                 </div>
             </div>
@@ -176,36 +177,37 @@
 <!-- The menu content -->
 <mat-menu #motionBlockMenu="matMenu">
     @if (vp.isMobile) {
-    <div>
-        <button
-            *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
-            mat-menu-item
-            [disabled]="isFollowButtonDisabledObservable() | async"
-            (click)="onFollowRecButton()"
-        >
-            <mat-icon>done_all</mat-icon>
-            <span>{{ 'Follow recommendations for all motions' | translate }}</span>
-        </button>
-    </div>
+        <div>
+            <button
+                *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
+                mat-menu-item
+                [disabled]="isFollowButtonDisabledObservable() | async"
+                (click)="onFollowRecButton()"
+            >
+                <mat-icon>done_all</mat-icon>
+                <span>{{ 'Follow recommendations for all motions' | translate }}</span>
+            </button>
+        </div>
     }
 
     <os-speaker-button [menuItem]="true" [object]="block"></os-speaker-button>
 
     @if (block) {
-    <os-projector-button [menuItem]="true" [object]="block"></os-projector-button>
+        <os-projector-button [menuItem]="true" [object]="block"></os-projector-button>
     }
 
     <div *osPerms="permission.agendaItemCanManage">
         @if (block && !block.agenda_item_id) {
-        <button mat-menu-item (click)="addToAgenda()">
-            <mat-icon>add</mat-icon>
-            <span>{{ 'Add to agenda' | translate }}</span>
-        </button>
-        } @if (block && block.agenda_item_id) {
-        <button mat-menu-item (click)="removeFromAgenda()">
-            <mat-icon>remove</mat-icon>
-            <span>{{ 'Remove from agenda' | translate }}</span>
-        </button>
+            <button mat-menu-item (click)="addToAgenda()">
+                <mat-icon>add</mat-icon>
+                <span>{{ 'Add to agenda' | translate }}</span>
+            </button>
+        }
+        @if (block && block.agenda_item_id) {
+            <button mat-menu-item (click)="removeFromAgenda()">
+                <mat-icon>remove</mat-icon>
+                <span>{{ 'Remove from agenda' | translate }}</span>
+            </button>
         }
     </div>
 

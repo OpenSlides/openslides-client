@@ -141,7 +141,7 @@
                     </th>
                     <th translate>Groups</th>
                 </tr>
-                <ng-container *ngFor="let row of tableData | keyvalue : tableDataAscOrderCompare; last as lastLine">
+                <ng-container *ngFor="let row of tableData | keyvalue: tableDataAscOrderCompare; last as lastLine">
                     <!-- Handle committees without meetings-->
                     <ng-container *ngIf="!getNumberOfKeys(row.value.meetings)">
                         <tr [ngClass]="getCellClass(true, true, lastLine)">
@@ -163,7 +163,7 @@
                     <!-- Handle committees with meetings-->
                     <tr
                         *ngFor="
-                            let meeting_row of row.value.meetings | keyvalue : tableDataAscOrderCompare;
+                            let meeting_row of row.value.meetings | keyvalue: tableDataAscOrderCompare;
                             first as isFirst;
                             last as isLast
                         "

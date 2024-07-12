@@ -6,21 +6,25 @@
 
     <ng-container class="menu-slot">
         @if (canImport) {
-        <button mat-button (click)="doImport()">
-            <span class="upper">{{ 'Import' | translate }}</span>
-        </button>
-        } @if (finishedSuccessfully || hasErrors) {
-        <div style="padding-top: 6px">
-            @if (finishedSuccessfully) {
-            <mat-icon matTooltip="{{ 'Import successful' | translate }}">done</mat-icon>
-            } @if (finishedWithWarnings) {
-            <mat-icon matTooltip="{{ 'Import successful with some warnings' | translate }}">done</mat-icon>
-            } @if (hasErrors) {
-            <mat-icon matTooltip="{{ 'Can not import because of errors' | translate }}">block</mat-icon>
-            }
-        </div>
-        } @if (isImporting) {
-        <os-spinner [height]="30" [showText]="false" [width]="30"></os-spinner>
+            <button mat-button (click)="doImport()">
+                <span class="upper">{{ 'Import' | translate }}</span>
+            </button>
+        }
+        @if (finishedSuccessfully || hasErrors) {
+            <div style="padding-top: 6px">
+                @if (finishedSuccessfully) {
+                    <mat-icon matTooltip="{{ 'Import successful' | translate }}">done</mat-icon>
+                }
+                @if (finishedWithWarnings) {
+                    <mat-icon matTooltip="{{ 'Import successful with some warnings' | translate }}">done</mat-icon>
+                }
+                @if (hasErrors) {
+                    <mat-icon matTooltip="{{ 'Can not import because of errors' | translate }}">block</mat-icon>
+                }
+            </div>
+        }
+        @if (isImporting) {
+            <os-spinner [height]="30" [showText]="false" [width]="30"></os-spinner>
         }
     </ng-container>
 </os-head-bar>

@@ -1,91 +1,95 @@
 @if (showPoll) {
-<mat-card class="motion-poll-wrapper">
-    <mat-card-content>
-        <!-- Poll Infos -->
-        <div class="poll-title-wrapper">
-            <!-- Title Area -->
-            <div class="poll-title-area">
-                <!-- Title -->
-                <span class="poll-title break-word">
-                    <a [routerLink]="getDetailLink()">
-                        {{ poll.title | translate }}
-                    </a>
+    <mat-card class="motion-poll-wrapper">
+        <mat-card-content>
+            <!-- Poll Infos -->
+            <div class="poll-title-wrapper">
+                <!-- Title Area -->
+                <div class="poll-title-area">
+                    <!-- Title -->
+                    <span class="poll-title break-word">
+                        <a [routerLink]="getDetailLink()">
+                            {{ poll.title | translate }}
+                        </a>
+                    </span>
+                </div>
+                <!-- Dot Menu -->
+                <span *osPerms="permission.motionCanManagePolls" class="poll-actions">
+                    <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
+                        <mat-icon class="icon-18">more_horiz</mat-icon>
+                    </button>
                 </span>
             </div>
-            <!-- Dot Menu -->
-            <span *osPerms="permission.motionCanManagePolls" class="poll-actions">
-                <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
-                    <mat-icon class="icon-18">more_horiz</mat-icon>
-                </button>
-            </span>
-        </div>
-        <!-- Subtitle -->
-        <div class="italic spacer-bottom-20">
-            <!-- Type and State -->
-            <div class="type-and-state italic spacer-bottom-20 break-word">
-                <span *osPerms="permission.motionCanManagePolls; and: poll.isEVoting">
-                    <os-icon-container
-                        class="poll-type break-word"
-                        color="primary"
-                        icon="info"
-                        [showIcon]="poll.isAnonymous"
-                        [swap]="true"
-                        (iconAction)="openVotingWarning()"
+            <!-- Subtitle -->
+            <div class="italic spacer-bottom-20">
+                <!-- Type and State -->
+                <div class="type-and-state italic spacer-bottom-20 break-word">
+                    <span *osPerms="permission.motionCanManagePolls; and: poll.isEVoting">
+                        <os-icon-container
+                            class="poll-type break-word"
+                            color="primary"
+                            icon="info"
+                            [showIcon]="poll.isAnonymous"
+                            [swap]="true"
+                            (iconAction)="openVotingWarning()"
+                        >
+                            {{ poll.typeVerbose | translate }}
+                        </os-icon-container>
+                        @if (poll.isAnonymous) {
+                            <span>&nbsp;</span>
+                        }
+                        &middot;&nbsp;
+                    </span>
+                    <!-- State -->
+                    <span class="break-word">
+                        {{ poll.stateVerbose | translate }}
+                    </span>
+                </div>
+            </div>
+            <!-- Change state button -->
+            <span *osPerms="permission.motionCanManagePolls; and: !hideChangeState">
+                @if (pollStateActions[poll.state]) {
+                    <button
+                        mat-stroked-button
+                        [disabled]="stateChangePendingObservable | async"
+                        [ngClass]="pollStateActions[poll.state].css"
+                        (click)="nextPollState()"
                     >
-                        {{ poll.typeVerbose | translate }}
-                    </os-icon-container>
-                    @if (poll.isAnonymous) {
-                    <span>&nbsp;</span>
-                    } &middot;&nbsp;
+                        <mat-icon>{{ pollStateActions[poll.state].icon }}</mat-icon>
+                        <span class="next-state-label">
+                            @if ((stateChangePendingObservable | async) === false) {
+                                {{ poll.nextStateActionVerbose | translate }}
+                            }
+                            @if (stateChangePendingObservable | async) {
+                                {{ 'In progress, please wait ...' | translate }}
+                            }
+                        </span>
+                    </button>
+                }
+            </span>
+            <!-- Results -->
+            @if (poll && !poll.stateHasVotes && poll.type !== 'analog') {
+                @if (poll && poll.isStarted) {
+                    <os-poll-progress [poll]="poll"></os-poll-progress>
+                }
+                @if (poll.canBeVotedFor()) {
+                    <os-motion-poll-vote [displayInAutopilot]="false" [poll]="poll"></os-motion-poll-vote>
+                }
+                <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
+            } @else {
+                <span class="poll-link-wrapper">
+                    <ng-container [ngTemplateOutlet]="canSeeVotes ? viewTemplate : emptyTemplate"></ng-container>
                 </span>
-                <!-- State -->
-                <span class="break-word">
-                    {{ poll.stateVerbose | translate }}
-                </span>
+            }
+            <!-- Detail link -->
+            <div class="poll-detail-button-wrapper">
+                @if (poll.isPublished) {
+                    <a mat-icon-button matTooltip="{{ 'More' | translate }}" [routerLink]="getDetailLink()">
+                        <mat-icon class="icon-18">visibility</mat-icon>
+                    </a>
+                }
             </div>
-        </div>
-        <!-- Change state button -->
-        <span *osPerms="permission.motionCanManagePolls; and: !hideChangeState">
-            @if (pollStateActions[poll.state]) {
-            <button
-                mat-stroked-button
-                [disabled]="stateChangePendingObservable | async"
-                [ngClass]="pollStateActions[poll.state].css"
-                (click)="nextPollState()"
-            >
-                <mat-icon>{{ pollStateActions[poll.state].icon }}</mat-icon>
-                <span class="next-state-label">
-                    @if ((stateChangePendingObservable | async) === false) {
-                    {{ poll.nextStateActionVerbose | translate }}
-                    } @if (stateChangePendingObservable | async) {
-                    {{ 'In progress, please wait ...' | translate }}
-                    }
-                </span>
-            </button>
-            }
-        </span>
-        <!-- Results -->
-        @if (poll && !poll.stateHasVotes && poll.type !== 'analog') { @if (poll && poll.isStarted) {
-        <os-poll-progress [poll]="poll"></os-poll-progress>
-        } @if (poll.canBeVotedFor()) {
-        <os-motion-poll-vote [poll]="poll" [displayInAutopilot]="false"></os-motion-poll-vote>
-        }
-        <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
-        } @else {
-        <span class="poll-link-wrapper">
-            <ng-container [ngTemplateOutlet]="canSeeVotes ? viewTemplate : emptyTemplate"></ng-container>
-        </span>
-        }
-        <!-- Detail link -->
-        <div class="poll-detail-button-wrapper">
-            @if (poll.isPublished) {
-            <a mat-icon-button matTooltip="{{ 'More' | translate }}" [routerLink]="getDetailLink()">
-                <mat-icon class="icon-18">visibility</mat-icon>
-            </a>
-            }
-        </div>
-    </mat-card-content>
-</mat-card>
+        </mat-card-content>
+    </mat-card>
 }
 
 <ng-template #viewTemplate>
@@ -102,11 +106,11 @@
         </div>
     </span>
     @if (poll.type !== 'analog') {
-    <p>
-        <i *osPerms="permission.motionCanManagePolls; or: isPublished">
-            {{ 'No one has voted for this poll' | translate }}
-        </i>
-    </p>
+        <p>
+            <i *osPerms="permission.motionCanManagePolls; or: isPublished">
+                {{ 'No one has voted for this poll' | translate }}
+            </i>
+        </p>
     }
 </ng-template>
 

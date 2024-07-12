@@ -25,7 +25,10 @@ export class ProjectableTitleComponent {
         map(_ => this.isBeingProjected())
     );
 
-    public constructor(private projectorService: ProjectorControllerService, private cd: ChangeDetectorRef) {}
+    public constructor(
+        private projectorService: ProjectorControllerService,
+        private cd: ChangeDetectorRef
+    ) {}
 
     public isBeingProjected(): boolean {
         if (!this.model) {

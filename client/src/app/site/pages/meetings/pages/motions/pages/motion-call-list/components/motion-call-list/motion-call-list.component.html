@@ -19,68 +19,69 @@
         <span>&nbsp;{{ seenNodes[1] }}</span>
     </div>
     @if (hasActiveFilter) {
-    <div class="current-filters">
-        <div>
-            <button mat-button (click)="resetFilters()">
-                <mat-icon inline>cancel</mat-icon>
-                <span>{{ 'Clear all filters' | translate }}</span>
-            </button>
+        <div class="current-filters">
+            <div>
+                <button mat-button (click)="resetFilters()">
+                    <mat-icon inline>cancel</mat-icon>
+                    <span>{{ 'Clear all filters' | translate }}</span>
+                </button>
+            </div>
         </div>
-    </div>
     }
     <div class="flex-spaced margin-right-5">
         @if (categoryFilterOptions.length) {
-        <div>
-            <button mat-button [matMenuTriggerFor]="catFilterMenu">
-                <span
-                    class="upper"
-                    matBadgeColor="accent"
-                    [matBadge]="activeCatFilterCount > 0 ? activeCatFilterCount : null"
-                    [matBadgeOverlap]="false"
-                >
-                    {{ 'Categories' | translate }}
-                </span>
-            </button>
-        </div>
-        } @if (tagFilterOptions.length) {
-        <div>
-            <button mat-button [matMenuTriggerFor]="tagFilterMenu">
-                <span
-                    class="upper"
-                    matBadgeColor="accent"
-                    [matBadge]="activeTagFilterCount > 0 ? activeTagFilterCount : null"
-                    [matBadgeOverlap]="false"
-                >
-                    {{ 'Tags' | translate }}
-                </span>
-            </button>
-        </div>
+            <div>
+                <button mat-button [matMenuTriggerFor]="catFilterMenu">
+                    <span
+                        class="upper"
+                        matBadgeColor="accent"
+                        [matBadge]="activeCatFilterCount > 0 ? activeCatFilterCount : null"
+                        [matBadgeOverlap]="false"
+                    >
+                        {{ 'Categories' | translate }}
+                    </span>
+                </button>
+            </div>
+        }
+        @if (tagFilterOptions.length) {
+            <div>
+                <button mat-button [matMenuTriggerFor]="tagFilterMenu">
+                    <span
+                        class="upper"
+                        matBadgeColor="accent"
+                        [matBadge]="activeTagFilterCount > 0 ? activeTagFilterCount : null"
+                        [matBadgeOverlap]="false"
+                    >
+                        {{ 'Tags' | translate }}
+                    </span>
+                </button>
+            </div>
         }
     </div>
 </div>
 
 <mat-menu #catFilterMenu="matMenu">
     @for (catOption of categoryFilterOptions; track catOption) {
-    <div>
-        <button mat-menu-item (click)="onFilterChange('category', catOption.id)">
-            @if (catOption.state) {
-            <mat-icon>checked</mat-icon>
-            }
-            <span>{{ catOption.label }}</span>
-        </button>
-    </div>
+        <div>
+            <button mat-menu-item (click)="onFilterChange('category', catOption.id)">
+                @if (catOption.state) {
+                    <mat-icon>checked</mat-icon>
+                }
+                <span>{{ catOption.label }}</span>
+            </button>
+        </div>
     }
 </mat-menu>
 <mat-menu #tagFilterMenu="matMenu">
     @for (tagOption of tagFilterOptions; track tagOption) {
-    <div>
-        <button mat-menu-item (click)="onFilterChange('tag', tagOption.id)">
-            @if (tagOption.state) {
-            <mat-icon>checked</mat-icon>
-            }
-            <span>{{ tagOption.label }}</span>
-        </button>
-    </div>
+        <div>
+            <button mat-menu-item (click)="onFilterChange('tag', tagOption.id)">
+                @if (tagOption.state) {
+                    <mat-icon>checked</mat-icon>
+                }
+                <span>{{ tagOption.label }}</span>
+            </button>
+        </div>
     }
 </mat-menu>
 
@@ -103,10 +104,10 @@
                     </div>
                     <div class="right">
                         @for (tag of getTags(item); track tag) {
-                        <span class="tag">
-                            <mat-icon inline>local_offer</mat-icon>
-                            {{ tag.getTitle() }}
-                        </span>
+                            <span class="tag">
+                                <mat-icon inline>local_offer</mat-icon>
+                                {{ tag.getTitle() }}
+                            </span>
                         }
                     </div>
                 </div>

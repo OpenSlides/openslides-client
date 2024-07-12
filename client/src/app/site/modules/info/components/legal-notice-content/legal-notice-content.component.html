@@ -4,50 +4,56 @@
             <h1>{{ 'Legal notice' | translate }}</h1>
             <div *osOmlPerms="OML.can_manage_organization; and: isEditable">
                 @if (!isEditing) {
-                <button mat-icon-button (click)="isEditing = true">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                } @if (isEditing) {
-                <button mat-icon-button (click)="leaveEditMode(true)">
-                    <mat-icon>done</mat-icon>
-                </button>
-                <button mat-icon-button (click)="leaveEditMode(false)">
-                    <mat-icon>close</mat-icon>
-                </button>
+                    <button mat-icon-button (click)="isEditing = true">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                }
+                @if (isEditing) {
+                    <button mat-icon-button (click)="leaveEditMode(true)">
+                        <mat-icon>done</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="leaveEditMode(false)">
+                        <mat-icon>close</mat-icon>
+                    </button>
                 }
             </div>
         </div>
         <div class="underlined-links">
-            @if (!isEditing) { @if (legalNotice) {
-            <div class="legal-notice-text" [innerHtml]="legalNotice | trust : 'html'"></div>
-            } @if (!legalNotice) {
-            <div>
-                {{ 'The event manager has not set up a legal notice yet.' | translate }}
-            </div>
-            } } @if (isEditing) {
-            <div>
-                <form [formGroup]="formGroup">
-                    <os-editor formControlName="legalNotice"></os-editor>
-                </form>
-            </div>
-            } @if (versionInfo | async; as version) {
-            <mat-divider></mat-divider>
-            <div class="version-text">
-                OpenSlides Version:
-                <a
-                    class="italic"
-                    href="https://support.openslides.com/help/de-de/45-uber-openslides/80-versionshistorie"
-                    target="_blank"
-                >
-                    {{ version }}
+            @if (!isEditing) {
+                @if (legalNotice) {
+                    <div class="legal-notice-text" [innerHtml]="legalNotice | trust: 'html'"></div>
+                }
+                @if (!legalNotice) {
+                    <div>
+                        {{ 'The event manager has not set up a legal notice yet.' | translate }}
+                    </div>
+                }
+            }
+            @if (isEditing) {
+                <div>
+                    <form [formGroup]="formGroup">
+                        <os-editor formControlName="legalNotice"></os-editor>
+                    </form>
+                </div>
+            }
+            @if (versionInfo | async; as version) {
+                <mat-divider></mat-divider>
+                <div class="version-text">
+                    OpenSlides Version:
+                    <a
+                        class="italic"
+                        href="https://support.openslides.com/help/de-de/45-uber-openslides/80-versionshistorie"
+                        target="_blank"
+                    >
+                        {{ version }}
+                    </a>
+                </div>
+                <a href="https://support.openslides.com/help/" target="_blank">
+                    <br />
+                    <os-icon-container icon="help">
+                        {{ 'OpenSlides help (FAQ)' | translate }}
+                    </os-icon-container>
                 </a>
-            </div>
-            <a href="https://support.openslides.com/help/" target="_blank">
-                <br />
-                <os-icon-container icon="help">
-                    {{ 'OpenSlides help (FAQ)' | translate }}
-                </os-icon-container>
-            </a>
             }
         </div>
     </mat-card-content>

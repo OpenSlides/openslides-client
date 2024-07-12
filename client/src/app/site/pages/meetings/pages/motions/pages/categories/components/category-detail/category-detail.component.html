@@ -3,9 +3,9 @@
         <!-- Title -->
         <div class="title-slot">
             @if (selectedCategory) {
-            <h2>
-                {{ selectedCategory.prefixedName }}
-            </h2>
+                <h2>
+                    {{ selectedCategory.prefixedName }}
+                </h2>
             }
         </div>
 
@@ -22,56 +22,56 @@
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
             @for (category of categories; track category) {
-            <div>
-                <h2>
-                    <span>{{ getLevelDashes(category) }}</span>
-                    {{ category.prefixedName }}
-                </h2>
-                <table class="os-headed-listview-table" mat-table [dataSource]="dataSources[category.id]">
-                    <!-- title column -->
-                    <ng-container matColumnDef="title">
-                        <mat-header-cell *matHeaderCellDef>
-                            <span>{{ 'Motion' | translate }}</span>
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let motion">
-                            {{ motion.getTitle() }}
-                        </mat-cell>
-                    </ng-container>
-                    <!-- state column -->
-                    <ng-container matColumnDef="state">
-                        <mat-header-cell *matHeaderCellDef>
-                            <span>{{ 'State' | translate }}</span>
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let motion" class="chip-container">
-                            <mat-basic-chip disableRipple [ngClass]="motion.stateCssColor">
-                                {{ getStateLabel(motion) }}
-                            </mat-basic-chip>
-                        </mat-cell>
-                    </ng-container>
-                    <!-- Recommendation column -->
-                    <ng-container matColumnDef="recommendation">
-                        <mat-header-cell *matHeaderCellDef>
-                            <span>{{ 'Recommendation' | translate }}</span>
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let motion" class="chip-container">
-                            @if (motion.recommendation) {
-                            <mat-basic-chip class="bluegrey" disableRipple>
-                                {{ getRecommendationLabel(motion) }}
-                            </mat-basic-chip>
-                            }
-                        </mat-cell>
-                    </ng-container>
-                    <!-- Anchor column to open the separate tab -->
-                    <ng-container matColumnDef="anchor">
-                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                        <mat-cell *matCellDef="let motion">
-                            <a [routerLink]="motion.getDetailStateUrl()" [state]="{ back: 'true' }"></a>
-                        </mat-cell>
-                    </ng-container>
-                    <mat-header-row *matHeaderRowDef="getColumnDefinition()"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: getColumnDefinition()"></mat-row>
-                </table>
-            </div>
+                <div>
+                    <h2>
+                        <span>{{ getLevelDashes(category) }}</span>
+                        {{ category.prefixedName }}
+                    </h2>
+                    <table class="os-headed-listview-table" mat-table [dataSource]="dataSources[category.id]">
+                        <!-- title column -->
+                        <ng-container matColumnDef="title">
+                            <mat-header-cell *matHeaderCellDef>
+                                <span>{{ 'Motion' | translate }}</span>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let motion">
+                                {{ motion.getTitle() }}
+                            </mat-cell>
+                        </ng-container>
+                        <!-- state column -->
+                        <ng-container matColumnDef="state">
+                            <mat-header-cell *matHeaderCellDef>
+                                <span>{{ 'State' | translate }}</span>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let motion" class="chip-container">
+                                <mat-basic-chip disableRipple [ngClass]="motion.stateCssColor">
+                                    {{ getStateLabel(motion) }}
+                                </mat-basic-chip>
+                            </mat-cell>
+                        </ng-container>
+                        <!-- Recommendation column -->
+                        <ng-container matColumnDef="recommendation">
+                            <mat-header-cell *matHeaderCellDef>
+                                <span>{{ 'Recommendation' | translate }}</span>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let motion" class="chip-container">
+                                @if (motion.recommendation) {
+                                    <mat-basic-chip class="bluegrey" disableRipple>
+                                        {{ getRecommendationLabel(motion) }}
+                                    </mat-basic-chip>
+                                }
+                            </mat-cell>
+                        </ng-container>
+                        <!-- Anchor column to open the separate tab -->
+                        <ng-container matColumnDef="anchor">
+                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            <mat-cell *matCellDef="let motion">
+                                <a [routerLink]="motion.getDetailStateUrl()" [state]="{ back: 'true' }"></a>
+                            </mat-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="getColumnDefinition()"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: getColumnDefinition()"></mat-row>
+                    </table>
+                </div>
             }
         </mat-card-content>
     </mat-card>

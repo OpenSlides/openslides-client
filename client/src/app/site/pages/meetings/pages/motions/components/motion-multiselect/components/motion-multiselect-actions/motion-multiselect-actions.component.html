@@ -37,42 +37,45 @@
     <span>{{ 'Set status' | translate }} ...</span>
 </button>
 @if (recommendationEnabled) {
-<button
-    mat-menu-item
-    [disabled]="!selectedMotions.length"
-    (click)="action.emit(multiselectService.setRecommendation(selectedMotions))"
->
-    <mat-icon>report</mat-icon>
-    <!-- TODO: better icon -->
-    <span>{{ 'Set recommendation' | translate }} ...</span>
-</button>
-} @if (categories.length) {
-<button
-    mat-menu-item
-    [disabled]="!selectedMotions.length"
-    (click)="action.emit(multiselectService.setCategory(selectedMotions))"
->
-    <mat-icon>category</mat-icon>
-    <span>{{ 'Set category' | translate }} ...</span>
-</button>
-} @if (motionBlocks.length) {
-<button
-    mat-menu-item
-    [disabled]="!selectedMotions.length"
-    (click)="action.emit(multiselectService.setMotionBlock(selectedMotions))"
->
-    <mat-icon>widgets</mat-icon>
-    <span>{{ 'Set motion block' | translate }} ...</span>
-</button>
-} @if (tags.length) {
-<button
-    mat-menu-item
-    [disabled]="!selectedMotions.length"
-    (click)="action.emit(multiselectService.changeTags(selectedMotions))"
->
-    <mat-icon>local_offer</mat-icon>
-    <span>{{ 'Set tags' | translate }} ...</span>
-</button>
+    <button
+        mat-menu-item
+        [disabled]="!selectedMotions.length"
+        (click)="action.emit(multiselectService.setRecommendation(selectedMotions))"
+    >
+        <mat-icon>report</mat-icon>
+        <!-- TODO: better icon -->
+        <span>{{ 'Set recommendation' | translate }} ...</span>
+    </button>
+}
+@if (categories.length) {
+    <button
+        mat-menu-item
+        [disabled]="!selectedMotions.length"
+        (click)="action.emit(multiselectService.setCategory(selectedMotions))"
+    >
+        <mat-icon>category</mat-icon>
+        <span>{{ 'Set category' | translate }} ...</span>
+    </button>
+}
+@if (motionBlocks.length) {
+    <button
+        mat-menu-item
+        [disabled]="!selectedMotions.length"
+        (click)="action.emit(multiselectService.setMotionBlock(selectedMotions))"
+    >
+        <mat-icon>widgets</mat-icon>
+        <span>{{ 'Set motion block' | translate }} ...</span>
+    </button>
+}
+@if (tags.length) {
+    <button
+        mat-menu-item
+        [disabled]="!selectedMotions.length"
+        (click)="action.emit(multiselectService.changeTags(selectedMotions))"
+    >
+        <mat-icon>local_offer</mat-icon>
+        <span>{{ 'Set tags' | translate }} ...</span>
+    </button>
 }
 <button
     mat-menu-item

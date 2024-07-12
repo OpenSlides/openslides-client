@@ -1,20 +1,21 @@
 <div class="text"></div>
 @if (!textLoaded) {
-<p>
-    <mat-progress-bar color="primary" mode="indeterminate" [bufferValue]="75" [value]="50"></mat-progress-bar>
-</p>
-} @if (showChangeRecommendations) {
-<ul class="change-recommendation-list">
-    @for (reco of textChangeRecommmendations; track reco) {
-    <li
-        [class.delete]="isDeletionChangeRecommendation(reco)"
-        [class.insert]="isInsertionChangeRecommendation(reco)"
-        [class.replace]="isReplacementChangeRecommendation(reco)"
-        [style.height]="calcRecoHeight(reco)"
-        [style.top]="calcRecoTop(reco)"
-        [title]="reco.getTitle()"
-        (click)="gotoReco(reco)"
-    ></li>
-    }
-</ul>
+    <p>
+        <mat-progress-bar color="primary" mode="indeterminate" [bufferValue]="75" [value]="50"></mat-progress-bar>
+    </p>
+}
+@if (showChangeRecommendations) {
+    <ul class="change-recommendation-list">
+        @for (reco of textChangeRecommmendations; track reco) {
+            <li
+                [class.delete]="isDeletionChangeRecommendation(reco)"
+                [class.insert]="isInsertionChangeRecommendation(reco)"
+                [class.replace]="isReplacementChangeRecommendation(reco)"
+                [style.height]="calcRecoHeight(reco)"
+                [style.top]="calcRecoTop(reco)"
+                [title]="reco.getTitle()"
+                (click)="gotoReco(reco)"
+            ></li>
+        }
+    </ul>
 }

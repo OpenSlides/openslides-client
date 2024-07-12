@@ -1,9 +1,9 @@
 @if (canSeeProgressBar) {
-<div class="poll-progress-wrapper">
-    <div class="vote-number">
-        <span>{{ votescast }} / {{ max }}</span>
+    <div class="poll-progress-wrapper">
+        <div class="vote-number">
+            <span>{{ votescast }} / {{ max }}</span>
+        </div>
+        <span>{{ 'Received votes' | translate }}</span>
+        <mat-progress-bar class="voting-progress-bar" mode="determinate" [value]="valueInPercent"></mat-progress-bar>
     </div>
-    <span>{{ 'Received votes' | translate }}</span>
-    <mat-progress-bar class="voting-progress-bar" mode="determinate" [value]="valueInPercent"></mat-progress-bar>
-</div>
 }

@@ -17,13 +17,13 @@
                 <mat-icon>autorenew</mat-icon>
             </button>
             @if (hasColorFormError('pattern')) {
-            <mat-error>
-                {{ 'You have to enter six hexadecimal digits' | translate }}
-            </mat-error>
+                <mat-error>
+                    {{ 'You have to enter six hexadecimal digits' | translate }}
+                </mat-error>
             }
         </mat-form-field>
         @if (name.value) {
-        <os-chip [color]="currentColor">{{ name.value }}</os-chip>
+            <os-chip [color]="currentColor">{{ name.value }}</os-chip>
         }
     </form>
 </mat-dialog-content>

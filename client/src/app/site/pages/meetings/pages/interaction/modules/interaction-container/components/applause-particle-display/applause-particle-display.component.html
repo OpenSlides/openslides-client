@@ -1,5 +1,5 @@
 @if (isStable | async) {
-<div class="particle-wrapper" (osResized)="updateParticleContainer($event)">
-    <Particles id="particles" [options]="options" (particlesLoaded)="particlesLoaded($event)"></Particles>
-</div>
+    <div class="particle-wrapper" (osResized)="updateParticleContainer($event)">
+        <Particles id="particles" [options]="options" (particlesLoaded)="particlesLoaded($event)"></Particles>
+    </div>
 }

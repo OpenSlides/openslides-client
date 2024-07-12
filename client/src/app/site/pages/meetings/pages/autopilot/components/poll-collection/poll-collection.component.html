@@ -1,10 +1,16 @@
-@if (!disableRunning) { @for (poll of polls; track identifyPoll($index, poll)) {
-<ng-container [ngTemplateOutlet]="pollArea" [ngTemplateOutletContext]="{ poll: poll, last: false }"></ng-container>
-} } @if (lastPublishedPoll && !hasProjectedModelOpenPolls && !disableFinished) {
-<ng-container
-    [ngTemplateOutlet]="pollArea"
-    [ngTemplateOutletContext]="{ poll: lastPublishedPoll, last: true }"
-></ng-container>
+@if (!disableRunning) {
+    @for (poll of polls; track identifyPoll($index, poll)) {
+        <ng-container
+            [ngTemplateOutlet]="pollArea"
+            [ngTemplateOutletContext]="{ poll: poll, last: false }"
+        ></ng-container>
+    }
+}
+@if (lastPublishedPoll && !hasProjectedModelOpenPolls && !disableFinished) {
+    <ng-container
+        [ngTemplateOutlet]="pollArea"
+        [ngTemplateOutletContext]="{ poll: lastPublishedPoll, last: true }"
+    ></ng-container>
 }
 
 <ng-template #pollArea let-last="last" let-poll="poll">
@@ -16,45 +22,57 @@
                 </a>
                 <br />
                 @if (canManagePoll(poll) && poll.isFinished) {
-                <i class="small">
-                    {{ 'finished (unpublished)' | translate }}
-                </i>
+                    <i class="small">
+                        {{ 'finished (unpublished)' | translate }}
+                    </i>
                 }
             </p>
 
             @if (poll.canBeVotedFor()) {
-            <os-poll-progress [poll]="poll"></os-poll-progress>
-            } @if (poll.isMotionPoll) {
-            <div>
-                @if (poll.canBeVotedFor() && !last) {
-                <os-motion-poll-vote [poll]="poll" [displayInAutopilot]="displayInAutopilot"></os-motion-poll-vote>
-                } @if (last) {
-                <os-motion-poll-detail-content [poll]="lastPublishedPoll"></os-motion-poll-detail-content>
-                }
-            </div>
-            } @if (poll.isAssignmentPoll) {
-            <div>
-                @if (poll.canBeVotedFor() && !last) {
-                <os-assignment-poll-vote [poll]="poll"></os-assignment-poll-vote>
-                } @if (last) {
-                <os-assignment-poll-detail-content [poll]="lastPublishedPoll"></os-assignment-poll-detail-content>
-                } @if (poll.isListPoll) {
-                <os-assignment-poll-meta-info
-                    [poll]="poll"
-                    [shortenList]="true"
-                    [showCandidates]="poll.isListPoll"
-                    [showStats]="false"
-                ></os-assignment-poll-meta-info>
-                }
-            </div>
-            } @if (poll.isTopicPoll) {
-            <div>
-                @if (poll.canBeVotedFor() && !last) {
-                <os-topic-poll-vote [poll]="poll"></os-topic-poll-vote>
-                } @if (last) {
-                <os-topic-poll-detail-content [poll]="lastPublishedPoll"></os-topic-poll-detail-content>
-                }
-            </div>
+                <os-poll-progress [poll]="poll"></os-poll-progress>
+            }
+            @if (poll.isMotionPoll) {
+                <div>
+                    @if (poll.canBeVotedFor() && !last) {
+                        <os-motion-poll-vote
+                            [displayInAutopilot]="displayInAutopilot"
+                            [poll]="poll"
+                        ></os-motion-poll-vote>
+                    }
+                    @if (last) {
+                        <os-motion-poll-detail-content [poll]="lastPublishedPoll"></os-motion-poll-detail-content>
+                    }
+                </div>
+            }
+            @if (poll.isAssignmentPoll) {
+                <div>
+                    @if (poll.canBeVotedFor() && !last) {
+                        <os-assignment-poll-vote [poll]="poll"></os-assignment-poll-vote>
+                    }
+                    @if (last) {
+                        <os-assignment-poll-detail-content
+                            [poll]="lastPublishedPoll"
+                        ></os-assignment-poll-detail-content>
+                    }
+                    @if (poll.isListPoll) {
+                        <os-assignment-poll-meta-info
+                            [poll]="poll"
+                            [shortenList]="true"
+                            [showCandidates]="poll.isListPoll"
+                            [showStats]="false"
+                        ></os-assignment-poll-meta-info>
+                    }
+                </div>
+            }
+            @if (poll.isTopicPoll) {
+                <div>
+                    @if (poll.canBeVotedFor() && !last) {
+                        <os-topic-poll-vote [poll]="poll"></os-topic-poll-vote>
+                    }
+                    @if (last) {
+                        <os-topic-poll-detail-content [poll]="lastPublishedPoll"></os-topic-poll-detail-content>
+                    }
+                </div>
             }
         </mat-card-content>
     </mat-card>

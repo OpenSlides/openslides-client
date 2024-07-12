@@ -1,49 +1,54 @@
 @if (motion) {
-<div class="title">
-    <os-projectable-title [getTitleFn]="getTitleFn" [model]="motion">
-        @if (titleCanBeChanged()) {
-        <span class="motion-title" prepend>
-            @if (titleChangeRecommendation) {
-            <span class="title-change-indicator" (click)="gotoChangeRecommendation(titleChangeRecommendation)"></span>
+    <div class="title">
+        <os-projectable-title [getTitleFn]="getTitleFn" [model]="motion">
+            @if (titleCanBeChanged()) {
+                <span class="motion-title" prepend>
+                    @if (titleChangeRecommendation) {
+                        <span
+                            class="title-change-indicator"
+                            (click)="gotoChangeRecommendation(titleChangeRecommendation)"
+                        ></span>
+                    }
+                    <span
+                        *osPerms="permission.motionCanManage; and: !titleChangeRecommendation"
+                        class="change-title"
+                        (click)="createTitleChangeRecommendation()"
+                    ></span>
+                </span>
             }
-            <span
-                *osPerms="permission.motionCanManage; and: !titleChangeRecommendation"
-                class="change-title"
-                (click)="createTitleChangeRecommendation()"
-            ></span>
+            <button
+                append
+                class="primary-accent-by-theme"
+                mat-icon-button
+                matTooltipPosition="right"
+                matTooltip="{{ 'Mark as personal favorite' | translate }}"
+                (click)="toggleFavorite()"
+            >
+                <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
+            </button>
+        </os-projectable-title>
+        <!-- Sequential number -->
+        <span class="main-nav-color title-font">
+            @if (showSequentialNumber) {
+                <span>
+                    <span>{{ 'Sequential number' | translate }}</span>
+                    &nbsp;{{ motion.sequential_number }}
+                </span>
+            }
+            @if (showSequentialNumber && parent) {
+                <span>&#xb7;&nbsp;</span>
+            }
+            @if (parent) {
+                <span>
+                    <span>
+                        <span>{{ 'Amendment to' | translate }}</span>
+                        &nbsp;
+                        <a [routerLink]="parent?.getDetailStateUrl()" [state]="{ back: 'true' }">
+                            {{ parent.number || parent.title }}
+                        </a>
+                    </span>
+                </span>
+            }
         </span>
-        }
-        <button
-            append
-            class="primary-accent-by-theme"
-            mat-icon-button
-            matTooltipPosition="right"
-            matTooltip="{{ 'Mark as personal favorite' | translate }}"
-            (click)="toggleFavorite()"
-        >
-            <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
-        </button>
-    </os-projectable-title>
-    <!-- Sequential number -->
-    <span class="main-nav-color title-font">
-        @if (showSequentialNumber) {
-        <span>
-            <span>{{ 'Sequential number' | translate }}</span>
-            &nbsp;{{ motion.sequential_number }}
-        </span>
-        } @if (showSequentialNumber && parent) {
-        <span>&#xb7;&nbsp;</span>
-        } @if (parent) {
-        <span>
-            <span>
-                <span>{{ 'Amendment to' | translate }}</span>
-                &nbsp;
-                <a [routerLink]="parent?.getDetailStateUrl()" [state]="{ back: 'true' }">
-                    {{ parent.number || parent.title }}
-                </a>
-            </span>
-        </span>
-        }
-    </span>
-</div>
+    </div>
 }

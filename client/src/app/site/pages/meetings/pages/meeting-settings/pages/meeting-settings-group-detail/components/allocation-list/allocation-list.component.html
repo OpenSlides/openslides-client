@@ -1,35 +1,36 @@
 <form [formGroup]="allocationListForm">
     @for (allocation of allocationBoxes.controls; track allocation; let i = $index) {
-    <div class="inline-form" formArrayName="allocationBoxes">
-        <ng-container [formGroupName]="i">
-            <mat-form-field>
-                <mat-label>{{ entryLabel | translate }}</mat-label>
-                <input formControlName="entry" matInput />
-                <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
-            </mat-form-field>
-            <mat-icon class="sep-line" [class.grey-out]="disabled">arrow_forward</mat-icon>
-            <mat-form-field>
-                <mat-label>{{ allocationLabel | translate }}</mat-label>
-                @if (config && isNumberAllocation) {
-                <input formControlName="allocation" matInput type="number" />
-                } @if (config && !isNumberAllocation) {
-                <input formControlName="allocation" matInput type="text" />
-                }
-                <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
-            </mat-form-field>
-            <button
-                class="delete-button"
-                mat-icon-button
-                matTooltipPosition="left"
-                type="button"
-                [disabled]="disabled"
-                matTooltip="{{ 'Cancel' | translate }}"
-                (click)="onRemoveAllocation(i)"
-            >
-                <mat-icon>close</mat-icon>
-            </button>
-        </ng-container>
-    </div>
+        <div class="inline-form" formArrayName="allocationBoxes">
+            <ng-container [formGroupName]="i">
+                <mat-form-field>
+                    <mat-label>{{ entryLabel | translate }}</mat-label>
+                    <input formControlName="entry" matInput />
+                    <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
+                </mat-form-field>
+                <mat-icon class="sep-line" [class.grey-out]="disabled">arrow_forward</mat-icon>
+                <mat-form-field>
+                    <mat-label>{{ allocationLabel | translate }}</mat-label>
+                    @if (config && isNumberAllocation) {
+                        <input formControlName="allocation" matInput type="number" />
+                    }
+                    @if (config && !isNumberAllocation) {
+                        <input formControlName="allocation" matInput type="text" />
+                    }
+                    <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
+                </mat-form-field>
+                <button
+                    class="delete-button"
+                    mat-icon-button
+                    matTooltipPosition="left"
+                    type="button"
+                    [disabled]="disabled"
+                    matTooltip="{{ 'Cancel' | translate }}"
+                    (click)="onRemoveAllocation(i)"
+                >
+                    <mat-icon>close</mat-icon>
+                </button>
+            </ng-container>
+        </div>
     }
 </form>
 

@@ -17,7 +17,10 @@ export class MotionManagePollsComponent {
     @Input()
     public hideAdd: boolean;
 
-    public constructor(private pollDialog: MotionPollDialogService, private pollController: PollControllerService) {}
+    public constructor(
+        private pollDialog: MotionPollDialogService,
+        private pollController: PollControllerService
+    ) {}
 
     public onEditPoll(id: Id): void {
         const viewPoll = this.pollController.getViewModel(id)!;

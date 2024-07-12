@@ -12,7 +12,7 @@
     <!-- Poll Title -->
     <div *osScrollingTableCell="'title'; row as poll; rowContext as context" class="cell-slot fill">
         @if (!isMultiSelect) {
-        <os-detail-view-navigator [model]="poll"></os-detail-view-navigator>
+            <os-detail-view-navigator [model]="poll"></os-detail-view-navigator>
         }
         <span>{{ poll.title }}</span>
     </div>
@@ -20,7 +20,7 @@
     <!-- Motion Or Assigmnent Title Title -->
     <div *osScrollingTableCell="'classType'; row as poll" class="cell-slot fill">
         @if (!isMultiSelect) {
-        <os-detail-view-navigator [model]="poll"></os-detail-view-navigator>
+            <os-detail-view-navigator [model]="poll"></os-detail-view-navigator>
         }
         <span>{{ poll.getContentObject()?.getListTitle() }}</span>
     </div>
@@ -31,7 +31,7 @@
         class="cell-slot fill"
     >
         @if (!isMultiSelect) {
-        <os-detail-view-navigator [model]="poll"></os-detail-view-navigator>
+            <os-detail-view-navigator [model]="poll"></os-detail-view-navigator>
         }
         <span>{{ poll.stateVerbose | translate }}</span>
     </div>
@@ -42,9 +42,9 @@
         class="cell-slot fill"
     >
         @if (canBeVoteFor(poll)) {
-        <mat-icon color="warn" matTooltip="{{ 'Voting is currently in progress.' | translate }}">warning</mat-icon>
+            <mat-icon color="warn" matTooltip="{{ 'Voting is currently in progress.' | translate }}">warning</mat-icon>
         } @else {
-        <mat-icon color="accent" matTooltip="{{ 'You have already voted.' | translate }}">check_circle</mat-icon>
+            <mat-icon color="accent" matTooltip="{{ 'You have already voted.' | translate }}">check_circle</mat-icon>
         }
     </div>
 </os-projectable-list>

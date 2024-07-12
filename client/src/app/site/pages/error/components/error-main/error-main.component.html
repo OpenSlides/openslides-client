@@ -1,13 +1,15 @@
 <div class="background-default error-page full-height flex-center-unsafe">
     <h2>{{ 'You are not supposed to be here...' | translate }}</h2>
     @if (error) {
-    <h3>{{ error | translate }}</h3>
-    } @if (error === 'Authorization Error' && msg.length) {
-    <p>
-        {{ 'Required permissions to view this page:' | translate }}
-    </p>
-    } @for (message of msg; track message) {
-    <span class="message">{{ message | translate }}</span>
+        <h3>{{ error | translate }}</h3>
+    }
+    @if (error === 'Authorization Error' && msg.length) {
+        <p>
+            {{ 'Required permissions to view this page:' | translate }}
+        </p>
+    }
+    @for (message of msg; track message) {
+        <span class="message">{{ message | translate }}</span>
     }
     <div class="go-back-button">
         <button mat-raised-button (click)="leaveErrorPage()">{{ 'Back to OpenSlides' | translate }}</button>

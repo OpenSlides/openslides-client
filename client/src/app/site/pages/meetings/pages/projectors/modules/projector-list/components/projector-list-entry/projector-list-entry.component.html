@@ -1,48 +1,49 @@
 @if (projector) {
-<os-action-card class="projector-tile" [disableExpandControl]="true" [showActionRow]="true">
-    <ng-container class="meta-text-block-title">
-        <os-icon-container
-            icon="lock"
-            size="large"
-            [iconTooltip]="'Internal' | translate"
-            [noWrap]="true"
-            [showIcon]="projector.is_internal"
-        >
-            <div class="ellipsis-overflow">
-                {{ projector.getTitle() }}
-            </div>
-        </os-icon-container>
-    </ng-container>
-    <ng-container *osPerms="permission.projectorCanManage" class="meta-text-block-action-row">
-        <button
-            mat-icon-button
-            matTooltip="{{ 'Sets this projector as the reference for the current list of speakers' | translate }}"
-            (click)="setProjectorAsReference()"
-        >
-            @if (projector.isReferenceProjector) {
-            <mat-icon class="grey-icon">star</mat-icon>
-            } @if (!projector.isReferenceProjector) {
-            <mat-icon class="grey-icon">star_border</mat-icon>
-            }
-        </button>
-        <button mat-icon-button matTooltip="{{ 'Edit projector' | translate }}" (click)="editProjector()">
-            <mat-icon class="grey-icon">edit</mat-icon>
-        </button>
-        <button
-            color="warn"
-            mat-icon-button
-            matTooltip="{{ 'Delete projector' | translate }}"
-            (click)="onDeleteButton()"
-        >
-            <mat-icon class="grey-icon">delete</mat-icon>
-        </button>
-    </ng-container>
-    <ng-container class="meta-text-block-content">
-        <a class="no-markup" [routerLink]="getDetailLink()" [target]="projectionTarget">
-            <div class="projector">
-                <os-projector [projector]="projector"></os-projector>
-            </div>
-        </a>
-    </ng-container>
-</os-action-card>
+    <os-action-card class="projector-tile" [disableExpandControl]="true" [showActionRow]="true">
+        <ng-container class="meta-text-block-title">
+            <os-icon-container
+                icon="lock"
+                size="large"
+                [iconTooltip]="'Internal' | translate"
+                [noWrap]="true"
+                [showIcon]="projector.is_internal"
+            >
+                <div class="ellipsis-overflow">
+                    {{ projector.getTitle() }}
+                </div>
+            </os-icon-container>
+        </ng-container>
+        <ng-container *osPerms="permission.projectorCanManage" class="meta-text-block-action-row">
+            <button
+                mat-icon-button
+                matTooltip="{{ 'Sets this projector as the reference for the current list of speakers' | translate }}"
+                (click)="setProjectorAsReference()"
+            >
+                @if (projector.isReferenceProjector) {
+                    <mat-icon class="grey-icon">star</mat-icon>
+                }
+                @if (!projector.isReferenceProjector) {
+                    <mat-icon class="grey-icon">star_border</mat-icon>
+                }
+            </button>
+            <button mat-icon-button matTooltip="{{ 'Edit projector' | translate }}" (click)="editProjector()">
+                <mat-icon class="grey-icon">edit</mat-icon>
+            </button>
+            <button
+                color="warn"
+                mat-icon-button
+                matTooltip="{{ 'Delete projector' | translate }}"
+                (click)="onDeleteButton()"
+            >
+                <mat-icon class="grey-icon">delete</mat-icon>
+            </button>
+        </ng-container>
+        <ng-container class="meta-text-block-content">
+            <a class="no-markup" [routerLink]="getDetailLink()" [target]="projectionTarget">
+                <div class="projector">
+                    <os-projector [projector]="projector"></os-projector>
+                </div>
+            </a>
+        </ng-container>
+    </os-action-card>
 }

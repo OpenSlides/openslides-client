@@ -12,23 +12,23 @@
 <div class="spacer-bottom-60">
     <os-grid>
         @for (group of this.groups; track group) {
-        <os-tile orientation="vertical" [preferredSize]="2">
-            <div
-                class="settings-group-card"
-                tabindex="0"
-                [osPaper]="2"
-                [osPaperRaise]="true"
-                [routerLink]="group.label.toLowerCase()"
-                (keydown.enter)="onEnter(group.label)"
-            >
-                <div class="flex-center background-selected">
-                    <mat-icon>{{ group.icon }}</mat-icon>
+            <os-tile orientation="vertical" [preferredSize]="2">
+                <div
+                    class="settings-group-card"
+                    tabindex="0"
+                    [osPaper]="2"
+                    [osPaperRaise]="true"
+                    [routerLink]="group.label.toLowerCase()"
+                    (keydown.enter)="onEnter(group.label)"
+                >
+                    <div class="flex-center background-selected">
+                        <mat-icon>{{ group.icon }}</mat-icon>
+                    </div>
+                    <div class="flex-center-unsafe text-center background-card">
+                        {{ group.label | translate }}
+                    </div>
                 </div>
-                <div class="flex-center-unsafe text-center background-card">
-                    {{ group.label | translate }}
-                </div>
-            </div>
-        </os-tile>
+            </os-tile>
         }
     </os-grid>
 </div>

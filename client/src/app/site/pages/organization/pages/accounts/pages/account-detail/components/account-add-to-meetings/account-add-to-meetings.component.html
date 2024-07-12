@@ -56,70 +56,71 @@
             </form>
             <div class="potential-warning">
                 @if (!!warningMessage) {
-                <div>
-                    <mat-icon color="warn" inline line-height="100%">warning</mat-icon>
-                    <i class="foreground-warn">
-                        {{ warningMessage | translate }}
-                    </i>
-                </div>
+                    <div>
+                        <mat-icon color="warn" inline line-height="100%">warning</mat-icon>
+                        <i class="foreground-warn">
+                            {{ warningMessage | translate }}
+                        </i>
+                    </div>
                 }
             </div>
         </div>
     </mat-card-content>
 </mat-card>
 @if (hasResult || waitingForResults) {
-<mat-card class="os-card" style="padding-right: 30px">
-    <mat-card-content>
-        <!-- Display results -->
-        <div class="assign-meetings-element">
-            <h2>{{ 'Results' | translate }}</h2>
-            <div class="assign-meetings-subtext">
-                <span>{{ 'Group name' | translate }}: '{{ lastGroupName || groupName }}'</span>
+    <mat-card class="os-card" style="padding-right: 30px">
+        <mat-card-content>
+            <!-- Display results -->
+            <div class="assign-meetings-element">
+                <h2>{{ 'Results' | translate }}</h2>
+                <div class="assign-meetings-subtext">
+                    <span>{{ 'Group name' | translate }}: '{{ lastGroupName || groupName }}'</span>
+                </div>
+                <table class="result-table">
+                    <tr>
+                        <th class="verticalSplit">{{ 'Account successfully assigned' | translate }}</th>
+                        <th class="verticalSplit">{{ 'Group not found - assigned to default group' | translate }}</th>
+                        <th class="verticalSplit">
+                            {{ 'Group not found - account is already in meeting, nothing assigned' | translate }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <td class="verticalSplit">
+                            <ng-container
+                                [ngTemplateOutlet]="tableData"
+                                [ngTemplateOutletContext]="{ $implicit: 'succeeded' }"
+                            ></ng-container>
+                        </td>
+                        <td class="verticalSplit">
+                            <ng-container
+                                [ngTemplateOutlet]="tableData"
+                                [ngTemplateOutletContext]="{ $implicit: 'standard_group' }"
+                            ></ng-container>
+                        </td>
+                        <td class="verticalSplit">
+                            <ng-container
+                                [ngTemplateOutlet]="tableData"
+                                [ngTemplateOutletContext]="{ $implicit: 'nothing' }"
+                            ></ng-container>
+                        </td>
+                    </tr>
+                </table>
             </div>
-            <table class="result-table">
-                <tr>
-                    <th class="verticalSplit">{{ 'Account successfully assigned' | translate }}</th>
-                    <th class="verticalSplit">{{ 'Group not found - assigned to default group' | translate }}</th>
-                    <th class="verticalSplit">
-                        {{ 'Group not found - account is already in meeting, nothing assigned' | translate }}
-                    </th>
-                </tr>
-                <tr>
-                    <td class="verticalSplit">
-                        <ng-container
-                            [ngTemplateOutlet]="tableData"
-                            [ngTemplateOutletContext]="{ $implicit: 'succeeded' }"
-                        ></ng-container>
-                    </td>
-                    <td class="verticalSplit">
-                        <ng-container
-                            [ngTemplateOutlet]="tableData"
-                            [ngTemplateOutletContext]="{ $implicit: 'standard_group' }"
-                        ></ng-container>
-                    </td>
-                    <td class="verticalSplit">
-                        <ng-container
-                            [ngTemplateOutlet]="tableData"
-                            [ngTemplateOutletContext]="{ $implicit: 'nothing' }"
-                        ></ng-container>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </mat-card-content>
-</mat-card>
+        </mat-card-content>
+    </mat-card>
 }
 
 <ng-template #tableData let-key>
     @if ((waitingForResultsSubject | async) === false) {
-    <div>
-        @for (meetingName of $any(resultsTableDataSubjects[key] | async); track meetingName) {
-        <div class="assign-meetings-name-line">
-            {{ meetingName }}
+        <div>
+            @for (meetingName of $any(resultsTableDataSubjects[key] | async); track meetingName) {
+                <div class="assign-meetings-name-line">
+                    {{ meetingName }}
+                </div>
+            }
         </div>
-        }
-    </div>
-    } @if (waitingForResultsSubject | async) {
-    <mat-spinner class="small-spinner await-result-spinner"></mat-spinner>
+    }
+    @if (waitingForResultsSubject | async) {
+        <mat-spinner class="small-spinner await-result-spinner"></mat-spinner>
     }
 </ng-template>

@@ -10,98 +10,100 @@
 
     <!-- Current filters -->
     @if (filterService) {
-    <div class="current-filters h-scroller">
-        @for (filter of filterService.filterStack; track filter) {
-        <div>
-            <button
-                mat-stroked-button
-                (click)="removeFilterFromStack(filter)"
-                (mouseup)="removeFilterFromStack(filter)"
-            >
-                <os-icon-container class="active-filter" icon="close">
-                    <span class="active-filter">
-                        {{ filter.option.label | translate }}
-                    </span>
-                </os-icon-container>
-            </button>
+        <div class="current-filters h-scroller">
+            @for (filter of filterService.filterStack; track filter) {
+                <div>
+                    <button
+                        mat-stroked-button
+                        (click)="removeFilterFromStack(filter)"
+                        (mouseup)="removeFilterFromStack(filter)"
+                    >
+                        <os-icon-container class="active-filter" icon="close">
+                            <span class="active-filter">
+                                {{ filter.option.label | translate }}
+                            </span>
+                        </os-icon-container>
+                    </button>
+                </div>
+            }
         </div>
-        }
-    </div>
     }
 
     <!-- Actions -->
     <div class="action-buttons">
         <!-- Sort Button -->
         @if ((vp.isMobileSubject | async) && hasSorting) {
-        <button mat-button (click)="openSortDropDown()">
-            <mat-icon
-                matBadge="&#8288;"
-                matBadgeColor="accent"
-                matBadgeSize="small"
-                [matBadgeHidden]="!hasSortOptionSelected"
-                [matBadgeOverlap]="false"
-            >
-                sort
-            </mat-icon>
-        </button>
-        } @if ((vp.isMobileSubject | async) === false && hasSorting) {
-        <button mat-button [matMenuTriggerFor]="menu" [matTooltip]="getSortLabel(sortOption) | translate">
-            <mat-icon>sort</mat-icon>
-            <span
-                class="upper"
-                matBadge="&#8288;"
-                matBadgeColor="accent"
-                matBadgeSize="small"
-                [matBadgeHidden]="!hasSortOptionSelected"
-                [matBadgeOverlap]="false"
-            >
-                {{ 'Sort' | translate }}
-            </span>
-        </button>
+            <button mat-button (click)="openSortDropDown()">
+                <mat-icon
+                    matBadge="&#8288;"
+                    matBadgeColor="accent"
+                    matBadgeSize="small"
+                    [matBadgeHidden]="!hasSortOptionSelected"
+                    [matBadgeOverlap]="false"
+                >
+                    sort
+                </mat-icon>
+            </button>
+        }
+        @if ((vp.isMobileSubject | async) === false && hasSorting) {
+            <button mat-button [matMenuTriggerFor]="menu" [matTooltip]="getSortLabel(sortOption) | translate">
+                <mat-icon>sort</mat-icon>
+                <span
+                    class="upper"
+                    matBadge="&#8288;"
+                    matBadgeColor="accent"
+                    matBadgeSize="small"
+                    [matBadgeHidden]="!hasSortOptionSelected"
+                    [matBadgeOverlap]="false"
+                >
+                    {{ 'Sort' | translate }}
+                </span>
+            </button>
         }
 
         <!-- Filter button -->
         @if (hasFilters) {
-        <button mat-button (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()">
-            <mat-icon
-                matBadgeColor="accent"
-                matBadgeSize="small"
-                [matBadge]="filterAmount"
-                [matBadgeHidden]="filterAmount === 0 || (vp.isMobileSubject | async) === false"
-                [matBadgeOverlap]="false"
-            >
-                filter_list
-            </mat-icon>
-            @if ((vp.isMobileSubject | async) === false) {
-            <span
-                class="upper"
-                matBadgeColor="accent"
-                matBadgeSize="small"
-                [matBadge]="filterAmount"
-                [matBadgeHidden]="filterAmount === 0"
-                [matBadgeOverlap]="false"
-            >
-                {{ 'Filter' | translate }}
-            </span>
-            }
-        </button>
+            <button mat-button (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()">
+                <mat-icon
+                    matBadgeColor="accent"
+                    matBadgeSize="small"
+                    [matBadge]="filterAmount"
+                    [matBadgeHidden]="filterAmount === 0 || (vp.isMobileSubject | async) === false"
+                    [matBadgeOverlap]="false"
+                >
+                    filter_list
+                </mat-icon>
+                @if ((vp.isMobileSubject | async) === false) {
+                    <span
+                        class="upper"
+                        matBadgeColor="accent"
+                        matBadgeSize="small"
+                        [matBadge]="filterAmount"
+                        [matBadgeHidden]="filterAmount === 0"
+                        [matBadgeOverlap]="false"
+                    >
+                        {{ 'Filter' | translate }}
+                    </span>
+                }
+            </button>
         }
 
         <!-- Search bar -->
         @if (searchService && !showSearchIconOnly) {
-        <os-rounded-input
-            #searchField
-            iconName="manage_search"
-            [fullWidth]="false"
-            placeholder="{{ 'Search' | translate }}"
-            [size]="'small'"
-            [(ngModel)]="searchFieldInput"
-            (clickIcon)="toggleSearchEdit()"
-        ></os-rounded-input>
-        } @if (showSearchIconOnly) {
-        <button mat-button (click)="toggleSearchEdit()">
-            <mat-icon>manage_search</mat-icon>
-        </button>
+            <os-rounded-input
+                #searchField
+                iconName="manage_search"
+                [fullWidth]="false"
+                placeholder="{{ 'Search' | translate }}"
+                [size]="'small'"
+                [(ngModel)]="searchFieldInput"
+                (clickIcon)="toggleSearchEdit()"
+            ></os-rounded-input>
+        }
+        @if (showSearchIconOnly) {
+            <button mat-button (click)="toggleSearchEdit()">
+                <mat-icon>manage_search</mat-icon>
+            </button>
         }
     </div>
 </div>
@@ -114,36 +116,40 @@
         </span>
 
         @if (filterAmount) {
-        <button mat-button (click)="onClearAllButton($event)">
-            <os-icon-container icon="clear">
-                <span>{{ 'Clear all filters' | translate }}</span>
-            </os-icon-container>
-        </button>
+            <button mat-button (click)="onClearAllButton($event)">
+                <os-icon-container icon="clear">
+                    <span>{{ 'Clear all filters' | translate }}</span>
+                </os-icon-container>
+            </button>
         }
     </div>
     @if (filterService) {
-    <os-filter-menu
-        [service]="filterService"
-        [showSpacer]="showSpacer"
-        (dismissed)="this.filterMenu.close()"
-    ></os-filter-menu>
+        <os-filter-menu
+            [service]="filterService"
+            [showSpacer]="showSpacer"
+            (dismissed)="this.filterMenu.close()"
+        ></os-filter-menu>
     }
 </mat-drawer>
 
 <!-- non-mobile sorting menu -->
 <mat-menu #menu>
-    @if (hasSorting) { @if (defaultOption) {
-    <button mat-menu-item (click)="sortOption = defaultOption">
-        <mat-icon>{{ getSortIcon(defaultOption) }}</mat-icon>
-        <span>{{ sortService.getSortLabel(defaultOption) | translate }}&emsp;</span>
-        <small class="subtitle">({{ 'Default' | translate }})</small>
-    </button>
-    } @if (defaultOption) {
-    <mat-divider></mat-divider>
-    } @for (option of sortOptionsWithoutDefault; track option) {
-    <button mat-menu-item (click)="sortOption = option">
-        <mat-icon>{{ getSortIcon(option) }}</mat-icon>
-        <span>{{ sortService.getSortLabel(option) | translate }}</span>
-    </button>
-    } }
+    @if (hasSorting) {
+        @if (defaultOption) {
+            <button mat-menu-item (click)="sortOption = defaultOption">
+                <mat-icon>{{ getSortIcon(defaultOption) }}</mat-icon>
+                <span>{{ sortService.getSortLabel(defaultOption) | translate }}&emsp;</span>
+                <small class="subtitle">({{ 'Default' | translate }})</small>
+            </button>
+        }
+        @if (defaultOption) {
+            <mat-divider></mat-divider>
+        }
+        @for (option of sortOptionsWithoutDefault; track option) {
+            <button mat-menu-item (click)="sortOption = option">
+                <mat-icon>{{ getSortIcon(option) }}</mat-icon>
+                <span>{{ sortService.getSortLabel(option) | translate }}</span>
+            </button>
+        }
+    }
 </mat-menu>
