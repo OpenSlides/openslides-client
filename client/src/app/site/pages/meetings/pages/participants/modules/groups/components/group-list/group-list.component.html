@@ -1,12 +1,12 @@
 <os-head-bar
-    [hasMainButton]="true"
-    [mainActionTooltip]="'New group' | translate"
-    (mainEvent)="setEditMode(!editGroup)"
-    [nav]="false"
     [editMode]="hasChanges"
+    [hasMainButton]="true"
     [isSaveButtonEnabled]="hasChanges"
+    [mainActionTooltip]="'New group' | translate"
+    [nav]="false"
     [saveAction]="getSaveAction()"
     (cancelEditEvent)="discardChanges()"
+    (mainEvent)="setEditMode(!editGroup)"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -30,15 +30,15 @@
                                 <mat-header-cell *matHeaderCellDef>{{ 'Permissions' | translate }}</mat-header-cell>
                                 <mat-cell
                                     *matCellDef="let perm"
-                                    class="raised-cell"
                                     #tooltip="matTooltip"
-                                    [ngClass]="{ 'has-help-text': perm.help_text }"
-                                    [matTooltip]="perm.help_text | translate"
+                                    class="raised-cell"
                                     matTooltipClass="pre-wrap"
                                     matTooltipPosition="after"
+                                    [matTooltip]="perm.help_text | translate"
+                                    [ngClass]="{ 'has-help-text': perm.help_text }"
+                                    (click)="tooltip.toggle()"
                                     (mouseenter)="$event.stopImmediatePropagation()"
                                     (mouseleave)="tooltip.hide()"
-                                    (click)="tooltip.toggle()"
                                 >
                                     {{ perm.display_name | translate }}
                                 </mat-cell>
@@ -47,8 +47,8 @@
                                 <div>
                                     <ng-container [matColumnDef]="group.name">
                                         <mat-header-cell
-                                            class="group-head-table-cell"
                                             *matHeaderCellDef
+                                            class="group-head-table-cell"
                                             (click)="selectGroup(group)"
                                         >
                                             <div class="inner-table">
@@ -95,7 +95,7 @@
         <form class="edit-form" [formGroup]="groupForm!" (keydown)="keyDownFunction($event)">
             <mat-form-field>
                 <mat-label>{{ 'Group name' | translate }}</mat-label>
-                <input type="text" matInput osAutofocus formControlName="name" />
+                <input formControlName="name" matInput osAutofocus type="text" />
                 @if (!groupForm?.valid && !groupForm.value.name) {
                     <mat-error>{{ 'Required' | translate }}</mat-error>
                 }
@@ -107,29 +107,29 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>{{ 'External ID' | translate }}</mat-label>
-                <input type="text" matInput formControlName="external_id" />
+                <input formControlName="external_id" matInput type="text" />
             </mat-form-field>
         </form>
     </mat-dialog-content>
     <mat-dialog-actions>
         <button
-            type="submit"
-            mat-button
-            [disabled]="!groupForm?.valid"
             color="accent"
+            mat-button
+            type="submit"
+            [disabled]="!groupForm?.valid"
             (click)="saveGroup(groupForm?.value)"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button (click)="cancelEditing()">
+        <button mat-button type="button" (click)="cancelEditing()">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
         @if (selectedGroup) {
             <button
-                [disabled]="isProtected(selectedGroup)"
-                type="button"
-                mat-button
                 color="warn"
+                mat-button
+                type="button"
+                [disabled]="isProtected(selectedGroup)"
                 (click)="deleteSelectedGroup()"
             >
                 <span>{{ 'Delete' | translate }}</span>

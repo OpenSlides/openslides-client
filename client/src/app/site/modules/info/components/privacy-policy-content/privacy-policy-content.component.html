@@ -4,15 +4,15 @@
             <h1>{{ 'Privacy policy' | translate }}</h1>
             <div *osOmlPerms="OML.can_manage_organization; and: isEditable">
                 @if (!isEditing) {
-                    <button (click)="isEditing = true" mat-icon-button>
+                    <button mat-icon-button (click)="isEditing = true">
                         <mat-icon>edit</mat-icon>
                     </button>
                 }
                 @if (isEditing) {
-                    <button (click)="leaveEditMode(true)" mat-icon-button>
+                    <button mat-icon-button (click)="leaveEditMode(true)">
                         <mat-icon>done</mat-icon>
                     </button>
-                    <button (click)="leaveEditMode(false)" mat-icon-button>
+                    <button mat-icon-button (click)="leaveEditMode(false)">
                         <mat-icon>close</mat-icon>
                     </button>
                 }

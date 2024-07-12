@@ -34,7 +34,7 @@
             </div>
             <div class="spacer"></div>
             @if (canManage) {
-                <button mat-icon-button [matMenuTriggerFor]="chatGroupMenu" [matMenuTriggerData]="{ chatGroup: group }">
+                <button mat-icon-button [matMenuTriggerData]="{ chatGroup: group }" [matMenuTriggerFor]="chatGroupMenu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
             }
@@ -42,14 +42,14 @@
         @if ({ writePermissions: hasWritePermissionsObservable | async }; as has) {
             <cdk-virtual-scroll-viewport
                 [itemSize]="70"
-                (scrolledIndexChange)="onScrolledIndexChanged()"
                 [ngClass]="{ 'has-write-permissions': has.writePermissions }"
+                (scrolledIndexChange)="onScrolledIndexChanged()"
             >
                 <div *cdkVirtualFor="let message of group.chat_messages">
                     <os-chat-group-detail-message
                         [chatMessage]="message"
-                        (editing)="prepareEditingChatMessage($event)"
                         (deleting)="deleteChatMessage($event)"
+                        (editing)="prepareEditingChatMessage($event)"
                     ></os-chat-group-detail-message>
                 </div>
             </cdk-virtual-scroll-viewport>
@@ -58,26 +58,26 @@
 }
 @if (hasWritePermissionsObservable | async) {
     <os-chat-group-detail-message-form
-        (messageSent)="sendChatMessage($event)"
-        (editingCanceled)="cancelEditingChatMessage()"
         [currentMessage]="toEditChatMessageObservable | async"
+        (editingCanceled)="cancelEditingChatMessage()"
+        (messageSent)="sendChatMessage($event)"
     ></os-chat-group-detail-message-form>
 }
 
 <!-- The menu content -->
 <mat-menu #chatGroupMenu="matMenu">
-    <ng-template matMenuContent let-chatGroup="chatGroup">
+    <ng-template let-chatGroup="chatGroup" matMenuContent>
         <button mat-menu-item (click)="editChatGroup(chatGroup)">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </button>
         <!-- clear history -->
-        <button mat-menu-item (click)="clearChatGroup(chatGroup)" class="red-warning-text">
+        <button class="red-warning-text" mat-menu-item (click)="clearChatGroup(chatGroup)">
             <mat-icon>format_clear</mat-icon>
             <span>{{ 'Clear' | translate }}</span>
         </button>
         <!-- delete -->
-        <button mat-menu-item (click)="deleteChatGroup(chatGroup)" class="red-warning-text">
+        <button class="red-warning-text" mat-menu-item (click)="deleteChatGroup(chatGroup)">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>

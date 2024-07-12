@@ -14,11 +14,11 @@
                 <ng-container *cdkVirtualFor="let tabLabel of tabLabelsObservable | async; let index = index">
                     <div
                         class="vertical-tab-label flex-vertical-center pointer padding-left-16 padding-right-16"
+                        tabindex="0"
                         [ngClass]="{ 'background-primary': index === selectedTabLabelIndex }"
                         [ngStyle]="{ height: labelHeight }"
                         (click)="changeTabSelection(index); openContent()"
                         (keydown.enter)="changeTabSelection(index); openContent()"
-                        tabindex="0"
                     >
                         <ng-template [cdkPortalOutlet]="tabLabel"></ng-template>
                         @if (isMobile) {

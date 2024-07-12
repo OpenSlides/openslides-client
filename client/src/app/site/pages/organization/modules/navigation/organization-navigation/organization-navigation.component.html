@@ -2,13 +2,13 @@
     <span>
         <a
             *osOmlPerms="entry.permission!"
-            mat-menu-item
             class="management-router-link foreground-icon"
-            [ngStyle]="getCustomStyleForEntry(entry)"
-            (click)="closeSidenavOnMobile()"
-            [routerLink]="entry.route"
+            mat-menu-item
             routerLinkActive="foreground-active"
+            [ngStyle]="getCustomStyleForEntry(entry)"
+            [routerLink]="entry.route"
             [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
+            (click)="closeSidenavOnMobile()"
         >
             <mat-icon>{{ entry.icon }}</mat-icon>
             <span>{{ entry.displayName | translate }}</span>

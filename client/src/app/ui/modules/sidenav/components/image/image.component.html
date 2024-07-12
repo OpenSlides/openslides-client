@@ -1,7 +1,7 @@
 @if (source) {
     <div>
         @if (!loaded) {
-            <mat-progress-spinner mode="determinate" [value]="progress" [diameter]="50"></mat-progress-spinner>
+            <mat-progress-spinner mode="determinate" [diameter]="50" [value]="progress"></mat-progress-spinner>
         }
         @if (loaded) {
             <img [src]="resource | trust: 'url'" />

@@ -1,16 +1,16 @@
-<div id="container" class="projector-container" (osResized)="onResized()" #container>
-    <div id="projector" class="projector">
+<div #container class="projector-container" id="container" (osResized)="onResized()">
+    <div class="projector" id="projector">
         @if (isOffline) {
             <div id="offline-indicator">
                 <mat-icon>fiber_manual_record</mat-icon>
             </div>
         }
         @if (projector && projector.show_header_footer) {
-            <div id="header" class="headerFooter">
+            <div class="headerFooter" id="header">
                 <!-- projector logo -->
                 @if (projectorLogoObservable | async; as projectorLogo) {
                     @if (projector.show_logo) {
-                        <img src="{{ projectorLogo }}" class="projector-logo-main" />
+                        <img class="projector-logo-main" src="{{ projectorLogo }}" />
                     }
                 }
                 @if (projector.show_title) {
@@ -25,8 +25,8 @@
                             @if (eventData.eventName) {
                                 <div
                                     class="event-name ellipsis-overflow"
-                                    [ngClass]="{ titleonly: !eventData.eventDescription }"
                                     [innerHTML]="eventData.eventName"
+                                    [ngClass]="{ titleonly: !eventData.eventDescription }"
                                 ></div>
                             }
                             @if (eventData.eventDescription) {
@@ -43,15 +43,15 @@
         @for (slide of slides | async; track slide) {
             <div>
                 <os-slide-container
-                    [slideData]="slide"
-                    [scroll]="projector!.scroll"
-                    [scale]="projector!.scale"
                     [projector]="projector!"
+                    [scale]="projector!.scale"
+                    [scroll]="projector!.scroll"
+                    [slideData]="slide"
                 ></os-slide-container>
             </div>
         }
         @if (projector && projector.show_header_footer) {
-            <div id="footer" class="headerFooter">
+            <div class="headerFooter" id="footer">
                 <div class="footertext"></div>
             </div>
         }

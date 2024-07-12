@@ -1,12 +1,12 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     @if (hasLoaded | async) {
         <os-head-bar
-            [hasMainButton]="hasPerms('manage') && !!assignment"
             mainButtonIcon="edit"
+            [editMode]="isEditing"
+            [hasMainButton]="hasPerms('manage') && !!assignment"
+            [isSaveButtonEnabled]="assignmentForm.valid"
             [mainActionTooltip]="'Edit' | translate"
             [nav]="false"
-            [editMode]="isEditing"
-            [isSaveButtonEnabled]="assignmentForm.valid"
             [saveAction]="getSaveAction()"
             (mainEvent)="setEditMode(!isEditing)"
         >
@@ -22,7 +22,7 @@
             <!-- Menu -->
             <ng-container class="menu-slot">
                 @if (assignment) {
-                    <button type="button" mat-icon-button [matMenuTriggerFor]="assignmentDetailMenu">
+                    <button mat-icon-button type="button" [matMenuTriggerFor]="assignmentDetailMenu">
                         <mat-icon>more_vert</mat-icon>
                     </button>
                 }
@@ -35,9 +35,9 @@
                         <span>{{ 'PDF' | translate }}</span>
                     </button>
                     <!-- List of speakers -->
-                    <os-speaker-button [object]="assignment" [menuItem]="true"></os-speaker-button>
+                    <os-speaker-button [menuItem]="true" [object]="assignment"></os-speaker-button>
                     <!-- Project -->
-                    <os-projector-button [object]="assignment" [menuItem]="true"></os-projector-button>
+                    <os-projector-button [menuItem]="true" [object]="assignment"></os-projector-button>
                     <!-- Add/remove to/from agenda -->
                     <div *osPerms="permission.agendaItemCanManage">
                         @if (assignment && !assignment.agenda_item_id) {
@@ -65,7 +65,7 @@
                         <div>
                             <!-- Delete -->
                             <mat-divider></mat-divider>
-                            <button mat-menu-item class="red-warning-text" (click)="onDeleteAssignmentButton()">
+                            <button class="red-warning-text" mat-menu-item (click)="onDeleteAssignmentButton()">
                                 <mat-icon>delete</mat-icon>
                                 <span>{{ 'Delete' | translate }}</span>
                             </button>
@@ -133,9 +133,9 @@
                     }
                     <div class="current-phase">
                         <h4>{{ 'Phase' | translate }}</h4>
-                        <os-chip-select [canOpen]="hasPerms('manage')" chipClass="bluegrey">
+                        <os-chip-select chipClass="bluegrey" [canOpen]="hasPerms('manage')">
                             @for (option of phaseOptions; track option) {
-                                <button menu mat-menu-item (click)="onSetPhaseButton(option.value)">
+                                <button mat-menu-item menu (click)="onSetPhaseButton(option.value)">
                                     {{ option.display_name | translate }}
                                 </button>
                             }
@@ -146,10 +146,10 @@
                 @if (assignment.attachments?.length) {
                     <div>
                         <h4>{{ 'Election documents' | translate }}</h4>
-                        <mat-list dense class="election-document-list">
+                        <mat-list class="election-document-list" dense>
                             @for (file of assignment.attachments; track file) {
                                 <mat-list-item>
-                                    <a [routerLink]="file.url" target="_blank">{{ file.getTitle() }}</a>
+                                    <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
                                 </mat-list-item>
                             }
                         </mat-list>
@@ -170,10 +170,10 @@
                         @if (assignment?.candidates?.length) {
                             <div class="candidates-list">
                                 <os-sorting-list
-                                    [input]="assignmentCandidates"
-                                    [live]="true"
                                     [count]="assignment.number_poll_candidates"
                                     [enable]="hasPerms('manage')"
+                                    [input]="assignmentCandidates"
+                                    [live]="true"
                                     (sortEvent)="onSortingChange($event)"
                                 >
                                     <!-- implicit item references into the component using ng-template slot -->
@@ -218,13 +218,13 @@
                                 <div>
                                     <div>
                                         @if (!isSelfCandidate) {
-                                            <button mat-button color="accent" (click)="addSelf()">
+                                            <button color="accent" mat-button (click)="addSelf()">
                                                 <mat-icon>add</mat-icon>
                                                 <span>{{ 'Add me' | translate }}</span>
                                             </button>
                                         }
                                         @if (isSelfCandidate) {
-                                            <button mat-button color="accent" (click)="removeSelf()">
+                                            <button color="accent" mat-button (click)="removeSelf()">
                                                 <mat-icon>remove</mat-icon>
                                                 <span>{{ 'Remove me' | translate }}</span>
                                             </button>
@@ -244,12 +244,12 @@
 <ng-template #assignmentFormTemplate>
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <form class="content" [formGroup]="assignmentForm" (keydown)="onKeyDown($event)" tabindex="-1">
+            <form class="content" tabindex="-1" [formGroup]="assignmentForm" (keydown)="onKeyDown($event)">
                 <div>
                     <!-- title -->
                     <mat-form-field class="full-width">
                         <mat-label>{{ 'Title' | translate }}</mat-label>
-                        <input matInput formControlName="title" />
+                        <input formControlName="title" matInput />
                         <mat-error>{{ 'The title is required' | translate }}</mat-error>
                     </mat-form-field>
                 </div>
@@ -265,8 +265,8 @@
                             <mat-label>{{ 'Tags' | translate }}</mat-label>
                             <os-list-search-selector
                                 formControlName="tag_ids"
-                                [multiple]="true"
                                 [inputListValues]="tagsObserver"
+                                [multiple]="true"
                             ></os-list-search-selector>
                         </mat-form-field>
                     </div>
@@ -285,7 +285,7 @@
                 <div>
                     <mat-form-field>
                         <mat-label>{{ 'Hint on voting' | translate }}</mat-label>
-                        <input matInput formControlName="default_poll_description" />
+                        <input formControlName="default_poll_description" matInput />
                     </mat-form-field>
                 </div>
 
@@ -293,7 +293,7 @@
                 <div>
                     <mat-form-field>
                         <mat-label>{{ 'Number of persons to be elected' | translate }}</mat-label>
-                        <input matInput formControlName="open_posts" type="number" />
+                        <input formControlName="open_posts" matInput type="number" />
                         @if (assignmentForm.get('open_posts')?.hasError('required')) {
                             <mat-error>
                                 {{ 'This field is required.' | translate }}

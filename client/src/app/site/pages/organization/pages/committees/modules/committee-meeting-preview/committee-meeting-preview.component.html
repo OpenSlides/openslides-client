@@ -18,7 +18,7 @@
                     </div>
                 }
 
-                <button type="button" mat-icon-button [matMenuTriggerFor]="meetingMenu">
+                <button mat-icon-button type="button" [matMenuTriggerFor]="meetingMenu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
             </ng-container>
@@ -57,7 +57,7 @@
     </mat-card-content>
     <mat-card-actions class="prev-content">
         @if (canEnter) {
-            <a mat-stroked-button color="accent" [routerLink]="meeting.getUrl()">
+            <a color="accent" mat-stroked-button [routerLink]="meeting.getUrl()">
                 {{ 'Open meeting' | translate }}
             </a>
         }
@@ -67,7 +67,7 @@
                     'You cannot enter this meeting because you are not assigned to any group.' | translate
                 }}"
             >
-                <button mat-stroked-button color="accent" [disabled]="true">
+                <button color="accent" mat-stroked-button [disabled]="true">
                     {{ 'Open meeting' | translate }}
                 </button>
             </span>
@@ -88,9 +88,9 @@
     <div class="fake-button-no-touch" matTooltip="{{ userAmount }} {{ 'participants' | translate }}">
         <mat-icon
             [class.smaller-badge-text]="shouldUseSmallerBadgeText"
-            [matBadgeHidden]="!showUserAmount"
             [matBadge]="formattedUserAmount"
             [matBadgeColor]="'accent'"
+            [matBadgeHidden]="!showUserAmount"
         >
             group
         </mat-icon>
@@ -104,9 +104,9 @@
     >
         <mat-icon
             [class.smaller-badge-text]="shouldUseSmallerBadgeText"
-            [matBadgeHidden]="!showUserAmount"
             [matBadge]="formattedUserAmount"
             [matBadgeColor]="'accent'"
+            [matBadgeHidden]="!showUserAmount"
         >
             group
         </mat-icon>
@@ -139,16 +139,16 @@
                 <span>{{ 'Archive' | translate }}</span>
             </button>
         }
-        <button mat-menu-item *osOmlPerms="OML.superadmin; and: meeting.isArchived" (click)="onUnarchive()">
+        <button *osOmlPerms="OML.superadmin; and: meeting.isArchived" mat-menu-item (click)="onUnarchive()">
             <mat-icon>unarchive</mat-icon>
             <span>{{ 'Activate' | translate }}</span>
         </button>
-        <button mat-menu-item *osOmlPerms="OML.superadmin" (click)="exportMeeting()">
+        <button *osOmlPerms="OML.superadmin" mat-menu-item (click)="exportMeeting()">
             <mat-icon>file_download</mat-icon>
             <span>{{ 'Export' | translate }}</span>
         </button>
         <mat-divider></mat-divider>
-        <button mat-menu-item class="red-warning-text" (click)="onDeleteMeeting()">
+        <button class="red-warning-text" mat-menu-item (click)="onDeleteMeeting()">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>

@@ -1,13 +1,13 @@
 @if (!swap && showIcon) {
     <mat-icon
+        [color]="color"
         [inline]="inline"
         [matTooltip]="iconTooltip"
-        [matTooltipPosition]="iconTooltipPosition"
         [matTooltipClass]="iconTooltipClass"
+        [matTooltipPosition]="iconTooltipPosition"
         [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
         [ngStyle]="{ transform: getRotation() }"
         (click)="iconClick()"
-        [color]="color"
     >
         {{ icon }}
     </mat-icon>
@@ -23,14 +23,14 @@
 }
 @if (swap && showIcon) {
     <mat-icon
+        [color]="color"
         [inline]="inline"
         [matTooltip]="iconTooltip"
-        [matTooltipPosition]="iconTooltipPosition"
         [matTooltipClass]="iconTooltipClass"
+        [matTooltipPosition]="iconTooltipPosition"
         [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
         [ngStyle]="{ transform: getRotation() }"
         (click)="iconClick()"
-        [color]="color"
     >
         {{ icon }}
     </mat-icon>

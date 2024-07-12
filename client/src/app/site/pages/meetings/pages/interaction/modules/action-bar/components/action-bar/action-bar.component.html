@@ -4,11 +4,11 @@
             @if ((isJoined | async) && (showCallDialog | async) === false) {
                 <!-- show dialog -->
                 <button
-                    mat-mini-fab
                     class="action-bar-shadow background-default"
+                    mat-mini-fab
+                    @fadeIn
                     matTooltip="{{ 'Show conference room' | translate }}"
                     (click)="maximizeCallDialog()"
-                    @fadeIn
                 >
                     <mat-icon
                         color="primary"
@@ -24,20 +24,20 @@
             <!-- Enter conference from stream -->
             @if (canEnterCall | async) {
                 <button
-                    (click)="enterConferenceRoom()"
-                    mat-mini-fab
                     class="action-bar-shadow background-default"
+                    mat-mini-fab
                     matTooltip="{{ canEnterTooltip | translate }}"
+                    (click)="enterConferenceRoom()"
                 >
                     <mat-icon color="primary">phone</mat-icon>
                 </button>
             }
             @if ((canEnterCall | async) === false) {
                 <a
-                    [routerLink]="['/', activeMeetingId, 'autopilot']"
-                    mat-mini-fab
                     class="action-bar-shadow fake-disabled"
+                    mat-mini-fab
                     matTooltip="{{ cannotEnterTooltip | translate }}"
+                    [routerLink]="['/', activeMeetingId, 'autopilot']"
                 >
                     <mat-icon color="primary">phone</mat-icon>
                 </a>
@@ -46,11 +46,11 @@
         <!-- Call support button -->
         @if (showHelpDesk | async) {
             <button
-                mat-mini-fab
                 class="action-bar-shadow background-default"
-                (click)="enterSupportRoom()"
-                matTooltip="{{ 'Help desk' | translate }}"
+                mat-mini-fab
                 @fadeIn
+                matTooltip="{{ 'Help desk' | translate }}"
+                (click)="enterSupportRoom()"
             >
                 <mat-icon color="primary">help_outline</mat-icon>
             </button>
@@ -58,14 +58,14 @@
         <!-- applause button -->
         @if (showApplause | async) {
             <button
-                mat-mini-fab
                 class="action-bar-shadow background-default"
-                matTooltip="{{ 'Give applause' | translate }}"
+                mat-mini-fab
+                @fadeIn
                 [disabled]="sendsApplause | async"
                 [matBadge]="applauseLevel | async"
                 [matBadgeHidden]="(showApplauseLevel | async) === false"
+                matTooltip="{{ 'Give applause' | translate }}"
                 (click)="sendApplause()"
-                @fadeIn
             >
                 <mat-icon class="svg-primary" svgIcon="clapping_hands"></mat-icon>
             </button>

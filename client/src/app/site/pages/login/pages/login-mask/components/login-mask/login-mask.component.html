@@ -31,28 +31,28 @@
         <div class="login-container">
             @if (samlEnabled) {
                 <button
-                    osAutofocus
-                    mat-raised-button
                     class="login-button"
+                    color="primary"
+                    mat-raised-button
+                    osAutofocus
                     type="button"
                     (click)="samlLogin()"
-                    color="primary"
                 >
                     {{ samlLoginButtonText || 'SAML Login' | translate }}
                 </button>
             }
             <br />
             @if (guestsEnabled) {
-                <button mat-stroked-button class="login-button" type="button" (click)="guestLogin()">
+                <button class="login-button" mat-stroked-button type="button" (click)="guestLogin()">
                     {{ 'Login as guest' | translate }}
                 </button>
             }
             <br />
             <mat-expansion-panel
-                style="border-radius: 4px !important"
                 class="spacer-bottom-10"
-                (afterExpand)="setLoginAreaExpansion(true)"
+                style="border-radius: 4px !important"
                 (afterCollapse)="setLoginAreaExpansion(false)"
+                (afterExpand)="setLoginAreaExpansion(true)"
             >
                 <mat-expansion-panel-header>
                     <mat-panel-title>
@@ -73,16 +73,16 @@
     <form [formGroup]="loginForm" [ngClass]="{ 'login-container': showExtra }" (ngSubmit)="formLogin()">
         <mat-form-field>
             <mat-label>{{ 'Username' | translate }}</mat-label>
-            <input matInput osAutofocus required data-cy="loginUsernameInput" formControlName="username" />
+            <input data-cy="loginUsernameInput" formControlName="username" matInput osAutofocus required />
         </mat-form-field>
         <br />
         <mat-form-field>
             <mat-label>{{ 'Password' | translate }}</mat-label>
             <input
-                matInput
-                required
                 data-cy="loginPasswordInput"
                 formControlName="password"
+                matInput
+                required
                 [type]="!hide ? 'password' : 'text'"
             />
             <mat-icon color="primary" matSuffix (click)="hide = !hide">
@@ -95,29 +95,29 @@
         <br />
         <!-- TODO: Next to each other...-->
         <button
-            mat-raised-button
-            color="primary"
             class="login-button"
-            type="submit"
+            color="primary"
             data-cy="loginButton"
+            mat-raised-button
+            type="submit"
             [disabled]="loginForm.invalid || isWaitingOnLogin"
         >
             @if (!isWaitingOnLogin) {
                 <span>{{ 'Login' | translate }}</span>
             }
             @if (isWaitingOnLogin) {
-                <os-spinner [width]="20" [height]="20" [showText]="false"></os-spinner>
+                <os-spinner [height]="20" [showText]="false" [width]="20"></os-spinner>
             }
         </button>
         @if (guestsEnabled && showExtra) {
-            <button mat-stroked-button class="login-button" type="button" (click)="guestLogin()">
+            <button class="login-button" mat-stroked-button type="button" (click)="guestLogin()">
                 {{ 'Login as guest' | translate }}
             </button>
         }
 
         <!-- forgot password button -->
         <br />
-        <button mat-button color="primary" type="button" class="forgot-password-button" (click)="resetPassword()">
+        <button class="forgot-password-button" color="primary" mat-button type="button" (click)="resetPassword()">
             {{ 'Forgot Password?' | translate }}
         </button>
     </form>

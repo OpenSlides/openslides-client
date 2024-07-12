@@ -1,8 +1,8 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar
-        [nav]="false"
-        [goBack]="true"
         [editMode]="isMobile && manualSortMode"
+        [goBack]="true"
+        [nav]="false"
         (cancelEditEvent)="setManualSortMode(false)"
         (saveEvent)="onMobileSaveSorting()"
     >
@@ -17,17 +17,17 @@
                 }
             </h2>
         </div>
-        <ng-container class="menu-slot" *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]">
+        <ng-container *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]" class="menu-slot">
             <button
-                type="button"
                 mat-icon-button
+                type="button"
+                [disabled]="!canReaddLastSpeaker"
                 matTooltip="{{ 'Re-add last speaker' | translate }}"
                 (click)="readdLastSpeaker()"
-                [disabled]="!canReaddLastSpeaker"
             >
                 <mat-icon>undo</mat-icon>
             </button>
-            <button type="button" mat-icon-button [matMenuTriggerFor]="speakerMenu">
+            <button mat-icon-button type="button" [matMenuTriggerFor]="speakerMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
         </ng-container>
@@ -35,11 +35,11 @@
 
     <os-list-of-speakers-content
         #content
+        [addBottomSpacer]="true"
         [listOfSpeakers]="viewListOfSpeakers"
         [sortMode]="manualSortMode"
-        [addBottomSpacer]="true"
-        (isListOfSpeakersEmptyEvent)="isListOfSpeakersEmpty = $event"
         (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
+        (isListOfSpeakersEmptyEvent)="isListOfSpeakersEmpty = $event"
     ></os-list-of-speakers-content>
 
     <!-- special los part for structure level -->
@@ -75,17 +75,17 @@
         </button>
     }
     @if (viewListOfSpeakers && projectors && projectors.length > 1) {
-        <os-projector-button [object]="getClosSlide()" [menuItem]="true">
+        <os-projector-button [menuItem]="true" [object]="getClosSlide()">
             {{ 'Current list of speakers (as slide)' | translate }}
         </os-projector-button>
     }
     @if (viewListOfSpeakers) {
-        <os-projector-button [object]="viewListOfSpeakers" [menuItem]="true">
+        <os-projector-button [menuItem]="true" [object]="viewListOfSpeakers">
             {{ 'List of speakers' | translate }}
         </os-projector-button>
     }
     @if (viewListOfSpeakers) {
-        <os-projector-button [object]="viewListOfSpeakers.content_object!" [menuItem]="true">
+        <os-projector-button [menuItem]="true" [object]="viewListOfSpeakers.content_object!">
             {{ getContentObjectProjectorButtonText() | translate }}
         </os-projector-button>
     }
@@ -103,26 +103,26 @@
     <mat-divider></mat-divider>
 
     <button
-        mat-menu-item
-        (click)="clearPreviousSpeakerList()"
-        [disabled]="isPreviousListOfSpeakersEmpty"
         class="red-warning-text"
+        mat-menu-item
+        [disabled]="isPreviousListOfSpeakersEmpty"
+        (click)="clearPreviousSpeakerList()"
     >
         <mat-icon>delete</mat-icon>
         <span>{{ 'Remove all previous speakers' | translate }}</span>
     </button>
 
     <button
-        mat-menu-item
-        (click)="clearNextSpeakerList()"
-        [disabled]="isNextListOfSpeakersEmpty"
         class="red-warning-text"
+        mat-menu-item
+        [disabled]="isNextListOfSpeakersEmpty"
+        (click)="clearNextSpeakerList()"
     >
         <mat-icon>delete</mat-icon>
         <span>{{ 'Remove all next speakers' | translate }}</span>
     </button>
 
-    <button mat-menu-item (click)="clearSpeakerList()" [disabled]="isListOfSpeakersEmpty" class="red-warning-text">
+    <button class="red-warning-text" mat-menu-item [disabled]="isListOfSpeakersEmpty" (click)="clearSpeakerList()">
         <mat-icon>delete</mat-icon>
         <span>{{ 'Remove all speakers' | translate }}</span>
     </button>

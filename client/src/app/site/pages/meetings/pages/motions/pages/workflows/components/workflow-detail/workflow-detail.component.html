@@ -1,8 +1,8 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar
-        [nav]="false"
         [hasMainButton]="true"
         [mainActionTooltip]="'New state' | translate"
+        [nav]="false"
         (mainEvent)="onNewStateButton()"
     >
         <!-- Title -->
@@ -35,20 +35,20 @@
             <div class="scrollable-matrix">
                 <table mat-table [dataSource]="getTableDataSource()">
                     <ng-container matColumnDef="perm" sticky>
-                        <th mat-header-cell class="group-head-table-cell" *matHeaderCellDef>
+                        <th *matHeaderCellDef class="group-head-table-cell" mat-header-cell>
                             {{ 'Permissions' | translate }}
                         </th>
                         <td
-                            mat-cell
                             *matCellDef="let perm"
                             #tooltip="matTooltip"
-                            [ngClass]="{ 'has-help-text': perm.help_text }"
-                            [matTooltip]="perm.help_text | translate"
+                            mat-cell
                             matTooltipClass="pre-wrap"
                             matTooltipPosition="after"
+                            [matTooltip]="perm.help_text | translate"
+                            [ngClass]="{ 'has-help-text': perm.help_text }"
+                            (click)="tooltip.toggle()"
                             (mouseenter)="$event.stopImmediatePropagation()"
                             (mouseleave)="tooltip.hide()"
-                            (click)="tooltip.toggle()"
                         >
                             <div class="permission-name">
                                 {{ perm.name | translate }}
@@ -57,12 +57,12 @@
                     </ng-container>
                     @for (state of workflowStates; track trackById($index, state)) {
                         <ng-container [matColumnDef]="getColumnDef(state)">
-                            <th mat-header-cell *matHeaderCellDef (click)="onClickStateName(state)">
+                            <th *matHeaderCellDef mat-header-cell (click)="onClickStateName(state)">
                                 <div class="clickable-cell stretch-to-fill-parent">
                                     <div class="inner-table">{{ state.name }}</div>
                                 </div>
                             </th>
-                            <td mat-cell *matCellDef="let perm">
+                            <td *matCellDef="let perm" mat-cell>
                                 @if (perm.type === 'check') {
                                     <div class="inner-table">
                                         <mat-checkbox
@@ -85,10 +85,10 @@
                                 @if (perm.type === 'color') {
                                     <div class="inner-table">
                                         <mat-basic-chip
-                                            [matMenuTriggerFor]="colorMenu"
-                                            [matMenuTriggerData]="{ state: state }"
-                                            [ngClass]="getValueOfState(state, perm)"
                                             [disableRipple]="true"
+                                            [matMenuTriggerData]="{ state: state }"
+                                            [matMenuTriggerFor]="colorMenu"
+                                            [ngClass]="getValueOfState(state, perm)"
                                         >
                                             {{ getValueOfState(state, perm) | translate }}
                                         </mat-basic-chip>
@@ -108,8 +108,8 @@
                                         </div>
                                         <div
                                             class="clickable-cell stretch-to-fill-parent"
-                                            [matMenuTriggerFor]="submitterWithdrawStateMenu"
                                             [matMenuTriggerData]="{ state: state }"
+                                            [matMenuTriggerFor]="submitterWithdrawStateMenu"
                                         ></div>
                                     </div>
                                 }
@@ -129,8 +129,8 @@
                                         </div>
                                         <div
                                             class="clickable-cell stretch-to-fill-parent"
-                                            [matMenuTriggerFor]="nextStatesMenu"
                                             [matMenuTriggerData]="{ state: state }"
+                                            [matMenuTriggerFor]="nextStatesMenu"
                                         ></div>
                                     </div>
                                 }
@@ -141,8 +141,8 @@
                                         </div>
                                         <div
                                             class="clickable-cell stretch-to-fill-parent"
-                                            [matMenuTriggerFor]="mergeAmendmentMenu"
                                             [matMenuTriggerData]="{ state: state }"
+                                            [matMenuTriggerFor]="mergeAmendmentMenu"
                                         ></div>
                                     </div>
                                 }
@@ -164,16 +164,16 @@
                                         </div>
                                         <div
                                             class="clickable-cell stretch-to-fill-parent"
-                                            [matMenuTriggerFor]="restrictionMenu"
                                             [matMenuTriggerData]="{ state: state }"
+                                            [matMenuTriggerFor]="restrictionMenu"
                                         ></div>
                                     </div>
                                 }
                             </td>
                         </ng-container>
                     }
-                    <tr mat-header-row *matHeaderRowDef="headerRowDef; sticky: true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: headerRowDef"></tr>
+                    <tr *matHeaderRowDef="headerRowDef; sticky: true" mat-header-row></tr>
+                    <tr *matRowDef="let row; columns: headerRowDef" mat-row></tr>
                 </table>
             </div>
         </div>
@@ -193,19 +193,19 @@
     </mat-dialog-content>
     <mat-dialog-actions>
         <button
+            color="accent"
+            mat-button
             type="submit"
             [disabled]="dialogData.value === '' && !dialogData.allowEmpty"
-            mat-button
-            color="accent"
             [mat-dialog-close]="{ action: 'update', value: dialogData.value }"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
         @if (dialogData.deletable) {
-            <button type="button" mat-button color="warn" [mat-dialog-close]="{ action: 'delete' }">
+            <button color="warn" mat-button type="button" [mat-dialog-close]="{ action: 'delete' }">
                 <span>{{ 'Delete' | translate }}</span>
             </button>
         }
@@ -213,7 +213,7 @@
 </ng-template>
 
 <!-- select color menu -->
-<mat-menu matMenuContent #colorMenu="matMenu">
+<mat-menu #colorMenu="matMenu" matMenuContent>
     <ng-template let-state="state" matMenuContent>
         @for (color of labelColors; track color) {
             <button mat-menu-item (click)="onSelectColor(state, color)">
@@ -227,7 +227,7 @@
 </mat-menu>
 
 <!-- select next states menu -->
-<mat-menu matMenuContent #submitterWithdrawStateMenu="matMenu">
+<mat-menu #submitterWithdrawStateMenu="matMenu" matMenuContent>
     <ng-template let-state="state" matMenuContent>
         @for (workflowState of workflow.states; track workflowState) {
             <div>
@@ -245,7 +245,7 @@
 </mat-menu>
 
 <!-- select next states menu -->
-<mat-menu matMenuContent #nextStatesMenu="matMenu">
+<mat-menu #nextStatesMenu="matMenu" matMenuContent>
     <ng-template let-state="state" matMenuContent>
         @for (nextState of getWorkflowStates(); track nextState) {
             <div>
@@ -263,7 +263,7 @@
 </mat-menu>
 
 <!-- Select restriction menu -->
-<mat-menu matMenuContent #restrictionMenu="matMenu">
+<mat-menu #restrictionMenu="matMenu" matMenuContent>
     <ng-template let-state="state" matMenuContent>
         @for (restriction of restrictions; track restriction) {
             <button mat-menu-item (click)="onSetRestriction(restriction.key, state)">
@@ -277,7 +277,7 @@
 </mat-menu>
 
 <!-- Select merge amendment menu -->
-<mat-menu matMenuContent #mergeAmendmentMenu="matMenu">
+<mat-menu #mergeAmendmentMenu="matMenu" matMenuContent>
     <ng-template let-state="state" matMenuContent>
         @for (amendment of amendmentIntoFinal; track amendment) {
             <div>

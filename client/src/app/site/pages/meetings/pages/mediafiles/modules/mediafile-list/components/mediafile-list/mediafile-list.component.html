@@ -12,15 +12,15 @@
     <!-- Menu -->
     <ng-container class="menu-slot">
         <button
-            type="button"
+            *osPerms="permission.mediafileCanManage; and: !isMultiSelect"
             mat-icon-button
+            type="button"
             [matTooltip]="'New folder' | translate"
             (click)="createNewFolder(newFolderDialog)"
-            *osPerms="permission.mediafileCanManage; and: !isMultiSelect"
         >
             <mat-icon>create_new_folder</mat-icon>
         </button>
-        <button type="button" mat-icon-button [matMenuTriggerFor]="mediafilesMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="mediafilesMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -34,20 +34,20 @@
 
 <!-- the actual file manager -->
 <os-file-list
-    [currentDirectory]="directory"
-    [isMultiSelect]="isMultiSelect"
-    [hiddenInMobile]="['edit']"
-    [canEdit]="canEdit"
+    [addBottomSpacer]="hasInteractionState | async"
     [canAccessFileMenu]="canAccessFileMenu"
-    [sourceFiles]="directoryObservable"
+    [canEdit]="canEdit"
+    [currentDirectory]="directory"
     [editFolderTemplate]="fileEditDialog"
     [fileMenuTemplate]="fileMenuTemplate"
+    [hiddenInMobile]="['edit']"
+    [isMultiSelect]="isMultiSelect"
     [shouldShowFileMenuFn]="shouldShowFileMenuFn"
-    [addBottomSpacer]="hasInteractionState | async"
-    (directoryChanged)="changeDirectory($event.directoryId)"
+    [sourceFiles]="directoryObservable"
     (beforeEditing)="onEditFile($event.file)"
-    (saved)="onSaveFile($event.update)"
     (deleted)="onDeleteFile($event.file)"
+    (directoryChanged)="changeDirectory($event.directoryId)"
+    (saved)="onSaveFile($event.update)"
     (selected)="onSelect($event.files)"
 ></os-file-list>
 
@@ -112,7 +112,7 @@
     </div>
 
     @if (mediafile.isProjectable()) {
-        <os-projector-button [object]="mediafile" [menuItem]="true"></os-projector-button>
+        <os-projector-button [menuItem]="true" [object]="mediafile"></os-projector-button>
     }
 </ng-template>
 
@@ -146,8 +146,8 @@
                 <span>{{ 'Download' | translate }}</span>
             </button>
             <button
-                mat-menu-item
                 *osPerms="permission.mediafileCanManage"
+                mat-menu-item
                 [disabled]="!selectedRows.length"
                 (click)="onMove(selectedRows)"
             >
@@ -156,8 +156,8 @@
             </button>
             <mat-divider></mat-divider>
             <button
-                mat-menu-item
                 *osPerms="permission.mediafileCanManage"
+                mat-menu-item
                 [disabled]="!selectedRows.length"
                 (click)="deleteSelected()"
             >
@@ -175,7 +175,7 @@
         <form class="edit-file-form" [formGroup]="fileEditForm!">
             <mat-form-field>
                 <mat-label>{{ 'New file name' | translate }}</mat-label>
-                <input type="text" matInput osAutofocus required formControlName="title" />
+                <input formControlName="title" matInput osAutofocus required type="text" />
                 @if (fileEditForm?.invalid) {
                     <mat-error>{{ 'Required' | translate }}</mat-error>
                 }
@@ -185,8 +185,8 @@
                 <mat-label>{{ 'Access groups' | translate }}</mat-label>
                 <os-list-search-selector
                     formControlName="access_group_ids"
-                    [multiple]="true"
                     [inputListValues]="groupsBehaviorSubject"
+                    [multiple]="true"
                     [sortFn]="sortFn"
                 ></os-list-search-selector>
             </mat-form-field>
@@ -194,15 +194,15 @@
     </mat-dialog-content>
     <mat-dialog-actions>
         <button
-            type="submit"
-            mat-button
-            [disabled]="!fileEditForm?.valid"
             color="accent"
+            mat-button
+            type="submit"
+            [disabled]="!fileEditForm?.valid"
             [mat-dialog-close]="fileEditForm?.value"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>
@@ -216,25 +216,25 @@
             <p>{{ 'Please enter a name for the new directory:' | translate }}</p>
             <mat-form-field>
                 <mat-label>{{ 'Title' | translate }}</mat-label>
-                <input matInput osAutofocus formControlName="title" required />
+                <input formControlName="title" matInput osAutofocus required />
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>{{ 'Access groups' | translate }}</mat-label>
                 <os-list-search-selector
                     formControlName="access_group_ids"
-                    [multiple]="true"
                     [inputListValues]="groupsBehaviorSubject"
+                    [multiple]="true"
                     [sortFn]="sortFn"
                 ></os-list-search-selector>
             </mat-form-field>
         </form>
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button type="submit" mat-button [disabled]="!newDirectoryForm.valid" color="accent" [mat-dialog-close]="true">
+        <button color="accent" mat-button type="submit" [disabled]="!newDirectoryForm.valid" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>

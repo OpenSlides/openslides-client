@@ -1,7 +1,7 @@
 <os-action-card
-    [showActionRow]="canBeEdited || hasSubmitterEditRights"
-    [disableExpandControl]="isEditing"
     icon="comment"
+    [disableExpandControl]="isEditing"
+    [showActionRow]="canBeEdited || hasSubmitterEditRights"
 >
     <ng-container class="meta-text-block-title">
         <span>{{ section?.getTitle() }}</span>
@@ -21,7 +21,7 @@
         @if (isEditing) {
             <form [formGroup]="formGroup">
                 <!-- The HTML Editor -->
-                <os-editor [id]="sectionId" formControlName="text"></os-editor>
+                <os-editor formControlName="text" [id]="sectionId"></os-editor>
             </form>
         }
         @if (saveHint) {
@@ -35,22 +35,22 @@
 
     <ng-container class="meta-text-block-action-row">
         @if (!isEditing && (canBeEdited || hasSubmitterEditRights)) {
-            <button mat-icon-button (click)="editComment()" matTooltip="{{ 'Edit' | translate }}">
+            <button mat-icon-button matTooltip="{{ 'Edit' | translate }}" (click)="editComment()">
                 <mat-icon>edit</mat-icon>
             </button>
         }
         @if (!isEditing && hasComment()) {
-            <button mat-icon-button (click)="exportCommentAsPDf()" matTooltip="{{ 'Export comment' | translate }}">
+            <button mat-icon-button matTooltip="{{ 'Export comment' | translate }}" (click)="exportCommentAsPDf()">
                 <mat-icon>picture_as_pdf</mat-icon>
             </button>
         }
         @if (isEditing) {
-            <button mat-icon-button color="warn" (click)="saveComment()" matTooltip="{{ 'Save' | translate }}">
+            <button color="warn" mat-icon-button matTooltip="{{ 'Save' | translate }}" (click)="saveComment()">
                 <mat-icon>done</mat-icon>
             </button>
         }
         @if (isEditing) {
-            <button mat-icon-button (click)="leaveEditMode()" matTooltip="{{ 'Cancel edit' | translate }}">
+            <button mat-icon-button matTooltip="{{ 'Cancel edit' | translate }}" (click)="leaveEditMode()">
                 <mat-icon>close</mat-icon>
             </button>
         }

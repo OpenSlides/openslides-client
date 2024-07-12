@@ -46,7 +46,7 @@
                 </p>
             </div>
 
-            <a mat-stroked-button color="primary" routerLink=".." [queryParams]="{ checkBrowser: false }">
+            <a color="primary" mat-stroked-button routerLink=".." [queryParams]="{ checkBrowser: false }">
                 @if (!supported) {
                     <span>
                         {{ 'Login anyway' | translate }}

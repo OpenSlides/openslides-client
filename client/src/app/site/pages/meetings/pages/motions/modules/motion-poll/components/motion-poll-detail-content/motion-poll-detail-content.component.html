@@ -2,13 +2,13 @@
     <div class="result-wrapper">
         @if (hasResults && canSeeResults) {
             <os-single-option-chart-table
-                [shouldShowHead]="true"
-                [tableData]="tableData"
-                [pollService]="motionPollService"
-                [poll]="poll"
                 [iconSize]="iconSize"
+                [poll]="poll"
+                [pollService]="motionPollService"
                 [shouldShowEntitled]="isPercentBaseEntitled"
                 [shouldShowEntitledPresent]="isPercentBaseEntitledPresent"
+                [shouldShowHead]="true"
+                [tableData]="tableData"
             ></os-single-option-chart-table>
         }
         <!-- No results yet -->

@@ -1,6 +1,6 @@
 @if (motion) {
     <div class="title">
-        <os-projectable-title [model]="motion" [getTitleFn]="getTitleFn">
+        <os-projectable-title [getTitleFn]="getTitleFn" [model]="motion">
             @if (titleCanBeChanged()) {
                 <span class="motion-title" prepend>
                     @if (titleChangeRecommendation) {
@@ -10,8 +10,8 @@
                         ></span>
                     }
                     <span
-                        class="change-title"
                         *osPerms="permission.motionCanManage; and: !titleChangeRecommendation"
+                        class="change-title"
                         (click)="createTitleChangeRecommendation()"
                     ></span>
                 </span>
@@ -20,9 +20,9 @@
                 append
                 class="primary-accent-by-theme"
                 mat-icon-button
-                (click)="toggleFavorite()"
-                matTooltip="{{ 'Mark as personal favorite' | translate }}"
                 matTooltipPosition="right"
+                matTooltip="{{ 'Mark as personal favorite' | translate }}"
+                (click)="toggleFavorite()"
             >
                 <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
             </button>

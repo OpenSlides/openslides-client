@@ -6,7 +6,6 @@
                     <hr class="structure-level-color" [ngStyle]="{ 'background-color': data.data.color }" />
                 </span>
                 <os-countdown-time
-                    [unstyled]="true"
                     [countdown]="{
                         running: !!data.data.current_start_time,
                         default_time: data.data.remaining_time === undefined ? 0 : null,
@@ -14,6 +13,7 @@
                             ? data.data.current_start_time + (data.data.remaining_time || 0)
                             : data.data.remaining_time
                     }"
+                    [unstyled]="true"
                 ></os-countdown-time>
             </div>
             <div id="inner-name">{{ data.data.name }}</div>

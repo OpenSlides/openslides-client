@@ -3,11 +3,11 @@
 </os-head-bar>
 
 <os-projectable-list
-    [listObservableProvider]="pollRepo"
-    [vScrollFixed]="64"
     [filterProps]="filterProps"
     [filterService]="filterService"
+    [listObservableProvider]="pollRepo"
     [showListOfSpeakers]="false"
+    [vScrollFixed]="64"
 >
     <!-- Poll Title -->
     <div *osScrollingTableCell="'title'; row as poll; rowContext as context" class="cell-slot fill">

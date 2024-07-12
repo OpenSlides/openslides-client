@@ -1,4 +1,4 @@
-<os-head-bar [nav]="false" [multiSelectMode]="isMultiSelect">
+<os-head-bar [multiSelectMode]="isMultiSelect" [nav]="false">
     <!-- Title -->
     <div class="title-slot">
         @if (parentMotion | async) {
@@ -16,7 +16,7 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="amendmentListMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="amendmentListMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -30,12 +30,12 @@
 
 @if (ready) {
     <os-projectable-list
-        [listObservableProvider]="amendmentRepo"
-        [sortService]="amendmentSortService"
-        [filterService]="amendmentFilterService"
         [filterProps]="filterProps"
-        [multiSelect]="isMultiSelect"
+        [filterService]="amendmentFilterService"
         [hiddenInMobile]="['summary']"
+        [listObservableProvider]="amendmentRepo"
+        [multiSelect]="isMultiSelect"
+        [sortService]="amendmentSortService"
         [(selectedRows)]="selectedRows"
     >
         <!-- Meta -->
@@ -90,7 +90,7 @@
                 <!-- State -->
                 <div>
                     @if (motion.state) {
-                        <mat-basic-chip [ngClass]="motion.stateCssColor" [disabled]="true">
+                        <mat-basic-chip [disabled]="true" [ngClass]="motion.stateCssColor">
                             {{ motionService.getExtendedStateLabel(motion) }}
                         </mat-basic-chip>
                     }
@@ -127,9 +127,9 @@
             <button
                 mat-icon-button
                 [disabled]="isMultiSelect"
+                [matMenuTriggerData]="{ motion: motion }"
                 [matMenuTriggerFor]="singleItemMenu"
                 (click)="$event.stopPropagation()"
-                [matMenuTriggerData]="{ motion: motion }"
             >
                 <mat-icon>more_vert</mat-icon>
             </button>
@@ -139,9 +139,9 @@
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
-    <ng-template matMenuContent let-motion="motion">
-        <os-projector-button [object]="motion" [menuItem]="true"></os-projector-button>
-        <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
+    <ng-template let-motion="motion" matMenuContent>
+        <os-projector-button [menuItem]="true" [object]="motion"></os-projector-button>
+        <os-speaker-button [menuItem]="true" [object]="motion"></os-speaker-button>
     </ng-template>
 </mat-menu>
 

@@ -1,9 +1,9 @@
 <os-head-bar
-    [nav]="false"
     [hasMainButton]="true"
-    (mainEvent)="onNewButton(newWorkflowDialog)"
     [mainActionTooltip]="'New category' | translate"
     [multiSelectMode]="isMultiSelect"
+    [nav]="false"
+    (mainEvent)="onNewButton(newWorkflowDialog)"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -11,7 +11,7 @@
     </div>
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="workflowListMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="workflowListMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -24,12 +24,12 @@
 </os-head-bar>
 
 <os-projectable-list
-    [listObservableProvider]="workflowRepo"
     [allowProjector]="false"
-    [hiddenInMobile]="['menu']"
-    [showListOfSpeakers]="false"
     [filterProps]="filterProps"
+    [hiddenInMobile]="['menu']"
+    [listObservableProvider]="workflowRepo"
     [multiSelect]="isMultiSelect"
+    [showListOfSpeakers]="false"
     [(selectedRows)]="selectedRows"
 >
     <!-- Name column -->
@@ -47,10 +47,10 @@
         class="cell-slot fill"
     >
         <button
-            type="button"
             mat-icon-button
-            (click)="onDeleteWorkflow(workflow)"
+            type="button"
             matTooltip="{{ 'Delete' | translate }}"
+            (click)="onDeleteWorkflow(workflow)"
         >
             <mat-icon color="warn">delete</mat-icon>
         </button>
@@ -65,20 +65,20 @@
     <mat-dialog-content class="os-form-card-mobile">
         <p>{{ 'Please enter a name for the new workflow:' | translate }}</p>
         <mat-form-field>
-            <input matInput osAutofocus [(ngModel)]="newWorkflowTitle" required />
+            <input matInput osAutofocus required [(ngModel)]="newWorkflowTitle" />
         </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
         <button
-            type="submit"
-            mat-button
             color="accent"
+            mat-button
+            type="submit"
             [disabled]="newWorkflowTitle === ''"
             [mat-dialog-close]="newWorkflowTitle"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>

@@ -12,8 +12,8 @@
     <div class="suffix">
         @if (isProjectedObservable | async) {
             <mat-icon
-                [ngClass]="{ 'primary-accent-by-theme': titleStyle === 'h1' }"
                 matTooltip="{{ 'Is being projected' | translate }}"
+                [ngClass]="{ 'primary-accent-by-theme': titleStyle === 'h1' }"
             >
                 videocam
             </mat-icon>

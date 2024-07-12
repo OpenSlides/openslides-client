@@ -15,10 +15,10 @@
                 <div>
                     <button
                         mat-stroked-button
-                        (mouseup)="removeFilterFromStack(filter)"
                         (click)="removeFilterFromStack(filter)"
+                        (mouseup)="removeFilterFromStack(filter)"
                     >
-                        <os-icon-container icon="close" class="active-filter">
+                        <os-icon-container class="active-filter" icon="close">
                             <span class="active-filter">
                                 {{ filter.option.label | translate }}
                             </span>
@@ -37,24 +37,24 @@
                 <mat-icon
                     matBadge="&#8288;"
                     matBadgeColor="accent"
+                    matBadgeSize="small"
                     [matBadgeHidden]="!hasSortOptionSelected"
                     [matBadgeOverlap]="false"
-                    matBadgeSize="small"
                 >
                     sort
                 </mat-icon>
             </button>
         }
         @if ((vp.isMobileSubject | async) === false && hasSorting) {
-            <button mat-button [matTooltip]="getSortLabel(sortOption) | translate" [matMenuTriggerFor]="menu">
+            <button mat-button [matMenuTriggerFor]="menu" [matTooltip]="getSortLabel(sortOption) | translate">
                 <mat-icon>sort</mat-icon>
                 <span
+                    class="upper"
                     matBadge="&#8288;"
                     matBadgeColor="accent"
+                    matBadgeSize="small"
                     [matBadgeHidden]="!hasSortOptionSelected"
                     [matBadgeOverlap]="false"
-                    matBadgeSize="small"
-                    class="upper"
                 >
                     {{ 'Sort' | translate }}
                 </span>
@@ -65,22 +65,22 @@
         @if (hasFilters) {
             <button mat-button (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()">
                 <mat-icon
-                    [matBadge]="filterAmount"
                     matBadgeColor="accent"
+                    matBadgeSize="small"
+                    [matBadge]="filterAmount"
                     [matBadgeHidden]="filterAmount === 0 || (vp.isMobileSubject | async) === false"
                     [matBadgeOverlap]="false"
-                    matBadgeSize="small"
                 >
                     filter_list
                 </mat-icon>
                 @if ((vp.isMobileSubject | async) === false) {
                     <span
                         class="upper"
-                        [matBadge]="filterAmount"
                         matBadgeColor="accent"
+                        matBadgeSize="small"
+                        [matBadge]="filterAmount"
                         [matBadgeHidden]="filterAmount === 0"
                         [matBadgeOverlap]="false"
-                        matBadgeSize="small"
                     >
                         {{ 'Filter' | translate }}
                     </span>
@@ -92,11 +92,11 @@
         @if (searchService && !showSearchIconOnly) {
             <os-rounded-input
                 #searchField
+                iconName="manage_search"
+                [fullWidth]="false"
                 placeholder="{{ 'Search' | translate }}"
                 [size]="'small'"
-                [fullWidth]="false"
                 [(ngModel)]="searchFieldInput"
-                iconName="manage_search"
                 (clickIcon)="toggleSearchEdit()"
             ></os-rounded-input>
         }
@@ -109,7 +109,7 @@
 </div>
 
 <!-- Header for the filter side bar -->
-<mat-drawer autoFocus="false" #filterMenu mode="push" position="end">
+<mat-drawer #filterMenu autoFocus="false" mode="push" position="end">
     <div class="custom-table-header filter-menu-head" (click)="this.filterMenu.toggle()">
         <span>
             <mat-icon>keyboard_arrow_right</mat-icon>
@@ -125,9 +125,9 @@
     </div>
     @if (filterService) {
         <os-filter-menu
-            (dismissed)="this.filterMenu.close()"
             [service]="filterService"
             [showSpacer]="showSpacer"
+            (dismissed)="this.filterMenu.close()"
         ></os-filter-menu>
     }
 </mat-drawer>
@@ -146,7 +146,7 @@
             <mat-divider></mat-divider>
         }
         @for (option of sortOptionsWithoutDefault; track option) {
-            <button (click)="sortOption = option" mat-menu-item>
+            <button mat-menu-item (click)="sortOption = option">
                 <mat-icon>{{ getSortIcon(option) }}</mat-icon>
                 <span>{{ sortService.getSortLabel(option) | translate }}</span>
             </button>

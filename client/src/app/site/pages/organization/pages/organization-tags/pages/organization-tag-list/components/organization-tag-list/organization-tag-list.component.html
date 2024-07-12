@@ -1,8 +1,8 @@
 <os-head-bar
     [hasMainButton]="true"
     [mainActionTooltip]="'New tag' | translate"
-    (mainEvent)="createOrganizationTag()"
     [multiSelectMode]="isMultiSelect"
+    (mainEvent)="createOrganizationTag()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -11,7 +11,7 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="orgaTagMenu"><mat-icon>more_vert</mat-icon></button>
+        <button mat-icon-button type="button" [matMenuTriggerFor]="orgaTagMenu"><mat-icon>more_vert</mat-icon></button>
     </ng-container>
 
     <!-- Multiselect info -->
@@ -22,13 +22,13 @@
 </os-head-bar>
 
 <os-list
-    [listObservable]="repo.getViewModelListObservable()"
-    [(selectedRows)]="selectedRows"
-    [multiSelect]="isMultiSelect"
     listStorageKey="orgaTags"
-    [vScrollFixed]="60"
     [filterProps]="['name']"
     [hiddenInMobile]="['info', 'menu']"
+    [listObservable]="repo.getViewModelListObservable()"
+    [multiSelect]="isMultiSelect"
+    [vScrollFixed]="60"
+    [(selectedRows)]="selectedRows"
 >
     <div *osScrollingTableCell="'name'; row as orgaTag" class="cell-slot fill">
         <div>
@@ -41,7 +41,7 @@
         </button>
     </div>
     <div *osScrollingTableCell="'delete'; row as orgaTag; config: { width: 40 }" class="cell-slot fill">
-        <button mat-icon-button color="warn" (click)="deleteOrganizationTags(orgaTag)">
+        <button color="warn" mat-icon-button (click)="deleteOrganizationTags(orgaTag)">
             <mat-icon>delete</mat-icon>
         </button>
     </div>
@@ -68,8 +68,8 @@
             </button>
             <mat-divider></mat-divider>
             <button
-                mat-menu-item
                 class="red-warning-text"
+                mat-menu-item
                 [disabled]="!selectedRows.length"
                 (click)="deleteSelectedTags()"
             >

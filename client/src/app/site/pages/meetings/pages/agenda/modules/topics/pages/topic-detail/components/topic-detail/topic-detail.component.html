@@ -1,13 +1,13 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar
-        [hasMainButton]="isAllowed('edit') && !!topic"
         mainButtonIcon="edit"
+        [editMode]="editTopic"
+        [goBack]="false"
+        [hasMainButton]="isAllowed('edit') && !!topic"
+        [isSaveButtonEnabled]="topicForm!.valid"
         [mainActionTooltip]="'Edit' | translate"
         [nav]="false"
-        [goBack]="false"
         [prevUrl]="prevUrl"
-        [editMode]="editTopic"
-        [isSaveButtonEnabled]="topicForm!.valid"
         [saveAction]="getSaveAction()"
         (mainEvent)="setEditMode(!editTopic)"
     >
@@ -29,12 +29,12 @@
         <!-- Back and forth buttons -->
         @if (!editTopic && showNavigateButtons) {
             <div class="extra-controls-slot">
-                <button mat-button (click)="navigateToTopic(previousTopic)" [disabled]="!previousTopic">
+                <button mat-button [disabled]="!previousTopic" (click)="navigateToTopic(previousTopic)">
                     <os-icon-container icon="chevron_left">
                         {{ getNavDisplay(previousTopic) }}
                     </os-icon-container>
                 </button>
-                <button mat-button (click)="navigateToTopic(nextTopic)" [disabled]="!nextTopic">
+                <button mat-button [disabled]="!nextTopic" (click)="navigateToTopic(nextTopic)">
                     <os-icon-container icon="chevron_right" [swap]="true">
                         {{ getNavDisplay(nextTopic) }}
                     </os-icon-container>
@@ -44,15 +44,15 @@
 
         <!-- Menu -->
         <div
-            class="menu-slot"
             *osPerms="[
                 permission.agendaItemCanManage,
                 permission.listOfSpeakersCanSee,
                 permission.listOfSpeakersCanBeSpeaker
             ]"
+            class="menu-slot"
         >
             @if (topic) {
-                <button type="button" mat-icon-button [matMenuTriggerFor]="topicExtraMenu">
+                <button mat-icon-button type="button" [matMenuTriggerFor]="topicExtraMenu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
             }
@@ -63,7 +63,7 @@
         <mat-card class="spacer-bottom-60 os-card">
             <mat-card-content>
                 @if (!editTopic && topic) {
-                    <os-projectable-title [model]="topic" [getTitleFn]="getTitleFn"></os-projectable-title>
+                    <os-projectable-title [getTitleFn]="getTitleFn" [model]="topic"></os-projectable-title>
                     <div>
                         @if (topic.text) {
                             <span>
@@ -80,7 +80,7 @@
                                 <mat-list dense>
                                     @for (file of topic.attachments; track file) {
                                         <mat-list-item>
-                                            <a [routerLink]="file.url" target="_blank">{{ file.getTitle() }}</a>
+                                            <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
                                         </mat-list-item>
                                     }
                                 </mat-list>
@@ -89,11 +89,11 @@
                     }
                 }
                 @if (editTopic && topicForm) {
-                    <form [formGroup]="topicForm" (keydown)="onKeyDown($event)" tabindex="-1">
+                    <form tabindex="-1" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
                         <div>
                             <mat-form-field>
                                 <mat-label>{{ 'Title' | translate }}</mat-label>
-                                <input type="text" matInput osAutofocus required formControlName="title" />
+                                <input formControlName="title" matInput osAutofocus required type="text" />
                                 @if (topicForm!.invalid) {
                                     <mat-error>{{ 'A name is required' | translate }}</mat-error>
                                 }
@@ -174,11 +174,11 @@
             <span>{{ 'PDF' | translate }}</span>
         </button>
 
-        <os-projector-button [object]="topic" [menuItem]="true"></os-projector-button>
-        <os-speaker-button [object]="topic" [menuItem]="true"></os-speaker-button>
+        <os-projector-button [menuItem]="true" [object]="topic"></os-projector-button>
+        <os-speaker-button [menuItem]="true" [object]="topic"></os-speaker-button>
         <div *osPerms="permission.agendaItemCanManage">
             <mat-divider></mat-divider>
-            <button mat-menu-item class="red-warning-text" (click)="onDeleteButton()">
+            <button class="red-warning-text" mat-menu-item (click)="onDeleteButton()">
                 <mat-icon>delete</mat-icon>
                 <span>{{ 'Delete' | translate }}</span>
             </button>

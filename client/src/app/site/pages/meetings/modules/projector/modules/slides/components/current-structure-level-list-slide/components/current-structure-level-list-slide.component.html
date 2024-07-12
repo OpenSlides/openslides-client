@@ -21,7 +21,6 @@
                                             />
                                         </span>
                                         <os-countdown-time
-                                            [unstyled]="true"
                                             [countdown]="{
                                                 running: !!getStructureLevel(i, j).current_start_time,
                                                 countdown_time: getStructureLevel(i, j).current_start_time
@@ -29,6 +28,7 @@
                                                       getStructureLevel(i, j).remaining_time
                                                     : getStructureLevel(i, j).remaining_time
                                             }"
+                                            [unstyled]="true"
                                         ></os-countdown-time>
                                     </div>
                                     <div class="structure-level-name">

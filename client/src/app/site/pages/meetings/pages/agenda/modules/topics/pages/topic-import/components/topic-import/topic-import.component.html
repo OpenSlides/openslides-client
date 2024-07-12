@@ -1,4 +1,4 @@
-<os-head-bar [nav]="false" prevUrl="../..">
+<os-head-bar prevUrl="../.." [nav]="false">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Import topics' | translate }}</h2>
@@ -24,19 +24,19 @@
             </div>
         }
         @if (isImporting) {
-            <os-spinner [width]="30" [height]="30" [showText]="false"></os-spinner>
+            <os-spinner [height]="30" [showText]="false" [width]="30"></os-spinner>
         }
     </ng-container>
 </os-head-bar>
 
 <os-backend-import-list
+    modelName="Topic"
+    [defaultColumns]="columns"
     [importer]="importer"
     [possibleFields]="possibleFields"
-    [defaultColumns]="columns"
-    modelName="Topic"
     (selectedTabChanged)="selectedTabIndex = $event"
 >
-    <ng-template [label]="'Text import' | translate" osImportListFirstTab>
+    <ng-template osImportListFirstTab [label]="'Text import' | translate">
         <div [formGroup]="textAreaForm">
             <div>
                 <div>{{ 'Paste/write your topics in this textbox.' | translate }}</div>
@@ -45,17 +45,17 @@
             <mat-form-field>
                 <mat-label>{{ 'Insert topics here' | translate }}</mat-label>
                 <textarea
+                    cdkAutosizeMaxRows="10"
+                    cdkAutosizeMinRows="3"
+                    cdkTextareaAutosize
+                    formControlName="inputtext"
                     matInput
                     osAutofocus
-                    formControlName="inputtext"
-                    cdkTextareaAutosize
-                    cdkAutosizeMinRows="3"
-                    cdkAutosizeMaxRows="10"
                 ></textarea>
             </mat-form-field>
         </div>
         <div>
-            <button mat-button color="accent" (click)="parseTextArea()">
+            <button color="accent" mat-button (click)="parseTextArea()">
                 <span>{{ 'Preview' | translate }}</span>
             </button>
         </div>

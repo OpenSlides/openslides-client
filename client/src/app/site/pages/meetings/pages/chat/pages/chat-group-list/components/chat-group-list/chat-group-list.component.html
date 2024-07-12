@@ -1,6 +1,6 @@
 <os-head-bar
-    [mainActionTooltip]="'New chat group' | translate"
     [hasMainButton]="hasMainButton"
+    [mainActionTooltip]="'New chat group' | translate"
     (mainEvent)="createChatGroup()"
 >
     <!-- Title -->
@@ -46,10 +46,10 @@
                                     ) {
                                         <div
                                             class="tab-label-notification-wrapper"
-                                            [matBadge]="notifications.amount"
-                                            [matBadgeHidden]="!notifications.amount"
                                             matBadgeColor="accent"
                                             matBadgeOverlap="false"
+                                            [matBadge]="notifications.amount"
+                                            [matBadgeHidden]="!notifications.amount"
                                         ></div>
                                         <div class="flex-vertical-center full-width one-line">
                                             <div class="one-line">

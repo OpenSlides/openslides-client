@@ -2,8 +2,8 @@
     <div class="form-item" [style.marginLeft.px]="setting.indentation * INDENTATION_PIXEL_AMOUNT">
         <form
             class="settings-form-group"
-            [ngClass]="{ 'checkbox-setting': setting.type === 'boolean' }"
             [formGroup]="form"
+            [ngClass]="{ 'checkbox-setting': setting.type === 'boolean' }"
         >
             @if (!isExcludedType(setting.type!)) {
                 <mat-form-field subscriptSizing="dynamic">
@@ -23,7 +23,7 @@
                     <mat-label>{{ setting.label | translate }}</mat-label>
                     @if (error) {
                         <span matSuffix>
-                            <mat-icon pull="right" class="red-warning-text">error</mat-icon>
+                            <mat-icon class="red-warning-text" pull="right">error</mat-icon>
                         </span>
                     }
                     @if (error) {
@@ -47,32 +47,32 @@
                     <ng-template #groups ngProjectAs="os-list-search-selector">
                         <os-list-search-selector
                             formControlName="value"
-                            [multiple]="true"
-                            [showChips]="false"
                             [errorStateMatcher]="matcher"
                             [inputListValues]="groupObservable!"
+                            [multiple]="true"
                             [shouldPropagateOnRegistering]="false"
+                            [showChips]="false"
                             [sortFn]="sortFn"
                         ></os-list-search-selector>
                     </ng-template>
                     <ng-template #input ngProjectAs="[matInput]">
                         @if (setting.type === 'email') {
                             <input
+                                formControlName="value"
                                 matInput
                                 osTrimOnPaste
-                                formControlName="value"
-                                [value]="internalValue"
                                 [errorStateMatcher]="matcher"
                                 [type]="formType(setting.type!)"
+                                [value]="internalValue"
                             />
                         }
                         @if (setting.type !== 'email') {
                             <input
-                                matInput
                                 formControlName="value"
-                                [value]="internalValue"
+                                matInput
                                 [errorStateMatcher]="matcher"
                                 [type]="formType(setting.type!)"
+                                [value]="internalValue"
                             />
                         }
                     </ng-template>
@@ -98,10 +98,10 @@
                     @if (setting.type === 'text') {
                         <div>
                             <mat-form-field>
-                                <textarea formControlName="value" rows="10" matInput [value]="internalValue"></textarea>
+                                <textarea formControlName="value" matInput rows="10" [value]="internalValue"></textarea>
                                 <span matSuffix>
                                     @if (updateSuccessIcon) {
-                                        <mat-icon pull="right" class="red-warning-text">check_circle</mat-icon>
+                                        <mat-icon class="red-warning-text" pull="right">check_circle</mat-icon>
                                     }
                                 </span>
                             </mat-form-field>
@@ -113,17 +113,17 @@
                             <os-datepicker
                                 formControlName="date"
                                 [error]="error"
-                                [title]="setting.label"
                                 [hintText]="setting.helpText"
                                 [showUpdateSuccessIcon]="updateSuccessIcon"
+                                [title]="setting.label"
                             ></os-datepicker>
                             <div class="datetimepicker-container">
                                 @if (setting.type === 'datetime') {
                                     <mat-form-field>
                                         <input
+                                            formControlName="time"
                                             matInput
                                             [format]="24"
-                                            formControlName="time"
                                             [ngxTimepicker]="timepicker"
                                         />
                                         <div class="suffix-wrapper" matSuffix>
@@ -149,9 +149,9 @@
                             <os-daterangepicker
                                 formControlName="daterange"
                                 [error]="error"
-                                [title]="setting.label"
                                 [hintText]="setting.helpText"
                                 [showUpdateSuccessIcon]="updateSuccessIcon"
+                                [title]="setting.label"
                             ></os-daterangepicker>
                         </div>
                     }
@@ -162,7 +162,7 @@
                             <os-editor formControlName="value" [customSettings]="getTinyMceSettings()"></os-editor>
                             <span matSuffix>
                                 @if (updateSuccessIcon) {
-                                    <mat-icon pull="right" class="red-warning-text">error</mat-icon>
+                                    <mat-icon class="red-warning-text" pull="right">error</mat-icon>
                                 }
                             </span>
                         </div>
@@ -171,8 +171,8 @@
                     @if (setting.type === 'translations' || setting.type === 'ranking') {
                         <div>
                             <os-allocation-list
-                                [config]="getAllocationConfig(setting)"
                                 formControlName="value"
+                                [config]="getAllocationConfig(setting)"
                             ></os-allocation-list>
                         </div>
                     }

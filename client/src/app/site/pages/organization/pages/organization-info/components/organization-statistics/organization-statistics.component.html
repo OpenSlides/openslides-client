@@ -16,7 +16,7 @@
     ></ng-container>
 </div>
 
-<ng-template #singleStatistik let-label="label" let-current="current" let-max="max">
+<ng-template #singleStatistik let-current="current" let-label="label" let-max="max">
     @if (max) {
         <div>{{ label | translate }}: {{ current }}/{{ max }}</div>
     }

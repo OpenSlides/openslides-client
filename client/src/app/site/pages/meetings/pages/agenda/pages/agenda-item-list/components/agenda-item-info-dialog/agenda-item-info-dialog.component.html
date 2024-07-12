@@ -2,7 +2,7 @@
     <h1 mat-dialog-title>{{ 'Edit details for' | translate }} {{ item.getTitle() }}</h1>
 }
 <mat-dialog-content>
-    <form class="item-dialog-form" [formGroup]="agendaInfoForm" (keydown)="onKeyDown($event)" tabindex="-1">
+    <form class="item-dialog-form" tabindex="-1" [formGroup]="agendaInfoForm" (keydown)="onKeyDown($event)">
         <!-- Tag -->
         @if (isTagAvailable()) {
             <mat-form-field>
@@ -32,7 +32,7 @@
         <!-- Duration -->
         <mat-form-field>
             <mat-label>{{ 'Duration' | translate }}</mat-label>
-            <input type="string" matInput formControlName="durationText" />
+            <input formControlName="durationText" matInput type="string" />
             @if (agendaInfoForm.invalid) {
                 <mat-error>
                     {{ 'Your input does not match the following structure: "hh:mm"' | translate }}
@@ -43,24 +43,24 @@
         <!-- Item number (prefix) -->
         <mat-form-field>
             <mat-label>{{ 'Item number' | translate }}</mat-label>
-            <input matInput formControlName="item_number" />
+            <input formControlName="item_number" matInput />
         </mat-form-field>
 
         <!-- Comment -->
         <mat-form-field>
             <mat-label>{{ 'Comment' | translate }}</mat-label>
             <textarea
-                matInput
-                formControlName="comment"
-                cdkTextareaAutosize
-                cdkAutosizeMinRows="3"
                 cdkAutosizeMaxRows="5"
+                cdkAutosizeMinRows="3"
+                cdkTextareaAutosize
+                formControlName="comment"
+                matInput
             ></textarea>
         </mat-form-field>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button (click)="saveItemInfo()" [disabled]="agendaInfoForm.invalid">
+    <button mat-button [disabled]="agendaInfoForm.invalid" (click)="saveItemInfo()">
         <span>{{ 'Save' | translate }}</span>
     </button>
     <button mat-button (click)="onCancelButton()">

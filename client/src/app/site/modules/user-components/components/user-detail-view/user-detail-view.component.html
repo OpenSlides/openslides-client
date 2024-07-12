@@ -63,17 +63,17 @@
             <!-- Title -->
             <mat-form-field class="form16 force-min-width">
                 <mat-label>{{ 'Title' | translate }}</mat-label>
-                <input type="text" matInput formControlName="title" />
+                <input formControlName="title" matInput type="text" />
             </mat-form-field>
             <!-- First name -->
             <mat-form-field class="form38 force-min-width">
                 <mat-label>{{ 'Given name' | translate }}</mat-label>
-                <input type="text" osAutofocus matInput formControlName="first_name" />
+                <input formControlName="first_name" matInput osAutofocus type="text" />
             </mat-form-field>
             <!-- Last name -->
             <mat-form-field class="form38 force-min-width">
                 <mat-label>{{ 'Surname' | translate }}</mat-label>
-                <input type="text" matInput formControlName="last_name" />
+                <input formControlName="last_name" matInput type="text" />
             </mat-form-field>
         </div>
 
@@ -94,7 +94,7 @@
             <!-- Pronoun -->
             <mat-form-field class="form38 force-min-width">
                 <mat-label>{{ 'Pronoun' | translate }}</mat-label>
-                <input type="text" matInput formControlName="pronoun" />
+                <input formControlName="pronoun" matInput type="text" />
                 <mat-error>{{ 'max. 32 characters allowed' | translate }}</mat-error>
             </mat-form-field>
         </div>
@@ -103,14 +103,14 @@
         <div class="personal-info-area">
             <!-- E-Mail -->
             <mat-form-field
+                class="force-min-width"
                 [ngClass]="{
                     form58: isAllowed('update'),
                     form100: !isAllowed('update')
                 }"
-                class="force-min-width"
             >
                 <mat-label>{{ 'Email' | translate }}</mat-label>
-                <input type="email" matInput autocomplete="off" name="email" formControlName="email" />
+                <input autocomplete="off" formControlName="email" matInput name="email" type="email" />
                 @if (personalInfoForm.get('email')?.hasError('email')) {
                     <mat-error>
                         {{ 'Please enter a valid email address!' | translate }}
@@ -121,7 +121,7 @@
             @if (isAllowed('update')) {
                 <mat-form-field class="form38 force-min-width">
                     <mat-label>{{ 'Membership number' | translate }}</mat-label>
-                    <input type="text" matInput formControlName="member_number" />
+                    <input formControlName="member_number" matInput type="text" />
                 </mat-form-field>
             }
         </div>
@@ -131,21 +131,21 @@
             <!-- username -->
             @if (isAllowed('seePersonal')) {
                 <mat-form-field
+                    class="force-min-width"
                     [ngClass]="{
                         form48: isAllowed('update'),
                         form100: !isAllowed('update')
                     }"
-                    class="force-min-width"
                 >
                     <mat-label>{{ 'Username' | translate }}</mat-label>
-                    <input type="text" matInput formControlName="username" />
+                    <input formControlName="username" matInput type="text" />
                     @if (isNewUser) {
                         <button
-                            matSuffix
-                            type="button"
                             mat-icon-button
-                            [matTooltip]="'Leave blank to automatically generate the username.' | translate"
+                            matSuffix
                             matTooltipPosition="above"
+                            type="button"
+                            [matTooltip]="'Leave blank to automatically generate the username.' | translate"
                         >
                             <mat-icon>help</mat-icon>
                         </button>
@@ -163,24 +163,24 @@
             @if (isAllowed('update') && !user?.saml_id) {
                 <mat-form-field class="form48 force-min-width">
                     <mat-label>{{ 'Initial password' | translate }}</mat-label>
-                    <input matInput autocomplete="off" formControlName="default_password" />
+                    <input autocomplete="off" formControlName="default_password" matInput />
                     @if (isNewUser && generatePasswordFn) {
                         <button
+                            mat-icon-button
                             matSuffix
                             type="button"
-                            mat-icon-button
                             [disabled]="!generatePasswordFn"
-                            (click)="setRandomPassword()"
                             [matTooltip]="'Generate password' | translate"
+                            (click)="setRandomPassword()"
                         >
                             <mat-icon>autorenew</mat-icon>
                         </button>
                     }
                     @if (isNewUser) {
                         <button
+                            mat-icon-button
                             matSuffix
                             type="button"
-                            mat-icon-button
                             [matTooltip]="'Leave blank to automatically generate the password.' | translate"
                         >
                             <mat-icon>help</mat-icon>

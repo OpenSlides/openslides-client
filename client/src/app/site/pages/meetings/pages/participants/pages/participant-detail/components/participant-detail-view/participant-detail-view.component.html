@@ -1,11 +1,11 @@
 <os-head-bar
-    [hasMainButton]="isAllowed('changePersonal') && !!user"
     mainButtonIcon="edit"
+    [editMode]="isEditingSubject.value"
+    [goBack]="!isAllowed('seeOtherUsers')"
+    [hasMainButton]="isAllowed('changePersonal') && !!user"
+    [isSaveButtonEnabled]="isFormValid"
     [mainActionTooltip]="'Edit' | translate"
     [nav]="false"
-    [goBack]="!isAllowed('seeOtherUsers')"
-    [editMode]="isEditingSubject.value"
-    [isSaveButtonEnabled]="isFormValid"
     [saveAction]="getSaveAction()"
     (mainEvent)="setEditMode(!isEditingSubject.value)"
 >
@@ -24,7 +24,7 @@
     <!-- Menu -->
     <ng-container class="menu-slot">
         @if (isAllowed('changePersonal') && isAllowed('changePassword') && user) {
-            <button type="button" mat-icon-button [matMenuTriggerFor]="userExtraMenu">
+            <button mat-icon-button type="button" [matMenuTriggerFor]="userExtraMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
         }
@@ -61,7 +61,7 @@
         @if (isAllowed('delete')) {
             <div>
                 <mat-divider></mat-divider>
-                <button mat-menu-item class="red-warning-text" (click)="deleteUserButton()">
+                <button class="red-warning-text" mat-menu-item (click)="deleteUserButton()">
                     <mat-icon>delete</mat-icon>
                     <span>{{ 'Delete' | translate }}</span>
                 </button>
@@ -72,18 +72,18 @@
 
 @if (user || newUser) {
     <os-user-detail-view
-        [user]="user"
-        [isNewUser]="newUser"
-        [isEditing]="isEditingSubject | async"
         [additionalFormControls]="additionalFormControls"
-        [isAllowedFn]="isAllowedFn"
         [generatePasswordFn]="randomPasswordFn"
+        [isAllowedFn]="isAllowedFn"
+        [isEditing]="isEditingSubject | async"
+        [isNewUser]="newUser"
         [patchFormValueFn]="patchFormValueFn"
         [shouldEnableFormControlFn]="shouldEnableFormControlFn"
+        [user]="user"
         (changeEvent)="personalInfoFormValue = $event"
-        (validEvent)="isFormValid = $event"
         (errorEvent)="formErrors = $event"
         (submitEvent)="saveUser()"
+        (validEvent)="isFormValid = $event"
     >
         <ng-template #editView let-form="form">
             <div [formGroup]="form">
@@ -92,8 +92,8 @@
                 <div [formGroup]="form">
                     <mat-checkbox
                         formControlName="is_present"
-                        matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
                         matTooltipPosition="right"
+                        matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
                     >
                         <span>{{ 'present' | translate }}</span>
                     </mat-checkbox>
@@ -110,9 +110,9 @@
                         <mat-label>{{ 'Structure level' | translate }}</mat-label>
                         <os-list-search-selector
                             formControlName="structure_level_ids"
-                            [multiple]="true"
                             [includeNone]="true"
                             [inputListValues]="structureLevelObservable"
+                            [multiple]="true"
                         ></os-list-search-selector>
                     </mat-form-field>
                     <!-- Participant Number -->
@@ -124,13 +124,13 @@
                         }"
                     >
                         <mat-label>{{ 'Participant number' | translate }}</mat-label>
-                        <input type="text" matInput formControlName="number" />
+                        <input formControlName="number" matInput type="text" />
                     </mat-form-field>
                     <!-- Vote weight -->
                     @if (showVoteWeight) {
                         <mat-form-field class="form16 force-min-with">
                             <mat-label>{{ 'Vote weight' | translate }}</mat-label>
-                            <input type="number" matInput formControlName="vote_weight" />
+                            <input formControlName="vote_weight" matInput type="number" />
                             @if (isVoteWeightError && form.controls['vote_weight'].value > 0) {
                                 <mat-error translate>
                                     Please select a vote weight greater than or equal to 0.000001
@@ -149,8 +149,8 @@
                             <mat-label>{{ 'Groups' | translate }}</mat-label>
                             <os-list-search-selector
                                 formControlName="group_ids"
-                                [multiple]="true"
                                 [inputListValues]="groups"
+                                [multiple]="true"
                                 [sortFn]="sortFn"
                             ></os-list-search-selector>
                         </mat-form-field>
@@ -160,9 +160,9 @@
                                 <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
                                 <os-repo-search-selector
                                     formControlName="vote_delegations_from_ids"
+                                    [multiple]="true"
                                     [repo]="repo"
                                     [sortService]="sortService"
-                                    [multiple]="true"
                                     [subscriptionConfig]="participantSubscriptionConfig"
                                 ></os-repo-search-selector>
                             </mat-form-field>
@@ -173,10 +173,10 @@
                                 <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
                                 <os-repo-search-selector
                                     formControlName="vote_delegated_to_id"
+                                    [includeNone]="true"
+                                    [multiple]="false"
                                     [repo]="repo"
                                     [sortService]="sortService"
-                                    [multiple]="false"
-                                    [includeNone]="true"
                                     [subscriptionConfig]="participantSubscriptionConfig"
                                 ></os-repo-search-selector>
                             </mat-form-field>
@@ -196,7 +196,7 @@
                         <!-- Comment -->
                         <mat-form-field class="form100 force-min-width" subscriptSizing="dynamic">
                             <mat-label>{{ 'Comment' | translate }}</mat-label>
-                            <input matInput formControlName="comment" />
+                            <input formControlName="comment" matInput />
                             <mat-hint>{{ 'Only for internal notes.' | translate }}</mat-hint>
                         </mat-form-field>
                     </div>

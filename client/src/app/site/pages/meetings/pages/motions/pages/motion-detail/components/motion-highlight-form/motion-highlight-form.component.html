@@ -4,13 +4,13 @@
             <mat-form-field class="motion-goto-line">
                 <mat-label>{{ 'Go to line' | translate }}</mat-label>
                 <input
-                    type="number"
-                    min="1"
                     matInput
+                    min="1"
                     osAutofocus
+                    type="number"
                     [osOnlyNumber]="true"
-                    (keydown)="onKeyDown($event)"
                     [(ngModel)]="highlightedLineTyping"
+                    (keydown)="onKeyDown($event)"
                 />
                 @if (highlightedLineTyping && +highlightedLineTyping > 10) {
                     <mat-error>
@@ -19,11 +19,11 @@
                 }
                 @if (highlightedLineTyping) {
                     <button
-                        type="submit"
-                        mat-button
-                        matSuffix
-                        mat-icon-button
                         aria-label="Go to line"
+                        mat-button
+                        mat-icon-button
+                        matSuffix
+                        type="submit"
                         (click)="gotoHighlightedLine(highlightedLineTyping); highlightedLineTyping = ''"
                     >
                         <mat-icon>redo</mat-icon>
@@ -37,7 +37,7 @@
             </button>
         }
 
-        <button type="button" mat-button [matMenuTriggerFor]="lineNumberingMenu" #trigger="matMenuTrigger">
+        <button #trigger="matMenuTrigger" mat-button type="button" [matMenuTriggerFor]="lineNumberingMenu">
             <mat-icon>format_list_numbered</mat-icon>
             @if (!isMobile) {
                 &nbsp;
@@ -52,7 +52,7 @@
             }
         </button>
         @if (motion && (hasChangingObjects || motion.modified_final_version)) {
-            <button type="button" mat-button [matMenuTriggerFor]="changeRecoMenu">
+            <button mat-button type="button" [matMenuTriggerFor]="changeRecoMenu">
                 <mat-icon>rate_review</mat-icon>
                 @if (!isMobile) {
                     &nbsp;
@@ -66,8 +66,8 @@
             <!-- create final version -->
             @if (showCreateFinalVersionButton) {
                 <button
-                    type="button"
                     mat-icon-button
+                    type="button"
                     matTooltip="{{ 'Create editorial final version' | translate }}"
                     (click)="createModifiedFinalVersion()"
                 >
@@ -78,8 +78,8 @@
                 <!-- edit final version -->
                 @if (!isEditingFinalVersion) {
                     <button
-                        type="button"
                         mat-icon-button
+                        type="button"
                         matTooltip="{{ 'Edit editorial final version' | translate }}"
                         (click)="editModifiedFinalVersion()"
                     >
@@ -89,8 +89,8 @@
                 <!-- save final version -->
                 @if (isEditingFinalVersion) {
                     <button
-                        type="button"
                         mat-icon-button
+                        type="button"
                         matTooltip="{{ 'Save editorial final version' | translate }}"
                         (click)="saveModifiedFinalVersion()"
                     >
@@ -100,8 +100,8 @@
                 <!-- cancel final version edit -->
                 @if (isEditingFinalVersion) {
                     <button
-                        type="button"
                         mat-icon-button
+                        type="button"
                         matTooltip="{{ 'Cancel editing without saving' | translate }}"
                         (click)="cancelEditingModifiedFinalVersion()"
                     >
@@ -111,9 +111,9 @@
                 <!-- delete final version edit -->
                 @if (!isEditingFinalVersion) {
                     <button
-                        type="button"
                         class="red-warning-text"
                         mat-icon-button
+                        type="button"
                         matTooltip="{{ 'Delete editorial final version' | translate }}"
                         (click)="deleteModifiedFinalVersion()"
                     >
@@ -132,22 +132,22 @@
             <div>
                 <button
                     mat-menu-item
-                    (click)="setLineNumberingMode(LineNumberingMode.None)"
                     [ngClass]="{ selected: lnMode === LineNumberingMode.None }"
+                    (click)="setLineNumberingMode(LineNumberingMode.None)"
                 >
                     {{ 'none' | translate }}
                 </button>
                 <button
                     mat-menu-item
-                    (click)="setLineNumberingMode(LineNumberingMode.Inside)"
                     [ngClass]="{ selected: lnMode === LineNumberingMode.Inside }"
+                    (click)="setLineNumberingMode(LineNumberingMode.Inside)"
                 >
                     {{ 'inline' | translate }}
                 </button>
                 <button
                     mat-menu-item
-                    (click)="setLineNumberingMode(LineNumberingMode.Outside)"
                     [ngClass]="{ selected: lnMode === LineNumberingMode.Outside }"
+                    (click)="setLineNumberingMode(LineNumberingMode.Outside)"
                 >
                     {{ 'outside' | translate }}
                 </button>
@@ -159,14 +159,14 @@
                     </button>
                 }
                 <div
-                    mat-list-item
-                    id="lineNumberItem"
                     *osPerms="permission.motionCanManage"
+                    id="lineNumberItem"
+                    mat-list-item
                     (click)="$event.stopPropagation()"
                 >
                     <mat-form-field>
                         <mat-label>{{ 'Start line number' | translate }}</mat-label>
-                        <input matInput type="number" min="1" [(ngModel)]="startLineNumber" />
+                        <input matInput min="1" type="number" [(ngModel)]="startLineNumber" />
                         <button mat-icon-button matSuffix (click)="updateStartLineNumber()">
                             <mat-icon>check</mat-icon>
                         </button>
@@ -184,16 +184,16 @@ For paragraph-based amendments, only the original and the diff version is availa
 <mat-menu #changeRecoMenu="matMenu">
     <button
         mat-menu-item
-        (click)="setChangeRecoMode(ChangeRecoMode.Original)"
         [ngClass]="{ selected: crMode === ChangeRecoMode.Original }"
+        (click)="setChangeRecoMode(ChangeRecoMode.Original)"
     >
         {{ 'Original version' | translate }}
     </button>
     @if (hasChangingObjects) {
         <button
             mat-menu-item
-            (click)="setChangeRecoMode(ChangeRecoMode.Changed)"
             [ngClass]="{ selected: crMode === ChangeRecoMode.Changed }"
+            (click)="setChangeRecoMode(ChangeRecoMode.Changed)"
         >
             {{ 'Changed version' | translate }}
         </button>
@@ -201,8 +201,8 @@ For paragraph-based amendments, only the original and the diff version is availa
     @if (hasChangingObjects) {
         <button
             mat-menu-item
-            (click)="setChangeRecoMode(ChangeRecoMode.Diff)"
             [ngClass]="{ selected: crMode === ChangeRecoMode.Diff }"
+            (click)="setChangeRecoMode(ChangeRecoMode.Diff)"
         >
             {{ 'Diff version' | translate }}
         </button>
@@ -210,8 +210,8 @@ For paragraph-based amendments, only the original and the diff version is availa
     @if (!isParagraphBasedAmendment && hasChangingObjects) {
         <button
             mat-menu-item
-            (click)="setChangeRecoMode(ChangeRecoMode.Final)"
             [ngClass]="{ selected: crMode === ChangeRecoMode.Final }"
+            (click)="setChangeRecoMode(ChangeRecoMode.Final)"
         >
             {{ 'Final version' | translate }}
         </button>
@@ -219,8 +219,8 @@ For paragraph-based amendments, only the original and the diff version is availa
     @if (motion && motion.modified_final_version && !motion.isParagraphBasedAmendment()) {
         <button
             mat-menu-item
-            (click)="setChangeRecoMode(ChangeRecoMode.ModifiedFinal)"
             [ngClass]="{ selected: crMode === ChangeRecoMode.ModifiedFinal }"
+            (click)="setChangeRecoMode(ChangeRecoMode.ModifiedFinal)"
         >
             {{ 'Editorial final version' | translate }}
         </button>

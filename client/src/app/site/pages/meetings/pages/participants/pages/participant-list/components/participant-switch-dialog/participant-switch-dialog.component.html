@@ -17,8 +17,8 @@
             </td>
             <td>
                 <os-participant-search-selector
-                    [shouldReset]="false"
                     [nonSelectableUserIds]="[left.id]"
+                    [shouldReset]="false"
                     (userSelected)="onUserSelect($event)"
                 ></os-participant-search-selector>
             </td>
@@ -79,7 +79,7 @@
         </tr>
         <tr>
             <th></th>
-            <td colSpan="3" class="red-warning-text warning-hint" translate>
+            <td class="red-warning-text warning-hint" colSpan="3" translate>
                 Only groups and participant number are switched.
             </td>
         </tr>

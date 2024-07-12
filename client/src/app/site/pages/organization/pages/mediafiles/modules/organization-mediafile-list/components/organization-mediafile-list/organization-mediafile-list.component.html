@@ -12,15 +12,15 @@
     <!-- Menu -->
     <ng-container class="menu-slot">
         <button
-            type="button"
+            *osOmlPerms="OML.can_manage_organization; and: !isMultiSelect"
             mat-icon-button
+            type="button"
             [matTooltip]="'New folder' | translate"
             (click)="createNewFolder(newFolderDialog)"
-            *osOmlPerms="OML.can_manage_organization; and: !isMultiSelect"
         >
             <mat-icon>create_new_folder</mat-icon>
         </button>
-        <button type="button" mat-icon-button [matMenuTriggerFor]="mediafilesMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="mediafilesMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -34,22 +34,22 @@
 
 <!-- the actual file manager -->
 <os-file-list
-    [currentDirectory]="directory"
-    [isMultiSelect]="isMultiSelect"
-    [canEdit]="canEdit"
     [canAccessFileMenu]="canAccessFileMenu"
-    [sourceFiles]="directoryObservable"
+    [canEdit]="canEdit"
+    [currentDirectory]="directory"
     [editFolderTemplate]="fileEditDialog"
     [fileMenuTemplate]="fileMenuTemplate"
-    [shouldShowFileMenuFn]="shouldShowFileMenuFn"
-    [isUsedAsLogoFn]="isUsedAsLogoFn"
-    [isUsedAsFontFn]="isUsedAsFontFn"
-    (directoryChanged)="changeDirectory($event.directoryId)"
-    (beforeEditing)="onEditFile($event.file)"
-    (saved)="onSaveFile($event.update)"
-    (deleted)="onDeleteFile($event.file)"
-    (selected)="onSelect($event.files)"
     [isInMeeting]="false"
+    [isMultiSelect]="isMultiSelect"
+    [isUsedAsFontFn]="isUsedAsFontFn"
+    [isUsedAsLogoFn]="isUsedAsLogoFn"
+    [shouldShowFileMenuFn]="shouldShowFileMenuFn"
+    [sourceFiles]="directoryObservable"
+    (beforeEditing)="onEditFile($event.file)"
+    (deleted)="onDeleteFile($event.file)"
+    (directoryChanged)="changeDirectory($event.directoryId)"
+    (saved)="onSaveFile($event.update)"
+    (selected)="onSelect($event.files)"
 ></os-file-list>
 
 <!-- Menu for Mediafiles -->
@@ -82,8 +82,8 @@
                 <span>{{ 'Download' | translate }}</span>
             </button>
             <button
-                mat-menu-item
                 *osOmlPerms="OML.can_manage_organization"
+                mat-menu-item
                 [disabled]="!selectedRows.length"
                 (click)="onMove(selectedRows)"
             >
@@ -92,8 +92,8 @@
             </button>
             <mat-divider></mat-divider>
             <button
-                mat-menu-item
                 *osOmlPerms="OML.can_manage_organization"
+                mat-menu-item
                 [disabled]="!selectedRows.length"
                 (click)="deleteSelected()"
             >
@@ -111,7 +111,7 @@
         <form class="edit-file-form" [formGroup]="fileEditForm!">
             <mat-form-field>
                 <mat-label>{{ 'New file name' | translate }}</mat-label>
-                <input type="text" matInput osAutofocus required formControlName="title" />
+                <input formControlName="title" matInput osAutofocus required type="text" />
                 @if (fileEditForm?.invalid) {
                     <mat-error>{{ 'Required' | translate }}</mat-error>
                 }
@@ -120,15 +120,15 @@
     </mat-dialog-content>
     <mat-dialog-actions>
         <button
-            type="submit"
-            mat-button
-            [disabled]="!fileEditForm?.valid"
             color="accent"
+            mat-button
+            type="submit"
+            [disabled]="!fileEditForm?.valid"
             [mat-dialog-close]="fileEditForm?.value"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>
@@ -138,8 +138,8 @@
 <ng-template #manageButton let-mediafile="mediafile" let-place="place">
     <button
         mat-menu-item
-        (click)="toggleMediafileUsage($event, mediafile, place)"
         [disabled]="updatingLogoAndFontSettings"
+        (click)="toggleMediafileUsage($event, mediafile, place)"
     >
         <mat-icon color="accent">
             {{ isMediafileUsed(mediafile, place) ? 'check_box' : 'check_box_outline_blank' }}
@@ -174,15 +174,15 @@
             <p>{{ 'Please enter a name for the new directory:' | translate }}</p>
             <mat-form-field>
                 <mat-label>{{ 'Title' | translate }}</mat-label>
-                <input matInput osAutofocus formControlName="title" required />
+                <input formControlName="title" matInput osAutofocus required />
             </mat-form-field>
         </form>
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button type="submit" mat-button [disabled]="!newDirectoryForm.valid" color="accent" [mat-dialog-close]="true">
+        <button color="accent" mat-button type="submit" [disabled]="!newDirectoryForm.valid" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>

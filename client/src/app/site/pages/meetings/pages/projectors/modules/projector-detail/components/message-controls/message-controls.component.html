@@ -8,32 +8,32 @@
                 <div class="message" [innerHTML]="message.getPreview(100)"></div>
                 <div class="action-buttons">
                     <button
-                        type="button"
                         class="small-mat-icon-button"
                         mat-icon-button
-                        (click)="onBringDialog()"
-                        matTooltip="{{ 'Open projection dialog' | translate }}"
                         matTooltipPosition="left"
+                        type="button"
+                        matTooltip="{{ 'Open projection dialog' | translate }}"
+                        (click)="onBringDialog()"
                     >
                         <mat-icon>open_in_new</mat-icon>
                     </button>
                     <button
-                        type="button"
                         class="small-mat-icon-button"
                         mat-icon-button
-                        (click)="onEdit()"
-                        matTooltip="{{ 'Edit' | translate }}"
                         matTooltipPosition="left"
+                        type="button"
+                        matTooltip="{{ 'Edit' | translate }}"
+                        (click)="onEdit()"
                     >
                         <mat-icon>edit</mat-icon>
                     </button>
                     <button
-                        type="button"
                         class="small-mat-icon-button"
                         mat-icon-button
-                        (click)="onDelete()"
-                        matTooltip="{{ 'Delete' | translate }}"
                         matTooltipPosition="left"
+                        type="button"
+                        matTooltip="{{ 'Delete' | translate }}"
+                        (click)="onDelete()"
                     >
                         <mat-icon>close</mat-icon>
                     </button>

@@ -1,6 +1,6 @@
-<h2 mat-dialog-title class="flex-container padding-bottom-0 padding-top-8">
+<h2 class="flex-container padding-bottom-0 padding-top-8" mat-dialog-title>
     <span class="left-align">{{ caption | translate }}</span>
-    <button mat-icon-button mat-dialog-close>
+    <button mat-dialog-close mat-icon-button>
         <mat-icon>close</mat-icon>
     </button>
 </h2>
@@ -12,7 +12,7 @@
     <div #chessboard class="spacer-top-5"></div>
     @if (inMeeting && state === 'start') {
         <div class="center spacer-top-5">
-            <button (click)="handleEvent('searchClicked')" mat-raised-button color="accent">
+            <button color="accent" mat-raised-button (click)="handleEvent('searchClicked')">
                 {{ 'Search player' | translate }}
             </button>
         </div>
