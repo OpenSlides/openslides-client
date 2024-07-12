@@ -123,7 +123,6 @@ export function isSettingsInput(item: SettingsItem): item is SettingsInput {
 export const SKIPPED_SETTINGS = [
     `motions_default_workflow_id`,
     `motions_default_amendment_workflow_id`,
-    `motions_default_statute_amendment_workflow_id`,
     `point_of_order_category_ids`
 ];
 
@@ -922,6 +921,13 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_enable_vote_delegations`,
                         label: _(`Activate vote delegations`),
                         type: `boolean`
+                    },
+                    {
+                        key: `users_forbid_delegator_to_vote`,
+                        label: _(`Restrict delegation principals from voting`),
+                        type: `boolean`,
+                        indentation: 1,
+                        disable: settings => !settings.users_enable_vote_delegations
                     },
                     {
                         key: `users_forbid_delegator_in_list_of_speakers`,

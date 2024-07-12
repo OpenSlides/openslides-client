@@ -45,7 +45,7 @@ export class StaticAdditionalImportHandler<MainModel, SideModel> extends BaseAdd
         this._pipeModelsFn = config.pipeModelsFn;
         this._getModelsToCreateAmountFn = config.getModelsToCreateAmountFn;
         this._getModelsImportedAmountFn = config.getModelsImportedAmountFn;
-        this._pipeSideModelsFn = config.pipeSideModelsFn || (() => {});
+        this._pipeSideModelsFn = config.pipeSideModelsFn || ((): void => {});
     }
 
     public override pipeModels(importModels: ImportModel<MainModel>[]): void {
@@ -77,15 +77,15 @@ export class StaticAdditionalImportHandler<MainModel, SideModel> extends BaseAdd
         this._modelsToCreateAmount = 0;
     }
 
-    public getModelsToCreateAmount = () => this._modelsToCreateAmount;
-    public getModelsImportedAmount = () => this._modelsImportedAmount;
+    public getModelsToCreateAmount = (): number => this._modelsToCreateAmount;
+    public getModelsImportedAmount = (): number => this._modelsImportedAmount;
 
     private createImportProcess(): ImportProcess<SideModel> {
         return new ImportProcess({
             importFn: models => this._doImportFn(models, this.getImportContext()),
             chunkSize: this.chunkSize,
             models: this.doTransformModels(this._sideModels),
-            afterImportChunkFn: nextChunk => {
+            afterImportChunkFn: (nextChunk): void => {
                 const oldValue = this._modelsImportedAmount;
                 this.importContext.modelsImported = this.importContext.modelsImported.concat(nextChunk as any);
                 this._modelsImportedAmount = this._getModelsImportedAmountFn(nextChunk as any, oldValue);

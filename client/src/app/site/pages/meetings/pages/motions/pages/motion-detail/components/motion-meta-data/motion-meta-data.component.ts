@@ -145,7 +145,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     ) {
         super();
 
-        if (operator.hasPerms(Permission.motionCanManage)) {
+        if (operator.hasPerms(Permission.motionCanManageMetadata)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
                 this._forwardingAvailable = forwardingAvailable;
                 this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
@@ -336,7 +336,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     private async updateSupportersSubject(): Promise<void> {
-        this._supportersSubject.next(await this.participantSort.sort(this.motion.supporter_users));
+        this._supportersSubject.next(await this.participantSort.sort(this.motion.supporters));
     }
 
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
@@ -353,8 +353,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                 .getViewModelObservable(this.motion.id)
                 .pipe(
                     map(motion => [
-                        motion.referenced_in_motion_recommendation_extensions,
-                        motion.recommendation_extension_references as ViewMotion[]
+                        motion?.referenced_in_motion_recommendation_extensions,
+                        motion?.recommendation_extension_references as ViewMotion[]
                     ]),
                     distinctUntilChanged((p, c) => [...Array(2).keys()].every(i => p[i].equals(c[i]))),
                     map(arr =>
@@ -374,9 +374,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      */
     private setupRecommender(): void {
         if (this.motion) {
-            const configKey: keyof Settings = this.motion.isStatuteAmendment()
-                ? `motions_statute_recommendations_by`
-                : `motions_recommendations_by`;
+            const configKey: keyof Settings = `motions_recommendations_by`;
             if (this.recommenderSubscription) {
                 this.recommenderSubscription.unsubscribe();
             }
@@ -389,7 +387,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     private async checkPresenter(): Promise<(Selectable & { name: string; toString: any })[]> {
         const meetingId = this.activeMeetingService.meetingId;
         const committees =
-            this.operator.hasPerms(Permission.motionCanManage) && !!meetingId
+            this.operator.hasPerms(Permission.motionCanManageMetadata) && !!meetingId
                 ? await this.presenter.call({ meeting_id: meetingId })
                 : [];
         const forwardingCommittees: (Selectable & { name: string; toString: any })[] = [];

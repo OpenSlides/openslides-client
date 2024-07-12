@@ -116,10 +116,13 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return this.structureLevelRepo.getViewModelListStructureLevel().length > 0;
     }
 
-    /**
-     * Define extra filter properties
-     */
-    public filterProps = [`full_name`, `groups`, `number`, `delegationName`, `structure_levels`];
+    protected get filterProps(): string[] {
+        if (this.canSeeSensitiveData) {
+            return [`full_name`, `groups`, `number`, `delegationName`, `structure_levels`, `member_number`, `email`];
+        } else {
+            return [`full_name`, `groups`, `number`, `delegationName`, `structure_levels`];
+        }
+    }
 
     public get hasInteractionState(): Observable<boolean> {
         return this.interactionService.isConfStateNone.pipe(map(isNone => !isNone));
@@ -200,11 +203,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     public canChangePassword(user: ViewUser): boolean {
         const userOML = user?.organization_management_level;
         const sufficientOML = userOML ? this.operator.hasOrganizationPermissions(userOML as OML) : true;
-        return (
-            !user?.saml_id &&
-            this.userService.isAllowed(`changePassword`, user.id === this.operator.user.id) &&
-            sufficientOML
-        );
+        return !user?.saml_id && this.userService.isAllowed(`changePassword`, false) && sufficientOML;
     }
 
     public isUserPresent(user: ViewUser): boolean {
@@ -458,8 +457,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         await this.repo.removeUsersFromMeeting([user]);
     }
 
-    public canSeeSingleItemMenu(user: ViewUser): boolean {
-        return this.operator.hasPerms(Permission.userCanUpdate) || this.canChangePassword(user);
+    public canSeeItemMenu(): boolean {
+        return this.operator.hasPerms(Permission.userCanUpdate);
     }
 
     /**

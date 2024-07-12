@@ -72,9 +72,4 @@ export class AmendmentControllerService {
         const result = await (this.repo.createParagraphBased(partialMotion).resolve() as Promise<CreateResponse[]>);
         return result[0];
     }
-
-    public async createStatuteAmendment(partialMotion: Partial<Motion>): Promise<CreateResponse> {
-        const result = await (this.repo.createStatuteAmendment(partialMotion).resolve() as Promise<CreateResponse[]>);
-        return result[0];
-    }
 }

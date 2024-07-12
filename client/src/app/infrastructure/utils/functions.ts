@@ -5,11 +5,11 @@ import { Decimal, Id } from '../../domain/definitions/key-types';
 export function toBase64(data: File | Blob): Promise<string> {
     return new Promise<string>(async (resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => {
+        reader.onload = (): void => {
             const resultStr: string = reader.result as string;
             resolve(resultStr.split(`,`)[1]);
         };
-        reader.onerror = error => {
+        reader.onerror = (error): void => {
             reject(error);
         };
         reader.readAsDataURL(data);
@@ -54,7 +54,7 @@ export function toBoolean(value: string): boolean {
     return VERBOSE_TRUE_FIELDS.includes(value.toLowerCase());
 }
 
-export const VoidFn = () => {};
+export const VoidFn = (): void => {};
 
 const AMOUNT_DECIMAL_PLACES = 6;
 

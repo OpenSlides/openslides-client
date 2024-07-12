@@ -4,7 +4,7 @@
         <h2>{{ 'Import topics' | translate }}</h2>
     </div>
 
-    <div class="menu-slot">
+    <ng-container class="menu-slot">
         <button *ngIf="canImport" mat-button (click)="doImport()">
             <span class="upper">{{ 'Import' | translate }}</span>
         </button>
@@ -21,7 +21,7 @@
             </mat-icon>
         </div>
         <os-spinner *ngIf="isImporting" [width]="30" [height]="30" [showText]="false"></os-spinner>
-    </div>
+    </ng-container>
 </os-head-bar>
 
 <os-backend-import-list
@@ -31,31 +31,28 @@
     modelName="Topic"
     (selectedTabChanged)="selectedTabIndex = $event"
 >
-    <mat-tab label="{{ 'Text import' | translate }}" osImportListFirstTab>
-        <ng-template matTabLabel>{{ 'Text import' | translate }}</ng-template>
-        <ng-template matTabContent>
-            <div [formGroup]="textAreaForm">
-                <div>
-                    <div>{{ 'Paste/write your topics in this textbox.' | translate }}</div>
-                    <div>{{ 'Keep each item in a single line.' | translate }}</div>
-                </div>
-                <mat-form-field>
-                    <mat-label>{{ 'Insert topics here' | translate }}</mat-label>
-                    <textarea
-                        matInput
-                        osAutofocus
-                        formControlName="inputtext"
-                        cdkTextareaAutosize
-                        cdkAutosizeMinRows="3"
-                        cdkAutosizeMaxRows="10"
-                    ></textarea>
-                </mat-form-field>
-            </div>
+    <ng-template [label]="'Text import' | translate" osImportListFirstTab>
+        <div [formGroup]="textAreaForm">
             <div>
-                <button mat-button color="accent" (click)="parseTextArea()">
-                    <span>{{ 'Preview' | translate }}</span>
-                </button>
+                <div>{{ 'Paste/write your topics in this textbox.' | translate }}</div>
+                <div>{{ 'Keep each item in a single line.' | translate }}</div>
             </div>
-        </ng-template>
-    </mat-tab>
+            <mat-form-field>
+                <mat-label>{{ 'Insert topics here' | translate }}</mat-label>
+                <textarea
+                    matInput
+                    osAutofocus
+                    formControlName="inputtext"
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows="3"
+                    cdkAutosizeMaxRows="10"
+                ></textarea>
+            </mat-form-field>
+        </div>
+        <div>
+            <button mat-button color="accent" (click)="parseTextArea()">
+                <span>{{ 'Preview' | translate }}</span>
+            </button>
+        </div>
+    </ng-template>
 </os-backend-import-list>

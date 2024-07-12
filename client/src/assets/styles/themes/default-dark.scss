@@ -2,6 +2,7 @@
 
 @import '../color-palettes/os-dynamic-palette';
 @import '../color-palettes/os-background';
+@import './typography.scss';
 
 $openslides-primary: mat.define-palette($dynamic-theme-primary);
 $openslides-accent: mat.define-palette($dynamic-theme-accent);
@@ -13,6 +14,7 @@ $openslides-dark-theme: mat.define-dark-theme((
         accent: $openslides-accent,
         warn: $openslides-warn,
     ),
+    typography: $default-typography
 ));
 
 $os-outline: mat.get-color-from-palette(mat.$grey-palette, 300);
@@ -22,7 +24,7 @@ $os-outline: mat.get-color-from-palette(mat.$grey-palette, 300);
  *  The components will get a value from this map.
  */
 $background-dark: map-get($openslides-dark-theme, background);
-$background-dark: map_merge(
+$background-dark: map-merge(
     $background-dark,
     (
         background: $os-background

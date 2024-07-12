@@ -6,7 +6,7 @@
     <div class="element-name" *ngIf="descriptor">
         {{ descriptor.getDialogTitle() }}
     </div>
-    <div class="content-wrapper">
+    <div class="content-wrapper" *ngIf="projectorSelectable">
         <div
             class="projectors"
             *ngFor="let projector of projectors"
@@ -15,11 +15,13 @@
             <mat-checkbox [checked]="isProjectorSelected(projector)" (change)="toggleProjector(projector)">
                 {{ projector.name }}
             </mat-checkbox>
-            <span *ngIf="isProjectedOn(projector)" class="right">
-                <mat-icon matTooltip="{{ 'Is already projected' | translate }}" matTooltipPosition="above">
-                    videocam
-                </mat-icon>
-            </span>
+            <mat-icon
+                *ngIf="isProjectedOn(projector)"
+                matTooltip="{{ 'Is already projected' | translate }}"
+                matTooltipPosition="above"
+            >
+                videocam
+            </mat-icon>
         </div>
     </div>
 
@@ -27,7 +29,7 @@
 
     <div *ngIf="options && options.length">
         <div *ngFor="let option of options">
-            <div *ngIf="isDecisionOption(option)" class="spacer-top-10 spacer-left-10">
+            <div *ngIf="isDecisionOption(option)">
                 <mat-checkbox
                     [checked]="optionValues[option.key]"
                     (change)="optionValues[option.key] = !optionValues[option.key]"
@@ -49,6 +51,7 @@
 
 <mat-dialog-actions>
     <button mat-button osAutofocus (click)="onProject()" color="accent">{{ 'Project' | translate }}</button>
-    <button mat-button (click)="onAddToPreview()">{{ 'Add to queue' | translate }}</button>
+    <button mat-button *ngIf="projectorSelectable" (click)="onAddToPreview()">{{ 'Add to queue' | translate }}</button>
+    <button mat-button *ngIf="!projectorSelectable" (click)="onHide()">{{ 'Hide' | translate }}</button>
     <button mat-button (click)="onCancel()">{{ 'Cancel' | translate }}</button>
 </mat-dialog-actions>

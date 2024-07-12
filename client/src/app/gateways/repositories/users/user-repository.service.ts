@@ -107,7 +107,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `is_physical_person`,
             `is_active`,
             `meeting_ids`,
-            `saml_id`
+            `saml_id`,
+            `member_number`
         ];
 
         const filterableListFields: TypedFieldset<User> = listFields.concat([
@@ -250,6 +251,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             first_name: partialUser.first_name,
             last_name: partialUser.last_name,
             username: partialUser.username,
+            member_number: partialUser.member_number,
             is_active: partialUser.is_active,
             is_physical_person: partialUser.is_physical_person,
             default_password: partialUser.default_password,
@@ -263,7 +265,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return partialPayload;
     }
 
-    public getTitle = (viewUser: ViewUser) => this.getFullName(viewUser);
+    public getTitle = (viewUser: ViewUser): string => this.getFullName(viewUser);
 
     /**
      * getter for the name
@@ -327,11 +329,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     }
 
     private getLevelAndNumber(user: LevelAndNumberInformation): string {
-        if (user.number()) {
-            return `${this.translate.instant(`No.`)} ${user.number()}`;
-        } else {
-            return ``;
+        const strings: string[] = [];
+        if (user.structureLevels()) {
+            strings.push(user.structureLevels());
         }
+        if (user.number()) {
+            strings.push(`${this.translate.instant(`No.`)} ${user.number()}`);
+        }
+        return strings.join(` · `);
     }
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Participants` : `Participant`);
@@ -503,6 +508,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction<BackendImportRawPreview | void>(UserAction.PARTICIPANT_IMPORT, payload);
     }
 
+    public mergeTogether(payload: { id: number; user_ids: number[] }[]): Action<void> {
+        return this.createAction(UserAction.MERGE_TOGETHER, payload);
+    }
+
     private sanitizePayload(payload: any): any {
         const temp = { ...payload };
         for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field))) {
@@ -529,7 +538,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `comment`,
             `about_me`,
             `number`,
-            `structure_level`
+            `structure_level`,
+            `member_number`
         ];
         return fields.includes(field);
     }

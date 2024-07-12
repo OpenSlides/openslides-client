@@ -63,7 +63,7 @@ export class AuthCheckService {
 
         await this.operator.ready;
         let meeting = this.activeMeeting.meeting;
-        if (!Number.isNaN(Number(meetingIdString)) && meetingIdString > 0) {
+        if (!Number.isNaN(Number(meetingIdString)) && +meetingIdString > 0) {
             await this.fetchMeetingIfNotExists(+meetingIdString);
             meeting = this.meetingRepo.getViewModel(+meetingIdString);
         }

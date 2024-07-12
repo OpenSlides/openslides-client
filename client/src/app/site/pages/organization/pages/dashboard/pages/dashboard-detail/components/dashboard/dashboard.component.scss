@@ -119,6 +119,7 @@ os-dashboard {
 
     .show-committee-icon,
     .show-committee-link {
+        color: inherit;
         @media (max-width: 960px) and (min-width: 701px) {
             display: inline-block !important;
             padding-right: 20px;

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Optional, Self, ViewEncapsulation } from '@angular/core';
-import { NgControl, UntypedFormControl } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 
 import { BaseDatepickerComponent } from '../base-datepicker/base-datepicker.component';
@@ -18,10 +18,6 @@ export class DatepickerComponent extends BaseDatepickerComponent {
     }
 
     public override contentForm: UntypedFormControl;
-
-    public constructor(element: ElementRef<HTMLElement>, @Optional() @Self() ngControl: NgControl) {
-        super(element, ngControl);
-    }
 
     protected createForm(): UntypedFormControl {
         return this.fb.control(null);

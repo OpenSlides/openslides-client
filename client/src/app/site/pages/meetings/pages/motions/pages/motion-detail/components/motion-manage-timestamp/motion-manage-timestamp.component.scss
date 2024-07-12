@@ -1,3 +1,5 @@
-.small-button {
-    height: 20px;
+@import 'src/assets/styles/mixins/button.scss';
+
+.mat-mdc-icon-button.small-button {
+    @include custom-size-button(20px, 14px);
 }

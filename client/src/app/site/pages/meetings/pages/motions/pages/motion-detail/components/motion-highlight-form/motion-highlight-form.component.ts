@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Subscription, takeUntil, timer } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -80,10 +80,6 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
             return false;
         }
         return true;
-    }
-
-    public get isStatuteAmendment(): boolean {
-        return (!!this.isExisting && this.motion?.isStatuteAmendment()) || false;
     }
 
     public get isParagraphBasedAmendment(): boolean {

@@ -8,6 +8,7 @@ import { CellFillingDefinition, XlsxExportService } from 'src/app/gateways/expor
 import { reconvertChars, stripHtmlTags } from 'src/app/infrastructure/utils';
 
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
+import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers';
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { InfoToExport, sortMotionPropertyList } from '../definitions';
@@ -83,6 +84,9 @@ export class MotionXlsxExportService {
         const properties: string[] = infoToExport.includes(`speakers`)
             ? sortMotionPropertyList([`number`, `title`].concat(infoToExport)).concat(`speakers`)
             : sortMotionPropertyList([`number`, `title`].concat(infoToExport));
+        if (infoToExport.includes(`working_group_speakers`)) {
+            properties.push(`working_group_speakers`);
+        }
 
         const worksheet = workbook.addWorksheet(this.translate.instant(`Motions`), {
             pageSetup: {
@@ -113,6 +117,9 @@ export class MotionXlsxExportService {
                         break;
                     case `speakers`:
                         propertyHeader = _(`Open requests to speak`);
+                        break;
+                    case `working_group_speakers`:
+                        propertyHeader = _(`Spokesperson`);
                         break;
                     default:
                         propertyHeader = property.charAt(0).toUpperCase() + property.slice(1).replace(`_`, ` `);
@@ -164,6 +171,10 @@ export class MotionXlsxExportService {
                             return this.motionService.getExtendedStateLabel(motion);
                         case `recommendation`:
                             return this.motionService.getExtendedRecommendationLabel(motion);
+                        case `working_group_speakers`:
+                            return (motionProp as Array<ViewMotionWorkingGroupSpeaker>)
+                                .sort((a, b) => a.weight - b.weight)
+                                .join(`, `);
                         default:
                             return motionProp.toString();
                     }

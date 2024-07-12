@@ -99,7 +99,7 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
                 this.activeMeeting.meetingIdObservable.pipe(filter(id => id !== undefined))
             );
             const meetings =
-                this.operator.hasPerms(Permission.motionCanManage) && !!meetingId
+                this.operator.hasPerms(Permission.motionCanManageMetadata) && !!meetingId
                     ? await this.presenter.call({ meeting_id: meetingId })
                     : [];
             this._forwardingMeetings = meetings;
@@ -109,9 +109,9 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
                     return {
                         id: committee.id,
                         name: committee.name,
-                        getTitle: () => committee.name,
-                        getListTitle: () => ``,
-                        toString: () => committee.name
+                        getTitle: (): string => committee.name,
+                        getListTitle: (): string => ``,
+                        toString: (): string => committee.name
                     };
                 })
             );
