@@ -1,45 +1,52 @@
-<ng-container *ngIf="projections$ | async as projections">
-    <mat-expansion-panel *ngIf="projections.length">
-        <mat-expansion-panel-header>
-            <span>{{ 'Media file' | translate }}</span>
-        </mat-expansion-panel-header>
-        <div *ngFor="let projection of projections">
-            <i>{{ getMediafile(projection)!.getTitle() }}</i>
-            <div *ngIf="getMediafile(projection)!.isImage()">
-                <button
-                    type="button"
-                    *ngIf="!isFullscreen(projection)"
-                    mat-icon-button
-                    (click)="fullscreen(projection)"
-                >
-                    <mat-icon>check_box_outline_blank</mat-icon>
-                </button>
-                <button type="button" *ngIf="isFullscreen(projection)" mat-icon-button (click)="fullscreen(projection)">
-                    <mat-icon>check_box</mat-icon>
-                </button>
-                <span>{{ 'fullscreen' | translate }}</span>
-            </div>
-            <div *ngIf="getMediafile(projection)!.isPdf()">
-                <button
-                    type="button"
-                    mat-icon-button
-                    (click)="pdfBackward(projection)"
-                    [disabled]="getPage(projection) <= 1"
-                >
-                    <mat-icon>arrow_back</mat-icon>
-                </button>
-                <button
-                    type="button"
-                    mat-icon-button
-                    (click)="pdfForward(projection)"
-                    [disabled]="getPage(projection) >= getPagesAmountFor(projection)"
-                >
-                    <mat-icon>arrow_forward</mat-icon>
-                </button>
-                <!-- TODO: Use form for page number; use pdfSetPage then. Do not forget to include a range check in pdfSetPage. -->
-                <span>{{ 'Page' | translate }}</span>
-                {{ getPage(projection) }}/{{ getPagesAmountFor(projection) }}
-            </div>
-        </div>
-    </mat-expansion-panel>
-</ng-container>
+@if (projections$ | async; as projections) {
+    @if (projections.length) {
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <span>{{ 'Media file' | translate }}</span>
+            </mat-expansion-panel-header>
+            @for (projection of projections; track projection) {
+                <div>
+                    <i>{{ getMediafile(projection)!.getTitle() }}</i>
+                    @if (getMediafile(projection)!.isImage()) {
+                        <div>
+                            @if (!isFullscreen(projection)) {
+                                <button mat-icon-button type="button" (click)="fullscreen(projection)">
+                                    <mat-icon>check_box_outline_blank</mat-icon>
+                                </button>
+                            }
+                            @if (isFullscreen(projection)) {
+                                <button mat-icon-button type="button" (click)="fullscreen(projection)">
+                                    <mat-icon>check_box</mat-icon>
+                                </button>
+                            }
+                            <span>{{ 'fullscreen' | translate }}</span>
+                        </div>
+                    }
+                    @if (getMediafile(projection)!.isPdf()) {
+                        <div>
+                            <button
+                                mat-icon-button
+                                type="button"
+                                [disabled]="getPage(projection) <= 1"
+                                (click)="pdfBackward(projection)"
+                            >
+                                <mat-icon>arrow_back</mat-icon>
+                            </button>
+                            <button
+                                mat-icon-button
+                                type="button"
+                                [disabled]="getPage(projection) >= getPagesAmountFor(projection)"
+                                (click)="pdfForward(projection)"
+                            >
+                                <mat-icon>arrow_forward</mat-icon>
+                            </button>
+                            <!-- TODO: Use form for page number; use pdfSetPage then. Do not forget to include a range check in pdfSetPage. -->
+                            <span>{{ 'Page' | translate }}</span>
+                            {{ getPage(projection) }}/{{ getPagesAmountFor(projection) }}
+                        </div>
+                    }
+                </div>
+            }
+        </mat-expansion-panel>
+    }
+}

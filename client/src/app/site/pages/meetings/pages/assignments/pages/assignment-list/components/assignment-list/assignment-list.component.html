@@ -1,8 +1,8 @@
 <os-head-bar
     [hasMainButton]="canManageAssignments"
     [mainActionTooltip]="'New election' | translate"
-    (mainEvent)="onPlusButton()"
     [multiSelectMode]="isMultiSelect"
+    (mainEvent)="onPlusButton()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -10,7 +10,7 @@
     </div>
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="assignmentMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="assignmentMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -23,26 +23,28 @@
 </os-head-bar>
 
 <os-projectable-list
-    [listObservableProvider]="repo"
-    [filterService]="filterService"
-    [sortService]="sortService"
     [filterProps]="filterProps"
-    [multiSelect]="isMultiSelect"
+    [filterService]="filterService"
     [hiddenInMobile]="getColumnsHiddenInMobile()"
+    [listObservableProvider]="repo"
+    [multiSelect]="isMultiSelect"
+    [sortService]="sortService"
     [(selectedRows)]="selectedRows"
 >
     <!-- Title -->
     <div *osScrollingTableCell="'title'; row as assignment; rowContext as rowContext" class="cell-slot fill">
-        <os-detail-view-navigator [model]="assignment" *ngIf="!isMultiSelect"></os-detail-view-navigator>
+        @if (!isMultiSelect) {
+            <os-detail-view-navigator [model]="assignment"></os-detail-view-navigator>
+        }
         <div class="innerTable overflow-hidden">
             <div class="title-line ellipsis-overflow">
                 {{ assignment.getListTitle() }}
             </div>
-            <mat-chip-list class="ellipsis-overflow" *ngIf="vp.isMobile">
-                <mat-chip color="primary" selected>
+            @if (vp.isMobile) {
+                <mat-basic-chip class="bg-primary ellipsis-overflow">
                     {{ assignment.phaseString | translate }}
-                </mat-chip>
-            </mat-chip-list>
+                </mat-basic-chip>
+            }
         </div>
     </div>
 
@@ -51,20 +53,16 @@
         *osScrollingTableCell="'phase'; row as assignment; config: { width: 180 }"
         class="cell-slot fill mat-chip-wrapper"
     >
-        <mat-chip-list>
-            <mat-chip color="primary" selected>
-                {{ assignment.phaseString | translate }}
-            </mat-chip>
-        </mat-chip-list>
+        <mat-basic-chip class="bg-primary">
+            {{ assignment.phaseString | translate }}
+        </mat-basic-chip>
     </div>
 
     <!-- Candidates -->
     <div *osScrollingTableCell="'candidates'; row as assignment; config: { width: 40 }" class="cell-slot fill">
-        <mat-chip-list>
-            <mat-chip color="accent" selected matTooltip="{{ 'Number of candidates' | translate }}">
-                {{ getCandidateAmount(assignment) }}
-            </mat-chip>
-        </mat-chip-list>
+        <mat-basic-chip class="bg-accent" matTooltip="{{ 'Number of candidates' | translate }}">
+            {{ getCandidateAmount(assignment) }}
+        </mat-basic-chip>
     </div>
 
     <!-- Menu -->
@@ -72,9 +70,9 @@
         <button
             mat-icon-button
             [disabled]="isMultiSelect"
+            [matMenuTriggerData]="{ assignment: assignment }"
             [matMenuTriggerFor]="singleItemMenu"
             (click)="$event.stopPropagation()"
-            [matMenuTriggerData]="{ assignment: assignment }"
         >
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -83,56 +81,59 @@
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
-    <ng-template matMenuContent let-assignment="assignment">
-        <os-projector-button [object]="assignment" [menuItem]="true"></os-projector-button>
-        <os-speaker-button [object]="assignment" [menuItem]="true"></os-speaker-button>
+    <ng-template let-assignment="assignment" matMenuContent>
+        <os-projector-button [menuItem]="true" [object]="assignment"></os-projector-button>
+        <os-speaker-button [menuItem]="true" [object]="assignment"></os-speaker-button>
     </ng-template>
 </mat-menu>
 
 <mat-menu #assignmentMenu="matMenu">
-    <div *ngIf="!isMultiSelect">
-        <button mat-menu-item *osPerms="permission.assignmentCanManage" (click)="toggleMultiSelect()">
-            <mat-icon>library_add</mat-icon>
-            <span>{{ 'Multiselect' | translate }}</span>
-        </button>
-        <button mat-menu-item (click)="downloadAssignmentButton()">
-            <mat-icon>archive</mat-icon>
-            <span>{{ 'Export as PDF' | translate }}</span>
-        </button>
-        <div *osPerms="permission.meetingCanManageSettings">
+    @if (!isMultiSelect) {
+        <div>
+            <button *osPerms="permission.assignmentCanManage" mat-menu-item (click)="toggleMultiSelect()">
+                <mat-icon>library_add</mat-icon>
+                <span>{{ 'Multiselect' | translate }}</span>
+            </button>
+            <button mat-menu-item (click)="downloadAssignmentButton()">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export as PDF' | translate }}</span>
+            </button>
+            <div *osPerms="permission.meetingCanManageSettings">
+                <mat-divider></mat-divider>
+                <!-- Settings -->
+                <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'elections']">
+                    <mat-icon>settings</mat-icon>
+                    <span>{{ 'Settings' | translate }}</span>
+                </button>
+            </div>
+        </div>
+    }
+    @if (isMultiSelect) {
+        <div>
+            <button mat-menu-item (click)="selectAll()">
+                <mat-icon>done_all</mat-icon>
+                <span>{{ 'Select all' | translate }}</span>
+            </button>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+                <mat-icon>clear</mat-icon>
+                <span>{{ 'Deselect all' | translate }}</span>
+            </button>
             <mat-divider></mat-divider>
-            <!-- Settings -->
-            <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'elections']">
-                <mat-icon>settings</mat-icon>
-                <span>{{ 'Settings' | translate }}</span>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadAssignmentButton(selectedRows)">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export selected elections' | translate }}</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button
+                *osPerms="permission.assignmentCanManage"
+                class="red-warning-text"
+                mat-menu-item
+                [disabled]="!selectedRows.length"
+                (click)="deleteSelected()"
+            >
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
             </button>
         </div>
-    </div>
-
-    <div *ngIf="isMultiSelect">
-        <button mat-menu-item (click)="selectAll()">
-            <mat-icon>done_all</mat-icon>
-            <span>{{ 'Select all' | translate }}</span>
-        </button>
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
-            <mat-icon>clear</mat-icon>
-            <span>{{ 'Deselect all' | translate }}</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadAssignmentButton(selectedRows)">
-            <mat-icon>archive</mat-icon>
-            <span>{{ 'Export selected elections' | translate }}</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button
-            mat-menu-item
-            class="red-warning-text"
-            *osPerms="permission.assignmentCanManage"
-            [disabled]="!selectedRows.length"
-            (click)="deleteSelected()"
-        >
-            <mat-icon>delete</mat-icon>
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
-    </div>
+    }
 </mat-menu>

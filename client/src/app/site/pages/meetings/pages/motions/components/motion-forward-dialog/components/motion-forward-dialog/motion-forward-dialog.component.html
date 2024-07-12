@@ -2,102 +2,136 @@
     {{ data.motion.length > 1 ? 'Forward motions' : ('Forwarding of motion' | translate) }}
 </div>
 <mat-dialog-content>
-    <div class="state-margin" *ngIf="data.motion.length === 1">
-        {{ 'State' | translate }}:
-        <b>{{ data.motion[0].state.name }}</b>
-    </div>
+    @if (data.motion.length === 1) {
+        <div class="state-margin">
+            {{ 'State' | translate }}:
+            <b>{{ data.motion[0].state.name }}</b>
+        </div>
+    }
     <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting']">
         <!-- Label in front-->
         <ng-container matColumnDef="label">
-            <td mat-cell *matCellDef="let rowName">
-                <span *ngIf="rowName === 'motion_version'">{{ 'Motion version' | translate }}</span>
-                <span *ngIf="rowName === 'submitter'">{{ 'Submitter' | translate }}</span>
-                <span *ngIf="rowName === 'identifier'">{{ 'Identifier' | translate }}</span>
-                <span *ngIf="rowName === 'meeting'">{{ 'Meetings' | translate }}</span>
+            <td *matCellDef="let rowName" mat-cell>
+                @if (rowName === 'motion_version') {
+                    <span>{{ 'Motion version' | translate }}</span>
+                }
+                @if (rowName === 'submitter') {
+                    <span>{{ 'Submitter' | translate }}</span>
+                }
+                @if (rowName === 'identifier') {
+                    <span>{{ 'Identifier' | translate }}</span>
+                }
+                @if (rowName === 'meeting') {
+                    <span>{{ 'Meetings' | translate }}</span>
+                }
             </td>
         </ng-container>
 
         <!-- radio checks -->
         <ng-container matColumnDef="radio">
-            <td mat-cell *matCellDef="let rowName">
-                <span *ngIf="rowName === 'motion_version'">
-                    <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalVersion">
-                        <mat-radio-button value="true">
-                            {{ 'Original motion text with amendments/change recommendations' | translate }}
-                        </mat-radio-button>
-                        <mat-radio-button value="false">
-                            {{ 'Final version' | translate }}
-                        </mat-radio-button>
-                    </mat-radio-group>
-                </span>
-                <span *ngIf="rowName === 'submitter'">
-                    <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalSubmitter">
-                        <mat-radio-button value="true">
-                            {{ 'original submitter name' | translate }}
-                            <span *ngIf="data.motion.length === 1 && data.motion[0].submitterNames.length > 0">
-                                <os-comma-separated-listing [list]="data.motion[0].submitterNames">
-                                    <ng-template let-submitter>
-                                        <b>{{ submitter }}</b>
-                                    </ng-template>
-                                </os-comma-separated-listing>
-                            </span>
-                            <span *ngIf="data.motion.length === 1 && data.motion[0].submitterNames.length === 0">
-                                <b>{{ showActiveMeetingName() }}</b>
-                            </span>
-                        </mat-radio-button>
-                        <mat-radio-button value="false">
-                            {{ 'committee name' | translate }}
-                            <span *ngIf="activeMeetingCommitteeName">
-                                <b>({{ activeMeetingCommitteeName }})</b>
-                            </span>
-                        </mat-radio-button>
-                    </mat-radio-group>
-                </span>
-                <span *ngIf="rowName === 'identifier'">
-                    <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalNumber">
-                        <mat-radio-button value="true">
-                            {{ 'original identifier' | translate }}
-                            <span *ngIf="data.motion.length === 1">
-                                <b>{{ data.motion[0].number }}</b>
-                            </span>
-                        </mat-radio-button>
-                        <mat-radio-button value="false">
-                            {{ 'without identifier' | translate }}
-                        </mat-radio-button>
-                    </mat-radio-group>
-                </span>
-                <span class="motion-forward-meeting-list" *ngIf="rowName === 'meeting'">
-                    <ng-container *ngFor="let committee of committeesObservable | async">
-                        <div *ngIf="committee.meetings?.length">
-                            <h4>{{ committee.name }}</h4>
-                            <div *ngFor="let meeting of committee.meetings">
-                                <mat-checkbox
-                                    [disabled]="isActiveMeeting(meeting) || hasAlreadyBeenForwardedTo(meeting)"
-                                    [value]="meeting.id"
-                                    [(ngModel)]="checkboxStateMap[meeting.id]"
-                                    (change)="onChangeCheckbox($event)"
-                                >
-                                    {{ meeting.name }}
-                                    <span *ngIf="meeting.start_time || meeting.end_time">
-                                        &nbsp;&middot;&nbsp;
-                                        <os-meeting-time
-                                            [startTime]="meeting.start_time"
-                                            [endTime]="meeting.end_time"
-                                        ></os-meeting-time>
+            <td *matCellDef="let rowName" mat-cell>
+                @if (rowName === 'motion_version') {
+                    <span>
+                        <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalVersion">
+                            <mat-radio-button value="true">
+                                {{ 'Original motion text with amendments/change recommendations' | translate }}
+                            </mat-radio-button>
+                            <mat-radio-button value="false">
+                                {{ 'Final version' | translate }}
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </span>
+                }
+                @if (rowName === 'submitter') {
+                    <span>
+                        <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalSubmitter">
+                            <mat-radio-button value="true">
+                                {{ 'original submitter name' | translate }}
+                                @if (data.motion.length === 1 && data.motion[0].submitterNames.length > 0) {
+                                    <span>
+                                        <os-comma-separated-listing [list]="data.motion[0].submitterNames">
+                                            <ng-template let-submitter>
+                                                <b>{{ submitter }}</b>
+                                            </ng-template>
+                                        </os-comma-separated-listing>
                                     </span>
-                                </mat-checkbox>
-                            </div>
-                        </div>
-                    </ng-container>
-                </span>
+                                }
+                                @if (data.motion.length === 1 && data.motion[0].submitterNames.length === 0) {
+                                    <span>
+                                        <b>{{ showActiveMeetingName() }}</b>
+                                    </span>
+                                }
+                            </mat-radio-button>
+                            <mat-radio-button value="false">
+                                {{ 'committee name' | translate }}
+                                @if (activeMeetingCommitteeName) {
+                                    <span>
+                                        <b>({{ activeMeetingCommitteeName }})</b>
+                                    </span>
+                                }
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </span>
+                }
+                @if (rowName === 'identifier') {
+                    <span>
+                        <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalNumber">
+                            <mat-radio-button value="true">
+                                {{ 'original identifier' | translate }}
+                                @if (data.motion.length === 1) {
+                                    <span>
+                                        <b>{{ data.motion[0].number }}</b>
+                                    </span>
+                                }
+                            </mat-radio-button>
+                            <mat-radio-button value="false">
+                                {{ 'without identifier' | translate }}
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </span>
+                }
+                @if (rowName === 'meeting') {
+                    <span class="motion-forward-meeting-list">
+                        @for (committee of committeesObservable | async; track committee) {
+                            @if (committee.meetings?.length) {
+                                <div>
+                                    <h4>{{ committee.name }}</h4>
+                                    @for (meeting of committee.meetings; track meeting) {
+                                        <div>
+                                            <mat-checkbox
+                                                [disabled]="
+                                                    isActiveMeeting(meeting) || hasAlreadyBeenForwardedTo(meeting)
+                                                "
+                                                [value]="meeting.id"
+                                                [(ngModel)]="checkboxStateMap[meeting.id]"
+                                                (change)="onChangeCheckbox($event)"
+                                            >
+                                                {{ meeting.name }}
+                                                @if (meeting.start_time || meeting.end_time) {
+                                                    <span>
+                                                        &nbsp;&middot;&nbsp;
+                                                        <os-meeting-time
+                                                            [endTime]="meeting.end_time"
+                                                            [startTime]="meeting.start_time"
+                                                        ></os-meeting-time>
+                                                    </span>
+                                                }
+                                            </mat-checkbox>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </span>
+                }
             </td>
         </ng-container>
 
-        <tr mat-row *matRowDef="let myRowData; columns: ['label', 'radio']"></tr>
+        <tr *matRowDef="let myRowData; columns: ['label', 'radio']" mat-row></tr>
     </table>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button [disabled]="!selectedMeetings?.size" color="primary" (click)="onSaveClicked()">
+    <button color="primary" mat-button [disabled]="!selectedMeetings?.size" (click)="onSaveClicked()">
         {{ 'Forward' | translate }}
     </button>
     <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>

@@ -1,15 +1,19 @@
-<div class="poll-content" *ngIf="poll">
-    <small *ngIf="poll.entitled_groups && poll.type && poll.type !== 'analog'">
-        {{ 'Groups' | translate }}:
-
-        <os-comma-separated-listing [list]="poll.entitled_groups">
-            <ng-template let-group>{{ group.getTitle() }}</ng-template>
-        </os-comma-separated-listing>
-    </small>
-    <small>{{ '100% base' | translate }}: {{ poll.percentBaseVerbose | translate }}</small>
-
-    <!-- Poll backend duration type -->
-    <small *ngIf="poll.backend">
-        {{ 'Voting duration' | translate }}: {{ POLL_BACKEND_DURATION_LABEL[poll.backend] | translate }}
-    </small>
-</div>
+@if (poll) {
+    <div class="poll-content">
+        @if (poll.entitled_groups && poll.type && poll.type !== 'analog') {
+            <small>
+                {{ 'Groups' | translate }}:
+                <os-comma-separated-listing [list]="poll.entitled_groups">
+                    <ng-template let-group>{{ group.getTitle() }}</ng-template>
+                </os-comma-separated-listing>
+            </small>
+        }
+        <small>{{ '100% base' | translate }}: {{ poll.percentBaseVerbose | translate }}</small>
+        <!-- Poll backend duration type -->
+        @if (poll.backend) {
+            <small>
+                {{ 'Voting duration' | translate }}: {{ POLL_BACKEND_DURATION_LABEL[poll.backend] | translate }}
+            </small>
+        }
+    </div>
+}

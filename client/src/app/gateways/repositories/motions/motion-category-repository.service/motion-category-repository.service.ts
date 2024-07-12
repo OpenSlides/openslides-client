@@ -52,12 +52,12 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
         };
     }
 
-    public getTitle = (viewMotionCategory: ViewMotionCategory) =>
+    public getTitle = (viewMotionCategory: ViewMotionCategory): string =>
         viewMotionCategory.prefix
             ? viewMotionCategory.prefix + ` - ` + viewMotionCategory.name
             : viewMotionCategory.name;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Categories` : `Category`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Categories` : `Category`);
 
     /**
      * Updates a categories numbering.

@@ -67,7 +67,7 @@ module.exports = {
                 '@typescript-eslint/adjacent-overload-signatures': ['error'],
                 '@typescript-eslint/ban-types': ['error'],
                 '@typescript-eslint/explicit-member-accessibility': ['error'],
-                '@typescript-eslint/explicit-function-return-type': ['warn'],
+                '@typescript-eslint/explicit-function-return-type': ['error'],
 
                 'jsdoc/require-example': ['off'],
                 'jsdoc/newline-after-description': ['off'],
@@ -80,7 +80,10 @@ module.exports = {
                 '@typescript-eslint/ban-ts-comment': ['warn'],
                 '@typescript-eslint/no-explicit-any': ['off'],
                 '@typescript-eslint/no-non-null-assertion': ['off'],
-                'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }]
+                'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }],
+
+                // Currently used by view models
+                '@typescript-eslint/no-unsafe-declaration-merging': ['off']
             }
         },
         {
@@ -98,11 +101,15 @@ module.exports = {
                 'plugin:@angular-eslint/template/accessibility'
             ],
             rules: {
+                '@angular-eslint/template/attributes-order': ['error', {
+                    alphabetical: true
+                }],
                 // Should be switched to error
                 '@angular-eslint/template/click-events-have-key-events': ['warn'],
                 '@angular-eslint/template/interactive-supports-focus': ['warn'],
                 '@angular-eslint/template/elements-content': ['warn'],
-                '@angular-eslint/template/alt-text': ['warn']
+                '@angular-eslint/template/alt-text': ['warn'],
+                '@angular-eslint/template/prefer-control-flow': ['warn']
             }
         },
         {

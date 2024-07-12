@@ -207,7 +207,10 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
     private _requiredFields: string[] = [];
     private _defaultColumns: ImportListHeaderDefinition[] = [];
 
-    public constructor(private host: ElementRef<HTMLElement>, private dialog: MatDialog) {}
+    public constructor(
+        private host: ElementRef<HTMLElement>,
+        private dialog: MatDialog
+    ) {}
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)

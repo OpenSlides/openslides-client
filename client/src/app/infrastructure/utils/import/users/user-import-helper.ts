@@ -84,7 +84,7 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
         this._useDefault = config.useDefault;
         this._importedAs = config.importedAs;
         this._userSearchService = config.searchService;
-        this._mapPropertyToFn = config.mapPropertyToFn || ((item, ids) => (item[this._property] = ids as any));
+        this._mapPropertyToFn = config.mapPropertyToFn || ((item, ids): any => (item[this._property] = ids as any));
     }
 
     public async onBeforeFind(allImportModels: ImportModel<Model>[]): Promise<void> {

@@ -77,7 +77,7 @@ export function ValidateDtoFor(fnName: string, dataArgumentIndex = 0): any {
     return (_: Constructable, methodName: string, descriptor: PropertyDescriptor) => {
         const fn = descriptor.value;
         const description = DtoContainer.getClassDescriptionFor(fnName);
-        descriptor.value = function (...args: any[]) {
+        descriptor.value = function (...args: any[]): any {
             const data = args[dataArgumentIndex]; // Suppose that the data is the first argument
             const payload: any = {};
             for (const propertyName of Object.keys(description)) {

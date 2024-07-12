@@ -18,9 +18,9 @@ export class MotionChangeRecommendationRepositoryService extends BaseMeetingRela
         super(repositoryServiceCollector, MotionChangeRecommendation);
     }
 
-    public getTitle = () => this.getVerboseName();
+    public getTitle = (): string => this.getVerboseName();
 
-    public getVerboseName = (plural = false) =>
+    public getVerboseName = (plural = false): string =>
         this.translate.instant(plural ? `Change recommendations` : `Change recommendation`);
 
     public create(model: Partial<MotionChangeRecommendation>, firstLine = 1): Promise<Identifiable> {

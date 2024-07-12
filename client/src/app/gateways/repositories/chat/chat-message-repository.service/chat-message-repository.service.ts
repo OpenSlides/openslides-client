@@ -19,8 +19,8 @@ export class ChatMessageRepositoryService extends BaseMeetingRelatedRepository<V
         super(repositoryServiceCollector, ChatMessage);
     }
 
-    public getVerboseName = (plural?: boolean) => (plural ? `Chat messages` : `Chat message`);
-    public getTitle = () => `No name`;
+    public getVerboseName = (plural?: boolean): string => (plural ? `Chat messages` : `Chat message`);
+    public getTitle = (): string => `No name`;
 
     public create(...data: any[]): Promise<Identifiable[]> {
         const payload = data.map(partialChatMessage => partialChatMessage);

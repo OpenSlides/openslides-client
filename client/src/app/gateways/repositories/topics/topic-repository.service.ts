@@ -50,9 +50,9 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
         return this.createAction<BackendImportRawPreview | void>(TopicAction.IMPORT, payload);
     }
 
-    public getTitle = (topic: ViewTopic) => topic.title;
+    public getTitle = (topic: ViewTopic): string => topic.title;
 
-    public override getListTitle = (topic: ViewTopic) => {
+    public override getListTitle = (topic: ViewTopic): string => {
         if (topic.agenda_item && topic.agenda_item.item_number) {
             return `${topic.agenda_item.item_number} · ${topic.title}`;
         } else {
@@ -60,11 +60,15 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
         }
     };
 
-    public override getAgendaListTitle = (topic: ViewTopic) => ({ title: this.getListTitle(topic) });
+    public override getAgendaListTitle = (
+        topic: ViewTopic
+    ): {
+        title: string;
+    } => ({ title: this.getListTitle(topic) });
 
-    public override getAgendaSlideTitle = (topic: ViewTopic) => this.getAgendaListTitle(topic).title;
+    public override getAgendaSlideTitle = (topic: ViewTopic): string => this.getAgendaListTitle(topic).title;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Topics` : `Topic`);
+    public getVerboseName = (plural = false): any => this.translate.instant(plural ? `Topics` : `Topic`);
 
     public duplicateTopics(...topicAgendaItems: ViewAgendaItem<ViewTopic>[]): Promise<Identifiable[]> {
         return this.create(...topicAgendaItems.map(topic => this.getDuplicatedTopic(topic)));

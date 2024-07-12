@@ -1,148 +1,183 @@
 <div class="settings-field-wrapper">
     <div class="form-item" [style.marginLeft.px]="setting.indentation * INDENTATION_PIXEL_AMOUNT">
-        <form class="settings-form-group" [formGroup]="form">
-            <mat-form-field *ngIf="!isExcludedType(setting.type!)" subscriptSizing="dynamic">
-                <!-- Decides which input-type to take (i.e) date, select, input) -->
-                <ng-container [ngSwitch]="setting.type">
-                    <ng-container *ngSwitchCase="'choice'">
-                        <ng-container *ngTemplateOutlet="select"></ng-container>
-                    </ng-container>
-                    <ng-container *ngSwitchCase="'groups'">
-                        <ng-container *ngTemplateOutlet="groups"></ng-container>
-                    </ng-container>
-                    <ng-container *ngSwitchDefault>
-                        <ng-container *ngTemplateOutlet="input"></ng-container>
-                    </ng-container>
-                </ng-container>
-
-                <!-- required for all kinds of input -->
-                <mat-label>{{ setting.label | translate }}</mat-label>
-                <span *ngIf="error" matSuffix>
-                    <mat-icon pull="right" class="red-warning-text">error</mat-icon>
-                </span>
-                <mat-error *ngIf="error">{{ error }}</mat-error>
-
-                <!-- templates for exchangeable inputs. Add more here if necessary -->
-
-                <ng-template #select ngProjectAs="mat-select">
-                    <mat-select formControlName="value" [errorStateMatcher]="matcher">
-                        <ng-container *ngIf="getRestrictedValue(setting.choices)">
-                            <mat-option
-                                *ngFor="let choice of getRestrictedValue(setting.choices) | keyvalue : keepEntryOrder"
-                                [value]="choice.key"
-                            >
-                                {{ choice.value | toString | translate }}
-                            </mat-option>
-                        </ng-container>
-                    </mat-select>
-                </ng-template>
-
-                <ng-template #groups ngProjectAs="os-list-search-selector">
-                    <os-list-search-selector
-                        formControlName="value"
-                        [multiple]="true"
-                        [showChips]="false"
-                        [errorStateMatcher]="matcher"
-                        [inputListValues]="groupObservable!"
-                        [shouldPropagateOnRegistering]="false"
-                        [sortFn]="sortFn"
-                    ></os-list-search-selector>
-                </ng-template>
-
-                <ng-template #input ngProjectAs="[matInput]">
-                    <input
-                        *ngIf="setting.type === 'email'"
-                        matInput
-                        osTrimOnPaste
-                        formControlName="value"
-                        [value]="internalValue"
-                        [errorStateMatcher]="matcher"
-                        [type]="formType(setting.type!)"
-                    />
-                    <input
-                        *ngIf="setting.type !== 'email'"
-                        matInput
-                        formControlName="value"
-                        [value]="internalValue"
-                        [errorStateMatcher]="matcher"
-                        [type]="formType(setting.type!)"
-                    />
-                </ng-template>
-
-                <mat-hint *ngIf="setting.helpText">{{ setting.helpText | translate }}</mat-hint>
-            </mat-form-field>
-
-            <div class="settings-form-group" *ngIf="isExcludedType(setting.type!)">
-                <div *ngIf="setting.type === 'boolean'">
-                    <mat-checkbox formControlName="value">{{ setting.label | translate }}</mat-checkbox>
-                    <div class="hint" *ngIf="setting.helpText">{{ setting.helpText | translate }}</div>
-                    <div class="error" *ngIf="error">{{ error }}</div>
-                </div>
-
-                <!-- textarea -->
-                <div *ngIf="setting.type === 'text'">
-                    <mat-form-field>
-                        <textarea formControlName="value" rows="10" matInput [value]="internalValue"></textarea>
+        <form
+            class="settings-form-group"
+            [formGroup]="form"
+            [ngClass]="{ 'checkbox-setting': setting.type === 'boolean' }"
+        >
+            @if (!isExcludedType(setting.type!)) {
+                <mat-form-field subscriptSizing="dynamic">
+                    <!-- Decides which input-type to take (i.e) date, select, input) -->
+                    @switch (setting.type) {
+                        @case ('choice') {
+                            <ng-container *ngTemplateOutlet="select"></ng-container>
+                        }
+                        @case ('groups') {
+                            <ng-container *ngTemplateOutlet="groups"></ng-container>
+                        }
+                        @default {
+                            <ng-container *ngTemplateOutlet="input"></ng-container>
+                        }
+                    }
+                    <!-- required for all kinds of input -->
+                    <mat-label>{{ setting.label | translate }}</mat-label>
+                    @if (error) {
                         <span matSuffix>
-                            <mat-icon pull="right" class="red-warning-text" *ngIf="updateSuccessIcon">
-                                check_circle
-                            </mat-icon>
+                            <mat-icon class="red-warning-text" pull="right">error</mat-icon>
                         </span>
-                    </mat-form-field>
-                </div>
-
-                <!-- date / datetime -->
-                <div *ngIf="setting.type === 'datetime' || setting.type === 'date'">
-                    <os-datepicker
-                        formControlName="date"
-                        [error]="error"
-                        [title]="setting.label"
-                        [hintText]="setting.helpText"
-                        [showUpdateSuccessIcon]="updateSuccessIcon"
-                    ></os-datepicker>
-                    <div class="datetimepicker-container">
-                        <mat-form-field *ngIf="setting.type === 'datetime'">
-                            <input matInput [format]="24" formControlName="time" [ngxTimepicker]="timepicker" />
-                            <div class="suffix-wrapper" matSuffix>
-                                <mat-icon class="red-warning-text" *ngIf="updateSuccessIcon">error</mat-icon>
-                                <ngx-material-timepicker-toggle [for]="timepicker">
-                                    <mat-icon ngxMaterialTimepickerToggleIcon>access_time</mat-icon>
-                                </ngx-material-timepicker-toggle>
+                    }
+                    @if (error) {
+                        <mat-error>{{ error }}</mat-error>
+                    }
+                    <!-- templates for exchangeable inputs. Add more here if necessary -->
+                    <ng-template #select ngProjectAs="mat-select">
+                        <mat-select formControlName="value" [errorStateMatcher]="matcher">
+                            @if (getRestrictedValue(setting.choices)) {
+                                @for (
+                                    choice of getRestrictedValue(setting.choices) | keyvalue: keepEntryOrder;
+                                    track choice
+                                ) {
+                                    <mat-option [value]="choice.key">
+                                        {{ choice.value | toString | translate }}
+                                    </mat-option>
+                                }
+                            }
+                        </mat-select>
+                    </ng-template>
+                    <ng-template #groups ngProjectAs="os-list-search-selector">
+                        <os-list-search-selector
+                            formControlName="value"
+                            [errorStateMatcher]="matcher"
+                            [inputListValues]="groupObservable!"
+                            [multiple]="true"
+                            [shouldPropagateOnRegistering]="false"
+                            [showChips]="false"
+                            [sortFn]="sortFn"
+                        ></os-list-search-selector>
+                    </ng-template>
+                    <ng-template #input ngProjectAs="[matInput]">
+                        @if (setting.type === 'email') {
+                            <input
+                                formControlName="value"
+                                matInput
+                                osTrimOnPaste
+                                [errorStateMatcher]="matcher"
+                                [type]="formType(setting.type!)"
+                                [value]="internalValue"
+                            />
+                        }
+                        @if (setting.type !== 'email') {
+                            <input
+                                formControlName="value"
+                                matInput
+                                [errorStateMatcher]="matcher"
+                                [type]="formType(setting.type!)"
+                                [value]="internalValue"
+                            />
+                        }
+                    </ng-template>
+                    @if (setting.helpText) {
+                        <mat-hint>{{ setting.helpText | translate }}</mat-hint>
+                    }
+                </mat-form-field>
+            }
+            @if (isExcludedType(setting.type!)) {
+                <div class="settings-form-group">
+                    @if (setting.type === 'boolean') {
+                        <div>
+                            <mat-checkbox formControlName="value">{{ setting.label | translate }}</mat-checkbox>
+                            @if (setting.helpText) {
+                                <div class="hint">{{ setting.helpText | translate }}</div>
+                            }
+                            @if (error) {
+                                <div class="error">{{ error }}</div>
+                            }
+                        </div>
+                    }
+                    <!-- textarea -->
+                    @if (setting.type === 'text') {
+                        <div>
+                            <mat-form-field>
+                                <textarea formControlName="value" matInput rows="10" [value]="internalValue"></textarea>
+                                <span matSuffix>
+                                    @if (updateSuccessIcon) {
+                                        <mat-icon class="red-warning-text" pull="right">check_circle</mat-icon>
+                                    }
+                                </span>
+                            </mat-form-field>
+                        </div>
+                    }
+                    <!-- date / datetime -->
+                    @if (setting.type === 'datetime' || setting.type === 'date') {
+                        <div>
+                            <os-datepicker
+                                formControlName="date"
+                                [error]="error"
+                                [hintText]="setting.helpText"
+                                [showUpdateSuccessIcon]="updateSuccessIcon"
+                                [title]="setting.label"
+                            ></os-datepicker>
+                            <div class="datetimepicker-container">
+                                @if (setting.type === 'datetime') {
+                                    <mat-form-field>
+                                        <input
+                                            formControlName="time"
+                                            matInput
+                                            [format]="24"
+                                            [ngxTimepicker]="timepicker"
+                                        />
+                                        <div class="suffix-wrapper" matSuffix>
+                                            @if (updateSuccessIcon) {
+                                                <mat-icon class="red-warning-text">error</mat-icon>
+                                            }
+                                            <ngx-material-timepicker-toggle [for]="timepicker">
+                                                <mat-icon ngxMaterialTimepickerToggleIcon>access_time</mat-icon>
+                                            </ngx-material-timepicker-toggle>
+                                        </div>
+                                        @if (error) {
+                                            <mat-error>{{ error }}</mat-error>
+                                        }
+                                        <ngx-material-timepicker #timepicker></ngx-material-timepicker>
+                                    </mat-form-field>
+                                }
                             </div>
-                            <mat-error *ngIf="error">{{ error }}</mat-error>
-                            <ngx-material-timepicker #timepicker></ngx-material-timepicker>
-                        </mat-form-field>
-                    </div>
+                        </div>
+                    }
+                    <!-- daterange -->
+                    @if (setting.type === 'daterange') {
+                        <div>
+                            <os-daterangepicker
+                                formControlName="daterange"
+                                [error]="error"
+                                [hintText]="setting.helpText"
+                                [showUpdateSuccessIcon]="updateSuccessIcon"
+                                [title]="setting.label"
+                            ></os-daterangepicker>
+                        </div>
+                    }
+                    <!-- The editor -->
+                    @if (setting.type === 'markupText') {
+                        <div>
+                            <h4>{{ setting.label | translate }}</h4>
+                            <os-editor formControlName="value" [customSettings]="getTinyMceSettings()"></os-editor>
+                            <span matSuffix>
+                                @if (updateSuccessIcon) {
+                                    <mat-icon class="red-warning-text" pull="right">error</mat-icon>
+                                }
+                            </span>
+                        </div>
+                    }
+                    <!-- Custom Translations -->
+                    @if (setting.type === 'translations' || setting.type === 'ranking') {
+                        <div>
+                            <os-allocation-list
+                                formControlName="value"
+                                [config]="getAllocationConfig(setting)"
+                            ></os-allocation-list>
+                        </div>
+                    }
                 </div>
-
-                <!-- daterange -->
-                <div *ngIf="setting.type === 'daterange'">
-                    <os-daterangepicker
-                        formControlName="daterange"
-                        [error]="error"
-                        [title]="setting.label"
-                        [hintText]="setting.helpText"
-                        [showUpdateSuccessIcon]="updateSuccessIcon"
-                    ></os-daterangepicker>
-                </div>
-
-                <!-- The editor -->
-                <div *ngIf="setting.type === 'markupText'">
-                    <h4>{{ setting.label | translate }}</h4>
-                    <os-editor formControlName="value" [customSettings]="getTinyMceSettings()"></os-editor>
-                    <span matSuffix>
-                        <mat-icon pull="right" class="red-warning-text" *ngIf="updateSuccessIcon">error</mat-icon>
-                    </span>
-                </div>
-
-                <!-- Custom Translations -->
-                <div *ngIf="setting.type === 'translations' || setting.type === 'ranking'">
-                    <os-allocation-list
-                        [config]="getAllocationConfig(setting)"
-                        formControlName="value"
-                    ></os-allocation-list>
-                </div>
-            </div>
+            }
         </form>
     </div>
 </div>
