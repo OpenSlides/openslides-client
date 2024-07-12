@@ -35,10 +35,7 @@ export class CountUsersStatisticsService {
 
     private _lastUpdated: number;
 
-    public constructor(
-        private http: HttpService,
-        private userRepo: UserRepositoryService
-    ) {}
+    public constructor(private http: HttpService, private userRepo: UserRepositoryService) {}
 
     /**
      * Starts counting users.

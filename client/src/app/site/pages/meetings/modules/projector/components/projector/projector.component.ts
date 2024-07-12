@@ -166,7 +166,7 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
                                 type: projection.type || ``,
                                 options: projection.options || {},
                                 ...(!!projection.content?.[`error`] && { error: projection.content[`error`] })
-                            }) as SlideData
+                            } as SlideData)
                     )
                 )
             )

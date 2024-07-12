@@ -12,10 +12,7 @@ import { PollServiceModule } from '../services/poll-service.module';
 
 @Injectable({ providedIn: PollServiceModule })
 export abstract class BasePollDialogService<V extends PollContentObject, C = any> {
-    public constructor(
-        private controller: PollControllerService,
-        private dialogService: MatDialog
-    ) {}
+    public constructor(private controller: PollControllerService, private dialogService: MatDialog) {}
 
     public async open(data: Partial<PollDialogData> | ViewPoll<V>): Promise<void> {
         const dialogRef = this.dialogService.open<C, Partial<PollDialogData> | ViewPoll<V>, PollDialogResult>(

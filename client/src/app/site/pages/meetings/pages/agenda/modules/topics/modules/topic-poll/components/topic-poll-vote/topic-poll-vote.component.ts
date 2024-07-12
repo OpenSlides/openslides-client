@@ -26,10 +26,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> {
 
     public override readonly noDataLabel = _(`Text for this option couldn't load.`);
 
-    public constructor(
-        private promptService: PromptService,
-        meetingSettingsService: MeetingSettingsService
-    ) {
+    public constructor(private promptService: PromptService, meetingSettingsService: MeetingSettingsService) {
         super(meetingSettingsService);
     }
 

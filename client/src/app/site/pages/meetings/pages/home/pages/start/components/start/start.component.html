@@ -16,24 +16,22 @@
 <mat-card class="spacer-bottom-60 os-card">
     <mat-card-content>
         @if (!isEditing) {
-            <div class="underlined-links" id="start-page-content">
-                @if (welcomeTitleObservable | async; as welcomeTitle) {
-                    <h1>{{ welcomeTitle }}</h1>
-                }
-                @if (welcomeTextObservable | async; as welcomeText) {
-                    <div [innerHTML]="welcomeText | trust: 'html'"></div>
-                }
-            </div>
-        }
-        @if (isEditing) {
-            <form [formGroup]="startForm">
-                <mat-form-field>
-                    <mat-label>{{ 'Front page title' | translate }}</mat-label>
-                    <input formControlName="welcome_title" matInput required />
-                    <mat-error>{{ 'The title is required' | translate }}</mat-error>
-                </mat-form-field>
-                <os-editor formControlName="welcome_text"></os-editor>
-            </form>
+        <div class="underlined-links" id="start-page-content">
+            @if (welcomeTitleObservable | async; as welcomeTitle) {
+            <h1>{{ welcomeTitle }}</h1>
+            } @if (welcomeTextObservable | async; as welcomeText) {
+            <div [innerHTML]="welcomeText | trust : 'html'"></div>
+            }
+        </div>
+        } @if (isEditing) {
+        <form [formGroup]="startForm">
+            <mat-form-field>
+                <mat-label>{{ 'Front page title' | translate }}</mat-label>
+                <input formControlName="welcome_title" matInput required />
+                <mat-error>{{ 'The title is required' | translate }}</mat-error>
+            </mat-form-field>
+            <os-editor formControlName="welcome_text"></os-editor>
+        </form>
         }
     </mat-card-content>
 </mat-card>

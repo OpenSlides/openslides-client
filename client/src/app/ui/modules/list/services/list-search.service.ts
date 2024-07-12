@@ -16,10 +16,7 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
 
     private readonly _outputSubject = new BehaviorSubject<V[]>([]);
 
-    public constructor(
-        private readonly filterProps: string[],
-        private readonly alsoFilterByProperties: string[]
-    ) {
+    public constructor(private readonly filterProps: string[], private readonly alsoFilterByProperties: string[]) {
         this._filterPropsMap = filterProps.mapToObject(prop => ({ [prop]: prop.split(`.`) }));
     }
 

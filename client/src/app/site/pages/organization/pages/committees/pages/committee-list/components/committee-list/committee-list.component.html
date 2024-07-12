@@ -36,22 +36,22 @@
 >
     <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
         @if (!isMultiSelect && committee.canAccess()) {
-            <a class="stretch-to-fill-parent" [routerLink]="committee.id"></a>
+        <a class="stretch-to-fill-parent" [routerLink]="committee.id"></a>
         }
         <div class="overflow-hidden">
             <div class="title-line ellipsis-overflow">
                 {{ committee.name }}
                 @if (committee.description?.trim()) {
-                    <div class="subtitle ellipsis-overflow">
-                        {{ committee.description }}
-                    </div>
+                <div class="subtitle ellipsis-overflow">
+                    {{ committee.description }}
+                </div>
                 }
             </div>
             <div class="ellipsis-overflow">
                 @for (tag of committee.organization_tags; track tag) {
-                    <os-chip [color]="tag.color">
-                        {{ tag.name }}
-                    </os-chip>
+                <os-chip [color]="tag.color">
+                    {{ tag.name }}
+                </os-chip>
                 }
             </div>
         </div>
@@ -59,32 +59,31 @@
     <div *osScrollingTableCell="'forwarding'; row as committee; config: { width: 70 }">
         <div class="forwarding-wrapper">
             @if (committee.forward_to_committees?.length && operator.isOrgaManager) {
-                <div>
-                    <os-icon-container
-                        icon="file_upload"
-                        iconTooltipPosition="left"
-                        iconTooltip="{{ 'Can forward motions to committee' | translate }}"
-                        [noWrap]="true"
-                    >
-                        <span>
-                            {{ committee.forward_to_committees.length }}
-                        </span>
-                    </os-icon-container>
-                </div>
-            }
-            @if (committee.receive_forwardings_from_committees?.length && operator.isOrgaManager) {
-                <div>
-                    <os-icon-container
-                        icon="file_download"
-                        iconTooltipPosition="left"
-                        iconTooltip="{{ 'Can receive motions from committee' | translate }}"
-                        [noWrap]="true"
-                    >
-                        <span>
-                            {{ committee.receive_forwardings_from_committees.length }}
-                        </span>
-                    </os-icon-container>
-                </div>
+            <div>
+                <os-icon-container
+                    icon="file_upload"
+                    iconTooltipPosition="left"
+                    iconTooltip="{{ 'Can forward motions to committee' | translate }}"
+                    [noWrap]="true"
+                >
+                    <span>
+                        {{ committee.forward_to_committees.length }}
+                    </span>
+                </os-icon-container>
+            </div>
+            } @if (committee.receive_forwardings_from_committees?.length && operator.isOrgaManager) {
+            <div>
+                <os-icon-container
+                    icon="file_download"
+                    iconTooltipPosition="left"
+                    iconTooltip="{{ 'Can receive motions from committee' | translate }}"
+                    [noWrap]="true"
+                >
+                    <span>
+                        {{ committee.receive_forwardings_from_committees.length }}
+                    </span>
+                </os-icon-container>
+            </div>
             }
         </div>
     </div>
@@ -92,37 +91,31 @@
     <div *osScrollingTableCell="'meta'; row as committee; config: { width: 75 }">
         <div>
             @if (committee.meetingAmount) {
-                <div>
-                    <os-icon-container
-                        icon="event_available"
-                        iconTooltipPosition="right"
-                        iconTooltip="{{ 'Meetings' | translate }}"
-                    >
-                        {{ committee.meetingAmount }}
-                    </os-icon-container>
-                </div>
-            }
-            @if (committee.memberAmount) {
-                <div>
-                    <os-icon-container
-                        icon="group"
-                        iconTooltipPosition="right"
-                        iconTooltip="{{ 'Accounts' | translate }}"
-                    >
-                        {{ committee.memberAmount }}
-                    </os-icon-container>
-                </div>
-            }
-            @if (committee.managerAmount) {
-                <div>
-                    <os-icon-container
-                        icon="engineering"
-                        iconTooltipPosition="right"
-                        iconTooltip="{{ 'Committee management' | translate }}"
-                    >
-                        {{ committee.managerAmount }}
-                    </os-icon-container>
-                </div>
+            <div>
+                <os-icon-container
+                    icon="event_available"
+                    iconTooltipPosition="right"
+                    iconTooltip="{{ 'Meetings' | translate }}"
+                >
+                    {{ committee.meetingAmount }}
+                </os-icon-container>
+            </div>
+            } @if (committee.memberAmount) {
+            <div>
+                <os-icon-container icon="group" iconTooltipPosition="right" iconTooltip="{{ 'Accounts' | translate }}">
+                    {{ committee.memberAmount }}
+                </os-icon-container>
+            </div>
+            } @if (committee.managerAmount) {
+            <div>
+                <os-icon-container
+                    icon="engineering"
+                    iconTooltipPosition="right"
+                    iconTooltip="{{ 'Committee management' | translate }}"
+                >
+                    {{ committee.managerAmount }}
+                </os-icon-container>
+            </div>
             }
         </div>
     </div>
@@ -174,54 +167,53 @@
 
 <mat-menu #committeeMenu="matMenu">
     @if (!isMultiSelect) {
-        <div>
-            <button mat-menu-item (click)="toggleMultiSelect()">
-                <mat-icon>library_add</mat-icon>
-                <span>{{ 'Multiselect' | translate }}</span>
+    <div>
+        <button mat-menu-item (click)="toggleMultiSelect()">
+            <mat-icon>library_add</mat-icon>
+            <span>{{ 'Multiselect' | translate }}</span>
+        </button>
+        <ng-container *osOmlPerms="OML.can_manage_organization">
+            <mat-divider></mat-divider>
+            <button mat-menu-item routerLink="import">
+                <mat-icon>cloud_upload</mat-icon>
+                <span>{{ 'Import' | translate }}</span>
             </button>
-            <ng-container *osOmlPerms="OML.can_manage_organization">
-                <mat-divider></mat-divider>
-                <button mat-menu-item routerLink="import">
-                    <mat-icon>cloud_upload</mat-icon>
-                    <span>{{ 'Import' | translate }}</span>
-                </button>
-                <button mat-menu-item (click)="exportAsCsv()">
-                    <mat-icon>archive</mat-icon>
-                    <span>{{ 'Export as CSV' | translate }}</span>
-                </button>
-            </ng-container>
-        </div>
-    }
-    @if (isMultiSelect) {
-        <div>
-            <button mat-menu-item (click)="selectAll()">
-                <mat-icon>done_all</mat-icon>
-                <span>{{ 'Select all' | translate }}</span>
+            <button mat-menu-item (click)="exportAsCsv()">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export as CSV' | translate }}</span>
             </button>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
-                <mat-icon>clear</mat-icon>
-                <span>{{ 'Deselect all' | translate }}</span>
+        </ng-container>
+    </div>
+    } @if (isMultiSelect) {
+    <div>
+        <button mat-menu-item (click)="selectAll()">
+            <mat-icon>done_all</mat-icon>
+            <span>{{ 'Select all' | translate }}</span>
+        </button>
+        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+            <mat-icon>clear</mat-icon>
+            <span>{{ 'Deselect all' | translate }}</span>
+        </button>
+        <ng-container *osOmlPerms="OML.can_manage_organization">
+            <mat-divider></mat-divider>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="forwardToCommittees()">
+                <mat-icon>swap_horiz</mat-icon>
+                <span>{{ 'Motion forwarding' | translate }} ...</span>
             </button>
-            <ng-container *osOmlPerms="OML.can_manage_organization">
-                <mat-divider></mat-divider>
-                <button mat-menu-item [disabled]="!selectedRows.length" (click)="forwardToCommittees()">
-                    <mat-icon>swap_horiz</mat-icon>
-                    <span>{{ 'Motion forwarding' | translate }} ...</span>
-                </button>
-                <button mat-menu-item [disabled]="!selectedRows.length" (click)="editTags()">
-                    <mat-icon>local_offer</mat-icon>
-                    <span>{{ 'Tags' | translate }}</span>
-                </button>
-                <button mat-menu-item [disabled]="!selectedRows.length" (click)="exportAsCsv()">
-                    <mat-icon>archive</mat-icon>
-                    <span>{{ 'Export as CSV' | translate }}</span>
-                </button>
-                <mat-divider></mat-divider>
-                <button class="red-warning-text" mat-menu-item [disabled]="!selectedRows.length" (click)="doDelete()">
-                    <mat-icon>delete</mat-icon>
-                    <span>{{ 'Delete' | translate }}</span>
-                </button>
-            </ng-container>
-        </div>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="editTags()">
+                <mat-icon>local_offer</mat-icon>
+                <span>{{ 'Tags' | translate }}</span>
+            </button>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="exportAsCsv()">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export as CSV' | translate }}</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button class="red-warning-text" mat-menu-item [disabled]="!selectedRows.length" (click)="doDelete()">
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+        </ng-container>
+    </div>
     }
 </mat-menu>

@@ -64,10 +64,7 @@ export class ApplauseService extends BaseICCGatewayService<Applause> {
         return this.activeMeetingService.meetingId!;
     }
 
-    public constructor(
-        settingService: MeetingSettingsService,
-        private activeMeetingService: ActiveMeetingService
-    ) {
+    public constructor(settingService: MeetingSettingsService, private activeMeetingService: ActiveMeetingService) {
         super();
         this.setupConnections();
 

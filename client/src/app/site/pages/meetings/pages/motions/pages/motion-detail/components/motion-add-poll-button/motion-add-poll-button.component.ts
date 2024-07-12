@@ -21,10 +21,7 @@ export class MotionAddPollButtonComponent {
         return this.motion.state?.allow_create_poll || false;
     }
 
-    public constructor(
-        private motionPollService: MotionPollService,
-        private pollDialog: MotionPollDialogService
-    ) {}
+    public constructor(private motionPollService: MotionPollService, private pollDialog: MotionPollDialogService) {}
 
     public async openDialog(): Promise<void> {
         const defaultPollData = this.motionPollService.getDefaultPollData(this.motion);

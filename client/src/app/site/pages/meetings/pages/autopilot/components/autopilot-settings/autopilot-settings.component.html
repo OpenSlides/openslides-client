@@ -1,14 +1,14 @@
 <h1 mat-dialog-title translate>Autopilot widgets</h1>
 <div mat-dialog-content>
     @for (option of autopilotContentElements; track option) {
-        <div class="option">
-            <mat-checkbox
-                [ngModel]="!disabledAutopilotContentElements[option.key]"
-                (ngModelChange)="updateDisabled(option.key, $event)"
-            >
-                {{ option.description | translate }}
-            </mat-checkbox>
-        </div>
+    <div class="option">
+        <mat-checkbox
+            [ngModel]="!disabledAutopilotContentElements[option.key]"
+            (ngModelChange)="updateDisabled(option.key, $event)"
+        >
+            {{ option.description | translate }}
+        </mat-checkbox>
+    </div>
     }
 
     <small translate>These settings are only applied locally on this browser.</small>

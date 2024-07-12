@@ -28,10 +28,7 @@ export class ParticipantPresenceComponent implements OnInit {
      */
     public errorMsg: string | null = null;
 
-    public constructor(
-        private userRepo: ParticipantControllerService,
-        private formBuilder: UntypedFormBuilder
-    ) {}
+    public constructor(private userRepo: ParticipantControllerService, private formBuilder: UntypedFormBuilder) {}
 
     /**
      * initializes the form control

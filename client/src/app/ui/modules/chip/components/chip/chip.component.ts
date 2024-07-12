@@ -29,10 +29,7 @@ export class ChipComponent {
 
     private root = this.hostElement.nativeElement;
 
-    public constructor(
-        private hostElement: ElementRef<HTMLElement>,
-        private colorService: ColorService
-    ) {}
+    public constructor(private hostElement: ElementRef<HTMLElement>, private colorService: ColorService) {}
 
     private recalcForegroundColor(): void {
         this.root.style.setProperty(`--os-chip-red`, this._color!.red);

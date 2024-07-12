@@ -13,10 +13,7 @@ import { MotionControllerService } from '../motion-controller.service';
     providedIn: `root`
 })
 export class AmendmentControllerService {
-    public constructor(
-        private controller: MotionControllerService,
-        private repo: MotionRepositoryService
-    ) {}
+    public constructor(private controller: MotionControllerService, private repo: MotionRepositoryService) {}
 
     public getViewModelObservable(amendmentId: Id): Observable<ViewMotion | null> {
         return this.controller.getViewModelObservable(amendmentId);

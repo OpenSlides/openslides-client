@@ -27,10 +27,7 @@ export class UpdateService {
      *
      * @param swUpdate Service Worker update service
      */
-    public constructor(
-        private swUpdate: SwUpdate,
-        private store: StorageService
-    ) {
+    public constructor(private swUpdate: SwUpdate, private store: StorageService) {
         swUpdate.versionUpdates
             .pipe(filter(event => event.type === `VERSION_READY`))
             .subscribe((version: VersionReadyEvent) => this.checkVersion(version));

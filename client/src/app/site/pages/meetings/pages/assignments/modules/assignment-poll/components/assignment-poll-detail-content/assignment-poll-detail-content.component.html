@@ -1,209 +1,197 @@
 @if (poll) {
-    <div>
-        @if (hasResults && canSeeResults && !shouldShowChart) {
-            <table class="assignment-result-table">
-                <tbody>
+<div>
+    @if (hasResults && canSeeResults && !shouldShowChart) {
+    <table class="assignment-result-table">
+        <tbody>
+            @if (!isMethodY) {
+            <tr>
+                <td></td>
+                <th class="voting-option"></th>
+                @if (showYHeader) {
+                <th class="result yes">
                     @if (!isMethodY) {
-                        <tr>
-                            <td></td>
-                            <th class="voting-option"></th>
-                            @if (showYHeader) {
-                                <th class="result yes">
-                                    @if (!isMethodY) {
-                                        <span>
-                                            {{ 'Yes' | translate }}
-                                        </span>
-                                    }
-                                    @if (isMethodY) {
-                                        <span>
-                                            {{ 'Votes' | translate }}
-                                        </span>
-                                    }
-                                </th>
-                            }
-                            @if (showNHeader) {
-                                <th class="result">
-                                    @if (!isMethodN) {
-                                        <span class="no">
-                                            {{ 'No' | translate }}
-                                        </span>
-                                    }
-                                    @if (isMethodN) {
-                                        <span class="yes">
-                                            {{ 'Votes' | translate }}
-                                        </span>
-                                    }
-                                </th>
-                            }
-                            @if (isMethodYNA) {
-                                <th class="result abstain">{{ 'Abstain' | translate }}</th>
-                            }
-                        </tr>
+                    <span>
+                        {{ 'Yes' | translate }}
+                    </span>
+                    } @if (isMethodY) {
+                    <span>
+                        {{ 'Votes' | translate }}
+                    </span>
                     }
-                    @for (row of tableData; track row; let i = $index) {
-                        <tr [class]="row.class">
-                            <td>
-                                @if (row.class === 'user') {
-                                    <span>{{ i + 1 }}.</span>
-                                }
-                            </td>
-                            <td class="voting-option">
-                                <ng-container *ngTemplateOutlet="showListForRow; context: { row: row }"></ng-container>
-                                @if (row.class !== 'list') {
-                                    <div>
-                                        <span class="candidate-name">
-                                            {{ row.votingOption | pollKeyVerbose | translate }}
-                                        </span>
-                                        @if (row.votingOptionSubtitle) {
-                                            <span class="user-subtitle">
-                                                <br />
-                                                {{ row.votingOptionSubtitle }}
-                                            </span>
-                                        }
-                                    </div>
-                                }
-                            </td>
-                            @for (vote of filterRelevantResults(row.value); track vote) {
-                                <td class="result">
-                                    <div class="single-result" [ngClass]="getVoteClass(vote)">
-                                        <span>
-                                            @if (vote.showPercent) {
-                                                <span>
-                                                    {{ getVoteAmount(vote, row) | pollPercentBase: poll : row }}
-                                                </span>
-                                            }
-                                            @if (['user', 'list'].includes(row.class)) {
-                                                <span>
-                                                    {{ getVoteAmount(vote, row) | pollParseNumber }}
-                                                </span>
-                                            }
-                                            @if (!['user', 'list'].includes(row.class)) {
-                                                <span>
-                                                    {{ vote.amount | pollParseNumber }}
-                                                </span>
-                                            }
-                                        </span>
-                                    </div>
-                                </td>
-                            }
-                        </tr>
+                </th>
+                } @if (showNHeader) {
+                <th class="result">
+                    @if (!isMethodN) {
+                    <span class="no">
+                        {{ 'No' | translate }}
+                    </span>
+                    } @if (isMethodN) {
+                    <span class="yes">
+                        {{ 'Votes' | translate }}
+                    </span>
                     }
-                    @if (isPercentBaseEntitled && poll.entitled_users_at_stop) {
-                        <tr class="entitled-users-row">
-                            <td></td>
-                            <td>{{ 'Entitled users' | translate }}</td>
-                            <td class="result">
-                                <div class="single-result">
-                                    <span>
-                                        {{ poll.entitled_users_at_stop.length | pollPercentBase: poll }}
-                                    </span>
-                                    <span>
-                                        {{ poll.entitled_users_at_stop.length }}
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
+                </th>
+                } @if (isMethodYNA) {
+                <th class="result abstain">{{ 'Abstain' | translate }}</th>
+                }
+            </tr>
+            } @for (row of tableData; track row; let i = $index) {
+            <tr [class]="row.class">
+                <td>
+                    @if (row.class === 'user') {
+                    <span>{{ i + 1 }}.</span>
                     }
-                    @if (isPercentBaseEntitledPresent && poll.entitled_users_at_stop) {
-                        <tr class="entitled-users-row">
-                            <td></td>
-                            <td>{{ 'Entitled present users' | translate }}</td>
-                            <td class="result">
-                                <div class="single-result">
-                                    <span>
-                                        {{ entitledPresentUsersCount | pollPercentBase: poll }}
-                                    </span>
-                                    <span>
-                                        {{ entitledPresentUsersCount }}
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        <!-- Table with Chart -->
-        @if (hasResults && canSeeResults && shouldShowChart) {
-            <div class="result-wrapper">
-                @if (tableData[0].class === 'user') {
-                    <h3 class="result-title">
+                </td>
+                <td class="voting-option">
+                    <ng-container *ngTemplateOutlet="showListForRow; context: { row: row }"></ng-container>
+                    @if (row.class !== 'list') {
+                    <div>
                         <span class="candidate-name">
-                            {{ tableData[0].votingOption | pollKeyVerbose | translate }}
+                            {{ row.votingOption | pollKeyVerbose | translate }}
                         </span>
-                        <br />
-                        @if (tableData[0].votingOptionSubtitle) {
-                            <span class="user-subtitle">({{ tableData[0].votingOptionSubtitle }})</span>
+                        @if (row.votingOptionSubtitle) {
+                        <span class="user-subtitle">
+                            <br />
+                            {{ row.votingOptionSubtitle }}
+                        </span>
                         }
-                    </h3>
+                    </div>
+                    }
+                </td>
+                @for (vote of filterRelevantResults(row.value); track vote) {
+                <td class="result">
+                    <div class="single-result" [ngClass]="getVoteClass(vote)">
+                        <span>
+                            @if (vote.showPercent) {
+                            <span>
+                                {{ getVoteAmount(vote, row) | pollPercentBase : poll : row }}
+                            </span>
+                            } @if (['user', 'list'].includes(row.class)) {
+                            <span>
+                                {{ getVoteAmount(vote, row) | pollParseNumber }}
+                            </span>
+                            } @if (!['user', 'list'].includes(row.class)) {
+                            <span>
+                                {{ vote.amount | pollParseNumber }}
+                            </span>
+                            }
+                        </span>
+                    </div>
+                </td>
                 }
-                @if (tableData[0].class === 'list') {
-                    <h3 class="result-title">
-                        {{ tableData[0].votingOption | translate }}
-                    </h3>
-                }
-                @if (hasResults && canSeeResults) {
-                    <os-single-option-chart-table
-                        iconSize="gigantic"
-                        [poll]="poll"
-                        [pollService]="assignmentPollService"
-                        [shouldShowEntitled]="isPercentBaseEntitled"
-                        [shouldShowHead]="false"
-                        [tableData]="reformedTableData"
-                    ></os-single-option-chart-table>
-                }
-            </div>
-        }
-        <!-- No results yet -->
-        @if (!hasResults) {
-            <div>
-                <i>
-                    {{ 'No results yet.' | translate }}
-                </i>
-            </div>
-        }
-        <!-- Has results, but user cannot see -->
-        @if (hasResults && !canSeeResults) {
-            <div>
-                <i>
-                    {{ 'Counting of votes is in progress ...' | translate }}
-                </i>
-            </div>
+            </tr>
+            } @if (isPercentBaseEntitled && poll.entitled_users_at_stop) {
+            <tr class="entitled-users-row">
+                <td></td>
+                <td>{{ 'Entitled users' | translate }}</td>
+                <td class="result">
+                    <div class="single-result">
+                        <span>
+                            {{ poll.entitled_users_at_stop.length | pollPercentBase : poll }}
+                        </span>
+                        <span>
+                            {{ poll.entitled_users_at_stop.length }}
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            } @if (isPercentBaseEntitledPresent && poll.entitled_users_at_stop) {
+            <tr class="entitled-users-row">
+                <td></td>
+                <td>{{ 'Entitled present users' | translate }}</td>
+                <td class="result">
+                    <div class="single-result">
+                        <span>
+                            {{ entitledPresentUsersCount | pollPercentBase : poll }}
+                        </span>
+                        <span>
+                            {{ entitledPresentUsersCount }}
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    }
+    <!-- Table with Chart -->
+    @if (hasResults && canSeeResults && shouldShowChart) {
+    <div class="result-wrapper">
+        @if (tableData[0].class === 'user') {
+        <h3 class="result-title">
+            <span class="candidate-name">
+                {{ tableData[0].votingOption | pollKeyVerbose | translate }}
+            </span>
+            <br />
+            @if (tableData[0].votingOptionSubtitle) {
+            <span class="user-subtitle">({{ tableData[0].votingOptionSubtitle }})</span>
+            }
+        </h3>
+        } @if (tableData[0].class === 'list') {
+        <h3 class="result-title">
+            {{ tableData[0].votingOption | translate }}
+        </h3>
+        } @if (hasResults && canSeeResults) {
+        <os-single-option-chart-table
+            iconSize="gigantic"
+            [poll]="poll"
+            [pollService]="assignmentPollService"
+            [shouldShowEntitled]="isPercentBaseEntitled"
+            [shouldShowHead]="false"
+            [tableData]="reformedTableData"
+        ></os-single-option-chart-table>
         }
     </div>
+    }
+    <!-- No results yet -->
+    @if (!hasResults) {
+    <div>
+        <i>
+            {{ 'No results yet.' | translate }}
+        </i>
+    </div>
+    }
+    <!-- Has results, but user cannot see -->
+    @if (hasResults && !canSeeResults) {
+    <div>
+        <i>
+            {{ 'Counting of votes is in progress ...' | translate }}
+        </i>
+    </div>
+    }
+</div>
 }
 
 <ng-template #showListForRow let-row="row">
     @if (row.class === 'list') {
-        <div class="result-title">
-            @if (!enumerateCandidates) {
-                <ul>
-                    @for (date of row.votingOptions; track date) {
-                        <li>
-                            <span class="candidate-name">
-                                {{ date.title }}
-                            </span>
-                            @if (date.subtitle) {
-                                <span class="user-subtitle">({{ date.subtitle }})</span>
-                            }
-                        </li>
-                    }
-                </ul>
+    <div class="result-title">
+        @if (!enumerateCandidates) {
+        <ul>
+            @for (date of row.votingOptions; track date) {
+            <li>
+                <span class="candidate-name">
+                    {{ date.title }}
+                </span>
+                @if (date.subtitle) {
+                <span class="user-subtitle">({{ date.subtitle }})</span>
+                }
+            </li>
             }
-            @if (enumerateCandidates) {
-                <ol>
-                    @for (date of row.votingOptions; track date) {
-                        <li>
-                            <span class="candidate-name">
-                                {{ date.title }}
-                            </span>
-                            @if (date.subtitle) {
-                                <span class="user-subtitle">({{ date.subtitle }})</span>
-                            }
-                        </li>
-                    }
-                </ol>
+        </ul>
+        } @if (enumerateCandidates) {
+        <ol>
+            @for (date of row.votingOptions; track date) {
+            <li>
+                <span class="candidate-name">
+                    {{ date.title }}
+                </span>
+                @if (date.subtitle) {
+                <span class="user-subtitle">({{ date.subtitle }})</span>
+                }
+            </li>
             }
-        </div>
+        </ol>
+        }
+    </div>
     }
 </ng-template>

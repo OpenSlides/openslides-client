@@ -22,10 +22,7 @@ import { PollServiceMapperService } from '../../services/poll-service-mapper.ser
     name: `pollPercentBase`
 })
 export class PollPercentBasePipe implements PipeTransform {
-    public constructor(
-        private pollService: PollService,
-        private pollServiceMapperService: PollServiceMapperService
-    ) {}
+    public constructor(private pollService: PollService, private pollServiceMapperService: PollServiceMapperService) {}
 
     public transform(value: number, poll: PollData, row?: OptionData | PollTableData): string | null {
         // logic handles over the pollService to avoid circular dependencies

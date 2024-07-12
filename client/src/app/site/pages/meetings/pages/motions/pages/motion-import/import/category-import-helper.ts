@@ -7,10 +7,7 @@ import { MotionCategoryControllerService } from '../../../modules/categories/ser
 import { ViewMotion } from '../../../view-models';
 
 export class CategoryImportHelper extends BaseBeforeImportHandler<ViewMotion, MotionCategory> {
-    public constructor(
-        private repo: MotionCategoryControllerService,
-        private translate: TranslateService
-    ) {
+    public constructor(private repo: MotionCategoryControllerService, private translate: TranslateService) {
         super({
             idProperty: `category_id`,
             translateFn: translate.instant,

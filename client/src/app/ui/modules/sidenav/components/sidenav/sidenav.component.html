@@ -7,19 +7,19 @@
     (swipeRight)="open()"
 >
     @if (isMobile) {
-        <mat-sidenav #sideNav class="side-panel" disableClose="!isMobile" [mode]="'over'" [opened]="!isMobile">
-            <ng-container *ngTemplateOutlet="sideNavContent"></ng-container>
-        </mat-sidenav>
+    <mat-sidenav #sideNav class="side-panel" disableClose="!isMobile" [mode]="'over'" [opened]="!isMobile">
+        <ng-container *ngTemplateOutlet="sideNavContent"></ng-container>
+    </mat-sidenav>
     }
     <mat-sidenav-content>
         @if (!isOpen) {
-            <ng-container [ngTemplateOutlet]="sideNavToggleButton"></ng-container>
+        <ng-container [ngTemplateOutlet]="sideNavToggleButton"></ng-container>
         }
         <div class="main-content-wrapper">
             @if (!isMobile && isOpen) {
-                <div class="navigation sidenav-background">
-                    <ng-container *ngTemplateOutlet="sideNavContent"></ng-container>
-                </div>
+            <div class="navigation sidenav-background">
+                <ng-container *ngTemplateOutlet="sideNavContent"></ng-container>
+            </div>
             }
             <div class="content">
                 <ng-container *ngTemplateOutlet="content"></ng-container>
@@ -31,17 +31,17 @@
 <ng-template #sideNavToggleButton>
     <!-- Toggle-button -->
     @if (!isMobile) {
-        <div class="nav-toggle-button-container">
-            <button
-                class="nav-toggle-button"
-                mat-raised-button
-                [matTooltip]="(isOpen ? 'Hide main menu' : 'Show main menu') | translate"
-                [ngClass]="{ left: isOpen, right: !isOpen }"
-                (click)="toggle()"
-            >
-                <mat-icon>{{ isOpen ? 'arrow_back_ios' : 'arrow_forward_ios' }}</mat-icon>
-            </button>
-        </div>
+    <div class="nav-toggle-button-container">
+        <button
+            class="nav-toggle-button"
+            mat-raised-button
+            [matTooltip]="(isOpen ? 'Hide main menu' : 'Show main menu') | translate"
+            [ngClass]="{ left: isOpen, right: !isOpen }"
+            (click)="toggle()"
+        >
+            <mat-icon>{{ isOpen ? 'arrow_back_ios' : 'arrow_forward_ios' }}</mat-icon>
+        </button>
+    </div>
     }
 </ng-template>
 
@@ -76,7 +76,7 @@
             </a>
         </div>
         @if (isOpen) {
-            <ng-container [ngTemplateOutlet]="sideNavToggleButton"></ng-container>
+        <ng-container [ngTemplateOutlet]="sideNavToggleButton"></ng-container>
         }
     </div>
 </ng-template>

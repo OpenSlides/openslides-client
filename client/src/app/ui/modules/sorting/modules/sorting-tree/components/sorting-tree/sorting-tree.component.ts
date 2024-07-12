@@ -215,10 +215,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
      * @param treeService Service to get data from store and build the tree nodes.
      * @param sortService Service to sort tree nodes by their given items.
      */
-    public constructor(
-        private treeService: TreeService,
-        private sortService: TreeSortService<T>
-    ) {}
+    public constructor(private treeService: TreeService, private sortService: TreeSortService<T>) {}
 
     /**
      * On destroy - unsubscribe the subscription

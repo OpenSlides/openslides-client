@@ -8,10 +8,9 @@
     <!-- Title -->
     <div class="title-slot">
         @if (isCreateView) {
-            <h2>{{ addMeetingLabel | translate }}</h2>
-        }
-        @if (!isCreateView) {
-            <h2>{{ editMeetingLabel | translate }}</h2>
+        <h2>{{ addMeetingLabel | translate }}</h2>
+        } @if (!isCreateView) {
+        <h2>{{ editMeetingLabel | translate }}</h2>
         }
     </div>
 </os-head-bar>
@@ -26,23 +25,23 @@
 
             <p class="has-hint">
                 @if (isCreateView) {
-                    <mat-form-field subscriptSizing="dynamic">
-                        <mat-label>{{ 'Duplicate from' | translate }}</mat-label>
-                        <os-list-search-selector
-                            [includeNone]="true"
-                            [inputListValues]="availableMeetingsObservable"
-                            [ngModel]="theDuplicateFromId"
-                            [ngModelOptions]="{ standalone: true }"
-                            [sortFn]="false"
-                            (ngModelChange)="onUpdateDuplicateFrom($event)"
-                        ></os-list-search-selector>
-                        <mat-hint>
-                            {{
-                                'Participants and administrators are copied completely and cannot be edited here.'
-                                    | translate
-                            }}
-                        </mat-hint>
-                    </mat-form-field>
+                <mat-form-field subscriptSizing="dynamic">
+                    <mat-label>{{ 'Duplicate from' | translate }}</mat-label>
+                    <os-list-search-selector
+                        [includeNone]="true"
+                        [inputListValues]="availableMeetingsObservable"
+                        [ngModel]="theDuplicateFromId"
+                        [ngModelOptions]="{ standalone: true }"
+                        [sortFn]="false"
+                        (ngModelChange)="onUpdateDuplicateFrom($event)"
+                    ></os-list-search-selector>
+                    <mat-hint>
+                        {{
+                            'Participants and administrators are copied completely and cannot be edited here.'
+                                | translate
+                        }}
+                    </mat-hint>
+                </mat-form-field>
                 }
             </p>
 
@@ -50,9 +49,9 @@
                 <mat-label>{{ 'Language' | translate }}</mat-label>
                 <mat-select formControlName="language">
                     @for (choice of translations | keyvalue; track choice) {
-                        <mat-option [value]="choice.key">
-                            {{ choice.value }}
-                        </mat-option>
+                    <mat-option [value]="choice.key">
+                        {{ choice.value }}
+                    </mat-option>
                     }
                 </mat-select>
             </mat-form-field>

@@ -1,26 +1,25 @@
 @if (data) {
-    <div>
-        @if (isImage) {
-            <div
-                [ngClass]="isFullscreen ? 'fullscreen' : 'nofullscreen'"
-                [ngStyle]="{ background: isFullscreen ? '#000' : '#ffffff' }"
-            >
-                <img alt="" [src]="url | trust: 'url'" />
-            </div>
-        }
-        @if (isPdf && url) {
-            <div class="fullscreen">
-                <pdf-viewer
-                    [autoresize]="true"
-                    [fit-to-page]="true"
-                    [ngStyle]="{ top: -scroll + 'px' }"
-                    [original-size]="false"
-                    [page]="page"
-                    [show-all]="false"
-                    [src]="url"
-                    [zoom]="zoom"
-                ></pdf-viewer>
-            </div>
-        }
+<div>
+    @if (isImage) {
+    <div
+        [ngClass]="isFullscreen ? 'fullscreen' : 'nofullscreen'"
+        [ngStyle]="{ background: isFullscreen ? '#000' : '#ffffff' }"
+    >
+        <img alt="" [src]="url | trust : 'url'" />
     </div>
+    } @if (isPdf && url) {
+    <div class="fullscreen">
+        <pdf-viewer
+            [autoresize]="true"
+            [fit-to-page]="true"
+            [ngStyle]="{ top: -scroll + 'px' }"
+            [original-size]="false"
+            [page]="page"
+            [show-all]="false"
+            [src]="url"
+            [zoom]="zoom"
+        ></pdf-viewer>
+    </div>
+    }
+</div>
 }

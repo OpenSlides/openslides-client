@@ -138,12 +138,9 @@ export class WorkerHttpAuth {
             const issuedAt = new Date().getTime(); // in ms
             const expiresAt = token.exp; // in sec
             this.currentUserId = token.userId;
-            this._authTokenRefreshTimeout = setTimeout(
-                () => {
-                    this.updateAuthentication();
-                },
-                expiresAt * 1000 - issuedAt - 100
-            ); // 100ms before token is invalid
+            this._authTokenRefreshTimeout = setTimeout(() => {
+                this.updateAuthentication();
+            }, expiresAt * 1000 - issuedAt - 100); // 100ms before token is invalid
         } else {
             this.currentUserId = null;
         }

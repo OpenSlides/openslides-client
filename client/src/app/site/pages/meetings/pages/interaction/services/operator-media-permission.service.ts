@@ -16,10 +16,7 @@ export class OperatorMediaPermissionService {
     private hasAudioDevice = false;
     private hasVideoDevice = false;
 
-    public constructor(
-        private translate: TranslateService,
-        private spinnerService: SpinnerService
-    ) {}
+    public constructor(private translate: TranslateService, private spinnerService: SpinnerService) {}
 
     public async requestMediaAccess(): Promise<void> {
         await this.detectAvailableDevices();

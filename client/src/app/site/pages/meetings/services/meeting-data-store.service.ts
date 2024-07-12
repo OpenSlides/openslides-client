@@ -7,10 +7,7 @@ import { MeetingCollectionMapperService } from './meeting-collection-mapper.serv
     providedIn: `root`
 })
 export class MeetingDataStoreService {
-    public constructor(
-        private modelMapper: MeetingCollectionMapperService,
-        private datastore: DataStoreService
-    ) {}
+    public constructor(private modelMapper: MeetingCollectionMapperService, private datastore: DataStoreService) {}
 
     /**
      * Deletes all models that belong to a meeting.

@@ -25,20 +25,20 @@
                 <mat-icon>drag_indicator</mat-icon>
             </span>
             @if (hasChild) {
-                <button
-                    cdkTreeNodeToggle
-                    mat-icon-button
-                    [attr.aria-label]="'toggle ' + node.filename"
-                    [style.visibility]="node.expandable ? 'visible' : 'hidden'"
-                    (click)="handleClick(node)"
+            <button
+                cdkTreeNodeToggle
+                mat-icon-button
+                [attr.aria-label]="'toggle ' + node.filename"
+                [style.visibility]="node.expandable ? 'visible' : 'hidden'"
+                (click)="handleClick(node)"
+            >
+                <mat-icon
+                    class="mat-icon-rtl-mirror"
+                    [style.transform]="node.isExpanded ? 'rotate(90deg)' : 'rotate(0deg)'"
                 >
-                    <mat-icon
-                        class="mat-icon-rtl-mirror"
-                        [style.transform]="node.isExpanded ? 'rotate(90deg)' : 'rotate(0deg)'"
-                    >
-                        chevron_right
-                    </mat-icon>
-                </button>
+                    chevron_right
+                </mat-icon>
+            </button>
             }
             <ng-container [ngTemplateOutlet]="innerNode" [ngTemplateOutletContext]="{ item: node.item }"></ng-container>
         </div>

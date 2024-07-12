@@ -42,10 +42,9 @@
 <ng-template #tagDialog>
     <h1 mat-dialog-title>
         @if (currentTag) {
-            <span>{{ 'Edit tag' | translate }}</span>
-        }
-        @if (!currentTag) {
-            <span>{{ 'New tag' | translate }}</span>
+        <span>{{ 'Edit tag' | translate }}</span>
+        } @if (!currentTag) {
+        <span>{{ 'New tag' | translate }}</span>
         }
     </h1>
     <mat-dialog-content class="os-form-card-mobile">

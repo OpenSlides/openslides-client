@@ -22,7 +22,7 @@
     <!-- Title column -->
     <div *osScrollingTableCell="'title'; value as title; row as block; rowContext as rowContext" class="cell-slot fill">
         @if (!isMultiSelect) {
-            <os-detail-view-navigator [model]="block"></os-detail-view-navigator>
+        <os-detail-view-navigator [model]="block"></os-detail-view-navigator>
         }
         <!--
     TODO: Tooltips do not work when hidden under the absolute link, but they can't be above it either,

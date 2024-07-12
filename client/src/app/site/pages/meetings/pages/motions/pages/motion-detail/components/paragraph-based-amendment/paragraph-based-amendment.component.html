@@ -1,148 +1,126 @@
 @if (!editMotion) {
-    <section class="text-holder">
-        <!-- If the array exists, we do not have an error -->
-        @if (amendmentLines) {
-            <div>
-                @if (amendmentLines.length === 0) {
-                    <div class="alert alert-info">
-                        @if (motion.lead_motion) {
-                            <i>{{ 'No changes at the text.' | translate }}</i>
-                        }
-                        @if (!motion.lead_motion) {
-                            <i>{{ 'The parent motion is not available.' | translate }}</i>
-                        }
-                    </div>
-                }
-                @if (amendmentErrorMessage) {
-                    <div class="alert alert-info alert-inconsistency">
-                        <i [innerHTML]="amendmentErrorMessage"></i>
-                    </div>
-                }
-                @if (motion.lead_motion && !isFinalEdit) {
-                    @if (changeRecoMode === ChangeRecoMode.Diff) {
-                        <os-motion-detail-diff-summary
-                            [changes]="changesForDiffMode"
-                            [elContainer]="nativeElement"
-                            [motion]="motion"
-                            [scrollToChange]="scrollToChange"
-                        ></os-motion-detail-diff-summary>
-                    }
-                    @for (paragraph of getAmendmentParagraphs(); track $index) {
-                        <div
-                            class="motion-text motion-text-diff amendment-view underlined-links"
-                            [class.amendment-context]="showAmendmentContext"
-                            [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
-                            [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
-                            [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
-                        >
-                            @if (!showAmendmentContext) {
-                                <h3 class="amendment-line-header">
-                                    {{ getAmendmentParagraphLinesTitle(paragraph) }}
-                                </h3>
-                            }
-                            @if (
-                                changeRecoMode !== ChangeRecoMode.Diff &&
-                                lineNumberingMode === LineNumberingMode.Outside &&
-                                (changeRecoMode === ChangeRecoMode.Original ||
-                                    changeRecoMode === ChangeRecoMode.Changed)
-                            ) {
-                                <os-motion-detail-original-change-recommendations
-                                    [changeRecommendations]="changeRecommendations"
-                                    [html]="getAmendmentDiffTextWithContext(paragraph)"
-                                    [motionId]="motion.id"
-                                    (createChangeRecommendation)="createChangeRecommendation.emit($event)"
-                                    (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
-                                ></os-motion-detail-original-change-recommendations>
-                            }
-                            @if (
-                                changeRecoMode !== ChangeRecoMode.Diff &&
-                                (lineNumberingMode !== LineNumberingMode.Outside ||
-                                    (changeRecoMode !== ChangeRecoMode.Original &&
-                                        changeRecoMode !== ChangeRecoMode.Changed))
-                            ) {
-                                <div [innerHTML]="getAmendmentDiffTextWithContext(paragraph) | trust: 'html'"></div>
-                            }
-                            <!-- the <div> element is only a placeholder -> outerHTML to replace it -->
-                        </div>
-                        @if (changeRecoMode === ChangeRecoMode.Diff) {
-                            <os-motion-detail-diff
-                                [changes]="changesForDiffMode"
-                                [highlightedLine]="highlightedLine"
-                                [lineNumberingMode]="lineNumberingMode"
-                                [lineRange]="{ from: paragraph.paragraphLineFrom, to: paragraph.paragraphLineTo }"
-                                [motion]="motion"
-                                [scrollToChange]="scrollToChange"
-                                [showAllAmendments]="showAllAmendments"
-                                [showPreamble]="false"
-                                [showSummary]="false"
-                                (createChangeRecommendation)="createChangeRecommendation.emit($event)"
-                            ></os-motion-detail-diff>
-                        }
-                    }
-                }
-                @if (changeRecoMode === ChangeRecoMode.Diff && (!motion.lead_motion || isFinalEdit)) {
-                    <os-motion-detail-diff
-                        [changes]="changesForDiffMode"
-                        [highlightedLine]="highlightedLine"
-                        [lineNumberingMode]="lineNumberingMode"
-                        [motion]="motion"
-                        [scrollToChange]="scrollToChange"
-                        [showAllAmendments]="showAllAmendments"
-                        (createChangeRecommendation)="createChangeRecommendation.emit($event)"
-                    ></os-motion-detail-diff>
-                }
-            </div>
-        }
-        @if (!amendmentLines) {
-            <div>
-                <span class="red-warning-text">
-                    {{ 'There is an error with this amendment. Please edit it manually.' | translate }}
-                </span>
-            </div>
-        }
-    </section>
-    <!-- Show entire motion text -->
-    @if (changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed) {
-        <div>
-            @if (motion && motion.isParagraphBasedAmendment() && motion.lead_motion) {
-                <mat-checkbox class="show-entire-text-check" (change)="showAmendmentContext = !showAmendmentContext">
-                    <span>{{ 'Show entire motion text' | translate }}</span>
-                </mat-checkbox>
+<section class="text-holder">
+    <!-- If the array exists, we do not have an error -->
+    @if (amendmentLines) {
+    <div>
+        @if (amendmentLines.length === 0) {
+        <div class="alert alert-info">
+            @if (motion.lead_motion) {
+            <i>{{ 'No changes at the text.' | translate }}</i>
+            } @if (!motion.lead_motion) {
+            <i>{{ 'The parent motion is not available.' | translate }}</i>
             }
         </div>
+        } @if (amendmentErrorMessage) {
+        <div class="alert alert-info alert-inconsistency">
+            <i [innerHTML]="amendmentErrorMessage"></i>
+        </div>
+        } @if (motion.lead_motion && !isFinalEdit) { @if (changeRecoMode === ChangeRecoMode.Diff) {
+        <os-motion-detail-diff-summary
+            [changes]="changesForDiffMode"
+            [elContainer]="nativeElement"
+            [motion]="motion"
+            [scrollToChange]="scrollToChange"
+        ></os-motion-detail-diff-summary>
+        } @for (paragraph of getAmendmentParagraphs(); track $index) {
+        <div
+            class="motion-text motion-text-diff amendment-view underlined-links"
+            [class.amendment-context]="showAmendmentContext"
+            [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
+            [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
+            [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
+        >
+            @if (!showAmendmentContext) {
+            <h3 class="amendment-line-header">
+                {{ getAmendmentParagraphLinesTitle(paragraph) }}
+            </h3>
+            } @if ( changeRecoMode !== ChangeRecoMode.Diff && lineNumberingMode === LineNumberingMode.Outside &&
+            (changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed) ) {
+            <os-motion-detail-original-change-recommendations
+                [changeRecommendations]="changeRecommendations"
+                [html]="getAmendmentDiffTextWithContext(paragraph)"
+                [motionId]="motion.id"
+                (createChangeRecommendation)="createChangeRecommendation.emit($event)"
+                (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
+            ></os-motion-detail-original-change-recommendations>
+            } @if ( changeRecoMode !== ChangeRecoMode.Diff && (lineNumberingMode !== LineNumberingMode.Outside ||
+            (changeRecoMode !== ChangeRecoMode.Original && changeRecoMode !== ChangeRecoMode.Changed)) ) {
+            <div [innerHTML]="getAmendmentDiffTextWithContext(paragraph) | trust : 'html'"></div>
+            }
+            <!-- the <div> element is only a placeholder -> outerHTML to replace it -->
+        </div>
+        @if (changeRecoMode === ChangeRecoMode.Diff) {
+        <os-motion-detail-diff
+            [changes]="changesForDiffMode"
+            [highlightedLine]="highlightedLine"
+            [lineNumberingMode]="lineNumberingMode"
+            [lineRange]="{ from: paragraph.paragraphLineFrom, to: paragraph.paragraphLineTo }"
+            [motion]="motion"
+            [scrollToChange]="scrollToChange"
+            [showAllAmendments]="showAllAmendments"
+            [showPreamble]="false"
+            [showSummary]="false"
+            (createChangeRecommendation)="createChangeRecommendation.emit($event)"
+        ></os-motion-detail-diff>
+        } } } @if (changeRecoMode === ChangeRecoMode.Diff && (!motion.lead_motion || isFinalEdit)) {
+        <os-motion-detail-diff
+            [changes]="changesForDiffMode"
+            [highlightedLine]="highlightedLine"
+            [lineNumberingMode]="lineNumberingMode"
+            [motion]="motion"
+            [scrollToChange]="scrollToChange"
+            [showAllAmendments]="showAllAmendments"
+            (createChangeRecommendation)="createChangeRecommendation.emit($event)"
+        ></os-motion-detail-diff>
+        }
+    </div>
+    } @if (!amendmentLines) {
+    <div>
+        <span class="red-warning-text">
+            {{ 'There is an error with this amendment. Please edit it manually.' | translate }}
+        </span>
+    </div>
     }
-}
+</section>
+<!-- Show entire motion text -->
+@if (changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed) {
+<div>
+    @if (motion && motion.isParagraphBasedAmendment() && motion.lead_motion) {
+    <mat-checkbox class="show-entire-text-check" (change)="showAmendmentContext = !showAmendmentContext">
+        <span>{{ 'Show entire motion text' | translate }}</span>
+    </mat-checkbox>
+    }
+</div>
+} }
 
 <!-- The HTML Editor for paragraph-based amendments -->
 @if (editMotion && contentForm) {
-    <form [formGroup]="contentForm">
-        @for (paragraph of selectedParagraphs; track paragraph) {
-            <section>
-                <h3>
-                    @if (paragraph.lineFrom >= paragraph.lineTo - 1) {
-                        <span class="line-number">{{ 'Line' | translate }} {{ paragraph.lineFrom }}</span>
-                    }
-                    @if (paragraph.lineFrom < paragraph.lineTo - 1) {
-                        <span class="line-number">
-                            {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}
-                        </span>
-                    }
-                </h3>
-                <os-editor [formControlName]="paragraph.paragraphNo"></os-editor>
-                @if (isControlInvalid(paragraph.paragraphNo)) {
-                    <div class="red-warning-text">
-                        {{ 'This field is required.' | translate }}
-                    </div>
-                }
-            </section>
+<form [formGroup]="contentForm">
+    @for (paragraph of selectedParagraphs; track paragraph) {
+    <section>
+        <h3>
+            @if (paragraph.lineFrom >= paragraph.lineTo - 1) {
+            <span class="line-number">{{ 'Line' | translate }} {{ paragraph.lineFrom }}</span>
+            } @if (paragraph.lineFrom < paragraph.lineTo - 1) {
+            <span class="line-number">
+                {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}
+            </span>
+            }
+        </h3>
+        <os-editor [formControlName]="paragraph.paragraphNo"></os-editor>
+        @if (isControlInvalid(paragraph.paragraphNo)) {
+        <div class="red-warning-text">
+            {{ 'This field is required.' | translate }}
+        </div>
         }
-        @for (paragraph of brokenParagraphs; track paragraph) {
-            <section>
-                <em class="red-warning-text">
-                    {{ 'This paragraph does not exist in the main motion anymore:' | translate }}
-                </em>
-                <div class="motion-text" [innerHTML]="paragraph | trust: 'html'"></div>
-            </section>
-        }
-    </form>
+    </section>
+    } @for (paragraph of brokenParagraphs; track paragraph) {
+    <section>
+        <em class="red-warning-text">
+            {{ 'This paragraph does not exist in the main motion anymore:' | translate }}
+        </em>
+        <div class="motion-text" [innerHTML]="paragraph | trust : 'html'"></div>
+    </section>
+    }
+</form>
 }

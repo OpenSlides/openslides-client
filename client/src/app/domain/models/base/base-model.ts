@@ -32,10 +32,7 @@ export abstract class BaseModel<T = any> implements Identifiable, Deserializable
      */
     public readonly id!: Id;
 
-    protected constructor(
-        public readonly collection: string,
-        input?: Partial<T>
-    ) {
+    protected constructor(public readonly collection: string, input?: Partial<T>) {
         if (input) {
             this.deserialize(input);
         }

@@ -1,10 +1,10 @@
 <mat-nav-list class="main-nav">
     @for (option of this.data.sortOptions; track option) {
-        <mat-list-item (click)="clickedOption(option.property)">
-            <button mat-menu-item>
-                <mat-icon>{{ data.getSortIcon(option) }}</mat-icon>
-                <span>{{ data.getSortLabel(option) | translate }}</span>
-            </button>
-        </mat-list-item>
+    <mat-list-item (click)="clickedOption(option.property)">
+        <button mat-menu-item>
+            <mat-icon>{{ data.getSortIcon(option) }}</mat-icon>
+            <span>{{ data.getSortLabel(option) | translate }}</span>
+        </button>
+    </mat-list-item>
     }
 </mat-nav-list>

@@ -56,10 +56,7 @@ export class FullscreenProjectorComponent implements OnInit {
     /**
      * Constructor. Updates the projector dimensions on a resize.
      */
-    public constructor(
-        private operator: OperatorService,
-        private repo: ProjectorControllerService
-    ) {}
+    public constructor(private operator: OperatorService, private repo: ProjectorControllerService) {}
 
     /**
      * Get the projector id from the URL. Loads the projector.

@@ -51,10 +51,7 @@ export class ChatGroupDetailMessageComponent {
         return this.chatMessage?.user;
     }
 
-    public constructor(
-        private _operator: OperatorService,
-        private _vp: ViewPortService
-    ) {}
+    public constructor(private _operator: OperatorService, private _vp: ViewPortService) {}
 
     public onEditMessage(): void {
         this.editing.emit(this.chatMessage);

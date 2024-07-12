@@ -84,10 +84,7 @@ export class InteractionReceiveService {
 
     private _kickObservable = this.notifyService.getMessageObservable<kickMessage>(KickMessage);
 
-    public constructor(
-        private notifyService: NotifyService,
-        private activeMeetingService: ActiveMeetingService
-    ) {}
+    public constructor(private notifyService: NotifyService, private activeMeetingService: ActiveMeetingService) {}
 
     public startListening(lazyServices: InteractionReceiveSetupServices): void {
         if (!!this._inviteSubscription) {

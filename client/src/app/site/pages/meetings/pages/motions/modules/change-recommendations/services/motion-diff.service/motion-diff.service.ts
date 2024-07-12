@@ -90,10 +90,7 @@ export class MotionDiffService {
     // @TODO Decide on a more sophisticated implementation
     private diffCache = new DiffCache();
 
-    public constructor(
-        private lineNumberingService: LineNumberingService,
-        private translate: TranslateService
-    ) {}
+    public constructor(private lineNumberingService: LineNumberingService, private translate: TranslateService) {}
 
     /**
      * Searches for the line breaking node within the given Document specified by the given lineNumber.

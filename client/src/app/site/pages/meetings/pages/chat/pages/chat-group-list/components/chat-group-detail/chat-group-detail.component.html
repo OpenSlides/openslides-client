@@ -1,67 +1,63 @@
 @if (chatGroupObservable | async; as group) {
-    <div>
-        <div class="background-primary flex-vertical-center chat-group-label-wrapper">
-            @if (isMobileObservable | async) {
-                <button mat-icon-button (click)="backButtonClicked.emit()">
-                    <mat-icon>arrow_back_ios</mat-icon>
-                </button>
-            }
-            <div class="max-lines-2">
-                {{ group.name }}
-            </div>
+<div>
+    <div class="background-primary flex-vertical-center chat-group-label-wrapper">
+        @if (isMobileObservable | async) {
+        <button mat-icon-button (click)="backButtonClicked.emit()">
+            <mat-icon>arrow_back_ios</mat-icon>
+        </button>
+        }
+        <div class="max-lines-2">
+            {{ group.name }}
         </div>
-        <div class="action-row flex-vertical-center padding-left-8 padding-right-8">
-            <div>
-                @if (group.write_groups.length) {
-                    <os-icon-container icon="edit" matTooltip="{{ 'Groups with write permissions' | translate }}">
-                        <os-comma-separated-listing [list]="group.write_groups" [showElementsAmount]="3">
-                            <ng-template let-group>{{ group.getTitle() }}</ng-template>
-                        </os-comma-separated-listing>
-                    </os-icon-container>
-                }
-            </div>
-            <div>
-                @if (getReadonlyGroups(group).length) {
-                    <os-icon-container
-                        icon="remove_red_eye"
-                        matTooltip="{{ 'Groups with read permissions' | translate }}"
-                    >
-                        <os-comma-separated-listing [list]="getReadonlyGroups(group)" [showElementsAmount]="3">
-                            <ng-template let-group>{{ group.getTitle() }}</ng-template>
-                        </os-comma-separated-listing>
-                    </os-icon-container>
-                }
-            </div>
-            <div class="spacer"></div>
-            @if (canManage) {
-                <button mat-icon-button [matMenuTriggerData]="{ chatGroup: group }" [matMenuTriggerFor]="chatGroupMenu">
-                    <mat-icon>more_vert</mat-icon>
-                </button>
+    </div>
+    <div class="action-row flex-vertical-center padding-left-8 padding-right-8">
+        <div>
+            @if (group.write_groups.length) {
+            <os-icon-container icon="edit" matTooltip="{{ 'Groups with write permissions' | translate }}">
+                <os-comma-separated-listing [list]="group.write_groups" [showElementsAmount]="3">
+                    <ng-template let-group>{{ group.getTitle() }}</ng-template>
+                </os-comma-separated-listing>
+            </os-icon-container>
             }
         </div>
-        @if ({ writePermissions: hasWritePermissionsObservable | async }; as has) {
-            <cdk-virtual-scroll-viewport
-                [itemSize]="70"
-                [ngClass]="{ 'has-write-permissions': has.writePermissions }"
-                (scrolledIndexChange)="onScrolledIndexChanged()"
-            >
-                <div *cdkVirtualFor="let message of group.chat_messages">
-                    <os-chat-group-detail-message
-                        [chatMessage]="message"
-                        (deleting)="deleteChatMessage($event)"
-                        (editing)="prepareEditingChatMessage($event)"
-                    ></os-chat-group-detail-message>
-                </div>
-            </cdk-virtual-scroll-viewport>
+        <div>
+            @if (getReadonlyGroups(group).length) {
+            <os-icon-container icon="remove_red_eye" matTooltip="{{ 'Groups with read permissions' | translate }}">
+                <os-comma-separated-listing [list]="getReadonlyGroups(group)" [showElementsAmount]="3">
+                    <ng-template let-group>{{ group.getTitle() }}</ng-template>
+                </os-comma-separated-listing>
+            </os-icon-container>
+            }
+        </div>
+        <div class="spacer"></div>
+        @if (canManage) {
+        <button mat-icon-button [matMenuTriggerData]="{ chatGroup: group }" [matMenuTriggerFor]="chatGroupMenu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
         }
     </div>
-}
-@if (hasWritePermissionsObservable | async) {
-    <os-chat-group-detail-message-form
-        [currentMessage]="toEditChatMessageObservable | async"
-        (editingCanceled)="cancelEditingChatMessage()"
-        (messageSent)="sendChatMessage($event)"
-    ></os-chat-group-detail-message-form>
+    @if ({ writePermissions: hasWritePermissionsObservable | async }; as has) {
+    <cdk-virtual-scroll-viewport
+        [itemSize]="70"
+        [ngClass]="{ 'has-write-permissions': has.writePermissions }"
+        (scrolledIndexChange)="onScrolledIndexChanged()"
+    >
+        <div *cdkVirtualFor="let message of group.chat_messages">
+            <os-chat-group-detail-message
+                [chatMessage]="message"
+                (deleting)="deleteChatMessage($event)"
+                (editing)="prepareEditingChatMessage($event)"
+            ></os-chat-group-detail-message>
+        </div>
+    </cdk-virtual-scroll-viewport>
+    }
+</div>
+} @if (hasWritePermissionsObservable | async) {
+<os-chat-group-detail-message-form
+    [currentMessage]="toEditChatMessageObservable | async"
+    (editingCanceled)="cancelEditingChatMessage()"
+    (messageSent)="sendChatMessage($event)"
+></os-chat-group-detail-message-form>
 }
 
 <!-- The menu content -->

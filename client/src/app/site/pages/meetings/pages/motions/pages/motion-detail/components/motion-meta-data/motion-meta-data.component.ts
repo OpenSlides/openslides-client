@@ -301,8 +301,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         const copy = this.motion.origin_id
             ? [...(this.motion.all_origins || [])]
             : this.motion.origin_meeting
-              ? [this.motion.origin_meeting]
-              : [];
+            ? [this.motion.origin_meeting]
+            : [];
         return copy.reverse();
     }
 

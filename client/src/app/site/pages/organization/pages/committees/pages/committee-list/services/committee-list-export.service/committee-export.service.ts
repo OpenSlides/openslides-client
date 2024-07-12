@@ -10,10 +10,7 @@ import { CommitteeListServiceModule } from '../committee-list-service.module';
     providedIn: CommitteeListServiceModule
 })
 export class CommitteeExportService {
-    public constructor(
-        private translate: TranslateService,
-        private csvExport: CsvExportForBackendService
-    ) {}
+    public constructor(private translate: TranslateService, private csvExport: CsvExportForBackendService) {}
 
     public export(committees: ViewCommittee[]): void {
         const properties: CsvColumnsDefinition<ViewCommittee> = [

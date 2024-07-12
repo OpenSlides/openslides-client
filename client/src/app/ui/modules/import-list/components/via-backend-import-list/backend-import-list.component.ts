@@ -243,10 +243,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         [property: string]: { default?: ImportListHeaderDefinition; preview?: BackendImportHeader };
     } = {};
 
-    public constructor(
-        private dialog: MatDialog,
-        private translate: TranslateService
-    ) {}
+    public constructor(private dialog: MatDialog, private translate: TranslateService) {}
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)

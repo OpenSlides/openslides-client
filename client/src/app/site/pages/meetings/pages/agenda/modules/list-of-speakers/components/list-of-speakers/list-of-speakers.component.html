@@ -10,10 +10,9 @@
         <div class="title-slot">
             <h2>
                 @if (!isCurrentListOfSpeakers) {
-                    <span>{{ 'List of speakers' | translate }}</span>
-                }
-                @if (isCurrentListOfSpeakers) {
-                    <span>{{ 'Current list of speakers' | translate }}</span>
+                <span>{{ 'List of speakers' | translate }}</span>
+                } @if (isCurrentListOfSpeakers) {
+                <span>{{ 'Current list of speakers' | translate }}</span>
                 }
             </h2>
         </div>
@@ -43,60 +42,52 @@
     ></os-list-of-speakers-content>
 
     <!-- special los part for structure level -->
-    @if (
-        structureLevelCountdownEnabled &&
-        viewListOfSpeakers &&
-        viewListOfSpeakers.structure_level_list_of_speakers_ids?.length
-    ) {
-        <div class="col-right">
-            <mat-card class="spacer-bottom-60 os-card">
-                <mat-card-content>
-                    <os-speaking-times
-                        [currentSpeakingTimes]="viewListOfSpeakers.structure_level_list_of_speakers_ids"
-                        [showProjectionMenu]="true"
-                    ></os-speaking-times>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    }
-    @if (viewListOfSpeakers) {
-        <div>
-            <!-- Moderator Note-->
-            <os-moderation-note [listOfSpeakers]="viewListOfSpeakers"></os-moderation-note>
-        </div>
+    @if ( structureLevelCountdownEnabled && viewListOfSpeakers &&
+    viewListOfSpeakers.structure_level_list_of_speakers_ids?.length ) {
+    <div class="col-right">
+        <mat-card class="spacer-bottom-60 os-card">
+            <mat-card-content>
+                <os-speaking-times
+                    [currentSpeakingTimes]="viewListOfSpeakers.structure_level_list_of_speakers_ids"
+                    [showProjectionMenu]="true"
+                ></os-speaking-times>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    } @if (viewListOfSpeakers) {
+    <div>
+        <!-- Moderator Note-->
+        <os-moderation-note [listOfSpeakers]="viewListOfSpeakers"></os-moderation-note>
+    </div>
     }
 </os-detail-view>
 
 <mat-menu #speakerMenu="matMenu">
     @if (isMobile) {
-        <button mat-menu-item (click)="setManualSortMode(true)">
-            <mat-icon>sort</mat-icon>
-            <span>{{ 'Sort' | translate }}</span>
-        </button>
-    }
-    @if (viewListOfSpeakers && projectors && projectors.length > 1) {
-        <os-projector-button [menuItem]="true" [object]="getClosSlide()">
-            {{ 'Current list of speakers (as slide)' | translate }}
-        </os-projector-button>
-    }
-    @if (viewListOfSpeakers) {
-        <os-projector-button [menuItem]="true" [object]="viewListOfSpeakers">
-            {{ 'List of speakers' | translate }}
-        </os-projector-button>
-    }
-    @if (viewListOfSpeakers) {
-        <os-projector-button [menuItem]="true" [object]="viewListOfSpeakers.content_object!">
-            {{ getContentObjectProjectorButtonText() | translate }}
-        </os-projector-button>
+    <button mat-menu-item (click)="setManualSortMode(true)">
+        <mat-icon>sort</mat-icon>
+        <span>{{ 'Sort' | translate }}</span>
+    </button>
+    } @if (viewListOfSpeakers && projectors && projectors.length > 1) {
+    <os-projector-button [menuItem]="true" [object]="getClosSlide()">
+        {{ 'Current list of speakers (as slide)' | translate }}
+    </os-projector-button>
+    } @if (viewListOfSpeakers) {
+    <os-projector-button [menuItem]="true" [object]="viewListOfSpeakers">
+        {{ 'List of speakers' | translate }}
+    </os-projector-button>
+    } @if (viewListOfSpeakers) {
+    <os-projector-button [menuItem]="true" [object]="viewListOfSpeakers.content_object!">
+        {{ getContentObjectProjectorButtonText() | translate }}
+    </os-projector-button>
     }
 
     <button mat-menu-item (click)="setLosClosed(!isListOfSpeakersClosed)">
         <mat-icon>{{ isListOfSpeakersClosed ? 'lock_open' : 'lock' }}</mat-icon>
         @if (!isListOfSpeakersClosed) {
-            <span>{{ 'Close list of speakers' | translate }}</span>
-        }
-        @if (isListOfSpeakersClosed) {
-            <span>{{ 'Open list of speakers' | translate }}</span>
+        <span>{{ 'Close list of speakers' | translate }}</span>
+        } @if (isListOfSpeakersClosed) {
+        <span>{{ 'Open list of speakers' | translate }}</span>
         }
     </button>
 

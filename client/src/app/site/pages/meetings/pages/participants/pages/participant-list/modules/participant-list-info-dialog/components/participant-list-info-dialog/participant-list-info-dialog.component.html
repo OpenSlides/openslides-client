@@ -6,34 +6,33 @@
         <mat-label>{{ 'Groups' | translate }}</mat-label>
         <mat-select multiple [(ngModel)]="infoDialog.group_ids">
             @for (group of groupsObservable | async; track group) {
-                <mat-option [value]="group.id">
-                    {{ group.getTitle() }}
-                </mat-option>
+            <mat-option [value]="group.id">
+                {{ group.getTitle() }}
+            </mat-option>
             }
         </mat-select>
     </mat-form-field>
     @if (showVoteDelegations) {
-        <mat-form-field>
-            <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
-            <os-list-search-selector
-                [inputListValues]="otherParticipantsObservable"
-                [multiple]="true"
-                [sortFn]="false"
-                [(ngModel)]="infoDialog.vote_delegations_from_ids"
-            ></os-list-search-selector>
-        </mat-form-field>
-    }
-    @if (showVoteDelegations) {
-        <mat-form-field>
-            <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
-            <os-list-search-selector
-                [includeNone]="true"
-                [inputListValues]="otherParticipantsObservable"
-                [multiple]="false"
-                [sortFn]="false"
-                [(ngModel)]="infoDialog.vote_delegated_to_id"
-            ></os-list-search-selector>
-        </mat-form-field>
+    <mat-form-field>
+        <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
+        <os-list-search-selector
+            [inputListValues]="otherParticipantsObservable"
+            [multiple]="true"
+            [sortFn]="false"
+            [(ngModel)]="infoDialog.vote_delegations_from_ids"
+        ></os-list-search-selector>
+    </mat-form-field>
+    } @if (showVoteDelegations) {
+    <mat-form-field>
+        <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
+        <os-list-search-selector
+            [includeNone]="true"
+            [inputListValues]="otherParticipantsObservable"
+            [multiple]="false"
+            [sortFn]="false"
+            [(ngModel)]="infoDialog.vote_delegated_to_id"
+        ></os-list-search-selector>
+    </mat-form-field>
     }
     <mat-form-field>
         <mat-label>{{ 'Structure level' | translate }}</mat-label>

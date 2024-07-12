@@ -12,10 +12,7 @@ import { PromptDialogModule } from '../prompt-dialog.module';
 export class PromptService {
     private dialogRef: MatDialogRef<PromptDialogComponent> | null = null;
 
-    public constructor(
-        private dialog: MatDialog,
-        private translate: TranslateService
-    ) {}
+    public constructor(private dialog: MatDialog, private translate: TranslateService) {}
 
     /**
      * Opens the dialog. Returns true, if the user accepts.

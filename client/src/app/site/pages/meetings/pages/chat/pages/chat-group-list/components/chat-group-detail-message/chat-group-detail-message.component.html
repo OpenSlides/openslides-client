@@ -1,8 +1,8 @@
 <div class="message-box" [ngClass]="{ 'incomming-message': !isOwnMessage, 'outgoing-message': isOwnMessage }">
     @if (!isOwnMessage) {
-        <div class="author">
-            {{ author }}
-        </div>
+    <div class="author">
+        {{ author }}
+    </div>
     }
     <div
         class="chat-text pointer"
@@ -14,32 +14,29 @@
     >
         {{ text }}
         <div class="timestamp">{{ date | localizedDate }}</div>
-        @if (isOwnMessage || canBeDeleted) {
-            @if (isMobile) {
-                <a class="stretch-to-fill-parent" [matMenuTriggerFor]="singleChatMenu"></a>
-            }
-            @if (!isMobile) {
-                <button mat-icon-button [matMenuTriggerFor]="singleChatMenu">
-                    <mat-icon>more_horiz</mat-icon>
-                </button>
-            }
-        }
+        @if (isOwnMessage || canBeDeleted) { @if (isMobile) {
+        <a class="stretch-to-fill-parent" [matMenuTriggerFor]="singleChatMenu"></a>
+        } @if (!isMobile) {
+        <button mat-icon-button [matMenuTriggerFor]="singleChatMenu">
+            <mat-icon>more_horiz</mat-icon>
+        </button>
+        } }
     </div>
 </div>
 
 <mat-menu #singleChatMenu="matMenu">
     <!-- Update this message -->
     @if (isOwnMessage) {
-        <button mat-menu-item (click)="onEditMessage()">
-            <mat-icon>edit</mat-icon>
-            <span>{{ 'Edit' | translate }}</span>
-        </button>
+    <button mat-menu-item (click)="onEditMessage()">
+        <mat-icon>edit</mat-icon>
+        <span>{{ 'Edit' | translate }}</span>
+    </button>
     }
     <!-- Delete this message -->
     @if (canBeDeleted) {
-        <button mat-menu-item (click)="onDeleteMessage()">
-            <mat-icon color="warn">delete</mat-icon>
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
+    <button mat-menu-item (click)="onDeleteMessage()">
+        <mat-icon color="warn">delete</mat-icon>
+        <span>{{ 'Delete' | translate }}</span>
+    </button>
     }
 </mat-menu>

@@ -34,16 +34,16 @@
 >
     <div *osScrollingTableCell="'name'; row as meeting" class="cell-slot fill">
         @if (!isMultiSelect && meeting.canAccess()) {
-            <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
+        <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
         }
         <div class="flex-vertical-center overflow-hidden">
             <div class="nameCell overflow-hidden">
                 <div class="title-line title-box">
                     <!-- Is Archived -->
                     @if (meeting.isArchived) {
-                        <span class="icon-prefix">
-                            <mat-icon [matTooltip]="'Archived' | translate">archive</mat-icon>
-                        </span>
+                    <span class="icon-prefix">
+                        <mat-icon [matTooltip]="'Archived' | translate">archive</mat-icon>
+                    </span>
                     }
 
                     <!-- Is Template -->
@@ -63,19 +63,17 @@
                 </div>
 
                 @if (meeting.location || meeting.start_time || meeting.end_time) {
-                    <div class="subtitle ellipsis-overflow">
-                        @if (meeting.location) {
-                            <span>{{ meeting.location }}</span>
-                        }
-                        @if (meeting.location && (meeting.start_time || meeting.end_time)) {
-                            <span>&nbsp;&middot;&nbsp;</span>
-                        }
-                        @if (meeting.start_time || meeting.end_time) {
-                            <span>
-                                <os-meeting-time [meeting]="meeting"></os-meeting-time>
-                            </span>
-                        }
-                    </div>
+                <div class="subtitle ellipsis-overflow">
+                    @if (meeting.location) {
+                    <span>{{ meeting.location }}</span>
+                    } @if (meeting.location && (meeting.start_time || meeting.end_time)) {
+                    <span>&nbsp;&middot;&nbsp;</span>
+                    } @if (meeting.start_time || meeting.end_time) {
+                    <span>
+                        <os-meeting-time [meeting]="meeting"></os-meeting-time>
+                    </span>
+                    }
+                </div>
                 }
             </div>
         </div>
@@ -84,60 +82,54 @@
     <div *osScrollingTableCell="'committee'; row as meeting">
         <div>
             @if (meeting.committee?.name) {
-                <div class="ellipsis-overflow" style="position: relative">
-                    @if (!this.isMultiSelect && meeting.committee?.canAccess()) {
-                        <a
-                            class="stretch-to-fill-parent committee-link"
-                            [routerLink]="getCommitteeForMeetingUrl(meeting)"
-                        ></a>
+            <div class="ellipsis-overflow" style="position: relative">
+                @if (!this.isMultiSelect && meeting.committee?.canAccess()) {
+                <a class="stretch-to-fill-parent committee-link" [routerLink]="getCommitteeForMeetingUrl(meeting)"></a>
+                } @if (meeting.committee?.name) {
+                <os-icon-container class="committee" icon="layers">
+                    {{ meeting.committee?.name | translate }}
+                </os-icon-container>
+                }
+            </div>
+            } @if (meeting.organization_tags.length) {
+            <div class="ellipsis-overflow">
+                <os-icon-container icon="local_offer">
+                    @for (tag of meeting.organization_tags; track tag) {
+                    <os-chip [color]="tag.color">
+                        {{ tag.name }}
+                    </os-chip>
                     }
-                    @if (meeting.committee?.name) {
-                        <os-icon-container class="committee" icon="layers">
-                            {{ meeting.committee?.name | translate }}
-                        </os-icon-container>
-                    }
-                </div>
-            }
-            @if (meeting.organization_tags.length) {
-                <div class="ellipsis-overflow">
-                    <os-icon-container icon="local_offer">
-                        @for (tag of meeting.organization_tags; track tag) {
-                            <os-chip [color]="tag.color">
-                                {{ tag.name }}
-                            </os-chip>
-                        }
-                    </os-icon-container>
-                </div>
+                </os-icon-container>
+            </div>
             }
         </div>
     </div>
 
     <div *osScrollingTableCell="'meta'; row as meeting; config: { width: 60 }">
         @if (!isMultiSelect && meeting.canAccess()) {
-            <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
+        <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
         }
         <div>
             @if (meeting.userAmount) {
-                <div>
-                    <os-icon-container
-                        icon="group"
-                        iconTooltipPosition="right"
-                        iconTooltip="{{ 'Participants' | translate }}"
-                    >
-                        {{ meeting.userAmount }}
-                    </os-icon-container>
-                </div>
-            }
-            @if (meeting.motionsAmount) {
-                <div>
-                    <os-icon-container
-                        icon="assignment"
-                        iconTooltipPosition="right"
-                        iconTooltip="{{ 'Motions' | translate }}"
-                    >
-                        {{ meeting.motionsAmount }}
-                    </os-icon-container>
-                </div>
+            <div>
+                <os-icon-container
+                    icon="group"
+                    iconTooltipPosition="right"
+                    iconTooltip="{{ 'Participants' | translate }}"
+                >
+                    {{ meeting.userAmount }}
+                </os-icon-container>
+            </div>
+            } @if (meeting.motionsAmount) {
+            <div>
+                <os-icon-container
+                    icon="assignment"
+                    iconTooltipPosition="right"
+                    iconTooltip="{{ 'Motions' | translate }}"
+                >
+                    {{ meeting.motionsAmount }}
+                </os-icon-container>
+            </div>
             }
         </div>
     </div>
@@ -160,12 +152,12 @@
 <mat-menu #singleMeetingMenu="matMenu">
     <ng-template let-meeting="meeting" matMenuContent>
         @if (!meeting.isArchived) {
-            <button data-cy="meetingListSingleEditButton" mat-menu-item type="button" (click)="editSingle(meeting)">
-                <mat-icon>edit</mat-icon>
-                <span>
-                    {{ 'Edit' | translate }}
-                </span>
-            </button>
+        <button data-cy="meetingListSingleEditButton" mat-menu-item type="button" (click)="editSingle(meeting)">
+            <mat-icon>edit</mat-icon>
+            <span>
+                {{ 'Edit' | translate }}
+            </span>
+        </button>
         }
         <button
             class="red-warning-text"
@@ -184,34 +176,33 @@
 
 <mat-menu #meetingMenu="matMenu">
     @if (!isMultiSelect) {
-        <div>
-            <button mat-menu-item (click)="csvExportMeetingList()">
-                <mat-icon>archive</mat-icon>
-                <span>{{ 'Export as CSV' | translate }}</span>
+    <div>
+        <button mat-menu-item (click)="csvExportMeetingList()">
+            <mat-icon>archive</mat-icon>
+            <span>{{ 'Export as CSV' | translate }}</span>
+        </button>
+        <button mat-menu-item (click)="toggleMultiSelect()">
+            <mat-icon>library_add</mat-icon>
+            <span>{{ 'Multiselect' | translate }}</span>
+        </button>
+    </div>
+    } @if (isMultiSelect) {
+    <div>
+        <button mat-menu-item (click)="selectAll()">
+            <mat-icon>done_all</mat-icon>
+            <span>{{ 'Select all' | translate }}</span>
+        </button>
+        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+            <mat-icon>clear</mat-icon>
+            <span>{{ 'Deselect all' | translate }}</span>
+        </button>
+        <ng-container *osOmlPerms="OML.superadmin">
+            <mat-divider></mat-divider>
+            <button class="red-warning-text" mat-menu-item [disabled]="!selectedRows.length" (click)="doDelete()">
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
             </button>
-            <button mat-menu-item (click)="toggleMultiSelect()">
-                <mat-icon>library_add</mat-icon>
-                <span>{{ 'Multiselect' | translate }}</span>
-            </button>
-        </div>
-    }
-    @if (isMultiSelect) {
-        <div>
-            <button mat-menu-item (click)="selectAll()">
-                <mat-icon>done_all</mat-icon>
-                <span>{{ 'Select all' | translate }}</span>
-            </button>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
-                <mat-icon>clear</mat-icon>
-                <span>{{ 'Deselect all' | translate }}</span>
-            </button>
-            <ng-container *osOmlPerms="OML.superadmin">
-                <mat-divider></mat-divider>
-                <button class="red-warning-text" mat-menu-item [disabled]="!selectedRows.length" (click)="doDelete()">
-                    <mat-icon>delete</mat-icon>
-                    <span>{{ 'Delete' | translate }}</span>
-                </button>
-            </ng-container>
-        </div>
+        </ng-container>
+    </div>
     }
 </mat-menu>

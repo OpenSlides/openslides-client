@@ -109,16 +109,13 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         this._fetchVotablePollsTimeout = setTimeout(() => {
             this.requestHasVoted();
             clearInterval(this._fetchVotablePollsInterval);
-            this._fetchVotablePollsInterval = setInterval(
-                () => {
-                    if (this._subscribedPolls.size) {
-                        this.requestHasVoted();
-                    } else {
-                        clearInterval(this._fetchVotablePollsInterval);
-                    }
-                },
-                8000 + Math.random() * 2000
-            );
+            this._fetchVotablePollsInterval = setInterval(() => {
+                if (this._subscribedPolls.size) {
+                    this.requestHasVoted();
+                } else {
+                    clearInterval(this._fetchVotablePollsInterval);
+                }
+            }, 8000 + Math.random() * 2000);
         }, 500);
     }
 

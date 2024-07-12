@@ -24,10 +24,7 @@ export class MotionImportListComponent extends BaseImportListComponent<ViewMotio
         }));
     }
 
-    public constructor(
-        protected override translate: TranslateService,
-        public override importer: MotionImportService
-    ) {
+    public constructor(protected override translate: TranslateService, public override importer: MotionImportService) {
         super(importer);
     }
 

@@ -121,10 +121,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      *
      * @param formBuilder The FormBuilder
      */
-    public constructor(
-        private formBuilder: UntypedFormBuilder,
-        private router: Router
-    ) {}
+    public constructor(private formBuilder: UntypedFormBuilder, private router: Router) {}
 
     /**
      * OnInit-method.

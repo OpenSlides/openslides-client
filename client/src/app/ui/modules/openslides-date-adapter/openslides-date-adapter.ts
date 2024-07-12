@@ -10,10 +10,7 @@ import { langToTimeLocale } from 'src/app/infrastructure/utils';
  */
 @Injectable()
 export class OpenSlidesDateAdapter extends DateFnsAdapter {
-    public constructor(
-        protected translate: TranslateService,
-        @Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string
-    ) {
+    public constructor(protected translate: TranslateService, @Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string) {
         super(dateLocale);
         // subscribe to language changes to change localisation of dates accordingly
         // DateAdapter seems not to be a singleton so we do that in this subclass instead of app.component

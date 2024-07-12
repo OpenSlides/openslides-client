@@ -5,21 +5,20 @@
 <mat-dialog-content>
     <p>{{ 'The server may still be processing them, but you will probably not get a result.' | translate }}</p>
     @if (snapshots && showSnapshots) {
-        <div class="snapshots-field">
-            {{ snapshots }}
-        </div>
+    <div class="snapshots-field">
+        {{ snapshots }}
+    </div>
     }
 </mat-dialog-content>
 
 <mat-dialog-actions>
     <button mat-button mat-dialog-close>{{ 'OK' | translate }}</button>
     @if (!showSnapshots) {
-        <button mat-button (click)="showReport()">{{ 'Show report' | translate }}</button>
-    }
-    @if (showSnapshots) {
-        <button mat-button (click)="copySnapshots()">
-            <mat-icon>content_copy</mat-icon>
-            {{ 'Copy report to clipboard' | translate }}
-        </button>
+    <button mat-button (click)="showReport()">{{ 'Show report' | translate }}</button>
+    } @if (showSnapshots) {
+    <button mat-button (click)="copySnapshots()">
+        <mat-icon>content_copy</mat-icon>
+        {{ 'Copy report to clipboard' | translate }}
+    </button>
     }
 </mat-dialog-actions>

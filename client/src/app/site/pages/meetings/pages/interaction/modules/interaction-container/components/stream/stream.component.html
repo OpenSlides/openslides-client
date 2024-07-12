@@ -1,6 +1,6 @@
 <div *osPerms="permission.meetingCanSeeLivestream; and: showVideoPlayer">
     @if (showParticles | async) {
-        <os-applause-particle-display class="applause-particles"></os-applause-particle-display>
+    <os-applause-particle-display class="applause-particles"></os-applause-particle-display>
     }
     <os-video-player [videoUrl]="liveStreamUrl" (started)="onSteamLoaded()"></os-video-player>
 </div>
@@ -8,9 +8,9 @@
     <span>{{ 'You are not allowed to see the livestream' | translate }}</span>
 </div>
 @if (isStreamInOtherTab) {
-    <div class="disconnected">
-        <button class="restart-stream-button" color="warn" mat-button (click)="forceLoadStream()">
-            <span>{{ 'Restart livestream' | translate }}</span>
-        </button>
-    </div>
+<div class="disconnected">
+    <button class="restart-stream-button" color="warn" mat-button (click)="forceLoadStream()">
+        <span>{{ 'Restart livestream' | translate }}</span>
+    </button>
+</div>
 }

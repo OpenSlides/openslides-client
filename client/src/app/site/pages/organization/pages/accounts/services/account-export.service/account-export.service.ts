@@ -12,10 +12,7 @@ import { AccountExportServiceModule } from '../account-export-service.module';
     providedIn: AccountExportServiceModule
 })
 export class AccountExportService {
-    public constructor(
-        private csvExportService: CsvExportForBackendService,
-        private translate: TranslateService
-    ) {}
+    public constructor(private csvExportService: CsvExportForBackendService, private translate: TranslateService) {}
 
     public downloadCsvImportExample(): void {
         this.csvExportService.dummyCSVExport<UserExport>(

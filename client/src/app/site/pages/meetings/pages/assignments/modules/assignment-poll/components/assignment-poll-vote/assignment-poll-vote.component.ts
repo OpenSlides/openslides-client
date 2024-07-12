@@ -43,10 +43,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         return this.assignment?.number_poll_candidates || false;
     }
 
-    public constructor(
-        private promptService: PromptService,
-        meetingSettingsService: MeetingSettingsService
-    ) {
+    public constructor(private promptService: PromptService, meetingSettingsService: MeetingSettingsService) {
         super(meetingSettingsService);
     }
 

@@ -305,18 +305,13 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             const chosenGroupIds = selectedChoice.ids as Ids;
             if (selectedChoice.action === ADD) {
                 this.repo
-                    .update(
-                        user => {
-                            const nextGroupIds = user
-                                .group_ids()
-                                .filter(id => this.activeMeeting.default_group_id !== id);
-                            return {
-                                id: user.id,
-                                group_ids: [...new Set(nextGroupIds.concat(chosenGroupIds))]
-                            };
-                        },
-                        ...this.selectedRows
-                    )
+                    .update(user => {
+                        const nextGroupIds = user.group_ids().filter(id => this.activeMeeting.default_group_id !== id);
+                        return {
+                            id: user.id,
+                            group_ids: [...new Set(nextGroupIds.concat(chosenGroupIds))]
+                        };
+                    }, ...this.selectedRows)
                     .resolve();
             } else if (
                 this.selectedRows.every(
@@ -333,20 +328,17 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 (await this.prompt.open(this.selfGroupRemovalDialogTitle, this.selfGroupRemovalDialogContent))
             ) {
                 this.repo
-                    .update(
-                        user => {
-                            const nextGroupIds = new Set(user.group_ids());
-                            chosenGroupIds.forEach(id => nextGroupIds.delete(id));
-                            return {
-                                id: user.id,
-                                group_ids:
-                                    nextGroupIds.size === 0
-                                        ? [this.activeMeeting.default_group_id]
-                                        : Array.from(nextGroupIds)
-                            };
-                        },
-                        ...this.selectedRows
-                    )
+                    .update(user => {
+                        const nextGroupIds = new Set(user.group_ids());
+                        chosenGroupIds.forEach(id => nextGroupIds.delete(id));
+                        return {
+                            id: user.id,
+                            group_ids:
+                                nextGroupIds.size === 0
+                                    ? [this.activeMeeting.default_group_id]
+                                    : Array.from(nextGroupIds)
+                        };
+                    }, ...this.selectedRows)
                     .resolve();
             }
         }
@@ -366,30 +358,24 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             const chosenStructureLevelIds = selectedChoice.ids as Ids;
             if (selectedChoice.action === ADD) {
                 this.repo
-                    .update(
-                        user => {
-                            const nextStructureLevelIds = user.structure_level_ids() || [];
-                            return {
-                                id: user.id,
-                                structure_level_ids: [...new Set(nextStructureLevelIds.concat(chosenStructureLevelIds))]
-                            };
-                        },
-                        ...this.selectedRows
-                    )
+                    .update(user => {
+                        const nextStructureLevelIds = user.structure_level_ids() || [];
+                        return {
+                            id: user.id,
+                            structure_level_ids: [...new Set(nextStructureLevelIds.concat(chosenStructureLevelIds))]
+                        };
+                    }, ...this.selectedRows)
                     .resolve();
             } else {
                 this.repo
-                    .update(
-                        user => {
-                            const nextStructureLevelIds = new Set(user.structure_level_ids() || []);
-                            chosenStructureLevelIds.forEach(id => nextStructureLevelIds.delete(id));
-                            return {
-                                id: user.id,
-                                structure_level_ids: Array.from(nextStructureLevelIds)
-                            };
-                        },
-                        ...this.selectedRows
-                    )
+                    .update(user => {
+                        const nextStructureLevelIds = new Set(user.structure_level_ids() || []);
+                        chosenStructureLevelIds.forEach(id => nextStructureLevelIds.delete(id));
+                        return {
+                            id: user.id,
+                            structure_level_ids: Array.from(nextStructureLevelIds)
+                        };
+                    }, ...this.selectedRows)
                     .resolve();
             }
         }

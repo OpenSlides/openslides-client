@@ -13,10 +13,7 @@ import { OrganizationTagAction } from './organization-tag.action';
     providedIn: `root`
 })
 export class OrganizationTagRepositoryService extends BaseRepository<ViewOrganizationTag, OrganizationTag> {
-    public constructor(
-        serviceCollector: RepositoryServiceCollectorService,
-        private theme: ThemeService
-    ) {
+    public constructor(serviceCollector: RepositoryServiceCollectorService, private theme: ThemeService) {
         super(serviceCollector, OrganizationTag);
     }
 

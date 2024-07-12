@@ -1,7 +1,7 @@
 <div class="os-datetimepicker-container">
     <mat-form-field class="datepicker-form-field">
         @if (title) {
-            <mat-label>{{ title | translate }}</mat-label>
+        <mat-label>{{ title | translate }}</mat-label>
         }
         <mat-date-range-input
             [formGroup]="contentForm"
@@ -13,16 +13,16 @@
             <input formControlName="end" matEndDate readonly [placeholder]="'End date' | translate" />
         </mat-date-range-input>
         @if (hintText) {
-            <mat-hint>{{ hintText | translate }}</mat-hint>
+        <mat-hint>{{ hintText | translate }}</mat-hint>
         }
         <div class="suffix-wrapper" matSuffix>
             @if (showUpdateSuccessIcon) {
-                <mat-icon class="red-warning-text">check_circle</mat-icon>
+            <mat-icon class="red-warning-text">check_circle</mat-icon>
             }
             <mat-datepicker-toggle [for]="picker" (click)="$event.preventDefault()"></mat-datepicker-toggle>
         </div>
         @if (error) {
-            <mat-error>{{ error }}</mat-error>
+        <mat-error>{{ error }}</mat-error>
         }
         <mat-date-range-picker #picker>
             <mat-datepicker-actions>

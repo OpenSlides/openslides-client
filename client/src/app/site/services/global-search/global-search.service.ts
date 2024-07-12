@@ -18,10 +18,7 @@ import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchResponseEntry } fr
     providedIn: `root`
 })
 export class GlobalSearchService {
-    public constructor(
-        private http: HttpService,
-        private activeMeeting: ActiveMeetingService
-    ) {}
+    public constructor(private http: HttpService, private activeMeeting: ActiveMeetingService) {}
 
     public async searchChange(
         searchTerm: string,

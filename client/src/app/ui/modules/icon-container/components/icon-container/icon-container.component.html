@@ -1,37 +1,35 @@
 @if (!swap && showIcon) {
-    <mat-icon
-        [color]="color"
-        [inline]="inline"
-        [matTooltip]="iconTooltip"
-        [matTooltipClass]="iconTooltipClass"
-        [matTooltipPosition]="iconTooltipPosition"
-        [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
-        [ngStyle]="{ transform: getRotation() }"
-        (click)="iconClick()"
-    >
-        {{ icon }}
-    </mat-icon>
-}
-@if (!hide) {
-    <span
-        class="content-node"
-        [ngClass]="{ 'single-line': noWrap, 'break-lines': !noWrap, 'content-swapped': swap, 'fill-space': !noFill }"
-    >
-        <ng-content></ng-content>
-        <ng-content select="[afterContent]"></ng-content>
-    </span>
-}
-@if (swap && showIcon) {
-    <mat-icon
-        [color]="color"
-        [inline]="inline"
-        [matTooltip]="iconTooltip"
-        [matTooltipClass]="iconTooltipClass"
-        [matTooltipPosition]="iconTooltipPosition"
-        [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
-        [ngStyle]="{ transform: getRotation() }"
-        (click)="iconClick()"
-    >
-        {{ icon }}
-    </mat-icon>
+<mat-icon
+    [color]="color"
+    [inline]="inline"
+    [matTooltip]="iconTooltip"
+    [matTooltipClass]="iconTooltipClass"
+    [matTooltipPosition]="iconTooltipPosition"
+    [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
+    [ngStyle]="{ transform: getRotation() }"
+    (click)="iconClick()"
+>
+    {{ icon }}
+</mat-icon>
+} @if (!hide) {
+<span
+    class="content-node"
+    [ngClass]="{ 'single-line': noWrap, 'break-lines': !noWrap, 'content-swapped': swap, 'fill-space': !noFill }"
+>
+    <ng-content></ng-content>
+    <ng-content select="[afterContent]"></ng-content>
+</span>
+} @if (swap && showIcon) {
+<mat-icon
+    [color]="color"
+    [inline]="inline"
+    [matTooltip]="iconTooltip"
+    [matTooltipClass]="iconTooltipClass"
+    [matTooltipPosition]="iconTooltipPosition"
+    [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
+    [ngStyle]="{ transform: getRotation() }"
+    (click)="iconClick()"
+>
+    {{ icon }}
+</mat-icon>
 }

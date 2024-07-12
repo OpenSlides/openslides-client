@@ -40,10 +40,7 @@ export class ParticipantCsvExportService {
     //     ]
     // ]);
 
-    public constructor(
-        private csvExport: MeetingCsvExportForBackendService,
-        private translate: TranslateService
-    ) {}
+    public constructor(private csvExport: MeetingCsvExportForBackendService, private translate: TranslateService) {}
 
     public export(participants: ViewUser[]): void {
         this.csvExport.export(

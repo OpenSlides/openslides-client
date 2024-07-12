@@ -44,10 +44,7 @@ export class ActiveMeetingIdService {
     // undefined to specify it is not initialized
     private readonly _meetingIdSubject = new BehaviorSubject<Id | null>(undefined);
 
-    public constructor(
-        router: Router,
-        private DS: MeetingDataStoreService
-    ) {
+    public constructor(router: Router, private DS: MeetingDataStoreService) {
         router.events
             .pipe(
                 filter((event): boolean => event instanceof RoutesRecognized),

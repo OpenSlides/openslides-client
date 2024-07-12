@@ -2,65 +2,59 @@
 <h1 mat-dialog-title>{{ 'Edit details for' | translate }} {{ infoDialog.title }}</h1>
 <mat-dialog-content class="os-form-card-mobile">
     <!-- Category -->
-    @if (categoriesObservable | async; as categories) {
-        @if (categories.length > 0) {
-            <mat-form-field>
-                <mat-label>{{ 'Category' | translate }}</mat-label>
-                <mat-select [(ngModel)]="infoDialog.update.category_id">
-                    <mat-option [value]="null">-</mat-option>
-                    @for (category of categories; track category) {
-                        <mat-option [value]="category.id">
-                            {{ category.getTitle() }}
-                        </mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-        }
-    }
+    @if (categoriesObservable | async; as categories) { @if (categories.length > 0) {
+    <mat-form-field>
+        <mat-label>{{ 'Category' | translate }}</mat-label>
+        <mat-select [(ngModel)]="infoDialog.update.category_id">
+            <mat-option [value]="null">-</mat-option>
+            @for (category of categories; track category) {
+            <mat-option [value]="category.id">
+                {{ category.getTitle() }}
+            </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    } }
     <!-- Motion block -->
-    @if (motionBlocksObservable | async; as motionBlocks) {
-        @if (motionBlocks.length > 0) {
-            <mat-form-field>
-                <mat-label>{{ 'Motion block' | translate }}</mat-label>
-                <mat-select [(ngModel)]="infoDialog.update.block_id">
-                    <mat-option [value]="null">-</mat-option>
-                    @for (block of motionBlocks; track block) {
-                        <mat-option [value]="block.id">
-                            {{ block.getTitle() }}
-                        </mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-        }
-    }
+    @if (motionBlocksObservable | async; as motionBlocks) { @if (motionBlocks.length > 0) {
+    <mat-form-field>
+        <mat-label>{{ 'Motion block' | translate }}</mat-label>
+        <mat-select [(ngModel)]="infoDialog.update.block_id">
+            <mat-option [value]="null">-</mat-option>
+            @for (block of motionBlocks; track block) {
+            <mat-option [value]="block.id">
+                {{ block.getTitle() }}
+            </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    } }
     <!-- Tag -->
-    @if (tagsObservable | async; as tags) {
-        @if (tags.length > 0) {
-            <mat-form-field>
-                <mat-label>{{ 'Tags' | translate }}</mat-label>
-                <mat-select multiple [(ngModel)]="infoDialog.update.tag_ids">
-                    @for (tag of tags; track tag) {
-                        <mat-option [value]="tag.id">
-                            {{ tag.getTitle() }}
-                        </mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-        }
-    }
+    @if (tagsObservable | async; as tags) { @if (tags.length > 0) {
+    <mat-form-field>
+        <mat-label>{{ 'Tags' | translate }}</mat-label>
+        <mat-select multiple [(ngModel)]="infoDialog.update.tag_ids">
+            @for (tag of tags; track tag) {
+            <mat-option [value]="tag.id">
+                {{ tag.getTitle() }}
+            </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    } }
 
     <!-- State -->
     @if (isAllowed('change_state')) {
-        <mat-form-field>
-            <mat-label>{{ 'State' | translate }}</mat-label>
-            <mat-select [(ngModel)]="infoDialog.state_id">
-                @for (state of selectedMotion.state!.next_states; track state) {
-                    <mat-option [value]="state.id">
-                        {{ state.getTitle() }}
-                    </mat-option>
-                }
-            </mat-select>
-        </mat-form-field>
+    <mat-form-field>
+        <mat-label>{{ 'State' | translate }}</mat-label>
+        <mat-select [(ngModel)]="infoDialog.state_id">
+            @for (state of selectedMotion.state!.next_states; track state) {
+            <mat-option [value]="state.id">
+                {{ state.getTitle() }}
+            </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
     }
 
     <!-- Recommendation -->
@@ -68,9 +62,9 @@
         <mat-label>{{ 'Recommendation' | translate }}</mat-label>
         <mat-select [(ngModel)]="infoDialog.recommendation_id">
             @for (recommendation of getPossibleRecommendations(); track recommendation) {
-                <mat-option [value]="recommendation.id">
-                    {{ recommendation.recommendation_label }}
-                </mat-option>
+            <mat-option [value]="recommendation.id">
+                {{ recommendation.recommendation_label }}
+            </mat-option>
             }
         </mat-select>
     </mat-form-field>

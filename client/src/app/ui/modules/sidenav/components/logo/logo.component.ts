@@ -37,10 +37,7 @@ export class LogoComponent extends BaseUiComponent implements OnInit {
     private _path: string | null = null;
     private _isDarkMode = false;
 
-    public constructor(
-        private themeService: ThemeService,
-        private mediaManageService: MediaManageService
-    ) {
+    public constructor(private themeService: ThemeService, private mediaManageService: MediaManageService) {
         super();
     }
 

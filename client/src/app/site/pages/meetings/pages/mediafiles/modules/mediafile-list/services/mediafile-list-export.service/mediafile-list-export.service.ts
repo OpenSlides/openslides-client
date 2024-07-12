@@ -10,10 +10,7 @@ import { MediafileListServiceModule } from '../mediafile-list-service.module';
     providedIn: MediafileListServiceModule
 })
 export class MediafileListExportService {
-    public constructor(
-        private exporter: FileExportService,
-        private http: HttpService
-    ) {}
+    public constructor(private exporter: FileExportService, private http: HttpService) {}
 
     public downloadArchive(filename: string, mediafiles: ViewMediafile[]): Promise<void> {
         return this.exporter.saveFileZip(filename, async zip => await this.addFileToZip(mediafiles, zip));

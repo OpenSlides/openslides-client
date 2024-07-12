@@ -20,10 +20,7 @@ export class OrganizationSettingsService {
     /**
      * Listen for changes of setting variables.
      */
-    public constructor(
-        private organization: OrganizationService,
-        private repo: OrganizationRepositoryService
-    ) {
+    public constructor(private organization: OrganizationService, private repo: OrganizationRepositoryService) {
         this.repo
             .getModifiedIdsObservable()
             .subscribe(ids => this.hasDataSubject.next(this.hasDataSubject.value || ids.includes(ORGANIZATION_ID)));

@@ -108,10 +108,7 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
      *
      * @param formBuilder FormBuilder
      */
-    public constructor(
-        private formBuilder: FormBuilder,
-        private cd: ChangeDetectorRef
-    ) {}
+    public constructor(private formBuilder: FormBuilder, private cd: ChangeDetectorRef) {}
 
     /**
      * Initializes the form-controls.

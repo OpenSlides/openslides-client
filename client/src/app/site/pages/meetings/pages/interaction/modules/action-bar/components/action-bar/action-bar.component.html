@@ -1,74 +1,69 @@
 @if ((isConfStateNone | async) === false) {
-    <div class="interaction-bar-wrapper">
-        @if (isConfStateJitsi | async) {
-            @if ((isJoined | async) && (showCallDialog | async) === false) {
-                <!-- show dialog -->
-                <button
-                    class="action-bar-shadow background-default"
-                    mat-mini-fab
-                    @fadeIn
-                    matTooltip="{{ 'Show conference room' | translate }}"
-                    (click)="maximizeCallDialog()"
-                >
-                    <mat-icon
-                        color="primary"
-                        [@fadeInOut]="meetingActiveAnimHelper"
-                        (@fadeInOut.done)="triggerCallHiddenAnimation()"
-                    >
-                        fullscreen
-                    </mat-icon>
-                </button>
-            }
-        }
-        @if ((showLiveConf | async) && (isConfStateStream | async)) {
-            <!-- Enter conference from stream -->
-            @if (canEnterCall | async) {
-                <button
-                    class="action-bar-shadow background-default"
-                    mat-mini-fab
-                    matTooltip="{{ canEnterTooltip | translate }}"
-                    (click)="enterConferenceRoom()"
-                >
-                    <mat-icon color="primary">phone</mat-icon>
-                </button>
-            }
-            @if ((canEnterCall | async) === false) {
-                <a
-                    class="action-bar-shadow fake-disabled"
-                    mat-mini-fab
-                    matTooltip="{{ cannotEnterTooltip | translate }}"
-                    [routerLink]="['/', activeMeetingId, 'autopilot']"
-                >
-                    <mat-icon color="primary">phone</mat-icon>
-                </a>
-            }
-        }
-        <!-- Call support button -->
-        @if (showHelpDesk | async) {
-            <button
-                class="action-bar-shadow background-default"
-                mat-mini-fab
-                @fadeIn
-                matTooltip="{{ 'Help desk' | translate }}"
-                (click)="enterSupportRoom()"
-            >
-                <mat-icon color="primary">help_outline</mat-icon>
-            </button>
-        }
-        <!-- applause button -->
-        @if (showApplause | async) {
-            <button
-                class="action-bar-shadow background-default"
-                mat-mini-fab
-                @fadeIn
-                [disabled]="sendsApplause | async"
-                [matBadge]="applauseLevel | async"
-                [matBadgeHidden]="(showApplauseLevel | async) === false"
-                matTooltip="{{ 'Give applause' | translate }}"
-                (click)="sendApplause()"
-            >
-                <mat-icon class="svg-primary" svgIcon="clapping_hands"></mat-icon>
-            </button>
-        }
-    </div>
+<div class="interaction-bar-wrapper">
+    @if (isConfStateJitsi | async) { @if ((isJoined | async) && (showCallDialog | async) === false) {
+    <!-- show dialog -->
+    <button
+        class="action-bar-shadow background-default"
+        mat-mini-fab
+        @fadeIn
+        matTooltip="{{ 'Show conference room' | translate }}"
+        (click)="maximizeCallDialog()"
+    >
+        <mat-icon
+            color="primary"
+            [@fadeInOut]="meetingActiveAnimHelper"
+            (@fadeInOut.done)="triggerCallHiddenAnimation()"
+        >
+            fullscreen
+        </mat-icon>
+    </button>
+    } } @if ((showLiveConf | async) && (isConfStateStream | async)) {
+    <!-- Enter conference from stream -->
+    @if (canEnterCall | async) {
+    <button
+        class="action-bar-shadow background-default"
+        mat-mini-fab
+        matTooltip="{{ canEnterTooltip | translate }}"
+        (click)="enterConferenceRoom()"
+    >
+        <mat-icon color="primary">phone</mat-icon>
+    </button>
+    } @if ((canEnterCall | async) === false) {
+    <a
+        class="action-bar-shadow fake-disabled"
+        mat-mini-fab
+        matTooltip="{{ cannotEnterTooltip | translate }}"
+        [routerLink]="['/', activeMeetingId, 'autopilot']"
+    >
+        <mat-icon color="primary">phone</mat-icon>
+    </a>
+    } }
+    <!-- Call support button -->
+    @if (showHelpDesk | async) {
+    <button
+        class="action-bar-shadow background-default"
+        mat-mini-fab
+        @fadeIn
+        matTooltip="{{ 'Help desk' | translate }}"
+        (click)="enterSupportRoom()"
+    >
+        <mat-icon color="primary">help_outline</mat-icon>
+    </button>
+    }
+    <!-- applause button -->
+    @if (showApplause | async) {
+    <button
+        class="action-bar-shadow background-default"
+        mat-mini-fab
+        @fadeIn
+        [disabled]="sendsApplause | async"
+        [matBadge]="applauseLevel | async"
+        [matBadgeHidden]="(showApplauseLevel | async) === false"
+        matTooltip="{{ 'Give applause' | translate }}"
+        (click)="sendApplause()"
+    >
+        <mat-icon class="svg-primary" svgIcon="clapping_hands"></mat-icon>
+    </button>
+    }
+</div>
 }

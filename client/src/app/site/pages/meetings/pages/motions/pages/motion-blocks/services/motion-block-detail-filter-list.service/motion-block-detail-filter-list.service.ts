@@ -24,10 +24,7 @@ export class MotionBlockDetailFilterListService extends MotionListFilterService 
      */
     private _blockId = 0;
 
-    public constructor(
-        store: MeetingActiveFiltersService,
-        protected override translate: TranslateService
-    ) {
+    public constructor(store: MeetingActiveFiltersService, protected override translate: TranslateService) {
         super(store);
     }
 

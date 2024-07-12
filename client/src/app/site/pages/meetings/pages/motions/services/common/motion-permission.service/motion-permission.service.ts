@@ -18,10 +18,7 @@ export class MotionPermissionService {
     private _forbidDelegatorCreateMotions = false;
     private _forbidDelegatorSupportMotions = false;
 
-    public constructor(
-        private operator: OperatorService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    public constructor(private operator: OperatorService, private meetingSettingsService: MeetingSettingsService) {
         // load config variables
         this.meetingSettingsService
             .get(`motions_supporters_min_amount`)
