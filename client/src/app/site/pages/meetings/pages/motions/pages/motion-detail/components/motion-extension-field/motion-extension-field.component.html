@@ -1,7 +1,7 @@
 <!-- Chip -->
 <div>
     @if (title) {
-    <h4>{{ title }}</h4>
+        <h4>{{ title }}</h4>
     }
     <mat-menu #triggerMenu="matMenu">
         <ng-container [ngTemplateOutlet]="triggerTemplate"></ng-container>
@@ -15,49 +15,51 @@
         (iconAction)="changeEditMode()"
     >
         @if (canBeEdited) {
-        <mat-basic-chip [matMenuTriggerFor]="triggerMenu" [ngClass]="classes" class="pointer" disableRipple>
-            {{ chipValue || '–' | translate }}
-        </mat-basic-chip>
-        } @if (!canBeEdited) {
-        <mat-basic-chip [ngClass]="classes" disableRipple>
-            {{ chipValue | translate }}
-        </mat-basic-chip>
-        } @if (internal) {
-        <span class="internal-suffix">({{ 'internal' | translate }})</span>
+            <mat-basic-chip [matMenuTriggerFor]="triggerMenu" [ngClass]="classes" class="pointer" disableRipple>
+                {{ chipValue || '–' | translate }}
+            </mat-basic-chip>
+        }
+        @if (!canBeEdited) {
+            <mat-basic-chip [ngClass]="classes" disableRipple>
+                {{ chipValue | translate }}
+            </mat-basic-chip>
+        }
+        @if (internal) {
+            <span class="internal-suffix">({{ 'internal' | translate }})</span>
         }
     </os-icon-container>
 </div>
 
 <!-- Extension field -->
 @if (hasExtension && editMode) {
-<div class="spacer-top-10 extension-container">
-    <mat-form-field>
-        <mat-label>{{ extensionLabel }}</mat-label>
-        <input
-            matInput
-            autocomplete="off"
-            osAutofocus
-            [(ngModel)]="inputControl"
-            (keydown)="keyDownFunction($event)"
-            (change)="inputChanged()"
-        />
-    </mat-form-field>
-    @for (list of searchLists; track list; let i = $index) {
-    <mat-form-field [formGroup]="extensionFieldForm">
-        <mat-label>{{ list.label ?? '' | translate }}</mat-label>
-        <os-list-search-selector
-            formControlName="{{ 'list' + i + '' }}"
-            [inputListValues]="list.observable"
-            [disableOptionWhenFn]="getIsDisabled(i)"
-            [keepOpen]="list.keepOpen"
-            (openedChange)="openedChange($event, i)"
-            [wider]="list.wider"
-        ></os-list-search-selector>
-    </mat-form-field>
-    }
-    <button mat-button (click)="changeEditMode(true)">{{ 'Save' | translate }}</button>
-    <button mat-button (click)="changeEditMode()">{{ 'Cancel' | translate }}</button>
-</div>
+    <div class="spacer-top-10 extension-container">
+        <mat-form-field>
+            <mat-label>{{ extensionLabel }}</mat-label>
+            <input
+                matInput
+                autocomplete="off"
+                osAutofocus
+                [(ngModel)]="inputControl"
+                (keydown)="keyDownFunction($event)"
+                (change)="inputChanged()"
+            />
+        </mat-form-field>
+        @for (list of searchLists; track list; let i = $index) {
+            <mat-form-field [formGroup]="extensionFieldForm">
+                <mat-label>{{ list.label ?? '' | translate }}</mat-label>
+                <os-list-search-selector
+                    formControlName="{{ 'list' + i + '' }}"
+                    [inputListValues]="list.observable"
+                    [disableOptionWhenFn]="getIsDisabled(i)"
+                    [keepOpen]="list.keepOpen"
+                    (openedChange)="openedChange($event, i)"
+                    [wider]="list.wider"
+                ></os-list-search-selector>
+            </mat-form-field>
+        }
+        <button mat-button (click)="changeEditMode(true)">{{ 'Save' | translate }}</button>
+        <button mat-button (click)="changeEditMode()">{{ 'Cancel' | translate }}</button>
+    </div>
 }
 
 <!-- Optional template for the menu -->

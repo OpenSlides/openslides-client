@@ -1,35 +1,37 @@
 @if (!swap && showIcon) {
-<mat-icon
-    [inline]="inline"
-    [matTooltip]="iconTooltip"
-    [matTooltipPosition]="iconTooltipPosition"
-    [matTooltipClass]="iconTooltipClass"
-    [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
-    [ngStyle]="{ transform: getRotation() }"
-    (click)="iconClick()"
-    [color]="color"
->
-    {{ icon }}
-</mat-icon>
-} @if (!hide) {
-<span
-    class="content-node"
-    [ngClass]="{ 'single-line': noWrap, 'break-lines': !noWrap, 'content-swapped': swap, 'fill-space': !noFill }"
->
-    <ng-content></ng-content>
-    <ng-content select="[afterContent]"></ng-content>
-</span>
-} @if (swap && showIcon) {
-<mat-icon
-    [inline]="inline"
-    [matTooltip]="iconTooltip"
-    [matTooltipPosition]="iconTooltipPosition"
-    [matTooltipClass]="iconTooltipClass"
-    [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
-    [ngStyle]="{ transform: getRotation() }"
-    (click)="iconClick()"
-    [color]="color"
->
-    {{ icon }}
-</mat-icon>
+    <mat-icon
+        [inline]="inline"
+        [matTooltip]="iconTooltip"
+        [matTooltipPosition]="iconTooltipPosition"
+        [matTooltipClass]="iconTooltipClass"
+        [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
+        [ngStyle]="{ transform: getRotation() }"
+        (click)="iconClick()"
+        [color]="color"
+    >
+        {{ icon }}
+    </mat-icon>
+}
+@if (!hide) {
+    <span
+        class="content-node"
+        [ngClass]="{ 'single-line': noWrap, 'break-lines': !noWrap, 'content-swapped': swap, 'fill-space': !noFill }"
+    >
+        <ng-content></ng-content>
+        <ng-content select="[afterContent]"></ng-content>
+    </span>
+}
+@if (swap && showIcon) {
+    <mat-icon
+        [inline]="inline"
+        [matTooltip]="iconTooltip"
+        [matTooltipPosition]="iconTooltipPosition"
+        [matTooltipClass]="iconTooltipClass"
+        [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
+        [ngStyle]="{ transform: getRotation() }"
+        (click)="iconClick()"
+        [color]="color"
+    >
+        {{ icon }}
+    </mat-icon>
 }

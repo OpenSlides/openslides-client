@@ -21,70 +21,78 @@
 <div class="spacer-bottom-60">
     <mat-accordion class="os-card">
         @for (section of this.commentSections; track section) {
-        <mat-expansion-panel multiple="false">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <div class="header-container">
-                        <div class="name ellipsis-overflow">
-                            {{ section.name }}
+            <mat-expansion-panel multiple="false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <div class="header-container">
+                            <div class="name ellipsis-overflow">
+                                {{ section.name }}
+                            </div>
+                            <div class="read">
+                                <os-icon-container icon="visibility">
+                                    @if (section.read_groups?.length) {
+                                        <ng-container
+                                            *ngTemplateOutlet="groupList; context: { groups: section.read_groups }"
+                                        ></ng-container>
+                                    }
+                                    @if (section.read_groups.length === 0) {
+                                        &ndash;
+                                    }
+                                </os-icon-container>
+                            </div>
+                            <div class="write">
+                                <os-icon-container icon="edit">
+                                    @if (section.write_groups?.length) {
+                                        <ng-container
+                                            *ngTemplateOutlet="groupList; context: { groups: section.write_groups }"
+                                        ></ng-container>
+                                    }
+                                    @if (section.write_groups.length === 0) {
+                                        &ndash;
+                                    }
+                                </os-icon-container>
+                            </div>
+                            <div class="submitter-write">
+                                @if (section.submitter_can_write) {
+                                    <i>{{ 'Allow submitter edit' | translate }}</i>
+                                }
+                            </div>
                         </div>
-                        <div class="read">
-                            <os-icon-container icon="visibility">
-                                @if (section.read_groups?.length) {
-                                <ng-container
-                                    *ngTemplateOutlet="groupList; context: { groups: section.read_groups }"
-                                ></ng-container>
-                                } @if (section.read_groups.length === 0) { &ndash; }
-                            </os-icon-container>
-                        </div>
-                        <div class="write">
-                            <os-icon-container icon="edit">
-                                @if (section.write_groups?.length) {
-                                <ng-container
-                                    *ngTemplateOutlet="groupList; context: { groups: section.write_groups }"
-                                ></ng-container>
-                                } @if (section.write_groups.length === 0) { &ndash; }
-                            </os-icon-container>
-                        </div>
-                        <div class="submitter-write">
-                            @if (section.submitter_can_write) {
-                            <i>{{ 'Allow submitter edit' | translate }}</i>
-                            }
-                        </div>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <h3>{{ 'Name' | translate }}</h3>
+                <div class="spacer-left">{{ section.name }}</div>
+                <h3>{{ 'Groups with read permissions' | translate }}</h3>
+                @for (group of section.read_groups; track group) {
+                    <ul>
+                        <li>{{ group.getTitle() }}</li>
+                    </ul>
+                }
+                @if (section.read_groups.length === 0) {
+                    <div class="spacer-left">
+                        {{ 'No groups selected' | translate }}
                     </div>
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <h3>{{ 'Name' | translate }}</h3>
-            <div class="spacer-left">{{ section.name }}</div>
-            <h3>{{ 'Groups with read permissions' | translate }}</h3>
-            @for (group of section.read_groups; track group) {
-            <ul>
-                <li>{{ group.getTitle() }}</li>
-            </ul>
-            } @if (section.read_groups.length === 0) {
-            <div class="spacer-left">
-                {{ 'No groups selected' | translate }}
-            </div>
-            }
-            <h3>{{ 'Groups with write permissions' | translate }}</h3>
-            @for (group of section.write_groups; track group) {
-            <ul>
-                <li>{{ group.getTitle() }}</li>
-            </ul>
-            } @if (section.write_groups.length === 0) {
-            <div class="spacer-left">
-                {{ 'No groups selected' | translate }}
-            </div>
-            }
-            <mat-action-row>
-                <button mat-icon-button (click)="openDialog(section)">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button (click)="onDeleteButton(section)">
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </mat-action-row>
-        </mat-expansion-panel>
+                }
+                <h3>{{ 'Groups with write permissions' | translate }}</h3>
+                @for (group of section.write_groups; track group) {
+                    <ul>
+                        <li>{{ group.getTitle() }}</li>
+                    </ul>
+                }
+                @if (section.write_groups.length === 0) {
+                    <div class="spacer-left">
+                        {{ 'No groups selected' | translate }}
+                    </div>
+                }
+                <mat-action-row>
+                    <button mat-icon-button (click)="openDialog(section)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="onDeleteButton(section)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-action-row>
+            </mat-expansion-panel>
         }
     </mat-accordion>
 </div>
@@ -106,9 +114,10 @@
 <ng-template #motionCommentDialog>
     <h1 mat-dialog-title>
         @if (currentComment) {
-        <span>{{ 'Edit comment field' | translate }}</span>
-        } @if (!currentComment) {
-        <span>{{ 'New comment field' | translate }}</span>
+            <span>{{ 'Edit comment field' | translate }}</span>
+        }
+        @if (!currentComment) {
+            <span>{{ 'New comment field' | translate }}</span>
         }
     </h1>
     <mat-dialog-content class="os-form-card-mobile">
@@ -118,9 +127,9 @@
                     <mat-label>{{ 'Name' | translate }}</mat-label>
                     <input formControlName="name" matInput required />
                     @if (!commentFieldForm.controls['name'].valid) {
-                    <mat-error>
-                        <span>{{ 'Required' | translate }}</span>
-                    </mat-error>
+                        <mat-error>
+                            <span>{{ 'Required' | translate }}</span>
+                        </mat-error>
                     }
                 </mat-form-field>
             </p>

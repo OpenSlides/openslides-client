@@ -7,18 +7,19 @@
 
 <mat-dialog-content>
     @if (opponentName) {
-    <div class="center spacer-top-5">{{ 'Playing against' | translate }} {{ opponentName }}</div>
+        <div class="center spacer-top-5">{{ 'Playing against' | translate }} {{ opponentName }}</div>
     }
     <div #chessboard class="spacer-top-5"></div>
     @if (inMeeting && state === 'start') {
-    <div class="center spacer-top-5">
-        <button (click)="handleEvent('searchClicked')" mat-raised-button color="accent">
-            {{ 'Search player' | translate }}
-        </button>
-    </div>
-    } @if (!inMeeting) {
-    <div>
-        {{ 'Open a meeting to play chess' | translate }}
-    </div>
+        <div class="center spacer-top-5">
+            <button (click)="handleEvent('searchClicked')" mat-raised-button color="accent">
+                {{ 'Search player' | translate }}
+            </button>
+        </div>
+    }
+    @if (!inMeeting) {
+        <div>
+            {{ 'Open a meeting to play chess' | translate }}
+        </div>
     }
 </mat-dialog-content>

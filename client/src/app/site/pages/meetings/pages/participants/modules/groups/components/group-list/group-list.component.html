@@ -17,66 +17,67 @@
 <mat-card class="spacer-bottom-60">
     <mat-card-content>
         @for (appPermissions of permissionsPerApp; track appPermissions) {
-        <mat-accordion>
-            <mat-expansion-panel class="mat-elevation-z0" [expanded]="true">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        {{ appPermissions.name | translate }}
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <div class="scrollable-perm-matrix">
-                    <table mat-table [dataSource]="getTableDataSource(appPermissions.permissions)">
-                        <ng-container matColumnDef="perm" sticky>
-                            <mat-header-cell *matHeaderCellDef>{{ 'Permissions' | translate }}</mat-header-cell>
-                            <mat-cell
-                                *matCellDef="let perm"
-                                class="raised-cell"
-                                #tooltip="matTooltip"
-                                [ngClass]="{ 'has-help-text': perm.help_text }"
-                                [matTooltip]="perm.help_text | translate"
-                                matTooltipClass="pre-wrap"
-                                matTooltipPosition="after"
-                                (mouseenter)="$event.stopImmediatePropagation()"
-                                (mouseleave)="tooltip.hide()"
-                                (click)="tooltip.toggle()"
-                            >
-                                {{ perm.display_name | translate }}
-                            </mat-cell>
-                        </ng-container>
-                        @for (group of groups; track $index) {
-                        <div>
-                            <ng-container [matColumnDef]="group.name">
-                                <mat-header-cell
-                                    class="group-head-table-cell"
-                                    *matHeaderCellDef
-                                    (click)="selectGroup(group)"
+            <mat-accordion>
+                <mat-expansion-panel class="mat-elevation-z0" [expanded]="true">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{ appPermissions.name | translate }}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="scrollable-perm-matrix">
+                        <table mat-table [dataSource]="getTableDataSource(appPermissions.permissions)">
+                            <ng-container matColumnDef="perm" sticky>
+                                <mat-header-cell *matHeaderCellDef>{{ 'Permissions' | translate }}</mat-header-cell>
+                                <mat-cell
+                                    *matCellDef="let perm"
+                                    class="raised-cell"
+                                    #tooltip="matTooltip"
+                                    [ngClass]="{ 'has-help-text': perm.help_text }"
+                                    [matTooltip]="perm.help_text | translate"
+                                    matTooltipClass="pre-wrap"
+                                    matTooltipPosition="after"
+                                    (mouseenter)="$event.stopImmediatePropagation()"
+                                    (mouseleave)="tooltip.hide()"
+                                    (click)="tooltip.toggle()"
                                 >
-                                    <div class="inner-table">
-                                        {{ group.name }}
-                                    </div>
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let perm">
-                                    <div class="inner-table">
-                                        @if (!group.isAdminGroup) {
-                                        <mat-checkbox
-                                            name="cb-{{ group.id }}-{{ perm.value }}"
-                                            [(ngModel)]="currentPermissions[group.id][perm.value]"
-                                            (change)="onChange(group, perm.value, $event.checked)"
-                                        ></mat-checkbox>
-                                        } @if (group.isAdminGroup) {
-                                        <mat-checkbox [checked]="true" [disabled]="true"></mat-checkbox>
-                                        }
-                                    </div>
+                                    {{ perm.display_name | translate }}
                                 </mat-cell>
                             </ng-container>
-                        </div>
-                        }
-                        <mat-header-row *matHeaderRowDef="headerRowDef"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: headerRowDef"></mat-row>
-                    </table>
-                </div>
-            </mat-expansion-panel>
-        </mat-accordion>
+                            @for (group of groups; track $index) {
+                                <div>
+                                    <ng-container [matColumnDef]="group.name">
+                                        <mat-header-cell
+                                            class="group-head-table-cell"
+                                            *matHeaderCellDef
+                                            (click)="selectGroup(group)"
+                                        >
+                                            <div class="inner-table">
+                                                {{ group.name }}
+                                            </div>
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let perm">
+                                            <div class="inner-table">
+                                                @if (!group.isAdminGroup) {
+                                                    <mat-checkbox
+                                                        name="cb-{{ group.id }}-{{ perm.value }}"
+                                                        [(ngModel)]="currentPermissions[group.id][perm.value]"
+                                                        (change)="onChange(group, perm.value, $event.checked)"
+                                                    ></mat-checkbox>
+                                                }
+                                                @if (group.isAdminGroup) {
+                                                    <mat-checkbox [checked]="true" [disabled]="true"></mat-checkbox>
+                                                }
+                                            </div>
+                                        </mat-cell>
+                                    </ng-container>
+                                </div>
+                            }
+                            <mat-header-row *matHeaderRowDef="headerRowDef"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: headerRowDef"></mat-row>
+                        </table>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
         }
     </mat-card-content>
 </mat-card>
@@ -84,9 +85,10 @@
 <ng-template #groupEditDialog>
     <h1 mat-dialog-title>
         @if (!groupForm.value.name) {
-        <span>{{ 'New group' | translate }}</span>
-        } @if (groupForm.value.name) {
-        <span>{{ 'Edit group' | translate }}</span>
+            <span>{{ 'New group' | translate }}</span>
+        }
+        @if (groupForm.value.name) {
+            <span>{{ 'Edit group' | translate }}</span>
         }
     </h1>
     <mat-dialog-content class="os-form-card-mobile">
@@ -95,11 +97,12 @@
                 <mat-label>{{ 'Group name' | translate }}</mat-label>
                 <input type="text" matInput osAutofocus formControlName="name" />
                 @if (!groupForm?.valid && !groupForm.value.name) {
-                <mat-error>{{ 'Required' | translate }}</mat-error>
-                } @if (!groupForm?.valid && groupForm.value.name) {
-                <mat-error>
-                    {{ 'Must be unique' | translate }}
-                </mat-error>
+                    <mat-error>{{ 'Required' | translate }}</mat-error>
+                }
+                @if (!groupForm?.valid && groupForm.value.name) {
+                    <mat-error>
+                        {{ 'Must be unique' | translate }}
+                    </mat-error>
                 }
             </mat-form-field>
             <mat-form-field>
@@ -122,15 +125,15 @@
             <span>{{ 'Cancel' | translate }}</span>
         </button>
         @if (selectedGroup) {
-        <button
-            [disabled]="isProtected(selectedGroup)"
-            type="button"
-            mat-button
-            color="warn"
-            (click)="deleteSelectedGroup()"
-        >
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
+            <button
+                [disabled]="isProtected(selectedGroup)"
+                type="button"
+                mat-button
+                color="warn"
+                (click)="deleteSelectedGroup()"
+            >
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
         }
     </mat-dialog-actions>
 </ng-template>

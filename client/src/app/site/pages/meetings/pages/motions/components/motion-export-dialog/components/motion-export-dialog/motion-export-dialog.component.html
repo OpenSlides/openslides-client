@@ -59,17 +59,17 @@
                 <p class="toggle-group-head">{{ 'Meta information' | translate }}</p>
                 <mat-button-toggle-group class="smaller-buttons" multiple formControlName="metaInfo">
                     @for (metaInfo of metaInfoExportOrder; track metaInfo) {
-                    <mat-button-toggle [value]="metaInfo">
-                        <span>{{ getLabelForMetadata(metaInfo) | translate }}</span>
-                    </mat-button-toggle>
+                        <mat-button-toggle [value]="metaInfo">
+                            <span>{{ getLabelForMetadata(metaInfo) | translate }}</span>
+                        </mat-button-toggle>
                     }
                     <mat-button-toggle *osPerms="permission.listOfSpeakersCanSee" value="speakers" #speakersButton>
                         <span>{{ 'Speakers' | translate }}</span>
                     </mat-button-toggle>
                     @if (workingGroupSpeakerActive) {
-                    <mat-button-toggle value="working_group_speakers" #workingGroupSpeakerButton>
-                        <span>{{ 'Spokesperson' | translate }}</span>
-                    </mat-button-toggle>
+                        <mat-button-toggle value="working_group_speakers" #workingGroupSpeakerButton>
+                            <span>{{ 'Spokesperson' | translate }}</span>
+                        </mat-button-toggle>
                     }
                     <mat-button-toggle value="polls" #votingResultButton>
                         <span>{{ 'Voting result' | translate }}</span>
@@ -121,9 +121,9 @@
                         <span>{{ 'Personal note' | translate }}</span>
                     </mat-button-toggle>
                     @for (comment of commentsToExport; track comment) {
-                    <mat-button-toggle [value]="comment.id">
-                        <span>{{ comment.name }}</span>
-                    </mat-button-toggle>
+                        <mat-button-toggle [value]="comment.id">
+                            <span>{{ comment.name }}</span>
+                        </mat-button-toggle>
                     }
                 </mat-button-toggle-group>
                 <!-- TODO only if not csv -->

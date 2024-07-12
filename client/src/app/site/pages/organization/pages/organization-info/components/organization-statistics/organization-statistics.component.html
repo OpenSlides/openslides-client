@@ -18,10 +18,12 @@
 
 <ng-template #singleStatistik let-label="label" let-current="current" let-max="max">
     @if (max) {
-    <div>{{ label | translate }}: {{ current }}/{{ max }}</div>
-    } @if (!max) {
-    <div>{{ label | translate }}: {{ current }}</div>
-    } @if (max) {
-    <mat-progress-bar mode="determinate" [value]="(current / max) * 100"></mat-progress-bar>
+        <div>{{ label | translate }}: {{ current }}/{{ max }}</div>
+    }
+    @if (!max) {
+        <div>{{ label | translate }}: {{ current }}</div>
+    }
+    @if (max) {
+        <mat-progress-bar mode="determinate" [value]="(current / max) * 100"></mat-progress-bar>
     }
 </ng-template>

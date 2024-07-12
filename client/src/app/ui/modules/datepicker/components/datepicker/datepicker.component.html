@@ -1,7 +1,7 @@
 <div class="os-datetimepicker-container">
     <mat-form-field class="datepicker-form-field">
         @if (title) {
-        <mat-label>{{ title | translate }}</mat-label>
+            <mat-label>{{ title | translate }}</mat-label>
         }
         <input
             matInput
@@ -12,16 +12,16 @@
             readonly
         />
         @if (hintText) {
-        <mat-hint>{{ hintText | translate }}</mat-hint>
+            <mat-hint>{{ hintText | translate }}</mat-hint>
         }
         <div class="suffix-wrapper" matSuffix>
             @if (showUpdateSuccessIcon) {
-            <mat-icon class="red-warning-text">check_circle</mat-icon>
+                <mat-icon class="red-warning-text">check_circle</mat-icon>
             }
             <mat-datepicker-toggle [for]="picker" (click)="$event.preventDefault()"></mat-datepicker-toggle>
         </div>
         @if (error) {
-        <mat-error>{{ error }}</mat-error>
+            <mat-error>{{ error }}</mat-error>
         }
         <mat-datepicker #picker>
             <mat-datepicker-actions>

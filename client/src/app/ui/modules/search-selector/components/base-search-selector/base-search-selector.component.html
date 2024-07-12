@@ -8,53 +8,58 @@
 >
     <!-- Custom display of selected items -->
     @if (multiple) {
-    <mat-select-trigger>
-        @if (selectedItems?.length) { @for (item of selectedItems; track item; let last = $last) {
-        <span class="inline-flex">
-            {{ item.getTitle() }} {{ getItemAdditionalInfoFn(item) }}
-            @if (!last) {
-            <span>,&nbsp;</span>
-            }
-        </span>
-        } }
-    </mat-select-trigger>
-    } @if (matSelect.panelOpen) {
-    <div #searchSelectorInput class="os-search-selector--input-wrapper">
-        <input
-            osAutofocus
-            class="background-card"
-            [formControl]="searchValueForm"
-            placeholder="{{ 'Search' | translate }}"
-            (keydown)="onSearchKeydown($event)"
-        />
-    </div>
-    } @if (multiple && showChips) {
-    <div #chipPlaceholder class="os-search-selector--chip-wrapper">
-        <div class="os-search-selector--chip-container flex-vertical-center">
-            <mat-chip-listbox class="chip-list" [selectable]="false">
-                @for (item of selectedItems; track item) {
-                <mat-chip-option
-                    class="one-line"
-                    [removable]="true"
-                    (removed)="onChipRemove(item.id)"
-                    [disableRipple]="true"
-                >
-                    <span class="one-line">
-                        {{ item.getTitle() }}
+        <mat-select-trigger>
+            @if (selectedItems?.length) {
+                @for (item of selectedItems; track item; let last = $last) {
+                    <span class="inline-flex">
+                        {{ item.getTitle() }} {{ getItemAdditionalInfoFn(item) }}
+                        @if (!last) {
+                            <span>,&nbsp;</span>
+                        }
                     </span>
-                    <button matChipRemove>
-                        <mat-icon>cancel</mat-icon>
-                    </button>
-                </mat-chip-option>
                 }
-            </mat-chip-listbox>
+            }
+        </mat-select-trigger>
+    }
+    @if (matSelect.panelOpen) {
+        <div #searchSelectorInput class="os-search-selector--input-wrapper">
+            <input
+                osAutofocus
+                class="background-card"
+                [formControl]="searchValueForm"
+                placeholder="{{ 'Search' | translate }}"
+                (keydown)="onSearchKeydown($event)"
+            />
         </div>
-        <div class="os-search-selector--chip-placeholder"></div>
-    </div>
-    } @if (showNotFoundButton) {
-    <button class="os-not-found-button" mat-button (click)="onNotFoundClick()">
-        <ng-container *ngTemplateOutlet="notFoundTemplate"></ng-container>
-    </button>
+    }
+    @if (multiple && showChips) {
+        <div #chipPlaceholder class="os-search-selector--chip-wrapper">
+            <div class="os-search-selector--chip-container flex-vertical-center">
+                <mat-chip-listbox class="chip-list" [selectable]="false">
+                    @for (item of selectedItems; track item) {
+                        <mat-chip-option
+                            class="one-line"
+                            [removable]="true"
+                            (removed)="onChipRemove(item.id)"
+                            [disableRipple]="true"
+                        >
+                            <span class="one-line">
+                                {{ item.getTitle() }}
+                            </span>
+                            <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-option>
+                    }
+                </mat-chip-listbox>
+            </div>
+            <div class="os-search-selector--chip-placeholder"></div>
+        </div>
+    }
+    @if (showNotFoundButton) {
+        <button class="os-not-found-button" mat-button (click)="onNotFoundClick()">
+            <ng-container *ngTemplateOutlet="notFoundTemplate"></ng-container>
+        </button>
     }
     <cdk-virtual-scroll-viewport
         [ngStyle]="{ height: panelHeight + 'px' }"
@@ -64,11 +69,12 @@
         [itemSize]="50"
     >
         @if ((filteredItemsObservable | async)?.length === 0) {
-        <mat-option class="os-search-selector--no-options" disabled>
-            {{ noOptionsFoundLabel | translate }}
-        </mat-option>
-        } @if (addClearSelection) {
-        <mat-option>-</mat-option>
+            <mat-option class="os-search-selector--no-options" disabled>
+                {{ noOptionsFoundLabel | translate }}
+            </mat-option>
+        }
+        @if (addClearSelection) {
+            <mat-option>-</mat-option>
         }
         <mat-option
             #currentOption
@@ -85,21 +91,26 @@
     </cdk-virtual-scroll-viewport>
 
     <!-- Ensure that selected options are always loaded, so that the mat-trigger is shown-->
-    @if (multiple) { @if (selectedItems.length) {
-    <mat-option class="selected-options-hidden" [value]="selectedItems[0].id" disabled>
-        <ng-container *ngTemplateOutlet="optionContent; context: { item: selectedItems[0] }"></ng-container>
-    </mat-option>
-    } } @if (!multiple) { @if (contentForm.value) {
-    <mat-option class="selected-options-hidden" [value]="contentForm.value" disabled>
-        <ng-container
-            *ngTemplateOutlet="optionContent; context: { item: getItemById(contentForm.value) }"
-        ></ng-container>
-    </mat-option>
-    } }
+    @if (multiple) {
+        @if (selectedItems.length) {
+            <mat-option class="selected-options-hidden" [value]="selectedItems[0].id" disabled>
+                <ng-container *ngTemplateOutlet="optionContent; context: { item: selectedItems[0] }"></ng-container>
+            </mat-option>
+        }
+    }
+    @if (!multiple) {
+        @if (contentForm.value) {
+            <mat-option class="selected-options-hidden" [value]="contentForm.value" disabled>
+                <ng-container
+                    *ngTemplateOutlet="optionContent; context: { item: getItemById(contentForm.value) }"
+                ></ng-container>
+            </mat-option>
+        }
+    }
 </mat-select>
 
 <ng-template #optionContent let-item="item">
     @if (item) {
-    {{ item.getTitle() }} {{ getItemAdditionalInfoFn(item) }}
+        {{ item.getTitle() }} {{ getItemAdditionalInfoFn(item) }}
     }
 </ng-template>

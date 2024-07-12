@@ -3,7 +3,7 @@
         <!-- Title -->
         <div class="title-slot">
             @if (category) {
-            <h2>{{ 'Sort motions' | translate }} ({{ category.prefixedName }})</h2>
+                <h2>{{ 'Sort motions' | translate }} ({{ category.prefixedName }})</h2>
             }
         </div>
     </os-head-bar>
@@ -11,13 +11,13 @@
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
             @if (isMultiSelect) {
-            <div>
-                <span>{{ sortSelector.multiSelectedIndex.length }}&nbsp;</span>
-                <span>{{ 'selected' | translate }}</span>
-                <button mat-button (click)="moveToPosition()">
-                    <span>{{ 'move ...' | translate }}</span>
-                </button>
-            </div>
+                <div>
+                    <span>{{ sortSelector.multiSelectedIndex.length }}&nbsp;</span>
+                    <span>{{ 'selected' | translate }}</span>
+                    <button mat-button (click)="moveToPosition()">
+                        <span>{{ 'move ...' | translate }}</span>
+                    </button>
+                </div>
             }
             <os-sorting-list (sortEvent)="onListUpdate($event)" [input]="motionObservable" #sorter>
                 <ng-template let-motion>

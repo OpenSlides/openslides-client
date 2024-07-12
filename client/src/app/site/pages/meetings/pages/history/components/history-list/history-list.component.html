@@ -12,9 +12,9 @@
                         <mat-label>{{ 'Module' | translate }}</mat-label>
                         <mat-select formControlName="collection">
                             @for (item of modelsRepoMap | keyvalue; track item) {
-                            <mat-option [value]="item.key">
-                                {{ item.value.getVerboseName() }}
-                            </mat-option>
+                                <mat-option [value]="item.key">
+                                    {{ item.value.getVerboseName() }}
+                                </mat-option>
                             }
                         </mat-select>
                     </mat-form-field>
@@ -43,10 +43,10 @@
                 </span>
                 <span class="spacer-left-20">
                     @if (currentFqid) {
-                    <button mat-button (click)="refresh()">
-                        <mat-icon>refresh</mat-icon>
-                        <span>{{ 'Refresh' | translate }}</span>
-                    </button>
+                        <button mat-button (click)="refresh()">
+                            <mat-icon>refresh</mat-icon>
+                            <span>{{ 'Refresh' | translate }}</span>
+                        </button>
                     }
                 </span>
             </div>
@@ -72,9 +72,9 @@
                 <mat-cell *matCellDef="let position">
                     <div>
                         @for (information of parseInformation(position); track information) {
-                        <div>
-                            {{ information }}
-                        </div>
+                            <div>
+                                {{ information }}
+                            </div>
                         }
                     </div>
                 </mat-cell>

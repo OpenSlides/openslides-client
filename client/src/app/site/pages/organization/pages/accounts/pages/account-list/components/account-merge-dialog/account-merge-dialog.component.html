@@ -14,53 +14,63 @@
                     <div class="nameCell overflow-hidden">
                         <div class="title-line title-box">
                             @if (!isCrossedOut(user)) {
-                            <div>
-                                <span class="ellipsis-overflow">{{ user.short_name }}</span>
-                                @if (!!user.gender) {
-                                <span class="meta-info user-subtitle">&middot;&nbsp;{{ user.gender }}</span>
-                                } @if (!!user.pronoun) {
-                                <span class="meta-info user-subtitle">&middot;&nbsp;{{ user.pronoun }}</span>
-                                }
-                            </div>
-                            } @if (isCrossedOut(user)) {
-                            <div>
-                                <span class="ellipsis-overflow crossed-out">{{ user.short_name }}</span>
-                                @if (!!user.gender) {
-                                <span class="meta-info user-subtitle">&middot;&nbsp;{{ user.gender }}</span>
-                                } @if (!!user.pronoun) {
-                                <span class="meta-info user-subtitle">&middot;&nbsp;{{ user.pronoun }}</span>
-                                }
-                            </div>
+                                <div>
+                                    <span class="ellipsis-overflow">{{ user.short_name }}</span>
+                                    @if (!!user.gender) {
+                                        <span class="meta-info user-subtitle">&middot;&nbsp;{{ user.gender }}</span>
+                                    }
+                                    @if (!!user.pronoun) {
+                                        <span class="meta-info user-subtitle">&middot;&nbsp;{{ user.pronoun }}</span>
+                                    }
+                                </div>
+                            }
+                            @if (isCrossedOut(user)) {
+                                <div>
+                                    <span class="ellipsis-overflow crossed-out">{{ user.short_name }}</span>
+                                    @if (!!user.gender) {
+                                        <span class="meta-info user-subtitle">&middot;&nbsp;{{ user.gender }}</span>
+                                    }
+                                    @if (!!user.pronoun) {
+                                        <span class="meta-info user-subtitle">&middot;&nbsp;{{ user.pronoun }}</span>
+                                    }
+                                </div>
                             }
                             <div style="float: right; display: inline-flex">
-                                &nbsp; @if (!user.is_physical_person) {
-                                <os-icon-container
-                                    icon="account_balance"
-                                    matTooltip="{{ 'Is no natural person' | translate }}"
-                                ></os-icon-container>
-                                } @if (!user.is_active) {
-                                <os-icon-container
-                                    icon="block"
-                                    matTooltip="{{ 'Inactive' | translate }}"
-                                ></os-icon-container>
-                                } @if (user.hasSamlId) {
-                                <os-icon-container
-                                    icon="fingerprint"
-                                    matTooltip="{{ 'Has SSO identification' | translate }}"
-                                ></os-icon-container>
+                                &nbsp;
+                                @if (!user.is_physical_person) {
+                                    <os-icon-container
+                                        icon="account_balance"
+                                        matTooltip="{{ 'Is no natural person' | translate }}"
+                                    ></os-icon-container>
+                                }
+                                @if (!user.is_active) {
+                                    <os-icon-container
+                                        icon="block"
+                                        matTooltip="{{ 'Inactive' | translate }}"
+                                    ></os-icon-container>
+                                }
+                                @if (user.hasSamlId) {
+                                    <os-icon-container
+                                        icon="fingerprint"
+                                        matTooltip="{{ 'Has SSO identification' | translate }}"
+                                    ></os-icon-container>
                                 }
                             </div>
                         </div>
                         <div class="meta-info user-subtitle ellipsis-overflow">
                             {{ user.saml_id || user.username }}
-                            @if (user.email) { &middot; {{ user.email }}&nbsp; } @if (user.member_number) { &middot;
-                            {{ user.member_number }}
+                            @if (user.email) {
+                                &middot; {{ user.email }}&nbsp;
+                            }
+                            @if (user.member_number) {
+                                &middot;
+                                {{ user.member_number }}
                             }
                         </div>
                         @if (user?.isLastLogin) {
-                        <div class="meta-info user-subtitle ellipsis-overflow">
-                            {{ 'Last login' | translate }} {{ user.last_login | localizedDate }}
-                        </div>
+                            <div class="meta-info user-subtitle ellipsis-overflow">
+                                {{ 'Last login' | translate }} {{ user.last_login | localizedDate }}
+                            </div>
                         }
                     </div>
                 </td>
@@ -80,11 +90,13 @@
                             {{ user.meetings.length }}
                         </os-icon-container>
                         @if (user.isLastEmailSent) {
-                        <os-icon-container
-                            icon="mail"
-                            iconTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
-                            iconTooltipPosition="left"
-                        ></os-icon-container>
+                            <os-icon-container
+                                icon="mail"
+                                iconTooltip="{{ 'Email sent' | translate }} ({{
+                                    user.last_email_sent | localizedDate
+                                }})"
+                                iconTooltipPosition="left"
+                            ></os-icon-container>
                         }
                     </div>
                 </td>
@@ -94,12 +106,12 @@
     </mat-radio-group>
     <div class="error-color">{{ 'Attention: Not selected accounts will be merged and then deleted.' | translate }}</div>
     @if (showMeetingsCollide) {
-    <div class="error-color">
-        {{ 'Warning: Data loss is possible because accounts are in the same meeting.' | translate }}
-        <br />
-        {{ 'Meetings effected:' | translate }}
-        {{ countMeetingsCollide }}
-    </div>
+        <div class="error-color">
+            {{ 'Warning: Data loss is possible because accounts are in the same meeting.' | translate }}
+            <br />
+            {{ 'Meetings effected:' | translate }}
+            {{ countMeetingsCollide }}
+        </div>
     }
 </mat-dialog-content>
 <mat-dialog-actions>

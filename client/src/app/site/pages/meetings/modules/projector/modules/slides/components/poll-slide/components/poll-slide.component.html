@@ -1,20 +1,23 @@
 @if (data?.data) {
-<div class="slidetitle">
-    <ng-container>
-        <h1>{{ title }}</h1>
-        @if (subtitle) {
-        <h2 class="poll-title">{{ subtitle }}</h2>
-        }
-    </ng-container>
-</div>
-@if (polldata) {
-<div>
-    @if (pollContentObjectType === PollContentObjectType.Motion) {
-    <os-motion-poll-detail-content [poll]="polldata" iconSize="gigantic"></os-motion-poll-detail-content>
-    } @if (pollContentObjectType === PollContentObjectType.Assignment) {
-    <os-assignment-poll-detail-content [poll]="polldata"></os-assignment-poll-detail-content>
-    } @if (pollContentObjectType === PollContentObjectType.Topic) {
-    <os-topic-poll-detail-content [poll]="polldata"></os-topic-poll-detail-content>
+    <div class="slidetitle">
+        <ng-container>
+            <h1>{{ title }}</h1>
+            @if (subtitle) {
+                <h2 class="poll-title">{{ subtitle }}</h2>
+            }
+        </ng-container>
+    </div>
+    @if (polldata) {
+        <div>
+            @if (pollContentObjectType === PollContentObjectType.Motion) {
+                <os-motion-poll-detail-content [poll]="polldata" iconSize="gigantic"></os-motion-poll-detail-content>
+            }
+            @if (pollContentObjectType === PollContentObjectType.Assignment) {
+                <os-assignment-poll-detail-content [poll]="polldata"></os-assignment-poll-detail-content>
+            }
+            @if (pollContentObjectType === PollContentObjectType.Topic) {
+                <os-topic-poll-detail-content [poll]="polldata"></os-topic-poll-detail-content>
+            }
+        </div>
     }
-</div>
-} }
+}

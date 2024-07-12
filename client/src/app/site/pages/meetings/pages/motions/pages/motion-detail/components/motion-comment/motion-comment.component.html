@@ -8,43 +8,51 @@
     </ng-container>
 
     <ng-container class="meta-text-block-content">
-        @if (!isEditing) { @if (comment) {
-        <div [innerHTML]="comment.comment | trust : 'html'"></div>
-        } @if (!comment) {
-        <div class="no-content">
-            {{ 'No comment' | translate }}
-        </div>
-        } } @if (isEditing) {
-        <form [formGroup]="formGroup">
-            <!-- The HTML Editor -->
-            <os-editor [id]="sectionId" formControlName="text"></os-editor>
-        </form>
-        } @if (saveHint) {
-        <div>
-            <span>{{ 'Touch the book icon to enter text' | translate }}</span>
-            <br />
-            <span class="red-warning-text">{{ 'Do not forget to save your changes!' | translate }}</span>
-        </div>
+        @if (!isEditing) {
+            @if (comment) {
+                <div [innerHTML]="comment.comment | trust: 'html'"></div>
+            }
+            @if (!comment) {
+                <div class="no-content">
+                    {{ 'No comment' | translate }}
+                </div>
+            }
+        }
+        @if (isEditing) {
+            <form [formGroup]="formGroup">
+                <!-- The HTML Editor -->
+                <os-editor [id]="sectionId" formControlName="text"></os-editor>
+            </form>
+        }
+        @if (saveHint) {
+            <div>
+                <span>{{ 'Touch the book icon to enter text' | translate }}</span>
+                <br />
+                <span class="red-warning-text">{{ 'Do not forget to save your changes!' | translate }}</span>
+            </div>
         }
     </ng-container>
 
     <ng-container class="meta-text-block-action-row">
         @if (!isEditing && (canBeEdited || hasSubmitterEditRights)) {
-        <button mat-icon-button (click)="editComment()" matTooltip="{{ 'Edit' | translate }}">
-            <mat-icon>edit</mat-icon>
-        </button>
-        } @if (!isEditing && hasComment()) {
-        <button mat-icon-button (click)="exportCommentAsPDf()" matTooltip="{{ 'Export comment' | translate }}">
-            <mat-icon>picture_as_pdf</mat-icon>
-        </button>
-        } @if (isEditing) {
-        <button mat-icon-button color="warn" (click)="saveComment()" matTooltip="{{ 'Save' | translate }}">
-            <mat-icon>done</mat-icon>
-        </button>
-        } @if (isEditing) {
-        <button mat-icon-button (click)="leaveEditMode()" matTooltip="{{ 'Cancel edit' | translate }}">
-            <mat-icon>close</mat-icon>
-        </button>
+            <button mat-icon-button (click)="editComment()" matTooltip="{{ 'Edit' | translate }}">
+                <mat-icon>edit</mat-icon>
+            </button>
+        }
+        @if (!isEditing && hasComment()) {
+            <button mat-icon-button (click)="exportCommentAsPDf()" matTooltip="{{ 'Export comment' | translate }}">
+                <mat-icon>picture_as_pdf</mat-icon>
+            </button>
+        }
+        @if (isEditing) {
+            <button mat-icon-button color="warn" (click)="saveComment()" matTooltip="{{ 'Save' | translate }}">
+                <mat-icon>done</mat-icon>
+            </button>
+        }
+        @if (isEditing) {
+            <button mat-icon-button (click)="leaveEditMode()" matTooltip="{{ 'Cancel edit' | translate }}">
+                <mat-icon>close</mat-icon>
+            </button>
         }
     </ng-container>
 </os-action-card>

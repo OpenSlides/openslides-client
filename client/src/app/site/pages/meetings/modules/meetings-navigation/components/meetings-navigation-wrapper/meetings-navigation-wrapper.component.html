@@ -3,58 +3,64 @@
         <!-- navigation -->
         <div class="main-nav">
             @if (showMeetingNav) {
-            <a
-                [@navItemAnim]
-                mat-menu-item
-                (click)="mobileAutoCloseNav()"
-                [routerLink]="['/']"
-                class="foreground-icon nav-item dashboard-entry"
-            >
-                <mat-icon matListItemIcon>apps</mat-icon>
-                <span matListItemTitle class="nav-row-text">{{ 'Dashboard' | translate }}</span>
-            </a>
-            <mat-divider></mat-divider>
-            } @for (entry of mainMenuEntries; track entry) {
-            <span>
                 <a
                     [@navItemAnim]
-                    *osPerms="entry.permission"
                     mat-menu-item
-                    class="foreground-icon nav-item"
-                    [ngStyle]="getCustomStyleForEntry(entry)"
                     (click)="mobileAutoCloseNav()"
-                    [routerLink]="entry.route"
-                    routerLinkActive="active"
-                    [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
+                    [routerLink]="['/']"
+                    class="foreground-icon nav-item dashboard-entry"
                 >
-                    <mat-icon matListItemIcon>{{ entry.icon }}</mat-icon>
-                    <span matListItemTitle class="nav-row-text">{{ entry.displayName | translate }}</span>
+                    <mat-icon matListItemIcon>apps</mat-icon>
+                    <span matListItemTitle class="nav-row-text">{{ 'Dashboard' | translate }}</span>
                 </a>
-            </span>
-            } @if ({ canSee: canSeeChatObservable | async, notifications: chatNotificationsObservable | async }; as
-            chat) { @if (chat.canSee) {
-            <a
-                [@navItemAnim]
-                class="foreground-icon nav-item"
-                mat-menu-item
-                (click)="mobileAutoCloseNav()"
-                routerLink="chat"
-                routerLinkActive="active"
-            >
-                <mat-icon
-                    matListItemIcon
-                    [matBadgeHidden]="chat.notifications === 0"
-                    [matBadge]="chat.notifications"
-                    matBadgeColor="accent"
-                    matBadgeOverlap="false"
-                >
-                    sms
-                </mat-icon>
-                <span matListItemTitle class="nav-row-text">
-                    {{ 'Chat' | translate }}
+                <mat-divider></mat-divider>
+            }
+            @for (entry of mainMenuEntries; track entry) {
+                <span>
+                    <a
+                        [@navItemAnim]
+                        *osPerms="entry.permission"
+                        mat-menu-item
+                        class="foreground-icon nav-item"
+                        [ngStyle]="getCustomStyleForEntry(entry)"
+                        (click)="mobileAutoCloseNav()"
+                        [routerLink]="entry.route"
+                        routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
+                    >
+                        <mat-icon matListItemIcon>{{ entry.icon }}</mat-icon>
+                        <span matListItemTitle class="nav-row-text">{{ entry.displayName | translate }}</span>
+                    </a>
                 </span>
-            </a>
-            } }
+            }
+            @if (
+                { canSee: canSeeChatObservable | async, notifications: chatNotificationsObservable | async };
+                as chat
+            ) {
+                @if (chat.canSee) {
+                    <a
+                        [@navItemAnim]
+                        class="foreground-icon nav-item"
+                        mat-menu-item
+                        (click)="mobileAutoCloseNav()"
+                        routerLink="chat"
+                        routerLinkActive="active"
+                    >
+                        <mat-icon
+                            matListItemIcon
+                            [matBadgeHidden]="chat.notifications === 0"
+                            [matBadge]="chat.notifications"
+                            matBadgeColor="accent"
+                            matBadgeOverlap="false"
+                        >
+                            sms
+                        </mat-icon>
+                        <span matListItemTitle class="nav-row-text">
+                            {{ 'Chat' | translate }}
+                        </span>
+                    </a>
+                }
+            }
         </div>
     </ng-template>
     <ng-template osSidenavMainContent>

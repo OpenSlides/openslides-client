@@ -1,44 +1,59 @@
 <div id="container" class="projector-container" (osResized)="onResized()" #container>
     <div id="projector" class="projector">
         @if (isOffline) {
-        <div id="offline-indicator">
-            <mat-icon>fiber_manual_record</mat-icon>
-        </div>
-        } @if (projector && projector.show_header_footer) {
-        <div id="header" class="headerFooter">
-            <!-- projector logo -->
-            @if (projectorLogoObservable | async; as projectorLogo) { @if (projector.show_logo) {
-            <img src="{{ projectorLogo }}" class="projector-logo-main" />
-            } } @if (projector.show_title) {
-            <div id="eventdata">
-                @if ({ eventName: eventNameObservable | async, eventDescription: eventDescriptionObservable | async };
-                as eventData) { @if (eventData.eventName) {
-                <div
-                    class="event-name ellipsis-overflow"
-                    [ngClass]="{ titleonly: !eventData.eventDescription }"
-                    [innerHTML]="eventData.eventName"
-                ></div>
-                } @if (eventData.eventDescription) {
-                <div class="event-description" [innerHTML]="eventData.eventDescription"></div>
-                } }
+            <div id="offline-indicator">
+                <mat-icon>fiber_manual_record</mat-icon>
             </div>
-            }
-        </div>
-        } @if (projector!.show_clock) {
-        <os-projector-clock [color]="projector!.header_font_color"></os-projector-clock>
-        } @for (slide of slides | async; track slide) {
-        <div>
-            <os-slide-container
-                [slideData]="slide"
-                [scroll]="projector!.scroll"
-                [scale]="projector!.scale"
-                [projector]="projector!"
-            ></os-slide-container>
-        </div>
-        } @if (projector && projector.show_header_footer) {
-        <div id="footer" class="headerFooter">
-            <div class="footertext"></div>
-        </div>
+        }
+        @if (projector && projector.show_header_footer) {
+            <div id="header" class="headerFooter">
+                <!-- projector logo -->
+                @if (projectorLogoObservable | async; as projectorLogo) {
+                    @if (projector.show_logo) {
+                        <img src="{{ projectorLogo }}" class="projector-logo-main" />
+                    }
+                }
+                @if (projector.show_title) {
+                    <div id="eventdata">
+                        @if (
+                            {
+                                eventName: eventNameObservable | async,
+                                eventDescription: eventDescriptionObservable | async
+                            };
+                            as eventData
+                        ) {
+                            @if (eventData.eventName) {
+                                <div
+                                    class="event-name ellipsis-overflow"
+                                    [ngClass]="{ titleonly: !eventData.eventDescription }"
+                                    [innerHTML]="eventData.eventName"
+                                ></div>
+                            }
+                            @if (eventData.eventDescription) {
+                                <div class="event-description" [innerHTML]="eventData.eventDescription"></div>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        }
+        @if (projector!.show_clock) {
+            <os-projector-clock [color]="projector!.header_font_color"></os-projector-clock>
+        }
+        @for (slide of slides | async; track slide) {
+            <div>
+                <os-slide-container
+                    [slideData]="slide"
+                    [scroll]="projector!.scroll"
+                    [scale]="projector!.scale"
+                    [projector]="projector!"
+                ></os-slide-container>
+            </div>
+        }
+        @if (projector && projector.show_header_footer) {
+            <div id="footer" class="headerFooter">
+                <div class="footertext"></div>
+            </div>
         }
     </div>
 </div>

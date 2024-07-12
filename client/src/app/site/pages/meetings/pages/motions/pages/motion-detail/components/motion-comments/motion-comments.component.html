@@ -1,9 +1,9 @@
 @for (section of sections; track trackById(index, section); let index = $index) {
-<os-motion-comment
-    [index]="index"
-    [section]="section"
-    [motion]="motion"
-    [canBeEdited]="canEditSection(section)"
-    [comment]="getCommentForSection(section)"
-></os-motion-comment>
+    <os-motion-comment
+        [index]="index"
+        [section]="section"
+        [motion]="motion"
+        [canBeEdited]="canEditSection(section)"
+        [comment]="getCommentForSection(section)"
+    ></os-motion-comment>
 }

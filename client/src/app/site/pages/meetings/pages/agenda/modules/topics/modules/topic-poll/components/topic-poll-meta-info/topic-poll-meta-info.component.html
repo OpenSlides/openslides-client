@@ -1,78 +1,83 @@
 @if (poll) {
-<!-- Candidates -->
-@if (poll.options?.length && showOptions) {
-<small class="meta-info-left subtitle">
-    <div>
-        {{ 'Options' | translate }}:
-        <ul>
-            @for (option of poll.options; track option) {
-            <li>{{ getOptionTitle(option) | translate }}</li>
+    <!-- Candidates -->
+    @if (poll.options?.length && showOptions) {
+        <small class="meta-info-left subtitle">
+            <div>
+                {{ 'Options' | translate }}:
+                <ul>
+                    @for (option of poll.options; track option) {
+                        <li>{{ getOptionTitle(option) | translate }}</li>
+                    }
+                </ul>
+            </div>
+            @if (hasGlobalOptionEnabled) {
+                <div>
+                    {{ 'Options' | translate }}:
+                    <ul>
+                        @if (poll.global_yes) {
+                            <li>{{ pollPropertyVerbose.global_yes | translate }}</li>
+                        }
+                        @if (poll.global_no) {
+                            <li>{{ pollPropertyVerbose.global_no | translate }}</li>
+                        }
+                        @if (poll.global_abstain) {
+                            <li>{{ pollPropertyVerbose.global_abstain | translate }}</li>
+                        }
+                    </ul>
+                </div>
             }
-        </ul>
-    </div>
-    @if (hasGlobalOptionEnabled) {
-    <div>
-        {{ 'Options' | translate }}:
-        <ul>
-            @if (poll.global_yes) {
-            <li>{{ pollPropertyVerbose.global_yes | translate }}</li>
-            } @if (poll.global_no) {
-            <li>{{ pollPropertyVerbose.global_no | translate }}</li>
-            } @if (poll.global_abstain) {
-            <li>{{ pollPropertyVerbose.global_abstain | translate }}</li>
-            }
-        </ul>
-    </div>
+        </small>
     }
-</small>
-}
-<div class="meta-info-right subtitle">
-    <!-- Groups who can vote -->
-    @if (poll.entitled_groups && poll.type && poll.type !== 'analog') {
-    <small>
-        {{ 'Entitled to vote' | translate }}:
-        <os-comma-separated-listing [list]="poll.entitled_groups">
-            <ng-template let-group>{{ group.getTitle() }}</ng-template>
-        </os-comma-separated-listing>
-        <br />
-    </small>
-    }
-    <!-- Voting method -->
-    @if (poll.pollmethod) {
-    <small>
-        <span>{{ 'Voting method' | translate }}: {{ getVerbosePollMethod() | translate }}</span>
-        <br />
-    </small>
-    }
-    <!-- Amount of Votes -->
-    @if (poll.max_votes_amount > 1) {
-    <small>
-        @if (poll.max_votes_amount !== poll.min_votes_amount) {
-        <span>{{ pollPropertyVerbose.min_votes_amount | translate }}: {{ poll.min_votes_amount }}</span>
-        <br />
-        <span>{{ pollPropertyVerbose.max_votes_amount | translate }}: {{ poll.max_votes_amount }}</span>
-        <br />
-        } @if (poll.max_votes_amount === poll.min_votes_amount) {
-        <span>{{ 'Votes' | translate }}: {{ poll.max_votes_amount }}</span>
-        <br />
+    <div class="meta-info-right subtitle">
+        <!-- Groups who can vote -->
+        @if (poll.entitled_groups && poll.type && poll.type !== 'analog') {
+            <small>
+                {{ 'Entitled to vote' | translate }}:
+                <os-comma-separated-listing [list]="poll.entitled_groups">
+                    <ng-template let-group>{{ group.getTitle() }}</ng-template>
+                </os-comma-separated-listing>
+                <br />
+            </small>
         }
-    </small>
-    }
-    <!-- Max Votes per Option -->
-    @if (poll.max_votes_per_option > 1) {
-    <small>
-        <span>{{ pollPropertyVerbose.max_votes_per_option | translate }}: {{ poll.max_votes_per_option }}</span>
-        <br />
-    </small>
-    }
-    <!-- 100% base -->
-    @if (poll.onehundred_percent_base) {
-    <small>{{ '100% base' | translate }}: {{ poll.percentBaseVerbose | translate }}</small>
-    <br />
-    }
-    <!-- Poll backend duration type -->
-    @if (poll.backend) {
-    <small>{{ 'Voting duration' | translate }}: {{ POLL_BACKEND_DURATION_LABEL[poll.backend] | translate }}</small>
-    }
-</div>
+        <!-- Voting method -->
+        @if (poll.pollmethod) {
+            <small>
+                <span>{{ 'Voting method' | translate }}: {{ getVerbosePollMethod() | translate }}</span>
+                <br />
+            </small>
+        }
+        <!-- Amount of Votes -->
+        @if (poll.max_votes_amount > 1) {
+            <small>
+                @if (poll.max_votes_amount !== poll.min_votes_amount) {
+                    <span>{{ pollPropertyVerbose.min_votes_amount | translate }}: {{ poll.min_votes_amount }}</span>
+                    <br />
+                    <span>{{ pollPropertyVerbose.max_votes_amount | translate }}: {{ poll.max_votes_amount }}</span>
+                    <br />
+                }
+                @if (poll.max_votes_amount === poll.min_votes_amount) {
+                    <span>{{ 'Votes' | translate }}: {{ poll.max_votes_amount }}</span>
+                    <br />
+                }
+            </small>
+        }
+        <!-- Max Votes per Option -->
+        @if (poll.max_votes_per_option > 1) {
+            <small>
+                <span>{{ pollPropertyVerbose.max_votes_per_option | translate }}: {{ poll.max_votes_per_option }}</span>
+                <br />
+            </small>
+        }
+        <!-- 100% base -->
+        @if (poll.onehundred_percent_base) {
+            <small>{{ '100% base' | translate }}: {{ poll.percentBaseVerbose | translate }}</small>
+            <br />
+        }
+        <!-- Poll backend duration type -->
+        @if (poll.backend) {
+            <small>
+                {{ 'Voting duration' | translate }}: {{ POLL_BACKEND_DURATION_LABEL[poll.backend] | translate }}
+            </small>
+        }
+    </div>
 }

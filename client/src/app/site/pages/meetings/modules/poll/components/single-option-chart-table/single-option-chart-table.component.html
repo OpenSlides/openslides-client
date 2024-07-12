@@ -1,97 +1,105 @@
 @if (poll) {
-<div class="result-wrapper">
-    <table class="result-table">
-        <tbody>
-            @if (shouldShowHead) {
-            <tr>
-                <th></th>
-                <th colspan="2">{{ 'Votes' | translate }}</th>
-            </tr>
-            } @for (row of tableData; track row; let i = $index) { @if (['user', 'list'].includes(row.class)) {
-            <tr [ngClass]="row.votingOption">
-                <td>
-                    @if (row.value[0].icon) {
-                    <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
-                        {{ row.votingOption | pollKeyVerbose | translate }}
-                    </os-icon-container>
-                    } @if (!row.value[0].icon) {
-                    <span>
-                        {{ row.votingOption | pollKeyVerbose | translate }}
-                    </span>
+    <div class="result-wrapper">
+        <table class="result-table">
+            <tbody>
+                @if (shouldShowHead) {
+                    <tr>
+                        <th></th>
+                        <th colspan="2">{{ 'Votes' | translate }}</th>
+                    </tr>
+                }
+                @for (row of tableData; track row; let i = $index) {
+                    @if (['user', 'list'].includes(row.class)) {
+                        <tr [ngClass]="row.votingOption">
+                            <td>
+                                @if (row.value[0].icon) {
+                                    <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
+                                        {{ row.votingOption | pollKeyVerbose | translate }}
+                                    </os-icon-container>
+                                }
+                                @if (!row.value[0].icon) {
+                                    <span>
+                                        {{ row.votingOption | pollKeyVerbose | translate }}
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                <div class="result-cell-definition">
+                                    @if (row.value[0].showPercent) {
+                                        <span [class]="textSizeClass">
+                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
+                                        </span>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="result-cell-definition" [class]="textSizeClass">
+                                    <span>
+                                        {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
                     }
-                </td>
-                <td>
-                    <div class="result-cell-definition">
-                        @if (row.value[0].showPercent) {
-                        <span [class]="textSizeClass">
-                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase : poll }}
-                        </span>
-                        }
-                    </div>
-                </td>
-                <td>
-                    <div class="result-cell-definition" [class]="textSizeClass">
-                        <span>
-                            {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
-                        </span>
-                    </div>
-                </td>
-            </tr>
-            } @if (!['user', 'list'].includes(row.class)) {
-            <tr [class]="row.votingOption">
-                <!-- YNA/Valid etc -->
-                <td>
-                    @if (row.value[0].icon) {
-                    <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
-                        {{ row.votingOption | pollKeyVerbose | translate }}
-                    </os-icon-container>
-                    } @if (!row.value[0].icon) {
-                    <span [class]="textSizeClass">
-                        {{ row.votingOption | pollKeyVerbose | translate }}
-                    </span>
+                    @if (!['user', 'list'].includes(row.class)) {
+                        <tr [class]="row.votingOption">
+                            <!-- YNA/Valid etc -->
+                            <td>
+                                @if (row.value[0].icon) {
+                                    <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
+                                        {{ row.votingOption | pollKeyVerbose | translate }}
+                                    </os-icon-container>
+                                }
+                                @if (!row.value[0].icon) {
+                                    <span [class]="textSizeClass">
+                                        {{ row.votingOption | pollKeyVerbose | translate }}
+                                    </span>
+                                }
+                            </td>
+                            <!-- Percent numbers -->
+                            <td class="result-cell-definition">
+                                @if (row.value[0].showPercent) {
+                                    <span [class]="textSizeClass">
+                                        {{ row.value[0].amount! | pollPercentBase: poll }}
+                                    </span>
+                                }
+                            </td>
+                            <!-- Voices -->
+                            <td class="result-cell-definition" [class]="textSizeClass">
+                                {{ row.value[0].amount | pollParseNumber }}
+                            </td>
+                        </tr>
                     }
-                </td>
-                <!-- Percent numbers -->
-                <td class="result-cell-definition">
-                    @if (row.value[0].showPercent) {
-                    <span [class]="textSizeClass">
-                        {{ row.value[0].amount! | pollPercentBase : poll }}
-                    </span>
-                    }
-                </td>
-                <!-- Voices -->
-                <td class="result-cell-definition" [class]="textSizeClass">
-                    {{ row.value[0].amount | pollParseNumber }}
-                </td>
-            </tr>
-            } } @if (shouldShowEntitled) {
-            <tr class="entitled-users-row">
-                <td>{{ 'Entitled users' | translate }}</td>
-                <td class="result-cell-definition">
-                    {{ poll.entitled_users_at_stop.length | pollPercentBase : poll }}
-                </td>
-                <td class="result-cell-definition">
-                    {{ poll.entitled_users_at_stop.length }}
-                </td>
-            </tr>
-            } @if (shouldShowEntitledPresent) {
-            <tr class="entitled-users-row">
-                <td>{{ 'Entitled present users' | translate }}</td>
-                <td class="result-cell-definition">
-                    {{ entitledUsersPresentCount | pollPercentBase : poll }}
-                </td>
-                <td class="result-cell-definition">
-                    {{ entitledUsersPresentCount }}
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
-    <!-- Chart -->
-    @if (shouldShowChart) {
-    <div class="doughnut-chart">
-        <os-chart type="doughnut" [data]="chartData"></os-chart>
+                }
+                @if (shouldShowEntitled) {
+                    <tr class="entitled-users-row">
+                        <td>{{ 'Entitled users' | translate }}</td>
+                        <td class="result-cell-definition">
+                            {{ poll.entitled_users_at_stop.length | pollPercentBase: poll }}
+                        </td>
+                        <td class="result-cell-definition">
+                            {{ poll.entitled_users_at_stop.length }}
+                        </td>
+                    </tr>
+                }
+                @if (shouldShowEntitledPresent) {
+                    <tr class="entitled-users-row">
+                        <td>{{ 'Entitled present users' | translate }}</td>
+                        <td class="result-cell-definition">
+                            {{ entitledUsersPresentCount | pollPercentBase: poll }}
+                        </td>
+                        <td class="result-cell-definition">
+                            {{ entitledUsersPresentCount }}
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <!-- Chart -->
+        @if (shouldShowChart) {
+            <div class="doughnut-chart">
+                <os-chart type="doughnut" [data]="chartData"></os-chart>
+            </div>
+        }
     </div>
-    }
-</div>
 }

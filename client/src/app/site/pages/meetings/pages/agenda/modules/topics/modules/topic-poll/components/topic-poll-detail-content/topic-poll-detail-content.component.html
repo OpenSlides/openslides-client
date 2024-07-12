@@ -1,60 +1,61 @@
 @if (poll) {
-<div class="result-wrapper">
-    @if (hasResults && canSeeResults) {
-    <!-- result table -->
-    <table class="result-table">
-        <tbody>
-            <tr>
-                <th colspan="2">{{ 'Votes' | translate }}</th>
-            </tr>
-            @for (label of pollService.getSortedChartLabels(poll); track label; let i = $index) {
-            <div>
-                <tr>
-                    <!-- Votes -->
-                    <td>
-                        <os-icon-container
-                            icon="circle"
-                            [size]="iconSize"
-                            [style.color]="colors.backgroundColor[i]"
-                        ></os-icon-container>
-                    </td>
-                    <td>
-                        {{ label }}
-                    </td>
-                </tr>
-                @if (poll.options.length - 1 > i) {
-                <mat-divider></mat-divider>
-                }
-            </div>
+    <div class="result-wrapper">
+        @if (hasResults && canSeeResults) {
+            <!-- result table -->
+            <table class="result-table">
+                <tbody>
+                    <tr>
+                        <th colspan="2">{{ 'Votes' | translate }}</th>
+                    </tr>
+                    @for (label of pollService.getSortedChartLabels(poll); track label; let i = $index) {
+                        <div>
+                            <tr>
+                                <!-- Votes -->
+                                <td>
+                                    <os-icon-container
+                                        icon="circle"
+                                        [size]="iconSize"
+                                        [style.color]="colors.backgroundColor[i]"
+                                    ></os-icon-container>
+                                </td>
+                                <td>
+                                    {{ label }}
+                                </td>
+                            </tr>
+                            @if (poll.options.length - 1 > i) {
+                                <mat-divider></mat-divider>
+                            }
+                        </div>
+                    }
+                </tbody>
+            </table>
+            <!-- Chart -->
+            @if (shouldShowChart) {
+                <div class="doughnut-chart">
+                    <os-chart
+                        type="doughnut"
+                        [circleColors]="chartColors"
+                        [labels]="pollService.getSortedChartLabels(poll)"
+                        [data]="chartData"
+                    ></os-chart>
+                </div>
             }
-        </tbody>
-    </table>
-    <!-- Chart -->
-    @if (shouldShowChart) {
-    <div class="doughnut-chart">
-        <os-chart
-            type="doughnut"
-            [circleColors]="chartColors"
-            [labels]="pollService.getSortedChartLabels(poll)"
-            [data]="chartData"
-        ></os-chart>
+        }
+        <!-- No results yet -->
+        @if (!hasResults) {
+            <div>
+                <i>
+                    {{ 'No results yet.' | translate }}
+                </i>
+            </div>
+        }
+        <!-- Has results, but user cannot see -->
+        @if (hasResults && !canSeeResults) {
+            <div>
+                <i>
+                    {{ 'Counting of votes is in progress ...' | translate }}
+                </i>
+            </div>
+        }
     </div>
-    } }
-    <!-- No results yet -->
-    @if (!hasResults) {
-    <div>
-        <i>
-            {{ 'No results yet.' | translate }}
-        </i>
-    </div>
-    }
-    <!-- Has results, but user cannot see -->
-    @if (hasResults && !canSeeResults) {
-    <div>
-        <i>
-            {{ 'Counting of votes is in progress ...' | translate }}
-        </i>
-    </div>
-    }
-</div>
 }

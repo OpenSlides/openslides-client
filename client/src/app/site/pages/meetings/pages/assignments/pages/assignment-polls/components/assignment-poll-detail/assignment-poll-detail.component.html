@@ -2,7 +2,7 @@
     <os-head-bar [goBack]="true" [nav]="false">
         <div class="title-slot">
             @if (!!poll) {
-            <h2>{{ poll.title }}</h2>
+                <h2>{{ poll.title }}</h2>
             }
         </div>
 
@@ -23,49 +23,49 @@
 <!-- Detailview for poll -->
 <ng-template #viewTemplate>
     @if (isReady) {
-    <div>
-        <h1>{{ poll.title }}</h1>
         <div>
-            <!-- Voting type -->
-            @if (poll.type !== 'analog') {
-            <span>{{ poll.typeVerbose | translate }} &middot;</span>
+            <h1>{{ poll.title }}</h1>
+            <div>
+                <!-- Voting type -->
+                @if (poll.type !== 'analog') {
+                    <span>{{ poll.typeVerbose | translate }} &middot;</span>
+                }
+                <!-- State -->
+                <span>
+                    {{ poll.stateVerbose | translate }}
+                </span>
+            </div>
+            @if (poll) {
+                <div class="assignment-result-wrapper">
+                    <!-- Result -->
+                    <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
+                    @if (showResults && poll.stateHasVotes && poll.isEVoting) {
+                        <mat-tab-group (selectedTabChange)="onTabChange()">
+                            <mat-tab label="{{ 'Single votes' | translate }}">
+                                <!-- Single Votes Table -->
+                                <div class="named-result-table">
+                                    @if (votesDataObservable) {
+                                        <os-votes-table
+                                            [votesDataObservable]="votesDataObservable"
+                                            [filterProps]="filterProps"
+                                            [isViewingThis]="isViewingVoteslist"
+                                            [parent]="self"
+                                            [templateType]="'assignment'"
+                                        ></os-votes-table>
+                                    }
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="{{ 'Entitled users' | translate }}">
+                                <os-entitled-users-table
+                                    [entitledUsersObservable]="entitledUsersObservable"
+                                    [isViewingThis]="isViewingEntitledUserslist"
+                                ></os-entitled-users-table>
+                            </mat-tab>
+                        </mat-tab-group>
+                    }
+                </div>
             }
-            <!-- State -->
-            <span>
-                {{ poll.stateVerbose | translate }}
-            </span>
         </div>
-        @if (poll) {
-        <div class="assignment-result-wrapper">
-            <!-- Result -->
-            <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
-            @if (showResults && poll.stateHasVotes && poll.isEVoting) {
-            <mat-tab-group (selectedTabChange)="onTabChange()">
-                <mat-tab label="{{ 'Single votes' | translate }}">
-                    <!-- Single Votes Table -->
-                    <div class="named-result-table">
-                        @if (votesDataObservable) {
-                        <os-votes-table
-                            [votesDataObservable]="votesDataObservable"
-                            [filterProps]="filterProps"
-                            [isViewingThis]="isViewingVoteslist"
-                            [parent]="self"
-                            [templateType]="'assignment'"
-                        ></os-votes-table>
-                        }
-                    </div>
-                </mat-tab>
-                <mat-tab label="{{ 'Entitled users' | translate }}">
-                    <os-entitled-users-table
-                        [entitledUsersObservable]="entitledUsersObservable"
-                        [isViewingThis]="isViewingEntitledUserslist"
-                    ></os-entitled-users-table>
-                </mat-tab>
-            </mat-tab-group>
-            }
-        </div>
-        }
-    </div>
     }
 
     <!-- Meta Infos -->

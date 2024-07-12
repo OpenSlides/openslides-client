@@ -1,39 +1,44 @@
 <div class="vertical-tab-group-wrapper">
     @if (!isContentOpen || !isMobile) {
-    <div class="flex-1 vertical-tab-group-label-wrapper">
-        @if (labelHeaderTemplate) {
-        <div class="flex-vertical-center" [ngStyle]="{ height: labelHeight }">
-            <ng-container *ngTemplateOutlet="labelHeaderTemplate"></ng-container>
-        </div>
-        <mat-divider></mat-divider>
-        }
-        <cdk-virtual-scroll-viewport [itemSize]="labelHeight" [ngStyle]="{ height: getVirtualScrollViewportHeight() }">
-            <ng-container *cdkVirtualFor="let tabLabel of tabLabelsObservable | async; let index = index">
-                <div
-                    class="vertical-tab-label flex-vertical-center pointer padding-left-16 padding-right-16"
-                    [ngClass]="{ 'background-primary': index === selectedTabLabelIndex }"
-                    [ngStyle]="{ height: labelHeight }"
-                    (click)="changeTabSelection(index); openContent()"
-                    (keydown.enter)="changeTabSelection(index); openContent()"
-                    tabindex="0"
-                >
-                    <ng-template [cdkPortalOutlet]="tabLabel"></ng-template>
-                    @if (isMobile) {
-                    <mat-icon class="margin-right-8">arrow_forward_ios</mat-icon>
-                    }
+        <div class="flex-1 vertical-tab-group-label-wrapper">
+            @if (labelHeaderTemplate) {
+                <div class="flex-vertical-center" [ngStyle]="{ height: labelHeight }">
+                    <ng-container *ngTemplateOutlet="labelHeaderTemplate"></ng-container>
                 </div>
                 <mat-divider></mat-divider>
-            </ng-container>
-        </cdk-virtual-scroll-viewport>
-    </div>
-    } @if (isContentOpen || !isMobile) { @if (!isMobile) {
-    <mat-divider [vertical]="true"></mat-divider>
-    }
-    <div class="flex-3">
-        <div class="vertical-tab-group-content-wrapper full-height">
-            <ng-template [cdkPortalOutlet]="selectedPortalObservable | async"></ng-template>
+            }
+            <cdk-virtual-scroll-viewport
+                [itemSize]="labelHeight"
+                [ngStyle]="{ height: getVirtualScrollViewportHeight() }"
+            >
+                <ng-container *cdkVirtualFor="let tabLabel of tabLabelsObservable | async; let index = index">
+                    <div
+                        class="vertical-tab-label flex-vertical-center pointer padding-left-16 padding-right-16"
+                        [ngClass]="{ 'background-primary': index === selectedTabLabelIndex }"
+                        [ngStyle]="{ height: labelHeight }"
+                        (click)="changeTabSelection(index); openContent()"
+                        (keydown.enter)="changeTabSelection(index); openContent()"
+                        tabindex="0"
+                    >
+                        <ng-template [cdkPortalOutlet]="tabLabel"></ng-template>
+                        @if (isMobile) {
+                            <mat-icon class="margin-right-8">arrow_forward_ios</mat-icon>
+                        }
+                    </div>
+                    <mat-divider></mat-divider>
+                </ng-container>
+            </cdk-virtual-scroll-viewport>
         </div>
-    </div>
+    }
+    @if (isContentOpen || !isMobile) {
+        @if (!isMobile) {
+            <mat-divider [vertical]="true"></mat-divider>
+        }
+        <div class="flex-3">
+            <div class="vertical-tab-group-content-wrapper full-height">
+                <ng-template [cdkPortalOutlet]="selectedPortalObservable | async"></ng-template>
+            </div>
+        </div>
     }
 </div>
 

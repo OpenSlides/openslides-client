@@ -1,18 +1,20 @@
 @if (title) {
-<div class="heading-container" [ngClass]="{ 'no-space': noSpace }">
-    <h3>{{ title }}</h3>
-    <mat-divider></mat-divider>
-</div>
+    <div class="heading-container" [ngClass]="{ 'no-space': noSpace }">
+        <h3>{{ title }}</h3>
+        <mat-divider></mat-divider>
+    </div>
 }
 
 <div class="os-grid" [ngClass]="{ 'no-space': noSpace }">
     @for (tile of tiles; track tile) {
-    <div [ngClass]="tile.classes" (click)="tile.onClick($event)" tabindex="-1">
-        <div class="tile-placeholder" [ngStyle]="{ marginTop: rowHeight }"></div>
-        <div class="tile-content stretch-to-fill-parent">
-            <ng-container *ngTemplateOutlet="tile.implicitContent; context: { $implicit: tile.data }"></ng-container>
+        <div [ngClass]="tile.classes" (click)="tile.onClick($event)" tabindex="-1">
+            <div class="tile-placeholder" [ngStyle]="{ marginTop: rowHeight }"></div>
+            <div class="tile-content stretch-to-fill-parent">
+                <ng-container
+                    *ngTemplateOutlet="tile.implicitContent; context: { $implicit: tile.data }"
+                ></ng-container>
+            </div>
         </div>
-    </div>
     }
 </div>
 

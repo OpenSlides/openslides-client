@@ -7,54 +7,55 @@
         #pollForm
     ></os-motion-poll-form>
     @if (pollForm.contentForm.get('type')!.value === 'analog') {
-    <div class="os-form-card-mobile">
-        <form [formGroup]="dialogVoteForm">
-            <div formGroupName="options">
-                @for (option of options; track option) {
-                <div>
-                    @for (field of analogVoteFields; track field) {
-                    <div [formGroupName]="option.fqid">
-                        <os-check-input
-                            [placeholder]="voteValueVerbose[field] | translate"
-                            [checkboxValue]="-1"
-                            inputType="number"
-                            [checkboxLabel]="'majority' | translate"
-                            [formControlName]="field"
-                            [radioGroupValue]="majority"
-                        ></os-check-input>
-                    </div>
+        <div class="os-form-card-mobile">
+            <form [formGroup]="dialogVoteForm">
+                <div formGroupName="options">
+                    @for (option of options; track option) {
+                        <div>
+                            @for (field of analogVoteFields; track field) {
+                                <div [formGroupName]="option.fqid">
+                                    <os-check-input
+                                        [placeholder]="voteValueVerbose[field] | translate"
+                                        [checkboxValue]="-1"
+                                        inputType="number"
+                                        [checkboxLabel]="'majority' | translate"
+                                        [formControlName]="field"
+                                        [radioGroupValue]="majority"
+                                    ></os-check-input>
+                                </div>
+                            }
+                        </div>
                     }
                 </div>
+                <os-check-input
+                    [placeholder]="'Valid votes' | translate"
+                    inputType="number"
+                    formControlName="votesvalid"
+                ></os-check-input>
+                <os-check-input
+                    [placeholder]="'Invalid votes' | translate"
+                    inputType="number"
+                    formControlName="votesinvalid"
+                ></os-check-input>
+                <os-check-input
+                    [placeholder]="'Total votes cast' | translate"
+                    inputType="number"
+                    formControlName="votescast"
+                ></os-check-input>
+            </form>
+        </div>
+        <!-- Publish immediately button. Only show for new polls -->
+        @if (!pollData.isPublished) {
+            <div>
+                <mat-checkbox [(ngModel)]="publishImmediately" (change)="publishStateChanged($event.checked)">
+                    <span>{{ 'Publish immediately' | translate }}</span>
+                </mat-checkbox>
+                @if (!dialogVoteForm.valid) {
+                    <mat-error>{{ 'Error in form field.' | translate }}</mat-error>
                 }
             </div>
-            <os-check-input
-                [placeholder]="'Valid votes' | translate"
-                inputType="number"
-                formControlName="votesvalid"
-            ></os-check-input>
-            <os-check-input
-                [placeholder]="'Invalid votes' | translate"
-                inputType="number"
-                formControlName="votesinvalid"
-            ></os-check-input>
-            <os-check-input
-                [placeholder]="'Total votes cast' | translate"
-                inputType="number"
-                formControlName="votescast"
-            ></os-check-input>
-        </form>
-    </div>
-    <!-- Publish immediately button. Only show for new polls -->
-    @if (!pollData.isPublished) {
-    <div>
-        <mat-checkbox [(ngModel)]="publishImmediately" (change)="publishStateChanged($event.checked)">
-            <span>{{ 'Publish immediately' | translate }}</span>
-        </mat-checkbox>
-        @if (!dialogVoteForm.valid) {
-        <mat-error>{{ 'Error in form field.' | translate }}</mat-error>
         }
-    </div>
-    } }
+    }
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button (click)="submitPoll()" [disabled]="!formsValid">

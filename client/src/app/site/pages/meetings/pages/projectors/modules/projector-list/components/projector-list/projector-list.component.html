@@ -45,8 +45,8 @@
 </ng-template>
 <div id="card-wrapper" class="spacer-bottom-60">
     @for (projector of projectors | async; track $index) {
-    <div class="projector-card">
-        <os-projector-list-entry [projector]="projector"></os-projector-list-entry>
-    </div>
+        <div class="projector-card">
+            <os-projector-list-entry [projector]="projector"></os-projector-list-entry>
+        </div>
     }
 </div>

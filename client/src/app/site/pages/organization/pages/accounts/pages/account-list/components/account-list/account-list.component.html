@@ -11,7 +11,7 @@
         <h2>
             {{ 'Accounts' | translate }}
             @if (meeting | async; as m) {
-            <span>({{ m.name }})</span>
+                <span>({{ m.name }})</span>
             }
         </h2>
     </div>
@@ -43,7 +43,7 @@
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
         @if (!isMultiSelect) {
-        <a class="detail-link" [routerLink]="['/accounts', user.id]"></a>
+            <a class="detail-link" [routerLink]="['/accounts', user.id]"></a>
         }
         <div class="flex-vertical-center overflow-hidden">
             <div class="nameCell overflow-hidden">
@@ -52,25 +52,35 @@
                         {{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')' : '') }}
                     </span>
                     <div style="float: right; display: inline-flex">
-                        &nbsp; @if (!user.is_physical_person) {
-                        <os-icon-container
-                            icon="account_balance"
-                            matTooltip="{{ 'Is no natural person' | translate }}"
-                        ></os-icon-container>
-                        } @if (!user.is_active) {
-                        <os-icon-container icon="block" matTooltip="{{ 'Inactive' | translate }}"></os-icon-container>
-                        } @if (user.hasSamlId) {
-                        <os-icon-container
-                            icon="fingerprint"
-                            matTooltip="{{ 'Has SSO identification' | translate }}"
-                        ></os-icon-container>
+                        &nbsp;
+                        @if (!user.is_physical_person) {
+                            <os-icon-container
+                                icon="account_balance"
+                                matTooltip="{{ 'Is no natural person' | translate }}"
+                            ></os-icon-container>
+                        }
+                        @if (!user.is_active) {
+                            <os-icon-container
+                                icon="block"
+                                matTooltip="{{ 'Inactive' | translate }}"
+                            ></os-icon-container>
+                        }
+                        @if (user.hasSamlId) {
+                            <os-icon-container
+                                icon="fingerprint"
+                                matTooltip="{{ 'Has SSO identification' | translate }}"
+                            ></os-icon-container>
                         }
                     </div>
                 </div>
                 <div class="meta-info user-subtitle ellipsis-overflow">
                     {{ user.saml_id || user.username }}
-                    @if (user.email) { &middot; {{ user.email }}&nbsp; } @if (user.member_number) { &middot;
-                    {{ user.member_number }}
+                    @if (user.email) {
+                        &middot; {{ user.email }}&nbsp;
+                    }
+                    @if (user.member_number) {
+                        &middot;
+                        {{ user.member_number }}
                     }
                 </div>
             </div>
@@ -80,24 +90,24 @@
     <div *osScrollingTableCell="'info'; row as user; config: { width: isMobile ? 55 : 160 }" class="committee-wrapper">
         <div class="flex-center">
             @if (!!user.meetings?.length) {
-            <os-icon-container
-                icon="event_available"
-                matTooltip="{{ 'Meetings' | translate }}"
-                matTooltipPosition="left"
-                [showIcon]="true"
-                [noWrap]="true"
-            >
-                {{ user.meetings.length }}
-            </os-icon-container>
+                <os-icon-container
+                    icon="event_available"
+                    matTooltip="{{ 'Meetings' | translate }}"
+                    matTooltipPosition="left"
+                    [showIcon]="true"
+                    [noWrap]="true"
+                >
+                    {{ user.meetings.length }}
+                </os-icon-container>
             }
         </div>
         <div class="flex-center">
             @if (user.isLastEmailSent) {
-            <os-icon-container
-                icon="mail"
-                matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
-                matTooltipPosition="left"
-            ></os-icon-container>
+                <os-icon-container
+                    icon="mail"
+                    matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
+                    matTooltipPosition="left"
+                ></os-icon-container>
             }
         </div>
         <div class="flex-center">
@@ -109,7 +119,7 @@
                 matTooltip="{{ getOmlByUser(user) | translate }}"
             >
                 @if (!isMobile) {
-                {{ getOmlByUser(user) | translate }}
+                    {{ getOmlByUser(user) | translate }}
                 }
             </os-icon-container>
         </div>
@@ -146,47 +156,48 @@
 
 <mat-menu #memberMenu="matMenu">
     @if (!isMultiSelect) {
-    <div>
-        <button mat-menu-item (click)="toggleMultiSelect()">
-            <mat-icon>library_add</mat-icon>
-            <span>{{ 'Multiselect' | translate }}</span>
-        </button>
-        <ng-container *osOmlPerms="OML.can_manage_users">
-            <button mat-menu-item (click)="csvExportMemberList()">
-                <mat-icon>archive</mat-icon>
-                <span>{{ 'Export as CSV' | translate }}</span>
+        <div>
+            <button mat-menu-item (click)="toggleMultiSelect()">
+                <mat-icon>library_add</mat-icon>
+                <span>{{ 'Multiselect' | translate }}</span>
             </button>
-            <button mat-menu-item routerLink="/accounts/import">
-                <mat-icon>cloud_upload</mat-icon>
-                <span>{{ 'Import' | translate }}</span>
-            </button>
-        </ng-container>
-    </div>
-    } @if (isMultiSelect) {
-    <div>
-        <os-user-multiselect-actions
-            [(selectedUsers)]="selectedRows"
-            (selectAll)="selectAll()"
-            (deselectAll)="deselectAll()"
-            (deleting)="deleteUsers()"
-        >
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="csvExportMemberList(selectedRows)">
-                <mat-icon>archive</mat-icon>
-                <span>{{ 'Export as CSV' | translate }}</span>
-            </button>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignMeetingToUsers()">
-                <mat-icon>event_available</mat-icon>
-                <span>{{ 'Set/remove meeting' | translate }} ...</span>
-            </button>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveState()">
-                <mat-icon>block</mat-icon>
-                <span>{{ 'Enable/disable accounts' | translate }} ...</span>
-            </button>
-            <button mat-menu-item [disabled]="selectedRows.length < 2" (click)="mergeUsersTogether()">
-                <mat-icon>merge</mat-icon>
-                <span>{{ 'Merge accounts' | translate }} ...</span>
-            </button>
-        </os-user-multiselect-actions>
-    </div>
+            <ng-container *osOmlPerms="OML.can_manage_users">
+                <button mat-menu-item (click)="csvExportMemberList()">
+                    <mat-icon>archive</mat-icon>
+                    <span>{{ 'Export as CSV' | translate }}</span>
+                </button>
+                <button mat-menu-item routerLink="/accounts/import">
+                    <mat-icon>cloud_upload</mat-icon>
+                    <span>{{ 'Import' | translate }}</span>
+                </button>
+            </ng-container>
+        </div>
+    }
+    @if (isMultiSelect) {
+        <div>
+            <os-user-multiselect-actions
+                [(selectedUsers)]="selectedRows"
+                (selectAll)="selectAll()"
+                (deselectAll)="deselectAll()"
+                (deleting)="deleteUsers()"
+            >
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="csvExportMemberList(selectedRows)">
+                    <mat-icon>archive</mat-icon>
+                    <span>{{ 'Export as CSV' | translate }}</span>
+                </button>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignMeetingToUsers()">
+                    <mat-icon>event_available</mat-icon>
+                    <span>{{ 'Set/remove meeting' | translate }} ...</span>
+                </button>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveState()">
+                    <mat-icon>block</mat-icon>
+                    <span>{{ 'Enable/disable accounts' | translate }} ...</span>
+                </button>
+                <button mat-menu-item [disabled]="selectedRows.length < 2" (click)="mergeUsersTogether()">
+                    <mat-icon>merge</mat-icon>
+                    <span>{{ 'Merge accounts' | translate }} ...</span>
+                </button>
+            </os-user-multiselect-actions>
+        </div>
     }
 </mat-menu>

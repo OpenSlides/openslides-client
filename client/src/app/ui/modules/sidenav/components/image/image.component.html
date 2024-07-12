@@ -1,9 +1,10 @@
 @if (source) {
-<div>
-    @if (!loaded) {
-    <mat-progress-spinner mode="determinate" [value]="progress" [diameter]="50"></mat-progress-spinner>
-    } @if (loaded) {
-    <img [src]="resource | trust : 'url'" />
-    }
-</div>
+    <div>
+        @if (!loaded) {
+            <mat-progress-spinner mode="determinate" [value]="progress" [diameter]="50"></mat-progress-spinner>
+        }
+        @if (loaded) {
+            <img [src]="resource | trust: 'url'" />
+        }
+    </div>
 }

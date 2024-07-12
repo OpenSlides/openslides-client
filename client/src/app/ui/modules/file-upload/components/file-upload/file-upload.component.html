@@ -31,15 +31,16 @@
 </div>
 
 @if (showProgress) {
-<mat-card class="os-card">
-    <mat-card-content>
-        @if (!parallel) {
-        <mat-progress-bar mode="determinate" [value]="progressObservable | async"></mat-progress-bar>
-        } @if (parallel) {
-        <mat-progress-bar mode="buffer"></mat-progress-bar>
-        }
-    </mat-card-content>
-</mat-card>
+    <mat-card class="os-card">
+        <mat-card-content>
+            @if (!parallel) {
+                <mat-progress-bar mode="determinate" [value]="progressObservable | async"></mat-progress-bar>
+            }
+            @if (parallel) {
+                <mat-progress-bar mode="buffer"></mat-progress-bar>
+            }
+        </mat-card-content>
+    </mat-card>
 }
 
 <ng-template #tableTemplate>

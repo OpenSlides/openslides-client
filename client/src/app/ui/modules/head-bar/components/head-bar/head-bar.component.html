@@ -1,48 +1,53 @@
 <ng-template #headbarContent>
     <mat-toolbar color="primary" [ngClass]="multiSelectMode ? 'multi-select' : ''" class="sticky-toolbar">
         <div class="toolbar-left">
-            @if (!editMode) { @if (!showBackButton) {
-            <!-- Toggle main nav -->
-            @if (vp.isMobile && !customMenu) {
-            <button mat-icon-button (click)="clickHamburgerMenu()">
-                <mat-icon>menu</mat-icon>
-            </button>
+            @if (!editMode) {
+                @if (!showBackButton) {
+                    <!-- Toggle main nav -->
+                    @if (vp.isMobile && !customMenu) {
+                        <button mat-icon-button (click)="clickHamburgerMenu()">
+                            <mat-icon>menu</mat-icon>
+                        </button>
+                    }
+                    <!-- Custom menu -->
+                    @if (customMenu && !multiSelectMode) {
+                        <button mat-icon-button [matMenuTriggerFor]="customNavMenu">
+                            <mat-icon>menu</mat-icon>
+                        </button>
+                    }
+                }
+                <!-- Exit / Back button -->
+                @if (showBackButton) {
+                    <button mat-icon-button data-cy="headbarBackButton" (click)="onBackButton()">
+                        <mat-icon>arrow_back</mat-icon>
+                    </button>
+                }
             }
-            <!-- Custom menu -->
-            @if (customMenu && !multiSelectMode) {
-            <button mat-icon-button [matMenuTriggerFor]="customNavMenu">
-                <mat-icon>menu</mat-icon>
-            </button>
-            } }
-            <!-- Exit / Back button -->
-            @if (showBackButton) {
-            <button mat-icon-button data-cy="headbarBackButton" (click)="onBackButton()">
-                <mat-icon>arrow_back</mat-icon>
-            </button>
-            } }
 
             <!-- Cancel edit button -->
             @if (editMode) {
-            <button
-                mat-icon-button
-                data-cy="headbarCloseButton"
-                (click)="isCancelEditUsed ? sendCancelEditEvent() : sendMainEvent()"
-            >
-                <mat-icon>close</mat-icon>
-            </button>
-            } @if (!multiSelectMode) {
-            <div class="toolbar-left-text">
-                <!-- Title slot -->
-                <ng-content select=".title-slot"></ng-content>
-            </div>
+                <button
+                    mat-icon-button
+                    data-cy="headbarCloseButton"
+                    (click)="isCancelEditUsed ? sendCancelEditEvent() : sendMainEvent()"
+                >
+                    <mat-icon>close</mat-icon>
+                </button>
+            }
+            @if (!multiSelectMode) {
+                <div class="toolbar-left-text">
+                    <!-- Title slot -->
+                    <ng-content select=".title-slot"></ng-content>
+                </div>
             }
         </div>
 
         <!-- centered information slot -->
         @if (!multiSelectMode) {
-        <div class="spacer"></div>
-        } @if (multiSelectMode) {
-        <ng-content select=".central-info-slot"></ng-content>
+            <div class="spacer"></div>
+        }
+        @if (multiSelectMode) {
+            <ng-content select=".central-info-slot"></ng-content>
         }
         <div class="spacer"></div>
 
@@ -52,31 +57,33 @@
 
             <!-- Main action button - desktop -->
             @if (hasMainButton && !editMode && !vp.isMobile && !multiSelectMode) {
-            <button
-                mat-icon-button
-                [disabled]="!isMainButtonEnabled"
-                (click)="sendMainEvent()"
-                matTooltip="{{ mainActionTooltip | translate }}"
-                data-cy="headbarMainButton"
-            >
-                <mat-icon>{{ mainButtonIcon }}</mat-icon>
-            </button>
+                <button
+                    mat-icon-button
+                    [disabled]="!isMainButtonEnabled"
+                    (click)="sendMainEvent()"
+                    matTooltip="{{ mainActionTooltip | translate }}"
+                    data-cy="headbarMainButton"
+                >
+                    <mat-icon>{{ mainButtonIcon }}</mat-icon>
+                </button>
             }
 
             <!-- Save button -->
             @if (isSavingObservable | async) {
-            <div>
-                <os-spinner [width]="30" [height]="30" [showText]="false"></os-spinner>
-            </div>
-            } @else { @if (editMode) {
-            <button mat-button data-cy="headbarSaveButton" [disabled]="!isSaveButtonEnabled" (click)="save()">
-                <strong class="upper">{{ saveText | translate }}</strong>
-            </button>
-            } }
+                <div>
+                    <os-spinner [width]="30" [height]="30" [showText]="false"></os-spinner>
+                </div>
+            } @else {
+                @if (editMode) {
+                    <button mat-button data-cy="headbarSaveButton" [disabled]="!isSaveButtonEnabled" (click)="save()">
+                        <strong class="upper">{{ saveText | translate }}</strong>
+                    </button>
+                }
+            }
 
             <!-- Menu button slot -->
             @if (!editMode) {
-            <ng-content select=".menu-slot"></ng-content>
+                <ng-content select=".menu-slot"></ng-content>
             }
         </div>
     </mat-toolbar>
@@ -84,21 +91,22 @@
     <!-- Main action button - mobile -->
 
     @if (hasMainButton && !editMode && vp.isMobile && !multiSelectMode) {
-    <button
-        mat-fab
-        class="head-button"
-        [disabled]="!isMainButtonEnabled"
-        (click)="sendMainEvent()"
-        matTooltip="{{ mainActionTooltip | translate }}"
-    >
-        @if (mainButtonIcon === 'add_circle') {
-        <mat-icon>add</mat-icon>
-        } @if (mainButtonIcon !== 'add_circle') {
-        <mat-icon>
-            {{ mainButtonIcon }}
-        </mat-icon>
-        }
-    </button>
+        <button
+            mat-fab
+            class="head-button"
+            [disabled]="!isMainButtonEnabled"
+            (click)="sendMainEvent()"
+            matTooltip="{{ mainActionTooltip | translate }}"
+        >
+            @if (mainButtonIcon === 'add_circle') {
+                <mat-icon>add</mat-icon>
+            }
+            @if (mainButtonIcon !== 'add_circle') {
+                <mat-icon>
+                    {{ mainButtonIcon }}
+                </mat-icon>
+            }
+        </button>
     }
 
     <mat-menu #customNavMenu="matMenu">

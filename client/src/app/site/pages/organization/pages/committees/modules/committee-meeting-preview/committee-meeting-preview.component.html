@@ -9,13 +9,13 @@
 
         <span class="committee-card-menu align-right">
             @if (meeting.isArchived) {
-            <mat-label class="archived-label">{{ 'Archived' | translate }}</mat-label>
+                <mat-label class="archived-label">{{ 'Archived' | translate }}</mat-label>
             }
             <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id; nonAdminCheck: true">
                 @if (isTemplateMeeting) {
-                <div class="template-indicator">
-                    <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
-                </div>
+                    <div class="template-indicator">
+                        <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
+                    </div>
                 }
 
                 <button type="button" mat-icon-button [matMenuTriggerFor]="meetingMenu">
@@ -32,7 +32,7 @@
                 {{ location }}
             </span>
             @if (location && (meeting.start_time || meeting.end_time)) {
-            <span>&nbsp;&middot;&nbsp;</span>
+                <span>&nbsp;&middot;&nbsp;</span>
             }
             <!-- date -->
             <span>
@@ -46,26 +46,31 @@
   </div> -->
         <!-- tags -->
         @if (meeting.organization_tags.length) {
-        <div class="ellipsis-overflow">
-            @for (tag of meeting.organization_tags; track tag) {
-            <os-chip [color]="tag.color">
-                {{ tag.name }}
-            </os-chip>
-            }
-        </div>
+            <div class="ellipsis-overflow">
+                @for (tag of meeting.organization_tags; track tag) {
+                    <os-chip [color]="tag.color">
+                        {{ tag.name }}
+                    </os-chip>
+                }
+            </div>
         }
     </mat-card-content>
     <mat-card-actions class="prev-content">
         @if (canEnter) {
-        <a mat-stroked-button color="accent" [routerLink]="meeting.getUrl()">
-            {{ 'Open meeting' | translate }}
-        </a>
-        } @if (!canEnter) {
-        <span matTooltip="{{ 'You cannot enter this meeting because you are not assigned to any group.' | translate }}">
-            <button mat-stroked-button color="accent" [disabled]="true">
+            <a mat-stroked-button color="accent" [routerLink]="meeting.getUrl()">
                 {{ 'Open meeting' | translate }}
-            </button>
-        </span>
+            </a>
+        }
+        @if (!canEnter) {
+            <span
+                matTooltip="{{
+                    'You cannot enter this meeting because you are not assigned to any group.' | translate
+                }}"
+            >
+                <button mat-stroked-button color="accent" [disabled]="true">
+                    {{ 'Open meeting' | translate }}
+                </button>
+            </span>
         }
     </mat-card-actions>
 
@@ -111,27 +116,28 @@
 <mat-menu #meetingMenu="matMenu">
     <ng-template matMenuContent>
         @if (!meeting.isArchived) {
-        <a mat-menu-item [routerLink]="['meeting', 'edit', meeting.id]">
-            <mat-icon>edit</mat-icon>
-            <span>{{ 'Edit' | translate }}</span>
-        </a>
-        } @if (!meeting.isArchived) {
-        <button mat-menu-item (click)="toggleTemplateMeeting()">
-            <mat-icon color="accent">
-                {{ isTemplateMeeting ? 'check_box' : 'check_box_outline_blank' }}
-            </mat-icon>
-            <span>{{ 'Public template' | translate }}</span>
-        </button>
+            <a mat-menu-item [routerLink]="['meeting', 'edit', meeting.id]">
+                <mat-icon>edit</mat-icon>
+                <span>{{ 'Edit' | translate }}</span>
+            </a>
+        }
+        @if (!meeting.isArchived) {
+            <button mat-menu-item (click)="toggleTemplateMeeting()">
+                <mat-icon color="accent">
+                    {{ isTemplateMeeting ? 'check_box' : 'check_box_outline_blank' }}
+                </mat-icon>
+                <span>{{ 'Public template' | translate }}</span>
+            </button>
         }
         <button mat-menu-item (click)="onDuplicate()">
             <mat-icon>file_copy</mat-icon>
             <span>{{ 'Duplicate' | translate }}</span>
         </button>
         @if (meeting.isActive) {
-        <button mat-menu-item (click)="onArchive()">
-            <mat-icon>archive</mat-icon>
-            <span>{{ 'Archive' | translate }}</span>
-        </button>
+            <button mat-menu-item (click)="onArchive()">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Archive' | translate }}</span>
+            </button>
         }
         <button mat-menu-item *osOmlPerms="OML.superadmin; and: meeting.isArchived" (click)="onUnarchive()">
             <mat-icon>unarchive</mat-icon>

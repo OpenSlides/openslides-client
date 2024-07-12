@@ -1,90 +1,92 @@
 @if (shouldShowPoll) {
-<mat-card class="os-card">
-    <mat-card-content>
-        <div class="topic-poll-wrapper">
-            <div>
-                <!-- Title -->
-                <mat-card-title>
-                    {{ poll.title }}
-                </mat-card-title>
-                <!-- Type and State -->
-                <div class="type-and-state italic spacer-bottom-20">
-                    <span *osPerms="permission.agendaItemCanManage; and: poll.isEVoting">
-                        <os-icon-container
-                            class="poll-type"
-                            icon="info"
-                            size="large"
-                            color="primary"
-                            [swap]="true"
-                            [showIcon]="poll.isAnonymous"
-                            (iconAction)="openVotingWarning()"
-                        >
-                            {{ poll.typeVerbose | translate }}
-                        </os-icon-container>
-                        @if (poll.isAnonymous) {
-                        <span>&nbsp;</span>
-                        } &middot;&nbsp;
-                    </span>
-                    <span>
-                        {{ poll.stateVerbose | translate }}
-                    </span>
-                </div>
-                <!-- Menu -->
-                <div class="poll-menu">
-                    <!-- Buttons -->
-                    <button
-                        mat-icon-button
-                        *osPerms="[permission.projectorCanManage, permission.agendaItemCanManage]"
-                        [matMenuTriggerFor]="pollItemMenu"
-                        (click)="$event.stopPropagation()"
-                    >
-                        <mat-icon>more_horiz</mat-icon>
-                    </button>
-                </div>
-                <!-- Change state button -->
-                <div *osPerms="permission.agendaItemCanManage; and: !hideChangeState">
-                    <button
-                        mat-stroked-button
-                        [ngClass]="pollStateActions[poll.state]?.css"
-                        (click)="nextPollState()"
-                        [disabled]="stateChangePendingObservable | async"
-                    >
-                        <mat-icon>{{ pollStateActions[poll.state]?.icon }}</mat-icon>
-                        <span class="next-state-label">
-                            @if ((stateChangePendingObservable | async) === false) {
-                            {{ poll.nextStateActionVerbose | translate }}
-                            } @if (stateChangePendingObservable | async) {
-                            {{ 'In progress, please wait ...' | translate }}
+    <mat-card class="os-card">
+        <mat-card-content>
+            <div class="topic-poll-wrapper">
+                <div>
+                    <!-- Title -->
+                    <mat-card-title>
+                        {{ poll.title }}
+                    </mat-card-title>
+                    <!-- Type and State -->
+                    <div class="type-and-state italic spacer-bottom-20">
+                        <span *osPerms="permission.agendaItemCanManage; and: poll.isEVoting">
+                            <os-icon-container
+                                class="poll-type"
+                                icon="info"
+                                size="large"
+                                color="primary"
+                                [swap]="true"
+                                [showIcon]="poll.isAnonymous"
+                                (iconAction)="openVotingWarning()"
+                            >
+                                {{ poll.typeVerbose | translate }}
+                            </os-icon-container>
+                            @if (poll.isAnonymous) {
+                                <span>&nbsp;</span>
                             }
+                            &middot;&nbsp;
                         </span>
-                    </button>
+                        <span>
+                            {{ poll.stateVerbose | translate }}
+                        </span>
+                    </div>
+                    <!-- Menu -->
+                    <div class="poll-menu">
+                        <!-- Buttons -->
+                        <button
+                            mat-icon-button
+                            *osPerms="[permission.projectorCanManage, permission.agendaItemCanManage]"
+                            [matMenuTriggerFor]="pollItemMenu"
+                            (click)="$event.stopPropagation()"
+                        >
+                            <mat-icon>more_horiz</mat-icon>
+                        </button>
+                    </div>
+                    <!-- Change state button -->
+                    <div *osPerms="permission.agendaItemCanManage; and: !hideChangeState">
+                        <button
+                            mat-stroked-button
+                            [ngClass]="pollStateActions[poll.state]?.css"
+                            (click)="nextPollState()"
+                            [disabled]="stateChangePendingObservable | async"
+                        >
+                            <mat-icon>{{ pollStateActions[poll.state]?.icon }}</mat-icon>
+                            <span class="next-state-label">
+                                @if ((stateChangePendingObservable | async) === false) {
+                                    {{ poll.nextStateActionVerbose | translate }}
+                                }
+                                @if (stateChangePendingObservable | async) {
+                                    {{ 'In progress, please wait ...' | translate }}
+                                }
+                            </span>
+                        </button>
+                    </div>
+                    <!-- Enter Votes Hint -->
+                    <div *osPerms="permission.agendaItemCanManage; and: poll.isAnalog && !poll.stateHasVotes">
+                        {{ 'Edit to enter votes.' | translate }}
+                    </div>
                 </div>
-                <!-- Enter Votes Hint -->
-                <div *osPerms="permission.agendaItemCanManage; and: poll.isAnalog && !poll.stateHasVotes">
-                    {{ 'Edit to enter votes.' | translate }}
-                </div>
+                <!-- Chart / Table -->
+                @if (poll.stateHasVotes) {
+                    <div class="poll-result-wrapper">
+                        <os-topic-poll-detail-content [poll]="poll"></os-topic-poll-detail-content>
+                    </div>
+                }
+                <!-- Poll progress bar -->
+                @if (poll && poll.isStarted) {
+                    <os-poll-progress [poll]="poll"></os-poll-progress>
+                }
+                <!-- The Vote -->
+                @if (poll.canBeVotedFor()) {
+                    <os-topic-poll-vote [poll]="poll"></os-topic-poll-vote>
+                }
+                <!-- Meta-Info -->
+                @if (showMetaInfo) {
+                    <os-topic-poll-meta-info [poll]="poll"></os-topic-poll-meta-info>
+                }
             </div>
-            <!-- Chart / Table -->
-            @if (poll.stateHasVotes) {
-            <div class="poll-result-wrapper">
-                <os-topic-poll-detail-content [poll]="poll"></os-topic-poll-detail-content>
-            </div>
-            }
-            <!-- Poll progress bar -->
-            @if (poll && poll.isStarted) {
-            <os-poll-progress [poll]="poll"></os-poll-progress>
-            }
-            <!-- The Vote -->
-            @if (poll.canBeVotedFor()) {
-            <os-topic-poll-vote [poll]="poll"></os-topic-poll-vote>
-            }
-            <!-- Meta-Info -->
-            @if (showMetaInfo) {
-            <os-topic-poll-meta-info [poll]="poll"></os-topic-poll-meta-info>
-            }
-        </div>
-    </mat-card-content>
-</mat-card>
+        </mat-card-content>
+    </mat-card>
 }
 
 <mat-menu #pollItemMenu="matMenu">

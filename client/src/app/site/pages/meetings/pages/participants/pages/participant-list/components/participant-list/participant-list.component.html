@@ -34,51 +34,66 @@
 >
     <!-- extra content in the filter bar -->
     @if (showVoteWeight) {
-    <div class="filter-bar-info-slot">
-        &nbsp;
-        <span>({{ 'Vote weight' | translate }} {{ totalVoteWeight }})</span>
-    </div>
+        <div class="filter-bar-info-slot">
+            &nbsp;
+            <span>({{ 'Vote weight' | translate }} {{ totalVoteWeight }})</span>
+        </div>
     }
 
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
         @if (!isMultiSelect) {
-        <a class="detail-link" [routerLink]="user.id"></a>
+            <a class="detail-link" [routerLink]="user.id"></a>
         }
         <div class="nameCell">
             <div>
                 <div class="title-line flex-vertical-center">
                     <div>{{ user.short_name }}</div>
-                    @if (user.pronoun) { &nbsp; @if (user.pronoun) {
-                    <div>({{ user.pronoun }})</div>
-                    } }
+                    @if (user.pronoun) {
+                        &nbsp;
+                        @if (user.pronoun) {
+                            <div>({{ user.pronoun }})</div>
+                        }
+                    }
                 </div>
                 @if (canSeeSensitiveData && showVoteWeight) {
-                <div class="user-subtitle">
-                    {{ user.username }}
-                    @if (user.email) { &middot; {{ user.email }}&nbsp; } @if (user.member_number) { &middot;
-                    {{ user.member_number }}
-                    }
-                </div>
-                <div class="user-subtitle">{{ 'Vote weight' | translate }}: {{ user.vote_weight() }}</div>
-                } @if (canSeeSensitiveData && !showVoteWeight) {
-                <div class="user-subtitle">
-                    {{ user.username }}
-                    @if (user.email) { &middot; {{ user.email }}&nbsp; } @if (user.member_number) { &middot;
-                    {{ user.member_number }}
-                    }
-                </div>
-                } @if (!canSeeSensitiveData && showVoteWeight) {
-                <div class="user-subtitle">{{ 'Vote weight' | translate }}: {{ user.vote_weight() }}</div>
+                    <div class="user-subtitle">
+                        {{ user.username }}
+                        @if (user.email) {
+                            &middot; {{ user.email }}&nbsp;
+                        }
+                        @if (user.member_number) {
+                            &middot;
+                            {{ user.member_number }}
+                        }
+                    </div>
+                    <div class="user-subtitle">{{ 'Vote weight' | translate }}: {{ user.vote_weight() }}</div>
+                }
+                @if (canSeeSensitiveData && !showVoteWeight) {
+                    <div class="user-subtitle">
+                        {{ user.username }}
+                        @if (user.email) {
+                            &middot; {{ user.email }}&nbsp;
+                        }
+                        @if (user.member_number) {
+                            &middot;
+                            {{ user.member_number }}
+                        }
+                    </div>
+                }
+                @if (!canSeeSensitiveData && showVoteWeight) {
+                    <div class="user-subtitle">{{ 'Vote weight' | translate }}: {{ user.vote_weight() }}</div>
                 }
             </div>
             <div class="icon-group">
                 @if (!user.is_physical_person) {
-                <mat-icon matTooltip="{{ 'Is no natural person' | translate }}">account_balance</mat-icon>
-                } @if (!user.is_active && canSeeSensitiveData) {
-                <mat-icon matTooltip="{{ 'Inactive' | translate }}">block</mat-icon>
-                } @if (user.hasSamlId && canSeeSensitiveData) {
-                <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}">fingerprint</mat-icon>
+                    <mat-icon matTooltip="{{ 'Is no natural person' | translate }}">account_balance</mat-icon>
+                }
+                @if (!user.is_active && canSeeSensitiveData) {
+                    <mat-icon matTooltip="{{ 'Inactive' | translate }}">block</mat-icon>
+                }
+                @if (user.hasSamlId && canSeeSensitiveData) {
+                    <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}">fingerprint</mat-icon>
                 }
             </div>
         </div>
@@ -93,37 +108,43 @@
     >
         <div class="groupsCell">
             @if (user.groups()?.length) {
-            <div>
-                <os-icon-container icon="people" [noWrap]="true">
-                    <os-comma-separated-listing [list]="user.groups()">
-                        <ng-template let-group>{{ group.getTitle() }}</ng-template>
-                    </os-comma-separated-listing>
-                </os-icon-container>
-            </div>
-            } @if (user.structure_levels()?.length) {
-            <div class="spacer-top-5">
-                <os-icon-container icon="flag">{{ user.structure_levels() }}</os-icon-container>
-            </div>
-            } @if (user.number()) {
-            <div class="spacer-top-5">
-                <os-icon-container icon="perm_identity">{{ user.number() }}</os-icon-container>
-            </div>
-            } @if (user.vote_delegated_to() && voteDelegationEnabled) {
-            <div
-                class="spacer-top-5"
-                matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}"
-                matTooltipPosition="left"
-            >
-                <os-icon-container icon="forward" [noWrap]="true">{{ user.vote_delegated_to() }}</os-icon-container>
-            </div>
-            } @if (user.vote_delegations_from_ids()?.length && voteDelegationEnabled) {
-            <div
-                class="spacer-top-5"
-                matTooltip="{{ 'Voting right received from (principals)' | translate }}"
-                matTooltipPosition="left"
-            >
-                <os-icon-container icon="work" [noWrap]="true">{{ user.vote_delegations_from() }}</os-icon-container>
-            </div>
+                <div>
+                    <os-icon-container icon="people" [noWrap]="true">
+                        <os-comma-separated-listing [list]="user.groups()">
+                            <ng-template let-group>{{ group.getTitle() }}</ng-template>
+                        </os-comma-separated-listing>
+                    </os-icon-container>
+                </div>
+            }
+            @if (user.structure_levels()?.length) {
+                <div class="spacer-top-5">
+                    <os-icon-container icon="flag">{{ user.structure_levels() }}</os-icon-container>
+                </div>
+            }
+            @if (user.number()) {
+                <div class="spacer-top-5">
+                    <os-icon-container icon="perm_identity">{{ user.number() }}</os-icon-container>
+                </div>
+            }
+            @if (user.vote_delegated_to() && voteDelegationEnabled) {
+                <div
+                    class="spacer-top-5"
+                    matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}"
+                    matTooltipPosition="left"
+                >
+                    <os-icon-container icon="forward" [noWrap]="true">{{ user.vote_delegated_to() }}</os-icon-container>
+                </div>
+            }
+            @if (user.vote_delegations_from_ids()?.length && voteDelegationEnabled) {
+                <div
+                    class="spacer-top-5"
+                    matTooltip="{{ 'Voting right received from (principals)' | translate }}"
+                    matTooltipPosition="left"
+                >
+                    <os-icon-container icon="work" [noWrap]="true">
+                        {{ user.vote_delegations_from() }}
+                    </os-icon-container>
+                </div>
             }
         </div>
     </div>
@@ -133,19 +154,19 @@
         <div class="infoCell">
             <!-- Email-sent indicator -->
             @if (user.isLastEmailSent && canSeeSensitiveData) {
-            <mat-icon
-                inline
-                matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
-                matTooltipPosition="above"
-            >
-                mail
-            </mat-icon>
+                <mat-icon
+                    inline
+                    matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
+                    matTooltipPosition="above"
+                >
+                    mail
+                </mat-icon>
             }
 
             <!-- Has comment indicator -->
             <div *osPerms="permission.userCanUpdate">
                 @if (!!user.comment()) {
-                <mat-icon inline matTooltip="{{ user.comment() }}">comment</mat-icon>
+                    <mat-icon inline matTooltip="{{ user.comment() }}">comment</mat-icon>
                 }
             </div>
 
@@ -194,14 +215,14 @@
     <ng-template matMenuContent let-user="user">
         <!-- Presence -->
         @if (viewport.isMobileSubject | async) {
-        <mat-checkbox
-            class="mat-menu-item"
-            (change)="setPresent(user)"
-            [checked]="isUserPresent(user)"
-            [disabled]="isPresentToggleDisabled(user)"
-        >
-            <span>{{ 'Present' | translate }}</span>
-        </mat-checkbox>
+            <mat-checkbox
+                class="mat-menu-item"
+                (change)="setPresent(user)"
+                [checked]="isUserPresent(user)"
+                [disabled]="isPresentToggleDisabled(user)"
+            >
+                <span>{{ 'Present' | translate }}</span>
+            </mat-checkbox>
         }
 
         <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="openEditInfo(user)">
@@ -215,10 +236,10 @@
         </button>
 
         @if (canChangePassword(user)) {
-        <button mat-menu-item [routerLink]="['/', activeMeetingId, 'participants', 'password', user.id]">
-            <mat-icon>security</mat-icon>
-            <span>{{ 'Change password' | translate }}</span>
-        </button>
+            <button mat-menu-item [routerLink]="['/', activeMeetingId, 'participants', 'password', user.id]">
+                <mat-icon>security</mat-icon>
+                <span>{{ 'Change password' | translate }}</span>
+            </button>
         }
 
         <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="sendInvitationEmail(user)">
@@ -240,94 +261,95 @@
 
 <mat-menu #userMenu="matMenu">
     @if (!isMultiSelect) {
-    <div>
-        <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="toggleMultiSelect()">
-            <mat-icon>library_add</mat-icon>
-            <span>{{ 'Multiselect' | translate }}</span>
-        </button>
-        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="groups">
-            <mat-icon>people</mat-icon>
-            <span>{{ 'Groups' | translate }}</span>
-        </button>
-        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="structure-levels">
-            <mat-icon>flag</mat-icon>
-            <span>{{ 'Structure levels' | translate }}</span>
-        </button>
-        @if (presenceViewConfigured) {
         <div>
-            <button mat-menu-item *osPerms="permission.userCanUpdate" routerLink="presence">
-                <mat-icon>transfer_within_a_station</mat-icon>
-                <span>{{ 'Presence' | translate }}</span>
+            <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="toggleMultiSelect()">
+                <mat-icon>library_add</mat-icon>
+                <span>{{ 'Multiselect' | translate }}</span>
             </button>
-        </div>
-        }
-        <button mat-menu-item *osPerms="permission.userCanUpdate" routerLink="speaker-list">
-            <mat-icon>record_voice_over</mat-icon>
-            <span translate>Contributions</span>
-        </button>
-        <button mat-menu-item (click)="pdfExportUserList()">
-            <mat-icon>picture_as_pdf</mat-icon>
-            <span>{{ 'List of participants (PDF)' | translate }}</span>
-        </button>
-        <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="onDownloadAccessPdf()">
-            <mat-icon>picture_as_pdf</mat-icon>
-            <span>{{ 'Access data (PDF)' | translate }}</span>
-        </button>
-        <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="csvExportUserList()">
-            <mat-icon>archive</mat-icon>
-            <span>{{ 'Export as CSV' | translate }}</span>
-        </button>
-        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="import">
-            <mat-icon>cloud_upload</mat-icon>
-            <span>{{ 'Import' | translate }}</span>
-        </button>
-        <div *osPerms="permission.meetingCanManageSettings">
-            <mat-divider></mat-divider>
-            <!-- Settings -->
-            <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'participants']">
-                <mat-icon>settings</mat-icon>
-                <span>{{ 'Settings' | translate }}</span>
-            </button>
-        </div>
-    </div>
-    } @if (isMultiSelect) {
-    <div>
-        <os-user-multiselect-actions
-            [selectedUsers]="selectedRows"
-            [canUpdate]="canUpdate"
-            [canManage]="canManage"
-            (deleting)="removeUsersFromMeeting()"
-            (selectAll)="selectAll()"
-            (deselectAll)="deselectAll()"
-        >
-            <mat-divider></mat-divider>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setGroupSelected()">
+            <button mat-menu-item *osPerms="permission.userCanManage" routerLink="groups">
                 <mat-icon>people</mat-icon>
-                <span>{{ 'Add/remove groups ...' | translate }}</span>
+                <span>{{ 'Groups' | translate }}</span>
             </button>
-            <button
-                mat-menu-item
-                [disabled]="!selectedRows.length || !hasStructureLevels"
-                (click)="setStructureLevelSelected()"
-            >
+            <button mat-menu-item *osPerms="permission.userCanManage" routerLink="structure-levels">
                 <mat-icon>flag</mat-icon>
-                <span>{{ 'Add/remove structure levels ...' | translate }}</span>
+                <span>{{ 'Structure levels' | translate }}</span>
             </button>
-            <mat-divider></mat-divider>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveStateOfSelectedUsers()">
-                <mat-icon>block</mat-icon>
-                <span>{{ 'Enable/disable account ...' | translate }}</span>
+            @if (presenceViewConfigured) {
+                <div>
+                    <button mat-menu-item *osPerms="permission.userCanUpdate" routerLink="presence">
+                        <mat-icon>transfer_within_a_station</mat-icon>
+                        <span>{{ 'Presence' | translate }}</span>
+                    </button>
+                </div>
+            }
+            <button mat-menu-item *osPerms="permission.userCanUpdate" routerLink="speaker-list">
+                <mat-icon>record_voice_over</mat-icon>
+                <span translate>Contributions</span>
             </button>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="changePresentStateOfSelectedUsers()">
-                <mat-icon>check_box</mat-icon>
-                <span>{{ 'Set presence ...' | translate }}</span>
+            <button mat-menu-item (click)="pdfExportUserList()">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>{{ 'List of participants (PDF)' | translate }}</span>
             </button>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="changePhysicalStateOfSelectedUsers()">
-                <mat-icon>sync</mat-icon>
-                <span>{{ 'Set natural person ...' | translate }}</span>
+            <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="onDownloadAccessPdf()">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>{{ 'Access data (PDF)' | translate }}</span>
             </button>
-            <mat-divider></mat-divider>
-        </os-user-multiselect-actions>
-    </div>
+            <button mat-menu-item *osPerms="permission.userCanUpdate" (click)="csvExportUserList()">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export as CSV' | translate }}</span>
+            </button>
+            <button mat-menu-item *osPerms="permission.userCanManage" routerLink="import">
+                <mat-icon>cloud_upload</mat-icon>
+                <span>{{ 'Import' | translate }}</span>
+            </button>
+            <div *osPerms="permission.meetingCanManageSettings">
+                <mat-divider></mat-divider>
+                <!-- Settings -->
+                <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'participants']">
+                    <mat-icon>settings</mat-icon>
+                    <span>{{ 'Settings' | translate }}</span>
+                </button>
+            </div>
+        </div>
+    }
+    @if (isMultiSelect) {
+        <div>
+            <os-user-multiselect-actions
+                [selectedUsers]="selectedRows"
+                [canUpdate]="canUpdate"
+                [canManage]="canManage"
+                (deleting)="removeUsersFromMeeting()"
+                (selectAll)="selectAll()"
+                (deselectAll)="deselectAll()"
+            >
+                <mat-divider></mat-divider>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="setGroupSelected()">
+                    <mat-icon>people</mat-icon>
+                    <span>{{ 'Add/remove groups ...' | translate }}</span>
+                </button>
+                <button
+                    mat-menu-item
+                    [disabled]="!selectedRows.length || !hasStructureLevels"
+                    (click)="setStructureLevelSelected()"
+                >
+                    <mat-icon>flag</mat-icon>
+                    <span>{{ 'Add/remove structure levels ...' | translate }}</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveStateOfSelectedUsers()">
+                    <mat-icon>block</mat-icon>
+                    <span>{{ 'Enable/disable account ...' | translate }}</span>
+                </button>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="changePresentStateOfSelectedUsers()">
+                    <mat-icon>check_box</mat-icon>
+                    <span>{{ 'Set presence ...' | translate }}</span>
+                </button>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="changePhysicalStateOfSelectedUsers()">
+                    <mat-icon>sync</mat-icon>
+                    <span>{{ 'Set natural person ...' | translate }}</span>
+                </button>
+                <mat-divider></mat-divider>
+            </os-user-multiselect-actions>
+        </div>
     }
 </mat-menu>

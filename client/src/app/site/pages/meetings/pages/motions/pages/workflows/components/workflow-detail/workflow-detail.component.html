@@ -8,9 +8,9 @@
         <!-- Title -->
         <div class="title-slot">
             @if (workflow) {
-            <h2>
-                {{ workflow.name }}
-            </h2>
+                <h2>
+                    {{ workflow.name }}
+                </h2>
             }
         </div>
 
@@ -24,147 +24,159 @@
 
     <!-- Detail -->
     @if (workflow) {
-    <div>
-        <div class="title-line">
-            <span>{{ 'First state' | translate }}</span>
-            : @if (workflow.first_state) {
-            <span>{{ workflow.first_state.name }}</span>
-            }
-        </div>
-        <div class="scrollable-matrix">
-            <table mat-table [dataSource]="getTableDataSource()">
-                <ng-container matColumnDef="perm" sticky>
-                    <th mat-header-cell class="group-head-table-cell" *matHeaderCellDef>
-                        {{ 'Permissions' | translate }}
-                    </th>
-                    <td
-                        mat-cell
-                        *matCellDef="let perm"
-                        #tooltip="matTooltip"
-                        [ngClass]="{ 'has-help-text': perm.help_text }"
-                        [matTooltip]="perm.help_text | translate"
-                        matTooltipClass="pre-wrap"
-                        matTooltipPosition="after"
-                        (mouseenter)="$event.stopImmediatePropagation()"
-                        (mouseleave)="tooltip.hide()"
-                        (click)="tooltip.toggle()"
-                    >
-                        <div class="permission-name">
-                            {{ perm.name | translate }}
-                        </div>
-                    </td>
-                </ng-container>
-                @for (state of workflowStates; track trackById($index, state)) {
-                <ng-container [matColumnDef]="getColumnDef(state)">
-                    <th mat-header-cell *matHeaderCellDef (click)="onClickStateName(state)">
-                        <div class="clickable-cell stretch-to-fill-parent">
-                            <div class="inner-table">{{ state.name }}</div>
-                        </div>
-                    </th>
-                    <td mat-cell *matCellDef="let perm">
-                        @if (perm.type === 'check') {
-                        <div class="inner-table">
-                            <mat-checkbox
-                                [checked]="getValueOfState(state, perm)"
-                                (change)="onToggleStatePerm(state, perm.selector, $event)"
-                            ></mat-checkbox>
-                        </div>
-                        } @if (perm.type === 'input') {
-                        <div>
-                            <div class="inner-table">
-                                {{ getValueOfState(state, perm) || '–' }}
-                            </div>
-                            <div
-                                class="clickable-cell stretch-to-fill-parent"
-                                (click)="onClickInputPerm(perm, state)"
-                            ></div>
-                        </div>
-                        } @if (perm.type === 'color') {
-                        <div class="inner-table">
-                            <mat-basic-chip
-                                [matMenuTriggerFor]="colorMenu"
-                                [matMenuTriggerData]="{ state: state }"
-                                [ngClass]="getValueOfState(state, perm)"
-                                [disableRipple]="true"
-                            >
-                                {{ getValueOfState(state, perm) | translate }}
-                            </mat-basic-chip>
-                        </div>
-                        } @if (perm.type === 'submitter_withdraw_state') {
-                        <div>
-                            <div class="inner-table">
-                                @if (!state.submitter_withdraw_state) {
-                                <div>-</div>
-                                } @if (state.submitter_withdraw_state) {
-                                <div>
-                                    {{ state.submitter_withdraw_state.name }}
-                                </div>
-                                }
-                            </div>
-                            <div
-                                class="clickable-cell stretch-to-fill-parent"
-                                [matMenuTriggerFor]="submitterWithdrawStateMenu"
-                                [matMenuTriggerData]="{ state: state }"
-                            ></div>
-                        </div>
-                        } @if (perm.type === 'state') {
-                        <div>
-                            <div class="inner-table">
-                                @if (!state.next_states.length) {
-                                <div>-</div>
-                                } @if (state.next_states.length) {
-                                <div>
-                                    <os-comma-separated-listing [list]="sortedNextStates(state)">
-                                        <ng-template let-next>{{ next.name }}</ng-template>
-                                    </os-comma-separated-listing>
-                                </div>
-                                }
-                            </div>
-                            <div
-                                class="clickable-cell stretch-to-fill-parent"
-                                [matMenuTriggerFor]="nextStatesMenu"
-                                [matMenuTriggerData]="{ state: state }"
-                            ></div>
-                        </div>
-                        } @if (perm.type === 'amendment') {
-                        <div>
-                            <div class="inner-table">
-                                {{ getMergeAmendmentLabel(state.merge_amendment_into_final) | translate }}
-                            </div>
-                            <div
-                                class="clickable-cell stretch-to-fill-parent"
-                                [matMenuTriggerFor]="mergeAmendmentMenu"
-                                [matMenuTriggerData]="{ state: state }"
-                            ></div>
-                        </div>
-                        } @if (perm.type === 'restrictions') {
-                        <div>
-                            <div class="inner-table">
-                                @if (!state.restrictions?.length) {
-                                <div>-</div>
-                                } @if (state.restrictions?.length) {
-                                <div>
-                                    <os-comma-separated-listing [list]="state.restrictions">
-                                        <ng-template let-res>{{ getRestrictionLabel(res) | translate }}</ng-template>
-                                    </os-comma-separated-listing>
-                                </div>
-                                }
-                            </div>
-                            <div
-                                class="clickable-cell stretch-to-fill-parent"
-                                [matMenuTriggerFor]="restrictionMenu"
-                                [matMenuTriggerData]="{ state: state }"
-                            ></div>
-                        </div>
-                        }
-                    </td>
-                </ng-container>
+        <div>
+            <div class="title-line">
+                <span>{{ 'First state' | translate }}</span>
+                :
+                @if (workflow.first_state) {
+                    <span>{{ workflow.first_state.name }}</span>
                 }
-                <tr mat-header-row *matHeaderRowDef="headerRowDef; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: headerRowDef"></tr>
-            </table>
+            </div>
+            <div class="scrollable-matrix">
+                <table mat-table [dataSource]="getTableDataSource()">
+                    <ng-container matColumnDef="perm" sticky>
+                        <th mat-header-cell class="group-head-table-cell" *matHeaderCellDef>
+                            {{ 'Permissions' | translate }}
+                        </th>
+                        <td
+                            mat-cell
+                            *matCellDef="let perm"
+                            #tooltip="matTooltip"
+                            [ngClass]="{ 'has-help-text': perm.help_text }"
+                            [matTooltip]="perm.help_text | translate"
+                            matTooltipClass="pre-wrap"
+                            matTooltipPosition="after"
+                            (mouseenter)="$event.stopImmediatePropagation()"
+                            (mouseleave)="tooltip.hide()"
+                            (click)="tooltip.toggle()"
+                        >
+                            <div class="permission-name">
+                                {{ perm.name | translate }}
+                            </div>
+                        </td>
+                    </ng-container>
+                    @for (state of workflowStates; track trackById($index, state)) {
+                        <ng-container [matColumnDef]="getColumnDef(state)">
+                            <th mat-header-cell *matHeaderCellDef (click)="onClickStateName(state)">
+                                <div class="clickable-cell stretch-to-fill-parent">
+                                    <div class="inner-table">{{ state.name }}</div>
+                                </div>
+                            </th>
+                            <td mat-cell *matCellDef="let perm">
+                                @if (perm.type === 'check') {
+                                    <div class="inner-table">
+                                        <mat-checkbox
+                                            [checked]="getValueOfState(state, perm)"
+                                            (change)="onToggleStatePerm(state, perm.selector, $event)"
+                                        ></mat-checkbox>
+                                    </div>
+                                }
+                                @if (perm.type === 'input') {
+                                    <div>
+                                        <div class="inner-table">
+                                            {{ getValueOfState(state, perm) || '–' }}
+                                        </div>
+                                        <div
+                                            class="clickable-cell stretch-to-fill-parent"
+                                            (click)="onClickInputPerm(perm, state)"
+                                        ></div>
+                                    </div>
+                                }
+                                @if (perm.type === 'color') {
+                                    <div class="inner-table">
+                                        <mat-basic-chip
+                                            [matMenuTriggerFor]="colorMenu"
+                                            [matMenuTriggerData]="{ state: state }"
+                                            [ngClass]="getValueOfState(state, perm)"
+                                            [disableRipple]="true"
+                                        >
+                                            {{ getValueOfState(state, perm) | translate }}
+                                        </mat-basic-chip>
+                                    </div>
+                                }
+                                @if (perm.type === 'submitter_withdraw_state') {
+                                    <div>
+                                        <div class="inner-table">
+                                            @if (!state.submitter_withdraw_state) {
+                                                <div>-</div>
+                                            }
+                                            @if (state.submitter_withdraw_state) {
+                                                <div>
+                                                    {{ state.submitter_withdraw_state.name }}
+                                                </div>
+                                            }
+                                        </div>
+                                        <div
+                                            class="clickable-cell stretch-to-fill-parent"
+                                            [matMenuTriggerFor]="submitterWithdrawStateMenu"
+                                            [matMenuTriggerData]="{ state: state }"
+                                        ></div>
+                                    </div>
+                                }
+                                @if (perm.type === 'state') {
+                                    <div>
+                                        <div class="inner-table">
+                                            @if (!state.next_states.length) {
+                                                <div>-</div>
+                                            }
+                                            @if (state.next_states.length) {
+                                                <div>
+                                                    <os-comma-separated-listing [list]="sortedNextStates(state)">
+                                                        <ng-template let-next>{{ next.name }}</ng-template>
+                                                    </os-comma-separated-listing>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div
+                                            class="clickable-cell stretch-to-fill-parent"
+                                            [matMenuTriggerFor]="nextStatesMenu"
+                                            [matMenuTriggerData]="{ state: state }"
+                                        ></div>
+                                    </div>
+                                }
+                                @if (perm.type === 'amendment') {
+                                    <div>
+                                        <div class="inner-table">
+                                            {{ getMergeAmendmentLabel(state.merge_amendment_into_final) | translate }}
+                                        </div>
+                                        <div
+                                            class="clickable-cell stretch-to-fill-parent"
+                                            [matMenuTriggerFor]="mergeAmendmentMenu"
+                                            [matMenuTriggerData]="{ state: state }"
+                                        ></div>
+                                    </div>
+                                }
+                                @if (perm.type === 'restrictions') {
+                                    <div>
+                                        <div class="inner-table">
+                                            @if (!state.restrictions?.length) {
+                                                <div>-</div>
+                                            }
+                                            @if (state.restrictions?.length) {
+                                                <div>
+                                                    <os-comma-separated-listing [list]="state.restrictions">
+                                                        <ng-template let-res>
+                                                            {{ getRestrictionLabel(res) | translate }}
+                                                        </ng-template>
+                                                    </os-comma-separated-listing>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div
+                                            class="clickable-cell stretch-to-fill-parent"
+                                            [matMenuTriggerFor]="restrictionMenu"
+                                            [matMenuTriggerData]="{ state: state }"
+                                        ></div>
+                                    </div>
+                                }
+                            </td>
+                        </ng-container>
+                    }
+                    <tr mat-header-row *matHeaderRowDef="headerRowDef; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: headerRowDef"></tr>
+                </table>
+            </div>
         </div>
-    </div>
     }
 </os-detail-view>
 
@@ -193,9 +205,9 @@
             <span>{{ 'Cancel' | translate }}</span>
         </button>
         @if (dialogData.deletable) {
-        <button type="button" mat-button color="warn" [mat-dialog-close]="{ action: 'delete' }">
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
+            <button type="button" mat-button color="warn" [mat-dialog-close]="{ action: 'delete' }">
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
         }
     </mat-dialog-actions>
 </ng-template>
@@ -204,12 +216,12 @@
 <mat-menu matMenuContent #colorMenu="matMenu">
     <ng-template let-state="state" matMenuContent>
         @for (color of labelColors; track color) {
-        <button mat-menu-item (click)="onSelectColor(state, color)">
-            @if (color === state.css_class) {
-            <mat-icon>check</mat-icon>
-            }
-            <span>{{ color | translate }}</span>
-        </button>
+            <button mat-menu-item (click)="onSelectColor(state, color)">
+                @if (color === state.css_class) {
+                    <mat-icon>check</mat-icon>
+                }
+                <span>{{ color | translate }}</span>
+            </button>
         }
     </ng-template>
 </mat-menu>
@@ -218,16 +230,16 @@
 <mat-menu matMenuContent #submitterWithdrawStateMenu="matMenu">
     <ng-template let-state="state" matMenuContent>
         @for (workflowState of workflow.states; track workflowState) {
-        <div>
-            @if (workflowState.name !== state.name) {
-            <button mat-menu-item (click)="onSetSubmitterWithdrawState(workflowState, state)">
-                @if (state.submitter_withdraw_state_id === workflowState.id) {
-                <mat-icon>check</mat-icon>
+            <div>
+                @if (workflowState.name !== state.name) {
+                    <button mat-menu-item (click)="onSetSubmitterWithdrawState(workflowState, state)">
+                        @if (state.submitter_withdraw_state_id === workflowState.id) {
+                            <mat-icon>check</mat-icon>
+                        }
+                        <span>{{ workflowState.name }}</span>
+                    </button>
                 }
-                <span>{{ workflowState.name }}</span>
-            </button>
-            }
-        </div>
+            </div>
         }
     </ng-template>
 </mat-menu>
@@ -236,16 +248,16 @@
 <mat-menu matMenuContent #nextStatesMenu="matMenu">
     <ng-template let-state="state" matMenuContent>
         @for (nextState of getWorkflowStates(); track nextState) {
-        <div>
-            @if (nextState.name !== state.name) {
-            <button mat-menu-item (click)="onSetNextState(nextState, state)">
-                @if (state.next_state_ids?.includes(nextState.id)) {
-                <mat-icon>check</mat-icon>
+            <div>
+                @if (nextState.name !== state.name) {
+                    <button mat-menu-item (click)="onSetNextState(nextState, state)">
+                        @if (state.next_state_ids?.includes(nextState.id)) {
+                            <mat-icon>check</mat-icon>
+                        }
+                        <span>{{ nextState.name }}</span>
+                    </button>
                 }
-                <span>{{ nextState.name }}</span>
-            </button>
-            }
-        </div>
+            </div>
         }
     </ng-template>
 </mat-menu>
@@ -254,12 +266,12 @@
 <mat-menu matMenuContent #restrictionMenu="matMenu">
     <ng-template let-state="state" matMenuContent>
         @for (restriction of restrictions; track restriction) {
-        <button mat-menu-item (click)="onSetRestriction(restriction.key, state)">
-            @if (state.restrictions?.includes(restriction.key)) {
-            <mat-icon>check</mat-icon>
-            }
-            <span>{{ restriction.label | translate }}</span>
-        </button>
+            <button mat-menu-item (click)="onSetRestriction(restriction.key, state)">
+                @if (state.restrictions?.includes(restriction.key)) {
+                    <mat-icon>check</mat-icon>
+                }
+                <span>{{ restriction.label | translate }}</span>
+            </button>
         }
     </ng-template>
 </mat-menu>
@@ -268,14 +280,14 @@
 <mat-menu matMenuContent #mergeAmendmentMenu="matMenu">
     <ng-template let-state="state" matMenuContent>
         @for (amendment of amendmentIntoFinal; track amendment) {
-        <div>
-            <button mat-menu-item (click)="setMergeAmendment(amendment.merge, state)">
-                @if (amendment.merge === state.merge_amendment_into_final) {
-                <mat-icon>check</mat-icon>
-                }
-                <span>{{ amendment.label | translate }}</span>
-            </button>
-        </div>
+            <div>
+                <button mat-menu-item (click)="setMergeAmendment(amendment.merge, state)">
+                    @if (amendment.merge === state.merge_amendment_into_final) {
+                        <mat-icon>check</mat-icon>
+                    }
+                    <span>{{ amendment.label | translate }}</span>
+                </button>
+            </div>
         }
     </ng-template>
 </mat-menu>

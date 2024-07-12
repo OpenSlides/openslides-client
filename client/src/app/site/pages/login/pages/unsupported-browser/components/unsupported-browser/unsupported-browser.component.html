@@ -1,12 +1,13 @@
 <main>
     @if (!supported) {
-    <h1 class="center spacer-top-20">
-        {{ 'Your browser is not supported by OpenSlides!' | translate }}
-    </h1>
-    } @if (supported) {
-    <h1 class="center spacer-top-20">
-        {{ 'Congratuations! Your browser is supported by OpenSlides.' | translate }}
-    </h1>
+        <h1 class="center spacer-top-20">
+            {{ 'Your browser is not supported by OpenSlides!' | translate }}
+        </h1>
+    }
+    @if (supported) {
+        <h1 class="center spacer-top-20">
+            {{ 'Congratuations! Your browser is supported by OpenSlides.' | translate }}
+        </h1>
     }
 
     <mat-card class="os-card">
@@ -18,41 +19,43 @@
                 </span>
                 <br />
                 @if (!!supportedVersion) {
-                <span>{{ 'Minimal required version' | translate }}: {{ supportedVersion }}</span>
+                    <span>{{ 'Minimal required version' | translate }}: {{ supportedVersion }}</span>
                 }
             </div>
 
             @if (!supported) {
-            <div class="spacer-top-20">
-                <span>{{ 'Please update your browser or contact your system administration.' | translate }}</span>
-            </div>
+                <div class="spacer-top-20">
+                    <span>{{ 'Please update your browser or contact your system administration.' | translate }}</span>
+                </div>
             }
 
             <div class="spacer-top-20">
                 <p>
                     {{ 'OpenSlides recommends' | translate }}
                     @for (browser of recommendedBrowsers; track browser; let isLast = $last) {
-                    <span>
-                        <a [href]="browser.url">{{ browser.name }}</a>
-                        @if (!isLast) {
-                        <span>&nbsp;{{ 'or' | translate }}&nbsp;</span>
-                        } @if (isLast) {
-                        <span>.</span>
-                        }
-                    </span>
+                        <span>
+                            <a [href]="browser.url">{{ browser.name }}</a>
+                            @if (!isLast) {
+                                <span>&nbsp;{{ 'or' | translate }}&nbsp;</span>
+                            }
+                            @if (isLast) {
+                                <span>.</span>
+                            }
+                        </span>
                     }
                 </p>
             </div>
 
             <a mat-stroked-button color="primary" routerLink=".." [queryParams]="{ checkBrowser: false }">
                 @if (!supported) {
-                <span>
-                    {{ 'Login anyway' | translate }}
-                </span>
-                } @if (supported) {
-                <span>
-                    {{ 'Login' | translate }}
-                </span>
+                    <span>
+                        {{ 'Login anyway' | translate }}
+                    </span>
+                }
+                @if (supported) {
+                    <span>
+                        {{ 'Login' | translate }}
+                    </span>
                 }
             </a>
         </mat-card-content>

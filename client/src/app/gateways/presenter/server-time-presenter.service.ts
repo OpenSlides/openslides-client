@@ -23,7 +23,10 @@ export class ServerTimePresenterService {
      */
     private readonly _serverOffsetSubject = new BehaviorSubject<number>(0);
 
-    public constructor(lifecycleService: LifecycleService, private presenter: PresenterService) {
+    public constructor(
+        lifecycleService: LifecycleService,
+        private presenter: PresenterService
+    ) {
         lifecycleService.appLoaded.subscribe(() => this.startScheduler());
     }
 

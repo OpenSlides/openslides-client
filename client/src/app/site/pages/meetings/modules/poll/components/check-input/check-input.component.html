@@ -4,15 +4,16 @@
         <input matInput class="check-input--input" [type]="inputType" [formControl]="contentForm" [min]="0" />
     </mat-form-field>
     @if (checkboxLabel) {
-    <mat-checkbox
-        [name]="'checkbox'"
-        [ngModel]="isChecked"
-        (change)="checkboxStateChanged($event.checked)"
-        tabindex="-1"
-    >
-        {{ checkboxLabel }}
-    </mat-checkbox>
-    } @if (!checkboxLabel) {
-    <div class="placeholder"></div>
+        <mat-checkbox
+            [name]="'checkbox'"
+            [ngModel]="isChecked"
+            (change)="checkboxStateChanged($event.checked)"
+            tabindex="-1"
+        >
+            {{ checkboxLabel }}
+        </mat-checkbox>
+    }
+    @if (!checkboxLabel) {
+        <div class="placeholder"></div>
     }
 </div>

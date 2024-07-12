@@ -1,228 +1,242 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     @if (hasLoaded | async) {
-    <os-head-bar
-        [hasMainButton]="hasPerms('manage') && !!assignment"
-        mainButtonIcon="edit"
-        [mainActionTooltip]="'Edit' | translate"
-        [nav]="false"
-        [editMode]="isEditing"
-        [isSaveButtonEnabled]="assignmentForm.valid"
-        [saveAction]="getSaveAction()"
-        (mainEvent)="setEditMode(!isEditing)"
-    >
-        <!-- Title -->
-        <div class="title-slot">
-            @if (assignment && !isCreating) {
-            <h2>{{ 'Election' | translate }}</h2>
-            } @if (isCreating) {
-            <h2>{{ 'New election' | translate }}</h2>
-            }
-        </div>
-        <!-- Menu -->
-        <ng-container class="menu-slot">
-            @if (assignment) {
-            <button type="button" mat-icon-button [matMenuTriggerFor]="assignmentDetailMenu">
-                <mat-icon>more_vert</mat-icon>
-            </button>
-            }
-        </ng-container>
-        <mat-menu #assignmentDetailMenu="matMenu">
-            <ng-template matMenuContent>
-                <!-- PDF -->
-                <button mat-menu-item (click)="onDownloadPdf()">
-                    <mat-icon>picture_as_pdf</mat-icon>
-                    <span>{{ 'PDF' | translate }}</span>
-                </button>
-                <!-- List of speakers -->
-                <os-speaker-button [object]="assignment" [menuItem]="true"></os-speaker-button>
-                <!-- Project -->
-                <os-projector-button [object]="assignment" [menuItem]="true"></os-projector-button>
-                <!-- Add/remove to/from agenda -->
-                <div *osPerms="permission.agendaItemCanManage">
-                    @if (assignment && !assignment.agenda_item_id) {
-                    <button mat-menu-item (click)="addToAgenda()">
-                        <mat-icon>add</mat-icon>
-                        <span>{{ 'Add to agenda' | translate }}</span>
-                    </button>
-                    } @if (assignment && assignment.agenda_item_id) {
-                    <button mat-menu-item (click)="removeFromAgenda()">
-                        <mat-icon>remove</mat-icon>
-                        <span>{{ 'Remove from agenda' | translate }}</span>
-                    </button>
-                    }
-                </div>
-                <!-- History -->
-                <div *osPerms="permission.meetingCanSeeHistory">
-                    <button mat-menu-item (click)="goToHistory()">
-                        <mat-icon>history</mat-icon>
-                        <span>{{ 'History' | translate }}</span>
-                    </button>
-                </div>
-                <!-- Delete -->
-                @if (hasPerms('manage')) {
-                <div>
-                    <!-- Delete -->
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item class="red-warning-text" (click)="onDeleteAssignmentButton()">
-                        <mat-icon>delete</mat-icon>
-                        <span>{{ 'Delete' | translate }}</span>
-                    </button>
-                </div>
+        <os-head-bar
+            [hasMainButton]="hasPerms('manage') && !!assignment"
+            mainButtonIcon="edit"
+            [mainActionTooltip]="'Edit' | translate"
+            [nav]="false"
+            [editMode]="isEditing"
+            [isSaveButtonEnabled]="assignmentForm.valid"
+            [saveAction]="getSaveAction()"
+            (mainEvent)="setEditMode(!isEditing)"
+        >
+            <!-- Title -->
+            <div class="title-slot">
+                @if (assignment && !isCreating) {
+                    <h2>{{ 'Election' | translate }}</h2>
                 }
-            </ng-template>
-        </mat-menu>
-    </os-head-bar>
-    <div>
-        @if (isEditing) {
-        <div>
-            <ng-container [ngTemplateOutlet]="assignmentFormTemplate"></ng-container>
-        </div>
-        } @if (!isEditing) {
-        <div>
-            <!-- assignment meta infos-->
-            <ng-container [ngTemplateOutlet]="metaInfoTemplate"></ng-container>
-            <!-- polls -->
-            @if (assignment && assignment.poll_ids) { @for (poll of assignment.poll_ids | reverse; track
-            trackById($index, poll)) {
-            <os-assignment-poll [pollId]="poll" (dialogOpened)="openDialog(poll)"></os-assignment-poll>
-            } }
-            <!-- New Ballot button -->
-            @if (assignment && assignment.candidatesAsUsers.length && hasPerms('createPoll')) {
-            <div class="new-ballot-button">
-                <button mat-stroked-button (click)="openDialog()">
-                    <mat-icon>add</mat-icon>
-                    <span>{{ 'New ballot' | translate }}</span>
-                </button>
+                @if (isCreating) {
+                    <h2>{{ 'New election' | translate }}</h2>
+                }
             </div>
+            <!-- Menu -->
+            <ng-container class="menu-slot">
+                @if (assignment) {
+                    <button type="button" mat-icon-button [matMenuTriggerFor]="assignmentDetailMenu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                }
+            </ng-container>
+            <mat-menu #assignmentDetailMenu="matMenu">
+                <ng-template matMenuContent>
+                    <!-- PDF -->
+                    <button mat-menu-item (click)="onDownloadPdf()">
+                        <mat-icon>picture_as_pdf</mat-icon>
+                        <span>{{ 'PDF' | translate }}</span>
+                    </button>
+                    <!-- List of speakers -->
+                    <os-speaker-button [object]="assignment" [menuItem]="true"></os-speaker-button>
+                    <!-- Project -->
+                    <os-projector-button [object]="assignment" [menuItem]="true"></os-projector-button>
+                    <!-- Add/remove to/from agenda -->
+                    <div *osPerms="permission.agendaItemCanManage">
+                        @if (assignment && !assignment.agenda_item_id) {
+                            <button mat-menu-item (click)="addToAgenda()">
+                                <mat-icon>add</mat-icon>
+                                <span>{{ 'Add to agenda' | translate }}</span>
+                            </button>
+                        }
+                        @if (assignment && assignment.agenda_item_id) {
+                            <button mat-menu-item (click)="removeFromAgenda()">
+                                <mat-icon>remove</mat-icon>
+                                <span>{{ 'Remove from agenda' | translate }}</span>
+                            </button>
+                        }
+                    </div>
+                    <!-- History -->
+                    <div *osPerms="permission.meetingCanSeeHistory">
+                        <button mat-menu-item (click)="goToHistory()">
+                            <mat-icon>history</mat-icon>
+                            <span>{{ 'History' | translate }}</span>
+                        </button>
+                    </div>
+                    <!-- Delete -->
+                    @if (hasPerms('manage')) {
+                        <div>
+                            <!-- Delete -->
+                            <mat-divider></mat-divider>
+                            <button mat-menu-item class="red-warning-text" (click)="onDeleteAssignmentButton()">
+                                <mat-icon>delete</mat-icon>
+                                <span>{{ 'Delete' | translate }}</span>
+                            </button>
+                        </div>
+                    }
+                </ng-template>
+            </mat-menu>
+        </os-head-bar>
+        <div>
+            @if (isEditing) {
+                <div>
+                    <ng-container [ngTemplateOutlet]="assignmentFormTemplate"></ng-container>
+                </div>
             }
-            <!-- candidates list -->
-            <ng-container [ngTemplateOutlet]="candidatesTemplate"></ng-container>
+            @if (!isEditing) {
+                <div>
+                    <!-- assignment meta infos-->
+                    <ng-container [ngTemplateOutlet]="metaInfoTemplate"></ng-container>
+                    <!-- polls -->
+                    @if (assignment && assignment.poll_ids) {
+                        @for (poll of assignment.poll_ids | reverse; track trackById($index, poll)) {
+                            <os-assignment-poll [pollId]="poll" (dialogOpened)="openDialog(poll)"></os-assignment-poll>
+                        }
+                    }
+                    <!-- New Ballot button -->
+                    @if (assignment && assignment.candidatesAsUsers.length && hasPerms('createPoll')) {
+                        <div class="new-ballot-button">
+                            <button mat-stroked-button (click)="openDialog()">
+                                <mat-icon>add</mat-icon>
+                                <span>{{ 'New ballot' | translate }}</span>
+                            </button>
+                        </div>
+                    }
+                    <!-- candidates list -->
+                    <ng-container [ngTemplateOutlet]="candidatesTemplate"></ng-container>
+                </div>
+            }
         </div>
-        }
-    </div>
     }
 </os-detail-view>
 
 <ng-template #metaInfoTemplate>
     @if (assignment) {
-    <mat-card class="os-card spacer-bottom-60">
-        <mat-card-content>
-            @if (!isEditing && assignment.getTitle) {
-            <os-projectable-title [model]="assignment"></os-projectable-title>
-            } @if (assignment) {
-            <div>
-                @if (assignment.assignment.description) {
-                <div class="detail-view" [innerHTML]="assignment.assignment.description | trust : 'html'"></div>
+        <mat-card class="os-card spacer-bottom-60">
+            <mat-card-content>
+                @if (!isEditing && assignment.getTitle) {
+                    <os-projectable-title [model]="assignment"></os-projectable-title>
                 }
-            </div>
-            }
-            <div [ngClass]="{ 'meta-info-grid': assignment.open_posts }">
-                @if (assignment.open_posts) {
-                <div class="number-of-elected">
-                    <h4>{{ 'Number of persons to be elected' | translate }}</h4>
-                    <span>{{ assignment.open_posts }}</span>
-                </div>
-                }
-                <div class="current-phase">
-                    <h4>{{ 'Phase' | translate }}</h4>
-                    <os-chip-select [canOpen]="hasPerms('manage')" chipClass="bluegrey">
-                        @for (option of phaseOptions; track option) {
-                        <button menu mat-menu-item (click)="onSetPhaseButton(option.value)">
-                            {{ option.display_name | translate }}
-                        </button>
+                @if (assignment) {
+                    <div>
+                        @if (assignment.assignment.description) {
+                            <div
+                                class="detail-view"
+                                [innerHTML]="assignment.assignment.description | trust: 'html'"
+                            ></div>
                         }
-                        {{ assignment.phaseString | translate }}
-                    </os-chip-select>
-                </div>
-            </div>
-            @if (assignment.attachments?.length) {
-            <div>
-                <h4>{{ 'Election documents' | translate }}</h4>
-                <mat-list dense class="election-document-list">
-                    @for (file of assignment.attachments; track file) {
-                    <mat-list-item>
-                        <a [routerLink]="file.url" target="_blank">{{ file.getTitle() }}</a>
-                    </mat-list-item>
+                    </div>
+                }
+                <div [ngClass]="{ 'meta-info-grid': assignment.open_posts }">
+                    @if (assignment.open_posts) {
+                        <div class="number-of-elected">
+                            <h4>{{ 'Number of persons to be elected' | translate }}</h4>
+                            <span>{{ assignment.open_posts }}</span>
+                        </div>
                     }
-                </mat-list>
-            </div>
-            }
-        </mat-card-content>
-    </mat-card>
+                    <div class="current-phase">
+                        <h4>{{ 'Phase' | translate }}</h4>
+                        <os-chip-select [canOpen]="hasPerms('manage')" chipClass="bluegrey">
+                            @for (option of phaseOptions; track option) {
+                                <button menu mat-menu-item (click)="onSetPhaseButton(option.value)">
+                                    {{ option.display_name | translate }}
+                                </button>
+                            }
+                            {{ assignment.phaseString | translate }}
+                        </os-chip-select>
+                    </div>
+                </div>
+                @if (assignment.attachments?.length) {
+                    <div>
+                        <h4>{{ 'Election documents' | translate }}</h4>
+                        <mat-list dense class="election-document-list">
+                            @for (file of assignment.attachments; track file) {
+                                <mat-list-item>
+                                    <a [routerLink]="file.url" target="_blank">{{ file.getTitle() }}</a>
+                                </mat-list-item>
+                            }
+                        </mat-list>
+                    </div>
+                }
+            </mat-card-content>
+        </mat-card>
     }
 </ng-template>
 
 <ng-template #candidatesTemplate>
     @if (assignment && !assignment.isFinished) {
-    <mat-card class="os-card spacer-bottom-60">
-        <mat-card-content>
-            <ng-container>
-                <h3>{{ 'Candidates' | translate }}</h3>
-                <div>
-                    @if (assignment?.candidates?.length) {
-                    <div class="candidates-list">
-                        <os-sorting-list
-                            [input]="assignmentCandidates"
-                            [live]="true"
-                            [count]="assignment.number_poll_candidates"
-                            [enable]="hasPerms('manage')"
-                            (sortEvent)="onSortingChange($event)"
-                        >
-                            <!-- implicit item references into the component using ng-template slot -->
-                            <ng-template let-item>
-                                <div [ngClass]="{ 'single-candidate-line': true, 'deleted-candidate': !item.user }">
-                                    <span>{{ item.getTitle() }}</span>
-                                    @if (hasPerms('manage')) {
-                                    <span>
-                                        <button
-                                            mat-icon-button
-                                            matTooltip="{{ 'Remove candidate' | translate }}"
-                                            (click)="removeCandidate(item)"
+        <mat-card class="os-card spacer-bottom-60">
+            <mat-card-content>
+                <ng-container>
+                    <h3>{{ 'Candidates' | translate }}</h3>
+                    <div>
+                        @if (assignment?.candidates?.length) {
+                            <div class="candidates-list">
+                                <os-sorting-list
+                                    [input]="assignmentCandidates"
+                                    [live]="true"
+                                    [count]="assignment.number_poll_candidates"
+                                    [enable]="hasPerms('manage')"
+                                    (sortEvent)="onSortingChange($event)"
+                                >
+                                    <!-- implicit item references into the component using ng-template slot -->
+                                    <ng-template let-item>
+                                        <div
+                                            [ngClass]="{
+                                                'single-candidate-line': true,
+                                                'deleted-candidate': !item.user
+                                            }"
                                         >
-                                            <mat-icon>clear</mat-icon>
-                                        </button>
-                                    </span>
-                                    }
-                                </div>
-                            </ng-template>
-                        </os-sorting-list>
-                    </div>
-                    }
-                    <!-- Add Candidates -->
-                    <div class="add-candidates">
-                        <!-- Search for candidates -->
-                        @if (hasPerms('addOthers')) {
-                        <div class="search-new-speaker-form">
-                            <os-participant-search-selector
-                                [nonSelectableUserIds]="candidateUserIds"
-                                placeholder="{{ 'Select participant' | translate }}"
-                                (userSelected)="addCandidate($event)"
-                            ></os-participant-search-selector>
-                        </div>
-                        }
-                        <!-- Add me and remove me if OP has correct permission -->
-                        @if (assignment && hasPerms('addSelf')) {
-                        <div>
-                            <div>
-                                @if (!isSelfCandidate) {
-                                <button mat-button color="accent" (click)="addSelf()">
-                                    <mat-icon>add</mat-icon>
-                                    <span>{{ 'Add me' | translate }}</span>
-                                </button>
-                                } @if (isSelfCandidate) {
-                                <button mat-button color="accent" (click)="removeSelf()">
-                                    <mat-icon>remove</mat-icon>
-                                    <span>{{ 'Remove me' | translate }}</span>
-                                </button>
-                                }
+                                            <span>{{ item.getTitle() }}</span>
+                                            @if (hasPerms('manage')) {
+                                                <span>
+                                                    <button
+                                                        mat-icon-button
+                                                        matTooltip="{{ 'Remove candidate' | translate }}"
+                                                        (click)="removeCandidate(item)"
+                                                    >
+                                                        <mat-icon>clear</mat-icon>
+                                                    </button>
+                                                </span>
+                                            }
+                                        </div>
+                                    </ng-template>
+                                </os-sorting-list>
                             </div>
-                        </div>
                         }
+                        <!-- Add Candidates -->
+                        <div class="add-candidates">
+                            <!-- Search for candidates -->
+                            @if (hasPerms('addOthers')) {
+                                <div class="search-new-speaker-form">
+                                    <os-participant-search-selector
+                                        [nonSelectableUserIds]="candidateUserIds"
+                                        placeholder="{{ 'Select participant' | translate }}"
+                                        (userSelected)="addCandidate($event)"
+                                    ></os-participant-search-selector>
+                                </div>
+                            }
+                            <!-- Add me and remove me if OP has correct permission -->
+                            @if (assignment && hasPerms('addSelf')) {
+                                <div>
+                                    <div>
+                                        @if (!isSelfCandidate) {
+                                            <button mat-button color="accent" (click)="addSelf()">
+                                                <mat-icon>add</mat-icon>
+                                                <span>{{ 'Add me' | translate }}</span>
+                                            </button>
+                                        }
+                                        @if (isSelfCandidate) {
+                                            <button mat-button color="accent" (click)="removeSelf()">
+                                                <mat-icon>remove</mat-icon>
+                                                <span>{{ 'Remove me' | translate }}</span>
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     </div>
-                </div>
-            </ng-container>
-        </mat-card-content>
-    </mat-card>
+                </ng-container>
+            </mat-card-content>
+        </mat-card>
     }
 </ng-template>
 
@@ -246,16 +260,16 @@
 
                 <!-- searchValueSelector: tags -->
                 @if (tagsAvailable) {
-                <div class="content-field" [formGroup]="assignmentForm">
-                    <mat-form-field>
-                        <mat-label>{{ 'Tags' | translate }}</mat-label>
-                        <os-list-search-selector
-                            formControlName="tag_ids"
-                            [multiple]="true"
-                            [inputListValues]="tagsObserver"
-                        ></os-list-search-selector>
-                    </mat-form-field>
-                </div>
+                    <div class="content-field" [formGroup]="assignmentForm">
+                        <mat-form-field>
+                            <mat-label>{{ 'Tags' | translate }}</mat-label>
+                            <os-list-search-selector
+                                formControlName="tag_ids"
+                                [multiple]="true"
+                                [inputListValues]="tagsObserver"
+                            ></os-list-search-selector>
+                        </mat-form-field>
+                    </div>
                 }
 
                 <os-attachment-control
@@ -264,7 +278,7 @@
                 ></os-attachment-control>
 
                 @if (isCreating) {
-                <os-agenda-content-object-form [form]="assignmentForm"></os-agenda-content-object-form>
+                    <os-agenda-content-object-form [form]="assignmentForm"></os-agenda-content-object-form>
                 }
 
                 <!-- default_poll_description -->
@@ -281,13 +295,14 @@
                         <mat-label>{{ 'Number of persons to be elected' | translate }}</mat-label>
                         <input matInput formControlName="open_posts" type="number" />
                         @if (assignmentForm.get('open_posts')?.hasError('required')) {
-                        <mat-error>
-                            {{ 'This field is required.' | translate }}
-                        </mat-error>
-                        } @if (assignmentForm.get('open_posts')?.hasError('min')) {
-                        <mat-error>
-                            {{ 'The number has to be greater than 0.' | translate }}
-                        </mat-error>
+                            <mat-error>
+                                {{ 'This field is required.' | translate }}
+                            </mat-error>
+                        }
+                        @if (assignmentForm.get('open_posts')?.hasError('min')) {
+                            <mat-error>
+                                {{ 'The number has to be greater than 0.' | translate }}
+                            </mat-error>
                         }
                     </mat-form-field>
                 </div>

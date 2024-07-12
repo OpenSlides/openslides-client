@@ -14,9 +14,9 @@
             ></os-rounded-input>
         </div>
         @if (isMobile) {
-        <div class="search-filter-toggle">
-            <button mat-icon-button (click)="filterOpen = !filterOpen"><mat-icon>filter_list</mat-icon></button>
-        </div>
+            <div class="search-filter-toggle">
+                <button mat-icon-button (click)="filterOpen = !filterOpen"><mat-icon>filter_list</mat-icon></button>
+            </div>
         }
     </div>
     <div class="search-hint">
@@ -24,27 +24,32 @@
     </div>
 
     @if (filterOpen || !isMobile) {
-    <section class="filters" [formGroup]="currentFilters">
-        @if (operator.knowsMultipleMeetings) {
-        <mat-radio-group class="filter-section" formControlName="meetingFilter">
-            @if (inMeeting) {
-            <mat-radio-button class="filter" value="current">
-                {{ 'This meeting' | translate }}
-            </mat-radio-button>
+        <section class="filters" [formGroup]="currentFilters">
+            @if (operator.knowsMultipleMeetings) {
+                <mat-radio-group class="filter-section" formControlName="meetingFilter">
+                    @if (inMeeting) {
+                        <mat-radio-button class="filter" value="current">
+                            {{ 'This meeting' | translate }}
+                        </mat-radio-button>
+                    }
+                    <mat-radio-button class="filter" value="all">{{ 'All meetings' | translate }}</mat-radio-button>
+                    <mat-radio-button class="filter" value="meetings">
+                        {{ 'Meeting title' | translate }}
+                    </mat-radio-button>
+                </mat-radio-group>
             }
-            <mat-radio-button class="filter" value="all">{{ 'All meetings' | translate }}</mat-radio-button>
-            <mat-radio-button class="filter" value="meetings">{{ 'Meeting title' | translate }}</mat-radio-button>
-        </mat-radio-group>
-        } @if (currentFilters.value.meetingFilter !== 'meetings') {
-        <div class="filter-section">
-            @for (filter of currentlyAvailableFilters; track filter) { @if (hasFilterPermission(filter)) {
-            <mat-checkbox formControlName="{{ filter }}" class="filter">
-                {{ availableFilters[filter] | translate }}
-            </mat-checkbox>
-            } }
-        </div>
-        }
-    </section>
+            @if (currentFilters.value.meetingFilter !== 'meetings') {
+                <div class="filter-section">
+                    @for (filter of currentlyAvailableFilters; track filter) {
+                        @if (hasFilterPermission(filter)) {
+                            <mat-checkbox formControlName="{{ filter }}" class="filter">
+                                {{ availableFilters[filter] | translate }}
+                            </mat-checkbox>
+                        }
+                    }
+                </div>
+            }
+        </section>
     }
 </div>
 
@@ -52,82 +57,102 @@
     <ng-container>
         <section class="search-results-category">
             @for (result of filteredResults; track result) {
-            <div class="search-results-entry divider-bottom">
-                <div class="breadcrumb">
-                    @if (result.committee) {
-                    <span>{{ result.committee.name }}</span>
-                    <span class="sep">&gt;</span>
-                    } @if (currentFilters.value.meetingFilter === 'all' && result.meeting) {
-                    <span>{{ result.meeting.name }}</span>
-                    <span class="sep">&gt;</span>
-                    } @if (currentFilters.value.meetingFilter === 'all' && result.collection === 'user') {
-                    <span>
-                        {{ 'Account' | translate }}
-                    </span>
-                    } @if (currentFilters.value.meetingFilter !== 'all' || result.collection !== 'user') {
-                    <span>
-                        {{ availableFilters[result.collection] | translate }}
-                    </span>
-                    }
-                </div>
-                @switch (result.collection) { @case ('mediafile') { @if (result.url.startsWith('/system')) {
-                <a [href]="result.url" target="_blank" mat-dialog-close>
-                    @if (result.title) {
-                    <h3 [innerHtml]="result.title"></h3>
-                    }
-                </a>
-                } @if (!result.url.startsWith('/system')) {
-                <a [routerLink]="result.url" mat-dialog-close>
-                    @if (result.title) {
-                    <h3 [innerHtml]="result.title"></h3>
-                    }
-                </a>
-                } } @case ('motion') {
-                <a [routerLink]="result.url" mat-dialog-close>
-                    @if (result.title) {
-                    <h3>
-                        @if (result.obj?.number) {
-                        <span [innerHTML]="result.obj?.number + ': '"></span>
+                <div class="search-results-entry divider-bottom">
+                    <div class="breadcrumb">
+                        @if (result.committee) {
+                            <span>{{ result.committee.name }}</span>
+                            <span class="sep">&gt;</span>
                         }
-                        <span [innerHTML]="result.title"></span>
-                    </h3>
-                    }
-                    <div class="info">
-                        @if (hasSubmitters(result)) {
-                        <span>
-                            {{ 'by' | translate }}
-                            <os-comma-separated-listing [list]="getSubmitterNames(result)"></os-comma-separated-listing>
-                        </span>
-                        } @if (result.meeting.motions_show_sequential_number) {
-                        <span>{{ 'Sequential number' | translate }} {{ result.obj.sequential_number }}</span>
+                        @if (currentFilters.value.meetingFilter === 'all' && result.meeting) {
+                            <span>{{ result.meeting.name }}</span>
+                            <span class="sep">&gt;</span>
+                        }
+                        @if (currentFilters.value.meetingFilter === 'all' && result.collection === 'user') {
+                            <span>
+                                {{ 'Account' | translate }}
+                            </span>
+                        }
+                        @if (currentFilters.value.meetingFilter !== 'all' || result.collection !== 'user') {
+                            <span>
+                                {{ availableFilters[result.collection] | translate }}
+                            </span>
                         }
                     </div>
-                    @if (result.text) {
-                    <p class="text-snippet" [innerHtml]="getTextSnippet(result.text)"></p>
-                    } @if (!result.text && result.obj?.amendment_paragraphs) {
-                    <p class="text-snippet" [innerHtml]="getTextSnippet(result.obj.amendment_paragraphs)"></p>
+                    @switch (result.collection) {
+                        @case ('mediafile') {
+                            @if (result.url.startsWith('/system')) {
+                                <a [href]="result.url" target="_blank" mat-dialog-close>
+                                    @if (result.title) {
+                                        <h3 [innerHtml]="result.title"></h3>
+                                    }
+                                </a>
+                            }
+                            @if (!result.url.startsWith('/system')) {
+                                <a [routerLink]="result.url" mat-dialog-close>
+                                    @if (result.title) {
+                                        <h3 [innerHtml]="result.title"></h3>
+                                    }
+                                </a>
+                            }
+                        }
+                        @case ('motion') {
+                            <a [routerLink]="result.url" mat-dialog-close>
+                                @if (result.title) {
+                                    <h3>
+                                        @if (result.obj?.number) {
+                                            <span [innerHTML]="result.obj?.number + ': '"></span>
+                                        }
+                                        <span [innerHTML]="result.title"></span>
+                                    </h3>
+                                }
+                                <div class="info">
+                                    @if (hasSubmitters(result)) {
+                                        <span>
+                                            {{ 'by' | translate }}
+                                            <os-comma-separated-listing
+                                                [list]="getSubmitterNames(result)"
+                                            ></os-comma-separated-listing>
+                                        </span>
+                                    }
+                                    @if (result.meeting.motions_show_sequential_number) {
+                                        <span>
+                                            {{ 'Sequential number' | translate }} {{ result.obj.sequential_number }}
+                                        </span>
+                                    }
+                                </div>
+                                @if (result.text) {
+                                    <p class="text-snippet" [innerHtml]="getTextSnippet(result.text)"></p>
+                                }
+                                @if (!result.text && result.obj?.amendment_paragraphs) {
+                                    <p
+                                        class="text-snippet"
+                                        [innerHtml]="getTextSnippet(result.obj.amendment_paragraphs)"
+                                    ></p>
+                                }
+                            </a>
+                        }
+                        @default {
+                            <a [routerLink]="result.url" mat-dialog-close>
+                                @if (result.title) {
+                                    <h3 [innerHtml]="result.title"></h3>
+                                }
+                                @if (result.text) {
+                                    <p class="text-snippet" [innerHtml]="getTextSnippet(result.text)"></p>
+                                }
+                            </a>
+                        }
                     }
-                </a>
-                } @default {
-                <a [routerLink]="result.url" mat-dialog-close>
-                    @if (result.title) {
-                    <h3 [innerHtml]="result.title"></h3>
-                    } @if (result.text) {
-                    <p class="text-snippet" [innerHtml]="getTextSnippet(result.text)"></p>
-                    }
-                </a>
-                } }
-            </div>
+                </div>
             }
         </section>
         @if (noResults) {
-        <h3 class="search-no-results">{{ 'No results found' | translate }}</h3>
+            <h3 class="search-no-results">{{ 'No results found' | translate }}</h3>
         }
     </ng-container>
     @if (searching !== null) {
-    <div class="spinner-container" [ngClass]="{ 'overlay-spinner': filteredResults.length > 0 }">
-        <mat-spinner></mat-spinner>
-    </div>
+        <div class="spinner-container" [ngClass]="{ 'overlay-spinner': filteredResults.length > 0 }">
+            <mat-spinner></mat-spinner>
+        </div>
     }
     <div style="display: none">Results {{ filteredResultCount }}/{{ resultCount }}</div>
 </mat-dialog-content>

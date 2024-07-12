@@ -1,13 +1,16 @@
 <span [ngClass]="cssClass">
     @if (meeting) {
-    <ng-container
-        *ngTemplateOutlet="timeTemplate; context: { startTime: meeting.start_time, endTime: meeting.end_time }"
-    ></ng-container>
-    } @if (!meeting) {
-    <ng-container *ngTemplateOutlet="timeTemplate; context: { startTime: startTime, endTime: endTime }"></ng-container>
+        <ng-container
+            *ngTemplateOutlet="timeTemplate; context: { startTime: meeting.start_time, endTime: meeting.end_time }"
+        ></ng-container>
+    }
+    @if (!meeting) {
+        <ng-container
+            *ngTemplateOutlet="timeTemplate; context: { startTime: startTime, endTime: endTime }"
+        ></ng-container>
     }
 </span>
 
 <ng-template #timeTemplate let-startTime="startTime" let-endTime="endTime">
-    <span>{{ { start: startTime, end: endTime } | localizedDateRange : 'PP' }}</span>
+    <span>{{ { start: startTime, end: endTime } | localizedDateRange: 'PP' }}</span>
 </ng-template>

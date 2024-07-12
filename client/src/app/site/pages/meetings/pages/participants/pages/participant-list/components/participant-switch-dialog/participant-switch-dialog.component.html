@@ -32,9 +32,10 @@
             </td>
             <td>
                 @if (right) {
-                <span>{{ right.structure_level() }}</span>
-                } @if (!right) {
-                <span>-</span>
+                    <span>{{ right.structure_level() }}</span>
+                }
+                @if (!right) {
+                    <span>-</span>
                 }
             </td>
         </tr>
@@ -50,9 +51,10 @@
             </td>
             <td class="red-warning-text">
                 @if (right) {
-                <os-comma-separated-listing [list]="right.groups()"></os-comma-separated-listing>
-                } @if (!right) {
-                <span>-</span>
+                    <os-comma-separated-listing [list]="right.groups()"></os-comma-separated-listing>
+                }
+                @if (!right) {
+                    <span>-</span>
                 }
             </td>
         </tr>
@@ -68,9 +70,10 @@
             </td>
             <td class="red-warning-text">
                 @if (right) {
-                <span>{{ right.number() }}</span>
-                } @if (!right) {
-                <span>-</span>
+                    <span>{{ right.number() }}</span>
+                }
+                @if (!right) {
+                    <span>-</span>
                 }
             </td>
         </tr>
