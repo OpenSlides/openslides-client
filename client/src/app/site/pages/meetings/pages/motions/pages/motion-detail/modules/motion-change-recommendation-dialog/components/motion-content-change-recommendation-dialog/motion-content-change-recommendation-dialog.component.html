@@ -2,22 +2,28 @@
 <mat-dialog-content>
     <form class="motion-content" [formGroup]="contentForm" (ngSubmit)="submitChanges()">
         <mat-radio-group #rGroup formControlName="type">
-            <mat-radio-button *ngFor="let radio of replacementTypes" [value]="radio.value">
-                {{ radio.title | translate }}
-            </mat-radio-button>
+            @for (radio of replacementTypes; track radio) {
+                <mat-radio-button [value]="radio.value">
+                    {{ radio.title | translate }}
+                </mat-radio-button>
+            }
         </mat-radio-group>
 
         <!-- The HTML Editor -->
-        <h4 *ngIf="lineRange.to === lineRange.from">
-            <span>{{ 'Changed version in line' | translate }}</span>
-            {{ lineRange.from }}:
-        </h4>
-        <h4 *ngIf="lineRange.to !== lineRange.from">
-            <span>{{ 'Changed version in line' | translate }}</span>
-            {{ lineRange.from }}
-            <span>{{ 'to' | translate }}</span>
-            {{ lineRange.to }}:
-        </h4>
+        @if (lineRange.to === lineRange.from) {
+            <h4>
+                <span>{{ 'Changed version in line' | translate }}</span>
+                {{ lineRange.from }}:
+            </h4>
+        }
+        @if (lineRange.to !== lineRange.from) {
+            <h4>
+                <span>{{ 'Changed version in line' | translate }}</span>
+                {{ lineRange.from }}
+                <span>{{ 'to' | translate }}</span>
+                {{ lineRange.to }}:
+            </h4>
+        }
         <div>
             <os-editor formControlName="text"></os-editor>
         </div>

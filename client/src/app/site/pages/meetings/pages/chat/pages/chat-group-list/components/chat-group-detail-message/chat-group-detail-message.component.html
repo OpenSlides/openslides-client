@@ -1,7 +1,9 @@
 <div class="message-box" [ngClass]="{ 'incomming-message': !isOwnMessage, 'outgoing-message': isOwnMessage }">
-    <div class="author" *ngIf="!isOwnMessage">
-        {{ author }}
-    </div>
+    @if (!isOwnMessage) {
+        <div class="author">
+            {{ author }}
+        </div>
+    }
     <div
         class="chat-text pointer"
         [ngClass]="{
@@ -12,24 +14,32 @@
     >
         {{ text }}
         <div class="timestamp">{{ date | localizedDate }}</div>
-        <ng-container *ngIf="isOwnMessage || canBeDeleted">
-            <a *ngIf="isMobile" class="stretch-to-fill-parent" [matMenuTriggerFor]="singleChatMenu"></a>
-            <button *ngIf="!isMobile" mat-icon-button [matMenuTriggerFor]="singleChatMenu">
-                <mat-icon>more_horiz</mat-icon>
-            </button>
-        </ng-container>
+        @if (isOwnMessage || canBeDeleted) {
+            @if (isMobile) {
+                <a class="stretch-to-fill-parent" [matMenuTriggerFor]="singleChatMenu"></a>
+            }
+            @if (!isMobile) {
+                <button mat-icon-button [matMenuTriggerFor]="singleChatMenu">
+                    <mat-icon>more_horiz</mat-icon>
+                </button>
+            }
+        }
     </div>
 </div>
 
 <mat-menu #singleChatMenu="matMenu">
     <!-- Update this message -->
-    <button mat-menu-item (click)="onEditMessage()" *ngIf="isOwnMessage">
-        <mat-icon>edit</mat-icon>
-        <span>{{ 'Edit' | translate }}</span>
-    </button>
+    @if (isOwnMessage) {
+        <button mat-menu-item (click)="onEditMessage()">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'Edit' | translate }}</span>
+        </button>
+    }
     <!-- Delete this message -->
-    <button mat-menu-item (click)="onDeleteMessage()" *ngIf="canBeDeleted">
-        <mat-icon color="warn">delete</mat-icon>
-        <span>{{ 'Delete' | translate }}</span>
-    </button>
+    @if (canBeDeleted) {
+        <button mat-menu-item (click)="onDeleteMessage()">
+            <mat-icon color="warn">delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    }
 </mat-menu>

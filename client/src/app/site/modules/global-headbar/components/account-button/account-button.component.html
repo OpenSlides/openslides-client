@@ -1,11 +1,11 @@
-<div class="flex-center" [matMenuTriggerFor]="userMenu" data-cy="accountButton">
+<div class="flex-center" data-cy="accountButton" [matMenuTriggerFor]="userMenu">
     <div class="operator-information flex-center">
         <div class="first-line one-line">
             {{ username }}
         </div>
     </div>
     <div class="fake-fab-button flex-center">
-        <mat-icon color="primary" class="icon-16">{{ isPresent ? 'how_to_reg' : 'person' }}</mat-icon>
+        <mat-icon class="icon-16" color="primary">{{ isPresent ? 'how_to_reg' : 'person' }}</mat-icon>
     </div>
 </div>
 
@@ -16,17 +16,19 @@
             <div class="username-wrapper action-title">
                 <div>
                     <div class="username">{{ username }}</div>
-                    <div *ngIf="user" class="subtitle">{{ getOmlVerboseName() | translate }}</div>
+                    @if (user) {
+                        <div class="subtitle">{{ getOmlVerboseName() | translate }}</div>
+                    }
                     <div class="subtitle structure-level">{{ getStructureLevel() }}</div>
                 </div>
                 <div>
                     <button
                         mat-icon-button
-                        (click)="toggleDarkMode($event)"
+                        matTooltipPosition="left"
                         matTooltip="{{
                             ((isDarkModeActiveObservable | async) ? 'Light mode' : 'Dark mode') | translate
                         }}"
-                        matTooltipPosition="left"
+                        (click)="toggleDarkMode($event)"
                     >
                         <mat-icon>
                             {{ (isDarkModeActiveObservable | async) ? 'light_mode' : 'dark_mode' }}
@@ -35,53 +37,54 @@
                 </div>
             </div>
 
-            <div *ngIf="user && isLoggedIn">
-                <!-- present toggle -->
-                <button
-                    [ngClass]="{ active: isPresent }"
-                    mat-menu-item
-                    (click)="toggleOperatorPresence()"
-                    *ngIf="isAllowedSelfSetPresent && hasActiveMeeting"
-                >
-                    <mat-icon [color]="isPresent ? 'accent' : ''" class="menu-icon">
-                        {{ isPresent ? 'check_box' : 'check_box_outline_blank' }}
-                    </mat-icon>
-                    <span class="menu-text">{{ 'Present' | translate }}</span>
-                </button>
-            </div>
+            @if (user && isLoggedIn) {
+                <div>
+                    <!-- present toggle -->
+                    @if (isAllowedSelfSetPresent && hasActiveMeeting) {
+                        <button mat-menu-item [ngClass]="{ active: isPresent }" (click)="toggleOperatorPresence()">
+                            <mat-icon class="menu-icon" [color]="isPresent ? 'accent' : ''">
+                                {{ isPresent ? 'check_box' : 'check_box_outline_blank' }}
+                            </mat-icon>
+                            <span class="menu-text">{{ 'Present' | translate }}</span>
+                        </button>
+                    }
+                </div>
+            }
         </div>
         <mat-divider></mat-divider>
 
         <!-- select language -->
-        <button mat-menu-item #languageTrigger [matMenuTriggerFor]="languageMenu">
+        <button #languageTrigger mat-menu-item [matMenuTriggerFor]="languageMenu">
             <mat-icon class="menu-icon">language</mat-icon>
             <span class="menu-text">{{ getCurrentLanguageName() }}</span>
         </button>
 
-        <div *ngIf="user && isLoggedIn">
-            <!-- Show profile -->
-            <button mat-menu-item (click)="openAccountDialog()">
-                <mat-icon class="menu-icon">person</mat-icon>
-                <span class="menu-text">{{ 'My account' | translate }}</span>
-            </button>
-
-            <!-- logout -->
-            <button (click)="logout()" mat-menu-item data-cy="accountLogoutButton">
-                <mat-icon class="menu-icon">logout</mat-icon>
-                <span class="menu-text">{{ 'Logout' | translate }}</span>
-            </button>
-        </div>
-
-        <div *ngIf="!user">
-            <button (click)="login()" mat-menu-item>
-                <mat-icon class="menu-icon">login</mat-icon>
-                <span class="menu-text">{{ 'Login' | translate }}</span>
-            </button>
-        </div>
+        @if (user && isLoggedIn) {
+            <div>
+                <!-- Show profile -->
+                <button mat-menu-item (click)="openAccountDialog()">
+                    <mat-icon class="menu-icon">person</mat-icon>
+                    <span class="menu-text">{{ 'My account' | translate }}</span>
+                </button>
+                <!-- logout -->
+                <button data-cy="accountLogoutButton" mat-menu-item (click)="logout()">
+                    <mat-icon class="menu-icon">logout</mat-icon>
+                    <span class="menu-text">{{ 'Logout' | translate }}</span>
+                </button>
+            </div>
+        }
+        @if (!user) {
+            <div>
+                <button mat-menu-item (click)="login()">
+                    <mat-icon class="menu-icon">login</mat-icon>
+                    <span class="menu-text">{{ 'Login' | translate }}</span>
+                </button>
+            </div>
+        }
 
         <mat-divider></mat-divider>
 
-        <a mat-menu-item routerLink="info" routerLinkActive="active" class="small-text">
+        <a class="small-text" mat-menu-item routerLink="info" routerLinkActive="active">
             <mat-icon>info</mat-icon>
             <span>{{ 'Legal notice' | translate }}</span>
             <span>&nbsp;&middot;&nbsp;</span>
@@ -92,9 +95,11 @@
 
 <mat-menu #languageMenu="matMenu">
     <ng-template matMenuContent>
-        <button *ngFor="let lang of translations | keyvalue" mat-menu-item (click)="selectLanguage(lang.key)">
-            <mat-icon>{{ getCurrentLanguageName() === lang.value ? 'check' : '' }}</mat-icon>
-            <span>{{ lang.value }}</span>
-        </button>
+        @for (lang of translations | keyvalue; track lang) {
+            <button mat-menu-item (click)="selectLanguage(lang.key)">
+                <mat-icon>{{ getCurrentLanguageName() === lang.value ? 'check' : '' }}</mat-icon>
+                <span>{{ lang.value }}</span>
+            </button>
+        }
     </ng-template>
 </mat-menu>

@@ -1,12 +1,12 @@
 <os-head-bar
-    [hasMainButton]="canManage()"
     [editMode]="isEditing"
-    [mainButtonIcon]="'edit'"
-    [mainActionTooltip]="'Edit' | translate"
+    [hasMainButton]="canManage()"
     [isSaveButtonEnabled]="startForm.valid"
+    [mainActionTooltip]="'Edit' | translate"
+    [mainButtonIcon]="'edit'"
+    (cancelEditEvent)="isEditing = !isEditing"
     (mainEvent)="editStartPage()"
     (saveEvent)="saveChanges()"
-    (cancelEditEvent)="isEditing = !isEditing"
 >
     <div class="title-slot">
         <h2>{{ 'Home' | translate }}</h2>
@@ -15,26 +15,25 @@
 
 <mat-card class="spacer-bottom-60 os-card">
     <mat-card-content>
-        <ng-container *ngIf="!isEditing">
+        @if (!isEditing) {
             <div class="underlined-links" id="start-page-content">
-                <ng-container *ngIf="welcomeTitleObservable | async as welcomeTitle">
+                @if (welcomeTitleObservable | async; as welcomeTitle) {
                     <h1>{{ welcomeTitle }}</h1>
-                </ng-container>
-                <ng-container *ngIf="welcomeTextObservable | async as welcomeText">
-                    <div [innerHTML]="welcomeText | trust : 'html'"></div>
-                </ng-container>
+                }
+                @if (welcomeTextObservable | async; as welcomeText) {
+                    <div [innerHTML]="welcomeText | trust: 'html'"></div>
+                }
             </div>
-        </ng-container>
-
-        <ng-container *ngIf="isEditing">
+        }
+        @if (isEditing) {
             <form [formGroup]="startForm">
                 <mat-form-field>
                     <mat-label>{{ 'Front page title' | translate }}</mat-label>
-                    <input matInput formControlName="welcome_title" required />
+                    <input formControlName="welcome_title" matInput required />
                     <mat-error>{{ 'The title is required' | translate }}</mat-error>
                 </mat-form-field>
-                <os-editor [allowEmbeds]="true" formControlName="welcome_text"></os-editor>
+                <os-editor formControlName="welcome_text" [allowEmbeds]="true"></os-editor>
             </form>
-        </ng-container>
+        }
     </mat-card-content>
 </mat-card>

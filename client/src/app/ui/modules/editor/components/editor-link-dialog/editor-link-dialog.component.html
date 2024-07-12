@@ -8,24 +8,28 @@
     </div>
 
     <div>
-        <mat-form-field *ngIf="data.needsText">
-            <mat-label translate>Text to display</mat-label>
-            <input matInput [(ngModel)]="text" />
-        </mat-form-field>
+        @if (data.needsText) {
+            <mat-form-field>
+                <mat-label translate>Text to display</mat-label>
+                <input matInput [(ngModel)]="text" />
+            </mat-form-field>
+        }
     </div>
 
     <div>
         <mat-form-field>
             <mat-label>Open link in</mat-label>
             <select matNativeControl [(ngModel)]="link.target">
-                <option value="_self" translate>Current window</option>
-                <option value="_blank" translate>New window</option>
+                <option translate value="_self">Current window</option>
+                <option translate value="_blank">New window</option>
             </select>
         </mat-form-field>
     </div>
 </div>
 <div mat-dialog-actions>
-    <button mat-button color="accent" [disabled]="!link.href" (click)="save()" translate>Ok</button>
-    <button *ngIf="isUpdate" mat-button color="warn" (click)="removeLink()" translate>Remove link</button>
-    <button mat-button (click)="cancel()" translate>Cancel</button>
+    <button color="accent" mat-button translate [disabled]="!link.href" (click)="save()">Ok</button>
+    @if (isUpdate) {
+        <button color="warn" mat-button translate (click)="removeLink()">Remove link</button>
+    }
+    <button mat-button translate (click)="cancel()">Cancel</button>
 </div>

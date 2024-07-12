@@ -1,25 +1,28 @@
 <mat-form-field appearance="outline" class="chat-form-field full-width" (keydown)="onKeyDown($event)">
-    <div *ngIf="currentMessage" matPrefix class="chat-form-field-prefix flex-vertical-center">
-        {{ 'Edit' | translate }}
-        <button mat-icon-button type="button" [disableRipple]="true" (click)="cancelEditingChatMessage()">
-            <mat-icon>close</mat-icon>
-        </button>
-    </div>
-    <input #chatinput autocomplete="off" type="text" matInput [formControl]="messageForm" />
-    <mat-hint align="end" *ngIf="chatinput.value!.length >= CHAT_MESSAGE_MAX_LENGTH - 100">
-        <span>{{ chatinput.value?.length || 0 }}/{{ CHAT_MESSAGE_MAX_LENGTH }}</span>
-
-        <span class="warn" *ngIf="chatinput.value!.length > CHAT_MESSAGE_MAX_LENGTH">
-            ({{ CHAT_MESSAGE_MAX_LENGTH - chatinput.value!.length }})
-        </span>
-    </mat-hint>
+    @if (currentMessage) {
+        <div class="chat-form-field-prefix flex-vertical-center" matPrefix>
+            {{ 'Edit' | translate }}
+            <button mat-icon-button type="button" [disableRipple]="true" (click)="cancelEditingChatMessage()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    }
+    <input #chatinput autocomplete="off" matInput type="text" [formControl]="messageForm" />
+    @if (chatinput.value!.length >= CHAT_MESSAGE_MAX_LENGTH - 100) {
+        <mat-hint align="end">
+            <span>{{ chatinput.value?.length || 0 }}/{{ CHAT_MESSAGE_MAX_LENGTH }}</span>
+            @if (chatinput.value!.length > CHAT_MESSAGE_MAX_LENGTH) {
+                <span class="warn">({{ CHAT_MESSAGE_MAX_LENGTH - chatinput.value!.length }})</span>
+            }
+        </mat-hint>
+    }
     <button
+        color="accent"
         mat-icon-button
         matSuffix
         type="button"
-        color="accent"
-        matTooltip=" {{ 'Send' | translate }}"
         [disabled]="!isMessageFormValid"
+        matTooltip=" {{ 'Send' | translate }}"
         (click)="sendChatMessage()"
     >
         <mat-icon>send</mat-icon>

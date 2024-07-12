@@ -5,19 +5,21 @@
     </div>
 
     <ng-container class="menu-slot">
-        <button *ngIf="canImport" mat-button (click)="doImport()">
-            <span class="upper">{{ 'Import' | translate }}</span>
-        </button>
+        @if (canImport) {
+            <button mat-button (click)="doImport()">
+                <span class="upper">{{ 'Import' | translate }}</span>
+            </button>
+        }
     </ng-container>
 </os-head-bar>
 
 <os-backend-import-list
-    [defaultColumns]="columns"
-    [importer]="importer"
-    [possibleFields]="possibleFields"
+    modelName="Account"
     additionalInfo="{{
         'Existing accounts can be reused or updated by using: <ul><li>Membership number <i>(recommended)</i><li>Username<li>Email address AND first name AND last name'
             | translate
     }}"
-    modelName="Account"
+    [defaultColumns]="columns"
+    [importer]="importer"
+    [possibleFields]="possibleFields"
 ></os-backend-import-list>

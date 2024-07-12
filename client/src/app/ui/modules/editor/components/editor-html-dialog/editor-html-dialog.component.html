@@ -1,8 +1,8 @@
 <h1 mat-dialog-title translate>Edit HTML content</h1>
 <div mat-dialog-content>
-    <textarea rows="20" cols="100" mat-input [(ngModel)]="data"></textarea>
+    <textarea cols="100" mat-input rows="20" [(ngModel)]="data"></textarea>
 </div>
 <div mat-dialog-actions>
-    <button mat-button color="accent" (click)="save()" translate>Ok</button>
-    <button mat-button (click)="cancel()" translate>Cancel</button>
+    <button color="accent" mat-button translate (click)="save()">Ok</button>
+    <button mat-button translate (click)="cancel()">Cancel</button>
 </div>

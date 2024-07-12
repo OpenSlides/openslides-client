@@ -1,9 +1,9 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar
-        [nav]="false"
-        [editMode]="true"
         saveText="Create"
+        [editMode]="true"
         [isSaveButtonEnabled]="matStepper.selectedIndex === 1 && contentForm.valid"
+        [nav]="false"
         [saveAction]="getSaveAction()"
         (cancelEditEvent)="cancelCreation()"
     >
@@ -14,20 +14,24 @@
 
         <!-- Next-button -->
         <div class="extra-controls-slot">
-            <div *ngIf="matStepper.selectedIndex === 0">
-                <button
-                    mat-button
-                    [disabled]="contentForm.value.selectedParagraphs.length === 0"
-                    (click)="matStepper.next()"
-                >
-                    <span class="upper">{{ 'Next' | translate }}</span>
-                </button>
-            </div>
-            <div *ngIf="matStepper.selectedIndex === 1">
-                <button type="button" mat-button (click)="matStepper.previous()">
-                    <span class="upper">{{ 'Previous' | translate }}</span>
-                </button>
-            </div>
+            @if (matStepper.selectedIndex === 0) {
+                <div>
+                    <button
+                        mat-button
+                        [disabled]="contentForm.value.selectedParagraphs.length === 0"
+                        (click)="matStepper.next()"
+                    >
+                        <span class="upper">{{ 'Next' | translate }}</span>
+                    </button>
+                </div>
+            }
+            @if (matStepper.selectedIndex === 1) {
+                <div>
+                    <button mat-button type="button" (click)="matStepper.previous()">
+                        <span class="upper">{{ 'Previous' | translate }}</span>
+                    </button>
+                </div>
+            }
         </div>
     </os-head-bar>
 
@@ -37,41 +41,49 @@
                 <ng-template matStepLabel>{{ 'Select paragraphs' | translate }}</ng-template>
                 <div class="amendment-create-wizard-wrapper spacer-bottom-20">
                     <cdk-virtual-scroll-viewport
-                        itemSize="90"
-                        minBufferPx="400"
-                        maxBufferPx="600"
                         class="paragraph-scroll"
+                        itemSize="90"
+                        maxBufferPx="600"
+                        minBufferPx="400"
                     >
-                        <section
-                            *ngFor="let paragraph of paragraphs; let i = index"
-                            class="paragraph-row background-hover"
-                            [class.outlined-hover]="isParagraphSelected(paragraph)"
-                            (click)="onParagraphClicked(paragraph)"
-                            tabindex="-1"
-                        >
-                            <mat-checkbox
-                                *ngIf="multipleParagraphsAllowed"
-                                class="flex-center paragraph-select"
-                                [checked]="isParagraphSelected(paragraph)"
-                                (click)="checkboxClicked($event)"
-                            ></mat-checkbox>
-                            <mat-radio-button
-                                *ngIf="!multipleParagraphsAllowed"
-                                class="flex-center paragraph-select"
-                                [checked]="isParagraphSelected(paragraph)"
-                            ></mat-radio-button>
-                            <div class="paragraph-text motion-text">
-                                <div>
-                                    <i *ngIf="paragraph.lineFrom >= paragraph.lineTo" class="line-number">
-                                        {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
-                                    </i>
-                                    <i *ngIf="paragraph.lineFrom < paragraph.lineTo" class="line-number">
-                                        {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}:
-                                    </i>
+                        @for (paragraph of paragraphs; track paragraph; let i = $index) {
+                            <section
+                                class="paragraph-row background-hover"
+                                tabindex="-1"
+                                [class.outlined-hover]="isParagraphSelected(paragraph)"
+                                (click)="onParagraphClicked(paragraph)"
+                            >
+                                @if (multipleParagraphsAllowed) {
+                                    <mat-checkbox
+                                        class="flex-center paragraph-select"
+                                        [checked]="isParagraphSelected(paragraph)"
+                                        (click)="checkboxClicked($event)"
+                                    ></mat-checkbox>
+                                }
+                                @if (!multipleParagraphsAllowed) {
+                                    <mat-radio-button
+                                        class="flex-center paragraph-select"
+                                        [checked]="isParagraphSelected(paragraph)"
+                                    ></mat-radio-button>
+                                }
+                                <div class="paragraph-text motion-text">
+                                    <div>
+                                        @if (paragraph.lineFrom >= paragraph.lineTo) {
+                                            <i class="line-number">
+                                                {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
+                                            </i>
+                                        }
+                                        @if (paragraph.lineFrom < paragraph.lineTo) {
+                                            <i class="line-number">
+                                                {{ 'Line' | translate }} {{ paragraph.lineFrom }} -
+                                                {{ paragraph.lineTo }}:
+                                            </i>
+                                        }
+                                    </div>
+                                    <div [innerHTML]="getParagraphPreview(i) | trust: 'html'"></div>
                                 </div>
-                                <div [innerHTML]="getParagraphPreview(i) | trust : 'html'"></div>
-                            </div>
-                        </section>
+                            </section>
+                        }
                     </cdk-virtual-scroll-viewport>
                 </div>
             </mat-step>
@@ -83,17 +95,21 @@
                 </h3>
 
                 <!-- Text -->
-                <section *ngFor="let paragraph of contentForm.value.selectedParagraphs">
-                    <h4>
-                        <span *ngIf="paragraph.lineFrom >= paragraph.lineTo" class="line-number">
-                            {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
-                        </span>
-                        <span *ngIf="paragraph.lineFrom < paragraph.lineTo" class="line-number">
-                            {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}:
-                        </span>
-                    </h4>
-                    <os-editor [formControlName]="'text_' + paragraph.paragraphNo"></os-editor>
-                </section>
+                @for (paragraph of contentForm.value.selectedParagraphs; track paragraph) {
+                    <section>
+                        <h4>
+                            @if (paragraph.lineFrom >= paragraph.lineTo) {
+                                <span class="line-number">{{ 'Line' | translate }} {{ paragraph.lineFrom }}:</span>
+                            }
+                            @if (paragraph.lineFrom < paragraph.lineTo) {
+                                <span class="line-number">
+                                    {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}:
+                                </span>
+                            }
+                        </h4>
+                        <os-editor [formControlName]="'text_' + paragraph.paragraphNo"></os-editor>
+                    </section>
+                }
 
                 <!-- Reason -->
                 <h3
@@ -107,20 +123,21 @@
                 >
                     <span>{{ 'Reason' | translate }}</span>
                     &nbsp;
-                    <span *ngIf="reasonRequired">*</span>
+                    @if (reasonRequired) {
+                        <span>*</span>
+                    }
                 </h3>
 
                 <os-editor formControlName="reason" [required]="reasonRequired"></os-editor>
-                <div
-                    *ngIf="
-                        reasonRequired &&
-                        contentForm.get('reason')?.invalid &&
-                        (contentForm.get('reason')?.dirty || contentForm.get('reason')?.touched)
-                    "
-                    class="red-warning-text"
-                >
-                    {{ 'This field is required.' | translate }}
-                </div>
+                @if (
+                    reasonRequired &&
+                    contentForm.get('reason')?.invalid &&
+                    (contentForm.get('reason')?.dirty || contentForm.get('reason')?.touched)
+                ) {
+                    <div class="red-warning-text">
+                        {{ 'This field is required.' | translate }}
+                    </div>
+                }
             </mat-step>
         </mat-horizontal-stepper>
     </form>

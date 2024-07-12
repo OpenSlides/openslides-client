@@ -150,7 +150,10 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     private cd: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-    public constructor(private dialog: MatDialog, private translate: TranslateService) {
+    public constructor(
+        private dialog: MatDialog,
+        private translate: TranslateService
+    ) {
         super();
     }
 

@@ -1,25 +1,27 @@
-<div class="attachment-container" *ngIf="contentForm">
-    <form [formGroup]="formGroup">
-        <mat-form-field>
-            <mat-label>{{ 'Attachments' | translate }}</mat-label>
-            <os-repo-search-selector
-                class="selector"
-                [multiple]="true"
-                formControlName="mediafile_ids"
-                [repo]="repo"
-                [pipeFn]="getMediafilesPipeFn()"
-            ></os-repo-search-selector>
-        </mat-form-field>
-    </form>
-    <button
-        type="button"
-        mat-icon-button
-        (click)="openUploadDialog(uploadDialog)"
-        *osPerms="permission.mediafileCanManage"
-    >
-        <mat-icon>cloud_upload</mat-icon>
-    </button>
-</div>
+@if (contentForm) {
+    <div class="attachment-container">
+        <form [formGroup]="formGroup">
+            <mat-form-field>
+                <mat-label>{{ 'Attachments' | translate }}</mat-label>
+                <os-repo-search-selector
+                    class="selector"
+                    formControlName="mediafile_ids"
+                    [multiple]="true"
+                    [pipeFn]="getMediafilesPipeFn()"
+                    [repo]="repo"
+                ></os-repo-search-selector>
+            </mat-form-field>
+        </form>
+        <button
+            *osPerms="permission.mediafileCanManage"
+            mat-icon-button
+            type="button"
+            (click)="openUploadDialog(uploadDialog)"
+        >
+            <mat-icon>cloud_upload</mat-icon>
+        </button>
+    </div>
+}
 
 <!-- upload file dialog -->
 <ng-template #uploadDialog>
@@ -29,8 +31,8 @@
     <os-media-upload-content
         [directories]="directoriesObservable"
         [uploadFn]="uploadFn"
-        (uploadSuccessEvent)="uploadSuccess($event.uploadedIds)"
         (errorEvent)="uploadError($event)"
+        (uploadSuccessEvent)="uploadSuccess($event.uploadedIds)"
     >
         <div *osScrollingTableCell="'access_groups'; row as file" class="cell-slot">
             <form [formGroup]="file.form">
@@ -38,8 +40,8 @@
                     <mat-label>{{ 'Access groups' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="access_group_ids"
-                        [multiple]="true"
                         [inputListValues]="availableGroups"
+                        [multiple]="true"
                     ></os-list-search-selector>
                 </mat-form-field>
             </form>

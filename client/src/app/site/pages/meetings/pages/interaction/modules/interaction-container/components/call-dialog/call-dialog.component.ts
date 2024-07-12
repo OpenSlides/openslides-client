@@ -28,7 +28,11 @@ export class CallDialogComponent implements AfterViewInit {
 
     public isMobile: Observable<boolean> = this.vp.isMobileSubject;
 
-    public constructor(private cd: ChangeDetectorRef, private rtcService: RtcService, private vp: ViewPortService) {}
+    public constructor(
+        private cd: ChangeDetectorRef,
+        private rtcService: RtcService,
+        private vp: ViewPortService
+    ) {}
 
     public ngAfterViewInit(): void {
         this.rtcService.setJitsiNode(this.jitsiNode);
