@@ -5,7 +5,7 @@
             <h2>{{ 'Election' | translate }}</h2>
         </div>
         @if (data.data.description) {
-            <div [innerHTML]="data.data.description | trust: 'html'"></div>
+            <div class="detail-view-text" [innerHTML]="data.data.description | trust: 'html'"></div>
         }
         <h3>{{ 'Candidates' | translate }}</h3>
         @if (data.data.candidates && data.data.candidates.length) {

@@ -106,7 +106,10 @@
                                 </div>
                             }
                             @if (formattedMotionTextPlain) {
-                                <div [innerHTML]="formattedMotionTextPlain | trust: 'html'"></div>
+                                <div
+                                    class="detail-view-text"
+                                    [innerHTML]="formattedMotionTextPlain | trust: 'html'"
+                                ></div>
                             }
                         </div>
                     }
@@ -146,16 +149,16 @@
                                             {{ paragraph.diffLineFrom }} - {{ paragraph.diffLineTo }}:
                                         </h3>
                                     }
-                                    <div [innerHtml]="paragraph.text | trust: 'html'"></div>
+                                    <div class="detail-view-text" [innerHtml]="paragraph.text | trust: 'html'"></div>
                                 </div>
                             }
                         </section>
                     }
                     <!-- Reason -->
                     @if (data.data.reason) {
-                        <div>
+                        <div class="reason-text">
                             <h3>{{ 'Reason' | translate }}</h3>
-                            <div [innerHTML]="data.data.reason | trust: 'html'"></div>
+                            <div class="detail-view-text" [innerHTML]="data.data.reason | trust: 'html'"></div>
                         </div>
                     }
                 </div>
