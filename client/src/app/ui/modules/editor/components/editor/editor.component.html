@@ -1,1 +1,3 @@
-<editor *ngIf="hasInitialized | async" [init]="getEditorSettings()" [formControl]="contentForm"></editor>
+@if (hasInitialized | async) {
+    <editor [formControl]="contentForm" [init]="getEditorSettings()"></editor>
+}

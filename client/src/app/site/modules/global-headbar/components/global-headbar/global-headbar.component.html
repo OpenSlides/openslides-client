@@ -5,16 +5,20 @@
     <div class="spacer"></div>
     <div class="flex-center">
         <!-- Button to open the global search -->
-        <button *ngIf="isSearchEnabled" mat-icon-button (click)="openSearch()">
-            <mat-icon>search</mat-icon>
-        </button>
+        @if (isSearchEnabled) {
+            <button mat-icon-button (click)="openSearch()">
+                <mat-icon>search</mat-icon>
+            </button>
+        }
         <!-- Button to view the own account -->
         <os-account-button></os-account-button>
-        <div class="fake-fab-button flex-center" *ngIf="showLongpollingIcon">
-            <div class="longpolling-adjust-icon">
-                <mat-icon color="white" matTooltip="Fallback Mode">sync_problem</mat-icon>
+        @if (showLongpollingIcon) {
+            <div class="fake-fab-button flex-center">
+                <div class="longpolling-adjust-icon">
+                    <mat-icon color="white" matTooltip="Fallback Mode">sync_problem</mat-icon>
+                </div>
             </div>
-        </div>
+        }
     </div>
 </mat-toolbar>
 

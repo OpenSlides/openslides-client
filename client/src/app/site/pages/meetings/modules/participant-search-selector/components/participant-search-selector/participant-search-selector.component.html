@@ -5,8 +5,8 @@
             class="search-users"
             formControlName="userId"
             [excludeIds]="true"
-            [multiple]="false"
             [inputListValues]="filteredUsersSubject"
+            [multiple]="false"
             [sortFn]="false"
             (clickNotFound)="createNewSelectedUser($event)"
         >

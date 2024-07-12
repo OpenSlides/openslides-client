@@ -1,52 +1,61 @@
-<div class="result-wrapper" *ngIf="poll">
-    <ng-container *ngIf="hasResults && canSeeResults">
-        <!-- result table -->
-        <table class="result-table">
-            <tbody>
-                <tr>
-                    <th colspan="2">{{ 'Votes' | translate }}</th>
-                </tr>
-                <div *ngFor="let label of pollService.getSortedChartLabels(poll); let i = index">
+@if (poll) {
+    <div class="result-wrapper">
+        @if (hasResults && canSeeResults) {
+            <!-- result table -->
+            <table class="result-table">
+                <tbody>
                     <tr>
-                        <!-- Votes -->
-                        <td>
-                            <os-icon-container
-                                icon="circle"
-                                [size]="iconSize"
-                                [style.color]="colors.backgroundColor[i]"
-                            ></os-icon-container>
-                        </td>
-                        <td>
-                            {{ label }}
-                        </td>
+                        <th colspan="2">{{ 'Votes' | translate }}</th>
                     </tr>
-                    <mat-divider *ngIf="poll.options.length - 1 > i"></mat-divider>
+                    @for (label of pollService.getSortedChartLabels(poll); track label; let i = $index) {
+                        <div>
+                            <tr>
+                                <!-- Votes -->
+                                <td>
+                                    <os-icon-container
+                                        icon="circle"
+                                        [size]="iconSize"
+                                        [style.color]="colors.backgroundColor[i]"
+                                    ></os-icon-container>
+                                </td>
+                                <td>
+                                    {{ label }}
+                                </td>
+                            </tr>
+                            @if (poll.options.length - 1 > i) {
+                                <mat-divider></mat-divider>
+                            }
+                        </div>
+                    }
+                </tbody>
+            </table>
+            <!-- Chart -->
+            @if (shouldShowChart) {
+                <div class="doughnut-chart">
+                    <os-chart
+                        type="doughnut"
+                        [circleColors]="chartColors"
+                        [data]="chartData"
+                        [labels]="pollService.getSortedChartLabels(poll)"
+                    ></os-chart>
                 </div>
-            </tbody>
-        </table>
-
-        <!-- Chart -->
-        <div *ngIf="shouldShowChart" class="doughnut-chart">
-            <os-chart
-                type="doughnut"
-                [circleColors]="chartColors"
-                [labels]="pollService.getSortedChartLabels(poll)"
-                [data]="chartData"
-            ></os-chart>
-        </div>
-    </ng-container>
-
-    <!-- No results yet -->
-    <div *ngIf="!hasResults">
-        <i>
-            {{ 'No results yet.' | translate }}
-        </i>
+            }
+        }
+        <!-- No results yet -->
+        @if (!hasResults) {
+            <div>
+                <i>
+                    {{ 'No results yet.' | translate }}
+                </i>
+            </div>
+        }
+        <!-- Has results, but user cannot see -->
+        @if (hasResults && !canSeeResults) {
+            <div>
+                <i>
+                    {{ 'Counting of votes is in progress ...' | translate }}
+                </i>
+            </div>
+        }
     </div>
-
-    <!-- Has results, but user cannot see -->
-    <div *ngIf="hasResults && !canSeeResults">
-        <i>
-            {{ 'Counting of votes is in progress ...' | translate }}
-        </i>
-    </div>
-</div>
+}
