@@ -4,160 +4,159 @@
 
 <div class="settings-grid">
     <form [formGroup]="updateForm" (ngSubmit)="onSubmitProjector()">
-        <mat-dialog-content *ngIf="projector">
-            <!-- Name field -->
-            <mat-form-field>
-                <mat-label>{{ 'Name' | translate }}</mat-label>
-                <input formControlName="name" matInput required />
-                <mat-error>
-                    <span>{{ 'Required' | translate }}</span>
-                </mat-error>
-            </mat-form-field>
-
-            <div *ngIf="!projector.used_as_reference_projector_meeting_id">
-                <mat-checkbox formControlName="is_internal">
-                    <span>{{ 'Internal' | translate }}</span>
-                </mat-checkbox>
-            </div>
-
-            <h3>{{ 'Resolution and size' | translate }}</h3>
-            <!-- Aspect ratio field -->
-            <div>
-                <mat-radio-group formControlName="aspectRatio" name="aspectRatio">
-                    <mat-radio-button
-                        *ngFor="let ratio of defaultAspectRatio"
-                        [value]="ratio"
-                        (change)="onCustomAspectRatio(false)"
+        @if (projector) {
+            <mat-dialog-content>
+                <!-- Name field -->
+                <mat-form-field>
+                    <mat-label>{{ 'Name' | translate }}</mat-label>
+                    <input formControlName="name" matInput required />
+                    <mat-error>
+                        <span>{{ 'Required' | translate }}</span>
+                    </mat-error>
+                </mat-form-field>
+                @if (!projector.used_as_reference_projector_meeting_id) {
+                    <div>
+                        <mat-checkbox formControlName="is_internal">
+                            <span>{{ 'Internal' | translate }}</span>
+                        </mat-checkbox>
+                    </div>
+                }
+                <h3>{{ 'Resolution and size' | translate }}</h3>
+                <!-- Aspect ratio field -->
+                <div>
+                    <mat-radio-group formControlName="aspectRatio" name="aspectRatio">
+                        @for (ratio of defaultAspectRatio; track ratio) {
+                            <mat-radio-button [value]="ratio" (change)="onCustomAspectRatio(false)">
+                                {{ ratio }}
+                            </mat-radio-button>
+                        }
+                        <!-- Custom aspect ratio -->
+                        <mat-radio-button (change)="onCustomAspectRatio(true)">
+                            {{ 'custom' | translate }}
+                        </mat-radio-button>
+                        @if (customAspectRatio) {
+                            <mat-form-field>
+                                <mat-label>{{ 'Custom aspect ratio' | translate }}</mat-label>
+                                <input
+                                    formControlName="aspectRatio"
+                                    matInput
+                                    type="text"
+                                    [value]="previewProjector!.aspectRatio"
+                                    (change)="setCustomAspectRatio()"
+                                />
+                            </mat-form-field>
+                        }
+                    </mat-radio-group>
+                </div>
+                <div class="spacer-top-20 grid-form">
+                    <mat-slider
+                        class="grid-start"
+                        [discrete]="true"
+                        [max]="maxResolution"
+                        [min]="minWidth"
+                        [step]="resolutionChangeStep"
                     >
-                        {{ ratio }}
-                    </mat-radio-button>
-
-                    <!-- Custom aspect ratio -->
-                    <mat-radio-button (change)="onCustomAspectRatio(true)">
-                        {{ 'custom' | translate }}
-                    </mat-radio-button>
-
-                    <mat-form-field *ngIf="customAspectRatio">
-                        <mat-label>{{ 'Custom aspect ratio' | translate }}</mat-label>
-                        <input
-                            matInput
-                            type="text"
-                            formControlName="aspectRatio"
-                            [value]="previewProjector!.aspectRatio"
-                            (change)="setCustomAspectRatio()"
-                        />
-                    </mat-form-field>
-                </mat-radio-group>
-            </div>
-
-            <div class="spacer-top-20 grid-form">
-                <mat-slider
-                    class="grid-start"
-                    [discrete]="true"
-                    [min]="minWidth"
-                    [max]="maxResolution"
-                    [step]="resolutionChangeStep"
-                >
-                    <input matSliderThumb formControlName="width" [value]="updateForm.value.width" />
-                </mat-slider>
-                <div class="grid-end">
-                    <mat-form-field>
-                        <input
-                            matInput
-                            type="number"
-                            formControlName="width"
-                            [min]="minWidth"
-                            [max]="maxResolution"
-                            [step]="resolutionChangeStep"
-                            [value]="updateForm.value.width"
-                        />
-                    </mat-form-field>
+                        <input formControlName="width" matSliderThumb [value]="updateForm.value.width" />
+                    </mat-slider>
+                    <div class="grid-end">
+                        <mat-form-field>
+                            <input
+                                formControlName="width"
+                                matInput
+                                type="number"
+                                [max]="maxResolution"
+                                [min]="minWidth"
+                                [step]="resolutionChangeStep"
+                                [value]="updateForm.value.width"
+                            />
+                        </mat-form-field>
+                    </div>
                 </div>
-            </div>
-
-            <!-- checkboxes -->
-            <div>
+                <!-- checkboxes -->
                 <div>
-                    <mat-checkbox formControlName="show_header_footer">
-                        <span>{{ 'Show header and footer' | translate }}</span>
-                    </mat-checkbox>
+                    <div>
+                        <mat-checkbox formControlName="show_header_footer">
+                            <span>{{ 'Show header and footer' | translate }}</span>
+                        </mat-checkbox>
+                    </div>
+                    <div>
+                        <mat-checkbox formControlName="show_title">
+                            <span>{{ 'Show title' | translate }}</span>
+                        </mat-checkbox>
+                    </div>
+                    <div>
+                        <mat-checkbox formControlName="show_logo">
+                            <span>{{ 'Show logo' | translate }}</span>
+                        </mat-checkbox>
+                    </div>
+                    <div>
+                        <mat-checkbox formControlName="show_clock">
+                            <span>{{ 'Show clock' | translate }}</span>
+                        </mat-checkbox>
+                    </div>
                 </div>
-                <div>
-                    <mat-checkbox formControlName="show_title">
-                        <span>{{ 'Show title' | translate }}</span>
-                    </mat-checkbox>
+                <!-- projection defaults -->
+                <h3>{{ 'Projection defaults' | translate }}</h3>
+                <mat-form-field>
+                    <mat-label>{{ 'Projection defaults' | translate }}</mat-label>
+                    <mat-select formControlName="projectiondefault_ids" [multiple]="true">
+                        @for (pd of projectiondefaultVerbose | keyvalue; track pd) {
+                            <mat-option [value]="projectiondefaultKeys[pd.key]">
+                                {{ pd.value | translate }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                <!-- colors -->
+                <div class="spacer-top-10">
+                    <!-- Template to streamline all the color forms -->
+                    <ng-template #colorFormField let-form="form" let-title="title">
+                        <mat-form-field class="color-picker-form">
+                            <mat-label>{{ title | translate }}</mat-label>
+                            <input matInput type="color" [formControlName]="form" />
+                            <button
+                                mat-icon-button
+                                matSuffix
+                                type="button"
+                                matTooltip="{{ 'Reset' | translate }}"
+                                (click)="resetField(form)"
+                            >
+                                <mat-icon>replay</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </ng-template>
+                    @for (colorPair of colorFields; track colorPair) {
+                        <ng-template
+                            [ngTemplateOutlet]="colorFormField"
+                            [ngTemplateOutletContext]="{ title: colorPair[1], form: colorPair[0] }"
+                        ></ng-template>
+                    }
                 </div>
-                <div>
-                    <mat-checkbox formControlName="show_logo">
-                        <span>{{ 'Show logo' | translate }}</span>
-                    </mat-checkbox>
-                </div>
-                <div>
-                    <mat-checkbox formControlName="show_clock">
-                        <span>{{ 'Show clock' | translate }}</span>
-                    </mat-checkbox>
-                </div>
-            </div>
-
-            <!-- projection defaults -->
-            <h3>{{ 'Projection defaults' | translate }}</h3>
-            <mat-form-field>
-                <mat-label>{{ 'Projection defaults' | translate }}</mat-label>
-                <mat-select formControlName="projectiondefault_ids" [multiple]="true">
-                    <mat-option
-                        *ngFor="let pd of projectiondefaultVerbose | keyvalue"
-                        [value]="projectiondefaultKeys[pd.key]"
-                    >
-                        {{ pd.value | translate }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <!-- colors -->
-            <div class="spacer-top-10">
-                <!-- Template to streamline all the color forms -->
-                <ng-template #colorFormField let-title="title" let-form="form">
-                    <mat-form-field class="color-picker-form">
-                        <mat-label>{{ title | translate }}</mat-label>
-                        <input matInput [formControlName]="form" type="color" />
-                        <button
-                            matSuffix
-                            type="button"
-                            mat-icon-button
-                            matTooltip="{{ 'Reset' | translate }}"
-                            (click)="resetField(form)"
-                        >
-                            <mat-icon>replay</mat-icon>
-                        </button>
-                    </mat-form-field>
-                </ng-template>
-
-                <ng-template
-                    *ngFor="let colorPair of colorFields"
-                    [ngTemplateOutlet]="colorFormField"
-                    [ngTemplateOutletContext]="{ title: colorPair[1], form: colorPair[0] }"
-                ></ng-template>
-            </div>
-        </mat-dialog-content>
+            </mat-dialog-content>
+        }
 
         <!-- Actions -->
         <mat-dialog-actions>
             <mat-divider class="padding-bottom-16"></mat-divider>
-            <button type="submit" mat-button color="accent">
+            <button color="accent" mat-button type="submit">
                 <span>{{ 'Save' | translate }}</span>
             </button>
-            <button type="button" mat-button [mat-dialog-close]="null">
+            <button mat-button type="button" [mat-dialog-close]="null">
                 <span>{{ 'Cancel' | translate }}</span>
             </button>
-            <button type="button" mat-button (click)="applyChanges()">
+            <button mat-button type="button" (click)="applyChanges()">
                 <span>{{ 'Apply' | translate }}</span>
             </button>
         </mat-dialog-actions>
     </form>
-    <mat-dialog-content *ngIf="previewProjector">
-        <h3>{{ 'Preview' | translate }}</h3>
-        <div class="preview-container">
-            <os-projector #preview *ngIf="previewProjector" [projector]="previewProjector"></os-projector>
-        </div>
-    </mat-dialog-content>
+    @if (previewProjector) {
+        <mat-dialog-content>
+            <h3>{{ 'Preview' | translate }}</h3>
+            <div class="preview-container">
+                @if (previewProjector) {
+                    <os-projector #preview [projector]="previewProjector"></os-projector>
+                }
+            </div>
+        </mat-dialog-content>
+    }
 </div>

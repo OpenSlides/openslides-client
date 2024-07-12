@@ -20,14 +20,14 @@ type TestConditionalType = {
 @Component({
     template: `
         <div
-            id="normal"
             *osCmlPerms="permission; committeeId: conditionals.id; nonAdminCheck: conditionals.nonAdmin"
+            id="normal"
         ></div>
-        <div id="or" *osCmlPerms="permission; committeeId: conditionals.id; or: conditionals.or"></div>
-        <div id="and" *osCmlPerms="permission; committeeId: conditionals.id; and: conditionals.and"></div>
+        <div *osCmlPerms="permission; committeeId: conditionals.id; or: conditionals.or" id="or"></div>
+        <div *osCmlPerms="permission; committeeId: conditionals.id; and: conditionals.and" id="and"></div>
         <div
-            id="complement"
             *osCmlPerms="permission; committeeId: conditionals.id; complement: conditionals.complement"
+            id="complement"
         ></div>
     `
 })

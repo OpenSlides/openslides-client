@@ -120,7 +120,10 @@ export class CountdownTimeComponent implements OnDestroy {
 
     private _countdown!: CountdownData;
 
-    public constructor(private servertimeService: ServerTimePresenterService, private cd: ChangeDetectorRef) {}
+    public constructor(
+        private servertimeService: ServerTimePresenterService,
+        private cd: ChangeDetectorRef
+    ) {}
 
     /**
      * Clear all pending intervals.

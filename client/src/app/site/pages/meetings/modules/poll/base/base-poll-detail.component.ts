@@ -126,7 +126,10 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     protected userRepo = inject(ParticipantControllerService);
     private scrollTableManage = inject(ScrollingTableManageService);
 
-    public constructor(protected pollService: S, private pollPdfService: BasePollPdfService) {
+    public constructor(
+        protected pollService: S,
+        private pollPdfService: BasePollPdfService
+    ) {
         super();
 
         this.subscriptions.push(

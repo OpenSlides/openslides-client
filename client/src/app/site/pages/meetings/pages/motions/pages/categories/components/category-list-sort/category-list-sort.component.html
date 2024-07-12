@@ -1,4 +1,4 @@
-<os-head-bar [editMode]="hasChanged" (saveEvent)="onSave()" (mainEvent)="onCancel()" [nav]="false">
+<os-head-bar [editMode]="hasChanged" [nav]="false" (mainEvent)="onCancel()" (saveEvent)="onSave()">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Sort categories' | translate }}</h2>
@@ -11,8 +11,8 @@
             #osSortedTree
             parentKey="parent_id"
             weightKey="weight"
-            (hasChanged)="receiveChanges($event)"
             [model]="categoriesObservable"
+            (hasChanged)="receiveChanges($event)"
         >
             <ng-template #innerNode let-item="item">
                 {{ item.getTitle() }}

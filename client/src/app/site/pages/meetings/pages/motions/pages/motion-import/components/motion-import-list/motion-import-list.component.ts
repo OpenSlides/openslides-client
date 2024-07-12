@@ -23,7 +23,10 @@ export class MotionImportListComponent extends BaseViaBackendImportListComponent
         }));
     }
 
-    public constructor(protected override translate: TranslateService, public override importer: MotionImportService) {
+    public constructor(
+        protected override translate: TranslateService,
+        public override importer: MotionImportService
+    ) {
         super(importer);
     }
 }
