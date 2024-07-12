@@ -43,7 +43,10 @@ export class SpeakerButtonComponent implements OnDestroy {
     private _losObservable: Observable<ViewListOfSpeakers | null> | null = of(null);
     private _losSub: Subscription | null = null;
 
-    public constructor(private cd: ChangeDetectorRef, private operator: OperatorService) {}
+    public constructor(
+        private cd: ChangeDetectorRef,
+        private operator: OperatorService
+    ) {}
 
     public ngOnDestroy(): void {
         this.cleanLosSub();

@@ -9,7 +9,10 @@ import { OsFilter } from '../base/base-filter.service';
     providedIn: `root`
 })
 export class ActiveFiltersService implements ActiveFiltersStoreService {
-    public constructor(private store: StorageService, private activeMeetingIdService: ActiveMeetingIdService) {}
+    public constructor(
+        private store: StorageService,
+        private activeMeetingIdService: ActiveMeetingIdService
+    ) {}
 
     public async save<V>(storageKey: string, filterDefinitions: OsFilter<V>[]): Promise<void> {
         return await this.store.set(this.calcStorageKey(storageKey), filterDefinitions);
