@@ -143,7 +143,10 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 
     private _oldDistTop = 0;
 
-    public constructor(private manageService: ScrollingTableManageService, private cd: ChangeDetectorRef) {
+    public constructor(
+        private manageService: ScrollingTableManageService,
+        private cd: ChangeDetectorRef
+    ) {
         super();
     }
 

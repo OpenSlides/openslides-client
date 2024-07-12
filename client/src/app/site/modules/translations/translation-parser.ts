@@ -16,7 +16,10 @@ export class OpenSlidesTranslateParser extends TranslateDefaultParser {
     /**
      * Subscribes to the custom translations and watches for updated custom translations.
      */
-    public constructor(ctService: CustomTranslationService, private translateStore: TranslateStore) {
+    public constructor(
+        ctService: CustomTranslationService,
+        private translateStore: TranslateStore
+    ) {
         super();
 
         ctService.customTranslationSubject.subscribe(ct => {

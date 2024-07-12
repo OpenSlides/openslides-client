@@ -5,9 +5,11 @@
     </div>
 
     <ng-container class="menu-slot">
-        <button *ngIf="canImport" mat-button (click)="doImport()">
-            <span class="upper">{{ 'Import' | translate }}</span>
-        </button>
+        @if (canImport) {
+            <button mat-button (click)="doImport()">
+                <span class="upper">{{ 'Import' | translate }}</span>
+            </button>
+        }
     </ng-container>
 </os-head-bar>
 

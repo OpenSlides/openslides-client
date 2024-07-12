@@ -1,46 +1,52 @@
 <div class="form-wrapper">
-    <ng-container
-        *ngIf="{ meeting: meetingObservable | async, organization: organizationObservable | async } as observables"
-    >
-        <div class="header-name" *ngIf="observables.meeting || observables.organization" [@fadeIn]>
-            <!-- Meeting's name -->
-            <h1 *ngIf="observables.meeting">{{ observables.meeting.name }}</h1>
-            <!-- Organization's name -->
-            <h1 *ngIf="observables.organization && !observables.meeting">
-                {{ observables.organization.name }}
-            </h1>
-        </div>
-    </ng-container>
+    @if ({ meeting: meetingObservable | async, organization: organizationObservable | async }; as observables) {
+        @if (observables.meeting || observables.organization) {
+            <div class="header-name" [@fadeIn]>
+                <!-- Meeting's name -->
+                @if (observables.meeting) {
+                    <h1>{{ observables.meeting.name }}</h1>
+                }
+                <!-- Organization's name -->
+                @if (observables.organization && !observables.meeting) {
+                    <h1>
+                        {{ observables.organization.name }}
+                    </h1>
+                }
+            </div>
+        }
+    }
 
     <!-- Install notice -->
-    <div class="login-container" *ngIf="installationNotice">
-        <mat-card>
-            <mat-card-content [innerHTML]="installationNotice | translate"></mat-card-content>
-        </mat-card>
-    </div>
-
-    <ng-container *ngIf="!samlEnabled && !loading">
-        <ng-container *ngTemplateOutlet="loginform; context: { showExtra: true }"></ng-container>
-    </ng-container>
-    <ng-container *ngIf="samlEnabled && !loading">
+    @if (installationNotice) {
         <div class="login-container">
-            <button
-                osAutofocus
-                mat-raised-button
-                *ngIf="samlEnabled"
-                class="login-button"
-                type="button"
-                (click)="samlLogin()"
-                color="primary"
-            >
-                {{ samlLoginButtonText || 'SAML Login' | translate }}
-            </button>
-
+            <mat-card>
+                <mat-card-content [innerHTML]="installationNotice | translate"></mat-card-content>
+            </mat-card>
+        </div>
+    }
+    @if (!samlEnabled && !loading) {
+        <ng-container *ngTemplateOutlet="loginform; context: { showExtra: true }"></ng-container>
+    }
+    @if (samlEnabled && !loading) {
+        <div class="login-container">
+            @if (samlEnabled) {
+                <button
+                    osAutofocus
+                    mat-raised-button
+                    class="login-button"
+                    type="button"
+                    (click)="samlLogin()"
+                    color="primary"
+                >
+                    {{ samlLoginButtonText || 'SAML Login' | translate }}
+                </button>
+            }
             <br />
-            <button mat-stroked-button *ngIf="guestsEnabled" class="login-button" type="button" (click)="guestLogin()">
-                {{ 'Login as guest' | translate }}
-            </button>
-
+            @if (guestsEnabled) {
+                <button mat-stroked-button class="login-button" type="button" (click)="guestLogin()">
+                    {{ 'Login as guest' | translate }}
+                </button>
+            }
             <br />
             <mat-expansion-panel
                 style="border-radius: 4px !important"
@@ -53,12 +59,14 @@
                         {{ 'Internal login' | translate }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <div *ngIf="loginAreaExpanded">
-                    <ng-container *ngTemplateOutlet="loginform; context: { showExtra: false }"></ng-container>
-                </div>
+                @if (loginAreaExpanded) {
+                    <div>
+                        <ng-container *ngTemplateOutlet="loginform; context: { showExtra: false }"></ng-container>
+                    </div>
+                }
             </mat-expansion-panel>
         </div>
-    </ng-container>
+    }
 </div>
 
 <ng-template #loginform let-showExtra="showExtra">
@@ -94,18 +102,18 @@
             data-cy="loginButton"
             [disabled]="loginForm.invalid || isWaitingOnLogin"
         >
-            <span *ngIf="!isWaitingOnLogin">{{ 'Login' | translate }}</span>
-            <os-spinner *ngIf="isWaitingOnLogin" [width]="20" [height]="20" [showText]="false"></os-spinner>
+            @if (!isWaitingOnLogin) {
+                <span>{{ 'Login' | translate }}</span>
+            }
+            @if (isWaitingOnLogin) {
+                <os-spinner [width]="20" [height]="20" [showText]="false"></os-spinner>
+            }
         </button>
-        <button
-            mat-stroked-button
-            *ngIf="guestsEnabled && showExtra"
-            class="login-button"
-            type="button"
-            (click)="guestLogin()"
-        >
-            {{ 'Login as guest' | translate }}
-        </button>
+        @if (guestsEnabled && showExtra) {
+            <button mat-stroked-button class="login-button" type="button" (click)="guestLogin()">
+                {{ 'Login as guest' | translate }}
+            </button>
+        }
 
         <!-- forgot password button -->
         <br />

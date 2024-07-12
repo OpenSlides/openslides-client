@@ -9,8 +9,12 @@
         <!-- Title -->
         <div class="title-slot">
             <h2>
-                <span *ngIf="!isCurrentListOfSpeakers">{{ 'List of speakers' | translate }}</span>
-                <span *ngIf="isCurrentListOfSpeakers">{{ 'Current list of speakers' | translate }}</span>
+                @if (!isCurrentListOfSpeakers) {
+                    <span>{{ 'List of speakers' | translate }}</span>
+                }
+                @if (isCurrentListOfSpeakers) {
+                    <span>{{ 'Current list of speakers' | translate }}</span>
+                }
             </h2>
         </div>
         <ng-container class="menu-slot" *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]">
@@ -39,55 +43,61 @@
     ></os-list-of-speakers-content>
 
     <!-- special los part for structure level -->
-    <div
-        *ngIf="
-            structureLevelCountdownEnabled &&
-            viewListOfSpeakers &&
-            viewListOfSpeakers.structure_level_list_of_speakers_ids?.length
-        "
-        class="col-right"
-    >
-        <mat-card class="spacer-bottom-60 os-card">
-            <mat-card-content>
-                <os-speaking-times
-                    [currentSpeakingTimes]="viewListOfSpeakers.structure_level_list_of_speakers_ids"
-                    [showProjectionMenu]="true"
-                ></os-speaking-times>
-            </mat-card-content>
-        </mat-card>
-    </div>
-    <div *ngIf="viewListOfSpeakers">
-        <!-- Moderator Note-->
-        <os-moderation-note [listOfSpeakers]="viewListOfSpeakers"></os-moderation-note>
-    </div>
+    @if (
+        structureLevelCountdownEnabled &&
+        viewListOfSpeakers &&
+        viewListOfSpeakers.structure_level_list_of_speakers_ids?.length
+    ) {
+        <div class="col-right">
+            <mat-card class="spacer-bottom-60 os-card">
+                <mat-card-content>
+                    <os-speaking-times
+                        [currentSpeakingTimes]="viewListOfSpeakers.structure_level_list_of_speakers_ids"
+                        [showProjectionMenu]="true"
+                    ></os-speaking-times>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    }
+    @if (viewListOfSpeakers) {
+        <div>
+            <!-- Moderator Note-->
+            <os-moderation-note [listOfSpeakers]="viewListOfSpeakers"></os-moderation-note>
+        </div>
+    }
 </os-detail-view>
 
 <mat-menu #speakerMenu="matMenu">
-    <button *ngIf="isMobile" mat-menu-item (click)="setManualSortMode(true)">
-        <mat-icon>sort</mat-icon>
-        <span>{{ 'Sort' | translate }}</span>
-    </button>
-
-    <os-projector-button
-        *ngIf="viewListOfSpeakers && projectors && projectors.length > 1"
-        [object]="getClosSlide()"
-        [menuItem]="true"
-    >
-        {{ 'Current list of speakers (as slide)' | translate }}
-    </os-projector-button>
-
-    <os-projector-button *ngIf="viewListOfSpeakers" [object]="viewListOfSpeakers" [menuItem]="true">
-        {{ 'List of speakers' | translate }}
-    </os-projector-button>
-
-    <os-projector-button *ngIf="viewListOfSpeakers" [object]="viewListOfSpeakers.content_object!" [menuItem]="true">
-        {{ getContentObjectProjectorButtonText() | translate }}
-    </os-projector-button>
+    @if (isMobile) {
+        <button mat-menu-item (click)="setManualSortMode(true)">
+            <mat-icon>sort</mat-icon>
+            <span>{{ 'Sort' | translate }}</span>
+        </button>
+    }
+    @if (viewListOfSpeakers && projectors && projectors.length > 1) {
+        <os-projector-button [object]="getClosSlide()" [menuItem]="true">
+            {{ 'Current list of speakers (as slide)' | translate }}
+        </os-projector-button>
+    }
+    @if (viewListOfSpeakers) {
+        <os-projector-button [object]="viewListOfSpeakers" [menuItem]="true">
+            {{ 'List of speakers' | translate }}
+        </os-projector-button>
+    }
+    @if (viewListOfSpeakers) {
+        <os-projector-button [object]="viewListOfSpeakers.content_object!" [menuItem]="true">
+            {{ getContentObjectProjectorButtonText() | translate }}
+        </os-projector-button>
+    }
 
     <button mat-menu-item (click)="setLosClosed(!isListOfSpeakersClosed)">
         <mat-icon>{{ isListOfSpeakersClosed ? 'lock_open' : 'lock' }}</mat-icon>
-        <span *ngIf="!isListOfSpeakersClosed">{{ 'Close list of speakers' | translate }}</span>
-        <span *ngIf="isListOfSpeakersClosed">{{ 'Open list of speakers' | translate }}</span>
+        @if (!isListOfSpeakersClosed) {
+            <span>{{ 'Close list of speakers' | translate }}</span>
+        }
+        @if (isListOfSpeakersClosed) {
+            <span>{{ 'Open list of speakers' | translate }}</span>
+        }
     </button>
 
     <mat-divider></mat-divider>

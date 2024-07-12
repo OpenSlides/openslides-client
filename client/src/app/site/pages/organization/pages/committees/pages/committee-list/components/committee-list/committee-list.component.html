@@ -35,79 +35,95 @@
     [(selectedRows)]="selectedRows"
 >
     <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
-        <a
-            class="stretch-to-fill-parent"
-            [routerLink]="committee.id"
-            *ngIf="!isMultiSelect && committee.canAccess()"
-        ></a>
+        @if (!isMultiSelect && committee.canAccess()) {
+            <a class="stretch-to-fill-parent" [routerLink]="committee.id"></a>
+        }
         <div class="overflow-hidden">
             <div class="title-line ellipsis-overflow">
                 {{ committee.name }}
-                <div class="subtitle ellipsis-overflow" *ngIf="committee.description?.trim()">
-                    {{ committee.description }}
-                </div>
+                @if (committee.description?.trim()) {
+                    <div class="subtitle ellipsis-overflow">
+                        {{ committee.description }}
+                    </div>
+                }
             </div>
             <div class="ellipsis-overflow">
-                <os-chip *ngFor="let tag of committee.organization_tags" [color]="tag.color">
-                    {{ tag.name }}
-                </os-chip>
+                @for (tag of committee.organization_tags; track tag) {
+                    <os-chip [color]="tag.color">
+                        {{ tag.name }}
+                    </os-chip>
+                }
             </div>
         </div>
     </div>
     <div *osScrollingTableCell="'forwarding'; row as committee; config: { width: 70 }">
         <div class="forwarding-wrapper">
-            <div *ngIf="committee.forward_to_committees?.length && operator.isOrgaManager">
-                <os-icon-container
-                    iconTooltip="{{ 'Can forward motions to committee' | translate }}"
-                    iconTooltipPosition="left"
-                    icon="file_upload"
-                    [noWrap]="true"
-                >
-                    <span>
-                        {{ committee.forward_to_committees.length }}
-                    </span>
-                </os-icon-container>
-            </div>
-            <div *ngIf="committee.receive_forwardings_from_committees?.length && operator.isOrgaManager">
-                <os-icon-container
-                    iconTooltip="{{ 'Can receive motions from committee' | translate }}"
-                    iconTooltipPosition="left"
-                    icon="file_download"
-                    [noWrap]="true"
-                >
-                    <span>
-                        {{ committee.receive_forwardings_from_committees.length }}
-                    </span>
-                </os-icon-container>
-            </div>
+            @if (committee.forward_to_committees?.length && operator.isOrgaManager) {
+                <div>
+                    <os-icon-container
+                        iconTooltip="{{ 'Can forward motions to committee' | translate }}"
+                        iconTooltipPosition="left"
+                        icon="file_upload"
+                        [noWrap]="true"
+                    >
+                        <span>
+                            {{ committee.forward_to_committees.length }}
+                        </span>
+                    </os-icon-container>
+                </div>
+            }
+            @if (committee.receive_forwardings_from_committees?.length && operator.isOrgaManager) {
+                <div>
+                    <os-icon-container
+                        iconTooltip="{{ 'Can receive motions from committee' | translate }}"
+                        iconTooltipPosition="left"
+                        icon="file_download"
+                        [noWrap]="true"
+                    >
+                        <span>
+                            {{ committee.receive_forwardings_from_committees.length }}
+                        </span>
+                    </os-icon-container>
+                </div>
+            }
         </div>
     </div>
 
     <div *osScrollingTableCell="'meta'; row as committee; config: { width: 75 }">
         <div>
-            <div *ngIf="committee.meetingAmount">
-                <os-icon-container
-                    iconTooltip="{{ 'Meetings' | translate }}"
-                    iconTooltipPosition="right"
-                    icon="event_available"
-                >
-                    {{ committee.meetingAmount }}
-                </os-icon-container>
-            </div>
-            <div *ngIf="committee.memberAmount">
-                <os-icon-container iconTooltip="{{ 'Accounts' | translate }}" iconTooltipPosition="right" icon="group">
-                    {{ committee.memberAmount }}
-                </os-icon-container>
-            </div>
-            <div *ngIf="committee.managerAmount">
-                <os-icon-container
-                    iconTooltip="{{ 'Committee management' | translate }}"
-                    iconTooltipPosition="right"
-                    icon="engineering"
-                >
-                    {{ committee.managerAmount }}
-                </os-icon-container>
-            </div>
+            @if (committee.meetingAmount) {
+                <div>
+                    <os-icon-container
+                        iconTooltip="{{ 'Meetings' | translate }}"
+                        iconTooltipPosition="right"
+                        icon="event_available"
+                    >
+                        {{ committee.meetingAmount }}
+                    </os-icon-container>
+                </div>
+            }
+            @if (committee.memberAmount) {
+                <div>
+                    <os-icon-container
+                        iconTooltip="{{ 'Accounts' | translate }}"
+                        iconTooltipPosition="right"
+                        icon="group"
+                    >
+                        {{ committee.memberAmount }}
+                    </os-icon-container>
+                </div>
+            }
+            @if (committee.managerAmount) {
+                <div>
+                    <os-icon-container
+                        iconTooltip="{{ 'Committee management' | translate }}"
+                        iconTooltipPosition="right"
+                        icon="engineering"
+                    >
+                        {{ committee.managerAmount }}
+                    </os-icon-container>
+                </div>
+            }
         </div>
     </div>
 
@@ -157,53 +173,55 @@
 </mat-menu>
 
 <mat-menu #committeeMenu="matMenu">
-    <div *ngIf="!isMultiSelect">
-        <button mat-menu-item (click)="toggleMultiSelect()">
-            <mat-icon>library_add</mat-icon>
-            <span>{{ 'Multiselect' | translate }}</span>
-        </button>
-        <ng-container *osOmlPerms="OML.can_manage_organization">
-            <mat-divider></mat-divider>
-            <button mat-menu-item routerLink="import">
-                <mat-icon>cloud_upload</mat-icon>
-                <span>{{ 'Import' | translate }}</span>
+    @if (!isMultiSelect) {
+        <div>
+            <button mat-menu-item (click)="toggleMultiSelect()">
+                <mat-icon>library_add</mat-icon>
+                <span>{{ 'Multiselect' | translate }}</span>
             </button>
-            <button mat-menu-item (click)="exportAsCsv()">
-                <mat-icon>archive</mat-icon>
-                <span>{{ 'Export as CSV' | translate }}</span>
+            <ng-container *osOmlPerms="OML.can_manage_organization">
+                <mat-divider></mat-divider>
+                <button mat-menu-item routerLink="import">
+                    <mat-icon>cloud_upload</mat-icon>
+                    <span>{{ 'Import' | translate }}</span>
+                </button>
+                <button mat-menu-item (click)="exportAsCsv()">
+                    <mat-icon>archive</mat-icon>
+                    <span>{{ 'Export as CSV' | translate }}</span>
+                </button>
+            </ng-container>
+        </div>
+    }
+    @if (isMultiSelect) {
+        <div>
+            <button mat-menu-item (click)="selectAll()">
+                <mat-icon>done_all</mat-icon>
+                <span>{{ 'Select all' | translate }}</span>
             </button>
-        </ng-container>
-    </div>
-    <div *ngIf="isMultiSelect">
-        <button mat-menu-item (click)="selectAll()">
-            <mat-icon>done_all</mat-icon>
-            <span>{{ 'Select all' | translate }}</span>
-        </button>
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
-            <mat-icon>clear</mat-icon>
-            <span>{{ 'Deselect all' | translate }}</span>
-        </button>
-
-        <ng-container *osOmlPerms="OML.can_manage_organization">
-            <mat-divider></mat-divider>
-            <button mat-menu-item (click)="forwardToCommittees()" [disabled]="!selectedRows.length">
-                <mat-icon>swap_horiz</mat-icon>
-                <span>{{ 'Motion forwarding' | translate }} ...</span>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+                <mat-icon>clear</mat-icon>
+                <span>{{ 'Deselect all' | translate }}</span>
             </button>
-            <button mat-menu-item (click)="editTags()" [disabled]="!selectedRows.length">
-                <mat-icon>local_offer</mat-icon>
-                <span>{{ 'Tags' | translate }}</span>
-            </button>
-            <button mat-menu-item (click)="exportAsCsv()" [disabled]="!selectedRows.length">
-                <mat-icon>archive</mat-icon>
-                <span>{{ 'Export as CSV' | translate }}</span>
-            </button>
-            <mat-divider></mat-divider>
-
-            <button mat-menu-item [disabled]="!selectedRows.length" class="red-warning-text" (click)="doDelete()">
-                <mat-icon>delete</mat-icon>
-                <span>{{ 'Delete' | translate }}</span>
-            </button>
-        </ng-container>
-    </div>
+            <ng-container *osOmlPerms="OML.can_manage_organization">
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="forwardToCommittees()" [disabled]="!selectedRows.length">
+                    <mat-icon>swap_horiz</mat-icon>
+                    <span>{{ 'Motion forwarding' | translate }} ...</span>
+                </button>
+                <button mat-menu-item (click)="editTags()" [disabled]="!selectedRows.length">
+                    <mat-icon>local_offer</mat-icon>
+                    <span>{{ 'Tags' | translate }}</span>
+                </button>
+                <button mat-menu-item (click)="exportAsCsv()" [disabled]="!selectedRows.length">
+                    <mat-icon>archive</mat-icon>
+                    <span>{{ 'Export as CSV' | translate }}</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item [disabled]="!selectedRows.length" class="red-warning-text" (click)="doDelete()">
+                    <mat-icon>delete</mat-icon>
+                    <span>{{ 'Delete' | translate }}</span>
+                </button>
+            </ng-container>
+        </div>
+    }
 </mat-menu>

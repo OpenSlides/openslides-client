@@ -3,34 +3,40 @@
         <div class="action-title">
             <h1>{{ 'Legal notice' | translate }}</h1>
             <div *osOmlPerms="OML.can_manage_organization; and: isEditable">
-                <button (click)="isEditing = true" mat-icon-button *ngIf="!isEditing">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <ng-container *ngIf="isEditing">
+                @if (!isEditing) {
+                    <button (click)="isEditing = true" mat-icon-button>
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                }
+                @if (isEditing) {
                     <button (click)="leaveEditMode(true)" mat-icon-button>
                         <mat-icon>done</mat-icon>
                     </button>
                     <button (click)="leaveEditMode(false)" mat-icon-button>
                         <mat-icon>close</mat-icon>
                     </button>
-                </ng-container>
+                }
             </div>
         </div>
         <div class="underlined-links">
-            <ng-container *ngIf="!isEditing">
-                <div *ngIf="legalNotice" class="legal-notice-text" [innerHtml]="legalNotice | trust : 'html'"></div>
-                <div *ngIf="!legalNotice">
-                    {{ 'The event manager has not set up a legal notice yet.' | translate }}
-                </div>
-            </ng-container>
-            <ng-container *ngIf="isEditing">
+            @if (!isEditing) {
+                @if (legalNotice) {
+                    <div class="legal-notice-text" [innerHtml]="legalNotice | trust: 'html'"></div>
+                }
+                @if (!legalNotice) {
+                    <div>
+                        {{ 'The event manager has not set up a legal notice yet.' | translate }}
+                    </div>
+                }
+            }
+            @if (isEditing) {
                 <div>
                     <form [formGroup]="formGroup">
                         <os-editor formControlName="legalNotice"></os-editor>
                     </form>
                 </div>
-            </ng-container>
-            <ng-container *ngIf="versionInfo | async as version">
+            }
+            @if (versionInfo | async; as version) {
                 <mat-divider></mat-divider>
                 <div class="version-text">
                     OpenSlides Version:
@@ -48,7 +54,7 @@
                         {{ 'OpenSlides help (FAQ)' | translate }}
                     </os-icon-container>
                 </a>
-            </ng-container>
+            }
         </div>
     </mat-card-content>
 </mat-card>

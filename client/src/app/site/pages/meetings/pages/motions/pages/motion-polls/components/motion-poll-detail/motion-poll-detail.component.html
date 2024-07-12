@@ -1,7 +1,9 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar [goBack]="true" [nav]="false">
         <div class="title-slot">
-            <h2 *ngIf="poll">{{ 'Motion' | translate }} {{ poll.title }}</h2>
+            @if (poll) {
+                <h2>{{ 'Motion' | translate }} {{ poll.title }}</h2>
+            }
         </div>
 
         <ng-container class="menu-slot" *osPerms="permission.motionCanManagePolls">
@@ -20,41 +22,41 @@
 
 <!-- Detailview for poll -->
 <ng-template #viewTemplate>
-    <ng-container *ngIf="poll">
+    @if (poll) {
         <h1>{{ poll.title | translate }}</h1>
-
         <div>
             <!-- Voting type -->
-            <span *ngIf="poll.type !== 'analog'">{{ poll.typeVerbose | translate }} &middot;</span>
-
+            @if (poll.type !== 'analog') {
+                <span>{{ poll.typeVerbose | translate }} &middot;</span>
+            }
             <!-- State -->
             <span>
                 {{ poll.stateVerbose | translate }}
             </span>
         </div>
-
         <os-motion-poll-detail-content [poll]="poll"></os-motion-poll-detail-content>
-
         <!-- Named table: only show if votes are present -->
-        <mat-tab-group *ngIf="showResults && poll.stateHasVotes && poll.isEVoting" (selectedTabChange)="onTabChange()">
-            <mat-tab label="{{ 'Single votes' | translate }}">
-                <div class="named-result-table">
-                    <os-votes-table
-                        [votesDataObservable]="votesDataObservable"
-                        [isViewingThis]="isViewingVoteslist"
-                        [parent]="self"
-                    ></os-votes-table>
-                </div>
-            </mat-tab>
-            <mat-tab label="{{ 'Entitled users' | translate }}">
-                <os-entitled-users-table
-                    [entitledUsersObservable]="entitledUsersObservable"
-                    [isViewingThis]="isViewingEntitledUserslist"
-                ></os-entitled-users-table>
-            </mat-tab>
-        </mat-tab-group>
+        @if (showResults && poll.stateHasVotes && poll.isEVoting) {
+            <mat-tab-group (selectedTabChange)="onTabChange()">
+                <mat-tab label="{{ 'Single votes' | translate }}">
+                    <div class="named-result-table">
+                        <os-votes-table
+                            [votesDataObservable]="votesDataObservable"
+                            [isViewingThis]="isViewingVoteslist"
+                            [parent]="self"
+                        ></os-votes-table>
+                    </div>
+                </mat-tab>
+                <mat-tab label="{{ 'Entitled users' | translate }}">
+                    <os-entitled-users-table
+                        [entitledUsersObservable]="entitledUsersObservable"
+                        [isViewingThis]="isViewingEntitledUserslist"
+                    ></os-entitled-users-table>
+                </mat-tab>
+            </mat-tab-group>
+        }
         <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
-    </ng-container>
+    }
 </ng-template>
 
 <!-- More Menu -->

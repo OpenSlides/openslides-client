@@ -1,5 +1,7 @@
-<div id="background" *ngIf="data">
-    <div id="message" class="underlined-links">
-        <div [innerHTML]="data.data.message | trust : 'html'"></div>
+@if (data) {
+    <div id="background">
+        <div id="message" class="underlined-links">
+            <div [innerHTML]="data.data.message | trust: 'html'"></div>
+        </div>
     </div>
-</div>
+}

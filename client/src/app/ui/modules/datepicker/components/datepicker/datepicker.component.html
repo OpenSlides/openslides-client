@@ -1,6 +1,8 @@
 <div class="os-datetimepicker-container">
     <mat-form-field class="datepicker-form-field">
-        <mat-label *ngIf="title">{{ title | translate }}</mat-label>
+        @if (title) {
+            <mat-label>{{ title | translate }}</mat-label>
+        }
         <input
             matInput
             [matDatepicker]="picker"
@@ -9,12 +11,18 @@
             (keydown)="onKeyPressed($event)"
             readonly
         />
-        <mat-hint *ngIf="hintText">{{ hintText | translate }}</mat-hint>
+        @if (hintText) {
+            <mat-hint>{{ hintText | translate }}</mat-hint>
+        }
         <div class="suffix-wrapper" matSuffix>
-            <mat-icon class="red-warning-text" *ngIf="showUpdateSuccessIcon">check_circle</mat-icon>
+            @if (showUpdateSuccessIcon) {
+                <mat-icon class="red-warning-text">check_circle</mat-icon>
+            }
             <mat-datepicker-toggle [for]="picker" (click)="$event.preventDefault()"></mat-datepicker-toggle>
         </div>
-        <mat-error *ngIf="error">{{ error }}</mat-error>
+        @if (error) {
+            <mat-error>{{ error }}</mat-error>
+        }
         <mat-datepicker #picker>
             <mat-datepicker-actions>
                 <button mat-button (click)="updateForm(null)" matDatepickerCancel color="warn">

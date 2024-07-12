@@ -1,8 +1,9 @@
-<os-motion-comment
-    *ngFor="let section of sections; let index = index; trackBy: trackById"
-    [index]="index"
-    [section]="section"
-    [motion]="motion"
-    [canBeEdited]="canEditSection(section)"
-    [comment]="getCommentForSection(section)"
-></os-motion-comment>
+@for (section of sections; track trackById(index, section); let index = $index) {
+    <os-motion-comment
+        [index]="index"
+        [section]="section"
+        [motion]="motion"
+        [canBeEdited]="canEditSection(section)"
+        [comment]="getCommentForSection(section)"
+    ></os-motion-comment>
+}

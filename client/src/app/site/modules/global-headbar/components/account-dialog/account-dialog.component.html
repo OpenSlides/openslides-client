@@ -8,35 +8,31 @@
 <mat-dialog-content class="account-dialog-container">
     <div class="account-dialog-menu-items">
         <mat-nav-list>
-            <ng-container *ngFor="let item of filteredMenuItems">
+            @for (item of filteredMenuItems; track item) {
                 <mat-list-item [activated]="activeMenuItem === item.name" (click)="activeMenuItem = item.name">
                     {{ item.name | translate }}
                 </mat-list-item>
                 <mat-divider></mat-divider>
-            </ng-container>
+            }
         </mat-nav-list>
     </div>
     <mat-divider [vertical]="true"></mat-divider>
     <div class="account-dialog-content">
         <div class="content-wrapper" (keydown)="onKeyDown($event)" tabindex="-1">
-            <ng-container [ngSwitch]="activeMenuItem">
-                <ng-container
-                    *ngSwitchCase="menuItemsRef.SHOW_PROFILE"
-                    [ngTemplateOutlet]="showProfileView"
-                ></ng-container>
-                <ng-container
-                    *ngSwitchCase="menuItemsRef.SHOW_MEETINGS"
-                    [ngTemplateOutlet]="showMeetingsView"
-                ></ng-container>
-                <ng-container
-                    *ngSwitchCase="menuItemsRef.CHANGE_PASSWORD"
-                    [ngTemplateOutlet]="changePasswordView"
-                ></ng-container>
-                <ng-container
-                    *ngSwitchCase="menuItemsRef.CLIENT_SETTINGS"
-                    [ngTemplateOutlet]="clientSettingsView"
-                ></ng-container>
-            </ng-container>
+            @switch (activeMenuItem) {
+                @case (menuItemsRef.SHOW_PROFILE) {
+                    <ng-container [ngTemplateOutlet]="showProfileView"></ng-container>
+                }
+                @case (menuItemsRef.SHOW_MEETINGS) {
+                    <ng-container [ngTemplateOutlet]="showMeetingsView"></ng-container>
+                }
+                @case (menuItemsRef.CHANGE_PASSWORD) {
+                    <ng-container [ngTemplateOutlet]="changePasswordView"></ng-container>
+                }
+                @case (menuItemsRef.CLIENT_SETTINGS) {
+                    <ng-container [ngTemplateOutlet]="clientSettingsView"></ng-container>
+                }
+            }
         </div>
     </div>
 </mat-dialog-content>
@@ -57,11 +53,13 @@
         (validEvent)="isUserFormValid = $event"
         (changeEvent)="userPersonalForm = $event"
     ></os-user-detail-view>
-    <div *ngIf="isEditing" class="margin-bottom-16">
-        <button mat-button [disabled]="!isUserFormValid" (click)="saveUserChanges()">
-            {{ 'Save' | translate }}
-        </button>
-    </div>
+    @if (isEditing) {
+        <div class="margin-bottom-16">
+            <button mat-button [disabled]="!isUserFormValid" (click)="saveUserChanges()">
+                {{ 'Save' | translate }}
+            </button>
+        </div>
+    }
 </ng-template>
 
 <ng-template #showMeetingsView>

@@ -1,25 +1,27 @@
-<div class="attachment-container" *ngIf="contentForm">
-    <form [formGroup]="formGroup">
-        <mat-form-field>
-            <mat-label>{{ 'Attachments' | translate }}</mat-label>
-            <os-repo-search-selector
-                class="selector"
-                [multiple]="true"
-                formControlName="mediafile_ids"
-                [repo]="repo"
-                [pipeFn]="getMediafilesPipeFn()"
-            ></os-repo-search-selector>
-        </mat-form-field>
-    </form>
-    <button
-        type="button"
-        mat-icon-button
-        (click)="openUploadDialog(uploadDialog)"
-        *osPerms="permission.mediafileCanManage"
-    >
-        <mat-icon>cloud_upload</mat-icon>
-    </button>
-</div>
+@if (contentForm) {
+    <div class="attachment-container">
+        <form [formGroup]="formGroup">
+            <mat-form-field>
+                <mat-label>{{ 'Attachments' | translate }}</mat-label>
+                <os-repo-search-selector
+                    class="selector"
+                    [multiple]="true"
+                    formControlName="mediafile_ids"
+                    [repo]="repo"
+                    [pipeFn]="getMediafilesPipeFn()"
+                ></os-repo-search-selector>
+            </mat-form-field>
+        </form>
+        <button
+            type="button"
+            mat-icon-button
+            (click)="openUploadDialog(uploadDialog)"
+            *osPerms="permission.mediafileCanManage"
+        >
+            <mat-icon>cloud_upload</mat-icon>
+        </button>
+    </div>
+}
 
 <!-- upload file dialog -->
 <ng-template #uploadDialog>

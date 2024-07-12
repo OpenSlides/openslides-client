@@ -1,38 +1,40 @@
 <ng-container *osPerms="[permission.listOfSpeakersCanSee, permission.listOfSpeakersCanBeSpeaker]; and: hasInitialized">
-    <ng-container *ngIf="currentListOfSpeakersObservable | async as listOfSpeakers">
+    @if (currentListOfSpeakersObservable | async; as listOfSpeakers) {
         <os-detail-view-navigator [model]="listOfSpeakers">
-            <button
-                *ngIf="!menuItem"
-                type="button"
-                mat-icon-button
-                matTooltip="{{
-                    (listOfSpeakers.closed ? 'The list of speakers is closed.' : 'List of speakers') | translate
-                }}"
-                [disabled]="disabled"
-                class="anchor-button"
-            >
-                <mat-icon
-                    [matBadge]="
-                        canSee && listOfSpeakers.waitingSpeakerAmount > 0 ? listOfSpeakers.waitingSpeakerAmount : null
-                    "
-                    matBadgeColor="accent"
+            @if (!menuItem) {
+                <button
+                    type="button"
+                    mat-icon-button
+                    matTooltip="{{
+                        (listOfSpeakers.closed ? 'The list of speakers is closed.' : 'List of speakers') | translate
+                    }}"
+                    [disabled]="disabled"
+                    class="anchor-button"
                 >
-                    {{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}
-                </mat-icon>
-            </button>
-
-            <button type="button" *ngIf="menuItem" mat-menu-item>
-                <mat-icon>{{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}</mat-icon>
-                <span>{{ 'List of speakers' | translate }}</span>
-                <span>&nbsp;</span>
-                <mat-basic-chip
-                    disableRipple
-                    class="lightblue"
-                    *ngIf="canSee && listOfSpeakers.waitingSpeakerAmount > 0"
-                >
-                    <span>{{ listOfSpeakers.waitingSpeakerAmount }}</span>
-                </mat-basic-chip>
-            </button>
+                    <mat-icon
+                        [matBadge]="
+                            canSee && listOfSpeakers.waitingSpeakerAmount > 0
+                                ? listOfSpeakers.waitingSpeakerAmount
+                                : null
+                        "
+                        matBadgeColor="accent"
+                    >
+                        {{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}
+                    </mat-icon>
+                </button>
+            }
+            @if (menuItem) {
+                <button type="button" mat-menu-item>
+                    <mat-icon>{{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}</mat-icon>
+                    <span>{{ 'List of speakers' | translate }}</span>
+                    <span>&nbsp;</span>
+                    @if (canSee && listOfSpeakers.waitingSpeakerAmount > 0) {
+                        <mat-basic-chip disableRipple class="lightblue">
+                            <span>{{ listOfSpeakers.waitingSpeakerAmount }}</span>
+                        </mat-basic-chip>
+                    }
+                </button>
+            }
         </os-detail-view-navigator>
-    </ng-container>
+    }
 </ng-container>

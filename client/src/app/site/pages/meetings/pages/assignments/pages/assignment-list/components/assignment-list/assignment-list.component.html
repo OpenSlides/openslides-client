@@ -33,14 +33,18 @@
 >
     <!-- Title -->
     <div *osScrollingTableCell="'title'; row as assignment; rowContext as rowContext" class="cell-slot fill">
-        <os-detail-view-navigator [model]="assignment" *ngIf="!isMultiSelect"></os-detail-view-navigator>
+        @if (!isMultiSelect) {
+            <os-detail-view-navigator [model]="assignment"></os-detail-view-navigator>
+        }
         <div class="innerTable overflow-hidden">
             <div class="title-line ellipsis-overflow">
                 {{ assignment.getListTitle() }}
             </div>
-            <mat-basic-chip *ngIf="vp.isMobile" class="bg-primary ellipsis-overflow">
-                {{ assignment.phaseString | translate }}
-            </mat-basic-chip>
+            @if (vp.isMobile) {
+                <mat-basic-chip class="bg-primary ellipsis-overflow">
+                    {{ assignment.phaseString | translate }}
+                </mat-basic-chip>
+            }
         </div>
     </div>
 
@@ -84,49 +88,52 @@
 </mat-menu>
 
 <mat-menu #assignmentMenu="matMenu">
-    <div *ngIf="!isMultiSelect">
-        <button mat-menu-item *osPerms="permission.assignmentCanManage" (click)="toggleMultiSelect()">
-            <mat-icon>library_add</mat-icon>
-            <span>{{ 'Multiselect' | translate }}</span>
-        </button>
-        <button mat-menu-item (click)="downloadAssignmentButton()">
-            <mat-icon>archive</mat-icon>
-            <span>{{ 'Export as PDF' | translate }}</span>
-        </button>
-        <div *osPerms="permission.meetingCanManageSettings">
+    @if (!isMultiSelect) {
+        <div>
+            <button mat-menu-item *osPerms="permission.assignmentCanManage" (click)="toggleMultiSelect()">
+                <mat-icon>library_add</mat-icon>
+                <span>{{ 'Multiselect' | translate }}</span>
+            </button>
+            <button mat-menu-item (click)="downloadAssignmentButton()">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export as PDF' | translate }}</span>
+            </button>
+            <div *osPerms="permission.meetingCanManageSettings">
+                <mat-divider></mat-divider>
+                <!-- Settings -->
+                <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'elections']">
+                    <mat-icon>settings</mat-icon>
+                    <span>{{ 'Settings' | translate }}</span>
+                </button>
+            </div>
+        </div>
+    }
+    @if (isMultiSelect) {
+        <div>
+            <button mat-menu-item (click)="selectAll()">
+                <mat-icon>done_all</mat-icon>
+                <span>{{ 'Select all' | translate }}</span>
+            </button>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+                <mat-icon>clear</mat-icon>
+                <span>{{ 'Deselect all' | translate }}</span>
+            </button>
             <mat-divider></mat-divider>
-            <!-- Settings -->
-            <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'elections']">
-                <mat-icon>settings</mat-icon>
-                <span>{{ 'Settings' | translate }}</span>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadAssignmentButton(selectedRows)">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export selected elections' | translate }}</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button
+                mat-menu-item
+                class="red-warning-text"
+                *osPerms="permission.assignmentCanManage"
+                [disabled]="!selectedRows.length"
+                (click)="deleteSelected()"
+            >
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
             </button>
         </div>
-    </div>
-
-    <div *ngIf="isMultiSelect">
-        <button mat-menu-item (click)="selectAll()">
-            <mat-icon>done_all</mat-icon>
-            <span>{{ 'Select all' | translate }}</span>
-        </button>
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
-            <mat-icon>clear</mat-icon>
-            <span>{{ 'Deselect all' | translate }}</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadAssignmentButton(selectedRows)">
-            <mat-icon>archive</mat-icon>
-            <span>{{ 'Export selected elections' | translate }}</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button
-            mat-menu-item
-            class="red-warning-text"
-            *osPerms="permission.assignmentCanManage"
-            [disabled]="!selectedRows.length"
-            (click)="deleteSelected()"
-        >
-            <mat-icon>delete</mat-icon>
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
-    </div>
+    }
 </mat-menu>

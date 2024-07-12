@@ -8,23 +8,22 @@
     <span>{{ 'Deselect all' | translate }}</span>
 </button>
 
-<ng-container *ngIf="canUpdate">
+@if (canUpdate) {
     <mat-divider></mat-divider>
-
     <!-- <ng-container *ngIf="implicitContent">
-        <ng-container *ngTemplateOutlet="implicitContent"></ng-container>
-        <mat-divider></mat-divider>
-    </ng-container> -->
+  <ng-container *ngTemplateOutlet="implicitContent"></ng-container>
+  <mat-divider></mat-divider>
+</ng-container> -->
     <div #ref>
         <ng-content></ng-content>
     </div>
-    <mat-divider *ngIf="ref.children.length"></mat-divider>
-
+    @if (ref.children.length) {
+        <mat-divider></mat-divider>
+    }
     <button mat-menu-item [disabled]="!selectedUsers.length" (click)="sendInvitationEmailSelected()">
         <mat-icon>mail</mat-icon>
         <span>{{ 'Send invitation email' | translate }}</span>
     </button>
-
     <button
         mat-menu-item
         [disabled]="!selectedUsers.length || !hasSelectedNonSamlUsers"
@@ -33,7 +32,6 @@
         <mat-icon>vpn_key</mat-icon>
         <span>{{ 'Reset passwords to the default ones' | translate }}</span>
     </button>
-
     <button
         mat-menu-item
         [disabled]="!selectedUsers.length || !hasSelectedNonSamlUsers"
@@ -42,17 +40,15 @@
         <mat-icon>vpn_key</mat-icon>
         <span>{{ 'Generate new passwords' | translate }}</span>
     </button>
-
-    <ng-container *ngIf="canManage">
+    @if (canManage) {
         <mat-divider></mat-divider>
-
         <button mat-menu-item class="red-warning-text" [disabled]="!selectedUsers.length" (click)="deleteSelected()">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>
-    </ng-container>
-</ng-container>
+    }
+}
 
 <!-- <ng-template>
-    <ng-content></ng-content>
+<ng-content></ng-content>
 </ng-template> -->

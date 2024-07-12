@@ -2,7 +2,7 @@
     <ng-template osSidenavDrawerContent>
         <!-- navigation -->
         <div class="main-nav">
-            <ng-container *ngIf="showMeetingNav">
+            @if (showMeetingNav) {
                 <a
                     [@navItemAnim]
                     mat-menu-item
@@ -14,8 +14,8 @@
                     <span matListItemTitle class="nav-row-text">{{ 'Dashboard' | translate }}</span>
                 </a>
                 <mat-divider></mat-divider>
-            </ng-container>
-            <ng-container *ngFor="let entry of mainMenuEntries">
+            }
+            @for (entry of mainMenuEntries; track entry) {
                 <span>
                     <a
                         [@navItemAnim]
@@ -32,36 +32,35 @@
                         <span matListItemTitle class="nav-row-text">{{ entry.displayName | translate }}</span>
                     </a>
                 </span>
-            </ng-container>
-            <ng-container
-                *ngIf="{
-                    canSee: canSeeChatObservable | async,
-                    notifications: chatNotificationsObservable | async
-                } as chat"
-            >
-                <a
-                    [@navItemAnim]
-                    *ngIf="chat.canSee"
-                    class="foreground-icon nav-item"
-                    mat-menu-item
-                    (click)="mobileAutoCloseNav()"
-                    routerLink="chat"
-                    routerLinkActive="active"
-                >
-                    <mat-icon
-                        matListItemIcon
-                        [matBadgeHidden]="chat.notifications === 0"
-                        [matBadge]="chat.notifications"
-                        matBadgeColor="accent"
-                        matBadgeOverlap="false"
+            }
+            @if (
+                { canSee: canSeeChatObservable | async, notifications: chatNotificationsObservable | async };
+                as chat
+            ) {
+                @if (chat.canSee) {
+                    <a
+                        [@navItemAnim]
+                        class="foreground-icon nav-item"
+                        mat-menu-item
+                        (click)="mobileAutoCloseNav()"
+                        routerLink="chat"
+                        routerLinkActive="active"
                     >
-                        sms
-                    </mat-icon>
-                    <span matListItemTitle class="nav-row-text">
-                        {{ 'Chat' | translate }}
-                    </span>
-                </a>
-            </ng-container>
+                        <mat-icon
+                            matListItemIcon
+                            [matBadgeHidden]="chat.notifications === 0"
+                            [matBadge]="chat.notifications"
+                            matBadgeColor="accent"
+                            matBadgeOverlap="false"
+                        >
+                            sms
+                        </mat-icon>
+                        <span matListItemTitle class="nav-row-text">
+                            {{ 'Chat' | translate }}
+                        </span>
+                    </a>
+                }
+            }
         </div>
     </ng-template>
     <ng-template osSidenavMainContent>

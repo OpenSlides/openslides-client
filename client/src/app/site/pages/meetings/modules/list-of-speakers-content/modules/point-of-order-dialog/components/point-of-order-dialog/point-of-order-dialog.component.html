@@ -4,14 +4,18 @@
 
 <form class="edit-form" [formGroup]="editForm" (ngSubmit)="onOk()">
     <mat-dialog-content>
-        <mat-form-field *ngIf="showCategorySelect">
-            <mat-label>{{ 'Possible points of order' | translate }}</mat-label>
-            <mat-select osAutofocus formControlName="category">
-                <mat-option *ngFor="let category of categoriesSubject | async" [value]="category.id">
-                    {{ category.getTitle() }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+        @if (showCategorySelect) {
+            <mat-form-field>
+                <mat-label>{{ 'Possible points of order' | translate }}</mat-label>
+                <mat-select osAutofocus formControlName="category">
+                    @for (category of categoriesSubject | async; track category) {
+                        <mat-option [value]="category.id">
+                            {{ category.getTitle() }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        }
         <mat-form-field>
             <mat-label>{{ 'Request' | translate }}</mat-label>
             <input matInput osAutofocus [maxLength]="MAX_LENGTH" formControlName="note" />
