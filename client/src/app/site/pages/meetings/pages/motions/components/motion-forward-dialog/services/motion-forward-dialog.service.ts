@@ -109,9 +109,9 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
                     return {
                         id: committee.id,
                         name: committee.name,
-                        getTitle: () => committee.name,
-                        getListTitle: () => ``,
-                        toString: () => committee.name
+                        getTitle: (): string => committee.name,
+                        getListTitle: (): string => ``,
+                        toString: (): string => committee.name
                     };
                 })
             );

@@ -7,7 +7,7 @@
             {{ title }}
         </mat-card-title>
 
-        <span class="align-right">
+        <span class="committee-card-menu align-right">
             <mat-label class="archived-label" *ngIf="meeting.isArchived">{{ 'Archived' | translate }}</mat-label>
             <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id; nonAdminCheck: true">
                 <div *ngIf="isTemplateMeeting" class="template-indicator">

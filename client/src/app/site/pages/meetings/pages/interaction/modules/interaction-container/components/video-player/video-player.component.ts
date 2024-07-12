@@ -32,7 +32,10 @@ enum Player {
 @Component({
     selector: `os-video-player`,
     templateUrl: `./video-player.component.html`,
-    styleUrls: [`./video-player.component.scss`],
+    styleUrls: [
+        `./video-player.component.scss`,
+        `../../../../../../../../../../../node_modules/video.js/dist/video-js.css`
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

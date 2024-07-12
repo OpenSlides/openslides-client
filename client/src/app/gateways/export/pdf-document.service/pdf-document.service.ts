@@ -488,7 +488,7 @@ export class PdfDocumentService {
             }),
             filename: `${filetitle}.pdf`,
             settings: this.settings,
-            loadImages: () => this.loadImages(),
+            loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
             progressService: this.progressService,
             progressSnackBarService: this.progressSnackBarService
         }).download();
@@ -509,7 +509,7 @@ export class PdfDocumentService {
             }),
             filename: `${filetitle}.pdf`,
             settings: this.settings,
-            loadImages: () => this.loadImages(),
+            loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
             progressService: this.progressService,
             progressSnackBarService: this.progressSnackBarService
         }).download();
@@ -536,7 +536,7 @@ export class PdfDocumentService {
                 settings: this.settings,
                 loadFonts,
                 createVfs: createVfs,
-                loadImages: () => this.loadImages(),
+                loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
                 progressService: this.progressService,
                 progressSnackBarService: this.progressSnackBarService
             }).download()
