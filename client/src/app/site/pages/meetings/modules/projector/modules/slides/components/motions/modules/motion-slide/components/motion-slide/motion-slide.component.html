@@ -83,7 +83,7 @@
             </div>
         </div>
         @if (showText) {
-            <div id="text-wrapper">
+            <section id="text-wrapper">
                 <div id="text" [ngStyle]="textDivStyles">
                     <!-- Text -->
                     @if (isParagraphBasedAmendment() || formattedMotionTextPlain) {
@@ -167,7 +167,7 @@
             <!-- Reason -->
             <div *ngIf="data.data.reason">
                 <h3>{{ 'Reason' | translate }}</h3>
-                <div [innerHTML]="data.data.reason | trust : 'html'"></div>
+                <div [innerHTML]="data.data.reason | trust: 'html'"></div>
             </div>
         }
     </div>
