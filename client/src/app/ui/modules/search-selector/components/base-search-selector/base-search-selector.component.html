@@ -28,8 +28,8 @@
     <ng-container *ngIf="multiple && showChips">
         <div #chipPlaceholder class="os-search-selector--chip-wrapper">
             <div class="os-search-selector--chip-container flex-vertical-center">
-                <mat-chip-list class="chip-list" [selectable]="false">
-                    <mat-chip
+                <mat-chip-listbox class="chip-list" [selectable]="false">
+                    <mat-chip-option
                         *ngFor="let item of selectedItems"
                         class="one-line"
                         [removable]="true"
@@ -42,8 +42,8 @@
                         <button matChipRemove>
                             <mat-icon>cancel</mat-icon>
                         </button>
-                    </mat-chip>
-                </mat-chip-list>
+                    </mat-chip-option>
+                </mat-chip-listbox>
             </div>
             <div class="os-search-selector--chip-placeholder"></div>
         </div>

@@ -23,12 +23,12 @@
 </h4>
 
 <div *ngIf="!isEditMode || !perms.isAllowed('change_metadata')">
-    <mat-chip-list *ngFor="let model of intermediateModels" class="user">
+    <mat-chip-listbox *ngFor="let model of intermediateModels" class="user">
         <mat-basic-chip disableRipple>{{ model.user?.getTitle() }}</mat-basic-chip>
-    </mat-chip-list>
-    <mat-chip-list *ngIf="useAdditionalInput && additionalInputValue" class="user">
+    </mat-chip-listbox>
+    <mat-chip-listbox *ngIf="useAdditionalInput && additionalInputValue" class="user">
         <mat-basic-chip disableRipple>{{ additionalInputValue }}</mat-basic-chip>
-    </mat-chip-list>
+    </mat-chip-listbox>
 </div>
 
 <div *ngIf="isEditMode && perms.isAllowed('change_metadata')">

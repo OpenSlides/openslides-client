@@ -16,7 +16,7 @@
         </div>
         <div>
             <button mat-button (click)="resetFilters()">
-                <mat-icon inline>cancel</mat-icon>
+                <mat-icon>cancel</mat-icon>
                 <span>{{ 'Visibility' | translate }}</span>
             </button>
         </div>
@@ -27,10 +27,12 @@
             <div class="filter-hint hint">{{ 'Visibility' | translate }}</div>
             <mat-selection-list #visibilities (selectionChange)="onFilterChange(visibilities.selectedOptions.selected)">
                 <mat-list-option *ngFor="let option of filterOptions" [value]="option.id" [selected]="option.state">
-                    <mat-icon matListIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
+                    <mat-icon matListItemIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
                         {{ getIcon(option.id) }}
                     </mat-icon>
-                    <p matLine>{{ option.label | translate }}</p>
+                    <div matListItemTitle>
+                        {{ option.label | translate }}
+                    </div>
                 </mat-list-option>
             </mat-selection-list>
         </mat-menu>
