@@ -15,10 +15,10 @@
                 <div>
                     <button
                         mat-stroked-button
-                        (mouseup)="removeFilterFromStack(filter)"
                         (click)="removeFilterFromStack(filter)"
+                        (mouseup)="removeFilterFromStack(filter)"
                     >
-                        <os-icon-container icon="close" class="active-filter">
+                        <os-icon-container class="active-filter" icon="close">
                             <span class="active-filter">
                                 {{ filter.option.label | translate }}
                             </span>
@@ -46,13 +46,13 @@
             </button>
         }
         @if ((vp.isMobileSubject | async) === false && hasSorting) {
-            <button mat-button [matTooltip]="getSortLabel(sortOption) | translate" [matMenuTriggerFor]="menu">
+            <button mat-button [matMenuTriggerFor]="menu" [matTooltip]="getSortLabel(sortOption) | translate">
                 <mat-icon>sort</mat-icon>
                 <span
+                    class="upper"
                     matBadge="&#8288;"
                     matBadgeColor="accent"
                     matBadgeSize="small"
-                    class="upper"
                     [matBadgeHidden]="!hasSortOptionSelected"
                     [matBadgeOverlap]="false"
                 >
@@ -93,9 +93,9 @@
             <os-rounded-input
                 #searchField
                 iconName="manage_search"
+                [fullWidth]="false"
                 placeholder="{{ 'Search' | translate }}"
                 [size]="'small'"
-                [fullWidth]="false"
                 [(ngModel)]="searchFieldInput"
                 (clickIcon)="toggleSearchEdit()"
             ></os-rounded-input>

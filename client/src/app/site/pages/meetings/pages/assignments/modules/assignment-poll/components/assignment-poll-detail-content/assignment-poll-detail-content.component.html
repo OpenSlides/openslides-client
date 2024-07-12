@@ -145,11 +145,11 @@
                 @if (hasResults && canSeeResults) {
                     <os-single-option-chart-table
                         iconSize="gigantic"
-                        [shouldShowHead]="false"
                         [poll]="poll"
-                        [tableData]="reformedTableData"
                         [pollService]="assignmentPollService"
                         [shouldShowEntitled]="isPercentBaseEntitled"
+                        [shouldShowHead]="false"
+                        [tableData]="reformedTableData"
                     ></os-single-option-chart-table>
                 }
             </div>

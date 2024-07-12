@@ -10,12 +10,12 @@
                     @if (getMediafile(projection)!.isImage()) {
                         <div>
                             @if (!isFullscreen(projection)) {
-                                <button type="button" mat-icon-button (click)="fullscreen(projection)">
+                                <button mat-icon-button type="button" (click)="fullscreen(projection)">
                                     <mat-icon>check_box_outline_blank</mat-icon>
                                 </button>
                             }
                             @if (isFullscreen(projection)) {
-                                <button type="button" mat-icon-button (click)="fullscreen(projection)">
+                                <button mat-icon-button type="button" (click)="fullscreen(projection)">
                                     <mat-icon>check_box</mat-icon>
                                 </button>
                             }
@@ -25,16 +25,16 @@
                     @if (getMediafile(projection)!.isPdf()) {
                         <div>
                             <button
-                                type="button"
                                 mat-icon-button
+                                type="button"
                                 [disabled]="getPage(projection) <= 1"
                                 (click)="pdfBackward(projection)"
                             >
                                 <mat-icon>arrow_back</mat-icon>
                             </button>
                             <button
-                                type="button"
                                 mat-icon-button
+                                type="button"
                                 [disabled]="getPage(projection) >= getPagesAmountFor(projection)"
                                 (click)="pdfForward(projection)"
                             >

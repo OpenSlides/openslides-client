@@ -6,8 +6,8 @@
                 @if (closed) {
                     <mat-icon
                         append
-                        style="margin-top: 8px"
                         class="primary-accent-by-theme"
+                        style="margin-top: 8px"
                         matTooltip="{{ 'The list of speakers is closed.' | translate }}"
                     >
                         lock
@@ -31,8 +31,8 @@
                             <os-list-of-speakers-entry
                                 [speaker]="speaker"
                                 [speakerIndex]="number"
-                                (startSpeech)="onStartButton(activeSpeaker)"
                                 (pauseSpeech)="onPauseButton(activeSpeaker)"
+                                (startSpeech)="onStartButton(activeSpeaker)"
                                 (stopSpeech)="onStopButton(activeSpeaker)"
                             />
                         </mat-list-item>
@@ -53,10 +53,10 @@
         @if (activeSpeaker) {
             <div class="current-speaker background-accent">
                 <os-list-of-speakers-entry
-                    [speaker]="activeSpeaker"
                     [showcolor]="false"
-                    (startSpeech)="onStartButton(activeSpeaker)"
+                    [speaker]="activeSpeaker"
                     (pauseSpeech)="onPauseButton(activeSpeaker)"
+                    (startSpeech)="onStartButton(activeSpeaker)"
                     (stopSpeech)="onStopButton(activeSpeaker)"
                 />
             </div>
@@ -73,8 +73,8 @@
                     >
                         <os-list-of-speakers-entry
                             [speaker]="speaker"
-                            (startSpeech)="onStartButton(speaker)"
                             (pauseSpeech)="onPauseButton(speaker)"
+                            (startSpeech)="onStartButton(speaker)"
                             (stopSpeech)="onStopButton(speaker)"
                         />
                     </div>
@@ -86,19 +86,19 @@
         @if (waitingSpeakers?.length) {
             <div class="waiting-list">
                 <os-sorting-list
-                    [live]="true"
-                    [input]="waitingSpeakers"
                     [enable]="canManage && (isSortMode || !isMobile)"
+                    [input]="waitingSpeakers"
                     [isPriorityItemFunction]="isPointOfOrderFn"
+                    [live]="true"
                     (sortEvent)="onSortingChanged($event)"
                 >
                     <!-- implicit speaker references into the component using ng-template slot -->
-                    <ng-template let-speaker let-index="index">
+                    <ng-template let-index="index" let-speaker>
                         <os-list-of-speakers-entry
                             [speaker]="speaker"
                             [speakerIndex]="index"
-                            (startSpeech)="onStartButton(speaker)"
                             (pauseSpeech)="onPauseButton(speaker)"
+                            (startSpeech)="onStartButton(speaker)"
                             (stopSpeech)="onStopButton(speaker)"
                         />
                     </ng-template>
@@ -141,8 +141,8 @@
                 <!-- Point Of order -->
                 @if (showPointOfOrders && !isOpInWaitlist(true)) {
                     <button
-                        mat-stroked-button
                         color="warn"
+                        mat-stroked-button
                         [disabled]="restrictPointOfOrderActions && closed"
                         (click)="addPointOfOrder()"
                     >
@@ -154,7 +154,7 @@
                     </button>
                 }
                 @if (showPointOfOrders && isOpInWaitlist(true)) {
-                    <button mat-stroked-button color="warn" (click)="removePointOfOrder()">
+                    <button color="warn" mat-stroked-button (click)="removePointOfOrder()">
                         <mat-icon>remove</mat-icon>
                         <span translate>Withdraw point of order</span>
                     </button>

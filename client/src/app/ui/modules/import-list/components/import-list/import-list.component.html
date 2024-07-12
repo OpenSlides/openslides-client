@@ -75,7 +75,7 @@
                     {{ additionalInfo }}
                 </p>
             }
-            <button mat-button color="accent" (click)="downloadCsvExample()">
+            <button color="accent" mat-button (click)="downloadCsvExample()">
                 {{ 'Download CSV example file' | translate }}
             </button>
             <div class="wrapper import-list-wrapper">
@@ -118,13 +118,13 @@
                 <div class="flex-vertical-center">
                     <input
                         #fileInput
+                        accept="text"
+                        class="hidden-input"
                         id="user-import-file-input"
                         type="file"
-                        class="hidden-input"
-                        accept="text"
                         (change)="onSelectFile($event)"
                     />
-                    <button mat-button color="accent" (click)="fileInput.click()">
+                    <button color="accent" mat-button (click)="fileInput.click()">
                         <span>{{ 'Select file' | translate }}</span>
                     </button>
                     @if (rawFileObservable | async; as file) {
@@ -278,7 +278,7 @@
             {{ additionalInfo }}
         </p>
     }
-    <button mat-button color="accent" (click)="downloadCsvExample()">
+    <button color="accent" mat-button (click)="downloadCsvExample()">
         {{ 'Download CSV example file' | translate }}
     </button>
     <div class="wrapper import-list-wrapper">
@@ -317,13 +317,13 @@
         <div class="flex-vertical-center">
             <input
                 #fileInput
+                accept="text"
+                class="hidden-input"
                 id="user-import-file-input"
                 type="file"
-                class="hidden-input"
-                accept="text"
                 (change)="onSelectFile($event)"
             />
-            <button mat-button color="accent" (click)="fileInput.click()">
+            <button color="accent" mat-button (click)="fileInput.click()">
                 <span>{{ 'Select file' | translate }}</span>
             </button>
             @if (rawFileObservable | async; as file) {
@@ -345,7 +345,7 @@
     }
 </ng-template>
 
-<ng-template #entryTemplate let-entry="entry" let-def="def" let-row="row" let-type="type">
+<ng-template #entryTemplate let-def="def" let-entry="entry" let-row="row" let-type="type">
     @if (entry[def] || type === 'boolean') {
         <div class="flex-vertical-center">
             @if (hasError(row, def)) {
@@ -380,12 +380,12 @@
 
 <ng-template #previewList>
     <os-scrolling-table
-        style="height: 500px"
         class="import-list-preview-table"
-        tableHeight="500px"
         rowClass="import-list-preview-row"
-        [rowHeight]="50"
+        style="height: 500px"
+        tableHeight="500px"
         [dataSource]="dataSource"
+        [rowHeight]="50"
         [showHeader]="true"
     >
         <div
@@ -447,7 +447,7 @@
 </ng-template>
 
 <ng-template #fullscreenDialog>
-    <div mat-dialog-title class="action-title">
+    <div class="action-title" mat-dialog-title>
         <h1 class="dialog-title">{{ 'Preview' | translate }}</h1>
         <button mat-icon-button [mat-dialog-close]="null" matTooltip="{{ 'Exit fullscreen' | translate }}">
             <mat-icon>close</mat-icon>

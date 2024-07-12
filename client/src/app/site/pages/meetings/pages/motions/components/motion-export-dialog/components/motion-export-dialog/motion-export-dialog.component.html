@@ -45,7 +45,7 @@
 
             <div>
                 <p class="toggle-group-head">{{ 'Content' | translate }}</p>
-                <mat-button-toggle-group class="smaller-buttons" multiple formControlName="content">
+                <mat-button-toggle-group class="smaller-buttons" formControlName="content" multiple>
                     <mat-button-toggle value="text">
                         <span>{{ 'Text' | translate }}</span>
                     </mat-button-toggle>
@@ -57,7 +57,7 @@
 
             <div>
                 <p class="toggle-group-head">{{ 'Meta information' | translate }}</p>
-                <mat-button-toggle-group class="smaller-buttons" multiple formControlName="metaInfo">
+                <mat-button-toggle-group class="smaller-buttons" formControlName="metaInfo" multiple>
                     @for (metaInfo of metaInfoExportOrder; track metaInfo) {
                         <mat-button-toggle [value]="metaInfo">
                             <span>{{ getLabelForMetadata(metaInfo) | translate }}</span>
@@ -83,8 +83,8 @@
                 <p class="toggle-group-head">{{ 'PDF options' | translate }}</p>
                 <mat-button-toggle-group
                     class="smaller-buttons"
-                    multiple
                     formControlName="pdfOptions"
+                    multiple
                     (change)="onChange($event)"
                 >
                     <mat-button-toggle #toc value="toc" [disabled]="continuousTextButton?.checked">
@@ -116,7 +116,7 @@
 
             <div>
                 <p class="toggle-group-head">{{ 'Comments' | translate }}</p>
-                <mat-button-toggle-group class="smaller-buttons" multiple formControlName="comments">
+                <mat-button-toggle-group class="smaller-buttons" formControlName="comments" multiple>
                     <mat-button-toggle [value]="PERSONAL_NOTE_ID">
                         <span>{{ 'Personal note' | translate }}</span>
                     </mat-button-toggle>
@@ -136,7 +136,7 @@
 
 <!-- Action buttons -->
 <mat-dialog-actions>
-    <button mat-button type="button" color="accent" [mat-dialog-close]="exportForm.value">
+    <button color="accent" mat-button type="button" [mat-dialog-close]="exportForm.value">
         <span>{{ 'Export' | translate }}</span>
     </button>
     <button mat-button type="button" (click)="onCloseClick()">

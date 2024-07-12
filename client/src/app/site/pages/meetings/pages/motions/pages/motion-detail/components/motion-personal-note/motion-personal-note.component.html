@@ -1,4 +1,4 @@
-<os-action-card icon="speaker_notes" [showActionRow]="true" [disableExpandControl]="isEditing">
+<os-action-card icon="speaker_notes" [disableExpandControl]="isEditing" [showActionRow]="true">
     <!-- Title row -->
     <ng-container class="meta-text-block-title">
         <span>{{ 'Personal note' | translate }}</span>
@@ -21,7 +21,7 @@
             </button>
         }
         @if (isEditing) {
-            <button mat-icon-button color="warn" matTooltip="{{ 'Save' | translate }}" (click)="savePersonalNote()">
+            <button color="warn" mat-icon-button matTooltip="{{ 'Save' | translate }}" (click)="savePersonalNote()">
                 <mat-icon>done</mat-icon>
             </button>
         }

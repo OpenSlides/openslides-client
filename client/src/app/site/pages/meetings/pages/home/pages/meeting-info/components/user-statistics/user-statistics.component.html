@@ -29,10 +29,10 @@
         </tr>
     </table>
     <os-list
-        [listObservable]="statisticsByStructureLevelObservable"
         [filterProps]="filterProps"
-        [vScrollFixed]="45"
         [fullScreen]="false"
+        [listObservable]="statisticsByStructureLevelObservable"
+        [vScrollFixed]="45"
     >
         <!-- Content -->
         <div *osScrollingTableCell="'structureLevel'; row as object" class="ellipsis-overflow">

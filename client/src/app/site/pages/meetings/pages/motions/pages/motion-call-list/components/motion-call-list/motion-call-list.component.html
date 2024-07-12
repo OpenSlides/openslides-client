@@ -1,4 +1,4 @@
-<os-head-bar [nav]="false" [editMode]="hasChanged" (mainEvent)="onCancel()" (saveEvent)="onSave()">
+<os-head-bar [editMode]="hasChanged" [nav]="false" (mainEvent)="onCancel()" (saveEvent)="onSave()">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Call list' | translate }}</h2>
@@ -6,7 +6,7 @@
 
     <!-- Export menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="mainMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="mainMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -91,11 +91,11 @@
             #osSortedTree
             parentKey="sort_parent_id"
             weightKey="sort_weight"
-            [model]="motionsObservable"
             [filterChange]="changeFilter"
+            [model]="motionsObservable"
             [sortingDefinition]="forceSort"
-            (visibleNodes)="onChangeAmountOfItems($event)"
             (hasChanged)="receiveChanges($event)"
+            (visibleNodes)="onChangeAmountOfItems($event)"
         >
             <ng-template #innerNode let-item="item">
                 <div class="line">

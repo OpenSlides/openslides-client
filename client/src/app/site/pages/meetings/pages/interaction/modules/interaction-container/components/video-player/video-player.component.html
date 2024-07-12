@@ -10,16 +10,16 @@
                 <div class="iframe-player">
                     @if (usingYouTube) {
                         <iframe
-                            class="player"
-                            type="text/html"
-                            frameborder="0"
                             allow="autoplay; encrypted-media"
                             allowfullscreen
+                            class="player"
+                            frameborder="0"
+                            type="text/html"
                             [src]="youTubeVideoUrl | trust: 'resourceUrl'"
                         ></iframe>
                     }
                     @if (usingNanocosmos) {
-                        <div id="nanocosmosPlayer" class="player"></div>
+                        <div class="player" id="nanocosmosPlayer"></div>
                     }
                 </div>
             }
@@ -29,7 +29,7 @@
                         <p>
                             {{ 'Currently no livestream available.' | translate }}
                         </p>
-                        <button mat-raised-button color="primary" (click)="onRefreshVideo()">
+                        <button color="primary" mat-raised-button (click)="onRefreshVideo()">
                             <mat-icon>refresh</mat-icon>
                             &nbsp;
                             <span>{{ 'Refresh' | translate }}</span>
@@ -38,8 +38,8 @@
                     @if (posterUrl) {
                         <div class="offlineposter">
                             <button
-                                mat-mini-fab
                                 color="accent"
+                                mat-mini-fab
                                 matTooltip="{{ 'Refresh' | translate }}"
                                 (click)="onRefreshVideo()"
                             >

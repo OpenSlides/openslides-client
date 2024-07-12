@@ -26,10 +26,10 @@
                     <span *osPerms="permission.motionCanManagePolls; and: poll.isEVoting">
                         <os-icon-container
                             class="poll-type break-word"
-                            icon="info"
                             color="primary"
-                            [swap]="true"
+                            icon="info"
                             [showIcon]="poll.isAnonymous"
+                            [swap]="true"
                             (iconAction)="openVotingWarning()"
                         >
                             {{ poll.typeVerbose | translate }}
@@ -50,8 +50,8 @@
                 @if (pollStateActions[poll.state]) {
                     <button
                         mat-stroked-button
-                        [ngClass]="pollStateActions[poll.state].css"
                         [disabled]="stateChangePendingObservable | async"
+                        [ngClass]="pollStateActions[poll.state].css"
                         (click)="nextPollState()"
                     >
                         <mat-icon>{{ pollStateActions[poll.state].icon }}</mat-icon>
@@ -83,7 +83,7 @@
             <!-- Detail link -->
             <div class="poll-detail-button-wrapper">
                 @if (poll.isPublished) {
-                    <a mat-icon-button [routerLink]="getDetailLink()" matTooltip="{{ 'More' | translate }}">
+                    <a mat-icon-button matTooltip="{{ 'More' | translate }}" [routerLink]="getDetailLink()">
                         <mat-icon class="icon-18">visibility</mat-icon>
                     </a>
                 }

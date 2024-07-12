@@ -1,5 +1,5 @@
 <ng-template #headbarContent>
-    <mat-toolbar color="primary" class="sticky-toolbar" [ngClass]="multiSelectMode ? 'multi-select' : ''">
+    <mat-toolbar class="sticky-toolbar" color="primary" [ngClass]="multiSelectMode ? 'multi-select' : ''">
         <div class="toolbar-left">
             @if (!editMode) {
                 @if (!showBackButton) {
@@ -18,7 +18,7 @@
                 }
                 <!-- Exit / Back button -->
                 @if (showBackButton) {
-                    <button mat-icon-button data-cy="headbarBackButton" (click)="onBackButton()">
+                    <button data-cy="headbarBackButton" mat-icon-button (click)="onBackButton()">
                         <mat-icon>arrow_back</mat-icon>
                     </button>
                 }
@@ -27,8 +27,8 @@
             <!-- Cancel edit button -->
             @if (editMode) {
                 <button
-                    mat-icon-button
                     data-cy="headbarCloseButton"
+                    mat-icon-button
                     (click)="isCancelEditUsed ? sendCancelEditEvent() : sendMainEvent()"
                 >
                     <mat-icon>close</mat-icon>
@@ -58,8 +58,8 @@
             <!-- Main action button - desktop -->
             @if (hasMainButton && !editMode && !vp.isMobile && !multiSelectMode) {
                 <button
-                    mat-icon-button
                     data-cy="headbarMainButton"
+                    mat-icon-button
                     [disabled]="!isMainButtonEnabled"
                     matTooltip="{{ mainActionTooltip | translate }}"
                     (click)="sendMainEvent()"
@@ -71,11 +71,11 @@
             <!-- Save button -->
             @if (isSavingObservable | async) {
                 <div>
-                    <os-spinner [width]="30" [height]="30" [showText]="false"></os-spinner>
+                    <os-spinner [height]="30" [showText]="false" [width]="30"></os-spinner>
                 </div>
             } @else {
                 @if (editMode) {
-                    <button mat-button data-cy="headbarSaveButton" [disabled]="!isSaveButtonEnabled" (click)="save()">
+                    <button data-cy="headbarSaveButton" mat-button [disabled]="!isSaveButtonEnabled" (click)="save()">
                         <strong class="upper">{{ saveText | translate }}</strong>
                     </button>
                 }
@@ -92,8 +92,8 @@
 
     @if (hasMainButton && !editMode && vp.isMobile && !multiSelectMode) {
         <button
-            mat-fab
             class="head-button"
+            mat-fab
             [disabled]="!isMainButtonEnabled"
             matTooltip="{{ mainActionTooltip | translate }}"
             (click)="sendMainEvent()"

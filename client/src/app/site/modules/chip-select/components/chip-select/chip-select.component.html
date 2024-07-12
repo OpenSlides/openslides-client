@@ -4,8 +4,8 @@
             <mat-basic-chip
                 class="chip-stacked"
                 disableRipple
-                [ngClass]="{ 'menu-handle': canOpen }"
                 [class]="chipClass || 'grey'"
+                [ngClass]="{ 'menu-handle': canOpen }"
             >
                 <ng-content *ngTemplateOutlet="chip.template"></ng-content>
             </mat-basic-chip>
@@ -15,8 +15,8 @@
 @if (chips.length < 1) {
     <mat-basic-chip
         disableRipple
-        [matMenuTriggerFor]="canOpen ? menu : null"
         [class]="chipClass || 'grey'"
+        [matMenuTriggerFor]="canOpen ? menu : null"
         [ngClass]="{ 'menu-handle': canOpen }"
     >
         <ng-content></ng-content>

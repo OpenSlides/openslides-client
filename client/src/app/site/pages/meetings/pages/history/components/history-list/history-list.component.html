@@ -22,9 +22,9 @@
                         <mat-label>{{ modelPlaceholder | translate }}</mat-label>
                         <os-list-search-selector
                             formControlName="id"
-                            [multiple]="false"
-                            [inputListValues]="models"
                             [disabled]="!modelSelectForm.get('collection').value"
+                            [inputListValues]="models"
+                            [multiple]="false"
                             (clickNotFound)="searchDeletedMotions($event)"
                             (openedChange)="resetListValues($event)"
                         >
@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <mat-table matSort class="os-headed-listview-table" [dataSource]="dataSource">
+        <mat-table class="os-headed-listview-table" matSort [dataSource]="dataSource">
             <!-- Timestamp -->
             <ng-container matColumnDef="time">
                 <mat-header-cell *matHeaderCellDef>{{ 'Timestamp' | translate }}</mat-header-cell>

@@ -1,10 +1,10 @@
 <mat-dialog-content>
     <os-motion-poll-form
         #pollForm
-        [pollClassType]="pollClassType.Motion"
         [data]="pollData"
-        [pollService]="motionPollService"
         [percentBases]="PercentBaseVerbose"
+        [pollClassType]="pollClassType.Motion"
+        [pollService]="motionPollService"
     ></os-motion-poll-form>
     @if (pollForm.contentForm.get('type')!.value === 'analog') {
         <div class="os-form-card-mobile">
@@ -16,10 +16,10 @@
                                 <div [formGroupName]="option.fqid">
                                     <os-check-input
                                         inputType="number"
-                                        [placeholder]="voteValueVerbose[field] | translate"
-                                        [checkboxValue]="-1"
                                         [checkboxLabel]="'majority' | translate"
+                                        [checkboxValue]="-1"
                                         [formControlName]="field"
+                                        [placeholder]="voteValueVerbose[field] | translate"
                                         [radioGroupValue]="majority"
                                     ></os-check-input>
                                 </div>
@@ -28,18 +28,18 @@
                     }
                 </div>
                 <os-check-input
-                    inputType="number"
                     formControlName="votesvalid"
+                    inputType="number"
                     [placeholder]="'Valid votes' | translate"
                 ></os-check-input>
                 <os-check-input
-                    inputType="number"
                     formControlName="votesinvalid"
+                    inputType="number"
                     [placeholder]="'Invalid votes' | translate"
                 ></os-check-input>
                 <os-check-input
-                    inputType="number"
                     formControlName="votescast"
+                    inputType="number"
                     [placeholder]="'Total votes cast' | translate"
                 ></os-check-input>
             </form>

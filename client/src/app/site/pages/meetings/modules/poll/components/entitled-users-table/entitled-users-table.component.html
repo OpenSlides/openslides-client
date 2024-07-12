@@ -2,10 +2,10 @@
     @if (isViewingThis) {
         <div>
             <os-list
-                [listObservable]="entitledUsersObservable"
                 [filterProps]="filterPropsEntitledUsersTable"
-                [fullScreen]="false"
                 [filterService]="filter"
+                [fullScreen]="false"
+                [listObservable]="entitledUsersObservable"
             >
                 <!-- Content -->
                 <div *osScrollingTableCell="'user_id'; row as entry">

@@ -1,10 +1,10 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar
         mainButtonIcon="edit"
-        [nav]="false"
+        [goBack]="true"
         [hasMainButton]="canManage()"
         [mainActionTooltip]="'Edit' | translate"
-        [goBack]="true"
+        [nav]="false"
         (mainEvent)="editProjector()"
     >
         <!-- Title -->
@@ -13,9 +13,9 @@
                 <os-icon-container
                     icon="lock"
                     size="large"
+                    [iconTooltip]="'Internal' | translate"
                     [noWrap]="true"
                     [showIcon]="projector.is_internal"
-                    [iconTooltip]="'Internal' | translate"
                 >
                     <h2>{{ projector.name }}</h2>
                 </os-icon-container>
@@ -26,8 +26,8 @@
         <ng-container class="menu-slot">
             <button
                 *osPerms="permission.projectorCanManage"
-                type="button"
                 mat-icon-button
+                type="button"
                 [matMenuTriggerFor]="projectorExtraMenu"
             >
                 <mat-icon>more_vert</mat-icon>
@@ -49,7 +49,7 @@
             }
 
             <!-- delete -->
-            <button mat-menu-item class="red-warning-text" (click)="onDeleteProjectorButton()">
+            <button class="red-warning-text" mat-menu-item (click)="onDeleteProjectorButton()">
                 <mat-icon>delete</mat-icon>
                 <span>{{ 'Delete' | translate }}</span>
             </button>
@@ -73,8 +73,8 @@
                         <div *osPerms="permission.projectorCanManage" class="control-group projector-controls">
                             <!-- scale down -->
                             <button
-                                type="button"
                                 mat-icon-button
+                                type="button"
                                 matTooltip="{{ 'Zoom out' | translate }}"
                                 (click)="scale(scrollScaleDirection.Down)"
                             >
@@ -82,8 +82,8 @@
                             </button>
                             <!-- scale up -->
                             <button
-                                type="button"
                                 mat-icon-button
+                                type="button"
                                 matTooltip="{{ 'Zoom in' | translate }}"
                                 (click)="scale(scrollScaleDirection.Up)"
                             >
@@ -91,8 +91,8 @@
                             </button>
                             <!-- reset button -->
                             <button
-                                type="button"
                                 mat-icon-button
+                                type="button"
                                 matTooltip="{{ 'Reset' | translate }}"
                                 (click)="scale(scrollScaleDirection.Reset)"
                             >
@@ -104,9 +104,9 @@
                             </span>
                             <!-- scroll viewport up (fast), decrease scroll counter -->
                             <button
-                                type="button"
                                 class="spacer-left-50"
                                 mat-icon-button
+                                type="button"
                                 [disabled]="projector.scroll <= 4"
                                 matTooltip="{{ 'Scroll up (big step)' | translate }}"
                                 (click)="scroll(scrollScaleDirection.Down, 5)"
@@ -115,8 +115,8 @@
                             </button>
                             <!-- scroll viewport up (slow), decrease scroll counter -->
                             <button
-                                type="button"
                                 mat-icon-button
+                                type="button"
                                 [disabled]="projector.scroll <= 0"
                                 matTooltip="{{ 'Scroll up' | translate }}"
                                 (click)="scroll(scrollScaleDirection.Down)"
@@ -125,8 +125,8 @@
                             </button>
                             <!-- scroll viewport down (slow), increase scroll counter -->
                             <button
-                                type="button"
                                 mat-icon-button
+                                type="button"
                                 matTooltip="{{ 'Scroll down' | translate }}"
                                 (click)="scroll(scrollScaleDirection.Up)"
                             >
@@ -134,8 +134,8 @@
                             </button>
                             <!-- scroll viewport down (fast), increase scroll counter -->
                             <button
-                                type="button"
                                 mat-icon-button
+                                type="button"
                                 matTooltip="{{ 'Scroll down (big step)' | translate }}"
                                 (click)="scroll(scrollScaleDirection.Up, 5)"
                             >
@@ -143,8 +143,8 @@
                             </button>
                             <!-- reset button -->
                             <button
-                                type="button"
                                 mat-icon-button
+                                type="button"
                                 matTooltip="{{ 'Reset' | translate }}"
                                 (click)="scroll(scrollScaleDirection.Reset)"
                             >
@@ -162,8 +162,8 @@
                 <div *osPerms="permission.projectorCanManage" style="padding-bottom: 60px">
                     <div class="back-n-forth-controls slide-controls">
                         <button
-                            type="button"
                             mat-button
+                            type="button"
                             [disabled]="projector.history_projections.length === 0"
                             (click)="projectPreviousSlide()"
                         >
@@ -171,8 +171,8 @@
                             {{ 'Previous' | translate }}
                         </button>
                         <button
-                            type="button"
                             mat-button
+                            type="button"
                             [disabled]="projector.preview_projections.length === 0"
                             (click)="projectNextSlide()"
                         >
@@ -194,8 +194,8 @@
                                                 @if (projection.getSubtitle()) {
                                                     <os-icon-container
                                                         class="subtitle-nocolor"
-                                                        size="small"
                                                         icon="comment"
+                                                        size="small"
                                                         [noWrap]="true"
                                                     >
                                                         {{ projection.getSubtitle() }}
@@ -203,8 +203,8 @@
                                                 }
                                             </span>
                                             <button
-                                                type="button"
                                                 mat-icon-button
+                                                type="button"
                                                 matTooltip="{{ 'Clear current projection' | translate }}"
                                                 (click)="deleteProjection(projection)"
                                             >
@@ -235,17 +235,17 @@
                                         track projection;
                                         let i = $index
                                     ) {
-                                        <div class="drop-list-entry queue-element backgroundColorLight" cdkDrag>
+                                        <div cdkDrag class="drop-list-entry queue-element backgroundColorLight">
                                             @if (editQueue) {
-                                                <div class="drag-handle" cdkDragHandle>
+                                                <div cdkDragHandle class="drag-handle">
                                                     <mat-icon>drag_indicator</mat-icon>
                                                 </div>
                                             }
                                             @if (!editQueue) {
                                                 <div class="drag-handle no-drag">
                                                     <os-projector-button
-                                                        [object]="projection.getProjectionBuildDescriptor()"
                                                         [blendIn]="true"
+                                                        [object]="projection.getProjectionBuildDescriptor()"
                                                         [onClickFn]="getProjectPreviewFunction(projection)"
                                                     ></os-projector-button>
                                                 </div>
@@ -258,8 +258,8 @@
                                                 @if (projection.getSubtitle()) {
                                                     <os-icon-container
                                                         class="subtitle"
-                                                        size="small"
                                                         icon="comment"
+                                                        size="small"
                                                         [noWrap]="true"
                                                     >
                                                         {{ projection.getSubtitle() }}
@@ -270,8 +270,8 @@
                                                 <div class="button-right">
                                                     <div>
                                                         <button
-                                                            type="button"
                                                             mat-icon-button
+                                                            type="button"
                                                             matTooltip="{{ 'Delete' | translate }}"
                                                             (click)="deleteProjection(projection)"
                                                         >
@@ -286,8 +286,8 @@
                                 <mat-action-row>
                                     @if (!editQueue) {
                                         <button
-                                            type="button"
                                             mat-icon-button
+                                            type="button"
                                             matTooltip="{{ 'Edit queue' | translate }}"
                                             (click)="editQueue = !editQueue"
                                         >
@@ -296,8 +296,8 @@
                                     }
                                     @if (editQueue) {
                                         <button
-                                            type="button"
                                             mat-icon-button
+                                            type="button"
                                             matTooltip="{{ 'Close edit mode' | translate }}"
                                             (click)="editQueue = !editQueue"
                                         >
@@ -324,7 +324,7 @@
                                 }
                             </div>
                             <mat-action-row>
-                                <button type="button" mat-button (click)="createProjectorCountdown()">
+                                <button mat-button type="button" (click)="createProjectorCountdown()">
                                     <mat-icon>add</mat-icon>
                                     <span>{{ 'Add timer' | translate }}</span>
                                 </button>
@@ -344,9 +344,9 @@
                                                 [ngClass]="{ 'spacer-bottom-10': !hasEnoughWiFiData }"
                                             >
                                                 <os-projector-button
+                                                    [disabled]="noWiFiData"
                                                     [object]="wifiDataBuildDesc()"
                                                     [projector]="projector"
-                                                    [disabled]="noWiFiData"
                                                 ></os-projector-button>
                                                 <span>{{ 'Wifi access data' | translate }}</span>
                                             </div>
@@ -369,7 +369,7 @@
                                 }
                             </div>
                             <mat-action-row>
-                                <button type="button" mat-button (click)="createProjectorMessage()">
+                                <button mat-button type="button" (click)="createProjectorMessage()">
                                     <mat-icon>add</mat-icon>
                                     <span>{{ 'Add message' | translate }}</span>
                                 </button>

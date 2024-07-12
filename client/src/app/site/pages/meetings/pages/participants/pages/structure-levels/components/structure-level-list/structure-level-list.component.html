@@ -1,4 +1,4 @@
-<os-head-bar [hasMainButton]="canEdit" [nav]="false" [multiSelectMode]="false" (mainEvent)="openStructureLevelDialog()">
+<os-head-bar [hasMainButton]="canEdit" [multiSelectMode]="false" [nav]="false" (mainEvent)="openStructureLevelDialog()">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Structure levels' | translate }}</h2>
@@ -7,13 +7,13 @@
 
 <os-list
     listStorageKey="structure_levels"
-    [listObservableProvider]="repo"
-    [vScrollFixed]="60"
+    [alwaysShowMenu]="canEdit"
     [filterProps]="['name']"
     [hiddenInMobile]="['info']"
-    [alwaysShowMenu]="canEdit"
+    [listObservableProvider]="repo"
     [showMenu]="canEdit"
     [sortService]="sortService"
+    [vScrollFixed]="60"
     [(selectedRows)]="selectedRows"
 >
     <!-- Name -->
@@ -41,8 +41,8 @@
     >
         <button
             mat-icon-button
-            [matMenuTriggerFor]="singleItemMenu"
             [matMenuTriggerData]="{ item: item }"
+            [matMenuTriggerFor]="singleItemMenu"
             (click)="$event.stopPropagation()"
         >
             <mat-icon>more_vert</mat-icon>
@@ -58,7 +58,7 @@
             <span>{{ 'Edit' | translate }}</span>
         </button>
         <!-- delete item -->
-        <button mat-menu-item class="red-warning-text" (click)="onDeleteButton(item)">
+        <button class="red-warning-text" mat-menu-item (click)="onDeleteButton(item)">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>
@@ -86,7 +86,7 @@
             </mat-checkbox>
             <mat-form-field class="os-dialog-large">
                 <mat-label>{{ 'Color' | translate }}</mat-label>
-                <input formControlName="color" type="color" matInput />
+                <input formControlName="color" matInput type="color" />
             </mat-form-field>
         </form>
     </mat-dialog-content>

@@ -11,6 +11,6 @@
     }
 </span>
 
-<ng-template #timeTemplate let-startTime="startTime" let-endTime="endTime">
+<ng-template #timeTemplate let-endTime="endTime" let-startTime="startTime">
     <span>{{ { start: startTime, end: endTime } | localizedDateRange: 'PP' }}</span>
 </ng-template>

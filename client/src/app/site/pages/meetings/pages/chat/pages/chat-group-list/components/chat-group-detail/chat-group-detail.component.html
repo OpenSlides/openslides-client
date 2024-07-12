@@ -34,7 +34,7 @@
             </div>
             <div class="spacer"></div>
             @if (canManage) {
-                <button mat-icon-button [matMenuTriggerFor]="chatGroupMenu" [matMenuTriggerData]="{ chatGroup: group }">
+                <button mat-icon-button [matMenuTriggerData]="{ chatGroup: group }" [matMenuTriggerFor]="chatGroupMenu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
             }
@@ -48,8 +48,8 @@
                 <div *cdkVirtualFor="let message of group.chat_messages">
                     <os-chat-group-detail-message
                         [chatMessage]="message"
-                        (editing)="prepareEditingChatMessage($event)"
                         (deleting)="deleteChatMessage($event)"
+                        (editing)="prepareEditingChatMessage($event)"
                     ></os-chat-group-detail-message>
                 </div>
             </cdk-virtual-scroll-viewport>
@@ -59,8 +59,8 @@
 @if (hasWritePermissionsObservable | async) {
     <os-chat-group-detail-message-form
         [currentMessage]="toEditChatMessageObservable | async"
-        (messageSent)="sendChatMessage($event)"
         (editingCanceled)="cancelEditingChatMessage()"
+        (messageSent)="sendChatMessage($event)"
     ></os-chat-group-detail-message-form>
 }
 
@@ -72,12 +72,12 @@
             <span>{{ 'Edit' | translate }}</span>
         </button>
         <!-- clear history -->
-        <button mat-menu-item class="red-warning-text" (click)="clearChatGroup(chatGroup)">
+        <button class="red-warning-text" mat-menu-item (click)="clearChatGroup(chatGroup)">
             <mat-icon>format_clear</mat-icon>
             <span>{{ 'Clear' | translate }}</span>
         </button>
         <!-- delete -->
-        <button mat-menu-item class="red-warning-text" (click)="deleteChatGroup(chatGroup)">
+        <button class="red-warning-text" mat-menu-item (click)="deleteChatGroup(chatGroup)">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>

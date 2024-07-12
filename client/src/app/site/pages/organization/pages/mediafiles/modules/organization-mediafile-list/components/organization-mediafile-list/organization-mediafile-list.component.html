@@ -13,14 +13,14 @@
     <ng-container class="menu-slot">
         <button
             *osOmlPerms="OML.can_manage_organization; and: !isMultiSelect"
-            type="button"
             mat-icon-button
+            type="button"
             [matTooltip]="'New folder' | translate"
             (click)="createNewFolder(newFolderDialog)"
         >
             <mat-icon>create_new_folder</mat-icon>
         </button>
-        <button type="button" mat-icon-button [matMenuTriggerFor]="mediafilesMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="mediafilesMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -34,21 +34,21 @@
 
 <!-- the actual file manager -->
 <os-file-list
-    [currentDirectory]="directory"
-    [isMultiSelect]="isMultiSelect"
-    [canEdit]="canEdit"
     [canAccessFileMenu]="canAccessFileMenu"
-    [sourceFiles]="directoryObservable"
+    [canEdit]="canEdit"
+    [currentDirectory]="directory"
     [editFolderTemplate]="fileEditDialog"
     [fileMenuTemplate]="fileMenuTemplate"
-    [shouldShowFileMenuFn]="shouldShowFileMenuFn"
-    [isUsedAsLogoFn]="isUsedAsLogoFn"
-    [isUsedAsFontFn]="isUsedAsFontFn"
     [isInMeeting]="false"
-    (directoryChanged)="changeDirectory($event.directoryId)"
+    [isMultiSelect]="isMultiSelect"
+    [isUsedAsFontFn]="isUsedAsFontFn"
+    [isUsedAsLogoFn]="isUsedAsLogoFn"
+    [shouldShowFileMenuFn]="shouldShowFileMenuFn"
+    [sourceFiles]="directoryObservable"
     (beforeEditing)="onEditFile($event.file)"
-    (saved)="onSaveFile($event.update)"
     (deleted)="onDeleteFile($event.file)"
+    (directoryChanged)="changeDirectory($event.directoryId)"
+    (saved)="onSaveFile($event.update)"
     (selected)="onSelect($event.files)"
 ></os-file-list>
 
@@ -111,7 +111,7 @@
         <form class="edit-file-form" [formGroup]="fileEditForm!">
             <mat-form-field>
                 <mat-label>{{ 'New file name' | translate }}</mat-label>
-                <input type="text" matInput osAutofocus required formControlName="title" />
+                <input formControlName="title" matInput osAutofocus required type="text" />
                 @if (fileEditForm?.invalid) {
                     <mat-error>{{ 'Required' | translate }}</mat-error>
                 }
@@ -120,15 +120,15 @@
     </mat-dialog-content>
     <mat-dialog-actions>
         <button
-            type="submit"
-            mat-button
             color="accent"
+            mat-button
+            type="submit"
             [disabled]="!fileEditForm?.valid"
             [mat-dialog-close]="fileEditForm?.value"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>
@@ -174,15 +174,15 @@
             <p>{{ 'Please enter a name for the new directory:' | translate }}</p>
             <mat-form-field>
                 <mat-label>{{ 'Title' | translate }}</mat-label>
-                <input matInput osAutofocus formControlName="title" required />
+                <input formControlName="title" matInput osAutofocus required />
             </mat-form-field>
         </form>
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button type="submit" mat-button color="accent" [disabled]="!newDirectoryForm.valid" [mat-dialog-close]="true">
+        <button color="accent" mat-button type="submit" [disabled]="!newDirectoryForm.valid" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>

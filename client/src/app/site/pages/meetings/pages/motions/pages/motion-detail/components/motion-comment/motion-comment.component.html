@@ -1,7 +1,7 @@
 <os-action-card
     icon="comment"
-    [showActionRow]="canBeEdited || hasSubmitterEditRights"
     [disableExpandControl]="isEditing"
+    [showActionRow]="canBeEdited || hasSubmitterEditRights"
 >
     <ng-container class="meta-text-block-title">
         <span>{{ section?.getTitle() }}</span>
@@ -45,7 +45,7 @@
             </button>
         }
         @if (isEditing) {
-            <button mat-icon-button color="warn" matTooltip="{{ 'Save' | translate }}" (click)="saveComment()">
+            <button color="warn" mat-icon-button matTooltip="{{ 'Save' | translate }}" (click)="saveComment()">
                 <mat-icon>done</mat-icon>
             </button>
         }

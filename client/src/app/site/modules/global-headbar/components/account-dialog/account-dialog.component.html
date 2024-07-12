@@ -1,4 +1,4 @@
-<h2 mat-dialog-title class="flex-container padding-top-16">
+<h2 class="flex-container padding-top-16" mat-dialog-title>
     <span class="left-align no-margin">{{ self?.short_name }}</span>
     <button mat-icon-button [matDialogClose]="null">
         <mat-icon>close</mat-icon>
@@ -45,13 +45,13 @@
         </button>
     </div>
     <os-user-detail-view
-        [user]="self"
-        [isEditing]="isEditing"
         [isAllowedFn]="isAllowedFn"
+        [isEditing]="isEditing"
         [shouldEnableFormControlFn]="shouldEnableFormControlFn"
         [useMatcard]="false"
-        (validEvent)="isUserFormValid = $event"
+        [user]="self"
         (changeEvent)="userPersonalForm = $event"
+        (validEvent)="isUserFormValid = $event"
     ></os-user-detail-view>
     @if (isEditing) {
         <div class="margin-bottom-16">
@@ -84,8 +84,8 @@
     <h2>{{ 'Change password' | translate }}</h2>
     <os-password-form
         #changePasswordComponent
-        (validEvent)="isUserPasswordValid = $event"
         (changeEvent)="userPasswordForm = $event"
+        (validEvent)="isUserPasswordValid = $event"
     ></os-password-form>
     <div>
         <button mat-button [disabled]="!isUserPasswordValid" (click)="changePassword()">

@@ -1,4 +1,4 @@
-<os-head-bar [nav]="false" [goBack]="true">
+<os-head-bar [goBack]="true" [nav]="false">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Import meeting' | translate }}</h2>
@@ -7,7 +7,7 @@
 
 <mat-card class="os-card">
     <mat-card-content>
-        <os-file-upload [uploadFileFn]="getUploadFileFn()" [parallel]="true" (uploadSucceeded)="onUploadSucceeded()">
+        <os-file-upload [parallel]="true" [uploadFileFn]="getUploadFileFn()" (uploadSucceeded)="onUploadSucceeded()">
             <div *osScrollingTableCell="'title'; row as file">
                 <div *osScrollingTableCellLabel>{{ 'Title' | translate }}</div>
                 {{ file?.title }}

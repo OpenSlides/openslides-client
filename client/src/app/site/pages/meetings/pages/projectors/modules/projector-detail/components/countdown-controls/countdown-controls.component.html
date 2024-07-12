@@ -8,18 +8,18 @@
                 <div class="title">{{ countdown.getTitle() }}</div>
                 <div class="action-buttons">
                     <button
-                        type="button"
                         class="small-mat-icon-button"
                         mat-icon-button
+                        type="button"
                         matTooltip="{{ 'Open projection dialog' | translate }}"
                         (click)="onBringDialog()"
                     >
                         <mat-icon>open_in_new</mat-icon>
                     </button>
                     <button
-                        type="button"
                         class="small-mat-icon-button"
                         mat-icon-button
+                        type="button"
                         [matTooltip]="'Edit' | translate"
                         (click)="onEdit()"
                     >
@@ -37,9 +37,9 @@
                     }
                     @if (!isFixedCountdown) {
                         <button
-                            type="button"
                             class="small-mat-icon-button"
                             mat-icon-button
+                            type="button"
                             matTooltip="{{ 'Delete' | translate }}"
                             (click)="onDelete()"
                         >
@@ -55,21 +55,21 @@
                     ></os-countdown-time>
                     <div>
                         <button
-                            type="button"
                             class="small-mat-icon-button"
                             mat-icon-button
+                            type="button"
                             [disabled]="!canStop()"
                             (click)="stop($event)"
                         >
                             <mat-icon>stop</mat-icon>
                         </button>
                         @if (!countdown.running) {
-                            <button type="button" class="small-mat-icon-button" mat-icon-button (click)="start($event)">
+                            <button class="small-mat-icon-button" mat-icon-button type="button" (click)="start($event)">
                                 <mat-icon>play_arrow</mat-icon>
                             </button>
                         }
                         @if (countdown.running) {
-                            <button type="button" class="small-mat-icon-button" mat-icon-button (click)="pause($event)">
+                            <button class="small-mat-icon-button" mat-icon-button type="button" (click)="pause($event)">
                                 <mat-icon>pause</mat-icon>
                             </button>
                         }

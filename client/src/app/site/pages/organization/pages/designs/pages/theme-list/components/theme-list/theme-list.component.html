@@ -11,11 +11,11 @@
 
 <os-list
     listStorageKey="themes"
+    [alwaysShowMenu]="true"
+    [filterProps]="['name']"
     [listObservable]="repo.getViewModelListObservable()"
     [multiSelect]="isMultiSelect"
-    [filterProps]="['name']"
     [vScrollFixed]="60"
-    [alwaysShowMenu]="true"
     [(selectedRows)]="selectedRows"
 >
     <div
@@ -41,18 +41,18 @@
     <div *osScrollingTableCell="'is_active'; row as theme; config: { width: 30 }" class="cell-slot fill central-button">
         <os-prompt-checkbox
             [checked]="isThemeUsed(theme)"
-            [disabled]="isThemeUsed(theme)"
-            [title]="'Change color set' | translate"
-            [matTooltip]="'Activate design' | translate"
             [content]="
                 'Are you sure you want to activate this color set? This will change the colors in all meetings.'
                     | translate
             "
+            [disabled]="isThemeUsed(theme)"
+            [matTooltip]="'Activate design' | translate"
+            [title]="'Change color set' | translate"
             (selected)="changeCurrentTheme($event, theme)"
         ></os-prompt-checkbox>
     </div>
     <div *osScrollingTableCell="'menu'; row as theme; config: { width: 40 }" class="cell-slot fill">
-        <button mat-icon-button [matMenuTriggerFor]="themeMenu" [matMenuTriggerData]="{ theme: theme }">
+        <button mat-icon-button [matMenuTriggerData]="{ theme: theme }" [matMenuTriggerFor]="themeMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </div>
@@ -64,7 +64,7 @@
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </button>
-        <button mat-menu-item class="red-warning-text" (click)="deleteTheme(theme)">
+        <button class="red-warning-text" mat-menu-item (click)="deleteTheme(theme)">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>

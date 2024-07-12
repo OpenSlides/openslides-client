@@ -7,7 +7,7 @@
                         <mat-panel-title>
                             <span>{{ service.getFilterName(filter) | translate }}</span>
                             @if (filter.count) {
-                                <mat-basic-chip disableRipple class="lightblue filter-count">
+                                <mat-basic-chip class="lightblue filter-count" disableRipple>
                                     <span>{{ filter.count }}</span>
                                 </mat-basic-chip>
                             }
@@ -24,10 +24,10 @@
                                             @if (isFilter(option)) {
                                                 <mat-checkbox
                                                     #filterCheckBox
-                                                    [ngClass]="option.isChild ? 'filter-child' : ''"
                                                     [checked]="!!option.isActive"
                                                     [matTooltip]="option.label"
                                                     [matTooltipDisabled]="!shouldShowTooltip(filterCheckBox)"
+                                                    [ngClass]="option.isChild ? 'filter-child' : ''"
                                                     (change)="service.toggleFilterOption(filter.property, option)"
                                                 >
                                                     {{ option.label | translate }}

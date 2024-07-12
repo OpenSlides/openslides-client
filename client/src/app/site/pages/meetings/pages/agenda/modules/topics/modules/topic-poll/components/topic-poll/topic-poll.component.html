@@ -12,11 +12,11 @@
                         <span *osPerms="permission.agendaItemCanManage; and: poll.isEVoting">
                             <os-icon-container
                                 class="poll-type"
+                                color="primary"
                                 icon="info"
                                 size="large"
-                                color="primary"
-                                [swap]="true"
                                 [showIcon]="poll.isAnonymous"
+                                [swap]="true"
                                 (iconAction)="openVotingWarning()"
                             >
                                 {{ poll.typeVerbose | translate }}
@@ -46,8 +46,8 @@
                     <div *osPerms="permission.agendaItemCanManage; and: !hideChangeState">
                         <button
                             mat-stroked-button
-                            [ngClass]="pollStateActions[poll.state]?.css"
                             [disabled]="stateChangePendingObservable | async"
+                            [ngClass]="pollStateActions[poll.state]?.css"
                             (click)="nextPollState()"
                         >
                             <mat-icon>{{ pollStateActions[poll.state]?.icon }}</mat-icon>
@@ -99,8 +99,8 @@
     <div *osPerms="permission.projectorCanManage">
         <os-projector-button
             *osPerms="permission.projectorCanManage"
-            [object]="poll"
             [menuItem]="true"
+            [object]="poll"
         ></os-projector-button>
     </div>
     <button mat-menu-item (click)="downloadPdf()">
@@ -117,7 +117,7 @@
         </button>
 
         <!-- Delete button -->
-        <button mat-menu-item class="red-warning-text" (click)="deletePoll()">
+        <button class="red-warning-text" mat-menu-item (click)="deletePoll()">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>

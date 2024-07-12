@@ -1,7 +1,7 @@
 <os-head-bar
-    [nav]="false"
     [hasMainButton]="canEdit"
     [mainActionTooltip]="'New category' | translate"
+    [nav]="false"
     (mainEvent)="onPlusButton()"
 >
     <!-- Title -->
@@ -11,19 +11,19 @@
 
     <!-- Menu -->
     <ng-container *osPerms="permission.motionCanManage" class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="categoryMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="categoryMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
 </os-head-bar>
 
 <os-projectable-list
-    [vScrollFixed]="64"
-    [listObservable]="categoriesObservable"
     [allowProjector]="false"
-    [showListOfSpeakers]="false"
     [filterProps]="filterProps"
     [hiddenInMobile]="['menu']"
+    [listObservable]="categoriesObservable"
+    [showListOfSpeakers]="false"
+    [vScrollFixed]="64"
 >
     <!-- Title -->
     <div *osScrollingTableCell="'title'; row as category; rowContext as rowContext" class="cell-slot fill">

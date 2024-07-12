@@ -6,8 +6,8 @@
     }
     @if (!menuItem && blendIn) {
         <button
-            mat-icon-button
             class="blend-in"
+            mat-icon-button
             [color]="isProjected ? 'accent' : 'basic'"
             [disabled]="disabled"
             (click)="onClick($event)"

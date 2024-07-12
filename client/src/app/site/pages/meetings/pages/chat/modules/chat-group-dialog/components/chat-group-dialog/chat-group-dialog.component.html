@@ -16,7 +16,7 @@
             <p>
                 <mat-form-field>
                     <mat-label>{{ 'Name' | translate }}</mat-label>
-                    <input type="text" matInput osAutofocus required formControlName="name" />
+                    <input formControlName="name" matInput osAutofocus required type="text" />
                     @if (chatGroupFormGroup.invalid) {
                         <mat-error>{{ 'Required' | translate }}</mat-error>
                     }
@@ -28,8 +28,8 @@
                     <mat-label>{{ 'Groups with read permissions' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="read_group_ids"
-                        [multiple]="true"
                         [inputListValues]="groupsObservable"
+                        [multiple]="true"
                         [sortFn]="sortFn"
                     ></os-list-search-selector>
                 </mat-form-field>
@@ -39,8 +39,8 @@
                     <mat-label>{{ 'Groups with write permissions' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="write_group_ids"
-                        [multiple]="true"
                         [inputListValues]="groupsObservable"
+                        [multiple]="true"
                         [sortFn]="sortFn"
                     ></os-list-search-selector>
                 </mat-form-field>
@@ -49,17 +49,16 @@
         <mat-dialog-actions>
             <!-- save  -->
             <button
-                type="submit"
                 color="accent"
                 mat-button
-                color="accent"
+                type="submit"
                 [disabled]="chatGroupFormGroup.invalid"
                 [mat-dialog-close]="chatGroupFormGroup.value"
             >
                 <span>{{ 'Save' | translate }}</span>
             </button>
             <!-- cancel -->
-            <button type="button" mat-button [mat-dialog-close]="null">
+            <button mat-button type="button" [mat-dialog-close]="null">
                 <span>{{ 'Cancel' | translate }}</span>
             </button>
         </mat-dialog-actions>

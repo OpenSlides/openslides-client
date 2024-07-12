@@ -1,6 +1,6 @@
 @if (motion) {
     <div class="title">
-        <os-projectable-title [model]="motion" [getTitleFn]="getTitleFn">
+        <os-projectable-title [getTitleFn]="getTitleFn" [model]="motion">
             @if (titleCanBeChanged()) {
                 <span class="motion-title" prepend>
                     @if (titleChangeRecommendation) {

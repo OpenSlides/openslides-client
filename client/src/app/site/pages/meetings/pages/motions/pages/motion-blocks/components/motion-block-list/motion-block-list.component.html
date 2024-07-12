@@ -1,7 +1,7 @@
 <os-head-bar
-    [nav]="false"
     [hasMainButton]="canEdit"
     [mainActionTooltip]="'New motion block' | translate"
+    [nav]="false"
     (mainEvent)="onPlusButton()"
 >
     <!-- Title -->
@@ -11,12 +11,12 @@
 </os-head-bar>
 
 <os-projectable-list
-    [vScrollFixed]="64"
+    [filterProps]="filterProps"
     [listObservableProvider]="repo"
+    [multiSelect]="isMultiSelect"
     [showFilterBar]="true"
     [sortService]="sortService"
-    [multiSelect]="isMultiSelect"
-    [filterProps]="filterProps"
+    [vScrollFixed]="64"
     [(selectedRows)]="selectedRows"
 >
     <!-- Title column -->
@@ -31,16 +31,16 @@
         <div class="innerTable overflow-hidden">
             <os-icon-container
                 size="large"
-                [noWrap]="true"
                 [icon]="getIndicatingIcon(block)"
                 [iconTooltip]="getIndicatingTooltip(block) | translate"
+                [noWrap]="true"
             >
                 <os-icon-container
                     icon="lock"
                     size="large"
+                    [iconTooltip]="'Internal' | translate"
                     [noWrap]="true"
                     [showIcon]="block.isFinished && block.internal"
-                    [iconTooltip]="'Internal' | translate"
                 >
                     <div class="ellipsis-overflow">
                         {{ title }}
@@ -65,8 +65,8 @@
         <button
             mat-icon-button
             [disabled]="isMultiSelect"
-            [matMenuTriggerFor]="singleItemMenu"
             [matMenuTriggerData]="{ block: block }"
+            [matMenuTriggerFor]="singleItemMenu"
             (click)="$event.stopPropagation()"
         >
             <mat-icon>more_vert</mat-icon>
@@ -77,7 +77,7 @@
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
     <ng-template let-block="block" matMenuContent>
-        <os-projector-button [object]="block" [menuItem]="true"></os-projector-button>
-        <os-speaker-button [object]="block" [menuItem]="true"></os-speaker-button>
+        <os-projector-button [menuItem]="true" [object]="block"></os-projector-button>
+        <os-speaker-button [menuItem]="true" [object]="block"></os-speaker-button>
     </ng-template>
 </mat-menu>

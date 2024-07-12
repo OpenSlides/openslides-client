@@ -9,9 +9,9 @@
     <os-icon-container
         icon="create"
         iconTooltip="{{ 'Edit' | translate }}"
-        [swap]="true"
         [noFill]="true"
         [showIcon]="!editMode && canBeEdited && hasExtension"
+        [swap]="true"
         (iconAction)="changeEditMode()"
     >
         @if (canBeEdited) {
@@ -36,21 +36,21 @@
         <mat-form-field>
             <mat-label>{{ extensionLabel }}</mat-label>
             <input
-                matInput
                 autocomplete="off"
+                matInput
                 osAutofocus
                 [(ngModel)]="inputControl"
-                (keydown)="keyDownFunction($event)"
                 (change)="inputChanged()"
+                (keydown)="keyDownFunction($event)"
             />
         </mat-form-field>
         @for (list of searchLists; track list; let i = $index) {
             <mat-form-field [formGroup]="extensionFieldForm">
                 <mat-label>{{ list.label ?? '' | translate }}</mat-label>
                 <os-list-search-selector
+                    [disableOptionWhenFn]="getIsDisabled(i)"
                     formControlName="{{ 'list' + i + '' }}"
                     [inputListValues]="list.observable"
-                    [disableOptionWhenFn]="getIsDisabled(i)"
                     [keepOpen]="list.keepOpen"
                     [wider]="list.wider"
                     (openedChange)="openedChange($event, i)"

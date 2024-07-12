@@ -6,16 +6,16 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="speakerMenu"><mat-icon>more_vert</mat-icon></button>
+        <button mat-icon-button type="button" [matMenuTriggerFor]="speakerMenu"><mat-icon>more_vert</mat-icon></button>
     </ng-container>
 </os-head-bar>
 
 <os-list
-    [listObservableProvider]="repo"
-    [filterService]="filterService"
-    [sortService]="sortService"
-    [filterProps]="filterProps"
     [addBottomSpacer]="hasInteractionState | async"
+    [filterProps]="filterProps"
+    [filterService]="filterService"
+    [listObservableProvider]="repo"
+    [sortService]="sortService"
     [(selectedRows)]="selectedRows"
 >
     <!-- Name column -->
@@ -92,8 +92,8 @@
                 <div class="spacer-top-5">
                     <os-icon-container icon="schedule" translate>
                         <os-countdown-time
-                            [unstyled]="true"
                             [countdown]="{ running: false, countdown_time: speaker.speakingTime }"
+                            [unstyled]="true"
                         ></os-countdown-time>
                     </os-icon-container>
                 </div>

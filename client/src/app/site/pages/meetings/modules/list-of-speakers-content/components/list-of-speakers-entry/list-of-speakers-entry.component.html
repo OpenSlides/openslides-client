@@ -5,14 +5,14 @@
                 <!-- start button -->
                 @if (!speaker.isSpeaking) {
                     <button
-                        mat-icon-button
                         class="speaker-control-button"
+                        mat-icon-button
                         matTooltipPosition="above"
                         [color]="speakerIndex === 0 ? 'accent' : null"
+                        matTooltip="{{ (speaker.pause_time ? 'Resume speech' : 'Begin speech') | translate }}"
                         [ngClass]="{
                             'small-play-icon': (speakerIndex > 0 || speakerIndex !== 0) && !speaker.isCurrentSpeaker
                         }"
-                        matTooltip="{{ (speaker.pause_time ? 'Resume speech' : 'Begin speech') | translate }}"
                         (click)="onStartButton()"
                     >
                         <mat-icon>
@@ -23,8 +23,8 @@
                 <!-- pause button -->
                 @if (speaker.isSpeaking) {
                     <button
-                        mat-icon-button
                         class="speaker-control-button"
+                        mat-icon-button
                         matTooltipPosition="above"
                         matTooltip="{{ 'Pause speech' | translate }}"
                         (click)="onPauseButton()"
@@ -111,8 +111,8 @@
                         @if (showStructureLevels()) {
                             <button
                                 mat-icon-button
-                                matTooltip="{{ 'Structure level' | translate }}"
                                 [matMenuTriggerFor]="structureLevelsMenu"
+                                matTooltip="{{ 'Structure level' | translate }}"
                             >
                                 <mat-icon>flag</mat-icon>
                             </button>
@@ -187,8 +187,8 @@
             <!-- Stop speaker button -->
             @if (speaker.isCurrentSpeaker && canManage) {
                 <button
-                    mat-icon-button
                     class="speaker-stop-button"
+                    mat-icon-button
                     matTooltipPosition="above"
                     matTooltip="{{ 'End speech' | translate }}"
                     (click)="onStopButton()"
@@ -199,15 +199,15 @@
             <!-- Speaker countdown -->
             @if (structureLevelCountdownEnabled && hasSpeakerCountdown) {
                 <span class="countdown">
-                    <os-countdown-time [unstyled]="true" [countdown]="getSpeakerCountdown()"></os-countdown-time>
+                    <os-countdown-time [countdown]="getSpeakerCountdown()" [unstyled]="true"></os-countdown-time>
                 </span>
             }
             @if (canManage) {
                 <!-- more menu button -->
                 <button
                     mat-icon-button
-                    [matMenuTriggerFor]="manageSpeakerMenu"
                     [matMenuTriggerData]="{ speaker: speaker }"
+                    [matMenuTriggerFor]="manageSpeakerMenu"
                 >
                     <mat-icon>more_vert</mat-icon>
                 </button>
@@ -220,7 +220,7 @@
             <div class="duration">
                 <div>{{ startTime }}</div>
                 <div>
-                    <mat-icon inline class="inline-icon-text-align">schedule</mat-icon>
+                    <mat-icon class="inline-icon-text-align" inline>schedule</mat-icon>
                     {{ durationString }}
                 </div>
             </div>
@@ -382,7 +382,7 @@
     <!-- Pro Speech -->
     @if (speaker.speech_state === SpeechState.PRO) {
         <span>
-            <mat-icon inline class="inline-icon-text-align" [class.green-text]="!!showcolor">add_circle</mat-icon>
+            <mat-icon class="inline-icon-text-align" inline [class.green-text]="!!showcolor">add_circle</mat-icon>
             <i [class.user-subtitle]="!!showcolor">
                 {{ 'Forspeech' | translate }}
             </i>
@@ -392,7 +392,7 @@
     <!-- Contra Speech -->
     @if (speaker.speech_state === SpeechState.CONTRA) {
         <span>
-            <mat-icon inline class="inline-icon-text-align" [class.red-warning-text]="!!showcolor">
+            <mat-icon class="inline-icon-text-align" inline [class.red-warning-text]="!!showcolor">
                 remove_circle
             </mat-icon>
             <i [class.user-subtitle]="!!showcolor">
@@ -404,7 +404,7 @@
     <!-- Marked -->
     @if (speaker.speech_state === SpeechState.CONTRIBUTION) {
         <span>
-            <mat-icon inline class="inline-icon-text-align" [class.icon]="!!showcolor">star</mat-icon>
+            <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">star</mat-icon>
             <i [class.user-subtitle]="!!showcolor">
                 {{ 'Contribution' | translate }}
             </i>
@@ -414,7 +414,7 @@
     <!-- Interposed question -->
     @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
         <span>
-            <mat-icon inline class="inline-icon-text-align" [class.icon]="!!showcolor">help</mat-icon>
+            <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">help</mat-icon>
             <i [class.user-subtitle]="!!showcolor">
                 {{ 'Interposed question' | translate }}
             </i>
@@ -424,7 +424,7 @@
     <!-- Intervention -->
     @if (speaker.speech_state === SpeechState.INTERVENTION) {
         <span>
-            <mat-icon inline class="inline-icon-text-align" [class.icon]="!!showcolor">error</mat-icon>
+            <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">error</mat-icon>
             <i [class.user-subtitle]="!!showcolor">
                 {{ 'Intervention' | translate }}
             </i>
@@ -439,7 +439,7 @@
     ) {
         <span>
             @if (speaker.point_of_order) {
-                <mat-icon inline class="inline-icon-text-align" color="{{ !!showcolor ? 'warn' : null }}">
+                <mat-icon class="inline-icon-text-align" inline color="{{ !!showcolor ? 'warn' : null }}">
                     warning
                 </mat-icon>
             }

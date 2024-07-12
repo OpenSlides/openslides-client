@@ -1,13 +1,13 @@
-<div mat-dialog-title class="search-form-container">
-    <div mat-dialog-close class="close-button-container">
+<div class="search-form-container" mat-dialog-title>
+    <div class="close-button-container" mat-dialog-close>
         <button mat-icon-button tabindex="-1"><mat-icon>close</mat-icon></button>
     </div>
     <div class="search-top-form">
         <div class="search-input-container">
             <os-rounded-input
-                placeholder="{{ 'Search' | translate }}"
-                [hasSubmit]="true"
                 [autofocus]="true"
+                [hasSubmit]="true"
+                placeholder="{{ 'Search' | translate }}"
                 [(ngModel)]="searchTerm"
                 (clickSubmit)="searchChange()"
                 (inputCleared)="searchCleared()"
@@ -81,7 +81,7 @@
                     @switch (result.collection) {
                         @case ('mediafile') {
                             @if (result.url.startsWith('/system')) {
-                                <a target="_blank" mat-dialog-close [href]="result.url">
+                                <a mat-dialog-close target="_blank" [href]="result.url">
                                     @if (result.title) {
                                         <h3 [innerHtml]="result.title"></h3>
                                     }

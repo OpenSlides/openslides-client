@@ -7,7 +7,7 @@
         </div>
 
         <ng-container *osPerms="permission.motionCanManagePolls" class="menu-slot">
-            <button type="button" mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
+            <button mat-icon-button type="button" [matMenuTriggerFor]="pollDetailMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
         </ng-container>
@@ -41,9 +41,9 @@
                 <mat-tab label="{{ 'Single votes' | translate }}">
                     <div class="named-result-table">
                         <os-votes-table
-                            [votesDataObservable]="votesDataObservable"
                             [isViewingThis]="isViewingVoteslist"
                             [parent]="self"
+                            [votesDataObservable]="votesDataObservable"
                         ></os-votes-table>
                     </div>
                 </mat-tab>

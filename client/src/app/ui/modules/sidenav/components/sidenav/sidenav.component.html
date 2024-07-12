@@ -3,11 +3,11 @@
     osSwipe
     swipeConstraints="left"
     (backdropClick)="toggle()"
-    (swipeRight)="open()"
     (swipeLeft)="mobileAutoCloseNav()"
+    (swipeRight)="open()"
 >
     @if (isMobile) {
-        <mat-sidenav #sideNav disableClose="!isMobile" class="side-panel" [mode]="'over'" [opened]="!isMobile">
+        <mat-sidenav #sideNav class="side-panel" disableClose="!isMobile" [mode]="'over'" [opened]="!isMobile">
             <ng-container *ngTemplateOutlet="sideNavContent"></ng-container>
         </mat-sidenav>
     }
@@ -33,8 +33,8 @@
     @if (!isMobile) {
         <div class="nav-toggle-button-container">
             <button
-                mat-raised-button
                 class="nav-toggle-button"
+                mat-raised-button
                 [matTooltip]="(isOpen ? 'Hide main menu' : 'Show main menu') | translate"
                 [ngClass]="{ left: isOpen, right: !isOpen }"
                 (click)="toggle()"
@@ -61,10 +61,10 @@
         </div>
         <div class="copyright-sign-container padding-bottom-20">
             <a
-                mat-menu-item
-                href="https://openslides.com"
-                target="_blank"
                 class="copyright-link"
+                href="https://openslides.com"
+                mat-menu-item
+                target="_blank"
                 (click)="mobileAutoCloseNav()"
             >
                 <span>

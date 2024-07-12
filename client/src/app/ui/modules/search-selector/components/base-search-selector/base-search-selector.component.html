@@ -1,9 +1,9 @@
 <mat-select
     #matSelect
+    [errorStateMatcher]="errorStateMatcher"
     [formControl]="contentForm"
     [multiple]="multiple"
     [panelClass]="{ 'os-search-selector-wider': wider, 'os-search-selector-panel': true }"
-    [errorStateMatcher]="errorStateMatcher"
     (openedChange)="onOpenChanged($event)"
 >
     <!-- Custom display of selected items -->
@@ -24,8 +24,8 @@
     @if (matSelect.panelOpen) {
         <div #searchSelectorInput class="os-search-selector--input-wrapper">
             <input
-                osAutofocus
                 class="background-card"
+                osAutofocus
                 [formControl]="searchValueForm"
                 placeholder="{{ 'Search' | translate }}"
                 (keydown)="onSearchKeydown($event)"
@@ -39,8 +39,8 @@
                     @for (item of selectedItems; track item) {
                         <mat-chip-option
                             class="one-line"
-                            [removable]="true"
                             [disableRipple]="true"
+                            [removable]="true"
                             (removed)="onChipRemove(item.id)"
                         >
                             <span class="one-line">
@@ -63,10 +63,10 @@
     }
     <cdk-virtual-scroll-viewport
         class="vscroll-viewport"
-        minBufferPx="400"
         maxBufferPx="600"
-        [ngStyle]="{ height: panelHeight + 'px' }"
+        minBufferPx="400"
         [itemSize]="50"
+        [ngStyle]="{ height: panelHeight + 'px' }"
     >
         @if ((filteredItemsObservable | async)?.length === 0) {
             <mat-option class="os-search-selector--no-options" disabled>
@@ -80,11 +80,11 @@
             *cdkVirtualFor="let selectableItem of filteredItemsObservable | async"
             #currentOption
             matTooltipPosition="left"
-            [value]="selectableItem.id"
             [disabled]="disableOptionWhenFn(selectableItem) || selectableItem.disabled"
             [matTooltip]="tooltipFn(selectableItem, currentOption)"
-            (onSelectionChange)="onSelectionChange(selectableItem, $event)"
+            [value]="selectableItem.id"
             (click)="keepOpen ? matSelect.open() : null"
+            (onSelectionChange)="onSelectionChange(selectableItem, $event)"
         >
             <ng-container *ngTemplateOutlet="optionContent; context: { item: selectableItem }"></ng-container>
         </mat-option>

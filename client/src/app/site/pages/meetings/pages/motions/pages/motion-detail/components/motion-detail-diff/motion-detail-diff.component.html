@@ -2,10 +2,10 @@
 <div class="motion-detail-diff">
     @if (showSummary) {
         <os-motion-detail-diff-summary
-            [motion]="motion"
             [changes]="changes"
-            [scrollToChange]="scrollToChange"
             [elContainer]="nativeElement"
+            [motion]="motion"
+            [scrollToChange]="scrollToChange"
         ></os-motion-detail-diff-summary>
     }
     @if (showPreamble) {
@@ -22,8 +22,8 @@
                             <button
                                 mat-icon-button
                                 type="button"
-                                [matMenuTriggerFor]="changeRecommendationMenu"
                                 [matMenuTriggerData]="{ change: changedTitle }"
+                                [matMenuTriggerFor]="changeRecommendationMenu"
                             >
                                 <mat-icon>more_horiz</mat-icon>
                             </button>
@@ -36,10 +36,10 @@
                     }
                     <div
                         class="motion-text motion-text-diff"
-                        [class.line-numbers-none]="isLineNumberingNone()"
-                        [class.line-numbers-inline]="isLineNumberingInline()"
-                        [class.line-numbers-outside]="isLineNumberingOutside()"
                         [attr.data-change-id]="changedTitle.getChangeId()"
+                        [class.line-numbers-inline]="isLineNumberingInline()"
+                        [class.line-numbers-none]="isLineNumberingNone()"
+                        [class.line-numbers-outside]="isLineNumberingOutside()"
                     >
                         <div class="bold">{{ 'Changed title' | translate }}:</div>
                         <div [innerHTML]="getFormattedTitleDiff() | trust: 'html'"></div>
@@ -51,14 +51,14 @@
             <div>
                 <div
                     class="motion-text"
-                    [class.line-numbers-none]="isLineNumberingNone()"
                     [class.line-numbers-inline]="isLineNumberingInline()"
+                    [class.line-numbers-none]="isLineNumberingNone()"
                     [class.line-numbers-outside]="isLineNumberingOutside()"
                 >
                     <os-motion-detail-original-change-recommendations
+                        [changeRecommendations]="[]"
                         [html]="getTextBetweenChanges(getAllTextChangingObjects()[i - 1], change)"
                         [motionId]="motion.id"
-                        [changeRecommendations]="[]"
                         (createChangeRecommendation)="onCreateChangeRecommendation($event)"
                     ></os-motion-detail-original-change-recommendations>
                 </div>
@@ -78,8 +78,8 @@
                             *osPerms="permission.motionCanManage; and: isRecommendation(change)"
                             mat-icon-button
                             type="button"
-                            [matMenuTriggerFor]="changeRecommendationMenu"
                             [matMenuTriggerData]="{ change: change }"
+                            [matMenuTriggerFor]="changeRecommendationMenu"
                         >
                             <mat-icon>more_horiz</mat-icon>
                         </button>
@@ -87,8 +87,8 @@
                             <button
                                 mat-icon-button
                                 type="button"
-                                [matMenuTriggerFor]="amendmentMenu"
                                 [matMenuTriggerData]="{ change: change }"
+                                [matMenuTriggerFor]="amendmentMenu"
                             >
                                 <mat-icon>more_horiz</mat-icon>
                             </button>
@@ -110,10 +110,10 @@
                     }
                     <div
                         class="motion-text motion-text-diff"
-                        [class.line-numbers-none]="isLineNumberingNone()"
-                        [class.line-numbers-inline]="isLineNumberingInline()"
-                        [class.line-numbers-outside]="isLineNumberingOutside()"
                         [attr.data-change-id]="change.getChangeId()"
+                        [class.line-numbers-inline]="isLineNumberingInline()"
+                        [class.line-numbers-none]="isLineNumberingNone()"
+                        [class.line-numbers-outside]="isLineNumberingOutside()"
                         [innerHTML]="getDiff(change) | trust: 'html'"
                     ></div>
                 </div>
@@ -122,14 +122,14 @@
 
         <div
             class="motion-text"
-            [class.line-numbers-none]="isLineNumberingNone()"
             [class.line-numbers-inline]="isLineNumberingInline()"
+            [class.line-numbers-none]="isLineNumberingNone()"
             [class.line-numbers-outside]="isLineNumberingOutside()"
         >
             <os-motion-detail-original-change-recommendations
+                [changeRecommendations]="[]"
                 [html]="getTextRemainderAfterLastChange()"
                 [motionId]="motion.id"
-                [changeRecommendations]="[]"
                 (createChangeRecommendation)="onCreateChangeRecommendation($event)"
             ></os-motion-detail-original-change-recommendations>
         </div>
@@ -138,8 +138,8 @@
     <mat-menu #amendmentMenu="matMenu">
         <ng-template let-change="change" matMenuContent>
             <a
-                type="button"
                 mat-menu-item
+                type="button"
                 [routerLink]="change.amendment.getDetailStateUrl()"
                 [state]="{ back: 'true' }"
             >
@@ -187,32 +187,32 @@
 
     <mat-menu #changeRecommendationMenu="matMenu">
         <ng-template let-change="change" matMenuContent>
-            <button type="button" mat-menu-item (click)="setAcceptanceValue(change, 'accepted')">
+            <button mat-menu-item type="button" (click)="setAcceptanceValue(change, 'accepted')">
                 <mat-icon>thumb_up</mat-icon>
                 <span>{{ 'Accept' | translate }}</span>
                 <mat-icon class="active-indicator">{{ change.isAccepted() ? 'done' : '' }}</mat-icon>
             </button>
-            <button type="button" mat-menu-item (click)="setAcceptanceValue(change, 'rejected')">
+            <button mat-menu-item type="button" (click)="setAcceptanceValue(change, 'rejected')">
                 <mat-icon>thumb_down</mat-icon>
                 <span>{{ 'Reject' | translate }}</span>
                 <mat-icon class="active-indicator">{{ change.isRejected() ? 'done' : '' }}</mat-icon>
             </button>
-            <button type="button" mat-menu-item (click)="setInternal(change, !change.internal)">
+            <button mat-menu-item type="button" (click)="setInternal(change, !change.internal)">
                 <mat-icon>{{ change.internal ? 'check_box_outline_blank' : 'check_box' }}</mat-icon>
                 <span>{{ 'Public' | translate }}</span>
             </button>
-            <button type="button" mat-menu-item (click)="deleteChangeRecommendation(change, $event)">
+            <button mat-menu-item type="button" (click)="deleteChangeRecommendation(change, $event)">
                 <mat-icon>delete</mat-icon>
                 <span>{{ 'Delete' | translate }}</span>
             </button>
             @if (!change.isTitleChange()) {
-                <button type="button" mat-menu-item (click)="editChangeRecommendation(change, $event)">
+                <button mat-menu-item type="button" (click)="editChangeRecommendation(change, $event)">
                     <mat-icon>edit</mat-icon>
                     <span>{{ 'Edit' | translate }}</span>
                 </button>
             }
             @if (change.isTitleChange()) {
-                <button type="button" mat-menu-item (click)="editTitleChangeRecommendation(change, $event)">
+                <button mat-menu-item type="button" (click)="editTitleChangeRecommendation(change, $event)">
                     <mat-icon>edit</mat-icon>
                     <span>{{ 'Edit' | translate }}</span>
                 </button>

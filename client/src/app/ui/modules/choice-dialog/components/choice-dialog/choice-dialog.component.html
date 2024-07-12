@@ -10,11 +10,11 @@
         @if (data?.choices) {
             <mat-dialog-content>
                 <os-list-search-selector
-                    ngDefaultControl
                     formControlName="select"
+                    ngDefaultControl
+                    [inputListValues]="data.choices!"
                     [multiple]="data.multiSelect!"
                     [sortFn]="data.sortFn"
-                    [inputListValues]="data.choices!"
                     (selectionChanged)="onSelectionChanged($event)"
                 ></os-list-search-selector>
             </mat-dialog-content>

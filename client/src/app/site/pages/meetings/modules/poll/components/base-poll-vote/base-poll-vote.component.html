@@ -180,11 +180,11 @@
                                 @if (poll.max_votes_per_option > 1) {
                                     <mat-form-field appearance="outline" class="vote-input">
                                         <input
-                                            type="number"
                                             matInput
                                             min="0"
-                                            value="0"
                                             required
+                                            type="number"
+                                            value="0"
                                             [formControl]="getFormControl(option.id)"
                                             max="{{ poll.max_votes_per_option }}"
                                             (change)="saveMultipleVotes(option.id, $event, delegation)"
@@ -259,11 +259,11 @@
             }
         }
         <os-poll-cannot-vote-message
-            [poll]="poll"
             [delegationUser]="delegation"
             [hasAlreadyVoted]="hasAlreadyVoted(delegation)"
-            [isDeliveringVote]="isDeliveringVote(delegation)"
             [hasDelegations]="!delegations.length"
+            [isDeliveringVote]="isDeliveringVote(delegation)"
+            [poll]="poll"
         ></os-poll-cannot-vote-message>
     }
 </ng-template>
@@ -271,8 +271,8 @@
 <ng-template #sendNow let-delegation="delegation">
     <div class="centered-button-wrapper">
         <button
-            mat-flat-button
             color="accent"
+            mat-flat-button
             [disabled]="getVotesCount(delegation) < minVotes"
             (click)="submitVote(delegation)"
         >

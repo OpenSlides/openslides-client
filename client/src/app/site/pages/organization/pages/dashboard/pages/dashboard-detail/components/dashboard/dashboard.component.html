@@ -30,7 +30,7 @@
                 <div class="organization-description" [innerHTML]="organizationDescription"></div>
             </div>
         }
-        <div id="active-meetings" class="meeting-list-container">
+        <div class="meeting-list-container" id="active-meetings">
             <div class="meeting-icon-wrapper foreground-accent">
                 <mat-icon color="accent">access_alarm</mat-icon>
                 <span>{{ 'today' | translate }}</span>
@@ -61,7 +61,7 @@
             </div>
         </div>
         <!-- future meetings -->
-        <div id="future-meetings" class="meeting-list-container">
+        <div class="meeting-list-container" id="future-meetings">
             <div class="meeting-icon-wrapper">
                 <mat-icon>update</mat-icon>
                 <span>{{ 'future' | translate }}</span>
@@ -79,7 +79,7 @@
             ></ng-container>
         </div>
         <!-- previous meetings -->
-        <div id="previous-meetings" class="meeting-list-container">
+        <div class="meeting-list-container" id="previous-meetings">
             <div class="meeting-icon-wrapper">
                 <mat-icon aria-hidden="true">history</mat-icon>
                 <span>{{ 'ended' | translate }}</span>
@@ -98,7 +98,7 @@
         </div>
         <!-- meetings with no date -->
         @if (!noNoDateMeetingsToShow) {
-            <div id="no-date-meetings" class="meeting-list-container">
+            <div class="meeting-list-container" id="no-date-meetings">
                 <div class="meeting-icon-wrapper">
                     <mat-icon aria-hidden="true">watch_later</mat-icon>
                     <span>{{ 'dateless' | translate }}</span>
@@ -115,7 +115,7 @@
     </div>
 }
 
-<ng-template #meetingListTemplate let-meetingList="meetingList" let-context="context">
+<ng-template #meetingListTemplate let-context="context" let-meetingList="meetingList">
     <div
         class="meeting-list"
         [ngClass]="{ 'no-meetings': !meetingList.length }"
@@ -149,13 +149,13 @@
     </div>
 </ng-template>
 
-<ng-template #meetingTemplate let-meeting="meeting" let-context="context">
+<ng-template #meetingTemplate let-context="context" let-meeting="meeting">
     <div class="meeting-box" [ngClass]="context?.wrapperCssClass">
         <a
             class="meeting-box-left flex-vertical-center"
             matRipple
-            [routerLink]="meeting.id"
             [ngClass]="context?.cssClass"
+            [routerLink]="meeting.id"
         >
             <div class="one-line">
                 <div class="meeting-box--mid one-line">
@@ -171,8 +171,8 @@
                     @if (meeting.start_time || meeting.end_time) {
                         <span>
                             <os-meeting-time
-                                [meeting]="meeting"
                                 [cssClass]="context?.subtitleCssClass"
+                                [meeting]="meeting"
                             ></os-meeting-time>
                         </span>
                     }
@@ -185,8 +185,8 @@
         <a
             class="show-committee-link"
             mat-icon-button
-            [routerLink]="['/', 'committees', meeting.committee_id]"
             matTooltip="{{ 'Show committee' | translate }}"
+            [routerLink]="['/', 'committees', meeting.committee_id]"
         >
             <mat-icon class="show-committee-icon">layers</mat-icon>
         </a>

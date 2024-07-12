@@ -5,7 +5,7 @@
         </div>
     </div>
     <div class="fake-fab-button flex-center">
-        <mat-icon color="primary" class="icon-16">{{ isPresent ? 'how_to_reg' : 'person' }}</mat-icon>
+        <mat-icon class="icon-16" color="primary">{{ isPresent ? 'how_to_reg' : 'person' }}</mat-icon>
     </div>
 </div>
 
@@ -67,7 +67,7 @@
                     <span class="menu-text">{{ 'My account' | translate }}</span>
                 </button>
                 <!-- logout -->
-                <button mat-menu-item data-cy="accountLogoutButton" (click)="logout()">
+                <button data-cy="accountLogoutButton" mat-menu-item (click)="logout()">
                     <mat-icon class="menu-icon">logout</mat-icon>
                     <span class="menu-text">{{ 'Logout' | translate }}</span>
                 </button>
@@ -84,7 +84,7 @@
 
         <mat-divider></mat-divider>
 
-        <a mat-menu-item routerLink="info" routerLinkActive="active" class="small-text">
+        <a class="small-text" mat-menu-item routerLink="info" routerLinkActive="active">
             <mat-icon>info</mat-icon>
             <span>{{ 'Legal notice' | translate }}</span>
             <span>&nbsp;&middot;&nbsp;</span>

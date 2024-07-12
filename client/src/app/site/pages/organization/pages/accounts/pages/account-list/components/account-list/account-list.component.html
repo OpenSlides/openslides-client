@@ -1,9 +1,9 @@
 <os-head-bar
-    [nav]="meeting === null"
     [goBack]="meeting !== null"
     [hasMainButton]="true"
     [mainActionTooltip]="'New account' | translate"
     [multiSelectMode]="isMultiSelect"
+    [nav]="meeting === null"
     (mainEvent)="createNewMember()"
 >
     <!-- Title -->
@@ -18,7 +18,7 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="memberMenu"><mat-icon>more_vert</mat-icon></button>
+        <button mat-icon-button type="button" [matMenuTriggerFor]="memberMenu"><mat-icon>more_vert</mat-icon></button>
     </ng-container>
 
     <!-- Multiselect info -->
@@ -30,13 +30,13 @@
 
 <os-list
     listStorageKey="member"
-    [listObservableProvider]="controller"
-    [multiSelect]="isMultiSelect"
+    [alwaysShowMenu]="true"
     [filterProps]="['full_name']"
     [filterService]="filterService"
+    [listObservableProvider]="controller"
+    [multiSelect]="isMultiSelect"
     [searchService]="searchService"
     [sortService]="sortService"
-    [alwaysShowMenu]="true"
     [vScrollFixed]="60"
     [(selectedRows)]="selectedRows"
 >
@@ -94,8 +94,8 @@
                     icon="event_available"
                     matTooltipPosition="left"
                     matTooltip="{{ 'Meetings' | translate }}"
-                    [showIcon]="true"
                     [noWrap]="true"
+                    [showIcon]="true"
                 >
                     {{ user.meetings.length }}
                 </os-icon-container>
@@ -115,8 +115,8 @@
                 *osOmlPerms="OML.can_manage_users; and: !!getOmlByUser(user)"
                 icon="engineering"
                 matTooltipPosition="left"
-                [matTooltipDisabled]="!isMobile"
                 matTooltip="{{ getOmlByUser(user) | translate }}"
+                [matTooltipDisabled]="!isMobile"
             >
                 @if (!isMobile) {
                     {{ getOmlByUser(user) | translate }}
@@ -129,7 +129,7 @@
     <ng-container *osOmlPerms="OML.can_manage_users">
         <div *osScrollingTableCell="'menu'; row as user; config: { width: 40 }" class="cell-slot fill">
             <div>
-                <button mat-icon-button [matMenuTriggerFor]="singleMenu" [matMenuTriggerData]="{ member: user }">
+                <button mat-icon-button [matMenuTriggerData]="{ member: user }" [matMenuTriggerFor]="singleMenu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
             </div>
@@ -147,7 +147,7 @@
             <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </a>
-        <button mat-menu-item class="red-warning-text" (click)="deleteUsers([member])">
+        <button class="red-warning-text" mat-menu-item (click)="deleteUsers([member])">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>
@@ -177,9 +177,9 @@
         <div>
             <os-user-multiselect-actions
                 [(selectedUsers)]="selectedRows"
-                (selectAll)="selectAll()"
-                (deselectAll)="deselectAll()"
                 (deleting)="deleteUsers()"
+                (deselectAll)="deselectAll()"
+                (selectAll)="selectAll()"
             >
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="csvExportMemberList(selectedRows)">
                     <mat-icon>archive</mat-icon>

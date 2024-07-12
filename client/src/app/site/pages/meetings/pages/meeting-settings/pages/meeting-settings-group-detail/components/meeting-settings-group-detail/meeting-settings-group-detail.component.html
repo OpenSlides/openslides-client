@@ -1,4 +1,4 @@
-<os-head-bar [nav]="false" [hasMainButton]="false" [isSearchEnabled]="false">
+<os-head-bar [hasMainButton]="false" [isSearchEnabled]="false" [nav]="false">
     <!-- Title -->
     <div class="title-slot">
         @if (settingsGroup) {
@@ -18,7 +18,7 @@
         >
             <strong class="upper">{{ 'Save' | translate }}</strong>
         </button>
-        <button type="button" mat-icon-button [matMenuTriggerFor]="settingsMenu"><mat-icon>more_vert</mat-icon></button>
+        <button mat-icon-button type="button" [matMenuTriggerFor]="settingsMenu"><mat-icon>more_vert</mat-icon></button>
     </ng-container>
 </os-head-bar>
 
@@ -36,9 +36,9 @@
                         @if (isSettingsInput(setting) && !setting.hide) {
                             <os-meeting-settings-group-detail-field
                                 #settingsFields
+                                [disabled]="isSettingDisabled(setting)"
                                 [setting]="setting"
                                 [value]="meeting && getDetailFieldValue(meeting, setting)"
-                                [disabled]="isSettingDisabled(setting)"
                                 (update)="updateSetting($event)"
                             ></os-meeting-settings-group-detail-field>
                         }
@@ -49,12 +49,12 @@
                                 }
                                 @if (setting.buttonLabel && setting.buttonLink) {
                                     @if (hasExternalLink(setting)) {
-                                        <a mat-stroked-button color="primary" [href]="getHelpLink(setting)">
+                                        <a color="primary" mat-stroked-button [href]="getHelpLink(setting)">
                                             {{ setting.buttonLabel | translate }}
                                         </a>
                                     }
                                     @if (!hasExternalLink(setting)) {
-                                        <a mat-stroked-button color="primary" [routerLink]="getHelpLink(setting)">
+                                        <a color="primary" mat-stroked-button [routerLink]="getHelpLink(setting)">
                                             {{ setting.buttonLabel | translate }}
                                         </a>
                                     }

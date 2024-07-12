@@ -4,14 +4,14 @@
         <div class="main-nav">
             @if (showMeetingNav) {
                 <a
-                    mat-menu-item
                     class="foreground-icon nav-item dashboard-entry"
+                    mat-menu-item
                     [@navItemAnim]
                     [routerLink]="['/']"
                     (click)="mobileAutoCloseNav()"
                 >
                     <mat-icon matListItemIcon>apps</mat-icon>
-                    <span matListItemTitle class="nav-row-text">{{ 'Dashboard' | translate }}</span>
+                    <span class="nav-row-text" matListItemTitle>{{ 'Dashboard' | translate }}</span>
                 </a>
                 <mat-divider></mat-divider>
             }
@@ -19,8 +19,8 @@
                 <span>
                     <a
                         *osPerms="entry.permission"
-                        mat-menu-item
                         class="foreground-icon nav-item"
+                        mat-menu-item
                         routerLinkActive="active"
                         [@navItemAnim]
                         [ngStyle]="getCustomStyleForEntry(entry)"
@@ -29,7 +29,7 @@
                         (click)="mobileAutoCloseNav()"
                     >
                         <mat-icon matListItemIcon>{{ entry.icon }}</mat-icon>
-                        <span matListItemTitle class="nav-row-text">{{ entry.displayName | translate }}</span>
+                        <span class="nav-row-text" matListItemTitle>{{ entry.displayName | translate }}</span>
                     </a>
                 </span>
             }
@@ -47,15 +47,15 @@
                         (click)="mobileAutoCloseNav()"
                     >
                         <mat-icon
-                            matListItemIcon
                             matBadgeColor="accent"
                             matBadgeOverlap="false"
-                            [matBadgeHidden]="chat.notifications === 0"
+                            matListItemIcon
                             [matBadge]="chat.notifications"
+                            [matBadgeHidden]="chat.notifications === 0"
                         >
                             sms
                         </mat-icon>
-                        <span matListItemTitle class="nav-row-text">
+                        <span class="nav-row-text" matListItemTitle>
                             {{ 'Chat' | translate }}
                         </span>
                     </a>

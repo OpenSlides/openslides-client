@@ -1,7 +1,7 @@
 <os-head-bar
-    [nav]="false"
     [editMode]="true"
     [isSaveButtonEnabled]="committeeForm.valid"
+    [nav]="false"
     [saveAction]="getSaveAction()"
     (cancelEditEvent)="onCancel()"
 >
@@ -22,19 +22,19 @@
             <form class="committee-form" [formGroup]="committeeForm" (ngSubmit)="onSubmit()">
                 <mat-form-field>
                     <mat-label>{{ 'Title' | translate }}</mat-label>
-                    <input matInput formControlName="name" data-cy="committeeName" required osAutofocus />
+                    <input data-cy="committeeName" formControlName="name" matInput osAutofocus required />
                     <mat-error>{{ 'The title is required' | translate }}</mat-error>
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{ 'Description' | translate }}</mat-label>
-                    <input matInput formControlName="description" data-cy="committeeDescription" />
+                    <input data-cy="committeeDescription" formControlName="description" matInput />
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{ 'Tags' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="organization_tag_ids"
-                        [repo]="orgaTagRepo"
                         [multiple]="true"
+                        [repo]="orgaTagRepo"
                         (clickNotFound)="onOrgaTagNotFound($event)"
                     >
                         <ng-template osNotFoundDescription>
@@ -52,8 +52,8 @@
                         formControlName="forward_to_committee_ids"
                         [multiple]="true"
                         [repo]="committeeRepo"
-                        [sortService]="committeeSortService"
                         [showChips]="false"
+                        [sortService]="committeeSortService"
                         (selectionChanged)="onForwardingSelectionChanged($event)"
                     ></os-repo-search-selector>
                 </mat-form-field>
@@ -61,17 +61,17 @@
                     <mat-label>{{ 'Can receive motions from committee' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="receive_forwardings_from_committee_ids"
+                        [disableOptionWhenFn]="getDisableOptionWhenFn()"
                         [multiple]="true"
                         [repo]="committeeRepo"
-                        [sortService]="committeeSortService"
                         [showChips]="false"
-                        [disableOptionWhenFn]="getDisableOptionWhenFn()"
+                        [sortService]="committeeSortService"
                         [tooltipFn]="getTooltipFn()"
                     ></os-repo-search-selector>
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{ 'External ID' | translate }}</mat-label>
-                    <input matInput formControlName="external_id" />
+                    <input formControlName="external_id" matInput />
                 </mat-form-field>
             </form>
         }

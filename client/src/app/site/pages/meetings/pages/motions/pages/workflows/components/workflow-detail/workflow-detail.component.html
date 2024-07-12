@@ -1,8 +1,8 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar
-        [nav]="false"
         [hasMainButton]="true"
         [mainActionTooltip]="'New state' | translate"
+        [nav]="false"
         (mainEvent)="onNewStateButton()"
     >
         <!-- Title -->
@@ -35,7 +35,7 @@
             <div class="scrollable-matrix">
                 <table mat-table [dataSource]="getTableDataSource()">
                     <ng-container matColumnDef="perm" sticky>
-                        <th *matHeaderCellDef mat-header-cell class="group-head-table-cell">
+                        <th *matHeaderCellDef class="group-head-table-cell" mat-header-cell>
                             {{ 'Permissions' | translate }}
                         </th>
                         <td
@@ -44,11 +44,11 @@
                             mat-cell
                             matTooltipClass="pre-wrap"
                             matTooltipPosition="after"
-                            [ngClass]="{ 'has-help-text': perm.help_text }"
                             [matTooltip]="perm.help_text | translate"
+                            [ngClass]="{ 'has-help-text': perm.help_text }"
+                            (click)="tooltip.toggle()"
                             (mouseenter)="$event.stopImmediatePropagation()"
                             (mouseleave)="tooltip.hide()"
-                            (click)="tooltip.toggle()"
                         >
                             <div class="permission-name">
                                 {{ perm.name | translate }}
@@ -85,10 +85,10 @@
                                 @if (perm.type === 'color') {
                                     <div class="inner-table">
                                         <mat-basic-chip
-                                            [matMenuTriggerFor]="colorMenu"
-                                            [matMenuTriggerData]="{ state: state }"
-                                            [ngClass]="getValueOfState(state, perm)"
                                             [disableRipple]="true"
+                                            [matMenuTriggerData]="{ state: state }"
+                                            [matMenuTriggerFor]="colorMenu"
+                                            [ngClass]="getValueOfState(state, perm)"
                                         >
                                             {{ getValueOfState(state, perm) | translate }}
                                         </mat-basic-chip>
@@ -108,8 +108,8 @@
                                         </div>
                                         <div
                                             class="clickable-cell stretch-to-fill-parent"
-                                            [matMenuTriggerFor]="submitterWithdrawStateMenu"
                                             [matMenuTriggerData]="{ state: state }"
+                                            [matMenuTriggerFor]="submitterWithdrawStateMenu"
                                         ></div>
                                     </div>
                                 }
@@ -129,8 +129,8 @@
                                         </div>
                                         <div
                                             class="clickable-cell stretch-to-fill-parent"
-                                            [matMenuTriggerFor]="nextStatesMenu"
                                             [matMenuTriggerData]="{ state: state }"
+                                            [matMenuTriggerFor]="nextStatesMenu"
                                         ></div>
                                     </div>
                                 }
@@ -141,8 +141,8 @@
                                         </div>
                                         <div
                                             class="clickable-cell stretch-to-fill-parent"
-                                            [matMenuTriggerFor]="mergeAmendmentMenu"
                                             [matMenuTriggerData]="{ state: state }"
+                                            [matMenuTriggerFor]="mergeAmendmentMenu"
                                         ></div>
                                     </div>
                                 }
@@ -164,8 +164,8 @@
                                         </div>
                                         <div
                                             class="clickable-cell stretch-to-fill-parent"
-                                            [matMenuTriggerFor]="restrictionMenu"
                                             [matMenuTriggerData]="{ state: state }"
+                                            [matMenuTriggerFor]="restrictionMenu"
                                         ></div>
                                     </div>
                                 }
@@ -193,19 +193,19 @@
     </mat-dialog-content>
     <mat-dialog-actions>
         <button
-            type="submit"
-            mat-button
             color="accent"
+            mat-button
+            type="submit"
             [disabled]="dialogData.value === '' && !dialogData.allowEmpty"
             [mat-dialog-close]="{ action: 'update', value: dialogData.value }"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
         @if (dialogData.deletable) {
-            <button type="button" mat-button color="warn" [mat-dialog-close]="{ action: 'delete' }">
+            <button color="warn" mat-button type="button" [mat-dialog-close]="{ action: 'delete' }">
                 <span>{{ 'Delete' | translate }}</span>
             </button>
         }

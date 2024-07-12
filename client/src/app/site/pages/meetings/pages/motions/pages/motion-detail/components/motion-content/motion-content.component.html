@@ -9,15 +9,15 @@
     @if (changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit) {
         <div
             class="motion-text underlined-links"
-            [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
             [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
+            [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
             [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
         >
             @if (lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original) {
                 <os-motion-detail-original-change-recommendations
+                    [changeRecommendations]="changeRecommendations"
                     [html]="getFormattedTextPlain()"
                     [motionId]="motion.id"
-                    [changeRecommendations]="changeRecommendations"
                     (createChangeRecommendation)="createChangeRecommendation($event)"
                     (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
                 ></os-motion-detail-original-change-recommendations>
@@ -32,12 +32,12 @@
     }
     @if (changeRecoMode === ChangeRecoMode.Diff) {
         <os-motion-detail-diff
-            [motion]="motion"
             [changes]="getChangesForDiffMode()"
-            [scrollToChange]="scrollToChange"
             [highlightedLine]="highlightedLine"
-            [showAllAmendments]="showAllAmendments"
             [lineNumberingMode]="lineNumberingMode"
+            [motion]="motion"
+            [scrollToChange]="scrollToChange"
+            [showAllAmendments]="showAllAmendments"
             (createChangeRecommendation)="createChangeRecommendation($event)"
         ></os-motion-detail-diff>
     }
@@ -75,7 +75,7 @@
                 @if (editMotion) {
                     <mat-form-field>
                         <mat-label>{{ 'Number' | translate }}</mat-label>
-                        <input matInput osAutofocus formControlName="number" />
+                        <input formControlName="number" matInput osAutofocus />
                         <mat-error>{{ 'already exists' | translate }}</mat-error>
                     </mat-form-field>
                 }
@@ -88,7 +88,7 @@
                 @if (editMotion) {
                     <mat-form-field>
                         <mat-label>{{ 'Title' | translate }}</mat-label>
-                        <input matInput formControlName="title" required />
+                        <input formControlName="title" matInput required />
                         <mat-error>{{ 'The title is required' | translate }}</mat-error>
                     </mat-form-field>
                 }
@@ -105,8 +105,8 @@
         }
         <os-editor
             formControlName="text"
-            [required]="!isParagraphBasedAmendment"
             [customSettings]="tinyMceConfig"
+            [required]="!isParagraphBasedAmendment"
         ></os-editor>
         @if (contentForm.get('text')?.invalid && (contentForm.get('text')?.dirty || contentForm.get('text')?.touched)) {
             <div class="red-warning-text">
@@ -118,11 +118,11 @@
     <!-- Paragraph-based amendments -->
     @if (isParagraphBasedAmendment) {
         <os-paragraph-based-amendment
-            [motion]="motion"
             [changesForDiffMode]="getChangesForDiffMode()"
+            [editMotion]="editMotion"
             [highlightedLine]="highlightedLine"
             [isFinalEdit]="isFinalEdit"
-            [editMotion]="editMotion"
+            [motion]="motion"
             (createChangeRecommendation)="createChangeRecommendation($event)"
             (formChanged)="paragraphBasedAmendmentContent = $event"
             (validStateChanged)="canSaveParagraphBasedAmendment = $event"
@@ -154,8 +154,8 @@
             @if (editMotion) {
                 <os-editor
                     formControlName="reason"
-                    [required]="reasonRequired"
                     [customSettings]="tinyMceConfig"
+                    [required]="reasonRequired"
                 ></os-editor>
             }
             @if (
@@ -178,9 +178,9 @@
                     <mat-label>{{ 'Category' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="category_id"
-                        [repo]="categoryRepo"
-                        [excludeIds]="true"
                         [addClearSelection]="true"
+                        [excludeIds]="true"
+                        [repo]="categoryRepo"
                     ></os-repo-search-selector>
                 </mat-form-field>
             </div>

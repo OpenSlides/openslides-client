@@ -16,9 +16,9 @@
         <mat-form-field>
             <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
             <os-list-search-selector
+                [inputListValues]="otherParticipantsObservable"
                 [multiple]="true"
                 [sortFn]="false"
-                [inputListValues]="otherParticipantsObservable"
                 [(ngModel)]="infoDialog.vote_delegations_from_ids"
             ></os-list-search-selector>
         </mat-form-field>
@@ -27,10 +27,10 @@
         <mat-form-field>
             <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
             <os-list-search-selector
-                [multiple]="false"
-                [sortFn]="false"
                 [includeNone]="true"
                 [inputListValues]="otherParticipantsObservable"
+                [multiple]="false"
+                [sortFn]="false"
                 [(ngModel)]="infoDialog.vote_delegated_to_id"
             ></os-list-search-selector>
         </mat-form-field>
@@ -38,22 +38,22 @@
     <mat-form-field>
         <mat-label>{{ 'Structure level' | translate }}</mat-label>
         <os-list-search-selector
-            [multiple]="true"
             [includeNone]="true"
             [inputListValues]="structureLevelObservable"
+            [multiple]="true"
             [(ngModel)]="infoDialog.structure_level_ids"
         ></os-list-search-selector>
     </mat-form-field>
     <mat-form-field>
         <mat-label>{{ 'Participant number' | translate }}</mat-label>
-        <input type="text" matInput [(ngModel)]="infoDialog.number" />
+        <input matInput type="text" [(ngModel)]="infoDialog.number" />
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
     <button
-        type="submit"
-        mat-button
         color="accent"
+        mat-button
+        type="submit"
         [mat-dialog-close]="{
             group_ids: infoDialog.group_ids,
             vote_delegations_from_ids: infoDialog.vote_delegations_from_ids,
@@ -64,7 +64,7 @@
     >
         <span>{{ 'Save' | translate }}</span>
     </button>
-    <button type="button" mat-button [mat-dialog-close]="null">
+    <button mat-button type="button" [mat-dialog-close]="null">
         <span>{{ 'Cancel' | translate }}</span>
     </button>
 </mat-dialog-actions>

@@ -1,12 +1,12 @@
 <mat-dialog-content>
     <os-assignment-poll-form
         #pollForm
-        [pollClassType]="pollClassType.Assignment"
         [data]="pollData"
+        [percentBases]="AssignmentPollPercentBaseVerbose"
+        [pollClassType]="pollClassType.Assignment"
+        [pollMethods]="AssignmentPollMethodVerbose"
         [pollOptionAmount]="getOptionAmount()"
         [pollService]="assignmentPollService"
-        [pollMethods]="AssignmentPollMethodVerbose"
-        [percentBases]="AssignmentPollPercentBaseVerbose"
     ></os-assignment-poll-form>
 
     <!-- Analog voting -->
@@ -33,10 +33,10 @@
                                 <div [formGroupName]="calculateOptionKey(option)">
                                     <os-check-input
                                         inputType="number"
-                                        [placeholder]="voteValueVerbose[value] | translate"
-                                        [checkboxValue]="-1"
                                         [checkboxLabel]="'majority' | translate"
+                                        [checkboxValue]="-1"
                                         [formControlName]="value"
+                                        [placeholder]="voteValueVerbose[value] | translate"
                                     ></os-check-input>
                                 </div>
                             }

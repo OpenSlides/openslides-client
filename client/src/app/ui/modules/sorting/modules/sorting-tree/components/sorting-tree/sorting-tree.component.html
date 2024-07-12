@@ -1,9 +1,9 @@
 <cdk-tree
     #osTree="cdkDropList"
     cdkDropList
+    [cdkDropListData]="osTreeData"
     [dataSource]="dataSource"
     [treeControl]="treeControl"
-    [cdkDropListData]="osTreeData"
     (cdkDropListSorted)="sortItems($event)"
 >
     <cdk-tree-node
@@ -13,21 +13,21 @@
         [style.display]="shouldRender(node) ? 'flex' : 'none'"
         [style.padding-left]="node.level * 40 + 'px'"
         (cdkDragDropped)="onDrop(node)"
+        (cdkDragMoved)="moveItem($event)"
+        (cdkDragStarted)="startsDrag($event)"
         (mousedown)="mouseDown($event)"
         (mouseup)="mouseUp()"
-        (touchstart)="touchStart($event)"
         (touchend)="mouseUp()"
-        (cdkDragStarted)="startsDrag($event)"
-        (cdkDragMoved)="moveItem($event)"
+        (touchstart)="touchStart($event)"
     >
         <div class="sorting-tree-node-container backgroundColorLight background-default">
-            <span class="flex-center" cdkDragHandle>
+            <span cdkDragHandle class="flex-center">
                 <mat-icon>drag_indicator</mat-icon>
             </span>
             @if (hasChild) {
                 <button
-                    mat-icon-button
                     cdkTreeNodeToggle
+                    mat-icon-button
                     [attr.aria-label]="'toggle ' + node.filename"
                     [style.visibility]="node.expandable ? 'visible' : 'hidden'"
                     (click)="handleClick(node)"

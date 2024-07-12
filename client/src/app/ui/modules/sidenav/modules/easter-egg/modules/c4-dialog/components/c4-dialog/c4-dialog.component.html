@@ -1,7 +1,7 @@
 <mat-dialog-content>
     <div class="flex-container">
-        <h2 mat-dialog-title class="left-align no-margin">{{ caption | translate }}</h2>
-        <button mat-icon-button mat-dialog-close>
+        <h2 class="left-align no-margin" mat-dialog-title>{{ caption | translate }}</h2>
+        <button mat-dialog-close mat-icon-button>
             <mat-icon>close</mat-icon>
         </button>
     </div>
@@ -34,7 +34,7 @@
         </table>
         <div class="center">
             @if (state === 'start') {
-                <button mat-raised-button color="accent" (click)="handleEvent('searchClicked')">
+                <button color="accent" mat-raised-button (click)="handleEvent('searchClicked')">
                     {{ 'Search player' | translate }}
                 </button>
             }

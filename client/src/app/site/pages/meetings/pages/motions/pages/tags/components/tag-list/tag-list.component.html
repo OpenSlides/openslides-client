@@ -2,8 +2,8 @@
     [goBack]="true"
     [hasMainButton]="true"
     [mainActionTooltip]="'New tag' | translate"
-    [nav]="false"
     [multiSelectMode]="isMultiSelect"
+    [nav]="false"
     (mainEvent)="openTagDialog()"
 >
     <div class="title-slot">
@@ -12,10 +12,10 @@
 </os-head-bar>
 
 <os-list
-    [listObservableProvider]="repo"
-    [hiddenInMobile]="['menu']"
-    [filterProps]="['name']"
     [addBottomSpacer]="hasInteractionState | async"
+    [filterProps]="['name']"
+    [hiddenInMobile]="['menu']"
+    [listObservableProvider]="repo"
     [(selectedRows)]="selectedRows"
 >
     <!-- Name column -->
@@ -32,7 +32,7 @@
     </div>
     <!-- delete column -->
     <div *osScrollingTableCell="'delete'; row as tag; config: { width: 45 }" class="cell-slot fill">
-        <button mat-icon-button color="warn" (click)="onDeleteButton(tag)">
+        <button color="warn" mat-icon-button (click)="onDeleteButton(tag)">
             <mat-icon>delete</mat-icon>
         </button>
     </div>
@@ -52,16 +52,16 @@
         <form tabindex="-1" [formGroup]="tagForm" (keydown)="onKeyDown($event)">
             <mat-form-field>
                 <mat-label>{{ 'Name' | translate }}</mat-label>
-                <input required type="text" matInput formControlName="name" />
+                <input formControlName="name" matInput required type="text" />
             </mat-form-field>
         </form>
     </mat-dialog-content>
 
     <mat-dialog-actions>
-        <button type="submit" mat-button color="accent" [mat-dialog-close]="true">
+        <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="false">
+        <button mat-button type="button" [mat-dialog-close]="false">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>

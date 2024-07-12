@@ -1,14 +1,14 @@
 <div class="upload-area">
     <div class="upload-area--top-content">
-        <input #fileInput hidden type="file" multiple (change)="onSelectFile($event)" />
+        <input #fileInput hidden multiple type="file" (change)="onSelectFile($event)" />
 
         <div class="selection-area">
             <ngx-file-drop
                 contentClassName="file-drop-content-style"
                 dropZoneClassName="file-drop-zone-style"
                 dropZoneLabel="{{ 'Drop files into this area OR click here to select files' | translate }}"
-                (onFileDrop)="onDropFile($event)"
                 (click)="fileInput.click()"
+                (onFileDrop)="onDropFile($event)"
             ></ngx-file-drop>
         </div>
 
@@ -22,10 +22,10 @@
 
 <!-- Upload and clear buttons -->
 <div class="action-buttons">
-    <button type="button" mat-raised-button color="accent" [disabled]="isUploadDisabled" (click)="onUploadButton()">
+    <button color="accent" mat-raised-button type="button" [disabled]="isUploadDisabled" (click)="onUploadButton()">
         <span>{{ 'Upload' | translate }}</span>
     </button>
-    <button type="button" mat-raised-button [disabled]="isUploadDisabled" (click)="onClearButton()">
+    <button mat-raised-button type="button" [disabled]="isUploadDisabled" (click)="onClearButton()">
         <span>{{ 'Clear list' | translate }}</span>
     </button>
 </div>
@@ -44,7 +44,7 @@
 }
 
 <ng-template #tableTemplate>
-    <os-scrolling-table vScrollFixed="50" [showHeader]="true" [dataSource]="dataSource" [tableHeight]="tableHeight">
+    <os-scrolling-table vScrollFixed="50" [dataSource]="dataSource" [showHeader]="true" [tableHeight]="tableHeight">
         <div *osScrollingTableCell="'remove'; row as file; config: { width: 24 }">
             <button mat-icon-button matTooltip="{{ 'Remove file' | translate }}" (click)="onRemoveButton(file)">
                 <mat-icon>close</mat-icon>

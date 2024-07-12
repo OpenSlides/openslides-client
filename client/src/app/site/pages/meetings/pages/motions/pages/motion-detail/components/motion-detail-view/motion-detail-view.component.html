@@ -2,14 +2,14 @@
     @if (hasLoaded | async) {
         <os-head-bar
             mainActionTooltip="New amendment"
-            [hasMainButton]="perms.isAllowed('can_create_amendments', motion)"
-            [nav]="false"
             [editMode]="editMotion"
-            [isSaveButtonEnabled]="canSave"
-            [saveAction]="getSaveAction()"
             [goBack]="motion?.hasLeadMotion"
-            (mainEvent)="createAmendment()"
+            [hasMainButton]="perms.isAllowed('can_create_amendments', motion)"
+            [isSaveButtonEnabled]="canSave"
+            [nav]="false"
+            [saveAction]="getSaveAction()"
             (cancelEditEvent)="leaveEditMotion()"
+            (mainEvent)="createAmendment()"
         >
             <!-- Title -->
             <div class="title-slot">
@@ -38,8 +38,8 @@
             @if (!editMotion && showNavigateButtons) {
                 <div class="extra-controls-slot prev-next-motion-controls">
                     <button
-                        mat-button
                         class="nav-button-overflow"
+                        mat-button
                         [disabled]="!previousMotion"
                         [ngClass]="{ 'motion-detail-nav-button': (vp.isMobileSubject | async) === false }"
                         (click)="navigateToMotion(previousMotion)"
@@ -49,13 +49,13 @@
                         </os-icon-container>
                     </button>
                     <button
-                        mat-button
                         class="nav-button-overflow"
+                        mat-button
                         [disabled]="!nextMotion"
                         [ngClass]="{ 'motion-detail-nav-button': (vp.isMobileSubject | async) === false }"
                         (click)="navigateToMotion(nextMotion)"
                     >
-                        <os-icon-container icon="chevron_right" [swap]="true" [hide]="vp.isMobileSubject | async">
+                        <os-icon-container icon="chevron_right" [hide]="vp.isMobileSubject | async" [swap]="true">
                             {{ nextMotion ? nextMotion.number : '' }}
                         </os-icon-container>
                     </button>
@@ -64,14 +64,14 @@
             <!-- Menu -->
             <ng-container class="menu-slot">
                 @if (motion) {
-                    <button type="button" mat-icon-button [matMenuTriggerFor]="motionExtraMenu">
+                    <button mat-icon-button type="button" [matMenuTriggerFor]="motionExtraMenu">
                         <mat-icon>more_vert</mat-icon>
                     </button>
                 }
             </ng-container>
             <mat-menu #motionExtraMenu="matMenu">
                 <!-- List of speakers -->
-                <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
+                <os-speaker-button [menuItem]="true" [object]="motion"></os-speaker-button>
                 <!-- PDF -->
                 <button mat-menu-item (click)="onDownloadPdf()">
                     <mat-icon>picture_as_pdf</mat-icon>
@@ -87,8 +87,8 @@
                 <!-- Project -->
                 <os-projector-button
                     *osPerms="permission.projectorCanManage"
-                    [object]="motion"
                     [menuItem]="true"
+                    [object]="motion"
                 ></os-projector-button>
                 <!-- Add/remove to/from agenda -->
                 <div *osPerms="permission.agendaItemCanManage">
@@ -131,7 +131,7 @@
                 }
                 <!-- Delete -->
                 @if (perms.isAllowed('manage')) {
-                    <button mat-menu-item class="red-warning-text" (click)="deleteMotionButton()">
+                    <button class="red-warning-text" mat-menu-item (click)="deleteMotionButton()">
                         <mat-icon>delete</mat-icon>
                         <span>{{ 'Delete' | translate }}</span>
                     </button>
@@ -226,16 +226,16 @@
     }
     <os-motion-content
         #content
-        [motion]="motion"
         [editMotion]="editMotion"
+        [motion]="motion"
         [newMotion]="newMotion"
         [osListenEditing]="{
             editMode: editMotion,
             model: motion,
             listen: !newMotion
         }"
-        (save)="saveMotion($event)"
         (formChanged)="temporaryMotion = $event"
+        (save)="saveMotion($event)"
         (validStateChanged)="canSave = $event"
     ></os-motion-content>
 </ng-template>

@@ -1,7 +1,7 @@
 <div *osPerms="permission.userCanSee">
     @if (isViewingThis) {
         <div>
-            <os-list [listObservable]="votesDataObservable" [filterProps]="filterProps" [fullScreen]="false">
+            <os-list [filterProps]="filterProps" [fullScreen]="false" [listObservable]="votesDataObservable">
                 <!-- Content -->
                 <div *osScrollingTableCell="'user'; row as vote">
                     <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>

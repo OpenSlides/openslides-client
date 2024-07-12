@@ -4,7 +4,7 @@
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
             <h2 class="poll-preview-title">
-                <input matInput required formControlName="title" />
+                <input formControlName="title" matInput required />
             </h2>
         </mat-form-field>
     </form>
@@ -36,10 +36,10 @@
                         <os-repo-search-selector
                             formControlName="entitled_group_ids"
                             [multiple]="true"
-                            [showChips]="false"
-                            [repo]="groupRepo"
-                            [sortFn]="sortFn"
                             [pipeFn]="groupRepo.getFilterDefaultGroupFn()"
+                            [repo]="groupRepo"
+                            [showChips]="false"
+                            [sortFn]="sortFn"
                         ></os-repo-search-selector>
                     </mat-form-field>
                 }
@@ -66,11 +66,11 @@
                             <mat-form-field>
                                 <mat-label>{{ PollPropertyVerbose.min_votes_amount | translate }}</mat-label>
                                 <input
-                                    type="number"
-                                    matInput
                                     formControlName="min_votes_amount"
+                                    matInput
                                     min="1"
                                     required
+                                    type="number"
                                     [errorStateMatcher]="parentErrorStateMatcher"
                                 />
                                 @if (contentForm.controls['votes_amount'].hasError('notEnoughOptionsError')) {
@@ -90,11 +90,11 @@
                             <mat-form-field>
                                 <mat-label>{{ PollPropertyVerbose.max_votes_amount | translate }}</mat-label>
                                 <input
-                                    type="number"
-                                    matInput
                                     formControlName="max_votes_amount"
+                                    matInput
                                     min="1"
                                     required
+                                    type="number"
                                     [errorStateMatcher]="parentErrorStateMatcher"
                                 />
                             </mat-form-field>
@@ -109,11 +109,11 @@
                             <mat-form-field>
                                 <mat-label>{{ PollPropertyVerbose.max_votes_per_option | translate }}</mat-label>
                                 <input
-                                    type="number"
-                                    matInput
                                     formControlName="max_votes_per_option"
+                                    matInput
                                     min="1"
                                     required
+                                    type="number"
                                     [errorStateMatcher]="parentErrorStateMatcher"
                                 />
                             </mat-form-field>
@@ -143,7 +143,7 @@
                 @if (!hideSelects.hundredPercentBase) {
                     <mat-form-field>
                         <mat-label>{{ PollPropertyVerbose.onehundred_percent_base | translate }}</mat-label>
-                        <mat-select panelClass="percent-base-panel" formControlName="onehundred_percent_base" required>
+                        <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
                             @for (option of validPercentBases | keyvalue: keepEntryOrder; track option) {
                                 <mat-option [value]="option.key">
                                     {{

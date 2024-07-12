@@ -2,11 +2,11 @@
     <!-- Settings -->
     <os-topic-poll-form
         #pollForm
-        [pollClassType]="pollClassType.Topic"
         [data]="pollData"
-        [pollService]="topicPollService"
-        [pollMethods]="PollMethodVerbose"
         [percentBases]="PollPercentBaseVerbose"
+        [pollClassType]="pollClassType.Topic"
+        [pollMethods]="PollMethodVerbose"
+        [pollService]="topicPollService"
         [pollTypes]="PollTypes"
     ></os-topic-poll-form>
 
@@ -46,7 +46,7 @@
                         <div>
                             <mat-form-field>
                                 <mat-label>{{ 'New option' | translate }}</mat-label>
-                                <input require matInput type="text" [(ngModel)]="optionInput" />
+                                <input matInput require type="text" [(ngModel)]="optionInput" />
                                 <mat-error>{{ 'This field is required.' | translate }}</mat-error>
                             </mat-form-field>
                         </div>
@@ -54,8 +54,8 @@
                         <div>
                             <div>
                                 <button
-                                    mat-button
                                     color="accent"
+                                    mat-button
                                     [disabled]="optionInput === ''"
                                     (click)="addNewOption()"
                                 >

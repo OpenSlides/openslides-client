@@ -22,10 +22,10 @@
                     @for (paragraph of getAmendmentParagraphs(); track $index) {
                         <div
                             class="motion-text motion-text-diff amendment-view"
-                            [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
-                            [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
-                            [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
                             [class.amendment-context]="showAmendmentContext"
+                            [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
+                            [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
+                            [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
                         >
                             @if (!showAmendmentContext) {
                                 <h3 class="amendment-line-header">
@@ -38,11 +38,11 @@
                                     changeRecoMode === ChangeRecoMode.Changed)
                             ) {
                                 <os-motion-detail-original-change-recommendations
+                                    [changeRecommendations]="changeRecommendations"
                                     [html]="getAmendmentDiffTextWithContext(paragraph)"
                                     [motionId]="motion.id"
-                                    [changeRecommendations]="changeRecommendations"
-                                    (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
                                     (createChangeRecommendation)="createChangeRecommendation.emit($event)"
+                                    (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
                                 ></os-motion-detail-original-change-recommendations>
                             }
                             @if (
@@ -60,12 +60,12 @@
                 }
                 @if (changeRecoMode === ChangeRecoMode.Diff) {
                     <os-motion-detail-diff
-                        [motion]="motion"
                         [changes]="changesForDiffMode"
-                        [scrollToChange]="scrollToChange"
                         [highlightedLine]="highlightedLine"
-                        [showAllAmendments]="showAllAmendments"
                         [lineNumberingMode]="lineNumberingMode"
+                        [motion]="motion"
+                        [scrollToChange]="scrollToChange"
+                        [showAllAmendments]="showAllAmendments"
                         (createChangeRecommendation)="createChangeRecommendation.emit($event)"
                     ></os-motion-detail-diff>
                 }

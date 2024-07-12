@@ -7,7 +7,7 @@
     <!-- Menu -->
     <!-- Only organization managers can do something -->
     <ng-container *osOmlPerms="OML.superadmin" class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="meetingMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="meetingMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -20,15 +20,15 @@
 </os-head-bar>
 
 <os-list
-    [listObservableProvider]="meetingController"
-    [multiSelect]="isMultiSelect"
     [alwaysShowMenu]="true"
     [filterProps]="['name', 'location', 'committeeName']"
-    [restricted]="restrictedColumns"
-    [toRestrictFn]="toRestrictFn"
-    [hiddenInMobile]="['archived', 'description', 'meta', 'menu', 'committee']"
-    [sortService]="sortService"
     [filterService]="filterService"
+    [hiddenInMobile]="['archived', 'description', 'meta', 'menu', 'committee']"
+    [listObservableProvider]="meetingController"
+    [multiSelect]="isMultiSelect"
+    [restricted]="restrictedColumns"
+    [sortService]="sortService"
+    [toRestrictFn]="toRestrictFn"
     [vScrollFixed]="70"
     [(selectedRows)]="selectedRows"
 >
@@ -92,7 +92,7 @@
                         ></a>
                     }
                     @if (meeting.committee?.name) {
-                        <os-icon-container icon="layers" class="committee">
+                        <os-icon-container class="committee" icon="layers">
                             {{ meeting.committee?.name | translate }}
                         </os-icon-container>
                     }
@@ -120,8 +120,8 @@
             @if (meeting.userAmount) {
                 <div>
                     <os-icon-container
-                        iconTooltipPosition="right"
                         icon="group"
+                        iconTooltipPosition="right"
                         iconTooltip="{{ 'Participants' | translate }}"
                     >
                         {{ meeting.userAmount }}
@@ -131,8 +131,8 @@
             @if (meeting.motionsAmount) {
                 <div>
                     <os-icon-container
-                        iconTooltipPosition="right"
                         icon="assignment"
+                        iconTooltipPosition="right"
                         iconTooltip="{{ 'Motions' | translate }}"
                     >
                         {{ meeting.motionsAmount }}
@@ -145,11 +145,11 @@
     <div *osScrollingTableCell="'menu'; row as meeting; config: { width: 40 }">
         <button
             *osCmlPerms="CML.can_manage; committeeId: meeting.committee?.id; nonAdminCheck: true"
-            mat-icon-button
             data-cy="meetingListSingleMenuTrigger"
+            mat-icon-button
             [disabled]="isMultiSelect"
-            [matMenuTriggerFor]="singleMeetingMenu"
             [matMenuTriggerData]="{ meeting: meeting }"
+            [matMenuTriggerFor]="singleMeetingMenu"
             (click)="$event.stopPropagation()"
         >
             <mat-icon>more_vert</mat-icon>
@@ -160,7 +160,7 @@
 <mat-menu #singleMeetingMenu="matMenu">
     <ng-template let-meeting="meeting" matMenuContent>
         @if (!meeting.isArchived) {
-            <button mat-menu-item type="button" data-cy="meetingListSingleEditButton" (click)="editSingle(meeting)">
+            <button data-cy="meetingListSingleEditButton" mat-menu-item type="button" (click)="editSingle(meeting)">
                 <mat-icon>edit</mat-icon>
                 <span>
                     {{ 'Edit' | translate }}
@@ -168,10 +168,10 @@
             </button>
         }
         <button
+            class="red-warning-text"
+            data-cy="meetingListSingleDeleteButton"
             mat-menu-item
             type="button"
-            data-cy="meetingListSingleDeleteButton"
-            class="red-warning-text"
             (click)="doDelete(meeting)"
         >
             <mat-icon>delete</mat-icon>
@@ -207,7 +207,7 @@
             </button>
             <ng-container *osOmlPerms="OML.superadmin">
                 <mat-divider></mat-divider>
-                <button mat-menu-item class="red-warning-text" [disabled]="!selectedRows.length" (click)="doDelete()">
+                <button class="red-warning-text" mat-menu-item [disabled]="!selectedRows.length" (click)="doDelete()">
                     <mat-icon>delete</mat-icon>
                     <span>{{ 'Delete' | translate }}</span>
                 </button>

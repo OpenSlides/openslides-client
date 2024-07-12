@@ -42,7 +42,7 @@
                         }
                     </span>
                 }
-                <mat-icon color="primary" class="pointer-icon" inline (click)="openDialog(fieldsInfoDialog)">
+                <mat-icon class="pointer-icon" color="primary" inline (click)="openDialog(fieldsInfoDialog)">
                     info
                 </mat-icon>
             </div>
@@ -78,7 +78,7 @@
                     <span [innerHTML]="additionalInfo | trust: 'html'"></span>
                 </p>
             }
-            <button mat-button color="accent" (click)="downloadCsvExample()">
+            <button color="accent" mat-button (click)="downloadCsvExample()">
                 {{ 'Download CSV example file' | translate }}
             </button>
             <div class="wrapper import-list-wrapper">
@@ -121,13 +121,13 @@
                 <div class="flex-vertical-center">
                     <input
                         #fileInput
+                        accept="text"
+                        class="hidden-input"
                         id="user-import-file-input"
                         type="file"
-                        class="hidden-input"
-                        accept="text"
                         (change)="onSelectFile($event)"
                     />
-                    <button mat-button color="accent" (click)="fileInput.click()">
+                    <button color="accent" mat-button (click)="fileInput.click()">
                         <span>{{ 'Select file' | translate }}</span>
                     </button>
                     @if (!finishedSuccessfully && (rawFileObservable | async); as file) {
@@ -230,7 +230,7 @@
                 }
             </span>
         }
-        <mat-icon color="primary" class="pointer-icon" inline (click)="openDialog(fieldsInfoDialog)">info</mat-icon>
+        <mat-icon class="pointer-icon" color="primary" inline (click)="openDialog(fieldsInfoDialog)">info</mat-icon>
     </div>
     @if (requiredFields.length) {
         <ul>
@@ -264,7 +264,7 @@
             <span [innerHTML]="additionalInfo | trust: 'html'"></span>
         </p>
     }
-    <button mat-button color="accent" (click)="downloadCsvExample()">
+    <button color="accent" mat-button (click)="downloadCsvExample()">
         {{ 'Download CSV example file' | translate }}
     </button>
     <div class="wrapper import-list-wrapper">
@@ -303,13 +303,13 @@
         <div class="flex-vertical-center">
             <input
                 #fileInput
+                accept="text"
+                class="hidden-input"
                 id="user-import-file-input"
                 type="file"
-                class="hidden-input"
-                accept="text"
                 (change)="onSelectFile($event)"
             />
-            <button mat-button color="accent" (click)="fileInput.click()">
+            <button color="accent" mat-button (click)="fileInput.click()">
                 <span>{{ 'Select file' | translate }}</span>
             </button>
             @if (!finishedSuccessfully && (rawFileObservable | async); as file) {
@@ -324,7 +324,7 @@
     </div>
 </ng-template>
 
-<ng-template #entryTemplate let-entry="entry" let-def="def" let-row="row" let-type="type">
+<ng-template #entryTemplate let-def="def" let-entry="entry" let-row="row" let-type="type">
     @if (entry && (entry[def] || type === 'boolean')) {
         <div class="flex-vertical-center">
             @if (getHeader(def).is_list && entry[def]) {
@@ -347,7 +347,7 @@
     }
 </ng-template>
 
-<ng-template #entryContentTemplate let-entry="entry" let-def="def">
+<ng-template #entryContentTemplate let-def="def" let-entry="entry">
     @if (getHeader(def).is_object) {
         <div class="list-field-entry">
             <ng-container
@@ -392,10 +392,10 @@
     @if (rows?.length && (dataSource | async)) {
         <os-scrolling-table
             class="import-list-preview-table"
-            tableHeight="500px"
             rowClass="import-list-preview-row"
-            [rowHeight]="50"
+            tableHeight="500px"
             [dataSource]="dataSource"
+            [rowHeight]="50"
             [showHeader]="true"
         >
             <div
@@ -451,7 +451,7 @@
 </ng-template>
 
 <ng-template #fullscreenDialog>
-    <div mat-dialog-title class="action-title">
+    <div class="action-title" mat-dialog-title>
         <h1 class="dialog-title">{{ 'Preview' | translate }}</h1>
         <button mat-icon-button [mat-dialog-close]="null" matTooltip="{{ 'Exit fullscreen' | translate }}">
             <mat-icon>close</mat-icon>
@@ -463,7 +463,7 @@
 </ng-template>
 
 <ng-template #fieldsInfoDialog>
-    <div mat-dialog-title class="action-title">
+    <div class="action-title" mat-dialog-title>
         <h1 class="dialog-title" translate>The fields are defined as follows</h1>
     </div>
     <mat-dialog-content>

@@ -1,7 +1,7 @@
 <os-head-bar
-    [nav]="false"
     [editMode]="true"
     [isSaveButtonEnabled]="isValid"
+    [nav]="false"
     [saveAction]="getSaveAction()"
     (cancelEditEvent)="onCancel()"
 >
@@ -21,7 +21,7 @@
         <mat-card-content>
             <mat-form-field>
                 <mat-label>{{ 'Title' | translate }}</mat-label>
-                <input matInput formControlName="name" required />
+                <input formControlName="name" matInput required />
             </mat-form-field>
 
             <p class="has-hint">
@@ -29,8 +29,8 @@
                     <mat-form-field subscriptSizing="dynamic">
                         <mat-label>{{ 'Duplicate from' | translate }}</mat-label>
                         <os-list-search-selector
-                            [inputListValues]="availableMeetingsObservable"
                             [includeNone]="true"
+                            [inputListValues]="availableMeetingsObservable"
                             [ngModel]="theDuplicateFromId"
                             [ngModelOptions]="{ standalone: true }"
                             [sortFn]="false"
@@ -59,7 +59,7 @@
 
             <mat-form-field>
                 <mat-label>{{ 'Event location' | translate }}</mat-label>
-                <input matInput formControlName="location" />
+                <input formControlName="location" matInput />
             </mat-form-field>
 
             <os-daterangepicker formControlName="daterange" title="{{ 'Meeting date' }}"></os-daterangepicker>
@@ -78,8 +78,8 @@
                 <mat-label>{{ 'Tags' | translate }}</mat-label>
                 <os-repo-search-selector
                     formControlName="organization_tag_ids"
-                    [repo]="orgaTagRepo"
                     [multiple]="true"
+                    [repo]="orgaTagRepo"
                     (clickNotFound)="onOrgaTagNotFound($event)"
                 >
                     <ng-template osNotFoundDescription>
@@ -90,7 +90,7 @@
 
             <mat-form-field>
                 <mat-label>{{ 'External ID' | translate }}</mat-label>
-                <input matInput formControlName="external_id" />
+                <input formControlName="external_id" matInput />
             </mat-form-field>
         </mat-card-content>
     </mat-card>
@@ -102,15 +102,15 @@
                 <h3>Jitsi</h3>
                 <mat-form-field>
                     <mat-label>{{ 'Jitsi domain' | translate }}</mat-label>
-                    <input matInput formControlName="jitsi_domain" />
+                    <input formControlName="jitsi_domain" matInput />
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{ 'Jitsi room name' | translate }}</mat-label>
-                    <input matInput formControlName="jitsi_room_name" />
+                    <input formControlName="jitsi_room_name" matInput />
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{ 'Jitsi room password' | translate }}</mat-label>
-                    <input matInput formControlName="jitsi_room_password" />
+                    <input formControlName="jitsi_room_password" matInput />
                 </mat-form-field>
             </div>
         </mat-card-content>

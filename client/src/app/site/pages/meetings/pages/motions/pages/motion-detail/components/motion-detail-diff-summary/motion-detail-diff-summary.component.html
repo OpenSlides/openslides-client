@@ -5,10 +5,10 @@
             {{ 'Summary of changes' | translate }}&nbsp;
         </strong>
         <cdk-virtual-scroll-viewport
-            itemSize="22"
-            minBufferPx="100"
-            maxBufferPx="300"
             class="summary-of-changes-scroll"
+            itemSize="22"
+            maxBufferPx="300"
+            minBufferPx="100"
         >
             <ul>
                 <li *cdkVirtualFor="let change of changes; let index = index">
@@ -47,8 +47,8 @@
                         </i>
                         @if (isAmendment(change)) {
                             <a
-                                mat-icon-button
                                 class="smaller-icon-button amendment-link"
+                                mat-icon-button
                                 [routerLink]="change.amendment.getDetailStateUrl()"
                                 [state]="{ back: 'true' }"
                             >

@@ -18,15 +18,15 @@
                     <h2>{{ 'General' | translate }}</h2>
                     <mat-form-field>
                         <mat-label>{{ 'Name' | translate }}</mat-label>
-                        <input matInput formControlName="name" />
+                        <input formControlName="name" matInput />
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ 'Description' | translate }}</mat-label>
-                        <input matInput formControlName="description" />
+                        <input formControlName="description" matInput />
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ 'Show this text on the login page' | translate }}</mat-label>
-                        <input matInput formControlName="login_text" />
+                        <input formControlName="login_text" matInput />
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ 'Organization language' | translate }}</mat-label>
@@ -47,22 +47,22 @@
                     <h2>{{ 'Email settings' | translate }}</h2>
                     <mat-form-field>
                         <mat-label>{{ 'Sender name' | translate }}</mat-label>
-                        <input matInput formControlName="users_email_sender" />
+                        <input formControlName="users_email_sender" matInput />
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ 'Reply address' | translate }}</mat-label>
-                        <input matInput formControlName="users_email_replyto" osTrimOnPaste />
+                        <input formControlName="users_email_replyto" matInput osTrimOnPaste />
                         <mat-error>
                             {{ 'Please enter a valid email address!' | translate }}
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ 'Email subject' | translate }}</mat-label>
-                        <input matInput formControlName="users_email_subject" />
+                        <input formControlName="users_email_subject" matInput />
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ 'Email body' | translate }}</mat-label>
-                        <textarea formControlName="users_email_body" rows="10" matInput></textarea>
+                        <textarea formControlName="users_email_body" matInput rows="10"></textarea>
                     </mat-form-field>
                 </div>
             </mat-card-content>
@@ -75,7 +75,7 @@
                     <section>
                         <mat-form-field subscriptSizing="dynamic">
                             <mat-label>{{ 'OpenSlides URL' | translate }}</mat-label>
-                            <input matInput formControlName="url" />
+                            <input formControlName="url" matInput />
                             <mat-hint>
                                 {{ 'Used for invitation emails and QRCode in PDF of access data.' | translate }}
                             </mat-hint>
@@ -103,11 +103,11 @@
                         <mat-form-field subscriptSizing="dynamic">
                             <mat-label>{{ 'Limit of active meetings' | translate }}</mat-label>
                             <input
-                                matInput
-                                type="number"
                                 formControlName="limit_of_meetings"
+                                matInput
                                 min="0"
                                 required
+                                type="number"
                                 [osOnlyNumber]="true"
                             />
                             <mat-hint>{{ '"0" means an unlimited number of active meetings' | translate }}</mat-hint>
@@ -117,11 +117,11 @@
                         <mat-form-field subscriptSizing="dynamic">
                             <mat-label>{{ 'Limit of active accounts' | translate }}</mat-label>
                             <input
-                                matInput
-                                type="number"
                                 formControlName="limit_of_users"
+                                matInput
                                 min="0"
                                 required
+                                type="number"
                                 [osOnlyNumber]="true"
                             />
                             <mat-hint>{{ '"0" means an unlimited number of active accounts' | translate }}</mat-hint>
@@ -144,14 +144,14 @@
                     <section>
                         <mat-form-field>
                             <mat-label>{{ 'Login button text' | translate }}</mat-label>
-                            <input matInput formControlName="saml_login_button_text" />
+                            <input formControlName="saml_login_button_text" matInput />
                         </mat-form-field>
                     </section>
                     <!-- JSON source attribute -->
                     <section>
                         <mat-form-field subscriptSizing="dynamic">
                             <mat-label>{{ 'Attribute mapping (JSON)' | translate }}</mat-label>
-                            <textarea matInput formControlName="saml_attr_mapping" [rows]="ssoConfigRows"></textarea>
+                            <textarea formControlName="saml_attr_mapping" matInput [rows]="ssoConfigRows"></textarea>
                             <mat-hint>
                                 {{
                                     'Use JSON key:value structure (key = OpenSlides attribute name, value = IdP attribute name).'
@@ -164,21 +164,21 @@
                     <section>
                         <mat-form-field>
                             <mat-label>{{ 'Metadata of Identity Provider (IdP)' | translate }}</mat-label>
-                            <textarea matInput formControlName="saml_metadata_idp" wrap="hard" [rows]="6"></textarea>
+                            <textarea formControlName="saml_metadata_idp" matInput wrap="hard" [rows]="6"></textarea>
                         </mat-form-field>
                     </section>
                     <!-- SSO login button text -->
                     <section>
                         <mat-form-field>
                             <mat-label>{{ 'Metadata of Service Provider (SP)' | translate }}</mat-label>
-                            <textarea matInput formControlName="saml_metadata_sp" wrap="hard" [rows]="6"></textarea>
+                            <textarea formControlName="saml_metadata_sp" matInput wrap="hard" [rows]="6"></textarea>
                         </mat-form-field>
                     </section>
                     <!-- SSO login button text -->
                     <section>
                         <mat-form-field>
                             <mat-label>{{ 'Private key of Service Provider (SP)' | translate }}</mat-label>
-                            <textarea matInput formControlName="saml_private_key" wrap="hard" [rows]="6"></textarea>
+                            <textarea formControlName="saml_private_key" matInput wrap="hard" [rows]="6"></textarea>
                         </mat-form-field>
                     </section>
                 </div>

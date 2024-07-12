@@ -6,15 +6,15 @@
     }
     @for (item of sortedItems; track item; let i = $index) {
         <div
-            class="line margin-bottom-5"
             cdkDrag
+            class="line margin-bottom-5"
             [ngClass]="isSelectedRow(i) ? 'backgroundColorSelected' : 'backgroundColorLight'"
-            (click)="onItemClick($event, i)"
             (cdkDragStarted)="dragStarted(i)"
+            (click)="onItemClick($event, i)"
         >
             <!-- drag handle -->
             @if (enable) {
-                <div class="drag-indicator" cdkDragHandle>
+                <div cdkDragHandle class="drag-indicator">
                     <mat-icon>drag_indicator</mat-icon>
                 </div>
             }

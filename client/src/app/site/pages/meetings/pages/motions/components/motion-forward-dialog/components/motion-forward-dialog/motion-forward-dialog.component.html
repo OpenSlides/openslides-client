@@ -38,8 +38,8 @@
                                     <span>
                                         &nbsp;&middot;&nbsp;
                                         <os-meeting-time
-                                            [startTime]="meeting.start_time"
                                             [endTime]="meeting.end_time"
+                                            [startTime]="meeting.start_time"
                                         ></os-meeting-time>
                                     </span>
                                 }
@@ -52,7 +52,7 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button color="primary" [disabled]="!selectedMeetings?.size" (click)="onSaveClicked()">
+    <button color="primary" mat-button [disabled]="!selectedMeetings?.size" (click)="onSaveClicked()">
         {{ 'Forward' | translate }}
     </button>
     <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>

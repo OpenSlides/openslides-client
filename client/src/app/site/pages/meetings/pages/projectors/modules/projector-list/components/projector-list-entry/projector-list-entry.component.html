@@ -1,12 +1,12 @@
 @if (projector) {
-    <os-action-card class="projector-tile" [showActionRow]="true" [disableExpandControl]="true">
+    <os-action-card class="projector-tile" [disableExpandControl]="true" [showActionRow]="true">
         <ng-container class="meta-text-block-title">
             <os-icon-container
                 icon="lock"
                 size="large"
+                [iconTooltip]="'Internal' | translate"
                 [noWrap]="true"
                 [showIcon]="projector.is_internal"
-                [iconTooltip]="'Internal' | translate"
             >
                 <div class="ellipsis-overflow">
                     {{ projector.getTitle() }}
@@ -30,8 +30,8 @@
                 <mat-icon class="grey-icon">edit</mat-icon>
             </button>
             <button
-                mat-icon-button
                 color="warn"
+                mat-icon-button
                 matTooltip="{{ 'Delete projector' | translate }}"
                 (click)="onDeleteButton()"
             >

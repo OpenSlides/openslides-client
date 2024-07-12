@@ -1,7 +1,7 @@
 <os-head-bar
     [hasMainButton]="operator.hasOrganizationPermissions(OML.can_manage_organization)"
-    [multiSelectMode]="isMultiSelect"
     [mainActionTooltip]="'New committee' | translate"
+    [multiSelectMode]="isMultiSelect"
     (mainEvent)="createNewCommittee()"
 >
     <!-- Title -->
@@ -12,7 +12,7 @@
     <!-- Menu -->
     <!-- Only organization managers can do something -->
     <ng-container *osOmlPerms="OML.can_manage_organization" class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="committeeMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="committeeMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -25,13 +25,13 @@
 </os-head-bar>
 
 <os-list
-    [listObservableProvider]="committeeController"
-    [multiSelect]="isMultiSelect"
     [alwaysShowMenu]="true"
     [filterProps]="['name']"
-    [hiddenInMobile]="['forwarding', 'managers', 'meta']"
-    [sortService]="sortService"
     [filterService]="filterService"
+    [hiddenInMobile]="['forwarding', 'managers', 'meta']"
+    [listObservableProvider]="committeeController"
+    [multiSelect]="isMultiSelect"
+    [sortService]="sortService"
     [(selectedRows)]="selectedRows"
 >
     <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
@@ -61,8 +61,8 @@
             @if (committee.forward_to_committees?.length && operator.isOrgaManager) {
                 <div>
                     <os-icon-container
-                        iconTooltipPosition="left"
                         icon="file_upload"
+                        iconTooltipPosition="left"
                         iconTooltip="{{ 'Can forward motions to committee' | translate }}"
                         [noWrap]="true"
                     >
@@ -75,8 +75,8 @@
             @if (committee.receive_forwardings_from_committees?.length && operator.isOrgaManager) {
                 <div>
                     <os-icon-container
-                        iconTooltipPosition="left"
                         icon="file_download"
+                        iconTooltipPosition="left"
                         iconTooltip="{{ 'Can receive motions from committee' | translate }}"
                         [noWrap]="true"
                     >
@@ -94,8 +94,8 @@
             @if (committee.meetingAmount) {
                 <div>
                     <os-icon-container
-                        iconTooltipPosition="right"
                         icon="event_available"
+                        iconTooltipPosition="right"
                         iconTooltip="{{ 'Meetings' | translate }}"
                     >
                         {{ committee.meetingAmount }}
@@ -105,8 +105,8 @@
             @if (committee.memberAmount) {
                 <div>
                     <os-icon-container
-                        iconTooltipPosition="right"
                         icon="group"
+                        iconTooltipPosition="right"
                         iconTooltip="{{ 'Accounts' | translate }}"
                     >
                         {{ committee.memberAmount }}
@@ -116,8 +116,8 @@
             @if (committee.managerAmount) {
                 <div>
                     <os-icon-container
-                        iconTooltipPosition="right"
                         icon="engineering"
+                        iconTooltipPosition="right"
                         iconTooltip="{{ 'Committee management' | translate }}"
                     >
                         {{ committee.managerAmount }}
@@ -130,11 +130,11 @@
     <div *osScrollingTableCell="'menu'; row as committee; config: { width: 40 }">
         <button
             *osOmlPerms="OML.can_manage_organization"
-            mat-icon-button
             data-cy="committeeListSingleMenuTrigger"
+            mat-icon-button
             [disabled]="isMultiSelect"
-            [matMenuTriggerFor]="singleCommitteeMenu"
             [matMenuTriggerData]="{ committee: committee }"
+            [matMenuTriggerFor]="singleCommitteeMenu"
             (click)="$event.stopPropagation()"
         >
             <mat-icon>more_vert</mat-icon>
@@ -145,11 +145,11 @@
 <mat-menu #singleCommitteeMenu="matMenu">
     <ng-template let-committee="committee" matMenuContent>
         <a
+            data-cy="committeeListSingleEditButton"
             mat-menu-item
             type="button"
-            data-cy="committeeListSingleEditButton"
-            [routerLink]="['/', 'committees', 'edit-committee']"
             [queryParams]="{ committeeId: committee.id }"
+            [routerLink]="['/', 'committees', 'edit-committee']"
         >
             <mat-icon>edit</mat-icon>
             <span>
@@ -158,10 +158,10 @@
         </a>
 
         <button
+            class="red-warning-text"
+            data-cy="committeeListSingleDeleteButton"
             mat-menu-item
             type="button"
-            data-cy="committeeListSingleDeleteButton"
-            class="red-warning-text"
             (click)="doDelete(committee)"
         >
             <mat-icon>delete</mat-icon>
@@ -217,7 +217,7 @@
                     <span>{{ 'Export as CSV' | translate }}</span>
                 </button>
                 <mat-divider></mat-divider>
-                <button mat-menu-item class="red-warning-text" [disabled]="!selectedRows.length" (click)="doDelete()">
+                <button class="red-warning-text" mat-menu-item [disabled]="!selectedRows.length" (click)="doDelete()">
                     <mat-icon>delete</mat-icon>
                     <span>{{ 'Delete' | translate }}</span>
                 </button>

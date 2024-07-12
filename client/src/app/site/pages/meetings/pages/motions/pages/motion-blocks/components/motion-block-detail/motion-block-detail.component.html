@@ -6,16 +6,16 @@
                 <os-icon-container
                     icon="check"
                     size="large"
+                    [iconTooltip]="'Finished' | translate"
                     [noWrap]="true"
                     [showIcon]="block.isFinished"
-                    [iconTooltip]="'Finished' | translate"
                 >
                     <os-icon-container
                         icon="lock"
                         size="large"
+                        [iconTooltip]="'Internal' | translate"
                         [noWrap]="true"
                         [showIcon]="block.internal"
-                        [iconTooltip]="'Internal' | translate"
                     >
                         <os-projectable-title titleStyle="h2" [model]="block"></os-projectable-title>
                     </os-icon-container>
@@ -25,7 +25,7 @@
 
         <!-- Menu -->
         <ng-container class="menu-slot">
-            <button type="button" mat-icon-button [matMenuTriggerFor]="motionBlockMenu">
+            <button mat-icon-button type="button" [matMenuTriggerFor]="motionBlockMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
         </ng-container>
@@ -39,7 +39,7 @@
                     [disabled]="isFollowButtonDisabledObservable() | async"
                     (click)="onFollowRecButton()"
                 >
-                    <os-icon-container icon="done_all" class="follow-all-icon">
+                    <os-icon-container class="follow-all-icon" icon="done_all">
                         <div>{{ 'Follow recommendations for all motions' | translate }}</div>
                     </os-icon-container>
                 </button>
@@ -48,11 +48,11 @@
     </os-head-bar>
 
     <os-projectable-list
-        [listObservableProvider]="motionRepo"
-        [filterService]="filterService"
-        [restricted]="restrictedColumns"
         [filterProps]="filterProps"
+        [filterService]="filterService"
         [hiddenInMobile]="['remove']"
+        [listObservableProvider]="motionRepo"
+        [restricted]="restrictedColumns"
     >
         <!-- Title column -->
         <div *osScrollingTableCell="'title'; row as motion; rowContext as rowContext" class="cell-slot fill">
@@ -109,7 +109,7 @@
                 <!-- Workflow state -->
                 <div class="ellipsis-overflow white">
                     @if (motion.state) {
-                        <mat-basic-chip [ngClass]="motion.stateCssColor" [disabled]="true">
+                        <mat-basic-chip [disabled]="true" [ngClass]="motion.stateCssColor">
                             {{ getStateLabel(motion) }}
                         </mat-basic-chip>
                     }
@@ -129,9 +129,9 @@
         <!-- Remove from block column -->
         <div *osScrollingTableCell="'remove'; row as motion; config: { width: 60 }" class="cell-slot fill">
             <button
-                type="button"
-                mat-icon-button
                 color="warn"
+                mat-icon-button
+                type="button"
                 matTooltip="{{ 'Remove from motion block' | translate }}"
                 (click)="onRemoveMotionButton(motion)"
             >
@@ -147,8 +147,8 @@
             <button
                 mat-icon-button
                 [disabled]="isMultiSelect"
-                [matMenuTriggerFor]="singleItemMenu"
                 [matMenuTriggerData]="{ motion: motion }"
+                [matMenuTriggerFor]="singleItemMenu"
                 (click)="$event.stopPropagation()"
             >
                 <mat-icon>more_vert</mat-icon>
@@ -160,12 +160,12 @@
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
     <ng-template let-motion="motion" matMenuContent>
-        <os-projector-button [object]="motion" [menuItem]="true"></os-projector-button>
-        <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
+        <os-projector-button [menuItem]="true" [object]="motion"></os-projector-button>
+        <os-speaker-button [menuItem]="true" [object]="motion"></os-speaker-button>
         <button
             *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
-            mat-menu-item
             class="red-warning-text"
+            mat-menu-item
             (click)="onRemoveMotionButton(motion)"
         >
             <mat-icon>close</mat-icon>
@@ -193,7 +193,7 @@
     <os-speaker-button [menuItem]="true" [object]="block"></os-speaker-button>
 
     @if (block) {
-        <os-projector-button [object]="block" [menuItem]="true"></os-projector-button>
+        <os-projector-button [menuItem]="true" [object]="block"></os-projector-button>
     }
 
     <div *osPerms="permission.agendaItemCanManage">
@@ -218,7 +218,7 @@
         </button>
         <mat-divider></mat-divider>
 
-        <button mat-menu-item class="red-warning-text" (click)="onDeleteBlockButton()">
+        <button class="red-warning-text" mat-menu-item (click)="onDeleteBlockButton()">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>

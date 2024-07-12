@@ -9,8 +9,8 @@
             (click)="picker.open()"
             (keydown)="onKeyPressed($event)"
         >
-            <input matStartDate readonly formControlName="start" [placeholder]="'Start date' | translate" />
-            <input matEndDate readonly formControlName="end" [placeholder]="'End date' | translate" />
+            <input formControlName="start" matStartDate readonly [placeholder]="'Start date' | translate" />
+            <input formControlName="end" matEndDate readonly [placeholder]="'End date' | translate" />
         </mat-date-range-input>
         @if (hintText) {
             <mat-hint>{{ hintText | translate }}</mat-hint>
@@ -26,11 +26,11 @@
         }
         <mat-date-range-picker #picker>
             <mat-datepicker-actions>
-                <button mat-button matDatepickerCancel color="warn" (click)="updateForm({ start: null, end: null })">
+                <button color="warn" mat-button matDatepickerCancel (click)="updateForm({ start: null, end: null })">
                     {{ 'Clear' | translate }}
                 </button>
                 <button mat-button matDatepickerCancel>{{ 'Cancel' | translate }}</button>
-                <button mat-raised-button color="primary" matDatepickerApply>{{ 'Apply' | translate }}</button>
+                <button color="primary" mat-raised-button matDatepickerApply>{{ 'Apply' | translate }}</button>
             </mat-datepicker-actions>
         </mat-date-range-picker>
     </mat-form-field>

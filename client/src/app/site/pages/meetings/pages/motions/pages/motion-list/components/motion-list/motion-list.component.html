@@ -11,7 +11,7 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="motionListMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="motionListMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -91,12 +91,12 @@
     </div>
 } @else {
     <os-projectable-list
-        [listObservableProvider]="motionRepo"
-        [filterService]="filterService"
-        [sortService]="sortService"
-        [multiSelect]="isMultiSelect"
         [filterProps]="filterProps"
+        [filterService]="filterService"
         [hiddenInMobile]="getColumnsHiddenInMobile()"
+        [listObservableProvider]="motionRepo"
+        [multiSelect]="isMultiSelect"
+        [sortService]="sortService"
         [(selectedRows)]="selectedRows"
     >
         <!-- number -->
@@ -180,7 +180,7 @@
                 <!-- Workflow state -->
                 <div class="ellipsis-overflow white">
                     @if (motion.state) {
-                        <mat-basic-chip [ngClass]="motion.stateCssColor" [disabled]="true">
+                        <mat-basic-chip [disabled]="true" [ngClass]="motion.stateCssColor">
                             {{ motionRepo.getExtendedStateLabel(motion) | translate }}
                         </mat-basic-chip>
                     }
@@ -239,8 +239,8 @@
             <button
                 mat-icon-button
                 [disabled]="isMultiSelect"
-                [matMenuTriggerFor]="singleItemMenu"
                 [matMenuTriggerData]="{ motion: motion }"
+                [matMenuTriggerFor]="singleItemMenu"
                 (click)="$event.stopPropagation()"
             >
                 <mat-icon>more_vert</mat-icon>
@@ -251,12 +251,12 @@
 
 <ng-template #list>
     <os-projectable-list
-        [listObservableProvider]="motionRepo"
-        [filterService]="filterService"
-        [sortService]="sortService"
-        [multiSelect]="isMultiSelect"
         [filterProps]="filterProps"
+        [filterService]="filterService"
         [hiddenInMobile]="getColumnsHiddenInMobile()"
+        [listObservableProvider]="motionRepo"
+        [multiSelect]="isMultiSelect"
+        [sortService]="sortService"
         [(selectedRows)]="selectedRows"
     >
         <!-- number -->
@@ -345,7 +345,7 @@
                 <!-- Workflow state -->
                 <div class="ellipsis-overflow white">
                     @if (motion.state) {
-                        <mat-basic-chip [ngClass]="motion.stateCssColor" [disabled]="true">
+                        <mat-basic-chip [disabled]="true" [ngClass]="motion.stateCssColor">
                             {{ motionRepo.getExtendedStateLabel(motion) | translate }}
                         </mat-basic-chip>
                     }
@@ -409,8 +409,8 @@
             <button
                 mat-icon-button
                 [disabled]="isMultiSelect"
-                [matMenuTriggerFor]="singleItemMenu"
                 [matMenuTriggerData]="{ motion: motion }"
+                [matMenuTriggerFor]="singleItemMenu"
                 (click)="$event.stopPropagation()"
             >
                 <mat-icon>more_vert</mat-icon>
@@ -422,8 +422,8 @@
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
     <ng-template let-motion="motion" matMenuContent>
-        <os-projector-button [object]="motion" [menuItem]="true"></os-projector-button>
-        <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
+        <os-projector-button [menuItem]="true" [object]="motion"></os-projector-button>
+        <os-speaker-button [menuItem]="true" [object]="motion"></os-speaker-button>
     </ng-template>
 </mat-menu>
 

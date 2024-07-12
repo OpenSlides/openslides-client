@@ -1,7 +1,7 @@
 <os-head-bar
-    [nav]="false"
     [hasMainButton]="true"
     [mainActionTooltip]="'New comment field' | translate"
+    [nav]="false"
     (mainEvent)="openDialog()"
 >
     <!-- Title -->
@@ -11,7 +11,7 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="commentListMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="commentListMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -138,8 +138,8 @@
                     <mat-label>{{ 'Groups with read permissions' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="read_group_ids"
-                        [multiple]="true"
                         [inputListValues]="groups"
+                        [multiple]="true"
                         [sortFn]="sortFn"
                     ></os-list-search-selector>
                 </mat-form-field>
@@ -149,8 +149,8 @@
                     <mat-label>{{ 'Groups with write permissions' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="write_group_ids"
-                        [multiple]="true"
                         [inputListValues]="groups"
+                        [multiple]="true"
                         [sortFn]="sortFn"
                     ></os-list-search-selector>
                 </mat-form-field>

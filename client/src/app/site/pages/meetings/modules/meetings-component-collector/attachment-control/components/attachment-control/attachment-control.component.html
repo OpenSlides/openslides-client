@@ -7,15 +7,15 @@
                     class="selector"
                     formControlName="mediafile_ids"
                     [multiple]="true"
-                    [repo]="repo"
                     [pipeFn]="getMediafilesPipeFn()"
+                    [repo]="repo"
                 ></os-repo-search-selector>
             </mat-form-field>
         </form>
         <button
             *osPerms="permission.mediafileCanManage"
-            type="button"
             mat-icon-button
+            type="button"
             (click)="openUploadDialog(uploadDialog)"
         >
             <mat-icon>cloud_upload</mat-icon>
@@ -31,8 +31,8 @@
     <os-media-upload-content
         [directories]="directoriesObservable"
         [uploadFn]="uploadFn"
-        (uploadSuccessEvent)="uploadSuccess($event.uploadedIds)"
         (errorEvent)="uploadError($event)"
+        (uploadSuccessEvent)="uploadSuccess($event.uploadedIds)"
     >
         <div *osScrollingTableCell="'access_groups'; row as file" class="cell-slot">
             <form [formGroup]="file.form">
@@ -40,8 +40,8 @@
                     <mat-label>{{ 'Access groups' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="access_group_ids"
-                        [multiple]="true"
                         [inputListValues]="availableGroups"
+                        [multiple]="true"
                     ></os-list-search-selector>
                 </mat-form-field>
             </form>

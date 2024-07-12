@@ -1,8 +1,8 @@
 <div class="expandable-content-wrapper">
     <div
         #contentBox
-        osResized
         class="content"
+        osResized
         [ngClass]="showCollapsed ? 'collapsed collapsed-card-content' : ''"
         (osResizedHeight)="onResizedHeight($event)"
     >

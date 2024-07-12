@@ -11,14 +11,14 @@
         @if (isPdf && url) {
             <div class="fullscreen">
                 <pdf-viewer
-                    [show-all]="false"
-                    [original-size]="false"
-                    [fit-to-page]="true"
                     [autoresize]="true"
-                    [page]="page"
-                    [zoom]="zoom"
-                    [src]="url"
+                    [fit-to-page]="true"
                     [ngStyle]="{ top: -scroll + 'px' }"
+                    [original-size]="false"
+                    [page]="page"
+                    [show-all]="false"
+                    [src]="url"
+                    [zoom]="zoom"
                 ></pdf-viewer>
             </div>
         }

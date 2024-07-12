@@ -1,5 +1,5 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
-    <os-head-bar [editMode]="hasChanged" [nav]="false" (saveEvent)="sendUpdate()" (mainEvent)="onCancel()">
+    <os-head-bar [editMode]="hasChanged" [nav]="false" (mainEvent)="onCancel()" (saveEvent)="sendUpdate()">
         <!-- Title -->
         <div class="title-slot">
             @if (category) {

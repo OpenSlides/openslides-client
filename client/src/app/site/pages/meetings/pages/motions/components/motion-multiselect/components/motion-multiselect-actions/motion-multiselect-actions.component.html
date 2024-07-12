@@ -103,8 +103,8 @@
     </button>
     <mat-divider></mat-divider>
     <button
-        mat-menu-item
         class="red-warning-text"
+        mat-menu-item
         [disabled]="!selectedMotions.length"
         (click)="action.emit(multiselectService.delete(selectedMotions))"
     >

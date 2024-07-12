@@ -30,15 +30,15 @@
             @if (isConfStateStream | async) {
                 <os-stream
                     class="video-player"
-                    (streamTitle)="updateTitle($event)"
                     (streamSubtitle)="updateSubtitle($event)"
+                    (streamTitle)="updateTitle($event)"
                 ></os-stream>
             }
             @if (isConfStateJitsi | async) {
                 <os-call
                     class="call-body"
-                    (conferenceTitle)="updateTitle($event)"
                     (conferenceSubtitle)="updateSubtitle($event)"
+                    (conferenceTitle)="updateTitle($event)"
                 ></os-call>
             }
         </div>

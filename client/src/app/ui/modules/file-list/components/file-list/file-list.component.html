@@ -27,11 +27,11 @@
                         <button
                             class="folder"
                             mat-button
-                            [matMenuTriggerFor]="singleMediafileMenu"
-                            [matMenuTriggerData]="{ mediafile: directory }"
                             [disabled]="isMultiSelect"
+                            [matMenuTriggerData]="{ mediafile: directory }"
+                            [matMenuTriggerFor]="singleMediafileMenu"
                         >
-                            <os-icon-container icon="arrow_drop_down" size="large" [swap]="true" [noWrap]="true">
+                            <os-icon-container icon="arrow_drop_down" size="large" [noWrap]="true" [swap]="true">
                                 {{ directory.getTitle() }}
                             </os-icon-container>
                         </button>
@@ -53,14 +53,14 @@
 <!-- the actual file manager -->
 <os-list
     class="file-manager-table"
-    [listObservable]="directoryObservable"
-    [vScrollFixed]="60"
-    [hiddenInMobile]="hiddenInMobile"
-    [showFilterBar]="false"
+    [addBottomSpacer]="addBottomSpacer"
     [alwaysShowMenu]="true"
     [componentHeight]="fileListHeight"
+    [hiddenInMobile]="hiddenInMobile"
+    [listObservable]="directoryObservable"
     [multiSelect]="isMultiSelect"
-    [addBottomSpacer]="addBottomSpacer"
+    [showFilterBar]="false"
+    [vScrollFixed]="60"
     (selectedRowsChange)="onSelectedRowsChange($event)"
 >
     <!-- Icon column -->
@@ -149,9 +149,9 @@
         @if (shouldShowFileMenuFn(mediafile)) {
             <button
                 mat-icon-button
-                [matMenuTriggerFor]="singleMediafileMenu"
-                [matMenuTriggerData]="{ mediafile: mediafile }"
                 [disabled]="isMultiSelect"
+                [matMenuTriggerData]="{ mediafile: mediafile }"
+                [matMenuTriggerFor]="singleMediafileMenu"
             >
                 <mat-icon>more_vert</mat-icon>
             </button>
@@ -175,7 +175,7 @@
                     <mat-icon>near_me</mat-icon>
                     <span>{{ 'Move' | translate }}</span>
                 </button>
-                <button mat-menu-item class="red-warning-text" (click)="onDelete(mediafile)">
+                <button class="red-warning-text" mat-menu-item (click)="onDelete(mediafile)">
                     <mat-icon>delete</mat-icon>
                     <span>{{ 'Delete' | translate }}</span>
                 </button>
@@ -191,7 +191,7 @@
         <form class="edit-file-form" [formGroup]="fileEditForm">
             <mat-form-field>
                 <mat-label>{{ 'New file name' | translate }}</mat-label>
-                <input type="text" matInput osAutofocus required formControlName="title" />
+                <input formControlName="title" matInput osAutofocus required type="text" />
                 @if (fileEditForm.invalid) {
                     <mat-error>{{ 'Required' | translate }}</mat-error>
                 }
@@ -200,15 +200,15 @@
     </mat-dialog-content>
     <mat-dialog-actions>
         <button
-            type="submit"
-            mat-button
             color="accent"
+            mat-button
+            type="submit"
             [disabled]="!fileEditForm.valid"
             [mat-dialog-close]="fileEditForm.value"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>
@@ -226,16 +226,16 @@
             <os-list-search-selector
                 formControlName="directory_id"
                 [includeNone]="true"
-                noneTitle="{{ 'Base folder' | translate }}"
                 [inputListValues]="filteredDirectoryBehaviorSubject"
+                noneTitle="{{ 'Base folder' | translate }}"
             ></os-list-search-selector>
         </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button type="submit" mat-button color="accent" [mat-dialog-close]="true">
+        <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
             <span>{{ 'Move' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>

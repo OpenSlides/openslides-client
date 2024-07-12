@@ -28,11 +28,11 @@
                             <mat-label>{{ 'Select meetings ...' | translate }}</mat-label>
                             <os-list-search-selector
                                 formControlName="meeting_ids"
+                                [getAdditionallySearchedValuesFn]="getMeetingAdditionallySearchedFn"
+                                [getItemAdditionalInfoFn]="getMeetingAdditionalInfoFn"
+                                [inputListValues]="meetingsObservable"
                                 [multiple]="true"
                                 [showChips]="false"
-                                [inputListValues]="meetingsObservable"
-                                [getItemAdditionalInfoFn]="getMeetingAdditionalInfoFn"
-                                [getAdditionallySearchedValuesFn]="getMeetingAdditionallySearchedFn"
                                 [showEntriesNumber]="8"
                             ></os-list-search-selector>
                         </mat-form-field>
@@ -57,7 +57,7 @@
             <div class="potential-warning">
                 @if (!!warningMessage) {
                     <div>
-                        <mat-icon line-height="100%" inline color="warn">warning</mat-icon>
+                        <mat-icon color="warn" inline line-height="100%">warning</mat-icon>
                         <i class="foreground-warn">
                             {{ warningMessage | translate }}
                         </i>

@@ -1,9 +1,9 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar
         saveText="Create"
-        [nav]="false"
         [editMode]="true"
         [isSaveButtonEnabled]="matStepper.selectedIndex === 1 && contentForm.valid"
+        [nav]="false"
         [saveAction]="getSaveAction()"
         (cancelEditEvent)="cancelCreation()"
     >
@@ -27,7 +27,7 @@
             }
             @if (matStepper.selectedIndex === 1) {
                 <div>
-                    <button type="button" mat-button (click)="matStepper.previous()">
+                    <button mat-button type="button" (click)="matStepper.previous()">
                         <span class="upper">{{ 'Previous' | translate }}</span>
                     </button>
                 </div>
@@ -41,10 +41,10 @@
                 <ng-template matStepLabel>{{ 'Select paragraphs' | translate }}</ng-template>
                 <div class="amendment-create-wizard-wrapper spacer-bottom-20">
                     <cdk-virtual-scroll-viewport
-                        itemSize="90"
-                        minBufferPx="400"
-                        maxBufferPx="600"
                         class="paragraph-scroll"
+                        itemSize="90"
+                        maxBufferPx="600"
+                        minBufferPx="400"
                     >
                         @for (paragraph of paragraphs; track paragraph; let i = $index) {
                             <section
@@ -108,8 +108,8 @@
                             }
                         </h4>
                         <os-editor
-                            [formControlName]="'text_' + paragraph.paragraphNo"
                             [customSettings]="tinyMceConfig"
+                            [formControlName]="'text_' + paragraph.paragraphNo"
                         ></os-editor>
                     </section>
                 }
@@ -133,8 +133,8 @@
 
                 <os-editor
                     formControlName="reason"
-                    [required]="reasonRequired"
                     [customSettings]="tinyMceConfig"
+                    [required]="reasonRequired"
                 ></os-editor>
                 @if (
                     reasonRequired &&
