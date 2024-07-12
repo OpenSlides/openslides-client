@@ -5,7 +5,6 @@ import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 
 import { AssignmentPollMethodVerbose } from '../../definitions';
-import { UnknownUserLabel } from '../../services/assignment-poll.service';
 
 @Component({
     selector: `os-assignment-poll-meta-info`,
@@ -14,7 +13,6 @@ import { UnknownUserLabel } from '../../services/assignment-poll.service';
 })
 export class AssignmentPollMetaInfoComponent extends BasePollMetaInformationComponent {
     public pollPropertyVerbose = PollPropertyVerbose;
-    private unknownUserLabel = UnknownUserLabel;
 
     @Input()
     public showCandidates = true;
