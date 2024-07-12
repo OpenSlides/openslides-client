@@ -24,8 +24,8 @@
             <span class="flex-center" cdkDragHandle>
                 <mat-icon>drag_indicator</mat-icon>
             </span>
+            @if (hasChild) {
             <button
-                *ngIf="hasChild"
                 mat-icon-button
                 cdkTreeNodeToggle
                 [attr.aria-label]="'toggle ' + node.filename"
@@ -39,6 +39,7 @@
                     chevron_right
                 </mat-icon>
             </button>
+            }
             <ng-container [ngTemplateOutlet]="innerNode" [ngTemplateOutletContext]="{ item: node.item }"></ng-container>
         </div>
         <div [style.margin-left]="placeholderLevel * 40 + 'px'" *cdkDragPlaceholder></div>

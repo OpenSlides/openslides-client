@@ -6,52 +6,48 @@
 
     <!-- Actions -->
     <ng-container class="meta-text-block-action-row">
-        <button mat-icon-button *ngIf="!isEditing" (click)="editPersonalNote()" matTooltip="{{ 'Edit' | translate }}">
+        @if (!isEditing) {
+        <button mat-icon-button (click)="editPersonalNote()" matTooltip="{{ 'Edit' | translate }}">
             <mat-icon>edit</mat-icon>
         </button>
+        } @if (!isEditing && (personalNoteObservable | async)) {
         <button
             mat-icon-button
-            *ngIf="!isEditing && (personalNoteObservable | async)"
             (click)="printPersonalNote()"
             matTooltip="{{ 'Export personal note only' | translate }}"
         >
             <mat-icon>picture_as_pdf</mat-icon>
         </button>
-        <button
-            mat-icon-button
-            color="warn"
-            *ngIf="isEditing"
-            (click)="savePersonalNote()"
-            matTooltip="{{ 'Save' | translate }}"
-        >
+        } @if (isEditing) {
+        <button mat-icon-button color="warn" (click)="savePersonalNote()" matTooltip="{{ 'Save' | translate }}">
             <mat-icon>done</mat-icon>
         </button>
-        <button
-            mat-icon-button
-            *ngIf="isEditing"
-            (click)="leaveEditMode()"
-            matTooltip="{{ 'Cancel edit' | translate }}"
-        >
+        } @if (isEditing) {
+        <button mat-icon-button (click)="leaveEditMode()" matTooltip="{{ 'Cancel edit' | translate }}">
             <mat-icon>close</mat-icon>
         </button>
+        }
     </ng-container>
 
     <!-- Content -->
     <ng-container class="meta-text-block-content">
-        <ng-container *ngIf="!isEditing">
-            <div *ngIf="(personalNoteObservable | async)?.note as note" [innerHTML]="note | trust : 'html'"></div>
-            <div class="no-content" *ngIf="(hasPersonalNoteObservable | async) === false">
-                {{ 'No personal note' | translate }}
-            </div>
-        </ng-container>
-        <form [formGroup]="formGroup" *ngIf="isEditing">
+        @if (!isEditing) { @if ((personalNoteObservable | async)?.note; as note) {
+        <div [innerHTML]="note | trust : 'html'"></div>
+        } @if ((hasPersonalNoteObservable | async) === false) {
+        <div class="no-content">
+            {{ 'No personal note' | translate }}
+        </div>
+        } } @if (isEditing) {
+        <form [formGroup]="formGroup">
             <!-- The HTML Editor -->
             <os-editor formControlName="text"></os-editor>
         </form>
-        <div *ngIf="saveHint">
+        } @if (saveHint) {
+        <div>
             <span>{{ 'Touch the book icon to enter text' | translate }}</span>
             <br />
             <span class="red-warning-text">{{ 'Do not forget to save your changes!' | translate }}</span>
         </div>
+        }
     </ng-container>
 </os-action-card>

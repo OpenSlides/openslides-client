@@ -36,8 +36,8 @@
     <mat-icon>label</mat-icon>
     <span>{{ 'Set status' | translate }} ...</span>
 </button>
+@if (recommendationEnabled) {
 <button
-    *ngIf="recommendationEnabled"
     [disabled]="!selectedMotions.length"
     mat-menu-item
     (click)="action.emit(multiselectService.setRecommendation(selectedMotions))"
@@ -46,33 +46,34 @@
     <!-- TODO: better icon -->
     <span>{{ 'Set recommendation' | translate }} ...</span>
 </button>
+} @if (categories.length) {
 <button
     mat-menu-item
     [disabled]="!selectedMotions.length"
-    *ngIf="categories.length"
     (click)="action.emit(multiselectService.setCategory(selectedMotions))"
 >
     <mat-icon>category</mat-icon>
     <span>{{ 'Set category' | translate }} ...</span>
 </button>
+} @if (motionBlocks.length) {
 <button
     mat-menu-item
-    *ngIf="motionBlocks.length"
     [disabled]="!selectedMotions.length"
     (click)="action.emit(multiselectService.setMotionBlock(selectedMotions))"
 >
     <mat-icon>widgets</mat-icon>
     <span>{{ 'Set motion block' | translate }} ...</span>
 </button>
+} @if (tags.length) {
 <button
     mat-menu-item
-    *ngIf="tags.length"
     [disabled]="!selectedMotions.length"
     (click)="action.emit(multiselectService.changeTags(selectedMotions))"
 >
     <mat-icon>local_offer</mat-icon>
     <span>{{ 'Set tags' | translate }} ...</span>
 </button>
+}
 <button
     mat-menu-item
     [disabled]="!selectedMotions.length"

@@ -31,56 +31,63 @@
 
     <div *osScrollingTableCell="'info'; row as speaker; config: { width: 200 }" class="cell-slot fill">
         <div class="infoCell">
-            <a
-                [routerLink]="viewModelUrl(speaker) || null"
-                [state]="{ back: 'true' }"
-                *ngIf="speaker.list_of_speakers?.content_object"
-                class="spacer-top-5"
-            >
+            @if (speaker.list_of_speakers?.content_object) {
+            <a [routerLink]="viewModelUrl(speaker) || null" [state]="{ back: 'true' }" class="spacer-top-5">
                 <os-icon-container [icon]="getSpeakerIcon(speaker)">
                     {{ speaker.topic }}
                 </os-icon-container>
             </a>
-            <div *ngIf="speaker.point_of_order" class="spacer-top-5">
+            } @if (speaker.point_of_order) {
+            <div class="spacer-top-5">
                 <os-icon-container icon="warning" translate>Point of order</os-icon-container>
             </div>
+            }
 
             <!-- Pro Speech -->
-            <div *ngIf="speaker.speech_state === SpeechState.PRO" class="spacer-top-5">
+            @if (speaker.speech_state === SpeechState.PRO) {
+            <div class="spacer-top-5">
                 <os-icon-container icon="add_circle">
                     {{ 'Forspeech' | translate }}
                 </os-icon-container>
             </div>
+            }
 
             <!-- Contra Speech -->
-            <div *ngIf="speaker.speech_state === SpeechState.CONTRA" class="spacer-top-5">
+            @if (speaker.speech_state === SpeechState.CONTRA) {
+            <div class="spacer-top-5">
                 <os-icon-container icon="remove_circle">
                     {{ 'Counter speech' | translate }}
                 </os-icon-container>
             </div>
+            }
 
             <!-- Marked -->
-            <div *ngIf="speaker.speech_state === SpeechState.CONTRIBUTION" class="spacer-top-5">
+            @if (speaker.speech_state === SpeechState.CONTRIBUTION) {
+            <div class="spacer-top-5">
                 <os-icon-container icon="star">
                     {{ 'Contribution' | translate }}
                 </os-icon-container>
             </div>
+            }
 
             <!-- Interposed question -->
-            <div *ngIf="speaker.speech_state === SpeechState.INTERPOSED_QUESTION" class="spacer-top-5">
+            @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
+            <div class="spacer-top-5">
                 <os-icon-container icon="help">
                     {{ 'Interposed question' | translate }}
                 </os-icon-container>
             </div>
+            }
 
             <!-- Intervention -->
-            <div *ngIf="speaker.speech_state === SpeechState.INTERVENTION" class="spacer-top-5">
+            @if (speaker.speech_state === SpeechState.INTERVENTION) {
+            <div class="spacer-top-5">
                 <os-icon-container icon="error">
                     {{ 'Intervention' | translate }}
                 </os-icon-container>
             </div>
-
-            <div *ngIf="speaker.end_time" class="spacer-top-5">
+            } @if (speaker.end_time) {
+            <div class="spacer-top-5">
                 <os-icon-container icon="schedule" translate>
                     <os-countdown-time
                         [unstyled]="true"
@@ -88,6 +95,7 @@
                     ></os-countdown-time>
                 </os-icon-container>
             </div>
+            }
         </div>
     </div>
 
@@ -101,10 +109,9 @@
         "
         class="fill"
     >
-        <os-speaker-button
-            *ngIf="speaker.list_of_speakers"
-            [object]="speaker.list_of_speakers.content_object"
-        ></os-speaker-button>
+        @if (speaker.list_of_speakers) {
+        <os-speaker-button [object]="speaker.list_of_speakers.content_object"></os-speaker-button>
+        }
     </div>
 </os-list>
 

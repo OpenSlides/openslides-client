@@ -9,9 +9,11 @@
         <ng-content></ng-content>
     </div>
     <!-- Expanding control -->
-    <div class="small show-entire-text" *ngIf="canExpand && !disableExpandControl">
+    @if (canExpand && !disableExpandControl) {
+    <div class="small show-entire-text">
         <a (click)="toggleExpansion()" tabindex="0" (keydown.enter)="toggleExpansion()">
             {{ isExpanded ? ('Hide more text' | translate) : ('Show full text' | translate) }}
         </a>
     </div>
+    }
 </div>

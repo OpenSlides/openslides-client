@@ -1,5 +1,6 @@
 <div *osPerms="permission.userCanSee">
-    <div *ngIf="isViewingThis">
+    @if (isViewingThis) {
+    <div>
         <os-list
             [listObservable]="entitledUsersObservable"
             [filterProps]="filterPropsEntitledUsersTable"
@@ -9,55 +10,71 @@
             <!-- Content -->
             <div *osScrollingTableCell="'user_id'; row as entry">
                 <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
-                <div *ngIf="entry.user">
+                @if (entry.user) {
+                <div>
                     {{ entry.user.getShortName() }}
                     <div class="user-subtitle">
                         <!-- Level and number -->
-                        <div *ngIf="entry.user.getLevelAndNumber()">
+                        @if (entry.user.getLevelAndNumber()) {
+                        <div>
                             {{ entry.user.getLevelAndNumber() }}
                         </div>
-
+                        }
                         <!-- Delegation -->
-                        <div *ngIf="entry.vote_delegated_to_user_id && !entry.delegation_user_merged_into_id">
+                        @if (entry.vote_delegated_to_user_id && !entry.delegation_user_merged_into_id) {
+                        <div>
                             <span>
                                 ({{ 'represented by' | translate }} {{ entry.vote_delegated_to.getShortName() }})
                             </span>
                         </div>
-                        <div *ngIf="entry.vote_delegated_to_user_id && entry.delegation_user_merged_into_id">
+                        } @if (entry.vote_delegated_to_user_id && entry.delegation_user_merged_into_id) {
+                        <div>
                             <span>
                                 {{ entry.delegation_user_merged_into }}
                             </span>
                         </div>
+                        }
                     </div>
                 </div>
-                <div *ngIf="!entry.user && entry.user_merged_into_id">
+                } @if (!entry.user && entry.user_merged_into_id) {
+                <div>
                     {{ entry.user_merged_into }}
                     <div class="user-subtitle">
                         <!-- Delegation -->
-                        <div *ngIf="entry.vote_delegated_to_user_id && !entry.delegation_user_merged_into_id">
+                        @if (entry.vote_delegated_to_user_id && !entry.delegation_user_merged_into_id) {
+                        <div>
                             <span>
                                 ({{ 'represented by' | translate }} {{ entry.vote_delegated_to?.getShortName() }})
                             </span>
                         </div>
-                        <div *ngIf="entry.vote_delegated_to_user_id && entry.delegation_user_merged_into_id">
+                        } @if (entry.vote_delegated_to_user_id && entry.delegation_user_merged_into_id) {
+                        <div>
                             <span>
                                 {{ entry.delegation_user_merged_into }}
                             </span>
                         </div>
+                        }
                     </div>
                 </div>
-                <i *ngIf="!entry.user && !entry.user_merged_into_id">{{ 'Anonymous' | translate }}</i>
+                } @if (!entry.user && !entry.user_merged_into_id) {
+                <i>{{ 'Anonymous' | translate }}</i>
+                }
             </div>
             <div *osScrollingTableCell="'present'; row as entry; config: { width: 24 }">
                 <div *osScrollingTableCellLabel>{{ 'Is present' | translate }}</div>
-                <mat-icon *ngIf="entry.present" [matTooltip]="'Is present' | translate">check</mat-icon>
+                @if (entry.present) {
+                <mat-icon [matTooltip]="'Is present' | translate">check</mat-icon>
+                }
             </div>
             <div *osScrollingTableCell="'voted'; row as entry; config: { width: 24 }">
                 <div *osScrollingTableCellLabel>{{ 'Voted' | translate }}</div>
-                <mat-icon *ngIf="entry.voted" [matTooltip]="'Vote submitted' | translate">how_to_vote</mat-icon>
+                @if (entry.voted) {
+                <mat-icon [matTooltip]="'Vote submitted' | translate">how_to_vote</mat-icon>
+                }
             </div>
         </os-list>
     </div>
+    }
 </div>
 <div class="no-can-see-users" *osPerms="permission.userCanSee; complement: true">
     <i>{{ 'You are not allowed to see all entitled users.' | translate }}</i>

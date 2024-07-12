@@ -1,12 +1,11 @@
-<mat-card *ngIf="message">
+@if (message) {
+<mat-card>
     <mat-card-content>
         <div class="flexbox-wrapper">
             <div class="projector-button">
                 <os-projector-button [object]="message" [projector]="projector"></os-projector-button>
             </div>
-
             <div class="message" [innerHTML]="message.getPreview(100)"></div>
-
             <div class="action-buttons">
                 <button
                     type="button"
@@ -42,3 +41,4 @@
         </div>
     </mat-card-content>
 </mat-card>
+}

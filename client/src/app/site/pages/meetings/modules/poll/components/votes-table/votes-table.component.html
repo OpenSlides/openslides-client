@@ -1,36 +1,43 @@
 <div *osPerms="permission.userCanSee">
-    <div *ngIf="isViewingThis">
+    @if (isViewingThis) {
+    <div>
         <os-list [listObservable]="votesDataObservable" [filterProps]="filterProps" [fullScreen]="false">
             <!-- Content -->
             <div *osScrollingTableCell="'user'; row as vote">
                 <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
-                <div *ngIf="vote.user">
+                @if (vote.user) {
+                <div>
                     {{ vote.user.getShortName() }}
                     <div class="user-subtitle">
                         <!-- Level and number -->
-                        <div *ngIf="vote.user.getLevelAndNumber()">
+                        @if (vote.user.getLevelAndNumber()) {
+                        <div>
                             {{ vote.user.getLevelAndNumber() }}
                         </div>
-
+                        }
                         <!-- Vote weight -->
-                        <div *ngIf="parent.voteWeightEnabled | async">
-                            {{ 'Vote weight' | translate }}: {{ vote.user.vote_weight() }}
-                        </div>
-
+                        @if (parent.voteWeightEnabled | async) {
+                        <div>{{ 'Vote weight' | translate }}: {{ vote.user.vote_weight() }}</div>
+                        }
                         <!-- Delegation -->
-                        <div *ngIf="parent.hasUserVoteDelegation(vote.user)">
+                        @if (parent.hasUserVoteDelegation(vote.user)) {
+                        <div>
                             <span>
                                 ({{ 'represented by' | translate }}
                                 {{ parent.getUsersVoteDelegation(vote.user)!.getShortName().trim() }})
                             </span>
                         </div>
+                        }
                     </div>
                 </div>
-                <div *ngIf="!vote.user">
+                } @if (!vote.user) {
+                <div>
                     <i>{{ 'Anonymous' | translate }}</i>
                 </div>
+                }
             </div>
-            <div *ngIf="getTemplateType() === 'default'">
+            @if (getTemplateType() === 'default') {
+            <div>
                 <div *osScrollingTableCell="'vote'; row as vote" class="vote-cell">
                     <div *osScrollingTableCellLabel>{{ 'Vote' | translate }}</div>
                     <div class="vote-cell-icon-container" [ngClass]="getVoteCSS(vote.value)">
@@ -39,16 +46,21 @@
                     <div>{{ vote.valueVerbose | translate }}</div>
                 </div>
             </div>
-            <div *ngIf="getTemplateType() === 'assignment'">
+            } @if (getTemplateType() === 'assignment') {
+            <div>
                 <div *osScrollingTableCell="'votes'; row as vote">
                     <div *osScrollingTableCellLabel>{{ 'Votes' | translate }}</div>
-                    <div class="single-vote-result" *ngFor="let candidate of vote.votes">
+                    @for (candidate of vote.votes; track candidate) {
+                    <div class="single-vote-result">
                         {{ candidate }}
                     </div>
+                    }
                 </div>
             </div>
+            }
         </os-list>
     </div>
+    }
 </div>
 <div class="no-can-see-users" *osPerms="permission.userCanSee; complement: true">
     <i>{{ 'You are not allowed to see all entitled users.' | translate }}</i>

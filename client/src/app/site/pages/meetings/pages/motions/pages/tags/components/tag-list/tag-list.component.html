@@ -41,8 +41,11 @@
 <!-- Template for dialog for quick editing -->
 <ng-template #tagDialog>
     <h1 mat-dialog-title>
-        <span *ngIf="currentTag">{{ 'Edit tag' | translate }}</span>
-        <span *ngIf="!currentTag">{{ 'New tag' | translate }}</span>
+        @if (currentTag) {
+        <span>{{ 'Edit tag' | translate }}</span>
+        } @if (!currentTag) {
+        <span>{{ 'New tag' | translate }}</span>
+        }
     </h1>
     <mat-dialog-content class="os-form-card-mobile">
         <form [formGroup]="tagForm" (keydown)="onKeyDown($event)" tabindex="-1">

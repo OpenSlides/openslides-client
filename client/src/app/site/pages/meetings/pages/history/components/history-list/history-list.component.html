@@ -11,9 +11,11 @@
                     <mat-form-field class="history-module-form-field">
                         <mat-label>{{ 'Module' | translate }}</mat-label>
                         <mat-select formControlName="collection">
-                            <mat-option *ngFor="let item of modelsRepoMap | keyvalue" [value]="item.key">
+                            @for (item of modelsRepoMap | keyvalue; track item) {
+                            <mat-option [value]="item.key">
                                 {{ item.value.getVerboseName() }}
                             </mat-option>
+                            }
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field class="spacer-left-20 history-module-detail-form-field">
@@ -27,23 +29,25 @@
                             (openedChange)="resetListValues($event)"
                         >
                             <!--
-                            <ng-template osSearchSelectorNotFoundTemplate>
-                                <div>
-                                    <mat-icon class="os-not-found-button-content">delete</mat-icon>
-                                    <span class="os-not-found-button-content">
-                                        {{ 'Search deleted' }} {{ (modelPlaceholder + "s").toLowerCase() | translate }}
-                                    </span>
-                                </div>
-                            </ng-template>
-                            -->
+              <ng-template osSearchSelectorNotFoundTemplate>
+                <div>
+                  <mat-icon class="os-not-found-button-content">delete</mat-icon>
+                  <span class="os-not-found-button-content">
+                    {{ 'Search deleted' }} {{ (modelPlaceholder + "s").toLowerCase() | translate }}
+                  </span>
+                </div>
+              </ng-template>
+              -->
                         </os-list-search-selector>
                     </mat-form-field>
                 </span>
                 <span class="spacer-left-20">
-                    <button mat-button (click)="refresh()" *ngIf="currentFqid">
+                    @if (currentFqid) {
+                    <button mat-button (click)="refresh()">
                         <mat-icon>refresh</mat-icon>
                         <span>{{ 'Refresh' | translate }}</span>
                     </button>
+                    }
                 </span>
             </div>
             <div>
@@ -67,9 +71,11 @@
                 <mat-header-cell *matHeaderCellDef>{{ 'Comment' | translate }}</mat-header-cell>
                 <mat-cell *matCellDef="let position">
                     <div>
-                        <div *ngFor="let information of parseInformation(position)">
+                        @for (information of parseInformation(position); track information) {
+                        <div>
                             {{ information }}
                         </div>
+                        }
                     </div>
                 </mat-cell>
             </ng-container>

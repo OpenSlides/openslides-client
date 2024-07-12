@@ -1,7 +1,9 @@
 <div class="input-container" [ngClass]="{ 'has-submit': hasSubmit }">
-    <div *ngIf="!hasSubmit" class="input-prefix">
+    @if (!hasSubmit) {
+    <div class="input-prefix">
         <mat-icon (click)="clickOnIcon()">{{ iconName }}</mat-icon>
     </div>
+    }
     <input
         #osInput
         [placeholder]="placeholder"
@@ -10,17 +12,20 @@
         (keyup)="keyPressed($event)"
         (blur)="blur()"
     />
+    @if (!!contentForm.value) {
     <div
-        *ngIf="!!contentForm.value"
         class="input-suffix-clear foreground-icon"
         [ngClass]="{ 'input-suffix-clear': hasSubmit, 'input-suffix': !hasSubmit }"
         (mousedown)="clear($event)"
     >
         <mat-icon>close</mat-icon>
     </div>
+    }
     <div class="input-suffix">
-        <button *ngIf="hasSubmit" mat-icon-button (click)="send()">
+        @if (hasSubmit) {
+        <button mat-icon-button (click)="send()">
             <mat-icon>{{ iconName }}</mat-icon>
         </button>
+        }
     </div>
 </div>

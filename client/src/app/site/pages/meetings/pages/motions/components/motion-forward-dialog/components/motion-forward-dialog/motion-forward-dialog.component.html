@@ -1,40 +1,50 @@
 <div mat-dialog-title>
     {{ data.motion.length > 1 ? 'Forward motions' : ('Forwarding of motion' | translate) }}
-    <span *ngIf="data.motion.length === 1">{{ data.motion[0].number }}</span>
+    @if (data.motion.length === 1) {
+    <span>{{ data.motion[0].number }}</span>
+    }
 </div>
 <mat-dialog-content>
-    <span *ngIf="data.motion.length === 1">
+    @if (data.motion.length === 1) {
+    <span>
         {{ 'State' | translate }}:
         <b>{{ data.motion[0].state.name }} {{ data.motion[0].state_extension }}</b>
     </span>
-    <br *ngIf="data.motion.length === 1 && activeMeetingCommitteeName" />
-    <span *ngIf="activeMeetingCommitteeName">
+    } @if (data.motion.length === 1 && activeMeetingCommitteeName) {
+    <br />
+    } @if (activeMeetingCommitteeName) {
+    <span>
         {{ 'Submitter (in target meeting)' | translate }}:
         <b>{{ activeMeetingCommitteeName }}</b>
     </span>
+    }
     <div class="motion-forward-meeting-list">
-        <ng-container *ngFor="let committee of committeesObservable | async">
-            <div *ngIf="committee.meetings?.length">
-                <h4>{{ committee.name }}</h4>
-                <div *ngFor="let meeting of committee.meetings">
-                    <mat-checkbox
-                        [disabled]="isActiveMeeting(meeting) || hasAlreadyBeenForwardedTo(meeting)"
-                        [value]="meeting.id"
-                        [(ngModel)]="checkboxStateMap[meeting.id]"
-                        (change)="onChangeCheckbox($event)"
-                    >
-                        {{ meeting.name }}
-                        <span *ngIf="meeting.start_time || meeting.end_time">
-                            &nbsp;&middot;&nbsp;
-                            <os-meeting-time
-                                [startTime]="meeting.start_time"
-                                [endTime]="meeting.end_time"
-                            ></os-meeting-time>
-                        </span>
-                    </mat-checkbox>
-                </div>
+        @for (committee of committeesObservable | async; track committee) { @if (committee.meetings?.length) {
+        <div>
+            <h4>{{ committee.name }}</h4>
+            @for (meeting of committee.meetings; track meeting) {
+            <div>
+                <mat-checkbox
+                    [disabled]="isActiveMeeting(meeting) || hasAlreadyBeenForwardedTo(meeting)"
+                    [value]="meeting.id"
+                    [(ngModel)]="checkboxStateMap[meeting.id]"
+                    (change)="onChangeCheckbox($event)"
+                >
+                    {{ meeting.name }}
+                    @if (meeting.start_time || meeting.end_time) {
+                    <span>
+                        &nbsp;&middot;&nbsp;
+                        <os-meeting-time
+                            [startTime]="meeting.start_time"
+                            [endTime]="meeting.end_time"
+                        ></os-meeting-time>
+                    </span>
+                    }
+                </mat-checkbox>
             </div>
-        </ng-container>
+            }
+        </div>
+        } }
     </div>
 </mat-dialog-content>
 <mat-dialog-actions>

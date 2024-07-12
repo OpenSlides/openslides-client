@@ -1,4 +1,5 @@
-<mat-card class="motion-poll-wrapper" *ngIf="showPoll">
+@if (showPoll) {
+<mat-card class="motion-poll-wrapper">
     <mat-card-content>
         <!-- Poll Infos -->
         <div class="poll-title-wrapper">
@@ -11,7 +12,6 @@
                     </a>
                 </span>
             </div>
-
             <!-- Dot Menu -->
             <span class="poll-actions" *osPerms="permission.motionCanManagePolls">
                 <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
@@ -19,7 +19,6 @@
                 </button>
             </span>
         </div>
-
         <!-- Subtitle -->
         <div class="italic spacer-bottom-20">
             <!-- Type and State -->
@@ -35,21 +34,20 @@
                     >
                         {{ poll.typeVerbose | translate }}
                     </os-icon-container>
-                    <span *ngIf="poll.isAnonymous">&nbsp;</span>
-                    &middot;&nbsp;
+                    @if (poll.isAnonymous) {
+                    <span>&nbsp;</span>
+                    } &middot;&nbsp;
                 </span>
-
                 <!-- State -->
                 <span class="break-word">
                     {{ poll.stateVerbose | translate }}
                 </span>
             </div>
         </div>
-
         <!-- Change state button -->
         <span *osPerms="permission.motionCanManagePolls; and: !hideChangeState">
+            @if (pollStateActions[poll.state]) {
             <button
-                *ngIf="pollStateActions[poll.state]"
                 mat-stroked-button
                 [ngClass]="pollStateActions[poll.state].css"
                 (click)="nextPollState()"
@@ -57,42 +55,38 @@
             >
                 <mat-icon>{{ pollStateActions[poll.state].icon }}</mat-icon>
                 <span class="next-state-label">
-                    <ng-container *ngIf="(stateChangePendingObservable | async) === false">
-                        {{ poll.nextStateActionVerbose | translate }}
-                    </ng-container>
-                    <ng-container *ngIf="stateChangePendingObservable | async">
-                        {{ 'In progress, please wait ...' | translate }}
-                    </ng-container>
+                    @if ((stateChangePendingObservable | async) === false) {
+                    {{ poll.nextStateActionVerbose | translate }}
+                    } @if (stateChangePendingObservable | async) {
+                    {{ 'In progress, please wait ...' | translate }}
+                    }
                 </span>
             </button>
+            }
         </span>
-
         <!-- Results -->
-        <ng-container *ngIf="poll && !poll.stateHasVotes && poll.type !== 'analog'; else votingResult">
-            <os-poll-progress *ngIf="poll && poll.isStarted" [poll]="poll"></os-poll-progress>
-            <os-motion-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor()"></os-motion-poll-vote>
-            <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
-        </ng-container>
-
+        @if (poll && !poll.stateHasVotes && poll.type !== 'analog') { @if (poll && poll.isStarted) {
+        <os-poll-progress [poll]="poll"></os-poll-progress>
+        } @if (poll.canBeVotedFor()) {
+        <os-motion-poll-vote [poll]="poll"></os-motion-poll-vote>
+        }
+        <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
+        } @else {
+        <span class="poll-link-wrapper">
+            <ng-container [ngTemplateOutlet]="canSeeVotes ? viewTemplate : emptyTemplate"></ng-container>
+        </span>
+        }
         <!-- Detail link -->
         <div class="poll-detail-button-wrapper">
-            <a
-                mat-icon-button
-                [routerLink]="getDetailLink()"
-                matTooltip="{{ 'More' | translate }}"
-                *ngIf="poll.isPublished"
-            >
+            @if (poll.isPublished) {
+            <a mat-icon-button [routerLink]="getDetailLink()" matTooltip="{{ 'More' | translate }}">
                 <mat-icon class="icon-18">visibility</mat-icon>
             </a>
+            }
         </div>
     </mat-card-content>
 </mat-card>
-
-<ng-template #votingResult>
-    <span class="poll-link-wrapper">
-        <ng-container [ngTemplateOutlet]="canSeeVotes ? viewTemplate : emptyTemplate"></ng-container>
-    </span>
-</ng-template>
+}
 
 <ng-template #viewTemplate>
     <os-motion-poll-detail-content [poll]="poll" [routerLink]="getDetailLink()"></os-motion-poll-detail-content>
@@ -107,11 +101,13 @@
             {{ 'Edit to enter votes.' | translate }}
         </div>
     </span>
-    <p *ngIf="poll.type !== 'analog'">
+    @if (poll.type !== 'analog') {
+    <p>
         <i *osPerms="permission.motionCanManagePolls; or: isPublished">
             {{ 'No one has voted for this poll' | translate }}
         </i>
     </p>
+    }
 </ng-template>
 
 <!-- More Menu -->

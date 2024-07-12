@@ -14,7 +14,8 @@
 
         <!-- Next-button -->
         <div class="extra-controls-slot">
-            <div *ngIf="matStepper.selectedIndex === 0">
+            @if (matStepper.selectedIndex === 0) {
+            <div>
                 <button
                     mat-button
                     [disabled]="contentForm.value.selectedParagraphs.length === 0"
@@ -23,11 +24,13 @@
                     <span class="upper">{{ 'Next' | translate }}</span>
                 </button>
             </div>
-            <div *ngIf="matStepper.selectedIndex === 1">
+            } @if (matStepper.selectedIndex === 1) {
+            <div>
                 <button type="button" mat-button (click)="matStepper.previous()">
                     <span class="upper">{{ 'Previous' | translate }}</span>
                 </button>
             </div>
+            }
         </div>
     </os-head-bar>
 
@@ -42,36 +45,39 @@
                         maxBufferPx="600"
                         class="paragraph-scroll"
                     >
+                        @for (paragraph of paragraphs; track paragraph; let i = $index) {
                         <section
-                            *ngFor="let paragraph of paragraphs; let i = index"
                             class="paragraph-row background-hover"
                             [class.outlined-hover]="isParagraphSelected(paragraph)"
                             (click)="onParagraphClicked(paragraph)"
                             tabindex="-1"
                         >
+                            @if (multipleParagraphsAllowed) {
                             <mat-checkbox
-                                *ngIf="multipleParagraphsAllowed"
                                 class="flex-center paragraph-select"
                                 [checked]="isParagraphSelected(paragraph)"
                                 (click)="checkboxClicked($event)"
                             ></mat-checkbox>
+                            } @if (!multipleParagraphsAllowed) {
                             <mat-radio-button
-                                *ngIf="!multipleParagraphsAllowed"
                                 class="flex-center paragraph-select"
                                 [checked]="isParagraphSelected(paragraph)"
                             ></mat-radio-button>
+                            }
                             <div class="paragraph-text motion-text">
                                 <div>
-                                    <i *ngIf="paragraph.lineFrom >= paragraph.lineTo" class="line-number">
-                                        {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
-                                    </i>
-                                    <i *ngIf="paragraph.lineFrom < paragraph.lineTo" class="line-number">
+                                    @if (paragraph.lineFrom >= paragraph.lineTo) {
+                                    <i class="line-number">{{ 'Line' | translate }} {{ paragraph.lineFrom }}:</i>
+                                    } @if (paragraph.lineFrom < paragraph.lineTo) {
+                                    <i class="line-number">
                                         {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}:
                                     </i>
+                                    }
                                 </div>
                                 <div [innerHTML]="getParagraphPreview(i) | trust : 'html'"></div>
                             </div>
                         </section>
+                        }
                     </cdk-virtual-scroll-viewport>
                 </div>
             </mat-step>
@@ -83,20 +89,23 @@
                 </h3>
 
                 <!-- Text -->
-                <section *ngFor="let paragraph of contentForm.value.selectedParagraphs">
+                @for (paragraph of contentForm.value.selectedParagraphs; track paragraph) {
+                <section>
                     <h4>
-                        <span *ngIf="paragraph.lineFrom >= paragraph.lineTo" class="line-number">
-                            {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
-                        </span>
-                        <span *ngIf="paragraph.lineFrom < paragraph.lineTo" class="line-number">
+                        @if (paragraph.lineFrom >= paragraph.lineTo) {
+                        <span class="line-number">{{ 'Line' | translate }} {{ paragraph.lineFrom }}:</span>
+                        } @if (paragraph.lineFrom < paragraph.lineTo) {
+                        <span class="line-number">
                             {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}:
                         </span>
+                        }
                     </h4>
                     <os-editor
                         [formControlName]="'text_' + paragraph.paragraphNo"
                         [customSettings]="tinyMceConfig"
                     ></os-editor>
                 </section>
+                }
 
                 <!-- Reason -->
                 <h3
@@ -109,8 +118,9 @@
                     "
                 >
                     <span>{{ 'Reason' | translate }}</span>
-                    &nbsp;
-                    <span *ngIf="reasonRequired">*</span>
+                    &nbsp; @if (reasonRequired) {
+                    <span>*</span>
+                    }
                 </h3>
 
                 <os-editor
@@ -118,16 +128,12 @@
                     [required]="reasonRequired"
                     [customSettings]="tinyMceConfig"
                 ></os-editor>
-                <div
-                    *ngIf="
-                        reasonRequired &&
-                        contentForm.get('reason')?.invalid &&
-                        (contentForm.get('reason')?.dirty || contentForm.get('reason')?.touched)
-                    "
-                    class="red-warning-text"
-                >
+                @if ( reasonRequired && contentForm.get('reason')?.invalid && (contentForm.get('reason')?.dirty ||
+                contentForm.get('reason')?.touched) ) {
+                <div class="red-warning-text">
                     {{ 'This field is required.' | translate }}
                 </div>
+                }
             </mat-step>
         </mat-horizontal-stepper>
     </form>

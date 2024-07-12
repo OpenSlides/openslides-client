@@ -1,4 +1,5 @@
-<mat-card class="os-card" *ngIf="shouldShowPoll">
+@if (shouldShowPoll) {
+<mat-card class="os-card">
     <mat-card-content>
         <div class="topic-poll-wrapper">
             <div>
@@ -6,7 +7,6 @@
                 <mat-card-title>
                     {{ poll.title }}
                 </mat-card-title>
-
                 <!-- Type and State -->
                 <div class="type-and-state italic spacer-bottom-20">
                     <span *osPerms="permission.agendaItemCanManage; and: poll.isEVoting">
@@ -21,14 +21,14 @@
                         >
                             {{ poll.typeVerbose | translate }}
                         </os-icon-container>
-                        <span *ngIf="poll.isAnonymous">&nbsp;</span>
-                        &middot;&nbsp;
+                        @if (poll.isAnonymous) {
+                        <span>&nbsp;</span>
+                        } &middot;&nbsp;
                     </span>
                     <span>
                         {{ poll.stateVerbose | translate }}
                     </span>
                 </div>
-
                 <!-- Menu -->
                 <div class="poll-menu">
                     <!-- Buttons -->
@@ -41,7 +41,6 @@
                         <mat-icon>more_horiz</mat-icon>
                     </button>
                 </div>
-
                 <!-- Change state button -->
                 <div *osPerms="permission.agendaItemCanManage; and: !hideChangeState">
                     <button
@@ -52,38 +51,41 @@
                     >
                         <mat-icon>{{ pollStateActions[poll.state]?.icon }}</mat-icon>
                         <span class="next-state-label">
-                            <ng-container *ngIf="(stateChangePendingObservable | async) === false">
-                                {{ poll.nextStateActionVerbose | translate }}
-                            </ng-container>
-                            <ng-container *ngIf="stateChangePendingObservable | async">
-                                {{ 'In progress, please wait ...' | translate }}
-                            </ng-container>
+                            @if ((stateChangePendingObservable | async) === false) {
+                            {{ poll.nextStateActionVerbose | translate }}
+                            } @if (stateChangePendingObservable | async) {
+                            {{ 'In progress, please wait ...' | translate }}
+                            }
                         </span>
                     </button>
                 </div>
-
                 <!-- Enter Votes Hint -->
                 <div *osPerms="permission.agendaItemCanManage; and: poll.isAnalog && !poll.stateHasVotes">
                     {{ 'Edit to enter votes.' | translate }}
                 </div>
             </div>
-
             <!-- Chart / Table -->
-            <div *ngIf="poll.stateHasVotes" class="poll-result-wrapper">
+            @if (poll.stateHasVotes) {
+            <div class="poll-result-wrapper">
                 <os-topic-poll-detail-content [poll]="poll"></os-topic-poll-detail-content>
             </div>
-
+            }
             <!-- Poll progress bar -->
-            <os-poll-progress *ngIf="poll && poll.isStarted" [poll]="poll"></os-poll-progress>
-
+            @if (poll && poll.isStarted) {
+            <os-poll-progress [poll]="poll"></os-poll-progress>
+            }
             <!-- The Vote -->
-            <os-topic-poll-vote *ngIf="poll.canBeVotedFor()" [poll]="poll"></os-topic-poll-vote>
-
+            @if (poll.canBeVotedFor()) {
+            <os-topic-poll-vote [poll]="poll"></os-topic-poll-vote>
+            }
             <!-- Meta-Info -->
-            <os-topic-poll-meta-info [poll]="poll" *ngIf="showMetaInfo"></os-topic-poll-meta-info>
+            @if (showMetaInfo) {
+            <os-topic-poll-meta-info [poll]="poll"></os-topic-poll-meta-info>
+            }
         </div>
     </mat-card-content>
 </mat-card>
+}
 
 <mat-menu #pollItemMenu="matMenu">
     <div *osPerms="permission.agendaItemCanManage">

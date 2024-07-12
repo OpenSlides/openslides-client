@@ -1,4 +1,5 @@
-<div *ngIf="data">
+@if (data) {
+<div>
     <h2 mat-dialog-title>{{ data.title | translate }}</h2>
     <mat-dialog-content [innerHTML]="data.content | translate"></mat-dialog-content>
     <mat-dialog-actions>
@@ -6,3 +7,4 @@
         <button mat-button [mat-dialog-close]="false">{{ 'Cancel' | translate }}</button>
     </mat-dialog-actions>
 </div>
+}

@@ -1,4 +1,5 @@
-<os-action-card class="projector-tile" [showActionRow]="true" *ngIf="projector" [disableExpandControl]="true">
+@if (projector) {
+<os-action-card class="projector-tile" [showActionRow]="true" [disableExpandControl]="true">
     <ng-container class="meta-text-block-title">
         <os-icon-container
             [noWrap]="true"
@@ -18,8 +19,11 @@
             (click)="setProjectorAsReference()"
             matTooltip="{{ 'Sets this projector as the reference for the current list of speakers' | translate }}"
         >
-            <mat-icon class="grey-icon" *ngIf="projector.isReferenceProjector">star</mat-icon>
-            <mat-icon class="grey-icon" *ngIf="!projector.isReferenceProjector">star_border</mat-icon>
+            @if (projector.isReferenceProjector) {
+            <mat-icon class="grey-icon">star</mat-icon>
+            } @if (!projector.isReferenceProjector) {
+            <mat-icon class="grey-icon">star_border</mat-icon>
+            }
         </button>
         <button mat-icon-button (click)="editProjector()" matTooltip="{{ 'Edit projector' | translate }}">
             <mat-icon class="grey-icon">edit</mat-icon>
@@ -41,3 +45,4 @@
         </a>
     </ng-container>
 </os-action-card>
+}

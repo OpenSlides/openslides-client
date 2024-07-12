@@ -8,19 +8,23 @@
 
 <os-info-actions></os-info-actions>
 
-<mat-card class="os-card" *ngIf="canSeeStatistics">
+@if (canSeeStatistics) {
+<mat-card class="os-card">
     <mat-card-content>
         <h2>{{ 'Statistics' | translate }}</h2>
-
-        <div *ngIf="osIsManager">
+        @if (osIsManager) {
+        <div>
             <h3>{{ 'Logged-in users' | translate }}</h3>
             <os-count-users></os-count-users>
         </div>
-        <div *ngIf="osIsMeetingAdmin">
+        } @if (osIsMeetingAdmin) {
+        <div>
             <h3>{{ 'Requests to speak' | translate }}</h3>
             <os-user-statistics></os-user-statistics>
         </div>
+        }
     </mat-card-content>
 </mat-card>
+}
 
 <os-privacy-policy-content [isEditable]="true" (update)="updatePrivacyPolicy($event)"></os-privacy-policy-content>

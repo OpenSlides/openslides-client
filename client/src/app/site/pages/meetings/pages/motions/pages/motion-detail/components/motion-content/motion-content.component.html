@@ -1,121 +1,128 @@
 <!-- Regular motions or traditional amendments -->
-<ng-container *ngIf="!editMotion && !motion?.isParagraphBasedAmendment()">
-    <!-- Text (hide preamble, if diff mode. The preample is included in the motion-detail-diff component) -->
-    <span *ngIf="showPreamble && changeRecoMode !== ChangeRecoMode.Diff" class="text-prefix-label">
-        {{ preamble }}
-    </span>
-    <div
-        *ngIf="changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit"
-        class="motion-text underlined-links"
-        [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
-        [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
-        [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
-    >
-        <os-motion-detail-original-change-recommendations
-            *ngIf="lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original"
-            [html]="getFormattedTextPlain()"
-            [motionId]="motion.id"
-            [changeRecommendations]="changeRecommendations"
-            (createChangeRecommendation)="createChangeRecommendation($event)"
-            (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
-        ></os-motion-detail-original-change-recommendations>
-        <os-motion-final-version
-            *ngIf="lineNumberingMode !== LineNumberingMode.Outside || changeRecoMode !== ChangeRecoMode.Original"
-            [formattedText]="getFormattedTextPlain()"
-            [motion]="motion"
-        ></os-motion-final-version>
-    </div>
-    <os-motion-detail-diff
-        *ngIf="changeRecoMode === ChangeRecoMode.Diff"
-        [motion]="motion"
-        [changes]="getChangesForDiffMode()"
-        [scrollToChange]="scrollToChange"
-        [highlightedLine]="highlightedLine"
-        [showAllAmendments]="showAllAmendments"
-        [lineNumberingMode]="lineNumberingMode"
+@if (!editMotion && !motion?.isParagraphBasedAmendment()) {
+<!-- Text (hide preamble, if diff mode. The preample is included in the motion-detail-diff component) -->
+@if (showPreamble && changeRecoMode !== ChangeRecoMode.Diff) {
+<span class="text-prefix-label">
+    {{ preamble }}
+</span>
+} @if (changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit) {
+<div
+    class="motion-text underlined-links"
+    [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
+    [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
+    [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
+>
+    @if (lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original) {
+    <os-motion-detail-original-change-recommendations
+        [html]="getFormattedTextPlain()"
+        [motionId]="motion.id"
+        [changeRecommendations]="changeRecommendations"
         (createChangeRecommendation)="createChangeRecommendation($event)"
-    ></os-motion-detail-diff>
-</ng-container>
+        (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
+    ></os-motion-detail-original-change-recommendations>
+    } @if (lineNumberingMode !== LineNumberingMode.Outside || changeRecoMode !== ChangeRecoMode.Original) {
+    <os-motion-final-version [formattedText]="getFormattedTextPlain()" [motion]="motion"></os-motion-final-version>
+    }
+</div>
+} @if (changeRecoMode === ChangeRecoMode.Diff) {
+<os-motion-detail-diff
+    [motion]="motion"
+    [changes]="getChangesForDiffMode()"
+    [scrollToChange]="scrollToChange"
+    [highlightedLine]="highlightedLine"
+    [showAllAmendments]="showAllAmendments"
+    [lineNumberingMode]="lineNumberingMode"
+    (createChangeRecommendation)="createChangeRecommendation($event)"
+></os-motion-detail-diff>
+} }
 
 <form class="motion-content" [formGroup]="contentForm" (keydown)="onKeyDown($event)" tabindex="-1">
     <!-- Submitter -->
-    <div *ngIf="newMotion" class="content-field">
-        <ng-container *ngIf="canChangeMetadata">
-            <mat-form-field>
-                <mat-label>{{ 'Submitters' | translate }}</mat-label>
-                <os-repo-search-selector
-                    formControlName="submitter_ids"
-                    [multiple]="true"
-                    [repo]="participantRepo"
-                    [sortService]="participantSortService"
-                    [subscriptionConfig]="participantSubscriptionConfig"
-                    (clickNotFound)="createNewSubmitter($event)"
-                >
-                    <ng-template osSearchSelectorNotFoundTemplate *osPerms="permission.userCanManage">
-                        <mat-icon>add</mat-icon>
-                        {{ 'Create user' | translate }}
-                    </ng-template>
-                </os-repo-search-selector>
-            </mat-form-field>
-        </ng-container>
+    @if (newMotion) {
+    <div class="content-field">
+        @if (canChangeMetadata) {
+        <mat-form-field>
+            <mat-label>{{ 'Submitters' | translate }}</mat-label>
+            <os-repo-search-selector
+                formControlName="submitter_ids"
+                [multiple]="true"
+                [repo]="participantRepo"
+                [sortService]="participantSortService"
+                [subscriptionConfig]="participantSubscriptionConfig"
+                (clickNotFound)="createNewSubmitter($event)"
+            >
+                <ng-template osSearchSelectorNotFoundTemplate *osPerms="permission.userCanManage">
+                    <mat-icon>add</mat-icon>
+                    {{ 'Create user' | translate }}
+                </ng-template>
+            </os-repo-search-selector>
+        </mat-form-field>
+        }
     </div>
+    }
 
     <div class="form-id-title">
         <!-- number -->
-        <div *ngIf="editMotion && !newMotion && canChangeMetadata" class="content-field form-number">
-            <mat-form-field *ngIf="editMotion">
+        @if (editMotion && !newMotion && canChangeMetadata) {
+        <div class="content-field form-number">
+            @if (editMotion) {
+            <mat-form-field>
                 <mat-label>{{ 'Number' | translate }}</mat-label>
                 <input matInput osAutofocus formControlName="number" />
                 <mat-error>{{ 'already exists' | translate }}</mat-error>
             </mat-form-field>
+            }
         </div>
+        }
 
         <!-- Title -->
-        <div *ngIf="editMotion" class="content-field form-title">
-            <mat-form-field *ngIf="editMotion">
+        @if (editMotion) {
+        <div class="content-field form-title">
+            @if (editMotion) {
+            <mat-form-field>
                 <mat-label>{{ 'Title' | translate }}</mat-label>
                 <input matInput formControlName="title" required />
                 <mat-error>{{ 'The title is required' | translate }}</mat-error>
             </mat-form-field>
+            }
         </div>
+        }
     </div>
 
     <!-- The HTML Editor for motions and traditional amendments -->
-    <ng-container *ngIf="editMotion && !isParagraphBasedAmendment">
-        <h3 *ngIf="preamble">
-            <span>{{ preamble }}</span>
-        </h3>
-        <os-editor
-            formControlName="text"
-            [required]="!isParagraphBasedAmendment"
-            [customSettings]="tinyMceConfig"
-        ></os-editor>
-        <div
-            *ngIf="
-                contentForm.get('text')?.invalid && (contentForm.get('text')?.dirty || contentForm.get('text')?.touched)
-            "
-            class="red-warning-text"
-        >
-            {{ 'This field is required.' | translate }}
-        </div>
-    </ng-container>
+    @if (editMotion && !isParagraphBasedAmendment) { @if (preamble) {
+    <h3>
+        <span>{{ preamble }}</span>
+    </h3>
+    }
+    <os-editor
+        formControlName="text"
+        [required]="!isParagraphBasedAmendment"
+        [customSettings]="tinyMceConfig"
+    ></os-editor>
+    @if ( contentForm.get('text')?.invalid && (contentForm.get('text')?.dirty || contentForm.get('text')?.touched) ) {
+    <div class="red-warning-text">
+        {{ 'This field is required.' | translate }}
+    </div>
+    } }
 
     <!-- Paragraph-based amendments -->
-    <ng-container *ngIf="isParagraphBasedAmendment">
-        <os-paragraph-based-amendment
-            [motion]="motion"
-            [changesForDiffMode]="getChangesForDiffMode()"
-            [highlightedLine]="highlightedLine"
-            [isFinalEdit]="isFinalEdit"
-            [editMotion]="editMotion"
-            (createChangeRecommendation)="createChangeRecommendation($event)"
-            (formChanged)="paragraphBasedAmendmentContent = $event"
-            (validStateChanged)="canSaveParagraphBasedAmendment = $event"
-        ></os-paragraph-based-amendment>
-    </ng-container>
+    @if (isParagraphBasedAmendment) {
+    <os-paragraph-based-amendment
+        [motion]="motion"
+        [changesForDiffMode]="getChangesForDiffMode()"
+        [highlightedLine]="highlightedLine"
+        [isFinalEdit]="isFinalEdit"
+        [editMotion]="editMotion"
+        (createChangeRecommendation)="createChangeRecommendation($event)"
+        (formChanged)="paragraphBasedAmendmentContent = $event"
+        (validStateChanged)="canSaveParagraphBasedAmendment = $event"
+    ></os-paragraph-based-amendment>
+    }
 
     <!-- Reason -->
-    <div *ngIf="motion?.reason || editMotion">
+    @if (motion?.reason || editMotion) {
+    <div>
         <h3
             [ngClass]="
                 reasonRequired &&
@@ -126,37 +133,29 @@
             "
         >
             <span>{{ 'Reason' | translate }}</span>
-            &nbsp;
-            <span *ngIf="reasonRequired && editMotion">*</span>
+            &nbsp; @if (reasonRequired && editMotion) {
+            <span>*</span>
+            }
         </h3>
-        <div
-            class="motion-text underlined-links"
-            *ngIf="!editMotion"
-            [innerHtml]="motion?.reason | trust : 'html'"
-        ></div>
-
+        @if (!editMotion) {
+        <div class="motion-text underlined-links" [innerHtml]="motion?.reason | trust : 'html'"></div>
+        }
         <!-- The HTML Editor -->
-        <os-editor
-            *ngIf="editMotion"
-            formControlName="reason"
-            [required]="reasonRequired"
-            [customSettings]="tinyMceConfig"
-        ></os-editor>
-        <div
-            *ngIf="
-                reasonRequired &&
-                contentForm.get('reason')?.invalid &&
-                (contentForm.get('reason')?.dirty || contentForm.get('reason')?.touched)
-            "
-            class="red-warning-text"
-        >
+        @if (editMotion) {
+        <os-editor formControlName="reason" [required]="reasonRequired" [customSettings]="tinyMceConfig"></os-editor>
+        } @if ( reasonRequired && contentForm.get('reason')?.invalid && (contentForm.get('reason')?.dirty ||
+        contentForm.get('reason')?.touched) ) {
+        <div class="red-warning-text">
             {{ 'This field is required.' | translate }}
         </div>
+        }
     </div>
+    }
 
     <div class="extra-data">
         <!-- Category form -->
-        <div class="content-field" *ngIf="newMotion && hasCategories">
+        @if (newMotion && hasCategories) {
+        <div class="content-field">
             <mat-form-field>
                 <mat-label>{{ 'Category' | translate }}</mat-label>
                 <os-repo-search-selector
@@ -167,20 +166,26 @@
                 ></os-repo-search-selector>
             </mat-form-field>
         </div>
+        }
 
         <!-- Attachments -->
-        <div *ngIf="hasAttachments || editMotion" class="content-field">
-            <div *ngIf="!editMotion">
+        @if (hasAttachments || editMotion) {
+        <div class="content-field">
+            @if (!editMotion) {
+            <div>
                 <h3>
                     {{ 'Attachments' | translate }}
                     <mat-icon>attach_file</mat-icon>
                 </h3>
                 <mat-list dense>
-                    <mat-list-item *ngFor="let file of motion?.attachments">
+                    @for (file of motion?.attachments; track file) {
+                    <mat-list-item>
                         <a [routerLink]="file.url" target="_blank">{{ file.title }}</a>
                     </mat-list-item>
+                    }
                 </mat-list>
             </div>
+            }
             <div *osPerms="permission.mediafileCanManage; and: editMotion">
                 <os-attachment-control
                     formControlName="attachment_ids"
@@ -188,42 +193,40 @@
                 ></os-attachment-control>
             </div>
         </div>
-
-        <ng-container *ngIf="canChangeMetadata">
-            <div *ngIf="newMotion">
-                <os-agenda-content-object-form [form]="contentForm"></os-agenda-content-object-form>
-            </div>
-
-            <!-- Supporter form -->
-            <div class="content-field" *ngIf="editMotion && minSupporters">
-                <mat-form-field>
-                    <mat-label>{{ 'Supporters' | translate }}</mat-label>
-                    <os-repo-search-selector
-                        formControlName="supporter_ids"
-                        [multiple]="true"
-                        [repo]="participantRepo"
-                        [sortService]="participantSortService"
-                        [subscriptionConfig]="participantSubscriptionConfig"
-                        (clickNotFound)="createNewSupporter($event)"
-                    >
-                        <ng-template osNotFoundDescription>
-                            <mat-icon>add</mat-icon>
-                            {{ 'Create user' | translate }}
-                        </ng-template>
-                    </os-repo-search-selector>
-                </mat-form-field>
-            </div>
-
-            <!-- Workflow -->
-            <div class="content-field" *ngIf="editMotion">
-                <mat-form-field>
-                    <mat-label>{{ 'Workflow' | translate }}</mat-label>
-                    <os-repo-search-selector
-                        formControlName="workflow_id"
-                        [repo]="workflowRepo"
-                    ></os-repo-search-selector>
-                </mat-form-field>
-            </div>
-        </ng-container>
+        } @if (canChangeMetadata) { @if (newMotion) {
+        <div>
+            <os-agenda-content-object-form [form]="contentForm"></os-agenda-content-object-form>
+        </div>
+        }
+        <!-- Supporter form -->
+        @if (editMotion && minSupporters) {
+        <div class="content-field">
+            <mat-form-field>
+                <mat-label>{{ 'Supporters' | translate }}</mat-label>
+                <os-repo-search-selector
+                    formControlName="supporter_ids"
+                    [multiple]="true"
+                    [repo]="participantRepo"
+                    [sortService]="participantSortService"
+                    [subscriptionConfig]="participantSubscriptionConfig"
+                    (clickNotFound)="createNewSupporter($event)"
+                >
+                    <ng-template osNotFoundDescription>
+                        <mat-icon>add</mat-icon>
+                        {{ 'Create user' | translate }}
+                    </ng-template>
+                </os-repo-search-selector>
+            </mat-form-field>
+        </div>
+        }
+        <!-- Workflow -->
+        @if (editMotion) {
+        <div class="content-field">
+            <mat-form-field>
+                <mat-label>{{ 'Workflow' | translate }}</mat-label>
+                <os-repo-search-selector formControlName="workflow_id" [repo]="workflowRepo"></os-repo-search-selector>
+            </mat-form-field>
+        </div>
+        } }
     </div>
 </form>

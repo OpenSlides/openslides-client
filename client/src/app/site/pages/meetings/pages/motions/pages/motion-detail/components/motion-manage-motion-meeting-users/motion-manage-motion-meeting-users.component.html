@@ -1,37 +1,30 @@
 <h4>
     <span class="title-font">{{ title }}</span>
-    <button
-        class="small-button"
-        type="button"
-        mat-icon-button
-        disableRipple
-        *ngIf="!isEditMode && perms.isAllowed('change_metadata')"
-        (click)="onEdit()"
-    >
+    @if (!isEditMode && perms.isAllowed('change_metadata')) {
+    <button class="small-button" type="button" mat-icon-button disableRipple (click)="onEdit()">
         <mat-icon>edit</mat-icon>
     </button>
-    <button
-        class="small-button"
-        type="button"
-        mat-icon-button
-        disableRipple
-        *ngIf="isEditMode && perms.isAllowed('change_metadata')"
-        (click)="onCancel()"
-    >
+    } @if (isEditMode && perms.isAllowed('change_metadata')) {
+    <button class="small-button" type="button" mat-icon-button disableRipple (click)="onCancel()">
         <mat-icon>close</mat-icon>
     </button>
+    }
 </h4>
 
-<div *ngIf="!isEditMode || !perms.isAllowed('change_metadata')">
-    <mat-chip-listbox *ngFor="let model of intermediateModels" class="user">
+@if (!isEditMode || !perms.isAllowed('change_metadata')) {
+<div>
+    @for (model of intermediateModels; track model) {
+    <mat-chip-listbox class="user">
         <mat-basic-chip disableRipple>{{ model.user?.getTitle() }}</mat-basic-chip>
     </mat-chip-listbox>
-    <mat-chip-listbox *ngIf="useAdditionalInput && additionalInputValue" class="user">
+    } @if (useAdditionalInput && additionalInputValue) {
+    <mat-chip-listbox class="user">
         <mat-basic-chip disableRipple>{{ additionalInputValue }}</mat-basic-chip>
     </mat-chip-listbox>
+    }
 </div>
-
-<div *ngIf="isEditMode && perms.isAllowed('change_metadata')">
+} @if (isEditMode && perms.isAllowed('change_metadata')) {
+<div>
     <os-sorting-list [input]="editObservable" [live]="true" [count]="false" (sortEvent)="onSortingChange($event)">
         <!-- implicit user references into the component using ng-template slot -->
         <ng-template let-user>
@@ -39,7 +32,6 @@
                 <span class="ellipsis-overflow">
                     {{ user.getTitle() }}
                 </span>
-
                 <span>
                     <button
                         type="button"
@@ -53,7 +45,6 @@
             </div>
         </ng-template>
     </os-sorting-list>
-
     <div class="text-field-container">
         <os-participant-search-selector
             [nonSelectableUserIds]="editUserIds"
@@ -61,15 +52,15 @@
             (userSelected)="addUser($event)"
         ></os-participant-search-selector>
     </div>
-
-    <div *ngIf="useAdditionalInput" class="text-field-container">
+    @if (useAdditionalInput) {
+    <div class="text-field-container">
         <mat-form-field>
             <mat-label>{{ additionalInputLabel }}</mat-label>
             <input matInput [formControl]="additionalInputControl" [value]="additionalInputValue" />
         </mat-form-field>
     </div>
-
-    <div *ngIf="useAdditionalInput && loadSecondSelectorValues" class="text-field-container">
+    } @if (useAdditionalInput && loadSecondSelectorValues) {
+    <div class="text-field-container">
         <mat-form-field>
             <mat-label>{{ secondSelectorLabel }}</mat-label>
             <os-list-search-selector
@@ -81,7 +72,7 @@
             ></os-list-search-selector>
         </mat-form-field>
     </div>
-
+    }
     <p>
         <button type="button" mat-button (click)="onSave()">
             <span>{{ 'Save' | translate }}</span>
@@ -91,3 +82,4 @@
         </button>
     </p>
 </div>
+}

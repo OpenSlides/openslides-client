@@ -4,7 +4,8 @@
 
 <div class="settings-grid">
     <form [formGroup]="updateForm" (ngSubmit)="onSubmitProjector()">
-        <mat-dialog-content *ngIf="projector">
+        @if (projector) {
+        <mat-dialog-content>
             <!-- Name field -->
             <mat-form-field>
                 <mat-label>{{ 'Name' | translate }}</mat-label>
@@ -13,31 +14,28 @@
                     <span>{{ 'Required' | translate }}</span>
                 </mat-error>
             </mat-form-field>
-
-            <div *ngIf="!projector.used_as_reference_projector_meeting_id">
+            @if (!projector.used_as_reference_projector_meeting_id) {
+            <div>
                 <mat-checkbox formControlName="is_internal">
                     <span>{{ 'Internal' | translate }}</span>
                 </mat-checkbox>
             </div>
-
+            }
             <h3>{{ 'Resolution and size' | translate }}</h3>
             <!-- Aspect ratio field -->
             <div>
                 <mat-radio-group formControlName="aspectRatio" name="aspectRatio">
-                    <mat-radio-button
-                        *ngFor="let ratio of defaultAspectRatio"
-                        [value]="ratio"
-                        (change)="onCustomAspectRatio(false)"
-                    >
+                    @for (ratio of defaultAspectRatio; track ratio) {
+                    <mat-radio-button [value]="ratio" (change)="onCustomAspectRatio(false)">
                         {{ ratio }}
                     </mat-radio-button>
-
+                    }
                     <!-- Custom aspect ratio -->
                     <mat-radio-button (change)="onCustomAspectRatio(true)">
                         {{ 'custom' | translate }}
                     </mat-radio-button>
-
-                    <mat-form-field *ngIf="customAspectRatio">
+                    @if (customAspectRatio) {
+                    <mat-form-field>
                         <mat-label>{{ 'Custom aspect ratio' | translate }}</mat-label>
                         <input
                             matInput
@@ -47,9 +45,9 @@
                             (change)="setCustomAspectRatio()"
                         />
                     </mat-form-field>
+                    }
                 </mat-radio-group>
             </div>
-
             <div class="spacer-top-20 grid-form">
                 <mat-slider
                     class="grid-start"
@@ -74,7 +72,6 @@
                     </mat-form-field>
                 </div>
             </div>
-
             <!-- checkboxes -->
             <div>
                 <div>
@@ -98,21 +95,18 @@
                     </mat-checkbox>
                 </div>
             </div>
-
             <!-- projection defaults -->
             <h3>{{ 'Projection defaults' | translate }}</h3>
             <mat-form-field>
                 <mat-label>{{ 'Projection defaults' | translate }}</mat-label>
                 <mat-select formControlName="projectiondefault_ids" [multiple]="true">
-                    <mat-option
-                        *ngFor="let pd of projectiondefaultVerbose | keyvalue"
-                        [value]="projectiondefaultKeys[pd.key]"
-                    >
+                    @for (pd of projectiondefaultVerbose | keyvalue; track pd) {
+                    <mat-option [value]="projectiondefaultKeys[pd.key]">
                         {{ pd.value | translate }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
-
             <!-- colors -->
             <div class="spacer-top-10">
                 <!-- Template to streamline all the color forms -->
@@ -131,14 +125,15 @@
                         </button>
                     </mat-form-field>
                 </ng-template>
-
+                @for (colorPair of colorFields; track colorPair) {
                 <ng-template
-                    *ngFor="let colorPair of colorFields"
                     [ngTemplateOutlet]="colorFormField"
                     [ngTemplateOutletContext]="{ title: colorPair[1], form: colorPair[0] }"
                 ></ng-template>
+                }
             </div>
         </mat-dialog-content>
+        }
 
         <!-- Actions -->
         <mat-dialog-actions>
@@ -154,10 +149,14 @@
             </button>
         </mat-dialog-actions>
     </form>
-    <mat-dialog-content *ngIf="previewProjector">
+    @if (previewProjector) {
+    <mat-dialog-content>
         <h3>{{ 'Preview' | translate }}</h3>
         <div class="preview-container">
-            <os-projector #preview *ngIf="previewProjector" [projector]="previewProjector"></os-projector>
+            @if (previewProjector) {
+            <os-projector #preview [projector]="previewProjector"></os-projector>
+            }
         </div>
     </mat-dialog-content>
+    }
 </div>

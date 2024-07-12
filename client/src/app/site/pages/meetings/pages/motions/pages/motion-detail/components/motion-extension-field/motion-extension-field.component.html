@@ -1,6 +1,8 @@
 <!-- Chip -->
 <div>
-    <h4 *ngIf="title">{{ title }}</h4>
+    @if (title) {
+    <h4>{{ title }}</h4>
+    }
     <mat-menu #triggerMenu="matMenu">
         <ng-container [ngTemplateOutlet]="triggerTemplate"></ng-container>
     </mat-menu>
@@ -12,24 +14,23 @@
         [showIcon]="!editMode && canBeEdited && hasExtension"
         (iconAction)="changeEditMode()"
     >
-        <mat-basic-chip
-            *ngIf="canBeEdited"
-            [matMenuTriggerFor]="triggerMenu"
-            [ngClass]="classes"
-            class="pointer"
-            disableRipple
-        >
+        @if (canBeEdited) {
+        <mat-basic-chip [matMenuTriggerFor]="triggerMenu" [ngClass]="classes" class="pointer" disableRipple>
             {{ chipValue || '–' | translate }}
         </mat-basic-chip>
-        <mat-basic-chip *ngIf="!canBeEdited" [ngClass]="classes" disableRipple>
+        } @if (!canBeEdited) {
+        <mat-basic-chip [ngClass]="classes" disableRipple>
             {{ chipValue | translate }}
         </mat-basic-chip>
-        <span *ngIf="internal" class="internal-suffix">({{ 'internal' | translate }})</span>
+        } @if (internal) {
+        <span class="internal-suffix">({{ 'internal' | translate }})</span>
+        }
     </os-icon-container>
 </div>
 
 <!-- Extension field -->
-<div *ngIf="hasExtension && editMode" class="spacer-top-10 extension-container">
+@if (hasExtension && editMode) {
+<div class="spacer-top-10 extension-container">
     <mat-form-field>
         <mat-label>{{ extensionLabel }}</mat-label>
         <input
@@ -41,7 +42,8 @@
             (change)="inputChanged()"
         />
     </mat-form-field>
-    <mat-form-field *ngFor="let list of searchLists; let i = index" [formGroup]="extensionFieldForm">
+    @for (list of searchLists; track list; let i = $index) {
+    <mat-form-field [formGroup]="extensionFieldForm">
         <mat-label>{{ list.label ?? '' | translate }}</mat-label>
         <os-list-search-selector
             formControlName="{{ 'list' + i + '' }}"
@@ -52,10 +54,11 @@
             [wider]="list.wider"
         ></os-list-search-selector>
     </mat-form-field>
-
+    }
     <button mat-button (click)="changeEditMode(true)">{{ 'Save' | translate }}</button>
     <button mat-button (click)="changeEditMode()">{{ 'Cancel' | translate }}</button>
 </div>
+}
 
 <!-- Optional template for the menu -->
 <ng-template #triggerTemplate>

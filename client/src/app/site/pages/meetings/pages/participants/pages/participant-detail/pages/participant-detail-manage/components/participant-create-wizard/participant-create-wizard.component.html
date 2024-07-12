@@ -13,16 +13,19 @@
 
     <!-- Next-button -->
     <div class="extra-controls-slot">
-        <div *ngIf="(currentStepIndexObservable | async) !== FILL_FORM_PARTICIPANT_STEP">
+        @if ((currentStepIndexObservable | async) !== FILL_FORM_PARTICIPANT_STEP) {
+        <div>
             <button type="button" mat-button (click)="matStepper.previous()">
                 <span class="upper">{{ 'Previous' | translate }}</span>
             </button>
         </div>
-        <div *ngIf="(currentStepIndexObservable | async) !== CREATE_PARTICIPANT_STEP">
+        } @if ((currentStepIndexObservable | async) !== CREATE_PARTICIPANT_STEP) {
+        <div>
             <button mat-button (click)="matStepper.next()">
                 <span class="upper">{{ 'Next' | translate }}</span>
             </button>
         </div>
+        }
     </div>
 </os-head-bar>
 
@@ -71,9 +74,9 @@
                                 >
                                     <mat-icon>help</mat-icon>
                                 </button>
-                                <mat-error *ngIf="createUserForm.controls['username'].errors?.['noSpace']" translate>
-                                    Username may not contain spaces
-                                </mat-error>
+                                @if (createUserForm.controls['username'].errors?.['noSpace']) {
+                                <mat-error translate>Username may not contain spaces</mat-error>
+                                }
                             </mat-form-field>
                         </div>
                     </mat-card-content>
@@ -83,25 +86,26 @@
         <mat-step [optional]="true">
             <ng-template matStepLabel>{{ 'Choice' | translate }}</ng-template>
             <ng-template matStepContent>
-                <ng-container *ngIf="suitableAccountList.length">
-                    <h3>{{ 'Suitable accounts found' | translate }}</h3>
-                    <mat-list class="spacer-bottom-60">
-                        <ng-container *ngFor="let user of suitableAccountList; let last = last">
-                            <mat-list-item>
-                                <div class="action-title full-width">
-                                    <div>
-                                        <div>{{ user.first_name }}&nbsp;{{ user.last_name }}</div>
-                                        <div class="subtitle">{{ user.email }}&nbsp;{{ user.username }}</div>
-                                    </div>
-                                    <button mat-flat-button color="primary" (click)="onAccountSelected(user)">
-                                        {{ 'Select' | translate }}
-                                    </button>
-                                </div>
-                            </mat-list-item>
-                            <mat-divider *ngIf="!last"></mat-divider>
-                        </ng-container>
-                    </mat-list>
-                </ng-container>
+                @if (suitableAccountList.length) {
+                <h3>{{ 'Suitable accounts found' | translate }}</h3>
+                <mat-list class="spacer-bottom-60">
+                    @for (user of suitableAccountList; track user; let last = $last) {
+                    <mat-list-item>
+                        <div class="action-title full-width">
+                            <div>
+                                <div>{{ user.first_name }}&nbsp;{{ user.last_name }}</div>
+                                <div class="subtitle">{{ user.email }}&nbsp;{{ user.username }}</div>
+                            </div>
+                            <button mat-flat-button color="primary" (click)="onAccountSelected(user)">
+                                {{ 'Select' | translate }}
+                            </button>
+                        </div>
+                    </mat-list-item>
+                    @if (!last) {
+                    <mat-divider></mat-divider>
+                    } }
+                </mat-list>
+                }
             </ng-template>
         </mat-step>
         <mat-step>
@@ -121,7 +125,8 @@
                     (errorEvent)="formErrors = $event"
                 >
                     <ng-template #editView let-form="form">
-                        <div [formGroup]="form" *ngIf="(flicker | async) === false">
+                        @if ((flicker | async) === false) {
+                        <div [formGroup]="form">
                             <h2>{{ 'Meeting specific information' | translate }}</h2>
                             <!-- Present? -->
                             <div [formGroup]="form">
@@ -144,7 +149,6 @@
                                         [inputListValues]="structureLevelObservable"
                                     ></os-list-search-selector>
                                 </mat-form-field>
-
                                 <!-- Participant Number -->
                                 <mat-form-field
                                     [ngClass]="{
@@ -156,28 +160,24 @@
                                     <mat-label>{{ 'Participant number' | translate }}</mat-label>
                                     <input type="text" matInput formControlName="number" />
                                 </mat-form-field>
-
                                 <!-- Vote weight -->
                                 <!-- TODO Input type should be number with limited decimal spaces -->
-                                <mat-form-field class="form45 force-min-with" *ngIf="showVoteWeight">
+                                @if (showVoteWeight) {
+                                <mat-form-field class="form45 force-min-with">
                                     <mat-label>{{ 'Vote weight' | translate }}</mat-label>
                                     <input type="number" matInput formControlName="vote_weight" />
-                                    <mat-error
-                                        *ngIf="isVoteWeightError && form.controls['vote_weight'].value > 0"
-                                        translate
-                                    >
+                                    @if (isVoteWeightError && form.controls['vote_weight'].value > 0) {
+                                    <mat-error translate>
                                         Please select a vote weight greater than or equal to 0.000001
                                     </mat-error>
-                                    <mat-error
-                                        *ngIf="isVoteWeightError && form.controls['vote_weight'].value <= 0"
-                                        translate
-                                    >
-                                        Please select a vote weight greater than zero.
-                                    </mat-error>
+                                    } @if (isVoteWeightError && form.controls['vote_weight'].value <= 0) {
+                                    <mat-error translate>Please select a vote weight greater than zero.</mat-error>
+                                    }
                                 </mat-form-field>
+                                }
                             </div>
-
-                            <div *ngIf="isAllowedFn('seeName')">
+                            @if (isAllowedFn('seeName')) {
+                            <div>
                                 <!-- Groups -->
                                 <mat-form-field class="form100 force-min-width">
                                     <mat-label>{{ 'Groups' | translate }}</mat-label>
@@ -188,9 +188,9 @@
                                         [sortFn]="sortFn"
                                     ></os-list-search-selector>
                                 </mat-form-field>
-
                                 <!-- Delegate Vote -->
-                                <mat-form-field class="form100 force-min-width" *ngIf="showVoteDelegations">
+                                @if (showVoteDelegations) {
+                                <mat-form-field class="form100 force-min-width">
                                     <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
                                     <os-repo-search-selector
                                         formControlName="vote_delegations_from_ids"
@@ -200,9 +200,10 @@
                                         [subscriptionConfig]="participantSubscriptionConfig"
                                     ></os-repo-search-selector>
                                 </mat-form-field>
-
+                                }
                                 <!-- Delegate Vote -->
-                                <mat-form-field class="form100 force-min-width" *ngIf="showVoteDelegations">
+                                @if (showVoteDelegations) {
+                                <mat-form-field class="form100 force-min-width">
                                     <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
                                     <os-repo-search-selector
                                         formControlName="vote_delegated_to_id"
@@ -213,16 +214,18 @@
                                         [subscriptionConfig]="participantSubscriptionConfig"
                                     ></os-repo-search-selector>
                                 </mat-form-field>
+                                }
                             </div>
-
+                            }
                             <!-- About me -->
-                            <div *ngIf="isAllowedFn('seePersonal')" class="spacer-bottom-20">
+                            @if (isAllowedFn('seePersonal')) {
+                            <div class="spacer-bottom-20">
                                 <!-- The HTML Editor -->
                                 <h4>{{ 'About me' | translate }}</h4>
                                 <os-editor formControlName="about_me"></os-editor>
                             </div>
-
-                            <div *ngIf="isAllowedFn('update')">
+                            } @if (isAllowedFn('update')) {
+                            <div>
                                 <!-- Comment -->
                                 <mat-form-field class="form100 force-min-width" subscriptSizing="dynamic">
                                     <mat-label>{{ 'Comment' | translate }}</mat-label>
@@ -230,7 +233,9 @@
                                     <mat-hint>{{ 'Only for internal notes.' | translate }}</mat-hint>
                                 </mat-form-field>
                             </div>
+                            }
                         </div>
+                        }
                     </ng-template>
                 </os-user-detail-view>
             </ng-template>

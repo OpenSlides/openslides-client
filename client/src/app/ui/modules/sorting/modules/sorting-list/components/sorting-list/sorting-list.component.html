@@ -1,25 +1,28 @@
 <div cdkDropList [cdkDropListDisabled]="!enable" (cdkDropListDropped)="drop($event)">
-    <div class="line" *ngIf="!sortedItems.length">
+    @if (!sortedItems.length) {
+    <div class="line">
         <span>{{ 'No data' | translate }}</span>
     </div>
+    } @for (item of sortedItems; track item; let i = $index) {
     <div
         [ngClass]="isSelectedRow(i) ? 'backgroundColorSelected' : 'backgroundColorLight'"
         class="line margin-bottom-5"
-        *ngFor="let item of sortedItems; let i = index"
         cdkDrag
         (click)="onItemClick($event, i)"
         (cdkDragStarted)="dragStarted(i)"
     >
         <!-- drag handle -->
-        <div class="drag-indicator" cdkDragHandle *ngIf="enable">
+        @if (enable) {
+        <div class="drag-indicator" cdkDragHandle>
             <mat-icon>drag_indicator</mat-icon>
         </div>
-
+        }
         <!-- Count number -->
-        <div *ngIf="count" class="count">
+        @if (count) {
+        <div class="count">
             <span>{{ i + 1 }}.</span>
         </div>
-
+        }
         <!-- Content -->
         <div class="content">
             <ng-template
@@ -27,13 +30,15 @@
                 [ngTemplateOutletContext]="{ $implicit: item, index: i }"
             ></ng-template>
         </div>
-
         <!-- Drag prev -->
         <div class="line" *cdkDragPreview>
-            <div class="spacer.left-10" *ngIf="multiSelectedIndex.length > 0">
+            @if (multiSelectedIndex.length > 0) {
+            <div class="spacer.left-10">
                 {{ multiSelectedIndex.length }}&nbsp;
                 <span>{{ 'items selected' | translate }}</span>
             </div>
+            }
         </div>
     </div>
+    }
 </div>

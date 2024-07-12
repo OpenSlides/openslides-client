@@ -1,34 +1,38 @@
 <!-- A summary of all changes -->
 <div class="motion-detail-diff">
+    @if (showSummary) {
     <os-motion-detail-diff-summary
-        *ngIf="showSummary"
         [motion]="motion"
         [changes]="changes"
         [scrollToChange]="scrollToChange"
         [elContainer]="nativeElement"
     ></os-motion-detail-diff-summary>
-
-    <span class="text-prefix-label" *ngIf="showPreamble">{{ preamble }}</span>
+    } @if (showPreamble) {
+    <span class="text-prefix-label">{{ preamble }}</span>
+    }
 
     <!-- The actual diff view -->
     <div class="motion-text-with-diffs underlined-links">
-        <div *ngIf="getTitleChangingObject() as changedTitle">
+        @if (getTitleChangingObject(); as changedTitle) {
+        <div>
             <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix outlined-hover outlined-border">
                 <div class="action-row" *osPerms="permission.motionCanManage">
+                    @if (isRecommendation(changedTitle)) {
                     <button
                         mat-icon-button
-                        *ngIf="isRecommendation(changedTitle)"
                         type="button"
                         [matMenuTriggerFor]="changeRecommendationMenu"
                         [matMenuTriggerData]="{ change: changedTitle }"
                     >
                         <mat-icon>more_horiz</mat-icon>
                     </button>
+                    }
                 </div>
-                <div class="status-row" *ngIf="changedTitle.isRejected()">
+                @if (changedTitle.isRejected()) {
+                <div class="status-row">
                     <i class="grey">{{ 'Rejected' | translate }}</i>
                 </div>
-
+                }
                 <div
                     class="motion-text motion-text-diff"
                     [class.line-numbers-none]="isLineNumberingNone()"
@@ -41,7 +45,8 @@
                 </div>
             </div>
         </div>
-        <div *ngFor="let change of getAllTextChangingObjects(); let i = index">
+        } @for (change of getAllTextChangingObjects(); track change; let i = $index) {
+        <div>
             <div
                 class="motion-text"
                 [class.line-numbers-none]="isLineNumberingNone()"
@@ -55,14 +60,15 @@
                     (createChangeRecommendation)="onCreateChangeRecommendation($event)"
                 ></os-motion-detail-original-change-recommendations>
             </div>
-
             <div
                 class="diff-box diff-box-{{ change.getChangeId() }} clearfix outlined-hover outlined-border"
                 [class.collides]="hasCollissions(change, getAllTextChangingObjects())"
             >
-                <div class="collission-hint" *ngIf="hasCollissions(change, getAllTextChangingObjects())">
+                @if (hasCollissions(change, getAllTextChangingObjects())) {
+                <div class="collission-hint">
                     <mat-icon matTooltip="{{ 'This change collides with another one.' | translate }}">warning</mat-icon>
                 </div>
+                }
                 <div class="action-row">
                     <button
                         mat-icon-button
@@ -73,28 +79,31 @@
                     >
                         <mat-icon>more_horiz</mat-icon>
                     </button>
+                    @if (isAmendment(change)) {
                     <button
                         mat-icon-button
-                        *ngIf="isAmendment(change)"
                         type="button"
                         [matMenuTriggerFor]="amendmentMenu"
                         [matMenuTriggerData]="{ change: change }"
                     >
                         <mat-icon>more_horiz</mat-icon>
                     </button>
+                    }
                 </div>
-                <div class="status-row" *ngIf="isChangeRecommendation(change) && change.isRejected()">
+                @if (isChangeRecommendation(change) && change.isRejected()) {
+                <div class="status-row">
                     <i class="grey">{{ 'Rejected' | translate }}</i>
                 </div>
-
+                }
                 <!-- If it's an amendment, only accepted ones will be passed to this component
-                 by default (== !showAllAmendments). In this case, don't show the prefix.
-                 However, if showAllAmendments === true, the prefix should be shown alwayes,
-                 even if it's accepted -->
-                <div class="status-row" *ngIf="isAmendment(change) && showAllAmendments">
+          by default (== !showAllAmendments). In this case, don't show the prefix.
+          However, if showAllAmendments === true, the prefix should be shown alwayes,
+          even if it's accepted -->
+                @if (isAmendment(change) && showAllAmendments) {
+                <div class="status-row">
                     <i class="grey">{{ change.amendment.number }} - {{ change.amendment.state!.name }}</i>
                 </div>
-
+                }
                 <div
                     class="motion-text motion-text-diff"
                     [class.line-numbers-none]="isLineNumberingNone()"
@@ -105,6 +114,7 @@
                 ></div>
             </div>
         </div>
+        }
 
         <div
             class="motion-text"
@@ -130,36 +140,35 @@
                 [state]="{ back: 'true' }"
             >
                 <mat-icon>visibility_on</mat-icon>
-                <ng-container *ngIf="!change?.amendment?.identifier">
-                    <span>{{ 'Show amendment' | translate }}</span>
-                </ng-container>
-
-                <ng-container *ngIf="change?.amendment?.identifier">
-                    <span>{{ change.amendment.identifier }}</span>
-                </ng-container>
+                @if (!change?.amendment?.identifier) {
+                <span>{{ 'Show amendment' | translate }}</span>
+                } @if (change?.amendment?.identifier) {
+                <span>{{ change.amendment.identifier }}</span>
+                }
             </a>
 
             <!-- perms.isAllowed('change_state', motion) (which does not exist)-->
             <ng-container *osPerms="permission.motionCanManage">
-                <mat-divider *ngIf="change.amendment.state.next_states.length > 0"></mat-divider>
-                <button
-                    *ngFor="let state of change.amendment.state.next_states"
-                    mat-menu-item
-                    (click)="setAmendmentState(change, state.id)"
-                >
+                @if (change.amendment.state.next_states.length > 0) {
+                <mat-divider></mat-divider>
+                } @for (state of change.amendment.state.next_states; track state) {
+                <button mat-menu-item (click)="setAmendmentState(change, state.id)">
                     {{ state.name }}
-                    <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
+                    @if (state.show_state_extension_field) {
+                    <span>&nbsp;...</span>
+                    }
                 </button>
-                <mat-divider *ngIf="change.amendment.state.next_states.length > 0"></mat-divider>
-                <button
-                    *ngFor="let state of change.amendment.state.previous_states"
-                    mat-menu-item
-                    (click)="setAmendmentState(change, state.id)"
-                >
+                } @if (change.amendment.state.next_states.length > 0) {
+                <mat-divider></mat-divider>
+                } @for (state of change.amendment.state.previous_states; track state) {
+                <button mat-menu-item (click)="setAmendmentState(change, state.id)">
                     <mat-icon>arrow_back</mat-icon>
                     {{ state.name }}
-                    <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
+                    @if (state.show_state_extension_field) {
+                    <span>&nbsp;...</span>
+                    }
                 </button>
+                }
                 <button mat-menu-item (click)="resetAmendmentState(change)">
                     <mat-icon>replay</mat-icon>
                     {{ 'Reset state' | translate }}
@@ -188,24 +197,17 @@
                 <mat-icon>delete</mat-icon>
                 <span>{{ 'Delete' | translate }}</span>
             </button>
-            <button
-                type="button"
-                mat-menu-item
-                (click)="editChangeRecommendation(change, $event)"
-                *ngIf="!change.isTitleChange()"
-            >
+            @if (!change.isTitleChange()) {
+            <button type="button" mat-menu-item (click)="editChangeRecommendation(change, $event)">
                 <mat-icon>edit</mat-icon>
                 <span>{{ 'Edit' | translate }}</span>
             </button>
-            <button
-                type="button"
-                mat-menu-item
-                (click)="editTitleChangeRecommendation(change, $event)"
-                *ngIf="change.isTitleChange()"
-            >
+            } @if (change.isTitleChange()) {
+            <button type="button" mat-menu-item (click)="editTitleChangeRecommendation(change, $event)">
                 <mat-icon>edit</mat-icon>
                 <span>{{ 'Edit' | translate }}</span>
             </button>
+            }
         </ng-template>
     </mat-menu>
 </div>

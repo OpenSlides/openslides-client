@@ -3,29 +3,30 @@
         <div class="action-title">
             <h1>{{ 'Privacy policy' | translate }}</h1>
             <div *osOmlPerms="OML.can_manage_organization; and: isEditable">
-                <button (click)="isEditing = true" mat-icon-button *ngIf="!isEditing">
+                @if (!isEditing) {
+                <button (click)="isEditing = true" mat-icon-button>
                     <mat-icon>edit</mat-icon>
                 </button>
-                <ng-container *ngIf="isEditing">
-                    <button (click)="leaveEditMode(true)" mat-icon-button>
-                        <mat-icon>done</mat-icon>
-                    </button>
-                    <button (click)="leaveEditMode(false)" mat-icon-button>
-                        <mat-icon>close</mat-icon>
-                    </button>
-                </ng-container>
+                } @if (isEditing) {
+                <button (click)="leaveEditMode(true)" mat-icon-button>
+                    <mat-icon>done</mat-icon>
+                </button>
+                <button (click)="leaveEditMode(false)" mat-icon-button>
+                    <mat-icon>close</mat-icon>
+                </button>
+                }
             </div>
         </div>
-        <ng-container *ngIf="!isEditing">
-            <div class="underlined-links" *ngIf="privacyPolicy" [innerHtml]="privacyPolicy | trust : 'html'"></div>
-            <div *ngIf="!privacyPolicy">
-                {{ 'The event manager has not set up a privacy policy yet.' | translate }}
-            </div>
-        </ng-container>
-        <ng-container *ngIf="isEditing">
-            <form [formGroup]="formGroup">
-                <os-editor formControlName="privacyPolicy"></os-editor>
-            </form>
-        </ng-container>
+        @if (!isEditing) { @if (privacyPolicy) {
+        <div class="underlined-links" [innerHtml]="privacyPolicy | trust : 'html'"></div>
+        } @if (!privacyPolicy) {
+        <div>
+            {{ 'The event manager has not set up a privacy policy yet.' | translate }}
+        </div>
+        } } @if (isEditing) {
+        <form [formGroup]="formGroup">
+            <os-editor formControlName="privacyPolicy"></os-editor>
+        </form>
+        }
     </mat-card-content>
 </mat-card>

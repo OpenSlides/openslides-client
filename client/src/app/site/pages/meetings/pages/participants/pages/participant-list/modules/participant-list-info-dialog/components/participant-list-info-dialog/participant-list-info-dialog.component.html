@@ -5,12 +5,15 @@
     <mat-form-field>
         <mat-label>{{ 'Groups' | translate }}</mat-label>
         <mat-select [(ngModel)]="infoDialog.group_ids" multiple>
-            <mat-option *ngFor="let group of groupsObservable | async" [value]="group.id">
+            @for (group of groupsObservable | async; track group) {
+            <mat-option [value]="group.id">
                 {{ group.getTitle() }}
             </mat-option>
+            }
         </mat-select>
     </mat-form-field>
-    <mat-form-field *ngIf="showVoteDelegations">
+    @if (showVoteDelegations) {
+    <mat-form-field>
         <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
         <os-list-search-selector
             [(ngModel)]="infoDialog.vote_delegations_from_ids"
@@ -19,7 +22,8 @@
             [inputListValues]="otherParticipantsObservable"
         ></os-list-search-selector>
     </mat-form-field>
-    <mat-form-field *ngIf="showVoteDelegations">
+    } @if (showVoteDelegations) {
+    <mat-form-field>
         <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
         <os-list-search-selector
             [(ngModel)]="infoDialog.vote_delegated_to_id"
@@ -29,6 +33,7 @@
             [inputListValues]="otherParticipantsObservable"
         ></os-list-search-selector>
     </mat-form-field>
+    }
     <mat-form-field>
         <mat-label>{{ 'Structure level' | translate }}</mat-label>
         <os-list-search-selector

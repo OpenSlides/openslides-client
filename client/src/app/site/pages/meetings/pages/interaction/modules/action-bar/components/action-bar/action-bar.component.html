@@ -1,61 +1,57 @@
-<div class="interaction-bar-wrapper" *ngIf="(isConfStateNone | async) === false">
-    <ng-container *ngIf="isConfStateJitsi | async">
-        <ng-container *ngIf="(isJoined | async) && (showCallDialog | async) === false">
-            <!-- show dialog -->
-            <button
-                mat-mini-fab
-                class="action-bar-shadow background-default"
-                matTooltip="{{ 'Show conference room' | translate }}"
-                (click)="maximizeCallDialog()"
-                @fadeIn
-            >
-                <mat-icon
-                    color="primary"
-                    [@fadeInOut]="meetingActiveAnimHelper"
-                    (@fadeInOut.done)="triggerCallHiddenAnimation()"
-                >
-                    fullscreen
-                </mat-icon>
-            </button>
-        </ng-container>
-    </ng-container>
-
-    <ng-container *ngIf="(showLiveConf | async) && (isConfStateStream | async)">
-        <!-- Enter conference from stream -->
-        <button
-            (click)="enterConferenceRoom()"
-            mat-mini-fab
-            class="action-bar-shadow background-default"
-            matTooltip="{{ canEnterTooltip | translate }}"
-            *ngIf="canEnterCall | async"
+@if ((isConfStateNone | async) === false) {
+<div class="interaction-bar-wrapper">
+    @if (isConfStateJitsi | async) { @if ((isJoined | async) && (showCallDialog | async) === false) {
+    <!-- show dialog -->
+    <button
+        mat-mini-fab
+        class="action-bar-shadow background-default"
+        matTooltip="{{ 'Show conference room' | translate }}"
+        (click)="maximizeCallDialog()"
+        @fadeIn
+    >
+        <mat-icon
+            color="primary"
+            [@fadeInOut]="meetingActiveAnimHelper"
+            (@fadeInOut.done)="triggerCallHiddenAnimation()"
         >
-            <mat-icon color="primary">phone</mat-icon>
-        </button>
-
-        <a
-            [routerLink]="['/', activeMeetingId, 'autopilot']"
-            mat-mini-fab
-            class="action-bar-shadow fake-disabled"
-            matTooltip="{{ cannotEnterTooltip | translate }}"
-            *ngIf="(canEnterCall | async) === false"
-        >
-            <mat-icon color="primary">phone</mat-icon>
-        </a>
-    </ng-container>
-
+            fullscreen
+        </mat-icon>
+    </button>
+    } } @if ((showLiveConf | async) && (isConfStateStream | async)) {
+    <!-- Enter conference from stream -->
+    @if (canEnterCall | async) {
+    <button
+        (click)="enterConferenceRoom()"
+        mat-mini-fab
+        class="action-bar-shadow background-default"
+        matTooltip="{{ canEnterTooltip | translate }}"
+    >
+        <mat-icon color="primary">phone</mat-icon>
+    </button>
+    } @if ((canEnterCall | async) === false) {
+    <a
+        [routerLink]="['/', activeMeetingId, 'autopilot']"
+        mat-mini-fab
+        class="action-bar-shadow fake-disabled"
+        matTooltip="{{ cannotEnterTooltip | translate }}"
+    >
+        <mat-icon color="primary">phone</mat-icon>
+    </a>
+    } }
     <!-- Call support button -->
+    @if (showHelpDesk | async) {
     <button
         mat-mini-fab
         class="action-bar-shadow background-default"
         (click)="enterSupportRoom()"
         matTooltip="{{ 'Help desk' | translate }}"
-        *ngIf="showHelpDesk | async"
         @fadeIn
     >
         <mat-icon color="primary">help_outline</mat-icon>
     </button>
-
+    }
     <!-- applause button -->
+    @if (showApplause | async) {
     <button
         mat-mini-fab
         class="action-bar-shadow background-default"
@@ -64,9 +60,10 @@
         [matBadge]="applauseLevel | async"
         [matBadgeHidden]="(showApplauseLevel | async) === false"
         (click)="sendApplause()"
-        *ngIf="showApplause | async"
         @fadeIn
     >
         <mat-icon class="svg-primary" svgIcon="clapping_hands"></mat-icon>
     </button>
+    }
 </div>
+}

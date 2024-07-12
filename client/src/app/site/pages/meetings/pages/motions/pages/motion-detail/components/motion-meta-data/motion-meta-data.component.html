@@ -1,5 +1,6 @@
 <!-- Submitters -->
-<div *ngIf="motion?.submitters">
+@if (motion?.submitters) {
+<div>
     <div class="remove-top-margin">
         <os-motion-manage-motion-meeting-users
             [motion]="motion"
@@ -15,44 +16,42 @@
         ></os-motion-manage-motion-meeting-users>
     </div>
 </div>
+}
 
 <!-- do Support -->
-<div *ngIf="minSupporters">
-    <h4 *ngIf="perms.isAllowed('support', motion) || motion.hasSupporters()">{{ 'Supporters' | translate }}</h4>
-
+@if (minSupporters) {
+<div>
+    @if (perms.isAllowed('support', motion) || motion.hasSupporters()) {
+    <h4>{{ 'Supporters' | translate }}</h4>
+    }
     <!-- support button -->
-    <button
-        type="button"
-        mat-stroked-button
-        color="accent"
-        (click)="support()"
-        *ngIf="perms.isAllowed('support', motion)"
-    >
+    @if (perms.isAllowed('support', motion)) {
+    <button type="button" mat-stroked-button color="accent" (click)="support()">
         <mat-icon>thumb_up</mat-icon>
         {{ 'Support' | translate }}
     </button>
-
+    }
     <!-- unsupport button -->
-    <button
-        type="button"
-        *ngIf="perms.isAllowed('unsupport', motion)"
-        (click)="unsupport()"
-        mat-stroked-button
-        color="accent"
-    >
+    @if (perms.isAllowed('unsupport', motion)) {
+    <button type="button" (click)="unsupport()" mat-stroked-button color="accent">
         <mat-icon>thumb_down</mat-icon>
         {{ 'Unsupport' | translate }}
     </button>
+    }
     <!-- show supporters (TODO: open in dialog) -->
-    <button type="button" *ngIf="motion.hasSupporters()" (click)="openSupportersDialog()" mat-button>
+    @if (motion.hasSupporters()) {
+    <button type="button" (click)="openSupportersDialog()" mat-button>
         {{ motion.supporters.length }} {{ 'supporters' | translate }}
     </button>
-    <p *ngIf="showSupporters" class="supporters">
+    } @if (showSupporters) {
+    <p class="supporters">
         <os-comma-separated-listing [list]="supportersObservable | async">
             <ng-template let-supporter>{{ supporter.full_name }}</ng-template>
         </os-comma-separated-listing>
     </p>
+    }
 </div>
+}
 
 <div *osMeetingSetting="'motions_enable_editor'; and: perms.isAllowed('change_metadata')">
     <os-motion-manage-motion-meeting-users
@@ -73,7 +72,8 @@
 </div>
 
 <!-- Set State -->
-<div *ngIf="motion?.state">
+@if (motion?.state) {
+<div>
     <os-motion-extension-field
         title="{{ 'State' | translate }}"
         [canBeEdited]="perms.isAllowed('change_state', motion) || !!motion.state.submitter_withdraw_state"
@@ -84,60 +84,73 @@
         extensionLabel="{{ 'Extension' | translate }}"
         (succeeded)="setStateExtension($event)"
     >
-        <span class="trigger-menu" *ngIf="motion.state">
-            <ng-container *ngIf="perms.isAllowed('change_state', motion)">
-                <button *ngFor="let state of motion.state.next_states" mat-menu-item (click)="setState(state.id)">
+        @if (motion.state) {
+        <span class="trigger-menu">
+            @if (perms.isAllowed('change_state', motion)) { @for (state of motion.state.next_states; track state) {
+            <button mat-menu-item (click)="setState(state.id)">
+                {{ state.name }}
+                @if (state.show_state_extension_field) {
+                <span>&nbsp;...</span>
+                }
+            </button>
+            }
+            <div>
+                @if (motion.state.previous_states.length > 0) {
+                <mat-divider></mat-divider>
+                } @for (state of motion.state.previous_states; track state) {
+                <button mat-menu-item (click)="setState(state.id)">
+                    <mat-icon>arrow_back</mat-icon>
                     {{ state.name }}
-                    <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
+                    @if (state.show_state_extension_field) {
+                    <span>&nbsp;...</span>
+                    }
                 </button>
-                <div>
-                    <mat-divider *ngIf="motion.state.previous_states.length > 0"></mat-divider>
-                    <button
-                        *ngFor="let state of motion.state.previous_states"
-                        mat-menu-item
-                        (click)="setState(state.id)"
-                    >
-                        <mat-icon>arrow_back</mat-icon>
-                        {{ state.name }}
-                        <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
-                    </button>
-                    <mat-divider *ngIf="perms.isAllowed('change_metadata', motion)"></mat-divider>
-                    <button *ngIf="perms.isAllowed('change_metadata', motion)" mat-menu-item (click)="resetState()">
-                        <mat-icon>replay</mat-icon>
-                        {{ 'Reset state' | translate }}
-                    </button>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="!perms.isAllowed('change_state', motion) && !!motion.state.submitter_withdraw_state">
-                <button mat-menu-item (click)="setState(motion.state.submitter_withdraw_state.id)">
-                    {{ motion.state.submitter_withdraw_state.name }}
+                } @if (perms.isAllowed('change_metadata', motion)) {
+                <mat-divider></mat-divider>
+                } @if (perms.isAllowed('change_metadata', motion)) {
+                <button mat-menu-item (click)="resetState()">
+                    <mat-icon>replay</mat-icon>
+                    {{ 'Reset state' | translate }}
                 </button>
-            </ng-container>
+                }
+            </div>
+            } @if (!perms.isAllowed('change_state', motion) && !!motion.state.submitter_withdraw_state) {
+            <button mat-menu-item (click)="setState(motion.state.submitter_withdraw_state.id)">
+                {{ motion.state.submitter_withdraw_state.name }}
+            </button>
+            }
         </span>
+        }
     </os-motion-extension-field>
-
     <!-- Forward to meeting -->
-    <button mat-stroked-button (click)="forwardMotionToMeetings()" *ngIf="showForwardButton" class="spacer-top-10">
+    @if (showForwardButton) {
+    <button mat-stroked-button (click)="forwardMotionToMeetings()" class="spacer-top-10">
         <mat-icon>forward</mat-icon>
         <span>{{ 'Forward' | translate }}</span>
     </button>
-
+    }
     <os-motion-add-poll-button [motion]="motion"></os-motion-add-poll-button>
 </div>
+}
 
 <!-- Forwardings - display only -->
-<div *ngIf="motion?.derived_motions?.length">
+@if (motion?.derived_motions?.length) {
+<div>
     <h4>{{ 'Motion forwarded to' | translate }}</h4>
     <div>
-        <div *ngFor="let derived of motion.derived_motions; let last = last">
+        @for (derived of motion.derived_motions; track derived; let last = $last) {
+        <div>
             <ng-container *ngTemplateOutlet="meetingLink; context: { motion: derived }"></ng-container>
             <span>({{ derived.forwarded | localizedDate }})</span>
         </div>
+        }
     </div>
 </div>
+}
 
 <!-- Recommendation -->
-<div *ngIf="isRecommendationEnabled">
+@if (isRecommendationEnabled) {
+<div>
     <os-motion-extension-field
         title="{{ recommender }}"
         [inputValue]="motion?.recommendation_extension"
@@ -151,15 +164,17 @@
         [internal]="motion?.state?.is_internal"
     >
         <span class="trigger-menu">
-            <button
-                *ngFor="let recommendation of getPossibleRecommendations()"
-                mat-menu-item
-                (click)="setRecommendation(recommendation.id)"
-            >
-                <mat-icon *ngIf="motion.recommendation_id === recommendation.id">check</mat-icon>
+            @for (recommendation of getPossibleRecommendations(); track recommendation) {
+            <button mat-menu-item (click)="setRecommendation(recommendation.id)">
+                @if (motion.recommendation_id === recommendation.id) {
+                <mat-icon>check</mat-icon>
+                }
                 {{ recommendation.recommendation_label }}
-                <span *ngIf="recommendation.show_recommendation_extension_field">&nbsp;...</span>
+                @if (recommendation.show_recommendation_extension_field) {
+                <span>&nbsp;...</span>
+                }
             </button>
+            }
             <mat-divider></mat-divider>
             <button mat-menu-item (click)="resetRecommendation()">
                 <mat-icon>replay</mat-icon>
@@ -167,31 +182,44 @@
             </button>
         </span>
     </os-motion-extension-field>
-
     <!-- recommendation referenced motions -->
-    <div class="spacer-top-10" *ngIf="showReferringMotions && referencedMotions?.length > 0">
-        <span *ngFor="let motion of referencedMotions; let last = last">
+    @if (showReferringMotions && referencedMotions?.length > 0) {
+    <div class="spacer-top-10">
+        @for (motion of referencedMotions; track motion; let last = $last) {
+        <span>
             <a [routerLink]="motion.getDetailStateUrl()">{{ motion.numberOrTitle }}</a>
-            <span *ngIf="!last" class="referencelist">&nbsp;·&nbsp;</span>
+            @if (!last) {
+            <span class="referencelist">&nbsp;·&nbsp;</span>
+            }
         </span>
+        }
     </div>
-
-    <button mat-stroked-button *ngIf="canFollowRecommendation()" (click)="onFollowRecButton()" class="spacer-top-10">
+    } @if (canFollowRecommendation()) {
+    <button mat-stroked-button (click)="onFollowRecButton()" class="spacer-top-10">
         <span>{{ 'Follow recommendation' | translate }}</span>
     </button>
+    }
 </div>
+}
 
 <!-- recommendation referencing motions -->
-<div *ngIf="showReferringMotions && motion?.referenced_in_motion_recommendation_extensions?.length > 0">
+@if (showReferringMotions && motion?.referenced_in_motion_recommendation_extensions?.length > 0) {
+<div>
     <h4>{{ 'Referring motions' | translate }}</h4>
-    <span *ngFor="let motion of referencingMotions; let last = last">
+    @for (motion of referencingMotions; track motion; let last = $last) {
+    <span>
         <a [routerLink]="motion.getDetailStateUrl()">{{ motion.numberOrTitle }}</a>
-        <span *ngIf="!last" class="referencelist">&nbsp;·&nbsp;</span>
+        @if (!last) {
+        <span class="referencelist">&nbsp;·&nbsp;</span>
+        }
     </span>
+    }
 </div>
+}
 
 <!-- Identical motions -->
-<div *ngIf="motion?.identical_motions?.length">
+@if (motion?.identical_motions?.length) {
+<div>
     <h4>{{ 'Identical with' | translate }}</h4>
     <os-comma-separated-listing [list]="motion?.identical_motions" [useMidpoint]="true">
         <ng-template let-view>
@@ -201,75 +229,92 @@
         </ng-template>
     </os-comma-separated-listing>
 </div>
+}
 
 <!-- Category -->
 <!-- Disabled during "new motion" since changing has no effect -->
-<div *ngIf="categories.length">
-    <h4 *ngIf="perms.isAllowed('change_metadata', motion) || motion.category">{{ 'Category' | translate }}</h4>
-
-    <os-chip-select
-        *ngIf="perms.isAllowed('change_metadata', motion) || motion.category"
-        chipClass="grey multi-line-chip"
-        [canOpen]="perms.isAllowed('change_metadata', motion)"
-    >
-        <button menu mat-menu-item *ngFor="let category of categories" (click)="setCategory(category.id)">
-            <mat-icon *ngIf="motion.category_id === category.id">check</mat-icon>
+@if (categories.length) {
+<div>
+    @if (perms.isAllowed('change_metadata', motion) || motion.category) {
+    <h4>{{ 'Category' | translate }}</h4>
+    } @if (perms.isAllowed('change_metadata', motion) || motion.category) {
+    <os-chip-select chipClass="grey multi-line-chip" [canOpen]="perms.isAllowed('change_metadata', motion)">
+        @for (category of categories; track category) {
+        <button menu mat-menu-item (click)="setCategory(category.id)">
+            @if (motion.category_id === category.id) {
+            <mat-icon>check</mat-icon>
+            }
             <span [ngStyle]="{ 'padding-left': getCategorySelectionMarginLeft(category) }">
                 {{ category.prefixedNameWithParents }}
             </span>
         </button>
-
-        <div *ngIf="motion.category">
-            <div *ngIf="motion.category.parent">
+        } @if (motion.category) {
+        <div>
+            @if (motion.category.parent) {
+            <div>
                 {{ motion.category.parent }}
             </div>
-            <span *ngIf="motion.category.parent">{{ 'Subcategory' | translate }}:</span>
+            } @if (motion.category.parent) {
+            <span>{{ 'Subcategory' | translate }}:</span>
+            }
             {{ motion.category }}
         </div>
-
-        <span *ngIf="!motion.category">-</span>
+        } @if (!motion.category) {
+        <span>-</span>
+        }
     </os-chip-select>
+    }
 </div>
+}
 
 <!-- Tags -->
 <!-- Disabled during "new motion" since changing has no effect -->
-<div *ngIf="tags.length">
-    <h4 *ngIf="perms.isAllowed('change_metadata', motion) || motion.hasTags()">{{ 'Tags' | translate }}</h4>
-
-    <os-chip-select
-        *ngIf="perms.isAllowed('change_metadata', motion) || motion.hasTags()"
-        [canOpen]="perms.isAllowed('change_metadata', motion)"
-    >
-        <button menu mat-menu-item *ngFor="let tag of tags" (click)="setTag($event, tag.id)">
-            <mat-icon *ngIf="motion.tags.includes(tag)">check</mat-icon>
+@if (tags.length) {
+<div>
+    @if (perms.isAllowed('change_metadata', motion) || motion.hasTags()) {
+    <h4>{{ 'Tags' | translate }}</h4>
+    } @if (perms.isAllowed('change_metadata', motion) || motion.hasTags()) {
+    <os-chip-select [canOpen]="perms.isAllowed('change_metadata', motion)">
+        @for (tag of tags; track tag) {
+        <button menu mat-menu-item (click)="setTag($event, tag.id)">
+            @if (motion.tags.includes(tag)) {
+            <mat-icon>check</mat-icon>
+            }
             {{ tag }}
         </button>
-
-        <os-chip-select-chip *ngFor="let tag of motion.tags" disabled disableRipple>
+        } @for (tag of motion.tags; track tag) {
+        <os-chip-select-chip disabled disableRipple>
             {{ tag }}
         </os-chip-select-chip>
-
+        }
         {{ '–' }}
     </os-chip-select>
+    }
 </div>
+}
 
 <!-- Block -->
-<div *ngIf="motionBlocks.length">
-    <h4 *ngIf="perms.isAllowed('change_metadata', motion) || motion.block">
+@if (motionBlocks.length) {
+<div>
+    @if (perms.isAllowed('change_metadata', motion) || motion.block) {
+    <h4>
         {{ 'Motion block' | translate }}
     </h4>
-    <os-chip-select
-        *ngIf="perms.isAllowed('change_metadata', motion) || motion.block"
-        [canOpen]="perms.isAllowed('change_metadata', motion)"
-    >
-        <button menu mat-menu-item *ngFor="let block of motionBlocks" (click)="setBlock(block.id)">
-            <mat-icon *ngIf="motion.block_id === block.id">check</mat-icon>
+    } @if (perms.isAllowed('change_metadata', motion) || motion.block) {
+    <os-chip-select [canOpen]="perms.isAllowed('change_metadata', motion)">
+        @for (block of motionBlocks; track block) {
+        <button menu mat-menu-item (click)="setBlock(block.id)">
+            @if (motion.block_id === block.id) {
+            <mat-icon>check</mat-icon>
+            }
             {{ block }}
         </button>
-
+        }
         {{ motion.block || '–' }}
     </os-chip-select>
+    }
 </div>
+}
 
 <!-- Workflow timestamp -->
 <os-motion-manage-timestamp
@@ -279,52 +324,66 @@
 ></os-motion-manage-timestamp>
 
 <!-- Created timestamp -->
-<div *ngIf="motion?.created && perms.isAllowed('change_metadata', motion)">
+@if (motion?.created && perms.isAllowed('change_metadata', motion)) {
+<div>
     <h4>{{ 'Creation date' | translate }}</h4>
     <div>{{ motion.created | localizedDate }}</div>
 </div>
+}
 
 <!-- Origins - display only -->
-<div *ngIf="getOriginMotions().length">
+@if (getOriginMotions().length) {
+<div>
     <h4>{{ 'Origin' | translate }}</h4>
     <div class="origin-view">
-        <ng-container *ngFor="let origin of getOriginMotions(); let last = last">
-            <div>
-                <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
-            </div>
-            <div class="flex-center">
-                <mat-icon *ngIf="!last">north</mat-icon>
-            </div>
-        </ng-container>
+        @for (origin of getOriginMotions(); track origin; let last = $last) {
+        <div>
+            <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
+        </div>
+        <div class="flex-center">
+            @if (!last) {
+            <mat-icon>north</mat-icon>
+            }
+        </div>
+        }
     </div>
 </div>
+}
 
 <!-- Amendments -->
-<div *ngIf="amendments && amendments.length > 0">
+@if (amendments && amendments.length > 0) {
+<div>
     <h4>{{ 'Amendments' | translate }}</h4>
     <a [routerLink]="['/', activeMeetingId, 'motions', 'amendments', motion.id]" [state]="{ back: 'true' }">
         {{ amendments.length }}
-        <span *ngIf="amendments.length === 1">{{ 'Amendment' | translate }}</span>
-        <span *ngIf="amendments.length > 1">{{ 'Amendments' | translate }}</span>
+        @if (amendments.length === 1) {
+        <span>{{ 'Amendment' | translate }}</span>
+        } @if (amendments.length > 1) {
+        <span>{{ 'Amendments' | translate }}</span>
+        }
     </a>
-
     <br />
-    <mat-checkbox [(ngModel)]="showAllAmendments" *ngIf="isDifferedChangeRecoMode">
+    @if (isDifferedChangeRecoMode) {
+    <mat-checkbox [(ngModel)]="showAllAmendments">
         {{ 'Show all changes' | translate }}
     </mat-checkbox>
+    }
 </div>
+}
 
 <!-- motion polls -->
 <os-motion-manage-polls [motion]="motion" [hideAdd]="true"></os-motion-manage-polls>
 
 <ng-template let-motion="motion" #meetingLink>
-    »
-    <span *ngIf="canAccess(motion)">
+    » @if (canAccess(motion)) {
+    <span>
         <a [routerLink]="getUrl(motion)">
             {{ getMeetingName(motion) }}
         </a>
     </span>
-    <span *ngIf="!canAccess(motion)">
+    } @if (!canAccess(motion)) {
+    <span>
         {{ getMeetingName(motion) }}
     </span>
+    }
 </ng-template>

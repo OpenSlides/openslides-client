@@ -1,12 +1,10 @@
-<div *ngIf="data" class="agenda-slide-wrapper">
+@if (data) {
+<div class="agenda-slide-wrapper">
     <h1 class="projector_h1">{{ 'Agenda' | translate }}</h1>
-
-    <div
-        *ngFor="let item of data.data.items"
-        [ngStyle]="getItemStyle(item)"
-        [ngClass]="item.depth === 0 ? 'mainitem' : 'subitem'"
-        class="item"
-    >
+    @for (item of data.data.items; track item) {
+    <div [ngStyle]="getItemStyle(item)" [ngClass]="item.depth === 0 ? 'mainitem' : 'subitem'" class="item">
         {{ getTitle(item) }}
     </div>
+    }
 </div>
+}

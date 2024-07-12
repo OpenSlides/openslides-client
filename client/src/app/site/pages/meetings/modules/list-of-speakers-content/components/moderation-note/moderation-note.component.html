@@ -1,54 +1,51 @@
 <!-- Moderator Note-->
-<mat-card
-    class="spacer-bottom-60 os-card"
-    *ngIf="agendaItem && canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))"
->
+@if (agendaItem && canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))) {
+<mat-card class="spacer-bottom-60 os-card">
     <mat-card-content>
         <!-- Title edit/save/cancle-->
         <div class="action-title">
             <p class="subtitle-text" translate>Moderation note</p>
-            <div class="buttons" *ngIf="canManageModerationNote">
-                <ng-container *ngIf="isEditing">
-                    <button
-                        mat-icon-button
-                        color="warn"
-                        (click)="saveChangesModerationNote()"
-                        matTooltip="{{ 'Save' | translate }}"
-                    >
-                        <mat-icon>done</mat-icon>
-                    </button>
-                    <button
-                        mat-icon-button
-                        (click)="toggleEditModeratorNote()"
-                        matTooltip="{{ 'Cancel edit' | translate }}"
-                    >
-                        <mat-icon>close</mat-icon>
-                    </button>
-                </ng-container>
-                <ng-container *ngIf="!isEditing">
-                    <button
-                        mat-icon-button
-                        (click)="toggleEditModeratorNote()"
-                        matTooltip="{{ 'Edit moderation note' | translate }}"
-                    >
-                        <mat-icon>edit</mat-icon>
-                    </button>
-                </ng-container>
+            @if (canManageModerationNote) {
+            <div class="buttons">
+                @if (isEditing) {
+                <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="saveChangesModerationNote()"
+                    matTooltip="{{ 'Save' | translate }}"
+                >
+                    <mat-icon>done</mat-icon>
+                </button>
+                <button
+                    mat-icon-button
+                    (click)="toggleEditModeratorNote()"
+                    matTooltip="{{ 'Cancel edit' | translate }}"
+                >
+                    <mat-icon>close</mat-icon>
+                </button>
+                } @if (!isEditing) {
+                <button
+                    mat-icon-button
+                    (click)="toggleEditModeratorNote()"
+                    matTooltip="{{ 'Edit moderation note' | translate }}"
+                >
+                    <mat-icon>edit</mat-icon>
+                </button>
+                }
             </div>
+            }
         </div>
-
-        <ng-container *ngIf="!isEditing">
-            <div class="app-content underlined-links">
-                <ng-container *ngIf="moderatorNotes | async as moderatorNoteText">
-                    <div [innerHTML]="moderatorNoteText | trust : 'html'"></div>
-                </ng-container>
-            </div>
-        </ng-container>
-
-        <ng-container *ngIf="isEditing">
-            <form [formGroup]="moderatorNoteForm">
-                <os-editor formControlName="moderator_notes"></os-editor>
-            </form>
-        </ng-container>
+        @if (!isEditing) {
+        <div class="app-content underlined-links">
+            @if (moderatorNotes | async; as moderatorNoteText) {
+            <div [innerHTML]="moderatorNoteText | trust : 'html'"></div>
+            }
+        </div>
+        } @if (isEditing) {
+        <form [formGroup]="moderatorNoteForm">
+            <os-editor formControlName="moderator_notes"></os-editor>
+        </form>
+        }
     </mat-card-content>
 </mat-card>
+}

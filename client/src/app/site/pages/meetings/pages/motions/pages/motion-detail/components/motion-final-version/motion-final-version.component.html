@@ -1,18 +1,13 @@
-<ng-container *ngIf="isEditMode; then editTemplate; else viewTemplate"></ng-container>
-<ng-template #viewTemplate>
-    <div [innerHTML]="formattedText | trust : 'html'"></div>
-</ng-template>
-<ng-template #editTemplate>
-    <form [formGroup]="contentForm">
-        <os-editor [hidden]="!isEditMode" formControlName="modified_final_version" required></os-editor>
-        <div
-            *ngIf="
-                contentForm.get('modified_final_version')?.invalid &&
-                (contentForm.get('modified_final_version')?.dirty || contentForm.get('modified_final_version')?.touched)
-            "
-            class="red-warning-text"
-        >
-            {{ 'This field is required.' | translate }}
-        </div>
-    </form>
-</ng-template>
+@if (isEditMode) {
+<form [formGroup]="contentForm">
+    <os-editor [hidden]="!isEditMode" formControlName="modified_final_version" required></os-editor>
+    @if ( contentForm.get('modified_final_version')?.invalid && (contentForm.get('modified_final_version')?.dirty ||
+    contentForm.get('modified_final_version')?.touched) ) {
+    <div class="red-warning-text">
+        {{ 'This field is required.' | translate }}
+    </div>
+    }
+</form>
+} @else {
+<div [innerHTML]="formattedText | trust : 'html'"></div>
+}

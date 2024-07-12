@@ -9,7 +9,8 @@
         <button mat-button (click)="onStateChange(true)">{{ 'Expand all' | translate }}</button>
         <button mat-button (click)="onStateChange(false)">{{ 'Collapse all' | translate }}</button>
     </div>
-    <div class="current-filters" *ngIf="hasActiveFilter">
+    @if (hasActiveFilter) {
+    <div class="current-filters">
         <div>
             <span>{{ 'Active filters' | translate }}</span>
             :&nbsp;
@@ -21,12 +22,14 @@
             </button>
         </div>
     </div>
+    }
     <div class="button-menu right">
         <button mat-button [matMenuTriggerFor]="menu">Filter</button>
         <mat-menu #menu>
             <div class="filter-hint hint">{{ 'Visibility' | translate }}</div>
             <mat-selection-list #visibilities (selectionChange)="onFilterChange(visibilities.selectedOptions.selected)">
-                <mat-list-option *ngFor="let option of filterOptions" [value]="option.id" [selected]="option.state">
+                @for (option of filterOptions; track option) {
+                <mat-list-option [value]="option.id" [selected]="option.state">
                     <mat-icon matListItemIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
                         {{ getIcon(option.id) }}
                     </mat-icon>
@@ -34,6 +37,7 @@
                         {{ option.label | translate }}
                     </div>
                 </mat-list-option>
+                }
             </mat-selection-list>
         </mat-menu>
     </div>

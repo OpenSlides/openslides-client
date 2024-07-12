@@ -16,11 +16,15 @@
             >
                 <mat-icon>autorenew</mat-icon>
             </button>
-            <mat-error *ngIf="hasColorFormError('pattern')">
+            @if (hasColorFormError('pattern')) {
+            <mat-error>
                 {{ 'You have to enter six hexadecimal digits' | translate }}
             </mat-error>
+            }
         </mat-form-field>
-        <os-chip *ngIf="name.value" [color]="currentColor">{{ name.value }}</os-chip>
+        @if (name.value) {
+        <os-chip [color]="currentColor">{{ name.value }}</os-chip>
+        }
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>

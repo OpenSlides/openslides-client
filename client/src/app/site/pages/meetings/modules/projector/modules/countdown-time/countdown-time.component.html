@@ -1,5 +1,5 @@
+@if (!unstyled) {
 <div
-    *ngIf="!unstyled"
     class="countdown-time-wrapper"
     [ngClass]="{
         'negative-time': seconds <= 0 && (countdown.default_time !== 0 || seconds < 0),
@@ -7,25 +7,20 @@
         'stretch-to-fill-parent': fullscreen
     }"
 >
-    <div
-        *ngIf="showTimeIndicator"
-        class="time-indicator-wrapper"
-        [ngClass]="{ 'only-time-indicator': !showCountdown && showTimeIndicator }"
-    >
+    @if (showTimeIndicator) {
+    <div class="time-indicator-wrapper" [ngClass]="{ 'only-time-indicator': !showCountdown && showTimeIndicator }">
         <div id="timeIndicator"></div>
     </div>
-    <div
-        *ngIf="showCountdown"
-        class="countdown-wrapper"
-        [ngClass]="{ 'only-countdown': showCountdown && !showTimeIndicator }"
-    >
+    } @if (showCountdown) {
+    <div class="countdown-wrapper" [ngClass]="{ 'only-countdown': showCountdown && !showTimeIndicator }">
         <span id="countdown">
             {{ time }}
         </span>
     </div>
+    }
 </div>
+} @if (unstyled) {
 <span
-    *ngIf="unstyled"
     id="countdown"
     [ngClass]="{
         'negative-time': seconds <= 0 && (countdown.default_time !== 0 || seconds < 0),
@@ -34,3 +29,4 @@
 >
     {{ time }}
 </span>
+}

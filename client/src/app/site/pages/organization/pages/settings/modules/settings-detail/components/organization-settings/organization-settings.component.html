@@ -10,7 +10,8 @@
     </div>
 </os-head-bar>
 
-<form [formGroup]="orgaSettingsForm" (ngSubmit)="onSubmit()" *ngIf="orgaSettingsForm">
+@if (orgaSettingsForm) {
+<form [formGroup]="orgaSettingsForm" (ngSubmit)="onSubmit()">
     <mat-card class="os-card">
         <mat-card-content>
             <div class="orga-settings-form">
@@ -19,29 +20,27 @@
                     <mat-label>{{ 'Name' | translate }}</mat-label>
                     <input matInput formControlName="name" />
                 </mat-form-field>
-
                 <mat-form-field>
                     <mat-label>{{ 'Description' | translate }}</mat-label>
                     <input matInput formControlName="description" />
                 </mat-form-field>
-
                 <mat-form-field>
                     <mat-label>{{ 'Show this text on the login page' | translate }}</mat-label>
                     <input matInput formControlName="login_text" />
                 </mat-form-field>
-
                 <mat-form-field>
                     <mat-label>{{ 'Organization language' | translate }}</mat-label>
                     <mat-select formControlName="default_language">
-                        <mat-option *ngFor="let choice of translations | keyvalue" [value]="choice.key">
+                        @for (choice of translations | keyvalue; track choice) {
+                        <mat-option [value]="choice.key">
                             {{ choice.value }}
                         </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
             </div>
         </mat-card-content>
     </mat-card>
-
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
             <div class="orga-settings-form">
@@ -68,7 +67,6 @@
             </div>
         </mat-card-content>
     </mat-card>
-
     <mat-card class="os-card margin-bottom-60" *osOmlPerms="OML.superadmin">
         <mat-card-content>
             <div class="superadmin-place">
@@ -132,7 +130,6 @@
             </div>
         </mat-card-content>
     </mat-card>
-
     <mat-card class="os-card margin-bottom-60" *osOmlPerms="OML.superadmin">
         <mat-card-content>
             <div class="saml-settings-form">
@@ -188,3 +185,4 @@
         </mat-card-content>
     </mat-card>
 </form>
+}

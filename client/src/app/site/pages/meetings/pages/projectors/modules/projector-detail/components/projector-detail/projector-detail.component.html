@@ -8,7 +8,8 @@
         (mainEvent)="editProjector()"
     >
         <!-- Title -->
-        <div class="title-slot" *ngIf="projector">
+        @if (projector) {
+        <div class="title-slot">
             <os-icon-container
                 [noWrap]="true"
                 icon="lock"
@@ -19,6 +20,7 @@
                 <h2>{{ projector.name }}</h2>
             </os-icon-container>
         </div>
+        }
 
         <!-- Menu -->
         <ng-container class="menu-slot">
@@ -34,16 +36,16 @@
 
         <mat-menu #projectorExtraMenu="matMenu">
             <!-- Button for set reference projector -->
-            <button
-                mat-menu-item
-                (click)="setProjectorAsReference()"
-                *ngIf="projector"
-                [disabled]="projector.isReferenceProjector"
-            >
-                <mat-icon *ngIf="projector.isReferenceProjector">star</mat-icon>
-                <mat-icon *ngIf="!projector.isReferenceProjector">star_border</mat-icon>
+            @if (projector) {
+            <button mat-menu-item (click)="setProjectorAsReference()" [disabled]="projector.isReferenceProjector">
+                @if (projector.isReferenceProjector) {
+                <mat-icon>star</mat-icon>
+                } @if (!projector.isReferenceProjector) {
+                <mat-icon>star_border</mat-icon>
+                }
                 <span>{{ 'Set as reference projector' | translate }}</span>
             </button>
+            }
 
             <!-- delete -->
             <button mat-menu-item class="red-warning-text" (click)="onDeleteProjectorButton()">
@@ -53,9 +55,11 @@
         </mat-menu>
     </os-head-bar>
 
-    <os-grid *ngIf="projector">
+    @if (projector) {
+    <os-grid>
         <os-tile [preferredSize]="projectorTileSizeLeft">
-            <div *ngIf="projector" class="projector-detail-wrapper column-left">
+            @if (projector) {
+            <div class="projector-detail-wrapper column-left">
                 <a [routerLink]="['/', activeMeetingId, 'projectors', projector.sequential_number]" target="_blank">
                     <div id="projector">
                         <os-projector [projector]="projector"></os-projector>
@@ -94,7 +98,6 @@
                     <span class="button-size" [ngClass]="projector.scale !== 0 ? 'warn' : ''">
                         {{ projector.scale }}
                     </span>
-
                     <!-- scroll viewport up (fast), decrease scroll counter -->
                     <button
                         [disabled]="projector.scroll <= 4"
@@ -149,6 +152,7 @@
                     </span>
                 </div>
             </div>
+            }
         </os-tile>
         <os-tile [preferredSize]="projectorTileSizeRight">
             <div *osPerms="permission.projectorCanManage" style="padding-bottom: 60px">
@@ -173,30 +177,27 @@
                     </button>
                     <hr />
                 </div>
-
-                <div *ngIf="projector.nonStableCurrentProjections.length">
+                @if (projector.nonStableCurrentProjections.length) {
+                <div>
                     <mat-list>
-                        <mat-list-item
-                            *ngFor="let projection of projector.nonStableCurrentProjections"
-                            class="current-element backgroundColorAccent"
-                        >
+                        @for (projection of projector.nonStableCurrentProjections; track projection) {
+                        <mat-list-item class="current-element backgroundColorAccent">
                             <div class="element-grid">
                                 <os-projector-button [blendIn]="true"></os-projector-button>
-
                                 <!-- Slide title and subtitle -->
                                 <span class="ellipsis-overflow current-element-text">
                                     {{ projection.getTitle() }}
+                                    @if (projection.getSubtitle()) {
                                     <os-icon-container
                                         class="subtitle-nocolor"
                                         size="small"
                                         icon="comment"
                                         [noWrap]="true"
-                                        *ngIf="projection.getSubtitle()"
                                     >
                                         {{ projection.getSubtitle() }}
                                     </os-icon-container>
+                                    }
                                 </span>
-
                                 <button
                                     type="button"
                                     mat-icon-button
@@ -207,13 +208,15 @@
                                 </button>
                             </div>
                         </mat-list-item>
+                        }
                     </mat-list>
                 </div>
-
+                }
                 <!-- Expandable elements -->
                 <mat-accordion multi="true">
                     <!-- Preview -->
-                    <mat-expansion-panel *ngIf="projector.preview_projections.length" [expanded]="true" class="queue">
+                    @if (projector.preview_projections.length) {
+                    <mat-expansion-panel [expanded]="true" class="queue">
                         <mat-expansion-panel-header>
                             <span>{{ 'Queue' | translate }}</span>
                         </mat-expansion-panel-header>
@@ -223,37 +226,34 @@
                             [cdkDropListDisabled]="!editQueue"
                             (cdkDropListDropped)="onSortingChange($event)"
                         >
-                            <div
-                                class="drop-list-entry queue-element backgroundColorLight"
-                                *ngFor="let projection of projector.preview_projections; let i = index"
-                                cdkDrag
-                            >
-                                <div class="drag-handle" cdkDragHandle *ngIf="editQueue">
+                            @for (projection of projector.preview_projections; track projection; let i = $index) {
+                            <div class="drop-list-entry queue-element backgroundColorLight" cdkDrag>
+                                @if (editQueue) {
+                                <div class="drag-handle" cdkDragHandle>
                                     <mat-icon>drag_indicator</mat-icon>
                                 </div>
-                                <div class="drag-handle no-drag" *ngIf="!editQueue">
+                                } @if (!editQueue) {
+                                <div class="drag-handle no-drag">
                                     <os-projector-button
                                         [object]="projection.getProjectionBuildDescriptor()"
                                         [blendIn]="true"
                                         [onClickFn]="getProjectPreviewFunction(projection)"
                                     ></os-projector-button>
                                 </div>
+                                }
                                 <!-- Slide title ans subtitle -->
                                 <div class="name">
                                     <div class="ellipsis-overflow">
                                         {{ projection.getTitle() }}
                                     </div>
-                                    <os-icon-container
-                                        class="subtitle"
-                                        size="small"
-                                        icon="comment"
-                                        [noWrap]="true"
-                                        *ngIf="projection.getSubtitle()"
-                                    >
+                                    @if (projection.getSubtitle()) {
+                                    <os-icon-container class="subtitle" size="small" icon="comment" [noWrap]="true">
                                         {{ projection.getSubtitle() }}
                                     </os-icon-container>
+                                    }
                                 </div>
-                                <div class="button-right" *ngIf="editQueue">
+                                @if (editQueue) {
+                                <div class="button-right">
                                     <div>
                                         <button
                                             type="button"
@@ -265,11 +265,13 @@
                                         </button>
                                     </div>
                                 </div>
+                                }
                             </div>
+                            }
                         </div>
                         <mat-action-row>
+                            @if (!editQueue) {
                             <button
-                                *ngIf="!editQueue"
                                 type="button"
                                 mat-icon-button
                                 (click)="editQueue = !editQueue"
@@ -277,8 +279,8 @@
                             >
                                 <mat-icon>edit</mat-icon>
                             </button>
+                            } @if (editQueue) {
                             <button
-                                *ngIf="editQueue"
                                 type="button"
                                 mat-icon-button
                                 (click)="editQueue = !editQueue"
@@ -286,22 +288,25 @@
                             >
                                 <mat-icon>close</mat-icon>
                             </button>
+                            }
                         </mat-action-row>
                     </mat-expansion-panel>
-
+                    }
                     <!-- countdowns -->
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
                             <span>{{ 'Timers' | translate }}</span>
                         </mat-expansion-panel-header>
                         <div class="card-list">
-                            <div *ngFor="let countdown of countdowns" class="card-list-item">
+                            @for (countdown of countdowns; track countdown) {
+                            <div class="card-list-item">
                                 <os-countdown-controls
                                     class="dynamic-list-entry"
                                     [countdown]="countdown"
                                     [projector]="projector"
                                 ></os-countdown-controls>
                             </div>
+                            }
                         </div>
                         <mat-action-row>
                             <button type="button" mat-button (click)="createProjectorCountdown()">
@@ -310,7 +315,6 @@
                             </button>
                         </mat-action-row>
                     </mat-expansion-panel>
-
                     <!-- messages -->
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
@@ -331,19 +335,23 @@
                                             ></os-projector-button>
                                             <span>{{ 'Wifi access data' | translate }}</span>
                                         </div>
-                                        <small class="wifi-help-text" *ngIf="!hasEnoughWiFiData" translate>
+                                        @if (!hasEnoughWiFiData) {
+                                        <small class="wifi-help-text" translate>
                                             Attention: First enter the wifi data in [Settings > General]
                                         </small>
+                                        }
                                     </mat-card-content>
                                 </mat-card>
                             </div>
-                            <div *ngFor="let message of messages" class="card-list-item">
+                            @for (message of messages; track message) {
+                            <div class="card-list-item">
                                 <os-message-controls
                                     class="dynamic-list-entry"
                                     [message]="message"
                                     [projector]="projector"
                                 ></os-message-controls>
                             </div>
+                            }
                         </div>
                         <mat-action-row>
                             <button type="button" mat-button (click)="createProjectorMessage()">
@@ -352,22 +360,21 @@
                             </button>
                         </mat-action-row>
                     </mat-expansion-panel>
-
                     <!-- Current list of speakers -->
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
                             <span>{{ 'Current list of speakers' | translate }}</span>
                         </mat-expansion-panel-header>
-
                         <!-- Slide-->
-                        <div *ngIf="projectorCount > 1 && !projector.isReferenceProjector" class="projectable-entry">
+                        @if (projectorCount > 1 && !projector.isReferenceProjector) {
+                        <div class="projectable-entry">
                             <os-projector-button
                                 [object]="getCurrentLoSBuildDesc(false)"
                                 [projector]="projector"
                             ></os-projector-button>
                             <span class="spacer-left-10">{{ 'List of speakers' | translate }}</span>
                         </div>
-
+                        }
                         <!-- Overlay -->
                         <div class="projectable-entry">
                             <os-projector-button
@@ -376,7 +383,6 @@
                             ></os-projector-button>
                             <span class="spacer-left-10">{{ 'List of speakers as overlay' | translate }}</span>
                         </div>
-
                         <!-- Chyron -->
                         <div class="projectable-entry">
                             <os-projector-button
@@ -386,9 +392,9 @@
                             ></os-projector-button>
                             <span class="spacer-left-10">{{ 'Chyron' | translate }}</span>
                         </div>
-
                         <!-- Strucutre level current speaker -->
-                        <div *ngIf="isStructureLevelCountdownEnabled()" class="projectable-entry">
+                        @if (isStructureLevelCountdownEnabled()) {
+                        <div class="projectable-entry">
                             <os-projector-button
                                 [object]="getCurrentStructureLevel()"
                                 [projector]="projector"
@@ -397,16 +403,11 @@
                                 {{ 'Speaking time – current contribution' | translate }}
                             </span>
                         </div>
-
+                        }
                         <!-- All structure level -->
-                        <div
-                            *ngIf="
-                                projectorCount > 1 &&
-                                !projector.isReferenceProjector &&
-                                isStructureLevelCountdownEnabled()
-                            "
-                            class="projectable-entry"
-                        >
+                        @if ( projectorCount > 1 && !projector.isReferenceProjector &&
+                        isStructureLevelCountdownEnabled() ) {
+                        <div class="projectable-entry">
                             <os-projector-button
                                 [object]="getAllStructureLevel()"
                                 [projector]="projector"
@@ -415,14 +416,14 @@
                                 {{ 'Speaking times – overview structure levels' | translate }}
                             </span>
                         </div>
+                        }
                     </mat-expansion-panel>
-
                     <!-- Current slide -->
-                    <mat-expansion-panel *ngIf="hasSlide && getCurrentProjectionLoSToggleBuildDesc()">
+                    @if (hasSlide && getCurrentProjectionLoSToggleBuildDesc()) {
+                    <mat-expansion-panel>
                         <mat-expansion-panel-header>
                             <span>{{ 'Current slide' | translate }}</span>
                         </mat-expansion-panel-header>
-
                         <!-- Toggle -->
                         <div class="projectable-entry">
                             <os-projector-button
@@ -438,26 +439,28 @@
                             </span>
                         </div>
                     </mat-expansion-panel>
-
+                    }
                     <!-- History -->
-                    <mat-expansion-panel *ngIf="projector.history_projections.length" class="previous-slides">
+                    @if (projector.history_projections.length) {
+                    <mat-expansion-panel class="previous-slides">
                         <mat-expansion-panel-header>
                             <span>{{ 'Previous slides' | translate }}</span>
                         </mat-expansion-panel-header>
                         <ol>
-                            <li *ngFor="let projection of projector.history_projections">
+                            @for (projection of projector.history_projections; track projection) {
+                            <li>
                                 {{ projection.getTitle() }}
                                 {{ projection.getSubtitle() }}
                             </li>
+                            }
                         </ol>
                     </mat-expansion-panel>
-
-                    <os-presentation-controls
-                        *ngIf="projectorObservable"
-                        [projectorObservable]="projectorObservable"
-                    ></os-presentation-controls>
+                    } @if (projectorObservable) {
+                    <os-presentation-controls [projectorObservable]="projectorObservable"></os-presentation-controls>
+                    }
                 </mat-accordion>
             </div>
         </os-tile>
     </os-grid>
+    }
 </os-detail-view>

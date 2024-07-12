@@ -11,17 +11,14 @@
     ></os-topic-poll-form>
 
     <!-- Options -->
-    <div class="option-selection topic-poll-preview-meta-info-form info-grid" *ngIf="!isEdit">
+    @if (!isEdit) {
+    <div class="option-selection topic-poll-preview-meta-info-form info-grid">
         <ng-container>
             <h3>{{ 'Options' | translate }}</h3>
             <div>
                 <div class="option-list" (scroll)="scrolled($event)" #scrollframe>
-                    <os-sorting-list
-                        *ngIf="newOptions.length"
-                        [input]="optionsSubject"
-                        [live]="true"
-                        (sortEvent)="onSortingChange($event)"
-                    >
+                    @if (newOptions.length) {
+                    <os-sorting-list [input]="optionsSubject" [live]="true" (sortEvent)="onSortingChange($event)">
                         <!-- implicit item references into the component using ng-template slot -->
                         <ng-template let-item>
                             <div class="single-option-line" #item>
@@ -38,8 +35,8 @@
                             </div>
                         </ng-template>
                     </os-sorting-list>
+                    }
                 </div>
-
                 <div>
                     <!-- Enter new option -->
                     <div>
@@ -49,7 +46,6 @@
                             <mat-error>{{ 'This field is required.' | translate }}</mat-error>
                         </mat-form-field>
                     </div>
-
                     <!-- Add option -->
                     <div>
                         <div>
@@ -62,29 +58,26 @@
                 </div>
             </div>
         </ng-container>
-
         <!-- Too few options warning -->
         <div class="potential-warning">
-            <ng-container *ngIf="!hasEnoughOptions()">
-                <i class="foreground-warn">
-                    {{ optionsWarning | translate }}
-                </i>
-            </ng-container>
+            @if (!hasEnoughOptions()) {
+            <i class="foreground-warn">
+                {{ optionsWarning | translate }}
+            </i>
+            }
         </div>
     </div>
+    }
 </mat-dialog-content>
 
 <!-- Actions -->
 <mat-dialog-actions>
     <!-- Save Button -->
-    <button
-        mat-button
-        (click)="submitPoll()"
-        *ngIf="pollForm && dialogVoteForm && pollForm.contentForm"
-        [disabled]="!formsValid || (!hasEnoughOptions() && !isEdit)"
-    >
+    @if (pollForm && dialogVoteForm && pollForm.contentForm) {
+    <button mat-button (click)="submitPoll()" [disabled]="!formsValid || (!hasEnoughOptions() && !isEdit)">
         <span>{{ 'Save' | translate }}</span>
     </button>
+    }
 
     <!-- Cancel Button -->
     <button mat-button [mat-dialog-close]="false">

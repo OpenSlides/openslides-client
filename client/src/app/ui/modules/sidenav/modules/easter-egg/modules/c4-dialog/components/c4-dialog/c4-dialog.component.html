@@ -5,37 +5,42 @@
             <mat-icon>close</mat-icon>
         </button>
     </div>
-    <ng-container *ngIf="inMeeting">
-        <ng-container *ngIf="opponentName">
-            <div class="space">
-                <div class="coin info-coin thisPlayer"></div>
-                <span>{{ getPlayerName() }}</span>
-            </div>
-            <div>
-                <div class="coin info-coin opponent"></div>
-                <span>{{ opponentName }}</span>
-            </div>
-        </ng-container>
-        <table [class]="disableBoard ? 'disabled' : ''" id="c4">
-            <tr *ngFor="let row of [5, 4, 3, 2, 1, 0]">
-                <td *ngFor="let col of [0, 1, 2, 3, 4, 5, 6]">
-                    <div
-                        [class]="getCoinClass(row, col)"
-                        (click)="clickField(col)"
-                        (keydown.enter)="clickField(col)"
-                        tabindex="0"
-                    ></div>
-                </td>
-            </tr>
-        </table>
-
-        <div class="center">
-            <button (click)="handleEvent('searchClicked')" *ngIf="state === 'start'" mat-raised-button color="accent">
-                {{ 'Search player' | translate }}
-            </button>
-        </div>
-    </ng-container>
-    <div *ngIf="!inMeeting">
+    @if (inMeeting) { @if (opponentName) {
+    <div class="space">
+        <div class="coin info-coin thisPlayer"></div>
+        <span>{{ getPlayerName() }}</span>
+    </div>
+    <div>
+        <div class="coin info-coin opponent"></div>
+        <span>{{ opponentName }}</span>
+    </div>
+    }
+    <table [class]="disableBoard ? 'disabled' : ''" id="c4">
+        @for (row of [5, 4, 3, 2, 1, 0]; track row) {
+        <tr>
+            @for (col of [0, 1, 2, 3, 4, 5, 6]; track col) {
+            <td>
+                <div
+                    [class]="getCoinClass(row, col)"
+                    (click)="clickField(col)"
+                    (keydown.enter)="clickField(col)"
+                    tabindex="0"
+                ></div>
+            </td>
+            }
+        </tr>
+        }
+    </table>
+    <div class="center">
+        @if (state === 'start') {
+        <button (click)="handleEvent('searchClicked')" mat-raised-button color="accent">
+            {{ 'Search player' | translate }}
+        </button>
+        }
+    </div>
+    } @if (!inMeeting) {
+    <div>
         {{ 'Open a meeting to play "Connect 4"' | translate }}
     </div>
+    }
 </mat-dialog-content>

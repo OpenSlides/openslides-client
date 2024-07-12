@@ -34,14 +34,18 @@
 >
     <!-- Title column -->
     <div *osScrollingTableCell="'title'; row as item; rowContext as rowContext" class="cell-slot fill">
-        <os-detail-view-navigator [model]="item.content_object" *ngIf="!isMultiSelect"></os-detail-view-navigator>
+        @if (!isMultiSelect) {
+        <os-detail-view-navigator [model]="item.content_object"></os-detail-view-navigator>
+        }
         <div [ngStyle]="{ 'margin-left': item.level * 25 + 'px' }" class="innerTable">
             <!-- Title line -->
             <div class="title-line ellipsis-overflow">
                 <!-- Is Closed -->
-                <span class="icon-prefix" *ngIf="item.closed">
+                @if (item.closed) {
+                <span class="icon-prefix">
                     <mat-icon>check</mat-icon>
                 </span>
+                }
 
                 <!-- Title -->
                 <span>
@@ -50,16 +54,20 @@
             </div>
 
             <!-- Subtitle line -->
-            <div class="subtitle ellipsis-overflow" *ngIf="showSubtitles | async">
+            @if (showSubtitles | async) {
+            <div class="subtitle ellipsis-overflow">
                 {{ item.getSubtitle() }}
             </div>
+            }
 
             <!-- Comment line -->
-            <div class="subtitle ellipsis-overflow" *ngIf="item.comment">
+            @if (item.comment) {
+            <div class="subtitle ellipsis-overflow">
                 <os-icon-container size="small" icon="comment" [noWrap]="true">
                     {{ item.comment }}
                 </os-icon-container>
             </div>
+            }
         </div>
     </div>
 
@@ -71,13 +79,15 @@
     >
         <div class="info-col-items">
             <!-- Tags -->
-            <div *ngIf="item.tags && item.tags.length">
+            @if (item.tags && item.tags.length) {
+            <div>
                 <os-icon-container icon="local_offer">
                     <os-comma-separated-listing [list]="item.tags">
                         <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
                     </os-comma-separated-listing>
                 </os-icon-container>
             </div>
+            }
 
             <!-- Visibility (Internal, Public, Hidden) -->
             <div *osPerms="permission.agendaItemCanManage; and: item.verboseType" class="spacer-top-5">
@@ -85,11 +95,13 @@
             </div>
 
             <!-- Duration -->
-            <div *ngIf="item.duration" class="spacer-top-5">
+            @if (item.duration) {
+            <div class="spacer-top-5">
                 <os-icon-container icon="access_time">
                     {{ durationService.durationToString(item.duration, 'h') }}
                 </os-icon-container>
             </div>
+            }
         </div>
     </div>
 
@@ -111,30 +123,29 @@
 </os-projectable-list>
 
 <mat-menu #agendaMenu="matMenu">
-    <div *ngIf="!isMultiSelect">
+    @if (!isMultiSelect) {
+    <div>
         <div *osPerms="permission.agendaItemCanManage">
             <!-- Enable multi select -->
             <button mat-menu-item (click)="toggleMultiSelect()">
                 <mat-icon>library_add</mat-icon>
                 <span>{{ 'Multiselect' | translate }}</span>
             </button>
-
             <mat-divider></mat-divider>
-
             <!-- automatic numbering -->
-            <button mat-menu-item *ngIf="isNumberingAllowed" (click)="onAutoNumbering()">
+            @if (isNumberingAllowed) {
+            <button mat-menu-item (click)="onAutoNumbering()">
                 <mat-icon>format_list_numbered</mat-icon>
                 <span>{{ 'Numbering' | translate }}</span>
             </button>
+            }
             <button mat-menu-item [routerLink]="['/', activeMeetingId, 'agenda', 'sort']">
                 <mat-icon>sort</mat-icon>
                 <span>{{ 'Sort' | translate }}</span>
             </button>
         </div>
-
         <!-- Project agenda -->
         <os-projector-button [object]="itemListSlide" [menuItem]="true"></os-projector-button>
-
         <!-- Tags -->
         <button
             mat-menu-item
@@ -144,9 +155,7 @@
             <mat-icon>local_offer</mat-icon>
             <span>{{ 'Tags' | translate }}</span>
         </button>
-
         <mat-divider></mat-divider>
-
         <!-- CSV export -->
         <button mat-menu-item *osPerms="permission.agendaItemCanManage" (click)="csvExportItemList()">
             <mat-icon>archive</mat-icon>
@@ -182,14 +191,13 @@
             </button>
         </div>
     </div>
-
-    <div *ngIf="isMultiSelect">
+    } @if (isMultiSelect) {
+    <div>
         <!-- Select all -->
         <button mat-menu-item (click)="selectAll()">
             <mat-icon>done_all</mat-icon>
             <span>{{ 'Select all' | translate }}</span>
         </button>
-
         <!-- Deselect all -->
         <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
             <mat-icon>clear</mat-icon>
@@ -202,59 +210,50 @@
                 <mat-icon>done</mat-icon>
                 <span>{{ 'Done' | translate }}</span>
             </button>
-
             <!-- Open selected -->
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="openSelectedItems()">
                 <mat-icon>redo</mat-icon>
                 <span>{{ 'Reopen' | translate }}</span>
             </button>
-
             <mat-divider></mat-divider>
-
             <!-- Open selected list of speakers -->
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setLosClosed(false)">
                 <mat-icon>record_voice_over</mat-icon>
                 <span>{{ 'Open list of speakers' | translate }}</span>
             </button>
-
             <!-- Close selected list of speakers -->
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setLosClosed(true)">
                 <mat-icon>voice_over_off</mat-icon>
                 <span>{{ 'Close list of speakers' | translate }}</span>
             </button>
-
             <mat-divider></mat-divider>
-
-            <button *ngIf="tags.length" mat-menu-item [disabled]="!selectedRows.length" (click)="changeSelectedTags()">
+            @if (tags.length) {
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeSelectedTags()">
                 <mat-icon>local_offer</mat-icon>
                 <span>{{ 'Set tags' | translate }} ...</span>
             </button>
-
+            }
             <!-- Set multiple to public -->
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(AGENDA_TYPE_PUBLIC)">
                 <mat-icon>public</mat-icon>
                 <span>{{ 'Set public' | translate }}</span>
             </button>
-
             <!-- Set multiple to internal -->
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(AGENDA_TYPE_INTERNAL)">
                 <mat-icon>visibility</mat-icon>
                 <span>{{ 'Set internal' | translate }}</span>
             </button>
-
             <!-- Set multiple to hidden -->
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(AGENDA_TYPE_HIDDEN)">
                 <mat-icon>visibility_off</mat-icon>
                 <span>{{ 'Set hidden' | translate }}</span>
             </button>
             <mat-divider></mat-divider>
-
             <!-- Duplicate items -->
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="duplicateMultipleTopics(selectedRows)">
                 <mat-icon>file_copy</mat-icon>
                 <span>{{ 'Duplicate' | translate }}</span>
             </button>
-
             <!-- Delete selected -->
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="removeSelected()">
                 <mat-icon>remove</mat-icon>
@@ -262,15 +261,18 @@
             </button>
         </div>
     </div>
+    }
 </mat-menu>
 
 <mat-menu #singleItemMenu="matMenu">
     <ng-template matMenuContent let-item="item">
         <!-- Mobile entries -->
-        <div *ngIf="vp.isMobile">
+        @if (vp.isMobile) {
+        <div>
             <os-projector-button [object]="item.content_object" [menuItem]="true"></os-projector-button>
             <os-speaker-button [object]="item.content_object" [menuItem]="true"></os-speaker-button>
         </div>
+        }
 
         <!-- Agenda entries -->
         <div *osPerms="permission.agendaItemCanManage">
@@ -292,26 +294,25 @@
             </button>
 
             <!-- Duplicate button -->
-            <button mat-menu-item (click)="duplicateTopic(item)" *ngIf="isTopic(item.content_object)">
+            @if (isTopic(item.content_object)) {
+            <button mat-menu-item (click)="duplicateTopic(item)">
                 <mat-icon>file_copy</mat-icon>
                 <span>{{ 'Duplicate' | translate }}</span>
             </button>
+            }
 
             <!-- Delete Button -->
-            <button mat-menu-item (click)="removeFromAgenda(item)" *ngIf="!isTopic(item.content_object)">
+            @if (!isTopic(item.content_object)) {
+            <button mat-menu-item (click)="removeFromAgenda(item)">
                 <mat-icon>remove</mat-icon>
                 <span>{{ 'Remove from agenda' | translate }}</span>
             </button>
-
-            <button
-                mat-menu-item
-                class="red-warning-text"
-                (click)="deleteTopic(item)"
-                *ngIf="isTopic(item.content_object)"
-            >
+            } @if (isTopic(item.content_object)) {
+            <button mat-menu-item class="red-warning-text" (click)="deleteTopic(item)">
                 <mat-icon>delete</mat-icon>
                 <span>{{ 'Delete' | translate }}</span>
             </button>
+            }
         </div>
     </ng-template>
 </mat-menu>

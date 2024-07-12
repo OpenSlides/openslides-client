@@ -1,13 +1,16 @@
 <os-head-bar [nav]="false" [multiSelectMode]="isMultiSelect">
     <!-- Title -->
     <div class="title-slot">
-        <h2 *ngIf="parentMotion | async">
+        @if (parentMotion | async) {
+        <h2>
             {{ 'Amendments to' | translate }}
             {{ (parentMotion | async)?.numberOrTitle }}
         </h2>
-        <h2 *ngIf="(parentMotion | async) === null">
+        } @if ((parentMotion | async) === null) {
+        <h2>
             {{ 'Amendments' | translate }}
         </h2>
+        }
     </div>
 
     <!-- Menu -->
@@ -24,8 +27,8 @@
     </ng-container>
 </os-head-bar>
 
+@if (ready) {
 <os-projectable-list
-    *ngIf="ready"
     [listObservableProvider]="amendmentRepo"
     [sortService]="amendmentSortService"
     [filterService]="amendmentFilterService"
@@ -36,71 +39,83 @@
 >
     <!-- Meta -->
     <div *osScrollingTableCell="'meta'; row as motion" class="cell-slot fill">
-        <os-detail-view-navigator *ngIf="!isMultiSelect" [model]="motion"></os-detail-view-navigator>
+        @if (!isMultiSelect) {
+        <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
+        }
         <div class="innerTable">
             <!-- number and line -->
             <div class="title-line one-line">
                 <!-- Is Favorite -->
-                <span *ngIf="motion.getPersonalNote()?.star" class="favorite-star">
+                @if (motion.getPersonalNote()?.star) {
+                <span class="favorite-star">
                     <mat-icon inline>star</mat-icon>
                 </span>
-
+                }
                 <!-- Has File -->
-                <span class="icon-prefix" *ngIf="motion.hasAttachments()">
+                @if (motion.hasAttachments()) {
+                <span class="icon-prefix">
                     <mat-icon>attach_file</mat-icon>
                 </span>
-
+                }
                 <span>{{ motion.number }}</span>
-                <span *ngIf="getChangedLinesFromAmendment(motion)">
-                    <span *ngIf="motion.number">&nbsp;&middot;&nbsp;</span>
+                @if (getChangedLinesFromAmendment(motion)) {
+                <span>
+                    @if (motion.number) {
+                    <span>&nbsp;&middot;&nbsp;</span>
+                    }
                     <span>{{ 'Line' | translate }}</span>
                     <span>&nbsp;{{ getChangedLinesFromAmendment(motion) }}</span>
                 </span>
+                }
             </div>
-
             <!-- Submitter -->
             <div class="submitters-line one-line">
-                <span *ngIf="motion.submitterNames.length">
+                @if (motion.submitterNames.length) {
+                <span>
                     <span>{{ 'by' | translate }}</span>
                     {{ motion.submitterNames }}
                 </span>
-
-                <span *ngIf="showSequentialNumber">
-                    <span *ngIf="motion.submitterNames.length">&middot;&nbsp;</span>
+                } @if (showSequentialNumber) {
+                <span>
+                    @if (motion.submitterNames.length) {
+                    <span>&middot;&nbsp;</span>
+                    }
                     <span>{{ 'Sequential number' | translate }}</span>
                     {{ motion.sequential_number }}
                 </span>
+                }
             </div>
-
             <!-- State -->
             <div>
-                <mat-basic-chip *ngIf="motion.state" [ngClass]="motion.stateCssColor" [disabled]="true">
+                @if (motion.state) {
+                <mat-basic-chip [ngClass]="motion.stateCssColor" [disabled]="true">
                     {{ motionService.getExtendedStateLabel(motion) }}
                 </mat-basic-chip>
+                }
             </div>
-
             <!--  Reco -->
-            <div class="spacer-top-3" *ngIf="motion.recommendation && motion.state.next_state_ids?.length > 0">
+            @if (motion.recommendation && motion.state.next_state_ids?.length > 0) {
+            <div class="spacer-top-3">
                 <mat-basic-chip class="bluegrey" [disabled]="true">
                     {{ motionService.getExtendedRecommendationLabel(motion) }}
                 </mat-basic-chip>
             </div>
+            }
         </div>
     </div>
-
     <!-- Summary -->
     <div *osScrollingTableCell="'summary'; row as motion" class="cell-slot fill">
-        <os-detail-view-navigator *ngIf="!isMultiSelect" [model]="motion"></os-detail-view-navigator>
+        @if (!isMultiSelect) {
+        <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
+        }
         <div class="innerTable">
-            <div
-                class="motion-text underlined-links"
-                *ngIf="getAmendmentSummary(motion)"
-                [innerHtml]="getAmendmentSummary(motion) | trust : 'html'"
-            ></div>
-            <i *ngIf="!getAmendmentSummary(motion)">{{ 'No changes at the text.' | translate }}</i>
+            @if (getAmendmentSummary(motion)) {
+            <div class="motion-text underlined-links" [innerHtml]="getAmendmentSummary(motion) | trust : 'html'"></div>
+            } @if (!getAmendmentSummary(motion)) {
+            <i>{{ 'No changes at the text.' | translate }}</i>
+            }
         </div>
     </div>
-
     <!-- Menu -->
     <div *osScrollingTableCell="'menu'; row as motion; config: { width: 40 }" class="cell-slot fill">
         <button
@@ -114,6 +129,7 @@
         </button>
     </div>
 </os-projectable-list>
+}
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
@@ -124,7 +140,8 @@
 </mat-menu>
 
 <mat-menu #amendmentListMenu="matMenu">
-    <div *ngIf="!isMultiSelect">
+    @if (!isMultiSelect) {
+    <div>
         <div *osPerms="permission.motionCanManage">
             <button mat-menu-item (click)="toggleMultiSelect()">
                 <mat-icon>library_add</mat-icon>
@@ -140,7 +157,8 @@
             <span>{{ 'Amendment list (PDF)' | translate }}</span>
         </button>
     </div>
-    <div *ngIf="isMultiSelect">
+    } @if (isMultiSelect) {
+    <div>
         <button mat-menu-item (click)="selectAll()">
             <mat-icon>done_all</mat-icon>
             <span>{{ 'Select all' | translate }}</span>
@@ -149,7 +167,6 @@
             <mat-icon>clear</mat-icon>
             <span>{{ 'Deselect all' | translate }}</span>
         </button>
-
         <ng-container *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]">
             <mat-divider></mat-divider>
             <os-motion-multiselect-actions
@@ -158,4 +175,5 @@
             ></os-motion-multiselect-actions>
         </ng-container>
     </div>
+    }
 </mat-menu>

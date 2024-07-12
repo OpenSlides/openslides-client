@@ -1,4 +1,5 @@
-<mat-card class="os-card" *ngIf="showPoll">
+@if (showPoll) {
+<mat-card class="os-card">
     <mat-card-content>
         <div class="assignment-poll-wrapper">
             <div>
@@ -8,7 +9,6 @@
                         {{ poll.title }}
                     </a>
                 </mat-card-title>
-
                 <!-- Type and State -->
                 <div class="type-and-state italic spacer-bottom-20">
                     <span *osPerms="permission.assignmentCanManage; and: poll.isEVoting">
@@ -23,14 +23,14 @@
                         >
                             {{ poll.typeVerbose | translate }}
                         </os-icon-container>
-                        <span *ngIf="poll.isAnonymous">&nbsp;</span>
-                        &middot;&nbsp;
+                        @if (poll.isAnonymous) {
+                        <span>&nbsp;</span>
+                        } &middot;&nbsp;
                     </span>
                     <span>
                         {{ poll.stateVerbose | translate }}
                     </span>
                 </div>
-
                 <!-- Menu -->
                 <div class="poll-menu">
                     <!-- Buttons -->
@@ -43,11 +43,10 @@
                         <mat-icon>more_horiz</mat-icon>
                     </button>
                 </div>
-
                 <!-- Change state button -->
                 <div *osPerms="permission.assignmentCanManage; and: !hideChangeState">
+                    @if (pollStateActions[poll.state]) {
                     <button
-                        *ngIf="pollStateActions[poll.state]"
                         mat-stroked-button
                         [ngClass]="pollStateActions[poll.state].css"
                         (click)="nextPollState()"
@@ -55,44 +54,47 @@
                     >
                         <mat-icon>{{ pollStateActions[poll.state]?.icon }}</mat-icon>
                         <span class="next-state-label">
-                            <ng-container *ngIf="(stateChangePendingObservable | async) === false">
-                                {{ poll.nextStateActionVerbose | translate }}
-                            </ng-container>
-                            <ng-container *ngIf="stateChangePendingObservable | async">
-                                {{ 'In progress, please wait ...' | translate }}
-                            </ng-container>
+                            @if ((stateChangePendingObservable | async) === false) {
+                            {{ poll.nextStateActionVerbose | translate }}
+                            } @if (stateChangePendingObservable | async) {
+                            {{ 'In progress, please wait ...' | translate }}
+                            }
                         </span>
                     </button>
+                    }
                 </div>
-
                 <!-- Enter Votes Hint -->
                 <div *osPerms="permission.assignmentCanManage; and: poll.isAnalog && !poll.stateHasVotes">
                     {{ 'Edit to enter votes.' | translate }}
                 </div>
             </div>
-
             <!-- Chart / Table -->
-            <div *ngIf="poll.stateHasVotes" class="poll-result-wrapper" [routerLink]="getDetailLink()">
+            @if (poll.stateHasVotes) {
+            <div class="poll-result-wrapper" [routerLink]="getDetailLink()">
                 <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
             </div>
-
+            }
             <!-- Poll progress bar -->
-            <os-poll-progress *ngIf="poll && poll.isStarted" [poll]="poll"></os-poll-progress>
-
+            @if (poll && poll.isStarted) {
+            <os-poll-progress [poll]="poll"></os-poll-progress>
+            }
             <!-- The Vote -->
-            <os-assignment-poll-vote *ngIf="poll.canBeVotedFor()" [poll]="poll"></os-assignment-poll-vote>
-
+            @if (poll.canBeVotedFor()) {
+            <os-assignment-poll-vote [poll]="poll"></os-assignment-poll-vote>
+            }
             <!-- Meta-Info -->
+            @if (showMetaInfo || poll.isListPoll) {
             <os-assignment-poll-meta-info
                 [poll]="poll"
                 [showCandidates]="showCandidatesInMetaInfo"
                 [showStats]="showMetaInfo"
                 [shortenList]="poll.isListPoll && !poll.canBeVotedFor()"
-                *ngIf="showMetaInfo || poll.isListPoll"
             ></os-assignment-poll-meta-info>
+            }
         </div>
     </mat-card-content>
 </mat-card>
+}
 
 <mat-menu #pollItemMenu="matMenu">
     <div *osPerms="permission.assignmentCanManage">

@@ -1,12 +1,13 @@
 <div class="charts-wrapper" [style.height]="calcBarChartHeight()">
+    @if (isReadyToShow) {
     <canvas
         baseChart
         class="chart-js-canvas"
-        *ngIf="isReadyToShow"
         [data]="chartData"
         [labels]="labels"
         [options]="chartOptions"
         [type]="type"
         [legend]="legend"
     ></canvas>
+    }
 </div>

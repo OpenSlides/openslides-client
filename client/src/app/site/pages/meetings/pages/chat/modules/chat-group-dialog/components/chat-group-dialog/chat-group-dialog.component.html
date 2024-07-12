@@ -1,22 +1,26 @@
 <h1 mat-dialog-title>
-    <span *ngIf="isCreateView">
+    @if (isCreateView) {
+    <span>
         {{ 'New chat group' | translate }}
     </span>
-
-    <span *ngIf="!isCreateView">{{ 'Edit details for' | translate }} {{ previousChatGroupName }}</span>
+    } @if (!isCreateView) {
+    <span>{{ 'Edit details for' | translate }} {{ previousChatGroupName }}</span>
+    }
 </h1>
 
-<form *ngIf="chatGroupFormGroup" [formGroup]="chatGroupFormGroup">
+@if (chatGroupFormGroup) {
+<form [formGroup]="chatGroupFormGroup">
     <mat-dialog-content class="os-form-card-mobile">
         <!-- Name -->
         <p>
             <mat-form-field>
                 <mat-label>{{ 'Name' | translate }}</mat-label>
                 <input type="text" matInput osAutofocus required formControlName="name" />
-                <mat-error *ngIf="chatGroupFormGroup.invalid">{{ 'Required' | translate }}</mat-error>
+                @if (chatGroupFormGroup.invalid) {
+                <mat-error>{{ 'Required' | translate }}</mat-error>
+                }
             </mat-form-field>
         </p>
-
         <!-- Groups -->
         <p>
             <mat-form-field>
@@ -41,7 +45,6 @@
             </mat-form-field>
         </p>
     </mat-dialog-content>
-
     <mat-dialog-actions>
         <!-- save  -->
         <button
@@ -54,10 +57,10 @@
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
-
         <!-- cancel -->
         <button type="button" mat-button [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>
 </form>
+}

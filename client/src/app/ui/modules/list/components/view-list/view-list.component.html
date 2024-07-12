@@ -1,7 +1,7 @@
 <mat-drawer-container class="list-view-frame">
     <div class="list-view-table-wrapper">
+        @if (showFilterBar) {
         <os-sort-filter-bar
-            *ngIf="showFilterBar"
             class="sort-filter-bar"
             [totalCount]="totalCountObservable | async"
             [filterCount]="currentCountObservable | async"
@@ -16,6 +16,7 @@
                 <ng-content select=".filter-bar-info-slot"></ng-content>
             </div>
         </os-sort-filter-bar>
+        }
 
         <os-scrolling-table
             [dataSource]="dataListObservable"

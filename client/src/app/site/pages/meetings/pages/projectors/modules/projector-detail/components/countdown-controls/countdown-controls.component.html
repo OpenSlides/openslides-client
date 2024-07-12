@@ -1,12 +1,11 @@
-<mat-card *ngIf="countdown">
+@if (countdown) {
+<mat-card>
     <mat-card-content>
         <div class="grid-wrapper">
             <div class="projector-button">
                 <os-projector-button [object]="countdown" [projector]="projector"></os-projector-button>
             </div>
-
             <div class="title">{{ countdown.getTitle() }}</div>
-
             <div class="action-buttons">
                 <button
                     type="button"
@@ -26,8 +25,8 @@
                 >
                     <mat-icon>edit</mat-icon>
                 </button>
+                @if (isFixedCountdown) {
                 <div
-                    *ngIf="isFixedCountdown"
                     class="small-mat-icon-button mat-icon-button-disabled disabled"
                     [matTooltip]="
                         'It is not allowed to delete countdowns used for list of speakers or polls' | translate
@@ -35,8 +34,8 @@
                 >
                     <mat-icon>close</mat-icon>
                 </div>
+                } @if (!isFixedCountdown) {
                 <button
-                    *ngIf="!isFixedCountdown"
                     type="button"
                     class="small-mat-icon-button"
                     mat-icon-button
@@ -45,15 +44,14 @@
                 >
                     <mat-icon>close</mat-icon>
                 </button>
+                }
             </div>
-
             <div class="timer">
                 <os-countdown-time
                     class="larger-countdown"
                     [countdown]="countdown"
                     [warningTime]="warningTime"
                 ></os-countdown-time>
-
                 <div>
                     <button
                         type="button"
@@ -64,26 +62,18 @@
                     >
                         <mat-icon>stop</mat-icon>
                     </button>
-                    <button
-                        type="button"
-                        class="small-mat-icon-button"
-                        mat-icon-button
-                        (click)="start($event)"
-                        *ngIf="!countdown.running"
-                    >
+                    @if (!countdown.running) {
+                    <button type="button" class="small-mat-icon-button" mat-icon-button (click)="start($event)">
                         <mat-icon>play_arrow</mat-icon>
                     </button>
-                    <button
-                        type="button"
-                        class="small-mat-icon-button"
-                        mat-icon-button
-                        (click)="pause($event)"
-                        *ngIf="countdown.running"
-                    >
+                    } @if (countdown.running) {
+                    <button type="button" class="small-mat-icon-button" mat-icon-button (click)="pause($event)">
                         <mat-icon>pause</mat-icon>
                     </button>
+                    }
                 </div>
             </div>
         </div>
     </mat-card-content>
 </mat-card>
+}

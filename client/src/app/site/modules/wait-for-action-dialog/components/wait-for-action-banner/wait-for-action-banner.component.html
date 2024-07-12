@@ -4,5 +4,7 @@
     </span>
     <span>({{ currentWorkerName }})</span>
     <a (click)="wait()">{{ 'Wait' | translate }}</a>
-    <a *ngIf="isInactive" (click)="stop()">{{ 'Stop waiting' | translate }}</a>
+    @if (isInactive) {
+    <a (click)="stop()">{{ 'Stop waiting' | translate }}</a>
+    }
 </div>

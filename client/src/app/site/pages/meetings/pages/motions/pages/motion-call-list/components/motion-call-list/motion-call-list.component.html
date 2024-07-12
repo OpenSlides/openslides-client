@@ -18,7 +18,8 @@
         <span>{{ 'of' | translate }}</span>
         <span>&nbsp;{{ seenNodes[1] }}</span>
     </div>
-    <div class="current-filters" *ngIf="hasActiveFilter">
+    @if (hasActiveFilter) {
+    <div class="current-filters">
         <div>
             <button mat-button (click)="resetFilters()">
                 <mat-icon inline>cancel</mat-icon>
@@ -26,8 +27,10 @@
             </button>
         </div>
     </div>
+    }
     <div class="flex-spaced margin-right-5">
-        <div *ngIf="categoryFilterOptions.length">
+        @if (categoryFilterOptions.length) {
+        <div>
             <button mat-button [matMenuTriggerFor]="catFilterMenu">
                 <span
                     class="upper"
@@ -39,7 +42,8 @@
                 </span>
             </button>
         </div>
-        <div *ngIf="tagFilterOptions.length">
+        } @if (tagFilterOptions.length) {
+        <div>
             <button mat-button [matMenuTriggerFor]="tagFilterMenu">
                 <span
                     class="upper"
@@ -51,24 +55,33 @@
                 </span>
             </button>
         </div>
+        }
     </div>
 </div>
 
 <mat-menu #catFilterMenu="matMenu">
-    <div *ngFor="let catOption of categoryFilterOptions">
+    @for (catOption of categoryFilterOptions; track catOption) {
+    <div>
         <button mat-menu-item (click)="onFilterChange('category', catOption.id)">
-            <mat-icon *ngIf="catOption.state">checked</mat-icon>
+            @if (catOption.state) {
+            <mat-icon>checked</mat-icon>
+            }
             <span>{{ catOption.label }}</span>
         </button>
     </div>
+    }
 </mat-menu>
 <mat-menu #tagFilterMenu="matMenu">
-    <div *ngFor="let tagOption of tagFilterOptions">
+    @for (tagOption of tagFilterOptions; track tagOption) {
+    <div>
         <button mat-menu-item (click)="onFilterChange('tag', tagOption.id)">
-            <mat-icon *ngIf="tagOption.state">checked</mat-icon>
+            @if (tagOption.state) {
+            <mat-icon>checked</mat-icon>
+            }
             <span>{{ tagOption.label }}</span>
         </button>
     </div>
+    }
 </mat-menu>
 
 <mat-card class="spacer-bottom-60">
@@ -89,10 +102,12 @@
                         {{ item.getTitle() }}
                     </div>
                     <div class="right">
-                        <span *ngFor="let tag of getTags(item)" class="tag">
+                        @for (tag of getTags(item); track tag) {
+                        <span class="tag">
                             <mat-icon inline>local_offer</mat-icon>
                             {{ tag.getTitle() }}
                         </span>
+                        }
                     </div>
                 </div>
             </ng-template>

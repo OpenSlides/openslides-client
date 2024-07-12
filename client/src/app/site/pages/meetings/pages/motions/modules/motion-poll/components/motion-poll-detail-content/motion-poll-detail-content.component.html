@@ -1,27 +1,31 @@
-<div class="result-wrapper" *ngIf="poll">
-    <ng-container *ngIf="hasResults && canSeeResults">
-        <os-single-option-chart-table
-            [shouldShowHead]="true"
-            [tableData]="tableData"
-            [pollService]="motionPollService"
-            [poll]="poll"
-            [iconSize]="iconSize"
-            [shouldShowEntitled]="isPercentBaseEntitled"
-            [shouldShowEntitledPresent]="isPercentBaseEntitledPresent"
-        ></os-single-option-chart-table>
-    </ng-container>
-
+@if (poll) {
+<div class="result-wrapper">
+    @if (hasResults && canSeeResults) {
+    <os-single-option-chart-table
+        [shouldShowHead]="true"
+        [tableData]="tableData"
+        [pollService]="motionPollService"
+        [poll]="poll"
+        [iconSize]="iconSize"
+        [shouldShowEntitled]="isPercentBaseEntitled"
+        [shouldShowEntitledPresent]="isPercentBaseEntitledPresent"
+    ></os-single-option-chart-table>
+    }
     <!-- No results yet -->
-    <div *ngIf="!hasResults">
+    @if (!hasResults) {
+    <div>
         <i>
             {{ 'No results yet.' | translate }}
         </i>
     </div>
-
+    }
     <!-- Has results, but user cannot see -->
-    <div *ngIf="hasResults && !canSeeResults">
+    @if (hasResults && !canSeeResults) {
+    <div>
         <i>
             {{ 'Counting of votes is in progress ...' | translate }}
         </i>
     </div>
+    }
 </div>
+}

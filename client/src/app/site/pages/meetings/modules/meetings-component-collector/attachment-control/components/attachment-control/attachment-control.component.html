@@ -1,4 +1,5 @@
-<div class="attachment-container" *ngIf="contentForm">
+@if (contentForm) {
+<div class="attachment-container">
     <form [formGroup]="formGroup">
         <mat-form-field>
             <mat-label>{{ 'Attachments' | translate }}</mat-label>
@@ -20,6 +21,7 @@
         <mat-icon>cloud_upload</mat-icon>
     </button>
 </div>
+}
 
 <!-- upload file dialog -->
 <ng-template #uploadDialog>

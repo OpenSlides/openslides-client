@@ -2,19 +2,23 @@
     <os-head-bar [editMode]="hasChanged" (saveEvent)="sendUpdate()" (mainEvent)="onCancel()" [nav]="false">
         <!-- Title -->
         <div class="title-slot">
-            <h2 *ngIf="category">{{ 'Sort motions' | translate }} ({{ category.prefixedName }})</h2>
+            @if (category) {
+            <h2>{{ 'Sort motions' | translate }} ({{ category.prefixedName }})</h2>
+            }
         </div>
     </os-head-bar>
 
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <div *ngIf="isMultiSelect">
+            @if (isMultiSelect) {
+            <div>
                 <span>{{ sortSelector.multiSelectedIndex.length }}&nbsp;</span>
                 <span>{{ 'selected' | translate }}</span>
                 <button mat-button (click)="moveToPosition()">
                     <span>{{ 'move ...' | translate }}</span>
                 </button>
             </div>
+            }
             <os-sorting-list (sortEvent)="onListUpdate($event)" [input]="motionObservable" #sorter>
                 <ng-template let-motion>
                     <div class="single-motion-line">

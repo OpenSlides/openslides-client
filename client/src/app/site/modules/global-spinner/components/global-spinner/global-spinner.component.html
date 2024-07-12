@@ -1,4 +1,7 @@
 <div>
-    <os-spinner *ngIf="spinnerText" [text]="spinnerText"></os-spinner>
-    <os-spinner *ngIf="!spinnerText"></os-spinner>
+    @if (spinnerText) {
+    <os-spinner [text]="spinnerText"></os-spinner>
+    } @if (!spinnerText) {
+    <os-spinner></os-spinner>
+    }
 </div>

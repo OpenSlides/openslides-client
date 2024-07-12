@@ -1,26 +1,26 @@
-<ng-container *ngIf="chips.length">
-    <mat-chip-listbox class="mat-chip-list-stacked" [matMenuTriggerFor]="canOpen ? menu : null">
-        <mat-basic-chip
-            class="chip-stacked"
-            *ngFor="let chip of chips"
-            [ngClass]="{ 'menu-handle': canOpen }"
-            [class]="chipClass || 'grey'"
-            disableRipple
-        >
-            <ng-content *ngTemplateOutlet="chip.template"></ng-content>
-        </mat-basic-chip>
-    </mat-chip-listbox>
-</ng-container>
-<ng-container *ngIf="chips.length < 1">
+@if (chips.length) {
+<mat-chip-listbox class="mat-chip-list-stacked" [matMenuTriggerFor]="canOpen ? menu : null">
+    @for (chip of chips; track chip) {
     <mat-basic-chip
-        disableRipple
-        [matMenuTriggerFor]="canOpen ? menu : null"
-        [class]="chipClass || 'grey'"
+        class="chip-stacked"
         [ngClass]="{ 'menu-handle': canOpen }"
+        [class]="chipClass || 'grey'"
+        disableRipple
     >
-        <ng-content></ng-content>
+        <ng-content *ngTemplateOutlet="chip.template"></ng-content>
     </mat-basic-chip>
-</ng-container>
+    }
+</mat-chip-listbox>
+} @if (chips.length < 1) {
+<mat-basic-chip
+    disableRipple
+    [matMenuTriggerFor]="canOpen ? menu : null"
+    [class]="chipClass || 'grey'"
+    [ngClass]="{ 'menu-handle': canOpen }"
+>
+    <ng-content></ng-content>
+</mat-basic-chip>
+}
 
 <mat-menu #menu="matMenu">
     <ng-content select="[menu]"></ng-content>
