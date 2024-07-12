@@ -42,7 +42,6 @@ import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
-import ImageResize from 'tiptap-extension-resize-image';
 
 import {
     EditorEmbedDialogComponent,
@@ -57,6 +56,7 @@ import { EditorLinkDialogComponent, EditorLinkDialogOutput } from '../editor-lin
 import { ClearTextcolorPaste } from './extensions/clear-textcolor';
 import { Highlight } from './extensions/highlight';
 import IFrame from './extensions/iframe';
+import { ImageResize } from './extensions/image-resize';
 import { MSOfficePaste } from './extensions/office';
 import { OrderedList } from './extensions/ordered-list';
 
