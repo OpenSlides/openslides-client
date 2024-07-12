@@ -35,13 +35,9 @@
         ></os-projector-button>
         <!-- Projector indicator -->
         <div class="projector-button" *osPerms="permission.projectorCanManage; complement: true">
-            <mat-icon
-                color="accent"
-                *ngIf="isProjectedFn(viewModel)"
-                matTooltip="{{ 'Currently projected' | translate }}"
-            >
-                videocam
-            </mat-icon>
+            @if (isProjectedFn(viewModel)) {
+                <mat-icon color="accent" matTooltip="{{ 'Currently projected' | translate }}">videocam</mat-icon>
+            }
         </div>
     </div>
 

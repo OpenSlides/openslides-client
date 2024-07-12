@@ -1,9 +1,9 @@
-<ng-container *ngFor="let entry of menuEntries">
+@for (entry of menuEntries; track entry) {
     <span>
         <a
             *osOmlPerms="entry.permission!"
             mat-menu-item
-            class="management-router-link"
+            class="management-router-link foreground-icon"
             [ngStyle]="getCustomStyleForEntry(entry)"
             (click)="closeSidenavOnMobile()"
             [routerLink]="entry.route"
@@ -14,5 +14,7 @@
             <span>{{ entry.displayName | translate }}</span>
         </a>
     </span>
-    <mat-divider *ngIf="entry.hasDividerBelow"></mat-divider>
-</ng-container>
+    @if (entry.hasDividerBelow) {
+        <mat-divider></mat-divider>
+    }
+}

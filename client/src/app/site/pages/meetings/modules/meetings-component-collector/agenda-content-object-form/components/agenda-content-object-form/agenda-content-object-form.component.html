@@ -8,31 +8,34 @@
             </p>
         </div>
 
-        <ng-container *ngIf="!!checkbox?.value">
+        @if (!!checkbox?.value) {
             <!-- Visibility -->
             <div>
                 <mat-form-field [formGroup]="form">
                     <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
                     <mat-select formControlName="agenda_type">
-                        <mat-option *ngFor="let type of itemVisibilityChoices" [value]="type.key">
-                            <span>{{ type.name | translate }}</span>
-                        </mat-option>
+                        @for (type of itemVisibilityChoices; track type) {
+                            <mat-option [value]="type.key">
+                                <span>{{ type.name | translate }}</span>
+                            </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
             </div>
-
             <!-- Parent item -->
-            <div *ngIf="hasItemsObservable | async" [formGroup]="form">
-                <mat-form-field>
-                    <mat-label>{{ 'Parent agenda item' | translate }}</mat-label>
-                    <os-list-search-selector
-                        formControlName="agenda_parent_id"
-                        [multiple]="false"
-                        [includeNone]="true"
-                        [inputListValues]="itemObserver"
-                    ></os-list-search-selector>
-                </mat-form-field>
-            </div>
-        </ng-container>
+            @if (hasItemsObservable | async) {
+                <div [formGroup]="form">
+                    <mat-form-field>
+                        <mat-label>{{ 'Parent agenda item' | translate }}</mat-label>
+                        <os-list-search-selector
+                            formControlName="agenda_parent_id"
+                            [multiple]="false"
+                            [includeNone]="true"
+                            [inputListValues]="itemObserver"
+                        ></os-list-search-selector>
+                    </mat-form-field>
+                </div>
+            }
+        }
     </ng-container>
 </ng-container>

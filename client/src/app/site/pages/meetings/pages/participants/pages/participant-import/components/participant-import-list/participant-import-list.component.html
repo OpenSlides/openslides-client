@@ -4,11 +4,13 @@
         <h2>{{ 'Import participants' | translate }}</h2>
     </div>
 
-    <div class="menu-slot">
-        <button *ngIf="canImport" mat-button (click)="doImport()">
-            <span class="upper">{{ 'Import' | translate }}</span>
-        </button>
-    </div>
+    <ng-container class="menu-slot">
+        @if (canImport) {
+            <button mat-button (click)="doImport()">
+                <span class="upper">{{ 'Import' | translate }}</span>
+            </button>
+        }
+    </ng-container>
 </os-head-bar>
 
 <os-backend-import-list

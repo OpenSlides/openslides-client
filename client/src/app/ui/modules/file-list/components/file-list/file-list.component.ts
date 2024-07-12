@@ -8,8 +8,7 @@ import {
     OnInit,
     Output,
     TemplateRef,
-    ViewChild,
-    ViewEncapsulation
+    ViewChild
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -56,7 +55,6 @@ const SUBSCRIPTION_NAME = `file_list_subscription`;
     selector: `os-file-list`,
     templateUrl: `./file-list.component.html`,
     styleUrls: [`./file-list.component.scss`],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileListComponent extends BaseUiComponent implements OnInit, OnDestroy {

@@ -6,22 +6,26 @@
         [percentBases]="PercentBaseVerbose"
         #pollForm
     ></os-motion-poll-form>
-    <ng-container *ngIf="pollForm.contentForm.get('type')!.value === 'analog'">
+    @if (pollForm.contentForm.get('type')!.value === 'analog') {
         <div class="os-form-card-mobile">
             <form [formGroup]="dialogVoteForm">
                 <div formGroupName="options">
-                    <div *ngFor="let option of options">
-                        <div *ngFor="let field of analogVoteFields" [formGroupName]="option.fqid">
-                            <os-check-input
-                                [placeholder]="voteValueVerbose[field] | translate"
-                                [checkboxValue]="-1"
-                                inputType="number"
-                                [checkboxLabel]="'majority' | translate"
-                                [formControlName]="field"
-                                [radioGroupValue]="majority"
-                            ></os-check-input>
+                    @for (option of options; track option) {
+                        <div>
+                            @for (field of analogVoteFields; track field) {
+                                <div [formGroupName]="option.fqid">
+                                    <os-check-input
+                                        [placeholder]="voteValueVerbose[field] | translate"
+                                        [checkboxValue]="-1"
+                                        inputType="number"
+                                        [checkboxLabel]="'majority' | translate"
+                                        [formControlName]="field"
+                                        [radioGroupValue]="majority"
+                                    ></os-check-input>
+                                </div>
+                            }
                         </div>
-                    </div>
+                    }
                 </div>
                 <os-check-input
                     [placeholder]="'Valid votes' | translate"
@@ -40,15 +44,18 @@
                 ></os-check-input>
             </form>
         </div>
-
         <!-- Publish immediately button. Only show for new polls -->
-        <div *ngIf="!pollData.isPublished">
-            <mat-checkbox [(ngModel)]="publishImmediately" (change)="publishStateChanged($event.checked)">
-                <span>{{ 'Publish immediately' | translate }}</span>
-            </mat-checkbox>
-            <mat-error *ngIf="!dialogVoteForm.valid">{{ 'Error in form field.' | translate }}</mat-error>
-        </div>
-    </ng-container>
+        @if (!pollData.isPublished) {
+            <div>
+                <mat-checkbox [(ngModel)]="publishImmediately" (change)="publishStateChanged($event.checked)">
+                    <span>{{ 'Publish immediately' | translate }}</span>
+                </mat-checkbox>
+                @if (!dialogVoteForm.valid) {
+                    <mat-error>{{ 'Error in form field.' | translate }}</mat-error>
+                }
+            </div>
+        }
+    }
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button (click)="submitPoll()" [disabled]="!formsValid">

@@ -6,9 +6,11 @@
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
             <input formControlName="title" matInput required />
-            <mat-error *ngIf="createBlockForm.get('title')!.hasError('required')">
-                {{ 'A title is required' | translate }}
-            </mat-error>
+            @if (createBlockForm.get('title')!.hasError('required')) {
+                <mat-error>
+                    {{ 'A title is required' | translate }}
+                </mat-error>
+            }
         </mat-form-field>
 
         <!-- Internal -->

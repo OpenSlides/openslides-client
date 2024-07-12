@@ -24,21 +24,22 @@
             <span class="flex-center" cdkDragHandle>
                 <mat-icon>drag_indicator</mat-icon>
             </span>
-            <button
-                *ngIf="hasChild"
-                mat-icon-button
-                cdkTreeNodeToggle
-                [attr.aria-label]="'toggle ' + node.filename"
-                (click)="handleClick(node)"
-                [style.visibility]="node.expandable ? 'visible' : 'hidden'"
-            >
-                <mat-icon
-                    [style.transform]="node.isExpanded ? 'rotate(90deg)' : 'rotate(0deg)'"
-                    class="mat-icon-rtl-mirror"
+            @if (hasChild) {
+                <button
+                    mat-icon-button
+                    cdkTreeNodeToggle
+                    [attr.aria-label]="'toggle ' + node.filename"
+                    (click)="handleClick(node)"
+                    [style.visibility]="node.expandable ? 'visible' : 'hidden'"
                 >
-                    chevron_right
-                </mat-icon>
-            </button>
+                    <mat-icon
+                        [style.transform]="node.isExpanded ? 'rotate(90deg)' : 'rotate(0deg)'"
+                        class="mat-icon-rtl-mirror"
+                    >
+                        chevron_right
+                    </mat-icon>
+                </button>
+            }
             <ng-container [ngTemplateOutlet]="innerNode" [ngTemplateOutletContext]="{ item: node.item }"></ng-container>
         </div>
         <div [style.margin-left]="placeholderLevel * 40 + 'px'" *cdkDragPlaceholder></div>

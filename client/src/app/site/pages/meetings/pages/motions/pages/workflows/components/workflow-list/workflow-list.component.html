@@ -86,7 +86,7 @@
 
 <mat-menu #workflowListMenu="matMenu">
     <ng-template matMenuContent>
-        <ng-container *ngIf="!isMultiSelect">
+        @if (!isMultiSelect) {
             <div>
                 <!-- Enable multi select -->
                 <button mat-menu-item (click)="toggleMultiSelect()">
@@ -100,15 +100,14 @@
                     <span>{{ 'Import' | translate }}</span>
                 </button>
             </div>
-        </ng-container>
-        <ng-container *ngIf="isMultiSelect">
+        }
+        @if (isMultiSelect) {
             <div>
                 <!-- Select all -->
                 <button mat-menu-item (click)="selectAll()">
                     <mat-icon>done_all</mat-icon>
                     <span>{{ 'Select all' | translate }}</span>
                 </button>
-
                 <!-- Deselect all -->
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
                     <mat-icon>clear</mat-icon>
@@ -120,6 +119,6 @@
                     <span>{{ 'Export' | translate }}</span>
                 </button>
             </div>
-        </ng-container>
+        }
     </ng-template>
 </mat-menu>

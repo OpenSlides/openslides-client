@@ -1,55 +1,61 @@
 <!-- Title -->
-<h2 mat-dialog-title *ngIf="data">{{ data.title | translate }}</h2>
+@if (data) {
+    <h2 mat-dialog-title>{{ data.title | translate }}</h2>
+}
 <mat-dialog-content class="choice-dialog-content">{{ data.content | translate }}</mat-dialog-content>
 
-<form [formGroup]="selectForm" *ngIf="data">
-    <!-- Content -->
-    <mat-dialog-content *ngIf="data?.choices">
-        <os-list-search-selector
-            ngDefaultControl
-            formControlName="select"
-            [multiple]="data.multiSelect!"
-            [sortFn]="data.sortFn"
-            [inputListValues]="data.choices!"
-            (selectionChanged)="onSelectionChanged($event)"
-        ></os-list-search-selector>
-    </mat-dialog-content>
-
-    <!-- Actions -->
-    <mat-dialog-actions>
-        <!-- Custom Actions -->
-        <div *ngIf="data.actions as actions">
-            <button
-                class="custom-actions-button"
-                *ngFor="let button of actions"
-                mat-button
-                (click)="closeDialog(true, button)"
-                [disabled]="!hasSelection"
-            >
-                <span>{{ button | translate }}</span>
+@if (data) {
+    <form [formGroup]="selectForm">
+        <!-- Content -->
+        @if (data?.choices) {
+            <mat-dialog-content>
+                <os-list-search-selector
+                    ngDefaultControl
+                    formControlName="select"
+                    [multiple]="data.multiSelect!"
+                    [sortFn]="data.sortFn"
+                    [inputListValues]="data.choices!"
+                    (selectionChanged)="onSelectionChanged($event)"
+                ></os-list-search-selector>
+            </mat-dialog-content>
+        }
+        <!-- Actions -->
+        <mat-dialog-actions>
+            <!-- Custom Actions -->
+            @if (data.actions; as actions) {
+                <div>
+                    @for (button of actions; track button) {
+                        <button
+                            class="custom-actions-button"
+                            mat-button
+                            (click)="closeDialog(true, button)"
+                            [disabled]="!hasSelection"
+                        >
+                            <span>{{ button | translate }}</span>
+                        </button>
+                    }
+                </div>
+            }
+            <!-- Normal okay button -->
+            @if (!data?.actions) {
+                <div>
+                    @if (!data.multiSelect || data?.choices) {
+                        <button mat-button (click)="closeDialog(true)" [disabled]="!hasSelection">
+                            <span>OK</span>
+                        </button>
+                    }
+                </div>
+            }
+            <!-- Clear choice button -->
+            @if (data.clearChoiceOption) {
+                <button mat-button (click)="closeDialog(true, data.clearChoiceOption)">
+                    <span>{{ data.clearChoiceOption | translate }}</span>
+                </button>
+            }
+            <!-- Cancel -->
+            <button mat-button (click)="closeDialog(false)">
+                <span>{{ 'Cancel' | translate }}</span>
             </button>
-        </div>
-
-        <!-- Normal okay button -->
-        <div *ngIf="!data?.actions">
-            <button
-                *ngIf="!data.multiSelect || data?.choices"
-                mat-button
-                (click)="closeDialog(true)"
-                [disabled]="!hasSelection"
-            >
-                <span>OK</span>
-            </button>
-        </div>
-
-        <!-- Clear choice button -->
-        <button mat-button *ngIf="data.clearChoiceOption" (click)="closeDialog(true, data.clearChoiceOption)">
-            <span>{{ data.clearChoiceOption | translate }}</span>
-        </button>
-
-        <!-- Cancel -->
-        <button mat-button (click)="closeDialog(false)">
-            <span>{{ 'Cancel' | translate }}</span>
-        </button>
-    </mat-dialog-actions>
-</form>
+        </mat-dialog-actions>
+    </form>
+}

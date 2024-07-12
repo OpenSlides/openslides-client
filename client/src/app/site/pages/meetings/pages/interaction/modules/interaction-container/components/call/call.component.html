@@ -4,37 +4,44 @@
     <!-- Jitsi content window -->
     <div class="content">
         <!-- The "somewhere else active" warning -->
-        <div class="disconnected" *ngIf="(isJitsiActiveInAnotherTab | async) && !isJitsiActive">
-            <div>
-                <div>{{ 'A conference is already running in your OpenSlides session.' | translate }}</div>
-                <button mat-button color="warn" (click)="forceStart()">
-                    <span>{{ 'Reenter to conference room' | translate }}</span>
-                </button>
+        @if ((isJitsiActiveInAnotherTab | async) && !isJitsiActive) {
+            <div class="disconnected">
+                <div>
+                    <div>{{ 'A conference is already running in your OpenSlides session.' | translate }}</div>
+                    <button mat-button color="warn" (click)="forceStart()">
+                        <span>{{ 'Reenter to conference room' | translate }}</span>
+                    </button>
+                </div>
             </div>
-        </div>
-
-        <div class="disconnected" *ngIf="isDisconnected && (isJitsiActiveInAnotherTab | async) === false">
-            <mat-icon>cloud_off</mat-icon>
-        </div>
-
-        <div class="disconnected" *ngIf="isConnecting">
-            <mat-spinner></mat-spinner>
-        </div>
+        }
+        @if (isDisconnected && (isJitsiActiveInAnotherTab | async) === false) {
+            <div class="disconnected">
+                <mat-icon>cloud_off</mat-icon>
+            </div>
+        }
+        @if (isConnecting) {
+            <div class="disconnected">
+                <mat-spinner></mat-spinner>
+            </div>
+        }
 
         <!-- user list -->
-        <div class="room-members" *ngIf="isConnected">
-            <os-applause-particle-display
-                *ngIf="showParticles | async"
-                class="room-list-applause-particles"
-            ></os-applause-particle-display>
-            <ol class="member-list">
-                <li *ngFor="let member of memberObservable | async | entries : valueNameOrder; trackBy: trackByIndex">
-                    <div class="member-list-entry">
-                        {{ member.value.name }}
-                    </div>
-                </li>
-            </ol>
-        </div>
+        @if (isConnected) {
+            <div class="room-members">
+                @if (showParticles | async) {
+                    <os-applause-particle-display class="room-list-applause-particles"></os-applause-particle-display>
+                }
+                <ol class="member-list">
+                    @for (member of memberObservable | async | entries: valueNameOrder; track $index) {
+                        <li>
+                            <div class="member-list-entry">
+                                {{ member.value.name }}
+                            </div>
+                        </li>
+                    }
+                </ol>
+            </div>
+        }
     </div>
 
     <!-- Custom control buttons -->
@@ -43,40 +50,38 @@
         <div class="control-grid">
             <div class="control-buttons">
                 <!-- Hangup -->
-                <button
-                    mat-mini-fab
-                    color="warn"
-                    (click)="hangUp()"
-                    *ngIf="showHangUp"
-                    matTooltip="{{ 'Leave' | translate }}"
-                >
-                    <mat-icon>call_end</mat-icon>
-                </button>
+                @if (showHangUp) {
+                    <button mat-mini-fab color="warn" (click)="hangUp()" matTooltip="{{ 'Leave' | translate }}">
+                        <mat-icon>call_end</mat-icon>
+                    </button>
+                }
 
                 <!-- Enter jitsi manually -->
-                <button
-                    mat-mini-fab
-                    color="accent"
-                    (click)="callRoom()"
-                    [disabled]="(canEnterCall | async) === false || isConnecting"
-                    *ngIf="!isJoined"
-                    matTooltip="{{ 'Enter conference room' | translate }}"
-                >
-                    <mat-icon>call</mat-icon>
-                </button>
+                @if (!isJoined) {
+                    <button
+                        mat-mini-fab
+                        color="accent"
+                        (click)="callRoom()"
+                        [disabled]="(canEnterCall | async) === false || isConnecting"
+                        matTooltip="{{ 'Enter conference room' | translate }}"
+                    >
+                        <mat-icon>call</mat-icon>
+                    </button>
+                }
             </div>
             <div class="exit">
                 <!-- Exit jitsi, view stream -->
                 <ng-container *osPerms="permission.meetingCanSeeLivestream">
-                    <button
-                        mat-icon-button
-                        color="primary"
-                        matTooltip="{{ 'Continue livestream' | translate }}"
-                        (click)="viewStream()"
-                        *ngIf="hasLiveStreamUrl | async"
-                    >
-                        <mat-icon>live_tv</mat-icon>
-                    </button>
+                    @if (hasLiveStreamUrl | async) {
+                        <button
+                            mat-icon-button
+                            color="primary"
+                            matTooltip="{{ 'Continue livestream' | translate }}"
+                            (click)="viewStream()"
+                        >
+                            <mat-icon>live_tv</mat-icon>
+                        </button>
+                    }
                 </ng-container>
             </div>
         </div>

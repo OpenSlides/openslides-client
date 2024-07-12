@@ -80,7 +80,10 @@ module.exports = {
                 '@typescript-eslint/ban-ts-comment': ['warn'],
                 '@typescript-eslint/no-explicit-any': ['off'],
                 '@typescript-eslint/no-non-null-assertion': ['off'],
-                'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }]
+                'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }],
+
+                // Currently used by view models
+                '@typescript-eslint/no-unsafe-declaration-merging': ['off']
             }
         },
         {
@@ -102,7 +105,8 @@ module.exports = {
                 '@angular-eslint/template/click-events-have-key-events': ['warn'],
                 '@angular-eslint/template/interactive-supports-focus': ['warn'],
                 '@angular-eslint/template/elements-content': ['warn'],
-                '@angular-eslint/template/alt-text': ['warn']
+                '@angular-eslint/template/alt-text': ['warn'],
+                '@angular-eslint/template/prefer-control-flow': ['warn']
             }
         },
         {

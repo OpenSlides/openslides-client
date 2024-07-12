@@ -60,7 +60,10 @@ const getUniqueItems = (positions: Position[]): Position[] => {
     providedIn: `root`
 })
 export class HistoryPresenterService {
-    public constructor(private http: HttpService, private userRepo: UserControllerService) {}
+    public constructor(
+        private http: HttpService,
+        private userRepo: UserControllerService
+    ) {}
 
     public async call(fqid: Fqid): Promise<HistoryPosition[]> {
         const response = await this.http.post<HistoryPresenterResponse>(HISTORY_ENDPOINT, undefined, {

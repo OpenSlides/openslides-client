@@ -2,54 +2,72 @@
     <span>{{ 'Project selection?' | translate }}</span>
 </h2>
 
-<mat-dialog-content *ngIf="projectors && projectors.length">
-    <div class="element-name" *ngIf="descriptor">
-        {{ descriptor.getDialogTitle() }}
-    </div>
-    <div class="content-wrapper" *ngIf="projectorSelectable">
-        <div
-            class="projectors"
-            *ngFor="let projector of projectors"
-            [ngClass]="isProjectedOn(projector) ? 'projected' : ''"
-        >
-            <mat-checkbox [checked]="isProjectorSelected(projector)" (change)="toggleProjector(projector)">
-                {{ projector.name }}
-            </mat-checkbox>
-            <span *ngIf="isProjectedOn(projector)" class="right">
-                <mat-icon matTooltip="{{ 'Is already projected' | translate }}" matTooltipPosition="above">
-                    videocam
-                </mat-icon>
-            </span>
-        </div>
-    </div>
-
-    <mat-divider *ngIf="options && options.length"></mat-divider>
-
-    <div *ngIf="options && options.length">
-        <div *ngFor="let option of options">
-            <div *ngIf="isDecisionOption(option)" class="spacer-top-10 spacer-left-10">
-                <mat-checkbox
-                    [checked]="optionValues[option.key]"
-                    (change)="optionValues[option.key] = !optionValues[option.key]"
-                >
-                    {{ option.displayName | translate }}
-                </mat-checkbox>
+@if (projectors && projectors.length) {
+    <mat-dialog-content>
+        @if (descriptor) {
+            <div class="element-name">
+                {{ descriptor.getDialogTitle() }}
             </div>
-            <div *ngIf="isChoiceOption(option)">
-                <h3>{{ option.displayName | translate }}</h3>
-                <mat-radio-group [name]="option.key" [(ngModel)]="optionValues[option.key]">
-                    <mat-radio-button *ngFor="let choice of option.choices" [value]="choice.value">
-                        {{ choice.displayName | translate }}
-                    </mat-radio-button>
-                </mat-radio-group>
+        }
+        @if (projectorSelectable) {
+            <div class="content-wrapper">
+                @for (projector of projectors; track projector) {
+                    <div class="projectors" [ngClass]="isProjectedOn(projector) ? 'projected' : ''">
+                        <mat-checkbox [checked]="isProjectorSelected(projector)" (change)="toggleProjector(projector)">
+                            {{ projector.name }}
+                        </mat-checkbox>
+                        @if (isProjectedOn(projector)) {
+                            <mat-icon matTooltip="{{ 'Is already projected' | translate }}" matTooltipPosition="above">
+                                videocam
+                            </mat-icon>
+                        }
+                    </div>
+                }
             </div>
-        </div>
-    </div>
-</mat-dialog-content>
+        }
+        @if (options && options.length) {
+            <mat-divider></mat-divider>
+        }
+        @if (options && options.length) {
+            <div>
+                @for (option of options; track option) {
+                    <div>
+                        @if (isDecisionOption(option)) {
+                            <div>
+                                <mat-checkbox
+                                    [checked]="optionValues[option.key]"
+                                    (change)="optionValues[option.key] = !optionValues[option.key]"
+                                >
+                                    {{ option.displayName | translate }}
+                                </mat-checkbox>
+                            </div>
+                        }
+                        @if (isChoiceOption(option)) {
+                            <div>
+                                <h3>{{ option.displayName | translate }}</h3>
+                                <mat-radio-group [name]="option.key" [(ngModel)]="optionValues[option.key]">
+                                    @for (choice of option.choices; track choice) {
+                                        <mat-radio-button [value]="choice.value">
+                                            {{ choice.displayName | translate }}
+                                        </mat-radio-button>
+                                    }
+                                </mat-radio-group>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </mat-dialog-content>
+}
 
 <mat-dialog-actions>
     <button mat-button osAutofocus (click)="onProject()" color="accent">{{ 'Project' | translate }}</button>
-    <button mat-button *ngIf="projectorSelectable" (click)="onAddToPreview()">{{ 'Add to queue' | translate }}</button>
-    <button mat-button *ngIf="!projectorSelectable" (click)="onHide()">{{ 'Hide' | translate }}</button>
+    @if (projectorSelectable) {
+        <button mat-button (click)="onAddToPreview()">{{ 'Add to queue' | translate }}</button>
+    }
+    @if (!projectorSelectable) {
+        <button mat-button (click)="onHide()">{{ 'Hide' | translate }}</button>
+    }
     <button mat-button (click)="onCancel()">{{ 'Cancel' | translate }}</button>
 </mat-dialog-actions>

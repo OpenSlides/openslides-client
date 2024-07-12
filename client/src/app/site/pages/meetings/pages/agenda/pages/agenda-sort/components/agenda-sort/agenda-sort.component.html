@@ -9,29 +9,35 @@
         <button mat-button (click)="onStateChange(true)">{{ 'Expand all' | translate }}</button>
         <button mat-button (click)="onStateChange(false)">{{ 'Collapse all' | translate }}</button>
     </div>
-    <div class="current-filters" *ngIf="hasActiveFilter">
-        <div>
-            <span>{{ 'Active filters' | translate }}</span>
-            :&nbsp;
+    @if (hasActiveFilter) {
+        <div class="current-filters">
+            <div>
+                <span>{{ 'Active filters' | translate }}</span>
+                :&nbsp;
+            </div>
+            <div>
+                <button mat-button (click)="resetFilters()">
+                    <mat-icon>cancel</mat-icon>
+                    <span>{{ 'Visibility' | translate }}</span>
+                </button>
+            </div>
         </div>
-        <div>
-            <button mat-button (click)="resetFilters()">
-                <mat-icon inline>cancel</mat-icon>
-                <span>{{ 'Visibility' | translate }}</span>
-            </button>
-        </div>
-    </div>
+    }
     <div class="button-menu right">
         <button mat-button [matMenuTriggerFor]="menu">Filter</button>
         <mat-menu #menu>
             <div class="filter-hint hint">{{ 'Visibility' | translate }}</div>
             <mat-selection-list #visibilities (selectionChange)="onFilterChange(visibilities.selectedOptions.selected)">
-                <mat-list-option *ngFor="let option of filterOptions" [value]="option.id" [selected]="option.state">
-                    <mat-icon matListIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
-                        {{ getIcon(option.id) }}
-                    </mat-icon>
-                    <p matLine>{{ option.label | translate }}</p>
-                </mat-list-option>
+                @for (option of filterOptions; track option) {
+                    <mat-list-option [value]="option.id" [selected]="option.state">
+                        <mat-icon matListItemIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
+                            {{ getIcon(option.id) }}
+                        </mat-icon>
+                        <div matListItemTitle>
+                            {{ option.label | translate }}
+                        </div>
+                    </mat-list-option>
+                }
             </mat-selection-list>
         </mat-menu>
     </div>

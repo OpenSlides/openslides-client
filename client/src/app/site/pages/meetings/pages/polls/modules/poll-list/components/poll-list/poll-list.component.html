@@ -11,13 +11,17 @@
 >
     <!-- Poll Title -->
     <div *osScrollingTableCell="'title'; row as poll; rowContext as context" class="cell-slot fill">
-        <os-detail-view-navigator [model]="poll" *ngIf="!isMultiSelect"></os-detail-view-navigator>
+        @if (!isMultiSelect) {
+            <os-detail-view-navigator [model]="poll"></os-detail-view-navigator>
+        }
         <span>{{ poll.title }}</span>
     </div>
 
     <!-- Motion Or Assigmnent Title Title -->
     <div *osScrollingTableCell="'classType'; row as poll" class="cell-slot fill">
-        <os-detail-view-navigator [model]="poll" *ngIf="!isMultiSelect"></os-detail-view-navigator>
+        @if (!isMultiSelect) {
+            <os-detail-view-navigator [model]="poll"></os-detail-view-navigator>
+        }
         <span>{{ poll.getContentObject()?.getListTitle() }}</span>
     </div>
 
@@ -26,7 +30,9 @@
         *osScrollingTableCell="'state'; row as poll; config: { maxWidth: 200, position: END_POSITION }"
         class="cell-slot fill"
     >
-        <os-detail-view-navigator [model]="poll" *ngIf="!isMultiSelect"></os-detail-view-navigator>
+        @if (!isMultiSelect) {
+            <os-detail-view-navigator [model]="poll"></os-detail-view-navigator>
+        }
         <span>{{ poll.stateVerbose | translate }}</span>
     </div>
 
@@ -35,13 +41,10 @@
         *osScrollingTableCell="'votability'; row as poll; config: { width: 40, position: END_POSITION }"
         class="cell-slot fill"
     >
-        <ng-container *ngIf="canBeVoteFor(poll); then inProgress; else notInProgress"></ng-container>
+        @if (canBeVoteFor(poll)) {
+            <mat-icon color="warn" matTooltip="{{ 'Voting is currently in progress.' | translate }}">warning</mat-icon>
+        } @else {
+            <mat-icon color="accent" matTooltip="{{ 'You have already voted.' | translate }}">check_circle</mat-icon>
+        }
     </div>
 </os-projectable-list>
-
-<ng-template #inProgress>
-    <mat-icon color="warn" matTooltip="{{ 'Voting is currently in progress.' | translate }}">warning</mat-icon>
-</ng-template>
-<ng-template #notInProgress>
-    <mat-icon color="accent" matTooltip="{{ 'You have already voted.' | translate }}">check_circle</mat-icon>
-</ng-template>

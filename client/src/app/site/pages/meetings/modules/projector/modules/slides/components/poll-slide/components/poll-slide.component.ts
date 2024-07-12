@@ -36,7 +36,10 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
 
     public polldata!: PollData;
 
-    public constructor(public pollService: PollService, private collectionMapperService: CollectionMapperService) {
+    public constructor(
+        public pollService: PollService,
+        private collectionMapperService: CollectionMapperService
+    ) {
         super();
     }
 

@@ -1,44 +1,62 @@
 <h2 mat-dialog-title>
-    <span *ngIf="!isOneUser && hasUsersToDelete" translate>Are you sure you want to delete these accounts?</span>
-    <span *ngIf="!isOneUser && !hasUsersToDelete" translate>Are you sure you want to remove these participants?</span>
-    <span *ngIf="isOneUserToDelete" translate>Are you sure you want to delete this account?</span>
-    <span *ngIf="isOneUserToRemove" translate>Are you sure you want to remove this participant?</span>
+    @if (!isOneUser && hasUsersToDelete) {
+        <span translate>Are you sure you want to delete these accounts?</span>
+    }
+    @if (!isOneUser && !hasUsersToDelete) {
+        <span translate>Are you sure you want to remove these participants?</span>
+    }
+    @if (isOneUserToDelete) {
+        <span translate>Are you sure you want to delete this account?</span>
+    }
+    @if (isOneUserToRemove) {
+        <span translate>Are you sure you want to remove this participant?</span>
+    }
 </h2>
 
 <mat-dialog-content>
     <div class="user-delete-dialog-content">
-        <div *ngIf="!isOneUser" class="user-list-block">
-            <div *ngIf="hasUsersToDelete" class="user-list-wrapper">
-                <p class="section-title flex-vertical-center">
-                    {{ 'These accounts will be deleted:' | translate }}
-                </p>
-                <cdk-virtual-scroll-viewport [itemSize]="30">
-                    <ng-container *cdkVirtualFor="let user of toDeleteUsers">
-                        <ng-container
-                            [ngTemplateOutlet]="userRowTemplate"
-                            [ngTemplateOutletContext]="{ user: user }"
-                        ></ng-container>
-                    </ng-container>
-                </cdk-virtual-scroll-viewport>
+        @if (!isOneUser) {
+            <div class="user-list-block">
+                @if (hasUsersToDelete) {
+                    <div class="user-list-wrapper">
+                        <p class="section-title flex-vertical-center">
+                            {{ 'These accounts will be deleted:' | translate }}
+                        </p>
+                        <cdk-virtual-scroll-viewport [itemSize]="30">
+                            <ng-container *cdkVirtualFor="let user of toDeleteUsers">
+                                <ng-container
+                                    [ngTemplateOutlet]="userRowTemplate"
+                                    [ngTemplateOutletContext]="{ user: user }"
+                                ></ng-container>
+                            </ng-container>
+                        </cdk-virtual-scroll-viewport>
+                    </div>
+                }
+                @if (hasUsersToRemove) {
+                    <div class="user-list-wrapper spacer-top-20">
+                        <p class="section-title flex-vertical-center">
+                            {{ 'These participants will be removed:' | translate }}
+                        </p>
+                        <cdk-virtual-scroll-viewport [itemSize]="30">
+                            <ng-container *cdkVirtualFor="let user of toRemoveUsers">
+                                <ng-container
+                                    [ngTemplateOutlet]="userRowTemplate"
+                                    [ngTemplateOutletContext]="{ user: user }"
+                                ></ng-container>
+                            </ng-container>
+                        </cdk-virtual-scroll-viewport>
+                    </div>
+                }
             </div>
-            <div *ngIf="hasUsersToRemove" class="user-list-wrapper spacer-top-20">
-                <p class="section-title flex-vertical-center">
-                    {{ 'These participants will be removed:' | translate }}
-                </p>
-                <cdk-virtual-scroll-viewport [itemSize]="30">
-                    <ng-container *cdkVirtualFor="let user of toRemoveUsers">
-                        <ng-container
-                            [ngTemplateOutlet]="userRowTemplate"
-                            [ngTemplateOutletContext]="{ user: user }"
-                        ></ng-container>
-                    </ng-container>
-                </cdk-virtual-scroll-viewport>
+        }
+        @if (selectedUser) {
+            <div class="user-detail-block">
+                @if (!isOneUser) {
+                    <mat-divider [vertical]="true"></mat-divider>
+                }
+                <ng-container *ngTemplateOutlet="userDetailTemplate; context: { user: selectedUser }"></ng-container>
             </div>
-        </div>
-        <div *ngIf="selectedUser" class="user-detail-block">
-            <mat-divider [vertical]="true" *ngIf="!isOneUser"></mat-divider>
-            <ng-container *ngTemplateOutlet="userDetailTemplate; context: { user: selectedUser }"></ng-container>
-        </div>
+        }
     </div>
 </mat-dialog-content>
 
@@ -46,8 +64,12 @@
     <button mat-button color="warn" [matDialogClose]="true">
         <span translate>Yes</span>
         <span>,&nbsp;</span>
-        <span translate *ngIf="!hasUsersToDelete">remove</span>
-        <span translate *ngIf="hasUsersToDelete">delete</span>
+        @if (!hasUsersToDelete) {
+            <span translate>remove</span>
+        }
+        @if (hasUsersToDelete) {
+            <span translate>delete</span>
+        }
     </button>
     <button mat-button [matDialogClose]="false">{{ 'Cancel' | translate }}</button>
 </mat-dialog-actions>
@@ -61,19 +83,22 @@
         (click)="selectedUser = user"
     >
         <div class="flex-vertical-center">
-            <ng-container *ngIf="willBeRemoved(user)">
+            @if (willBeRemoved(user)) {
                 <mat-icon></mat-icon>
-            </ng-container>
-            <ng-container *ngIf="!willBeRemoved(user)">
-                <mat-icon *ngIf="!hasRelations(user)"></mat-icon>
-                <mat-icon
-                    *ngIf="hasRelations(user)"
-                    color="warn"
-                    matTooltip="{{ 'This account has relations to meetings or committees' | translate }}"
-                >
-                    warning
-                </mat-icon>
-            </ng-container>
+            }
+            @if (!willBeRemoved(user)) {
+                @if (!hasRelations(user)) {
+                    <mat-icon></mat-icon>
+                }
+                @if (hasRelations(user)) {
+                    <mat-icon
+                        color="warn"
+                        matTooltip="{{ 'This account has relations to meetings or committees' | translate }}"
+                    >
+                        warning
+                    </mat-icon>
+                }
+            }
             <p class="padding-left-8 padding-right-8 one-line">{{ user.name }}</p>
         </div>
         <mat-divider></mat-divider>
@@ -82,44 +107,54 @@
 
 <ng-template #userDetailTemplate let-user="user">
     <div class="user-name padding-left-25">{{ user.name }}</div>
-    <ng-container *ngIf="willBeRemoved(user)">
+    @if (willBeRemoved(user)) {
         <p class="padding-left-25">
             {{ 'This participant will only be removed from this meeting' | translate }}
         </p>
-    </ng-container>
-    <ng-container *ngIf="!willBeRemoved(user)">
-        <ng-container *ngIf="!user.error">
-            <ng-container *ngIf="!hasRelations(user)">
+    }
+    @if (!willBeRemoved(user)) {
+        @if (!user.error) {
+            @if (!hasRelations(user)) {
                 <p class="padding-left-25">
                     {{
                         'This account is not linked as candidate, submitter or speaker in any meeting and is not manager of any committee'
                             | translate
                     }}
                 </p>
-            </ng-container>
-            <ng-container *ngIf="hasRelations(user)">
-                <ul *ngFor="let meeting of user.meetings">
-                    <p class="meeting-title">{{ meeting.name }}</p>
-                    <li *ngIf="meeting.assignment_candidate_ids?.length">
-                        {{ 'Is candidate' | translate }}
-                    </li>
-                    <li *ngIf="meeting.motion_submitter_ids?.length">
-                        {{ 'Is submitter' | translate }}
-                    </li>
-                    <li *ngIf="meeting.speaker_ids?.length">
-                        {{ 'Is speaker' | translate }}
-                    </li>
-                </ul>
-                <ul *ngFor="let committee of getManagedCommittees(user)">
-                    <p class="committee-title">{{ committee.name }}</p>
-                    <li>{{ 'Is manager' | translate }}</li>
-                </ul>
-            </ng-container>
-        </ng-container>
-        <ng-container *ngIf="user.error">
+            }
+            @if (hasRelations(user)) {
+                @for (meeting of user.meetings; track meeting) {
+                    <ul>
+                        <p class="meeting-title">{{ meeting.name }}</p>
+                        @if (meeting.assignment_candidate_ids?.length) {
+                            <li>
+                                {{ 'Is candidate' | translate }}
+                            </li>
+                        }
+                        @if (meeting.motion_submitter_ids?.length) {
+                            <li>
+                                {{ 'Is submitter' | translate }}
+                            </li>
+                        }
+                        @if (meeting.speaker_ids?.length) {
+                            <li>
+                                {{ 'Is speaker' | translate }}
+                            </li>
+                        }
+                    </ul>
+                }
+                @for (committee of getManagedCommittees(user); track committee) {
+                    <ul>
+                        <p class="committee-title">{{ committee.name }}</p>
+                        <li>{{ 'Is manager' | translate }}</li>
+                    </ul>
+                }
+            }
+        }
+        @if (user.error) {
             <p class="padding-left-25">
                 {{ user.error | translate }}
             </p>
-        </ng-container>
-    </ng-container>
+        }
+    }
 </ng-template>

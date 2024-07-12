@@ -1,27 +1,32 @@
-<div
-    class="countdown overlay"
-    *ngIf="data && !isFullscreen"
-    [ngClass]="{ 'only-time-indicator': displayType === 'onlyTimeIndicator' }"
-    [ngStyle]="{
-        'margin-top': !projector || projector.show_header_footer ? '80px' : '30px'
-    }"
->
-    <os-countdown-time
-        [countdown]="data.data"
-        [displayType]="displayType"
-        [warningTime]="data.data.warning_time"
-    ></os-countdown-time>
-    <div *ngIf="data.data.description" class="description">
-        {{ data.data.description }}
-    </div>
-</div>
-<div class="countdown fullscreen" *ngIf="data && isFullscreen">
-    <div>
+@if (data && !isFullscreen) {
+    <div
+        class="countdown overlay"
+        [ngClass]="{ 'only-time-indicator': displayType === 'onlyTimeIndicator' }"
+        [ngStyle]="{
+            'margin-top': !projector || projector.show_header_footer ? '80px' : '30px'
+        }"
+    >
         <os-countdown-time
             [countdown]="data.data"
-            [fullscreen]="true"
             [displayType]="displayType"
             [warningTime]="data.data.warning_time"
         ></os-countdown-time>
+        @if (data.data.description) {
+            <div class="description">
+                {{ data.data.description }}
+            </div>
+        }
     </div>
-</div>
+}
+@if (data && isFullscreen) {
+    <div class="countdown fullscreen">
+        <div>
+            <os-countdown-time
+                [countdown]="data.data"
+                [fullscreen]="true"
+                [displayType]="displayType"
+                [warningTime]="data.data.warning_time"
+            ></os-countdown-time>
+        </div>
+    </div>
+}

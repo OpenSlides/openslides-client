@@ -55,7 +55,10 @@ export class RoutingStateService {
      *
      * @param router Angular Router
      */
-    public constructor(private router: Router, private location: Location) {
+    public constructor(
+        private router: Router,
+        private location: Location
+    ) {
         this.router.events
             .pipe(
                 filter(e => e instanceof RoutesRecognized),

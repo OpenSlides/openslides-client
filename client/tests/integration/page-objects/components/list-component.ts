@@ -19,6 +19,6 @@ export class ListComponent {
 
     async openRowMenu(row: Locator) {
         await row.scrollIntoViewIfNeeded();
-        await row.locator('button.mat-menu-trigger').click();
+        await row.locator('button.mat-mdc-menu-trigger').click();
     }
 }
