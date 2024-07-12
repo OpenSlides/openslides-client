@@ -102,6 +102,15 @@
     }
 }
 
+.remove-grid-gap {
+    @media (max-width: 700px) {
+        //grid-gap: 0 !important;
+        grid-template-areas: 'yes no abstain';
+        grid-template-columns: 70px 70px 70px;
+        justify-content: end;
+    }
+}
+
 .single-vote-grid {
     @extend %vote-grid-base;
     grid-template-areas: 'name yes';

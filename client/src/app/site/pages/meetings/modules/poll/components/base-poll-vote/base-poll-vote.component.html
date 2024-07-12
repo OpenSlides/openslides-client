@@ -65,6 +65,7 @@
                             <div
                                 [ngClass]="{
                                     'yna-grid': poll.isMethodYNA || (settings.isSplitSingleOption && displayed_in_autopilot),
+                                    'remove-grid-gap': settings.isSplitSingleOption && displayed_in_autopilot,
                                     'yn-grid': poll.isMethodYN,
                                     'single-vote-grid':
                                         (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option <= 1,
@@ -97,6 +98,7 @@
                             <div
                                 [ngClass]="{
                                     'split-grid': settings.isSplitSingleOption && !displayed_in_autopilot,
+                                    'remove-grid-gap': settings.isSplitSingleOption && displayed_in_autopilot,
                                     'yna-grid':
                                         (!settings.isSplitSingleOption && poll.isMethodYNA) ||
                                         (settings.isSplitSingleOption && displayed_in_autopilot),
