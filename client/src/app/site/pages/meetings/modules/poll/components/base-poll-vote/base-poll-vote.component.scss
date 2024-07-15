@@ -102,6 +102,15 @@
     }
 }
 
+.remove-grid-gap {
+    @media (max-width: 700px) {
+        //grid-gap: 0 !important;
+        grid-template-areas: 'yes no abstain';
+        grid-template-columns: 70px 70px 70px;
+        justify-content: end;
+    }
+}
+
 .single-vote-grid {
     @extend %vote-grid-base;
     grid-template-areas: 'name yes';
@@ -118,16 +127,6 @@
     @media (max-width: 700px) {
         grid-template-areas: 'name name' '. yes';
     }
-}
-
-.global-option-grid {
-    @extend %vote-grid-base;
-    grid-template-columns: auto var(--poll-option-title-width, 70px);
-}
-
-.option-list-information-grid {
-    @extend %vote-grid-base;
-    grid-template-columns: max-content auto max-content;
 }
 
 .split-grid {
@@ -153,6 +152,16 @@
         margin: 0;
         text-align: center;
     }
+}
+
+.global-option-grid {
+    @extend %vote-grid-base;
+    grid-template-columns: auto var(--poll-option-title-width, 70px);
+}
+
+.option-list-information-grid {
+    @extend %vote-grid-base;
+    grid-template-columns: max-content auto max-content;
 }
 
 .grid-name-area {
