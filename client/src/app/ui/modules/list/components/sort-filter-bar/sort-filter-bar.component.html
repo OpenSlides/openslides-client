@@ -9,9 +9,20 @@
     </div>
 
     <!-- Current filters -->
-    @if (filterService) {
+    @if (filterService || fakeFilters) {
         <div class="current-filters h-scroller">
-            @for (filter of filterService.filterStack; track filter) {
+            @for (filterdata of fakeFilters | keyvalue; track filterdata) {
+                <div>
+                    <button mat-stroked-button (click)="filterdata.value()" (mouseup)="filterdata.value()">
+                        <os-icon-container class="active-filter" icon="close">
+                            <span class="active-filter">
+                                {{ filterdata.key | translate }}
+                            </span>
+                        </os-icon-container>
+                    </button>
+                </div>
+            }
+            @for (filter of filterService?.filterStack || []; track filter) {
                 <div>
                     <button
                         mat-stroked-button
