@@ -8,7 +8,6 @@ import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { UserService } from 'src/app/site/services/user.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
@@ -32,10 +31,6 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         return this._otherParticipantsSubject;
     }
 
-    public get isUserInScope(): boolean {
-        return this._isUserInScope;
-    }
-
     public get showVoteDelegations(): boolean {
         return this._voteDelegationEnabled;
     }
@@ -43,7 +38,6 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     public structureLevelObservable: Observable<ViewStructureLevel[]>;
 
     private readonly _otherParticipantsSubject = new BehaviorSubject<ViewMeetingUser[]>([]);
-    private _isUserInScope = true;
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled = false;
 
@@ -53,7 +47,6 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         private userSortService: ParticipantListSortService,
         private groupRepo: GroupControllerService,
         private structureLevelRepo: StructureLevelControllerService,
-        private userService: UserService,
         private meetingSettings: MeetingSettingsService
     ) {
         super();
@@ -62,7 +55,6 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     public ngOnInit(): void {
         this.userSortService.initSorting();
         this._currentUser = this.participantRepo.getViewModel(this.infoDialog.id);
-        this.updateIsUserInScope();
         this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
         this.subscriptions.push(
             this.participantRepo
@@ -83,9 +75,5 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     public override ngOnDestroy(): void {
         this.userSortService.exitSortService();
         super.ngOnDestroy();
-    }
-
-    private async updateIsUserInScope(): Promise<void> {
-        this._isUserInScope = await this.userService.isUserInSameScope(this.infoDialog.id);
     }
 }

@@ -6,7 +6,7 @@
                     <ng-container *ngTemplateOutlet="editTemplate; context: { form: personalInfoForm }"></ng-container>
                 </mat-card-content>
             </mat-card>
-            @if (editView) {
+            @if (editView && useAdditionalEditTemplate) {
                 <mat-card class="os-card">
                     <mat-card-content>
                         <ng-container *ngTemplateOutlet="editView; context: { form: personalInfoForm }"></ng-container>
@@ -16,7 +16,7 @@
         }
         @if (!useMatcard) {
             <ng-container *ngTemplateOutlet="editTemplate; context: { form: personalInfoForm }"></ng-container>
-            @if (editView) {
+            @if (editView && useAdditionalEditTemplate) {
                 <ng-container
                     [ngTemplateOutlet]="editView"
                     [ngTemplateOutletContext]="{ form: personalInfoForm }"
