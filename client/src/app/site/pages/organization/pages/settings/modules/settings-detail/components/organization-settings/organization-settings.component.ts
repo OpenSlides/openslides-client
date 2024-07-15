@@ -83,6 +83,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                     enable_chat: [this._currentOrgaSettings.enable_chat],
                     limit_of_meetings: [this._currentOrgaSettings.limit_of_meetings ?? 0],
                     limit_of_users: [this._currentOrgaSettings.limit_of_users ?? 0],
+                    require_duplicate_from: [this._currentOrgaSettings.require_duplicate_from ?? false],
                     saml_enabled: [this._currentOrgaSettings.saml_enabled ?? false],
                     saml_login_button_text: [this._currentOrgaSettings.saml_login_button_text],
                     saml_attr_mapping: [
