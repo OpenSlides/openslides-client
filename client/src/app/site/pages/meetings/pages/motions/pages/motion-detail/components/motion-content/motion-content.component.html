@@ -43,7 +43,7 @@
     }
 }
 
-<form class="motion-content" tabindex="-1" [formGroup]="contentForm" (keydown)="onKeyDown($event)">
+<form class="motion-content" tabindex="-1" [formGroup]="contentForm">
     <!-- Submitter -->
     @if (newMotion) {
         <div class="content-field">
@@ -103,11 +103,7 @@
                 <span>{{ preamble }}</span>
             </h3>
         }
-        <os-editor
-            formControlName="text"
-            [customSettings]="tinyMceConfig"
-            [required]="!isParagraphBasedAmendment"
-        ></os-editor>
+        <os-editor formControlName="text" [required]="!isParagraphBasedAmendment"></os-editor>
         @if (contentForm.get('text')?.invalid && (contentForm.get('text')?.dirty || contentForm.get('text')?.touched)) {
             <div class="red-warning-text">
                 {{ 'This field is required.' | translate }}
@@ -150,13 +146,10 @@
             @if (!editMotion) {
                 <div class="motion-text underlined-links" [innerHtml]="motion?.reason | trust: 'html'"></div>
             }
+
             <!-- The HTML Editor -->
             @if (editMotion) {
-                <os-editor
-                    formControlName="reason"
-                    [customSettings]="tinyMceConfig"
-                    [required]="reasonRequired"
-                ></os-editor>
+                <os-editor formControlName="reason" [required]="reasonRequired"></os-editor>
             }
             @if (
                 reasonRequired &&
@@ -212,12 +205,14 @@
                 </div>
             </div>
         }
+
         @if (canChangeMetadata) {
             @if (newMotion) {
                 <div>
                     <os-agenda-content-object-form [form]="contentForm"></os-agenda-content-object-form>
                 </div>
             }
+
             <!-- Supporter form -->
             @if (editMotion && minSupporters) {
                 <div class="content-field">
@@ -239,6 +234,7 @@
                     </mat-form-field>
                 </div>
             }
+
             <!-- Workflow -->
             @if (editMotion) {
                 <div class="content-field">

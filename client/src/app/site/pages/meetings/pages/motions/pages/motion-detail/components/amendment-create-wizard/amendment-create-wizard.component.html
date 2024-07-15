@@ -107,10 +107,7 @@
                                 </span>
                             }
                         </h4>
-                        <os-editor
-                            [customSettings]="tinyMceConfig"
-                            [formControlName]="'text_' + paragraph.paragraphNo"
-                        ></os-editor>
+                        <os-editor [formControlName]="'text_' + paragraph.paragraphNo"></os-editor>
                     </section>
                 }
 
@@ -131,11 +128,7 @@
                     }
                 </h3>
 
-                <os-editor
-                    formControlName="reason"
-                    [customSettings]="tinyMceConfig"
-                    [required]="reasonRequired"
-                ></os-editor>
+                <os-editor formControlName="reason" [required]="reasonRequired"></os-editor>
                 @if (
                     reasonRequired &&
                     contentForm.get('reason')?.invalid &&

@@ -57,7 +57,8 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
     private readonly _id: number;
     private _disabled = false;
 
-    protected fb = inject(UntypedFormBuilder);
+    protected fb: UntypedFormBuilder = inject(UntypedFormBuilder);
+
     public constructor() {
         this._id = ++BaseFormControlComponent.formControlId;
         this.contentForm = this.createForm();
