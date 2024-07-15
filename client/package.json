@@ -56,7 +56,6 @@
     "@types/pdfmake": "^0.2.9",
     "acorn": "^8.8.0",
     "ascii-art-api": "^1.0.0",
-    "broadcast-channel": "^4.18.0",
     "chart.js": "^3.9.1",
     "cm-chess": "^3.3.3",
     "cm-chessboard": "^8.1.5",
