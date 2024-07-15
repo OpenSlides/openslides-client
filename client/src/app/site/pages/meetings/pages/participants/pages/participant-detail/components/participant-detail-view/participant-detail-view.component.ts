@@ -296,7 +296,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public async setEditMode(edit: boolean): Promise<void> {
         if (!this.newUser && edit) {
             this._isUserInScope = await this.userService.hasScopeManagePerms(this._userId!);
-            console.log(`IS IN SCOPE`, this._isUserInScope);
         }
 
         this.isEditingSubject.next(edit);
