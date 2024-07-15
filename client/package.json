@@ -86,7 +86,7 @@
     "ts-dedent": "^2.2.0",
     "tslib": "^2.3.0",
     "tsparticles": "~1.42.4",
-    "video.js": "^7.20.3",
+    "video.js": "^8.16.1",
     "zone.js": "^0.14.7"
   },
   "devDependencies": {
