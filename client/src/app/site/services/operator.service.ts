@@ -85,6 +85,10 @@ export class OperatorService {
         return this.hasOrganizationPermissions(OML.can_manage_organization);
     }
 
+    public get isAccountAdmin(): boolean {
+        return this.hasOrganizationPermissions(OML.can_manage_users);
+    }
+
     private get isCommitteeManager(): boolean {
         return !!(this.user.committee_management_ids || []).length;
     }
