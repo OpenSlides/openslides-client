@@ -367,11 +367,13 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             .afterClosed()
             .subscribe((result?: EditorImageDialogOutput) => {
                 if (result?.action === `set-image`) {
-                    this.editor.commands.setImage({
-                        src: result.image.src,
-                        title: result.image.title,
-                        alt: result.image.alt
-                    });
+                    this.editor.commands.setImage(
+                        Object.assign({}, this.editor.getAttributes(`image`), {
+                            src: result.image.src,
+                            title: result.image.title,
+                            alt: result.image.alt
+                        })
+                    );
                 }
             });
     }
