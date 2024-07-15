@@ -50,6 +50,13 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         return this._poll;
     }
 
+    @Input()
+    public set displayInAutopilot(is_in_autopilot: boolean) {
+        this.displayed_in_autopilot = is_in_autopilot;
+    }
+
+    protected displayed_in_autopilot = true;
+
     public PollType = PollType;
     public formControlMap: { [optionId: number]: UntypedFormControl } = {};
 

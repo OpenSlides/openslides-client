@@ -61,10 +61,12 @@
                             </div>
                         }
                         <!-- Options and Actions -->
-                        @if (!settings.isSplitSingleOption) {
+                        @if (!(settings.isSplitSingleOption && !displayed_in_autopilot)) {
                             <div
                                 [ngClass]="{
-                                    'yna-grid': poll.isMethodYNA,
+                                    'yna-grid':
+                                        poll.isMethodYNA || (settings.isSplitSingleOption && displayed_in_autopilot),
+                                    'remove-grid-gap': settings.isSplitSingleOption && displayed_in_autopilot,
                                     'yn-grid': poll.isMethodYN,
                                     'single-vote-grid':
                                         (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option <= 1,
@@ -75,7 +77,11 @@
                                 @if (showAvailableVotes) {
                                     <div class="grid-name-area"></div>
                                 }
-                                @if (!showAvailableVotes && poll.option_ids) {
+                                @if (
+                                    !showAvailableVotes &&
+                                    poll.option_ids &&
+                                    !(settings.isSplitSingleOption && displayed_in_autopilot)
+                                ) {
                                     <b class="grid-name-area">
                                         {{ poll.option_ids.length }} {{ optionPluralLabel | translate }}
                                     </b>
@@ -85,17 +91,22 @@
                                     track action;
                                     let i = $index
                                 ) {
-                                    <b class="poll-option-title" [ngClass]="'option' + i">
-                                        {{ action.label | translate }}
-                                    </b>
+                                    @if (!poll.isTopicPoll) {
+                                        <b class="poll-option-title" [ngClass]="'option' + i">
+                                            {{ action.label | translate }}
+                                        </b>
+                                    }
                                 }
                             </div>
                         }
                         @for (option of poll.options; track option; let i = $index) {
                             <div
                                 [ngClass]="{
-                                    'split-grid': settings.isSplitSingleOption,
-                                    'yna-grid': !settings.isSplitSingleOption && poll.isMethodYNA,
+                                    'split-grid': settings.isSplitSingleOption && !displayed_in_autopilot,
+                                    'remove-grid-gap': settings.isSplitSingleOption && displayed_in_autopilot,
+                                    'yna-grid':
+                                        (!settings.isSplitSingleOption && poll.isMethodYNA) ||
+                                        (settings.isSplitSingleOption && displayed_in_autopilot),
                                     'yn-grid': !settings.isSplitSingleOption && poll.isMethodYN,
                                     'single-vote-grid':
                                         !settings.isSplitSingleOption &&
@@ -169,13 +180,47 @@
                                                     </mat-icon>
                                                 </div>
                                             </button>
-                                            @if (settings.isSplitSingleOption) {
+                                            @if (settings.isSplitSingleOption && !displayed_in_autopilot) {
                                                 <span class="vote-label">
                                                     {{ action.label | translate }}
                                                 </span>
                                             }
                                         </div>
                                     }
+                                }
+                                @if (settings.isSplitSingleOption && displayed_in_autopilot) {
+                                    <ng-container>
+                                        @for (
+                                            action of voteActions.length ? voteActions : voteOptions;
+                                            track action;
+                                            let i = $index
+                                        ) {
+                                            <div class="vote-button-area" [ngClass]="'option' + i">
+                                                <button
+                                                    class="vote-button"
+                                                    mat-raised-button
+                                                    [disabled]="isDeliveringVote(delegation)"
+                                                    (click)="saveSingleVote(option.id, action.vote, delegation)"
+                                                >
+                                                    <div
+                                                        class="vote-button-content"
+                                                        [ngClass]="
+                                                            getActionButtonContentClass(action, option, delegation)
+                                                        "
+                                                    >
+                                                        <os-custom-icon
+                                                            class="vote-button-cross"
+                                                            [customIcon]="drawnCross"
+                                                            [ngClass]="getActionButtonClass(action, option, delegation)"
+                                                        ></os-custom-icon>
+                                                        <mat-icon class="vote-button-circle">
+                                                            radio_button_unchecked
+                                                        </mat-icon>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        }
+                                    </ng-container>
                                 }
                                 @if (poll.max_votes_per_option > 1) {
                                     <mat-form-field appearance="outline" class="vote-input">
