@@ -79,13 +79,25 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     public get canSeeParticipationTable(): boolean {
         return (
-            this.operator.hasOrganizationPermissions(OML.can_manage_organization) &&
+            (this.operator.hasOrganizationPermissions(OML.can_manage_organization) ||
+                this.operator.isAnyCommitteeAdmin()) &&
             (!!this.user.committee_ids?.length || !!this.user.meeting_ids?.length)
         );
     }
 
     public get comitteeAdministrationAmount(): number {
         return Object.values(this._tableData).filter(row => row[`is_manager`] === true).length;
+    }
+
+    public get userOML(): OML {
+        return this.user?.organization_management_level as OML;
+    }
+
+    public get canEdit(): boolean {
+        if (!this.userOML) {
+            return true;
+        }
+        return this.operator.hasOrganizationPermissions(this.userOML);
     }
 
     public tableDataAscOrderCompare = <T>(a: KeyValue<string, T>, b: KeyValue<string, T>): number => {

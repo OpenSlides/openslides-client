@@ -20,7 +20,6 @@ import { getParticipantMinimalSubscriptionConfig } from '../../../../../particip
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { MotionTinyMceConfig } from '../../definitions/tinymce-config';
 import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
 
@@ -58,8 +57,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     @Output()
     public validStateChanged = new EventEmitter<boolean>();
-
-    public tinyMceConfig = MotionTinyMceConfig;
 
     private finalEditMode = false;
 
@@ -159,18 +156,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.motionController
             .getViewModelListObservable()
             .subscribe(motions => this.updateMotionNumbersSubject(motions));
-    }
-
-    /**
-     * clicking Shift and Enter will save automatically
-     *
-     * @param event has the code
-     */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.save.emit(this.contentForm.value);
-            this.updateMotionNumbersSubject();
-        }
     }
 
     /**

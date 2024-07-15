@@ -37,11 +37,6 @@
                             "src/ngsw-safety.json",
                             {
                                 "glob": "**/*",
-                                "input": "node_modules/tinymce",
-                                "output": "/tinymce/"
-                            },
-                            {
-                                "glob": "**/*",
                                 "input": "node_modules/cm-chessboard/assets/",
                                 "output": "/chess/"
                             }
@@ -63,7 +58,7 @@
                                 {
                                     "type": "initial",
                                     "maximumWarning": "1500kb",
-                                    "maximumError": "3500kb"
+                                    "maximumError": "4mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",

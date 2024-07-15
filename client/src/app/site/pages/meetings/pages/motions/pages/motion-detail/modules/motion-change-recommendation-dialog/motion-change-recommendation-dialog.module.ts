@@ -23,9 +23,9 @@ import { MotionTitleChangeRecommendationDialogComponent } from './components/mot
         MatFormFieldModule,
         MatRadioModule,
         MatButtonModule,
+        EditorModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild(),
-        EditorModule
+        OpenSlidesTranslationModule.forChild()
     ]
 })
 export class MotionChangeRecommendationDialogModule {

@@ -202,6 +202,20 @@ export function findNextAuntNode(node: Node): Node | null {
 }
 
 /**
+ * Removes the sourounding tag of a node
+ *
+ * @param {Node} node
+ * @returns {Node}
+ */
+export function unwrapNode(node: Node): void {
+    const parent = node.parentNode;
+    while (node.firstChild) {
+        parent.insertBefore(node.firstChild, node);
+    }
+    parent.removeChild(node);
+}
+
+/**
  * This method adds a CSS class name to a given node.
  *
  * @param {Node} node
@@ -439,7 +453,8 @@ export function isInlineElement(element: Element): boolean {
         `TT`,
         `INS`,
         `DEL`,
-        `STRIKE`
+        `STRIKE`,
+        `MARK`
     ];
     if (element) {
         return inlineElements.indexOf(element.nodeName) > -1;
