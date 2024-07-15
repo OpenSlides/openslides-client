@@ -72,7 +72,7 @@
                     <os-poll-progress [poll]="poll"></os-poll-progress>
                 }
                 @if (poll.canBeVotedFor()) {
-                    <os-motion-poll-vote [poll]="poll"></os-motion-poll-vote>
+                    <os-motion-poll-vote [displayInAutopilot]="false" [poll]="poll"></os-motion-poll-vote>
                 }
                 <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
             } @else {
