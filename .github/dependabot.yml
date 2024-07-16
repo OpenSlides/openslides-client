@@ -1,0 +1,51 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/client/"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "bastianjoel"
+    assignees:
+      - "bastianjoel"
+    groups:
+       typescript-eslint:
+          patterns:
+            - "@typescript-eslint/*"
+       opentelemetry:
+          patterns:
+            - "@opentelemetry/*"
+       angular:
+          patterns:
+            - "@angular/*"
+       angular-eslint:
+          patterns:
+            - "@angular-eslint/*"
+       ngx-translate:
+          patterns:
+            - "@ngx-translate/*"
+       tiptap:
+          patterns:
+            - "@tiptap/*"
+       chess:
+          patterns:
+            - "cm-chess*"
+    open-pull-requests-limit: 42
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "bastianjoel"
+    assignees:
+      - "bastianjoel"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "bastianjoel"
+    assignees:
+      - "bastianjoel"
