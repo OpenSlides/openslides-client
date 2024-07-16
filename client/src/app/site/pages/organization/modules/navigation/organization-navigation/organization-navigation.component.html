@@ -1,7 +1,7 @@
 @for (entry of menuEntries; track entry) {
     <span>
         <a
-            *osOmlPerms="entry.permission!"
+            *osOmlPerms="entry.permission!; allowCommitteeAdmin: entry.optionalCML === CML.can_manage"
             class="management-router-link foreground-icon"
             mat-menu-item
             routerLinkActive="foreground-active"

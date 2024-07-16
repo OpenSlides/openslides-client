@@ -8,6 +8,7 @@
             @if (!isExcludedType(setting.type!)) {
                 <mat-form-field subscriptSizing="dynamic">
                     <!-- Decides which input-type to take (i.e) date, select, input) -->
+
                     @switch (setting.type) {
                         @case ('choice') {
                             <ng-container *ngTemplateOutlet="select"></ng-container>
@@ -19,6 +20,7 @@
                             <ng-container *ngTemplateOutlet="input"></ng-container>
                         }
                     }
+
                     <!-- required for all kinds of input -->
                     <mat-label>{{ setting.label | translate }}</mat-label>
                     @if (error) {
@@ -29,7 +31,9 @@
                     @if (error) {
                         <mat-error>{{ error }}</mat-error>
                     }
+
                     <!-- templates for exchangeable inputs. Add more here if necessary -->
+
                     <ng-template #select ngProjectAs="mat-select">
                         <mat-select formControlName="value" [errorStateMatcher]="matcher">
                             @if (getRestrictedValue(setting.choices)) {
@@ -44,6 +48,7 @@
                             }
                         </mat-select>
                     </ng-template>
+
                     <ng-template #groups ngProjectAs="os-list-search-selector">
                         <os-list-search-selector
                             formControlName="value"
@@ -55,6 +60,7 @@
                             [sortFn]="sortFn"
                         ></os-list-search-selector>
                     </ng-template>
+
                     <ng-template #input ngProjectAs="[matInput]">
                         @if (setting.type === 'email') {
                             <input
@@ -76,11 +82,13 @@
                             />
                         }
                     </ng-template>
+
                     @if (setting.helpText) {
                         <mat-hint>{{ setting.helpText | translate }}</mat-hint>
                     }
                 </mat-form-field>
             }
+
             @if (isExcludedType(setting.type!)) {
                 <div class="settings-form-group">
                     @if (setting.type === 'boolean') {
@@ -94,6 +102,7 @@
                             }
                         </div>
                     }
+
                     <!-- textarea -->
                     @if (setting.type === 'text') {
                         <div>
@@ -107,6 +116,7 @@
                             </mat-form-field>
                         </div>
                     }
+
                     <!-- date / datetime -->
                     @if (setting.type === 'datetime' || setting.type === 'date') {
                         <div>
@@ -143,6 +153,7 @@
                             </div>
                         </div>
                     }
+
                     <!-- daterange -->
                     @if (setting.type === 'daterange') {
                         <div>
@@ -155,11 +166,12 @@
                             ></os-daterangepicker>
                         </div>
                     }
+
                     <!-- The editor -->
                     @if (setting.type === 'markupText') {
                         <div>
                             <h4>{{ setting.label | translate }}</h4>
-                            <os-editor formControlName="value" [customSettings]="getTinyMceSettings()"></os-editor>
+                            <os-editor formControlName="value" (leaveFocus)="onEditorBlur()"></os-editor>
                             <span matSuffix>
                                 @if (updateSuccessIcon) {
                                     <mat-icon class="red-warning-text" pull="right">error</mat-icon>
@@ -167,6 +179,7 @@
                             </span>
                         </div>
                     }
+
                     <!-- Custom Translations -->
                     @if (setting.type === 'translations' || setting.type === 'ranking') {
                         <div>

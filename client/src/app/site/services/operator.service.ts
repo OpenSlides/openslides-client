@@ -634,6 +634,10 @@ export class OperatorService {
         return permissionsToCheck.some(permission => currentCommitteePermission >= cmlNameMapping[permission]);
     }
 
+    public isAnyCommitteeAdmin(): boolean {
+        return !!this._CML && !!Object.keys(this._CML).length;
+    }
+
     /**
      * Determines whether the current operator is included in at least one of the committees, which are passed.
      * This function checks also if an operator is a "superadmin" -> then, they is technically in every committee.

@@ -3,6 +3,7 @@
         @if (showFilterBar) {
             <os-sort-filter-bar
                 class="sort-filter-bar"
+                [fakeFilters]="fakeFilters"
                 [filterCount]="currentCountObservable | async"
                 [filterService]="filterService!"
                 [searchFieldInput]="searchFieldValue"
