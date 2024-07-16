@@ -27,6 +27,9 @@ updates:
        tiptap:
           patterns:
             - "@tiptap/*"
+       tsparticles:
+          patterns:
+            - "@tsparticles/*"
        chess:
           patterns:
             - "cm-chess*"
