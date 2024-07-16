@@ -427,9 +427,23 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     private cleanupOutput(html: string): string {
         const dom = this.domParser.parseFromString(html, `text/html`);
 
+        // Remove paragraphs inside list elements
         const listParagraphs = dom.querySelectorAll(`li > p`);
         for (let i = 0; i < listParagraphs.length; i++) {
             unwrapNode(listParagraphs.item(i));
+        }
+
+        // Normalize colors
+        const withStyle = dom.querySelectorAll("*[style]");
+        for (let i = 0; i < withStyle.length; i++) {
+            const el = <HTMLElement>withStyle.item(i);
+            if (el.style.color) {
+                el.style.color = tinycolor(el.style.color).toPercentageRgbString();
+            }
+
+            if (el.style.backgroundColor) {
+                el.style.backgroundColor = tinycolor(el.style.backgroundColor).toPercentageRgbString();
+            }
         }
 
         return dom.body.innerHTML;
