@@ -192,6 +192,7 @@ export class HtmlToPdfService {
                 newParagraph = this.createFormattedParagraph(createPayload);
                 break;
             }
+            case `mark`:
             case `span`: {
                 newParagraph = this.createSpanParagraph(createPayload);
                 break;
