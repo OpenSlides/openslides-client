@@ -40,6 +40,7 @@ import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
+import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
 
@@ -150,6 +151,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     private cd: ChangeDetectorRef = inject(ChangeDetectorRef);
 
+    private domParser = new DOMParser();
+
     public constructor(
         private dialog: MatDialog,
         private translate: TranslateService
@@ -221,7 +224,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                         this.cd.detectChanges();
                     },
                     onUpdate: () => {
-                        const content = this.editor.getHTML();
+                        const content = this.cleanupOutput(this.editor.getHTML());
                         if (this.value != content) {
                             this.updateForm(content);
                         }
@@ -403,7 +406,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     public editCode(): void {
         this.dialog
             .open(EditorHtmlDialogComponent, {
-                data: this.editor.getHTML()
+                data: this.cleanupOutput(this.editor.getHTML())
             })
             .afterClosed()
             .subscribe((result: EditorHtmlDialogOutput) => {
@@ -418,20 +421,17 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     protected updateForm(value: string | null): void {
-        const html = value?.replace(/(<ul[^>]*>)(.*?)(<\/ul>)||(<li[^>]*>)(.*?)(<\/li>)/g, res => {
-            if (res) {
-                return res.replace(/(<li[^>]*>)(.*?)(<\/li[^>]*>)/g, response => {
-                    if (response.match(/<\/?p[^>]*>/g)?.length == 2) {
-                        return response.replace(/<\/?p[^>]*>/g, ``);
-                    } else if (response) {
-                        return response;
-                    }
-                    return ``;
-                });
-            }
-            return ``;
-        });
+        this.contentForm.setValue(value);
+    }
 
-        this.contentForm.setValue(html);
+    private cleanupOutput(html: string): string {
+        const dom = this.domParser.parseFromString(html, `text/html`);
+
+        const listParagraphs = dom.querySelectorAll(`li > p`);
+        for (let i = 0; i < listParagraphs.length; i++) {
+            unwrapNode(listParagraphs.item(i));
+        }
+
+        return dom.body.innerHTML;
     }
 }
