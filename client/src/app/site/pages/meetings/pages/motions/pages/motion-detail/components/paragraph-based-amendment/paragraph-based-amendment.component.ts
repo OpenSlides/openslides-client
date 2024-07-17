@@ -16,8 +16,8 @@ import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/mod
 
 import { DiffLinesInParagraph } from '../../../../definitions/index';
 import { ParagraphToChoose } from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
-import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
 import { ViewMotion } from '../../../../view-models';
+import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
 
 interface ParagraphBasedAmendmentContent {
     amendment_paragraphs: { [paragraph_number: number]: any };
