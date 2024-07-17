@@ -176,6 +176,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `external_id`,
                         label: _(`External ID`)
+                    },
+                    {
+                        key: `locked_from_inside`,
+                        label: _(`Close your meeting from the inside`),
+                        type: `boolean`
                     }
                 ]
             },
