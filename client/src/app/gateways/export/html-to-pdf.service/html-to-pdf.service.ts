@@ -503,11 +503,11 @@ export class HtmlToPdfService {
                             break;
                         }
                         case `color`: {
-                            styleObject.color = this.parseColor(value);
+                            styleObject.color = this.parseColor(value) || styleObject.color;
                             break;
                         }
                         case `background-color`: {
-                            styleObject.background = this.parseColor(value);
+                            styleObject.background = this.parseColor(value) || styleObject.background;
                             break;
                         }
                     }
@@ -528,15 +528,17 @@ export class HtmlToPdfService {
      * @returns color as hex values for pdfmake
      */
     private parseColor(color: string): string {
+        // e.g. `#fff` or `#ff0048`
         const haxRegex = new RegExp(`^#([0-9a-f]{3}|[0-9a-f]{6})$`);
 
-        // e.g. `#fff` or `#ff0048`
+        // e.g. rgb(0,255,34) or rgb(22, 0, 0)
         const rgbRegex = new RegExp(`^rgb\\((\\d+),\\s*(\\d+),\\s*(\\d+)\\)$`);
 
-        // e.g. rgb(0,255,34) or rgb(22, 0, 0)
         const nameRegex = new RegExp(`^[a-z]+$`);
 
-        if (haxRegex.test(color)) {
+        if (color.trim() === `inherit`) {
+            return null;
+        } else if (haxRegex.test(color)) {
             return color;
         } else if (rgbRegex.test(color)) {
             const decimalColors = rgbRegex.exec(color)!.slice(1);
