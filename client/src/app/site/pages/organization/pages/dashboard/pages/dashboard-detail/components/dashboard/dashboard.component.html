@@ -151,14 +151,14 @@
 
 <ng-template #meetingTemplate let-context="context" let-meeting="meeting">
     <div class="meeting-box" [ngClass]="context?.wrapperCssClass">
-        @if (canEnterMeeting(meeting)) {
+        @if (meeting.canBeEnterBy(operator.operatorId)) {
             <a
                 class="meeting-box-left flex-vertical-center"
                 matRipple
                 [ngClass]="context?.cssClass"
                 [routerLink]="meeting.id"
             >
-                @if (isMeetingLocked(meeting)) {
+                @if (meeting.locked_from_inside) {
                     <mat-icon>lock</mat-icon>
                 }
                 <div class="one-line">
@@ -183,7 +183,7 @@
             </a>
         } @else {
             <div class="meeting-box-left meeting-box-readonly flex-vertical-center" [ngClass]="context?.cssClass">
-                @if (isMeetingLocked(meeting)) {
+                @if (meeting.locked_from_inside) {
                     <mat-icon>lock</mat-icon>
                 }
                 <div class="one-line">

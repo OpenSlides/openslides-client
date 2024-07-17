@@ -33,11 +33,7 @@
     [(selectedRows)]="selectedRows"
 >
     <div *osScrollingTableCell="'name'; row as meeting" class="cell-slot fill">
-        @if (
-            !isMultiSelect &&
-            meeting.canAccess() &&
-            (!meeting.locked_from_inside || meeting.user_ids?.includes(operator.operatorId))
-        ) {
+        @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnterBy(operator.operatorId)) {
             <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
         }
         <div class="flex-vertical-center overflow-hidden">
@@ -124,7 +120,7 @@
     </div>
 
     <div *osScrollingTableCell="'meta'; row as meeting; config: { width: 60 }">
-        @if (!isMultiSelect && meeting.canAccess()) {
+        @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnterBy(operator.operatorId)) {
             <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
         }
         <div>

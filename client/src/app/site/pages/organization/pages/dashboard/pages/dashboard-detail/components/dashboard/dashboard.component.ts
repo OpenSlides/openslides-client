@@ -38,14 +38,6 @@ export class DashboardComponent extends BaseComponent {
         return this.orgaService.organization?.description;
     }
 
-    public isMeetingLocked(meeting: ViewMeeting): boolean {
-        return meeting.locked_from_inside;
-    }
-
-    public canEnterMeeting(meeting: ViewMeeting): boolean {
-        return !this.isMeetingLocked(meeting) || meeting.user_ids?.includes(this.operator.operatorId);
-    }
-
     public ready = false;
 
     public previousMeetings: ViewMeeting[] = [];
@@ -58,7 +50,7 @@ export class DashboardComponent extends BaseComponent {
         private orgaService: OrganizationService,
         private meetingRepo: MeetingControllerService,
         private themeService: ThemeService,
-        private operator: OperatorService
+        public operator: OperatorService
     ) {
         super();
         super.setTitle(`Calendar`);

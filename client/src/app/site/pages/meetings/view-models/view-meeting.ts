@@ -133,6 +133,10 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     public default_projectors(place: ProjectiondefaultValue): ViewProjector[] {
         return this[`default_projectors_${place}`];
     }
+
+    public canBeEnterBy(userId: number): boolean {
+        return !this.locked_from_inside || this.user_ids?.includes(userId);
+    }
 }
 interface IMeetingRelations {
     motions_default_workflow: ViewMotionWorkflow;
