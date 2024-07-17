@@ -3,29 +3,26 @@
         <div class="toolbar-left">
             @if (!editMode) {
                 @if (!showBackButton) {
-                    <!-- Toggle main nav -->
                     @if (vp.isMobile && !customMenu) {
+                        <!-- Toggle main nav -->
                         <button mat-icon-button (click)="clickHamburgerMenu()">
                             <mat-icon>menu</mat-icon>
                         </button>
                     }
-                    <!-- Custom menu -->
                     @if (customMenu && !multiSelectMode) {
+                        <!-- Custom menu -->
                         <button mat-icon-button [matMenuTriggerFor]="customNavMenu">
                             <mat-icon>menu</mat-icon>
                         </button>
                     }
-                }
-                <!-- Exit / Back button -->
-                @if (showBackButton) {
+                } @else {
+                    <!-- Exit / Back button -->
                     <button data-cy="headbarBackButton" mat-icon-button (click)="onBackButton()">
                         <mat-icon>arrow_back</mat-icon>
                     </button>
                 }
-            }
-
-            <!-- Cancel edit button -->
-            @if (editMode) {
+            } @else {
+                <!-- Cancel edit button -->
                 <button
                     data-cy="headbarCloseButton"
                     mat-icon-button
@@ -45,8 +42,7 @@
         <!-- centered information slot -->
         @if (!multiSelectMode) {
             <div class="spacer"></div>
-        }
-        @if (multiSelectMode) {
+        } @else {
             <ng-content select=".central-info-slot"></ng-content>
         }
         <div class="spacer"></div>
