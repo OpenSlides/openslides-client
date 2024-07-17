@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as tinycolor from 'tinycolor2';
+import tinycolor from 'tinycolor2';
 
 import { HtmlColor } from '../../domain/definitions/key-types';
 
