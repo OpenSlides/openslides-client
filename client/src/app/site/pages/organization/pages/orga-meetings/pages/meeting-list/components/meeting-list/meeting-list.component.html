@@ -33,7 +33,11 @@
     [(selectedRows)]="selectedRows"
 >
     <div *osScrollingTableCell="'name'; row as meeting" class="cell-slot fill">
-        @if (!isMultiSelect && meeting.canAccess()) {
+        @if (
+            !isMultiSelect &&
+            meeting.canAccess() &&
+            (!meeting.locked_from_inside || meeting.user_ids?.includes(operator.operatorId))
+        ) {
             <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
         }
         <div class="flex-vertical-center overflow-hidden">
@@ -43,6 +47,13 @@
                     @if (meeting.isArchived) {
                         <span class="icon-prefix">
                             <mat-icon [matTooltip]="'Archived' | translate">archive</mat-icon>
+                        </span>
+                    }
+
+                    <!--- Is locked from inside-->
+                    @if (meeting.locked_from_inside) {
+                        <span class="icon-prefix">
+                            <mat-icon [matTooltip]="'Locked' | translate">lock</mat-icon>
                         </span>
                     }
 
