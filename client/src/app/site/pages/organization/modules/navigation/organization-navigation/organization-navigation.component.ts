@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { OML } from 'src/app/domain/definitions/organization-permission';
+import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseMenuEntry, getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
 import { MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
 import { AuthService } from 'src/app/site/services/auth.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 
-interface OrgaMenuEntry extends BaseMenuEntry<OML> {}
+interface OrgaMenuEntry extends BaseMenuEntry<OML> {
+    optionalCML?: CML;
+}
 
 @Component({
     selector: `os-organization-navigation`,
@@ -13,6 +15,8 @@ interface OrgaMenuEntry extends BaseMenuEntry<OML> {}
     styleUrls: [`./organization-navigation.component.scss`]
 })
 export class OrganizationNavigationComponent {
+    public CML = CML;
+
     public menuEntries: OrgaMenuEntry[] = [
         {
             route: `/`,
@@ -39,6 +43,7 @@ export class OrganizationNavigationComponent {
             displayName: `Accounts`,
             icon: `group`,
             permission: OML.can_manage_users,
+            optionalCML: CML.can_manage,
             weight: 300
         },
         {

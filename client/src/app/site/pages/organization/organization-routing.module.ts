@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { OML } from '../../../domain/definitions/organization-permission';
+import { CML, OML } from '../../../domain/definitions/organization-permission';
 import { AuthGuard } from '../../guards/auth.guard';
 import { PermissionGuard } from '../../guards/permission.guard';
 import { OrganizationNavigationWrapperComponent } from './modules/navigation/organization-navigation-wrapper/organization-navigation-wrapper.component';
@@ -31,7 +31,7 @@ const routes: Routes = [
             {
                 path: `accounts`,
                 loadChildren: () => import(`./pages/accounts/accounts.module`).then(m => m.AccountsModule),
-                data: { omlPermissions: [OML.can_manage_users] },
+                data: { omlPermissions: [OML.can_manage_users], optionalCmlPermissions: [CML.can_manage] },
                 canLoad: [PermissionGuard]
             },
             {

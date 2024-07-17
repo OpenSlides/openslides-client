@@ -80,6 +80,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public useMatcard = true;
 
     @Input()
+    public useAdditionalEditTemplate = true;
+
+    @Input()
     public set additionalFormControls(controls: any) {
         this._additionalFormControls = controls;
         this.prepareForm();
@@ -344,7 +347,12 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         };
     }
 
-    private getChangedValues(data: { [key: string]: any }): { [key: string]: any } {
+    private getChangedValues(formData: { [key: string]: any }): { [key: string]: any } {
+        const data = this.useAdditionalEditTemplate
+            ? formData
+            : Object.keys(formData).mapToObject(key =>
+                  Object.keys(this._additionalFormControls ?? {}).includes(key) ? {} : { [key]: formData[key] }
+              );
         const newData = {};
         if (this.user) {
             Object.keys(data).forEach(key => {

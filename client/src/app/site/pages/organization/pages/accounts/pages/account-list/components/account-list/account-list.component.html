@@ -1,6 +1,6 @@
 <os-head-bar
     [goBack]="meeting !== null"
-    [hasMainButton]="true"
+    [hasMainButton]="isUserManager && meeting === null"
     [mainActionTooltip]="'New account' | translate"
     [multiSelectMode]="isMultiSelect"
     [nav]="meeting === null"
@@ -10,9 +10,6 @@
     <div class="title-slot">
         <h2>
             {{ 'Accounts' | translate }}
-            @if (meeting | async; as m) {
-                <span>({{ m.name }})</span>
-            }
         </h2>
     </div>
 
@@ -31,19 +28,21 @@
 <os-list
     listStorageKey="member"
     [alwaysShowMenu]="true"
+    [fakeFilters]="fakeFilters"
     [filterProps]="['full_name']"
     [filterService]="filterService"
     [listObservableProvider]="controller"
     [multiSelect]="isMultiSelect"
     [searchService]="searchService"
     [sortService]="sortService"
+    [totalCount]="controller.getViewModelList().length"
     [vScrollFixed]="60"
     [(selectedRows)]="selectedRows"
 >
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
         @if (!isMultiSelect) {
-            <a class="detail-link" [routerLink]="['/accounts', user.id]"></a>
+            <a class="detail-link" [routerLink]="[user.id]"></a>
         }
         <div class="flex-vertical-center overflow-hidden">
             <div class="nameCell overflow-hidden">
@@ -79,8 +78,7 @@
                         &middot; {{ user.email }}&nbsp;
                     }
                     @if (user.member_number) {
-                        &middot;
-                        {{ user.member_number }}
+                        &middot; {{ user.member_number }}
                     }
                 </div>
             </div>
@@ -112,7 +110,7 @@
         </div>
         <div class="flex-center">
             <os-icon-container
-                *osOmlPerms="OML.can_manage_users; and: !!getOmlByUser(user)"
+                *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true; and: !!getOmlByUser(user)"
                 icon="engineering"
                 matTooltipPosition="left"
                 matTooltip="{{ getOmlByUser(user) | translate }}"
@@ -126,9 +124,9 @@
     </div>
 
     <!-- Menu column -->
-    <ng-container *osOmlPerms="OML.can_manage_users">
+    <ng-container *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
         <div *osScrollingTableCell="'menu'; row as user; config: { width: 40 }" class="cell-slot fill">
-            <div>
+            <div *osOmlPerms="user.organization_management_level">
                 <button mat-icon-button [matMenuTriggerData]="{ member: user }" [matMenuTriggerFor]="singleMenu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
@@ -139,11 +137,11 @@
 
 <mat-menu #singleMenu="matMenu">
     <ng-template let-member="member" matMenuContent>
-        <a mat-menu-item [routerLink]="['/accounts', member.id, 'edit']">
+        <a mat-menu-item [routerLink]="[member.id, 'edit']">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <a *osOmlPerms="OML.can_manage_users" mat-menu-item [routerLink]="['/accounts', member.id, 'meetings']">
+        <a *osOmlPerms="OML.can_manage_users" mat-menu-item [routerLink]="[member.id, 'meetings']">
             <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </a>
@@ -161,16 +159,22 @@
                 <mat-icon>library_add</mat-icon>
                 <span>{{ 'Multiselect' | translate }}</span>
             </button>
-            <ng-container *osOmlPerms="OML.can_manage_users">
-                <button mat-menu-item (click)="csvExportMemberList()">
-                    <mat-icon>archive</mat-icon>
-                    <span>{{ 'Export as CSV' | translate }}</span>
-                </button>
-                <button mat-menu-item routerLink="/accounts/import">
-                    <mat-icon>cloud_upload</mat-icon>
-                    <span>{{ 'Import' | translate }}</span>
-                </button>
-            </ng-container>
+            <button
+                *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true"
+                mat-menu-item
+                (click)="csvExportMemberList()"
+            >
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export as CSV' | translate }}</span>
+            </button>
+            <button
+                *osOmlPerms="OML.can_manage_users; and: meeting === null"
+                mat-menu-item
+                routerLink="/accounts/import"
+            >
+                <mat-icon>cloud_upload</mat-icon>
+                <span>{{ 'Import' | translate }}</span>
+            </button>
         </div>
     }
     @if (isMultiSelect) {
@@ -193,7 +197,12 @@
                     <mat-icon>block</mat-icon>
                     <span>{{ 'Enable/disable accounts' | translate }} ...</span>
                 </button>
-                <button mat-menu-item [disabled]="selectedRows.length < 2" (click)="mergeUsersTogether()">
+                <button
+                    *osOmlPerms="OML.can_manage_users"
+                    mat-menu-item
+                    [disabled]="selectedRows.length < 2"
+                    (click)="mergeUsersTogether()"
+                >
                     <mat-icon>merge</mat-icon>
                     <span>{{ 'Merge accounts' | translate }} ...</span>
                 </button>
