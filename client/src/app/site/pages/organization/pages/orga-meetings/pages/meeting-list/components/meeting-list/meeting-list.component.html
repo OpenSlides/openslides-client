@@ -32,7 +32,11 @@
     [vScrollFixed]="70"
     [(selectedRows)]="selectedRows"
 >
-    <div *osScrollingTableCell="'name'; row as meeting" class="cell-slot fill">
+    <div
+        *osScrollingTableCell="'name'; row as meeting"
+        class="cell-slot fill"
+        [class.no-access]="isMultiSelect || !meeting.canAccess() || !meeting.canBeEnteredBy(operator.operatorId)"
+    >
         @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnteredBy(operator.operatorId)) {
             <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
         }
@@ -119,7 +123,10 @@
         </div>
     </div>
 
-    <div *osScrollingTableCell="'meta'; row as meeting; config: { width: 60 }">
+    <div
+        *osScrollingTableCell="'meta'; row as meeting; config: { width: 60 }"
+        [class.no-access]="isMultiSelect || !meeting.canAccess() || !meeting.canBeEnteredBy(operator.operatorId)"
+    >
         @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnteredBy(operator.operatorId)) {
             <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
         }
