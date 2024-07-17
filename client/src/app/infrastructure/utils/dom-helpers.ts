@@ -1,3 +1,5 @@
+import tinycolor from 'tinycolor2';
+
 /**
  * Replaces encoded HTML characters except &gt; and &lt;
  */
@@ -427,6 +429,36 @@ export function htmlToUppercase(html: string): string {
         );
 
         return `<` + tag.toUpperCase() + attributes + `>`;
+    });
+}
+
+/**
+ * Normalizes content of style attributes.
+ * 1. Converts all `color` and `backgroundColor` style properties
+ *    to rgba or rgb format.
+ * 2. Adds semicolon at end of style tag
+ * 3. trims style properties and values
+ */
+export function normalizeStyleAttributes(html: string): string {
+    return html.replace(/<(\/?[a-z]*)( [^>]*)?>/gi, (_fullHtml: string, tag: string, attributes: string): string => {
+        if (attributes === undefined) {
+            attributes = ``;
+        }
+
+        attributes = attributes.replace(/style\s*=\s*"([^"]*)"/gi, (_attr: string, styles: string) => {
+            const el = document.createElement(`div`);
+            el.style.cssText = styles;
+            if (el.style.color) {
+                el.style.color = tinycolor(el.style.color).toRgbString();
+            }
+
+            if (el.style.backgroundColor) {
+                el.style.backgroundColor = tinycolor(el.style.backgroundColor).toRgbString();
+            }
+            return `style="${el.style.cssText}"`;
+        });
+
+        return `<` + tag + attributes + `>`;
     });
 }
 
