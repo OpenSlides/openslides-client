@@ -1,5 +1,5 @@
-FROM node:18.20 as build
-ENV NODE_VERSION=18.20.0
+FROM node:20.14 as build
+ENV NODE_VERSION=20.14.0
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN if [ -n "$VERSION" ]; then echo "$VERSION ($(date +%Y-%m-%d))" > src/assets/
 RUN npm run build
 
 FROM nginx:latest
-COPY --from=build /app/dist/client /usr/share/nginx/html
+COPY --from=build /app/dist/client/browser /usr/share/nginx/html
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 LABEL org.opencontainers.image.title="OpenSlides Client"
