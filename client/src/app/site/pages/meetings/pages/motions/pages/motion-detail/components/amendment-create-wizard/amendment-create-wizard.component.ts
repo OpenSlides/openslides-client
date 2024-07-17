@@ -118,16 +118,6 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     }
 
     /**
-     * Function to prevent executing the click event of a checkbox.
-     * This prevents that the state of the checkbox is not changed by clicking it.
-     *
-     * @param event The `MouseEvent`
-     */
-    public checkboxClicked(event: MouseEvent): void {
-        event.preventDefault();
-    }
-
-    /**
      * Called by the template when a paragraph is clicked.
      *
      * @param {ParagraphToChoose} paragraph
@@ -250,7 +240,9 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
             this.contentForm.patchValue({
                 selectedParagraphs: newParagraphs
             });
-            this.contentForm.removeControl(`text_` + paragraph.paragraphNo);
+            try {
+                this.contentForm.removeControl(`text_` + paragraph.paragraphNo);
+            } catch (_) {}
         } else {
             newParagraphs = Object.assign([], oldSelected);
             newParagraphs.push(paragraph);
