@@ -343,7 +343,7 @@ export function addClassToHtmlTag(tagStr: string, className: string): string {
         if (tagArguments.match(/class="/gi)) {
             // class="someclass" => class="someclass insert"
             tagArguments = tagArguments.replace(
-                /(class\s*=\s*)(["'])([^\2]*)\2/gi,
+                /(class\s*=\s*)(["'])((?:(?!\2).)*)\2/gi,
                 (_classWhole: string, attr: string, para: string, content: string): string =>
                     attr + para + content + ` ` + className + para
             );
