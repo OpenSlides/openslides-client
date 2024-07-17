@@ -151,7 +151,7 @@
 
 <ng-template #meetingTemplate let-context="context" let-meeting="meeting">
     <div class="meeting-box" [ngClass]="context?.wrapperCssClass">
-        @if (meeting.canBeEnterBy(operator.operatorId)) {
+        @if (meeting.canBeEnteredBy(operator.operatorId)) {
             <a
                 class="meeting-box-left flex-vertical-center"
                 matRipple

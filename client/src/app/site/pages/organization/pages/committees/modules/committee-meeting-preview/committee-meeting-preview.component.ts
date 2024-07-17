@@ -56,7 +56,7 @@ export class CommitteeMeetingPreviewComponent {
     }
 
     public get canEnter(): boolean {
-        return this.operator.isInMeetingIds(this.meeting.id) && this.meeting.canBeEnterBy(this.operator.operatorId);
+        return this.operator.isInMeetingIds(this.meeting.id) && this.meeting.canBeEnteredBy(this.operator.operatorId);
     }
 
     public constructor(
