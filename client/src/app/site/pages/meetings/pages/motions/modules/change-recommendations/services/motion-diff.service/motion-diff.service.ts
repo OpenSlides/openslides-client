@@ -239,6 +239,7 @@ export class MotionDiffService {
      */
     public normalizeHtmlForDiff(html: string): string {
         html = DomHelpers.sortHtmlAttributes(html);
+        html = DomHelpers.normalizeStyleAttributes(html);
         html = DomHelpers.htmlToUppercase(html);
 
         // remove whitespaces infront of closing tags
