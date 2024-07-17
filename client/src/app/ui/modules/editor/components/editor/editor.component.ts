@@ -434,7 +434,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         }
 
         // Normalize colors
-        const withStyle = dom.querySelectorAll("*[style]");
+        const withStyle = dom.querySelectorAll(`*[style]`);
         for (let i = 0; i < withStyle.length; i++) {
             const el = <HTMLElement>withStyle.item(i);
             if (el.style.color) {
