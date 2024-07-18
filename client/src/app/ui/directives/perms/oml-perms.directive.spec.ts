@@ -20,6 +20,7 @@ type TestConditionalType = {
         <div *osOmlPerms="permission; or: conditionals.or" id="or"></div>
         <div *osOmlPerms="permission; and: conditionals.and" id="and"></div>
         <div *osOmlPerms="permission; complement: conditionals.complement" id="complement"></div>
+        <div *osOmlPerms="permission; allowCommitteeAdmin: true" id="committee"></div>
         <ng-container *osOmlPerms="permission; then thenTemplate; else elseTemplate"></ng-container>
         <ng-template #thenTemplate>
             <div id="then"></div>
@@ -43,14 +44,20 @@ class MockOperatorService {
 
     private _operatorUpdatedSubject = new Subject<void>();
     private _permList: OML[] = [];
+    private _isCommitteeAdmin = true;
 
     public hasOrganizationPermissions(...checkPerms: OML[]): boolean {
         return checkPerms.some(perm => this._permList.includes(perm));
     }
 
-    public changeOperatorPermsForTest(newPermList: OML[]): void {
+    public changeOperatorPermsForTest(newPermList: OML[], isCommitteeAdmin: boolean = this._isCommitteeAdmin): void {
         this._permList = newPermList;
+        this._isCommitteeAdmin = isCommitteeAdmin;
         this._operatorUpdatedSubject.next();
+    }
+
+    public isAnyCommitteeAdmin(): boolean {
+        return this._isCommitteeAdmin;
     }
 }
 
@@ -128,5 +135,20 @@ describe(`OmlPermsDirective`, () => {
         update();
         expect(getElement(`#else`)).toBeFalsy();
         expect(getElement(`#then`)).toBeTruthy();
+    });
+
+    it(`check if allowCommitteeAdmin works`, async () => {
+        operatorService.changeOperatorPermsForTest([OML.can_manage_organization]);
+        update();
+        expect(getElement(`#committee`)).toBeTruthy();
+        operatorService.changeOperatorPermsForTest([OML.can_manage_organization], true);
+        update();
+        expect(getElement(`#committee`)).toBeTruthy();
+        operatorService.changeOperatorPermsForTest([]);
+        update();
+        expect(getElement(`#committee`)).toBeTruthy();
+        operatorService.changeOperatorPermsForTest([], false);
+        update();
+        expect(getElement(`#committee`)).toBeFalsy();
     });
 });
