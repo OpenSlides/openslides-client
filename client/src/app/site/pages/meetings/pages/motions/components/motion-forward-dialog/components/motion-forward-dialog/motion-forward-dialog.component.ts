@@ -32,9 +32,9 @@ export class MotionForwardDialogComponent implements OnInit {
         return this.activeMeeting.meeting?.committee?.name;
     }
 
-    public useOriginalSubmitter = `true`;
-    public useOriginalNumber = `true`;
-    public useOriginalVersion = `true`;
+    public useOriginalSubmitter = true;
+    public useOriginalNumber = true;
+    public useOriginalVersion = true;
 
     private readonly committeesSubject = new BehaviorSubject<GetForwardingMeetingsPresenter[]>([]);
 
@@ -54,9 +54,9 @@ export class MotionForwardDialogComponent implements OnInit {
     public onSaveClicked(): void {
         this.dialogRef.close({
             meetingIds: Array.from(this.selectedMeetings),
-            useOriginalSubmitter: this.useOriginalSubmitter === `true`,
-            useOriginalNumber: this.useOriginalNumber === `true`,
-            useOriginalVersion: this.useOriginalVersion === `true`
+            useOriginalSubmitter: this.useOriginalSubmitter,
+            useOriginalNumber: this.useOriginalNumber,
+            useOriginalVersion: this.useOriginalVersion
         });
     }
 
