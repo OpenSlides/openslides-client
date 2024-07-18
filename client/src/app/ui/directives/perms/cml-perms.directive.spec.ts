@@ -31,6 +31,15 @@ type TestConditionalType = {
             id="complement"
         ></div>
         <div *osCmlPerms="permission; committeeId: conditionals.id; orOML: conditionals.orOML" id="oml"></div>
+        <ng-container
+            *osCmlPerms="permission; committeeId: conditionals.id; then: thenTemplate; else elseTemplate"
+        ></ng-container>
+        <ng-template #thenTemplate>
+            <div id="then"></div>
+        </ng-template>
+        <ng-template #elseTemplate>
+            <div id="else"></div>
+        </ng-template>
     `
 })
 class TestComponent extends BasePermsTestComponent<TestConditionalType> {
@@ -190,5 +199,17 @@ describe(`CmlPermsDirective`, () => {
         operatorService.changeOperatorPermsForTest([], OML.can_manage_organization);
         update();
         expect(getElement(`#oml`)).toBeFalsy();
+    });
+
+    it(`check if then and else work`, async () => {
+        update();
+        console.log(`BEFORE: THEN:`, getElement(`#then`), `ELSE:`, getElement(`#else`));
+        // expect(getElement(`#else`)).toBeTruthy();
+        // expect(getElement(`#then`)).toBeFalsy();
+        operatorService.changeOperatorPermsForTest([CML.can_manage]);
+        update();
+        console.log(`AFTER: THEN:`, getElement(`#then`), `ELSE:`, getElement(`#else`));
+        expect(getElement(`#else`)).toBeFalsy();
+        expect(getElement(`#then`)).toBeTruthy();
     });
 });
