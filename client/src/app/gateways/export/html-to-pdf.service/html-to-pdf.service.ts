@@ -65,6 +65,7 @@ export class HtmlToPdfService {
         h6: [`font-size:10`],
         a: [`color:blue`, `text-decoration:underline`],
         strike: [`text-decoration:line-through`],
+        s: [`text-decoration:line-through`],
         // Pretty specific stuff that might be excluded for other projects than OpenSlides
         del: [`color:red`, `text-decoration:line-through`],
         ins: [`color:green`, `text-decoration:underline`]
@@ -102,6 +103,9 @@ export class HtmlToPdfService {
      */
     public convertHtml({ htmlText }: { htmlText: string }): Content[] {
         const docDef = [];
+
+        // DEBUG: printing htmlText. Do not remove, just comment out
+        // console.log('MakePDF htmlText:\n---\n', htmlText, '\n---\n');
 
         // Create a HTML DOM tree out of html string
         const parser = new DOMParser();
@@ -188,6 +192,7 @@ export class HtmlToPdfService {
             case `i`:
             case `ins`:
             case `del`:
+            case `s`:
             case `strike`: {
                 newParagraph = this.createFormattedParagraph(createPayload);
                 break;
