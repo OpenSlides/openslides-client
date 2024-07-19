@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { CML } from 'src/app/domain/definitions/organization-permission';
+import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { CmlPermsDirective } from './cml-perms.directive';
@@ -15,6 +15,7 @@ type TestConditionalType = {
     complement: boolean;
     id: number;
     nonAdmin: boolean;
+    orOML: OML | undefined;
 };
 
 @Component({
@@ -29,12 +30,22 @@ type TestConditionalType = {
             *osCmlPerms="permission; committeeId: conditionals.id; complement: conditionals.complement"
             id="complement"
         ></div>
+        <div *osCmlPerms="permission; committeeId: conditionals.id; orOML: conditionals.orOML" id="oml"></div>
+        <ng-container
+            *osCmlPerms="permission; committeeId: conditionals.id; then: thenTemplate; else elseTemplate"
+        ></ng-container>
+        <ng-template #thenTemplate>
+            <div id="then"></div>
+        </ng-template>
+        <ng-template #elseTemplate>
+            <div id="else"></div>
+        </ng-template>
     `
 })
 class TestComponent extends BasePermsTestComponent<TestConditionalType> {
     public permission = CML.can_manage;
     public constructor() {
-        super({ and: true, or: true, complement: true, id: 1, nonAdmin: false });
+        super({ and: true, or: true, complement: true, id: 1, nonAdmin: false, orOML: undefined });
     }
 }
 
@@ -45,7 +56,12 @@ class MockOperatorService {
 
     private _operatorUpdatedSubject = new Subject<void>();
     private _permList: CML[] = [];
+    private _oml: OML | undefined = undefined;
     private _isAdmin = false;
+
+    public hasOrganizationPermissions(...checkPerms: OML[]): boolean {
+        return checkPerms.some(perm => perm === this._oml);
+    }
 
     public hasCommitteePermissions(committeeId: Id | null, ...checkPerms: CML[]): boolean {
         return this._isAdmin || this.hasCommitteePermissionsNonAdminCheck(committeeId, ...checkPerms);
@@ -55,11 +71,12 @@ class MockOperatorService {
         return checkPerms.some(perm => this._permList.includes(perm));
     }
 
-    public changeOperatorPermsForTest(newPermList: CML[], isAdmin?: boolean): void {
+    public changeOperatorPermsForTest(newPermList: CML[], oml?: OML | undefined): void {
         this._permList = newPermList;
-        if (isAdmin !== undefined) {
-            this._isAdmin = isAdmin;
+        if (oml) {
+            this._isAdmin = oml === OML.superadmin;
         }
+        this._oml = oml;
         this._operatorUpdatedSubject.next();
     }
 }
@@ -96,10 +113,10 @@ describe(`CmlPermsDirective`, () => {
         operatorService.changeOperatorPermsForTest([]);
         update();
         expect(getElement(`#normal`)).toBeFalsy();
-        operatorService.changeOperatorPermsForTest([CML.can_manage], true);
+        operatorService.changeOperatorPermsForTest([CML.can_manage], OML.superadmin);
         update();
         expect(getElement(`#normal`)).toBeTruthy();
-        operatorService.changeOperatorPermsForTest([]);
+        operatorService.changeOperatorPermsForTest([], OML.superadmin);
         update();
         expect(getElement(`#normal`)).toBeTruthy();
     });
@@ -112,10 +129,10 @@ describe(`CmlPermsDirective`, () => {
         operatorService.changeOperatorPermsForTest([]);
         update();
         expect(getElement(`#normal`)).toBeFalsy();
-        operatorService.changeOperatorPermsForTest([CML.can_manage], true);
+        operatorService.changeOperatorPermsForTest([CML.can_manage], OML.superadmin);
         update();
         expect(getElement(`#normal`)).toBeTruthy();
-        operatorService.changeOperatorPermsForTest([]);
+        operatorService.changeOperatorPermsForTest([], OML.superadmin);
         update();
         expect(getElement(`#normal`)).toBeFalsy();
     });
@@ -160,5 +177,39 @@ describe(`CmlPermsDirective`, () => {
         fixture.componentInstance.setTestComponentData({ id: undefined });
         update();
         expect(getElement(`#normal`)).toBeFalsy();
+    });
+
+    it(`check if orOML works`, async () => {
+        operatorService.changeOperatorPermsForTest([], OML.can_manage_organization);
+        update();
+        expect(getElement(`#oml`)).toBeFalsy();
+        operatorService.changeOperatorPermsForTest([], undefined);
+        fixture.componentInstance.setTestComponentData({ orOML: OML.can_manage_users });
+        update();
+        expect(getElement(`#oml`)).toBeFalsy();
+        operatorService.changeOperatorPermsForTest([CML.can_manage]);
+        update();
+        expect(getElement(`#oml`)).toBeTruthy();
+        operatorService.changeOperatorPermsForTest([CML.can_manage], OML.can_manage_users);
+        update();
+        expect(getElement(`#oml`)).toBeTruthy();
+        operatorService.changeOperatorPermsForTest([], OML.can_manage_users);
+        update();
+        expect(getElement(`#oml`)).toBeTruthy();
+        operatorService.changeOperatorPermsForTest([], OML.can_manage_organization);
+        update();
+        expect(getElement(`#oml`)).toBeFalsy();
+    });
+
+    it(`check if then and else work`, async () => {
+        update();
+        console.log(`BEFORE: THEN:`, getElement(`#then`), `ELSE:`, getElement(`#else`));
+        // expect(getElement(`#else`)).toBeTruthy();
+        // expect(getElement(`#then`)).toBeFalsy();
+        operatorService.changeOperatorPermsForTest([CML.can_manage]);
+        update();
+        console.log(`AFTER: THEN:`, getElement(`#then`), `ELSE:`, getElement(`#else`));
+        expect(getElement(`#else`)).toBeFalsy();
+        expect(getElement(`#then`)).toBeTruthy();
     });
 });

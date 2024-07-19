@@ -42,6 +42,20 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         return this.operator.hasOrganizationPermissions(OML.can_manage_users);
     }
 
+    public get fakeFilters(): Observable<{ [key: string]: () => void }> {
+        if (this.meeting) {
+            return this.meeting.pipe(
+                map(meeting => {
+                    if (meeting) {
+                        return { [meeting.name]: () => this.navigateToBaseList() };
+                    }
+                    return {};
+                })
+            );
+        }
+        return null;
+    }
+
     public constructor(
         protected override translate: TranslateService,
         public readonly controller: AccountControllerService,
@@ -81,20 +95,6 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
 
     public navigateToBaseList(): void {
         this.router.navigate([`/accounts`]);
-    }
-
-    public get fakeFilters(): Observable<{ [key: string]: () => void }> {
-        if (this.meeting) {
-            return this.meeting.pipe(
-                map(meeting => {
-                    if (meeting) {
-                        return { [meeting.name]: () => this.navigateToBaseList() };
-                    }
-                    return {};
-                })
-            );
-        }
-        return null;
     }
 
     public async deleteUsers(accounts: ViewUser[] = this.selectedRows): Promise<void> {
