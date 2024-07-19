@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Identifiable, Selectable } from 'src/app/domain/interfaces';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import {
@@ -116,6 +117,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
      * The operating user received from the OperatorService
      */
     private operatingUser: ViewUser | null = null;
+    private _committee_users_set: Set<Id> = new Set();
 
     private get daterangeControl(): AbstractControl {
         return this.meetingForm?.get(`daterange`);
@@ -157,6 +159,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 // We need here the user from the operator, because the operator holds not all groups in all meetings they are
                 this.operatingUser = user;
                 this.onAfterCreateForm();
+            }),
+            this.operator.user.committee_managements_as_observable.subscribe(committees => {
+                this._committee_users_set = new Set(committees.flatMap(committee => committee.user_ids ?? []));
             })
         );
 
@@ -172,7 +177,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 ];
             })
         );
-        this.availableAdmins = this.userRepo.getViewModelList();
+        this.availableAdmins = this.filterAccountsForCommitteeAdmins(this.userRepo.getViewModelList());
     }
 
     public getSaveAction(): () => Promise<void> {
@@ -416,5 +421,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             const patchValue = endDateChanged ? this.daterangeControl?.value.end : this.daterangeControl?.value.start;
             this.daterangeControl?.patchValue({ start: patchValue, end: patchValue });
         }
+    }
+
+    private filterAccountsForCommitteeAdmins(accounts: ViewUser[]): ViewUser[] {
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            return accounts;
+        }
+        return accounts.filter(account => this._committee_users_set.has(account.id));
     }
 }
