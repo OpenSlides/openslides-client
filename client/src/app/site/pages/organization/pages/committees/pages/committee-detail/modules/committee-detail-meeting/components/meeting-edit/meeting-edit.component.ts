@@ -104,15 +104,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     };
 
     public committee!: ViewCommittee;
-
-    public get meetingUsers(): ViewUser[] {
-        const users = this.editMeeting?.calculated_users;
-        if (users && !users.some(u => u.id === this.operator.operatorId)) {
-            users.push(this.operator.user);
-        }
-
-        return users || [];
-    }
+    public availableAdmins: ViewUser[] = [];
 
     private meetingId: Id | null = null;
     private editMeeting: ViewMeeting | null = null;
@@ -180,6 +172,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 ];
             })
         );
+        this.availableAdmins = this.userRepo.getViewModelList();
     }
 
     public getSaveAction(): () => Promise<void> {
