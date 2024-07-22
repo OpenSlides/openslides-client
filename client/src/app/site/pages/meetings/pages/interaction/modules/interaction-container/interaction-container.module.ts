@@ -6,7 +6,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { NgParticlesModule } from 'ng-particles';
+import { NgxParticlesModule } from '@tsparticles/angular';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { PipesModule } from 'src/app/ui/pipes';
@@ -42,7 +42,7 @@ const EXPORTS = [InteractionContainerComponent];
         MatIconModule,
         MatButtonModule,
         MatCardModule,
-        NgParticlesModule,
+        NgxParticlesModule,
         DirectivesModule,
         PipesModule,
         OpenSlidesTranslationModule.forChild()

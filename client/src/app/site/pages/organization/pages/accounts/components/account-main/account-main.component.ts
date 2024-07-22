@@ -21,7 +21,7 @@ const accountListSubsciptionContent = {
             follow: [
                 {
                     idField: `meeting_id`,
-                    fieldset: [`is_active_in_organization_id`, `is_archived_in_organization_id`],
+                    fieldset: [`is_active_in_organization_id`, `is_archived_in_organization_id`, `default_group_id`],
                     follow: [{ idField: `committee_id`, fieldset: [`manager_ids`] }]
                 }
             ]

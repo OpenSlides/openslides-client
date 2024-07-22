@@ -1,4 +1,5 @@
-import { SizeMode } from 'tsparticles';
+import { IParticlesProps } from '@tsparticles/angular';
+import { MoveDirection, OutMode, PixelMode } from '@tsparticles/engine';
 
 export const particleConfig = {
     noAutomaticParticles: {
@@ -19,12 +20,14 @@ export const particleConfig = {
     },
     customImageShape: {
         type: `image`,
-        image: {
-            replace_color: false,
-            replaceColor: false,
-            src: ``,
-            width: 24,
-            height: 24
+        options: {
+            image: {
+                replace_color: false,
+                replaceColor: false,
+                src: ``,
+                width: 24,
+                height: 24
+            }
         }
     },
     charShapeHearth: {
@@ -54,7 +57,7 @@ export const particleConfig = {
     },
     moveUpOptions: {
         enable: true,
-        direction: `top`,
+        direction: MoveDirection.top,
         speed: 1.0,
         angle: {
             offset: 45,
@@ -66,9 +69,10 @@ export const particleConfig = {
             acceleration: -3
         },
         outModes: {
-            left: `bounce`,
-            right: `bounce`,
-            top: `destroy`
+            default: OutMode.destroy,
+            left: OutMode.bounce,
+            right: OutMode.bounce,
+            bottom: OutMode.bounce
         }
     },
     slowRandomRotation: {
@@ -89,7 +93,7 @@ export const particleConfig = {
     },
     singleBottomEmitter: [
         {
-            direction: `top`,
+            direction: MoveDirection.top,
             rate: {
                 quantity: 0,
                 delay: 0.33
@@ -99,14 +103,14 @@ export const particleConfig = {
                 y: 100
             },
             size: {
-                mode: SizeMode.percent,
+                mode: PixelMode.percent,
                 width: 100
             }
         }
     ]
 };
 
-export const particleOptions: any = {
+export const particleOptions: IParticlesProps = {
     fullScreen: {
         enable: false
     },
@@ -117,7 +121,7 @@ export const particleOptions: any = {
         rotate: particleConfig.slowRandomRotation,
         move: particleConfig.moveUpOptions,
         color: particleConfig.randomColor,
-        shape: particleConfig.charShapeHearth,
+        shape: particleConfig.customImageShape,
         size: particleConfig.slightlyRandomSize
     },
     emitters: particleConfig.singleBottomEmitter,

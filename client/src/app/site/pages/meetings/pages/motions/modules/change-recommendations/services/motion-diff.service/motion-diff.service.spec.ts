@@ -845,12 +845,12 @@ describe(`MotionDiffService`, () => {
             const before = `<p>This is a random first line that remains unchanged.</p>`,
                 after =
                     `<p>This is a random first line that remains unchanged.</p>` +
-                    `<p style="text-align: justify;"><span style="color: #000000;">Inserting this line should not make any troubles, especially not affect the first line</span></p>` +
-                    `<p style="text-align: justify;"><span style="color: #000000;">Neither should this line</span></p>`,
+                    `<p style="text-align: justify;"><span style="color: rgb(0, 0, 0);">Inserting this line should not make any troubles, especially not affect the first line</span></p>` +
+                    `<p style="text-align: justify;"><span style="color: rgb(0, 0, 0);">Neither should this line</span></p>`,
                 expected =
                     `<p>This is a random first line that remains unchanged.</p>` +
-                    `<p style="text-align: justify;" class="insert"><span style="color: #000000;">Inserting this line should not make any troubles, especially not affect the first line</span></p>` +
-                    `<p style="text-align: justify;" class="insert"><span style="color: #000000;">Neither should this line</span></p>`;
+                    `<p style="text-align: justify;" class="insert"><span style="color: rgb(0, 0, 0);">Inserting this line should not make any troubles, especially not affect the first line</span></p>` +
+                    `<p style="text-align: justify;" class="insert"><span style="color: rgb(0, 0, 0);">Neither should this line</span></p>`;
 
             const diff = service.diff(before, after);
             expect(diff).toBe(expected);
@@ -1065,11 +1065,11 @@ describe(`MotionDiffService`, () => {
             [MotionDiffService],
             (service: MotionDiffService) => {
                 const before = `<P>...so frißt er Euch alle mit Haut und Haar.</P>`,
-                    after = `<P>...so frißt er <span style='color: #000000;'>Euch alle</span> mit Haut und Haar.</P>`;
+                    after = `<P>...so frißt er <span style='color: rgb(0, 0, 0);'>Euch alle</span> mit Haut und Haar.</P>`;
                 const diff = service.diff(before, after);
 
                 expect(diff).toBe(
-                    `<p>...so frißt er <del>Euch alle</del><ins><span style="color: #000000;">Euch alle</span></ins> mit Haut und Haar.</p>`
+                    `<p>...so frißt er <del>Euch alle</del><ins><span style="color: rgb(0, 0, 0);">Euch alle</span></ins> mit Haut und Haar.</p>`
                 );
             }
         ));
@@ -1078,11 +1078,11 @@ describe(`MotionDiffService`, () => {
             [MotionDiffService],
             (service: MotionDiffService) => {
                 const before = `<P>...so frißt er Euch alle mit Haut und Haar.</P>`,
-                    after = `<P>...so frißt er <span style='font-size: 2em; color: #000000; opacity: 0.5'>Euch alle</span> mit Haut und Haar.</P>`;
+                    after = `<P>...so frißt er <span style='font-size: 2em; color: rgb(0, 0, 0); opacity: 0.5'>Euch alle</span> mit Haut und Haar.</P>`;
                 const diff = service.diff(before, after);
 
                 expect(diff).toBe(
-                    `<p>...so frißt er <del>Euch alle</del><ins><span style="font-size: 2em; color: #000000; opacity: 0.5">Euch alle</span></ins> mit Haut und Haar.</p>`
+                    `<p>...so frißt er <del>Euch alle</del><ins><span style="font-size: 2em; color: rgb(0, 0, 0); opacity: 0.5">Euch alle</span></ins> mit Haut und Haar.</p>`
                 );
             }
         ));
@@ -1101,12 +1101,12 @@ describe(`MotionDiffService`, () => {
         ));
 
         it(`works with style-tags in spans`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const before = `<p class="os-split-before os-split-after"><span class="os-line-number line-number-4" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: #0000ff;" class="os-split-before os-split-after">sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`,
-                after = `<p class="os-split-after os-split-before"><span class="os-split-after os-split-before" style="color: #0000ff;">sanctus est Lorem ipsum dolor sit amet. Test Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`;
+            const before = `<p class="os-split-before os-split-after"><span class="os-line-number line-number-4" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: rgb(0, 0, 255);" class="os-split-before os-split-after">sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`,
+                after = `<p class="os-split-after os-split-before"><span class="os-split-after os-split-before" style="color: rgb(0, 0, 255);">sanctus est Lorem ipsum dolor sit amet. Test Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`;
             const diff = service.diff(before, after);
 
             expect(diff).toBe(
-                `<p class="os-split-after os-split-before"><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span><span class="os-split-after os-split-before" style="color: #0000ff;">sanctus est Lorem ipsum dolor sit amet. <ins>Test </ins>Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`
+                `<p class="os-split-after os-split-before"><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span><span class="os-split-after os-split-before" style="color: rgb(0, 0, 255);">sanctus est Lorem ipsum dolor sit amet. <ins>Test </ins>Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`
             );
         }));
 
@@ -1314,8 +1314,8 @@ describe(`MotionDiffService`, () => {
         it(`detects broken HTML and lowercases class names`, inject(
             [MotionDiffService],
             (service: MotionDiffService) => {
-                const before = `<p><span class="line-number-3 os-line-number" data-line-number="3" contenteditable="false">&nbsp;</span>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span class="line-number-4 os-line-number" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: #000000;">"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <br class="os-line-break"><span class="line-number-5 os-line-number" data-line-number="5" contenteditable="false">&nbsp;</span>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <br class="os-line-break"><span class="line-number-6 os-line-number" data-line-number="6" contenteditable="false">&nbsp;</span>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</span></p>\n\n<p><span class="line-number-7 os-line-number" data-line-number="7" contenteditable="false">&nbsp;</span>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </p>`,
-                    after = `<p>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span style="color: #000000;">Hello</span></p>\n\n<p><span style="color: #000000;">World</span></p>\n\n<p><span style="color: #000000;">Ya</span></p>\n\n<p>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne</p>`;
+                const before = `<p><span class="line-number-3 os-line-number" data-line-number="3" contenteditable="false">&nbsp;</span>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span class="line-number-4 os-line-number" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: rgb(0, 0, 0);">"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <br class="os-line-break"><span class="line-number-5 os-line-number" data-line-number="5" contenteditable="false">&nbsp;</span>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <br class="os-line-break"><span class="line-number-6 os-line-number" data-line-number="6" contenteditable="false">&nbsp;</span>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</span></p>\n\n<p><span class="line-number-7 os-line-number" data-line-number="7" contenteditable="false">&nbsp;</span>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </p>`,
+                    after = `<p>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span style="color: rgb(0, 0, 0);">Hello</span></p>\n\n<p><span style="color: rgb(0, 0, 0);">World</span></p>\n\n<p><span style="color: rgb(0, 0, 0);">Ya</span></p>\n\n<p>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne</p>`;
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     `<P class="delete"><SPAN class="line-number-3 os-line-number" data-line-number="3" contenteditable="false">\u00A0</SPAN>holen, da rief sie alle sieben herbei und sprach:</P><DEL>\n\n</DEL>` +
