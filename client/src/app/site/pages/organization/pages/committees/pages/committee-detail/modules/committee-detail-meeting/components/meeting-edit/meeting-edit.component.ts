@@ -65,7 +65,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     public get isValid(): boolean {
         if (this.isCommitteeManagerAndRequireDuplicateFrom) {
-            if (!this.theDuplicateFromId) {
+            if (!this.theDuplicateFromId && this.isCreateView) {
                 return false;
             }
         }
