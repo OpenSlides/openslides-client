@@ -90,7 +90,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         if (!this.motion) {
             return false;
         }
-        return !!Object.keys(this.motion)?.length ?? false;
+        return !!Object.keys(this.motion)?.length;
     }
 
     public get isMobile(): boolean {

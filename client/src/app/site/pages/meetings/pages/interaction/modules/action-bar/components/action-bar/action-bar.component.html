@@ -31,8 +31,7 @@
                 >
                     <mat-icon color="primary">phone</mat-icon>
                 </button>
-            }
-            @if ((canEnterCall | async) === false) {
+            } @else {
                 <a
                     class="action-bar-shadow fake-disabled"
                     mat-mini-fab

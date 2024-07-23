@@ -13,7 +13,7 @@ import {
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDrawer } from '@angular/material/sidenav';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { OsFilterIndicator } from 'src/app/site/base/base-filter.service';
 import { OsSortingOption } from 'src/app/site/base/base-sort.service';
@@ -89,6 +89,30 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
     public get searchFieldInput(): string {
         return this._searchField;
     }
+
+    /**
+     * Will show fake filter buttons with the string keys as content in bar.
+     * Closing them will cause the callback function to be called.
+     */
+    @Input()
+    public set fakeFilters(value: { [key: string]: () => void } | Observable<{ [key: string]: () => void }>) {
+        if (!value) {
+            return;
+        }
+        this._fakeFilterSubscription?.unsubscribe();
+        if (value instanceof Observable) {
+            this._fakeFilterSubscription = value.subscribe(val => (this.fakeFilters = val));
+        } else {
+            this._fakeFilters = value;
+        }
+    }
+
+    public get fakeFilters(): { [key: string]: () => void } {
+        return this._fakeFilters;
+    }
+
+    private _fakeFilterSubscription: Subscription;
+    private _fakeFilters: { [key: string]: () => void } = {};
 
     /**
      * EventEmitter to emit the next search-value.

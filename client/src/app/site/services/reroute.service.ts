@@ -48,6 +48,11 @@ export class RerouteService {
         if (routeData?.[`omlPermissions`]) {
             routeDataArray = routeDataArray.concat(routeData[`omlPermissions`]);
         }
+        if (routeData?.[`optionalCmlPermissions`]) {
+            routeDataArray = routeDataArray.concat(
+                routeData[`optionalCmlPermissions`].map(perm => `committee.` + perm)
+            );
+        }
 
         const queryParams = {
             error: `Authorization Error`,

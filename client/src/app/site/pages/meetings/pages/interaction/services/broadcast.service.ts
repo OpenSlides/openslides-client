@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BroadcastChannel } from 'broadcast-channel';
 import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -9,9 +8,6 @@ import { InteractionServiceModule } from './interaction-service.module';
  * Implements the BroadcastChannel API.
  * Documentation at mdb:
  * https://developer.mozilla.org/en-US/docs/Web/API/Broadcast_Channel_API
- *
- * At the time being, this might not work on safari
- * https://caniuse.com/broadcastchannel
  */
 
 export interface BroadcastMessage {

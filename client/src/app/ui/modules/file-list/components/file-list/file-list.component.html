@@ -22,8 +22,7 @@
                                 {{ directory.getTitle() }}
                             </span>
                         </button>
-                    }
-                    @if (last && shouldShowFileMenuFn(directory)) {
+                    } @else if (shouldShowFileMenuFn(directory)) {
                         <button
                             class="folder"
                             mat-button
@@ -35,8 +34,7 @@
                                 {{ directory.getTitle() }}
                             </os-icon-container>
                         </button>
-                    }
-                    @if (last && !shouldShowFileMenuFn(directory)) {
+                    } @else {
                         <span class="folder fake-folder folder-text">
                             {{ directory.getTitle() }}
                         </span>
