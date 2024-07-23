@@ -94,7 +94,7 @@
     "rxjs": "^7.8.1",
     "tinycolor2": "1.6.0",
     "video.js": "^8.16.1",
-    "zone.js": "^0.14.7"
+    "zone.js": "^0.14.8"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.1.0",
