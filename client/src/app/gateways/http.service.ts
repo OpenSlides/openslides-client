@@ -31,13 +31,7 @@ export interface RequestSettings {
     providedIn: `root`
 })
 export class HttpService {
-    private _actionWorkerWatch: ActionWorkerWatchService;
-    private get actionWorkerWatch(): ActionWorkerWatchService {
-        if (!this._actionWorkerWatch) {
-            this._actionWorkerWatch = this.injector.get(ActionWorkerWatchService);
-        }
-        return this._actionWorkerWatch;
-    }
+    private actionWorkerWatch = this.injector.get(ActionWorkerWatchService);
 
     public constructor(
         private http: HttpClient,
