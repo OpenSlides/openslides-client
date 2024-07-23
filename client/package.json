@@ -123,7 +123,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^3.2.0",
     "fetch-mock": "^10.0.8",
-    "jasmine-core": "~5.1.2",
+    "jasmine-core": "~5.2.0",
     "js-yaml": "^4.1.0",
     "karma": "~6.4.3",
     "karma-chrome-launcher": "~3.2.0",
