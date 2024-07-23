@@ -83,11 +83,12 @@
         <!-- users -->
         <div class="user-footer">
             <ng-container
-                *osOmlPerms="
-                    OML.can_manage_users;
-                    allowCommitteeAdmin: true;
+                *osCmlPerms="
+                    CML.can_manage;
+                    committeeId: committee.id;
+                    orOML: OML.can_manage_users;
                     then: canManageUsersTemplate;
-                    else canNotManageUsersTemplate
+                    else: canNotManageUsersTemplate
                 "
             ></ng-container>
         </div>

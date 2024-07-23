@@ -22,8 +22,7 @@
                         {{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}
                     </mat-icon>
                 </button>
-            }
-            @if (menuItem) {
+            } @else {
                 <button mat-menu-item type="button">
                     <mat-icon>{{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}</mat-icon>
                     <span>{{ 'List of speakers' | translate }}</span>

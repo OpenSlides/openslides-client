@@ -35,8 +35,7 @@
         <mat-card-content>
             @if (!parallel) {
                 <mat-progress-bar mode="determinate" [value]="progressObservable | async"></mat-progress-bar>
-            }
-            @if (parallel) {
+            } @else {
                 <mat-progress-bar mode="buffer"></mat-progress-bar>
             }
         </mat-card-content>

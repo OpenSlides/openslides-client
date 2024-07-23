@@ -4,11 +4,11 @@
 @import '../color-palettes/os-background';
 @import './typography.scss';
 
-$openslides-primary: mat.define-palette($dynamic-theme-primary);
-$openslides-accent: mat.define-palette($dynamic-theme-accent);
-$openslides-warn: mat.define-palette($dynamic-theme-warn);
+$openslides-primary: mat.m2-define-palette($dynamic-theme-primary);
+$openslides-accent: mat.m2-define-palette($dynamic-theme-accent);
+$openslides-warn: mat.m2-define-palette($dynamic-theme-warn);
 
-$openslides-dark-theme: mat.define-dark-theme((
+$openslides-dark-theme: mat.m2-define-dark-theme((
     color: (
         primary: $openslides-primary,
         accent: $openslides-accent,
@@ -17,7 +17,7 @@ $openslides-dark-theme: mat.define-dark-theme((
     typography: $default-typography
 ));
 
-$os-outline: mat.get-color-from-palette(mat.$grey-palette, 300);
+$os-outline: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 300);
 
 /** This is the workaround to set a custom background-color
  *  In the first step the color must be merged, in order to have to a map.

@@ -7,17 +7,16 @@
                     [ngTemplateOutletContext]="{ $implicit: item }"
                 ></ng-template>
             </span>
-        }
-        @if (!templateRef) {
+        } @else {
             <span [innerHtml]="item"></span>
         }
-        @if (!isLast && !useMidpoint) {
-            <span>,&#32;</span>
-        }
-        @if (!isLast && useMidpoint) {
-            <span>&ensp;&middot;&ensp;</span>
-        }
-        @if (isLast && ellipsed) {
+        @if (!isLast) {
+            @if (!useMidpoint) {
+                <span>,&#32;</span>
+            } @else {
+                <span>&ensp;&middot;&ensp;</span>
+            }
+        } @else if (ellipsed) {
             <span>…</span>
         }
     </span>

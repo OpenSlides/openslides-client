@@ -97,8 +97,7 @@
                 <ng-container *ngTemplateOutlet="optionContent; context: { item: selectedItems[0] }"></ng-container>
             </mat-option>
         }
-    }
-    @if (!multiple) {
+    } @else {
         @if (contentForm.value) {
             <mat-option class="selected-options-hidden" disabled [value]="contentForm.value">
                 <ng-container

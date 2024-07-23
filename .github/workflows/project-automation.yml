@@ -21,7 +21,7 @@ jobs:
     name: Set status
     runs-on: ubuntu-latest
     steps:
-      - uses: leonsteinhaeuser/project-beta-automations@v2.1.0
+      - uses: leonsteinhaeuser/project-beta-automations@v2.2.1
         with:
           gh_app_ID: ${{ secrets.AUTOMATION_APP_ID }}
           gh_app_installation_ID: ${{ secrets.AUTOMATION_APP_INSTALLATION_ID }}
