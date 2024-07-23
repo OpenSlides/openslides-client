@@ -1,13 +1,14 @@
 <div class="projectable-title-line">
-    @if (titleStyle === 'h1' && model) {
-        <h1 class="model-title">
-            <ng-container [ngTemplateOutlet]="titleline"></ng-container>
-        </h1>
-    }
-    @if (titleStyle === 'h2' && model) {
-        <h2 class="model-title">
-            <ng-container [ngTemplateOutlet]="titleline"></ng-container>
-        </h2>
+    @if (model) {
+        @if (titleStyle === 'h1') {
+            <h1 class="model-title">
+                <ng-container [ngTemplateOutlet]="titleline"></ng-container>
+            </h1>
+        } @else if (titleStyle === 'h2') {
+            <h2 class="model-title">
+                <ng-container [ngTemplateOutlet]="titleline"></ng-container>
+            </h2>
+        }
     }
     <div class="suffix">
         @if (isProjectedObservable | async) {

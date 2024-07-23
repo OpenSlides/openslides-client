@@ -10,16 +10,15 @@
         <div class="center spacer-top-5">{{ 'Playing against' | translate }} {{ opponentName }}</div>
     }
     <div #chessboard class="spacer-top-5"></div>
-    @if (inMeeting && state === 'start') {
+    @if (!inMeeting) {
+        <div>
+            {{ 'Open a meeting to play chess' | translate }}
+        </div>
+    } @else if (state === 'start') {
         <div class="center spacer-top-5">
             <button color="accent" mat-raised-button (click)="handleEvent('searchClicked')">
                 {{ 'Search player' | translate }}
             </button>
-        </div>
-    }
-    @if (!inMeeting) {
-        <div>
-            {{ 'Open a meeting to play chess' | translate }}
         </div>
     }
 </mat-dialog-content>

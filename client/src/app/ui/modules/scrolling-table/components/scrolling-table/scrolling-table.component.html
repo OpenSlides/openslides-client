@@ -20,8 +20,7 @@
                             >
                                 @if (definition.labelTemplate) {
                                     <ng-template [cdkPortalOutlet]="definition.labelTemplate"></ng-template>
-                                }
-                                @if (!definition.labelTemplate) {
+                                } @else {
                                     <ng-template>{{ definition.labelString }}</ng-template>
                                 }
                             </div>
