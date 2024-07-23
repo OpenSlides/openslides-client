@@ -18,6 +18,8 @@ updates:
        angular:
           patterns:
             - "@angular/*"
+            - "@angular-devkit/build-angular"
+            - "@schematics/angular"
        angular-eslint:
           patterns:
             - "@angular-eslint/*"
