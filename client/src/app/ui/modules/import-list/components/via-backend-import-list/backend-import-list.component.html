@@ -371,7 +371,7 @@
 
 <ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
     @if (type === 'string') {
-        {{ entry }}
+        <div>{{ entry }}</div>
     }
     @if (type === 'number' || type === 'integer') {
         {{ entry }}

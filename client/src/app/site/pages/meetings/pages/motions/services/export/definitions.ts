@@ -3,11 +3,10 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
  * Type declaring which strings are valid options for metainfos to be exported into a pdf
  */
 export type InfoToExport =
-    | 'submitters'
-    | 'supporters'
     | 'state'
     | 'recommendation'
-    | 'category'
+    | 'category_name'
+    | 'category_prefix'
     | 'block'
     | 'tags'
     | 'polls'
@@ -16,6 +15,11 @@ export type InfoToExport =
     | 'sequential_number'
     | 'referring_motions'
     | 'allcomments'
+    | 'motion_amendment'
+    | 'submitters_verbose'
+    | 'supporters_verbose'
+    | 'submitters_username'
+    | 'supporters_username'
     | 'editors'
     | 'working_group_speakers';
 
@@ -33,17 +37,21 @@ export enum ExportFileFormat {
  */
 const motionHeadersAndVerboseNames: { [key in keyof ViewMotion]?: any } = {
     number: `Number`,
-    submitters: `Submitters`,
-    supporters: `Supporters`,
+    submitters_verbose: `Submitter full names`,
+    supporters_verbose: `Supporter full names`,
+    submitters_username: `Submitter usernames`,
+    supporters_username: `Supporter usernames`,
     title: `Title`,
     text: `Text`,
     reason: `Reason`,
-    category: `Category`,
+    category_name: `Category name`,
+    category_prefix: `Category prefix`,
     tags: `Tags`,
     block: `Motion block`,
     recommendation: `Recommendation`,
     state: `State`,
-    sequential_number: `Sequential number`
+    sequential_number: `Sequential number`,
+    motion_amendment: `Amendment status`
 };
 
 /**
@@ -65,6 +73,12 @@ const motionExportOnly: (keyof ViewMotion)[] = [`id`, `sequential_number`, `reco
 
 export const motionExpectedHeaders: (keyof ViewMotion)[] = motionImportExportHeaderOrder.filter(
     header => !motionExportOnly.includes(header)
+);
+
+export const motionImportFields: { [key in keyof ViewMotion]?: any } = Object.fromEntries(
+    Object.entries(motionHeadersAndVerboseNames).filter(
+        entry => !motionExportOnly.includes(entry[0] as keyof ViewMotion)
+    )
 );
 
 /**

@@ -59,7 +59,7 @@
                 <p class="toggle-group-head">{{ 'Meta information' | translate }}</p>
                 <mat-button-toggle-group class="smaller-buttons" formControlName="metaInfo" multiple>
                     @for (metaInfo of metaInfoExportOrder; track metaInfo) {
-                        <mat-button-toggle [value]="metaInfo">
+                        <mat-button-toggle #metaInfoButtons [value]="metaInfo">
                             <span>{{ getLabelForMetadata(metaInfo) | translate }}</span>
                         </mat-button-toggle>
                     }

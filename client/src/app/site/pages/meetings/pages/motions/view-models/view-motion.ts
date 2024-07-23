@@ -240,6 +240,34 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.supporter_meeting_users?.flatMap(user => user.user_id ?? []);
     }
 
+    public get submitters_verbose(): string[] {
+        return this.submittersAsUsers.map(user => user.getFullName());
+    }
+
+    public get supporters_verbose(): string[] {
+        return this.supporters.map(user => user.getFullName());
+    }
+
+    public get submitters_username(): string[] {
+        return this.submittersAsUsers.map(user => user.username);
+    }
+
+    public get supporters_username(): string[] {
+        return this.supporters.map(user => user.username);
+    }
+
+    public get motion_amendment(): boolean {
+        return !!this.lead_motion_id;
+    }
+
+    public get category_prefix(): string {
+        return this.category?.prefix;
+    }
+
+    public get category_name(): string {
+        return this.category?.name;
+    }
+
     private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
     private _affectedAmendmentLines: DiffLinesInParagraph[] | null = null;
 
