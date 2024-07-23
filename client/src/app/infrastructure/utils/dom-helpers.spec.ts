@@ -13,6 +13,7 @@ import {
     isInlineElement,
     isValidInlineHtml,
     nodesToHtml,
+    normalizeStyleAttributes,
     removeCSSClass,
     replaceHtmlEntities,
     serializeTag,
@@ -403,6 +404,50 @@ describe(`utils: dom helpers`, () => {
 
         it(`does not change tag content`, () => {
             expect(htmlToUppercase(`<a>tEst</a>`)).toBe(`<A>tEst</A>`);
+        });
+    });
+
+    describe(`normalizeStyleAttributes function`, () => {
+        it(`converts hex color to rgb`, () => {
+            expect(normalizeStyleAttributes(`<div style="color: #ff0009;"></div>`)).toBe(
+                `<div style="color: rgb(255, 0, 9);"></div>`
+            );
+        });
+
+        it(`converts hex backgroundColor to rgb`, () => {
+            expect(normalizeStyleAttributes(`<div style="background-color: #ff0009;"></div>`)).toBe(
+                `<div style="background-color: rgb(255, 0, 9);"></div>`
+            );
+        });
+
+        it(`converts hex8 color to rgba`, () => {
+            expect(normalizeStyleAttributes(`<div style="color: #43ff64d9;"></div>`)).toBe(
+                `<div style="color: rgba(67, 255, 100, 0.85);"></div>`
+            );
+        });
+
+        it(`converts color name to rgb`, () => {
+            expect(normalizeStyleAttributes(`<span style="color: red;">Foo</span>`)).toBe(
+                `<span style="color: rgb(255, 0, 0);">Foo</span>`
+            );
+        });
+
+        it(`keeps rgb colors untouched`, () => {
+            expect(normalizeStyleAttributes(`<div style="color: rgb(255, 23, 91);"></div>`)).toBe(
+                `<div style="color: rgb(255, 23, 91);"></div>`
+            );
+        });
+
+        it(`trims properties`, () => {
+            expect(normalizeStyleAttributes(`<div style="color: rgb(255, 23, 91); "></div>`)).toBe(
+                `<div style="color: rgb(255, 23, 91);"></div>`
+            );
+        });
+
+        it(`adds trailing semicolon`, () => {
+            expect(normalizeStyleAttributes(`<div style="color: rgb(255, 23, 91)"></div>`)).toBe(
+                `<div style="color: rgb(255, 23, 91);"></div>`
+            );
         });
     });
 

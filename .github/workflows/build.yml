@@ -32,7 +32,7 @@ jobs:
         run: rm -r openslides-client
 
       - name: Clone openslides-client
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: "./openslides-client"
 
@@ -49,7 +49,7 @@ jobs:
           docker compose up -d
 
       - name: Wait for dev setup
-        uses: iFaxity/wait-on-action@v1.1.0
+        uses: iFaxity/wait-on-action@v1.2.1
         with:
           resource: https://localhost:8000
           timeout: 30000
@@ -58,7 +58,7 @@ jobs:
         working-directory: "./openslides-client"
         run: make run-playwright
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report

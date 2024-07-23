@@ -43,33 +43,34 @@
     <!-- Actions -->
     <div class="action-buttons">
         <!-- Sort Button -->
-        @if ((vp.isMobileSubject | async) && hasSorting) {
-            <button mat-button (click)="openSortDropDown()">
-                <mat-icon
-                    matBadge="&#8288;"
-                    matBadgeColor="accent"
-                    matBadgeSize="small"
-                    [matBadgeHidden]="!hasSortOptionSelected"
-                    [matBadgeOverlap]="false"
-                >
-                    sort
-                </mat-icon>
-            </button>
-        }
-        @if ((vp.isMobileSubject | async) === false && hasSorting) {
-            <button mat-button [matMenuTriggerFor]="menu" [matTooltip]="getSortLabel(sortOption) | translate">
-                <mat-icon>sort</mat-icon>
-                <span
-                    class="upper"
-                    matBadge="&#8288;"
-                    matBadgeColor="accent"
-                    matBadgeSize="small"
-                    [matBadgeHidden]="!hasSortOptionSelected"
-                    [matBadgeOverlap]="false"
-                >
-                    {{ 'Sort' | translate }}
-                </span>
-            </button>
+        @if (hasSorting) {
+            @if (vp.isMobileSubject | async) {
+                <button mat-button (click)="openSortDropDown()">
+                    <mat-icon
+                        matBadge="&#8288;"
+                        matBadgeColor="accent"
+                        matBadgeSize="small"
+                        [matBadgeHidden]="!hasSortOptionSelected"
+                        [matBadgeOverlap]="false"
+                    >
+                        sort
+                    </mat-icon>
+                </button>
+            } @else {
+                <button mat-button [matMenuTriggerFor]="menu" [matTooltip]="getSortLabel(sortOption) | translate">
+                    <mat-icon>sort</mat-icon>
+                    <span
+                        class="upper"
+                        matBadge="&#8288;"
+                        matBadgeColor="accent"
+                        matBadgeSize="small"
+                        [matBadgeHidden]="!hasSortOptionSelected"
+                        [matBadgeOverlap]="false"
+                    >
+                        {{ 'Sort' | translate }}
+                    </span>
+                </button>
+            }
         }
 
         <!-- Filter button -->
@@ -100,7 +101,11 @@
         }
 
         <!-- Search bar -->
-        @if (searchService && !showSearchIconOnly) {
+        @if (showSearchIconOnly) {
+            <button mat-button (click)="toggleSearchEdit()">
+                <mat-icon>manage_search</mat-icon>
+            </button>
+        } @else if (searchService) {
             <os-rounded-input
                 #searchField
                 iconName="manage_search"
@@ -110,11 +115,6 @@
                 [(ngModel)]="searchFieldInput"
                 (clickIcon)="toggleSearchEdit()"
             ></os-rounded-input>
-        }
-        @if (showSearchIconOnly) {
-            <button mat-button (click)="toggleSearchEdit()">
-                <mat-icon>manage_search</mat-icon>
-            </button>
         }
     </div>
 </div>
@@ -152,8 +152,6 @@
                 <span>{{ sortService.getSortLabel(defaultOption) | translate }}&emsp;</span>
                 <small class="subtitle">({{ 'Default' | translate }})</small>
             </button>
-        }
-        @if (defaultOption) {
             <mat-divider></mat-divider>
         }
         @for (option of sortOptionsWithoutDefault; track option) {

@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
@@ -27,11 +27,11 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
 
 @NgModule({
     declarations: [OpenSlidesMainComponent, OpenSlidesOverlayContainerComponent],
+    bootstrap: [OpenSlidesMainComponent],
     imports: [
         BrowserModule,
         OpenSlidesMainRoutingModule,
         BrowserAnimationsModule,
-        HttpClientModule,
         OpenSlidesTranslationModule.forRoot(),
         ...NOT_LAZY_LOADED_MODULES,
         ServiceWorkerModule.register(`sw.js`, {
@@ -43,8 +43,8 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: AppLoaderFactory, deps: [AppLoadService], multi: true },
-        httpInterceptorProviders
-    ],
-    bootstrap: [OpenSlidesMainComponent]
+        httpInterceptorProviders,
+        provideHttpClient(withInterceptorsFromDi())
+    ]
 })
 export class OpenSlidesMainModule {}

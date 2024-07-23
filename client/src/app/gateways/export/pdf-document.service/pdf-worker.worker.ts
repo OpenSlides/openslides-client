@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-import * as pdfMake from 'pdfmake/build/pdfmake';
+import pdfMake from 'pdfmake/build/pdfmake';
 
 const osTableLayout = {
     switchColorTableLayout: {
@@ -46,11 +46,11 @@ function applyLayout(content: any): void {
  * Sets the internal PdfMake fonts and VFS
  */
 function initPdfMake(data: any): void {
-    (<any>pdfMake).fonts = {
+    pdfMake.fonts = {
         PdfFont: data.fonts
     };
 
-    (<any>pdfMake).vfs = data.vfs;
+    pdfMake.vfs = data.vfs;
 }
 
 /**
