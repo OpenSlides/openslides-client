@@ -72,7 +72,8 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 users_email_replyto: [this._currentOrgaSettings.users_email_replyto, [createEmailValidator()]],
                 users_email_sender: [this._currentOrgaSettings.users_email_sender],
                 users_email_subject: [this._currentOrgaSettings.users_email_subject],
-                default_language: [this._currentOrgaSettings.default_language]
+                default_language: [this._currentOrgaSettings.default_language],
+                require_duplicate_from: [this._currentOrgaSettings.require_duplicate_from ?? false]
             };
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {
@@ -83,7 +84,6 @@ export class OrganizationSettingsComponent extends BaseComponent {
                     enable_chat: [this._currentOrgaSettings.enable_chat],
                     limit_of_meetings: [this._currentOrgaSettings.limit_of_meetings ?? 0],
                     limit_of_users: [this._currentOrgaSettings.limit_of_users ?? 0],
-                    require_duplicate_from: [this._currentOrgaSettings.require_duplicate_from ?? false],
                     saml_enabled: [this._currentOrgaSettings.saml_enabled ?? false],
                     saml_login_button_text: [this._currentOrgaSettings.saml_login_button_text],
                     saml_attr_mapping: [
