@@ -2,6 +2,8 @@ import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 import { OptionDataKey, PollDataKey } from './generic-poll';
 
+export const UnknownUserLabel = _(`Deleted user`);
+
 export const YES_KEY = `yes`;
 export const NO_KEY = `no`;
 export const ABSTAIN_KEY = `abstain`;

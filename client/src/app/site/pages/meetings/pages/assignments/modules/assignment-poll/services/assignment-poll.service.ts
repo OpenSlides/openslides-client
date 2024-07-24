@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { PollPercentBaseVerboseKey, PollTypeVerboseKey } from 'src/app/domain/models/poll';
@@ -22,8 +21,6 @@ import { PollService } from '../../../../../modules/poll/services/poll.service/p
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
 import { AssignmentPollMethodKey, AssignmentPollMethodVerbose } from '../definitions';
 import { AssignmentPollServiceModule } from './assignment-poll-service.module';
-
-export const UnknownUserLabel = _(`Deleted user`);
 
 /**
  * The assignment poll service should not have too much content since the poll system in OS4
