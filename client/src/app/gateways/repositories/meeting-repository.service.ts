@@ -13,7 +13,6 @@ import { Fieldsets } from '../../site/services/model-request-builder';
 import { TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from './base-repository';
 import { MeetingAction } from './meetings';
-import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 import { UserAction } from './users/user-action';
 
 export enum MeetingProjectionType {
@@ -40,11 +39,8 @@ export interface MeetingUserModifiedFields {
     providedIn: `root`
 })
 export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meeting> {
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollectorService,
-        private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionService
-    ) {
-        super(repositoryServiceCollector, Meeting);
+    public constructor(private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionService) {
+        super(Meeting);
     }
 
     public override getFieldsets(): Fieldsets<Meeting> {

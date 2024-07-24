@@ -7,7 +7,6 @@ import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorAction, ScrollScaleDirection } from './projector.action';
 
 /**
@@ -17,8 +16,8 @@ import { ProjectorAction, ScrollScaleDirection } from './projector.action';
     providedIn: `root`
 })
 export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<ViewProjector, Projector> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, Projector);
+    public constructor() {
+        super(Projector);
     }
 
     public getTitle = (viewProjector: ViewProjector): string => viewProjector.name;

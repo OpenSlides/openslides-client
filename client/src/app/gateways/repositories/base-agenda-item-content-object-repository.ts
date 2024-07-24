@@ -5,7 +5,6 @@ import { AgendaListTitle, HasAgendaItem } from 'src/app/site/pages/meetings/page
 
 import { AgendaItemRepositoryService } from './agenda';
 import { BaseMeetingRelatedRepository } from './base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';
 
 export function isAgendaItemContentObjectRepository(obj: any): obj is BaseAgendaItemContentObjectRepository<any, any> {
     const repo = obj as BaseAgendaItemContentObjectRepository<any, any>;
@@ -34,11 +33,10 @@ export abstract class BaseAgendaItemContentObjectRepository<
     implements AgendaItemContentObjectRepository<V, M>
 {
     public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         baseModelCtor: ModelConstructor<M>,
         protected agendaItemRepo: AgendaItemRepositoryService
     ) {
-        super(repositoryServiceCollector, baseModelCtor);
+        super(baseModelCtor);
     }
 
     /**

@@ -11,7 +11,6 @@ import { BaseController } from 'src/app/site/base/base-controller';
 import { UserDeleteDialogService } from 'src/app/site/modules/user-components';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -25,13 +24,12 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
     private _committee_users_set: Set<Id> = new Set();
 
     public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
         private userDeleteDialog: UserDeleteDialogService,
         private prompt: PromptService,
         private operator: OperatorService
     ) {
-        super(controllerServiceCollector, User, repo);
+        super(User, repo);
         this.operator.user.committee_managements_as_observable.subscribe(committees => {
             this._committee_users_set = new Set(committees.flatMap(committee => committee.user_ids ?? []));
         });

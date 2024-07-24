@@ -5,15 +5,14 @@ import { ChatGroup } from 'src/app/domain/models/chat/chat-group';
 import { ViewChatGroup } from 'src/app/site/pages/meetings/pages/chat';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { ChatGroupAction } from './chat-group.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class ChatGroupRepositoryService extends BaseMeetingRelatedRepository<ViewChatGroup, ChatGroup> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, ChatGroup);
+    public constructor() {
+        super(ChatGroup);
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Chat groups` : `Chat group`);

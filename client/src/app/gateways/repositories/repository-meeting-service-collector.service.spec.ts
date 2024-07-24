@@ -48,12 +48,6 @@ describe(`RepositoryMeetingServiceCollectorService and MeetingServiceCollectorSe
     let service: RepositoryMeetingServiceCollectorService;
 
     const serviceGetterTestCases: (keyof RepositoryMeetingServiceCollectorService)[] = [
-        `DS`,
-        `actionService`,
-        `collectionMapperService`,
-        `viewModelStoreService`,
-        `translate`,
-        `relationManager`,
         `activeMeetingIdService`,
         `activeMeetingService`,
         `meetingSettingsService`

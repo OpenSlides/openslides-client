@@ -9,7 +9,6 @@ import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { VoteRepositoryService } from '../vote-repository.service';
 import { PollAction } from './poll.action';
 
@@ -30,11 +29,10 @@ interface AnalogPollGlobalValues {
 })
 export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll, Poll> {
     public constructor(
-        repoServiceCollector: RepositoryMeetingServiceCollectorService,
         private voteController: VoteControllerService,
         private voteRepo: VoteRepositoryService
     ) {
-        super(repoServiceCollector, Poll);
+        super(Poll);
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Polls` : `Poll`);

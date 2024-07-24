@@ -9,18 +9,14 @@ import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/ser
 
 import { Action } from '../../actions';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { AgendaItemAction } from './agenda-item.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<ViewAgendaItem, AgendaItem> {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        private treeService: TreeService
-    ) {
-        super(repositoryServiceCollector, AgendaItem);
+    public constructor(private treeService: TreeService) {
+        super(AgendaItem);
 
         this.setSortFunction((a, b) => a.tree_weight - b.tree_weight); // leave the sorting as it is
     }

@@ -4,7 +4,6 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { hasListOfSpeakers, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { SpeakerAction } from '../speakers/speaker.action';
 import { ListOfSpeakersAction } from './list-of-speakers.action';
 
@@ -17,8 +16,8 @@ import { ListOfSpeakersAction } from './list-of-speakers.action';
     providedIn: `root`
 })
 export class ListOfSpeakersRepositoryService extends BaseMeetingRelatedRepository<ViewListOfSpeakers, ListOfSpeakers> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, ListOfSpeakers);
+    public constructor() {
+        super(ListOfSpeakers);
     }
 
     public getVerboseName = (plural = false): string =>

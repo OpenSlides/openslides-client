@@ -1,25 +1,21 @@
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
 import { BaseRepository } from '../../gateways/repositories/base-repository';
-import { ControllerServiceCollectorService } from '../services/controller-service-collector.service';
 import { BaseViewModel } from './base-view-model';
 
 @Directive()
 export abstract class BaseController<V extends BaseViewModel, M extends BaseModel> {
-    public get translate(): TranslateService {
-        return this.controllerServiceCollector.translate;
-    }
+    public translate = inject(TranslateService);
 
     public get collection(): string {
         return this.repo.collection;
     }
 
     public constructor(
-        protected controllerServiceCollector: ControllerServiceCollectorService,
         protected baseModelCtor: ModelConstructor<M>,
         protected repo: BaseRepository<V, M>
     ) {}

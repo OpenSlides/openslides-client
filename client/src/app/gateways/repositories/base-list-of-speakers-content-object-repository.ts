@@ -4,7 +4,6 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 
 import { BaseMeetingRelatedRepository } from './base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';
 
 /**
  * Describes a base repository which objects have a list of speakers assigned.
@@ -27,11 +26,8 @@ export abstract class BaseListOfSpeakersContentObjectRepository<
     extends BaseMeetingRelatedRepository<V, M>
     implements ListOfSpeakersContentObjectRepository<V, M>
 {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        baseModelCtor: ModelConstructor<M>
-    ) {
-        super(repositoryServiceCollector, baseModelCtor);
+    public constructor(baseModelCtor: ModelConstructor<M>) {
+        super(baseModelCtor);
     }
 
     public getListOfSpeakersTitle(viewModel: V): string {

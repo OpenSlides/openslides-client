@@ -7,15 +7,14 @@ import { StructureLevel } from '../../../domain/models/structure-levels/structur
 import { ViewStructureLevel } from '../../../site/pages/meetings/pages/participants/pages/structure-levels/view-models/view-structure-level';
 import { Action } from '../../actions';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { StructureLevelAction } from './structure-level.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class StructureLevelRepositoryService extends BaseMeetingRelatedRepository<ViewStructureLevel, StructureLevel> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, StructureLevel);
+    public constructor() {
+        super(StructureLevel);
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? _(`Structure levels`) : _(`Structure level`));

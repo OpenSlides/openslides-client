@@ -7,7 +7,6 @@ import { ViewAssignmentCandidate } from 'src/app/site/pages/meetings/pages/assig
 import { UnknownUserLabel } from 'src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/services/assignment-poll.service';
 
 import { AssignmentCandidate } from '../../../../domain/models/assignments/assignment-candidate';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AssignmentCandidateAction } from './assignment-candidate.action';
 
 @Injectable({
@@ -17,8 +16,8 @@ export class AssignmentCandidateRepositoryService extends BaseMeetingRelatedRepo
     ViewAssignmentCandidate,
     AssignmentCandidate
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, AssignmentCandidate);
+    public constructor() {
+        super(AssignmentCandidate);
     }
 
     public getTitle = (viewAssignmentCandidate: ViewAssignmentCandidate): string =>

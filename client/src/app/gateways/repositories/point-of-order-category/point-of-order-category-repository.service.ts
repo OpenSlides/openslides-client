@@ -8,7 +8,6 @@ import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agen
 import { Action } from '../../actions';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { CanPerformListUpdates } from '../base-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { PointOfOrderCategoryAction } from './point-of-order-category.action';
 
 @Injectable({
@@ -18,8 +17,8 @@ export class PointOfOrderCategoryRepositoryService
     extends BaseMeetingRelatedRepository<ViewPointOfOrderCategory, PointOfOrderCategory>
     implements CanPerformListUpdates<PointOfOrderCategory, void | Identifiable>
 {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, PointOfOrderCategory);
+    public constructor() {
+        super(PointOfOrderCategory);
     }
 
     public getVerboseName = (plural?: boolean): string =>

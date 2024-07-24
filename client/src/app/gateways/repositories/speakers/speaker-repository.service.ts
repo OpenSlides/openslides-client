@@ -7,7 +7,6 @@ import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { SpeakerAction } from './speaker.action';
 
 export interface PointOfOrderInformation {
@@ -20,8 +19,8 @@ export interface PointOfOrderInformation {
     providedIn: `root`
 })
 export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewSpeaker, Speaker> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, Speaker);
+    public constructor() {
+        super(Speaker);
     }
 
     public getVerboseName = (plural = false): any => this.translate.instant(plural ? `Speakers` : `Speaker`);

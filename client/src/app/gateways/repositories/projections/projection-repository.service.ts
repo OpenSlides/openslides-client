@@ -5,15 +5,14 @@ import { ViewProjection } from 'src/app/site/pages/meetings/pages/projectors';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectionAction } from './projection.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class ProjectionRepositoryService extends BaseMeetingRelatedRepository<ViewProjection, Projection> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, Projection);
+    public constructor() {
+        super(Projection);
     }
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Projections` : `Projection`);

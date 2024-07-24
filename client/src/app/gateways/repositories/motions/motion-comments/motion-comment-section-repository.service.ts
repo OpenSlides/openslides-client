@@ -4,7 +4,6 @@ import { MotionCommentSection } from 'src/app/domain/models/motions/motion-comme
 import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionCommentSectionAction } from './motion-comment-section.action';
 
 @Injectable({
@@ -14,8 +13,8 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
     ViewMotionCommentSection,
     MotionCommentSection
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MotionCommentSection);
+    public constructor() {
+        super(MotionCommentSection);
 
         this.viewModelSortFn = (a: ViewMotionCommentSection, b: ViewMotionCommentSection): number => {
             if (a.weight === b.weight) {

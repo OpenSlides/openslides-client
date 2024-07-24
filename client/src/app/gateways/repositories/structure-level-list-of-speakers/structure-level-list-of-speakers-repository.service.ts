@@ -5,7 +5,6 @@ import { StructureLevelListOfSpeakersAction } from 'src/app/gateways/repositorie
 import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 
 @Injectable({
     providedIn: `root`
@@ -14,8 +13,8 @@ export class StructureLevelListOfSpeakersRepositoryService extends BaseMeetingRe
     ViewStructureLevelListOfSpeakers,
     StructureLevelListOfSpeakers
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, StructureLevelListOfSpeakers);
+    public constructor() {
+        super(StructureLevelListOfSpeakers);
     }
 
     public getVerboseName = (): string => `StructureLevelListOfSpeakers`;

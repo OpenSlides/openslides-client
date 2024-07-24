@@ -7,7 +7,6 @@ import { ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 
 const VOTE_URL = `/system/vote`;
 const HAS_VOTED_URL = `${VOTE_URL}/voted`;
@@ -42,11 +41,10 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
     private _fetchVotablePollsTimeout = null;
 
     public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         private operator: OperatorService,
         private http: HttpService
     ) {
-        super(repositoryServiceCollector, Vote);
+        super(Vote);
     }
 
     public getTitle = (): string => `Vote`;

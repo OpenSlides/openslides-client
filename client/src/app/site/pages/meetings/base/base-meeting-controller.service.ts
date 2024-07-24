@@ -45,11 +45,11 @@ export abstract class BaseMeetingControllerService<V extends BaseViewModel, M ex
     private _isConstructed = false;
 
     public constructor(
-        protected override controllerServiceCollector: MeetingControllerServiceCollectorService,
+        protected controllerServiceCollector: MeetingControllerServiceCollectorService,
         baseModelConstructor: ModelConstructor<M>,
         repo: BaseRepository<V, M>
     ) {
-        super(controllerServiceCollector, baseModelConstructor, repo);
+        super(baseModelConstructor, repo);
         controllerServiceCollector.activeMeetingIdService.meetingIdObservable.subscribe(id => this.onNextMeetingId(id));
         this._isConstructed = true;
     }

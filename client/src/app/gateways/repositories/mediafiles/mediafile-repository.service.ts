@@ -9,7 +9,6 @@ import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/ac
 import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from '../base-repository';
 import { ProjectionRepositoryService } from '../projections/projection-repository.service';
-import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { MediafileAction } from './mediafile.action';
 
 @Injectable({
@@ -21,11 +20,10 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     }
 
     public constructor(
-        repositoryServiceCollector: RepositoryServiceCollectorService,
         private activeMeetingIdService: ActiveMeetingIdService,
         private projectionRepo: ProjectionRepositoryService
     ) {
-        super(repositoryServiceCollector, Mediafile);
+        super(Mediafile);
 
         this.viewModelSortFn = (a: ViewMediafile, b: ViewMediafile): number =>
             this.languageCollator.compare(a.title, b.title);

@@ -15,11 +15,11 @@ import { MediafileCommonServiceModule } from './mediafile-common-service.module'
 @Injectable({ providedIn: MediafileCommonServiceModule })
 export class MediafileControllerService extends BaseController<ViewMediafile, Mediafile> {
     public constructor(
-        protected override controllerServiceCollector: MeetingControllerServiceCollectorService,
+        protected controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MediafileRepositoryService,
         private operator: OperatorService
     ) {
-        super(controllerServiceCollector, Mediafile, repo);
+        super(Mediafile, repo);
     }
 
     public move(files: Identifiable[], directoryId: Id | null): Promise<void> {

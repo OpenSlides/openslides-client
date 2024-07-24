@@ -3,7 +3,6 @@ import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-s
 import { ListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/list-of-speakers/list-of-speakers-repository.service';
 import { BaseController } from 'src/app/site/base/base-controller';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
 
 import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
 
@@ -21,11 +20,8 @@ export interface SpeakingTimeStructureLevelObject {
     providedIn: `root`
 })
 export class ListOfSpeakersControllerService extends BaseController<ViewListOfSpeakers, ListOfSpeakers> {
-    public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
-        protected override repo: ListOfSpeakersRepositoryService
-    ) {
-        super(controllerServiceCollector, ListOfSpeakers, repo);
+    public constructor(protected override repo: ListOfSpeakersRepositoryService) {
+        super(ListOfSpeakers, repo);
     }
 
     public readdLastSpeaker(listOfSpeakers: ViewListOfSpeakers): Promise<void> {

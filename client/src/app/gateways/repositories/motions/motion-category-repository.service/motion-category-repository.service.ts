@@ -7,15 +7,14 @@ import { ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionCategoryAction } from './motion-category.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepository<ViewMotionCategory, MotionCategory> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MotionCategory);
+    public constructor() {
+        super(MotionCategory);
     }
 
     public create(...categories: Partial<MotionCategory>[]): Promise<Identifiable[]> {

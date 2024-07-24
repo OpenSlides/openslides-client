@@ -8,7 +8,6 @@ import { Assignment } from '../../../../domain/models/assignments/assignment';
 import { createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { CreateResponse } from '../../base-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AssignmentAction } from './assignment.action';
 
 @Injectable({
@@ -18,11 +17,8 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
     ViewAssignment,
     Assignment
 > {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, Assignment, agendaItemRepo);
+    public constructor(agendaItemRepo: AgendaItemRepositoryService) {
+        super(Assignment, agendaItemRepo);
     }
 
     public override getFieldsets(): Fieldsets<Assignment> {

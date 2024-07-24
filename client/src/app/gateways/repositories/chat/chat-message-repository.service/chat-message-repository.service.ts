@@ -5,7 +5,6 @@ import { ChatMessage } from 'src/app/domain/models/chat/chat-message';
 import { ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { ChatMessageAction } from './chat-message.action';
 
 /**
@@ -15,8 +14,8 @@ export const CHAT_MESSAGE_MAX_LENGTH = 512;
 
 @Injectable({ providedIn: `root` })
 export class ChatMessageRepositoryService extends BaseMeetingRelatedRepository<ViewChatMessage, ChatMessage> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, ChatMessage);
+    public constructor() {
+        super(ChatMessage);
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Chat messages` : `Chat message`);

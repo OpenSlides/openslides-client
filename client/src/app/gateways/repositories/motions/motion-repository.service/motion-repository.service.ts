@@ -7,13 +7,13 @@ import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { NullablePartial } from 'src/app/infrastructure/utils';
 import { AgendaListTitle } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { Motion } from '../../../../domain/models/motions/motion';
 import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { CreateResponse } from '../../base-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AmendmentAction } from './amendment.action';
 import { MotionAction } from './motion.action';
 
@@ -32,11 +32,11 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     protected sortProperty: SortProperty = `number`;
 
     public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         agendaItemRepo: AgendaItemRepositoryService,
-        private treeService: TreeService
+        private treeService: TreeService,
+        private meetingSettingsService: MeetingSettingsService
     ) {
-        super(repositoryServiceCollector, Motion, agendaItemRepo);
+        super(Motion, agendaItemRepo);
         this.meetingSettingsService.get(`motions_default_sorting`).subscribe(conf => {
             this.sortProperty = conf as SortProperty;
             this.setConfigSortFn();

@@ -6,7 +6,6 @@ import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-me
 import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 
 export type MeetingUserPatchFn =
     | { [key in keyof MeetingUser]?: any }
@@ -20,8 +19,8 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
 
     private meetingUserIdMap: Map<Id, Map<Id, Id>> = new Map();
 
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MeetingUser);
+    public constructor() {
+        super(MeetingUser);
     }
 
     public override getFieldsets(): Fieldsets<MeetingUser> {

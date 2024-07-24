@@ -4,7 +4,6 @@ import { Action } from 'src/app/gateways/actions';
 import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 
 interface MotionMeetingUserActions {
     CREATE: string;
@@ -19,11 +18,10 @@ export abstract class BaseMotionMeetingUserRepositoryService<
     protected abstract sortPayloadField: string;
 
     public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         constructor: ModelConstructor<M>,
         private actionDefs: MotionMeetingUserActions
     ) {
-        super(repositoryServiceCollector, constructor);
+        super(constructor);
     }
 
     public getTitle = (model: V): string => model?.user?.getTitle() || this.translate.instant(`Unknown participant`);

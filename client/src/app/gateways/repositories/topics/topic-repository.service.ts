@@ -8,18 +8,14 @@ import { Action } from '../../actions';
 import { createAgendaItem } from '../agenda';
 import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-agenda-item-and-list-of-speakers-content-object-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { TopicAction } from './topic.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<ViewTopic, Topic> {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, Topic, agendaItemRepo);
+    public constructor(agendaItemRepo: AgendaItemRepositoryService) {
+        super(Topic, agendaItemRepo);
     }
 
     public create(...topics: any[]): Promise<Identifiable[]> {

@@ -6,15 +6,14 @@ import { ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
 import { Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionWorkflowAction } from './motion-workflow.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepository<ViewMotionWorkflow, MotionWorkflow> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MotionWorkflow);
+    public constructor() {
+        super(MotionWorkflow);
     }
 
     public override getFieldsets(): Fieldsets<MotionWorkflow> {

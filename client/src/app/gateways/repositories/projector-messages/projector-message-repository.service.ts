@@ -4,7 +4,6 @@ import { ProjectorMessage } from 'src/app/domain/models/projector/projector-mess
 import { ViewProjectorMessage } from 'src/app/site/pages/meetings/pages/projectors';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorMessageAction } from './projector-message.action';
 
 @Injectable({
@@ -14,8 +13,8 @@ export class ProjectorMessageRepositoryService extends BaseMeetingRelatedReposit
     ViewProjectorMessage,
     ProjectorMessage
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, ProjectorMessage);
+    public constructor() {
+        super(ProjectorMessage);
     }
 
     public getTitle = (): string => this.getVerboseName();

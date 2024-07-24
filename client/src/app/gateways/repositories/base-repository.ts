@@ -1,3 +1,4 @@
+import { inject, Injector } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, BehaviorSubject, filter, Observable, Subject, Subscription } from 'rxjs';
 import { HasSequentialNumber, Identifiable } from 'src/app/domain/interfaces';
@@ -15,7 +16,6 @@ import { CollectionMapperService } from '../../site/services/collection-mapper.s
 import { DataStoreService } from '../../site/services/data-store.service';
 import { Fieldsets } from '../../site/services/model-request-builder';
 import { RelationManagerService } from '../../site/services/relation-manager.service';
-import { ViewModelStoreService } from '../../site/services/view-model-store.service';
 import { Action, ActionService } from '../actions';
 import { ActionRequest } from '../actions/action-utils';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
@@ -113,29 +113,11 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     protected baseViewModelCtor!: ViewModelConstructor<V>;
 
-    protected get DS(): DataStoreService {
-        return this.repositoryServiceCollector.DS;
-    }
-
-    protected get actions(): ActionService {
-        return this.repositoryServiceCollector.actionService;
-    }
-
-    protected get collectionMapperService(): CollectionMapperService {
-        return this.repositoryServiceCollector.collectionMapperService;
-    }
-
-    protected get viewModelStoreService(): ViewModelStoreService {
-        return this.repositoryServiceCollector.viewModelStoreService;
-    }
-
-    protected get translate(): TranslateService {
-        return this.repositoryServiceCollector.translate;
-    }
-
-    protected get relationManager(): RelationManagerService {
-        return this.repositoryServiceCollector.relationManager;
-    }
+    protected DS = inject(DataStoreService);
+    protected actions = inject(ActionService);
+    protected collectionMapperService = inject(CollectionMapperService);
+    protected translate = inject(TranslateService);
+    protected relationManager = inject(RelationManagerService);
 
     /**
      * The collection string of the managed model.
@@ -166,10 +148,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     private foreignSortBaseKeys: { [key: string]: { [collection: string]: string[] } } = {};
     private foreignSortBaseKeySubscriptions: { [key: string]: Subscription[] } = {};
 
-    public constructor(
-        private repositoryServiceCollector: RepositoryServiceCollectorService,
-        protected baseModelCtor: ModelConstructor<M>
-    ) {
+    protected injector = inject(Injector);
+    private repositoryServiceCollector = inject(RepositoryServiceCollectorService);
+
+    public constructor(protected baseModelCtor: ModelConstructor<M>) {
         this._collection = baseModelCtor.COLLECTION;
 
         this.relationManager.getRelationsForCollection(this.collection).forEach(relation => {

@@ -5,15 +5,14 @@ import { Action } from 'src/app/gateways/actions';
 import { ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionStateAction } from './motion-state.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<ViewMotionState, MotionState> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MotionState);
+    public constructor() {
+        super(MotionState);
     }
 
     public getTitle = (viewMotionState: ViewMotionState): string => viewMotionState.name;

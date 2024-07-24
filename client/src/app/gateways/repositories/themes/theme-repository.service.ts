@@ -6,15 +6,14 @@ import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { ViewTheme } from 'src/app/site/pages/organization/pages/designs';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
-import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { ThemeAction } from './theme.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class ThemeRepositoryService extends BaseRepository<ViewTheme, Theme> {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollectorService) {
-        super(repositoryServiceCollector, Theme);
+    public constructor() {
+        super(Theme);
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Themes` : `Theme`);

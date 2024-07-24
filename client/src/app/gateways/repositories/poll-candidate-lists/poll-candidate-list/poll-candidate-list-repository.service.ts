@@ -5,7 +5,6 @@ import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/v
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 
 /**
  * Repository service for the PollCandidateList.
@@ -24,8 +23,8 @@ export class PollCandidateListRepositoryService extends BaseMeetingRelatedReposi
     ViewPollCandidateList,
     PollCandidateList
 > {
-    public constructor(repoServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repoServiceCollector, PollCandidateList);
+    public constructor() {
+        super(PollCandidateList);
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `PollCandidateLists` : `PollCandidateList`);

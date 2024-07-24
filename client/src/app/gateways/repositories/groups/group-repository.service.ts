@@ -5,15 +5,14 @@ import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { GroupAction } from './group.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGroup, Group> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, Group);
+    public constructor() {
+        super(Group);
     }
 
     public override getFieldsets(): Fieldsets<Group> {

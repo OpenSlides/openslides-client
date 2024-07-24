@@ -7,7 +7,6 @@ import { Identifiable } from '../../../../../../domain/interfaces';
 import { Committee } from '../../../../../../domain/models/comittees/committee';
 import { CommitteeRepositoryService } from '../../../../../../gateways/repositories/committee-repository.service';
 import { BaseController } from '../../../../../base/base-controller';
-import { ControllerServiceCollectorService } from '../../../../../services/controller-service-collector.service';
 import { ViewCommittee } from '../view-models';
 import { CommitteeCommonServiceModule } from './committee-common-service.module';
 
@@ -15,11 +14,8 @@ import { CommitteeCommonServiceModule } from './committee-common-service.module'
     providedIn: CommitteeCommonServiceModule
 })
 export class CommitteeControllerService extends BaseController<ViewCommittee, Committee> {
-    public constructor(
-        repositoryServiceCollector: ControllerServiceCollectorService,
-        protected override repo: CommitteeRepositoryService
-    ) {
-        super(repositoryServiceCollector, Committee, repo);
+    public constructor(protected override repo: CommitteeRepositoryService) {
+        super(Committee, repo);
     }
 
     public bulkForwardToCommittees(committees: ViewCommittee[], committeeIds: Ids): Promise<void> {
