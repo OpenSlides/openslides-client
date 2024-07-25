@@ -56,7 +56,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
         private modelRequestService: ModelRequestService
     ) {
         this.descriptor = isProjectionBuildDescriptor(data) ? data : data.descriptor;
-        this.allowReferenceProjector = !isProjectionBuildDescriptor(data) && data.allowReferenceProjector;
+        this.allowReferenceProjector = isProjectionBuildDescriptor(data) || data.allowReferenceProjector;
         this.projectorSelectable = isProjectionBuildDescriptor(data) || !data.projector;
         if (!this.projectorSelectable && !isProjectionBuildDescriptor(data)) {
             this.selectedProjectors = [data.projector.id];
