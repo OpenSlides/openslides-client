@@ -1,12 +1,12 @@
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { Observable } from 'rxjs';
+import { UnknownUserLabel } from 'src/app/domain/models/poll';
 
 import { OptionData, OptionTitle } from '../../../../../../domain/models/poll/generic-poll';
 import { Option } from '../../../../../../domain/models/poll/option';
 import { BaseViewModel } from '../../../../../base/base-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewUser } from '../../../view-models/view-user';
-import { UnknownUserLabel } from '../../assignments/modules/assignment-poll/services/assignment-poll.service';
 import { isSortedList, SortedList } from './sorted-list';
 import { ViewPoll } from './view-poll';
 import { ViewVote } from './view-vote';

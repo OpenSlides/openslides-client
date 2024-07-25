@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { PollMethod } from 'src/app/domain/models/poll/poll-constants';
+import { PollMethod, UnknownUserLabel } from 'src/app/domain/models/poll/poll-constants';
 import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
 import {
     BasePollVoteComponent,
@@ -11,8 +11,6 @@ import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-
-import { UnknownUserLabel } from '../../services/assignment-poll.service';
 
 @Component({
     selector: `os-assignment-poll-vote`,

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { UnknownUserLabel } from 'src/app/domain/models/poll';
 import { Action } from 'src/app/gateways/actions';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
 import { ViewAssignmentCandidate } from 'src/app/site/pages/meetings/pages/assignments';
-import { UnknownUserLabel } from 'src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/services/assignment-poll.service';
 
 import { AssignmentCandidate } from '../../../../domain/models/assignments/assignment-candidate';
 import { AssignmentCandidateAction } from './assignment-candidate.action';
