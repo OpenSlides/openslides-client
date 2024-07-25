@@ -6,8 +6,8 @@ import { ListUpdateData } from 'src/app/infrastructure/utils';
 import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 
 import { Action } from '../../actions';
+import { CanPerformListUpdates } from '../base-backend-repository';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { CanPerformListUpdates } from '../base-repository';
 import { PointOfOrderCategoryAction } from './point-of-order-category.action';
 
 @Injectable({

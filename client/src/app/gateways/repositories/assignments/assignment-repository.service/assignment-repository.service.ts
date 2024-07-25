@@ -7,7 +7,7 @@ import { Fieldsets } from 'src/app/site/services/model-request-builder';
 import { Assignment } from '../../../../domain/models/assignments/assignment';
 import { createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
-import { CreateResponse } from '../../base-repository';
+import { CreateResponse } from '../../base-backend-repository';
 import { AssignmentAction } from './assignment.action';
 
 @Injectable({

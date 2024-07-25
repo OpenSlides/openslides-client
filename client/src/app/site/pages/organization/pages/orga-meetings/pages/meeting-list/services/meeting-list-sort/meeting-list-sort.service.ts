@@ -1,6 +1,6 @@
 import { Injectable, ProviderToken } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -11,7 +11,7 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 export class MeetingListSortService extends BaseSortListService<ViewMeeting> {
     protected storageKey = `MeetingList`;
 
-    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = MeetingRepositoryService;
+    protected repositoryToken: ProviderToken<BaseBackendRepository<any, any>> = MeetingRepositoryService;
 
     private readonly staticSortOptions: OsSortingOption<ViewMeeting>[] = [
         { property: `name`, label: _(`Title`) },

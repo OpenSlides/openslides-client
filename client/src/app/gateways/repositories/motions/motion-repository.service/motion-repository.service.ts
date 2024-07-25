@@ -13,7 +13,7 @@ import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/ser
 import { Motion } from '../../../../domain/models/motions/motion';
 import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
-import { CreateResponse } from '../../base-repository';
+import { CreateResponse } from '../../base-backend-repository';
 import { AmendmentAction } from './amendment.action';
 import { MotionAction } from './motion.action';
 

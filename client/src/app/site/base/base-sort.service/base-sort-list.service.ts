@@ -9,7 +9,7 @@ import {
     Observable
 } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
@@ -154,7 +154,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     /**
      * Injection token for the repository whose values should be sorted by this service.
      */
-    protected abstract readonly repositoryToken: ProviderToken<BaseRepository<any, any>>;
+    protected abstract readonly repositoryToken: ProviderToken<BaseBackendRepository<any, any>>;
 
     /**
      * The current sorting definitions
@@ -167,14 +167,14 @@ export abstract class BaseSortListService<V extends BaseViewModel>
 
     private sortDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V> | null>(null);
 
-    private get repository(): BaseRepository<any, any> {
+    private get repository(): BaseBackendRepository<any, any> {
         if (!this._repository) {
             this._repository = this.injector.get(this.repositoryToken);
         }
         return this._repository;
     }
 
-    private _repository: BaseRepository<any, any>;
+    private _repository: BaseBackendRepository<any, any>;
 
     private initializationCount = 0;
 

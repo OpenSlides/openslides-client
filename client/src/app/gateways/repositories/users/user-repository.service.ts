@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Fqid } from 'src/app/domain/definitions/key-types';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
@@ -78,7 +78,7 @@ export type FullNameInformation = ShortNameInformation & LevelAndNumberInformati
 @Injectable({
     providedIn: `root`
 })
-export class UserRepositoryService extends BaseRepository<ViewUser, User> {
+export class UserRepositoryService extends BaseBackendRepository<ViewUser, User> {
     public constructor(
         private activeMeetingIdService: ActiveMeetingIdService,
         private meetingUserRepo: MeetingUserRepositoryService

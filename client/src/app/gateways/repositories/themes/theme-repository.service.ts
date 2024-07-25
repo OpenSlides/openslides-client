@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Theme } from 'src/app/domain/models/theme/theme';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { ViewTheme } from 'src/app/site/pages/organization/pages/designs';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
@@ -11,7 +11,7 @@ import { ThemeAction } from './theme.action';
 @Injectable({
     providedIn: `root`
 })
-export class ThemeRepositoryService extends BaseRepository<ViewTheme, Theme> {
+export class ThemeRepositoryService extends BaseBackendRepository<ViewTheme, Theme> {
     public constructor() {
         super(Theme);
     }

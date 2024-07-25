@@ -11,7 +11,7 @@ import { ViewMeeting } from '../../site/pages/meetings/view-models/view-meeting'
 import { ViewUser } from '../../site/pages/meetings/view-models/view-user';
 import { Fieldsets } from '../../site/services/model-request-builder';
 import { TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
-import { BaseRepository } from './base-repository';
+import { BaseBackendRepository } from './base-backend-repository';
 import { MeetingAction } from './meetings';
 import { UserAction } from './users/user-action';
 
@@ -38,7 +38,7 @@ export interface MeetingUserModifiedFields {
 @Injectable({
     providedIn: `root`
 })
-export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meeting> {
+export class MeetingRepositoryService extends BaseBackendRepository<ViewMeeting, Meeting> {
     public constructor(private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionService) {
         super(Meeting);
     }

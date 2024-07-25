@@ -1,9 +1,7 @@
 import { inject, Injector } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, BehaviorSubject, filter, Observable, Subject, Subscription } from 'rxjs';
-import { HasSequentialNumber, Identifiable } from 'src/app/domain/interfaces';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
-import { ListUpdateData } from 'src/app/infrastructure/utils';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { OsSortProperty } from 'src/app/site/base/base-sort.service';
 import { SortListService } from 'src/app/ui/modules/list';
@@ -16,21 +14,9 @@ import { CollectionMapperService } from '../../site/services/collection-mapper.s
 import { DataStoreService } from '../../site/services/data-store.service';
 import { Fieldsets } from '../../site/services/model-request-builder';
 import { RelationManagerService } from '../../site/services/relation-manager.service';
-import { Action, ActionService } from '../actions';
-import { ActionRequest } from '../actions/action-utils';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 
 const RELATION_AS_OBSERVABLE_SUFFIX = `_as_observable`;
-
-export interface CreateResponse extends Identifiable, HasSequentialNumber {}
-
-export interface CanPerformListUpdates<M extends BaseModel, UpdateResult = any> {
-    listUpdate: (data: ListUpdateData<M>, meeting_id?: Id) => Action<UpdateResult>;
-}
-
-export function canPerformListUpdates(repo: any): repo is CanPerformListUpdates<any> {
-    return repo.listUpdate && typeof repo.listUpdate === `function`;
-}
 
 enum PipelineActionType {
     General = `general`,
@@ -114,10 +100,9 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     protected baseViewModelCtor!: ViewModelConstructor<V>;
 
     protected DS = inject(DataStoreService);
-    protected actions = inject(ActionService);
     protected collectionMapperService = inject(CollectionMapperService);
-    protected translate = inject(TranslateService);
     protected relationManager = inject(RelationManagerService);
+    protected translate = inject(TranslateService);
 
     /**
      * The collection string of the managed model.
@@ -465,17 +450,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
 
     protected tapViewModels(_viewModels: V[]): void {}
 
-    protected createAction<T = void>(
-        name: string,
-        payload: unknown | unknown[],
-        handle_separately?: boolean
-    ): Action<T> {
-        if (!Array.isArray(payload)) {
-            payload = [payload];
-        }
-        return this.actions.createFromArray([{ action: name, data: payload as unknown[] }], handle_separately ?? false);
-    }
-
     /**
      * After creating a view model, all functions for models from the repo
      * are assigned to the new view model.
@@ -707,56 +681,5 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         });
         this._createViewModelPipes.forEach(fn => fn(viewModel));
         return viewModel;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////// The following methods will be removed ///////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * @deprecated This will be removed pretty soon, use `createAction` instead!
-     * @param action
-     * @param payload
-     * @returns
-     */
-    protected async sendActionToBackend<T>(action: string, payload: T): Promise<any> {
-        try {
-            const results = await this.actions.createFromArray([{ action, data: [payload] }]).resolve();
-            if (results) {
-                if (results.length !== 1) {
-                    throw new Error(`The action service did not respond with exactly one response for the request.`);
-                }
-                return results[0];
-            }
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    /**
-     * @deprecated This will be removed pretty soon, use `createAction` instead!
-     * @param action
-     * @param payload
-     * @returns
-     */
-    protected async sendBulkActionToBackend<T>(action: string, payload: T[]): Promise<any> {
-        try {
-            return await this.actions.createFromArray<any>([{ action, data: payload }]).resolve();
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    /**
-     * @deprecated This will be removed pretty soon, use `createAction` instead!
-     * @param actions
-     * @returns
-     */
-    protected async sendActionsToBackend(actions: ActionRequest[], handle_separately = false): Promise<any> {
-        try {
-            return await this.actions.sendRequests(actions, handle_separately);
-        } catch (e) {
-            throw e;
-        }
     }
 }

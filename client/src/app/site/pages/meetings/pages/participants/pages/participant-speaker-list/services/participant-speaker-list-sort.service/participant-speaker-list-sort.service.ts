@@ -1,6 +1,6 @@
 import { Injectable, ProviderToken } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 
@@ -15,7 +15,7 @@ export class ParticipantSpeakerListSortService extends BaseSortListService<ViewS
      */
     protected storageKey = `SpeakerList`;
 
-    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = SpeakerRepositoryService;
+    protected repositoryToken: ProviderToken<BaseBackendRepository<any, any>> = SpeakerRepositoryService;
 
     /**
      * Define the sort options

@@ -4,12 +4,12 @@ import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organi
 import { Organization, OrganizationAction, OrganizationSetting } from '../../domain/models/organizations/organization';
 import { ViewOrganization } from '../../site/pages/organization/view-models/view-organization';
 import { Fieldsets } from '../../site/services/model-request-builder';
-import { BaseRepository } from './base-repository';
+import { BaseBackendRepository } from './base-backend-repository';
 
 @Injectable({
     providedIn: `root`
 })
-export class OrganizationRepositoryService extends BaseRepository<ViewOrganization, Organization> {
+export class OrganizationRepositoryService extends BaseBackendRepository<ViewOrganization, Organization> {
     public constructor() {
         super(Organization);
     }

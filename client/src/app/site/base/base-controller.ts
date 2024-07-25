@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
-import { BaseRepository } from '../../gateways/repositories/base-repository';
+import { BaseBackendRepository } from '../../gateways/repositories/base-backend-repository';
 import { BaseViewModel } from './base-view-model';
 
 @Directive()
@@ -17,7 +17,7 @@ export abstract class BaseController<V extends BaseViewModel, M extends BaseMode
 
     public constructor(
         protected baseModelCtor: ModelConstructor<M>,
-        protected repo: BaseRepository<V, M>
+        protected repo: BaseBackendRepository<V, M>
     ) {}
 
     public getViewModel(id: Id): V | null {

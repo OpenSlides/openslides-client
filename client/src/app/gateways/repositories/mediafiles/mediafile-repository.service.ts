@@ -7,14 +7,14 @@ import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
 import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
-import { BaseRepository } from '../base-repository';
+import { BaseBackendRepository } from '../base-backend-repository';
 import { ProjectionRepositoryService } from '../projections/projection-repository.service';
 import { MediafileAction } from './mediafile.action';
 
 @Injectable({
     providedIn: `root`
 })
-export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Mediafile> {
+export class MediafileRepositoryService extends BaseBackendRepository<ViewMediafile, Mediafile> {
     private get activeMeetingId(): number {
         return this.activeMeetingIdService.meetingId!;
     }

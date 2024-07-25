@@ -1,6 +1,6 @@
 import { Injectable, ProviderToken } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -11,7 +11,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 export class AccountSortService extends BaseSortListService<ViewUser> {
     protected storageKey = `MemberList`;
 
-    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = UserRepositoryService;
+    protected repositoryToken: ProviderToken<BaseBackendRepository<any, any>> = UserRepositoryService;
 
     private staticSortOptions: OsSortingOption<ViewUser>[] = [
         { property: `full_name`, label: _(`Full name`), baseKeys: [`first_name`, `last_name`, `title`] },

@@ -4,7 +4,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { Action, createEmptyAction } from 'src/app/gateways/actions';
-import { CreateResponse } from 'src/app/gateways/repositories/base-repository';
+import { CreateResponse } from 'src/app/gateways/repositories/base-backend-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';

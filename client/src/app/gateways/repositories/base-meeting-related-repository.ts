@@ -4,16 +4,16 @@ import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
 import { BaseViewModel } from '../../site/base/base-view-model';
 import { ActiveMeetingIdService } from '../../site/pages/meetings/services/active-meeting-id.service';
-import { BaseRepository } from './base-repository';
+import { BaseBackendRepository } from './base-backend-repository';
 
 /**
  * Extension of the base repository for all meeting specific models. Provides access
  * to the active meeting service and automatically inserts the id on viewmodel creates.
  */
-export abstract class BaseMeetingRelatedRepository<V extends BaseViewModel, M extends BaseModel> extends BaseRepository<
-    V,
-    M
-> {
+export abstract class BaseMeetingRelatedRepository<
+    V extends BaseViewModel,
+    M extends BaseModel
+> extends BaseBackendRepository<V, M> {
     public readonly resetOnMeetingChange: boolean = true;
 
     protected get activeMeetingId(): Id | null {

@@ -1,7 +1,7 @@
 import { Injectable, ProviderToken } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { BaseSortListService, OsHideSortingOptionSetting, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -17,7 +17,7 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
      */
     protected storageKey = `UserList`;
 
-    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = UserRepositoryService;
+    protected repositoryToken: ProviderToken<BaseBackendRepository<any, any>> = UserRepositoryService;
 
     /**
      * Define the sort options

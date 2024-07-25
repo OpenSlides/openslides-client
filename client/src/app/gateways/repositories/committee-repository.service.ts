@@ -11,14 +11,14 @@ import { ViewCommittee } from '../../site/pages/organization/pages/committees';
 import { Fieldsets, TypedFieldset } from '../../site/services/model-request-builder';
 import { OperatorService } from '../../site/services/operator.service';
 import { Action } from '../actions';
-import { BaseRepository } from './base-repository';
+import { BaseBackendRepository } from './base-backend-repository';
 import { CommitteeAction } from './committees/committee.action';
 import { UserRepositoryService } from './users/user-repository.service';
 
 @Injectable({
     providedIn: `root`
 })
-export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Committee> {
+export class CommitteeRepositoryService extends BaseBackendRepository<ViewCommittee, Committee> {
     public constructor(
         private operator: OperatorService,
         private userRepo: UserRepositoryService

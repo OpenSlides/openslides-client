@@ -1,5 +1,5 @@
 import { Injectable, ProviderToken } from '@angular/core';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { MotionBlockRepositoryService } from 'src/app/gateways/repositories/motions';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
@@ -13,7 +13,7 @@ export class MotionBlockSortService extends BaseSortListService<ViewMotionBlock>
      */
     protected storageKey = `MotionBlockList`;
 
-    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = MotionBlockRepositoryService;
+    protected repositoryToken: ProviderToken<BaseBackendRepository<any, any>> = MotionBlockRepositoryService;
 
     private MotionBlockSortOptions: OsSortingOption<ViewMotionBlock>[] = [
         { property: `title` },

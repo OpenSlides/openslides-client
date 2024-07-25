@@ -1,5 +1,5 @@
 import { Injectable, ProviderToken } from '@angular/core';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { StructureLevelRepositoryService } from 'src/app/gateways/repositories/structure-levels';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
@@ -13,7 +13,7 @@ export class StructureLevelSortService extends BaseSortListService<ViewStructure
      */
     protected storageKey = `StructureLevelList`;
 
-    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = StructureLevelRepositoryService;
+    protected repositoryToken: ProviderToken<BaseBackendRepository<any, any>> = StructureLevelRepositoryService;
 
     private StructureLevelSortOptions: OsSortingOption<ViewStructureLevel>[] = [{ property: `name` }];
 

@@ -1,6 +1,6 @@
 import { Injectable, ProviderToken } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { CommitteeRepositoryService } from 'src/app/gateways/repositories/committee-repository.service';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 
@@ -12,7 +12,7 @@ import { ViewCommittee } from '../../../../view-models';
 export class CommitteeSortService extends BaseSortListService<ViewCommittee> {
     protected storageKey = `CommitteeList`;
 
-    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = CommitteeRepositoryService;
+    protected repositoryToken: ProviderToken<BaseBackendRepository<any, any>> = CommitteeRepositoryService;
 
     private readonly staticSortOptions: OsSortingOption<ViewCommittee>[] = [
         { property: `name`, label: _(`Title`) },

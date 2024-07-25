@@ -1,7 +1,7 @@
 import { Directive } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { BaseController } from 'src/app/site/base/base-controller';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
@@ -47,7 +47,7 @@ export abstract class BaseMeetingControllerService<V extends BaseViewModel, M ex
     public constructor(
         protected controllerServiceCollector: MeetingControllerServiceCollectorService,
         baseModelConstructor: ModelConstructor<M>,
-        repo: BaseRepository<V, M>
+        repo: BaseBackendRepository<V, M>
     ) {
         super(baseModelConstructor, repo);
         controllerServiceCollector.activeMeetingIdService.meetingIdObservable.subscribe(id => this.onNextMeetingId(id));

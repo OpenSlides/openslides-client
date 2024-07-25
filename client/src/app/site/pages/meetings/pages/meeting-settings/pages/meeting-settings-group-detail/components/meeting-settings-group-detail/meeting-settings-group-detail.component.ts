@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Meeting, Settings } from 'src/app/domain/models/meetings/meeting';
 import { Action } from 'src/app/gateways/actions';
-import { canPerformListUpdates } from 'src/app/gateways/repositories/base-repository';
+import { canPerformListUpdates } from 'src/app/gateways/repositories/base-backend-repository';
 import { Relation, RELATIONS } from 'src/app/infrastructure/definitions/relations';
 import { ObjectReplaceKeysConfig, partitionModelsForUpdate, replaceObjectKeys } from 'src/app/infrastructure/utils';
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';

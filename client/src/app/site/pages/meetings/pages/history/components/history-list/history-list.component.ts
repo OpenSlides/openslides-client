@@ -11,7 +11,7 @@ import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { HistoryPosition, HistoryPresenterService } from 'src/app/gateways/presenter/history-presenter.service';
 import { SearchDeletedModelsPresenterService } from 'src/app/gateways/presenter/search-deleted-models-presenter.service';
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import {
     collectionIdFromFqid,
@@ -74,7 +74,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         }
     }
 
-    public get modelsRepoMap(): { [collection: Collection]: BaseRepository<BaseViewModel, BaseModel> } {
+    public get modelsRepoMap(): { [collection: Collection]: BaseBackendRepository<BaseViewModel, BaseModel> } {
         // add repos to this array to extend the selection for history models
         const historyRepos: any[] = [this.motionRepo, this.assignmentRepo];
         if (this.operator.isOrgaManager) {

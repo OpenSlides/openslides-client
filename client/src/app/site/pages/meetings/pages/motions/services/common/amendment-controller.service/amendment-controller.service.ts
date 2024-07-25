@@ -3,7 +3,7 @@ import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions/motion';
-import { CreateResponse } from 'src/app/gateways/repositories/base-repository';
+import { CreateResponse } from 'src/app/gateways/repositories/base-backend-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 
 import { ViewMotion } from '../../../view-models';

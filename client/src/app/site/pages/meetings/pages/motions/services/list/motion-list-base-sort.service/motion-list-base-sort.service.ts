@@ -1,7 +1,7 @@
 import { Directive, inject, ProviderToken } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import {
     BaseSortListService,
@@ -20,7 +20,7 @@ export class MotionListBaseSortService extends BaseSortListService<ViewMotion> {
      */
     protected storageKey = `MotionList`;
 
-    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = MotionRepositoryService;
+    protected repositoryToken: ProviderToken<BaseBackendRepository<any, any>> = MotionRepositoryService;
 
     /**
      * Hold the default motion sorting

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { BaseRepository } from '../../gateways/repositories/base-repository';
+import { BaseBackendRepository } from '../../gateways/repositories/base-backend-repository';
 import { BaseViewModel, ViewModelConstructor } from '../base/base-view-model';
 import { CollectionMapperService } from './collection-mapper.service';
 
@@ -17,8 +17,8 @@ export class ViewModelStoreService {
      */
     private getRepository<V extends BaseViewModel>(
         collectionType: ViewModelConstructor<V> | string
-    ): BaseRepository<V, any> {
-        return this.collectionMapperService.getRepository(collectionType) as BaseRepository<V, any>;
+    ): BaseBackendRepository<V, any> {
+        return this.collectionMapperService.getRepository(collectionType) as BaseBackendRepository<V, any>;
     }
 
     /**

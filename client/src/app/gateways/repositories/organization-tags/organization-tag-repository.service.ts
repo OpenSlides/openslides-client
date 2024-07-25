@@ -5,13 +5,13 @@ import { Identifiable } from '../../../domain/interfaces';
 import { OrganizationTag } from '../../../domain/models/organization-tags/organization-tag';
 import { ViewOrganizationTag } from '../../../site/pages/organization/pages/organization-tags';
 import { ThemeService } from '../../../site/services/theme.service';
-import { BaseRepository } from '../base-repository';
+import { BaseBackendRepository } from '../base-backend-repository';
 import { OrganizationTagAction } from './organization-tag.action';
 
 @Injectable({
     providedIn: `root`
 })
-export class OrganizationTagRepositoryService extends BaseRepository<ViewOrganizationTag, OrganizationTag> {
+export class OrganizationTagRepositoryService extends BaseBackendRepository<ViewOrganizationTag, OrganizationTag> {
     public constructor(private theme: ThemeService) {
         super(OrganizationTag);
     }

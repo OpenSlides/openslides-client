@@ -1,6 +1,6 @@
 import { Injectable, ProviderToken } from '@angular/core';
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { BaseBackendRepository } from 'src/app/gateways/repositories/base-backend-repository';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 
@@ -16,7 +16,7 @@ export class AssignmentSortListService extends BaseSortListService<ViewAssignmen
      */
     protected storageKey = `AssignmentList`;
 
-    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = AssignmentRepositoryService;
+    protected repositoryToken: ProviderToken<BaseBackendRepository<any, any>> = AssignmentRepositoryService;
 
     /**
      * Define the sort options
