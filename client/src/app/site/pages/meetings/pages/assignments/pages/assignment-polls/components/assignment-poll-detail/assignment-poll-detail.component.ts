@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { UnknownUserLabel, VoteValue } from 'src/app/domain/models/poll';
+import { VoteValue } from 'src/app/domain/models/poll';
 import {
     BasePollDetailComponent,
     BaseVoteData
@@ -11,7 +11,8 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { isSortedList, SortedList } from '../../../../../polls/view-models/sorted-list';
 import {
-    AssignmentPollService
+    AssignmentPollService,
+    UnknownUserLabel
 } from '../../../../modules/assignment-poll/services/assignment-poll.service';
 import { AssignmentPollDialogService } from '../../../../modules/assignment-poll/services/assignment-poll-dialog.service';
 import { AssignmentPollPdfService } from '../../../../modules/assignment-poll/services/assignment-poll-pdf.service/assignment-poll-pdf.service';

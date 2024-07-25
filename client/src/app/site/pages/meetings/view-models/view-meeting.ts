@@ -10,8 +10,8 @@ import {
 } from 'src/app/domain/models/meetings/meeting.constants';
 import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 
-import { ViewCommittee } from '../../organization/pages/committees/view-models/view-committee';
-import { HasOrganizationTags } from '../../organization/pages/organization-tags/view-models/has-organization-tags';
+import { ViewCommittee } from '../../organization/pages/committees';
+import { HasOrganizationTags } from '../../organization/pages/organization-tags';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { BaseHasMeetingUsersViewModel } from '../base/base-has-meeting-user-view-model';
 import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker, ViewTopic } from '../pages/agenda';
@@ -20,6 +20,7 @@ import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
 import { ViewMediafile } from '../pages/mediafiles';
 import {
+    ViewMotion,
     ViewMotionBlock,
     ViewMotionCategory,
     ViewMotionChangeRecommendation,
@@ -30,19 +31,15 @@ import {
     ViewMotionWorkflow,
     ViewPersonalNote,
     ViewTag
-} from '../pages/motions/modules';
+} from '../pages/motions';
 import { ViewMotionEditor } from '../pages/motions/modules/editors';
 import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
-import { ViewMotion } from '../pages/motions/view-models';
 import { ViewGroup } from '../pages/participants';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from '../pages/polls/view-models/view-poll-candidate-list';
-import { ViewProjection } from '../pages/projectors/view-models/view-projection';
-import { ViewProjector } from '../pages/projectors/view-models/view-projector';
-import { ViewProjectorCountdown } from '../pages/projectors/view-models/view-projector-countdown';
-import { ViewProjectorMessage } from '../pages/projectors/view-models/view-projector-message';
+import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../pages/projectors';
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;

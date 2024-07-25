@@ -1,9 +1,9 @@
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
-import { ViewSpeaker } from '../pages/agenda/modules/list-of-speakers/view-models/view-speaker';
-import { ViewAssignmentCandidate } from '../pages/assignments/view-models/view-assignment-candidate';
-import { ViewChatMessage } from '../pages/chat/view-models/view-chat-message';
+import { ViewSpeaker } from '../pages/agenda';
+import { ViewAssignmentCandidate } from '../pages/assignments';
+import { ViewChatMessage } from '../pages/chat';
 import { ViewMotion, ViewMotionSubmitter, ViewPersonalNote } from '../pages/motions';
 import { ViewMotionEditor } from '../pages/motions/modules/editors';
 import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';

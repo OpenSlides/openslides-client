@@ -11,8 +11,8 @@ import {
 import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
 import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/projector.constants';
 import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
-import { ViewMotionEditor } from 'src/app/site/pages/meetings/pages/motions/modules/editors/view-models';
-import { ViewMotionWorkingGroupSpeaker } from 'src/app/site/pages/meetings/pages/motions/modules/working-group-speakers/view-models';
+import { ViewMotionEditor } from 'src/app/site/pages/meetings/pages/motions/modules/editors';
+import { ViewMotionWorkingGroupSpeaker } from 'src/app/site/pages/meetings/pages/motions/modules/working-group-speakers';
 import {
     ViewStructureLevel,
     ViewStructureLevelListOfSpeakers
@@ -20,21 +20,24 @@ import {
 import { ViewPollCandidate } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
-import { ViewResource } from 'src/app/site/pages/organization/pages/resources/view-models';
+import { ViewResource } from 'src/app/site/pages/organization/pages/resources';
 
 import { BaseViewModel, ViewModelConstructor } from '../../../site/base/base-view-model';
-import { HasListOfSpeakers } from '../../../site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/has-list-of-speakers';
-import { ViewListOfSpeakers } from '../../../site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-list-of-speakers';
-import { ViewSpeaker } from '../../../site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-speaker';
-import { ViewTopic } from '../../../site/pages/meetings/pages/agenda/modules/topics/view-models';
-import { HasAgendaItem, ViewAgendaItem } from '../../../site/pages/meetings/pages/agenda/view-models';
-import { ViewAssignment, ViewAssignmentCandidate } from '../../../site/pages/meetings/pages/assignments/view-models';
-import { ViewChatGroup } from '../../../site/pages/meetings/pages/chat/view-models/view-chat-group';
-import { ViewChatMessage } from '../../../site/pages/meetings/pages/chat/view-models/view-chat-message';
-import { HasAttachment } from '../../../site/pages/meetings/pages/mediafiles/view-models/has-attachment';
-import { ViewMediafile } from '../../../site/pages/meetings/pages/mediafiles/view-models/view-mediafile';
 import {
+    HasAgendaItem,
+    HasListOfSpeakers,
+    ViewAgendaItem,
+    ViewListOfSpeakers,
+    ViewSpeaker,
+    ViewTopic
+} from '../../../site/pages/meetings/pages/agenda';
+import { ViewAssignment, ViewAssignmentCandidate } from '../../../site/pages/meetings/pages/assignments';
+import { ViewChatGroup, ViewChatMessage } from '../../../site/pages/meetings/pages/chat';
+import { HasAttachment, ViewMediafile } from '../../../site/pages/meetings/pages/mediafiles';
+import {
+    HasReferencedMotionsInExtension,
     HasTags,
+    ViewMotion,
     ViewMotionBlock,
     ViewMotionCategory,
     ViewMotionChangeRecommendation,
@@ -45,23 +48,21 @@ import {
     ViewMotionWorkflow,
     ViewPersonalNote,
     ViewTag
-} from '../../../site/pages/meetings/pages/motions/modules';
-import { HasReferencedMotionsInExtension, ViewMotion } from '../../../site/pages/meetings/pages/motions/view-models';
-import { ViewGroup } from '../../../site/pages/meetings/pages/participants/modules/groups/view-models/view-group';
-import { ViewOption, ViewPoll, ViewVote } from '../../../site/pages/meetings/pages/polls/view-models';
-import { ViewProjection } from '../../../site/pages/meetings/pages/projectors/view-models/view-projection';
-import { ViewProjector } from '../../../site/pages/meetings/pages/projectors/view-models/view-projector';
-import { ViewProjectorCountdown } from '../../../site/pages/meetings/pages/projectors/view-models/view-projector-countdown';
-import { ViewProjectorMessage } from '../../../site/pages/meetings/pages/projectors/view-models/view-projector-message';
+} from '../../../site/pages/meetings/pages/motions';
+import { ViewGroup } from '../../../site/pages/meetings/pages/participants';
+import { ViewOption, ViewPoll, ViewVote } from '../../../site/pages/meetings/pages/polls';
+import {
+    ViewProjection,
+    ViewProjector,
+    ViewProjectorCountdown,
+    ViewProjectorMessage
+} from '../../../site/pages/meetings/pages/projectors';
 import { Projectable } from '../../../site/pages/meetings/view-models/projectable';
 import { ViewMeeting } from '../../../site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '../../../site/pages/meetings/view-models/view-user';
-import { ViewCommittee } from '../../../site/pages/organization/pages/committees/view-models/view-committee';
-import { ViewTheme } from '../../../site/pages/organization/pages/designs/view-models/view-theme';
-import {
-    HasOrganizationTags,
-    ViewOrganizationTag
-} from '../../../site/pages/organization/pages/organization-tags/view-models';
+import { ViewCommittee } from '../../../site/pages/organization/pages/committees';
+import { ViewTheme } from '../../../site/pages/organization/pages/designs';
+import { HasOrganizationTags, ViewOrganizationTag } from '../../../site/pages/organization/pages/organization-tags';
 import { ViewOrganization } from '../../../site/pages/organization/view-models/view-organization';
 import {
     makeGenericM2M,

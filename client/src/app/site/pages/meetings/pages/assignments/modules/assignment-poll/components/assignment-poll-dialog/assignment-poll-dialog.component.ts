@@ -8,7 +8,6 @@ import {
     PollMethod,
     PollPercentBaseVerbose,
     PollPropertyVerbose,
-    UnknownUserLabel,
     VoteValue
 } from 'src/app/domain/models/poll';
 import {
@@ -19,7 +18,7 @@ import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 import { AssignmentPollMethodVerbose, AssignmentPollPercentBaseVerbose } from '../../definitions';
-import { AssignmentPollService } from '../../services/assignment-poll.service';
+import { AssignmentPollService, UnknownUserLabel } from '../../services/assignment-poll.service';
 
 @Component({
     selector: `os-assignment-poll-dialog`,
