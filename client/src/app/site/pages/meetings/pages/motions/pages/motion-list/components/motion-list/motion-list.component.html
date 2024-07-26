@@ -199,8 +199,10 @@
         <div
             *osScrollingTableCell="'state'; row as motion; config: { width: 240 }"
             class="cell-slot fill"
+            tabindex="0"
             [ngClass]="isMultiSelect ? '' : 'clickable'"
             (click)="openEditInfo(motion)"
+            (keyup.enter)="openEditInfo(motion)"
         >
             <div class="column-state innerTable">
                 <!-- Category -->
@@ -366,8 +368,10 @@
         <div
             *osScrollingTableCell="'state'; row as motion; config: { width: 240 }"
             class="cell-slot fill"
+            tabindex="0"
             [ngClass]="isMultiSelect ? '' : 'clickable'"
             (click)="openEditInfo(motion)"
+            (keyup.enter)="openEditInfo(motion)"
         >
             <div class="column-state innerTable">
                 <!-- Category -->

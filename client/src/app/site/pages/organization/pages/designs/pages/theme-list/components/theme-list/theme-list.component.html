@@ -21,7 +21,10 @@
     <div
         *osScrollingTableCell="'name'; row as theme"
         class="cell-slot fill pointer"
+        role="button"
+        tabindex="0"
         (click)="openThemeBuilderDialog(theme)"
+        (keyup.enter)="openThemeBuilderDialog(theme)"
     >
         <div class="ellipsis-overflow">
             {{ theme.name }}
@@ -29,6 +32,7 @@
     </div>
     <div
         *osScrollingTableCell="'colors'; row as theme; config: { width: 120 }"
+        aria-hidden="true"
         class="cell-slot fill pointer"
         (click)="openThemeBuilderDialog(theme)"
     >

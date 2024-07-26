@@ -198,20 +198,24 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      * @param event MouseEvent.
      * @param indx The index of the row clicked.
      */
-    public onItemClick(event: MouseEvent, indx: number): void {
-        if (event.ctrlKey) {
-            const ind = this.multiSelectedIndex.findIndex(i => i === indx);
-            if (ind === -1) {
-                this.multiSelectedIndex.push(indx);
+    public onItemClick(event: MouseEvent | Event, indx: number): void {
+        console.log(event);
+        if (event.type === `click` || (<KeyboardEvent>event).key === ` `) {
+            event.preventDefault();
+            if ((<MouseEvent>event).ctrlKey) {
+                const ind = this.multiSelectedIndex.findIndex(i => i === indx);
+                if (ind === -1) {
+                    this.multiSelectedIndex.push(indx);
+                } else {
+                    this.multiSelectedIndex = this.multiSelectedIndex
+                        .slice(0, ind)
+                        .concat(this.multiSelectedIndex.slice(ind + 1));
+                }
             } else {
-                this.multiSelectedIndex = this.multiSelectedIndex
-                    .slice(0, ind)
-                    .concat(this.multiSelectedIndex.slice(ind + 1));
-            }
-        } else {
-            // deselect all when clicking on an non-selected item
-            if (this.multiSelectedIndex.length && !this.multiSelectedIndex.includes(indx)) {
-                this.multiSelectedIndex = [];
+                // deselect all when clicking on an non-selected item
+                if (this.multiSelectedIndex.length && !this.multiSelectedIndex.includes(indx)) {
+                    this.multiSelectedIndex = [];
+                }
             }
         }
     }
