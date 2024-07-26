@@ -1,3 +1,5 @@
+import './overload-js-functions';
+
 import { Collection, Field, Fqfield, Fqid, Id } from '../../domain/definitions/key-types';
 
 const KEYSEPERATOR = `/`;
