@@ -49,6 +49,7 @@
                         @for (paragraph of paragraphs; track paragraph; let i = $index) {
                             <section
                                 class="paragraph-row background-hover"
+                                role="none"
                                 tabindex="-1"
                                 [class.outlined-hover]="isParagraphSelected(paragraph)"
                                 (click)="onParagraphClicked(paragraph)"

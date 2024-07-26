@@ -7,7 +7,7 @@
 
 <div class="os-grid" [ngClass]="{ 'no-space': noSpace }">
     @for (tile of tiles; track tile) {
-        <div tabindex="-1" [ngClass]="tile.classes" (click)="tile.onClick($event)">
+        <div tabindex="0" [ngClass]="tile.classes" (click)="tile.onClick($event)" (keyup.enter)="tile.onClick($event)">
             <div class="tile-placeholder" [ngStyle]="{ marginTop: rowHeight }"></div>
             <div class="tile-content stretch-to-fill-parent">
                 <ng-container

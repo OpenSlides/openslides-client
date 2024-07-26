@@ -104,7 +104,6 @@ module.exports = {
                 }],
                 '@angular-eslint/template/prefer-control-flow': ['error'],
                 // Should be switched to error
-                '@angular-eslint/template/click-events-have-key-events': ['warn'],
                 '@angular-eslint/template/elements-content': ['warn']
             }
         },
