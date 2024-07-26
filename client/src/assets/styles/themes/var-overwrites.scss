@@ -3,6 +3,10 @@
         --mdc-linear-progress-track-color: var(--theme-primary-100);
     }
 
+    .mat-mdc-fab, .mat-mdc-mini-fab {
+        --mat-icon-color: var(--mdc-fab-icon-color, inherit);
+    }
+
     .mat-mdc-fab.mat-primary, .mat-mdc-mini-fab.mat-primary {
         --mdc-fab-icon-color: var(--theme-primary-contrast-500);
         --mat-mdc-fab-color: var(--theme-primary-contrast-500);
