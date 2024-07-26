@@ -11,6 +11,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { catchError, firstValueFrom, map, of } from 'rxjs';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -92,6 +93,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
         return this._videoUrl;
     }
 
+    public posterAlt: string = _(`Video player preview poster`);
     public posterUrl!: string;
     public vjsPlayer: any | null = null;
     public videoId!: string;

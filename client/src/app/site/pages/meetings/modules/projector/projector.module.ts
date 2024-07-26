@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 import { DirectivesModule } from 'src/app/ui/directives';
 
 import { TopicPollServiceModule } from '../../pages/agenda/modules/topics/modules/topic-poll/services/topic-poll-service.module';
@@ -25,7 +26,8 @@ const EXPORTED_MODULES = [CountdownTimeModule];
         SlidesModule,
         AssignmentPollServiceModule,
         MotionPollServiceModule,
-        TopicPollServiceModule
+        TopicPollServiceModule,
+        TranslateModule
     ]
 })
 export class ProjectorModule {}
