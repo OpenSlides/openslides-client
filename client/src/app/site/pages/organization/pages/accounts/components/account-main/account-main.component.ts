@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { inject } from '@angular/core';
-import { distinctUntilChanged, map } from 'rxjs';
+import { distinctUntilChanged, map, skip } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -35,30 +35,31 @@ const accountListSubsciptionContent = {
     styleUrls: [`./account-main.component.scss`]
 })
 export class AccountMainComponent extends BaseModelRequestHandlerComponent {
-    protected operator: OperatorService;
+    protected operator: OperatorService = inject(OperatorService);
 
-    public constructor() {
-        super();
-
-        this.operator = inject(OperatorService);
+    protected override async onBeforeModelRequests(): Promise<void> {
+        await this.operator.ready;
     }
 
     protected override async onShouldCreateModelRequests(): Promise<void> {
-        await this.operator.ready;
         this.subscribeTo(
             this.getAccountSubscriptionForCurrentPerm(this.operator.hasOrganizationPermissions(OML.can_manage_users)),
             { hideWhenMeetingChanged: true }
         );
-        this.operator.userObservable
-            .pipe(
-                map(user => user && !!user?.organization_management_level),
-                distinctUntilChanged()
-            )
-            .subscribe(hasOrgaRights => {
-                this.updateSubscribeTo(this.getAccountSubscriptionForCurrentPerm(hasOrgaRights), {
-                    hideWhenMeetingChanged: true
-                });
-            });
+
+        this.subscriptions.push(
+            this.operator.userObservable
+                .pipe(
+                    map(user => user && !!user?.organization_management_level),
+                    distinctUntilChanged(),
+                    skip(1)
+                )
+                .subscribe(hasOrgaRights => {
+                    this.updateSubscribeTo(this.getAccountSubscriptionForCurrentPerm(hasOrgaRights), {
+                        hideWhenMeetingChanged: true
+                    });
+                })
+        );
     }
 
     private getAccountSubscriptionForCurrentPerm(isUserAdmin: boolean): any {
