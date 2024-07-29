@@ -437,7 +437,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         }
     }
 
-    private get isCommitteeManagerAndRequireDuplicateFrom(): boolean {
+    public get isCommitteeManagerAndRequireDuplicateFrom(): boolean {
         return this.requireDuplicateFrom && !this.operator.isOrgaManager;
     }
 
