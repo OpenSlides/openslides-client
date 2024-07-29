@@ -65,6 +65,10 @@ export class TileComponent implements OnInit {
      */
     public largeSize: number | null = null;
 
+    public get onClickUsed(): boolean {
+        return this.clicked.observed;
+    }
+
     /**
      * OnInit method.
      * The preferred size for the tile will calculated.
