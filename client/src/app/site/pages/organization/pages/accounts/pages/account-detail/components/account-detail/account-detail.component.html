@@ -131,14 +131,14 @@
                 <tr class="header-underline">
                     <th>
                         <span translate>Committees</span>
-                        ({{ user.committee_ids?.length }})
+                        ({{ numCommittees }})
                     </th>
                     <th *ngIf="comitteeAdministrationAmount" class="admin-column">
                         ({{ comitteeAdministrationAmount }})
                     </th>
                     <th>
                         <span translate>Meetings</span>
-                        ({{ user.meeting_ids?.length }})
+                        ({{ user.meetings?.length }})
                     </th>
                     <th translate>Groups</th>
                 </tr>
