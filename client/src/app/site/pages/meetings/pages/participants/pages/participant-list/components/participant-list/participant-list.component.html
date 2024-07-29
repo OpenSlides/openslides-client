@@ -106,7 +106,7 @@
         tabindex="0"
         [ngClass]="isMultiSelect ? '' : 'clickable'"
         (click)="openEditInfo(user, $event)"
-        (keyup.enter)="openEditInfo(user)"
+        (keyup.space)="openEditInfo(user)"
     >
         <div class="groupsCell">
             @if (user.groups()?.length) {
