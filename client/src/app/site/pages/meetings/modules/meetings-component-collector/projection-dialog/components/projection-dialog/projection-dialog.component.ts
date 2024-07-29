@@ -46,8 +46,8 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
         if (this._descriptor.stableToggle && this.optionValues) {
             return Object.assign({}, this._descriptor, {
                 stable: this.optionValues[this._descriptor.stableToggle]
-                    ? this._descriptor.stable
-                    : !this._descriptor.stable
+                    ? !this._descriptor.stable
+                    : !!this._descriptor.stable
             });
         }
 
