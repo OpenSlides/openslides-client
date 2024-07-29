@@ -73,6 +73,10 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public isNewUser = false;
     public committeeSubscriptionConfig = getCommitteeListMinimalSubscriptionConfig();
 
+    public get numCommittees(): number {
+        return this._numCommittees;
+    }
+
     public get tableData(): ParticipationTableData {
         return this._tableData;
     }
@@ -107,6 +111,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     };
 
     private _tableData: ParticipationTableData = {};
+    private _numCommittees: number = 0;
 
     public constructor(
         protected override translate: TranslateService,
@@ -239,6 +244,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             };
         });
         this._tableData = tableData;
+        this._numCommittees = Object.keys(this.tableData).length;
     }
 
     private getUserByUrl(): void {
