@@ -199,7 +199,6 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
      * @param indx The index of the row clicked.
      */
     public onItemClick(event: MouseEvent | Event, indx: number): void {
-        console.log(event);
         if (event.type === `click` || (<KeyboardEvent>event).key === ` `) {
             event.preventDefault();
             if ((<MouseEvent>event).ctrlKey) {
