@@ -78,7 +78,9 @@
                                         </div>
                                         <div
                                             class="clickable-cell stretch-to-fill-parent"
+                                            tabindex="0"
                                             (click)="onClickInputPerm(perm, state)"
+                                            (keyup.enter)="onClickInputPerm(perm, state)"
                                         ></div>
                                     </div>
                                 }

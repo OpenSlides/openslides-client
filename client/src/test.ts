@@ -9,6 +9,10 @@ import { overloadJsFunctions } from './app/infrastructure/utils/overload-js-func
 
 overloadJsFunctions();
 
+if (!window.process) {
+    window.process = <any>{};
+}
+
 if (!window.requestAnimationFrame) {
     window.requestAnimationFrame = function (callback): number {
         return window.setTimeout(function () {
