@@ -3,7 +3,7 @@
     <form class="motion-content" [formGroup]="contentForm" (ngSubmit)="submitChanges()">
         <mat-form-field>
             <mat-label>{{ 'Changed title' | translate }}</mat-label>
-            <input matInput formControlName="text" />
+            <input formControlName="text" matInput />
         </mat-form-field>
 
         <mat-checkbox formControlName="public">{{ 'Public' | translate }}</mat-checkbox>

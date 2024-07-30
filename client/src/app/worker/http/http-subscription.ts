@@ -20,7 +20,10 @@ export interface HttpSubscriptionCallbacks {
  * new data.
  */
 export abstract class HttpSubscription {
-    public constructor(protected endpoint: HttpSubscriptionEndpoint, protected callbacks: HttpSubscriptionCallbacks) {}
+    public constructor(
+        protected endpoint: HttpSubscriptionEndpoint,
+        protected callbacks: HttpSubscriptionCallbacks
+    ) {}
 
     protected _active = false;
     public get active(): boolean {

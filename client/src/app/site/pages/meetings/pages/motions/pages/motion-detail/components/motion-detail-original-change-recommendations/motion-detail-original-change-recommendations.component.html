@@ -1,16 +1,21 @@
-<div class="text"></div>
-<p *ngIf="!textLoaded">
-    <mat-progress-bar mode="indeterminate" color="primary" [value]="50" [bufferValue]="75"></mat-progress-bar>
-</p>
-<ul class="change-recommendation-list" *ngIf="showChangeRecommendations">
-    <li
-        *ngFor="let reco of textChangeRecommmendations"
-        [title]="reco.getTitle()"
-        [style.top]="calcRecoTop(reco)"
-        [style.height]="calcRecoHeight(reco)"
-        [class.delete]="isDeletionChangeRecommendation(reco)"
-        [class.insert]="isInsertionChangeRecommendation(reco)"
-        [class.replace]="isReplacementChangeRecommendation(reco)"
-        (click)="gotoReco(reco)"
-    ></li>
-</ul>
+<div class="text tiptap-view"></div>
+@if (!textLoaded) {
+    <p>
+        <mat-progress-bar color="primary" mode="indeterminate" [bufferValue]="75" [value]="50"></mat-progress-bar>
+    </p>
+}
+@if (showChangeRecommendations) {
+    <ul class="change-recommendation-list">
+        @for (reco of textChangeRecommmendations; track reco) {
+            <li
+                [class.delete]="isDeletionChangeRecommendation(reco)"
+                [class.insert]="isInsertionChangeRecommendation(reco)"
+                [class.replace]="isReplacementChangeRecommendation(reco)"
+                [style.height]="calcRecoHeight(reco)"
+                [style.top]="calcRecoTop(reco)"
+                [title]="reco.getTitle()"
+                (click)="gotoReco(reco)"
+            ></li>
+        }
+    </ul>
+}

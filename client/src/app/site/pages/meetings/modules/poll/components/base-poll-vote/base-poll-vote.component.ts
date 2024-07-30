@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Directive, inject, Input, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import {
     GlobalVote,
@@ -49,6 +49,13 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     public get poll(): ViewPoll<C> {
         return this._poll;
     }
+
+    @Input()
+    public set displayInAutopilot(is_in_autopilot: boolean) {
+        this.displayed_in_autopilot = is_in_autopilot;
+    }
+
+    protected displayed_in_autopilot = true;
 
     public PollType = PollType;
     public formControlMap: { [optionId: number]: UntypedFormControl } = {};
@@ -162,8 +169,8 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                         this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
                     }
 
-                    this.cd.markForCheck();
                     this._isReady = true;
+                    this.cd.markForCheck();
                 }
             }),
             this.translate.onLangChange.subscribe(() => {
@@ -423,19 +430,10 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         }
     }
 
-    private createVotingDataObjects(): void {
-        this.voteRequestData[this.user.id] = { value: {} } as VotingData;
-        this.alreadyVoted[this.user.id] = this.poll.hasVoted;
-        this.deliveringVote[this.user.id] = false;
-
-        if (this.delegations) {
-            this.setupDelegations();
-        }
-    }
-
     protected updatePoll(): void {
         this.setupHasVotedSubscription();
         this.defineVoteOptions();
+        this.cd.markForCheck();
     }
 
     private setupHasVotedSubscription(): void {
@@ -448,6 +446,18 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                     }
                 }
 
+                for (const key of Object.keys(this._canVoteForSubjectMap)) {
+                    this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
+                }
+
+                this.cd.markForCheck();
+            })
+        );
+        this.subscriptions.push(
+            combineLatest([
+                this.meetingSettingsService.get(`users_enable_vote_delegations`).pipe(distinctUntilChanged()),
+                this.meetingSettingsService.get(`users_forbid_delegator_to_vote`).pipe(distinctUntilChanged())
+            ]).subscribe(_ => {
                 for (const key of Object.keys(this._canVoteForSubjectMap)) {
                     this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
                 }
@@ -486,7 +496,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
             };
 
             for (const option of this.voteOptions) {
-                if (this.poll.pollmethod.includes(option.vote)) {
+                if (this.poll.pollmethod?.includes(option.vote)) {
                     this.voteActions.push(option);
                 }
 

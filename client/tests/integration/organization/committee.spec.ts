@@ -94,7 +94,7 @@ test.describe('Testing committees', () => {
         let delCommittee = await createCommittee(context, `TestDeleteCommittee ${Date.now().toString()}`);
         const listComponent = new ListComponent(page);
         await listComponent.openRowMenu(listComponent.getRowByText(delCommittee.name));
-        await page.locator('.mat-menu-content button', { hasText: `Delete` }).first().click();
+        await page.locator('.mat-mdc-menu-content button', { hasText: `Delete` }).first().click();
         await page.locator('os-choice-dialog button', { hasText: `Yes` }).first().click();
         await expect(listComponent.getRowByText(delCommittee.name)).toBeHidden();
         await logout(context);

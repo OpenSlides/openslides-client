@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { User } from 'src/app/domain/models/users/user';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
@@ -48,7 +49,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get numberOfMeetings(): number {
-        return this.meeting_ids.length;
+        return this.meetings.length;
     }
 
     public get name(): string {
@@ -335,6 +336,7 @@ interface IUserRelations {
     meeting_users: ViewMeetingUser[];
     poll_voted: ViewPoll[];
     committee_managements: ViewCommittee[];
+    committee_managements_as_observable: Observable<ViewCommittee[]>;
     options: ViewOption[];
     votes: ViewVote[];
     poll_candidates: ViewPollCandidate[];

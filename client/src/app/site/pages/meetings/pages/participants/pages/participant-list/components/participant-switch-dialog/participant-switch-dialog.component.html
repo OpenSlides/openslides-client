@@ -17,8 +17,8 @@
             </td>
             <td>
                 <os-participant-search-selector
-                    [shouldReset]="false"
                     [nonSelectableUserIds]="[left.id]"
+                    [shouldReset]="false"
                     (userSelected)="onUserSelect($event)"
                 ></os-participant-search-selector>
             </td>
@@ -31,8 +31,12 @@
                 <span>{{ left.structure_level() }}</span>
             </td>
             <td>
-                <span *ngIf="right">{{ right.structure_level() }}</span>
-                <span *ngIf="!right">-</span>
+                @if (right) {
+                    <span>{{ right.structure_level() }}</span>
+                }
+                @if (!right) {
+                    <span>-</span>
+                }
             </td>
         </tr>
         <tr>
@@ -46,8 +50,12 @@
                 <mat-icon>swap_horiz</mat-icon>
             </td>
             <td class="red-warning-text">
-                <os-comma-separated-listing *ngIf="right" [list]="right.groups()"></os-comma-separated-listing>
-                <span *ngIf="!right">-</span>
+                @if (right) {
+                    <os-comma-separated-listing [list]="right.groups()"></os-comma-separated-listing>
+                }
+                @if (!right) {
+                    <span>-</span>
+                }
             </td>
         </tr>
         <tr>
@@ -61,13 +69,17 @@
                 <mat-icon>swap_horiz</mat-icon>
             </td>
             <td class="red-warning-text">
-                <span *ngIf="right">{{ right.number() }}</span>
-                <span *ngIf="!right">-</span>
+                @if (right) {
+                    <span>{{ right.number() }}</span>
+                }
+                @if (!right) {
+                    <span>-</span>
+                }
             </td>
         </tr>
         <tr>
             <th></th>
-            <td colSpan="3" class="red-warning-text warning-hint" translate>
+            <td class="red-warning-text warning-hint" colSpan="3" translate>
                 Only groups and participant number are switched.
             </td>
         </tr>

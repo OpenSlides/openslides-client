@@ -5,7 +5,7 @@ import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-ba
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
-import { accountHeadersAndVerboseNames } from '../../definitions';
+import { accountColumns, accountHeadersAndVerboseNames } from '../../definitions';
 import { AccountImportService } from '../../services/account-import.service/account-import.service';
 
 @Component({
@@ -14,9 +14,9 @@ import { AccountImportService } from '../../services/account-import.service/acco
     styleUrls: [`./account-import-list.component.scss`]
 })
 export class AccountImportListComponent extends BaseViaBackendImportListComponent {
-    public possibleFields = Object.keys(accountHeadersAndVerboseNames);
+    public possibleFields = accountColumns;
 
-    public columns: ImportListHeaderDefinition[] = Object.keys(accountHeadersAndVerboseNames).map(header => ({
+    public columns: ImportListHeaderDefinition[] = this.possibleFields.map(header => ({
         property: header,
         label: (<any>accountHeadersAndVerboseNames)[header],
         isTableColumn: true,

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Subscription, takeUntil, timer } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -90,7 +90,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         if (!this.motion) {
             return false;
         }
-        return !!Object.keys(this.motion)?.length ?? false;
+        return !!Object.keys(this.motion)?.length;
     }
 
     public get isMobile(): boolean {

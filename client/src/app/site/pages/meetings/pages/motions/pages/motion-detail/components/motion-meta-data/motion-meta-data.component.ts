@@ -301,8 +301,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         const copy = this.motion.origin_id
             ? [...(this.motion.all_origins || [])]
             : this.motion.origin_meeting
-            ? [this.motion.origin_meeting]
-            : [];
+              ? [this.motion.origin_meeting]
+              : [];
         return copy.reverse();
     }
 
@@ -353,8 +353,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                 .getViewModelObservable(this.motion.id)
                 .pipe(
                     map(motion => [
-                        motion.referenced_in_motion_recommendation_extensions,
-                        motion.recommendation_extension_references as ViewMotion[]
+                        motion?.referenced_in_motion_recommendation_extensions,
+                        motion?.recommendation_extension_references as ViewMotion[]
                     ]),
                     distinctUntilChanged((p, c) => [...Array(2).keys()].every(i => p[i].equals(c[i]))),
                     map(arr =>

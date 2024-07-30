@@ -1,14 +1,10 @@
 <div class="spacer-top-20 spacer-bottom-20">
-    <ng-container *ngIf="motion && motion.poll_ids">
-        <os-motion-poll
-            *ngFor="let id of motion.poll_ids | reverse"
-            [pollId]="id"
-            (dialogOpened)="onEditPoll(id)"
-        ></os-motion-poll>
-    </ng-container>
-    <os-motion-add-poll-button
-        *ngIf="!hideAdd"
-        class="spacer-top-10 spacer-bottom-20"
-        [motion]="motion"
-    ></os-motion-add-poll-button>
+    @if (motion && motion.poll_ids) {
+        @for (id of motion.poll_ids | reverse; track id) {
+            <os-motion-poll [pollId]="id" (dialogOpened)="onEditPoll(id)"></os-motion-poll>
+        }
+    }
+    @if (!hideAdd) {
+        <os-motion-add-poll-button class="spacer-top-10 spacer-bottom-20" [motion]="motion"></os-motion-add-poll-button>
+    }
 </div>

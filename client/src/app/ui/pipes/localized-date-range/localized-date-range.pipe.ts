@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { fromUnixTime } from 'date-fns';
-import { FormatPipe } from 'ngx-date-fns';
+import { fromUnixTime, Locale } from 'date-fns';
+import { DateFnsInputDate, FormatPipe } from 'ngx-date-fns';
 
 @Pipe({
     name: `localizedDateRange`,
@@ -30,7 +30,7 @@ export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform 
     }
 
     private generateAndSplitIntervalStrings(
-        interval: Interval,
+        interval: { start: DateFnsInputDate; end: DateFnsInputDate },
         dateFormat: string
     ): { startString: string; startArray: string[]; endString: string; endArray: string[] } {
         const start = typeof interval.start === `number` ? fromUnixTime(interval.start) : interval.start;

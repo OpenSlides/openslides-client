@@ -1,50 +1,57 @@
-<div *ngIf="data">
-    <div class="slidetitle">
-        <h1>{{ data.data.title }}</h1>
-        <h2>
-            <span>{{ 'Motion block' | translate }}</span>
-            – {{ motions.length }}
-            <span>{{ 'motions' | translate }}</span>
-        </h2>
-    </div>
-
-    <div *ngIf="commonRecommendation" class="spacer-bottom-10">
-        <mat-basic-chip class="mat-basic-chip large block-recommendation" [ngClass]="getStateCssColor(0, 0)">
-            {{ commonRecommendation }}
-        </mat-basic-chip>
-    </div>
-
-    <table>
-        <tr *ngFor="let i of rowsArray">
-            <td *ngFor="let j of columnsArray" [ngStyle]="{ width: columnWidthInPercent }">
-                <ng-container *ngIf="getMotion(i, j)">
-                    <div
-                        class="spacer-top-5"
-                        [ngClass]="
-                            !commonRecommendation && getMotion(i, j).recommendationLabel
-                                ? 'motion-wrapper'
-                                : 'motion-wrapper-single'
-                        "
-                    >
-                        <div class="motion-title">{{ getMotionTitle(i, j) }}</div>
-                        <br *ngIf="!shortDisplayStyle" />
-                        <div
-                            class="white recommendation-chip-wrapper"
-                            *ngIf="!commonRecommendation && getMotion(i, j).recommendationLabel"
-                        >
-                            <mat-basic-chip
-                                disableRipple
-                                [ngClass]="getStateCssColor(i, j)"
-                                class="block-recommendation"
-                            >
-                                <div class="ellipsis-overflow">
-                                    {{ getMotion(i, j).recommendationLabel }}
+@if (data) {
+    <div>
+        <div class="slidetitle">
+            <h1>{{ data.data.title }}</h1>
+            <h2>
+                <span>{{ 'Motion block' | translate }}</span>
+                – {{ motions.length }}
+                <span>{{ 'motions' | translate }}</span>
+            </h2>
+        </div>
+        @if (commonRecommendation) {
+            <div class="spacer-bottom-10">
+                <mat-basic-chip class="mat-basic-chip large block-recommendation" [ngClass]="getStateCssColor(0, 0)">
+                    {{ commonRecommendation }}
+                </mat-basic-chip>
+            </div>
+        }
+        <table>
+            @for (i of rowsArray; track i) {
+                <tr>
+                    @for (j of columnsArray; track j) {
+                        <td [ngStyle]="{ width: columnWidthInPercent }">
+                            @if (getMotion(i, j)) {
+                                <div
+                                    class="spacer-top-5"
+                                    [ngClass]="
+                                        !commonRecommendation && getMotion(i, j).recommendationLabel
+                                            ? 'motion-wrapper'
+                                            : 'motion-wrapper-single'
+                                    "
+                                >
+                                    <div class="motion-title">{{ getMotionTitle(i, j) }}</div>
+                                    @if (!shortDisplayStyle) {
+                                        <br />
+                                    }
+                                    @if (!commonRecommendation && getMotion(i, j).recommendationLabel) {
+                                        <div class="white recommendation-chip-wrapper">
+                                            <mat-basic-chip
+                                                class="block-recommendation"
+                                                disableRipple
+                                                [ngClass]="getStateCssColor(i, j)"
+                                            >
+                                                <div class="ellipsis-overflow">
+                                                    {{ getMotion(i, j).recommendationLabel }}
+                                                </div>
+                                            </mat-basic-chip>
+                                        </div>
+                                    }
                                 </div>
-                            </mat-basic-chip>
-                        </div>
-                    </div>
-                </ng-container>
-            </td>
-        </tr>
-    </table>
-</div>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+    </div>
+}

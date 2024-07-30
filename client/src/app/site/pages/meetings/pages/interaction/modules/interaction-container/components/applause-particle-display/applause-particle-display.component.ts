@@ -1,9 +1,13 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { NgParticlesService } from '@tsparticles/angular';
+import { Container, Engine } from '@tsparticles/engine';
+import { loadEmittersPlugin } from '@tsparticles/plugin-emitters';
+import { loadTextShape } from '@tsparticles/shape-text';
+import { loadSlim } from '@tsparticles/slim';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 import { ElementSize } from 'src/app/ui/directives/resized/resized.directive';
-import { Container } from 'tsparticles';
 
 import { ApplauseService } from '../../../../services/applause.service';
 import { particleConfig, particleOptions } from './particle-options';
@@ -14,7 +18,7 @@ import { particleConfig, particleOptions } from './particle-options';
     styleUrls: [`./applause-particle-display.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
-export class ApplauseParticleDisplayComponent extends BaseMeetingComponent {
+export class ApplauseParticleDisplayComponent extends BaseMeetingComponent implements OnInit {
     public options = particleOptions;
     public isStable: Promise<boolean> = this.osStatus.stable.then(() => true);
     private particleContainer!: Container;
@@ -30,7 +34,8 @@ export class ApplauseParticleDisplayComponent extends BaseMeetingComponent {
     public constructor(
         protected override translate: TranslateService,
         private applauseService: ApplauseService,
-        private osStatus: OpenSlidesStatusService
+        private osStatus: OpenSlidesStatusService,
+        private readonly ngParticlesService: NgParticlesService
     ) {
         super();
         this.subscriptions.push(
@@ -43,6 +48,14 @@ export class ApplauseParticleDisplayComponent extends BaseMeetingComponent {
         );
     }
 
+    public ngOnInit(): void {
+        this.ngParticlesService.init(async (engine: Engine) => {
+            await loadSlim(engine, false);
+            await loadTextShape(engine, false);
+            await loadEmittersPlugin(engine);
+        });
+    }
+
     public updateParticleContainer(size: ElementSize): void {
         if (!size.height || !size.width) {
             this.stop();
@@ -53,13 +66,12 @@ export class ApplauseParticleDisplayComponent extends BaseMeetingComponent {
 
     private setParticleImage(particleImage: string | undefined): void {
         if (particleImage) {
-            particleConfig.customImageShape.image.src = particleImage;
+            particleConfig.customImageShape.options.image.src = particleImage;
             (this.options.particles.shape as any) = particleConfig.customImageShape;
         } else {
             (this.options.particles.shape as any) = particleConfig.charShapeHearth;
         }
         if (this.particleContainer) {
-            this.particleContainer.options.particles.load(this.options.particles as any);
             this.refresh();
         }
     }
@@ -77,7 +89,8 @@ export class ApplauseParticleDisplayComponent extends BaseMeetingComponent {
         if (this.particleContainer) {
             const emitters = this.particleContainer.plugins.get(`emitters`) as any;
             if (emitters) {
-                emitters.array[0].options.rate.quantity = level;
+                this.options[`emitters`][0][`rate`][`quantity`] = level;
+                this.refresh();
             }
         }
     }
@@ -87,6 +100,8 @@ export class ApplauseParticleDisplayComponent extends BaseMeetingComponent {
     }
 
     private refresh(): void {
+        this.particleContainer?.options.load(this.options);
+        this.particleContainer?.updateActualOptions();
         this.particleContainer?.refresh();
     }
 

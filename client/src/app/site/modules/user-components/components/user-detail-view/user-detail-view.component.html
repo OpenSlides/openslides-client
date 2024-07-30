@@ -1,56 +1,58 @@
 <div class="content-container spacer-bottom-60">
-    <ng-container *ngIf="isEditing">
-        <ng-container *ngIf="useMatcard">
+    @if (isEditing) {
+        @if (useMatcard) {
             <mat-card class="os-card">
                 <mat-card-content>
                     <ng-container *ngTemplateOutlet="editTemplate; context: { form: personalInfoForm }"></ng-container>
                 </mat-card-content>
             </mat-card>
-            <mat-card class="os-card" *ngIf="editView">
-                <mat-card-content>
-                    <ng-container *ngTemplateOutlet="editView; context: { form: personalInfoForm }"></ng-container>
-                </mat-card-content>
-            </mat-card>
-        </ng-container>
-        <ng-container *ngIf="!useMatcard">
+            @if (editView && useAdditionalEditTemplate) {
+                <mat-card class="os-card">
+                    <mat-card-content>
+                        <ng-container *ngTemplateOutlet="editView; context: { form: personalInfoForm }"></ng-container>
+                    </mat-card-content>
+                </mat-card>
+            }
+        }
+        @if (!useMatcard) {
             <ng-container *ngTemplateOutlet="editTemplate; context: { form: personalInfoForm }"></ng-container>
-            <ng-container
-                *ngIf="editView"
-                [ngTemplateOutlet]="editView"
-                [ngTemplateOutletContext]="{ form: personalInfoForm }"
-            ></ng-container>
-        </ng-container>
-    </ng-container>
-    <ng-container *ngIf="!isEditing && user">
-        <ng-container *ngIf="useMatcard">
+            @if (editView && useAdditionalEditTemplate) {
+                <ng-container
+                    [ngTemplateOutlet]="editView"
+                    [ngTemplateOutletContext]="{ form: personalInfoForm }"
+                ></ng-container>
+            }
+        }
+    }
+    @if (!isEditing && user) {
+        @if (useMatcard) {
             <mat-card class="os-card">
                 <mat-card-content>
                     <ng-container *ngTemplateOutlet="showTemplate"></ng-container>
                 </mat-card-content>
             </mat-card>
-            <ng-container *ngIf="showView">
-                <mat-card
-                    class="os-card"
-                    [ngClass]="{ 'margin-bottom-60': isLast }"
-                    *ngFor="let showViewElement of showView; last as isLast"
-                >
-                    <mat-card-content>
-                        <ng-container *ngTemplateOutlet="showViewElement; context: { user: user }"></ng-container>
-                    </mat-card-content>
-                </mat-card>
-            </ng-container>
-        </ng-container>
-        <ng-container *ngIf="!useMatcard">
+            @if (showView) {
+                @for (showViewElement of showView; track showViewElement; let isLast = $last) {
+                    <mat-card class="os-card" [ngClass]="{ 'margin-bottom-60': isLast }">
+                        <mat-card-content>
+                            <ng-container *ngTemplateOutlet="showViewElement; context: { user: user }"></ng-container>
+                        </mat-card-content>
+                    </mat-card>
+                }
+            }
+        }
+        @if (!useMatcard) {
             <ng-container *ngTemplateOutlet="showTemplate"></ng-container>
-            <ng-container *ngIf="showView">
-                <ng-container
-                    *ngFor="let showViewElement of showView"
-                    [ngTemplateOutlet]="showViewElement"
-                    [ngTemplateOutletContext]="{ user: user }"
-                ></ng-container>
-            </ng-container>
-        </ng-container>
-    </ng-container>
+            @if (showView) {
+                @for (showViewElement of showView; track showViewElement) {
+                    <ng-container
+                        [ngTemplateOutlet]="showViewElement"
+                        [ngTemplateOutletContext]="{ user: user }"
+                    ></ng-container>
+                }
+            }
+        }
+    }
 </div>
 
 <ng-template #editTemplate>
@@ -61,17 +63,17 @@
             <!-- Title -->
             <mat-form-field class="form16 force-min-width">
                 <mat-label>{{ 'Title' | translate }}</mat-label>
-                <input type="text" matInput formControlName="title" />
+                <input formControlName="title" matInput type="text" />
             </mat-form-field>
             <!-- First name -->
             <mat-form-field class="form38 force-min-width">
                 <mat-label>{{ 'Given name' | translate }}</mat-label>
-                <input type="text" osAutofocus matInput formControlName="first_name" />
+                <input formControlName="first_name" matInput osAutofocus type="text" />
             </mat-form-field>
             <!-- Last name -->
             <mat-form-field class="form38 force-min-width">
                 <mat-label>{{ 'Surname' | translate }}</mat-label>
-                <input type="text" matInput formControlName="last_name" />
+                <input formControlName="last_name" matInput type="text" />
             </mat-form-field>
         </div>
 
@@ -82,15 +84,17 @@
                 <mat-label>{{ 'Gender' | translate }}</mat-label>
                 <mat-select formControlName="gender">
                     <mat-option [value]="null">-</mat-option>
-                    <mat-option *ngFor="let gender of genders" [value]="gender">
-                        {{ gender | translate }}
-                    </mat-option>
+                    @for (gender of genders; track gender) {
+                        <mat-option [value]="gender">
+                            {{ gender | translate }}
+                        </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <!-- Pronoun -->
             <mat-form-field class="form38 force-min-width">
                 <mat-label>{{ 'Pronoun' | translate }}</mat-label>
-                <input type="text" matInput formControlName="pronoun" />
+                <input formControlName="pronoun" matInput type="text" />
                 <mat-error>{{ 'max. 32 characters allowed' | translate }}</mat-error>
             </mat-form-field>
         </div>
@@ -99,160 +103,174 @@
         <div class="personal-info-area">
             <!-- E-Mail -->
             <mat-form-field
+                class="force-min-width"
                 [ngClass]="{
                     form58: isAllowed('update'),
                     form100: !isAllowed('update')
                 }"
-                class="force-min-width"
             >
                 <mat-label>{{ 'Email' | translate }}</mat-label>
-                <input type="email" matInput autocomplete="off" name="email" formControlName="email" />
-                <mat-error *ngIf="personalInfoForm.get('email')?.hasError('email')">
-                    {{ 'Please enter a valid email address!' | translate }}
-                </mat-error>
+                <input autocomplete="off" formControlName="email" matInput name="email" type="email" />
+                @if (personalInfoForm.get('email')?.hasError('email')) {
+                    <mat-error>
+                        {{ 'Please enter a valid email address!' | translate }}
+                    </mat-error>
+                }
             </mat-form-field>
             <!-- Member Number -->
-            <ng-container *ngIf="isAllowed('update')">
+            @if (isAllowed('update')) {
                 <mat-form-field class="form38 force-min-width">
                     <mat-label>{{ 'Membership number' | translate }}</mat-label>
-                    <input type="text" matInput formControlName="member_number" />
+                    <input formControlName="member_number" matInput type="text" />
                 </mat-form-field>
-            </ng-container>
+            }
         </div>
 
         <!-- Fourth line -->
         <div class="personal-info-area">
             <!-- username -->
-            <ng-container *ngIf="isAllowed('seePersonal')">
+            @if (isAllowed('seePersonal')) {
                 <mat-form-field
+                    class="force-min-width"
                     [ngClass]="{
-                        form58: isAllowed('update'),
+                        form48: isAllowed('update'),
                         form100: !isAllowed('update')
                     }"
-                    class="force-min-width"
                 >
                     <mat-label>{{ 'Username' | translate }}</mat-label>
-                    <input type="text" matInput formControlName="username" />
-                    <button
-                        *ngIf="isNewUser"
-                        matSuffix
-                        type="button"
-                        mat-button
-                        mat-icon-button
-                        [matTooltip]="'Leave blank to automatically generate the username.' | translate"
-                        matTooltipPosition="above"
-                    >
-                        <mat-icon>help</mat-icon>
-                    </button>
-                    <mat-error *ngIf="personalInfoForm.controls['username'].errors?.['required']" translate>
-                        You have to enter at least one character
-                    </mat-error>
-                    <mat-error *ngIf="personalInfoForm.controls['username'].errors?.['noSpace']" translate>
-                        Username may not contain spaces
-                    </mat-error>
+                    <input formControlName="username" matInput type="text" />
+                    @if (isNewUser) {
+                        <button
+                            mat-icon-button
+                            matSuffix
+                            matTooltipPosition="above"
+                            type="button"
+                            [matTooltip]="'Leave blank to automatically generate the username.' | translate"
+                        >
+                            <mat-icon>help</mat-icon>
+                        </button>
+                    }
+                    @if (personalInfoForm.controls['username'].errors?.['required']) {
+                        <mat-error translate>You have to enter at least one character</mat-error>
+                    }
+                    @if (personalInfoForm.controls['username'].errors?.['noSpace']) {
+                        <mat-error translate>Username may not contain spaces</mat-error>
+                    }
                 </mat-form-field>
-            </ng-container>
+            }
 
             <!-- Initial Password -->
-            <ng-container *ngIf="isAllowed('update') && !user?.saml_id">
-                <mat-form-field class="form38 force-min-width">
+            @if (isAllowed('update') && !user?.saml_id) {
+                <mat-form-field class="form48 force-min-width">
                     <mat-label>{{ 'Initial password' | translate }}</mat-label>
-                    <input matInput autocomplete="off" formControlName="default_password" />
-                    <button
-                        *ngIf="isNewUser && generatePasswordFn"
-                        matSuffix
-                        type="button"
-                        mat-button
-                        mat-icon-button
-                        [disabled]="!generatePasswordFn"
-                        (click)="setRandomPassword()"
-                        [matTooltip]="'Generate password' | translate"
-                    >
-                        <mat-icon>autorenew</mat-icon>
-                    </button>
-                    <button
-                        *ngIf="isNewUser"
-                        matSuffix
-                        type="button"
-                        mat-button
-                        mat-icon-button
-                        [matTooltip]="'Leave blank to automatically generate the password.' | translate"
-                    >
-                        <mat-icon>help</mat-icon>
-                    </button>
+                    <input autocomplete="off" formControlName="default_password" matInput />
+                    @if (isNewUser && generatePasswordFn) {
+                        <button
+                            mat-icon-button
+                            matSuffix
+                            type="button"
+                            [disabled]="!generatePasswordFn"
+                            [matTooltip]="'Generate password' | translate"
+                            (click)="setRandomPassword()"
+                        >
+                            <mat-icon>autorenew</mat-icon>
+                        </button>
+                    }
+                    @if (isNewUser) {
+                        <button
+                            mat-icon-button
+                            matSuffix
+                            type="button"
+                            [matTooltip]="'Leave blank to automatically generate the password.' | translate"
+                        >
+                            <mat-icon>help</mat-icon>
+                        </button>
+                    }
                 </mat-form-field>
-            </ng-container>
+            }
         </div>
 
-        <div *ngIf="isAllowed('seeName')">
-            <mat-checkbox formControlName="is_active" *ngIf="!isSelf">{{ 'active' | translate }}</mat-checkbox>
-            <mat-checkbox formControlName="is_physical_person">{{ 'natural person' | translate }}</mat-checkbox>
-        </div>
+        @if (isAllowed('seeName')) {
+            <div>
+                @if (!isSelf) {
+                    <mat-checkbox formControlName="is_active">{{ 'active' | translate }}</mat-checkbox>
+                }
+                <mat-checkbox formControlName="is_physical_person">{{ 'natural person' | translate }}</mat-checkbox>
+            </div>
+        }
     </form>
 </ng-template>
 
 <ng-template #showTemplate>
     <h2>{{ 'Personal information' | translate }}</h2>
-    <ng-container *ngIf="user">
+    @if (user) {
         <!-- Displayed name -->
-        <div *ngIf="isAllowed('seeName')">
-            <h4>{{ 'Name' | translate }}</h4>
-            <span class="state-icons">
-                <span>{{ user.short_name }}</span>
-                <ng-container *ngIf="user.pronoun">
-                    &nbsp;
-                    <span>({{ user.pronoun }})</span>
-                </ng-container>
-                <mat-icon
-                    *ngIf="!user.is_active && isAllowed('seeSensitiveData')"
-                    matTooltip="{{ 'Inactive' | translate }}"
-                >
-                    block
-                </mat-icon>
-                <mat-icon *ngIf="!user.is_physical_person" matTooltip="{{ 'Is no natural person' | translate }}">
-                    account_balance
-                </mat-icon>
-                <mat-icon
-                    *ngIf="user.hasSamlId && isAllowed('seeSensitiveData')"
-                    matTooltip="{{ 'Has SSO identification' | translate }}"
-                >
-                    fingerprint
-                </mat-icon>
-            </span>
-        </div>
-
+        @if (isAllowed('seeName')) {
+            <div>
+                <h4>{{ 'Name' | translate }}</h4>
+                <span class="state-icons">
+                    <span>{{ user.short_name }}</span>
+                    @if (user.pronoun) {
+                        &nbsp;
+                        <span>({{ user.pronoun }})</span>
+                    }
+                    @if (!user.is_active && isAllowed('seeSensitiveData')) {
+                        <mat-icon matTooltip="{{ 'Inactive' | translate }}">block</mat-icon>
+                    }
+                    @if (!user.is_physical_person) {
+                        <mat-icon matTooltip="{{ 'Is no natural person' | translate }}">account_balance</mat-icon>
+                    }
+                    @if (user.hasSamlId && isAllowed('seeSensitiveData')) {
+                        <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}">fingerprint</mat-icon>
+                    }
+                </span>
+            </div>
+        }
         <!-- Gender -->
-        <div *ngIf="user.gender">
-            <h4>{{ 'Gender' | translate }}</h4>
-            <span>{{ user.gender | translate }}</span>
-        </div>
-
+        @if (user.gender) {
+            <div>
+                <h4>{{ 'Gender' | translate }}</h4>
+                <span>{{ user.gender | translate }}</span>
+            </div>
+        }
         <!-- Mail -->
-        <div *ngIf="isAllowed('seeSensitiveData')">
-            <div *ngIf="user.email">
-                <h4>{{ 'Email' | translate }}</h4>
-                <span>{{ user.email }}</span>
+        @if (isAllowed('seeSensitiveData')) {
+            <div>
+                @if (user.email) {
+                    <div>
+                        <h4>{{ 'Email' | translate }}</h4>
+                        <span>{{ user.email }}</span>
+                    </div>
+                }
+                <!-- Membership number-->
+                @if (user.member_number) {
+                    <div>
+                        <h4>{{ 'Membership number' | translate }}</h4>
+                        <span>{{ user.member_number }}</span>
+                    </div>
+                }
+                <!-- Username -->
+                @if (user.username) {
+                    <div>
+                        <h4>{{ 'Username' | translate }}</h4>
+                        <span>{{ user.username }}</span>
+                    </div>
+                }
+                <!-- Initial Password -->
+                @if (user.default_password && !user.saml_id && isAllowed('update')) {
+                    <div>
+                        <h4>{{ 'Initial password' | translate }}</h4>
+                        <span>{{ user.default_password }}</span>
+                    </div>
+                }
+                <!-- SAML id -->
+                @if (user.saml_id) {
+                    <div>
+                        <h4>{{ 'SSO Identification' | translate }}</h4>
+                        <span>{{ user.saml_id }}</span>
+                    </div>
+                }
             </div>
-            <!-- Membership number-->
-            <div *ngIf="user.member_number">
-                <h4>{{ 'Membership number' | translate }}</h4>
-                <span>{{ user.member_number }}</span>
-            </div>
-            <!-- Username -->
-            <div *ngIf="user.username">
-                <h4>{{ 'Username' | translate }}</h4>
-                <span>{{ user.username }}</span>
-            </div>
-            <!-- Initial Password -->
-            <div *ngIf="user.default_password && !user.saml_id && isAllowed('update')">
-                <h4>{{ 'Initial password' | translate }}</h4>
-                <span>{{ user.default_password }}</span>
-            </div>
-            <!-- SAML id -->
-            <div *ngIf="user.saml_id">
-                <h4>{{ 'SSO Identification' | translate }}</h4>
-                <span>{{ user.saml_id }}</span>
-            </div>
-        </div>
-    </ng-container>
+        }
+    }
 </ng-template>

@@ -7,7 +7,10 @@ import { MotionBlockControllerService } from '../../../modules/motion-blocks/ser
 import { ViewMotion } from '../../../view-models';
 
 export class MotionBlockImportHelper extends BaseBeforeImportHandler<ViewMotion, MotionBlock> {
-    public constructor(private repo: MotionBlockControllerService, private translate: TranslateService) {
+    public constructor(
+        private repo: MotionBlockControllerService,
+        private translate: TranslateService
+    ) {
         super({
             idProperty: `block_id`,
             translateFn: translate.instant,

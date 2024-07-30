@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
@@ -44,7 +44,7 @@ const COMPONENTS = [
     declarations: [...PIPES, ...COMPONENTS],
     imports: [
         CommonModule,
-        NgChartsModule,
+        BaseChartDirective,
         MatProgressBarModule,
         MatFormFieldModule,
         MatSelectModule,
@@ -64,6 +64,6 @@ const COMPONENTS = [
         OpenSlidesTranslationModule.forChild()
     ],
     exports: [...PIPES, ...MODULES, ...COMPONENTS],
-    providers: PIPES
+    providers: [...PIPES, provideCharts(withDefaultRegisterables())]
 })
 export class PollModule {}

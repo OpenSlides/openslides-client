@@ -1,6 +1,6 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, TemplateRef } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { CML } from 'src/app/domain/definitions/organization-permission';
+import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 
 import { BasePermsDirective } from './base-perms.directive';
 
@@ -40,10 +40,30 @@ export class CmlPermsDirective extends BasePermsDirective<CML> {
         this.updatePermission();
     }
 
+    @Input()
+    public set osCmlPermsThen(template: TemplateRef<any>) {
+        this.setThenTemplate(template);
+    }
+
+    @Input()
+    public set osCmlPermsElse(template: TemplateRef<any>) {
+        this.setElseTemplate(template);
+    }
+
+    @Input()
+    public set osCmlPermsOrOML(value: OML | undefined) {
+        this._orOML = value;
+        this.updatePermission();
+    }
+
     private _committeeId: Id | undefined = undefined;
     private _checkNonAdmin = false;
+    private _orOML: OML | undefined = undefined;
 
     protected hasPermissions(): boolean {
+        if (this._orOML && this.operator.hasOrganizationPermissions(this._orOML)) {
+            return true;
+        }
         if (!this._committeeId) {
             return false;
         }

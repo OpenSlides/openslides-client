@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-import * as pdfMake from 'pdfmake/build/pdfmake';
+import pdfMake from 'pdfmake/build/pdfmake';
 
 const osTableLayout = {
     switchColorTableLayout: {
@@ -46,11 +46,11 @@ function applyLayout(content: any): void {
  * Sets the internal PdfMake fonts and VFS
  */
 function initPdfMake(data: any): void {
-    (<any>pdfMake).fonts = {
+    pdfMake.fonts = {
         PdfFont: data.fonts
     };
 
-    (<any>pdfMake).vfs = data.vfs;
+    pdfMake.vfs = data.vfs;
 }
 
 /**
@@ -61,7 +61,7 @@ function addPageNumbers(data: any): void {
     // to allow page numbers in every page, after the initial "%PAGENR%" placeholder was reset
     let countPageNumbers = false;
 
-    data.doc.footer = (currentPage: any, pageCount: any) => {
+    data.doc.footer = (currentPage: any, pageCount: any): any => {
         const footer = data.doc.tmpfooter;
 
         // if the tmpfooter starts with an image, the pagenumber will be found in column 1

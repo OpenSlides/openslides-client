@@ -1,64 +1,77 @@
 <os-detail-view [collection]="collection" (idFound)="onIdFound($event)">
-    <ng-container *ngIf="hasLoaded | async">
+    @if (hasLoaded | async) {
         <os-head-bar
-            [hasMainButton]="perms.isAllowed('can_create_amendments', motion)"
             mainActionTooltip="New amendment"
-            [nav]="false"
             [editMode]="editMotion"
-            [isSaveButtonEnabled]="canSave"
-            [saveAction]="getSaveAction()"
-            (mainEvent)="createAmendment()"
-            (cancelEditEvent)="leaveEditMotion()"
             [goBack]="motion?.hasLeadMotion"
+            [hasMainButton]="perms.isAllowed('can_create_amendments', motion)"
+            [isSaveButtonEnabled]="canSave"
+            [nav]="false"
+            [saveAction]="getSaveAction()"
+            (cancelEditEvent)="leaveEditMotion()"
+            (mainEvent)="createAmendment()"
         >
             <!-- Title -->
             <div class="title-slot">
-                <h2 *ngIf="motion && !newMotion">
-                    <span *ngIf="!vp.isMobile">{{ 'Motion' | translate }}</span>
-                    <!-- Whitespace between "Motion" and number -->
-                    <span *ngIf="!vp.isMobile">&nbsp;</span>
-                    <span *ngIf="!editMotion">{{ motion.number }}</span>
-                </h2>
-                <h2 *ngIf="newMotion && !amendmentEdit">{{ 'New motion' | translate }}</h2>
-                <h2 *ngIf="amendmentEdit">{{ 'New amendment' | translate }}</h2>
+                @if (motion && !newMotion) {
+                    <h2>
+                        @if (!vp.isMobile) {
+                            <span>{{ 'Motion' | translate }}</span>
+                        }
+                        <!-- Whitespace between "Motion" and number -->
+                        @if (!vp.isMobile) {
+                            <span>&nbsp;</span>
+                        }
+                        @if (!editMotion) {
+                            <span>{{ motion.number }}</span>
+                        }
+                    </h2>
+                }
+                @if (newMotion && !amendmentEdit) {
+                    <h2>{{ 'New motion' | translate }}</h2>
+                }
+                @if (amendmentEdit) {
+                    <h2>{{ 'New amendment' | translate }}</h2>
+                }
             </div>
-
             <!-- Back and forth buttons -->
-            <div *ngIf="!editMotion && showNavigateButtons" class="extra-controls-slot prev-next-motion-controls">
-                <button
-                    mat-button
-                    (click)="navigateToMotion(previousMotion)"
-                    [disabled]="!previousMotion"
-                    class="nav-button-overflow"
-                    [ngClass]="{ 'motion-detail-nav-button': (vp.isMobileSubject | async) === false }"
-                >
-                    <os-icon-container icon="chevron_left" [hide]="vp.isMobileSubject | async">
-                        {{ previousMotion ? previousMotion.number : '' }}
-                    </os-icon-container>
-                </button>
-                <button
-                    mat-button
-                    (click)="navigateToMotion(nextMotion)"
-                    [disabled]="!nextMotion"
-                    class="nav-button-overflow"
-                    [ngClass]="{ 'motion-detail-nav-button': (vp.isMobileSubject | async) === false }"
-                >
-                    <os-icon-container icon="chevron_right" [swap]="true" [hide]="vp.isMobileSubject | async">
-                        {{ nextMotion ? nextMotion.number : '' }}
-                    </os-icon-container>
-                </button>
-            </div>
-
+            @if (!editMotion && showNavigateButtons) {
+                <div class="extra-controls-slot prev-next-motion-controls">
+                    <button
+                        class="nav-button-overflow"
+                        mat-button
+                        [disabled]="!previousMotion"
+                        [ngClass]="{ 'motion-detail-nav-button': (vp.isMobileSubject | async) === false }"
+                        (click)="navigateToMotion(previousMotion)"
+                    >
+                        <os-icon-container icon="chevron_left" [hide]="vp.isMobileSubject | async">
+                            {{ previousMotion ? previousMotion.number : '' }}
+                        </os-icon-container>
+                    </button>
+                    <button
+                        class="nav-button-overflow"
+                        mat-button
+                        [disabled]="!nextMotion"
+                        [ngClass]="{ 'motion-detail-nav-button': (vp.isMobileSubject | async) === false }"
+                        (click)="navigateToMotion(nextMotion)"
+                    >
+                        <os-icon-container icon="chevron_right" [hide]="vp.isMobileSubject | async" [swap]="true">
+                            {{ nextMotion ? nextMotion.number : '' }}
+                        </os-icon-container>
+                    </button>
+                </div>
+            }
             <!-- Menu -->
-            <div class="menu-slot">
-                <button type="button" mat-icon-button [matMenuTriggerFor]="motionExtraMenu" *ngIf="motion">
-                    <mat-icon>more_vert</mat-icon>
-                </button>
-            </div>
-
+            <ng-container class="menu-slot">
+                @if (motion) {
+                    <button mat-icon-button type="button" [matMenuTriggerFor]="motionExtraMenu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                }
+            </ng-container>
             <mat-menu #motionExtraMenu="matMenu">
                 <!-- List of speakers -->
-                <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
+                <os-speaker-button [menuItem]="true" [object]="motion"></os-speaker-button>
                 <!-- PDF -->
                 <button mat-menu-item (click)="onDownloadPdf()">
                     <mat-icon>picture_as_pdf</mat-icon>
@@ -74,19 +87,23 @@
                 <!-- Project -->
                 <os-projector-button
                     *osPerms="permission.projectorCanManage"
-                    [object]="motion"
                     [menuItem]="true"
+                    [object]="motion"
                 ></os-projector-button>
                 <!-- Add/remove to/from agenda -->
                 <div *osPerms="permission.agendaItemCanManage">
-                    <button mat-menu-item (click)="addToAgenda()" *ngIf="motion && !motion.agenda_item_id">
-                        <mat-icon>add</mat-icon>
-                        <span>{{ 'Add to agenda' | translate }}</span>
-                    </button>
-                    <button mat-menu-item (click)="removeFromAgenda()" *ngIf="motion && motion.agenda_item_id">
-                        <mat-icon>remove</mat-icon>
-                        <span>{{ 'Remove from agenda' | translate }}</span>
-                    </button>
+                    @if (motion && !motion.agenda_item_id) {
+                        <button mat-menu-item (click)="addToAgenda()">
+                            <mat-icon>add</mat-icon>
+                            <span>{{ 'Add to agenda' | translate }}</span>
+                        </button>
+                    }
+                    @if (motion && motion.agenda_item_id) {
+                        <button mat-menu-item (click)="removeFromAgenda()">
+                            <mat-icon>remove</mat-icon>
+                            <span>{{ 'Remove from agenda' | translate }}</span>
+                        </button>
+                    }
                 </div>
                 <!-- Go to the history -->
                 <div *osPerms="permission.meetingCanSeeHistory">
@@ -102,94 +119,100 @@
                         <span>{{ 'Forward' | translate }}</span>
                     </button>
                 </div>
-                <mat-divider *ngIf="perms.isAllowed('update', motion) || perms.isAllowed('manage')"></mat-divider>
+                @if (perms.isAllowed('update', motion) || perms.isAllowed('manage')) {
+                    <mat-divider></mat-divider>
+                }
                 <!-- Edit-->
-                <button mat-menu-item (click)="enterEditMotion()" *ngIf="perms.isAllowed('update', motion)">
-                    <mat-icon>edit</mat-icon>
-                    <span>{{ 'Edit' | translate }}</span>
-                </button>
+                @if (perms.isAllowed('update', motion)) {
+                    <button mat-menu-item (click)="enterEditMotion()">
+                        <mat-icon>edit</mat-icon>
+                        <span>{{ 'Edit' | translate }}</span>
+                    </button>
+                }
                 <!-- Delete -->
-                <button
-                    mat-menu-item
-                    class="red-warning-text"
-                    (click)="deleteMotionButton()"
-                    *ngIf="perms.isAllowed('manage')"
-                >
-                    <mat-icon>delete</mat-icon>
-                    <span>{{ 'Delete' | translate }}</span>
-                </button>
+                @if (perms.isAllowed('manage')) {
+                    <button class="red-warning-text" mat-menu-item (click)="deleteMotionButton()">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{ 'Delete' | translate }}</span>
+                    </button>
+                }
             </mat-menu>
         </os-head-bar>
-
-        <div
-            class="content-container spacer-bottom-60"
-            osSwipe
-            (swipeLeft)="navigateToMotion(previousMotion)"
-            (swipeRight)="navigateToMotion(nextMotion)"
-            *ngIf="motion"
-        >
-            <!-- Title -->
-            <div class="title" *ngIf="!editMotion">
-                <os-motion-manage-title [motion]="motion"></os-motion-manage-title>
+        @if (motion) {
+            <div
+                class="content-container spacer-bottom-60"
+                osSwipe
+                (swipeLeft)="navigateToMotion(previousMotion)"
+                (swipeRight)="navigateToMotion(nextMotion)"
+            >
+                <!-- Title -->
+                @if (!editMotion) {
+                    <div class="title">
+                        <os-motion-manage-title [motion]="motion"></os-motion-manage-title>
+                    </div>
+                }
+                @if (editMotion) {
+                    <div>
+                        <mat-card [ngClass]="vp.isMobile ? 'os-form-card-mobile' : 'os-card'">
+                            <mat-card-content>
+                                <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                }
+                @if (!editMotion) {
+                    @if (vp.isMobile) {
+                        <div class="mobile-view">
+                            <!-- Meta info -->
+                            @if (!newMotion) {
+                                <div>
+                                    <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
+                                </div>
+                            }
+                            <!-- Content -->
+                            <mat-card class="os-card">
+                                <mat-card-content>
+                                    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                                </mat-card-content>
+                            </mat-card>
+                            <!-- Comments -->
+                            <os-motion-comments [motion]="motion"></os-motion-comments>
+                            <!-- Personal note -->
+                            @if (!operator.isAnonymous) {
+                                <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
+                            }
+                        </div>
+                    } @else {
+                        @if (motion || newMotion) {
+                            <div class="desktop-view">
+                                <div class="desktop-left" [ngClass]="{ 'spacer-bottom-60': !editMotion }">
+                                    <!-- Meta Info -->
+                                    @if (!newMotion) {
+                                        <div>
+                                            <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
+                                        </div>
+                                    }
+                                    <os-motion-comments [motion]="motion"></os-motion-comments>
+                                    @if (!operator.isAnonymous) {
+                                        <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
+                                    }
+                                </div>
+                                <div class="desktop-right">
+                                    <!-- Content -->
+                                    <mat-card class="os-card">
+                                        <mat-card-content>
+                                            <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
             </div>
-
-            <div *ngIf="editMotion">
-                <mat-card [ngClass]="vp.isMobile ? 'os-form-card-mobile' : 'os-card'">
-                    <mat-card-content>
-                        <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-            <ng-container *ngIf="!editMotion">
-                <ng-container *ngIf="vp.isMobile; then mobileView; else desktopView"></ng-container>
-            </ng-container>
-        </div>
-    </ng-container>
+        }
+    }
 </os-detail-view>
-
-<ng-template #mobileView>
-    <div class="mobile-view">
-        <!-- Meta info -->
-        <div *ngIf="!newMotion">
-            <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
-        </div>
-
-        <!-- Content -->
-        <mat-card class="os-card">
-            <mat-card-content>
-                <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-            </mat-card-content>
-        </mat-card>
-
-        <!-- Comments -->
-        <os-motion-comments [motion]="motion"></os-motion-comments>
-
-        <!-- Personal note -->
-        <os-motion-personal-note *ngIf="!operator.isAnonymous" [motion]="motion"></os-motion-personal-note>
-    </div>
-</ng-template>
-
-<ng-template #desktopView>
-    <div class="desktop-view" *ngIf="motion || newMotion">
-        <div class="desktop-left" [ngClass]="{ 'spacer-bottom-60': !editMotion }">
-            <!-- Meta Info -->
-            <div *ngIf="!newMotion">
-                <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
-            </div>
-
-            <os-motion-comments [motion]="motion"></os-motion-comments>
-            <os-motion-personal-note *ngIf="!operator.isAnonymous" [motion]="motion"></os-motion-personal-note>
-        </div>
-        <div class="desktop-right">
-            <!-- Content -->
-            <mat-card class="os-card">
-                <mat-card-content>
-                    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </div>
-</ng-template>
 
 <ng-template #metaInfoTemplate>
     <div>
@@ -198,23 +221,21 @@
 </ng-template>
 
 <ng-template #contentTemplate>
-    <os-motion-highlight-form
-        #highlightForm
-        *ngIf="!newMotion && !editMotion"
-        [motion]="motion"
-    ></os-motion-highlight-form>
+    @if (!newMotion && !editMotion) {
+        <os-motion-highlight-form #highlightForm [motion]="motion"></os-motion-highlight-form>
+    }
     <os-motion-content
         #content
-        [motion]="motion"
         [editMotion]="editMotion"
+        [motion]="motion"
         [newMotion]="newMotion"
         [osListenEditing]="{
             editMode: editMotion,
             model: motion,
             listen: !newMotion
         }"
-        (save)="saveMotion($event)"
         (formChanged)="temporaryMotion = $event"
+        (save)="saveMotion($event)"
         (validStateChanged)="canSave = $event"
     ></os-motion-content>
 </ng-template>

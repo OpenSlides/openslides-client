@@ -99,8 +99,8 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
             this.filteredItemsSubject.next(
                 result.map(entry => ({
                     id: entry.id,
-                    getTitle: () => getTitle(entry),
-                    getListTitle: () => getTitle(entry)
+                    getTitle: (): string => getTitle(entry),
+                    getListTitle: (): string => getTitle(entry)
                 }))
             );
         } else {

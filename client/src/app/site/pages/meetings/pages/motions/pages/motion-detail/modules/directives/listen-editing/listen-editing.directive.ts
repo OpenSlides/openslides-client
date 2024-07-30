@@ -104,7 +104,10 @@ export class ListenEditingDirective extends BaseComponent implements OnDestroy {
 
     private isEditing = false;
 
-    public constructor(private notifyService: NotifyService, private operator: OperatorService) {
+    public constructor(
+        private notifyService: NotifyService,
+        private operator: OperatorService
+    ) {
         super();
     }
 

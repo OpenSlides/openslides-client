@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
 import {
@@ -14,7 +14,8 @@ import { ViewOption } from '../../../../../polls';
 @Component({
     selector: `os-motion-poll-vote`,
     templateUrl: `../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.html`,
-    styleUrls: [`../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.scss`]
+    styleUrls: [`../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionPollVoteComponent extends BasePollVoteComponent {
     public override readonly settings = {
@@ -24,7 +25,10 @@ export class MotionPollVoteComponent extends BasePollVoteComponent {
         isSplitSingleOption: true
     };
 
-    public constructor(private promptService: PromptService, meetingSettingsService: MeetingSettingsService) {
+    public constructor(
+        private promptService: PromptService,
+        meetingSettingsService: MeetingSettingsService
+    ) {
         super(meetingSettingsService);
     }
 
