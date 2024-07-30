@@ -127,7 +127,7 @@
                 <span>{{ 'Edit' | translate }}</span>
             </a>
         }
-        @if (!meeting.isArchived) {
+        @if (!meeting.isArchived && !isCMAndRequireDuplicateFrom) {
             <button mat-menu-item (click)="toggleTemplateMeeting()">
                 <mat-icon color="accent">
                     {{ isTemplateMeeting ? 'check_box' : 'check_box_outline_blank' }}
@@ -135,10 +135,12 @@
                 <span>{{ 'Public template' | translate }}</span>
             </button>
         }
-        <button mat-menu-item (click)="onDuplicate()">
-            <mat-icon>file_copy</mat-icon>
-            <span>{{ 'Duplicate' | translate }}</span>
-        </button>
+        @if (!isCMAndRequireDuplicateFrom) {
+            <button mat-menu-item (click)="onDuplicate()">
+                <mat-icon>file_copy</mat-icon>
+                <span>{{ 'Duplicate' | translate }}</span>
+            </button>
+        }
         @if (meeting.isActive) {
             <button mat-menu-item (click)="onArchive()">
                 <mat-icon>archive</mat-icon>

@@ -65,6 +65,11 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
 
     public get isValid(): boolean {
+        if (this.isCommitteeManagerAndRequireDuplicateFrom) {
+            if (!this.theDuplicateFromId && this.isCreateView) {
+                return false;
+            }
+        }
         return this.meetingForm?.valid;
     }
 
@@ -112,6 +117,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     private committeeId!: Id;
 
     private cameFromList = false;
+    private requireDuplicateFrom = false;
 
     /**
      * The operating user received from the OperatorService
@@ -164,9 +170,17 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 this._committee_users_set = new Set(committees.flatMap(committee => committee.user_ids ?? []));
             })
         );
+        this.subscriptions.push(
+            this.orgaSettings
+                .get(`require_duplicate_from`)
+                .subscribe((value: boolean) => (this.requireDuplicateFrom = value))
+        );
 
         this.availableMeetingsObservable = this.orga.organizationObservable.pipe(
             map(organization => {
+                if (this.isCommitteeManagerAndRequireDuplicateFrom) {
+                    return [TEMPLATE_MEETINGS_LABEL, ...organization.template_meetings.sort(this.sortFn)];
+                }
                 return [
                     TEMPLATE_MEETINGS_LABEL,
                     ...organization.template_meetings.sort(this.sortFn),
@@ -421,6 +435,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             const patchValue = endDateChanged ? this.daterangeControl?.value.end : this.daterangeControl?.value.start;
             this.daterangeControl?.patchValue({ start: patchValue, end: patchValue });
         }
+    }
+
+    public get isCommitteeManagerAndRequireDuplicateFrom(): boolean {
+        return this.requireDuplicateFrom && !this.operator.isOrgaManager;
     }
 
     private filterAccountsForCommitteeAdmins(accounts: ViewUser[]): ViewUser[] {
