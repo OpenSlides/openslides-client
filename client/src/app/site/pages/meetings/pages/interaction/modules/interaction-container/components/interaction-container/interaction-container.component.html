@@ -1,6 +1,11 @@
 @if ((isConfStateNone | async) === false) {
     <div class="interaction-container-wrapper">
-        <div class="container-head background-primary" (click)="toggleBodyState()">
+        <div
+            class="container-head background-primary"
+            tabindex="0"
+            (click)="toggleBodyState()"
+            (keyup.enter)="toggleBodyState()"
+        >
             <div class="container-head-wrapper">
                 <div class="ellipsis-overflow container-head-title">
                     {{ containerHeadTitle | translate }}
