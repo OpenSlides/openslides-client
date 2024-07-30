@@ -1,3 +1,5 @@
+import './overload-js-functions';
+
 import { Collection, Field, Fqfield, Fqid, Id } from '../../domain/definitions/key-types';
 
 const KEYSEPERATOR = `/`;
@@ -6,7 +8,6 @@ export function copy<T>(model: T, modelHeaders: (keyof T)[] = []): T {
     if (!modelHeaders.length) {
         modelHeaders = Object.keys(model) as (keyof T)[];
     }
-    // @ts-ignore
     return modelHeaders.mapToObject(header => ({ [header]: model[header] })) as T;
 }
 

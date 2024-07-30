@@ -67,6 +67,7 @@ module.exports = {
                 '@typescript-eslint/ban-types': ['error'],
                 '@typescript-eslint/explicit-member-accessibility': ['error'],
                 '@typescript-eslint/explicit-function-return-type': ['error'],
+                '@typescript-eslint/ban-ts-comment': ['error'],
 
                 'jsdoc/require-example': ['off'],
                 'jsdoc/newline-after-description': ['off'],
@@ -75,7 +76,6 @@ module.exports = {
                 '@typescript-eslint/no-empty-interface': ['off'],
 
                 // Should be switched to error ordered by priority
-                '@typescript-eslint/ban-ts-comment': ['warn'],
                 '@typescript-eslint/no-explicit-any': ['off'],
                 '@typescript-eslint/no-non-null-assertion': ['off'],
                 'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }],
@@ -102,12 +102,9 @@ module.exports = {
                 '@angular-eslint/template/attributes-order': ['error', {
                     alphabetical: true
                 }],
+                '@angular-eslint/template/prefer-control-flow': ['error'],
                 // Should be switched to error
-                '@angular-eslint/template/click-events-have-key-events': ['warn'],
-                '@angular-eslint/template/interactive-supports-focus': ['warn'],
-                '@angular-eslint/template/elements-content': ['warn'],
-                '@angular-eslint/template/alt-text': ['warn'],
-                '@angular-eslint/template/prefer-control-flow': ['warn']
+                '@angular-eslint/template/elements-content': ['warn']
             }
         },
         {

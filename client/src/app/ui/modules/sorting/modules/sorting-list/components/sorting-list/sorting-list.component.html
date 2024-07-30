@@ -9,8 +9,10 @@
             cdkDrag
             class="line margin-bottom-5"
             [ngClass]="isSelectedRow(i) ? 'backgroundColorSelected' : 'backgroundColorLight'"
+            [tabindex]="0"
             (cdkDragStarted)="dragStarted(i)"
             (click)="onItemClick($event, i)"
+            (keyup)="onItemClick($event, i)"
         >
             <!-- drag handle -->
             @if (enable) {

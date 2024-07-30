@@ -8,6 +8,9 @@ import { HttpService } from 'src/app/gateways/http.service';
 })
 export class ImageComponent {
     @Input()
+    public alt: string = null;
+
+    @Input()
     public set source(src: string | null) {
         if (this._source !== src) {
             this._source = src;

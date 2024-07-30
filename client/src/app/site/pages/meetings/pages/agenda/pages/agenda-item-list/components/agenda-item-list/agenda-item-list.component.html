@@ -75,7 +75,9 @@
     <div
         *osScrollingTableCell="'info'; row as item; config: { width: 120 }"
         class="cell-slot fill clickable"
+        tabindex="0"
         (click)="openEditInfo(item)"
+        (keyup.space)="openEditInfo(item)"
     >
         <div class="info-col-items">
             <!-- Tags -->

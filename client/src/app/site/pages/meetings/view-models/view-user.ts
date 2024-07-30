@@ -49,7 +49,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get numberOfMeetings(): number {
-        return this.meeting_ids.length;
+        return this.meetings.length;
     }
 
     public get name(): string {

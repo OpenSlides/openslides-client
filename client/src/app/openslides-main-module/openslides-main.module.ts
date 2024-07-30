@@ -9,6 +9,7 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { environment } from 'src/environments/environment';
 
 import { WaitForActionDialogModule } from '../site/modules/wait-for-action-dialog';
+import { WaitForActionDialogService } from '../site/modules/wait-for-action-dialog/services';
 import { OpenSlidesMainComponent } from './components/openslides-main/openslides-main.component';
 import { OpenSlidesOverlayContainerComponent } from './components/openslides-overlay-container/openslides-overlay-container.component';
 import { httpInterceptorProviders } from './interceptors';
@@ -42,6 +43,7 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
         })
     ],
     providers: [
+        WaitForActionDialogService,
         { provide: APP_INITIALIZER, useFactory: AppLoaderFactory, deps: [AppLoadService], multi: true },
         httpInterceptorProviders,
         provideHttpClient(withInterceptorsFromDi())
