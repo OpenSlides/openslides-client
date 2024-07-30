@@ -99,7 +99,7 @@
                                 }
                             </div>
                         }
-                        @if (poll.isMethodN && poll.hasGlobalOptionEnabled) {
+                        @if (poll.isMethodN && poll.hasGlobalOptionEnabled && poll.global_yes) {
                             @if (!settings.hideGlobalOptions) {
                                 @for (option of globalVoteActions; track option) {
                                     @if (option.vote === 'Y') {
@@ -290,7 +290,11 @@
                                 }
                             </div>
                         }
-                        @if ((poll.isMethodY || poll.isMethodN || poll.isMethodYN) && poll.hasGlobalOptionEnabled) {
+                        @if (
+                            (poll.isMethodY || poll.isMethodN || poll.isMethodYN) &&
+                            poll.hasGlobalOptionEnabled &&
+                            (!poll.isMethodN || poll.global_no || poll.global_abstain)
+                        ) {
                             @if (!settings.hideLeftoverVotes) {
                                 <div class="or-divider-grid">
                                     <div class="hr-wrapper">
