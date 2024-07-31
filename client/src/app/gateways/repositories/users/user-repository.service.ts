@@ -26,13 +26,9 @@ export type GeneralUser = ViewUser & ViewMeetingUser;
 
 /**
  * Unified type name for state fields like `is_active`, `is_physical_person`, `is_present_in_meetings`
- * and 'is_locked_out_of_meetings'.
+ * and 'locked_out'.
  */
-export type UserStateField =
-    | 'is_active'
-    | 'is_present_in_meetings'
-    | 'is_physical_person'
-    | 'is_locked_out_of_meetings';
+export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person' | 'locked_out';
 
 export interface AssignMeetingsPayload {
     meeting_ids: Id[];
@@ -544,7 +540,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `about_me`,
             `number`,
             `structure_level`,
-            `member_number`
+            `member_number`,
+            `locked_out`
         ];
         return fields.includes(field);
     }

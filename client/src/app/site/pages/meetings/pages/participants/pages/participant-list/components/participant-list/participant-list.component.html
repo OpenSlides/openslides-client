@@ -187,8 +187,8 @@
             >
                 <span>{{ 'Present' | translate }}</span>
             </mat-checkbox>
-            <div style="padding-left: 12px">
-                <os-icon-container color="warn" icon="event_busy" [hide]="!user.is_locked_out">
+            <div style="padding-left: 22px">
+                <os-icon-container color="warn" icon="event_busy" [hide]="!user.is_locked_out" [showIcon]="user.is_locked_out">
                     {{ 'Locked out' | translate }}
                 </os-icon-container>
             </div>

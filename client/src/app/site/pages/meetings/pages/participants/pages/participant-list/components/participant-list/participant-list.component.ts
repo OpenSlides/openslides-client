@@ -457,7 +457,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     public async changeLockedOutStateOfSelectedUsers(): Promise<void> {
-        await this.setStateSelected(`is_locked_out_of_meetings`);
+        await this.setStateSelected(`locked_out`);
     }
 
     /**
@@ -480,7 +480,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     public setLockout(viewUser: ViewUser): void {
         const isAllowed = this.operator.hasPerms(Permission.userCanManage);
         if (isAllowed) {
-            console.log(`XXX setLockout`, viewUser);
+            this.repo.setState(`locked_out`, !this.isUserLockedOut(viewUser), viewUser);
         }
     }
 
@@ -528,8 +528,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             case `is_physical_person`:
                 actions = [_(`natural person`), _(`no natural person`)];
                 break;
-            case `is_locked_out_of_meetings`:
+            case `locked_out`:
                 actions = [_(`locked out`), _(`no locked out`)];
+                break;
         }
         const content = _(`Set status for selected participants:`);
 
@@ -538,9 +539,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             const value = selectedChoice.action === actions[0];
             if (field === `is_present_in_meetings`) {
                 await this.repo.setPresent(value, ...this.selectedRows).resolve();
-            } else if (field === `is_locked_out_of_meetings`) {
-                console.log(`XXX, lockout`);
-                // TODO add the right action call here. e.g. this.repo.setLockedOut
+            } else if (field === `locked_out`) {
+                await this.repo.update(value, ...this.selectedRows).resolve();
             } else {
                 await this.repo.setState(field, value, ...this.selectedRows);
             }
