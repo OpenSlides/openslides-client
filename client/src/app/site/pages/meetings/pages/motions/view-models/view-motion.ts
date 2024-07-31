@@ -157,7 +157,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public get showPreamble(): boolean {
-        return !this.state?.isFinalState ?? true;
+        return !this.state?.isFinalState;
     }
 
     /**

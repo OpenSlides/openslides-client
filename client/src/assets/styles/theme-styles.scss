@@ -2,7 +2,7 @@
 @use '@angular/material' as mat;
 @include mat.core();
 
-// /** Import brand theme */
+// __<<ngM2ThemingMigrationEscapedComment1>>__
 @import 'themes/default-light.scss';
 @import 'themes/default-dark.scss';
 @import 'themes/var-overwrites.scss';

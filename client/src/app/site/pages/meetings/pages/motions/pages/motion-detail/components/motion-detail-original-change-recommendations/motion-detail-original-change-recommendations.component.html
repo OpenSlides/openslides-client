@@ -1,4 +1,4 @@
-<div class="text"></div>
+<div class="text tiptap-view"></div>
 @if (!textLoaded) {
     <p>
         <mat-progress-bar color="primary" mode="indeterminate" [bufferValue]="75" [value]="50"></mat-progress-bar>
@@ -8,6 +8,7 @@
     <ul class="change-recommendation-list">
         @for (reco of textChangeRecommmendations; track reco) {
             <li
+                tabindex="0"
                 [class.delete]="isDeletionChangeRecommendation(reco)"
                 [class.insert]="isInsertionChangeRecommendation(reco)"
                 [class.replace]="isReplacementChangeRecommendation(reco)"
@@ -15,6 +16,7 @@
                 [style.top]="calcRecoTop(reco)"
                 [title]="reco.getTitle()"
                 (click)="gotoReco(reco)"
+                (keyup.enter)="gotoReco(reco)"
             ></li>
         }
     </ul>

@@ -1,4 +1,4 @@
-import fetchMock, { MockRequest } from 'fetch-mock';
+import fetchMock from 'fetch-mock';
 import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 
 import { HttpSubscriptionEndpoint } from './http-subscription';
@@ -18,7 +18,7 @@ function getHttpSubscriptionSSEInstance(url = `/`, onData: any = () => {}, onErr
     return new HttpSubscriptionSSE(endpointConfig, handlerConfig);
 }
 
-function getValidStream(req: MockRequest, interval: number, resolveAfter = -1) {
+function getValidStream(req: fetchMock.MockRequest, interval: number, resolveAfter = -1) {
     let cnt = 0;
     let abort = false;
     const textEncoder = new TextEncoder();

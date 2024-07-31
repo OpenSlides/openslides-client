@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { FileExportService } from 'src/app/gateways/export/file-export.service/file-export.service';
 import { HttpService } from 'src/app/gateways/http.service';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';

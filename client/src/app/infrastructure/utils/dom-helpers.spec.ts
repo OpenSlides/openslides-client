@@ -13,10 +13,12 @@ import {
     isInlineElement,
     isValidInlineHtml,
     nodesToHtml,
+    normalizeStyleAttributes,
     removeCSSClass,
     replaceHtmlEntities,
     serializeTag,
-    sortHtmlAttributes
+    sortHtmlAttributes,
+    unwrapNode
 } from './dom-helpers';
 
 describe(`utils: dom helpers`, () => {
@@ -193,6 +195,29 @@ describe(`utils: dom helpers`, () => {
     xdescribe(`getAllPrevSiblingsReversed function`, () => {
         it(``, () => {
             // expect(``).toBe(``);
+        });
+    });
+
+    describe(`unwrapNode function`, () => {
+        it(`unwrapNode removes sourrounding node`, () => {
+            const el = document.createElement(`body`);
+            el.innerHTML = `<div class="outer"><div class="inner"></div></div>`;
+            unwrapNode(el.querySelector(`.outer`));
+            expect(el.outerHTML).toBe(`<body><div class="inner"></div></body>`);
+        });
+
+        it(`unwrapNode preserves multiple inner nodes`, () => {
+            const el = document.createElement(`body`);
+            el.innerHTML = `<div class="outer"><div class="inner"></div><div class="inner-2"></div></div>`;
+            unwrapNode(el.querySelector(`.outer`));
+            expect(el.outerHTML).toBe(`<body><div class="inner"></div><div class="inner-2"></div></body>`);
+        });
+
+        it(`unwrapNode removes empty node`, () => {
+            const el = document.createElement(`body`);
+            el.innerHTML = `<div class="outer"></div>`;
+            unwrapNode(el.querySelector(`.outer`));
+            expect(el.outerHTML).toBe(`<body></body>`);
         });
     });
 
@@ -379,6 +404,50 @@ describe(`utils: dom helpers`, () => {
 
         it(`does not change tag content`, () => {
             expect(htmlToUppercase(`<a>tEst</a>`)).toBe(`<A>tEst</A>`);
+        });
+    });
+
+    describe(`normalizeStyleAttributes function`, () => {
+        it(`converts hex color to rgb`, () => {
+            expect(normalizeStyleAttributes(`<div style="color: #ff0009;"></div>`)).toBe(
+                `<div style="color: rgb(255, 0, 9);"></div>`
+            );
+        });
+
+        it(`converts hex backgroundColor to rgb`, () => {
+            expect(normalizeStyleAttributes(`<div style="background-color: #ff0009;"></div>`)).toBe(
+                `<div style="background-color: rgb(255, 0, 9);"></div>`
+            );
+        });
+
+        it(`converts hex8 color to rgba`, () => {
+            expect(normalizeStyleAttributes(`<div style="color: #43ff64d9;"></div>`)).toBe(
+                `<div style="color: rgba(67, 255, 100, 0.85);"></div>`
+            );
+        });
+
+        it(`converts color name to rgb`, () => {
+            expect(normalizeStyleAttributes(`<span style="color: red;">Foo</span>`)).toBe(
+                `<span style="color: rgb(255, 0, 0);">Foo</span>`
+            );
+        });
+
+        it(`keeps rgb colors untouched`, () => {
+            expect(normalizeStyleAttributes(`<div style="color: rgb(255, 23, 91);"></div>`)).toBe(
+                `<div style="color: rgb(255, 23, 91);"></div>`
+            );
+        });
+
+        it(`trims properties`, () => {
+            expect(normalizeStyleAttributes(`<div style="color: rgb(255, 23, 91); "></div>`)).toBe(
+                `<div style="color: rgb(255, 23, 91);"></div>`
+            );
+        });
+
+        it(`adds trailing semicolon`, () => {
+            expect(normalizeStyleAttributes(`<div style="color: rgb(255, 23, 91)"></div>`)).toBe(
+                `<div style="color: rgb(255, 23, 91);"></div>`
+            );
         });
     });
 

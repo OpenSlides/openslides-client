@@ -32,7 +32,7 @@
                     <input formControlName="welcome_title" matInput required />
                     <mat-error>{{ 'The title is required' | translate }}</mat-error>
                 </mat-form-field>
-                <os-editor formControlName="welcome_text"></os-editor>
+                <os-editor formControlName="welcome_text" [allowEmbeds]="true"></os-editor>
             </form>
         }
     </mat-card-content>

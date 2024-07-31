@@ -6,13 +6,17 @@
                     @if (titleChangeRecommendation) {
                         <span
                             class="title-change-indicator"
+                            tabindex="0"
                             (click)="gotoChangeRecommendation(titleChangeRecommendation)"
+                            (keyup.enter)="gotoChangeRecommendation(titleChangeRecommendation)"
                         ></span>
                     }
                     <span
                         *osPerms="permission.motionCanManage; and: !titleChangeRecommendation"
                         class="change-title"
+                        tabindex="0"
                         (click)="createTitleChangeRecommendation()"
+                        (keyup.enter)="createTitleChangeRecommendation()"
                     ></span>
                 </span>
             }

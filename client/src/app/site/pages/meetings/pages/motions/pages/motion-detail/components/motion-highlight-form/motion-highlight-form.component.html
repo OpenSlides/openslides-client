@@ -160,8 +160,10 @@
                 }
                 <div
                     *osPerms="permission.motionCanManage"
+                    aria-disabled="true"
                     id="lineNumberItem"
                     mat-list-item
+                    role="none"
                     (click)="$event.stopPropagation()"
                 >
                     <mat-form-field>
