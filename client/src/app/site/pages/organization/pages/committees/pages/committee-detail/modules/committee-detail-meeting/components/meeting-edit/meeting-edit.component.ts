@@ -30,6 +30,7 @@ const ADD_MEETING_LABEL = _(`New meeting`);
 const EDIT_MEETING_LABEL = _(`Edit meeting`);
 
 const ORGA_ADMIN_ALLOWED_CONTROLNAMES = [`admin_ids`];
+const SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES = [`jitsi_domain`, `jitsi_room_name`, `jitsi_room_password`];
 
 const TEMPLATE_MEETINGS_LABEL: Selectable = {
     id: -1,
@@ -298,6 +299,13 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 if (!ORGA_ADMIN_ALLOWED_CONTROLNAMES.includes(controlName)) {
                     this.meetingForm.get(controlName)!.disable();
                 } else if (!this.isCreateView && controlName === `language`) {
+                    this.meetingForm.get(controlName)!.disable();
+                }
+            });
+        }
+        if (this.operator.isSuperAdmin && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside) {
+            Object.keys(this.meetingForm.controls).forEach(controlName => {
+                if (!SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES.includes(controlName)) {
                     this.meetingForm.get(controlName)!.disable();
                 }
             });

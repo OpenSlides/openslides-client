@@ -59,12 +59,16 @@ export class CommitteeMeetingPreviewComponent {
         return this.operator.isInMeetingIds(this.meeting.id) && this.meeting.canBeEnteredBy(this.operator.operatorId);
     }
 
+    public get isLockedFromInside(): boolean {
+        return this.meeting?.locked_from_inside;
+    }
+
     public constructor(
         private translate: TranslateService,
         private meetingRepo: MeetingControllerService,
         private meetingService: MeetingService,
         private promptService: PromptService,
-        private operator: OperatorService
+        public operator: OperatorService
     ) {}
 
     public async onArchive(): Promise<void> {
