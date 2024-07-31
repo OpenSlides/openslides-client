@@ -11,11 +11,11 @@ import { OrganizationService } from 'src/app/site/pages/organization/services/or
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 import { AuthService } from 'src/app/site/services/auth.service';
+import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
 import { BrowserSupportService } from '../../../../services/browser-support.service';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 
 const HTTP_WARNING = _(`Using OpenSlides over HTTP is not supported. Enable HTTPS to continue.`);
 const HTTP_H1_WARNING = _(
