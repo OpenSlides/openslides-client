@@ -132,7 +132,7 @@
                 <span>{{ 'Edit' | translate }}</span>
             </a>
         }
-        @if (!meeting.isArchived && !isLockedFromInside) {
+        @if (!meeting.isArchived && !isCMAndRequireDuplicateFrom && !isLockedFromInside) {
             <button mat-menu-item (click)="toggleTemplateMeeting()">
                 <mat-icon color="accent">
                     {{ isTemplateMeeting ? 'check_box' : 'check_box_outline_blank' }}
@@ -140,7 +140,7 @@
                 <span>{{ 'Public template' | translate }}</span>
             </button>
         }
-        @if (!isLockedFromInside) {
+        @if (!isCMAndRequireDuplicateFrom && !isLockedFromInside) {
             <button mat-menu-item (click)="onDuplicate()">
                 <mat-icon>file_copy</mat-icon>
                 <span>{{ 'Duplicate' | translate }}</span>

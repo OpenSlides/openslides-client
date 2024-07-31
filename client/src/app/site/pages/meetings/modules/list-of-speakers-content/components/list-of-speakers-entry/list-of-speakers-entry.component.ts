@@ -23,6 +23,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
+import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
 import {
     getLosFirstContributionSubscriptionConfig,
     LOS_FIRST_CONTRIBUTION_SUBSCRIPTION
@@ -45,6 +46,9 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
 
     @Input({ required: true })
     public speaker: ViewSpeaker;
+
+    @Input({ required: true })
+    public meetingUser: ViewMeetingUser;
 
     @Input()
     public speakerIndex: number = null;

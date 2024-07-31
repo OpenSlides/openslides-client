@@ -6,6 +6,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { Committee } from 'src/app/domain/models/comittees/committee';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -27,6 +28,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
 
     public receiveExpanded = false;
     public forwardingExpanded = false;
+    public requireDuplicateFrom = false;
 
     public get canManageMeetingsInCommittee(): boolean {
         return this.operator.hasCommitteePermissionsNonAdminCheck(this.committeeId, CML.can_manage);
@@ -42,7 +44,8 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         private router: Router,
         private operator: OperatorService,
         private committeeRepo: CommitteeControllerService,
-        private promptService: PromptService
+        private promptService: PromptService,
+        private orgaSettings: OrganizationSettingsService
     ) {
         super();
         this.subscriptions.push(
@@ -52,6 +55,9 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
                     this.currentCommitteeObservable = this.committeeRepo.getViewModelObservable(this.committeeId);
                 }
             })
+        );
+        this.subscriptions.push(
+            this.orgaSettings.get(`require_duplicate_from`).subscribe(value => (this.requireDuplicateFrom = value))
         );
     }
 
@@ -76,6 +82,10 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
 
     public isSuperAdmin(): boolean {
         return this.operator.isSuperAdmin;
+    }
+
+    public isCMandRequireDuplicateFrom(): boolean {
+        return this.requireDuplicateFrom && !this.isOrgaAdmin();
     }
 
     public canAccessCommittee(committee: Committee): boolean {

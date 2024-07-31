@@ -19,6 +19,7 @@ import { MeetingService } from '../services/meeting.service';
 export class CommitteeMeetingPreviewComponent {
     @Input() public meeting!: ViewMeeting;
     @Input() public committee!: ViewCommittee;
+    @Input() public isCMAndRequireDuplicateFrom!: boolean;
 
     public readonly OML = OML;
     public readonly CML = CML;
