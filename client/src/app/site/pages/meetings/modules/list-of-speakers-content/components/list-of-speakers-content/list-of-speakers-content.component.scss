@@ -48,7 +48,7 @@
 }
 
 .current-speaker {
-    margin: 10px 25px 0 25px;
+    margin-top: 10px;
     padding: 0 0.75em;
     border-radius: 4px;
     @include desktop {
@@ -80,7 +80,7 @@
 
 .waiting-list,
 .interposed-questions {
-    padding: 10px 25px 0 25px;
+    padding-top: 10px;
 }
 
 .interposed-questions {
@@ -125,7 +125,7 @@ os-sorting-list .line {
 }
 
 .add-self-buttons {
-    margin: 10px 20px;
+    margin: 10px 0;
     display: inline-flex;
     flex-wrap: wrap;
 
@@ -135,7 +135,7 @@ os-sorting-list .line {
 }
 
 .search-new-speaker-form {
-    padding: 15px 25px 0 25px;
+    padding-top: 15px;
     width: auto;
 }
 
