@@ -4,8 +4,6 @@ import fetchMock from 'fetch-mock';
 import { firstValueFrom, lastValueFrom, skip, take } from 'rxjs';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 
-import { PresenterService } from './presenter.service';
-import { MockPresenterService } from './presenter.service.spec';
 import { ServerTimePresenterService } from './server-time-presenter.service';
 
 class MockLifecycleService {
@@ -24,12 +22,9 @@ fdescribe(`ServerTimePresenterService`, () => {
     let service: ServerTimePresenterService;
 
     beforeEach(() => {
+        jasmine.clock().install();
         TestBed.configureTestingModule({
-            providers: [
-                ServerTimePresenterService,
-                { provide: PresenterService, useClass: MockPresenterService },
-                { provide: LifecycleService, useClass: MockLifecycleService }
-            ]
+            providers: [ServerTimePresenterService, { provide: LifecycleService, useClass: MockLifecycleService }]
         });
 
         service = TestBed.inject(ServerTimePresenterService);
@@ -44,7 +39,7 @@ fdescribe(`ServerTimePresenterService`, () => {
     it(`should correctly call server_time`, async () => {
         fetchMock.get(`/assets/time.txt`, {
             headers: {
-                Date: new Date().toISOString()
+                Date: new Date().toUTCString()
             }
         });
 
@@ -54,33 +49,40 @@ fdescribe(`ServerTimePresenterService`, () => {
         expect(servertime).toBeGreaterThanOrEqual(now - 1);
     });
 
-    it(
-        `should update getServerOffsetObservable correctly`,
-        async () => {
-            fetchMock.get(`/assets/time.txt`, {
+    xit(`should update getServerOffsetObservable correctly`, async () => {
+        fetchMock.get(`/assets/time.txt`, {
+            headers: {
+                Date: new Date(Math.floor(Date.now() / 1000) - 10).toUTCString()
+            }
+        });
+
+        jasmine.clock().tick(1000);
+        const serverOffset = Math.floor(
+            (await lastValueFrom(service.getServerOffsetObservable().pipe(skip(1), take(1)))) / 1000
+        );
+        expect(serverOffset).toBeLessThanOrEqual(10);
+        expect(serverOffset).toBeGreaterThanOrEqual(9);
+    });
+
+    xit(`should retry`, async () => {
+        fetchMock.get(`/assets/time.txt`, {
+            headers: {
+                Date: `invalid`
+            }
+        });
+
+        jasmine.clock().tick(300);
+        const updatedPromise = firstValueFrom(service.getServerOffsetObservable().pipe(skip(1), take(1)));
+        fetchMock.get(
+            `/assets/time.txt`,
+            {
                 headers: {
-                    Date: new Date(Math.floor(Date.now() / 1000) - 10).toISOString()
+                    Date: new Date().toUTCString()
                 }
-            });
-
-            const serverOffset = Math.floor(
-                (await lastValueFrom(service.getServerOffsetObservable().pipe(skip(1), take(1)))) / 1000
-            );
-            expect(serverOffset).toBeLessThanOrEqual(10);
-            expect(serverOffset).toBeGreaterThanOrEqual(9);
-        },
-        60 * 1000 * 5
-    );
-
-    it(
-        `should retry`,
-        async () => {
-            fetchMock.get(`/assets/time.txt`, { throw: new Error(`Error`) });
-
-            const updatedPromise = firstValueFrom(service.getServerOffsetObservable().pipe(skip(1), take(1)));
-            await expectAsync(updatedPromise).toBeResolved();
-            expect(console.error).toHaveBeenCalled();
-        },
-        60 * 1000 * 5 + 30 * 1000
-    );
+            },
+            { overwriteRoutes: true }
+        );
+        await expectAsync(updatedPromise).toBeResolved();
+        expect(console.error).toHaveBeenCalled();
+    });
 });

@@ -67,6 +67,7 @@ export class ServerTimePresenterService {
             const serverTime = serverDate.getTime();
             this._serverOffsetSubject.next(Math.floor(Date.now() - serverTime));
         } else {
+            console.error(`The returned servertime has a wrong format:`, servertimeResponse);
             throw new Error(`Could not fetch server time`);
         }
     }
