@@ -29,11 +29,7 @@
         @if (!!title && disabledContentElements['title'] !== true) {
             <mat-card class="os-card">
                 <mat-card-content>
-                    <a
-                        [routerLink]="viewModelUrl || null"
-                        [state]="{ back: 'true' }"
-                        [target]="lowerProjectionTarget"
-                    >
+                    <a [routerLink]="viewModelUrl || null" [state]="{ back: 'true' }" [target]="lowerProjectionTarget">
                         <h1>
                             {{ title | translate }}
                         </h1>
@@ -150,11 +146,7 @@
                     <a [routerLink]="projectorUrl" [state]="{ back: 'true' }" [target]="projectionTarget">
                         <p class="subtitle-text">{{ projectorTitle | translate }}</p>
                     </a>
-                    <a
-                        [routerLink]="viewModelUrl || null"
-                        [state]="{ back: 'true' }"
-                        [target]="lowerProjectionTarget"
-                    >
+                    <a [routerLink]="viewModelUrl || null" [state]="{ back: 'true' }" [target]="lowerProjectionTarget">
                         <div class="projector">
                             @if (projector) {
                                 <os-projector [projector]="projector"></os-projector>
