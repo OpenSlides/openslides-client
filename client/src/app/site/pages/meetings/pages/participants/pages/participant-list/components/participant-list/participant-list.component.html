@@ -247,7 +247,7 @@
             *osPerms="permission.userCanManage"
             mat-menu-item
             [disabled]="isLockedOutToggleDisabled(user)"
-            (click)="setLockout(user)"
+            (click)="toggleLockout(user)"
         >
             <mat-icon>event_busy</mat-icon>
             <span>{{ 'Toggle lockout' | translate }}</span>

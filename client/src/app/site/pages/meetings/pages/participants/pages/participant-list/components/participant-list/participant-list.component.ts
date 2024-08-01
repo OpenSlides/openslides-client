@@ -475,9 +475,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     /**
-     * Sets the lockout
+     * Toggles the lockout
      */
-    public setLockout(viewUser: ViewUser): void {
+    public toggleLockout(viewUser: ViewUser): void {
         const isAllowed = this.operator.hasPerms(Permission.userCanManage);
         if (isAllowed) {
             this.repo.setState(`locked_out`, !this.isUserLockedOut(viewUser), viewUser);
@@ -539,8 +539,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             const value = selectedChoice.action === actions[0];
             if (field === `is_present_in_meetings`) {
                 await this.repo.setPresent(value, ...this.selectedRows).resolve();
-            } else if (field === `locked_out`) {
-                await this.repo.update(value, ...this.selectedRows).resolve();
             } else {
                 await this.repo.setState(field, value, ...this.selectedRows);
             }
