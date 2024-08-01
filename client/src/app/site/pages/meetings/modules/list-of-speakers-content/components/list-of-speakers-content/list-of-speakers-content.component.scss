@@ -48,7 +48,12 @@
 }
 
 .current-speaker {
-    margin-top: 10px;
+    margin: 10px 25px 0 25px;
+
+    @include phone {
+        margin: 10px 0 0 0;
+    }
+
     padding: 0 0.75em;
     border-radius: 4px;
     @include desktop {
@@ -80,7 +85,12 @@
 
 .waiting-list,
 .interposed-questions {
-    padding-top: 10px;
+    padding: 10px 25px 0 25px;
+
+    @include phone {
+        padding: 10px 0 0 0;
+    }
+
 }
 
 .interposed-questions {
@@ -125,7 +135,12 @@ os-sorting-list .line {
 }
 
 .add-self-buttons {
-    margin: 10px 0;
+    margin: 10px 20px;
+
+    @include phone {
+        padding: 10px 0;
+    }
+
     display: inline-flex;
     flex-wrap: wrap;
 
@@ -135,7 +150,12 @@ os-sorting-list .line {
 }
 
 .search-new-speaker-form {
-    padding-top: 15px;
+    padding: 15px 25px 0 25px;
+
+    @include phone {
+        padding: 15px 0 0 0;
+    }
+
     width: auto;
 }
 
