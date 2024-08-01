@@ -1,13 +1,13 @@
 <div class="form-wrapper">
-    @if ({ meeting: meetingObservable | async, organization: organizationObservable | async }; as observables) {
-        @if (observables.meeting || observables.organization) {
+    @if ({ organization: organizationObservable | async }; as observables) {
+        @if (meeting || observables.organization) {
             <div class="header-name" [@fadeIn]>
                 <!-- Meeting's name -->
-                @if (observables.meeting) {
-                    <h1>{{ observables.meeting.name }}</h1>
+                @if (meeting && meeting.name) {
+                    <h1>{{ meeting.name }}</h1>
                 }
                 <!-- Organization's name -->
-                @if (observables.organization && !observables.meeting) {
+                @if (observables.organization && !meeting) {
                     <h1>
                         {{ observables.organization.name }}
                     </h1>
@@ -24,6 +24,7 @@
             </mat-card>
         </div>
     }
+
     @if (!samlEnabled && !loading) {
         <ng-container *ngTemplateOutlet="loginform; context: { showExtra: true }"></ng-container>
     }
