@@ -72,7 +72,7 @@
                     <span class="menu-text">{{ 'Logout' | translate }}</span>
                 </button>
             </div>
-        } @else if (!user) {
+        } @else if (!isLoggedIn) {
             <div>
                 <button mat-menu-item (click)="login()">
                     <mat-icon class="menu-icon">login</mat-icon>
