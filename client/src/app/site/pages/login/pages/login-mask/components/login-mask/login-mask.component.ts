@@ -123,7 +123,9 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         // Maybe the operator changes and the user is logged in. If so, redirect him and boot OpenSlides.
         this.operatorSubscription = this.operator.operatorUpdated.subscribe(() => {
             this.clearOperatorSubscription();
-            this.osRouter.navigateAfterLogin(this.currentMeetingId);
+            if (this.authService.isAuthenticated()) {
+                this.osRouter.navigateAfterLogin(this.currentMeetingId);
+            }
         });
 
         this.route.queryParams.pipe(filter(params => params[`checkBrowser`])).subscribe(params => {
@@ -182,7 +184,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public async guestLogin(): Promise<void> {
         await this.authService.anonLogin();
-        this.router.navigate([`${this.currentMeetingId}/`]);
+        this.osRouter.navigateAfterLogin(this.currentMeetingId);
     }
 
     public async samlLogin(): Promise<void> {
