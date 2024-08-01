@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 
-import { HttpService } from '../http.service';
-
 @Injectable({
     providedIn: `root`
 })
@@ -18,10 +16,7 @@ export class ServerTimePresenterService {
      */
     private readonly _serverOffsetSubject = new BehaviorSubject<number>(0);
 
-    public constructor(
-        lifecycleService: LifecycleService,
-        private http: HttpService
-    ) {
+    public constructor(lifecycleService: LifecycleService) {
         lifecycleService.appLoaded.subscribe(() => this.startScheduler());
     }
 
@@ -61,14 +56,19 @@ export class ServerTimePresenterService {
      */
     private async refreshServertime(): Promise<void> {
         // servertime is the time in seconds.
-        const servertimeResponse = await fetch(`/`, {
+        const servertimeResponse = await fetch(`/assets/time.txt`, {
             headers: {
                 'ngsw-bypass': `true`
             }
         });
-        const serverDate = new Date(servertimeResponse.headers.get(`Date`));
-        const serverTime = serverDate.getTime();
-        this._serverOffsetSubject.next(Math.floor(Date.now() - serverTime));
+        const date = new Date(servertimeResponse.headers.get(`Date`));
+        if (servertimeResponse.headers.get(`Date`) && !isNaN(date.valueOf())) {
+            const serverDate = new Date(servertimeResponse.headers.get(`Date`));
+            const serverTime = serverDate.getTime();
+            this._serverOffsetSubject.next(Math.floor(Date.now() - serverTime));
+        } else {
+            throw new Error(`Could not fetch server time`);
+        }
     }
 
     /**
