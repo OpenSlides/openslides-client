@@ -90,6 +90,10 @@ export class OperatorService {
         return this.hasOrganizationPermissions(OML.can_manage_organization);
     }
 
+    public get isAccountAdmin(): boolean {
+        return this.hasOrganizationPermissions(OML.can_manage_users);
+    }
+
     private get isCommitteeManager(): boolean {
         return !!(this.user.committee_management_ids || []).length;
     }
@@ -643,6 +647,10 @@ export class OperatorService {
         }
         const currentCommitteePermission = cmlNameMapping[(this._CML || {})[committeeId]] || 0;
         return permissionsToCheck.some(permission => currentCommitteePermission >= cmlNameMapping[permission]);
+    }
+
+    public isAnyCommitteeAdmin(): boolean {
+        return !!this._CML && !!Object.keys(this._CML).length;
     }
 
     /**

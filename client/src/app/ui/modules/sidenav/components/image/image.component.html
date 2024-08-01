@@ -2,9 +2,8 @@
     <div>
         @if (!loaded) {
             <mat-progress-spinner mode="determinate" [diameter]="50" [value]="progress"></mat-progress-spinner>
-        }
-        @if (loaded) {
-            <img [src]="resource | trust: 'url'" />
+        } @else {
+            <img [alt]="alt" [src]="resource | trust: 'url'" />
         }
     </div>
 }

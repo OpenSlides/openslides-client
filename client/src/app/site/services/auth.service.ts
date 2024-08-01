@@ -7,7 +7,6 @@ import { SharedWorkerService } from 'src/app/openslides-main-module/services/sha
 import { AuthToken } from '../../domain/interfaces/auth-token';
 import { AuthAdapterService } from '../../gateways/auth-adapter.service';
 import { ProcessError } from '../../infrastructure/errors';
-import { UpdateService } from '../modules/site-wrapper/services/update.service';
 import { AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
@@ -51,7 +50,6 @@ export class AuthService {
         private authAdapter: AuthAdapterService,
         private authTokenService: AuthTokenService,
         private sharedWorker: SharedWorkerService,
-        private updateService: UpdateService,
         private cookie: CookieService,
         private DS: DataStoreService
     ) {
@@ -81,8 +79,7 @@ export class AuthService {
      * @param meetingId Optional. A meeting-id can be given to signs in to a specific meeting.
      * Required, if anyone signs in as guest.
      */
-    public async login(username: string, password: string, meetingId: number | null = null): Promise<void> {
-        this.logoutAnonymous();
+    public async login(username: string, password: string): Promise<void> {
         try {
             const response = await this.authAdapter.login({ username, password });
             if (response?.success) {
@@ -91,18 +88,16 @@ export class AuthService {
                 this._loginEvent.emit();
                 this.lifecycleService.reboot();
                 this.sharedWorker.sendMessage(`auth`, { action: `update` });
-                this.redirectUser(meetingId);
             }
         } catch (e) {
             throw e;
         }
     }
 
-    public async anonLogin(meetingId: number | null = null): Promise<void> {
+    public async anonLogin(): Promise<void> {
         this.cookie.set(`anonymous-auth`, ``, {
             sameSite: `Strict`
         });
-        this.redirectUser(meetingId);
         return;
     }
 
@@ -110,23 +105,11 @@ export class AuthService {
         return this.authAdapter.startSamlLogin();
     }
 
-    public redirectUser(meetingId: number | null): void {
-        if (this.isAuthenticated()) {
-            const baseRoute = meetingId ? `${meetingId}/` : `/`;
-            if (this.updateService.updateAvailable) {
-                const baseUrl = this.router.serializeUrl(this.router.createUrlTree([baseRoute]));
-                location.href = baseUrl;
-            } else {
-                this.router.navigate([baseRoute]);
-            }
-        }
-    }
-
     public async updateUser(userId: number): Promise<void> {
         if (userId) {
             this._loginEvent.emit();
             this.lifecycleService.reboot();
-            this.redirectUser(null);
+            this.router.navigate([`/`]);
         } else {
             this.lifecycleService.shutdown();
             this.authTokenService.setRawAccessToken(null);

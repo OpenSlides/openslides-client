@@ -256,7 +256,7 @@
 
                 <!-- description: HTML Editor -->
                 <h4>{{ 'Description' | translate }}:</h4>
-                <os-editor formControlName="description"></os-editor>
+                <os-editor formControlName="description" [allowEmbeds]="true"></os-editor>
 
                 <!-- searchValueSelector: tags -->
                 @if (tagsAvailable) {

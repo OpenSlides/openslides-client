@@ -72,7 +72,8 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 users_email_replyto: [this._currentOrgaSettings.users_email_replyto, [createEmailValidator()]],
                 users_email_sender: [this._currentOrgaSettings.users_email_sender],
                 users_email_subject: [this._currentOrgaSettings.users_email_subject],
-                default_language: [this._currentOrgaSettings.default_language]
+                default_language: [this._currentOrgaSettings.default_language],
+                require_duplicate_from: [this._currentOrgaSettings.require_duplicate_from ?? false]
             };
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {

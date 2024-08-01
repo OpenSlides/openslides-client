@@ -3,9 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
-import { Observable } from 'rxjs';
-import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
+import { firstValueFrom, map, Observable } from 'rxjs';
+import { getOmlVerboseName, OML } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
@@ -39,6 +38,24 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         return this.vp.isMobile;
     }
 
+    public get isUserManager(): boolean {
+        return this.operator.hasOrganizationPermissions(OML.can_manage_users);
+    }
+
+    public get fakeFilters(): Observable<{ [key: string]: () => void }> {
+        if (this.meeting) {
+            return this.meeting.pipe(
+                map(meeting => {
+                    if (meeting) {
+                        return { [meeting.name]: () => this.navigateToBaseList() };
+                    }
+                    return {};
+                })
+            );
+        }
+        return null;
+    }
+
     public constructor(
         protected override translate: TranslateService,
         public readonly controller: AccountControllerService,
@@ -60,9 +77,9 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         this.listStorageIndex = ACCOUNT_LIST_STORAGE_INDEX;
         this.subscriptions.push(
             this.route.params.subscribe(async params => {
-                this.filterService.filterMeeting(params[`id`] || null);
-                if (params[`id`]) {
-                    this.meeting = this.meetingRepo.getViewModelObservable(+params[`id`]);
+                this.filterService.filterMeeting(params[`meetingId`] || null);
+                if (params[`meetingId`]) {
+                    this.meeting = this.meetingRepo.getViewModelObservable(+params[`meetingId`]);
                 }
             })
         );
@@ -74,6 +91,10 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
 
     public navigateToMember(account: ViewUser): void {
         this.router.navigate([account.id, `edit`], { relativeTo: this.route });
+    }
+
+    public navigateToBaseList(): void {
+        this.router.navigate([`/accounts`]);
     }
 
     public async deleteUsers(accounts: ViewUser[] = this.selectedRows): Promise<void> {

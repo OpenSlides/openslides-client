@@ -51,7 +51,7 @@
     }
 
     <div class="speaker-info">
-        @if (speaker.meeting_user_id) {
+        @if (meetingUser) {
             <div class="speaker-name">
                 {{ speaker.user_short_name }}
                 @if (speaker.user_pronoun) {
@@ -60,7 +60,16 @@
             </div>
         }
         @if (!speaker.meeting_user_id && canManage) {
-            <span class="select-speaker-button" translate (click)="updateSpeakerMeetingUser()">Select speaker</span>
+            <span
+                class="select-speaker-button"
+                role="button"
+                tabindex="0"
+                translate
+                (click)="updateSpeakerMeetingUser()"
+                (keyup.enter)="updateSpeakerMeetingUser()"
+            >
+                Select speaker
+            </span>
         }
 
         <div class="speaker-additional-info">

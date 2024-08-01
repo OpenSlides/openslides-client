@@ -30,7 +30,7 @@ export class PermissionGuard {
             return await this.reroute.handleForbiddenRoute(route.data, segments, url);
         }
         if (!(await this.authCheck.isAuthenticated(url))) {
-            return this.reroute.toLogin();
+            return this.reroute.toLogin(url);
         }
         if (route.data && !(await this.authCheck.isAuthorized(route.data))) {
             return await this.reroute.handleForbiddenRoute(route.data, segments, url);

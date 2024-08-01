@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map, Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
 import { Action } from 'src/app/gateways/actions';
@@ -20,6 +22,8 @@ import { AccountCommonServiceModule } from './account-common-service.module';
     providedIn: AccountCommonServiceModule
 })
 export class AccountControllerService extends BaseController<ViewUser, User> {
+    private _committee_users_set: Set<Id> = new Set();
+
     public constructor(
         controllerServiceCollector: ControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
@@ -28,6 +32,32 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
         private operator: OperatorService
     ) {
         super(controllerServiceCollector, User, repo);
+        this.operator.user.committee_managements_as_observable.subscribe(committees => {
+            this._committee_users_set = new Set(committees.flatMap(committee => committee.user_ids ?? []));
+        });
+    }
+
+    public override getViewModelListObservable(): Observable<ViewUser[]> {
+        return super
+            .getViewModelListObservable()
+            .pipe(map(accounts => this.filterAccountsForCommitteeAdmins(accounts)));
+    }
+
+    public override getSortedViewModelListObservable(key?: string): Observable<ViewUser[]> {
+        return super
+            .getSortedViewModelListObservable(key)
+            .pipe(map(accounts => this.filterAccountsForCommitteeAdmins(accounts)));
+    }
+
+    public override getViewModelList(): ViewUser[] {
+        return this.filterAccountsForCommitteeAdmins(super.getViewModelList());
+    }
+
+    private filterAccountsForCommitteeAdmins(accounts: ViewUser[]): ViewUser[] {
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            return accounts;
+        }
+        return accounts.filter(account => this._committee_users_set.has(account.id));
     }
 
     public bulkAddUserToMeeting(users: ViewUser[], ...meetings: ViewMeeting[]): Action<void> {

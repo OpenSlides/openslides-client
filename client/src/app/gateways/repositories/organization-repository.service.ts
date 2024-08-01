@@ -37,6 +37,7 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             `users_email_replyto`,
             `users_email_sender`,
             `users_email_subject`,
+            `require_duplicate_from`,
             `saml_enabled`,
             `saml_login_button_text`,
             `saml_attr_mapping`,

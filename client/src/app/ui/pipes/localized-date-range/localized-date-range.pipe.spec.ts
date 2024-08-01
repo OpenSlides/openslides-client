@@ -2,7 +2,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import * as cs from 'date-fns/locale/cs';
 import * as de from 'date-fns/locale/de';
-import * as enUS from 'date-fns/locale/en-US/index';
+import * as enUS from 'date-fns/locale/en-US';
 import * as es from 'date-fns/locale/es';
 import * as ita from 'date-fns/locale/it';
 import * as ru from 'date-fns/locale/ru';
@@ -13,17 +13,17 @@ import { LocalizedDateRangePipe } from './localized-date-range.pipe';
 function getLocale(lang: string) {
     switch (lang) {
         case `es`:
-            return es.default;
+            return es.es;
         case `de`:
-            return de.default;
+            return de.de;
         case `cs`:
-            return cs.default;
+            return cs.cs;
         case `it`:
-            return ita.default;
+            return ita.it;
         case `ru`:
-            return ru.default;
+            return ru.ru;
         default:
-            return enUS.default;
+            return enUS.enUS;
     }
 }
 

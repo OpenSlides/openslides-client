@@ -25,6 +25,11 @@ export class RerouteService {
      * returned.
      */
     public async handleForbiddenRoute(routeData: Data, segments: UrlSegment[], url?: string): Promise<UrlTree> {
+        const state = this.router.getCurrentNavigation()?.extras?.state || {};
+        if (state[`redirectOnGuardFail`]) {
+            return this.router.createUrlTree([`/`]);
+        }
+
         if (segments.length === 0) {
             const fallbackMeetingId = Number.isNaN(this.osRouter.getMeetingId(url))
                 ? null
@@ -47,6 +52,11 @@ export class RerouteService {
         }
         if (routeData?.[`omlPermissions`]) {
             routeDataArray = routeDataArray.concat(routeData[`omlPermissions`]);
+        }
+        if (routeData?.[`optionalCmlPermissions`]) {
+            routeDataArray = routeDataArray.concat(
+                routeData[`optionalCmlPermissions`].map(perm => `committee.` + perm)
+            );
         }
 
         const queryParams = {
@@ -74,7 +84,11 @@ export class RerouteService {
         return this.router.createUrlTree([meetingId, ...segments]);
     }
 
-    public toLogin(): UrlTree {
+    public toLogin(previousUrl: UrlTree | string): UrlTree {
+        if (previousUrl) {
+            this.osRouter.setNextAfterLoginUrl(previousUrl);
+        }
+
         if (this.osRouter.getCurrentMeetingId()) {
             return this.router.createUrlTree([this.osRouter.getCurrentMeetingId(), `login`]);
         }

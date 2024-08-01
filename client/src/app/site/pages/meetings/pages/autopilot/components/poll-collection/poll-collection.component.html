@@ -34,7 +34,10 @@
             @if (poll.isMotionPoll) {
                 <div>
                     @if (poll.canBeVotedFor() && !last) {
-                        <os-motion-poll-vote [poll]="poll"></os-motion-poll-vote>
+                        <os-motion-poll-vote
+                            [displayInAutopilot]="displayInAutopilot"
+                            [poll]="poll"
+                        ></os-motion-poll-vote>
                     }
                     @if (last) {
                         <os-motion-poll-detail-content [poll]="lastPublishedPoll"></os-motion-poll-detail-content>

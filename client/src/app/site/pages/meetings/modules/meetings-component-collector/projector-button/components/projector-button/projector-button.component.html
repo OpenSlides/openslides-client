@@ -1,20 +1,4 @@
 <ng-container *osPerms="permission.projectorCanManage">
-    @if (!menuItem && !blendIn) {
-        <button mat-mini-fab [color]="isProjected ? 'accent' : 'basic'" [disabled]="disabled" (click)="onClick($event)">
-            <mat-icon>videocam</mat-icon>
-        </button>
-    }
-    @if (!menuItem && blendIn) {
-        <button
-            class="blend-in"
-            mat-icon-button
-            [color]="isProjected ? 'accent' : 'basic'"
-            [disabled]="disabled"
-            (click)="onClick($event)"
-        >
-            <mat-icon>videocam</mat-icon>
-        </button>
-    }
     @if (menuItem) {
         <button mat-menu-item [disabled]="disabled" (click)="onClick()">
             <mat-icon>videocam</mat-icon>
@@ -24,6 +8,20 @@
                     {{ 'Project' | translate }}
                 </span>
             }
+        </button>
+    } @else if (!blendIn) {
+        <button mat-mini-fab [color]="isProjected ? 'accent' : 'basic'" [disabled]="disabled" (click)="onClick($event)">
+            <mat-icon>videocam</mat-icon>
+        </button>
+    } @else {
+        <button
+            class="blend-in"
+            mat-icon-button
+            [color]="isProjected ? 'accent' : 'basic'"
+            [disabled]="disabled"
+            (click)="onClick($event)"
+        >
+            <mat-icon>videocam</mat-icon>
         </button>
     }
 </ng-container>

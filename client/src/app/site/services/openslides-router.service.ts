@@ -18,6 +18,7 @@ import {
 } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { AuthService } from 'src/app/site/services/auth.service';
 
+import { UpdateService } from '../modules/site-wrapper/services/update.service';
 import { OperatorService } from './operator.service';
 
 enum UrlTarget {
@@ -29,6 +30,8 @@ enum UrlTarget {
     providedIn: `root`
 })
 export class OpenSlidesRouterService {
+    private preLoginRedirectUrl: UrlTree;
+
     public get currentParamMap(): Observable<{ [paramName: string]: any }> {
         return this._currentParamMap;
     }
@@ -57,6 +60,7 @@ export class OpenSlidesRouterService {
         private route: ActivatedRoute,
         private injector: Injector,
         private activeMeetingIdService: ActiveMeetingIdService,
+        private updateService: UpdateService,
         private operator: OperatorService
     ) {
         _auth.logoutObservable.subscribe(() => {
@@ -88,12 +92,36 @@ export class OpenSlidesRouterService {
 
         // Navigate to login if the user is not already there
         if (!url.startsWith(`/${UrlTarget.LOGIN}`) && !new RegExp(`^\/[0-9]+\/${UrlTarget.LOGIN}`).test(url)) {
+            this.setNextAfterLoginUrl(url);
             if (this.getCurrentMeetingId()) {
                 this.router.navigate([`/`, this.getCurrentMeetingId(), UrlTarget.LOGIN]);
             } else {
                 this.router.navigate([`/`, UrlTarget.LOGIN]);
             }
         }
+    }
+
+    public navigateAfterLogin(meetingId: number): void {
+        let baseRoute: string | UrlTree = meetingId ? `${meetingId}/` : `/`;
+        if (this.preLoginRedirectUrl) {
+            baseRoute = this.preLoginRedirectUrl.toString();
+            this.preLoginRedirectUrl = null;
+        }
+
+        if (this.updateService.updateAvailable) {
+            const baseUrl = this.router.serializeUrl(this.router.createUrlTree([baseRoute]));
+            location.href = baseUrl;
+        } else {
+            this.router.navigate([baseRoute], {
+                state: {
+                    redirectOnGuardFail: true
+                }
+            });
+        }
+    }
+
+    public setNextAfterLoginUrl(url: string | UrlTree): void {
+        this.preLoginRedirectUrl = typeof url === `string` ? this.router.createUrlTree([url]) : url;
     }
 
     /**

@@ -72,6 +72,7 @@
                             </span>
                         }
                     </div>
+
                     @if (topic.hasAttachments()) {
                         <div>
                             <h3>
@@ -88,6 +89,7 @@
                         </div>
                     }
                 }
+
                 @if (editTopic && topicForm) {
                     <form tabindex="-1" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
                         <div>
@@ -99,13 +101,16 @@
                                 }
                             </mat-form-field>
                         </div>
+
                         <!-- The editor -->
                         <div class="spacer-bottom-20">
                             <h4>{{ 'Text' | translate }}</h4>
-                            <os-editor formControlName="text"></os-editor>
+                            <os-editor formControlName="text" [allowEmbeds]="true"></os-editor>
                         </div>
+
                         <!-- Attachments -->
                         <os-attachment-control formControlName="attachment_ids"></os-attachment-control>
+
                         @if (newTopic) {
                             <div>
                                 <!-- Visibility -->
@@ -121,6 +126,7 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
+
                                 <!-- Parent item -->
                                 <div>
                                     <mat-form-field>
@@ -139,6 +145,7 @@
             </mat-card-content>
         </mat-card>
     }
+
     @if (!editTopic) {
         <os-moderation-note [contentObject]="topic"></os-moderation-note>
     }

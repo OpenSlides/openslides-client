@@ -10,7 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
@@ -44,7 +44,7 @@ const COMPONENTS = [
     declarations: [...PIPES, ...COMPONENTS],
     imports: [
         CommonModule,
-        NgChartsModule,
+        BaseChartDirective,
         MatProgressBarModule,
         MatFormFieldModule,
         MatSelectModule,
@@ -64,6 +64,6 @@ const COMPONENTS = [
         OpenSlidesTranslationModule.forChild()
     ],
     exports: [...PIPES, ...MODULES, ...COMPONENTS],
-    providers: PIPES
+    providers: [...PIPES, provideCharts(withDefaultRegisterables())]
 })
 export class PollModule {}
