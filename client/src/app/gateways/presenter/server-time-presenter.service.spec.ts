@@ -18,7 +18,7 @@ class MockLifecycleService {
     }
 }
 
-fdescribe(`ServerTimePresenterService`, () => {
+describe(`ServerTimePresenterService`, () => {
     let service: ServerTimePresenterService;
 
     beforeEach(() => {
