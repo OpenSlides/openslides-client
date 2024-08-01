@@ -48,7 +48,7 @@ export class AuthGuard {
             return false;
         }
         if (!(await this.authCheck.isAuthenticated())) {
-            return this.reroute.toLogin();
+            return this.reroute.toLogin(state.url);
         }
         return await this.authCheck.isAuthorized(route.data);
     }
