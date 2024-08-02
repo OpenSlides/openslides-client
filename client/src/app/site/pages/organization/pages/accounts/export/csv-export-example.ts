@@ -10,33 +10,32 @@ export const AccountCsvExportExample: UserExport[] = [
         default_password: `initialPassword`,
         username: `mmustermann`,
         gender: `male`,
-        default_number: 1234567890,
-        default_structure_level: `Berlin`,
-        default_vote_weight: 1.0
+        default_vote_weight: 1.0,
+        member_number: `123456`
     },
     {
         first_name: `John`,
         last_name: `Doe`,
-        default_structure_level: `Washington`,
-        default_number: `75/99/8/2`,
         is_active: true,
         is_physical_person: true,
         email: `john.doe@email.com`,
         username: `jdoe`,
         gender: `diverse`,
-        default_vote_weight: 2.0
+        default_vote_weight: 2.0,
+        member_number: `234`
     },
     {
         first_name: `Julia`,
         last_name: `Bloggs`,
-        default_structure_level: `London`,
         username: `jbloggs`,
         gender: `female`,
-        default_vote_weight: 1.5
+        default_vote_weight: 1.5,
+        member_number: `5678`
     },
     {
         last_name: `Executive Board`,
         username: `executive`,
-        default_vote_weight: 2.5
+        default_vote_weight: 2.5,
+        member_number: `6789`
     }
 ];

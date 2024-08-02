@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { OptionDataKey } from 'src/app/domain/models/poll/generic-poll';
@@ -44,14 +44,14 @@ export abstract class PollService {
 
     private _isElectronicVotingEnabled = false;
 
-    public constructor(
-        organizationSettingsService: OrganizationSettingsService,
-        protected translate: TranslateService,
-        protected pollKeyVerbose: PollKeyVerbosePipe,
-        protected pollParseNumber: PollParseNumberPipe,
-        protected themeService: ThemeService
-    ) {
-        organizationSettingsService
+    private organizationSettingsService = inject(OrganizationSettingsService);
+    protected translate = inject(TranslateService);
+    protected pollKeyVerbose = inject(PollKeyVerbosePipe);
+    protected pollParseNumber = inject(PollParseNumberPipe);
+    protected themeService = inject(ThemeService);
+
+    public constructor() {
+        this.organizationSettingsService
             .get(`enable_electronic_voting`)
             .subscribe(is => (this._isElectronicVotingEnabled = is));
     }
@@ -98,7 +98,7 @@ export abstract class PollService {
                                 icon: key.icon,
                                 hide: key.hide,
                                 showPercent: key.showPercent
-                            } as VotingResult)
+                            }) as VotingResult
                     ),
                     votingOption: title.title
                 };
@@ -184,7 +184,7 @@ export abstract class PollService {
                                 showPercent: key.showPercent
                             } as VotingResult
                         ]
-                    } as PollTableData)
+                    }) as PollTableData
             );
     }
 
@@ -210,6 +210,9 @@ export abstract class PollService {
                 break;
             case PollPercentBase.Entitled:
                 totalByBase = poll.entitled_users_at_stop?.length || 0;
+                break;
+            case PollPercentBase.EntitledPresent:
+                totalByBase = poll.entitled_users_at_stop?.filter(x => x.present).length || 0;
                 break;
             case PollPercentBase.Cast:
                 totalByBase = poll.votescast > 0 ? poll.votescast : 0;
@@ -300,7 +303,8 @@ export abstract class PollService {
         return (
             poll.onehundred_percent_base === PollPercentBase.Valid ||
             poll.onehundred_percent_base === PollPercentBase.Cast ||
-            poll.onehundred_percent_base === PollPercentBase.Entitled
+            poll.onehundred_percent_base === PollPercentBase.Entitled ||
+            poll.onehundred_percent_base === PollPercentBase.EntitledPresent
         );
     }
 
@@ -340,7 +344,7 @@ export abstract class PollService {
                         hoverBackgroundColor: this.themeService.getPollColor(key),
                         barThickness: PollChartBarThickness,
                         maxBarThickness: PollChartBarThickness
-                    } as ChartDate)
+                    }) as ChartDate
             )
             .filter(chartDate => !!chartDate.data[0] || !!chartDate.data[1]);
 

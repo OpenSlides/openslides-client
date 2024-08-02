@@ -1,42 +1,43 @@
 <h1 mat-dialog-title>
-    <span>{{ 'Countdown' | translate }}</span>
+    <span>{{ 'Timer' | translate }}</span>
 </h1>
 
 <form [formGroup]="countdownForm">
-    <div mat-dialog-content>
+    <mat-dialog-content>
         <!-- Title field -->
         <mat-form-field>
-            <mat-label>{{ 'Countdown title' | translate }}</mat-label>
-            <input matInput osAutofocus formControlName="title" required />
+            <mat-label>{{ 'Title' | translate }}</mat-label>
+            <input formControlName="title" matInput osAutofocus required />
         </mat-form-field>
 
         <!-- Description field -->
         <mat-form-field>
-            <mat-label>{{ 'Countdown description' | translate }}</mat-label>
-            <input matInput formControlName="description" />
+            <mat-label>{{ 'Description' | translate }}</mat-label>
+            <input formControlName="description" matInput />
         </mat-form-field>
 
         <!-- Time field -->
-        <mat-form-field>
-            <mat-label>{{ 'Countdown time' | translate }}</mat-label>
-            <input matInput formControlName="duration" required />
+        <mat-form-field subscriptSizing="dynamic">
+            <mat-label>{{ 'Time' | translate }}</mat-label>
+            <input formControlName="duration" matInput required />
+            <mat-hint translate>If the value is set to 0 the time counts up as stopwatch.</mat-hint>
         </mat-form-field>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <!-- Submit countdown button -->
         <button
-            type="submit"
-            mat-button
             color="accent"
-            [mat-dialog-close]="countdownForm.value"
+            mat-button
+            type="submit"
             [disabled]="!countdownForm.valid"
+            [mat-dialog-close]="countdownForm.value"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
 
-        <!-- Cancel Countdown button -->
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <!-- Cancel countdown button -->
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </form>

@@ -4,5 +4,6 @@
 export enum SpeakerState {
     WAITING,
     CURRENT,
-    FINISHED
+    FINISHED,
+    INTERPOSED_QUESTION
 }

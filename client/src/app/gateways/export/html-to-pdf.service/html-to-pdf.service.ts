@@ -65,6 +65,7 @@ export class HtmlToPdfService {
         h6: [`font-size:10`],
         a: [`color:blue`, `text-decoration:underline`],
         strike: [`text-decoration:line-through`],
+        s: [`text-decoration:line-through`],
         // Pretty specific stuff that might be excluded for other projects than OpenSlides
         del: [`color:red`, `text-decoration:line-through`],
         ins: [`color:green`, `text-decoration:underline`]
@@ -102,6 +103,9 @@ export class HtmlToPdfService {
      */
     public convertHtml({ htmlText }: { htmlText: string }): Content[] {
         const docDef = [];
+
+        // DEBUG: printing htmlText. Do not remove, just comment out
+        // console.log('MakePDF htmlText:\n---\n', htmlText, '\n---\n');
 
         // Create a HTML DOM tree out of html string
         const parser = new DOMParser();
@@ -188,10 +192,12 @@ export class HtmlToPdfService {
             case `i`:
             case `ins`:
             case `del`:
+            case `s`:
             case `strike`: {
                 newParagraph = this.createFormattedParagraph(createPayload);
                 break;
             }
+            case `mark`:
             case `span`: {
                 newParagraph = this.createSpanParagraph(createPayload);
                 break;
@@ -310,7 +316,7 @@ export class HtmlToPdfService {
      * Can be overwritten by subclasses for more specific functionality.
      */
     protected createListParagraph(data: CreateSpecificParagraphPayload): any {
-        let children = this.parseChildren(data.element, data.styles);
+        let children: Element[] | Content[] = this.parseChildren(data.element, data.styles);
         const list = this.create(data.nodeName);
 
         // Fixes nested lists being placed inside `text` elements
@@ -319,7 +325,6 @@ export class HtmlToPdfService {
             (<any>children[0])?.text?.length &&
             (<any>children[0])?.text.find((el: any) => !!el.ul)
         ) {
-            // @ts-ignore
             children = [{ stack: (<any>children[0]).text }];
         }
 
@@ -372,7 +377,7 @@ export class HtmlToPdfService {
      * Takes a list of paragraphs and the data from which to calculate the next paragraph and appends the child node.
      * Can be overwritten by subclasses for more specific functionality.
      */
-    protected addChildNodeIntoParagraphs(paragraph: any[], data: ChildNodeParagraphPayload) {
+    protected addChildNodeIntoParagraphs(paragraph: any[], data: ChildNodeParagraphPayload): void {
         const parsedElement = this.parseElement(data.child, data.styles);
         paragraph.push(parsedElement);
     }
@@ -502,11 +507,11 @@ export class HtmlToPdfService {
                             break;
                         }
                         case `color`: {
-                            styleObject.color = this.parseColor(value);
+                            styleObject.color = this.parseColor(value) || styleObject.color;
                             break;
                         }
                         case `background-color`: {
-                            styleObject.background = this.parseColor(value);
+                            styleObject.background = this.parseColor(value) || styleObject.background;
                             break;
                         }
                     }
@@ -527,15 +532,17 @@ export class HtmlToPdfService {
      * @returns color as hex values for pdfmake
      */
     private parseColor(color: string): string {
+        // e.g. `#fff` or `#ff0048`
         const haxRegex = new RegExp(`^#([0-9a-f]{3}|[0-9a-f]{6})$`);
 
-        // e.g. `#fff` or `#ff0048`
+        // e.g. rgb(0,255,34) or rgb(22, 0, 0)
         const rgbRegex = new RegExp(`^rgb\\((\\d+),\\s*(\\d+),\\s*(\\d+)\\)$`);
 
-        // e.g. rgb(0,255,34) or rgb(22, 0, 0)
         const nameRegex = new RegExp(`^[a-z]+$`);
 
-        if (haxRegex.test(color)) {
+        if (color.trim() === `inherit`) {
+            return null;
+        } else if (haxRegex.test(color)) {
             return color;
         } else if (rgbRegex.test(color)) {
             const decimalColors = rgbRegex.exec(color)!.slice(1);

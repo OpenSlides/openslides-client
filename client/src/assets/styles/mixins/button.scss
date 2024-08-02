@@ -1,0 +1,14 @@
+@mixin custom-size-button($size, $font-size) {
+    --mdc-icon-button-state-layer-size: #{$size};
+    --mdc-icon-button-icon-size: #{$font-size};
+
+    &.mdc-icon-button {
+        padding: ($size - $font-size) / 2;
+    }
+
+    mat-icon {
+        width: $font-size;
+        height: $font-size;
+        font-size: $font-size;
+    }
+}

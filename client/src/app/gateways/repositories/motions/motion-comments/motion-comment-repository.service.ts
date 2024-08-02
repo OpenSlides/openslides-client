@@ -11,13 +11,13 @@ import { MotionCommentAction } from './motion-comment.action';
     providedIn: `root`
 })
 export class MotionCommentRepositoryService extends BaseMeetingRelatedRepository<ViewMotionComment, MotionComment> {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionComment);
     }
 
-    public getTitle = () => `Comment`;
+    public getTitle = (): string => `Comment`;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Comments` : `Comment`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Comments` : `Comment`);
 
     public async create(partialModel: Partial<MotionComment>): Promise<Identifiable> {
         const payload = {

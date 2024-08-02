@@ -1,12 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription, takeUntil, timer } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -14,7 +13,6 @@ import { verboseChangeRecoMode } from '../../../../../../../../../domain/models/
 import { LineNumberingService } from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
 import { ViewUnifiedChange } from '../../../../modules/change-recommendations/view-models/view-unified-change';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 import { ModifiedFinalVersionAction } from '../../services/motion-detail-view.service';
 
 @Component({
@@ -84,10 +82,6 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         return true;
     }
 
-    public get isStatuteAmendment(): boolean {
-        return (!!this.isExisting && this.motion?.isStatuteAmendment()) || false;
-    }
-
     public get isParagraphBasedAmendment(): boolean {
         return (this.isExisting && this.motion?.isParagraphBasedAmendment()) || false;
     }
@@ -96,7 +90,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         if (!this.motion) {
             return false;
         }
-        return !!Object.keys(this.motion)?.length ?? false;
+        return !!Object.keys(this.motion)?.length;
     }
 
     public get isMobile(): boolean {
@@ -104,14 +98,12 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private linenumberingService: LineNumberingService,
         private promptService: PromptService,
         private vpService: ViewPortService
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
     }
 
     public ngOnInit(): void {
@@ -284,7 +276,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
                 /**
                  * Because without change recos you cannot escape the final version anymore
                  */
-            } else if (!this.hasChangeRecommendations) {
+            } else if (!this.getAllChangingObjectsSorted().some(change => change.showInFinalView())) {
                 return ChangeRecoMode.Original;
             }
         } else if (mode === ChangeRecoMode.Changed && !this.hasChangeRecommendations) {
@@ -313,8 +305,11 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
             this.meetingSettingsService
                 .get(`motions_default_line_numbering`)
                 .subscribe(mode => this.setLineNumberingMode(mode)),
-            this.meetingSettingsService.get(`motions_recommendation_text_mode`).subscribe(mode => {
-                if (mode) {
+            combineLatest([
+                this.changeRecoRepo.getViewModelListObservable().pipe(takeUntil(timer(1000))),
+                this.meetingSettingsService.get(`motions_recommendation_text_mode`)
+            ]).subscribe(([_, mode]) => {
+                if (!this.isEditingFinalVersion && mode) {
                     this.setChangeRecoMode(this.determineCrMode(mode as ChangeRecoMode));
                 }
             })

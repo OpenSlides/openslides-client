@@ -1,128 +1,148 @@
-<ng-container *ngIf="!editMotion">
+@if (!editMotion) {
     <section class="text-holder">
         <!-- If the array exists, we do not have an error -->
-        <div *ngIf="amendmentLines">
-            <div class="alert alert-info" *ngIf="amendmentLines.length === 0">
-                <i *ngIf="motion.lead_motion">{{ 'No changes at the text.' | translate }}</i>
-                <i *ngIf="!motion.lead_motion">{{ 'The parent motion is not available.' | translate }}</i>
-            </div>
-            <div class="alert alert-info alert-inconsistency" *ngIf="amendmentErrorMessage">
-                <i [innerHTML]="amendmentErrorMessage"></i>
-            </div>
-            <ng-container *ngIf="motion.lead_motion && !isFinalEdit">
-                <os-motion-detail-diff-summary
-                    *ngIf="changeRecoMode === ChangeRecoMode.Diff"
-                    [changes]="changesForDiffMode"
-                    [scrollToChange]="scrollToChange"
-                    [elContainer]="nativeElement"
-                ></os-motion-detail-diff-summary>
-
-                <ng-container *ngFor="let paragraph of getAmendmentParagraphs(); trackBy: trackByIndex">
-                    <div
-                        class="motion-text motion-text-diff amendment-view underlined-links"
-                        [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
-                        [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
-                        [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
-                        [class.amendment-context]="showAmendmentContext"
-                    >
-                        <h3 class="amendment-line-header" *ngIf="!showAmendmentContext">
-                            {{ getAmendmentParagraphLinesTitle(paragraph) }}
-                        </h3>
-
-                        <os-motion-detail-original-change-recommendations
-                            *ngIf="
+        @if (amendmentLines) {
+            <div>
+                @if (amendmentLines.length === 0) {
+                    <div class="alert alert-info">
+                        @if (motion.lead_motion) {
+                            <i>{{ 'No changes at the text.' | translate }}</i>
+                        }
+                        @if (!motion.lead_motion) {
+                            <i>{{ 'The parent motion is not available.' | translate }}</i>
+                        }
+                    </div>
+                }
+                @if (amendmentErrorMessage) {
+                    <div class="alert alert-info alert-inconsistency">
+                        <i [innerHTML]="amendmentErrorMessage"></i>
+                    </div>
+                }
+                @if (motion.lead_motion && !isFinalEdit) {
+                    @if (changeRecoMode === ChangeRecoMode.Diff) {
+                        <os-motion-detail-diff-summary
+                            [changes]="changesForDiffMode"
+                            [elContainer]="nativeElement"
+                            [motion]="motion"
+                            [scrollToChange]="scrollToChange"
+                        ></os-motion-detail-diff-summary>
+                    }
+                    @for (paragraph of getAmendmentParagraphs(); track $index) {
+                        <div
+                            class="motion-text motion-text-diff amendment-view underlined-links"
+                            [class.amendment-context]="showAmendmentContext"
+                            [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
+                            [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
+                            [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
+                        >
+                            @if (!showAmendmentContext) {
+                                <h3 class="amendment-line-header">
+                                    {{ getAmendmentParagraphLinesTitle(paragraph) }}
+                                </h3>
+                            }
+                            @if (
                                 changeRecoMode !== ChangeRecoMode.Diff &&
                                 lineNumberingMode === LineNumberingMode.Outside &&
                                 (changeRecoMode === ChangeRecoMode.Original ||
                                     changeRecoMode === ChangeRecoMode.Changed)
-                            "
-                            [html]="getAmendmentDiffTextWithContext(paragraph)"
-                            [motionId]="motion.id"
-                            [changeRecommendations]="changeRecommendations"
-                            (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
-                            (createChangeRecommendation)="createChangeRecommendation.emit($event)"
-                        ></os-motion-detail-original-change-recommendations>
-
-                        <div
-                            *ngIf="
+                            ) {
+                                <os-motion-detail-original-change-recommendations
+                                    [changeRecommendations]="changeRecommendations"
+                                    [html]="getAmendmentDiffTextWithContext(paragraph)"
+                                    [motionId]="motion.id"
+                                    (createChangeRecommendation)="createChangeRecommendation.emit($event)"
+                                    (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
+                                ></os-motion-detail-original-change-recommendations>
+                            }
+                            @if (
                                 changeRecoMode !== ChangeRecoMode.Diff &&
                                 (lineNumberingMode !== LineNumberingMode.Outside ||
                                     (changeRecoMode !== ChangeRecoMode.Original &&
                                         changeRecoMode !== ChangeRecoMode.Changed))
-                            "
-                            [innerHTML]="getAmendmentDiffTextWithContext(paragraph) | trust : 'html'"
-                        ></div>
-                        <!-- the <div> element is only a placeholder -> outerHTML to replace it -->
-                    </div>
-
+                            ) {
+                                <div [innerHTML]="getAmendmentDiffTextWithContext(paragraph) | trust: 'html'"></div>
+                            }
+                            <!-- the <div> element is only a placeholder -> outerHTML to replace it -->
+                        </div>
+                        @if (changeRecoMode === ChangeRecoMode.Diff) {
+                            <os-motion-detail-diff
+                                [changes]="changesForDiffMode"
+                                [highlightedLine]="highlightedLine"
+                                [lineNumberingMode]="lineNumberingMode"
+                                [lineRange]="{ from: paragraph.paragraphLineFrom, to: paragraph.paragraphLineTo }"
+                                [motion]="motion"
+                                [scrollToChange]="scrollToChange"
+                                [showAllAmendments]="showAllAmendments"
+                                [showPreamble]="false"
+                                [showSummary]="false"
+                                (createChangeRecommendation)="createChangeRecommendation.emit($event)"
+                            ></os-motion-detail-diff>
+                        }
+                    }
+                }
+                @if (changeRecoMode === ChangeRecoMode.Diff && (!motion.lead_motion || isFinalEdit)) {
                     <os-motion-detail-diff
-                        *ngIf="changeRecoMode === ChangeRecoMode.Diff"
-                        [motion]="motion"
-                        [lineRange]="{ from: paragraph.paragraphLineFrom, to: paragraph.paragraphLineTo }"
                         [changes]="changesForDiffMode"
-                        [scrollToChange]="scrollToChange"
                         [highlightedLine]="highlightedLine"
-                        [showAllAmendments]="showAllAmendments"
-                        [showPreamble]="false"
-                        [showSummary]="false"
                         [lineNumberingMode]="lineNumberingMode"
+                        [motion]="motion"
+                        [scrollToChange]="scrollToChange"
+                        [showAllAmendments]="showAllAmendments"
                         (createChangeRecommendation)="createChangeRecommendation.emit($event)"
                     ></os-motion-detail-diff>
-                </ng-container>
-            </ng-container>
-
-            <os-motion-detail-diff
-                *ngIf="changeRecoMode === ChangeRecoMode.Diff && (!motion.lead_motion || isFinalEdit)"
-                [motion]="motion"
-                [changes]="changesForDiffMode"
-                [scrollToChange]="scrollToChange"
-                [highlightedLine]="highlightedLine"
-                [showAllAmendments]="showAllAmendments"
-                [lineNumberingMode]="lineNumberingMode"
-                (createChangeRecommendation)="createChangeRecommendation.emit($event)"
-            ></os-motion-detail-diff>
-        </div>
-        <div *ngIf="!amendmentLines">
-            <span class="red-warning-text">
-                {{ 'There is an error with this amendment. Please edit it manually.' | translate }}
-            </span>
-        </div>
+                }
+            </div>
+        }
+        @if (!amendmentLines) {
+            <div>
+                <span class="red-warning-text">
+                    {{ 'There is an error with this amendment. Please edit it manually.' | translate }}
+                </span>
+            </div>
+        }
     </section>
-
     <!-- Show entire motion text -->
-    <div *ngIf="changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed">
-        <mat-checkbox
-            (change)="showAmendmentContext = !showAmendmentContext"
-            *ngIf="motion && motion.isParagraphBasedAmendment() && motion.lead_motion"
-            class="show-entire-text-check"
-        >
-            <span>{{ 'Show entire motion text' | translate }}</span>
-        </mat-checkbox>
-    </div>
-</ng-container>
+    @if (changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed) {
+        <div>
+            @if (motion && motion.isParagraphBasedAmendment() && motion.lead_motion) {
+                <mat-checkbox class="show-entire-text-check" (change)="showAmendmentContext = !showAmendmentContext">
+                    <span>{{ 'Show entire motion text' | translate }}</span>
+                </mat-checkbox>
+            }
+        </div>
+    }
+}
 
 <!-- The HTML Editor for paragraph-based amendments -->
-<ng-container *ngIf="editMotion && contentForm">
+@if (editMotion && contentForm) {
     <form [formGroup]="contentForm">
-        <section *ngFor="let paragraph of selectedParagraphs">
-            <h3>
-                <span *ngIf="paragraph.lineFrom >= paragraph.lineTo - 1" class="line-number">
-                    {{ 'Line' | translate }} {{ paragraph.lineFrom }}
-                </span>
-                <span *ngIf="paragraph.lineFrom < paragraph.lineTo - 1" class="line-number">
-                    {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}
-                </span>
-            </h3>
-            <os-editor [formControlName]="paragraph.paragraphNo"></os-editor>
-            <div *ngIf="isControlInvalid(paragraph.paragraphNo)" class="red-warning-text">
-                {{ 'This field is required.' | translate }}
-            </div>
-        </section>
-        <section *ngFor="let paragraph of brokenParagraphs">
-            <em class="red-warning-text">
-                {{ 'This paragraph does not exist in the main motion anymore:' | translate }}
-            </em>
-            <div class="motion-text" [innerHTML]="paragraph | trust : 'html'"></div>
-        </section>
+        @for (paragraph of selectedParagraphs; track paragraph) {
+            <section>
+                <h3>
+                    @if (paragraph.lineFrom >= paragraph.lineTo - 1) {
+                        <span class="line-number">{{ 'Line' | translate }} {{ paragraph.lineFrom }}</span>
+                    }
+                    @if (paragraph.lineFrom < paragraph.lineTo - 1) {
+                        <span class="line-number">
+                            {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}
+                        </span>
+                    }
+                </h3>
+                <os-editor [formControlName]="paragraph.paragraphNo"></os-editor>
+                @if (isControlInvalid(paragraph.paragraphNo)) {
+                    <div class="red-warning-text">
+                        {{ 'This field is required.' | translate }}
+                    </div>
+                }
+            </section>
+        }
+        @for (paragraph of brokenParagraphs; track paragraph) {
+            <section>
+                <em class="red-warning-text">
+                    {{ 'This paragraph does not exist in the main motion anymore:' | translate }}
+                </em>
+                <div class="motion-text" [innerHTML]="paragraph | trust: 'html'"></div>
+            </section>
+        }
     </form>
-</ng-container>
+}

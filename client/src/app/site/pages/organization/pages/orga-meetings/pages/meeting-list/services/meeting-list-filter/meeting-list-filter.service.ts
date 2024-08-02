@@ -31,7 +31,7 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
         this.updateFilterForRepo({
             repo: organizationTagRepo,
             filter: this.orgaTagFilterOptions,
-            noneOptionLabel: _(`No tags`)
+            noneOptionLabel: _(`not specified`)
         });
     }
 

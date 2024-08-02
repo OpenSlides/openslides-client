@@ -46,6 +46,7 @@ declare global {
 
     interface Set<T> {
         equals(other: Set<T>): boolean;
+        difference(other: Set<T>): Set<T>;
         /**
          * Adds all elements of `other` to this set.
          */
@@ -204,6 +205,16 @@ function overloadSetFunctions(): void {
                 }
             }
             return !difference.size;
+        },
+        enumerable: false
+    });
+    Object.defineProperty(Set.prototype, `difference`, {
+        value<T>(other: Set<T>): Set<T> {
+            const difference: Set<T> = new Set(this);
+            for (const elem of other) {
+                difference.delete(elem);
+            }
+            return difference;
         },
         enumerable: false
     });

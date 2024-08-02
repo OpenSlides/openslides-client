@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
@@ -8,9 +8,11 @@ import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { UserService } from 'src/app/site/services/user.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
+import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
+import { ViewStructureLevel } from '../../../../../structure-levels/view-models';
+import { ParticipantListSortService } from '../../../../services/participant-list-sort/participant-list-sort.service';
 import { InfoDialog } from '../../services/participant-list-info-dialog.service';
 
 @Component({
@@ -18,7 +20,7 @@ import { InfoDialog } from '../../services/participant-list-info-dialog.service'
     templateUrl: `./participant-list-info-dialog.component.html`,
     styleUrls: [`./participant-list-info-dialog.component.scss`]
 })
-export class ParticipantListInfoDialogComponent extends BaseUiComponent implements OnInit {
+export class ParticipantListInfoDialogComponent extends BaseUiComponent implements OnInit, OnDestroy {
     public readonly genders = GENDERS;
 
     public get groupsObservable(): Observable<ViewGroup[]> {
@@ -29,35 +31,34 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         return this._otherParticipantsSubject;
     }
 
-    public get isUserInScope(): boolean {
-        return this._isUserInScope;
-    }
-
     public get showVoteDelegations(): boolean {
         return this._voteDelegationEnabled;
     }
 
+    public structureLevelObservable: Observable<ViewStructureLevel[]>;
+
     private readonly _otherParticipantsSubject = new BehaviorSubject<ViewMeetingUser[]>([]);
-    private _isUserInScope = true;
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled = false;
 
-    constructor(
+    public constructor(
         @Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog,
         private participantRepo: ParticipantControllerService,
+        private userSortService: ParticipantListSortService,
         private groupRepo: GroupControllerService,
-        private userService: UserService,
+        private structureLevelRepo: StructureLevelControllerService,
         private meetingSettings: MeetingSettingsService
     ) {
         super();
     }
 
     public ngOnInit(): void {
+        this.userSortService.initSorting();
         this._currentUser = this.participantRepo.getViewModel(this.infoDialog.id);
-        this.updateIsUserInScope();
+        this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
         this.subscriptions.push(
             this.participantRepo
-                .getViewModelListObservable()
+                .getSortedViewModelListObservable(this.userSortService.repositorySortingKey)
                 .subscribe(participants =>
                     this._otherParticipantsSubject.next(
                         participants
@@ -71,7 +72,8 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         );
     }
 
-    private async updateIsUserInScope(): Promise<void> {
-        this._isUserInScope = await this.userService.isUserInSameScope(this.infoDialog.id);
+    public override ngOnDestroy(): void {
+        this.userSortService.exitSortService();
+        super.ngOnDestroy();
     }
 }

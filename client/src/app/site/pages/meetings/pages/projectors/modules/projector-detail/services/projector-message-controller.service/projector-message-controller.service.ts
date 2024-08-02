@@ -13,7 +13,7 @@ export class ProjectorMessageControllerService extends BaseMeetingControllerServ
     ViewProjectorMessage,
     ProjectorMessage
 > {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: ProjectorMessageRepositoryService
     ) {

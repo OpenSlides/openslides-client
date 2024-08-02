@@ -13,7 +13,7 @@ import { PasswordForm } from '../../definitions';
 })
 export class UserPasswordFormComponent implements OnInit, OnDestroy {
     @Input()
-    public canManage = false;
+    public canUpdate = false;
 
     @Input()
     public user: ViewUser | null = null;
@@ -65,7 +65,10 @@ export class UserPasswordFormComponent implements OnInit, OnDestroy {
 
     private passwordFormSubscription: Subscription | null = null;
 
-    public constructor(private operator: OperatorService, private fb: UntypedFormBuilder) {
+    public constructor(
+        private operator: OperatorService,
+        private fb: UntypedFormBuilder
+    ) {
         this.adminPasswordForm = this.createForm();
     }
 

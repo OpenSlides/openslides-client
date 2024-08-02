@@ -13,7 +13,6 @@ import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meet
 import { ViewProjection } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import { MeetingCollectionMapperService } from 'src/app/site/pages/meetings/services/meeting-collection-mapper.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { Projectable, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -22,6 +21,8 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { hasListOfSpeakers, ViewListOfSpeakers } from '../../../../../agenda';
 import { CurrentListOfSpeakersSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-list-of-speakers-slide.service';
+import { CurrentSpeakingStructureLevelSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-speaking-structure-level-slide.service';
+import { CurrentStructureLevelListSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-structure-level-list-slide.service';
 import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog';
 import { ProjectorEditDialogService } from '../../../../components/projector-edit-dialog/services/projector-edit-dialog.service';
 import { ProjectorMessageDialogService } from '../../../../components/projector-message-dialog';
@@ -104,13 +105,14 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     private _projectorIdSubject: BehaviorSubject<number> = new BehaviorSubject(null);
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private repo: ProjectorControllerService,
         private projectionRepo: ProjectionControllerService,
         private countdownRepo: ProjectorCountdownControllerService,
         private messageRepo: ProjectorMessageControllerService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
+        private currentStructureLevelListSlideService: CurrentStructureLevelListSlideService,
+        private currentSpeakingStructureLevelSlideService: CurrentSpeakingStructureLevelSlideService,
         private currentSpeakerChyronService: CurrentSpeakerChyronSlideService,
         private projectorEditDialog: ProjectorEditDialogService,
         private projectorMessageDialog: ProjectorMessageDialogService,
@@ -121,7 +123,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         private operator: OperatorService,
         private meetingCollectionMapper: MeetingCollectionMapperService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
             this.countdownRepo.getViewModelListObservable().subscribe(countdowns => (this.countdowns = countdowns)),
@@ -260,6 +262,19 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     public getCurrentLoSBuildDesc(overlay: boolean): ProjectionBuildDescriptor {
         return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
+    }
+
+    public getCurrentStructureLevel(): ProjectionBuildDescriptor {
+        return this.currentSpeakingStructureLevelSlideService.getProjectionBuildDescriptor(true);
+    }
+
+    public getAllStructureLevel(): ProjectionBuildDescriptor {
+        return this.currentStructureLevelListSlideService.getProjectionBuildDescriptor(false);
+    }
+
+    public isStructureLevelCountdownEnabled(): boolean {
+        const strucutreLevelTime = this.meetingSettingsService.instant(`list_of_speakers_default_structure_level_time`);
+        return strucutreLevelTime > 0;
     }
 
     public wifiDataBuildDesc(): ProjectionBuildDescriptor {

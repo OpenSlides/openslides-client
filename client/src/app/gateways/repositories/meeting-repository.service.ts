@@ -19,6 +19,8 @@ import { UserAction } from './users/user-action';
 export enum MeetingProjectionType {
     CurrentListOfSpeakers = `current_list_of_speakers`,
     CurrentSpeakerChyron = `current_speaker_chyron`,
+    CurrentSpeakingStructureLevel = `current_speaking_structure_level`,
+    CurrentStructureLevelList = `current_structure_level_list`,
     AgendaItemList = `agenda_item_list`,
     WiFiAccess = `wifi_access_data`
 }
@@ -90,11 +92,16 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         };
     }
 
-    public getTitle = (viewMeeting: ViewMeeting) => viewMeeting.name;
+    public getTitle = (viewMeeting: ViewMeeting): string => viewMeeting.name;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Meetings` : `Meeting`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Meetings` : `Meeting`);
 
-    public getProjectorTitle = (_: ViewMeeting, projection: Projection) => {
+    public getProjectorTitle = (
+        _: ViewMeeting,
+        projection: Projection
+    ): {
+        title: string;
+    } => {
         let title: string;
 
         switch (projection.type as MeetingProjectionType) {
@@ -103,6 +110,12 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
                 break;
             case MeetingProjectionType.CurrentSpeakerChyron:
                 title = this.translate.instant(`Current speaker chyron`);
+                break;
+            case MeetingProjectionType.CurrentStructureLevelList:
+                title = this.translate.instant(`All structure levels`);
+                break;
+            case MeetingProjectionType.CurrentSpeakingStructureLevel:
+                title = this.translate.instant(`Current speaker`);
                 break;
             case MeetingProjectionType.AgendaItemList:
                 title = this.translate.instant(`Agenda`);
@@ -237,7 +250,11 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
 
     protected override createViewModel(model: Meeting): ViewMeeting {
         const viewModel = super.createViewModel(model);
-        viewModel.getProjectorTitle = (projection: Projection) => this.getProjectorTitle(viewModel, projection);
+        viewModel.getProjectorTitle = (
+            projection: Projection
+        ): {
+            title: string;
+        } => this.getProjectorTitle(viewModel, projection);
         return viewModel;
     }
 
@@ -304,7 +321,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         meetingId: Id,
         groupId: Id
     ): void {
-        const getNextGroupIds = (groupIds: Id[]) => {
+        const getNextGroupIds = (groupIds: Id[]): number[] => {
             const index = groupIds.findIndex(id => groupId === id);
             if (index > -1) {
                 groupIds.splice(index, 1);

@@ -1,71 +1,45 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
 import {
     BasePollVoteComponent,
     VoteOption
-} from 'src/app/site/pages/meetings/modules/poll/base/base-poll-vote.component';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
-import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
+} from 'src/app/site/pages/meetings/modules/poll/components/base-poll-vote/base-poll-vote.component';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { ViewOption } from '../../../../../polls';
 
 @Component({
     selector: `os-motion-poll-vote`,
-    templateUrl: `./motion-poll-vote.component.html`,
-    styleUrls: [`./motion-poll-vote.component.scss`]
+    templateUrl: `../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.html`,
+    styleUrls: [`../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotionPollVoteComponent extends BasePollVoteComponent implements OnInit {
-    public voteOptions: VoteOption[] = [
-        {
-            vote: `Y`,
-            css: `voted-yes`,
-            icon: `thumb_up`,
-            label: `Yes`
-        },
-        {
-            vote: `N`,
-            css: `voted-no`,
-            icon: `thumb_down`,
-            label: `No`
-        },
-        {
-            vote: `A`,
-            css: `voted-abstain`,
-            icon: `trip_origin`,
-            label: `Abstain`
-        }
-    ];
+export class MotionPollVoteComponent extends BasePollVoteComponent {
+    public override readonly settings = {
+        hideLeftoverVotes: true,
+        hideGlobalOptions: true,
+        hideSendNow: true,
+        isSplitSingleOption: true
+    };
 
     public constructor(
         private promptService: PromptService,
-        operator: OperatorService,
-        votingService: VotingService,
-        cd: ChangeDetectorRef,
-        pollRepo: PollControllerService,
-        meetingSettingsService: MeetingSettingsService,
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService
+        meetingSettingsService: MeetingSettingsService
     ) {
-        super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
+        super(meetingSettingsService);
     }
 
-    public ngOnInit(): void {
-        this.cd.markForCheck();
-    }
-
-    public getActionButtonClass(voteOption: VoteOption, user: ViewUser = this.user): string {
+    public getActionButtonClass(voteOption: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
         if (this.voteRequestData[user?.id]?.value === voteOption.vote) {
             return voteOption.css!;
         }
         return ``;
     }
 
-    public async saveVote(vote: VoteValue, optionId: Id, user: ViewUser = this.user): Promise<void> {
+    public async saveSingleVote(optionId: Id, vote: VoteValue, user: ViewUser = this.user): Promise<void> {
         if (!this.voteRequestData[user?.id]) {
             return;
         }
@@ -76,14 +50,11 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         const confirmed = await this.promptService.open(title, content);
 
         if (confirmed) {
-            this.deliveringVote[user.id] = true;
-            this.cd.markForCheck();
-
-            const votePayload = {
-                value: { [optionId]: vote },
-                user_id: user.id
-            };
-            await this.sendVote(user.id, votePayload);
+            await super.submitVote(user, { [optionId]: vote });
         }
+    }
+
+    public override shouldStrikeOptionText(_option: ViewOption, _user: ViewUser): boolean {
+        return false;
     }
 }

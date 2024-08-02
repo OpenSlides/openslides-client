@@ -1,70 +1,86 @@
 <!-- Template for dialog for quick editing -->
-<h1 mat-dialog-title>
-    <span>{{ 'Edit details for' | translate }} {{ infoDialog.title }}</span>
-</h1>
-<div class="os-form-card-mobile" mat-dialog-content>
+<h1 mat-dialog-title>{{ 'Edit details for' | translate }} {{ infoDialog.title }}</h1>
+<mat-dialog-content class="os-form-card-mobile">
     <!-- Category -->
-    <ng-container *ngIf="categoriesObservable | async as categories">
-        <mat-form-field *ngIf="categories.length > 0">
-            <mat-label>{{ 'Category' | translate }}</mat-label>
-            <mat-select [(ngModel)]="infoDialog.update.category_id">
-                <mat-option [value]="null">-</mat-option>
-                <mat-option *ngFor="let category of categories" [value]="category.id">
-                    {{ category.getTitle() }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </ng-container>
+    @if (categoriesObservable | async; as categories) {
+        @if (categories.length > 0) {
+            <mat-form-field>
+                <mat-label>{{ 'Category' | translate }}</mat-label>
+                <mat-select [(ngModel)]="infoDialog.update.category_id">
+                    <mat-option [value]="null">-</mat-option>
+                    @for (category of categories; track category) {
+                        <mat-option [value]="category.id">
+                            {{ category.getTitle() }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        }
+    }
     <!-- Motion block -->
-    <ng-container *ngIf="motionBlocksObservable | async as motionBlocks">
-        <mat-form-field *ngIf="motionBlocks.length > 0">
-            <mat-label>{{ 'Motion block' | translate }}</mat-label>
-            <mat-select [(ngModel)]="infoDialog.update.block_id">
-                <mat-option [value]="null">-</mat-option>
-                <mat-option *ngFor="let block of motionBlocks" [value]="block.id">
-                    {{ block.getTitle() }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </ng-container>
+    @if (motionBlocksObservable | async; as motionBlocks) {
+        @if (motionBlocks.length > 0) {
+            <mat-form-field>
+                <mat-label>{{ 'Motion block' | translate }}</mat-label>
+                <mat-select [(ngModel)]="infoDialog.update.block_id">
+                    <mat-option [value]="null">-</mat-option>
+                    @for (block of motionBlocks; track block) {
+                        <mat-option [value]="block.id">
+                            {{ block.getTitle() }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        }
+    }
     <!-- Tag -->
-    <ng-container *ngIf="tagsObservable | async as tags">
-        <mat-form-field *ngIf="tags.length > 0">
-            <mat-label>{{ 'Tags' | translate }}</mat-label>
-            <mat-select multiple [(ngModel)]="infoDialog.update.tag_ids">
-                <mat-option *ngFor="let tag of tags" [value]="tag.id">
-                    {{ tag.getTitle() }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </ng-container>
+    @if (tagsObservable | async; as tags) {
+        @if (tags.length > 0) {
+            <mat-form-field>
+                <mat-label>{{ 'Tags' | translate }}</mat-label>
+                <mat-select multiple [(ngModel)]="infoDialog.update.tag_ids">
+                    @for (tag of tags; track tag) {
+                        <mat-option [value]="tag.id">
+                            {{ tag.getTitle() }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        }
+    }
 
     <!-- State -->
-    <mat-form-field *ngIf="isAllowed('change_state')">
-        <mat-label>{{ 'State' | translate }}</mat-label>
-        <mat-select [(ngModel)]="infoDialog.state_id">
-            <mat-option *ngFor="let state of selectedMotion.state!.next_states" [value]="state.id">
-                {{ state.getTitle() }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+    @if (isAllowed('change_state')) {
+        <mat-form-field>
+            <mat-label>{{ 'State' | translate }}</mat-label>
+            <mat-select [(ngModel)]="infoDialog.state_id">
+                @for (state of selectedMotion.state!.next_states; track state) {
+                    <mat-option [value]="state.id">
+                        {{ state.getTitle() }}
+                    </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    }
 
     <!-- Recommendation -->
     <mat-form-field *osMeetingSetting="'motions_recommendations_by'; and: hasRecommendations()">
         <mat-label>{{ 'Recommendation' | translate }}</mat-label>
         <mat-select [(ngModel)]="infoDialog.recommendation_id">
-            <mat-option *ngFor="let recommendation of getPossibleRecommendations()" [value]="recommendation.id">
-                {{ recommendation.recommendation_label }}
-            </mat-option>
+            @for (recommendation of getPossibleRecommendations(); track recommendation) {
+                <mat-option [value]="recommendation.id">
+                    {{ recommendation.recommendation_label }}
+                </mat-option>
+            }
         </mat-select>
     </mat-form-field>
-</div>
+</mat-dialog-content>
 
-<div mat-dialog-actions>
-    <button type="submit" mat-button color="accent" [mat-dialog-close]="infoDialog">
+<mat-dialog-actions>
+    <button color="accent" mat-button type="submit" [mat-dialog-close]="infoDialog">
         <span>{{ 'Save' | translate }}</span>
     </button>
-    <button type="button" mat-button [mat-dialog-close]="null">
+    <button mat-button type="button" [mat-dialog-close]="null">
         <span>{{ 'Cancel' | translate }}</span>
     </button>
-</div>
+</mat-dialog-actions>

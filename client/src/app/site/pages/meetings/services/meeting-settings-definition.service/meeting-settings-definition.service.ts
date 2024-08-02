@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 
 import { meetingSettingsDefaults } from '../../../../../domain/definitions/meeting-settings-defaults';
-import { meetingSettings, SettingsGroup, SettingsItem } from './meeting-settings-definitions';
+import { isSettingsInput, meetingSettings, SettingsGroup, SettingsInput } from './meeting-settings-definitions';
 
-export type SettingsMap = { [key in keyof Settings]: SettingsItem };
+export type SettingsMap = { [key in keyof Settings]: SettingsInput };
 
 @Injectable({
     providedIn: `root`
@@ -38,12 +38,12 @@ export class MeetingSettingsDefinitionService {
         return Object.keys(this.settingsMap) as (keyof Settings)[];
     }
 
-    public getDefaultValue(setting: keyof Settings | SettingsItem): any {
+    public getDefaultValue(setting: keyof Settings | SettingsInput): any {
         const settingItem = typeof setting === `string` ? this.settingsMap[setting] : setting;
         return this.getDefaultValueForItem(settingItem) ?? this.getDefaultValueForType(settingItem);
     }
 
-    public getDefaultValueForType(setting: SettingsItem): any {
+    public getDefaultValueForType(setting: SettingsInput): any {
         switch (setting.type) {
             case `integer`:
                 return 0;
@@ -92,7 +92,7 @@ export class MeetingSettingsDefinitionService {
         }
     }
 
-    private getDefaultValueForItem(item: SettingsItem): any {
+    private getDefaultValueForItem(item: SettingsInput): any {
         const isArray = Array.isArray(item.key);
         const value = this.settingsDefaults[isArray ? item.key[0] : (item.key as keyof Settings)];
         if (item.type === `daterange`) {
@@ -101,7 +101,7 @@ export class MeetingSettingsDefinitionService {
         return value;
     }
 
-    private validateSetting(setting: SettingsItem): void {
+    private validateSetting(setting: SettingsInput): void {
         if (setting.type === `choice`) {
             if (!setting.choices && !setting.choicesFunc) {
                 throw new Error(`You must provide choices for ${setting.key}`);
@@ -114,10 +114,12 @@ export class MeetingSettingsDefinitionService {
         for (const group of this.settings) {
             for (const subgroup of group.subgroups) {
                 for (const setting of subgroup.settings) {
-                    this.validateSetting(setting);
-                    const keys = Array.isArray(setting.key) ? setting.key : [setting.key];
-                    for (const key of keys) {
-                        localSettingsMap[key] = setting;
+                    if (isSettingsInput(setting)) {
+                        this.validateSetting(setting);
+                        const keys = Array.isArray(setting.key) ? setting.key : [setting.key];
+                        for (const key of keys) {
+                            localSettingsMap[key] = setting;
+                        }
                     }
                 }
             }

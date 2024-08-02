@@ -1,6 +1,5 @@
 import { AfterViewInit, Directive, ViewChild } from '@angular/core';
 import { NavigationStart } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ListComponent } from 'src/app/ui/modules/list/components';
@@ -9,11 +8,10 @@ import {
     START_POSITION
 } from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 
-import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { BaseViewModel } from './base-view-model';
 
-const createStorageOffsetIndex = (prefix: string) => `${prefix}:offset`;
-const createStorageSearchIndex = (prefix: string) => `${prefix}:search`;
+const createStorageOffsetIndex = (prefix: string): string => `${prefix}:offset`;
+const createStorageSearchIndex = (prefix: string): string => `${prefix}:search`;
 
 @Directive()
 export abstract class BaseListViewComponent<V extends BaseViewModel> extends BaseComponent implements AfterViewInit {
@@ -52,8 +50,8 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
      */
     private _multiSelectMode = false;
 
-    public constructor(componentServiceCollector: ComponentServiceCollectorService, translate: TranslateService) {
-        super(componentServiceCollector, translate);
+    public constructor() {
+        super();
         this.selectedRows = [];
     }
 

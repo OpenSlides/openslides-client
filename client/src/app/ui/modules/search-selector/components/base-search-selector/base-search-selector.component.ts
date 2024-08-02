@@ -158,7 +158,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         return 112 + this.panelHeight + `px`;
     }
 
-    private _defaultSortFn = (a: Selectable, b: Selectable) =>
+    private _defaultSortFn = (a: Selectable, b: Selectable): number =>
         a && typeof a.getTitle() === `string` ? a.getTitle().localeCompare(b.getTitle()) : 0;
 
     private _sortFn: false | ((valueA: Selectable, valueB: Selectable) => number) = this._defaultSortFn;

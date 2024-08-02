@@ -1,61 +1,66 @@
 <h1 mat-dialog-title>
-    <span *ngIf="isCreateView">
-        {{ 'New chat group' | translate }}
-    </span>
-
-    <span *ngIf="!isCreateView">{{ 'Edit details for' | translate }} {{ previousChatGroupName }}</span>
+    @if (isCreateView) {
+        <span>
+            {{ 'New chat group' | translate }}
+        </span>
+    }
+    @if (!isCreateView) {
+        <span>{{ 'Edit details for' | translate }} {{ previousChatGroupName }}</span>
+    }
 </h1>
 
-<form *ngIf="chatGroupFormGroup" [formGroup]="chatGroupFormGroup">
-    <div class="os-form-card-mobile" mat-dialog-content>
-        <!-- Name -->
-        <p>
-            <mat-form-field>
-                <mat-label>{{ 'Name' | translate }}</mat-label>
-                <input type="text" matInput osAutofocus required formControlName="name" />
-                <mat-error *ngIf="chatGroupFormGroup.invalid">{{ 'Required' | translate }}</mat-error>
-            </mat-form-field>
-        </p>
-
-        <!-- Groups -->
-        <p>
-            <mat-form-field>
-                <mat-label>{{ 'Groups with read permissions' | translate }}</mat-label>
-                <os-list-search-selector
-                    formControlName="read_group_ids"
-                    [multiple]="true"
-                    [inputListValues]="groupsObservable"
-                ></os-list-search-selector>
-            </mat-form-field>
-        </p>
-        <p>
-            <mat-form-field>
-                <mat-label>{{ 'Groups with write permissions' | translate }}</mat-label>
-                <os-list-search-selector
-                    formControlName="write_group_ids"
-                    [multiple]="true"
-                    [inputListValues]="groupsObservable"
-                ></os-list-search-selector>
-            </mat-form-field>
-        </p>
-    </div>
-
-    <div mat-dialog-actions>
-        <!-- save  -->
-        <button
-            type="submit"
-            color="accent"
-            mat-button
-            [disabled]="chatGroupFormGroup.invalid"
-            [mat-dialog-close]="chatGroupFormGroup.value"
-            color="accent"
-        >
-            <span>{{ 'Save' | translate }}</span>
-        </button>
-
-        <!-- cancel -->
-        <button type="button" mat-button [mat-dialog-close]="null">
-            <span>{{ 'Cancel' | translate }}</span>
-        </button>
-    </div>
-</form>
+@if (chatGroupFormGroup) {
+    <form [formGroup]="chatGroupFormGroup">
+        <mat-dialog-content class="os-form-card-mobile">
+            <!-- Name -->
+            <p>
+                <mat-form-field>
+                    <mat-label>{{ 'Name' | translate }}</mat-label>
+                    <input formControlName="name" matInput osAutofocus required type="text" />
+                    @if (chatGroupFormGroup.invalid) {
+                        <mat-error>{{ 'Required' | translate }}</mat-error>
+                    }
+                </mat-form-field>
+            </p>
+            <!-- Groups -->
+            <p>
+                <mat-form-field>
+                    <mat-label>{{ 'Groups with read permissions' | translate }}</mat-label>
+                    <os-list-search-selector
+                        formControlName="read_group_ids"
+                        [inputListValues]="groupsObservable"
+                        [multiple]="true"
+                        [sortFn]="sortFn"
+                    ></os-list-search-selector>
+                </mat-form-field>
+            </p>
+            <p>
+                <mat-form-field>
+                    <mat-label>{{ 'Groups with write permissions' | translate }}</mat-label>
+                    <os-list-search-selector
+                        formControlName="write_group_ids"
+                        [inputListValues]="groupsObservable"
+                        [multiple]="true"
+                        [sortFn]="sortFn"
+                    ></os-list-search-selector>
+                </mat-form-field>
+            </p>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+            <!-- save  -->
+            <button
+                color="accent"
+                mat-button
+                type="submit"
+                [disabled]="chatGroupFormGroup.invalid"
+                [mat-dialog-close]="chatGroupFormGroup.value"
+            >
+                <span>{{ 'Save' | translate }}</span>
+            </button>
+            <!-- cancel -->
+            <button mat-button type="button" [mat-dialog-close]="null">
+                <span>{{ 'Cancel' | translate }}</span>
+            </button>
+        </mat-dialog-actions>
+    </form>
+}

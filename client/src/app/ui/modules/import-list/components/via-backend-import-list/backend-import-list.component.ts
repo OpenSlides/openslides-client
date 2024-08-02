@@ -13,9 +13,9 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
-import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
@@ -57,11 +57,11 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
 
-    @ContentChildren(ImportListFirstTabDirective, { read: MatTab })
-    public importListFirstTabs!: QueryList<MatTab>;
+    @ContentChildren(ImportListFirstTabDirective)
+    public importListFirstTabs!: QueryList<ImportListFirstTabDirective>;
 
-    @ContentChildren(ImportListLastTabDirective, { read: MatTab })
-    public importListLastTabs!: QueryList<MatTab>;
+    @ContentChildren(ImportListLastTabDirective)
+    public importListLastTabs!: QueryList<ImportListLastTabDirective>;
 
     @ContentChild(ImportListStatusTemplateDirective, { read: TemplateRef })
     public importListStateTemplate: TemplateRef<any>;
@@ -243,7 +243,10 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         [property: string]: { default?: ImportListHeaderDefinition; preview?: BackendImportHeader };
     } = {};
 
-    public constructor(private dialog: MatDialog, private translate: TranslateService) {}
+    public constructor(
+        private dialog: MatDialog,
+        private translate: TranslateService
+    ) {}
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)
@@ -360,7 +363,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     }
 
     public getEntryIcon(item: BackendImportEntryObject): string {
-        if (item.info === BackendImportState.Done) {
+        if (item.info === BackendImportState.Done || !item) {
             return undefined;
         }
         return this.getActionIcon(item);
@@ -490,13 +493,13 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`\n `);
     }
 
-    private fillPreviewData(previews: BackendImportPreview[]) {
+    private fillPreviewData(previews: BackendImportPreview[]): void {
         if (!previews || !previews.length) {
             this._previewColumns = undefined;
             this._summary = undefined;
             this._rows = undefined;
         } else {
-            this._previewColumns = previews[0].headers ?? this._previewColumns;
+            this._previewColumns = (previews[0].headers ?? this._previewColumns).filter(header => !header[`is_hidden`]);
             this._summary = previews.some(preview => preview.statistics)
                 ? previews.flatMap(preview => preview.statistics).filter(point => point?.value)
                 : [];

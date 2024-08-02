@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Data } from '@angular/router';
-import { OML } from 'src/app/domain/definitions/organization-permission';
+import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 
@@ -16,7 +16,7 @@ export class AuthCheckService {
     /**
      * The last url to be approved by the permission guard, will be automatically emptied after the first read.
      */
-    public get lastSuccessfulUrl() {
+    public get lastSuccessfulUrl(): string {
         const url = this._lastSuccessfulUrl;
         this._lastSuccessfulUrl = null;
         return url;
@@ -31,18 +31,19 @@ export class AuthCheckService {
     public constructor(
         private operator: OperatorService,
         private activeMeeting: ActiveMeetingService,
-        private meetingSettingService: MeetingSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private osRouter: OpenSlidesRouterService
     ) {}
 
     public async isAuthorized(routeData: Data): Promise<boolean> {
         const basePerm: Permission[] = routeData[`meetingPermissions`];
         const omlPermissions: OML[] = routeData[`omlPermissions`];
-        if (!basePerm && !omlPermissions) {
+        const cmlPermissions: CML[] = routeData[`optionalCmlPermissions`];
+        if (!basePerm && !omlPermissions && !cmlPermissions) {
             return true;
         }
         const meetingSetting: keyof Settings = routeData[`meetingSetting`];
-        const hasPerm = await this.hasPerms(basePerm, omlPermissions);
+        const hasPerm = await this.hasPerms(basePerm, omlPermissions, cmlPermissions);
         const hasSetting = this.isMeetingSettingEnabled(meetingSetting);
         return hasPerm && hasSetting;
     }
@@ -52,7 +53,7 @@ export class AuthCheckService {
         return (this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated;
     }
 
-    public async isAuthorizedToSeeOrganization() {
+    public async isAuthorizedToSeeOrganization(): Promise<boolean> {
         await this.operator.ready;
         try {
             return this.operator.knowsMultipleMeetings || this.operator.hasOrganizationPermissions();
@@ -78,9 +79,19 @@ export class AuthCheckService {
         return this.operator.isInMeeting(Number(meetingIdString)) || this.operator.isSuperAdmin;
     }
 
-    private async hasPerms(basePerm: Permission | Permission[], omlPerm?: OML | OML[]): Promise<boolean> {
+    private async hasPerms(
+        basePerm: Permission | Permission[],
+        omlPerm?: OML | OML[],
+        cmlPerm?: CML | CML[]
+    ): Promise<boolean> {
         await this.operator.ready;
         let result = true;
+        if (!!cmlPerm) {
+            const toCheck = Array.isArray(cmlPerm) ? cmlPerm : [cmlPerm];
+            if (toCheck.includes(CML.can_manage) && this.operator.isAnyCommitteeAdmin()) {
+                return true;
+            }
+        }
         if (!!basePerm && !!this.activeMeeting.meetingId) {
             const toCheck = Array.isArray(basePerm) ? basePerm : [basePerm];
             await this.operator.groupPermissionsLoaded;
@@ -97,6 +108,6 @@ export class AuthCheckService {
         if (!meetingSetting) {
             return true;
         }
-        return this.meetingSettingService.instant(meetingSetting) as boolean;
+        return this.meetingSettingsService.instant(meetingSetting) as boolean;
     }
 }

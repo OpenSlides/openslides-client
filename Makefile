@@ -1,4 +1,4 @@
-docker-run=docker run -ti -v `pwd`/client/src:/app/src -p 127.0.0.1:9001:9001/tcp openslides-client-dev
+docker-run=docker run -ti -v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp openslides-client-dev
 
 build-dev:
 	docker build -t openslides-client-dev -f Dockerfile.dev .
@@ -34,5 +34,5 @@ run-check-prettifying:
 	docker run -t openslides-client-dev npm run prettify-check
 
 run-playwright:
-	docker-compose -f client/tests/docker-compose.test.yml build
-	docker-compose -f client/tests/docker-compose.test.yml up --exit-code-from playwright
+	docker compose -f client/tests/docker-compose.test.yml build
+	docker compose -f client/tests/docker-compose.test.yml up --exit-code-from playwright

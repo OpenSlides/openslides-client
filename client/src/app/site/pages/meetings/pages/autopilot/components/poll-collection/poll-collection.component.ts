@@ -8,7 +8,6 @@ import { BaseComponent } from 'src/app/site/base/base.component';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { getPollDetailSubscriptionConfig, POLL_DETAIL_SUBSCRIPTION } from '../../../polls/polls.subscription';
@@ -27,6 +26,15 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
     public currentSubscribed: Id | null = null;
 
     private _currentProjection: (Partial<HasPolls<C>> & { readonly fqid: string }) | null = null;
+
+    @Input()
+    public disableRunning = false;
+
+    @Input()
+    public disableFinished = false;
+
+    @Input()
+    public displayInAutopilot = true;
 
     @Input()
     public set currentProjection(viewModel: (Partial<HasPolls<C>> & { readonly fqid: string }) | null) {
@@ -62,13 +70,12 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private repo: PollControllerService,
         private cd: ChangeDetectorRef,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {
@@ -102,7 +109,7 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         const model = contentObject.getVerboseName();
         const pollTitle = poll.getTitle();
 
-        if (this.showExtendedTitle && contentObject.fqid !== this.currentProjection.fqid) {
+        if (this.showExtendedTitle && contentObject?.fqid !== this.currentProjection?.fqid) {
             return `(${model}) ${listTitle} - ${pollTitle}`;
         } else {
             return pollTitle;

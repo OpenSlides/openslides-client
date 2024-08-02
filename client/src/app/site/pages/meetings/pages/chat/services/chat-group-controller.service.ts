@@ -11,7 +11,7 @@ import { ViewChatGroup } from '../view-models';
     providedIn: `root`
 })
 export class ChatGroupControllerService extends BaseMeetingControllerService<ViewChatGroup, ChatGroup> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: ChatGroupRepositoryService
     ) {

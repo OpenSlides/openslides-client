@@ -6,13 +6,6 @@
         flex: 2;
     }
 
-    .mat-mdc-form-field {
-        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-        .mat-form-field-subscript-wrapper {
-            position: static;
-        }
-    }
-
     /* Full width form fields */
     .mat-mdc-form-field {
         width: 100%;
@@ -55,6 +48,12 @@
 
     /* Spacing between config entries */
     .settings-form-group {
-        margin-bottom: 15px;
+        margin-bottom: 16px;
+        &.checkbox-setting {
+            margin-bottom: 8px;
+            .settings-form-group {
+                margin-bottom: 8px;
+            }
+        }
     }
 }

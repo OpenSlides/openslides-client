@@ -1,8 +1,9 @@
 <os-view-list
+    [addBottomSpacer]="hasInteractionState | async"
     [alsoFilterByProperties]="alsoFilterByProperties"
     [alwaysShowMenu]="alwaysShowMenu"
-    [filterService]="filterService"
     [filterProps]="filterProps"
+    [filterService]="filterService"
     [hiddenColumns]="hiddenColumns"
     [listObservable]="listObservable"
     [listObservableProvider]="listObservableProvider"
@@ -14,9 +15,8 @@
     [showMenu]="showMenu"
     [sortService]="sortService"
     [vScrollFixed]="vScrollFixed"
-    [addBottomSpacer]="hasInteractionState | async"
-    (selectedRowsChange)="selectedRowsChange.emit($event)"
     (searchFilterUpdated)="searchFilterUpdated.emit($event)"
+    (selectedRowsChange)="selectedRowsChange.emit($event)"
 >
     <!-- Projector column -->
     <div
@@ -34,14 +34,10 @@
             (changeEvent)="viewUpdateEvent()"
         ></os-projector-button>
         <!-- Projector indicator -->
-        <div class="projector-button" *osPerms="permission.projectorCanManage; complement: true">
-            <mat-icon
-                color="accent"
-                *ngIf="isProjectedFn(viewModel)"
-                matTooltip="{{ 'Currently projected' | translate }}"
-            >
-                videocam
-            </mat-icon>
+        <div *osPerms="permission.projectorCanManage; complement: true" class="projector-button">
+            @if (isProjectedFn(viewModel)) {
+                <mat-icon color="accent" matTooltip="{{ 'Currently projected' | translate }}">videocam</mat-icon>
+            }
         </div>
     </div>
 
@@ -55,6 +51,6 @@
         "
         class="fill"
     >
-        <os-speaker-button [object]="_getSpeakerButtonObject(viewModel)" [disabled]="multiSelect"></os-speaker-button>
+        <os-speaker-button [disabled]="multiSelect" [object]="_getSpeakerButtonObject(viewModel)"></os-speaker-button>
     </div>
 </os-view-list>

@@ -134,7 +134,7 @@ export class CheckInputComponent extends BaseUiComponent implements OnInit, Cont
     /**
      * Helper function to determine which information to give to the parent form
      */
-    private propagateChange = (_: any) => {};
+    private propagateChange = (_: any): void => {};
 
     /**
      * Initially build the form-control.

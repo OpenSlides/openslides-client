@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, map, Subscription } from 'rxjs';
@@ -12,25 +11,17 @@ import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions
 import { RawUser } from 'src/app/gateways/repositories/users';
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique-among';
-import {
-    ViewMotion,
-    ViewMotionCategory,
-    ViewMotionStatuteParagraph,
-    ViewMotionWorkflow
-} from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion, ViewMotionCategory, ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
-import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort.service/participant-list-sort.service';
+import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { MotionTinyMceConfig } from '../../definitions/tinymce-config';
 import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 
 /**
  * fields that are required for the motion form but are not part of any motion payload
@@ -39,8 +30,6 @@ interface MotionFormFields {
     // from update payload
     modified_final_version: string;
     // apparently from no payload
-    statute_amendment: string;
-    statute_paragraph_id: string;
     parent_id: string;
 
     // For agenda creations
@@ -51,7 +40,7 @@ interface MotionFormFields {
 }
 
 type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any } & {
-    supporter_user_ids?: any;
+    supporter_ids?: any;
 };
 
 @Component({
@@ -68,8 +57,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     @Output()
     public validStateChanged = new EventEmitter<boolean>();
-
-    public tinyMceConfig = MotionTinyMceConfig;
 
     private finalEditMode = false;
 
@@ -126,11 +113,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public categories: ViewMotionCategory[] = [];
 
     /**
-     * statute paragraphs, necessary for amendments
-     */
-    public statuteParagraphs: ViewMotionStatuteParagraph[] = [];
-
-    /**
      * Indicates the currently highlighted line, if any.
      */
     public highlightedLine!: number;
@@ -161,9 +143,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     private _motionNumbersSubject = new BehaviorSubject<string[]>([]);
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private fb: UntypedFormBuilder,
         private dialog: MotionChangeRecommendationDialogService,
         private route: ActivatedRoute,
@@ -172,48 +152,10 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         private motionController: MotionControllerService,
         public participantSortService: ParticipantListSortService
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
         this.motionController
             .getViewModelListObservable()
             .subscribe(motions => this.updateMotionNumbersSubject(motions));
-    }
-
-    /**
-     * clicking Shift and Enter will save automatically
-     *
-     * @param event has the code
-     */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.save.emit(this.contentForm.value);
-            this.updateMotionNumbersSubject();
-        }
-    }
-
-    /**
-     * If the checkbox is deactivated, the statute_paragraph_id-field needs to be reset, as only that field is saved
-     *
-     * @param {MatCheckboxChange} _event
-     */
-    public onStatuteAmendmentChange(_event: MatCheckboxChange): void {
-        this.contentForm.patchValue({
-            statute_paragraph_id: null,
-            workflow_id: this.getWorkflowIdForCreateFormByParagraph()
-        });
-    }
-
-    /**
-     * The paragraph of the statute to amend was changed -> change the input fields below
-     *
-     * @param {number} newValue
-     */
-    public onStatuteParagraphChange(newValue: number): void {
-        const selectedParagraph = this.statuteParagraphs.find(par => par.id === newValue);
-        this.contentForm.patchValue({
-            title: this.translate.instant(`Statute amendment for`) + ` ${selectedParagraph!.title}`,
-            text: selectedParagraph?.text,
-            workflow_id: this.getWorkflowIdForCreateFormByParagraph(newValue)
-        });
     }
 
     /**
@@ -232,15 +174,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
      */
     public showUploadError(error: any): void {
         this.raiseError(error);
-    }
-
-    /**
-     * get the diff html from the statute amendment, as SafeHTML for [innerHTML]
-     *
-     * @returns safe html strings
-     */
-    public getFormattedStatuteAmendment(): string {
-        return this.motionLineNumbering.formatStatuteAmendment(this.statuteParagraphs, this.motion, this.lineLength);
     }
 
     /**
@@ -327,11 +260,9 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.addNewUserToFormCtrl(newUserObj, `supporters_id`);
     }
 
-    public getDefaultWorkflowKeyOfSettingsByParagraph(paragraph?: number): keyof Settings {
+    public getDefaultWorkflowKeyOfSettingsByParagraph(_paragraph: number): keyof Settings {
         let configKey: keyof Settings = `motions_default_workflow_id`;
-        if (!!this.contentForm && !!this.contentForm.get(`statute_amendment`)!.value && !!paragraph) {
-            configKey = `motions_default_statute_amendment_workflow_id`;
-        } else if (!!this.route.snapshot.queryParams[`parent`]) {
+        if (!!this.route.snapshot.queryParams[`parent`]) {
             configKey = `motions_default_amendment_workflow_id`;
         }
         return configKey;
@@ -360,10 +291,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
                 this.contentForm.get(`text`)?.clearValidators(); // manually adjust validators
             }
 
-            if (this.isExisting && this.motion.isStatuteAmendment()) {
-                const statuteAmendmentFieldName = `statute_amendment`;
-                contentPatch[statuteAmendmentFieldName] = true;
-            }
             this._initialState = deepCopy(contentPatch);
             this.contentForm.patchValue(contentPatch);
         } else {
@@ -412,10 +339,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         // since updates are usually not coming at the same time, every change to
         // any subject has to mark the view for checking
         if (this.motion) {
-            return [
-                this.statuteRepo.getViewModelListObservable().subscribe(values => (this.statuteParagraphs = values)),
-                this.participantRepo.getViewModelListObservable().subscribe(() => this.cd.markForCheck())
-            ];
+            return [this.participantRepo.getViewModelListObservable().subscribe(() => this.cd.markForCheck())];
         }
         return [];
     }
@@ -424,7 +348,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.updateMotionNumbersSubject();
     }
 
-    private updateMotionNumbersSubject(motions?: ViewMotion[]) {
+    private updateMotionNumbersSubject(motions?: ViewMotion[]): void {
         this._motionNumbersSubject.next(
             (motions ?? this.motionController.getViewModelList())
                 .filter(
@@ -491,11 +415,9 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             attachment_ids: [[]],
             agenda_parent_id: [],
             submitter_ids: [[]],
-            supporter_user_ids: [[]],
-            workflow_id: [],
+            supporter_ids: [[]],
+            workflow_id: [+this.meetingSettingsService.instant(`motions_default_workflow_id`)],
             tag_ids: [[]],
-            statute_amendment: [``], // Internal value for the checkbox, not saved to the model
-            statute_paragraph_id: [],
             block_id: [],
             parent_id: [],
             modified_final_version: [``],
@@ -510,10 +432,5 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         };
 
         return this.fb.group(motionFormControls);
-    }
-
-    private getWorkflowIdForCreateFormByParagraph(paragraph?: number): number {
-        const configKey = this.getDefaultWorkflowKeyOfSettingsByParagraph(paragraph);
-        return +this.meetingSettingsService.instant(configKey)!;
     }
 }

@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -79,6 +80,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public useMatcard = true;
 
     @Input()
+    public useAdditionalEditTemplate = true;
+
+    @Input()
     public set additionalFormControls(controls: any) {
         this._additionalFormControls = controls;
         this.prepareForm();
@@ -146,7 +150,11 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private selfUpdateEnabled = false;
 
-    public constructor(private fb: UntypedFormBuilder, private operator: OperatorService) {
+    public constructor(
+        private fb: UntypedFormBuilder,
+        private operator: OperatorService,
+        private cd: ChangeDetectorRef
+    ) {
         super();
     }
 
@@ -160,6 +168,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     public ngAfterViewInit(): void {
         this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
+        this.cd.detectChanges();
     }
 
     public isAllowed(permission: string): boolean {
@@ -305,6 +314,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             email: [``, [createEmailValidator()]],
             last_email_sent: [``],
             default_password: [``],
+            member_number: [``],
             is_active: [true],
             is_physical_person: [true],
             ...this._additionalFormControls
@@ -314,7 +324,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private propagateValues(): void {
         setTimeout(() => {
             // setTimeout prevents 'ExpressionChangedAfterItHasBeenChecked'-error
-            this.changeEvent.emit(this.getChangedValues(this.personalInfoForm.value));
+            const changes = this.getChangedValues(this.personalInfoForm.value);
+            this.changeEvent.emit(changes);
             this.validEvent.emit(this.personalInfoForm.valid && (this.isNewUser || this._hasChanges));
             this.errorEvent.emit(this.personalInfoForm.errors);
         });
@@ -324,7 +335,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         return (control: AbstractControl): ValidationErrors | null => {
             const value = control.value;
 
-            if (!value) {
+            if (!value || (this.user?.id && control.pristine)) {
                 return null;
             }
 
@@ -336,7 +347,12 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         };
     }
 
-    private getChangedValues(data: { [key: string]: any }): { [key: string]: any } {
+    private getChangedValues(formData: { [key: string]: any }): { [key: string]: any } {
+        const data = this.useAdditionalEditTemplate
+            ? formData
+            : Object.keys(formData).mapToObject(key =>
+                  Object.keys(this._additionalFormControls ?? {}).includes(key) ? {} : { [key]: formData[key] }
+              );
         const newData = {};
         if (this.user) {
             Object.keys(data).forEach(key => {
@@ -346,6 +362,13 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
                     this.personalInfoForm.get(key).markAsTouched();
                 }
             });
+            if (this.user.id) {
+                for (const key of Object.keys(newData)) {
+                    if (this.personalInfoForm.get(key).pristine) {
+                        delete newData[key];
+                    }
+                }
+            }
             if (this.user.saml_id && newData[`default_password`]) {
                 delete newData[`default_password`];
             }

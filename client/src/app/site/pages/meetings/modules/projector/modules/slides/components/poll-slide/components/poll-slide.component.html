@@ -1,23 +1,23 @@
-<ng-container *ngIf="data?.data">
+@if (data?.data) {
     <div class="slidetitle">
         <ng-container>
             <h1>{{ title }}</h1>
-            <h2 class="poll-title" *ngIf="subtitle">{{ subtitle }}</h2>
+            @if (subtitle) {
+                <h2 class="poll-title">{{ subtitle }}</h2>
+            }
         </ng-container>
     </div>
-    <div *ngIf="polldata">
-        <os-motion-poll-detail-content
-            *ngIf="pollContentObjectType === PollContentObjectType.Motion"
-            [poll]="polldata"
-            iconSize="gigantic"
-        ></os-motion-poll-detail-content>
-        <os-assignment-poll-detail-content
-            *ngIf="pollContentObjectType === PollContentObjectType.Assignment"
-            [poll]="polldata"
-        ></os-assignment-poll-detail-content>
-        <os-topic-poll-detail-content
-            *ngIf="pollContentObjectType === PollContentObjectType.Topic"
-            [poll]="polldata"
-        ></os-topic-poll-detail-content>
-    </div>
-</ng-container>
+    @if (polldata) {
+        <div>
+            @if (pollContentObjectType === PollContentObjectType.Motion) {
+                <os-motion-poll-detail-content iconSize="gigantic" [poll]="polldata"></os-motion-poll-detail-content>
+            }
+            @if (pollContentObjectType === PollContentObjectType.Assignment) {
+                <os-assignment-poll-detail-content [poll]="polldata"></os-assignment-poll-detail-content>
+            }
+            @if (pollContentObjectType === PollContentObjectType.Topic) {
+                <os-topic-poll-detail-content [poll]="polldata"></os-topic-poll-detail-content>
+            }
+        </div>
+    }
+}

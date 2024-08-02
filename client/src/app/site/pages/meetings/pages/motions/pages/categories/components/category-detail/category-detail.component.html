@@ -2,74 +2,78 @@
     <os-head-bar [nav]="false">
         <!-- Title -->
         <div class="title-slot">
-            <h2 *ngIf="selectedCategory">
-                {{ selectedCategory.prefixedName }}
-            </h2>
+            @if (selectedCategory) {
+                <h2>
+                    {{ selectedCategory.prefixedName }}
+                </h2>
+            }
         </div>
 
         <!-- Menu -->
-        <div class="menu-slot">
+        <ng-container class="menu-slot">
             <div *osPerms="permission.motionCanManage">
-                <button type="button" mat-icon-button [matMenuTriggerFor]="categoryMenu">
+                <button mat-icon-button type="button" [matMenuTriggerFor]="categoryMenu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
             </div>
-        </div>
+        </ng-container>
     </os-head-bar>
 
     <mat-card class="os-card spacer-bottom-60">
-        <div *ngFor="let category of categories">
-            <h2>
-                <span>{{ getLevelDashes(category) }}</span>
-                {{ category.prefixedName }}
-            </h2>
-            <table class="os-headed-listview-table" mat-table [dataSource]="dataSources[category.id]">
-                <!-- title column -->
-                <ng-container matColumnDef="title">
-                    <mat-header-cell *matHeaderCellDef>
-                        <span>{{ 'Motion' | translate }}</span>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let motion">
-                        {{ motion.getTitle() }}
-                    </mat-cell>
-                </ng-container>
-
-                <!-- state column -->
-                <ng-container matColumnDef="state">
-                    <mat-header-cell *matHeaderCellDef>
-                        <span>{{ 'State' | translate }}</span>
-                    </mat-header-cell>
-                    <mat-cell class="chip-container" *matCellDef="let motion">
-                        <mat-basic-chip disableRipple [ngClass]="motion.stateCssColor">
-                            {{ getStateLabel(motion) }}
-                        </mat-basic-chip>
-                    </mat-cell>
-                </ng-container>
-
-                <!-- Recommendation column -->
-                <ng-container matColumnDef="recommendation">
-                    <mat-header-cell *matHeaderCellDef>
-                        <span>{{ 'Recommendation' | translate }}</span>
-                    </mat-header-cell>
-                    <mat-cell class="chip-container" *matCellDef="let motion">
-                        <mat-basic-chip *ngIf="motion.recommendation" disableRipple class="bluegrey">
-                            {{ getRecommendationLabel(motion) }}
-                        </mat-basic-chip>
-                    </mat-cell>
-                </ng-container>
-
-                <!-- Anchor column to open the separate tab -->
-                <ng-container matColumnDef="anchor">
-                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let motion">
-                        <a [routerLink]="motion.getDetailStateUrl()" [state]="{ back: 'true' }"></a>
-                    </mat-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="getColumnDefinition()"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: getColumnDefinition()"></mat-row>
-            </table>
-        </div>
+        <mat-card-content>
+            @for (category of categories; track category) {
+                <div>
+                    <h2>
+                        <span>{{ getLevelDashes(category) }}</span>
+                        {{ category.prefixedName }}
+                    </h2>
+                    <table class="os-headed-listview-table" mat-table [dataSource]="dataSources[category.id]">
+                        <!-- title column -->
+                        <ng-container matColumnDef="title">
+                            <mat-header-cell *matHeaderCellDef>
+                                <span>{{ 'Motion' | translate }}</span>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let motion">
+                                {{ motion.getTitle() }}
+                            </mat-cell>
+                        </ng-container>
+                        <!-- state column -->
+                        <ng-container matColumnDef="state">
+                            <mat-header-cell *matHeaderCellDef>
+                                <span>{{ 'State' | translate }}</span>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let motion" class="chip-container">
+                                <mat-basic-chip disableRipple [ngClass]="motion.stateCssColor">
+                                    {{ getStateLabel(motion) }}
+                                </mat-basic-chip>
+                            </mat-cell>
+                        </ng-container>
+                        <!-- Recommendation column -->
+                        <ng-container matColumnDef="recommendation">
+                            <mat-header-cell *matHeaderCellDef>
+                                <span>{{ 'Recommendation' | translate }}</span>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let motion" class="chip-container">
+                                @if (motion.recommendation) {
+                                    <mat-basic-chip class="bluegrey" disableRipple>
+                                        {{ getRecommendationLabel(motion) }}
+                                    </mat-basic-chip>
+                                }
+                            </mat-cell>
+                        </ng-container>
+                        <!-- Anchor column to open the separate tab -->
+                        <ng-container matColumnDef="anchor">
+                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            <mat-cell *matCellDef="let motion">
+                                <a [routerLink]="motion.getDetailStateUrl()" [state]="{ back: 'true' }"></a>
+                            </mat-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="getColumnDefinition()"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: getColumnDefinition()"></mat-row>
+                    </table>
+                </div>
+            }
+        </mat-card-content>
     </mat-card>
 </os-detail-view>
 
@@ -88,7 +92,7 @@
         <span>{{ 'Number motions' | translate }}</span>
     </button>
     <mat-divider></mat-divider>
-    <button mat-menu-item class="red-warning-text" (click)="onDeleteButton()">
+    <button class="red-warning-text" mat-menu-item (click)="onDeleteButton()">
         <mat-icon>delete</mat-icon>
         <span>{{ 'Delete' | translate }}</span>
     </button>
@@ -98,25 +102,25 @@
     <h1 mat-dialog-title>
         <span>{{ 'Edit details for' | translate }} {{ selectedCategory.prefixedName }}</span>
     </h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
-        <form class="edit-form" [formGroup]="editForm" (ngSubmit)="save()" (keydown)="onKeyDown($event)">
+    <mat-dialog-content class="os-form-card-mobile">
+        <form class="edit-form" tabindex="-1" [formGroup]="editForm" (keydown)="onKeyDown($event)" (ngSubmit)="save()">
             <mat-form-field>
                 <mat-label>{{ 'Prefix' | translate }}</mat-label>
-                <input matInput osAutofocus formControlName="prefix" />
+                <input formControlName="prefix" matInput osAutofocus />
                 <mat-error>{{ 'This prefix already exists.' | translate }}</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>{{ 'Name' | translate }}</mat-label>
-                <input matInput osAutofocus formControlName="name" required />
+                <input formControlName="name" matInput osAutofocus required />
             </mat-form-field>
         </form>
-    </div>
-    <div mat-dialog-actions>
-        <button type="submit" mat-button [disabled]="!editForm.valid" color="accent" (click)="save()">
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button color="accent" mat-button type="submit" [disabled]="!editForm.valid" (click)="save()">
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

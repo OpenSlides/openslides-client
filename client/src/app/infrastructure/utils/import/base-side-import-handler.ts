@@ -76,11 +76,11 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
     public constructor(config: BaseSideImportHandlerConfig<MainModel, SideModel>) {
         super({ ...config, verboseNameFn: config.verboseNameFn ?? config.repo?.getVerboseName });
         this.idProperty = config.idProperty;
-        this.translateFn = config.translateFn || (value => value);
+        this.translateFn = config.translateFn || ((value): string => value);
         this._useArray = config.useArray ?? false;
         this._additionalFields = config.additionalFields ?? [];
         this._nameDelimiter = config.nameDelimiter ?? `,`;
-        this._shouldCreateModelFn = config.shouldCreateModelFn ?? (() => true);
+        this._shouldCreateModelFn = config.shouldCreateModelFn ?? ((): true => true);
 
         this.setCreateFn(config.createFn as any, config.repo);
         this.setFindFn(config.findFn, config.repo);
@@ -209,7 +209,7 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
         if (findFn) {
             this._findFn = findFn;
         } else if (fallbackRepo) {
-            this._findFn = name =>
+            this._findFn = (name): any =>
                 fallbackRepo
                     .getViewModelList()
                     .find((model: any) => model.getTitle() === name || this.translateFn(model.getTitle()) === name);
@@ -220,7 +220,7 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
         if (createFn) {
             this._createFn = createFn;
         } else if (fallbackRepo) {
-            this._createFn = entries => fallbackRepo.create(...entries);
+            this._createFn = (entries): any => fallbackRepo.create(...entries);
         }
     }
 

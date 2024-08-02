@@ -1,13 +1,10 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
-import { TranslateService } from '@ngx-translate/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Chess, EVENT_TYPE } from 'cm-chess/src/Chess';
 import { BORDER_TYPE, Chessboard, COLOR, FEN, INPUT_EVENT_TYPE } from 'cm-chessboard/src/Chessboard';
 import { PromotionDialog } from 'cm-chessboard/src/extensions/promotion-dialog/PromotionDialog';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { NotifyResponse } from 'src/app/gateways/notify.service';
 
 import { BaseGameDialogComponent, State } from '../../../../components/base-game-dialog/base-game-dialog';
 
@@ -46,14 +43,8 @@ export class ChessDialogComponent extends BaseGameDialogComponent implements OnI
      */
     private ownColor: COLOR = COLOR.white;
 
-    public constructor(
-        activeMeetingService: ActiveMeetingService,
-        notifyService: NotifyService,
-        op: OperatorService,
-        translate: TranslateService,
-        @Inject(MAT_DIALOG_DATA) private config: ChessDialogConfig
-    ) {
-        super(activeMeetingService, notifyService, op, translate);
+    public constructor(@Inject(MAT_DIALOG_DATA) private config: ChessDialogConfig) {
+        super();
     }
 
     public override ngOnInit(): void {
@@ -80,7 +71,7 @@ export class ChessDialogComponent extends BaseGameDialogComponent implements OnI
             this.notifyService.sendToUsers(`chess_challenge`, { name: this.getPlayerName() }, this.config.userId);
             this.caption = this.translate.instant(`Waiting for response ...`);
             const handle = this.SM.waitForResponse.receivedACK.handle;
-            this.SM.waitForResponse.receivedACK.handle = (notify: NotifyResponse<{ name: string }>) => {
+            this.SM.waitForResponse.receivedACK.handle = (notify: NotifyResponse<{ name: string }>): State => {
                 if (notify.sender_user_id === this.config.userId) {
                     this.replyChannel = notify.sender_channel_id;
                     return handle(notify);

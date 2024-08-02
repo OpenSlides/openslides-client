@@ -68,6 +68,9 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     @Input()
     public inputValue!: string;
 
+    @Input()
+    public internal = false;
+
     /**
      * EventEmitter, when clicking on the 'save'-button.
      */
@@ -118,7 +121,10 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      *
      * @param formBuilder The FormBuilder
      */
-    public constructor(private formBuilder: UntypedFormBuilder, private router: Router) {}
+    public constructor(
+        private formBuilder: UntypedFormBuilder,
+        private router: Router
+    ) {}
 
     /**
      * OnInit-method.

@@ -1,5 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ActionWorker } from 'src/app/domain/models/action-worker/action-worker';
@@ -153,11 +153,11 @@ export class WaitForActionDialogService {
         this.newCurrentReason();
     }
 
-    private async openDialog() {
+    private async openDialog(): Promise<void> {
         this.bannerService.addBanner({ component: WaitForActionBannerComponent });
     }
 
-    private closeDialog() {
+    private closeDialog(): void {
         this.bannerService.removeBanner({ component: WaitForActionBannerComponent });
     }
 

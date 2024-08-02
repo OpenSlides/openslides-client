@@ -84,6 +84,16 @@ Optional combination of requests to speak with presence status is possible. ( > 
                 display_name: _(`Can manage polls`),
                 help_text: _(`Can create, change, start/stop and delete polls.`),
                 value: Permission.pollCanManage
+            },
+            {
+                display_name: _(`Can see moderation notes`),
+                help_text: _(`Can see all moderation notes in each list of speakers.`),
+                value: Permission.agendaItemCanSeeModeratorNotes
+            },
+            {
+                display_name: _(`Can manage moderation notes`),
+                help_text: _(`Can edit all moderation notes.`),
+                value: Permission.agendaItemCanManageModeratorNotes
             }
         ]
     },
@@ -206,9 +216,19 @@ Meeting specific information: Structure level, Group, Participant number, About 
                 value: Permission.userCanSee
             },
             {
+                display_name: _(`Can see sensitive data`),
+                help_text: _(`Can see email, username and SSO identification of all participants.`),
+                value: Permission.userCanSeeSensitiveData
+            },
+            {
                 display_name: _(`Can manage presence of others`),
                 help_text: _(`Can change the presence status of other participants.`),
                 value: Permission.userCanManagePresence
+            },
+            {
+                display_name: _(`Can update participants`),
+                help_text: _(`Can modify existing participants, but cannot create or delete them.`),
+                value: Permission.userCanUpdate
             },
             {
                 display_name: _(`Can manage participants`),

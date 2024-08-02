@@ -18,10 +18,16 @@ export class ProcessError extends Error {
 
     public constructor(description: unknown) {
         // Unfortunately, this must be handled before the `super`-call to have the dedicated message.
-        const handleErrorDescription = () => {
+        const handleErrorDescription = (): {
+            message: string;
+            status: number;
+        } => {
             let errorStatus = 400;
             let errorMessage: string;
-            const getReturnValue = () => ({ message: errorMessage, status: errorStatus });
+            const getReturnValue = (): {
+                message: string;
+                status: number;
+            } => ({ message: errorMessage, status: errorStatus });
             // If the error is a string already, return it.
             if (typeof description === `string`) {
                 errorMessage = _(description);

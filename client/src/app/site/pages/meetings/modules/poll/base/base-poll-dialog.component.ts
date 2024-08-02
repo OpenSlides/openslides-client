@@ -1,9 +1,6 @@
-import { Directive, Inject, OnInit, ViewChild } from '@angular/core';
+import { Directive, Inject, inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import {
-    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-    MatLegacyDialogRef as MatDialogRef
-} from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -100,11 +97,10 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
 
     private isList = false;
 
-    public constructor(
-        public dialogRef: MatDialogRef<BasePollDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public pollData: ViewPoll,
-        protected formBuilder: UntypedFormBuilder
-    ) {
+    protected formBuilder = inject(UntypedFormBuilder);
+    public dialogRef = inject(MatDialogRef<BasePollDialogComponent>);
+
+    public constructor(@Inject(MAT_DIALOG_DATA) public pollData: ViewPoll) {
         super();
         this.addKeyListener();
     }

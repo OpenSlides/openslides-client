@@ -1,8 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-    MatLegacyListOption as MatListOption,
-    MatLegacySelectionList as MatSelectionList
-} from '@angular/material/legacy-list';
+import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
@@ -12,7 +9,6 @@ import {
     SortTreeFilterId,
     SortTreeFilterOption
 } from 'src/app/ui/base/base-sort-tree-view-component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../services/agenda-item-controller.service/agenda-item-controller.service';
 
@@ -27,7 +23,7 @@ export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaIte
      */
     public itemsObservable: Observable<ViewAgendaItem[]>;
 
-    @ViewChild(`visibilities`) visibilitiesEl: MatSelectionList;
+    @ViewChild(`visibilities`) public visibilitiesEl: MatSelectionList;
 
     /**
      * These are the available options for filtering the nodes.
@@ -47,10 +43,9 @@ export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaIte
 
     public constructor(
         protected override translate: TranslateService,
-        promptService: PromptService,
         private agendaRepo: AgendaItemControllerService
     ) {
-        super(translate, promptService);
+        super();
         this.itemsObservable = this.agendaRepo.getViewModelListObservable();
     }
 

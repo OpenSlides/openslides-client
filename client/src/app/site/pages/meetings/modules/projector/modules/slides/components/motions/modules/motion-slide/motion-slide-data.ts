@@ -16,15 +16,6 @@ export interface LeadMotionData {
 }
 
 /**
- * This interface describes the data returned by the server about a statute paragraph that is changed by an amendment.
- * It only contains the data necessary for rendering the amendment's diff.
- */
-export interface BaseStatuteData {
-    title: string;
-    text: string;
-}
-
-/**
  * This interface describes the data returned by the server about a change recommendation.
  */
 export interface ChangeRecommendationData {
@@ -61,9 +52,9 @@ export interface MotionSlideData extends MotionFormattingRepresentation {
     title: string;
     reason: string;
     submitters: string[];
+    additional_submitter: string;
     amendment_paragraphs: { [paragraphNumber: string]: string };
     lead_motion: LeadMotionData;
-    base_statute: BaseStatuteData;
     change_recommendations: ChangeRecommendationData[];
     amendments: AmendmentData[];
     recommendation_referencing_motions?: MotionTitleInformation[];

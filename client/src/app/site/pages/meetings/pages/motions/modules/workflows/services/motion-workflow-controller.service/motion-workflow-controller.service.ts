@@ -15,7 +15,7 @@ import { ViewMotionWorkflow } from '../../view-models';
     providedIn: `root`
 })
 export class MotionWorkflowControllerService extends BaseMeetingControllerService<ViewMotionWorkflow, MotionWorkflow> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MotionWorkflowRepositoryService
     ) {

@@ -13,17 +13,14 @@
 
     .toolbar-left {
         display: flex;
-        max-width: calc(100% - 100px);
-        button {
-            margin: 12px 0;
-        }
+        align-items: center;
+        min-width: 0;
         .toolbar-left-text {
             margin-left: 10px;
             width: 100%;
             overflow: hidden;
 
             .title-slot {
-                margin: 16px 0;
                 display: block;
                 h2 {
                     overflow: hidden;
@@ -36,6 +33,7 @@
 
     .toolbar-right {
         display: flex;
+        align-items: center;
         .extra-controls-slot {
             display: flex;
         }

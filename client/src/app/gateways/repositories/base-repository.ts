@@ -434,11 +434,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
             this.sortListServices[key] = sortService;
             this.pushToPipeline({
                 funct: async () => {
+                    const sortListService = this.sortListServices[key];
                     this.updateForeignBaseKeys(key);
-                    await this.sortListServices[key].hasLoaded;
-                    this.sortedViewModelLists[key] = await this.sortListServices[key].sort(
-                        Object.values(this.viewModelStore)
-                    );
+                    await sortListService.hasLoaded;
+                    this.sortedViewModelLists[key] = await sortListService.sort(Object.values(this.viewModelStore));
                 },
                 type: PipelineActionType.General,
                 key
@@ -502,8 +501,8 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     protected createViewModel(model?: M): V {
         const viewModel = this.createViewModelProxy(model);
 
-        viewModel.getTitle = () => this.getTitle(viewModel);
-        viewModel.getListTitle = () => this.getListTitle(viewModel);
+        viewModel.getTitle = (): string => this.getTitle(viewModel);
+        viewModel.getListTitle = (): string => this.getListTitle(viewModel);
         viewModel.getVerboseName = this.getVerboseName;
 
         this.onCreateViewModel(viewModel);
@@ -589,10 +588,11 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     private resortAndUpdateForeignBaseKeys(key: string): void {
         const resortAction = {
-            funct: async () => {
+            funct: async (): Promise<void> => {
+                const sortListService = this.sortListServices[key];
                 this.updateForeignBaseKeys(key);
-                await this.sortListServices[key].hasLoaded;
-                this.sortedViewModelLists[key] = await this.sortListServices[key].sort(this.sortedViewModelLists[key]);
+                await sortListService.hasLoaded;
+                this.sortedViewModelLists[key] = await sortListService.sort(this.sortedViewModelLists[key]);
             },
             type: PipelineActionType.Reset,
             key
@@ -603,19 +603,17 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
 
     private async updateForeignBaseKeys(key: string): Promise<void> {
         (this.foreignSortBaseKeySubscriptions[key] ?? []).forEach(subscr => subscr.unsubscribe());
-        await this.sortListServices[key].hasLoaded;
-        this.foreignSortBaseKeys[key] = this.sortListServices[key].currentForeignSortBaseKeys;
+
+        const sortListService = this.sortListServices[key];
+        await sortListService.hasLoaded;
+        this.foreignSortBaseKeys[key] = sortListService.currentForeignSortBaseKeys;
         this.foreignSortBaseKeySubscriptions[key] = Object.keys(this.foreignSortBaseKeys[key]).map(collection =>
             this.repositoryServiceCollector.getNewKeyUpdatesObservable(collection).subscribe(async keys => {
                 if (this.foreignSortBaseKeys[key][collection].some(key => keys.includes(key))) {
-                    this.sortedViewModelLists[key] = await this.sortListServices[key].sort(
-                        this.sortedViewModelLists[key]
-                    );
+                    this.sortedViewModelLists[key] = await sortListService.sort(this.sortedViewModelLists[key]);
                     const resortAction = {
-                        funct: async () => {
-                            this.sortedViewModelLists[key] = await this.sortListServices[key].sort(
-                                this.sortedViewModelLists[key]
-                            );
+                        funct: async (): Promise<void> => {
+                            this.sortedViewModelLists[key] = await sortListService.sort(this.sortedViewModelLists[key]);
                         },
                         type: PipelineActionType.Resort,
                         key
@@ -682,7 +680,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     private createViewModelProxy(model?: M): V {
         let viewModel = new this.baseViewModelCtor(model);
         viewModel = new Proxy(viewModel, {
-            get: (target: V, property) => {
+            get: (target: V, property): any => {
                 // target is our viewModel and property the requested value: viewModel[property]
                 let result: any; // This is what we have to resolve: viewModel[property] -> result
                 const _model: M = target.getModel();

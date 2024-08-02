@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Selectable } from 'src/app/domain/interfaces';
-import { isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { HistoryPosition, HistoryPresenterService } from 'src/app/gateways/presenter/history-presenter.service';
 import { SearchDeletedModelsPresenterService } from 'src/app/gateways/presenter/search-deleted-models-presenter.service';
@@ -21,7 +20,6 @@ import {
 } from 'src/app/infrastructure/utils/transform-functions';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -29,8 +27,6 @@ import { ViewModelStoreService } from 'src/app/site/services/view-model-store.se
 
 import { ViewMotionState } from '../../../motions';
 import { ParticipantControllerService } from '../../../participants/services/common/participant-controller.service';
-import { Position } from '../../definitions';
-import { HistoryService } from '../../services/history.service';
 
 const HISTORY_SUBSCRIPTION_PREFIX = `history`;
 
@@ -103,7 +99,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private viewModelStore: ViewModelStoreService,
         private formBuilder: UntypedFormBuilder,
@@ -111,13 +106,12 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         private historyPresenter: HistoryPresenterService,
         private searchDeletedModelsPresenter: SearchDeletedModelsPresenterService,
         private operator: OperatorService,
-        private historyService: HistoryService,
         private motionRepo: MotionRepositoryService,
         private assignmentRepo: AssignmentRepositoryService,
         private userRepo: ParticipantControllerService,
         private collectionMapperService: CollectionMapperService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.modelSelectForm = this.formBuilder.group({
             collection: [],
@@ -148,7 +142,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     public ngOnInit(): void {
         super.setTitle(`History`);
 
-        this.dataSource.filterPredicate = (position: HistoryPosition, filter: string) => {
+        this.dataSource.filterPredicate = (position: HistoryPosition, filter: string): boolean => {
             filter = filter ? filter.toLowerCase() : ``;
 
             if (!position) {
@@ -249,26 +243,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         return [`time`, `info`, `user`];
     }
 
-    /**
-     * Click handler for rows in the history table.
-     * Serves as an entry point for the time travel routine
-     */
-    public async onClickRow(position: Position): Promise<void> {
-        if (!this.operator.hasOrganizationPermissions(OML.superadmin)) {
-            return;
-        }
-
-        await this.historyService.enterHistoryMode(this.currentFqid, position);
-        const [collection, id] = collectionIdFromFqid(this.currentFqid);
-        const element = this.viewModelStore.get(collection, id);
-        if (element && isDetailNavigable(element)) {
-            this.router.navigate([element.getDetailStateUrl()]);
-        } else {
-            const message = this.translate.instant(`Cannot navigate to the selected history element.`);
-            this.raiseError(message);
-        }
-    }
-
     public refresh(): void {
         if (this.currentFqid) {
             this.queryByFqid(this.currentFqid);
@@ -353,8 +327,8 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             meeting_id: this.activeMeeting.id
         });
         Object.values(result).forEach(model => {
-            model.getTitle = () => this.modelsRepoMap[this.currentCollection].getTitle(model);
-            model.getListTitle = () => this.modelsRepoMap[this.currentCollection].getListTitle(model);
+            model.getTitle = (): string => this.modelsRepoMap[this.currentCollection].getTitle(model);
+            model.getListTitle = (): string => this.modelsRepoMap[this.currentCollection].getListTitle(model);
         });
         this.models = Object.values(result);
     }

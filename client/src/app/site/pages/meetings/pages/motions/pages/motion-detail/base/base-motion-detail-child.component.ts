@@ -1,17 +1,15 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, inject, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Subscription } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
 import { ViewUnifiedChange } from '../../../modules/change-recommendations/view-models/view-unified-change';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
-import { MotionStatuteParagraphControllerService } from '../../../modules/statute-paragraphs/services';
 import { TagControllerService } from '../../../modules/tags/services';
 import { MotionWorkflowControllerService } from '../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
 import { AmendmentControllerService } from '../../../services/common/amendment-controller.service';
@@ -119,10 +117,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
         return this.motionServiceCollector.tagRepo;
     }
 
-    protected get statuteRepo(): MotionStatuteParagraphControllerService {
-        return this.motionServiceCollector.statuteRepo;
-    }
-
     protected get changeRecoRepo(): MotionChangeRecommendationControllerService {
         return this.motionServiceCollector.changeRecoRepo;
     }
@@ -145,7 +139,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
 
     public multipleParagraphsAllowed = false;
     public reasonRequired = false;
-    public statutesEnabled = false;
     public minSupporters = 0;
     public preamble = ``;
     public showReferringMotions = false;
@@ -170,13 +163,8 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     private _isEditing = false;
     private _motion: ViewMotion | null = null;
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected motionServiceCollector: MotionDetailServiceCollectorService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    protected override translate = inject(TranslateService);
+    protected motionServiceCollector = inject(MotionDetailServiceCollectorService);
 
     /**
      * In the original version, a change-recommendation-annotation has been clicked
@@ -273,9 +261,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
                 .get(`motions_supporters_min_amount`)
                 .subscribe(value => (this.minSupporters = value)),
             this.meetingSettingsService.get(`motions_preamble`).subscribe(value => (this.preamble = value)),
-            this.meetingSettingsService
-                .get(`motions_statutes_enabled`)
-                .subscribe(value => (this.statutesEnabled = value)),
             this.meetingSettingsService.get(`motions_amendments_multiple_paragraphs`).subscribe(allowed => {
                 this.multipleParagraphsAllowed = allowed;
             }),

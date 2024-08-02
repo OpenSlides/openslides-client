@@ -3,6 +3,7 @@
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 export const meetingSettingsDefaults: { [key: string]: any } = {
+    name: `Meeting title`,
     enable_anonymous: false,
     export_csv_separator: `;`,
     export_csv_encoding: `utf-8`,
@@ -19,6 +20,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     agenda_item_creation: `default_no`,
     agenda_new_items_default_visibility: `internal`,
     agenda_show_internal_items_on_projector: false,
+    agenda_show_topic_navigation_on_detail_view: false,
     agenda_show_subtitles: false,
     list_of_speakers_enable_point_of_order_speakers: true,
     list_of_speakers_enable_pro_contra_speech: false,
@@ -27,6 +29,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     list_of_speakers_speaker_note_for_everyone: true,
     list_of_speakers_initially_closed: false,
     list_of_speakers_show_first_contribution: false,
+    list_of_speakers_hide_contribution_count: false,
     list_of_speakers_couple_countdown: true,
     list_of_speakers_show_amount_of_speakers_on_slide: true,
     list_of_speakers_amount_last_on_projector: 0,
@@ -49,7 +52,6 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     motions_number_min_digits: 2,
     motions_number_with_blank: false,
     motions_amendments_enabled: true,
-    motions_statutes_enabled: false,
     motions_amendments_in_main_list: true,
     motions_amendments_prefix: _(`-Ä`),
     motions_amendments_text_mode: `paragraph`,

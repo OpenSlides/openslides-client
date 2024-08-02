@@ -36,7 +36,10 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
 
     public polldata!: PollData;
 
-    public constructor(public pollService: PollService, private collectionMapperService: CollectionMapperService) {
+    public constructor(
+        public pollService: PollService,
+        private collectionMapperService: CollectionMapperService
+    ) {
         super();
     }
 
@@ -86,7 +89,7 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
     }
 
     private createPollData(data: PollSlideData): PollData {
-        const getContentObjectTitle = () => {
+        const getContentObjectTitle = (): string => {
             if (data.title_information) {
                 modifyAgendaItemNumber(data.title_information);
                 const repo = this.collectionMapperService.getRepository(data.title_information.collection);
@@ -120,6 +123,8 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
         const getOptionTitle: () => OptionTitle = () => {
             if (data.text) {
                 return { title: data.text };
+            } else if (data.content_object && data.content_object.collection === `user`) {
+                return { title: (<any>data.content_object).username };
             } else if (data.content_object) {
                 modifyAgendaItemNumber(data.content_object!);
                 const repo = this.collectionMapperService.getRepository(data.content_object!.collection);

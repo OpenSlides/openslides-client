@@ -11,7 +11,7 @@ interface GetActiveUsersPresenterResult {
     providedIn: `root`
 })
 export class GetActiveUsersAmountPresenterService {
-    constructor(private presenter: PresenterService) {}
+    public constructor(private presenter: PresenterService) {}
 
     public async call(): Promise<number> {
         const response = await this.presenter.call<GetActiveUsersPresenterResult>(Presenter.GET_ACTIVE_USER_AMOUNT, {});

@@ -121,10 +121,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
 
     public get textLoaded(): boolean {
         const motion = this.motionId ? this.controller.getViewModel(this.motionId) : undefined;
-        return (
-            !!this.dataLoaded ||
-            (motion ? !!motion?.text || !!motion?.amendment_paragraphs || !!motion.statute_paragraph : false)
-        );
+        return !!this.dataLoaded || (motion ? !!motion?.text || !!motion?.amendment_paragraphs : false);
     }
 
     public constructor(

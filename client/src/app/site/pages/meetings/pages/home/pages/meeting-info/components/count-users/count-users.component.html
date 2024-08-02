@@ -1,21 +1,36 @@
-<button type="button" mat-stroked-button (click)="countUsers()">
-    <span *ngIf="!stats">{{ 'Count logged-in users' | translate }}</span>
-    <span *ngIf="stats">{{ 'Re-count logged-in users' | translate }}</span>
+<button mat-stroked-button type="button" (click)="countUsers()">
+    @if (!stats) {
+        <span>{{ 'Count logged-in users' | translate }}</span>
+    }
+    @if (stats) {
+        <span>{{ 'Re-count logged-in users' | translate }}</span>
+    }
 </button>
-<div *ngIf="stats">
-    <i>{{ 'last updated' | translate }}: {{ lastUpdated / 1000 | localizedDate : 'PPpp' }}</i>
-    <p>
-        {{ userIds().length }} {{ 'logged-in users' | translate }} ({{ stats.activeUserHandles }}
-        {{ 'connections' | translate }})
-    </p>
-    {{ 'Groups' | translate }}:
-    <ul>
-        <li *ngFor="let groupId of groupIds()">
-            <strong>{{ stats.groups[groupId].name | translate }}:</strong>
-            {{ userInGroupIds(groupId).length }} {{ 'logged-in users' | translate }} ({{
-                stats.groups[groupId].userHandleCount
-            }}
+@if (stats && stats.length >= 3) {
+    <div>
+        <div class="connection-selection">
+            <mat-button-toggle-group [(ngModel)]="displayMode">
+                <mat-button-toggle translate [value]="2">All</mat-button-toggle>
+                <mat-button-toggle translate [value]="0">Normal (http/2)</mat-button-toggle>
+                <mat-button-toggle translate [value]="1">Fallback</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+        <i>{{ 'last updated' | translate }}: {{ lastUpdated / 1000 | localizedDate: 'PPpp' }}</i>
+        <p>
+            {{ userIds().length }} {{ 'logged-in users' | translate }} ({{ activeUserHandles }}
             {{ 'connections' | translate }})
-        </li>
-    </ul>
-</div>
+        </p>
+        {{ 'Groups' | translate }}:
+        <ul>
+            @for (groupId of groupIds(); track groupId) {
+                <li>
+                    <strong>{{ selectedStats.groups[groupId].name | translate }}:</strong>
+                    {{ userInGroupIds(groupId).length }} {{ 'logged-in users' | translate }} ({{
+                        selectedStats.groups[groupId].userHandleCount
+                    }}
+                    {{ 'connections' | translate }})
+                </li>
+            }
+        </ul>
+    </div>
+}

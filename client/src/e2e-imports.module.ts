@@ -1,5 +1,5 @@
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -18,15 +18,14 @@ import { OpenSlidesTranslationModule } from './app/site/modules/translations';
  */
 
 @NgModule({
+    exports: [CommonModule, OpenSlidesTranslationModule, OpenSlidesMainRoutingModule],
     imports: [
         OpenSlidesMainModule,
         CommonModule,
-        HttpClientModule,
         OpenSlidesTranslationModule.forRoot(),
         BrowserAnimationsModule,
         OpenSlidesMainRoutingModule
     ],
-    exports: [CommonModule, HttpClientModule, OpenSlidesTranslationModule, OpenSlidesMainRoutingModule],
-    providers: [{ provide: APP_BASE_HREF, useValue: `/` }]
+    providers: [{ provide: APP_BASE_HREF, useValue: `/` }, provideHttpClient(withInterceptorsFromDi())]
 })
 export class E2EImportsModule {}

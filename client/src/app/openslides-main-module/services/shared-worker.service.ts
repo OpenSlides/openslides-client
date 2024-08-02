@@ -49,8 +49,9 @@ export class SharedWorkerService {
     private ready = false;
     private healthCheckSubscription: Subscription;
     private messageEventSubscription: Subscription;
+    private windowMode = false;
 
-    constructor(private zone: NgZone) {
+    public constructor(private zone: NgZone) {
         this.connectWorker(true);
     }
 
@@ -134,7 +135,8 @@ export class SharedWorkerService {
 
     private setupInWindowAu(): void {
         this.conn = window;
-        this.registerMessageListener(true);
+        this.windowMode = true;
+        this.registerMessageListener();
         this.zone.runOutsideAngular(() => {
             import(`../../worker/default-shared-worker.worker`);
         });
@@ -181,9 +183,11 @@ export class SharedWorkerService {
         await this.connectWorker();
     }
 
-    private async registerMessageListener(windowMode = false): Promise<Event> {
-        let eventListener = merge(fromEvent(this.conn, `message`), fromEvent(this.broadcastChannel, `message`));
-        if (!windowMode) {
+    private async registerMessageListener(): Promise<Event> {
+        let eventListener = this.windowMode
+            ? fromEvent(this.conn, `message`)
+            : merge(fromEvent(this.conn, `message`), fromEvent(this.broadcastChannel, `message`));
+        if (!this.windowMode) {
             eventListener = eventListener.pipe(timeout({ first: SHARED_WORKER_READY_TIMEOUT }));
         }
         if (this.messageEventSubscription) {
@@ -279,7 +283,9 @@ export class SharedWorkerService {
         isMessage: (data?: any) => boolean,
         doBefore?: () => void
     ): Promise<MessageEvent<WorkerResponse>> {
-        const eventListener = merge(fromEvent(this.conn, `message`), fromEvent(this.broadcastChannel, `message`));
+        const eventListener = this.windowMode
+            ? fromEvent(this.conn, `message`)
+            : merge(fromEvent(this.conn, `message`), fromEvent(this.broadcastChannel, `message`));
         const promise = firstValueFrom(
             eventListener.pipe(
                 first(e => isMessage((<any>e)?.data)),

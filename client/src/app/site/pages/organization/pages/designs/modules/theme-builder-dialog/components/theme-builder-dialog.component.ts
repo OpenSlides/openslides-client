@@ -1,10 +1,7 @@
 import { AfterViewInit, Component, Inject } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
-import {
-    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-    MatLegacyDialogRef as MatDialogRef
-} from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Theme, ThemeGeneralColors } from 'src/app/domain/models/theme/theme';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
@@ -103,7 +100,7 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
         return GENERAL_DEFAULT_COLORS[key];
     }
 
-    private generateHeadbarColorFromPrimaryHex(hex: string) {
+    private generateHeadbarColorFromPrimaryHex(hex: string): string {
         return this.colorService.generateColorPaletteByHex(hex).find(def => def.name === `900`).hex;
     }
 

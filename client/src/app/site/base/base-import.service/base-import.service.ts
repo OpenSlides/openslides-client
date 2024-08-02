@@ -1,5 +1,5 @@
 import { Directive, EventEmitter } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, map, Observable } from 'rxjs';
@@ -227,7 +227,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
      * strings
      */
     public constructor(private importServiceCollector: ImportServiceCollectorService) {
-        this._reader.onload = (event: FileReaderProgressEvent) => {
+        this._reader.onload = (event: FileReaderProgressEvent): void => {
             this.parseInput(event.target?.result as string);
         };
         this.init();
@@ -468,7 +468,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
             _handler:
                 | StaticAdditionalImportHandlerConfig<MainModel, SideModel>
                 | BaseAdditionalImportHandler<MainModel, SideModel>
-        ) => {
+        ): BaseAdditionalImportHandler<MainModel, SideModel> => {
             if (_handler instanceof BaseAdditionalImportHandler) {
                 return _handler;
             } else {
@@ -501,8 +501,8 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
         } else {
             this._otherMainImportHelper.push(
                 new StaticMainImportHandler({
-                    translateFn: key => this.translate.instant(key),
-                    resolveEntryFn: importModel => this.resolveEntry(importModel),
+                    translateFn: (key): string => this.translate.instant(key),
+                    resolveEntryFn: (importModel): MainModel => this.resolveEntry(importModel),
                     ...handler
                 })
             );
@@ -648,8 +648,8 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
             shouldCreateModelFn,
             createFn,
             updateFn,
-            translateFn: key => this.translate.instant(key),
-            resolveEntryFn: importModel => this.resolveEntry(importModel)
+            translateFn: (key): string => this.translate.instant(key),
+            resolveEntryFn: (importModel): MainModel => this.resolveEntry(importModel)
         });
         this.updateSummary();
     }

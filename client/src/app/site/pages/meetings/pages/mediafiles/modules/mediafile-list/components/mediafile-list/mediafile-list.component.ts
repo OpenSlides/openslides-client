@@ -89,15 +89,6 @@ export class MediafileListComponent extends MediafileListeComponent implements O
     }
 
     /**
-     * Click on the edit button in the file menu
-     *
-     * @param file the selected file
-     */
-    public override onEditFile(file: ViewMediafile): void {
-        super.onEditFile(file, this.isOrgaLevel);
-    }
-
-    /**
      * Returns a formated string for the tooltip containing all the action names.
      *
      * @param file the target file where the tooltip should be shown

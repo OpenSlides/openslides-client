@@ -10,7 +10,6 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
     public readonly comment!: string;
     public readonly number!: string;
     public readonly about_me!: string;
-    public readonly structure_level!: string;
     public readonly vote_weight!: number;
 
     public user_id!: Id;
@@ -27,6 +26,7 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
     public vote_delegated_vote_ids!: Id[];
     public vote_delegations_from_ids!: Id[]; // meeting_user/vote_delegated_to_id;
     public chat_message_ids!: Id[]; // (chat_message/meeting_user_id)[];
+    public structure_level_ids: Id[]; // structure_level/meeting_user_ids
 
     public constructor(input?: Partial<MeetingUser>) {
         super(MeetingUser.COLLECTION, input);
@@ -40,7 +40,6 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
         `id`,
         `comment`,
         `number`,
-        `structure_level`,
         `about_me`,
         `vote_weight`,
         `user_id`,
@@ -52,7 +51,8 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
         `vote_delegated_to_id`,
         `vote_delegations_from_ids`,
         `chat_message_ids`,
-        `group_ids`
+        `group_ids`,
+        `structure_level_ids`
     ];
 }
 export interface MeetingUser {}

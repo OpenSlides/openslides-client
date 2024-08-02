@@ -15,6 +15,7 @@ export interface BackendImportHeader {
     type: `boolean` | `number` | `string` | `date`; // date must be in format yyyy-mm-dd
     is_list: boolean; // optional, if not given defaults to `false`
     is_object: boolean; // optional, if not given defaults to `false`
+    is_hidden: boolean; // optional, if not given defaults to `false`
 }
 
 export type BackendImportEntry = null | boolean | number | string | BackendImportEntryObject;

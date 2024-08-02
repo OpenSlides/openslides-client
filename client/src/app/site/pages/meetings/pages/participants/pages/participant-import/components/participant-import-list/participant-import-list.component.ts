@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { BaseViaBackendImportListMeetingComponent } from 'src/app/site/base/base-via-backend-import-list-meeting.component';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
-import { participantHeadersAndVerboseNames } from '../../definitions';
+import { participantColumns, participantHeadersAndVerboseNames } from '../../definitions';
 import { ParticipantImportService } from '../../services';
 
 @Component({
@@ -12,10 +11,10 @@ import { ParticipantImportService } from '../../services';
     templateUrl: `./participant-import-list.component.html`,
     styleUrls: [`./participant-import-list.component.scss`]
 })
-export class ParticipantImportListComponent extends BaseViaBackendImportListComponent {
-    public possibleFields = Object.keys(participantHeadersAndVerboseNames);
+export class ParticipantImportListComponent extends BaseViaBackendImportListMeetingComponent {
+    public possibleFields = participantColumns;
 
-    public columns: ImportListHeaderDefinition[] = Object.keys(participantHeadersAndVerboseNames).map(header => ({
+    public columns: ImportListHeaderDefinition[] = this.possibleFields.map(header => ({
         property: header,
         label: (<any>participantHeadersAndVerboseNames)[header],
         isTableColumn: true
@@ -25,10 +24,9 @@ export class ParticipantImportListComponent extends BaseViaBackendImportListComp
      * Constructor for list view bases
      */
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public override readonly importer: ParticipantImportService
     ) {
-        super(componentServiceCollector, translate, importer);
+        super(importer);
     }
 }

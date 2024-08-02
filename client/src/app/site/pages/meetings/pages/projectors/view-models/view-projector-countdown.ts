@@ -31,8 +31,8 @@ export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCo
                     key: `displayType`,
                     displayName: _(`Display type`),
                     choices: [
-                        { value: `onlyCountdown`, displayName: _(`Only countdown`) },
-                        { value: `countdownAndTimeIndicator`, displayName: _(`Countdown and traffic light`) },
+                        { value: `onlyCountdown`, displayName: _(`Only time`) },
+                        { value: `countdownAndTimeIndicator`, displayName: _(`Time and traffic light`) },
                         { value: `onlyTimeIndicator`, displayName: _(`Only traffic light`) }
                     ],
                     default: `onlyCountdown`

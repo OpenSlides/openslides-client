@@ -1,0 +1,141 @@
+<div class="action-title">
+    <p class="subtitle-text" translate>Speaking times</p>
+    <ng-container *osPerms="permission.projectorCanManage">
+        @if (showProjectionMenu) {
+            <button mat-icon-button type="button" [matMenuTriggerFor]="projectionMenu">
+                <mat-icon>more_horiz</mat-icon>
+            </button>
+        }
+    </ng-container>
+</div>
+
+<div class="structure-level-list">
+    @for (structure_level of structureLevels | keyvalue; track structure_level) {
+        <div class="structure-level">
+            <div class="structure-level-content">
+                <hr class="structure-level-color" [ngStyle]="{ 'background-color': structure_level.value.color }" />
+                <span class="structure-level-time">
+                    <os-countdown-time
+                        [countdown]="structure_level.value.countdown"
+                        [unstyled]="true"
+                    ></os-countdown-time>
+                </span>
+                <div class="structure-level-name">{{ structure_level.value.name }}</div>
+            </div>
+            <ng-container *osPerms="permission.listOfSpeakersCanManage">
+                <button
+                    class="icon-less-space-to-left"
+                    mat-icon-button
+                    type="button"
+                    [matMenuTriggerData]="{ structure_level: structure_level.value }"
+                    [matMenuTriggerFor]="editAndDistributeMenu"
+                >
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </ng-container>
+        </div>
+    }
+</div>
+
+<mat-menu #editAndDistributeMenu="matMenu">
+    <ng-template let-structure_level="structure_level" matMenuContent>
+        <button
+            mat-menu-item
+            [disabled]="structureLevelIsSpeaking(structure_level.id)"
+            (click)="setTotalTime(structure_level.id)"
+        >
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'Edit' | translate }}</span>
+        </button>
+        <button mat-menu-item (click)="resetTimer(structure_level.id)">
+            <mat-icon>replay</mat-icon>
+            <span>{{ 'Reset' | translate }}</span>
+        </button>
+        <button mat-menu-item (click)="addRemoveTime(structure_level.id)">
+            <mat-icon>timelapse</mat-icon>
+            <span>{{ 'Add/subtract' | translate }}</span>
+        </button>
+        <button
+            mat-menu-item
+            [disabled]="!isInOvertimeAndNotSpeaking(structure_level.id)"
+            (click)="distributeOverhangTime(structure_level.id)"
+        >
+            <mat-icon>more_time</mat-icon>
+            <span>{{ 'Distribute overhang time' | translate }}</span>
+        </button>
+    </ng-template>
+</mat-menu>
+
+<!-- Template for total times dialog -->
+<ng-template #totalTimeDialog>
+    <h2 mat-dialog-title>{{ currentEntry.name }}</h2>
+    <mat-dialog-content class="os-form-card-mobile">
+        <form tabindex="-1" [formGroup]="totalTimeForm" (keydown)="onKeyDown($event)">
+            <!-- total time -->
+            <mat-form-field>
+                <mat-label>{{ 'Total time' | translate }}</mat-label>
+                <input formControlName="totalTime" matInput required type="text" />
+                <mat-error>
+                    {{ 'A time is required and must be in min:secs format.' | translate }}
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button mat-button [disabled]="!totalTimeForm.valid" [mat-dialog-close]="true">
+            <span>{{ 'OK' | translate }}</span>
+        </button>
+        <button mat-button [mat-dialog-close]="false">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </mat-dialog-actions>
+</ng-template>
+
+<!-- Template for add/remove time dialog -->
+<ng-template #addRemoveTimeDialog>
+    <h2 mat-dialog-title>{{ currentEntry.name }}</h2>
+    <div class="os-form-card-mobile" mat-dialog-content>
+        <form tabindex="-1" (keydown)="onKeyDown($event)">
+            <!-- total time -->
+            <mat-form-field>
+                <mat-label>{{ 'Time' | translate }}</mat-label>
+                <input matInput required type="text" [formControl]="addTimeControl" />
+                <mat-error>
+                    {{ 'A time is required and must be in min:secs format.' | translate }}
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+
+    <div mat-dialog-actions>
+        <button
+            mat-button
+            [disabled]="!addTimeControl.valid"
+            [mat-dialog-close]="true"
+            (click)="doAddOrRemoveTime(true)"
+        >
+            <span>{{ 'Add up' | translate }}</span>
+        </button>
+        <button
+            mat-button
+            [disabled]="!addTimeControl.valid"
+            [mat-dialog-close]="true"
+            (click)="doAddOrRemoveTime(false)"
+        >
+            <span>{{ 'Subtract' | translate }}</span>
+        </button>
+        <button mat-button [mat-dialog-close]="false">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </div>
+</ng-template>
+
+<mat-menu #projectionMenu="matMenu">
+    <os-projector-button [allowReferenceProjector]="false" [menuItem]="true" [object]="getAllStructureLevel()">
+        {{ 'Project all structure levels' | translate }}
+    </os-projector-button>
+    <os-projector-button [menuItem]="true" [object]="getCurrentStructureLevel()">
+        {{ 'Project active structure level' | translate }}
+    </os-projector-button>
+</mat-menu>

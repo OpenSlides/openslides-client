@@ -1,19 +1,21 @@
-<div mat-dialog-content>
-    <ng-container *ngIf="!selectedModule">
+<mat-dialog-content>
+    @if (!selectedModule) {
         <os-grid>
-            <os-tile *ngFor="let module of choosableModules" (clicked)="selectModule(module.getComponent())">
-                <div class="flex-center full-height easter-egg-tile" [osPaper]="2" [osPaperRaise]="true">
-                    {{ module.label | translate }}
-                </div>
-            </os-tile>
+            @for (module of choosableModules; track module) {
+                <os-tile (clicked)="selectModule(module.getComponent())">
+                    <div class="flex-center full-height easter-egg-tile" [osPaper]="2" [osPaperRaise]="true">
+                        {{ module.label | translate }}
+                    </div>
+                </os-tile>
+            }
             <os-tile>
                 <div class="flex-center full-height easter-egg-tile" [osPaper]="2" [osPaperRaise]="true">
                     {{ 'Enter the developer mode' | translate }}
                 </div>
             </os-tile>
         </os-grid>
-    </ng-container>
-    <ng-container *ngIf="selectedModule">
+    }
+    @if (selectedModule) {
         <ng-template [cdkPortalOutlet]="selectedModule"></ng-template>
-    </ng-container>
-</div>
+    }
+</mat-dialog-content>

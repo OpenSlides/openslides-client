@@ -14,7 +14,6 @@ import {
     MotionChangeRecommendationControllerService,
     MotionDiffService
 } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/services';
-import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { MotionFormatService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-format.service';
 import { ViewMotionAmendedParagraph } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion-amended-paragraph';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
@@ -157,20 +156,23 @@ export class MotionSlideComponent
 
     public constructor(
         protected override translate: TranslateService,
-        motionRepo: MotionControllerService,
         private motionFormatService: MotionFormatService,
         private changeRepo: MotionChangeRecommendationControllerService,
         private lineNumbering: LineNumberingService,
         private diff: MotionDiffService,
         private meetingSettings: MeetingSettingsService
     ) {
-        super(translate, motionRepo);
+        super();
         this.meetingSettings.get(`motions_enable_text_on_projector`).subscribe(val => (this._showText = val));
     }
 
     protected override setData(value: SlideData<MotionSlideData>): void {
         super.setData(value);
-        this._submittersSubject.next(value.data.submitters || []);
+        const submitters = value.data.submitters ? [...value.data.submitters] : [];
+        if (value.data.additional_submitter) {
+            submitters.push(value.data.additional_submitter);
+        }
+        this._submittersSubject.next(submitters);
         this.lnMode = value.data.line_numbering;
         this.lineLength = value.data.line_length;
         this.preamble = value.data.preamble;
@@ -301,15 +303,6 @@ export class MotionSlideComponent
     }
 
     /**
-     * Returns true, if this is a statute amendment
-     *
-     * @returns {boolean}
-     */
-    public isStatuteAmendment(): boolean {
-        return !!this.data.data.base_statute;
-    }
-
-    /**
      * Returns true, if this is an paragraph-based amendment
      *
      * @returns {boolean}
@@ -423,16 +416,6 @@ export class MotionSlideComponent
             .filter((para: DiffLinesInParagraph | null) => para !== null) as DiffLinesInParagraph[];
 
         return amendmentParagraphs;
-    }
-
-    /**
-     * get the diff html from the statute amendment, as SafeHTML for [innerHTML]
-     *
-     * @returns safe html strings
-     */
-    public getFormattedStatuteAmendment(): string {
-        const diffHtml = this.diff.diff(this.data.data.base_statute.text, this.data.data.text);
-        return this.lineNumbering.insertLineBreaksWithoutNumbers(diffHtml, this.lineLength, true);
     }
 
     /**

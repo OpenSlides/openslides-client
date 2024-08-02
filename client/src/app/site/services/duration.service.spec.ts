@@ -21,6 +21,13 @@ describe(`DurationService`, () => {
         expect(service.stringToDuration(`1:23 h`, `h`)).toBe(83);
     });
 
+    it(`test stringToDuration allow negativ`, () => {
+        expect(service.stringToDuration(`1:23`, `m`, true)).toBe(83);
+        expect(service.stringToDuration(`0:00`, `m`, true)).toBe(0);
+        expect(service.stringToDuration(`-0:10`, `m`, true)).toBe(-10);
+        expect(service.stringToDuration(`-1:10`, `m`, true)).toBe(-70);
+    });
+
     it(`test durationToStringWithHours`, () => {
         expect(service.durationToStringWithHours(83)).toBe(`0:01 h`);
         expect(service.durationToStringWithHours(7345)).toBe(`2:02 h`);

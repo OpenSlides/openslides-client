@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButtonToggle, MatButtonToggleChange } from '@angular/material/button-toggle';
-import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { auditTime, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import {
@@ -52,6 +52,8 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
      * The form that contains the export information.
      */
     public exportForm!: UntypedFormGroup;
+
+    public workingGroupSpeakerActive: boolean;
 
     /**
      * Store the subject to the ViewMotionCommentSection
@@ -110,6 +112,12 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
     public speakersButton!: MatButtonToggle;
 
     /**
+     * To deactivate the working group button.
+     */
+    @ViewChild(`workingGroupSpeakerButton`)
+    public workingGroupSpeakerButton!: MatButtonToggle;
+
+    /**
      * To deactivate the toc button.
      */
     @ViewChild(MOTION_PDF_OPTIONS.Toc)
@@ -137,6 +145,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
         super();
         this.defaults.lnMode = this.meetingSettingsService.instant(`motions_default_line_numbering`)!;
         this.defaults.crMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`)!;
+        this.workingGroupSpeakerActive = this.meetingSettingsService.instant(`motions_enable_working_group_speaker`)!;
         this.commentsSubject = this.commentRepo.getViewModelListObservable();
         if (this.meetingSettingsService.instant(`motions_show_sequential_number`)) {
             this.defaults.metaInfo!.push(`id`);
@@ -173,9 +182,15 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
         if (format === ExportFileFormat.XLSX) {
             this.disableControl(`content`);
             this.changeStateOfButton(this.speakersButton, false);
+            if (this.workingGroupSpeakerButton) {
+                this.changeStateOfButton(this.workingGroupSpeakerButton, false);
+            }
         } else {
             this.enableControl(`content`);
             this.changeStateOfButton(this.speakersButton, true);
+            if (this.workingGroupSpeakerButton) {
+                this.changeStateOfButton(this.workingGroupSpeakerButton, true);
+            }
         }
 
         if (format === ExportFileFormat.CSV || format === ExportFileFormat.XLSX) {
@@ -287,6 +302,10 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
         // restore selection or set default
         this.store.get<MotionExportInfo>(`motion_export_selection`).then(restored => {
             if (restored) {
+                if (!this.workingGroupSpeakerActive && restored.metaInfo?.includes(`working_group_speakers`)) {
+                    restored.metaInfo.splice(restored.metaInfo.indexOf(`working_group_speakers`));
+                }
+
                 this.exportForm.patchValue(restored);
             } else {
                 this.exportForm.patchValue(this.defaults);

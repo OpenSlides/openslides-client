@@ -4,8 +4,10 @@ import { PermissionsMap } from './permission.config';
 
 export const permissionChildren: PermissionsMap = {
     'agenda_item.can_manage': [Permission.agendaItemCanSeeInternal, Permission.agendaItemCanSee],
+    'agenda_item.can_manage_moderator_notes': [Permission.agendaItemCanSeeModeratorNotes, Permission.agendaItemCanSee],
     'agenda_item.can_see': [],
     'agenda_item.can_see_internal': [Permission.agendaItemCanSee],
+    'agenda_item.can_see_moderator_notes': [Permission.agendaItemCanSee],
     'assignment.can_manage': [Permission.assignmentCanNominateOther, Permission.assignmentCanSee],
     'assignment.can_nominate_other': [Permission.assignmentCanSee],
     'assignment.can_nominate_self': [Permission.assignmentCanSee],
@@ -43,15 +45,29 @@ export const permissionChildren: PermissionsMap = {
     'projector.can_manage': [Permission.projectorCanSee],
     'projector.can_see': [],
     'tag.can_manage': [],
-    'user.can_manage': [Permission.userCanManagePresence, Permission.userCanSee],
+    'user.can_manage': [
+        Permission.userCanManagePresence,
+        Permission.userCanSee,
+        Permission.userCanUpdate,
+        Permission.userCanSeeSensitiveData
+    ],
     'user.can_manage_presence': [Permission.userCanSee],
-    'user.can_see': []
+    'user.can_see': [],
+    'user.can_see_sensitive_data': [Permission.userCanSee],
+    'user.can_update': [Permission.userCanSeeSensitiveData, Permission.userCanSee]
 };
 
 export const permissionParents: PermissionsMap = {
     'agenda_item.can_manage': [],
-    'agenda_item.can_see': [Permission.agendaItemCanSeeInternal, Permission.agendaItemCanManage],
+    'agenda_item.can_manage_moderator_notes': [],
+    'agenda_item.can_see': [
+        Permission.agendaItemCanSeeInternal,
+        Permission.agendaItemCanManage,
+        Permission.agendaItemCanSeeModeratorNotes,
+        Permission.agendaItemCanManageModeratorNotes
+    ],
     'agenda_item.can_see_internal': [Permission.agendaItemCanManage],
+    'agenda_item.can_see_moderator_notes': [Permission.agendaItemCanManageModeratorNotes],
     'assignment.can_manage': [],
     'assignment.can_nominate_other': [Permission.assignmentCanManage],
     'assignment.can_nominate_self': [],
@@ -96,5 +112,12 @@ export const permissionParents: PermissionsMap = {
     'tag.can_manage': [],
     'user.can_manage': [],
     'user.can_manage_presence': [Permission.userCanManage],
-    'user.can_see': [Permission.userCanManagePresence, Permission.userCanManage]
+    'user.can_see': [
+        Permission.userCanManagePresence,
+        Permission.userCanManage,
+        Permission.userCanSeeSensitiveData,
+        Permission.userCanUpdate
+    ],
+    'user.can_see_sensitive_data': [Permission.userCanUpdate, Permission.userCanManage],
+    'user.can_update': [Permission.userCanManage]
 };

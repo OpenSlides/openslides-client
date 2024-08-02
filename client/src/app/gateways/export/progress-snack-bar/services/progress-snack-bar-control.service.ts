@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LegacyProgressBarMode as ProgressBarMode } from '@angular/material/legacy-progress-bar';
+import { ProgressBarMode } from '@angular/material/progress-bar';
 import { Subject } from 'rxjs';
 
 import { ProgressSnackBarServiceModule } from './progress-snack-bar-service.module';

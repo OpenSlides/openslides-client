@@ -13,12 +13,11 @@ import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { DiffLinesInParagraph } from '../../../../definitions/index';
 import { ParagraphToChoose } from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
+import { ViewMotion } from '../../../../view-models';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 
 interface ParagraphBasedAmendmentContent {
     amendment_paragraphs: { [paragraph_number: number]: any };
@@ -75,14 +74,12 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private fb: UntypedFormBuilder,
         private cd: ChangeDetectorRef,
         private el: ElementRef
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
     }
 
     /**
@@ -138,13 +135,19 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
         this.propagateChanges();
     }
 
+    protected override onAfterSetMotion(previous: ViewMotion): void {
+        if (!previous) {
+            this.onEnterEditMode();
+        }
+    }
+
     private createForm(): ParagraphBasedAmendmentContent {
         const contentPatch: ParagraphBasedAmendmentContent = {
             selected_paragraphs: [],
             amendment_paragraphs: {},
             broken_paragraphs: []
         };
-        const leadMotion = this.motion.lead_motion;
+        const leadMotion = this.motion?.lead_motion;
         // Hint: lineLength is sometimes not loaded yet when this form is initialized;
         // This doesn't hurt as long as patchForm is called when editing mode is started, i.e., later.
         if (leadMotion && this.lineLength) {

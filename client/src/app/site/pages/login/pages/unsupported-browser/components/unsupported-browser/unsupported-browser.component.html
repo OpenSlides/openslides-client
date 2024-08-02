@@ -1,43 +1,63 @@
 <main>
-    <h1 class="center spacer-top-20" *ngIf="!supported">
-        {{ 'Your browser is not supported by OpenSlides!' | translate }}
-    </h1>
-    <h1 class="center spacer-top-20" *ngIf="supported">
-        {{ 'Congratuations! Your browser is supported by OpenSlides.' | translate }}
-    </h1>
+    @if (!supported) {
+        <h1 class="center spacer-top-20">
+            {{ 'Your browser is not supported by OpenSlides!' | translate }}
+        </h1>
+    }
+    @if (supported) {
+        <h1 class="center spacer-top-20">
+            {{ 'Congratuations! Your browser is supported by OpenSlides.' | translate }}
+        </h1>
+    }
 
     <mat-card class="os-card">
-        <div>
-            <span>
-                {{ 'Your browser' | translate }}: {{ currentBrowser }} ({{ 'version' | translate }}:
-                {{ browserVersion }})
-            </span>
-            <br />
-            <span *ngIf="!!supportedVersion">{{ 'Minimal required version' | translate }}: {{ supportedVersion }}</span>
-        </div>
-
-        <div class="spacer-top-20" *ngIf="!supported">
-            <span>{{ 'Please update your browser or contact your system administration.' | translate }}</span>
-        </div>
-
-        <div class="spacer-top-20">
-            <p>
-                {{ 'OpenSlides recommends' | translate }}
-                <span *ngFor="let browser of recommendedBrowsers; last as isLast">
-                    <a [href]="browser.url">{{ browser.name }}</a>
-                    <span *ngIf="!isLast">&nbsp;{{ 'or' | translate }}&nbsp;</span>
-                    <span *ngIf="isLast">.</span>
+        <mat-card-content>
+            <div>
+                <span>
+                    {{ 'Your browser' | translate }}: {{ currentBrowser }} ({{ 'version' | translate }}:
+                    {{ browserVersion }})
                 </span>
-            </p>
-        </div>
+                <br />
+                @if (!!supportedVersion) {
+                    <span>{{ 'Minimal required version' | translate }}: {{ supportedVersion }}</span>
+                }
+            </div>
 
-        <a mat-stroked-button color="primary" routerLink=".." [queryParams]="{ checkBrowser: false }">
-            <span *ngIf="!supported">
-                {{ 'Login anyway' | translate }}
-            </span>
-            <span *ngIf="supported">
-                {{ 'Login' | translate }}
-            </span>
-        </a>
+            @if (!supported) {
+                <div class="spacer-top-20">
+                    <span>{{ 'Please update your browser or contact your system administration.' | translate }}</span>
+                </div>
+            }
+
+            <div class="spacer-top-20">
+                <p>
+                    {{ 'OpenSlides recommends' | translate }}
+                    @for (browser of recommendedBrowsers; track browser; let isLast = $last) {
+                        <span>
+                            <a [href]="browser.url">{{ browser.name }}</a>
+                            @if (!isLast) {
+                                <span>&nbsp;{{ 'or' | translate }}&nbsp;</span>
+                            }
+                            @if (isLast) {
+                                <span>.</span>
+                            }
+                        </span>
+                    }
+                </p>
+            </div>
+
+            <a color="primary" mat-stroked-button routerLink=".." [queryParams]="{ checkBrowser: false }">
+                @if (!supported) {
+                    <span>
+                        {{ 'Login anyway' | translate }}
+                    </span>
+                }
+                @if (supported) {
+                    <span>
+                        {{ 'Login' | translate }}
+                    </span>
+                }
+            </a>
+        </mat-card-content>
     </mat-card>
 </main>

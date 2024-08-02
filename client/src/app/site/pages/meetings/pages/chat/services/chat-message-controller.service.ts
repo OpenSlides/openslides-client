@@ -11,7 +11,7 @@ import { ViewChatMessage } from '../view-models';
     providedIn: `root`
 })
 export class ChatMessageControllerService extends BaseMeetingControllerService<ViewChatMessage, ChatMessage> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: ChatMessageRepositoryService
     ) {

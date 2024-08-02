@@ -1,7 +1,7 @@
 import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { GridModule } from 'src/app/ui/modules/grid';

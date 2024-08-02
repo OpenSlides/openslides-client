@@ -7,7 +7,6 @@ import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/serv
 import {
     AGENDA_LIST_ITEM_SUBSCRIPTION,
     getAgendaListMinimalSubscriptionConfig,
-    getAgendaListSubscriptionConfig,
     getTopicDetailSubscriptionConfig
 } from '../../../../../../agenda.subscription';
 
@@ -23,35 +22,51 @@ export class TopicDetailMainComponent extends BaseModelRequestHandlerComponent {
         super();
     }
 
-    protected override onParamsChanged(params: any, oldParams: any): void {
-        if (params[`id`] !== oldParams[`id`] || params[`meetingId`] !== oldParams[`meetingId`]) {
-            this.sequentialNumberMapping
-                .getIdBySequentialNumber({
-                    collection: Topic.COLLECTION,
-                    meetingId: params[`meetingId`],
-                    sequentialNumber: +params[`id`]
-                })
-                .then(id => {
-                    if (id && this._currentTopicId !== id) {
-                        this._currentTopicId = id;
-                        this.loadTopicDetail();
-                    } else if (!id && params[`meetingId`]) {
-                        this.loadTopicList(+params[`meetingId`]);
-                    }
-                });
+    protected override onShouldCreateModelRequests(params: any, meetingId: any): void {
+        if (meetingId) {
+            if (+params[`id`]) {
+                this.loadTopicDetail(+params[`id`], +params[`meetingId`]);
+            } else {
+                this.loadTopicList(+params[`meetingId`]);
+            }
         }
     }
 
-    private loadTopicDetail(): void {
-        this.updateSubscribeTo(getTopicDetailSubscriptionConfig(this._currentTopicId), { hideWhenDestroyed: true });
+    protected override onParamsChanged(params: any, oldParams: any): void {
+        if (
+            params[`id`] !== oldParams[`id`] ||
+            (+params[`meetingId`] && params[`meetingId`] !== oldParams[`meetingId`])
+        ) {
+            if (+params[`id`]) {
+                this.loadTopicDetail(+params[`id`], +params[`meetingId`]);
+            } else {
+                this.loadTopicList(+params[`meetingId`]);
+            }
+        }
+    }
+
+    private loadTopicDetail(sNr: Id, meetingId: Id): void {
+        this.sequentialNumberMapping
+            .getIdBySequentialNumber({
+                collection: Topic.COLLECTION,
+                meetingId,
+                sequentialNumber: sNr
+            })
+            .then(id => {
+                if (id && this._currentTopicId !== id) {
+                    this._currentTopicId = id;
+                    this.updateSubscribeTo(getTopicDetailSubscriptionConfig(this._currentTopicId), {
+                        hideWhenDestroyed: true
+                    });
+                }
+            });
     }
 
     private async loadTopicList(meetingId: number): Promise<void> {
-        const hasMaxSubscription = await this.modelRequestService.subscriptionGotData(AGENDA_LIST_ITEM_SUBSCRIPTION);
-        this.updateSubscribeTo(
-            hasMaxSubscription
-                ? getAgendaListSubscriptionConfig(meetingId)
-                : getAgendaListMinimalSubscriptionConfig(meetingId)
-        );
+        try {
+            await this.modelRequestService.waitSubscriptionReady(AGENDA_LIST_ITEM_SUBSCRIPTION, 500);
+        } catch (e) {
+            await this.updateSubscribeTo(getAgendaListMinimalSubscriptionConfig(meetingId));
+        }
     }
 }

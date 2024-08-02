@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 
@@ -19,6 +19,13 @@ import { ErrorMapService } from './error-mapping/error-map.service';
 type HttpHeadersObj = HttpHeaders | { [header: string]: string | string[] };
 
 const defaultHeaders: HttpHeadersObj = { [`Content-Type`]: `application/json` };
+
+export interface RequestSettings {
+    queryParams?: QueryParams;
+    customHeader?: HttpHeaders;
+    responseType?: ResponseType;
+    catchError?: boolean;
+}
 
 @Injectable({
     providedIn: `root`
@@ -56,10 +63,10 @@ export class HttpService {
         path: string,
         method: HttpMethod,
         data?: any,
-        queryParams?: QueryParams,
-        customHeader?: HttpHeaders,
-        responseType: ResponseType = `json`
+        { queryParams, customHeader, responseType, catchError }: RequestSettings = {}
     ): Promise<T> {
+        responseType = responseType ?? `json`;
+        catchError = catchError ?? true;
         let url = path + formatQueryParams(queryParams);
         if (url[0] !== `/`) {
             console.warn(`Please prefix the URL "${url}" with a slash.`);
@@ -93,6 +100,9 @@ export class HttpService {
                         throw cleanError;
                     }
                     this.snackBar.open(cleanError, this.translate.instant(`Ok`));
+                    if (!catchError) {
+                        throw cleanError;
+                    }
                     return null;
                 } else if (!navigator.onLine) {
                     const cleanError = this.translate.instant(`The request could not be sent. Check your connection.`);
@@ -132,14 +142,8 @@ export class HttpService {
      * @param responseType option expected response type by the request (i.e 'arraybuffer')
      * @returns A promise holding a generic
      */
-    public async get<T>(
-        path: string,
-        data?: any,
-        queryParams?: QueryParams,
-        header?: HttpHeaders,
-        responseType: ResponseType = `json`
-    ): Promise<T> {
-        return await this.send<T>(path, HttpMethod.GET, data, queryParams, header, responseType);
+    public async get<T>(path: string, data?: any, requestSettings?: RequestSettings): Promise<T> {
+        return await this.send<T>(path, HttpMethod.GET, data, requestSettings);
     }
 
     /**
@@ -150,8 +154,8 @@ export class HttpService {
      * @param header optional HTTP header if required
      * @returns A promise holding a generic
      */
-    public async post<T>(path: string, data?: any, queryParams?: QueryParams, header?: HttpHeaders): Promise<T> {
-        return await this.send<T>(path, HttpMethod.POST, data, queryParams, header);
+    public async post<T>(path: string, data?: any, requestSettings?: RequestSettings): Promise<T> {
+        return await this.send<T>(path, HttpMethod.POST, data, requestSettings);
     }
 
     /**
@@ -162,8 +166,8 @@ export class HttpService {
      * @param header optional HTTP header if required
      * @returns A promise holding a generic
      */
-    public async patch<T>(path: string, data?: any, queryParams?: QueryParams, header?: HttpHeaders): Promise<T> {
-        return await this.send<T>(path, HttpMethod.PATCH, data, queryParams, header);
+    public async patch<T>(path: string, data?: any, requestSettings?: RequestSettings): Promise<T> {
+        return await this.send<T>(path, HttpMethod.PATCH, data, requestSettings);
     }
 
     /**
@@ -174,8 +178,8 @@ export class HttpService {
      * @param header optional HTTP header if required
      * @returns A promise holding a generic
      */
-    public async put<T>(path: string, data?: any, queryParams?: QueryParams, header?: HttpHeaders): Promise<T> {
-        return await this.send<T>(path, HttpMethod.PUT, data, queryParams, header);
+    public async put<T>(path: string, data?: any, requestSettings?: RequestSettings): Promise<T> {
+        return await this.send<T>(path, HttpMethod.PUT, data, requestSettings);
     }
 
     /**
@@ -186,8 +190,8 @@ export class HttpService {
      * @param header optional HTTP header if required
      * @returns A promise holding a generic
      */
-    public async delete<T>(path: string, data?: any, queryParams?: QueryParams, header?: HttpHeaders): Promise<T> {
-        return await this.send<T>(path, HttpMethod.DELETE, data, queryParams, header);
+    public async delete<T>(path: string, data?: any, requestSettings?: RequestSettings): Promise<T> {
+        return await this.send<T>(path, HttpMethod.DELETE, data, requestSettings);
     }
 
     /**
@@ -198,7 +202,7 @@ export class HttpService {
      */
     public async downloadAsBase64(url: string): Promise<{ data: string; type: string }> {
         const headers = new HttpHeaders();
-        const file = await this.get<Blob>(url, {}, {}, headers, `blob`);
+        const file = await this.get<Blob>(url, {}, { customHeader: headers, responseType: `blob` });
         return { data: await toBase64(file), type: file.type };
     }
 

@@ -1,6 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
-import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
+import { MeetingUserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
@@ -9,10 +9,16 @@ import { pollModelRequest } from '../polls/polls.subscription';
 import { ViewMotionWorkflow } from './modules';
 import { ViewMotion } from './view-models';
 
-export const MOTION_LIST_SUBSCRIPTION = `motion_list`;
-export const MOTION_LIST_MINIMAL_SUBSCRIPTION = `motion_list_minimal`;
+export const AMENDMENT_LIST_SUBSCRIPTION = `amendment_list`;
+export const MOTION_ADDITIONAL_DETAIL_SUBSCRIPTION = `motion_additional_detail`;
 export const MOTION_BLOCK_SUBSCRIPTION = `motion_block_list`;
+export const MOTION_DETAIL_SUBSCRIPTION = `motion_detail`;
+export const MOTION_FORWARD_DATA_SUBSCRIPTION = `motion_forward_data`;
+export const MOTION_LIST_MINIMAL_SUBSCRIPTION = `motion_list_minimal`;
+export const MOTION_LIST_SUBSCRIPTION = `motion_list`;
 export const MOTION_SUBMODELS_SUBSCRIPTION = `motion_submodel_list`;
+export const MOTION_WORKFLOW_DETAIL_SUBSCRIPTION = `motion_workflow_detail`;
+export const MOTION_WORKFLOW_SUBSCRIPTION = `motion_workflow_list`;
 
 export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -55,8 +61,10 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     `state_extension_reference_ids`,
                     `state_id`,
                     `submitter_ids`,
+                    `additional_submitter`,
                     `tag_ids`,
-                    `title`
+                    `title`,
+                    `identical_motion_ids`
                 ],
                 follow: [
                     { idField: `list_of_speakers_id`, ...listOfSpeakersSpeakerCountSubscription },
@@ -64,18 +72,17 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     {
                         idField: `submitter_ids`,
                         fieldset: FULL_FIELDSET,
-                        follow: [
-                            {
-                                idField: `meeting_user_id`,
-                                follow: [
-                                    {
-                                        idField: `user_id`,
-                                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
-                                    }
-                                ],
-                                ...MeetingUserFieldsets.FullNameSubscription
-                            }
-                        ]
+                        follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
+                    },
+                    {
+                        idField: `editor_ids`,
+                        fieldset: FULL_FIELDSET,
+                        follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
+                    },
+                    {
+                        idField: `working_group_speaker_ids`,
+                        fieldset: FULL_FIELDSET,
+                        follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
                     }
                 ]
             }
@@ -99,8 +106,6 @@ export const getMotionBlockSubscriptionConfig: SubscriptionConfigGenerator = (id
     subscriptionName: MOTION_BLOCK_SUBSCRIPTION
 });
 
-export const MOTION_WORKFLOW_SUBSCRIPTION = `motion_workflow_list`;
-
 export const getMotionWorkflowSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
@@ -110,7 +115,6 @@ export const getMotionWorkflowSubscriptionConfig: SubscriptionConfigGenerator = 
     subscriptionName: MOTION_WORKFLOW_SUBSCRIPTION
 });
 
-export const MOTION_WORKFLOW_DETAIL_SUBSCRIPTION = `motion_workflow_detail`;
 export const getMotionWorkflowDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         ids: [id],
@@ -145,14 +149,11 @@ export const getMotionsSubmodelSubscriptionConfig: SubscriptionConfigGenerator =
                     `write_group_ids`
                 ]
             },
-            { idField: `motion_statute_paragraph_ids`, fieldset: FULL_FIELDSET },
             { idField: `tag_ids`, fieldset: [`name`, `meeting_id`] }
         ]
     },
     subscriptionName: MOTION_SUBMODELS_SUBSCRIPTION
 });
-
-export const MOTION_ADDITIONAL_DETAIL_SUBSCRIPTION = `motion_additional_detail`;
 
 export const getMotionAdditionalDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {
@@ -163,8 +164,6 @@ export const getMotionAdditionalDetailSubscriptionConfig: SubscriptionConfigGene
     },
     subscriptionName: MOTION_ADDITIONAL_DETAIL_SUBSCRIPTION
 });
-
-export const MOTION_DETAIL_SUBSCRIPTION = `motion_detail`;
 
 export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {
@@ -192,10 +191,10 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                 follow: [
                     {
                         idField: `user_id`,
-                        fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
+                        fieldset: `participantList`
                     }
                 ],
-                ...MeetingUserFieldsets.FullNameSubscription
+                fieldset: `participantListMinimal`
             }
         ],
         fieldset: [
@@ -206,6 +205,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             `all_origin_ids`,
             `origin_meeting_id`,
             `derived_motion_ids`,
+            `identical_motion_ids`,
             `amendment_ids`,
             `amendment_paragraphs`
         ]
@@ -221,8 +221,6 @@ export const getMotionListMinimalSubscriptionConfig: SubscriptionConfigGenerator
     },
     subscriptionName: MOTION_LIST_MINIMAL_SUBSCRIPTION
 });
-
-export const AMENDMENT_LIST_SUBSCRIPTION = `amendment_list`;
 
 export const getAmendmentListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -247,8 +245,6 @@ export const getAmendmentListSubscriptionConfig: SubscriptionConfigGenerator = (
     },
     subscriptionName: AMENDMENT_LIST_SUBSCRIPTION
 });
-
-export const MOTION_FORWARD_DATA_SUBSCRIPTION = `motion_forward_data`;
 
 export const getMotionForwardDataSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {

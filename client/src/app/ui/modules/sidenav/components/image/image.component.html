@@ -1,10 +1,9 @@
-<ng-container *ngIf="source">
+@if (source) {
     <div>
-        <ng-container *ngIf="!loaded">
-            <mat-progress-spinner mode="determinate" [value]="progress" [diameter]="50"></mat-progress-spinner>
-        </ng-container>
-        <ng-container *ngIf="loaded">
-            <img [src]="resource | trust : 'url'" />
-        </ng-container>
+        @if (!loaded) {
+            <mat-progress-spinner mode="determinate" [diameter]="50" [value]="progress"></mat-progress-spinner>
+        } @else {
+            <img [alt]="alt" [src]="resource | trust: 'url'" />
+        }
     </div>
-</ng-container>
+}

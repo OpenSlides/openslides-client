@@ -1,38 +1,39 @@
 <os-head-bar
-    [hasMainButton]="canManage()"
     [editMode]="isEditing"
-    [mainButtonIcon]="'edit'"
-    [mainActionTooltip]="'Edit' | translate"
+    [hasMainButton]="canManage()"
     [isSaveButtonEnabled]="startForm.valid"
+    [mainActionTooltip]="'Edit' | translate"
+    [mainButtonIcon]="'edit'"
+    (cancelEditEvent)="isEditing = !isEditing"
     (mainEvent)="editStartPage()"
     (saveEvent)="saveChanges()"
-    (cancelEditEvent)="isEditing = !isEditing"
 >
     <div class="title-slot">
         <h2>{{ 'Home' | translate }}</h2>
     </div>
 </os-head-bar>
 
-<mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'">
-    <ng-container *ngIf="!isEditing">
-        <div class="app-content underlined-links">
-            <ng-container *ngIf="welcomeTitleObservable | async as welcomeTitle">
-                <h1>{{ welcomeTitle }}</h1>
-            </ng-container>
-            <ng-container *ngIf="welcomeTextObservable | async as welcomeText">
-                <div [innerHTML]="welcomeText | trust : 'html'"></div>
-            </ng-container>
-        </div>
-    </ng-container>
-
-    <ng-container *ngIf="isEditing">
-        <form [formGroup]="startForm">
-            <mat-form-field>
-                <mat-label>{{ 'Front page title' | translate }}</mat-label>
-                <input matInput formControlName="welcome_title" required />
-                <mat-error>{{ 'The title is required' | translate }}</mat-error>
-            </mat-form-field>
-            <os-editor formControlName="welcome_text"></os-editor>
-        </form>
-    </ng-container>
+<mat-card class="spacer-bottom-60 os-card">
+    <mat-card-content>
+        @if (!isEditing) {
+            <div class="underlined-links" id="start-page-content">
+                @if (welcomeTitleObservable | async; as welcomeTitle) {
+                    <h1>{{ welcomeTitle }}</h1>
+                }
+                @if (welcomeTextObservable | async; as welcomeText) {
+                    <div [innerHTML]="welcomeText | trust: 'html'"></div>
+                }
+            </div>
+        }
+        @if (isEditing) {
+            <form [formGroup]="startForm">
+                <mat-form-field>
+                    <mat-label>{{ 'Front page title' | translate }}</mat-label>
+                    <input formControlName="welcome_title" matInput required />
+                    <mat-error>{{ 'The title is required' | translate }}</mat-error>
+                </mat-form-field>
+                <os-editor formControlName="welcome_text" [allowEmbeds]="true"></os-editor>
+            </form>
+        }
+    </mat-card-content>
 </mat-card>

@@ -21,6 +21,7 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     /**
      * The object to project.
      */
+
     private _object: ProjectionBuildDescriptor | Projectable | null = null;
 
     public get object(): ProjectionBuildDescriptor | Projectable {
@@ -43,17 +44,32 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     @Output()
     public changeEvent: EventEmitter<void> = new EventEmitter();
 
+    private _projector: ViewProjector | null = null;
+
+    public get projector(): ViewProjector | null {
+        return this._projector;
+    }
+
     /**
      * Pre-define projection target
      */
     @Input()
-    public projector: ViewProjector | null = null;
+    public set projector(projector: ViewProjector | null) {
+        this._projector = projector;
+        this.updateIsProjected();
+    }
 
     @Input()
     public blendIn = false;
 
     @Input()
     public disabled = false;
+
+    @Input()
+    public allowReferenceProjector = true;
+
+    @Input()
+    public useToggleDialog = false;
 
     /**
      * If this is re-defined, it will replace the usual click functionality.
@@ -64,11 +80,20 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
             return;
         }
         const descriptor = this.projectorService.ensureDescriptor(this.object);
-        if (this.projector) {
+        if (this.useToggleDialog) {
+            this.projectionDialogService.openProjectDialogFor({
+                descriptor,
+                projector: this.projector,
+                allowReferenceProjector: true
+            });
+        } else if (this.projector) {
             this.projectorService.toggle(descriptor, [this.projector]);
         } else {
             // open the projection dialog
-            this.projectionDialogService.openProjectDialogFor(descriptor);
+            this.projectionDialogService.openProjectDialogFor({
+                descriptor,
+                allowReferenceProjector: this.allowReferenceProjector
+            });
         }
     };
 
@@ -131,7 +156,6 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         if (!this.object) {
             this._isProjected = false;
         }
-
         this._isProjected = this.projector
             ? this.projectorService.isProjectedOn(this.object, this.projector)
             : this.projectorService.isProjected(this.object);

@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
-import { SettingsGroup } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
+import {
+    SettingsGroup,
+    SKIPPED_SETTINGS
+} from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 @Component({
@@ -16,13 +18,12 @@ export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
     public groups: SettingsGroup[] = [];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private promptDialog: PromptService,
         private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionService,
         private meetingRepo: MeetingControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.groups = this.meetingSettingsDefinitionProvider.settings;
     }
@@ -42,9 +43,16 @@ export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
 
     private getDefaultValues(): any {
         const payload: any = {};
-        for (const setting of this.meetingSettingsDefinitionProvider.getSettingsKeys()) {
-            payload[setting] = this.meetingSettingsDefinitionProvider.getDefaultValue(setting);
+        for (const settingGroup of this.meetingSettingsDefinitionProvider.getSettingsKeys()) {
+            if (!SKIPPED_SETTINGS.includes(settingGroup)) {
+                payload[settingGroup] = this.meetingSettingsDefinitionProvider.getDefaultValue(settingGroup);
+            }
         }
         return payload;
+    }
+
+    protected onEnter(route: string): void {
+        route = this.activeMeetingId + `/settings/` + route.toLowerCase();
+        this.router.navigate([route]);
     }
 }

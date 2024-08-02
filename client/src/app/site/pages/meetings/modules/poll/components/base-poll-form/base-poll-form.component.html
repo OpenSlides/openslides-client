@@ -4,158 +4,170 @@
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
             <h2 class="poll-preview-title">
-                <input matInput required formControlName="title" />
+                <input formControlName="title" matInput required />
             </h2>
         </mat-form-field>
     </form>
 
-    <form [formGroup]="contentForm" class="poll-preview-meta-info-form">
-        <ng-container *ngIf="!data || !data.state || data.isCreated">
+    <form class="poll-preview-meta-info-form" [formGroup]="contentForm">
+        @if (!data || !data.state || data.isCreated) {
             <div class="info-grid">
                 <!-- Poll Type -->
-                <mat-form-field *ngIf="isEVotingEnabled && !hideSelects.type">
-                    <mat-label>{{ PollPropertyVerbose.type | translate }}</mat-label>
-                    <mat-select formControlName="type" required>
-                        <mat-option *ngFor="let option of pollTypes | keyvalue" [value]="option.key">
-                            {{ option.value | translate }}
-                        </mat-option>
-                    </mat-select>
-                    <mat-icon
-                        color="primary"
-                        matSuffix
-                        *ngIf="showNonNominalWarning"
-                        (click)="openVotingWarning($event)"
-                    >
-                        info
-                    </mat-icon>
-                    <mat-error>{{ 'This field is required.' | translate }}</mat-error>
-                </mat-form-field>
-
+                @if (isEVotingEnabled && !hideSelects.type) {
+                    <mat-form-field>
+                        <mat-label>{{ PollPropertyVerbose.type | translate }}</mat-label>
+                        <mat-select formControlName="type" required>
+                            @for (option of pollTypes | keyvalue; track option) {
+                                <mat-option [value]="option.key">
+                                    {{ option.value | translate }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        @if (showNonNominalWarning) {
+                            <mat-icon color="primary" matSuffix (click)="openVotingWarning($event)">info</mat-icon>
+                        }
+                        <mat-error>{{ 'This field is required.' | translate }}</mat-error>
+                    </mat-form-field>
+                }
                 <!-- Groups entitled to Vote -->
-                <mat-form-field *ngIf="isEVotingSelected && !hideSelects.entitledGroups">
-                    <mat-label>{{ PollPropertyVerbose.groups | translate }}</mat-label>
-                    <os-repo-search-selector
-                        formControlName="entitled_group_ids"
-                        [multiple]="true"
-                        [showChips]="false"
-                        [repo]="groupRepo"
-                        [pipeFn]="groupRepo.getFilterDefaultGroupFn()"
-                    ></os-repo-search-selector>
-                </mat-form-field>
+                @if (isEVotingSelected && !hideSelects.entitledGroups) {
+                    <mat-form-field>
+                        <mat-label>{{ PollPropertyVerbose.groups | translate }}</mat-label>
+                        <os-repo-search-selector
+                            formControlName="entitled_group_ids"
+                            [multiple]="true"
+                            [pipeFn]="groupRepo.getFilterDefaultGroupFn()"
+                            [repo]="groupRepo"
+                            [showChips]="false"
+                            [sortFn]="sortFn"
+                        ></os-repo-search-selector>
+                    </mat-form-field>
+                }
             </div>
-
             <div class="info-grid">
                 <!-- Poll Methods -->
-                <mat-form-field *ngIf="!isCreatedList && filteredPollMethods && !hideSelects.pollMethod">
-                    <mat-label>{{ PollPropertyVerbose.pollmethod | translate }}</mat-label>
-                    <mat-select formControlName="pollmethod" required>
-                        <mat-option
-                            *ngFor="let option of filteredPollMethods | keyvalue : keepEntryOrder"
-                            [value]="option.key"
-                        >
-                            {{ option.value | translate }}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error>{{ 'This field is required.' | translate }}</mat-error>
-                </mat-form-field>
-
-                <ng-container formGroupName="votes_amount" *ngIf="isEVotingSelected">
-                    <!-- Min Amount of Votes -->
-                    <mat-form-field *ngIf="showMinMaxVotes(data)">
-                        <mat-label>{{ PollPropertyVerbose.min_votes_amount | translate }}</mat-label>
-                        <input
-                            type="number"
-                            matInput
-                            formControlName="min_votes_amount"
-                            min="1"
-                            required
-                            [errorStateMatcher]="parentErrorStateMatcher"
-                        />
-                        <mat-error *ngIf="contentForm.controls['votes_amount'].hasError('notEnoughOptionsError')">
-                            {{ 'There are not enough options.' | translate }}
-                        </mat-error>
-                        <mat-error *ngIf="contentForm.controls['votes_amount'].hasError('rangeError')">
-                            {{ 'Min votes cannot be greater than max votes.' | translate }}
-                        </mat-error>
+                @if (!isCreatedList && filteredPollMethods && !hideSelects.pollMethod) {
+                    <mat-form-field>
+                        <mat-label>{{ PollPropertyVerbose.pollmethod | translate }}</mat-label>
+                        <mat-select formControlName="pollmethod" required>
+                            @for (option of filteredPollMethods | keyvalue: keepEntryOrder; track option) {
+                                <mat-option [value]="option.key">
+                                    {{ option.value | translate }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        <mat-error>{{ 'This field is required.' | translate }}</mat-error>
                     </mat-form-field>
-
-                    <!-- Max Amount of Votes -->
-                    <mat-form-field *ngIf="showMinMaxVotes(data)">
-                        <mat-label>{{ PollPropertyVerbose.max_votes_amount | translate }}</mat-label>
-                        <input
-                            type="number"
-                            matInput
-                            formControlName="max_votes_amount"
-                            min="1"
-                            required
-                            [errorStateMatcher]="parentErrorStateMatcher"
-                        />
-                    </mat-form-field>
-                </ng-container>
-
-                <!-- Second row with span over 2nd and 3rd column if max amount of votes per option is enabled-->
-                <div
-                    *ngIf="pollService.isMaxVotesPerOptionEnabled() && isEVotingSelected && showMaxVotesPerOption(data)"
-                    class="third-option"
-                >
+                }
+                @if (isEVotingSelected) {
                     <ng-container formGroupName="votes_amount">
-                        <!-- Max Amount of Votes per Option -->
-                        <mat-form-field>
-                            <mat-label>{{ PollPropertyVerbose.max_votes_per_option | translate }}</mat-label>
-                            <input
-                                type="number"
-                                matInput
-                                formControlName="max_votes_per_option"
-                                min="1"
-                                required
-                                [errorStateMatcher]="parentErrorStateMatcher"
-                            />
-                        </mat-form-field>
+                        <!-- Min Amount of Votes -->
+                        @if (showMinMaxVotes(data)) {
+                            <mat-form-field>
+                                <mat-label>{{ PollPropertyVerbose.min_votes_amount | translate }}</mat-label>
+                                <input
+                                    formControlName="min_votes_amount"
+                                    matInput
+                                    min="1"
+                                    required
+                                    type="number"
+                                    [errorStateMatcher]="parentErrorStateMatcher"
+                                />
+                                @if (contentForm.controls['votes_amount'].hasError('notEnoughOptionsError')) {
+                                    <mat-error>
+                                        {{ 'There are not enough options.' | translate }}
+                                    </mat-error>
+                                }
+                                @if (contentForm.controls['votes_amount'].hasError('rangeError')) {
+                                    <mat-error>
+                                        {{ 'Min votes cannot be greater than max votes.' | translate }}
+                                    </mat-error>
+                                }
+                            </mat-form-field>
+                        }
+                        <!-- Max Amount of Votes -->
+                        @if (showMinMaxVotes(data)) {
+                            <mat-form-field>
+                                <mat-label>{{ PollPropertyVerbose.max_votes_amount | translate }}</mat-label>
+                                <input
+                                    formControlName="max_votes_amount"
+                                    matInput
+                                    min="1"
+                                    required
+                                    type="number"
+                                    [errorStateMatcher]="parentErrorStateMatcher"
+                                />
+                            </mat-form-field>
+                        }
                     </ng-container>
-                </div>
+                }
+                <!-- Second row with span over 2nd and 3rd column if max amount of votes per option is enabled-->
+                @if (pollService.isMaxVotesPerOptionEnabled() && isEVotingSelected && showMaxVotesPerOption(data)) {
+                    <div class="third-option">
+                        <ng-container formGroupName="votes_amount">
+                            <!-- Max Amount of Votes per Option -->
+                            <mat-form-field>
+                                <mat-label>{{ PollPropertyVerbose.max_votes_per_option | translate }}</mat-label>
+                                <input
+                                    formControlName="max_votes_per_option"
+                                    matInput
+                                    min="1"
+                                    required
+                                    type="number"
+                                    [errorStateMatcher]="parentErrorStateMatcher"
+                                />
+                            </mat-form-field>
+                        </ng-container>
+                    </div>
+                }
             </div>
-
             <!-- Amount of Votes and global options -->
-            <div class="global-options" *ngIf="!hideSelects.globalOptions">
-                <mat-checkbox formControlName="global_yes">
-                    {{ PollPropertyVerbose.global_yes | translate }}
-                </mat-checkbox>
-                <mat-checkbox formControlName="global_no">{{ PollPropertyVerbose.global_no | translate }}</mat-checkbox>
-                <mat-checkbox formControlName="global_abstain">
-                    {{ PollPropertyVerbose.global_abstain | translate }}
-                </mat-checkbox>
-            </div>
-        </ng-container>
+            @if (!hideSelects.globalOptions) {
+                <div class="global-options">
+                    <mat-checkbox formControlName="global_yes">
+                        {{ PollPropertyVerbose.global_yes | translate }}
+                    </mat-checkbox>
+                    <mat-checkbox formControlName="global_no">
+                        {{ PollPropertyVerbose.global_no | translate }}
+                    </mat-checkbox>
+                    <mat-checkbox formControlName="global_abstain">
+                        {{ PollPropertyVerbose.global_abstain | translate }}
+                    </mat-checkbox>
+                </div>
+            }
+        }
 
         <div class="info-grid">
             <!-- 100 Percent Base -->
             <div>
-                <mat-form-field *ngIf="!hideSelects.hundredPercentBase">
-                    <mat-label>{{ PollPropertyVerbose.onehundred_percent_base | translate }}</mat-label>
-                    <mat-select formControlName="onehundred_percent_base" required>
-                        <ng-container *ngFor="let option of validPercentBases | keyvalue : keepEntryOrder">
-                            <mat-option [value]="option.key">
-                                {{
-                                    (isCreatedList || pollMethod === 'yna'
-                                        ? alternativePercentBases[option.key]
-                                        : option.value
-                                    ) | translate
-                                }}
-                            </mat-option>
-                        </ng-container>
-                    </mat-select>
-                </mat-form-field>
+                @if (!hideSelects.hundredPercentBase) {
+                    <mat-form-field>
+                        <mat-label>{{ PollPropertyVerbose.onehundred_percent_base | translate }}</mat-label>
+                        <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
+                            @for (option of validPercentBases | keyvalue: keepEntryOrder; track option) {
+                                <mat-option [value]="option.key">
+                                    {{
+                                        (isCreatedList || pollMethod === 'yna'
+                                            ? alternativePercentBases[option.key]
+                                            : option.value
+                                        ) | translate
+                                    }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                }
             </div>
             <div>
-                <ng-container *ngIf="isEVotingSelected && isCreated && !hideSelects.backendDuration">
+                @if (isEVotingSelected && isCreated && !hideSelects.backendDuration) {
                     <mat-form-field subscriptSizing="dynamic">
                         <mat-label>{{ 'Voting duration' | translate }}</mat-label>
                         <mat-select formControlName="backend" required>
-                            <ng-container *ngFor="let option of pollBackendDurationChoices | keyvalue">
+                            @for (option of pollBackendDurationChoices | keyvalue; track option) {
                                 <mat-option [value]="option.key">
                                     {{ option.value | translate }}
                                 </mat-option>
-                            </ng-container>
+                            }
                         </mat-select>
                         <mat-hint
                             [innerText]="
@@ -164,7 +176,7 @@
                             "
                         ></mat-hint>
                     </mat-form-field>
-                </ng-container>
+                }
             </div>
         </div>
     </form>

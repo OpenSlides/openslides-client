@@ -38,6 +38,7 @@ export class AgendaItem extends BaseModel<AgendaItem> {
     public is_internal!: boolean;
     public duration!: number; // in minutes
     public weight!: number;
+    public moderator_notes: string;
     /**
      * Client-calculated field: The level indicates the indentation of an agenda-item.
      */
@@ -62,6 +63,7 @@ export class AgendaItem extends BaseModel<AgendaItem> {
         `closed`,
         `type`,
         `duration`,
+        `moderator_notes`,
         `is_internal`,
         `is_hidden`,
         `level`,

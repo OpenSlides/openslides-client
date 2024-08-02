@@ -1,31 +1,35 @@
 <h2 mat-dialog-title>{{ (isCreateView ? 'New tag' : 'Edit tag') | translate }}</h2>
-<div mat-dialog-content class="organization-tag-content">
+<mat-dialog-content class="organization-tag-content">
     <form [formGroup]="organizationTagForm">
         <mat-form-field appearance="fill">
             <mat-label>{{ 'Name' | translate }}</mat-label>
-            <input #name matInput formControlName="name" required />
+            <input #name formControlName="name" matInput required />
         </mat-form-field>
         <mat-form-field appearance="fill">
             <mat-label>{{ 'Color' | translate }}</mat-label>
-            <input matInput type="color" formControlName="color" [required]="isCreateView" />
+            <input formControlName="color" matInput type="color" [required]="isCreateView" />
             <button
                 mat-icon-button
                 matSuffix
-                (click)="generateColor()"
                 matTooltip="{{ 'Generate new color' | translate }}"
+                (click)="generateColor()"
             >
                 <mat-icon>autorenew</mat-icon>
             </button>
-            <mat-error *ngIf="hasColorFormError('pattern')">
-                {{ 'You have to enter six hexadecimal digits' | translate }}
-            </mat-error>
+            @if (hasColorFormError('pattern')) {
+                <mat-error>
+                    {{ 'You have to enter six hexadecimal digits' | translate }}
+                </mat-error>
+            }
         </mat-form-field>
-        <os-chip *ngIf="name.value" [color]="currentColor">{{ name.value }}</os-chip>
+        @if (name.value) {
+            <os-chip [color]="currentColor">{{ name.value }}</os-chip>
+        }
     </form>
-</div>
-<div mat-dialog-actions>
-    <button mat-button [disabled]="organizationTagForm?.invalid" color="primary" (click)="onSaveClicked()">
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button color="primary" mat-button [disabled]="organizationTagForm?.invalid" (click)="onSaveClicked()">
         {{ 'Save' | translate }}
     </button>
     <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>
-</div>
+</mat-dialog-actions>

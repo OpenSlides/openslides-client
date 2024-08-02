@@ -18,6 +18,8 @@ export const projectionContentObjectFieldset = [
 ];
 
 export const PROJECTOR_LIST_SUBSCRIPTION = `projector_list`;
+export const PROJECTOR_LIST_MINIMAL_SUBSCRIPTION = `projector_list_minimal`;
+export const PROJECTOR_SUBSCRIPTION = `projector_detail`;
 
 export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -54,8 +56,6 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
     subscriptionName: PROJECTOR_LIST_SUBSCRIPTION
 });
 
-export const PROJECTOR_LIST_MINIMAL_SUBSCRIPTION = `projector_list`;
-
 export const getProjectorListMinimalSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
@@ -65,8 +65,6 @@ export const getProjectorListMinimalSubscriptionConfig: SubscriptionConfigGenera
     },
     subscriptionName: PROJECTOR_LIST_MINIMAL_SUBSCRIPTION
 });
-
-export const PROJECTOR_SUBSCRIPTION = `projector_detail`;
 
 export const getProjectorSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {

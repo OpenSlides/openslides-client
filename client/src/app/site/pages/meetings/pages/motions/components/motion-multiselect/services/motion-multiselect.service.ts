@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
@@ -68,7 +68,12 @@ export class MotionMultiselectService {
      * @param motions The motions to delete
      */
     public async delete(motions: ViewMotion[]): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete all selected motions?`);
+        let title = this.translate.instant(`Are you sure you want to delete all selected motions?`);
+        if (motions.some(motion => motion.amendments?.length)) {
+            title = this.translate.instant(
+                `Warning: At least one of the selected motions has amendments, these will be deleted as well. Do you want to delete anyway?`
+            );
+        }
         if (await this.promptService.open(title)) {
             const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
             this.spinnerService.show(message, { hideAfterPromiseResolved: () => this.repo.delete(...motions) });
@@ -329,7 +334,7 @@ export class MotionMultiselectService {
 
             if (actions.length) {
                 for (const action of actions) {
-                    action.setSendActionFn((req: ActionRequest[]) => this.actionService.sendRequests(req, true));
+                    action.setSendActionFn((req: ActionRequest[], _) => this.actionService.sendRequests(req, true));
                 }
 
                 const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;

@@ -22,16 +22,18 @@ import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
 import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
 import { HasPolls, VotingTextContext } from '../../polls';
 import { DiffLinesInParagraph } from '../definitions';
-import { ViewMotionChangeRecommendation, ViewMotionStatuteParagraph, ViewMotionWorkflow } from '../modules';
+import { ViewMotionChangeRecommendation, ViewMotionWorkflow } from '../modules';
 import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
 import { ViewMotionComment } from '../modules/comments/view-models/view-motion-comment';
 import { ViewMotionCommentSection } from '../modules/comments/view-models/view-motion-comment-section';
+import { ViewMotionEditor } from '../modules/editors';
 import { ViewMotionBlock } from '../modules/motion-blocks/view-models/view-motion-block';
 import { HasPersonalNote } from '../modules/personal-notes/view-models/has-personal-note';
 import { ViewPersonalNote } from '../modules/personal-notes/view-models/view-personal-note';
 import { ViewMotionState } from '../modules/states/view-models/view-motion-state';
 import { ViewMotionSubmitter } from '../modules/submitters';
 import { HasTags } from '../modules/tags/view-models/has-tags';
+import { ViewMotionWorkingGroupSpeaker } from '../modules/working-group-speakers';
 
 export interface HasReferencedMotionsInExtension extends HasReferencedMotionInExtensionIds {
     referenced_in_motion_state_extensions: ViewMotion[];
@@ -70,6 +72,18 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     public get submittersAsUsers(): ViewUser[] {
         return (this.submitters || []).map(submitter => submitter.user);
+    }
+
+    public get submitterNames(): string[] {
+        return this.mapSubmittersWithAdditional(submitter => submitter?.getTitle());
+    }
+
+    public get editorUserIds(): Id[] {
+        return (this.editors || []).map(editor => editor.user_id);
+    }
+
+    public get workingGroupSpeakerUserIds(): Id[] {
+        return (this.working_group_speakers || []).map(workingGroupSpeaker => workingGroupSpeaker.user_id);
     }
 
     public get numberOrTitle(): string {
@@ -138,8 +152,12 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.speakerAmount > 0;
     }
 
+    public get hasIdenticalMotions(): boolean {
+        return !!this.identical_motion_ids?.length;
+    }
+
     public get showPreamble(): boolean {
-        return !this.state?.isFinalState ?? true;
+        return !this.state?.isFinalState;
     }
 
     /**
@@ -214,11 +232,11 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return status;
     }
 
-    public get supporter_users(): ViewUser[] {
+    public get supporters(): ViewUser[] {
         return this.supporter_meeting_users?.flatMap(user => user.user ?? []);
     }
 
-    public get supporter_user_ids(): number[] {
+    public get supporter_ids(): number[] {
         return this.supporter_meeting_users?.flatMap(user => user.user_id ?? []);
     }
 
@@ -250,6 +268,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
             return this.personal_notes[0] || null;
         }
         return null;
+    }
+
+    public mapSubmittersWithAdditional(mapFn: (submitter: ViewUser) => string): string[] {
+        const submitters = this.submittersAsUsers.map(mapFn);
+        if (this.additional_submitter) {
+            submitters.push(this.additional_submitter);
+        }
+        return submitters;
     }
 
     /**
@@ -298,15 +324,15 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return !!(this.tags && this.tags.length > 0);
     }
 
-    public isStatuteAmendment(): boolean {
-        return !!this.statute_paragraph_id;
-    }
-
     /**
      * Determine if the motion is in its final workflow state
      */
     public isInFinalState(): boolean {
         return this.state ? this.state.isFinalState : false;
+    }
+
+    public isAmendment(): boolean {
+        return this.lead_motion_id && this.lead_motion_id > 0;
     }
 
     /**
@@ -343,7 +369,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public getProjectiondefault(): ProjectiondefaultValue {
-        if (this.isParagraphBasedAmendment()) {
+        if (this.isAmendment()) {
             return PROJECTIONDEFAULT.amendment;
         } else {
             return PROJECTIONDEFAULT.motion;
@@ -361,6 +387,7 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     derived_motions?: ViewMotion[];
     all_derived_motions?: ViewMotion[];
     all_origins?: ViewMotion[];
+    identical_motions?: ViewMotion[];
     state?: ViewMotionState;
     state_extension_references: (BaseViewModel & HasReferencedMotionsInExtension)[];
     recommendation?: ViewMotionState;
@@ -369,8 +396,9 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
     supporter_meeting_users: ViewMeetingUser[];
+    editors: ViewMotionEditor[];
+    working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     change_recommendations: ViewMotionChangeRecommendation[];
-    statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];
 }
 

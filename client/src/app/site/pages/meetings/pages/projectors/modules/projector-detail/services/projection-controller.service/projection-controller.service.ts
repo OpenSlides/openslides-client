@@ -10,7 +10,7 @@ import { ProjectorDetailServiceModule } from '../projector-detail-service.module
 
 @Injectable({ providedIn: ProjectorDetailServiceModule })
 export class ProjectionControllerService extends BaseMeetingControllerService<ViewProjection, Projection> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: ProjectionRepositoryService
     ) {

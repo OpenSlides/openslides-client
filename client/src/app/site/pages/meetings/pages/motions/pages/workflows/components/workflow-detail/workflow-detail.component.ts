@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
-import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -10,7 +10,6 @@ import { MergeAmendment, MotionState, Restriction } from 'src/app/domain/models/
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotionState, ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionStateControllerService } from '../../../../modules/states/services';
@@ -143,7 +142,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
             name: _(`Recommendation label`),
             help_text: _(
                 `Defines the wording of the recommendation that belongs to this state.
-Example: State = Accepted / Recommendation = Acceptance. 
+Example: State = Accepted / Recommendation = Acceptance.
 
 To activate the recommendation system, a recommender (for example, a motion committee) must be defined under > [Settings] > [Motions] > [Name of recommender].
 Example recommender: motion committee
@@ -153,6 +152,12 @@ In combination with motion blocks, the recommendation of multiple motions can be
             ),
             selector: `recommendation_label`,
             type: `input`
+        },
+        {
+            name: _(`Do not show recommendations publicly`),
+            help_text: _(`Recommendation of motions in such a state can only be seen by motion managers.`),
+            selector: `is_internal`,
+            type: `check`
         },
         {
             name: _(`Allow support`),
@@ -179,10 +184,10 @@ In combination with motion blocks, the recommendation of multiple motions can be
         {
             name: _(`Allow forwarding of motions`),
             help_text: _(
-                `Enables the forwarding of motions to other meetings within the OpenSlides instance in the selected state. 
+                `Enables the forwarding of motions to other meetings within the OpenSlides instance in the selected state.
 
 Prerequisites:
-1. forwarding hierarchy must be set at the organizational level in the committee. 
+1. forwarding hierarchy must be set at the organizational level in the committee.
 2. target meeting must be created.
 3. user must have group permission for forwarding.`
             ),
@@ -266,7 +271,6 @@ Note: Does not affect the visibility of change recommendations.`
     ] as StatePerm[];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private promptService: PromptService,
         private dialog: MatDialog,
@@ -275,7 +279,7 @@ Note: Does not affect the visibility of change recommendations.`
         private exporter: WorkflowExportService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public onIdFound(id: Id | null): void {

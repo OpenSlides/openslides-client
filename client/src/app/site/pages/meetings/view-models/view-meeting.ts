@@ -27,13 +27,15 @@ import {
     ViewMotionComment,
     ViewMotionCommentSection,
     ViewMotionState,
-    ViewMotionStatuteParagraph,
     ViewMotionSubmitter,
     ViewMotionWorkflow,
     ViewPersonalNote,
     ViewTag
 } from '../pages/motions';
+import { ViewMotionEditor } from '../pages/motions/modules/editors';
+import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
 import { ViewGroup } from '../pages/participants';
+import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from '../pages/polls/view-models/view-poll-candidate-list';
@@ -135,7 +137,6 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
 interface IMeetingRelations {
     motions_default_workflow: ViewMotionWorkflow;
     motions_default_amendment_workflow: ViewMotionWorkflow;
-    motions_default_statute_amendment_workflow: ViewMotionWorkflow;
     motion_poll_default_groups: ViewGroup[];
     assignment_poll_default_groups: ViewGroup[];
     topic_poll_default_groups: ViewGroup[];
@@ -158,10 +159,11 @@ interface IMeetingRelations {
     motion_categories: ViewMotionCategory[];
     motion_blocks: ViewMotionBlock[];
     motion_submitters: ViewMotionSubmitter[];
+    motion_editors: ViewMotionEditor[];
+    motion_working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     motion_change_recommendations: ViewMotionChangeRecommendation[];
     motion_workflows: ViewMotionWorkflow[];
     motion_states: ViewMotionState[];
-    motion_statute_paragraphs: ViewMotionStatuteParagraph[];
     forwarded_motions: ViewMotion[];
     polls: ViewPoll[];
     poll_candidates: ViewPollCandidate[];
@@ -187,6 +189,7 @@ interface IMeetingRelations {
     list_of_speakers_countdown: ViewProjectorCountdown;
     point_of_order_categories: ViewPointOfOrderCategory[];
     point_of_order_categories_as_observable: Observable<ViewPointOfOrderCategory[]>;
+    structure_levels: ViewStructureLevel[];
 }
 export interface ViewMeeting
     extends Meeting,

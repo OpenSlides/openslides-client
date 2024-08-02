@@ -134,7 +134,7 @@ export class MotionCsvExportService {
                         : this.commentRepo.getViewModel(commentId)!.getTitle();
                 return {
                     label,
-                    map: (motion: ViewMotion) => {
+                    map: (motion: ViewMotion): string => {
                         if (commentId === PERSONAL_NOTE_ID) {
                             return motion && motion.getPersonalNote()! && motion.getPersonalNote()!.note;
                         } else {
@@ -161,13 +161,16 @@ export class MotionCsvExportService {
         this.csvExport.export(
             motions,
             [
-                { label: `Called`, map: motion => (motion.sort_parent_id ? `` : motion.numberOrTitle) },
-                { label: `Called with`, map: motion => (!motion.sort_parent_id ? `` : motion.numberOrTitle) },
-                { label: `submitters`, map: motion => motion.submittersAsUsers.map(s => s.short_name).join(`,`) },
+                { label: `Called`, map: (motion): string => (motion.sort_parent_id ? `` : motion.numberOrTitle) },
+                { label: `Called with`, map: (motion): string => (!motion.sort_parent_id ? `` : motion.numberOrTitle) },
+                {
+                    label: `submitters`,
+                    map: (motion): string => motion.mapSubmittersWithAdditional(s => s.short_name).join(`,`)
+                },
                 { property: `title` },
                 {
                     label: `recommendation`,
-                    map: motion =>
+                    map: (motion): string =>
                         motion.recommendation ? this.motionService.getExtendedRecommendationLabel(motion) : ``
                 },
                 { property: `block`, label: `Motion block` }

@@ -1,3 +1,5 @@
+import { Locale } from 'date-fns';
+
 /**
  * Helper function to convert a language indicator (en, de)
  * to a locale indicator (de-DE, en-US)
@@ -25,16 +27,16 @@ export function langToLocale(lang: string): string {
 export async function langToTimeLocale(lang: string): Promise<Locale> {
     switch (lang) {
         case `es`:
-            return (await import(`date-fns/locale/es`)).default;
+            return (await import(`date-fns/locale/es`)).es;
         case `de`:
-            return (await import(`date-fns/locale/de`)).default;
+            return (await import(`date-fns/locale/de`)).de;
         case `cs`:
-            return (await import(`date-fns/locale/cs`)).default;
+            return (await import(`date-fns/locale/cs`)).cs;
         case `it`:
-            return (await import(`date-fns/locale/it`)).default;
+            return (await import(`date-fns/locale/it`)).it;
         case `ru`:
-            return (await import(`date-fns/locale/ru`)).default;
+            return (await import(`date-fns/locale/ru`)).ru;
         default:
-            return (await import(`date-fns/locale/en-US`)).default;
+            return (await import(`date-fns/locale/en-US`)).enUS;
     }
 }

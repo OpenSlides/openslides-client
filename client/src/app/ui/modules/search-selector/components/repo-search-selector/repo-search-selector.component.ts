@@ -1,6 +1,5 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
-import { NgControl, UntypedFormBuilder } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { map, OperatorFunction } from 'rxjs';
 import { ModelRequestService, SubscribeToConfig } from 'src/app/site/services/model-request.service';
@@ -31,9 +30,6 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
     public pipeFn: OperatorFunction<any, any> = map(items => items);
 
     @Input()
-    public lazyLoading = true;
-
-    @Input()
     public subscriptionConfig: SubscribeToConfig = null;
 
     @Input()
@@ -51,14 +47,11 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
     private subscriptionName: string;
 
     public constructor(
-        formBuilder: UntypedFormBuilder,
-        focusMonitor: FocusMonitor,
-        element: ElementRef<HTMLElement>,
         @Optional() @Self() ngControl: NgControl,
-        private meetingSettingService: MeetingSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private modelRequestService: ModelRequestService
     ) {
-        super(formBuilder, focusMonitor, element, ngControl);
+        super(ngControl);
         this.shouldPropagateOnRegistering = false;
     }
 
@@ -87,7 +80,7 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
         this.initItems();
         if (this.defaultDataConfigKey) {
             this.subscriptions.push(
-                this.meetingSettingService.get(this.defaultDataConfigKey).subscribe(value => {
+                this.meetingSettingsService.get(this.defaultDataConfigKey).subscribe(value => {
                     if (this.empty) {
                         this.value = value as any;
                     }

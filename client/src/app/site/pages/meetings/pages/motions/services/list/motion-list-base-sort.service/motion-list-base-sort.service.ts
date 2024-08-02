@@ -1,10 +1,8 @@
-import { Directive, inject, Injector, ProviderToken } from '@angular/core';
+import { Directive, inject, ProviderToken } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { StorageService } from 'src/app/gateways/storage.service';
 import {
     BaseSortListService,
     OsSortingDefinition,
@@ -33,13 +31,14 @@ export class MotionListBaseSortService extends BaseSortListService<ViewMotion> {
      * Define the sort options
      */
     protected motionSortOptions: OsSortingOption<ViewMotion>[] = [
-        { property: `tree_weight`, label: `Call list`, baseKeys: [`sort_weight`, `sort_parent_id`] },
+        { property: `tree_weight`, label: _(`Call list`), baseKeys: [`sort_weight`, `sort_parent_id`] },
         { property: `number` },
         { property: `title` },
         {
-            property: `submitters`,
+            property: `submitterNames`,
+            label: _(`Submitters`),
             foreignBaseKeys: {
-                user: [`username`, `first_name`, `last_name`, `default_structure_level`],
+                user: [`username`, `first_name`, `last_name`],
                 meeting_user: [`structure_level`]
             }
         },
@@ -49,7 +48,7 @@ export class MotionListBaseSortService extends BaseSortListService<ViewMotion> {
             baseKeys: [`category_id`, `category_weight`],
             foreignBaseKeys: { category: [`parent_id`, `weight`] }
         },
-        { property: `block_id`, label: `Motion block` },
+        { property: `block_id`, label: _(`Motion block`) },
         { property: `state`, baseKeys: [`state_id`], foreignBaseKeys: { motion_state: [`name`] } },
         { property: `created`, label: _(`Creation date`) },
         { property: `sequential_number`, label: _(`Sequential number`) },
@@ -62,19 +61,12 @@ export class MotionListBaseSortService extends BaseSortListService<ViewMotion> {
 
     /**
      * Constructor.
-     *
-     * @param translate required by parent
-     * @param store required by parent
-     * @param config set the default sorting according to OpenSlides configuration
      */
     public constructor(
-        protected override translate: TranslateService,
-        store: StorageService,
-        injector: Injector,
         defaultDefinition?: OsSortingDefinition<ViewMotion> | Observable<OsSortingDefinition<ViewMotion>>
     ) {
         const defaultDefinitions = new BehaviorSubject<OsSortingDefinition<ViewMotion>>(null);
-        super(translate, store, injector, defaultDefinition ?? defaultDefinitions);
+        super(defaultDefinition ?? defaultDefinitions);
         this.defaultDefinitionSubject = defaultDefinitions;
 
         this.defaultMotionSorting = `number`;

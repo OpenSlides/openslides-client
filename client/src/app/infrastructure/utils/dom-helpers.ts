@@ -1,3 +1,5 @@
+import tinycolor from 'tinycolor2';
+
 /**
  * Replaces encoded HTML characters except &gt; and &lt;
  */
@@ -202,6 +204,20 @@ export function findNextAuntNode(node: Node): Node | null {
 }
 
 /**
+ * Removes the sourounding tag of a node
+ *
+ * @param {Node} node
+ * @returns {Node}
+ */
+export function unwrapNode(node: Node): void {
+    const parent = node.parentNode;
+    while (node.firstChild) {
+        parent.insertBefore(node.firstChild, node);
+    }
+    parent.removeChild(node);
+}
+
+/**
  * This method adds a CSS class name to a given node.
  *
  * @param {Node} node
@@ -327,7 +343,7 @@ export function addClassToHtmlTag(tagStr: string, className: string): string {
         if (tagArguments.match(/class="/gi)) {
             // class="someclass" => class="someclass insert"
             tagArguments = tagArguments.replace(
-                /(class\s*=\s*)(["'])([^\2]*)\2/gi,
+                /(class\s*=\s*)(["'])((?:(?!\2).)*)\2/gi,
                 (_classWhole: string, attr: string, para: string, content: string): string =>
                     attr + para + content + ` ` + className + para
             );
@@ -417,6 +433,36 @@ export function htmlToUppercase(html: string): string {
 }
 
 /**
+ * Normalizes content of style attributes.
+ * 1. Converts all `color` and `backgroundColor` style properties
+ *    to rgba or rgb format.
+ * 2. Adds semicolon at end of style tag
+ * 3. trims style properties and values
+ */
+export function normalizeStyleAttributes(html: string): string {
+    return html.replace(/<(\/?[a-z]*)( [^>]*)?>/gi, (_fullHtml: string, tag: string, attributes: string): string => {
+        if (attributes === undefined) {
+            attributes = ``;
+        }
+
+        attributes = attributes.replace(/style\s*=\s*"([^"]*)"/gi, (_attr: string, styles: string) => {
+            const el = document.createElement(`div`);
+            el.style.cssText = styles;
+            if (el.style.color) {
+                el.style.color = tinycolor(el.style.color).toRgbString();
+            }
+
+            if (el.style.backgroundColor) {
+                el.style.backgroundColor = tinycolor(el.style.backgroundColor).toRgbString();
+            }
+            return `style="${el.style.cssText}"`;
+        });
+
+        return `<` + tag + attributes + `>`;
+    });
+}
+
+/**
  * Returns true, if the provided element is an inline element (hard-coded list of known elements).
  *
  * @param {Element} element
@@ -439,7 +485,8 @@ export function isInlineElement(element: Element): boolean {
         `TT`,
         `INS`,
         `DEL`,
-        `STRIKE`
+        `STRIKE`,
+        `MARK`
     ];
     if (element) {
         return inlineElements.indexOf(element.nodeName) > -1;

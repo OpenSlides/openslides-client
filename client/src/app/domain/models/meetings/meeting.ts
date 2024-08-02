@@ -82,6 +82,7 @@ export class Settings {
     public agenda_item_creation!: AgendaItemCreation;
     public agenda_new_items_default_visibility!: AgendaItemType;
     public agenda_show_internal_items_on_projector!: boolean;
+    public agenda_show_topic_navigation_on_detail_view!: boolean;
 
     // List of speakers
     public list_of_speakers_amount_last_on_projector!: number;
@@ -90,18 +91,24 @@ export class Settings {
     public list_of_speakers_show_amount_of_speakers_on_slide!: boolean;
     public list_of_speakers_present_users_only!: boolean;
     public list_of_speakers_show_first_contribution!: boolean;
+    public list_of_speakers_hide_contribution_count!: boolean;
     public list_of_speakers_enable_point_of_order_categories!: boolean;
     public list_of_speakers_enable_point_of_order_speakers!: boolean;
     public list_of_speakers_initially_closed!: boolean;
     public list_of_speakers_enable_pro_contra_speech!: boolean;
     public list_of_speakers_can_set_contribution_self!: boolean;
+    public list_of_speakers_allow_multiple_speakers!: boolean;
     public list_of_speakers_speaker_note_for_everyone!: boolean;
     public list_of_speakers_closing_disables_point_of_order!: boolean;
+    public list_of_speakers_can_create_point_of_order_for_others!: boolean;
+
+    public list_of_speakers_default_structure_level_time: number;
+    public list_of_speakers_enable_interposed_question: boolean;
+    public list_of_speakers_intervention_time: number;
 
     // Motions
     public motions_default_workflow_id!: Id; // workflow/default_workflow_meeting_id;
     public motions_default_amendment_workflow_id!: Id; // workflow/default_amendment_workflow_meeting_id;
-    public motions_default_statute_amendment_workflow_id!: Id; // workflow/default_statute_amendment_workflow_meeting_id;
     public motions_preamble!: string;
     public motions_default_line_numbering!: LineNumberingMode;
     public motions_line_length!: number;
@@ -113,13 +120,11 @@ export class Settings {
     public motions_show_referring_motions!: boolean;
     public motions_show_sequential_number!: boolean;
     public motions_recommendations_by!: string;
-    public motions_statute_recommendations_by!: string;
     public motions_recommendation_text_mode!: ChangeRecoMode;
     public motions_default_sorting!: string;
     public motions_number_type!: string;
     public motions_number_min_digits!: number;
     public motions_number_with_blank!: boolean;
-    public motions_statutes_enabled!: boolean;
     public motions_amendments_enabled!: boolean;
     public motions_amendments_in_main_list!: boolean;
     public motions_amendments_of_amendments!: boolean;
@@ -128,6 +133,8 @@ export class Settings {
     public motions_amendments_multiple_paragraphs!: boolean;
     public motions_supporters_min_amount!: number;
     public motions_block_slide_columns!: number;
+    public motions_enable_editor!: boolean;
+    public motions_enable_working_group_speaker!: boolean;
     public motions_export_title!: string;
     public motions_export_preamble!: string;
     public motions_export_submitter_recommendation!: boolean;
@@ -154,6 +161,10 @@ export class Settings {
     public users_email_replyto!: string;
     public users_email_subject!: string;
     public users_email_body!: string;
+    public users_forbid_delegator_in_list_of_speakers!: boolean;
+    public users_forbid_delegator_as_submitter!: boolean;
+    public users_forbid_delegator_as_supporter!: boolean;
+    public users_forbid_delegator_to_vote!: boolean;
 
     // Assignments
     public assignments_export_title!: string;
@@ -171,20 +182,23 @@ export class Settings {
     public assignment_poll_default_backend!: PollBackendDurationType;
 
     //topic poll
-    topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
+    public topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
 
     //default poll
-    poll_ballot_paper_selection: BallotPaperSelection;
-    poll_ballot_paper_number: number;
-    poll_sort_poll_result_by_votes: boolean;
-    poll_default_type: PollType;
-    poll_default_method: PollMethod;
-    poll_default_onehundred_percent_base: PollPercentBase;
-    poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
-    poll_default_backend: PollBackendDurationType;
+    public poll_ballot_paper_selection: BallotPaperSelection;
+    public poll_ballot_paper_number: number;
+    public poll_sort_poll_result_by_votes: boolean;
+    public poll_default_type: PollType;
+    public poll_default_method: PollMethod;
+    public poll_default_onehundred_percent_base: PollPercentBase;
+    public poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
+    public poll_default_backend: PollBackendDurationType;
 
     //SSO
     public external_id!: string;
+
+    // Structure Level
+    public structure_level_ids: Id[]; // (structure_level/meeting_id)
 }
 
 export class Meeting extends BaseModel<Meeting> {
@@ -211,10 +225,11 @@ export class Meeting extends BaseModel<Meeting> {
     public motion_category_ids!: Id[]; // (motion_category/meeting_id)[];
     public motion_block_ids!: Id[]; // (motion_block/meeting_id)[];
     public motion_submitter_ids!: Id[]; // (motion_submitter/meeting_id)[];
+    public motion_editor_ids!: Id[]; // (motion_editor/meeting_id)[];
+    public motion_working_group_speaker_ids!: Id[]; // (motion_working_group_speaker/meeting_id)[];
     public motion_change_recommendation_ids!: Id[]; // (motion_change_recommendation/meeting_id)[];
     public motion_workflow_ids!: Id[]; // (motion_workflow/meeting_id)[];
     public motion_state_ids!: Id[]; // (motion_state/meeting_id)[];
-    public motion_statute_paragraph_ids!: Id[]; // (motion_statute_paragraph/meeting_id)[];
     public forwarded_motion_ids!: Id[];
     public poll_ids!: Id[]; // (poll/meeting_id)[];
     public option_ids!: Id[]; // (option/meeting_id)[];
@@ -245,6 +260,8 @@ export class Meeting extends BaseModel<Meeting> {
     public is_active_in_organization_id!: Id; // (organization/active_meeting_ids)[];
     public is_archived_in_organization_id!: Id; // (organization/archived_meeting_ids)[];
     public template_for_organization_id!: Id; // (organization/template_meeting_ids)[];
+
+    public structure_level_list_of_speakers_ids: Id[]; // (structure_level_list_of_speakers/meeting_id)[]
 
     public constructor(input?: any) {
         super(Meeting.COLLECTION, input);
@@ -317,22 +334,28 @@ export class Meeting extends BaseModel<Meeting> {
         `agenda_item_creation`,
         `agenda_new_items_default_visibility`,
         `agenda_show_internal_items_on_projector`,
+        `agenda_show_topic_navigation_on_detail_view`,
         `list_of_speakers_amount_last_on_projector`,
         `list_of_speakers_amount_next_on_projector`,
         `list_of_speakers_couple_countdown`,
         `list_of_speakers_show_amount_of_speakers_on_slide`,
         `list_of_speakers_present_users_only`,
         `list_of_speakers_show_first_contribution`,
+        `list_of_speakers_hide_contribution_count`,
+        `list_of_speakers_allow_multiple_speakers`,
         `list_of_speakers_enable_point_of_order_speakers`,
+        `list_of_speakers_can_create_point_of_order_for_others`,
         `list_of_speakers_enable_point_of_order_categories`,
         `list_of_speakers_closing_disables_point_of_order`,
         `list_of_speakers_enable_pro_contra_speech`,
         `list_of_speakers_can_set_contribution_self`,
         `list_of_speakers_speaker_note_for_everyone`,
         `list_of_speakers_initially_closed`,
+        `list_of_speakers_default_structure_level_time`,
+        `list_of_speakers_enable_interposed_question`,
+        `list_of_speakers_intervention_time`,
         `motions_default_workflow_id`,
         `motions_default_amendment_workflow_id`,
-        `motions_default_statute_amendment_workflow_id`,
         `motions_preamble`,
         `motions_default_line_numbering`,
         `motions_line_length`,
@@ -345,13 +368,11 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_show_sequential_number`,
         `motions_recommendations_by`,
         `motions_block_slide_columns`,
-        `motions_statute_recommendations_by`,
         `motions_recommendation_text_mode`,
         `motions_default_sorting`,
         `motions_number_type`,
         `motions_number_min_digits`,
         `motions_number_with_blank`,
-        `motions_statutes_enabled`,
         `motions_amendments_enabled`,
         `motions_amendments_in_main_list`,
         `motions_amendments_of_amendments`,
@@ -359,6 +380,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_amendments_text_mode`,
         `motions_amendments_multiple_paragraphs`,
         `motions_supporters_min_amount`,
+        `motions_enable_editor`,
+        `motions_enable_working_group_speaker`,
         `motions_export_title`,
         `motions_export_preamble`,
         `motions_export_submitter_recommendation`,
@@ -372,7 +395,6 @@ export class Meeting extends BaseModel<Meeting> {
         `poll_candidate_list_ids`,
         `poll_candidate_ids`,
         `meeting_user_ids`,
-        `user_ids`,
         `users_enable_presence_view`,
         `users_enable_vote_weight`,
         `users_allow_self_set_present`,
@@ -386,6 +408,10 @@ export class Meeting extends BaseModel<Meeting> {
         `users_email_subject`,
         `users_email_body`,
         `users_enable_vote_delegations`,
+        `users_forbid_delegator_in_list_of_speakers`,
+        `users_forbid_delegator_as_submitter`,
+        `users_forbid_delegator_as_supporter`,
+        `users_forbid_delegator_to_vote`,
         `assignments_export_title`,
         `assignments_export_preamble`,
         `assignment_poll_ballot_paper_selection`,
@@ -414,6 +440,7 @@ export class Meeting extends BaseModel<Meeting> {
         `tag_ids`,
         `agenda_item_ids`,
         `list_of_speakers_ids`,
+        `structure_level_list_of_speakers_ids`,
         `point_of_order_category_ids`,
         `speaker_ids`,
         `topic_ids`,
@@ -425,9 +452,10 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_category_ids`,
         `motion_block_ids`,
         `motion_workflow_ids`,
-        `motion_statute_paragraph_ids`,
         `motion_comment_ids`,
         `motion_submitter_ids`,
+        `motion_editor_ids`,
+        `motion_working_group_speaker_ids`,
         `motion_change_recommendation_ids`,
         `motion_state_ids`,
         `poll_ids`,
@@ -438,6 +466,7 @@ export class Meeting extends BaseModel<Meeting> {
         `personal_note_ids`,
         `chat_group_ids`,
         `chat_message_ids`,
+        `structure_level_ids`,
         `logo_projector_main_id`,
         `logo_projector_header_id`,
         `logo_web_header_id`,
@@ -458,6 +487,7 @@ export class Meeting extends BaseModel<Meeting> {
         `default_meeting_for_committee_id`,
         `organization_tag_ids`,
         `present_user_ids`,
+        `user_ids`,
         `reference_projector_id`,
         `list_of_speakers_countdown_id`,
         `poll_countdown_id`,

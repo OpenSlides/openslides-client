@@ -93,13 +93,17 @@ export enum PollPercentBase {
     Valid = `valid`,
     Cast = `cast`,
     Entitled = `entitled`,
+    EntitledPresent = `entitled_present`,
     Disabled = `disabled`
 }
 
 export interface EntitledUsersEntry {
     user_id: number;
+    present: boolean;
     voted: boolean;
     vote_delegated_to_user_id?: number;
+    user_merged_into_id?: number;
+    delegation_user_merged_into_id?: number;
 }
 
 export const VOTE_MAJORITY = -1;
@@ -164,6 +168,7 @@ export const PollPercentBaseVerbose = {
     valid: _(`All valid ballots`),
     cast: _(`All casted ballots`),
     entitled: _(`All entitled users`),
+    entitled_present: _(`All present entitled users`),
     disabled: _(`Disabled (no percents)`)
 };
 

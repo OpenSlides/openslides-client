@@ -4,11 +4,9 @@
     --os-row-height: 50px;
 }
 
-mat-card.import-table {
-    .code {
-        span {
-            display: inline-flex;
-        }
+.possible-fields-list {
+    span {
+        display: inline-flex;
     }
 }
 
@@ -53,6 +51,12 @@ pbl-ngrid-cell {
     font-size: 14px;
 }
 
+.import-file-handle {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+}
+
 @keyframes rotation {
     from {
         transform: rotate(0deg);
@@ -72,4 +76,9 @@ pbl-ngrid-cell {
 
 .table-title-column {
     vertical-align: top;
+}
+
+.list-field-entry {
+    display: inline-flex;
+    margin-right: 10px;
 }

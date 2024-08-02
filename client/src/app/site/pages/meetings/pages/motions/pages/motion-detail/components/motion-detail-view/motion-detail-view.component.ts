@@ -17,7 +17,6 @@ import { LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motio
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -33,6 +32,7 @@ import { AmendmentListSortService } from '../../../../services/list/amendment-li
 import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service/motion-list-filter.service';
 import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
 import { MotionDetailViewService } from '../../services/motion-detail-view.service';
+import { MotionDetailViewOriginUrlService } from '../../services/motion-detail-view-originurl.service';
 
 @Component({
     selector: `os-motion-detail-view`,
@@ -139,8 +139,9 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     private _amendmentsInMainList = false;
 
+    private _navigatedFromAmendmentList = false;
+
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public vp: ViewPortService,
         public operator: OperatorService,
@@ -157,9 +158,10 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         private amendmentSortService: AmendmentListSortService,
         private amendmentFilterService: AmendmentListFilterService,
         private cd: ChangeDetectorRef,
-        private pdfExport: MotionPdfExportService
+        private pdfExport: MotionPdfExportService,
+        private originUrlService: MotionDetailViewOriginUrlService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
             this._forwardingAvailable = forwardingAvailable;
@@ -197,6 +199,21 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         return () => this.saveMotion();
     }
 
+    /**
+     * Sets @var this._navigatedFromAmendmentList on navigation from either of both lists.
+     * Does nothing on navigation between two motions.
+     */
+    private isNavigatedFromAmendments(): void {
+        const previousUrl = this.originUrlService.getPreviousUrl();
+        if (!!previousUrl) {
+            if (previousUrl.endsWith(`amendments`)) {
+                this._navigatedFromAmendmentList = true;
+            } else if (previousUrl.endsWith(`motions`)) {
+                this._navigatedFromAmendmentList = false;
+            }
+        }
+    }
+
     public goToHistory(): void {
         this.router.navigate([this.activeMeetingId!, `history`], { queryParams: { fqid: this.motion.fqid } });
     }
@@ -218,8 +235,27 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Trigger to delete the motion.
      */
     public async deleteMotionButton(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this motion?`);
-        const content = this.motion.getTitle();
+        let title = this.translate.instant(`Are you sure you want to delete this motion? `);
+        let content = this.motion.getTitle();
+        if (this.motion.amendments.length) {
+            title = this.translate.instant(
+                `Warning: Amendments exist for this motion. Are you sure you want to delete this motion regardless?`
+            );
+            content =
+                `<i>` +
+                this.translate.instant(`Motion`) +
+                ` ` +
+                this.motion.getTitle() +
+                `</i>` +
+                `<br>` +
+                this.translate.instant(`Deleting this motion will also delete the amendments.`) +
+                `<br>` +
+                this.translate.instant(`List of amendments: `) +
+                `<br>` +
+                this.motion.amendments
+                    .map(amendment => (amendment.number ? amendment.number : amendment.title))
+                    .join(`, `);
+        }
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.motion);
             this.router.navigate([this.activeMeetingId, `motions`]);
@@ -230,7 +266,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Goes to the amendment creation wizard. Executed via click.
      */
     public createAmendment(): void {
-        const amendmentTextMode = this.meetingSettingService.instant(`motions_amendments_text_mode`);
+        const amendmentTextMode = this.meetingSettingsService.instant(`motions_amendments_text_mode`);
         if (amendmentTextMode === `paragraph`) {
             this.router.navigate([`create-amendment`], { relativeTo: this.route });
         } else {
@@ -284,15 +320,35 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     public setSurroundingMotions(): void {
         const indexOfCurrent = this._sortedMotions.findIndex(motion => motion === this.motion);
         if (indexOfCurrent > 0) {
-            this.previousMotion = this._sortedMotions[indexOfCurrent - 1];
+            this.previousMotion = this.findNextSuitableMotion(indexOfCurrent, -1);
         } else {
             this.previousMotion = null;
         }
         if (indexOfCurrent > -1 && indexOfCurrent < this._sortedMotions.length - 1) {
-            this.nextMotion = this._sortedMotions[indexOfCurrent + 1];
+            this.nextMotion = this.findNextSuitableMotion(indexOfCurrent, 1);
         } else {
             this.nextMotion = null;
         }
+    }
+
+    /**
+     * Finds the next suitable motion.
+     * If @var this._amendmentsInMainList as well as @var this._navigatedFromAmendmentList collide
+     * iterates over the next or previous motions to find the first with lead motion.
+     * @param indexOfCurrent The index from the active motion.
+     * @param step Stepwidth to iterate eiter over the previous or next motions.
+     */
+    private findNextSuitableMotion(indexOfCurrent: number, step: number): ViewMotion {
+        if (!this._amendmentsInMainList || !this._navigatedFromAmendmentList) {
+            return this._sortedMotions[indexOfCurrent + step];
+        }
+
+        for (let i = indexOfCurrent + step; 0 <= i && i <= this._sortedMotions.length - 1; i += step) {
+            if (!!this._sortedMotions[i].hasLeadMotion) {
+                return this._sortedMotions[i];
+            }
+        }
+        return null;
     }
 
     /**
@@ -457,7 +513,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
             const defaultTitle = `${this.translate.instant(`Amendment to`)} ${parentMotion.numberOrTitle}`;
             motion.title = defaultTitle;
             motion.category_id = parentMotion.category_id;
-            const amendmentTextMode = this.meetingSettingService.instant(`motions_amendments_text_mode`);
+            const amendmentTextMode = this.meetingSettingsService.instant(`motions_amendments_text_mode`);
             if (amendmentTextMode === `fulltext`) {
                 motion.text = parentMotion.text;
             }
@@ -471,6 +527,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     private init(): void {
         this.cd.reattach();
 
+        this.isNavigatedFromAmendments();
         this.registerSubjects();
 
         // use the filter and the search service to get the current sorting

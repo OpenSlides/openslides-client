@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -12,7 +12,10 @@ import { PromptDialogModule } from '../prompt-dialog.module';
 export class PromptService {
     private dialogRef: MatDialogRef<PromptDialogComponent> | null = null;
 
-    public constructor(private dialog: MatDialog, private translate: TranslateService) {}
+    public constructor(
+        private dialog: MatDialog,
+        private translate: TranslateService
+    ) {}
 
     /**
      * Opens the dialog. Returns true, if the user accepts.

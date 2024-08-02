@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -13,9 +13,13 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
+import { ViewMotionEditor } from '../../../modules/editors';
+import { MotionEditorControllerService } from '../../../modules/editors/services';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { TagControllerService } from '../../../modules/tags/services';
 import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
+import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers';
+import { MotionWorkingGroupSpeakerControllerService } from '../../../modules/working-group-speakers/services';
 import { ForwardingStatus, ViewMotion } from '../../../view-models';
 import { MotionsListServiceModule } from '../motions-list-service.module';
 
@@ -28,8 +32,6 @@ interface WorkflowFilterDesc {
 }
 
 interface WorkflowConfiguration {
-    statuteEnabled: boolean;
-    statute: Id | null;
     motion: Id | null;
     amendment: Id | null;
 }
@@ -50,8 +52,6 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
      * Listen to the configuration for change in defined/used workflows
      */
     protected enabledWorkflows: WorkflowConfiguration = {
-        statuteEnabled: false,
-        statute: null,
         motion: null,
         amendment: null
     };
@@ -101,6 +101,18 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         options: []
     };
 
+    private editorFilterOptions: OsFilter<ViewMotion> = {
+        property: `editorUserIds`,
+        label: _(`Motion editor`),
+        options: []
+    };
+
+    private workingGroupSpeakerFilterOptions: OsFilter<ViewMotion> = {
+        property: `workingGroupSpeakerUserIds`,
+        label: _(`Spokesperson`),
+        options: []
+    };
+
     private hasSpeakerOptions: OsFilter<ViewMotion> = {
         property: `hasSpeakers`,
         label: _(`Speakers`),
@@ -110,7 +122,16 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         ]
     };
 
-    private AmendmentFilterOption: OsFilter<ViewMotion> = {
+    private hasIdenticalMotionsOptions: OsFilter<ViewMotion> = {
+        property: `hasIdenticalMotions`,
+        label: _(`Identical motions`),
+        options: [
+            { condition: true, label: _(`Has identical motions`) },
+            { condition: [false, null], label: _(`Has no identical motions`) }
+        ]
+    };
+
+    private amendmentFilterOption: OsFilter<ViewMotion> = {
         property: `amendmentType`,
         label: _(`Amendment`),
         options: [
@@ -170,43 +191,58 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         ]
     };
 
-    public constructor(
-        store: MeetingActiveFiltersService,
-        categoryRepo: MotionCategoryControllerService,
-        motionBlockRepo: MotionBlockControllerService,
-        commentRepo: MotionCommentSectionControllerService,
-        tagRepo: TagControllerService,
-        private workflowRepo: MotionWorkflowControllerService,
-        protected translate: TranslateService,
-        private operator: OperatorService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    private categoryRepo = inject(MotionCategoryControllerService);
+    private motionBlockRepo = inject(MotionBlockControllerService);
+    private commentRepo = inject(MotionCommentSectionControllerService);
+    private tagRepo = inject(TagControllerService);
+    private workflowRepo = inject(MotionWorkflowControllerService);
+    private editorRepo = inject(MotionEditorControllerService);
+    private workingGroupSpeakerRepo = inject(MotionWorkingGroupSpeakerControllerService);
+    protected translate = inject(TranslateService);
+    private operator = inject(OperatorService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor(store: MeetingActiveFiltersService) {
         super(store);
         this.getWorkflowConfig();
         this.getShowAmendmentConfig();
 
         this.updateFilterForRepo({
-            repo: categoryRepo,
+            repo: this.categoryRepo,
             filter: this.categoryFilterOptions,
-            noneOptionLabel: _(`No category set`)
+            noneOptionLabel: _(`not specified`)
         });
 
         this.updateFilterForRepo({
-            repo: motionBlockRepo,
+            repo: this.motionBlockRepo,
             filter: this.motionBlockFilterOptions,
-            noneOptionLabel: _(`No motion block set`)
+            noneOptionLabel: _(`not specified`)
         });
 
         this.updateFilterForRepo({
-            repo: commentRepo,
+            repo: this.commentRepo,
             filter: this.motionCommentFilterOptions,
-            noneOptionLabel: _(`No comment`)
+            noneOptionLabel: _(`not specified`)
         });
 
         this.updateFilterForRepo({
-            repo: tagRepo,
+            repo: this.tagRepo,
             filter: this.tagFilterOptions,
-            noneOptionLabel: _(`No tags`)
+            noneOptionLabel: _(`not specified`)
+        });
+
+        this.updateFilterForRepo({
+            repo: this.editorRepo,
+            filter: this.editorFilterOptions,
+            noneOptionLabel: _(`not specified`),
+            mapFn: (editor: ViewMotionEditor) => editor.user
+        });
+
+        this.updateFilterForRepo({
+            repo: this.workingGroupSpeakerRepo,
+            filter: this.workingGroupSpeakerFilterOptions,
+            noneOptionLabel: _(`not specified`),
+            mapFn: (speaker: ViewMotionWorkingGroupSpeaker) => speaker.user
         });
 
         this.subscribeWorkflows();
@@ -220,10 +256,11 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
      * @param motions The motions without amendments, if the according config was set
      */
     protected override preFilter(motions: ViewMotion[]): ViewMotion[] {
-        if (!this.showAmendmentsInMainTable) {
-            return motions.filter(motion => !motion.lead_motion_id);
-        }
-        return motions;
+        return motions.filter(
+            motion =>
+                motion.meeting_id === motion.getActiveMeetingId() &&
+                (this.showAmendmentsInMainTable || !motion.lead_motion_id)
+        );
     }
 
     /**
@@ -236,20 +273,12 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
     }
 
     private getWorkflowConfig(): void {
-        this.meetingSettingsService.get(`motions_default_statute_amendment_workflow_id`).subscribe(id => {
-            this.enabledWorkflows.statute = +id;
-        });
-
         this.meetingSettingsService.get(`motions_default_workflow_id`).subscribe(id => {
             this.enabledWorkflows.motion = +id;
         });
 
         this.meetingSettingsService.get(`motions_default_amendment_workflow_id`).subscribe(id => {
             this.enabledWorkflows.amendment = +id;
-        });
-
-        this.meetingSettingsService.get(`motions_statutes_enabled`).subscribe(bool => {
-            this.enabledWorkflows.statuteEnabled = bool;
         });
     }
 
@@ -264,7 +293,8 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
             this.recommendationFilterOptions,
             this.motionCommentFilterOptions,
             this.tagFilterOptions,
-            this.forwardingFilterOptions
+            this.forwardingFilterOptions,
+            this.hasIdenticalMotionsOptions
         ];
 
         // only add the filter if the user has the correct permission
@@ -273,11 +303,16 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         }
 
         if (this.showAmendmentsInMainTable) {
-            filterDefinitions.push(this.AmendmentFilterOption);
+            filterDefinitions.push(this.amendmentFilterOption);
         }
 
         if (!this.operator.isAnonymous) {
             filterDefinitions = filterDefinitions.concat(this.personalNoteFilterOptions);
+        }
+
+        if (this.operator.hasPerms(Permission.motionCanManage)) {
+            filterDefinitions.push(this.editorFilterOptions);
+            filterDefinitions.push(this.workingGroupSpeakerFilterOptions);
         }
 
         return filterDefinitions;
@@ -386,16 +421,13 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
 
         recoOptions.push(`-`);
         recoOptions.push({
-            label: _(`No recommendation`),
+            label: _(`not specified`),
             condition: null
         });
         this.recommendationFilterOptions.options = recoOptions;
     }
 
     protected isWorkflowEnabled(workflowId: number): boolean {
-        return (
-            workflowId === this.enabledWorkflows.motion ||
-            (this.enabledWorkflows.statuteEnabled && workflowId === this.enabledWorkflows.statute)
-        );
+        return workflowId === this.enabledWorkflows.motion;
     }
 }

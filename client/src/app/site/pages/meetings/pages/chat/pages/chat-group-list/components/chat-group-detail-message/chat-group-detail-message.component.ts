@@ -30,7 +30,7 @@ export class ChatGroupDetailMessageComponent {
 
     public get author(): string {
         if (this.user) {
-            return `${this.user.first_name ?? ``} ${this.user.last_name ?? ``}`.trim();
+            return this.user.short_name;
         }
         return ``;
     }
@@ -51,7 +51,10 @@ export class ChatGroupDetailMessageComponent {
         return this.chatMessage?.user;
     }
 
-    public constructor(private _operator: OperatorService, private _vp: ViewPortService) {}
+    public constructor(
+        private _operator: OperatorService,
+        private _vp: ViewPortService
+    ) {}
 
     public onEditMessage(): void {
         this.editing.emit(this.chatMessage);

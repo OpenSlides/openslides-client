@@ -34,6 +34,7 @@ export class UserService {
      * - seeName        (title, first, last, gender, about) (user.can_see_name or ownPage)
      * - seeOtherUsers  (title, first, last, gender, about) (user.can_see_name)
      * - seePersonal    (mail, username, structure level) (ownPage)
+     * - seeSensitiveData (mail, username, saml_id, last_email_sent) (ownPage, user.can_see_sensible_data)
      * - manage         (everything) (user.can_manage)
      * - changePersonal (mail, username, about) (user.can_manage or ownPage)
      * - changePassword (user.can_change_password)
@@ -41,7 +42,7 @@ export class UserService {
      * @param action the action the user tries to perform
      */
     public isAllowed(action: string, isOwnPage: boolean): boolean {
-        if ([`seePersonal`, `seeName`, `changePersonal`].includes(action) && isOwnPage === true) {
+        if ([`seePersonal`, `seeName`, `changePersonal`, `seeSensitiveData`].includes(action) && isOwnPage === true) {
             return true;
         }
         if (!this.activeMeetingService.meeting) {
@@ -52,47 +53,23 @@ export class UserService {
                 return this.operator.hasPerms(Permission.userCanManage) && !isOwnPage;
             case `manage`:
                 return this.operator.hasPerms(Permission.userCanManage);
-            case `seeName`:
-                return this.operator.hasPerms(Permission.userCanSee, Permission.userCanManage);
-            case `seeOtherUsers`:
-                return this.operator.hasPerms(Permission.userCanSee, Permission.userCanManage);
-            case `seePersonal`:
-                return this.operator.hasPerms(Permission.userCanManage);
+            case `update`:
             case `changePersonal`:
-                return this.operator.hasPerms(Permission.userCanManage);
+            case `seePersonal`:
+                return this.operator.hasPerms(Permission.userCanUpdate);
+            case `seeSensitiveData`:
+                return this.operator.hasPerms(Permission.userCanSeeSensitiveData);
+            case `seeName`:
+            case `seeOtherUsers`:
+                return this.operator.hasPerms(Permission.userCanSee, Permission.userCanUpdate);
             case `changePassword`:
                 return (
                     (isOwnPage && this.operator.canChangeOwnPassword) ||
-                    this.operator.hasPerms(Permission.userCanManage)
+                    this.operator.hasPerms(Permission.userCanUpdate)
                 );
             default:
                 return false;
         }
-    }
-
-    /**
-     * Checks, if the passed users (given by their ids) are in the same scope as the operator and returns the result.
-     *
-     * @param userIds The id of every user to check
-     *
-     * @returns A boolean whether every given user is in the same scope as the operator, if there are no users or only the operator is given, it will always be true
-     */
-    public async isUserInSameScope(...userIds: Id[]): Promise<boolean> {
-        userIds = userIds.filter(id => id !== this.operator.operatorId);
-        if (!userIds.length) {
-            return true;
-        }
-        const result = await this.presenter.call({ user_ids: [...userIds, this.operator.operatorId!] });
-        const ownScope = result[this.operator.operatorId!];
-        return !Object.keys(result)
-            .map(userId => parseInt(userId, 10))
-            .some(userId => {
-                const toCompare = result[userId];
-                return (
-                    this.presenter.compareScope(ownScope, toCompare) === -1 ||
-                    (ownScope.collection === toCompare.collection && ownScope.id !== toCompare.id)
-                );
-            });
     }
 
     /**
@@ -110,6 +87,14 @@ export class UserService {
             .every(userId => {
                 const toCompare = result[userId];
                 let hasPerms = this.operator.hasOrganizationPermissions(toCompare.user_oml || OML.can_manage_users);
+                if (
+                    !hasPerms &&
+                    toCompare.collection === UserScope.ORGANIZATION &&
+                    !toCompare.user_oml &&
+                    toCompare.committee_ids.intersect(this.operator.user.committee_management_ids || [])
+                ) {
+                    hasPerms = true;
+                }
                 if (!hasPerms && toCompare.collection === UserScope.COMMITTEE) {
                     hasPerms = hasPerms || this.operator.hasCommitteePermissions(toCompare.id, CML.can_manage);
                 }

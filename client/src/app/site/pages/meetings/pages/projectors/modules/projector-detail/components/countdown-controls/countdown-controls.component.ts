@@ -17,7 +17,7 @@ import { ProjectorCountdownControllerService } from '../../services/projector-co
 })
 export class CountdownControlsComponent {
     /**
-     * Countdown as input
+     * Countdown/Timer as input
      */
     @Input()
     public countdown!: ViewProjectorCountdown;

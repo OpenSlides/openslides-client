@@ -23,4 +23,11 @@
             cursor: pointer;
         }
     }
+
+    .show-entire-text {
+        a:focus {
+            outline: none;
+            text-decoration: underline;
+        }
+    }
 }

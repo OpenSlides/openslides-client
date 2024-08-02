@@ -7,7 +7,6 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -18,7 +17,6 @@ import {
     MotionLineNumberingService,
     ParagraphToChoose
 } from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
-import { MotionTinyMceConfig } from '../../definitions/tinymce-config';
 
 @Component({
     selector: `os-amendment-create-wizard`,
@@ -70,12 +68,9 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
      */
     public multipleParagraphsAllowed = false;
 
-    public tinyMceConfig = MotionTinyMceConfig;
-
     private _parentMotionId: Id | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private formBuilder: UntypedFormBuilder,
         private repo: AmendmentControllerService,
@@ -85,7 +80,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
         private promptService: PromptService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.createForm();
     }
 
@@ -120,16 +115,6 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
         return !!this.contentForm.value.selectedParagraphs.find(
             (para: ParagraphToChoose) => para.paragraphNo === paragraph.paragraphNo
         );
-    }
-
-    /**
-     * Function to prevent executing the click event of a checkbox.
-     * This prevents that the state of the checkbox is not changed by clicking it.
-     *
-     * @param event The `MouseEvent`
-     */
-    public checkboxClicked(event: MouseEvent): void {
-        event.preventDefault();
     }
 
     /**
@@ -255,7 +240,9 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
             this.contentForm.patchValue({
                 selectedParagraphs: newParagraphs
             });
-            this.contentForm.removeControl(`text_` + paragraph.paragraphNo);
+            try {
+                this.contentForm.removeControl(`text_` + paragraph.paragraphNo);
+            } catch (_) {}
         } else {
             newParagraphs = Object.assign([], oldSelected);
             newParagraphs.push(paragraph);

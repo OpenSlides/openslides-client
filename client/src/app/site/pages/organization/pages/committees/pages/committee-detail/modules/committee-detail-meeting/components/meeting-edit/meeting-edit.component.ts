@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Identifiable, Selectable } from 'src/app/domain/interfaces';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import {
@@ -17,7 +18,6 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -65,6 +65,11 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
 
     public get isValid(): boolean {
+        if (this.isCommitteeManagerAndRequireDuplicateFrom) {
+            if (!this.theDuplicateFromId && this.isCreateView) {
+                return false;
+            }
+        }
         return this.meetingForm?.valid;
     }
 
@@ -100,38 +105,31 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public meetingForm!: UntypedFormGroup;
     public theDuplicateFromId: Id | null = null;
 
-    public sortFn: (valueA: Selectable, valueB: Selectable) => number = (a, b) => {
+    public sortFn: (valueA: Selectable, valueB: Selectable) => number = (a, b): number => {
         return a && typeof a.getTitle() === `string` ? a.getTitle().localeCompare(b.getTitle()) : -1;
     };
 
     public committee!: ViewCommittee;
-
-    public get meetingUsers(): ViewUser[] {
-        const users = this.editMeeting?.calculated_users;
-        if (users && !users.some(u => u.id === this.operator.operatorId)) {
-            users.push(this.operator.user);
-        }
-
-        return users || [];
-    }
+    public availableAdmins: ViewUser[] = [];
 
     private meetingId: Id | null = null;
     private editMeeting: ViewMeeting | null = null;
     private committeeId!: Id;
 
     private cameFromList = false;
+    private requireDuplicateFrom = false;
 
     /**
      * The operating user received from the OperatorService
      */
     private operatingUser: ViewUser | null = null;
+    private _committee_users_set: Set<Id> = new Set();
 
     private get daterangeControl(): AbstractControl {
         return this.meetingForm?.get(`daterange`);
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         private formBuilder: UntypedFormBuilder,
@@ -145,7 +143,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         private orga: OrganizationService,
         private routingState: RoutingStateService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.checkCreateView();
         this.createForm();
         this.init();
@@ -167,11 +165,22 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 // We need here the user from the operator, because the operator holds not all groups in all meetings they are
                 this.operatingUser = user;
                 this.onAfterCreateForm();
+            }),
+            this.operator.user.committee_managements_as_observable.subscribe(committees => {
+                this._committee_users_set = new Set(committees.flatMap(committee => committee.user_ids ?? []));
             })
+        );
+        this.subscriptions.push(
+            this.orgaSettings
+                .get(`require_duplicate_from`)
+                .subscribe((value: boolean) => (this.requireDuplicateFrom = value))
         );
 
         this.availableMeetingsObservable = this.orga.organizationObservable.pipe(
             map(organization => {
+                if (this.isCommitteeManagerAndRequireDuplicateFrom) {
+                    return [TEMPLATE_MEETINGS_LABEL, ...organization.template_meetings.sort(this.sortFn)];
+                }
                 return [
                     TEMPLATE_MEETINGS_LABEL,
                     ...organization.template_meetings.sort(this.sortFn),
@@ -182,6 +191,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 ];
             })
         );
+        this.availableAdmins = this.filterAccountsForCommitteeAdmins(this.userRepo.getViewModelList());
     }
 
     public getSaveAction(): () => Promise<void> {
@@ -370,7 +380,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const { daterange: { start: start_time, end: end_time } = { start: null, end: null }, ...rawPayload } = {
             ...this.meetingForm.value
         };
-        return { start_time, end_time, ...rawPayload };
+        if (!this.meetingForm.get(`daterange`).disabled) {
+            return { start_time, end_time, ...rawPayload };
+        }
+        return { ...rawPayload };
     }
 
     /**
@@ -422,5 +435,16 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             const patchValue = endDateChanged ? this.daterangeControl?.value.end : this.daterangeControl?.value.start;
             this.daterangeControl?.patchValue({ start: patchValue, end: patchValue });
         }
+    }
+
+    public get isCommitteeManagerAndRequireDuplicateFrom(): boolean {
+        return this.requireDuplicateFrom && !this.operator.isOrgaManager;
+    }
+
+    private filterAccountsForCommitteeAdmins(accounts: ViewUser[]): ViewUser[] {
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            return accounts;
+        }
+        return accounts.filter(account => this._committee_users_set.has(account.id));
     }
 }

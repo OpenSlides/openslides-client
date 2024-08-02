@@ -1,21 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { distinctUntilChanged, map, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { Selectable } from 'src/app/domain/interfaces';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
+import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presenter/get-forwarding-committees-presenter.service';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
+import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
+import { MotionEditorControllerService } from '../../../../modules/editors/services';
+import { MotionSubmitterControllerService } from '../../../../modules/submitters/services';
+import { MotionWorkingGroupSpeakerControllerService } from '../../../../modules/working-group-speakers/services';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
 
 @Component({
@@ -23,7 +28,7 @@ import { SearchListDefinition } from '../motion-extension-field/motion-extension
     templateUrl: `./motion-meta-data.component.html`,
     styleUrls: [`./motion-meta-data.component.scss`]
 })
-export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
+export class MotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnInit, OnDestroy {
     public motionBlocks: MotionBlock[] = [];
 
     public categories: ViewMotionCategory[] = [];
@@ -79,7 +84,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         }
     ];
 
-    public motionTransformFn = (value: ViewMotion) => `[${value.fqid}]`;
+    public motionTransformFn = (value: ViewMotion): string => `[${value.fqid}]`;
 
     /**
      * All amendments to this motion
@@ -107,11 +112,19 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         return this._referencedMotions;
     }
 
+    public loadForwardingCommittees: () => Promise<Selectable[]>;
+
     private _referencingMotions: ViewMotion[];
 
     private _referencedMotions: ViewMotion[];
 
     private _forwardingAvailable = false;
+
+    public get supportersObservable(): Observable<ViewUser[]> {
+        return this._supportersSubject;
+    }
+
+    private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
 
     /**
      * The subscription to the recommender config variable.
@@ -119,23 +132,42 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     private recommenderSubscription: Subscription | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         public perms: MotionPermissionService,
         private operator: OperatorService,
         private motionForwardingService: MotionForwardDialogService,
-        private meetingController: MeetingControllerService
+        private meetingController: MeetingControllerService,
+        public motionSubmitterRepo: MotionSubmitterControllerService,
+        public motionEditorRepo: MotionEditorControllerService,
+        public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService,
+        private participantSort: ParticipantListSortService,
+        private presenter: GetForwardingCommitteesPresenterService
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
 
-        if (operator.hasPerms(Permission.motionCanManage)) {
+        if (operator.hasPerms(Permission.motionCanManageMetadata)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
                 this._forwardingAvailable = forwardingAvailable;
+                this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
+                    return (await this.checkPresenter()) as Selectable[];
+                };
             });
         } else {
             this._forwardingAvailable = false;
         }
+    }
+
+    public ngOnInit(): void {
+        this.participantSort.initSorting();
+
+        this.subscriptions.push(
+            this.participantSort.getSortedViewModelListObservable().subscribe(() => this.updateSupportersSubject())
+        );
+    }
+
+    public override ngOnDestroy(): void {
+        this.participantSort.exitSortService();
+        super.ngOnDestroy();
     }
 
     /**
@@ -269,8 +301,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         const copy = this.motion.origin_id
             ? [...(this.motion.all_origins || [])]
             : this.motion.origin_meeting
-            ? [this.motion.origin_meeting]
-            : [];
+              ? [this.motion.origin_meeting]
+              : [];
         return copy.reverse();
     }
 
@@ -298,6 +330,15 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         return origin?.canAccess();
     }
 
+    protected override onAfterSetMotion(previous: ViewMotion, current: ViewMotion): void {
+        super.onAfterSetMotion(previous, current);
+        this.updateSupportersSubject();
+    }
+
+    private async updateSupportersSubject(): Promise<void> {
+        this._supportersSubject.next(await this.participantSort.sort(this.motion.supporters));
+    }
+
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
         return toTest.COLLECTION === Motion.COLLECTION;
     }
@@ -312,8 +353,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
                 .getViewModelObservable(this.motion.id)
                 .pipe(
                     map(motion => [
-                        motion.referenced_in_motion_recommendation_extensions,
-                        motion.recommendation_extension_references as ViewMotion[]
+                        motion?.referenced_in_motion_recommendation_extensions,
+                        motion?.recommendation_extension_references as ViewMotion[]
                     ]),
                     distinctUntilChanged((p, c) => [...Array(2).keys()].every(i => p[i].equals(c[i]))),
                     map(arr =>
@@ -333,9 +374,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
      */
     private setupRecommender(): void {
         if (this.motion) {
-            const configKey: keyof Settings = this.motion.isStatuteAmendment()
-                ? `motions_statute_recommendations_by`
-                : `motions_recommendations_by`;
+            const configKey: keyof Settings = `motions_recommendations_by`;
             if (this.recommenderSubscription) {
                 this.recommenderSubscription.unsubscribe();
             }
@@ -343,5 +382,25 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
                 this.recommender = recommender;
             });
         }
+    }
+
+    private async checkPresenter(): Promise<(Selectable & { name: string; toString: any })[]> {
+        const meetingId = this.activeMeetingService.meetingId;
+        const committees =
+            this.operator.hasPerms(Permission.motionCanManageMetadata) && !!meetingId
+                ? await this.presenter.call({ meeting_id: meetingId })
+                : [];
+        const forwardingCommittees: (Selectable & { name: string; toString: any })[] = [];
+        for (let n = 0; n < committees.length; n++) {
+            forwardingCommittees.push({
+                id: n + 1,
+                name: committees[n],
+                getTitle: () => committees[n],
+                getListTitle: () => ``,
+                toString: () => committees[n]
+            });
+        }
+
+        return forwardingCommittees;
     }
 }

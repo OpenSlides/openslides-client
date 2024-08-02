@@ -14,6 +14,11 @@ export class UpdateService {
         return this._nextVersionAvailableSubject;
     }
 
+    private _updateAvailable = false;
+    public get updateAvailable(): boolean {
+        return this._updateAvailable;
+    }
+
     private _nextVersionAvailableSubject = new Subject<void>();
 
     /**
@@ -22,7 +27,10 @@ export class UpdateService {
      *
      * @param swUpdate Service Worker update service
      */
-    public constructor(private swUpdate: SwUpdate, private store: StorageService) {
+    public constructor(
+        private swUpdate: SwUpdate,
+        private store: StorageService
+    ) {
         swUpdate.versionUpdates
             .pipe(filter(event => event.type === `VERSION_READY`))
             .subscribe((version: VersionReadyEvent) => this.checkVersion(version));
@@ -57,6 +65,7 @@ export class UpdateService {
         const currentVersion = version.currentVersion.hash;
         const latestVersion = version.latestVersion.hash;
         const isUpdateAvailable = currentVersion !== latestVersion;
+        this._updateAvailable = isUpdateAvailable;
         console.log(`Current version: ${currentVersion}.\n Latest version: ${latestVersion}`);
         console.log(isUpdateAvailable ? `Update available` : `No update available`);
         if (isUpdateAvailable) {

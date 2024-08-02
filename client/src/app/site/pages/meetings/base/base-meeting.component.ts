@@ -1,5 +1,4 @@
-import { Directive } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Directive, inject } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseComponent } from 'src/app/site/base/base.component';
 
@@ -19,13 +18,6 @@ export abstract class BaseMeetingComponent extends BaseComponent {
         return this.activeMeetingService.meeting;
     }
 
-    /**
-     * @deprecated Typo: use `meetingSettingsService` instead
-     */
-    protected get meetingSettingService(): MeetingSettingsService {
-        return this.componentServiceCollector.meetingSettingsService;
-    }
-
     protected get meetingSettingsService(): MeetingSettingsService {
         return this.componentServiceCollector.meetingSettingsService;
     }
@@ -38,10 +30,5 @@ export abstract class BaseMeetingComponent extends BaseComponent {
         return this.componentServiceCollector.activeMeetingService;
     }
 
-    public constructor(
-        public override componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService
-    ) {
-        super(componentServiceCollector, translate);
-    }
+    public override componentServiceCollector = inject(MeetingComponentServiceCollectorService);
 }

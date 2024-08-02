@@ -3,25 +3,25 @@
 </h1>
 
 <form [formGroup]="messageForm">
-    <div mat-dialog-content>
+    <mat-dialog-content>
         <!-- Message -->
         <os-editor formControlName="message"></os-editor>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <!-- Submit countdown button -->
         <button
-            type="submit"
-            mat-button
             color="accent"
-            [mat-dialog-close]="messageForm.value"
+            mat-button
+            type="submit"
             [disabled]="!messageForm.valid"
+            [mat-dialog-close]="messageForm.value"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
 
-        <!-- Cancel Countdown button -->
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <!-- Cancel countdown button -->
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </form>

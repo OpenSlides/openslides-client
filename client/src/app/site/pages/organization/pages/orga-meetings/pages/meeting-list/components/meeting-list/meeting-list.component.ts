@@ -5,15 +5,15 @@ import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { ColumnRestriction } from 'src/app/ui/modules/list';
 
+import { MeetingCsvExportService } from '../../services/meeting-export.service';
 import { MeetingListFilterService } from '../../services/meeting-list-filter/meeting-list-filter.service';
 import { MeetingListSortService } from '../../services/meeting-list-sort/meeting-list-sort.service';
 
-const MEETING_LIST_STORAGE_INDEX = `committee_list`;
+const MEETING_LIST_STORAGE_INDEX = `meeting_list`;
 
 @Component({
     selector: `os-meeting-list`,
@@ -29,19 +29,19 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         }
     ];
 
-    public toRestrictFn = (restriction: ColumnRestriction<OML>) =>
+    public toRestrictFn = (restriction: ColumnRestriction<OML>): boolean =>
         !this.operator.hasOrganizationPermissions(restriction.permission);
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public meetingController: MeetingControllerService,
         public operator: OperatorService,
         public filterService: MeetingListFilterService,
         public sortService: MeetingListSortService,
+        private csvExport: MeetingCsvExportService,
         private choiceService: ChoiceService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Meetings`);
         this.canMultiSelect = true;
         this.listStorageIndex = MEETING_LIST_STORAGE_INDEX;
@@ -57,6 +57,10 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
 
     public getCommitteeForMeetingUrl(meeting: ViewMeeting): string | null {
         return `/committees/` + meeting.committee_id + ``;
+    }
+
+    public csvExportMeetingList(): void {
+        this.csvExport.export(this.listComponent.source);
     }
 
     public async doDelete(meeting?: ViewMeeting): Promise<void> {

@@ -12,15 +12,15 @@
     <!-- Menu -->
     <ng-container class="menu-slot">
         <button
-            type="button"
+            *osOmlPerms="OML.can_manage_organization; and: !isMultiSelect"
             mat-icon-button
+            type="button"
             [matTooltip]="'New folder' | translate"
             (click)="createNewFolder(newFolderDialog)"
-            *osOmlPerms="OML.can_manage_organization; and: !isMultiSelect"
         >
             <mat-icon>create_new_folder</mat-icon>
         </button>
-        <button type="button" mat-icon-button [matMenuTriggerFor]="mediafilesMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="mediafilesMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -34,105 +34,112 @@
 
 <!-- the actual file manager -->
 <os-file-list
-    [currentDirectory]="directory"
-    [isMultiSelect]="isMultiSelect"
-    [canEdit]="canEdit"
     [canAccessFileMenu]="canAccessFileMenu"
-    [sourceFiles]="directoryObservable"
+    [canEdit]="canEdit"
+    [currentDirectory]="directory"
     [editFolderTemplate]="fileEditDialog"
     [fileMenuTemplate]="fileMenuTemplate"
-    [shouldShowFileMenuFn]="shouldShowFileMenuFn"
-    [isUsedAsLogoFn]="isUsedAsLogoFn"
+    [isInMeeting]="false"
+    [isMultiSelect]="isMultiSelect"
     [isUsedAsFontFn]="isUsedAsFontFn"
-    (directoryChanged)="changeDirectory($event.directoryId)"
+    [isUsedAsLogoFn]="isUsedAsLogoFn"
+    [shouldShowFileMenuFn]="shouldShowFileMenuFn"
+    [sourceFiles]="directoryObservable"
     (beforeEditing)="onEditFile($event.file)"
-    (saved)="onSaveFile($event.update)"
     (deleted)="onDeleteFile($event.file)"
+    (directoryChanged)="changeDirectory($event.directoryId)"
+    (saved)="onSaveFile($event.update)"
     (selected)="onSelect($event.files)"
 ></os-file-list>
 
 <!-- Menu for Mediafiles -->
 <mat-menu #mediafilesMenu="matMenu">
-    <div *ngIf="!isMultiSelect">
-        <button mat-menu-item (click)="toggleMultiSelect()">
-            <mat-icon>library_add</mat-icon>
-            <span>{{ 'Multiselect' | translate }}</span>
-        </button>
-        <button mat-menu-item (click)="downloadMultiple(isOrgaLevel)">
-            <mat-icon>cloud_download</mat-icon>
-            <span>{{ 'Download folder' | translate }}</span>
-        </button>
-    </div>
-    <div *ngIf="isMultiSelect">
-        <button mat-menu-item (click)="selectAll()">
-            <mat-icon>done_all</mat-icon>
-            <span>{{ 'Select all' | translate }}</span>
-        </button>
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
-            <mat-icon>clear</mat-icon>
-            <span>{{ 'Deselect all' | translate }}</span>
-        </button>
-        <mat-divider *osOmlPerms="OML.can_manage_organization"></mat-divider>
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadMultiple(isOrgaLevel, selectedRows)">
-            <mat-icon>cloud_download</mat-icon>
-            <span>{{ 'Download' | translate }}</span>
-        </button>
-        <button
-            mat-menu-item
-            *osOmlPerms="OML.can_manage_organization"
-            [disabled]="!selectedRows.length"
-            (click)="onMove(selectedRows)"
-        >
-            <mat-icon>near_me</mat-icon>
-            <span>{{ 'Move' | translate }}</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button
-            mat-menu-item
-            *osOmlPerms="OML.can_manage_organization"
-            [disabled]="!selectedRows.length"
-            (click)="deleteSelected()"
-        >
-            <mat-icon color="warn">delete</mat-icon>
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
-    </div>
+    @if (!isMultiSelect) {
+        <div>
+            <button mat-menu-item (click)="toggleMultiSelect()">
+                <mat-icon>library_add</mat-icon>
+                <span>{{ 'Multiselect' | translate }}</span>
+            </button>
+            <button mat-menu-item (click)="downloadMultiple(isOrgaLevel)">
+                <mat-icon>cloud_download</mat-icon>
+                <span>{{ 'Download folder' | translate }}</span>
+            </button>
+        </div>
+    }
+    @if (isMultiSelect) {
+        <div>
+            <button mat-menu-item (click)="selectAll()">
+                <mat-icon>done_all</mat-icon>
+                <span>{{ 'Select all' | translate }}</span>
+            </button>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+                <mat-icon>clear</mat-icon>
+                <span>{{ 'Deselect all' | translate }}</span>
+            </button>
+            <mat-divider *osOmlPerms="OML.can_manage_organization"></mat-divider>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadMultiple(isOrgaLevel, selectedRows)">
+                <mat-icon>cloud_download</mat-icon>
+                <span>{{ 'Download' | translate }}</span>
+            </button>
+            <button
+                *osOmlPerms="OML.can_manage_organization"
+                mat-menu-item
+                [disabled]="!selectedRows.length"
+                (click)="onMove(selectedRows)"
+            >
+                <mat-icon>near_me</mat-icon>
+                <span>{{ 'Move' | translate }}</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button
+                *osOmlPerms="OML.can_manage_organization"
+                mat-menu-item
+                [disabled]="!selectedRows.length"
+                (click)="deleteSelected()"
+            >
+                <mat-icon color="warn">delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+        </div>
+    }
 </mat-menu>
 
 <!-- File edit dialog -->
 <ng-template #fileEditDialog>
     <h1 mat-dialog-title>{{ 'Edit details for' | translate }}</h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form class="edit-file-form" [formGroup]="fileEditForm!">
             <mat-form-field>
                 <mat-label>{{ 'New file name' | translate }}</mat-label>
-                <input type="text" matInput osAutofocus required formControlName="title" />
-                <mat-error *ngIf="fileEditForm?.invalid">{{ 'Required' | translate }}</mat-error>
+                <input formControlName="title" matInput osAutofocus required type="text" />
+                @if (fileEditForm?.invalid) {
+                    <mat-error>{{ 'Required' | translate }}</mat-error>
+                }
             </mat-form-field>
         </form>
-    </div>
-    <div mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button
-            type="submit"
-            mat-button
-            [disabled]="!fileEditForm?.valid"
             color="accent"
+            mat-button
+            type="submit"
+            [disabled]="!fileEditForm?.valid"
             [mat-dialog-close]="fileEditForm?.value"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>
 
 <!-- Template for the managing buttons -->
 <ng-template #manageButton let-mediafile="mediafile" let-place="place">
     <button
         mat-menu-item
-        (click)="toggleMediafileUsage($event, mediafile, place)"
         [disabled]="updatingLogoAndFontSettings"
+        (click)="toggleMediafileUsage($event, mediafile, place)"
     >
         <mat-icon color="accent">
             {{ isMediafileUsed(mediafile, place, isOrgaLevel) ? 'check_box' : 'check_box_outline_blank' }}
@@ -144,35 +151,39 @@
 <ng-template #fileMenuTemplate let-mediafile="mediafile">
     <div *osOmlPerms="OML.can_manage_organization">
         <!-- Exclusive for images -->
-        <div *ngIf="mediafile.isImage()">
-            <ng-container *ngFor="let place of logoPlaces">
-                <ng-container
-                    *ngTemplateOutlet="manageButton; context: { mediafile: mediafile, place: place }"
-                ></ng-container>
-            </ng-container>
-        </div>
-        <mat-divider *ngIf="mediafile.isImage()"></mat-divider>
+        @if (mediafile.isImage()) {
+            <div>
+                @for (place of logoPlaces; track place) {
+                    <ng-container
+                        *ngTemplateOutlet="manageButton; context: { mediafile: mediafile, place: place }"
+                    ></ng-container>
+                }
+            </div>
+        }
+        @if (mediafile.isImage()) {
+            <mat-divider></mat-divider>
+        }
     </div>
 </ng-template>
 
 <!-- New folder dialog -->
 <ng-template #newFolderDialog>
     <h1 mat-dialog-title>{{ 'New directory' | translate }}</h1>
-    <div class="os-form-card-mobile" mat-dialog-content>
+    <mat-dialog-content class="os-form-card-mobile">
         <form class="edit-file-form" [formGroup]="newDirectoryForm">
             <p>{{ 'Please enter a name for the new directory:' | translate }}</p>
             <mat-form-field>
                 <mat-label>{{ 'Title' | translate }}</mat-label>
-                <input matInput osAutofocus formControlName="title" required />
+                <input formControlName="title" matInput osAutofocus required />
             </mat-form-field>
         </form>
-    </div>
-    <div mat-dialog-actions>
-        <button type="submit" mat-button [disabled]="!newDirectoryForm.valid" color="accent" [mat-dialog-close]="true">
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button color="accent" mat-button type="submit" [disabled]="!newDirectoryForm.valid" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
-    </div>
+    </mat-dialog-actions>
 </ng-template>

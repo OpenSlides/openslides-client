@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Selectable } from 'src/app/domain/interfaces';
@@ -35,7 +35,6 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
     private _forwardingMeetingsUpdateRequired = true;
 
     public constructor(
-        dialog: MatDialog,
         private translate: TranslateService,
         private repo: MotionRepositoryService,
         private formatService: MotionFormatService,
@@ -45,7 +44,7 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         private operator: OperatorService,
         private modelRequest: ModelRequestService
     ) {
-        super(dialog);
+        super();
 
         this.activeMeeting.meetingIdObservable.subscribe(() => {
             this._forwardingMeetingsUpdateRequired = true;
@@ -73,6 +72,10 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
 
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
         const toForward = motions.filter(motion => motion.state?.allow_motion_forwarding);
+        if (toForward.length === 0) {
+            this.snackbar.open(this.translate.instant(`None of the selected motions can be forwarded.`), `Ok`);
+            return;
+        }
         const dialogRef = await this.open(toForward);
         const toMeetingIds = (await firstValueFrom(dialogRef.afterClosed())) as Ids;
         if (toMeetingIds) {
@@ -92,9 +95,13 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
 
     private async updateForwardMeetings(): Promise<void> {
         if (this._forwardingMeetingsUpdateRequired && !this.activeMeeting.meeting.isArchived) {
-            const meetings = this.operator.hasPerms(Permission.motionCanManage)
-                ? await this.presenter.call({ meeting_id: this.activeMeeting.meetingId! })
-                : [];
+            const meetingId = await firstValueFrom(
+                this.activeMeeting.meetingIdObservable.pipe(filter(id => id !== undefined))
+            );
+            const meetings =
+                this.operator.hasPerms(Permission.motionCanManageMetadata) && !!meetingId
+                    ? await this.presenter.call({ meeting_id: meetingId })
+                    : [];
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
             this._forwardingCommitteesSubject.next(
@@ -102,9 +109,9 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
                     return {
                         id: committee.id,
                         name: committee.name,
-                        getTitle: () => committee.name,
-                        getListTitle: () => ``,
-                        toString: () => committee.name
+                        getTitle: (): string => committee.name,
+                        getListTitle: (): string => ``,
+                        toString: (): string => committee.name
                     };
                 })
             );

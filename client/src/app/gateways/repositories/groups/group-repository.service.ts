@@ -26,9 +26,9 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
         };
     }
 
-    public getTitle = (viewGroup: ViewGroup) => viewGroup.name;
+    public getTitle = (viewGroup: ViewGroup): string => viewGroup.name;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Groups` : `Group`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Groups` : `Group`);
 
     public getNameForIds(...ids: number[]): string {
         return this.getSortedViewModelList()

@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
-import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { UserComponentsModule } from 'src/app/site/modules/user-components';
@@ -15,14 +16,16 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { PipesModule } from 'src/app/ui/pipes';
 
+import { ParticipantSearchSelectorModule } from '../../../../modules/participant-search-selector';
 import { ParticipantExportModule } from '../../export/participant-export.module';
 import { ParticipantListComponent } from './components/participant-list/participant-list.component';
+import { ParticipantSwitchDialogComponent } from './components/participant-switch-dialog/participant-switch-dialog.component';
 import { ParticipantListInfoDialogModule } from './modules/participant-list-info-dialog/participant-list-info-dialog.module';
 import { ParticipantListRoutingModule } from './participant-list-routing.module';
 import { ParticipantListServiceModule } from './services/participant-list-service.module';
 
 @NgModule({
-    declarations: [ParticipantListComponent],
+    declarations: [ParticipantListComponent, ParticipantSwitchDialogComponent],
     imports: [
         CommonModule,
         CommaSeparatedListingModule,
@@ -30,6 +33,7 @@ import { ParticipantListServiceModule } from './services/participant-list-servic
         ParticipantListServiceModule,
         ParticipantListInfoDialogModule,
         ParticipantExportModule,
+        ParticipantSearchSelectorModule,
         UserComponentsModule,
         ChoiceDialogModule,
         HeadBarModule,
@@ -40,6 +44,7 @@ import { ParticipantListServiceModule } from './services/participant-list-servic
         MatIconModule,
         MatMenuModule,
         MatCheckboxModule,
+        MatDialogModule,
         MatDividerModule,
         MatTooltipModule,
         PipesModule

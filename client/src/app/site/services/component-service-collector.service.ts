@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
@@ -10,7 +10,7 @@ import { ModelRequestService } from './model-request.service';
     providedIn: `root`
 })
 export class ComponentServiceCollectorService {
-    constructor(
+    public constructor(
         public router: Router,
         public titleService: Title,
         public matSnackBar: MatSnackBar,

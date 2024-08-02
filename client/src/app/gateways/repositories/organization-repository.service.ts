@@ -15,9 +15,10 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
         super(repositoryServiceCollector, Organization);
     }
 
-    public getTitle = (viewOrganization: ViewOrganization) => viewOrganization.name;
+    public getTitle = (viewOrganization: ViewOrganization): string => viewOrganization.name;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Organizations` : `Organization`);
+    public getVerboseName = (plural = false): string =>
+        this.translate.instant(plural ? `Organizations` : `Organization`);
 
     public override getFieldsets(): Fieldsets<Organization> {
         const coreFieldset: (keyof Organization)[] = [`name`, `description`];
@@ -36,6 +37,7 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             `users_email_replyto`,
             `users_email_sender`,
             `users_email_subject`,
+            `require_duplicate_from`,
             `saml_enabled`,
             `saml_login_button_text`,
             `saml_attr_mapping`,

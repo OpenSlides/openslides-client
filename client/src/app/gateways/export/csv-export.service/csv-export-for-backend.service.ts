@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { ExportServiceModule } from '../export-service.module';
@@ -17,7 +17,7 @@ import {
     providedIn: ExportServiceModule
 })
 export class CsvExportForBackendService {
-    public constructor(private exporter: FileExportService) {}
+    private exporter = inject(FileExportService);
 
     /**
      * Saves an array of model data to a CSV.
@@ -54,7 +54,7 @@ export class CsvExportForBackendService {
         const header = columns.map(column => {
             let label = ``;
             if (isPropertyDefinition(column)) {
-                label = column.property as string;
+                label = (column.label || column.property) as string;
             } else if (isMapDefinition(column)) {
                 label = column.label;
             }
@@ -101,14 +101,15 @@ export class CsvExportForBackendService {
         }
     }
 
-    public dummyCSVExport<I>(headerAndVerboseNames: { [key in keyof I]: any }, rows: I[], filename: string): void {
+    public dummyCSVExport<I>(headers: string[], rows: I[], filename: string): void {
         const separator = DEFAULT_COLUMN_SEPARATOR;
         const encoding: `utf-8` | `iso-8859-15` = DEFAULT_ENCODING as any;
-        const headerRow = [Object.keys(headerAndVerboseNames).join(separator)];
+        const headerRow = [headers.join(separator)];
+
         const content = rows.map(row =>
-            Object.keys(headerAndVerboseNames)
+            headers
                 .map(key => {
-                    let value = row[key as keyof I] || ``;
+                    let value = row[key] || ``;
                     if (typeof value === `number`) {
                         value = value.toString(10);
                     } else if (typeof value === `boolean`) {

@@ -3,6 +3,7 @@ import { Fqid } from 'src/app/domain/definitions/key-types';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
+import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
@@ -34,7 +35,7 @@ export interface AssignMeetingsPayload {
 }
 
 export interface NameInformation {
-    username: string;
+    id: Id;
     first_name?: string;
     last_name?: string;
 }
@@ -69,8 +70,8 @@ export interface AssignMeetingsResult {
 }
 
 interface LevelAndNumberInformation {
-    structure_level: (meetingId?: Id) => string;
     number: (meetingId?: Id) => string;
+    structureLevels: (meetingId?: Id) => string;
 }
 
 export type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
@@ -102,13 +103,12 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `pronoun`,
             `username` /* Required! To getShortName */,
             `gender`,
-            `default_number`,
-            `default_structure_level`,
             `default_vote_weight`,
             `is_physical_person`,
             `is_active`,
             `meeting_ids`,
-            `saml_id`
+            `saml_id`,
+            `member_number`
         ];
 
         const filterableListFields: TypedFieldset<User> = listFields.concat([
@@ -251,13 +251,12 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             first_name: partialUser.first_name,
             last_name: partialUser.last_name,
             username: partialUser.username,
+            member_number: partialUser.member_number,
             is_active: partialUser.is_active,
             is_physical_person: partialUser.is_physical_person,
             default_password: partialUser.default_password,
             gender: partialUser.gender,
             email: partialUser.email,
-            default_structure_level: partialUser.default_structure_level,
-            default_number: partialUser.default_number,
             default_vote_weight: toDecimal(partialUser.default_vote_weight, false) as any,
             organization_management_level: partialUser.organization_management_level,
             committee_management_ids: partialUser.committee_management_ids
@@ -266,7 +265,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return partialPayload;
     }
 
-    public getTitle = (viewUser: ViewUser) => this.getFullName(viewUser);
+    public getTitle = (viewUser: ViewUser): string => this.getFullName(viewUser);
 
     /**
      * getter for the name
@@ -274,8 +273,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     private getName(user: NameInformation): string {
         const firstName = user.first_name?.trim() || ``;
         const lastName = user.last_name?.trim() || ``;
-        const userName = user.username?.trim() || ``;
-        const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
+        const name =
+            firstName || lastName ? `${firstName} ${lastName}` : this.translate.instant(`User`) + ` ${user.id}`;
         return name?.trim() || ``;
     }
 
@@ -290,21 +289,26 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return `${title} ${name}`.trim();
     }
 
-    private getFullName(user: FullNameInformation): string {
+    private getFullName(user: ViewUser, structureLevel?: ViewStructureLevel): string {
         let fullName = this.getShortName(user);
         const additions: string[] = [];
+        const meetingUser = user.getMeetingUser();
 
         // addition: add pronoun, structure level and number
         if (user.pronoun) {
             additions.push(user.pronoun);
         }
 
-        const structure_level = user.structure_level ? user.structure_level() : null;
-        if (structure_level) {
-            additions.push(structure_level);
+        if (structureLevel) {
+            additions.push(structureLevel.getTitle());
+        } else if (structureLevel !== null && meetingUser) {
+            const structureLevels = meetingUser.structureLevels();
+            if (structureLevels) {
+                additions.push(structureLevels);
+            }
         }
 
-        const number = user.number ? user.number() : null;
+        const number = meetingUser?.number ? meetingUser.number : null;
         if (number) {
             additions.push(`${this.translate.instant(`No.`)} ${number}`);
         }
@@ -325,15 +329,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     }
 
     private getLevelAndNumber(user: LevelAndNumberInformation): string {
-        if (user.structure_level() && user.number()) {
-            return `${user.structure_level()} · ${this.translate.instant(`No.`)} ${user.number()}`;
-        } else if (user.structure_level()) {
-            return user.structure_level();
-        } else if (user.number()) {
-            return `${this.translate.instant(`No.`)} ${user.number()}`;
-        } else {
-            return ``;
+        const strings: string[] = [];
+        if (user.structureLevels()) {
+            strings.push(user.structureLevels());
         }
+        if (user.number()) {
+            strings.push(`${this.translate.instant(`No.`)} ${user.number()}`);
+        }
+        return strings.join(` · `);
     }
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Participants` : `Participant`);
@@ -344,26 +347,17 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     protected override createViewModel(model: User): ViewUser {
         const viewModel = super.createViewModel(model);
 
-        const meetingUserIdMap = new Map<Id, Id>();
-        const getMeetingUserId = (meetingId: Id) => {
-            if (!meetingUserIdMap.has(meetingId)) {
-                for (const meetingUser of this.relationManager.handleRelation(
-                    viewModel.getModel(),
-                    this.relationsByKey[`meeting_users`]
-                )) {
-                    meetingUserIdMap.set(meetingUser.meeting_id, meetingUser.id);
-                }
-            }
-
-            return meetingUserIdMap.get(meetingId);
-        };
-
-        viewModel.getName = () => this.getName(viewModel);
-        viewModel.getShortName = () => this.getShortName(viewModel);
-        viewModel.getFullName = () => this.getFullName(viewModel);
-        viewModel.getMeetingUser = (meetingId: Id) => this.getMeetingUser(getMeetingUserId, meetingId);
-        viewModel.getLevelAndNumber = () => this.getLevelAndNumber(viewModel);
-        viewModel.getEnsuredActiveMeetingId = () => this.activeMeetingIdService.meetingId;
+        viewModel.getName = (): string => this.getName(viewModel);
+        viewModel.getShortName = (): string => this.getShortName(viewModel);
+        viewModel.getFullName = (structureLevel?: ViewStructureLevel): string =>
+            this.getFullName(viewModel, structureLevel);
+        viewModel.getMeetingUser = (meetingId: Id): ViewMeetingUser =>
+            this.getMeetingUser(
+                (meetingId: Id): Id => this.meetingUserRepo.getMeetingUserId(model.id, meetingId),
+                meetingId
+            );
+        viewModel.getLevelAndNumber = (): string => this.getLevelAndNumber(viewModel);
+        viewModel.getEnsuredActiveMeetingId = (): Id => this.activeMeetingIdService.meetingId;
         return viewModel;
     }
 
@@ -514,6 +508,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction<BackendImportRawPreview | void>(UserAction.PARTICIPANT_IMPORT, payload);
     }
 
+    public mergeTogether(payload: { id: number; user_ids: number[] }[]): Action<void> {
+        return this.createAction(UserAction.MERGE_TOGETHER, payload);
+    }
+
     private sanitizePayload(payload: any): any {
         const temp = { ...payload };
         for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field))) {
@@ -541,8 +539,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `about_me`,
             `number`,
             `structure_level`,
-            `default_number`,
-            `default_structure_level`
+            `member_number`
         ];
         return fields.includes(field);
     }

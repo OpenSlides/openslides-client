@@ -1,4 +1,5 @@
 @import 'src/assets/styles/variables.scss';
+@import 'src/assets/styles/mixins/detail-view-appearance.scss';
 
 .full-width {
     width: 100%;
@@ -6,6 +7,10 @@
 
 .full-height {
     height: 100%;
+}
+
+mat-card mat-card-content h3 {
+    margin-top: 0 !important;
 }
 
 .meta-info-grid {
@@ -108,4 +113,8 @@
 .search-new-speaker-form {
     padding: 15px 25px 0 25px;
     width: auto;
+}
+
+:host ::ng-deep .detail-view {
+    @include detail-view-appearance;
 }

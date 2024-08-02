@@ -1,69 +1,65 @@
-<div>
-    <div class="account-dialog-title flex-container">
-        <h2 mat-dialog-title class="left-align no-margin">{{ self?.short_name }}</h2>
-        <button mat-icon-button [matDialogClose]="null">
-            <mat-icon>close</mat-icon>
-        </button>
+<h2 class="flex-container padding-top-16" mat-dialog-title>
+    <span class="left-align no-margin">{{ self?.short_name }}</span>
+    <button mat-icon-button [matDialogClose]="null">
+        <mat-icon>close</mat-icon>
+    </button>
+</h2>
+<mat-divider></mat-divider>
+<mat-dialog-content class="account-dialog-container">
+    <div class="account-dialog-menu-items">
+        <mat-nav-list>
+            @for (item of filteredMenuItems; track item) {
+                <mat-list-item [activated]="activeMenuItem === item.name" (click)="activeMenuItem = item.name">
+                    {{ item.name | translate }}
+                </mat-list-item>
+                <mat-divider></mat-divider>
+            }
+        </mat-nav-list>
     </div>
-    <mat-divider></mat-divider>
-    <div mat-dialog-content class="account-dialog-container">
-        <div class="account-dialog-menu-items">
-            <mat-selection-list [multiple]="false">
-                <ng-container *ngFor="let item of filteredMenuItems">
-                    <mat-list-option
-                        [value]="item"
-                        [selected]="activeMenuItem === item.name"
-                        (click)="activeMenuItem = item.name"
-                    >
-                        {{ item.name | translate }}
-                    </mat-list-option>
-                    <mat-divider></mat-divider>
-                </ng-container>
-            </mat-selection-list>
-        </div>
-        <mat-divider [vertical]="true"></mat-divider>
-        <div class="account-dialog-content">
-            <div class="content-wrapper" (keydown)="onKeyDown($event)">
-                <ng-container [ngSwitch]="activeMenuItem">
-                    <ng-container
-                        *ngSwitchCase="menuItemsRef.SHOW_PROFILE"
-                        [ngTemplateOutlet]="showProfileView"
-                    ></ng-container>
-                    <ng-container
-                        *ngSwitchCase="menuItemsRef.SHOW_MEETINGS"
-                        [ngTemplateOutlet]="showMeetingsView"
-                    ></ng-container>
-                    <ng-container
-                        *ngSwitchCase="menuItemsRef.CHANGE_PASSWORD"
-                        [ngTemplateOutlet]="changePasswordView"
-                    ></ng-container>
-                </ng-container>
-            </div>
+    <mat-divider [vertical]="true"></mat-divider>
+    <div class="account-dialog-content">
+        <div class="content-wrapper" tabindex="-1" (keydown)="onKeyDown($event)">
+            @switch (activeMenuItem) {
+                @case (menuItemsRef.SHOW_PROFILE) {
+                    <ng-container [ngTemplateOutlet]="showProfileView"></ng-container>
+                }
+                @case (menuItemsRef.SHOW_MEETINGS) {
+                    <ng-container [ngTemplateOutlet]="showMeetingsView"></ng-container>
+                }
+                @case (menuItemsRef.CHANGE_PASSWORD) {
+                    <ng-container [ngTemplateOutlet]="changePasswordView"></ng-container>
+                }
+                @case (menuItemsRef.CLIENT_SETTINGS) {
+                    <ng-container [ngTemplateOutlet]="clientSettingsView"></ng-container>
+                }
+            }
         </div>
     </div>
-</div>
+</mat-dialog-content>
 
 <ng-template #showProfileView>
-    <div class="flex-container">
+    <div class="flex-container padding-0">
         <h2 class="left-align">{{ 'My profile' | translate }}</h2>
         <button mat-icon-button (click)="isEditing = !isEditing">
             <mat-icon>{{ isEditing ? 'close' : 'edit' }}</mat-icon>
         </button>
     </div>
     <os-user-detail-view
-        [user]="self"
-        [isEditing]="isEditing"
         [isAllowedFn]="isAllowedFn"
+        [isEditing]="isEditing"
         [shouldEnableFormControlFn]="shouldEnableFormControlFn"
         [useMatcard]="false"
-        (validEvent)="isUserFormValid = $event"
+        [user]="self"
         (changeEvent)="userPersonalForm = $event"
+        (validEvent)="isUserFormValid = $event"
     ></os-user-detail-view>
-    <div *ngIf="isEditing" class="margin-top-16">
-        <button mat-button [disabled]="!isUserFormValid" (click)="saveUserChanges()">
-            {{ 'Save' | translate }}
-        </button>
-    </div>
+    @if (isEditing) {
+        <div class="margin-bottom-16">
+            <button mat-button [disabled]="!isUserFormValid" (click)="saveUserChanges()">
+                {{ 'Save' | translate }}
+            </button>
+        </div>
+    }
 </ng-template>
 
 <ng-template #showMeetingsView>
@@ -72,7 +68,7 @@
         <cdk-virtual-scroll-viewport [itemSize]="50">
             <ng-container *cdkVirtualFor="let meeting of getAllMeetings()">
                 <div class="meeting-group-block">
-                    <a (click)="closeDialog()" [routerLink]="[meeting.id]">{{ meeting.name }}</a>
+                    <a [routerLink]="[meeting.id]" (click)="closeDialog()">{{ meeting.name }}</a>
                     <div class="flex-vertical-center">
                         <os-comma-separated-listing [list]="getGroupsForMeeting(meeting)">
                             <ng-template let-group>{{ group.name }}</ng-template>
@@ -88,11 +84,25 @@
     <h2>{{ 'Change password' | translate }}</h2>
     <os-password-form
         #changePasswordComponent
-        (validEvent)="isUserPasswordValid = $event"
         (changeEvent)="userPasswordForm = $event"
+        (validEvent)="isUserPasswordValid = $event"
     ></os-password-form>
     <div>
         <button mat-button [disabled]="!isUserPasswordValid" (click)="changePassword()">
+            {{ 'Save' | translate }}
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #clientSettingsView>
+    <h2>{{ 'Settings' | translate }}</h2>
+    <form [formGroup]="clientSettingsForm">
+        <mat-checkbox formControlName="disablePauseAuConnections">
+            {{ 'Disable connection closing on inactivity' | translate }}
+        </mat-checkbox>
+    </form>
+    <div>
+        <button mat-button [disabled]="!clientSettingsForm.dirty" (click)="saveClientSettings()">
             {{ 'Save' | translate }}
         </button>
     </div>

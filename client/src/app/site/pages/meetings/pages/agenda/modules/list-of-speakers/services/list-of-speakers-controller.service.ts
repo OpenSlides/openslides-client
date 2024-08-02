@@ -8,12 +8,11 @@ import { ControllerServiceCollectorService } from 'src/app/site/services/control
 import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
 
 /**
- * An object, that contains information about structure-level,
+ * An object, that contains information about
  * speaking-time and finished-speakers.
  * Helpful to get a relation between speakers and their structure-level.
  */
 export interface SpeakingTimeStructureLevelObject {
-    structureLevel: string;
     finishedSpeakers: ViewSpeaker[];
     speakingTime: number;
 }
@@ -81,10 +80,6 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
      */
     private getSpeakingTimeStructureLevelObject(speaker: ViewSpeaker): SpeakingTimeStructureLevelObject {
         return {
-            structureLevel:
-                !speaker.user || (speaker.user && !speaker.user.structure_level())
-                    ? `–`
-                    : speaker.user.structure_level(),
             finishedSpeakers: [speaker],
             speakingTime: this.getSpeakingTimeAsNumber(speaker)
         };
@@ -103,13 +98,7 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
         object: SpeakingTimeStructureLevelObject,
         list: SpeakingTimeStructureLevelObject[]
     ): SpeakingTimeStructureLevelObject[] {
-        const index = list.findIndex(entry => entry.structureLevel === object.structureLevel);
-        if (index >= 0) {
-            list[index].speakingTime += object.speakingTime;
-            list[index].finishedSpeakers.push(...object.finishedSpeakers);
-        } else {
-            list.push(object);
-        }
+        list.push(object);
         return list;
     }
 

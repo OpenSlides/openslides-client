@@ -1,17 +1,25 @@
 import { Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
+import { BaseMeetingModelRequestHandler } from 'src/app/site/pages/meetings/base/base-meeting-model-request-handler.component';
 
-import { getParticipantListSubscriptionConfig } from '../../participants.subscription';
+import {
+    getParticipantListSubscriptionConfig,
+    getSpeakersListSubscriptionConfig
+} from '../../participants.subscription';
+import { getStructureLevelListSubscriptionConfig } from '../../participants.subscription';
 
 @Component({
     selector: `os-participant-main`,
     templateUrl: `./participant-main.component.html`,
     styleUrls: [`./participant-main.component.scss`]
 })
-export class ParticipantMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onNextMeetingId(id: number | null): void {
-        if (id) {
-            this.subscribeTo(getParticipantListSubscriptionConfig(id), { hideWhenMeetingChanged: true });
-        }
+export class ParticipantMainComponent extends BaseMeetingModelRequestHandler {
+    protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {
+        return [
+            getParticipantListSubscriptionConfig(id),
+            getStructureLevelListSubscriptionConfig(id),
+            getSpeakersListSubscriptionConfig(id)
+        ];
     }
 }

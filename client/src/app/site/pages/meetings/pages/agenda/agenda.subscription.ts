@@ -9,6 +9,10 @@ import { pollModelRequest } from '../polls/polls.subscription';
 import { ViewListOfSpeakers, ViewTopic } from './modules';
 
 export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
+export const AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION = `agenda_list_minimal`;
+export const TOPIC_ITEM_SUBSCRIPTION = `topic_detail`;
+export const TOPIC_ITEM_DUPLICATE_SUBSCRIPTION = `topic_detail`;
+export const LIST_OF_SPEAKERS_SUBSCRIPTION = `los_detail`;
 
 export const agendaItemFollow: FollowList<any> = [
     {
@@ -19,16 +23,7 @@ export const agendaItemFollow: FollowList<any> = [
                 idField: `speaker_ids`,
                 fieldset: FULL_FIELDSET,
                 follow: [
-                    {
-                        idField: `meeting_user_id`,
-                        follow: [
-                            {
-                                idField: `user_id`,
-                                fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `meeting_user_ids`]
-                            }
-                        ],
-                        ...MeetingUserFieldsets.FullNameSubscription
-                    },
+                    { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription },
                     {
                         idField: `point_of_order_category_id`,
                         fieldset: FULL_FIELDSET
@@ -59,6 +54,11 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                             {
                                 idField: `list_of_speakers_id`,
                                 ...listOfSpeakersSpeakerCountSubscription
+                            },
+                            {
+                                idField: `submitter_ids`,
+                                fieldset: FULL_FIELDSET,
+                                follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
                             }
                         ]
                     }
@@ -69,8 +69,6 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
     },
     subscriptionName: AGENDA_LIST_ITEM_SUBSCRIPTION
 });
-
-export const AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION = `agenda_list_minimal`;
 
 export const getAgendaListMinimalSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -92,8 +90,6 @@ export const getAgendaListMinimalSubscriptionConfig: SubscriptionConfigGenerator
     subscriptionName: AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION
 });
 
-export const TOPIC_ITEM_SUBSCRIPTION = `topic_detail`;
-
 export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {
         viewModelCtor: ViewTopic,
@@ -109,7 +105,7 @@ export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (..
                 idField: `list_of_speakers_id`,
                 ...listOfSpeakersSpeakerCountSubscription
             },
-            { idField: `agenda_item_id`, fieldset: [`item_number`, `content_object_id`] }
+            { idField: `agenda_item_id`, fieldset: [`item_number`, `content_object_id`, `moderator_notes`] }
         ]
     },
     subscriptionName: TOPIC_ITEM_SUBSCRIPTION
@@ -121,7 +117,7 @@ export const getTopicDuplicateSubscriptionConfig: SubscriptionConfigGenerator = 
         ids,
         fieldset: FULL_FIELDSET
     },
-    subscriptionName: TOPIC_ITEM_SUBSCRIPTION
+    subscriptionName: TOPIC_ITEM_DUPLICATE_SUBSCRIPTION
 });
 
 export const listOfSpeakersSpeakerCountSubscription = {
@@ -140,8 +136,6 @@ export const listOfSpeakersSpeakerCountSubscription = {
     ]
 };
 
-export const LIST_OF_SPEAKERS_SUBSCRIPTION = `los_detail`;
-
 export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewListOfSpeakers,
@@ -154,8 +148,15 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
                 follow: [
                     {
                         idField: `meeting_user_id`,
-                        follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }],
-                        fieldset: [`number`, `structure_level`, `vote_weight`]
+                        follow: [
+                            { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
+                            { idField: `structure_level_ids`, fieldset: [`name`] }
+                        ],
+                        fieldset: [`number`, `vote_weight`]
+                    },
+                    {
+                        idField: `structure_level_list_of_speakers_id`,
+                        fieldset: FULL_FIELDSET
                     },
                     {
                         idField: `point_of_order_category_id`,
@@ -165,7 +166,18 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
             },
             {
                 idField: `content_object_id`,
-                fieldset: [`number`, `title`, ...MEETING_ROUTING_FIELDS]
+                fieldset: [`number`, `title`, ...MEETING_ROUTING_FIELDS],
+                follow: [{ idField: `agenda_item_id`, fieldset: [`moderator_notes`, `content_object_id`] }]
+            },
+            {
+                idField: `structure_level_list_of_speakers_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    {
+                        idField: `structure_level_id`,
+                        fieldset: [`name`, `color`]
+                    }
+                ]
             }
         ]
     },

@@ -1,6 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
-import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS, mergeSubscriptionFollow } from 'src/app/domain/fieldsets/misc';
+import { MeetingUserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfig, SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
@@ -57,18 +57,35 @@ export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfi
                                 idField: `speaker_ids`,
                                 fieldset: FULL_FIELDSET,
                                 follow: [
+                                    mergeSubscriptionFollow(
+                                        {
+                                            idField: `meeting_user_id`,
+                                            follow: [
+                                                {
+                                                    idField: `structure_level_ids`,
+                                                    fieldset: [`name`, `color`]
+                                                }
+                                            ]
+                                        },
+                                        { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
+                                    ),
                                     {
-                                        idField: `meeting_user_id`,
-                                        follow: [
-                                            {
-                                                idField: `user_id`,
-                                                fieldset: [
-                                                    ...UserFieldsets.FullNameSubscription.fieldset,
-                                                    `meeting_user_ids`
-                                                ]
-                                            }
-                                        ],
-                                        ...MeetingUserFieldsets.FullNameSubscription
+                                        idField: `structure_level_list_of_speakers_id`,
+                                        fieldset: FULL_FIELDSET
+                                    }
+                                ]
+                            },
+                            {
+                                idField: `structure_level_list_of_speakers_ids`,
+                                fieldset: FULL_FIELDSET
+                            },
+                            {
+                                idField: `content_object_id`,
+                                fieldset: [],
+                                follow: [
+                                    {
+                                        idField: `agenda_item_id`,
+                                        fieldset: [`item_number`, `moderator_notes`, `content_object_id`]
                                     }
                                 ]
                             }

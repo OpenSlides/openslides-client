@@ -18,7 +18,10 @@ import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchResponseEntry } fr
     providedIn: `root`
 })
 export class GlobalSearchService {
-    public constructor(private http: HttpService, private activeMeeting: ActiveMeetingService) {}
+    public constructor(
+        private http: HttpService,
+        private activeMeeting: ActiveMeetingService
+    ) {}
 
     public async searchChange(
         searchTerm: string,
@@ -38,7 +41,7 @@ export class GlobalSearchService {
             params.c = reqCollections.join(`,`);
         }
 
-        const rawResults: GlobalSearchResponse = await this.http.get(`/system/search`, null, params);
+        const rawResults: GlobalSearchResponse = await this.http.get(`/system/search`, null, { queryParams: params });
 
         this.updateScores(rawResults);
         this.parseFragments(rawResults, searchTerm);
@@ -56,7 +59,7 @@ export class GlobalSearchService {
         };
     }
 
-    public getTitle(collection: string, content: any) {
+    public getTitle(collection: string, content: any): string {
         if (collection === `user`) {
             const firstName = content.first_name?.trim() || ``;
             const lastName = content.last_name?.trim() || ``;
@@ -166,7 +169,20 @@ export class GlobalSearchService {
         results[addToFqid].matched_by_fqids.push(fqid);
     }
 
-    private getResult(fqid: Fqid, results: GlobalSearchResponse) {
+    private getResult(
+        fqid: Fqid,
+        results: GlobalSearchResponse
+    ): {
+        title: string;
+        text: string;
+        obj: any;
+        fqid: string;
+        collection: string;
+        url: string;
+        meeting: any;
+        committee: any;
+        score: number;
+    } {
         const content = results[fqid].content;
         const collection = collectionFromFqid(fqid);
         const id = content.sequential_number || idFromFqid(fqid);
@@ -190,7 +206,7 @@ export class GlobalSearchService {
         };
     }
 
-    private getText(collection: string, result: GlobalSearchResponseEntry, results: GlobalSearchResponse) {
+    private getText(collection: string, result: GlobalSearchResponseEntry, results: GlobalSearchResponse): string {
         const content = result.content;
         if (
             collection === Motion.COLLECTION &&

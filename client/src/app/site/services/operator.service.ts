@@ -1,6 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, debounceTime, Observable, Subject } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    debounceTime,
+    distinctUntilChanged,
+    Observable,
+    startWith,
+    Subject
+} from 'rxjs';
+import { DelegationSetting, delegationSettings } from 'src/app/domain/definitions/delegation-setting';
 import { UserFieldsets } from 'src/app/domain/fieldsets/user';
+import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
@@ -16,6 +27,7 @@ import { GroupControllerService } from '../pages/meetings/pages/participants';
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 import { NoActiveMeetingError } from '../pages/meetings/services/active-meeting-id.service';
 import { MeetingControllerService } from '../pages/meetings/services/meeting-controller.service';
+import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
 import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate';
@@ -73,6 +85,10 @@ export class OperatorService {
         return this.hasOrganizationPermissions(OML.can_manage_organization);
     }
 
+    public get isAccountAdmin(): boolean {
+        return this.hasOrganizationPermissions(OML.can_manage_users);
+    }
+
     private get isCommitteeManager(): boolean {
         return !!(this.user.committee_management_ids || []).length;
     }
@@ -108,6 +124,10 @@ export class OperatorService {
      */
     public get operatorUpdated(): Observable<void> {
         return this._operatorUpdatedSubject;
+    }
+
+    public get delegationSettingsUpdated(): Observable<void> {
+        return this._delegationSettingsUpdatedSubject;
     }
 
     public get operatorShortNameObservable(): Observable<string | null> {
@@ -176,6 +196,8 @@ export class OperatorService {
         null
     );
 
+    private readonly _delegationSettingsUpdatedSubject = new Subject<void>();
+
     private readonly _userSubject = new BehaviorSubject<ViewUser | null>(null);
     private readonly _operatorReadySubject = new BehaviorSubject<boolean>(false);
 
@@ -218,10 +240,12 @@ export class OperatorService {
         private authService: AuthService,
         private lifecycle: LifecycleService,
         private userRepo: UserRepositoryService,
+        private meetingUserRepo: MeetingUserRepositoryService,
         private groupRepo: GroupControllerService,
         private autoupdateService: AutoupdateService,
         private modelRequestBuilder: ModelRequestBuilderService,
-        private meetingRepo: MeetingControllerService
+        private meetingRepo: MeetingControllerService,
+        private meetingSettings: MeetingSettingsService
     ) {
         this.setNotReady();
         // General environment in which the operator moves
@@ -279,6 +303,18 @@ export class OperatorService {
                 this._operatorUpdatedSubject.next();
             }
         });
+        this.meetingUserRepo.getGeneralViewModelObservable().subscribe(mUser => {
+            if (mUser !== undefined && this.operatorId === mUser.user_id) {
+                const user = mUser.user;
+                if (user) {
+                    this._shortName = this.userRepo.getShortName(user);
+                    this.updateUser(user);
+                    this._operatorShortNameSubject.next(this._shortName);
+                    this._userSubject.next(user);
+                }
+                this._operatorUpdatedSubject.next();
+            }
+        });
         this.groupRepo.getGeneralViewModelObservable().subscribe(group => {
             if (!this.activeMeetingId || !group) {
                 return;
@@ -318,6 +354,13 @@ export class OperatorService {
                     this._groupsLoadedDeferred.resolve();
                 }
             });
+        combineLatest(
+            Object.values(delegationSettings).map(setting =>
+                this.meetingSettings.get(setting as keyof Settings).pipe(startWith(null))
+            )
+        )
+            .pipe(distinctUntilChanged())
+            .subscribe(() => this._delegationSettingsUpdatedSubject.next());
     }
 
     public isInMeeting(meetingId: Id): boolean {
@@ -438,7 +481,7 @@ export class OperatorService {
 
         if (operatorRequest && !this._currentOperatorDataSubscription) {
             // Do not wait for the subscription to be done...
-            (async () => {
+            (async (): Promise<void> => {
                 console.log(`operator: Do operator model request`, operatorRequest);
                 console.log(
                     `operator: configuration: meeting`,
@@ -537,6 +580,13 @@ export class OperatorService {
         return checkPerms.some(permission => groups.some(group => group.hasPermission(permission)));
     }
 
+    public isAllowedWithDelegation(...appliedSettings: DelegationSetting[]): boolean {
+        return (
+            !this.user.getMeetingUser(this.activeMeetingId)?.vote_delegated_to_id ||
+            !appliedSettings.some(appliedSetting => this.meetingSettings.instant(appliedSetting as keyof Settings))
+        );
+    }
+
     /**
      * Checks, if the own OML is equals or higher than at least one of the given permissions.
      *
@@ -582,6 +632,10 @@ export class OperatorService {
         }
         const currentCommitteePermission = cmlNameMapping[(this._CML || {})[committeeId]] || 0;
         return permissionsToCheck.some(permission => currentCommitteePermission >= cmlNameMapping[permission]);
+    }
+
+    public isAnyCommitteeAdmin(): boolean {
+        return !!this._CML && !!Object.keys(this._CML).length;
     }
 
     /**
@@ -695,6 +749,16 @@ export class OperatorService {
                         idField: `meeting_user_ids`,
                         fieldset: `all`,
                         follow: [
+                            {
+                                idField: `vote_delegated_to_id`,
+                                fieldset: [`meeting_id`, `group_ids`],
+                                follow: [
+                                    {
+                                        idField: `user_id`,
+                                        fieldset: UserFieldsets.FullNameSubscription.fieldset.concat(`meeting_user_ids`)
+                                    }
+                                ]
+                            },
                             {
                                 idField: `vote_delegations_from_ids`,
                                 fieldset: [`meeting_id`, `group_ids`],

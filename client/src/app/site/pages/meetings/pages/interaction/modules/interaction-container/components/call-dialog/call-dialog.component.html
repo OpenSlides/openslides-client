@@ -1,54 +1,56 @@
 <!-- iFrame Dialog -->
 <div class="jitsi-fake-dialog-wrapper" [ngClass]="{ 'dialog-mobile': (isMobile | async) }">
-    <mat-card class="jitsi-fake-dialog">
-        <div class="jitsi-dialog-actions">
-            <span>
-                <a
-                    mat-icon-button
-                    type="button"
-                    color="primary"
-                    matTooltip="{{ 'Open Jitsi in new tab' | translate }}"
-                    target="_blank"
-                    (click)="hangUp()"
-                    [href]="jitsiMeetUrl | async"
-                    *osPerms="permission.listOfSpeakersCanManage"
-                >
-                    <mat-icon>open_in_new</mat-icon>
-                </a>
-            </span>
-            <span class="right">
-                <button
-                    mat-icon-button
-                    type="button"
-                    color="primary"
-                    matTooltip="{{ 'Minimize' | translate }}"
-                    (click)="hideDialog()"
-                >
-                    <mat-icon>minimize</mat-icon>
-                </button>
+    <mat-card>
+        <mat-card-content>
+            <div class="action-title">
+                <span>
+                    <a
+                        *osPerms="permission.listOfSpeakersCanManage"
+                        color="primary"
+                        mat-icon-button
+                        target="_blank"
+                        type="button"
+                        [href]="jitsiMeetUrl | async"
+                        matTooltip="{{ 'Open Jitsi in new tab' | translate }}"
+                        (click)="hangUp()"
+                    >
+                        <mat-icon>open_in_new</mat-icon>
+                    </a>
+                </span>
+                <span class="right">
+                    <button
+                        color="primary"
+                        mat-icon-button
+                        type="button"
+                        matTooltip="{{ 'Minimize' | translate }}"
+                        (click)="hideDialog()"
+                    >
+                        <mat-icon>minimize</mat-icon>
+                    </button>
 
-                <!-- does not exist yet -->
-                <!-- <button
-                    mat-icon-button
-                    type="button"
-                    color="primary"
-                    matTooltip="{{ 'Full screen' | translate }}"
-                    (click)="fullScreen()()"
-                >
-                    <mat-icon>fullscreen</mat-icon>
-                </button> -->
+                    <!-- does not exist yet -->
+                    <!-- <button
+                        mat-icon-button
+                        type="button"
+                        color="primary"
+                        matTooltip="{{ 'Full screen' | translate }}"
+                        (click)="fullScreen()()"
+                    >
+                        <mat-icon>fullscreen</mat-icon>
+                    </button> -->
 
-                <button
-                    mat-icon-button
-                    type="button"
-                    color="primary"
-                    matTooltip="{{ 'Exit conference room' | translate }}"
-                    (click)="hangUp()"
-                >
-                    <mat-icon>close</mat-icon>
-                </button>
-            </span>
-        </div>
-        <div class="jitsi-iframe-wrapper" #jitsi></div>
+                    <button
+                        color="primary"
+                        mat-icon-button
+                        type="button"
+                        matTooltip="{{ 'Exit conference room' | translate }}"
+                        (click)="hangUp()"
+                    >
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </span>
+            </div>
+            <div #jitsi class="jitsi-iframe-wrapper"></div>
+        </mat-card-content>
     </mat-card>
 </div>

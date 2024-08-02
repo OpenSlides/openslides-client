@@ -1,52 +1,79 @@
-<ng-container
-    *ngFor="let poll of polls; trackBy: identifyPoll"
-    [ngTemplateOutlet]="pollArea"
-    [ngTemplateOutletContext]="{ poll: poll, last: false }"
-></ng-container>
+@if (!disableRunning) {
+    @for (poll of polls; track identifyPoll($index, poll)) {
+        <ng-container
+            [ngTemplateOutlet]="pollArea"
+            [ngTemplateOutletContext]="{ poll: poll, last: false }"
+        ></ng-container>
+    }
+}
+@if (lastPublishedPoll && !hasProjectedModelOpenPolls && !disableFinished) {
+    <ng-container
+        [ngTemplateOutlet]="pollArea"
+        [ngTemplateOutletContext]="{ poll: lastPublishedPoll, last: true }"
+    ></ng-container>
+}
 
-<ng-container
-    *ngIf="lastPublishedPoll && !hasProjectedModelOpenPolls"
-    [ngTemplateOutlet]="pollArea"
-    [ngTemplateOutletContext]="{ poll: lastPublishedPoll, last: true }"
-></ng-container>
-
-<ng-template #pollArea let-poll="poll" let-last="last">
+<ng-template #pollArea let-last="last" let-poll="poll">
     <mat-card class="os-card">
-        <p>
-            <a [routerLink]="poll.getDetailStateUrl()" [state]="{ back: 'true' }" class="subtitle-text">
-                {{ getPollVoteTitle(poll) }}
-            </a>
-            <br />
-            <i *ngIf="canManagePoll(poll) && poll.isFinished" class="small">
-                {{ 'finished (unpublished)' | translate }}
-            </i>
-        </p>
+        <mat-card-content>
+            <p>
+                <a class="subtitle-text" [routerLink]="poll.getDetailStateUrl()" [state]="{ back: 'true' }">
+                    {{ getPollVoteTitle(poll) }}
+                </a>
+                <br />
+                @if (canManagePoll(poll) && poll.isFinished) {
+                    <i class="small">
+                        {{ 'finished (unpublished)' | translate }}
+                    </i>
+                }
+            </p>
 
-        <os-poll-progress *ngIf="poll.canBeVotedFor()" [poll]="poll"></os-poll-progress>
-
-        <div *ngIf="poll.isMotionPoll">
-            <os-motion-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor() && !last"></os-motion-poll-vote>
-            <os-motion-poll-detail-content [poll]="lastPublishedPoll" *ngIf="last"></os-motion-poll-detail-content>
-        </div>
-
-        <div *ngIf="poll.isAssignmentPoll">
-            <os-assignment-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor() && !last"></os-assignment-poll-vote>
-            <os-assignment-poll-detail-content
-                [poll]="lastPublishedPoll"
-                *ngIf="last"
-            ></os-assignment-poll-detail-content>
-            <os-assignment-poll-meta-info
-                [poll]="poll"
-                [shortenList]="true"
-                [showCandidates]="poll.isListPoll"
-                [showStats]="false"
-                *ngIf="poll.isListPoll"
-            ></os-assignment-poll-meta-info>
-        </div>
-
-        <div *ngIf="poll.isTopicPoll">
-            <os-topic-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor() && !last"></os-topic-poll-vote>
-            <os-topic-poll-detail-content [poll]="lastPublishedPoll" *ngIf="last"></os-topic-poll-detail-content>
-        </div>
+            @if (poll.canBeVotedFor()) {
+                <os-poll-progress [poll]="poll"></os-poll-progress>
+            }
+            @if (poll.isMotionPoll) {
+                <div>
+                    @if (poll.canBeVotedFor() && !last) {
+                        <os-motion-poll-vote
+                            [displayInAutopilot]="displayInAutopilot"
+                            [poll]="poll"
+                        ></os-motion-poll-vote>
+                    }
+                    @if (last) {
+                        <os-motion-poll-detail-content [poll]="lastPublishedPoll"></os-motion-poll-detail-content>
+                    }
+                </div>
+            }
+            @if (poll.isAssignmentPoll) {
+                <div>
+                    @if (poll.canBeVotedFor() && !last) {
+                        <os-assignment-poll-vote [poll]="poll"></os-assignment-poll-vote>
+                    }
+                    @if (last) {
+                        <os-assignment-poll-detail-content
+                            [poll]="lastPublishedPoll"
+                        ></os-assignment-poll-detail-content>
+                    }
+                    @if (poll.isListPoll) {
+                        <os-assignment-poll-meta-info
+                            [poll]="poll"
+                            [shortenList]="true"
+                            [showCandidates]="poll.isListPoll"
+                            [showStats]="false"
+                        ></os-assignment-poll-meta-info>
+                    }
+                </div>
+            }
+            @if (poll.isTopicPoll) {
+                <div>
+                    @if (poll.canBeVotedFor() && !last) {
+                        <os-topic-poll-vote [poll]="poll"></os-topic-poll-vote>
+                    }
+                    @if (last) {
+                        <os-topic-poll-detail-content [poll]="lastPublishedPoll"></os-topic-poll-detail-content>
+                    }
+                </div>
+            }
+        </mat-card-content>
     </mat-card>
 </ng-template>

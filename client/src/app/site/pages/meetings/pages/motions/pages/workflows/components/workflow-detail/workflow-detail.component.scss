@@ -5,12 +5,6 @@
 }
 
 table {
-    .mat-header-cell,
-    .mat-cell {
-        min-width: 200px;
-        position: relative;
-    }
-
     .has-help-text {
         cursor: help;
         &:hover {
@@ -42,7 +36,7 @@ table {
     }
 }
 
-.mat-chip:hover {
+.mat-mdc-chip:hover {
     cursor: pointer;
 }
 

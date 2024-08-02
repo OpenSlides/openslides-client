@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
@@ -34,7 +34,7 @@ export class MeetingComponentServiceCollectorService {
         return this.componentServiceCollector.router;
     }
 
-    constructor(
+    public constructor(
         private componentServiceCollector: ComponentServiceCollectorService,
         public activeMeetingIdService: ActiveMeetingIdService,
         public activeMeetingService: ActiveMeetingService,

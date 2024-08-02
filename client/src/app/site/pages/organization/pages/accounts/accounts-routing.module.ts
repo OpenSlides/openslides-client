@@ -14,6 +14,22 @@ const routes: Routes = [
                 loadChildren: () => import(`./pages/account-list/account-list.module`).then(m => m.AccountListModule)
             },
             {
+                path: `meeting/:meetingId`,
+                children: [
+                    {
+                        path: ``,
+                        pathMatch: `full`,
+                        loadChildren: () =>
+                            import(`./pages/account-list/account-list.module`).then(m => m.AccountListModule)
+                    },
+                    {
+                        path: `:id`,
+                        loadChildren: () =>
+                            import(`./pages/account-detail/account-detail.module`).then(m => m.AccountDetailModule)
+                    }
+                ]
+            },
+            {
                 path: `create`,
                 loadChildren: () =>
                     import(`./pages/account-detail/account-detail.module`).then(m => m.AccountDetailModule)

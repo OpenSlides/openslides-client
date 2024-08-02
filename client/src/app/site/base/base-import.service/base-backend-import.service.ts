@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -160,7 +160,7 @@ export abstract class BaseBackendImportService implements BackendImportService {
      * strings
      */
     public constructor(private importServiceCollector: ImportServiceCollectorService) {
-        this._reader.onload = (event: FileReaderProgressEvent) => {
+        this._reader.onload = (event: FileReaderProgressEvent): void => {
             this.parseInput(event.target?.result as string);
         };
     }

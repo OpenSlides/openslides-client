@@ -8,11 +8,10 @@ import {
     OnInit,
     Output,
     TemplateRef,
-    ViewChild,
-    ViewEncapsulation
+    ViewChild
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -56,7 +55,6 @@ const SUBSCRIPTION_NAME = `file_list_subscription`;
     selector: `os-file-list`,
     templateUrl: `./file-list.component.html`,
     styleUrls: [`./file-list.component.scss`],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileListComponent extends BaseUiComponent implements OnInit, OnDestroy {
@@ -88,6 +86,9 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     public set hiddenInMobile(cols: string[]) {
         this._hiddenInMobile = [`indicator`, ...cols];
     }
+
+    @Input()
+    public isInMeeting = true;
 
     @Input()
     public addBottomSpacer = false;
@@ -223,7 +224,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         }
     }
 
-    public onSelectedRowsChange(files: ViewMediafile[]) {
+    public onSelectedRowsChange(files: ViewMediafile[]): void {
         this.selected.emit({ files });
     }
 
@@ -295,7 +296,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     }
 
     private updateView(nextFiles: ViewMediafile[] = this.currentFileList): void {
-        const defaultSortFn = (fileA: ViewMediafile, fileB: ViewMediafile) => {
+        const defaultSortFn = (fileA: ViewMediafile, fileB: ViewMediafile): number => {
             if (fileA.is_directory && !fileB.is_directory) {
                 return -1;
             }

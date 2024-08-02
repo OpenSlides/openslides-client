@@ -3,10 +3,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
-import { accountHeadersAndVerboseNames } from '../../definitions';
+import { accountColumns, accountHeadersAndVerboseNames } from '../../definitions';
 import { AccountImportService } from '../../services/account-import.service/account-import.service';
 
 @Component({
@@ -15,9 +14,9 @@ import { AccountImportService } from '../../services/account-import.service/acco
     styleUrls: [`./account-import-list.component.scss`]
 })
 export class AccountImportListComponent extends BaseViaBackendImportListComponent {
-    public possibleFields = Object.keys(accountHeadersAndVerboseNames);
+    public possibleFields = accountColumns;
 
-    public columns: ImportListHeaderDefinition[] = Object.keys(accountHeadersAndVerboseNames).map(header => ({
+    public columns: ImportListHeaderDefinition[] = this.possibleFields.map(header => ({
         property: header,
         label: (<any>accountHeadersAndVerboseNames)[header],
         isTableColumn: true,
@@ -25,12 +24,11 @@ export class AccountImportListComponent extends BaseViaBackendImportListComponen
     }));
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public override importer: AccountImportService,
         public orgaSettings: OrganizationSettingsService
     ) {
-        super(componentServiceCollector, translate, importer);
+        super(importer);
     }
 
     private getTranslatedGenderInfoObservable(): Observable<string> {

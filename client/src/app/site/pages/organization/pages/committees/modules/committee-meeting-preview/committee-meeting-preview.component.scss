@@ -1,61 +1,24 @@
-.meeting-prev {
-    margin: 0 auto;
-    padding: 0;
-    max-width: 800px;
-    position: relative;
+@import 'src/assets/styles/mixins/button.scss';
 
-    .mat-card-header {
-        min-height: 40px;
-        display: flex !important;
-
-        .mat-card-header-text {
-            flex: 1;
-            margin-top: auto !important;
-            margin-bottom: auto !important;
-
-            .mat-card-title {
-                margin: 0;
-            }
-        }
-
-        .align-right {
-            min-width: 40px;
-        }
+.smaller-badge-text {
+    .mat-badge-content {
+        font-size: 9px;
     }
+}
 
-    .mat-card-content {
-        margin-top: 1em;
-
-        .date-loc {
-            display: flex;
-            font-size: large;
-            margin-bottom: 0.5em;
-        }
-    }
-
-    .mat-card-actions {
-        padding-bottom: 15px;
-    }
-
-    .user-footer {
-        position: absolute;
-        right: 0.5em;
-        bottom: 0;
-    }
-
-    .smaller-badge-text {
-        .mat-badge-content {
-            font-size: 9px;
-        }
-    }
+.user-footer {
+    position: absolute;
+    right: 0.5em;
+    bottom: 0;
 }
 
 .prev-content {
     padding: 0 20px;
+    margin-top: 14px;
 }
 
 .archived-label {
-    padding: 6px;
+    padding: 4px;
     border: 1px solid;
     border-radius: 4px;
 }
@@ -66,5 +29,18 @@
     text-align: center;
     .mat-icon {
         vertical-align: middle;
+    }
+}
+
+.os-mat-card-header {
+    padding-top: 6px;
+    padding-right: 0;
+}
+
+.committee-card-menu {
+    display: flex;
+    align-items: center;
+    .mat-mdc-icon-button {
+        @include custom-size-button(40px, 24px);
     }
 }

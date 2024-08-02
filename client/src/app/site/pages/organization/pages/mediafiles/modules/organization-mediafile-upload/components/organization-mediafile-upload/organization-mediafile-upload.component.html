@@ -1,26 +1,28 @@
-<os-head-bar [nav]="false" [goBack]="true">
+<os-head-bar [goBack]="true" [nav]="false">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'New file' | translate }}</h2>
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="uploadMenu">
+    <ng-container class="menu-slot">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="uploadMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 </os-head-bar>
 
 <mat-card class="os-card">
-    <os-media-upload-content
-        [parallel]="parallel"
-        [directoryId]="directoryId"
-        [directories]="directoriesObservable"
-        [uploadFn]="uploadFn"
-        (uploadSuccessEvent)="uploadSuccess($event)"
-        (errorEvent)="showError($event)"
-    ></os-media-upload-content>
+    <mat-card-content>
+        <os-media-upload-content
+            [directories]="directoriesObservable"
+            [directoryId]="directoryId"
+            [parallel]="parallel"
+            [uploadFn]="uploadFn"
+            (errorEvent)="showError($event)"
+            (uploadSuccessEvent)="uploadSuccess($event)"
+        ></os-media-upload-content>
+    </mat-card-content>
 </mat-card>
 
 <mat-menu #uploadMenu="matMenu">

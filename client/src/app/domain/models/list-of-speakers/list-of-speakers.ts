@@ -16,6 +16,8 @@ export class ListOfSpeakers extends BaseModel<ListOfSpeakers> {
     public content_object_id!: Fqid; // */list_of_speakers_id;
     public speaker_ids!: Id[]; // (speaker/list_of_speakers_id)[];
 
+    public structure_level_list_of_speakers_ids: Id[]; // (structure_level_list_of_speakers/list_of_speakers_id)[];
+
     public constructor(input?: any) {
         super(ListOfSpeakers.COLLECTION, input);
     }
@@ -26,6 +28,7 @@ export class ListOfSpeakers extends BaseModel<ListOfSpeakers> {
         `sequential_number`,
         `content_object_id`,
         `speaker_ids`,
+        `structure_level_list_of_speakers_ids`,
         `projection_ids`,
         `meeting_id`
     ];

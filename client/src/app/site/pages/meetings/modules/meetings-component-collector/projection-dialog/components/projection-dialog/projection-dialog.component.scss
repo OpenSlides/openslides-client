@@ -8,25 +8,9 @@ h3 {
     margin-bottom: 10px;
 }
 
-mat-dialog-content {
-    overflow: inherit;
-    min-width: auto;
-
-    .content-wrapper {
-        max-height: 400px;
-        overflow: auto;
-    }
-
-    div.projectors {
-        padding: 15px 0;
-
-        mat-checkbox {
-            padding: 0 10px;
-        }
-
-        .right {
-            float: right;
-            padding-right: 10px;
-        }
-    }
+div.projectors {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
 }

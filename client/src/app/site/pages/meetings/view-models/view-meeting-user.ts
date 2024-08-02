@@ -5,7 +5,10 @@ import { ViewSpeaker } from '../pages/agenda';
 import { ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatMessage } from '../pages/chat';
 import { ViewMotion, ViewMotionSubmitter, ViewPersonalNote } from '../pages/motions';
+import { ViewMotionEditor } from '../pages/motions/modules/editors';
+import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
 import { ViewGroup } from '../pages/participants';
+import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
 import { ViewVote } from '../pages/polls';
 import { ViewMeeting } from './view-meeting';
 import { ViewUser } from './view-user';
@@ -15,6 +18,10 @@ export class ViewMeetingUser extends BaseViewModel<MeetingUser> {
 
     public get meeting_user(): MeetingUser {
         return this._model;
+    }
+
+    public structureLevels(): string {
+        return (this.structure_levels || []).map(sl => sl.name).join(`, `);
     }
 }
 interface IMeetingUserRelations {
@@ -27,8 +34,11 @@ interface IMeetingUserRelations {
     personal_notes: ViewPersonalNote[];
     supported_motions: ViewMotion[];
     submitted_motions: ViewMotionSubmitter[];
+    motion_editors: ViewMotionEditor[];
+    motion_working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     vote_delegated_to: ViewMeetingUser;
     vote_delegations_from: ViewMeetingUser[];
     vote_delegated_votes: ViewVote[];
+    structure_levels: ViewStructureLevel[];
 }
 export interface ViewMeetingUser extends MeetingUser, IMeetingUserRelations {}

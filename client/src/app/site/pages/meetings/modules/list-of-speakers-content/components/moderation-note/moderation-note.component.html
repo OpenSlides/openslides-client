@@ -1,0 +1,53 @@
+<!-- Moderator Note-->
+@if (agendaItem && canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))) {
+    <mat-card class="spacer-bottom-60 os-card">
+        <mat-card-content>
+            <!-- Title edit/save/cancle-->
+            <div class="action-title">
+                <p class="subtitle-text" translate>Moderation note</p>
+                @if (canManageModerationNote) {
+                    <div class="buttons">
+                        @if (isEditing) {
+                            <button
+                                color="warn"
+                                mat-icon-button
+                                matTooltip="{{ 'Save' | translate }}"
+                                (click)="saveChangesModerationNote()"
+                            >
+                                <mat-icon>done</mat-icon>
+                            </button>
+                            <button
+                                mat-icon-button
+                                matTooltip="{{ 'Cancel edit' | translate }}"
+                                (click)="toggleEditModeratorNote()"
+                            >
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        }
+                        @if (!isEditing) {
+                            <button
+                                mat-icon-button
+                                matTooltip="{{ 'Edit moderation note' | translate }}"
+                                (click)="toggleEditModeratorNote()"
+                            >
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+            @if (!isEditing) {
+                <div class="app-content underlined-links">
+                    @if (moderatorNotes | async; as moderatorNoteText) {
+                        <div [innerHTML]="moderatorNoteText | trust: 'html'"></div>
+                    }
+                </div>
+            }
+            @if (isEditing) {
+                <form [formGroup]="moderatorNoteForm">
+                    <os-editor formControlName="moderator_notes"></os-editor>
+                </form>
+            }
+        </mat-card-content>
+    </mat-card>
+}

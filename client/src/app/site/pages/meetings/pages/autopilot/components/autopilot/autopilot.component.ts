@@ -1,5 +1,8 @@
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
@@ -7,13 +10,14 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from '../../../../services/meeting-component-service-collector.service';
 import { ViewListOfSpeakers } from '../../../agenda';
 import { CurrentListOfSpeakersService } from '../../../agenda/modules/list-of-speakers/services/current-list-of-speakers.service';
 import { ListOfSpeakersControllerService } from '../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 import { HasPolls } from '../../../polls';
 import { ViewProjection, ViewProjector } from '../../../projectors';
 import { ProjectorControllerService } from '../../../projectors/services/projector-controller.service';
+import { AutopilotService } from '../../services/autopilot.service';
+import { AutopilotSettingsComponent } from '../autopilot-settings/autopilot-settings.component';
 
 @Component({
     selector: `os-autopilot`,
@@ -94,29 +98,53 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         }
     }
 
+    public get numDisabledElements(): number {
+        return Object.values(this.disabledContentElements).filter(v => v).length;
+    }
+
+    public structureLevelCountdownEnabled = false;
+
+    public disabledContentElements: { [key: string]: boolean } = {};
+
+    public showRightCol: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
     private _currentProjection: ViewProjection | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private operator: OperatorService,
+        private autopilotService: AutopilotService,
         projectorRepo: ProjectorControllerService,
         closService: CurrentListOfSpeakersService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService
+        private listOfSpeakersRepo: ListOfSpeakersControllerService,
+        breakpoint: BreakpointObserver,
+        private dialog: MatDialog
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
+            this.autopilotService.disabledContentElements.subscribe(keys => {
+                this.disabledContentElements = keys || {};
+            }),
             projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {
                 if (refProjector) {
                     this.projector = refProjector;
                     const currentProjections = refProjector.nonStableCurrentProjections;
-                    this._currentProjection = currentProjections.length > 0 ? currentProjections[0] : null;
+                    this._currentProjection =
+                        currentProjections.length > 0 && !!currentProjections[0].meeting_id
+                            ? currentProjections[0]
+                            : null;
                     this.projectedViewModel = this._currentProjection?.content_object || null;
                 }
             }),
             closService.currentListOfSpeakersObservable.subscribe(clos => {
                 this.listOfSpeakers = clos;
+            }),
+            this.meetingSettingsService
+                .get(`list_of_speakers_default_structure_level_time`)
+                .subscribe(time => (this.structureLevelCountdownEnabled = time > 0)),
+            breakpoint.observe([`(min-width: 1050px)`]).subscribe((state: BreakpointState) => {
+                this.showRightCol.next(state.matches);
             })
         );
     }
@@ -131,5 +159,13 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public async readdLastSpeaker(): Promise<void> {
         await this.listOfSpeakersRepo.readdLastSpeaker(this.listOfSpeakers!).catch(this.raiseError);
+    }
+
+    public get hasCurrentProjection(): boolean {
+        return !!this._currentProjection;
+    }
+
+    public customizeAutopilot(): void {
+        this.dialog.open(AutopilotSettingsComponent);
     }
 }

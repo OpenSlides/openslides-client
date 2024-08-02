@@ -1,18 +1,22 @@
-<os-head-bar [nav]="false" [multiSelectMode]="isMultiSelect">
+<os-head-bar [multiSelectMode]="isMultiSelect" [nav]="false">
     <!-- Title -->
     <div class="title-slot">
-        <h2 *ngIf="parentMotion | async">
-            {{ 'Amendments to' | translate }}
-            {{ (parentMotion | async)?.numberOrTitle }}
-        </h2>
-        <h2 *ngIf="(parentMotion | async) === null">
-            {{ 'Amendments' | translate }}
-        </h2>
+        @if (parentMotion | async) {
+            <h2>
+                {{ 'Amendments to' | translate }}
+                {{ (parentMotion | async)?.numberOrTitle }}
+            </h2>
+        }
+        @if ((parentMotion | async) === null) {
+            <h2>
+                {{ 'Amendments' | translate }}
+            </h2>
+        }
     </div>
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="amendmentListMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="amendmentListMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -24,138 +28,159 @@
     </ng-container>
 </os-head-bar>
 
-<os-projectable-list
-    *ngIf="ready"
-    [listObservableProvider]="amendmentRepo"
-    [sortService]="amendmentSortService"
-    [filterService]="amendmentFilterService"
-    [filterProps]="filterProps"
-    [multiSelect]="isMultiSelect"
-    [hiddenInMobile]="['summary']"
-    [(selectedRows)]="selectedRows"
->
-    <!-- Meta -->
-    <div *osScrollingTableCell="'meta'; row as motion" class="cell-slot fill">
-        <os-detail-view-navigator *ngIf="!isMultiSelect" [model]="motion"></os-detail-view-navigator>
-        <div class="innerTable">
-            <!-- number and line -->
-            <div class="title-line one-line">
-                <!-- Is Favorite -->
-                <span *ngIf="motion.getPersonalNote()?.star" class="favorite-star">
-                    <mat-icon inline>star</mat-icon>
-                </span>
-
-                <!-- Has File -->
-                <span class="icon-prefix" *ngIf="motion.hasAttachments()">
-                    <mat-icon>attach_file</mat-icon>
-                </span>
-
-                <span>{{ motion.number }}</span>
-                <span *ngIf="getChangedLinesFromAmendment(motion)">
-                    <span *ngIf="motion.number">&nbsp;&middot;&nbsp;</span>
-                    <span>{{ 'Line' | translate }}</span>
-                    <span>&nbsp;{{ getChangedLinesFromAmendment(motion) }}</span>
-                </span>
-            </div>
-
-            <!-- Submitter -->
-            <div class="submitters-line one-line">
-                <span *ngIf="motion.submitters.length">
-                    <span>{{ 'by' | translate }}</span>
-                    {{ motion.submitters }}
-                </span>
-
-                <span *ngIf="showSequentialNumber">
-                    <span *ngIf="motion.submitters.length">&middot;</span>
-                    <span>{{ 'Sequential number' | translate }}</span>
-                    {{ motion.sequential_number }}
-                </span>
-            </div>
-
-            <!-- State -->
-            <div>
-                <mat-basic-chip *ngIf="motion.state" [ngClass]="motion.stateCssColor" [disabled]="true">
-                    {{ motionService.getExtendedStateLabel(motion) }}
-                </mat-basic-chip>
-            </div>
-
-            <!--  Reco -->
-            <div class="spacer-top-3" *ngIf="motion.recommendation && motion.state.next_state_ids?.length > 0">
-                <mat-basic-chip class="bluegrey" [disabled]="true">
-                    {{ motionService.getExtendedRecommendationLabel(motion) }}
-                </mat-basic-chip>
+@if (ready) {
+    <os-projectable-list
+        [filterProps]="filterProps"
+        [filterService]="amendmentFilterService"
+        [hiddenInMobile]="['summary']"
+        [listObservableProvider]="amendmentRepo"
+        [multiSelect]="isMultiSelect"
+        [sortService]="amendmentSortService"
+        [(selectedRows)]="selectedRows"
+    >
+        <!-- Meta -->
+        <div *osScrollingTableCell="'meta'; row as motion" class="cell-slot fill">
+            @if (!isMultiSelect) {
+                <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
+            }
+            <div class="innerTable">
+                <!-- number and line -->
+                <div class="title-line one-line">
+                    <!-- Is Favorite -->
+                    @if (motion.getPersonalNote()?.star) {
+                        <span class="favorite-star">
+                            <mat-icon inline>star</mat-icon>
+                        </span>
+                    }
+                    <!-- Has File -->
+                    @if (motion.hasAttachments()) {
+                        <span class="icon-prefix">
+                            <mat-icon>attach_file</mat-icon>
+                        </span>
+                    }
+                    <span>{{ motion.number }}</span>
+                    @if (getChangedLinesFromAmendment(motion)) {
+                        <span>
+                            @if (motion.number) {
+                                <span>&nbsp;&middot;&nbsp;</span>
+                            }
+                            <span>{{ 'Line' | translate }}</span>
+                            <span>&nbsp;{{ getChangedLinesFromAmendment(motion) }}</span>
+                        </span>
+                    }
+                </div>
+                <!-- Submitter -->
+                <div class="submitters-line one-line">
+                    @if (motion.submitterNames.length) {
+                        <span>
+                            <span>{{ 'by' | translate }}</span>
+                            {{ motion.submitterNames }}
+                        </span>
+                    }
+                    @if (showSequentialNumber) {
+                        <span>
+                            @if (motion.submitterNames.length) {
+                                <span>&middot;&nbsp;</span>
+                            }
+                            <span>{{ 'Sequential number' | translate }}</span>
+                            {{ motion.sequential_number }}
+                        </span>
+                    }
+                </div>
+                <!-- State -->
+                <div>
+                    @if (motion.state) {
+                        <mat-basic-chip [disabled]="true" [ngClass]="motion.stateCssColor">
+                            {{ motionService.getExtendedStateLabel(motion) }}
+                        </mat-basic-chip>
+                    }
+                </div>
+                <!--  Reco -->
+                @if (motion.recommendation && motion.state.next_state_ids?.length > 0) {
+                    <div class="spacer-top-3">
+                        <mat-basic-chip class="bluegrey" [disabled]="true">
+                            {{ motionService.getExtendedRecommendationLabel(motion) }}
+                        </mat-basic-chip>
+                    </div>
+                }
             </div>
         </div>
-    </div>
-
-    <!-- Summary -->
-    <div *osScrollingTableCell="'summary'; row as motion" class="cell-slot fill">
-        <os-detail-view-navigator *ngIf="!isMultiSelect" [model]="motion"></os-detail-view-navigator>
-        <div class="innerTable">
-            <div
-                class="motion-text underlined-links"
-                *ngIf="getAmendmentSummary(motion)"
-                [innerHtml]="getAmendmentSummary(motion) | trust : 'html'"
-            ></div>
-            <i *ngIf="!getAmendmentSummary(motion)">{{ 'No changes at the text.' | translate }}</i>
+        <!-- Summary -->
+        <div *osScrollingTableCell="'summary'; row as motion" class="cell-slot fill">
+            @if (!isMultiSelect) {
+                <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
+            }
+            <div class="innerTable">
+                @if (getAmendmentSummary(motion)) {
+                    <div
+                        class="motion-text underlined-links"
+                        [innerHtml]="getAmendmentSummary(motion) | trust: 'html'"
+                    ></div>
+                }
+                @if (!getAmendmentSummary(motion)) {
+                    <i>{{ 'No changes at the text.' | translate }}</i>
+                }
+            </div>
         </div>
-    </div>
-
-    <!-- Menu -->
-    <div *osScrollingTableCell="'menu'; row as motion; config: { width: 40 }" class="cell-slot fill">
-        <button
-            mat-icon-button
-            [disabled]="isMultiSelect"
-            [matMenuTriggerFor]="singleItemMenu"
-            (click)="$event.stopPropagation()"
-            [matMenuTriggerData]="{ motion: motion }"
-        >
-            <mat-icon>more_vert</mat-icon>
-        </button>
-    </div>
-</os-projectable-list>
+        <!-- Menu -->
+        <div *osScrollingTableCell="'menu'; row as motion; config: { width: 40 }" class="cell-slot fill">
+            <button
+                mat-icon-button
+                [disabled]="isMultiSelect"
+                [matMenuTriggerData]="{ motion: motion }"
+                [matMenuTriggerFor]="singleItemMenu"
+                (click)="$event.stopPropagation()"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </div>
+    </os-projectable-list>
+}
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
-    <ng-template matMenuContent let-motion="motion">
-        <os-projector-button [object]="motion" [menuItem]="true"></os-projector-button>
-        <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
+    <ng-template let-motion="motion" matMenuContent>
+        <os-projector-button [menuItem]="true" [object]="motion"></os-projector-button>
+        <os-speaker-button [menuItem]="true" [object]="motion"></os-speaker-button>
     </ng-template>
 </mat-menu>
 
 <mat-menu #amendmentListMenu="matMenu">
-    <div *ngIf="!isMultiSelect">
-        <div *osPerms="permission.motionCanManage">
-            <button mat-menu-item (click)="toggleMultiSelect()">
-                <mat-icon>library_add</mat-icon>
-                <span>{{ 'Multiselect' | translate }}</span>
+    @if (!isMultiSelect) {
+        <div>
+            <div *osPerms="permission.motionCanManage">
+                <button mat-menu-item (click)="toggleMultiSelect()">
+                    <mat-icon>library_add</mat-icon>
+                    <span>{{ 'Multiselect' | translate }}</span>
+                </button>
+            </div>
+            <button mat-menu-item (click)="openExportDialog()">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export' | translate }}</span>
+            </button>
+            <button mat-menu-item (click)="exportAmendmentListPdf()">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>{{ 'Amendment list (PDF)' | translate }}</span>
             </button>
         </div>
-        <button mat-menu-item (click)="openExportDialog()">
-            <mat-icon>archive</mat-icon>
-            <span>{{ 'Export' | translate }}</span>
-        </button>
-        <button mat-menu-item (click)="exportAmendmentListPdf()">
-            <mat-icon>picture_as_pdf</mat-icon>
-            <span>{{ 'Amendment list (PDF)' | translate }}</span>
-        </button>
-    </div>
-    <div *ngIf="isMultiSelect">
-        <button mat-menu-item (click)="selectAll()">
-            <mat-icon>done_all</mat-icon>
-            <span>{{ 'Select all' | translate }}</span>
-        </button>
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
-            <mat-icon>clear</mat-icon>
-            <span>{{ 'Deselect all' | translate }}</span>
-        </button>
-
-        <ng-container *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]">
-            <mat-divider></mat-divider>
-            <os-motion-multiselect-actions
-                [selectedMotions]="selectedRows"
-                [sortService]="amendmentSortService"
-            ></os-motion-multiselect-actions>
-        </ng-container>
-    </div>
+    }
+    @if (isMultiSelect) {
+        <div>
+            <button mat-menu-item (click)="selectAll()">
+                <mat-icon>done_all</mat-icon>
+                <span>{{ 'Select all' | translate }}</span>
+            </button>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+                <mat-icon>clear</mat-icon>
+                <span>{{ 'Deselect all' | translate }}</span>
+            </button>
+            <ng-container *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]">
+                <mat-divider></mat-divider>
+                <os-motion-multiselect-actions
+                    [selectedMotions]="selectedRows"
+                    [sortService]="amendmentSortService"
+                ></os-motion-multiselect-actions>
+            </ng-container>
+        </div>
+    }
 </mat-menu>

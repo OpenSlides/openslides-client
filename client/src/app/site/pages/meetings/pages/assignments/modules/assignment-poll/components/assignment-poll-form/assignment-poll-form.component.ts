@@ -1,15 +1,9 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import {
     BasePollFormComponent,
     PollFormHideSelectsData
 } from 'src/app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component';
-import { VotingPrivacyWarningDialogService } from 'src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 
-import { GroupControllerService } from '../../../../../participants';
 import { ViewAssignment } from '../../../../view-models';
 
 @Component({
@@ -26,17 +20,6 @@ export class AssignmentPollFormComponent extends BasePollFormComponent implement
         };
     }
 
-    constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
-        fb: UntypedFormBuilder,
-        groupRepo: GroupControllerService,
-        dialog: VotingPrivacyWarningDialogService,
-        meetingSettingService: MeetingSettingsService
-    ) {
-        super(componentServiceCollector, translate, fb, groupRepo, dialog, meetingSettingService);
-    }
-
     public override ngOnInit(): void {
         if (this.data && this.data?.isAssignmentPoll) {
             if (!!this.data.getContentObject() && !this.data.max_votes_amount) {
@@ -44,7 +27,7 @@ export class AssignmentPollFormComponent extends BasePollFormComponent implement
                 this.data.max_votes_amount = assignment.open_posts;
             }
             if (!this.data.pollmethod) {
-                this.data.pollmethod = this.meetingSettingService.instant(`assignment_poll_default_method`);
+                this.data.pollmethod = this.meetingSettingsService.instant(`assignment_poll_default_method`);
             }
         }
         super.ngOnInit();

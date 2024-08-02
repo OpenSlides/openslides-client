@@ -1,6 +1,5 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { NgControl, UntypedFormBuilder } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { NgControl } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { distinctUntilChanged } from 'rxjs';
@@ -43,16 +42,13 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
     public override readonly multiple = true;
 
     public constructor(
-        fb: UntypedFormBuilder,
-        fm: FocusMonitor,
-        element: ElementRef,
         ngControl: NgControl,
         private operator: OperatorService,
         private presenter: SearchUsersPresenterService,
         private userRepo: UserRepositoryService,
         private userSortService: AccountSortService
     ) {
-        super(fb, fm, element, ngControl);
+        super(ngControl);
     }
 
     public override ngOnInit(): void {
@@ -99,12 +95,12 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
                 permissionRelatedId: ORGANIZATION_ID,
                 permissionScope: UserScope.ORGANIZATION
             })[0];
-            const getTitle = (user: Partial<User>) => `${user.first_name ?? ``} ${user.last_name ?? ``}`;
+            const getTitle = (user: Partial<User>): string => `${user.first_name ?? ``} ${user.last_name ?? ``}`;
             this.filteredItemsSubject.next(
                 result.map(entry => ({
                     id: entry.id,
-                    getTitle: () => getTitle(entry),
-                    getListTitle: () => getTitle(entry)
+                    getTitle: (): string => getTitle(entry),
+                    getListTitle: (): string => getTitle(entry)
                 }))
             );
         } else {

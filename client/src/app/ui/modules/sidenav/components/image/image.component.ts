@@ -8,6 +8,9 @@ import { HttpService } from 'src/app/gateways/http.service';
 })
 export class ImageComponent {
     @Input()
+    public alt: string = null;
+
+    @Input()
     public set source(src: string | null) {
         if (this._source !== src) {
             this._source = src;
@@ -43,8 +46,8 @@ export class ImageComponent {
     }
 
     private addListenersToReader(fileReader: FileReader): void {
-        fileReader.onprogress = event => this.handleReaderEvent(event, fileReader);
-        fileReader.onload = event => this.handleReaderEvent(event, fileReader);
+        fileReader.onprogress = (event): void => this.handleReaderEvent(event, fileReader);
+        fileReader.onload = (event): void => this.handleReaderEvent(event, fileReader);
     }
 
     private startLoading(): void {
@@ -54,7 +57,7 @@ export class ImageComponent {
     }
 
     private loadResource(): void {
-        this.http.get<Blob>(this._source!, null, undefined, undefined, `blob`).then(response => {
+        this.http.get<Blob>(this._source!, null, { responseType: `blob` }).then(response => {
             this.readBlobData(response);
         });
     }

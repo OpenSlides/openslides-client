@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { User } from 'src/app/domain/models/users/user';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
@@ -5,6 +6,7 @@ import { Id } from '../../../../domain/definitions/key-types';
 import { ViewCommittee } from '../../organization/pages/committees';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
+import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { DelegationType } from './delegation-type';
@@ -47,7 +49,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get numberOfMeetings(): number {
-        return this.meeting_ids.length;
+        return this.meetings.length;
     }
 
     public get name(): string {
@@ -103,10 +105,14 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.isPresentInMeeting();
     }
 
+    public get hasMemberNumber(): boolean {
+        return !!this.member_number;
+    }
+
     // Will be set by the repository
     public getName!: () => string;
     public getShortName!: () => string;
-    public getFullName!: () => string;
+    public getFullName!: (structureLevel?: ViewStructureLevel) => string;
     public getLevelAndNumber!: () => string;
     public getMeetingUser!: (meetingId?: Id) => ViewMeetingUser;
 
@@ -207,17 +213,9 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public number(meetingId?: Id): string {
         try {
-            return this.getMeetingUser(meetingId)?.number || this.default_number;
+            return this.getMeetingUser(meetingId)?.number;
         } catch (e) {
-            return this.user.default_number;
-        }
-    }
-
-    public structure_level(meetingId?: Id): string {
-        try {
-            return this.getMeetingUser(meetingId)?.structure_level || this.default_structure_level;
-        } catch (e) {
-            return this.user.default_structure_level;
+            return ``;
         }
     }
 
@@ -235,6 +233,24 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public group_ids(meetingId?: Id): number[] {
         return this.getMeetingUser(meetingId)?.group_ids ?? [];
+    }
+
+    public structure_level_ids(meetingId?: Id): Id[] {
+        return this.getMeetingUser(meetingId)?.structure_level_ids;
+    }
+
+    public structure_levels(meetingId?: Id): ViewStructureLevel[] {
+        return this.getMeetingUser(meetingId)?.structure_levels ?? [];
+    }
+
+    public structure_level(meetingId?: Id): string {
+        return this.structure_levels(meetingId)
+            .map(sl => sl.name)
+            .join(`,`);
+    }
+
+    public structureLevels(meetingId?: Id): string {
+        return this.getMeetingUser(meetingId)?.structureLevels();
     }
 
     public get isVoteWeightOne(): boolean {
@@ -270,7 +286,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         if (!user) {
             return false;
         }
-        return this.vote_delegations_from_ids().includes(user.id);
+        return this.vote_delegations_from_ids()?.includes(user.id);
     }
 
     public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser {
@@ -320,6 +336,7 @@ interface IUserRelations {
     meeting_users: ViewMeetingUser[];
     poll_voted: ViewPoll[];
     committee_managements: ViewCommittee[];
+    committee_managements_as_observable: Observable<ViewCommittee[]>;
     options: ViewOption[];
     votes: ViewVote[];
     poll_candidates: ViewPollCandidate[];

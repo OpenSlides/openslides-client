@@ -41,7 +41,7 @@ export class SingleOptionChartTableComponent {
         this.cd.markForCheck();
     }
 
-    public get pollService() {
+    public get pollService(): PollService {
         return this._pollService || this.defaultPollService;
     }
 
@@ -65,6 +65,9 @@ export class SingleOptionChartTableComponent {
 
     @Input()
     public shouldShowEntitled = false;
+
+    @Input()
+    public shouldShowEntitledPresent = false;
 
     public get chartData(): ChartData {
         return this._chartData;
@@ -92,6 +95,10 @@ export class SingleOptionChartTableComponent {
 
     public get shouldShowChart(): boolean {
         return !this.tableData.some(option => option.value[0].amount < 0);
+    }
+
+    public get entitledUsersPresentCount(): number {
+        return this.poll.entitled_users_at_stop?.filter(x => x.present).length || 0;
     }
 
     public constructor(

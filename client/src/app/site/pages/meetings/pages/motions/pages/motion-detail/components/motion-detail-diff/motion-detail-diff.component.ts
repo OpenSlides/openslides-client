@@ -6,7 +6,6 @@ import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meet
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { HEAD_BAR_HEIGHT } from 'src/app/ui/modules/head-bar/components/head-bar/head-bar.component';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -111,7 +110,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private diff: MotionDiffService,
         private lineNumbering: LineNumberingService,
@@ -122,7 +120,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         private promptService: PromptService,
         private dialog: MotionChangeRecommendationDialogService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => (this.lineLength = lineLength));
         this.meetingSettingsService.get(`motions_preamble`).subscribe(preamble => (this.preamble = preamble));
     }
@@ -135,8 +133,8 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public getTextBetweenChanges(change1: ViewUnifiedChange, change2: ViewUnifiedChange): string {
         // @TODO Highlighting
         const lineRange: LineRange = {
-            from: change1 ? change1.getLineTo() + 1 : this.lineRange?.from ?? this.motion.firstLine,
-            to: change2 ? change2.getLineFrom() - 1 : this.lineRange?.to ?? null
+            from: change1 ? change1.getLineTo() + 1 : (this.lineRange?.from ?? this.motion.firstLine),
+            to: change2 ? change2.getLineFrom() - 1 : (this.lineRange?.to ?? null)
         };
 
         if (lineRange.from > lineRange.to && change1 && change2) {

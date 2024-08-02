@@ -9,7 +9,6 @@ import { getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/o
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -60,8 +59,6 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public readonly additionalFormControls = {
-        default_structure_level: [``],
-        default_number: [``],
         default_vote_weight: [``, Validators.min(0.000001)],
         organization_management_level: [],
         committee_management_ids: []
@@ -76,13 +73,18 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public isNewUser = false;
     public committeeSubscriptionConfig = getCommitteeListMinimalSubscriptionConfig();
 
+    public get numCommittees(): number {
+        return this._numCommittees;
+    }
+
     public get tableData(): ParticipationTableData {
         return this._tableData;
     }
 
     public get canSeeParticipationTable(): boolean {
         return (
-            this.operator.hasOrganizationPermissions(OML.can_manage_organization) &&
+            (this.operator.hasOrganizationPermissions(OML.can_manage_organization) ||
+                this.operator.isAnyCommitteeAdmin()) &&
             (!!this.user.committee_ids?.length || !!this.user.meeting_ids?.length)
         );
     }
@@ -91,16 +93,27 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return Object.values(this._tableData).filter(row => row[`is_manager`] === true).length;
     }
 
-    public tableDataAscOrderCompare = <T>(a: KeyValue<string, T>, b: KeyValue<string, T>) => {
+    public get userOML(): OML {
+        return this.user?.organization_management_level as OML;
+    }
+
+    public get canEdit(): boolean {
+        if (!this.userOML) {
+            return true;
+        }
+        return this.operator.hasOrganizationPermissions(this.userOML);
+    }
+
+    public tableDataAscOrderCompare = <T>(a: KeyValue<string, T>, b: KeyValue<string, T>): number => {
         const aName = a.value[`committee_name`] ?? a.value[`meeting_name`] ?? ``;
         const bName = b.value[`committee_name`] ?? b.value[`meeting_name`] ?? ``;
         return aName.localeCompare(bName);
     };
 
     private _tableData: ParticipationTableData = {};
+    private _numCommittees: number = 0;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         private osRouter: OpenSlidesRouterService,
@@ -111,7 +124,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         private userController: UserControllerService,
         private promptService: PromptService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {
@@ -231,6 +244,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             };
         });
         this._tableData = tableData;
+        this._numCommittees = Object.keys(this.tableData).length;
     }
 
     private getUserByUrl(): void {
@@ -283,13 +297,13 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     private async createUser(): Promise<void> {
-        const payload = this.getPartialUserPayload();
+        const payload = this.getPartialUserPayload(true);
         const identifiable = (await this.userController.create(payload))[0];
         this.router.navigate([`..`, identifiable.id], { relativeTo: this.route });
     }
 
     private async updateUser(): Promise<void> {
-        const payload = this.getPartialUserPayload();
+        const payload = this.getPartialUserPayload(false);
         if (
             !(
                 this.user.id === this.operator.operatorId &&
@@ -307,10 +321,17 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         }
     }
 
-    private getPartialUserPayload(): any {
+    private getPartialUserPayload(isCreate: boolean): any {
         const payload = this.personalInfoFormValue;
         if (!this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
             payload[`committee_management_ids`] = undefined;
+        }
+        if (payload.member_number === ``) {
+            if (isCreate) {
+                delete payload.member_number;
+            } else {
+                payload.member_number = null;
+            }
         }
         return payload;
     }

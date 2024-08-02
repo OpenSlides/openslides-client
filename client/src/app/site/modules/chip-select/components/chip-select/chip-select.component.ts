@@ -8,7 +8,7 @@ import { ChipSelectChipComponent } from '../chip-select-chip/chip-select-chip.co
     styleUrls: [`./chip-select.component.scss`]
 })
 export class ChipSelectComponent implements AfterContentInit {
-    constructor() {}
+    public constructor() {}
 
     @Input()
     public chipClass: string | null;
@@ -16,11 +16,11 @@ export class ChipSelectComponent implements AfterContentInit {
     @Input()
     public canOpen: boolean;
 
-    @ContentChildren(ChipSelectChipComponent) inputChips: QueryList<ChipSelectChipComponent>;
+    @ContentChildren(ChipSelectChipComponent) public inputChips: QueryList<ChipSelectChipComponent>;
 
     public chips: ChipSelectChipComponent[] = [];
 
-    ngAfterContentInit(): void {
+    public ngAfterContentInit(): void {
         this.chips = this.inputChips.toArray();
         this.inputChips.changes.subscribe((chips: ChipSelectChipComponent[]) => {
             this.chips = chips;

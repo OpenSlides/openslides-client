@@ -76,6 +76,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     }
 
     public isPercentBaseEntitled = false;
+    public isPercentBaseEntitledPresent = false;
 
     private _tableData: PollTableData[] = [];
     private _chartData: ChartData | null = null;

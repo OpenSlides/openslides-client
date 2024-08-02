@@ -38,6 +38,7 @@ const VotingProhibitionVerbose = {
 export class VotingService {
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled = false;
+    private _forbidDelegationToVote = false;
 
     public constructor(
         private activeMeetingService: ActiveMeetingService,
@@ -48,6 +49,9 @@ export class VotingService {
         this.meetingSettingsService
             .get(`users_enable_vote_delegations`)
             .subscribe(enabled => (this._voteDelegationEnabled = enabled));
+        this.meetingSettingsService
+            .get(`users_forbid_delegator_to_vote`)
+            .subscribe(enabled => (this._forbidDelegationToVote = enabled));
     }
 
     /**
@@ -67,7 +71,7 @@ export class VotingService {
         user: ViewUser | null = this._currentUser
     ): VotingProhibition | void {
         if (this._currentUser?.id === user?.id) {
-            if (user?.isVoteRightDelegated && this._voteDelegationEnabled) {
+            if (user?.isVoteRightDelegated && this._voteDelegationEnabled && this._forbidDelegationToVote) {
                 return VotingProhibition.USER_HAS_DELEGATED_RIGHT;
             }
             if (poll.hasVoted) {
@@ -105,7 +109,7 @@ export class VotingService {
         }
     }
 
-    public getVotingProhibitionReasonVerboseFromName(reasonName: string) {
+    public getVotingProhibitionReasonVerboseFromName(reasonName: string): string {
         return VotingProhibitionVerbose[VotingProhibition[reasonName]] ?? _(`There is an unknown voting problem.`);
     }
 }

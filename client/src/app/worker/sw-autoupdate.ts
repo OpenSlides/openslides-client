@@ -19,6 +19,7 @@ const subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
     required: [],
     requiredMeeting: [],
     sequentialnumbermapping: [],
+    detail: [],
     other: []
 };
 const openTimeouts = {
@@ -29,13 +30,13 @@ const openTimeouts = {
 };
 
 let debugCommandsRegistered = false;
-function registerDebugCommands() {
+function registerDebugCommands(): void {
     if (debugCommandsRegistered) {
         return;
     }
 
     debugCommandsRegistered = true;
-    (<any>self).printAutoupdateState = function () {
+    (<any>self).printAutoupdateState = function (): void {
         console.log(`AU POOL INFO`);
         console.log(`Currently open:`, autoupdatePool.activeStreams.length);
         console.group(`Streams`);
@@ -65,7 +66,7 @@ function registerDebugCommands() {
         console.groupEnd();
     };
 
-    (<any>self).disableAutoupdateCompression = function () {
+    (<any>self).disableAutoupdateCompression = function (): void {
         autoupdatePool.disableCompression();
     };
 }
@@ -77,7 +78,7 @@ function openConnection(
     function getRequestCategory(
         description: string,
         _request: unknown
-    ): 'required' | 'requiredMeeting' | 'other' | 'sequentialnumbermapping' {
+    ): 'required' | 'requiredMeeting' | 'other' | 'sequentialnumbermapping' | null {
         const required = [`theme_list:subscription`, `operator:subscription`, `organization:subscription`];
         if (required.indexOf(description) !== -1) {
             return `required`;
@@ -90,6 +91,12 @@ function openConnection(
 
         if (description.startsWith(`SequentialNumberMappingService:prepare`)) {
             return `sequentialnumbermapping`;
+        }
+
+        // Subscriptions ending with a number nomally are used for detail subscriptions
+        // and should not be bundled
+        if (!isNaN(+description.substring(description.length - 13, description.length - 14))) {
+            return null;
         }
 
         return `other`;
@@ -123,16 +130,20 @@ function openConnection(
 
     const category = getRequestCategory(description, request);
     const subscription = new AutoupdateSubscription(streamId, queryParams, requestHash, request, description, [ctx]);
-    subscriptionQueues[category].push(subscription);
+    if (category) {
+        subscriptionQueues[category].push(subscription);
 
-    clearTimeout(openTimeouts[category]);
-    openTimeouts[category] = setTimeout(() => {
-        const queue = subscriptionQueues[category];
-        subscriptionQueues[category] = [];
-        openTimeouts[category] = undefined;
+        clearTimeout(openTimeouts[category]);
+        openTimeouts[category] = setTimeout(() => {
+            const queue = subscriptionQueues[category];
+            subscriptionQueues[category] = [];
+            openTimeouts[category] = undefined;
 
-        autoupdatePool.openNewStream(queue, queryParams);
-    }, 5);
+            autoupdatePool.openNewStream(queue, queryParams);
+        }, 5);
+    } else {
+        autoupdatePool.openNewStream([subscription], queryParams);
+    }
 }
 
 function closeConnection(ctx: MessagePort, params: AutoupdateCloseStreamParams): void {
@@ -167,6 +178,10 @@ if (!environment.production) {
     registerDebugCommands();
 }
 
+export function initAutoupdateSw(broadcast: (s: string, a: string, c?: any) => void): void {
+    autoupdatePool.registerBroadcast(broadcast);
+}
+
 export function autoupdateMessageHandler(ctx: any, e: any): void {
     const msg = e.data?.msg;
     const params = msg?.params;
@@ -180,9 +195,6 @@ export function autoupdateMessageHandler(ctx: any, e: any): void {
             break;
         case `cleanup-cache`:
             cleanupStream(params);
-            break;
-        case `auth-change`:
-            autoupdatePool.updateAuthentication();
             break;
         case `set-endpoint`:
             autoupdatePool.setEndpoint(params);

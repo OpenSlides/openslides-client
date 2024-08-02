@@ -1,7 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
@@ -13,34 +22,49 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
+import { ProjectorButtonModule } from '../../modules/meetings-component-collector/projector-button/projector-button.module';
+import { CountdownTimeModule } from '../../modules/projector/modules/countdown-time/countdown-time.module';
 import { ProjectorModule } from '../../modules/projector/projector.module';
 import { TopicPollModule } from '../agenda/modules/topics/modules/topic-poll/topic-poll.module';
 import { InteractionServiceModule } from '../interaction/services/interaction-service.module';
 import { AutopilotRoutingModule } from './autopilot-routing.module';
 import { AutopilotComponent } from './components/autopilot/autopilot.component';
 import { AutopilotMainComponent } from './components/autopilot-main/autopilot-main.component';
+import { AutopilotSettingsComponent } from './components/autopilot-settings/autopilot-settings.component';
 import { PollCollectionComponent } from './components/poll-collection/poll-collection.component';
 
 @NgModule({
-    declarations: [AutopilotMainComponent, AutopilotComponent, PollCollectionComponent],
+    declarations: [AutopilotMainComponent, AutopilotSettingsComponent, AutopilotComponent, PollCollectionComponent],
     imports: [
         CommonModule,
         RouterModule,
         AutopilotRoutingModule,
         PromptDialogModule,
         InteractionServiceModule,
+        FormsModule,
         ProjectorModule,
         DirectivesModule,
         MatCardModule,
+        MatCheckboxModule,
+        MatProgressBarModule,
+        MatTabsModule,
         MatTooltipModule,
+        MatFormFieldModule,
         MatIconModule,
+        MatDialogModule,
+        MatBadgeModule,
         ListOfSpeakersContentModule,
         HeadBarModule,
+        CountdownTimeModule,
         OpenSlidesTranslationModule.forChild(),
         PollModule,
         MotionPollModule,
+        MatMenuModule,
         TopicPollModule,
-        AssignmentPollModule
+        AssignmentPollModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        ProjectorButtonModule
     ]
 })
 export class AutopilotModule {}

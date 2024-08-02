@@ -1,9 +1,5 @@
-import { Directive, OnDestroy } from '@angular/core';
-import {
-    LegacySimpleSnackBar as SimpleSnackBar,
-    MatLegacySnackBar as MatSnackBar,
-    MatLegacySnackBarRef as MatSnackBarRef
-} from '@angular/material/legacy-snack-bar';
+import { Directive, inject, OnDestroy } from '@angular/core';
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -79,12 +75,8 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
         return this.componentServiceCollector.router;
     }
 
-    public constructor(
-        protected componentServiceCollector: ComponentServiceCollectorService,
-        protected translate: TranslateService
-    ) {
-        super();
-    }
+    protected componentServiceCollector = inject(ComponentServiceCollectorService);
+    protected translate = inject(TranslateService);
 
     /**
      * automatically dismisses the error snack bar and clears subscriptions
@@ -167,20 +159,4 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
      * Should be overwritten by children which need swipe gestures
      */
     protected swipe(_e: TouchEvent, _when: string): void {}
-
-    /**
-     * TinyMCE Init callback. Used for certain mobile editors
-     * @param event
-     */
-    public onInitTinyMce(event: any): void {
-        if (event.event.target.settings.theme === `mobile`) {
-            this.saveHint = true;
-        } else {
-            event.editor.focus();
-        }
-    }
-
-    public onLeaveTinyMce(_event: any): void {
-        this.saveHint = false;
-    }
 }

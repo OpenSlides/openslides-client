@@ -1,12 +1,12 @@
 <div class="vertical-tab-group-wrapper">
-    <ng-container *ngIf="!isContentOpen || !isMobile">
+    @if (!isContentOpen || !isMobile) {
         <div class="flex-1 vertical-tab-group-label-wrapper">
-            <ng-container *ngIf="labelHeaderTemplate">
+            @if (labelHeaderTemplate) {
                 <div class="flex-vertical-center" [ngStyle]="{ height: labelHeight }">
                     <ng-container *ngTemplateOutlet="labelHeaderTemplate"></ng-container>
                 </div>
                 <mat-divider></mat-divider>
-            </ng-container>
+            }
             <cdk-virtual-scroll-viewport
                 [itemSize]="labelHeight"
                 [ngStyle]="{ height: getVirtualScrollViewportHeight() }"
@@ -14,26 +14,32 @@
                 <ng-container *cdkVirtualFor="let tabLabel of tabLabelsObservable | async; let index = index">
                     <div
                         class="vertical-tab-label flex-vertical-center pointer padding-left-16 padding-right-16"
+                        tabindex="0"
                         [ngClass]="{ 'background-primary': index === selectedTabLabelIndex }"
                         [ngStyle]="{ height: labelHeight }"
                         (click)="changeTabSelection(index); openContent()"
+                        (keydown.enter)="changeTabSelection(index); openContent()"
                     >
                         <ng-template [cdkPortalOutlet]="tabLabel"></ng-template>
-                        <mat-icon *ngIf="isMobile" class="margin-right-8">arrow_forward_ios</mat-icon>
+                        @if (isMobile) {
+                            <mat-icon class="margin-right-8">arrow_forward_ios</mat-icon>
+                        }
                     </div>
                     <mat-divider></mat-divider>
                 </ng-container>
             </cdk-virtual-scroll-viewport>
         </div>
-    </ng-container>
-    <ng-container *ngIf="isContentOpen || !isMobile">
-        <mat-divider [vertical]="true" *ngIf="!isMobile"></mat-divider>
+    }
+    @if (isContentOpen || !isMobile) {
+        @if (!isMobile) {
+            <mat-divider [vertical]="true"></mat-divider>
+        }
         <div class="flex-3">
             <div class="vertical-tab-group-content-wrapper full-height">
                 <ng-template [cdkPortalOutlet]="selectedPortalObservable | async"></ng-template>
             </div>
         </div>
-    </ng-container>
+    }
 </div>
 
 <!-- Retrieving the tabs -->

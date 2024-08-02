@@ -5,7 +5,6 @@ import { firstValueFrom, map } from 'rxjs';
 import { OsFilterOptionCondition } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewMotionCategory, ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { GridBlockTileType } from 'src/app/ui/modules/grid';
@@ -59,12 +58,6 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     public selectedMotion: ViewMotion | null = null;
 
     /**
-     * Value of the configuration variable `motions_statutes_enabled` - are statutes enabled?
-     * @TODO replace by direct access to config variable, once it's available from the templates
-     */
-    public statutesEnabled = false;
-
-    /**
      * Value of the configuration variable `motions_amendments_enabled` - are amendments enabled?
      */
     public amendmentsEnabled = false;
@@ -81,6 +74,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
      */
     public filterProps = [
         `submitters`,
+        `additional_submitter`,
         `block`,
         `title`,
         `number`,
@@ -130,7 +124,6 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     private _hasAmendments = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public filterService: MotionListFilterService,
@@ -147,7 +140,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         public vp: ViewPortService,
         public operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
         this.listStorageIndex = MOTION_LIST_STORAGE_INDEX;
 
@@ -166,9 +159,6 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         super.setTitle(`Motions`);
 
         this.subscriptions.push(
-            this.meetingSettingsService
-                .get(`motions_statutes_enabled`)
-                .subscribe(enabled => (this.statutesEnabled = enabled)),
             this.meetingSettingsService
                 .get(`motions_amendments_enabled`)
                 .subscribe(enabled => (this.amendmentsEnabled = enabled)),

@@ -6,7 +6,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { PasswordForm } from 'src/app/site/modules/user-components';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -33,7 +32,7 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
     /**
      * if current user has the "can_manage" permission
      */
-    public canManage = false;
+    public canUpdate = false;
 
     public get generatePasswordFn(): () => string {
         return () => this.repo.getRandomPassword();
@@ -42,14 +41,13 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
     private urlUserId: number | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private operator: OperatorService,
         private openslidesRouter: OpenSlidesRouterService,
         private route: ActivatedRoute,
         private repo: ParticipantControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**
@@ -84,7 +82,7 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
 
     private updateUser(): void {
         this.ownPage = this.urlUserId ? this.operator.operatorId === this.urlUserId : true;
-        this.canManage = this.operator.hasPerms(Permission.userCanManage);
+        this.canUpdate = this.operator.hasPerms(Permission.userCanUpdate);
     }
 
     /**
@@ -103,7 +101,7 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
         }
         // can Manage, but not own Page (a.k.a. Admin)
         try {
-            if (this.canManage && !this.ownPage) {
+            if (this.canUpdate && !this.ownPage) {
                 const password = this.passwordForm as string;
                 await this.repo.setPassword(this.user, password);
             } else if (this.ownPage) {

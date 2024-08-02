@@ -1,3 +1,5 @@
-<div *ngIf="data">
-    <h1>{{ data.data.user }}</h1>
-</div>
+@if (data) {
+    <div>
+        <h1>{{ data.data.user }}</h1>
+    </div>
+}

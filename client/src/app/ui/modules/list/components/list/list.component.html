@@ -1,8 +1,11 @@
 <os-view-list
+    [addBottomSpacer]="addBottomSpacer"
     [alsoFilterByProperties]="alsoFilterByProperties"
     [alwaysShowMenu]="alwaysShowMenu"
-    [filterService]="filterService"
+    [fakeFilters]="fakeFilters"
     [filterProps]="filterProps"
+    [filterService]="filterService"
+    [fullScreen]="fullScreen"
     [hiddenColumns]="hiddenColumns"
     [listObservable]="listObservable"
     [listObservableProvider]="listObservableProvider"
@@ -13,11 +16,10 @@
     [showFilterBar]="showFilterBar"
     [showMenu]="showMenu"
     [sortService]="sortService"
+    [totalCount]="totalCount"
     [vScrollFixed]="vScrollFixed"
-    [fullScreen]="fullScreen"
-    [addBottomSpacer]="addBottomSpacer"
-    (selectedRowsChange)="selectedRowsChange.emit($event)"
     (searchFilterUpdated)="searchFilterUpdated.emit($event)"
+    (selectedRowsChange)="selectedRowsChange.emit($event)"
 >
     <div class="filter-bar-info-slot">
         <ng-content select=".filter-bar-info-slot"></ng-content>

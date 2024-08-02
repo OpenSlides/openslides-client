@@ -9,7 +9,6 @@ import { BaseComponent } from 'src/app/site/base/base.component';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
@@ -37,13 +36,12 @@ export class OrganizationSettingsComponent extends BaseComponent {
     private _currentOrgaSettings: ViewOrganization | null = null;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private controller: OrganizationControllerService,
         private formBuilder: UntypedFormBuilder,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(this.pageTitle);
 
         this.subscriptions.push(
@@ -74,7 +72,8 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 users_email_replyto: [this._currentOrgaSettings.users_email_replyto, [createEmailValidator()]],
                 users_email_sender: [this._currentOrgaSettings.users_email_sender],
                 users_email_subject: [this._currentOrgaSettings.users_email_subject],
-                default_language: [this._currentOrgaSettings.default_language]
+                default_language: [this._currentOrgaSettings.default_language],
+                require_duplicate_from: [this._currentOrgaSettings.require_duplicate_from ?? false]
             };
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {

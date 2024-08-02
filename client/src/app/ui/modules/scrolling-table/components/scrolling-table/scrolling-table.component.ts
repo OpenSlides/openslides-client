@@ -43,7 +43,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     @ViewChild(CdkVirtualScrollViewport)
     public scrollViewport: CdkVirtualScrollViewport | undefined;
 
-    @ViewChild(`cdkContainer`) cdkContainer: ElementRef;
+    @ViewChild(`cdkContainer`) public cdkContainer: ElementRef;
 
     @Input()
     public tableHeight: string | undefined = undefined;
@@ -143,7 +143,10 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 
     private _oldDistTop = 0;
 
-    public constructor(private manageService: ScrollingTableManageService, private cd: ChangeDetectorRef) {
+    public constructor(
+        private manageService: ScrollingTableManageService,
+        private cd: ChangeDetectorRef
+    ) {
         super();
     }
 
