@@ -63,6 +63,8 @@ export class MediafileListComponent extends MediafileListeComponent implements O
         this.directoryObservable = this.directorySubject as Observable<ViewMediafile[]>;
     }
 
+    public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
+
     /**
      * Init.
      * Set the title, make the edit Form and observe Mediafiles

@@ -44,7 +44,7 @@
     [isMultiSelect]="isMultiSelect"
     [shouldShowFileMenuFn]="shouldShowFileMenuFn"
     [sourceFiles]="directoryObservable"
-    (beforeEditing)="onEditFile($event.file)"
+    (beforeEditing)="onEditFile($event.file, isOrgaLevel)"
     (deleted)="onDeleteFile($event.file)"
     (directoryChanged)="changeDirectory($event.directoryId)"
     (saved)="onSaveFile($event.update)"
@@ -55,7 +55,7 @@
 <ng-template #breadcrumbManageTemplate>
     @if (canEdit && directory && directory.has_inherited_access_groups) {
         <span class="visibility">
-            <button class="visible-for" mat-button (click)="onEditFile(directory)">
+            <button class="visible-for" mat-button (click)="onEditFile(directory, isOrgaLevel)">
                 <os-icon-container
                     icon="group"
                     matTooltip="{{ 'Allowed access groups for this directory' | translate }}"
