@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseMenuEntry, getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
 import { MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
-import { AuthCheckService } from 'src/app/site/services/auth-check.service';
 import { AuthService } from 'src/app/site/services/auth.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
