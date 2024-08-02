@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { OML } from 'src/app/domain/definitions/organization-permission';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { FontPlace, LogoDisplayNames, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
@@ -11,10 +13,8 @@ import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileListExportService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-export.service/mediafile-list-export.service';
 import { MediafileCommonService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { OML } from 'src/app/domain/definitions/organization-permission';
 
 import { FileListComponent } from '../../../ui/modules/file-list/components/file-list/file-list.component';
 import { ModelData } from '../../services/autoupdate/utils';
@@ -24,10 +24,12 @@ import { MeetingComponentServiceCollectorService } from '../meetings/services/me
 import { MeetingSettingsService } from '../meetings/services/meeting-settings.service';
 import { ORGANIZATION_SUBSCRIPTION } from '../organization/organization.subscription';
 import { ORGANIZATION_MEDIAFILE_LIST_SUBSCRIPTION } from '../organization/pages/mediafiles/mediafiles.subscription';
-import { Permission } from 'src/app/domain/definitions/permission';
 
 @Component({ templateUrl: `./mediafiles.html` })
-export abstract class MediafileListeComponent extends BaseListViewComponent<ViewMediafile> implements OnInit, OnDestroy {
+export abstract class MediafileListeComponent
+    extends BaseListViewComponent<ViewMediafile>
+    implements OnInit, OnDestroy
+{
     @ViewChild(FileListComponent)
     public readonly fileListComponent!: FileListComponent;
 
@@ -59,8 +61,8 @@ export abstract class MediafileListeComponent extends BaseListViewComponent<View
     public fileEditForm: UntypedFormGroup | null = null;
 
     //public isUsedAsLogoFn = (file: ViewMediafile) => this.isUsedAs(file, true);
-    public isUsedAsLogoFn = (file: ViewMediafile) => false;
-    public isUsedAsFontFn = (_file: ViewMediafile) => false;
+    public isUsedAsLogoFn = (_file: ViewMediafile): boolean => false;
+    public isUsedAsFontFn = (_file: ViewMediafile): boolean => false;
 
     public folderSubscription: Subscription | null = null;
     public directorySubscription: Subscription | null = null;
@@ -84,18 +86,18 @@ export abstract class MediafileListeComponent extends BaseListViewComponent<View
      * @return true if the user can manage media files
      */
     public get canEdit(): boolean {
-        return this.operator.hasOrganizationPermissions(OML.can_manage_organization) || this.operator.hasPerms(Permission.mediafileCanManage);
+        return (
+            this.operator.hasOrganizationPermissions(OML.can_manage_organization) ||
+            this.operator.hasPerms(Permission.mediafileCanManage)
+        );
     }
 
     public get shouldShowFileMenuFn(): (file?: ViewMediafile) => boolean {
-        return (file?) => file? this.showFileMenu(file): this.showFileMenu();
+        return (file?) => (file ? this.showFileMenu(file) : this.showFileMenu());
     }
 
-    public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService
-    ) {
-        super(componentServiceCollector, translate);
+    public constructor(protected override translate: TranslateService) {
+        super();
         this.canMultiSelect = true;
 
         this.newDirectoryForm = this.formBuilder.group({
@@ -239,7 +241,7 @@ export abstract class MediafileListeComponent extends BaseListViewComponent<View
         const places = this.logoPlaces;
         return places.some(place => this.isMediafileUsed(file, place, isOrgaLevel));
     }
-    
+
     public isMediafileUsed(file: ViewMediafile, place: LogoPlace | string, isOrgaLevel: boolean): boolean {
         const mediafile = this.repo.getViewModel(file.id)!;
         if (isOrgaLevel) {
@@ -269,9 +271,9 @@ export abstract class MediafileListeComponent extends BaseListViewComponent<View
 
     public downloadMultiple(isOrgaLevel: boolean, mediafiles: ViewMediafile[] = this.directorySubject.value): void {
         let eventName = ``;
-        if(!isOrgaLevel) {
+        if (!isOrgaLevel) {
             eventName = this.meetingSettingsService.instant(`name`);
-        } 
+        }
         const dirName = this.directory?.title ?? this.translate.instant(`Files`);
         const archiveName = `${eventName} - ${dirName}`.trim();
         this.exporter.downloadArchive(archiveName, mediafiles);

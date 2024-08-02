@@ -77,7 +77,11 @@
                 <span>{{ 'Deselect all' | translate }}</span>
             </button>
             <mat-divider *osOmlPerms="OML.can_manage_organization"></mat-divider>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadMultiple(isOrgaLevel, selectedRows)">
+            <button
+                mat-menu-item
+                [disabled]="!selectedRows.length"
+                (click)="downloadMultiple(isOrgaLevel, selectedRows)"
+            >
                 <mat-icon>cloud_download</mat-icon>
                 <span>{{ 'Download' | translate }}</span>
             </button>

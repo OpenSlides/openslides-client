@@ -6,7 +6,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { FontDisplayNames, FontPlace, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
 
 import { MediafileListeComponent } from '../../../../../../../base-media/mediafiles';
@@ -49,11 +48,8 @@ export class MediafileListComponent extends MediafileListeComponent implements O
     private groupRepo = inject(MediafileListGroupService);
     private interactionService = inject(InteractionService);
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService
-    ) {
-        super(componentServiceCollector, translate);
+    public constructor(protected override translate: TranslateService) {
+        super(translate);
         this.canMultiSelect = true;
 
         this.logoPlaces = this.mediaManage.allLogoPlaces;

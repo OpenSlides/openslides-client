@@ -141,7 +141,11 @@
                 <span>{{ 'Deselect all' | translate }}</span>
             </button>
             <mat-divider *osPerms="permission.mediafileCanManage"></mat-divider>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadMultiple(isOrgaLevel, selectedRows)">
+            <button
+                mat-menu-item
+                [disabled]="!selectedRows.length"
+                (click)="downloadMultiple(isOrgaLevel, selectedRows)"
+            >
                 <mat-icon>cloud_download</mat-icon>
                 <span>{{ 'Download' | translate }}</span>
             </button>
