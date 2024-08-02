@@ -8,7 +8,7 @@ import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { fadeInAnim } from 'src/app/infrastructure/animations';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
+import { ORGANIZATION_ID, OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 import { AuthService } from 'src/app/site/services/auth.service';
@@ -90,6 +90,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     private loginMessage = `Loading data. Please wait ...`;
 
     private currentMeetingId: number | null = null;
+    private guestMeetingId: number | null = null;
 
     public constructor(
         protected override translate: TranslateService,
@@ -123,7 +124,9 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         // Maybe the operator changes and the user is logged in. If so, redirect him and boot OpenSlides.
         this.operatorSubscription = this.operator.operatorUpdated.subscribe(() => {
             this.clearOperatorSubscription();
-            this.osRouter.navigateAfterLogin(this.currentMeetingId);
+            if (this.authService.isAuthenticated()) {
+                this.osRouter.navigateAfterLogin(this.currentMeetingId);
+            }
         });
 
         this.route.queryParams.pipe(filter(params => params[`checkBrowser`])).subscribe(params => {
@@ -132,6 +135,8 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         this.route.params.subscribe(params => {
             if (params[`meetingId`]) {
                 this.loadMeeting(params[`meetingId`]);
+            } else {
+                this.loadActiveMeetings();
             }
         });
 
@@ -182,7 +187,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public async guestLogin(): Promise<void> {
         await this.authService.anonLogin();
-        this.router.navigate([`${this.currentMeetingId}/`]);
+        this.osRouter.navigateAfterLogin(this.currentMeetingId || this.guestMeetingId);
     }
 
     public async samlLogin(): Promise<void> {
@@ -235,6 +240,26 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
         this.meeting = new Meeting(resp[`meeting`][this.currentMeetingId]);
         this.guestsEnabled = this.meeting.enable_anonymous;
+    }
+
+    private async loadActiveMeetings(): Promise<void> {
+        const resp = await this.autoupdate.single(
+            await this.modelRequestBuilder.build({
+                ids: [ORGANIZATION_ID],
+                viewModelCtor: ViewOrganization,
+                follow: [{ idField: `active_meeting_ids`, fieldset: [`enable_anonymous`] }]
+            }),
+            `meeting_login`
+        );
+        if (!resp || !resp[`meeting`]) {
+            return;
+        }
+        const publicMeetings = Object.values(resp[`meeting`]).filter(m => m[`enable_anonymous`]);
+
+        this.guestsEnabled = !!publicMeetings.length;
+        if (publicMeetings.length === 1) {
+            this.guestMeetingId = publicMeetings[0][`id`];
+        }
     }
 
     private checkDevice(): void {

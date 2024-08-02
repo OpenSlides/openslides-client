@@ -38,10 +38,7 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
     }
 
     public get showMeetingNav(): boolean {
-        return (
-            !this.operator.isAnonymous &&
-            (this.operator.knowsMultipleMeetings || this.operator.hasOrganizationPermissions())
-        );
+        return this.operator.knowsMultipleMeetings || this.operator.hasOrganizationPermissions();
     }
 
     public get meeting(): ViewMeeting | null {

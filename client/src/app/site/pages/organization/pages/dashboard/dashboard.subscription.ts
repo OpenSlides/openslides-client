@@ -13,6 +13,7 @@ export const meetingFields: (keyof Meeting)[] = [
     `committee_id`,
     `is_active_in_organization_id`,
     `template_for_organization_id`,
+    `enable_anonymous`,
     `description`,
     `location`,
     `organization_tag_ids`

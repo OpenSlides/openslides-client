@@ -30,6 +30,7 @@ import { NoActiveMeetingError } from '../pages/meetings/services/active-meeting-
 import { MeetingControllerService } from '../pages/meetings/services/meeting-controller.service';
 import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
+import { OrganizationService } from '../pages/organization/services/organization.service';
 import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate';
 import { DataStoreService } from './data-store.service';
@@ -103,7 +104,10 @@ export class OperatorService {
     }
 
     public get knowsMultipleMeetings(): boolean {
-        return this.isAnyManager || this.user.hasMultipleMeetings;
+        return (
+            this.isAnyManager ||
+            (this.isAnonymous ? this.defaultAnonUser.hasMultipleMeetings : this.user.hasMultipleMeetings)
+        );
     }
 
     public get onlyMeeting(): Id {
@@ -259,7 +263,8 @@ export class OperatorService {
         private autoupdateService: AutoupdateService,
         private modelRequestBuilder: ModelRequestBuilderService,
         private meetingRepo: MeetingControllerService,
-        private meetingSettings: MeetingSettingsService
+        private meetingSettings: MeetingSettingsService,
+        private organizationService: OrganizationService
     ) {
         this.setNotReady();
         // General environment in which the operator moves
@@ -347,6 +352,19 @@ export class OperatorService {
                 }
             }
         });
+        this.organizationService.organizationObservable.pipe().subscribe(organization => {
+            if (this.isAnonymous) {
+                this.defaultAnonUser = new ViewUser(
+                    new User({
+                        id: 0,
+                        first_name: `Guest`,
+                        meeting_ids:
+                            organization?.active_meetings.filter(m => m.enable_anonymous).map(m => m.id) || null
+                    })
+                );
+                this._operatorUpdatedSubject.next();
+            }
+        });
         this.operatorUpdated.subscribe(() => {
             this.checkReadyState();
         });
@@ -379,7 +397,7 @@ export class OperatorService {
 
     public isInMeeting(meetingId: Id): boolean {
         const meeting = this.meetingRepo.getViewModel(meetingId);
-        return (meeting.enable_anonymous && this.isAnonymous) || this.user.meeting_ids?.includes(meetingId) || false;
+        return (meeting?.enable_anonymous && this.isAnonymous) || this.user.meeting_ids?.includes(meetingId) || false;
     }
 
     private updateUser(user: ViewUser): void {
