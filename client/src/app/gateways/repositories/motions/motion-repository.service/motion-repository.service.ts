@@ -72,6 +72,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
                         use_original_submitter: useOriginalSubmitter,
                         use_original_number: useOriginalNumber,
                         with_amendments: useOriginalVersion,
+                        with_change_recommendations: useOriginalVersion,
                         ...motion
                     };
                 })
