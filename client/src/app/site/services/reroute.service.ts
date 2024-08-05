@@ -25,6 +25,11 @@ export class RerouteService {
      * returned.
      */
     public async handleForbiddenRoute(routeData: Data, segments: UrlSegment[], url?: string): Promise<UrlTree> {
+        const state = this.router.getCurrentNavigation()?.extras?.state || {};
+        if (state[`redirectOnGuardFail`]) {
+            return this.router.createUrlTree([`/`]);
+        }
+
         if (segments.length === 0) {
             const fallbackMeetingId = Number.isNaN(this.osRouter.getMeetingId(url))
                 ? null
@@ -79,7 +84,10 @@ export class RerouteService {
         return this.router.createUrlTree([meetingId, ...segments]);
     }
 
-    public toLogin(): UrlTree {
+    public toLogin(previousUrl: UrlTree | string): UrlTree {
+        if (previousUrl) {
+            this.osRouter.setNextAfterLoginUrl(previousUrl);
+        }
         return this.router.createUrlTree([`login`]);
     }
 }

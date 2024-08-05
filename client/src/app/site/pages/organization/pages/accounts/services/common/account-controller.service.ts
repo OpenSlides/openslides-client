@@ -43,9 +43,9 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
             .pipe(map(accounts => this.filterAccountsForCommitteeAdmins(accounts)));
     }
 
-    public override getSortedViewModelListObservable(): Observable<ViewUser[]> {
+    public override getSortedViewModelListObservable(key?: string): Observable<ViewUser[]> {
         return super
-            .getSortedViewModelListObservable()
+            .getSortedViewModelListObservable(key)
             .pipe(map(accounts => this.filterAccountsForCommitteeAdmins(accounts)));
     }
 
