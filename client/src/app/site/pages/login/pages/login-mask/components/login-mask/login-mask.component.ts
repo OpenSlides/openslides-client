@@ -11,6 +11,7 @@ import { OrganizationService } from 'src/app/site/pages/organization/services/or
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 import { AuthService } from 'src/app/site/services/auth.service';
+import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
@@ -94,6 +95,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         private authService: AuthService,
         private operator: OperatorService,
         private route: ActivatedRoute,
+        private osRouter: OpenSlidesRouterService,
         private formBuilder: UntypedFormBuilder,
         private orgaService: OrganizationService,
         private orgaSettings: OrganizationSettingsService,
@@ -118,7 +120,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         // Maybe the operator changes and the user is logged in. If so, redirect him and boot OpenSlides.
         this.operatorSubscription = this.operator.operatorUpdated.subscribe(() => {
             this.clearOperatorSubscription();
-            this.authService.redirectUser(this.currentMeetingId);
+            this.osRouter.navigateAfterLogin(this.currentMeetingId);
         });
 
         this.route.queryParams.pipe(filter(params => params[`checkBrowser`])).subscribe(params => {
@@ -167,7 +169,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         try {
             // this.spinnerService.show(this.loginMessage, { hideWhenStable: true });
             const { username, password } = this.formatLoginInputValues(this.loginForm.value);
-            await this.authService.login(username, password, this.currentMeetingId);
+            await this.authService.login(username, password);
         } catch (e: any) {
             this.isWaitingOnLogin = false;
             // this.spinnerService.hide();
