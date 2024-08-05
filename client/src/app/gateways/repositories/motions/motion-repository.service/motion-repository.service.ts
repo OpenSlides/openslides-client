@@ -56,13 +56,22 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.sendBulkActionToBackend(MotionAction.CREATE, payload);
     }
 
-    public async createForwarded(meetingIds: Id[], ...motions: any[]): Promise<{ success: number; partial: number }> {
+    public async createForwarded(
+        meetingIds: Id[],
+        useOriginalSubmitter: boolean,
+        useOriginalNumber: boolean,
+        useOriginalVersion: boolean,
+        ...motions: any[]
+    ): Promise<{ success: number; partial: number }> {
         const payloads: any[][] = [];
         motions.forEach(motion => {
             payloads.push(
                 meetingIds.map(id => {
                     return {
                         meeting_id: id,
+                        use_original_submitter: useOriginalSubmitter,
+                        use_original_number: useOriginalNumber,
+                        with_amendments: useOriginalVersion,
                         ...motion
                     };
                 })
