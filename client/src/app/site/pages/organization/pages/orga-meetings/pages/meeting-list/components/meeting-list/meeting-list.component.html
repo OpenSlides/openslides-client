@@ -35,9 +35,9 @@
     <div
         *osScrollingTableCell="'name'; row as meeting"
         class="cell-slot fill"
-        [class.no-access]="isMultiSelect || !meeting.canAccess() || !meeting.canBeEnteredBy(operator.operatorId)"
+        [class.no-access]="isMultiSelect || !meeting.canAccess() || !meeting.canBeEnteredBy(operator.user)"
     >
-        @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnteredBy(operator.operatorId)) {
+        @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnteredBy(operator.user)) {
             <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
         }
         <div class="flex-vertical-center overflow-hidden">
@@ -125,9 +125,9 @@
 
     <div
         *osScrollingTableCell="'meta'; row as meeting; config: { width: 60 }"
-        [class.no-access]="isMultiSelect || !meeting.canAccess() || !meeting.canBeEnteredBy(operator.operatorId)"
+        [class.no-access]="isMultiSelect || !meeting.canAccess() || !meeting.canBeEnteredBy(operator.user)"
     >
-        @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnteredBy(operator.operatorId)) {
+        @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnteredBy(operator.user)) {
             <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
         }
         <div>

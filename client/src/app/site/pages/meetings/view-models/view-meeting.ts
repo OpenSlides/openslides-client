@@ -134,8 +134,8 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
         return this[`default_projectors_${place}`];
     }
 
-    public canBeEnteredBy(userId: number): boolean {
-        return !this.locked_from_inside || this.user_ids?.includes(userId);
+    public canBeEnteredBy(user: ViewUser): boolean {
+        return !this.locked_from_inside || user.group_ids(this.id).length > 0;
     }
 }
 interface IMeetingRelations {
