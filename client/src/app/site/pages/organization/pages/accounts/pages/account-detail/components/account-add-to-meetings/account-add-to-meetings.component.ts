@@ -110,8 +110,10 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
                 .pipe(
                     map(meetings =>
                         this.operator.isSuperAdmin
-                            ? meetings
-                            : meetings.filter(meeting => this.operator.isInMeeting(meeting.id))
+                            ? meetings.filter(meeting => !meeting.locked_from_inside)
+                            : meetings.filter(
+                                  meeting => this.operator.isInMeeting(meeting.id) && !meeting.locked_from_inside
+                              )
                     )
                 )
                 .subscribe(meetings => this.meetingsSubject.next(meetings.filter(meeting => !meeting.isArchived)))

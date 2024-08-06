@@ -143,6 +143,11 @@
                                 {{ 'Is speaker' | translate }}
                             </li>
                         }
+                        @if (meeting.is_locked) {
+                            <li>
+                                {{ 'Meeting is locked' | translate }}
+                            </li>
+                        }
                     </ul>
                 }
                 @for (committee of getManagedCommittees(user); track committee) {

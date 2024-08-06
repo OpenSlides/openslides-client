@@ -14,6 +14,7 @@ export interface GetUserRelatedModelsUser {
         assignment_candidate_ids: Id[];
         speaker_ids: Id[];
         motion_submitter_ids: Id[];
+        is_locked?: boolean;
     }[];
     committees?: GetUserRelatedModelsCommittee[];
     error?: string; // This is in case the presenter fails in an unpredicted way
