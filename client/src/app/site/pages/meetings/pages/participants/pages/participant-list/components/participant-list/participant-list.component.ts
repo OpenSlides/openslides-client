@@ -231,6 +231,12 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             return true;
         } else if (user.organization_management_level) {
             return true;
+        } else if (user.group_ids().includes(this.activeMeeting.admin_group_id)) {
+            return true;
+        } else if (user.committee_management_ids?.includes(this.activeMeeting.committee_id)) {
+            return true;
+        } else if (user.groups().some(group => group.permissions.includes(Permission.userCanManage))) {
+            return true;
         } else {
             return !this.operator.hasPerms(Permission.userCanManage);
         }
