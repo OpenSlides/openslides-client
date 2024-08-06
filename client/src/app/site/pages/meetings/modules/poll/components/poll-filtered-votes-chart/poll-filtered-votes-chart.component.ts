@@ -22,6 +22,10 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
     public totalAmountWeighted = 0;
     public voteAmounts: VoteAmount[] = [];
 
+    public get filtersEnabled(): boolean {
+        return this.filterService.filterStack.length > 0;
+    }
+
     public constructor(
         private filterService: VotesFilterService,
         private cd: ChangeDetectorRef
