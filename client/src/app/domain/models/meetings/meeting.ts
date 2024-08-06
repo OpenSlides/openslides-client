@@ -199,6 +199,9 @@ export class Settings {
 
     // Structure Level
     public structure_level_ids: Id[]; // (structure_level/meeting_id)
+
+    // lock meeting
+    public locked_from_inside: boolean;
 }
 
 export class Meeting extends BaseModel<Meeting> {
@@ -293,6 +296,7 @@ export class Meeting extends BaseModel<Meeting> {
         `end_time`,
         `imported_at`,
         `language`,
+        `locked_from_inside`,
         `jitsi_domain`,
         `jitsi_room_name`,
         `jitsi_room_password`,
