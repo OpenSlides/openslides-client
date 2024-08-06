@@ -1,5 +1,7 @@
 <div class="progress-wrapper background-primary">
-    <mat-icon class="end-icon foreground-primary" *ngIf="endIcon">{{ endIcon }}</mat-icon>
+    @if (endIcon) {
+        <mat-icon class="end-icon foreground-primary">{{ endIcon }}</mat-icon>
+    }
     <div class="slot foreground-primary">
         <ng-content></ng-content>
     </div>

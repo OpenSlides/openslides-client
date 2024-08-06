@@ -21,10 +21,10 @@ export class AssignmentCandidateRepositoryService extends BaseMeetingRelatedRepo
         super(repositoryServiceCollector, AssignmentCandidate);
     }
 
-    public getTitle = (viewAssignmentCandidate: ViewAssignmentCandidate) =>
+    public getTitle = (viewAssignmentCandidate: ViewAssignmentCandidate): string =>
         viewAssignmentCandidate.user?.getTitle() ?? UnknownUserLabel;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Candidates` : `Candidate`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Candidates` : `Candidate`);
 
     public async create(assignment: Identifiable, meetingUserId: Id): Promise<Identifiable> {
         const payload = {

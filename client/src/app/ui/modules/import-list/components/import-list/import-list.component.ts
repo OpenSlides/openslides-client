@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
-import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { auditTime, distinctUntilChanged, firstValueFrom, map, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -40,11 +40,11 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
 
-    @ContentChildren(ImportListFirstTabDirective, { read: MatTab })
-    public importListFirstTabs!: QueryList<MatTab>;
+    @ContentChildren(ImportListFirstTabDirective)
+    public importListFirstTabs!: QueryList<ImportListFirstTabDirective>;
 
-    @ContentChildren(ImportListLastTabDirective, { read: MatTab })
-    public importListLastTabs!: QueryList<MatTab>;
+    @ContentChildren(ImportListLastTabDirective)
+    public importListLastTabs!: QueryList<ImportListLastTabDirective>;
 
     @ContentChild(ImportListStatusTemplateDirective, { read: TemplateRef })
     public importListStateTemplate: TemplateRef<any>;
@@ -207,7 +207,10 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
     private _requiredFields: string[] = [];
     private _defaultColumns: ImportListHeaderDefinition[] = [];
 
-    public constructor(private host: ElementRef<HTMLElement>, private dialog: MatDialog) {}
+    public constructor(
+        private host: ElementRef<HTMLElement>,
+        private dialog: MatDialog
+    ) {}
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)

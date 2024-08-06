@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
@@ -15,17 +16,17 @@ export class FullscreenProjectorMainComponent extends BaseModelRequestHandlerCom
         super();
     }
 
-    protected override onParamsChanged(params: any, _oldParams?: any): void {
+    protected override onShouldCreateModelRequests(params: any, meetingId: Id): void {
         if (params[`id`]) {
             this.sequentialNumberMappingService
                 .getIdBySequentialNumber({
                     collection: ViewProjector.COLLECTION,
-                    meetingId: params[`meetingId`],
+                    meetingId,
                     sequentialNumber: +params[`id`]
                 })
                 .then(id => {
                     if (id) {
-                        this.subscribeTo(getProjectorSubscriptionConfig(id), { hideWhenMeetingChanged: true });
+                        this.subscribeTo(getProjectorSubscriptionConfig(id), { hideWhenDestroyed: true });
                     }
                 });
         }

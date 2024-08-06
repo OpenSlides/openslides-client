@@ -1,123 +1,128 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar
-        [nav]="false"
-        [goBack]="true"
         [editMode]="isMobile && manualSortMode"
+        [goBack]="true"
+        [nav]="false"
         (cancelEditEvent)="setManualSortMode(false)"
         (saveEvent)="onMobileSaveSorting()"
     >
         <!-- Title -->
         <div class="title-slot">
             <h2>
-                <span *ngIf="!isCurrentListOfSpeakers">{{ 'List of speakers' | translate }}</span>
-                <span *ngIf="isCurrentListOfSpeakers">{{ 'Current list of speakers' | translate }}</span>
+                @if (!isCurrentListOfSpeakers) {
+                    <span>{{ 'List of speakers' | translate }}</span>
+                }
+                @if (isCurrentListOfSpeakers) {
+                    <span>{{ 'Current list of speakers' | translate }}</span>
+                }
             </h2>
         </div>
-        <div class="menu-slot" *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]">
+        <ng-container *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]" class="menu-slot">
             <button
-                type="button"
                 mat-icon-button
+                type="button"
+                [disabled]="!canReaddLastSpeaker"
                 matTooltip="{{ 'Re-add last speaker' | translate }}"
                 (click)="readdLastSpeaker()"
-                [disabled]="!canReaddLastSpeaker"
             >
                 <mat-icon>undo</mat-icon>
             </button>
-            <button type="button" mat-icon-button [matMenuTriggerFor]="speakerMenu">
+            <button mat-icon-button type="button" [matMenuTriggerFor]="speakerMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
-        </div>
+        </ng-container>
     </os-head-bar>
 
     <os-list-of-speakers-content
         #content
+        [addBottomSpacer]="true"
         [listOfSpeakers]="viewListOfSpeakers"
         [sortMode]="manualSortMode"
-        [addBottomSpacer]="true"
-        (isListOfSpeakersEmptyEvent)="isListOfSpeakersEmpty = $event"
         (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
+        (isListOfSpeakersEmptyEvent)="isListOfSpeakersEmpty = $event"
     ></os-list-of-speakers-content>
 
     <!-- special los part for structure level -->
-    <div
-        *ngIf="
-            structureLevelCountdownEnabled &&
-            viewListOfSpeakers &&
-            viewListOfSpeakers.structure_level_list_of_speakers_ids?.length
-        "
-        class="col-right"
-    >
-        <mat-card class="spacer-bottom-60 os-card">
-            <mat-card-content>
-                <os-speaking-times
-                    [currentSpeakingTimes]="viewListOfSpeakers.structure_level_list_of_speakers_ids"
-                    [showProjectionMenu]="true"
-                ></os-speaking-times>
-            </mat-card-content>
-        </mat-card>
-    </div>
-    <div *ngIf="viewListOfSpeakers">
-        <!-- Moderator Note-->
-        <os-moderation-note [listOfSpeakers]="viewListOfSpeakers"></os-moderation-note>
-    </div>
+    @if (
+        structureLevelCountdownEnabled &&
+        viewListOfSpeakers &&
+        viewListOfSpeakers.structure_level_list_of_speakers_ids?.length
+    ) {
+        <div class="col-right">
+            <mat-card class="spacer-bottom-60 os-card">
+                <mat-card-content>
+                    <os-speaking-times
+                        [currentSpeakingTimes]="viewListOfSpeakers.structure_level_list_of_speakers_ids"
+                        [showProjectionMenu]="true"
+                    ></os-speaking-times>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    }
+    @if (viewListOfSpeakers) {
+        <div>
+            <!-- Moderator Note-->
+            <os-moderation-note [listOfSpeakers]="viewListOfSpeakers"></os-moderation-note>
+        </div>
+    }
 </os-detail-view>
 
 <mat-menu #speakerMenu="matMenu">
-    <button *ngIf="isMobile" mat-menu-item (click)="setManualSortMode(true)">
-        <mat-icon>sort</mat-icon>
-        <span>{{ 'Sort' | translate }}</span>
-    </button>
-
-    <os-projector-button
-        *ngIf="viewListOfSpeakers && projectors && projectors.length > 1"
-        [object]="getClosSlide()"
-        [menuItem]="true"
-    >
-        {{ 'Current list of speakers (as slide)' | translate }}
-    </os-projector-button>
-
-    <os-projector-button *ngIf="viewListOfSpeakers" [object]="viewListOfSpeakers" [menuItem]="true">
-        {{ 'List of speakers' | translate }}
-    </os-projector-button>
-
-    <os-projector-button *ngIf="viewListOfSpeakers" [object]="viewListOfSpeakers.content_object!" [menuItem]="true">
-        {{ getContentObjectProjectorButtonText() | translate }}
-    </os-projector-button>
+    @if (isMobile) {
+        <button mat-menu-item (click)="setManualSortMode(true)">
+            <mat-icon>sort</mat-icon>
+            <span>{{ 'Sort' | translate }}</span>
+        </button>
+    }
+    @if (viewListOfSpeakers && projectors && projectors.length > 1) {
+        <os-projector-button [menuItem]="true" [object]="getClosSlide()">
+            {{ 'Current list of speakers (as slide)' | translate }}
+        </os-projector-button>
+    }
+    @if (viewListOfSpeakers) {
+        <os-projector-button [menuItem]="true" [object]="viewListOfSpeakers">
+            {{ 'List of speakers' | translate }}
+        </os-projector-button>
+    }
+    @if (viewListOfSpeakers) {
+        <os-projector-button [menuItem]="true" [object]="viewListOfSpeakers.content_object!">
+            {{ getContentObjectProjectorButtonText() | translate }}
+        </os-projector-button>
+    }
 
     <button mat-menu-item (click)="setLosClosed(!isListOfSpeakersClosed)">
-        <ng-container *ngIf="isListOfSpeakersClosed">
-            <mat-icon>lock_open</mat-icon>
-            <span>{{ 'Open list of speakers' | translate }}</span>
-        </ng-container>
-        <ng-container *ngIf="!isListOfSpeakersClosed">
-            <mat-icon>lock</mat-icon>
+        <mat-icon>{{ isListOfSpeakersClosed ? 'lock_open' : 'lock' }}</mat-icon>
+        @if (!isListOfSpeakersClosed) {
             <span>{{ 'Close list of speakers' | translate }}</span>
-        </ng-container>
+        }
+        @if (isListOfSpeakersClosed) {
+            <span>{{ 'Open list of speakers' | translate }}</span>
+        }
     </button>
 
     <mat-divider></mat-divider>
 
     <button
-        mat-menu-item
-        (click)="clearPreviousSpeakerList()"
-        [disabled]="isPreviousListOfSpeakersEmpty"
         class="red-warning-text"
+        mat-menu-item
+        [disabled]="isPreviousListOfSpeakersEmpty"
+        (click)="clearPreviousSpeakerList()"
     >
         <mat-icon>delete</mat-icon>
         <span>{{ 'Remove all previous speakers' | translate }}</span>
     </button>
 
     <button
-        mat-menu-item
-        (click)="clearNextSpeakerList()"
-        [disabled]="isNextListOfSpeakersEmpty"
         class="red-warning-text"
+        mat-menu-item
+        [disabled]="isNextListOfSpeakersEmpty"
+        (click)="clearNextSpeakerList()"
     >
         <mat-icon>delete</mat-icon>
         <span>{{ 'Remove all next speakers' | translate }}</span>
     </button>
 
-    <button mat-menu-item (click)="clearSpeakerList()" [disabled]="isListOfSpeakersEmpty" class="red-warning-text">
+    <button class="red-warning-text" mat-menu-item [disabled]="isListOfSpeakersEmpty" (click)="clearSpeakerList()">
         <mat-icon>delete</mat-icon>
         <span>{{ 'Remove all speakers' | translate }}</span>
     </button>

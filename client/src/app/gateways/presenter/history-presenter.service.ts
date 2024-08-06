@@ -48,7 +48,7 @@ interface HistoryPresenterResponse {
 
 const HISTORY_ENDPOINT = `/system/autoupdate/history_information`;
 
-const getUniqueItems = (positions: Position[]) => {
+const getUniqueItems = (positions: Position[]): Position[] => {
     const positionMap: { [positionNumber: number]: Position } = {};
     for (const position of positions) {
         positionMap[position.position] = position;
@@ -60,7 +60,10 @@ const getUniqueItems = (positions: Position[]) => {
     providedIn: `root`
 })
 export class HistoryPresenterService {
-    public constructor(private http: HttpService, private userRepo: UserControllerService) {}
+    public constructor(
+        private http: HttpService,
+        private userRepo: UserControllerService
+    ) {}
 
     public async call(fqid: Fqid): Promise<HistoryPosition[]> {
         const response = await this.http.post<HistoryPresenterResponse>(HISTORY_ENDPOINT, undefined, {
@@ -70,13 +73,14 @@ export class HistoryPresenterService {
             .flatMap(positions => getUniqueItems(positions))
             .sort((positionA, positionB) => positionB.timestamp - positionA.timestamp)
             .map(position => {
+                const userView = this.userRepo.getViewModel(position.user_id);
                 return new HistoryPosition({
                     ...position,
                     information: Array.isArray(position.information)
                         ? position.information
                         : position?.information[fqid],
                     fqid,
-                    user: this.userRepo.getViewModel(position.user_id)?.getFullName()
+                    user: userView?.getFullName() ? userView.getFullName() : `user/${position.user_id}`
                 });
             });
     }

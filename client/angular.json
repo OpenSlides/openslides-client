@@ -19,12 +19,15 @@
             "prefix": "os",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/client",
+                        "outputPath": {
+                            "base": "dist/client"
+                        },
                         "index": "src/index.html",
-                        "main": "src/main.ts",
-                        "polyfills": "src/polyfills.ts",
+                        "polyfills": [
+                            "src/polyfills.ts"
+                        ],
                         "tsConfig": "tsconfig.app.json",
                         "inlineStyleLanguage": "scss",
                         "assets": [
@@ -34,11 +37,6 @@
                             "src/ngsw-safety.json",
                             {
                                 "glob": "**/*",
-                                "input": "node_modules/tinymce",
-                                "output": "/tinymce/"
-                            },
-                            {
-                                "glob": "**/*",
                                 "input": "node_modules/cm-chessboard/assets/",
                                 "output": "/chess/"
                             }
@@ -46,8 +44,13 @@
                         "styles": ["src/styles.scss"],
                         "scripts": ["src/assets/jitsi/external_api.js"],
                         "webWorkerTsConfig": "tsconfig.worker.json",
-                        "serviceWorker": true,
-                        "ngswConfigPath": "ngsw-config.json"
+                        "serviceWorker": "ngsw-config.json",
+                        "browser": "src/main.ts",
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "."
+                            ]
+                        }
                     },
                     "configurations": {
                         "production": {
@@ -55,12 +58,12 @@
                                 {
                                     "type": "initial",
                                     "maximumWarning": "1500kb",
-                                    "maximumError": "3mb"
+                                    "maximumError": "4mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "4kb",
-                                    "maximumError": "8kb"
+                                    "maximumWarning": "10kb",
+                                    "maximumError": "50kb"
                                 }
                             ],
                             "fileReplacements": [
@@ -72,10 +75,8 @@
                             "outputHashing": "all"
                         },
                         "development": {
-                            "buildOptimizer": false,
                             "optimization": false,
                             "outputHashing": "none",
-                            "vendorChunk": true,
                             "extractLicenses": false,
                             "sourceMap": true,
                             "namedChunks": true,
@@ -90,10 +91,10 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "configurations": {
                         "production": {
-                            "browserTarget": "client:build:production"
+                            "buildTarget": "client:build:production"
                         },
                         "development": {
-                            "browserTarget": "client:build:development"
+                            "buildTarget": "client:build:development"
                         }
                     },
                     "defaultConfiguration": "development"
@@ -101,7 +102,7 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "client:build"
+                        "buildTarget": "client:build"
                     }
                 },
                 "test": {

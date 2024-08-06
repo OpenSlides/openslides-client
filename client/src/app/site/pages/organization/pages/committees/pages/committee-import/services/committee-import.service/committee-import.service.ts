@@ -38,7 +38,7 @@ export class CommitteeImportService extends BaseBackendImportService {
 
     public downloadCsvExample(): void {
         this.exporter.dummyCSVExport(
-            committeeHeadersAndVerboseNames,
+            Object.keys(committeeHeadersAndVerboseNames),
             COMMITTEE_CSV_EXPORT_EXAMPLE,
             `${this.translate.instant(`committee-example`)}.csv`
         );

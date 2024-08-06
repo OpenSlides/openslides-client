@@ -1,116 +1,127 @@
 <os-head-bar
-    [hasMainButton]="true"
     mainButtonIcon="edit"
-    [mainActionTooltip]="'Edit account' | translate"
-    (mainEvent)="editMember()"
-    [goBack]="false"
-    [nav]="false"
     [editMode]="isEditingUser"
+    [goBack]="false"
+    [hasMainButton]="canEdit"
     [isSaveButtonEnabled]="isFormValid"
+    [mainActionTooltip]="'Edit account' | translate"
+    [nav]="false"
     [saveAction]="getSaveAction()"
     (cancelEditEvent)="onCancel()"
+    (mainEvent)="editMember()"
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2 *ngIf="isNewUser">{{ 'New account' | translate }}</h2>
-        <h2 *ngIf="!isNewUser">{{ user?.full_name }}</h2>
+        @if (isNewUser) {
+            <h2>{{ 'New account' | translate }}</h2>
+        }
+        @if (!isNewUser) {
+            <h2>{{ user?.full_name }}</h2>
+        }
     </div>
 
     <!-- Menu -->
-    <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="userExtraMenu">
+    <ng-container *osOmlPerms="userOML" class="menu-slot">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="userExtraMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
 </os-head-bar>
 
 <os-user-detail-view
-    [isEditing]="isEditingUser"
-    [isNewUser]="isNewUser"
     [additionalFormControls]="additionalFormControls"
     [generatePasswordFn]="getRandomPasswordFn()"
+    [isEditing]="isEditingUser"
+    [isNewUser]="isNewUser"
+    [useAdditionalEditTemplate]="!!organizationManagementLevels.length"
     [user]="user"
     (changeEvent)="personalInfoFormValue = $event"
-    (validEvent)="isFormValid = $event"
     (errorEvent)="formErrors = $event"
+    (validEvent)="isFormValid = $event"
 >
     <ng-template #editView let-form="form">
         <h2>{{ 'Organization specific information' | translate }}</h2>
         <div [formGroup]="form">
-            <!-- Default Vote weight -->
-            <mat-form-field class="form100 force-min-with">
-                <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
-                <input type="number" matInput formControlName="default_vote_weight" />
-                <mat-error *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0" translate>
-                    Please select a vote weight greater than or equal to 0.000001
-                </mat-error>
-                <mat-error
-                    *ngIf="isDefaultVoteWeightError && form.controls['default_vote_weight'].value <= 0"
-                    translate
-                >
-                    Please select a vote weight greater than zero.
-                </mat-error>
-            </mat-form-field>
-        </div>
-
-        <div [formGroup]="form">
-            <div *osOmlPerms="OML.can_manage_users">
+            <!-- Administration roles (at organization level) -->
+            <div *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
                 <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Administration roles (at organization level)' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">
-                        <mat-option [value]="null" *ngIf="!orgaManagementLevelChangeDisabled">-</mat-option>
-                        <mat-option
-                            *ngFor="let level of organizationManagementLevels"
-                            [value]="level"
-                            [disabled]="orgaManagementLevelChangeDisabled"
-                        >
-                            {{ getOmlVerboseName(level) | translate }}
-                        </mat-option>
+                        @if (!orgaManagementLevelChangeDisabled) {
+                            <mat-option [value]="null">-</mat-option>
+                        }
+                        @for (level of organizationManagementLevels; track level) {
+                            <mat-option [disabled]="orgaManagementLevelChangeDisabled" [value]="level">
+                                {{ getOmlVerboseName(level) | translate }}
+                            </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
             </div>
+            <!-- Committee admin -->
             <div *osOmlPerms="OML.can_manage_organization">
                 <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Committee admin' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="committee_management_ids"
                         [multiple]="true"
-                        [subscriptionConfig]="committeeSubscriptionConfig"
                         [repo]="committeeController"
                         [sortService]="committeeSortService"
+                        [subscriptionConfig]="committeeSubscriptionConfig"
                         [transformPropagateFn]="getTransformPropagateFn()"
                         [transformSetFn]="getTransformSetFn()"
                     ></os-repo-search-selector>
                 </mat-form-field>
             </div>
         </div>
+        <!-- Default Vote weight -->
+        <div [formGroup]="form">
+            <mat-form-field class="form100 force-min-with">
+                <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
+                <input formControlName="default_vote_weight" matInput type="number" />
+                @if (isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0) {
+                    <mat-error translate>Please select a vote weight greater than or equal to 0.000001</mat-error>
+                }
+                @if (isDefaultVoteWeightError && form.controls['default_vote_weight'].value <= 0) {
+                    <mat-error translate>Please select a vote weight greater than zero.</mat-error>
+                }
+            </mat-form-field>
+        </div>
     </ng-template>
 
     <ng-template #showView let-user="user">
         <h2>{{ 'Organization specific information' | translate }}</h2>
-
-        <div *ngIf="user.default_vote_weight || user.default_vote_weight === 0">
-            <h4>{{ 'Default vote weight' | translate }}</h4>
-            <span>{{ user.default_vote_weight }}</span>
-        </div>
-
         <!-- Organization management level -->
-        <div *ngIf="user.organization_management_level">
-            <h4>{{ 'Administration roles (at organization level)' | translate }}</h4>
-            <span>{{ getOmlVerboseName(user.organization_management_level) | translate }}</span>
-        </div>
-
-        <div *ngIf="user?.isLastEmailSent">
+        @if (user.organization_management_level) {
             <div>
-                <h4>{{ 'Last email sent' | translate }}</h4>
-                <span>{{ user.last_email_sent | localizedDate }}</span>
+                <h4>{{ 'Administration roles (at organization level)' | translate }}</h4>
+                <span>{{ getOmlVerboseName(user.organization_management_level) | translate }}</span>
             </div>
-        </div>
+        }
+        <!-- Default vote weight -->
+        @if (user.default_vote_weight || user.default_vote_weight === 0) {
+            <div>
+                <h4>{{ 'Default vote weight' | translate }}</h4>
+                <span>{{ user.default_vote_weight }}</span>
+            </div>
+        }
+        <!-- Last email sent -->
+        @if (user?.isLastEmailSent) {
+            <div>
+                <div>
+                    <h4>{{ 'Last email sent' | translate }}</h4>
+                    <span>{{ user.last_email_sent | localizedDate }}</span>
+                </div>
+            </div>
+        }
+        <!-- Last login -->
         <div>
-            <div *ngIf="user?.isLastLogin">
-                <h4>{{ 'Last login' | translate }}</h4>
-                <span>{{ user.last_login | localizedDate }}</span>
-            </div>
+            @if (user?.isLastLogin) {
+                <div>
+                    <h4>{{ 'Last login' | translate }}</h4>
+                    <span>{{ user.last_login | localizedDate }}</span>
+                </div>
+            }
         </div>
     </ng-template>
 
@@ -118,116 +129,131 @@
         <!-- Meeting Table -->
         <ng-container>
             <h2>{{ 'Committees and meetings' | translate }}</h2>
-            <p *ngIf="canSeeParticipationTable">
-                {{ user.short_name }} {{ 'is assigned to the following committees, meetings and groups' | translate }}:
-            </p>
-            <p *ngIf="!canSeeParticipationTable">
-                {{ user.short_name }} {{ 'is not assigned to any committees or meetings yet' | translate }}.
-            </p>
+            @if (canSeeParticipationTable) {
+                <p>
+                    {{ user.short_name }}
+                    {{ 'is assigned to the following committees, meetings and groups' | translate }}:
+                </p>
+            }
+            @if (!canSeeParticipationTable) {
+                <p>{{ user.short_name }} {{ 'is not assigned to any committees or meetings yet' | translate }}.</p>
+            }
 
-            <table *ngIf="canSeeParticipationTable" class="participation-table">
-                <tr class="header-underline">
-                    <th>
-                        <span translate>Committees</span>
-                        ({{ user.committee_ids?.length }})
-                    </th>
-                    <th class="admin-column" *ngIf="comitteeAdministrationAmount">
-                        ({{ comitteeAdministrationAmount }})
-                    </th>
-                    <th>
-                        <span translate>Meetings</span>
-                        ({{ user.meeting_ids?.length }})
-                    </th>
-                    <th translate>Groups</th>
-                </tr>
-                <ng-container *ngFor="let row of tableData | keyvalue : tableDataAscOrderCompare; last as lastLine">
-                    <!-- Handle committees without meetings-->
-                    <ng-container *ngIf="!getNumberOfKeys(row.value.meetings)">
-                        <tr [ngClass]="getCellClass(true, true, lastLine)">
-                            <td>
-                                <a [routerLink]="'/committees/' + row.key + ''">{{ row.value.committee_name }}</a>
-                            </td>
-                            <td class="admin-column" *ngIf="comitteeAdministrationAmount">
-                                <mat-icon
-                                    matTooltip="{{ 'Committee admin' | translate }}"
-                                    [matTooltipPosition]="'left'"
-                                    *ngIf="row.value.is_manager"
-                                >
-                                    engineering
-                                </mat-icon>
-                            </td>
-                            <td colspan="2"></td>
-                        </tr>
-                    </ng-container>
-                    <!-- Handle committees with meetings-->
-                    <tr
-                        *ngFor="
-                            let meeting_row of row.value.meetings | keyvalue : tableDataAscOrderCompare;
-                            first as isFirst;
-                            last as isLast
-                        "
-                        [ngClass]="getCellClass(true, true, lastLine)"
-                    >
-                        <td *ngIf="isFirst" [attr.rowspan]="getNumberOfKeys(row.value.meetings)">
-                            <a [routerLink]="'/committees/' + row.key + ''">{{ row.value.committee_name }}</a>
-                        </td>
-                        <td
-                            class="admin-column"
-                            *ngIf="isFirst && comitteeAdministrationAmount"
-                            [attr.rowspan]="getNumberOfKeys(row.value.meetings)"
-                        >
-                            <mat-icon
-                                matTooltip="{{ 'Committee admin' | translate }}"
-                                [matTooltipPosition]="'left'"
-                                *ngIf="row.value.is_manager"
-                            >
-                                engineering
-                            </mat-icon>
-                        </td>
-                        <td [ngClass]="getCellClass(false, isLast, lastLine)">
-                            <a [routerLink]="'/' + meeting_row.key + ''">{{ meeting_row.value.meeting_name }}</a>
-                        </td>
-                        <td [ngClass]="getCellClass(false, isLast, lastLine)">
-                            <span *ngFor="let group of meeting_row.value.group_names; last as lastGroup">
-                                {{ group }}{{ !lastGroup ? ', ' : '' }}
-                            </span>
-                        </td>
+            @if (canSeeParticipationTable) {
+                <table class="participation-table">
+                    <tr class="header-underline">
+                        <th>
+                            <span translate>Committees</span>
+                            ({{ numCommittees }})
+                        </th>
+                        @if (comitteeAdministrationAmount) {
+                            <th class="admin-column">({{ comitteeAdministrationAmount }})</th>
+                        }
+                        <th>
+                            <span translate>Meetings</span>
+                            ({{ user.meetings?.length }})
+                        </th>
+                        <th translate>Groups</th>
                     </tr>
-                </ng-container>
-            </table>
+                    @for (row of tableData | keyvalue: tableDataAscOrderCompare; track row; let lastLine = $last) {
+                        <!-- Handle committees without meetings-->
+                        @if (!getNumberOfKeys(row.value.meetings)) {
+                            <tr [ngClass]="getCellClass(true, true, lastLine)">
+                                <td>
+                                    <a [routerLink]="'/committees/' + row.key + ''">{{ row.value.committee_name }}</a>
+                                </td>
+                                @if (comitteeAdministrationAmount) {
+                                    <td class="admin-column">
+                                        @if (row.value.is_manager) {
+                                            <mat-icon
+                                                matTooltip="{{ 'Committee admin' | translate }}"
+                                                [matTooltipPosition]="'left'"
+                                            >
+                                                engineering
+                                            </mat-icon>
+                                        }
+                                    </td>
+                                }
+                                <td colspan="2"></td>
+                            </tr>
+                        }
+                        <!-- Handle committees with meetings-->
+                        @for (
+                            meeting_row of row.value.meetings | keyvalue: tableDataAscOrderCompare;
+                            track meeting_row;
+                            let isFirst = $first;
+                            let isLast = $last
+                        ) {
+                            <tr [ngClass]="getCellClass(true, true, lastLine)">
+                                @if (isFirst) {
+                                    <td [attr.rowspan]="getNumberOfKeys(row.value.meetings)">
+                                        <a [routerLink]="'/committees/' + row.key + ''">
+                                            {{ row.value.committee_name }}
+                                        </a>
+                                    </td>
+                                }
+                                @if (isFirst && comitteeAdministrationAmount) {
+                                    <td class="admin-column" [attr.rowspan]="getNumberOfKeys(row.value.meetings)">
+                                        @if (row.value.is_manager) {
+                                            <mat-icon
+                                                matTooltip="{{ 'Committee admin' | translate }}"
+                                                [matTooltipPosition]="'left'"
+                                            >
+                                                engineering
+                                            </mat-icon>
+                                        }
+                                    </td>
+                                }
+                                <td [ngClass]="getCellClass(false, isLast, lastLine)">
+                                    <a [routerLink]="'/' + meeting_row.key + ''">
+                                        {{ meeting_row.value.meeting_name }}
+                                    </a>
+                                </td>
+                                <td [ngClass]="getCellClass(false, isLast, lastLine)">
+                                    @for (group of meeting_row.value.group_names; track group; let lastGroup = $last) {
+                                        <span>{{ group }}{{ !lastGroup ? ', ' : '' }}</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
         </ng-container>
     </ng-template>
 </os-user-detail-view>
 
 <ng-template #modelListTemplate let-models="models">
     <ol>
-        <li *ngFor="let model of models">
-            {{ model.getTitle() | translate }}
-        </li>
+        @for (model of models; track model) {
+            <li>
+                {{ model.getTitle() | translate }}
+            </li>
+        }
     </ol>
 </ng-template>
 
 <mat-menu #userExtraMenu="matMenu">
-    <button
-        *ngIf="user && !user.saml_id && operatorHasEqualOrHigherOML"
-        mat-menu-item
-        [routerLink]="['/', 'accounts', user.id, 'password']"
-    >
-        <mat-icon>security</mat-icon>
-        <span>{{ 'Change password' | translate }}</span>
-    </button>
-    <ng-container *osOmlPerms="OML.can_manage_users">
+    @if (user && !user.saml_id && operatorHasEqualOrHigherOML) {
+        <button mat-menu-item [routerLink]="['/', 'accounts', user.id, 'password']">
+            <mat-icon>security</mat-icon>
+            <span>{{ 'Change password' | translate }}</span>
+        </button>
+    }
+    <ng-container *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
         <button mat-menu-item [routerLink]="['/', 'accounts', user?.id, 'meetings']">
             <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </button>
         <!-- invitation email -->
-        <button mat-menu-item *ngIf="user?.email" (click)="sendInvitationEmail()">
-            <mat-icon>mail</mat-icon>
-            <span>{{ 'Send invitation email' | translate }}</span>
-        </button>
+        @if (user?.email) {
+            <button mat-menu-item (click)="sendInvitationEmail()">
+                <mat-icon>mail</mat-icon>
+                <span>{{ 'Send invitation email' | translate }}</span>
+            </button>
+        }
         <mat-divider></mat-divider>
-        <button (click)="deleteUser()" mat-menu-item class="red-warning-text">
+        <button class="red-warning-text" mat-menu-item (click)="deleteUser()">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>

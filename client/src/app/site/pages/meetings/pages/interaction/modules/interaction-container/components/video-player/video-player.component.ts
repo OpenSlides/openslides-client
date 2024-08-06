@@ -11,6 +11,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { catchError, firstValueFrom, map, of } from 'rxjs';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -32,7 +33,10 @@ enum Player {
 @Component({
     selector: `os-video-player`,
     templateUrl: `./video-player.component.html`,
-    styleUrls: [`./video-player.component.scss`],
+    styleUrls: [
+        `./video-player.component.scss`,
+        `../../../../../../../../../../../node_modules/video.js/dist/video-js.css`
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -89,6 +93,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
         return this._videoUrl;
     }
 
+    public posterAlt: string = _(`Video player preview poster`);
     public posterUrl!: string;
     public vjsPlayer: any | null = null;
     public videoId!: string;
@@ -245,8 +250,8 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
                 const script = document.createElement(`script`);
                 script.type = `text/javascript`;
                 script.src = `https://demo.nanocosmos.de/nanoplayer/api/release/nanoplayer.4.min.js`;
-                script.onload = () => {
-                    // @ts-ignore
+                script.onload = (): void => {
+                    // @ts-expect-error NanoPlayer is loaded with the external script specified above
                     this.nanoPlayer = new NanoPlayer(`nanocosmosPlayer`);
                     resolve();
                 };

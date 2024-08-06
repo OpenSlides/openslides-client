@@ -49,9 +49,9 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         super(repositoryServiceCollector, Vote);
     }
 
-    public getTitle = () => `Vote`;
+    public getTitle = (): string => `Vote`;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Votes` : `Vote`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Votes` : `Vote`);
 
     public async sendVote(pollId: Id, payload: VotePayload): Promise<void> {
         const request: Promise<void> = this.http.post(`${VOTE_URL}?id=${pollId}`, payload);
@@ -109,13 +109,16 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         this._fetchVotablePollsTimeout = setTimeout(() => {
             this.requestHasVoted();
             clearInterval(this._fetchVotablePollsInterval);
-            this._fetchVotablePollsInterval = setInterval(() => {
-                if (this._subscribedPolls.size) {
-                    this.requestHasVoted();
-                } else {
-                    clearInterval(this._fetchVotablePollsInterval);
-                }
-            }, 8000 + Math.random() * 2000);
+            this._fetchVotablePollsInterval = setInterval(
+                () => {
+                    if (this._subscribedPolls.size) {
+                        this.requestHasVoted();
+                    } else {
+                        clearInterval(this._fetchVotablePollsInterval);
+                    }
+                },
+                8000 + Math.random() * 2000
+            );
         }, 500);
     }
 

@@ -1,10 +1,14 @@
-<button mat-stroked-button *ngIf="!openedStatistics" (click)="changeViewOfStatistics()">
-    {{ 'Count completed requests to speak' | translate }}
-</button>
-<button mat-stroked-button *ngIf="openedStatistics" (click)="changeViewOfStatistics()">
-    {{ 'Stop counting' | translate }}
-</button>
-<ng-container *ngIf="openedStatistics">
+@if (!openedStatistics) {
+    <button mat-stroked-button (click)="changeViewOfStatistics()">
+        {{ 'Count completed requests to speak' | translate }}
+    </button>
+}
+@if (openedStatistics) {
+    <button mat-stroked-button (click)="changeViewOfStatistics()">
+        {{ 'Stop counting' | translate }}
+    </button>
+}
+@if (openedStatistics) {
     <table class="user-statistics-table">
         <tr>
             <td class="divider-bottom">{{ 'Number of all requests to speak' | translate }}</td>
@@ -25,10 +29,10 @@
         </tr>
     </table>
     <os-list
-        [listObservable]="statisticsByStructureLevelObservable"
         [filterProps]="filterProps"
-        [vScrollFixed]="45"
         [fullScreen]="false"
+        [listObservable]="statisticsByStructureLevelObservable"
+        [vScrollFixed]="45"
     >
         <!-- Content -->
         <div *osScrollingTableCell="'structureLevel'; row as object" class="ellipsis-overflow">
@@ -44,4 +48,4 @@
             {{ object.finishedSpeakers.length }}
         </div>
     </os-list>
-</ng-container>
+}

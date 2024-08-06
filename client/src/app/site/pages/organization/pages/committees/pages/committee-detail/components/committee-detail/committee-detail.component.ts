@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 
 import { getCommitteeDetailSubscriptionConfig } from '../../../../committees.subscription';
@@ -10,12 +9,17 @@ import { getCommitteeDetailSubscriptionConfig } from '../../../../committees.sub
     styleUrls: [`./committee-detail.component.scss`]
 })
 export class CommitteeDetailComponent extends BaseModelRequestHandlerComponent {
-    private committeeId: Id | null = null;
-
     protected override onParamsChanged(params: any, oldParams: any): void {
-        if (params[`committeeId`] !== oldParams[`committeeId`]) {
-            this.committeeId = +params[`committeeId`] || null;
-            this.subscribeTo(getCommitteeDetailSubscriptionConfig(this.committeeId), { hideWhenDestroyed: true });
+        if (params[`committeeId`] !== oldParams[`committeeId`] && +params[`committeeId`]) {
+            this.updateSubscribeTo(getCommitteeDetailSubscriptionConfig(+params[`committeeId`]), {
+                hideWhenDestroyed: true
+            });
+        }
+    }
+
+    protected override onShouldCreateModelRequests(params: any): void {
+        if (+params[`committeeId`]) {
+            this.subscribeTo(getCommitteeDetailSubscriptionConfig(+params[`committeeId`]), { hideWhenDestroyed: true });
         }
     }
 }

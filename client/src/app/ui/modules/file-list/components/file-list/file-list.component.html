@@ -3,40 +3,44 @@
     <div class="custom-table-header">
         <!-- Scrollable folder bar -->
         <span class="folder-nav-bar h-scroller">
-            <button class="folder" mat-button (click)="changeDirectory(null)" [disabled]="isMultiSelect">
+            <button class="folder" mat-button [disabled]="isMultiSelect" (click)="changeDirectory(null)">
                 <mat-icon class="grey-icon foreground-icon">home</mat-icon>
             </button>
-            <span class="folder-section" *ngFor="let directory of directoryChain; let last = last">
-                <span class="arrow">
-                    <mat-icon>chevron_right</mat-icon>
-                </span>
-                <button
-                    class="folder"
-                    mat-button
-                    (click)="changeDirectory(directory.id)"
-                    [disabled]="isMultiSelect"
-                    *ngIf="!last"
-                >
-                    <span class="folder-text">
-                        {{ directory.getTitle() }}
+            @for (directory of directoryChain; track directory; let last = $last) {
+                <span class="folder-section">
+                    <span class="arrow">
+                        <mat-icon>chevron_right</mat-icon>
                     </span>
-                </button>
-                <button
-                    class="folder"
-                    mat-button
-                    [matMenuTriggerFor]="singleMediafileMenu"
-                    [matMenuTriggerData]="{ mediafile: directory }"
-                    [disabled]="isMultiSelect"
-                    *ngIf="last && shouldShowFileMenuFn(directory)"
-                >
-                    <os-icon-container icon="arrow_drop_down" [swap]="true" size="large" [noWrap]="true">
-                        {{ directory.getTitle() }}
-                    </os-icon-container>
-                </button>
-                <span class="folder fake-folder folder-text" *ngIf="last && !shouldShowFileMenuFn(directory)">
-                    {{ directory.getTitle() }}
+                    @if (!last) {
+                        <button
+                            class="folder"
+                            mat-button
+                            [disabled]="isMultiSelect"
+                            (click)="changeDirectory(directory.id)"
+                        >
+                            <span class="folder-text">
+                                {{ directory.getTitle() }}
+                            </span>
+                        </button>
+                    } @else if (shouldShowFileMenuFn(directory)) {
+                        <button
+                            class="folder"
+                            mat-button
+                            [disabled]="isMultiSelect"
+                            [matMenuTriggerData]="{ mediafile: directory }"
+                            [matMenuTriggerFor]="singleMediafileMenu"
+                        >
+                            <os-icon-container icon="arrow_drop_down" size="large" [noWrap]="true" [swap]="true">
+                                {{ directory.getTitle() }}
+                            </os-icon-container>
+                        </button>
+                    } @else {
+                        <span class="folder fake-folder folder-text">
+                            {{ directory.getTitle() }}
+                        </span>
+                    }
                 </span>
-            </span>
+            }
         </span>
 
         <!-- Visibility as button -->
@@ -47,14 +51,14 @@
 <!-- the actual file manager -->
 <os-list
     class="file-manager-table"
-    [listObservable]="directoryObservable"
-    [vScrollFixed]="60"
-    [hiddenInMobile]="hiddenInMobile"
-    [showFilterBar]="false"
+    [addBottomSpacer]="addBottomSpacer"
     [alwaysShowMenu]="true"
     [componentHeight]="fileListHeight"
+    [hiddenInMobile]="hiddenInMobile"
+    [listObservable]="directoryObservable"
     [multiSelect]="isMultiSelect"
-    [addBottomSpacer]="addBottomSpacer"
+    [showFilterBar]="false"
+    [vScrollFixed]="60"
     (selectedRowsChange)="onSelectedRowsChange($event)"
 >
     <!-- Icon column -->
@@ -62,66 +66,65 @@
         *osScrollingTableCell="'icon'; row as mediafile; config: { width: 40, position: START_POSITION }"
         class="fill clickable"
     >
-        <a
-            class="detail-link"
-            target="_blank"
-            [routerLink]="getMediaUrl(mediafile)"
-            *ngIf="!mediafile.is_directory && !isMultiSelect"
-        ></a>
-        <a
-            class="detail-link"
-            *ngIf="mediafile.is_directory && !isMultiSelect"
-            (click)="changeDirectory(mediafile.id)"
-            (keydown.enter)="changeDirectory(mediafile.id)"
-            tabindex="0"
-        ></a>
+        @if (!mediafile.is_directory && !isMultiSelect) {
+            <a class="detail-link" target="_blank" [routerLink]="getMediaUrl(mediafile)"></a>
+        }
+        @if (mediafile.is_directory && !isMultiSelect) {
+            <a
+                class="detail-link"
+                tabindex="0"
+                (click)="changeDirectory(mediafile.id)"
+                (keydown.enter)="changeDirectory(mediafile.id)"
+            ></a>
+        }
         <mat-icon class="grey-icon foreground-icon">{{ mediafile.getIcon() }}</mat-icon>
     </div>
 
     <!-- Title column -->
     <div *osScrollingTableCell="'title'; row as mediafile; config: { position: START_POSITION }" class="fill clickable">
-        <a
-            class="detail-link"
-            target="_blank"
-            [routerLink]="getMediaUrl(mediafile)"
-            *ngIf="!mediafile.is_directory && !isMultiSelect"
-        ></a>
-        <a
-            class="detail-link"
-            *ngIf="mediafile.is_directory && !isMultiSelect"
-            (click)="changeDirectory(mediafile.id)"
-            (keydown.enter)="changeDirectory(mediafile.id)"
-            tabindex="0"
-        ></a>
+        @if (!mediafile.is_directory && !isMultiSelect) {
+            <a class="detail-link" target="_blank" [routerLink]="getMediaUrl(mediafile)"></a>
+        }
+        @if (mediafile.is_directory && !isMultiSelect) {
+            <a
+                class="detail-link"
+                tabindex="0"
+                (click)="changeDirectory(mediafile.id)"
+                (keydown.enter)="changeDirectory(mediafile.id)"
+            ></a>
+        }
         <div class="innerTable overflow-hidden">
             <div class="file-title ellipsis-overflow">
                 {{ mediafile.title }}
             </div>
-            <div class="foreground-icon" *ngIf="!mediafile.is_directory">
-                <span>{{ mediafile.create_timestamp | time }} · {{ mediafile.filesize | readableBytes }}</span>
-            </div>
+            @if (!mediafile.is_directory) {
+                <div class="foreground-icon">
+                    <span>{{ mediafile.create_timestamp | time }} · {{ mediafile.filesize | readableBytes }}</span>
+                </div>
+            }
         </div>
     </div>
 
     <div *osScrollingTableCell="'edit'; row as mediafile" class="fill detail-link">
-        <div
-            *ngIf="canEdit"
-            class="fill detail-link"
-            tabindex="0"
-            (click)="onEditFile(mediafile, fileEditDialog)"
-            (keydown.enter)="onEditFile(mediafile, fileEditDialog)"
-        >
-            <ng-container *ngIf="isInMeeting">
-                <os-icon-container icon="group">
-                    <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
-                        <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
-                    </os-comma-separated-listing>
-                </os-icon-container>
-            </ng-container>
-            <ng-container *ngIf="!isInMeeting">
-                <os-icon-container icon="edit"></os-icon-container>
-            </ng-container>
-        </div>
+        @if (canEdit) {
+            <div
+                class="fill detail-link"
+                tabindex="0"
+                (click)="onEditFile(mediafile, fileEditDialog)"
+                (keydown.enter)="onEditFile(mediafile, fileEditDialog)"
+            >
+                @if (isInMeeting) {
+                    <os-icon-container icon="group">
+                        <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
+                            <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
+                        </os-comma-separated-listing>
+                    </os-icon-container>
+                }
+                @if (!isInMeeting) {
+                    <os-icon-container icon="edit"></os-icon-container>
+                }
+            </div>
+        }
     </div>
 
     <!-- Mimetype (usually hidden) -->
@@ -131,56 +134,51 @@
 
     <!-- Indicator column -->
     <div *osScrollingTableCell="'indicator'; row as mediafile; config: { width: 40 }" class="fill clickable">
-        <mat-icon
-            [matTooltip]="'File is being used' | translate"
-            class="foreground-icon"
-            *ngIf="mediafile.isFont() && isUsedAsFontFn(mediafile)"
-        >
-            text_fields
-        </mat-icon>
-        <mat-icon
-            [matTooltip]="'File is being used' | translate"
-            class="foreground-icon"
-            *ngIf="mediafile.isImage() && isUsedAsLogoFn(mediafile)"
-        >
-            insert_photo
-        </mat-icon>
+        @if (mediafile.isFont() && isUsedAsFontFn(mediafile)) {
+            <mat-icon class="foreground-icon" [matTooltip]="'File is being used' | translate">text_fields</mat-icon>
+        }
+        @if (mediafile.isImage() && isUsedAsLogoFn(mediafile)) {
+            <mat-icon class="foreground-icon" [matTooltip]="'File is being used' | translate">insert_photo</mat-icon>
+        }
     </div>
 
     <!-- Menu column -->
     <div *osScrollingTableCell="'menu'; row as mediafile; config: { width: 40 }" class="fill">
-        <button
-            mat-icon-button
-            [matMenuTriggerFor]="singleMediafileMenu"
-            [matMenuTriggerData]="{ mediafile: mediafile }"
-            [disabled]="isMultiSelect"
-            *ngIf="shouldShowFileMenuFn(mediafile)"
-        >
-            <mat-icon>more_vert</mat-icon>
-        </button>
+        @if (shouldShowFileMenuFn(mediafile)) {
+            <button
+                mat-icon-button
+                [disabled]="isMultiSelect"
+                [matMenuTriggerData]="{ mediafile: mediafile }"
+                [matMenuTriggerFor]="singleMediafileMenu"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        }
     </div>
 </os-list>
 
 <!-- Menu for single files in the list -->
 <mat-menu #singleMediafileMenu="matMenu">
-    <ng-template matMenuContent let-mediafile="mediafile">
+    <ng-template let-mediafile="mediafile" matMenuContent>
         <!-- Space for custom content -->
         <ng-container *ngTemplateOutlet="fileMenuTemplate; context: { mediafile: mediafile }"></ng-container>
 
-        <div *ngIf="canEdit">
-            <button mat-menu-item (click)="onEditFile(mediafile, fileEditDialog)">
-                <mat-icon>edit</mat-icon>
-                <span>{{ 'Edit' | translate }}</span>
-            </button>
-            <button mat-menu-item (click)="move(moveDialog, [mediafile])">
-                <mat-icon>near_me</mat-icon>
-                <span>{{ 'Move' | translate }}</span>
-            </button>
-            <button mat-menu-item class="red-warning-text" (click)="onDelete(mediafile)">
-                <mat-icon>delete</mat-icon>
-                <span>{{ 'Delete' | translate }}</span>
-            </button>
-        </div>
+        @if (canEdit) {
+            <div>
+                <button mat-menu-item (click)="onEditFile(mediafile, fileEditDialog)">
+                    <mat-icon>edit</mat-icon>
+                    <span>{{ 'Edit' | translate }}</span>
+                </button>
+                <button mat-menu-item (click)="move(moveDialog, [mediafile])">
+                    <mat-icon>near_me</mat-icon>
+                    <span>{{ 'Move' | translate }}</span>
+                </button>
+                <button class="red-warning-text" mat-menu-item (click)="onDelete(mediafile)">
+                    <mat-icon>delete</mat-icon>
+                    <span>{{ 'Delete' | translate }}</span>
+                </button>
+            </div>
+        }
     </ng-template>
 </mat-menu>
 
@@ -191,22 +189,24 @@
         <form class="edit-file-form" [formGroup]="fileEditForm">
             <mat-form-field>
                 <mat-label>{{ 'New file name' | translate }}</mat-label>
-                <input type="text" matInput osAutofocus required formControlName="title" />
-                <mat-error *ngIf="fileEditForm.invalid">{{ 'Required' | translate }}</mat-error>
+                <input formControlName="title" matInput osAutofocus required type="text" />
+                @if (fileEditForm.invalid) {
+                    <mat-error>{{ 'Required' | translate }}</mat-error>
+                }
             </mat-form-field>
         </form>
     </mat-dialog-content>
     <mat-dialog-actions>
         <button
-            type="submit"
-            mat-button
-            [disabled]="!fileEditForm.valid"
             color="accent"
+            mat-button
+            type="submit"
+            [disabled]="!fileEditForm.valid"
             [mat-dialog-close]="fileEditForm.value"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>
@@ -224,16 +224,16 @@
             <os-list-search-selector
                 formControlName="directory_id"
                 [includeNone]="true"
-                noneTitle="{{ 'Base folder' | translate }}"
                 [inputListValues]="filteredDirectoryBehaviorSubject"
+                noneTitle="{{ 'Base folder' | translate }}"
             ></os-list-search-selector>
         </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button type="submit" mat-button color="accent" [mat-dialog-close]="true">
+        <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
             <span>{{ 'Move' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="null">
+        <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>

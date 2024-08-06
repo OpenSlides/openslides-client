@@ -3,6 +3,8 @@
         {{ currentTitle | translate }}
     </span>
     <span>({{ currentWorkerName }})</span>
-    <a (click)="wait()">{{ 'Wait' | translate }}</a>
-    <a *ngIf="isInactive" (click)="stop()">{{ 'Stop waiting' | translate }}</a>
+    <a role="button" tabindex="0" (click)="wait()" (keyup.enter)="wait()">{{ 'Wait' | translate }}</a>
+    @if (isInactive) {
+        <a role="button" tabindex="0" (click)="stop()" (keyup.enter)="stop()">{{ 'Stop waiting' | translate }}</a>
+    }
 </div>

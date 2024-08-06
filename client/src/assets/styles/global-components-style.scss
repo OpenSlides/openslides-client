@@ -15,32 +15,46 @@
 
     h1,
     h3.accent {
-        color: mat.get-color-from-palette(if($is-dark-theme, $accent, $primary));
+        color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
     }
 
     a {
-        color: mat.get-color-from-palette(if($is-dark-theme, $accent, $primary));
+        color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
     }
 
     .underlined-links a {
-        text-decoration: solid underline mat.get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.15em;
+        text-decoration: solid underline mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.15em;
 
         &:hover {
-            text-decoration: solid underline mat.get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.175em;
+            text-decoration: solid underline mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.175em;
+        }
+
+        a.mat-mdc-button-base {
+            text-decoration: inherit;
+        }
+    }
+
+    .accentuated-background, .accentuated-background button {
+        background-color: if($is-dark-theme, lighten(mat.m2-get-color-from-palette($background, background), 4%), darken(mat.m2-get-color-from-palette($background, background), 4%));
+    }
+
+    mat-card {
+        .accentuated-background, .accentuated-background button {
+            background-color: if($is-dark-theme, lighten(mat.m2-get-color-from-palette($background, card), 4%), darken(mat.m2-get-color-from-palette($background, card), 4%));
         }
     }
 
     .anchor-button {
-        color: mat.get-color-from-palette($foreground, text) !important;
+        color: mat.m2-get-color-from-palette($foreground, text) !important;
     }
 
     .accent,
     .accent-text {
-        color: mat.get-color-from-palette($accent);
+        color: mat.m2-get-color-from-palette($accent);
     }
 
     .primary-accent-by-theme {
-        color: mat.get-color-from-palette(if($is-dark-theme, $accent, $primary));
+        color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
     }
 
     /**
@@ -50,30 +64,28 @@
      */
     .custom-table-header,
     .background-default {
-        background: mat.get-color-from-palette($background, background) !important;
+        background: mat.m2-get-color-from-palette($background, background) !important;
     }
 
     .disabled {
-        color: mat.get-color-from-palette($foreground, disabled-button);
+        color: mat.m2-get-color-from-palette($foreground, disabled-button);
     }
 
     .fake-disabled {
-        background: mat.get-color-from-palette($background, unselected-chip) !important;
+        background: mat.m2-get-color-from-palette($background, unselected-chip) !important;
+        color: mat.m2-get-color-from-palette($foreground, disabled-button);
         opacity: 1 !important;
-
-        .mat-button-wrapper {
-            .mat-icon {
-                color: mat.get-color-from-palette($foreground, disabled-button) !important;
-                svg path {
-                    fill: mat.get-color-from-palette($foreground, disabled-button) !important;
-                }
+        .mat-icon {
+            color: adjust-color(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28) !important;
+            svg path {
+                fill: mat.m2-get-color-from-palette($foreground, disabled-button adjust-color(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28)) !important;
             }
         }
     }
 
     .error,
     .warn {
-        color: mat.get-color-from-palette($warn);
+        color: mat.m2-get-color-from-palette($warn);
     }
 
     .outline-border-bottom {
@@ -81,74 +93,76 @@
     }
 
     /* motion list/detail view */
-    .mat-chip-list.user .mat-chip {
-        color: mat.get-color-from-palette($foreground, text);
-        background: mat.get-color-from-palette($background, card);
-        border-color: mat.get-color-from-palette($background, selected-button);
+    .mat-mdc-chip-list.user .mat-chip {
+        color: mat.m2-get-color-from-palette($foreground, text);
+        background: mat.m2-get-color-from-palette($background, card);
+        border-color: mat.m2-get-color-from-palette($background, selected-button);
     }
 
     .os-amount-chip {
-        background: mat.get-color-from-palette($background, selected-button);
-        color: mat.get-color-from-palette($foreground, text);
+        background: mat.m2-get-color-from-palette($background, selected-button);
+        color: mat.m2-get-color-from-palette($foreground, text);
     }
 
     .subtitle-text {
-        color: mat.get-color-from-palette(if($is-dark-theme, $accent, $primary));
+        color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
     }
 
     .main-nav-color {
-        color: mat.get-color-from-palette($foreground, secondary-text);
+        color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
 
     .submitters-line {
-        color: mat.get-color-from-palette($foreground, secondary-text);
+        color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
 
     .subtitle {
         @extend .subtitle-nocolor;
-        color: mat.get-color-from-palette($foreground, secondary-text);
+        color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
 
     .user-subtitle {
-        color: mat.get-color-from-palette($foreground, secondary-text);
+        color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
-    mat-card-header {
-        background-color: mat.get-color-from-palette($background, app-bar);
+
+    .mat-mdc-card-header {
+        background-color: mat.m2-get-color-from-palette($background, app-bar);
     }
 
     /* drag & drop views */
     .node-content-wrapper {
-        background-color: mat.get-color-from-palette($background, app-bar);
+        background-color: mat.m2-get-color-from-palette($background, app-bar);
     }
 
     /* projector components */
     .backgroundColorAccent {
-        background-color: mat.get-color-from-palette($accent);
-        color: mat.get-color-from-palette($accent, default-contrast) !important;
+        background-color: mat.m2-get-color-from-palette($accent);
+        &, .mdc-list-item__primary-text {
+            color: mat.m2-get-color-from-palette($accent, default-contrast) !important;
+        }
     }
 
     .backgroundColorSelected {
         background-color: rgba(0, 0, 0, 0.155);
-        color: mat.get-color-from-palette($foreground, text) !important;
+        color: mat.m2-get-color-from-palette($foreground, text) !important;
     }
 
     .backgroundColorLight {
-        background-color: mat.get-color-from-palette($background, hover);
-        color: mat.get-color-from-palette($foreground, text) !important;
+        background-color: mat.m2-get-color-from-palette($background, hover);
+        color: mat.m2-get-color-from-palette($foreground, text) !important;
     }
 
     .icon {
-        color: mat.get-color-from-palette($foreground, icon);
+        color: mat.m2-get-color-from-palette($foreground, icon);
     }
 
     /** Custom themes for NGrid. Could be an own file if it gets more */
     .pbl-ngrid-container {
-        background: mat.get-color-from-palette($background, card);
+        background: mat.m2-get-color-from-palette($background, card);
     }
 
     .pbl-ngrid-no-data {
-        color: mat.get-color-from-palette($foreground, secondary-text);
+        color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
 
     /**
@@ -156,77 +170,77 @@
      * whole theme-related stylesheets can be replaced using classes like this one
      */
     .outlined {
-        background: mat.get-color-from-palette($background, background);
+        background: mat.m2-get-color-from-palette($background, background);
     }
 
     .outlined-hover {
         @extend .outlined;
         &:hover {
-            background-color: mat.get-color-from-palette($background, selected-button);
+            background-color: mat.m2-get-color-from-palette($background, selected-button);
         }
     }
 
     .outlined-border {
         @extend .outlined;
-        border: 1px solid mat.get-color-from-palette($background, selected-button);
+        border: 1px solid mat.m2-get-color-from-palette($background, selected-button);
     }
 
     .background-default {
-        background: mat.get-color-from-palette($background, background);
-        color: mat.get-color-from-palette($foreground, text);
+        background: mat.m2-get-color-from-palette($background, background);
+        color: mat.m2-get-color-from-palette($foreground, text);
     }
 
     .background-hover {
         &:hover {
-            background-color: mat.get-color-from-palette($background, background);
+            background-color: mat.m2-get-color-from-palette($background, background);
         }
     }
 
     .background-primary {
-        background: mat.get-color-from-palette($primary) !important;
-        color: mat.get-color-from-palette($primary, default-contrast) !important;
+        background: mat.m2-get-color-from-palette($primary) !important;
+        color: mat.m2-get-color-from-palette($primary, default-contrast) !important;
     }
 
     .background-primary-darker {
-        background: mat.get-color-from-palette($primary, 700);
-        color: mat.get-color-from-palette($primary, default-contrast) !important;
+        background: mat.m2-get-color-from-palette($primary, 700);
+        color: mat.m2-get-color-from-palette($primary, default-contrast) !important;
     }
 
     .background-primary-darkest {
-        background: mat.get-color-from-palette($primary, 900);
-        color: mat.get-color-from-palette($primary, default-contrast) !important;
+        background: mat.m2-get-color-from-palette($primary, 900);
+        color: mat.m2-get-color-from-palette($primary, default-contrast) !important;
     }
 
     .background-accent {
-        background: mat.get-color-from-palette($accent) !important;
-        color: mat.get-color-from-palette($accent, default-contrast) !important;
+        background: mat.m2-get-color-from-palette($accent) !important;
+        color: mat.m2-get-color-from-palette($accent, default-contrast) !important;
 
         a {
-            color: mat.get-color-from-palette($accent, default-contrast) !important;
+            color: mat.m2-get-color-from-palette($accent, default-contrast) !important;
         }
     }
 
     .background-warn {
-        background: mat.get-color-from-palette($warn) !important;
+        background: mat.m2-get-color-from-palette($warn) !important;
     }
 
     .background-card {
-        background: mat.get-color-from-palette($background, card);
-        color: mat.get-color-from-palette($foreground, text);
+        background: mat.m2-get-color-from-palette($background, card);
+        color: mat.m2-get-color-from-palette($foreground, text);
     }
 
     .collapsed-card-content {
         &::after {
-            background: linear-gradient(rgba(255, 255, 255, 0), mat.get-color-from-palette($background, card));
+            background: linear-gradient(rgba(255, 255, 255, 0), mat.m2-get-color-from-palette($background, card));
         }
     }
 
     .background-selected {
-        background-color: mat.get-color-from-palette($background, selected-button);
+        background-color: mat.m2-get-color-from-palette($background, selected-button);
     }
 
     .foreground-active {
-        $color: mat.get-color-from-palette(if($is-dark-theme, $accent, $primary));
+        $color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
         color: $color !important;
         * {
             color: $color !important;
@@ -234,23 +248,23 @@
     }
 
     .foreground-primary {
-        color: mat.get-color-from-palette($primary);
+        color: mat.m2-get-color-from-palette($primary);
     }
 
     .foreground-primary-contrast {
-        color: mat.get-color-from-palette($primary, default-contrast);
+        color: mat.m2-get-color-from-palette($primary, default-contrast);
     }
 
     .foreground-accent {
-        color: mat.get-color-from-palette($accent);
+        color: mat.m2-get-color-from-palette($accent);
     }
 
     .foreground-accent-contrast {
-        color: mat.get-color-from-palette($accent, default-contrast);
+        color: mat.m2-get-color-from-palette($accent, default-contrast);
     }
 
     .foreground-warn {
-        $color: mat.get-color-from-palette($warn);
+        $color: mat.m2-get-color-from-palette($warn);
         color: $color !important;
         * {
             color: $color !important;
@@ -259,13 +273,13 @@
 
     .foreground-icon {
         mat-icon {
-            color: mat.get-color-from-palette($foreground, icon);
+            color: mat.m2-get-color-from-palette($foreground, icon);
         }
         * {
-            color: mat.get-color-from-palette($foreground, text);
+            color: mat.m2-get-color-from-palette($foreground, text);
         }
         &.active {
-            $color: mat.get-color-from-palette(if($is-dark-theme, $accent, $primary));
+            $color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
             color: $color;
             * {
                 color: $color;
@@ -274,16 +288,16 @@
     }
 
     .text {
-        color: mat.get-color-from-palette($foreground, text);
+        color: mat.m2-get-color-from-palette($foreground, text);
     }
 
     .hint {
-        color: mat.get-color-from-palette($foreground, secondary-text);
+        color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
 
     .svg-primary {
         svg path {
-            fill: mat.get-color-from-palette($primary) !important;
+            fill: mat.m2-get-color-from-palette($primary) !important;
         }
     }
 
@@ -292,7 +306,7 @@
     }
 
     .divider {
-        $divider-color: 1px solid mat.get-color-from-palette($foreground, divider);
+        $divider-color: 1px solid mat.m2-get-color-from-palette($foreground, divider);
         &-bottom {
             border-bottom: $divider-color;
         }
@@ -309,11 +323,11 @@
 
     .assignment-result-table {
         tr {
-            border-bottom: 1px solid mat.get-color-from-palette($background, focused-button);
+            border-bottom: 1px solid mat.m2-get-color-from-palette($background, focused-button);
         }
     }
 
     .sidenav-background {
-        background: if($is-dark-theme,  darken(mat.get-color-from-palette($background, background), 0.5%), white);
+        background: if($is-dark-theme,  darken(mat.m2-get-color-from-palette($background, background), 0.5%), white);
     }
 }

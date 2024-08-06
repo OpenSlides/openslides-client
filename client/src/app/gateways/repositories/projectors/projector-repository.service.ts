@@ -21,9 +21,9 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
         super(repositoryServiceCollector, Projector);
     }
 
-    public getTitle = (viewProjector: ViewProjector) => viewProjector.name;
+    public getTitle = (viewProjector: ViewProjector): string => viewProjector.name;
 
-    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Projectors` : `Projector`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Projectors` : `Projector`);
 
     public async create(partialProjector: Partial<Projector> & { name: string }): Promise<Identifiable> {
         const payload: any = {
@@ -55,6 +55,8 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
             header_h1_color: projector.header_h1_color,
             chyron_background_color: projector.chyron_background_color,
             chyron_font_color: projector.chyron_font_color,
+            chyron_background_color_2: projector.chyron_background_color_2,
+            chyron_font_color_2: projector.chyron_font_color_2,
             show_header_footer: projector.show_header_footer,
             show_title: projector.show_title,
             show_logo: projector.show_logo,
@@ -137,9 +139,14 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
     public async project(
         descriptor: ProjectionBuildDescriptor,
         projectors: ViewProjector[],
-        options: object | null
+        options: object | null,
+        keepActiveProjections?: boolean
     ): Promise<void> {
         const payload = this.createProjectPayload(descriptor, projectors, options);
+        if (keepActiveProjections) {
+            payload.keep_active_projections = keepActiveProjections;
+        }
+
         return await this.sendActionToBackend(ProjectorAction.PROJECT, payload);
     }
 

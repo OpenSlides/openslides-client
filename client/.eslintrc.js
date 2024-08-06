@@ -14,7 +14,6 @@ module.exports = {
             plugins: ['simple-import-sort', 'unused-imports'],
             extends: [
                 'plugin:@typescript-eslint/recommended',
-                'plugin:rxjs/recommended',
                 'plugin:@angular-eslint/recommended',
                 'plugin:@angular-eslint/template/process-inline-templates',
                 'plugin:prettier/recommended'
@@ -67,20 +66,22 @@ module.exports = {
                 '@typescript-eslint/adjacent-overload-signatures': ['error'],
                 '@typescript-eslint/ban-types': ['error'],
                 '@typescript-eslint/explicit-member-accessibility': ['error'],
-                '@typescript-eslint/explicit-function-return-type': ['warn'],
+                '@typescript-eslint/explicit-function-return-type': ['error'],
+                '@typescript-eslint/ban-ts-comment': ['error'],
 
                 'jsdoc/require-example': ['off'],
                 'jsdoc/newline-after-description': ['off'],
                 'jsdoc/no-types': ['off'],
                 '@typescript-eslint/no-empty-function': ['off'],
                 '@typescript-eslint/no-empty-interface': ['off'],
-                'rxjs/no-async-subscribe': ['off'],
 
                 // Should be switched to error ordered by priority
-                '@typescript-eslint/ban-ts-comment': ['warn'],
                 '@typescript-eslint/no-explicit-any': ['off'],
                 '@typescript-eslint/no-non-null-assertion': ['off'],
-                'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }]
+                'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }],
+
+                // Currently used by view models
+                '@typescript-eslint/no-unsafe-declaration-merging': ['off']
             }
         },
         {
@@ -98,11 +99,12 @@ module.exports = {
                 'plugin:@angular-eslint/template/accessibility'
             ],
             rules: {
+                '@angular-eslint/template/attributes-order': ['error', {
+                    alphabetical: true
+                }],
+                '@angular-eslint/template/prefer-control-flow': ['error'],
                 // Should be switched to error
-                '@angular-eslint/template/click-events-have-key-events': ['warn'],
-                '@angular-eslint/template/interactive-supports-focus': ['warn'],
-                '@angular-eslint/template/elements-content': ['warn'],
-                '@angular-eslint/template/alt-text': ['warn']
+                '@angular-eslint/template/elements-content': ['warn']
             }
         },
         {

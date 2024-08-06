@@ -13,7 +13,10 @@ import { MotionControllerService } from '../motion-controller.service';
     providedIn: `root`
 })
 export class AmendmentControllerService {
-    public constructor(private controller: MotionControllerService, private repo: MotionRepositoryService) {}
+    public constructor(
+        private controller: MotionControllerService,
+        private repo: MotionRepositoryService
+    ) {}
 
     public getViewModelObservable(amendmentId: Id): Observable<ViewMotion | null> {
         return this.controller.getViewModelObservable(amendmentId);
@@ -59,7 +62,7 @@ export class AmendmentControllerService {
 
     public getSortedViewModelListObservableFor(motion: Identifiable, key = `default`): Observable<ViewMotion[]> {
         return this.getSortedViewModelListObservable(key).pipe(
-            map(_motions => _motions.filter(_motion => _motion.lead_motion_id === motion.id))
+            map(_motions => _motions.filter(_motion => _motion.hasLeadMotion === true))
         );
     }
 
@@ -70,11 +73,6 @@ export class AmendmentControllerService {
 
     public async createParagraphBased(partialMotion: Partial<Motion>): Promise<CreateResponse> {
         const result = await (this.repo.createParagraphBased(partialMotion).resolve() as Promise<CreateResponse[]>);
-        return result[0];
-    }
-
-    public async createStatuteAmendment(partialMotion: Partial<Motion>): Promise<CreateResponse> {
-        const result = await (this.repo.createStatuteAmendment(partialMotion).resolve() as Promise<CreateResponse[]>);
         return result[0];
     }
 }

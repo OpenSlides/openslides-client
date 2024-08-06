@@ -144,7 +144,7 @@ export class TopicPollService extends PollService {
                     hoverBackgroundColor: this.themeService.getPollColor(key),
                     barThickness: 20,
                     maxBarThickness: 20
-                } as ChartDate)
+                }) as ChartDate
         );
 
         return data;

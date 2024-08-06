@@ -41,7 +41,10 @@ export class ChatNotificationService {
     private _lastMessageAmount = 0;
     private _chatMessages: ViewChatMessage[] = [];
 
-    public constructor(private storage: StorageService, private chatMessageRepo: ChatMessageControllerService) {
+    public constructor(
+        private storage: StorageService,
+        private chatMessageRepo: ChatMessageControllerService
+    ) {
         storage.addNoClearKey(STORAGE_KEY);
         this.setup();
     }

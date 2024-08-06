@@ -27,7 +27,7 @@ export class AssignmentPollFormComponent extends BasePollFormComponent implement
                 this.data.max_votes_amount = assignment.open_posts;
             }
             if (!this.data.pollmethod) {
-                this.data.pollmethod = this.meetingSettingService.instant(`assignment_poll_default_method`);
+                this.data.pollmethod = this.meetingSettingsService.instant(`assignment_poll_default_method`);
             }
         }
         super.ngOnInit();

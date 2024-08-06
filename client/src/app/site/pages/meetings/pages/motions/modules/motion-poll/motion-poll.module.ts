@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
-import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
@@ -21,6 +21,7 @@ import { PollModule } from 'src/app/site/pages/meetings/modules/poll';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
+import { CustomIconModule } from 'src/app/ui/modules/custom-icon';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
@@ -45,6 +46,7 @@ const MODULES = [MotionPollServiceModule];
 @NgModule({
     imports: [
         ...MODULES,
+        CustomIconModule,
         CommonModule,
         CommaSeparatedListingModule,
         RouterModule,

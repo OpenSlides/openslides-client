@@ -2,6 +2,11 @@
     width: 800px;
     max-width: 100%;
     min-height: fit-content;
+
+    &::before {
+        height: 0;
+    }
+
     .search-top-form {
         display: flex;
         .search-input-container {
@@ -123,11 +128,10 @@
 }
 
 .filter-section {
-    padding: 0;
     display: flex;
     flex-wrap: wrap;
-    margin-top: 12px;
-    padding: 0 50px;
+    margin: 12px 0;
+    padding: 0 38px;
     justify-content: space-between;
     .filter {
         padding-right: 24px;
@@ -149,11 +153,11 @@
 
 .close-button-container {
     position: relative;
-    height: 25px;
+    height: 30px;
     > button {
         position: absolute;
-        top: -15px;
-        right: -15px;
+        top: -20px;
+        right: -20px;
     }
 }
 

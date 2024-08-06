@@ -1,0 +1,40 @@
+<div class="centered-button-wrapper">
+    <!-- Success -->
+    @if (hasAlreadyVoted && !isDeliveringVote) {
+        <div>
+            <mat-icon class="vote-submitted">check_circle</mat-icon>
+            <br />
+            <span>{{ 'Voting successful.' | translate }}</span>
+        </div>
+    }
+
+    <!-- Delivering -->
+    @if (isDeliveringVote) {
+        <div class="submit-vote-indicator">
+            <mat-spinner class="small-spinner"></mat-spinner>
+            <br />
+            <span>{{ 'Delivering vote... Please wait!' | translate }}</span>
+        </div>
+    }
+    @if (hasAlreadyVoted === undefined) {
+        <div>
+            <mat-spinner class="small-spinner"></mat-spinner>
+            <br />
+            <span>{{ 'Retrieving vote status... Please wait!' | translate }}</span>
+        </div>
+    }
+    @if (hasAlreadyVoted !== undefined) {
+        <!-- Permission error error -->
+        @if (!hasAlreadyVoted && !isDeliveringVote && !(!isUserPresent && hasDelegations)) {
+            <div>
+                <span>{{ getVotingError(delegationUser) | translate }}</span>
+            </div>
+        }
+        <!-- Delegation not present vote error -->
+        @if (!hasAlreadyVoted && !isDeliveringVote && !isUserPresent && hasDelegations) {
+            <div>
+                <span>{{ getVotingErrorFromName('USER_NOT_PRESENT') | translate }}</span>
+            </div>
+        }
+    }
+</div>

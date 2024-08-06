@@ -7,6 +7,8 @@ import { BasePermsDirective } from './base-perms.directive';
     selector: `[osOmlPerms]`
 })
 export class OmlPermsDirective extends BasePermsDirective<OML> {
+    private _checkCML = false;
+
     @Input()
     public set osOmlPerms(perms: OML | OML[]) {
         this.setPermissions(perms);
@@ -27,6 +29,16 @@ export class OmlPermsDirective extends BasePermsDirective<OML> {
         this.setComplementCondition(value);
     }
 
+    /**
+     * If set to true in order to also allow anyone who has any committee permissions
+     * `*osPerms="permission.mediafileCanManage; allowCommitteeAdmin: true"`
+     */
+    @Input()
+    public set osOmlPermsAllowCommitteeAdmin(value: boolean) {
+        this._checkCML = value;
+        this.updatePermission();
+    }
+
     @Input()
     public set osOmlPermsThen(template: TemplateRef<any>) {
         this.setThenTemplate(template);
@@ -38,6 +50,9 @@ export class OmlPermsDirective extends BasePermsDirective<OML> {
     }
 
     protected hasPermissions(): boolean {
-        return this.operator.hasOrganizationPermissions(...this.permissions);
+        return (
+            this.operator.hasOrganizationPermissions(...this.permissions) ||
+            (this._checkCML ? this.operator.isAnyCommitteeAdmin() : false)
+        );
     }
 }

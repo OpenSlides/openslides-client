@@ -176,8 +176,8 @@ class PdfCreator {
         this._document = config.document;
         this._filename = config.filename;
         this._loadFonts = config.loadFonts;
-        this._loadImages = config.loadImages || (() => ({}));
-        this._createVfs = config.createVfs || (() => ({}));
+        this._loadImages = config.loadImages || ((): any => ({}));
+        this._createVfs = config.createVfs || ((): any => ({}));
         this._progressService = config.progressService;
         this._progressSnackBarService = config.progressSnackBarService;
         this._settings = config.settings;
@@ -202,7 +202,7 @@ class PdfCreator {
         });
 
         // the result of the worker
-        this._pdfWorker.onmessage = ({ data }) => {
+        this._pdfWorker.onmessage = ({ data }): void => {
             // if the worker returns a numbers, is always the progress
             if (typeof data === `number`) {
                 // update progress
@@ -488,7 +488,7 @@ export class PdfDocumentService {
             }),
             filename: `${filetitle}.pdf`,
             settings: this.settings,
-            loadImages: () => this.loadImages(),
+            loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
             progressService: this.progressService,
             progressSnackBarService: this.progressSnackBarService
         }).download();
@@ -509,7 +509,7 @@ export class PdfDocumentService {
             }),
             filename: `${filetitle}.pdf`,
             settings: this.settings,
-            loadImages: () => this.loadImages(),
+            loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
             progressService: this.progressService,
             progressSnackBarService: this.progressSnackBarService
         }).download();
@@ -536,7 +536,7 @@ export class PdfDocumentService {
                 settings: this.settings,
                 loadFonts,
                 createVfs: createVfs,
-                loadImages: () => this.loadImages(),
+                loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
                 progressService: this.progressService,
                 progressSnackBarService: this.progressSnackBarService
             }).download()

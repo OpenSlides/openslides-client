@@ -44,7 +44,6 @@ import {
     ViewMotionComment,
     ViewMotionCommentSection,
     ViewMotionState,
-    ViewMotionStatuteParagraph,
     ViewMotionSubmitter,
     ViewMotionWorkflow,
     ViewPersonalNote,
@@ -130,7 +129,7 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMediafile,
         OField: `mediafiles`,
         MField: `organization`,
-        isFullList: true
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
@@ -337,12 +336,6 @@ export const RELATIONS: Relation[] = [
         AField: `motions_default_amendment_workflow`,
         BField: `default_amendment_workflow_meeting`
     }),
-    ...makeO2O({
-        AViewModel: ViewMeeting,
-        BViewModel: ViewMotionWorkflow,
-        AField: `motions_default_statute_amendment_workflow`,
-        BField: `default_statute_amendment_workflow_meeting`
-    }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewGroup,
@@ -535,13 +528,6 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionState,
         OField: `motion_states`,
-        MField: `meeting`,
-        isFullList: true
-    }),
-    ...makeM2O({
-        OViewModel: ViewMeeting,
-        MViewModel: ViewMotionStatuteParagraph,
-        OField: `motion_statute_paragraphs`,
         MField: `meeting`,
         isFullList: true
     }),
@@ -838,12 +824,6 @@ export const RELATIONS: Relation[] = [
         MField: `motion`,
         OField: `change_recommendations`,
         isExclusiveList: true
-    }),
-    ...makeM2O({
-        MViewModel: ViewMotion,
-        OViewModel: ViewMotionStatuteParagraph,
-        MField: `statute_paragraph`,
-        OField: `motions`
     }),
     ...makeM2O({
         MViewModel: ViewMotionComment,

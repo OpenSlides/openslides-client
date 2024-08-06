@@ -1,8 +1,8 @@
 <os-head-bar
     [hasMainButton]="perms.isAllowed('create')"
     [mainActionTooltip]="'New motion' | translate"
-    (mainEvent)="onPlusButton()"
     [multiSelectMode]="isMultiSelect"
+    (mainEvent)="onPlusButton()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -11,7 +11,7 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="motionListMenu">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="motionListMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
@@ -23,43 +23,249 @@
     </ng-container>
 
     <div class="extra-controls-slot">
-        <div *ngIf="hasCategories && !isMultiSelect">
-            <button
-                mat-button
-                *ngIf="selectedView === 'list'"
-                (click)="onChangeView('tiles')"
-                matTooltip="{{ 'Tile view' | translate }}"
-            >
-                <mat-icon>view_module</mat-icon>
-            </button>
-
-            <button
-                mat-button
-                *ngIf="selectedView === 'tiles'"
-                (click)="onChangeView('list')"
-                matTooltip="{{ 'List view' | translate }}"
-            >
-                <mat-icon>view_headline</mat-icon>
-            </button>
-        </div>
+        @if (hasCategories && !isMultiSelect) {
+            <div>
+                @if (selectedView === 'list') {
+                    <button mat-button matTooltip="{{ 'Tile view' | translate }}" (click)="onChangeView('tiles')">
+                        <mat-icon>view_module</mat-icon>
+                    </button>
+                }
+                @if (selectedView === 'tiles') {
+                    <button mat-button matTooltip="{{ 'List view' | translate }}" (click)="onChangeView('list')">
+                        <mat-icon>view_headline</mat-icon>
+                    </button>
+                }
+            </div>
+        }
     </div>
 </os-head-bar>
 
-<ng-container *ngIf="selectedView === 'tiles'; then tiles; else list"></ng-container>
-
-<ng-template #list>
+@if (selectedView === 'tiles') {
+    <div class="spacer-bottom-60">
+        <os-grid rowHeight="50%">
+            @for (tile of listTiles; track tile) {
+                <os-tile [data]="tile" (clicked)="changeToViewWithTileCategory(tile)">
+                    <div class="motion-tile-card" [osPaper]="2" [osPaperRaise]="true">
+                        <div class="full-height">
+                            <div class="flex-center background-selected">
+                                <span
+                                    class="tile-content-prefix"
+                                    [matBadge]="tile.amountOfMotions"
+                                    [matBadgeColor]="'accent'"
+                                >
+                                    @switch (tile.name) {
+                                        @case ('Favorites') {
+                                            <span><mat-icon>star</mat-icon></span>
+                                        }
+                                        @case ('No category') {
+                                            <span><mat-icon>block</mat-icon></span>
+                                        }
+                                        @case ('Personal notes') {
+                                            <span><mat-icon>speaker_notes</mat-icon></span>
+                                        }
+                                        @default {
+                                            <span>
+                                                @if (tile.prefix) {
+                                                    <span>
+                                                        {{ tile.prefix }}
+                                                    </span>
+                                                }
+                                                @if (!tile.prefix) {
+                                                    <span>
+                                                        <mat-icon>category</mat-icon>
+                                                    </span>
+                                                }
+                                            </span>
+                                        }
+                                    }
+                                </span>
+                            </div>
+                            <div class="tile-content-name background-card">
+                                {{ tile.name | translate }}
+                            </div>
+                        </div>
+                    </div>
+                </os-tile>
+            }
+        </os-grid>
+    </div>
+} @else {
     <os-projectable-list
-        [listObservableProvider]="motionRepo"
-        [filterService]="filterService"
-        [sortService]="sortService"
-        [multiSelect]="isMultiSelect"
         [filterProps]="filterProps"
+        [filterService]="filterService"
         [hiddenInMobile]="getColumnsHiddenInMobile()"
+        [listObservableProvider]="motionRepo"
+        [multiSelect]="isMultiSelect"
+        [sortService]="sortService"
         [(selectedRows)]="selectedRows"
     >
         <!-- number -->
         <div *osScrollingTableCell="'number'; row as motion; config: { width: 73 }" class="cell-slot fill">
-            <os-detail-view-navigator [model]="motion" *ngIf="!isMultiSelect"></os-detail-view-navigator>
+            @if (!isMultiSelect) {
+                <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
+            }
+            <div class="column-number innerTable">
+                {{ motion.number }}
+            </div>
+        </div>
+        <!-- Title -->
+        <div *osScrollingTableCell="'title'; row as motion; rowContext as rowContext" class="cell-slot fill">
+            @if (!isMultiSelect) {
+                <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
+            }
+            <div class="column-title innerTable overflow-hidden">
+                <div class="title-line ellipsis-overflow">
+                    <!-- Is Favorite -->
+                    @if (motion.getPersonalNote()?.star) {
+                        <span class="favorite-star">
+                            <mat-icon inline>star</mat-icon>
+                        </span>
+                    }
+                    <!-- Has File -->
+                    @if (motion.hasAttachments()) {
+                        <span class="icon-prefix">
+                            <mat-icon>attach_file</mat-icon>
+                        </span>
+                    }
+                    <!-- The title -->
+                    <span>
+                        @if (vp.isMobile && motion.number) {
+                            <span>
+                                {{ motion.number }}
+                                <span>&middot;</span>
+                            </span>
+                        }
+                        {{ motion.title }}
+                    </span>
+                </div>
+                <!-- Submitters -->
+                <div class="submitters-line ellipsis-overflow">
+                    @if (motion.submitterNames.length) {
+                        <span>
+                            <span>{{ 'by' | translate }}</span>
+                            {{ motion.submitterNames }}
+                        </span>
+                    }
+                    @if (showSequential) {
+                        <span>
+                            @if (motion.submitterNames.length) {
+                                <span>&middot;&nbsp;</span>
+                            }
+                            <span>{{ 'Sequential number' | translate }}</span>
+                            {{ motion.sequential_number }}
+                        </span>
+                    }
+                    @if (sortService.sortProperty === 'last_modified' || sortService.sortProperty === 'created') {
+                        <span>
+                            @if (motion.submitters.length || showSequential) {
+                                <span>&middot;&nbsp;</span>
+                            }
+                            @if (sortService.sortProperty === 'last_modified') {
+                                <span>
+                                    {{
+                                        motion.last_modified && motion.last_modified !== motion.created
+                                            ? ('modified' | translate)
+                                            : ('created' | translate)
+                                    }}
+                                    {{ motion.last_modified ?? motion.created | localizedDate }}
+                                </span>
+                            }
+                            @if (sortService.sortProperty === 'created') {
+                                <span>{{ 'created' | translate }} {{ motion.created | localizedDate }}</span>
+                            }
+                        </span>
+                    }
+                </div>
+                <!-- TODO: These two now appear twice. Might be an own component -->
+                <!-- Workflow state -->
+                <div class="ellipsis-overflow white">
+                    @if (motion.state) {
+                        <mat-basic-chip [disabled]="true" [ngClass]="motion.stateCssColor">
+                            {{ motionRepo.getExtendedStateLabel(motion) | translate }}
+                        </mat-basic-chip>
+                    }
+                </div>
+                <!-- Recommendation -->
+                @if (motion.recommendation && motion.state?.next_state_ids?.length) {
+                    <div class="ellipsis-overflow white spacer-top-3">
+                        <mat-basic-chip class="bluegrey" [disabled]="true">
+                            {{ motionRepo.getExtendedRecommendationLabel(motion) | translate }}
+                        </mat-basic-chip>
+                    </div>
+                }
+            </div>
+        </div>
+        <!-- Category, blocks and tags -->
+        <div
+            *osScrollingTableCell="'state'; row as motion; config: { width: 240 }"
+            class="cell-slot fill"
+            tabindex="0"
+            [ngClass]="isMultiSelect ? '' : 'clickable'"
+            (click)="openEditInfo(motion)"
+            (keyup.space)="openEditInfo(motion)"
+        >
+            <div class="column-state innerTable">
+                <!-- Category -->
+                @if (motion.category) {
+                    <div class="ellipsis-overflow">
+                        <os-icon-container icon="category">
+                            @if (motion.category.parent) {
+                                <div class="ellipsis-overflow">
+                                    {{ motion.category.parent.toString() }}
+                                </div>
+                            }
+                            <div class="ellipsis-overflow">{{ motion.category.toString() }}</div>
+                        </os-icon-container>
+                    </div>
+                }
+                <!-- Motion Block -->
+                @if (motion.block) {
+                    <div class="ellipsis-overflow spacer-top-5">
+                        <os-icon-container icon="widgets">{{ motion.block.title }}</os-icon-container>
+                    </div>
+                }
+                <!-- Tags -->
+                @if (motion.tags && motion.tags.length) {
+                    <div class="ellipsis-overflow spacer-top-5">
+                        <os-icon-container icon="local_offer">
+                            <os-comma-separated-listing [list]="motion.tags">
+                                <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
+                            </os-comma-separated-listing>
+                        </os-icon-container>
+                    </div>
+                }
+            </div>
+        </div>
+        <!-- Menu -->
+        <div *osScrollingTableCell="'menu'; config: { width: 40 }; row as motion" class="cell-slot fill">
+            <button
+                mat-icon-button
+                [disabled]="isMultiSelect"
+                [matMenuTriggerData]="{ motion: motion }"
+                [matMenuTriggerFor]="singleItemMenu"
+                (click)="$event.stopPropagation()"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </div>
+    </os-projectable-list>
+}
+
+<ng-template #list>
+    <os-projectable-list
+        [filterProps]="filterProps"
+        [filterService]="filterService"
+        [hiddenInMobile]="getColumnsHiddenInMobile()"
+        [listObservableProvider]="motionRepo"
+        [multiSelect]="isMultiSelect"
+        [sortService]="sortService"
+        [(selectedRows)]="selectedRows"
+    >
+        <!-- number -->
+        <div *osScrollingTableCell="'number'; row as motion; config: { width: 73 }" class="cell-slot fill">
+            @if (!isMultiSelect) {
+                <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
+            }
             <div class="column-number innerTable">
                 {{ motion.number }}
             </div>
@@ -67,77 +273,94 @@
 
         <!-- Title -->
         <div *osScrollingTableCell="'title'; row as motion; rowContext as rowContext" class="cell-slot fill">
-            <os-detail-view-navigator [model]="motion" *ngIf="!isMultiSelect"></os-detail-view-navigator>
+            @if (!isMultiSelect) {
+                <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
+            }
             <div class="column-title innerTable overflow-hidden">
                 <div class="title-line ellipsis-overflow">
                     <!-- Is Favorite -->
-                    <span *ngIf="motion.getPersonalNote()?.star" class="favorite-star">
-                        <mat-icon inline>star</mat-icon>
-                    </span>
+                    @if (motion.getPersonalNote()?.star) {
+                        <span class="favorite-star">
+                            <mat-icon inline>star</mat-icon>
+                        </span>
+                    }
 
                     <!-- Has File -->
-                    <span class="icon-prefix" *ngIf="motion.hasAttachments()">
-                        <mat-icon>attach_file</mat-icon>
-                    </span>
+                    @if (motion.hasAttachments()) {
+                        <span class="icon-prefix">
+                            <mat-icon>attach_file</mat-icon>
+                        </span>
+                    }
 
                     <!-- The title -->
                     <span>
-                        <span *ngIf="vp.isMobile && motion.number">
-                            {{ motion.number }}
-                            <span>&middot;</span>
-                        </span>
+                        @if (vp.isMobile && motion.number) {
+                            <span>
+                                {{ motion.number }}
+                                <span>&middot;</span>
+                            </span>
+                        }
                         {{ motion.title }}
                     </span>
                 </div>
 
                 <!-- Submitters -->
                 <div class="submitters-line ellipsis-overflow">
-                    <span *ngIf="motion.submitterNames.length">
-                        <span>{{ 'by' | translate }}</span>
-                        {{ motion.submitterNames }}
-                    </span>
-
-                    <span *ngIf="showSequential">
-                        <span *ngIf="motion.submitters.length">&middot;&nbsp;</span>
-                        <span>{{ 'Sequential number' | translate }}</span>
-                        {{ motion.sequential_number }}
-                    </span>
-
-                    <span
-                        *ngIf="sortService.sortProperty === 'last_modified' || sortService.sortProperty === 'created'"
-                    >
-                        <span *ngIf="motion.submitters.length || showSequential">&middot;&nbsp;</span>
-                        <span *ngIf="sortService.sortProperty === 'last_modified'">
-                            {{
-                                motion.last_modified && motion.last_modified !== motion.created
-                                    ? ('modified' | translate)
-                                    : ('created' | translate)
-                            }}
-                            {{ motion.last_modified ?? motion.created | localizedDate }}
+                    @if (motion.submitterNames.length) {
+                        <span>
+                            <span>{{ 'by' | translate }}</span>
+                            {{ motion.submitterNames }}
                         </span>
-                        <span *ngIf="sortService.sortProperty === 'created'">
-                            {{ 'created' | translate }} {{ motion.created | localizedDate }}
+                    }
+                    @if (showSequential) {
+                        <span>
+                            @if (motion.submitterNames.length) {
+                                <span>&middot;&nbsp;</span>
+                            }
+                            <span>{{ 'Sequential number' | translate }}</span>
+                            {{ motion.sequential_number }}
                         </span>
-                    </span>
+                    }
+                    @if (sortService.sortProperty === 'last_modified' || sortService.sortProperty === 'created') {
+                        <span>
+                            @if (motion.submitters.length || showSequential) {
+                                <span>&middot;&nbsp;</span>
+                            }
+                            @if (sortService.sortProperty === 'last_modified') {
+                                <span>
+                                    {{
+                                        motion.last_modified && motion.last_modified !== motion.created
+                                            ? ('modified' | translate)
+                                            : ('created' | translate)
+                                    }}
+                                    {{ motion.last_modified ?? motion.created | localizedDate }}
+                                </span>
+                            }
+                            @if (sortService.sortProperty === 'created') {
+                                <span>{{ 'created' | translate }} {{ motion.created | localizedDate }}</span>
+                            }
+                        </span>
+                    }
                 </div>
 
                 <!-- TODO: These two now appear twice. Might be an own component -->
                 <!-- Workflow state -->
                 <div class="ellipsis-overflow white">
-                    <mat-basic-chip *ngIf="motion.state" [ngClass]="motion.stateCssColor" [disabled]="true">
-                        {{ motionRepo.getExtendedStateLabel(motion) | translate }}
-                    </mat-basic-chip>
+                    @if (motion.state) {
+                        <mat-basic-chip [disabled]="true" [ngClass]="motion.stateCssColor">
+                            {{ motionRepo.getExtendedStateLabel(motion) | translate }}
+                        </mat-basic-chip>
+                    }
                 </div>
 
                 <!-- Recommendation -->
-                <div
-                    *ngIf="motion.recommendation && motion.state?.next_state_ids?.length"
-                    class="ellipsis-overflow white spacer-top-3"
-                >
-                    <mat-basic-chip class="bluegrey" [disabled]="true">
-                        {{ motionRepo.getExtendedRecommendationLabel(motion) | translate }}
-                    </mat-basic-chip>
-                </div>
+                @if (motion.recommendation && motion.state?.next_state_ids?.length) {
+                    <div class="ellipsis-overflow white spacer-top-3">
+                        <mat-basic-chip class="bluegrey" [disabled]="true">
+                            {{ motionRepo.getExtendedRecommendationLabel(motion) | translate }}
+                        </mat-basic-chip>
+                    </div>
+                }
             </div>
         </div>
 
@@ -145,33 +368,43 @@
         <div
             *osScrollingTableCell="'state'; row as motion; config: { width: 240 }"
             class="cell-slot fill"
+            tabindex="0"
             [ngClass]="isMultiSelect ? '' : 'clickable'"
             (click)="openEditInfo(motion)"
+            (keyup.space)="openEditInfo(motion)"
         >
             <div class="column-state innerTable">
                 <!-- Category -->
-                <div class="ellipsis-overflow" *ngIf="motion.category">
-                    <os-icon-container icon="category">
-                        <div class="ellipsis-overflow" *ngIf="motion.category.parent">
-                            {{ motion.category.parent.toString() }}
-                        </div>
-                        <div class="ellipsis-overflow">{{ motion.category.toString() }}</div>
-                    </os-icon-container>
-                </div>
+                @if (motion.category) {
+                    <div class="ellipsis-overflow">
+                        <os-icon-container icon="category">
+                            @if (motion.category.parent) {
+                                <div class="ellipsis-overflow">
+                                    {{ motion.category.parent.toString() }}
+                                </div>
+                            }
+                            <div class="ellipsis-overflow">{{ motion.category.toString() }}</div>
+                        </os-icon-container>
+                    </div>
+                }
 
                 <!-- Motion Block -->
-                <div class="ellipsis-overflow spacer-top-5" *ngIf="motion.block">
-                    <os-icon-container icon="widgets">{{ motion.block.title }}</os-icon-container>
-                </div>
+                @if (motion.block) {
+                    <div class="ellipsis-overflow spacer-top-5">
+                        <os-icon-container icon="widgets">{{ motion.block.title }}</os-icon-container>
+                    </div>
+                }
 
                 <!-- Tags -->
-                <div class="ellipsis-overflow spacer-top-5" *ngIf="motion.tags && motion.tags.length">
-                    <os-icon-container icon="local_offer">
-                        <os-comma-separated-listing [list]="motion.tags">
-                            <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
-                        </os-comma-separated-listing>
-                    </os-icon-container>
-                </div>
+                @if (motion.tags && motion.tags.length) {
+                    <div class="ellipsis-overflow spacer-top-5">
+                        <os-icon-container icon="local_offer">
+                            <os-comma-separated-listing [list]="motion.tags">
+                                <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
+                            </os-comma-separated-listing>
+                        </os-icon-container>
+                    </div>
+                }
             </div>
         </div>
 
@@ -180,9 +413,9 @@
             <button
                 mat-icon-button
                 [disabled]="isMultiSelect"
+                [matMenuTriggerData]="{ motion: motion }"
                 [matMenuTriggerFor]="singleItemMenu"
                 (click)="$event.stopPropagation()"
-                [matMenuTriggerData]="{ motion: motion }"
             >
                 <mat-icon>more_vert</mat-icon>
             </button>
@@ -192,188 +425,152 @@
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
-    <ng-template matMenuContent let-motion="motion">
-        <os-projector-button [object]="motion" [menuItem]="true"></os-projector-button>
-        <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
+    <ng-template let-motion="motion" matMenuContent>
+        <os-projector-button [menuItem]="true" [object]="motion"></os-projector-button>
+        <os-speaker-button [menuItem]="true" [object]="motion"></os-speaker-button>
     </ng-template>
 </mat-menu>
 
-<ng-template #tiles>
-    <div class="spacer-bottom-60">
-        <os-grid rowHeight="50%">
-            <os-tile *ngFor="let tile of listTiles" [data]="tile" (clicked)="changeToViewWithTileCategory(tile)">
-                <div class="motion-tile-card" [osPaper]="2" [osPaperRaise]="true">
-                    <div class="full-height">
-                        <div class="flex-center background-selected">
-                            <span
-                                class="tile-content-prefix"
-                                [matBadge]="tile.amountOfMotions"
-                                [matBadgeColor]="'accent'"
-                                [ngSwitch]="tile.name"
-                            >
-                                <span *ngSwitchCase="'Favorites'"><mat-icon>star</mat-icon></span>
-                                <span *ngSwitchCase="'No category'"><mat-icon>block</mat-icon></span>
-                                <span *ngSwitchCase="'Personal notes'"><mat-icon>speaker_notes</mat-icon></span>
-                                <span *ngSwitchDefault>
-                                    <span *ngIf="tile.prefix">
-                                        {{ tile.prefix }}
-                                    </span>
-                                    <span *ngIf="!tile.prefix">
-                                        <mat-icon>category</mat-icon>
-                                    </span>
-                                </span>
-                            </span>
-                        </div>
-                        <div class="tile-content-name background-card">
-                            {{ tile.name | translate }}
-                        </div>
-                    </div>
-                </div>
-            </os-tile>
-        </os-grid>
-    </div>
-</ng-template>
-
 <mat-menu #motionListMenu="matMenu">
-    <div *ngIf="!isMultiSelect">
-        <!-- Multiselect -->
-        <div *ngIf="perms.isAllowed('change_metadata') && selectedView === 'list'">
-            <button mat-menu-item (click)="toggleMultiSelect()">
-                <mat-icon>library_add</mat-icon>
-                <span>{{ 'Multiselect' | translate }}</span>
-            </button>
-            <mat-divider></mat-divider>
-        </div>
-
-        <!-- Amendments -->
-        <div *ngIf="amendmentsEnabled && (perms.isAllowed('manage') || hasAmendments)">
-            <button mat-menu-item routerLink="amendments">
-                <!-- color_lens -->
-                <!-- format_paint -->
-                <mat-icon>color_lens</mat-icon>
-                <span>{{ 'Amendments' | translate }}</span>
-            </button>
-        </div>
-
-        <!-- Categories -->
-        <div *ngIf="perms.isAllowed('manage') || hasCategories">
-            <button mat-menu-item routerLink="categories">
-                <mat-icon>category</mat-icon>
-                <span>{{ 'Categories' | translate }}</span>
-            </button>
-        </div>
-
-        <!-- Motion blocks -->
-        <div *ngIf="perms.isAllowed('manage') || hasMotionBlocks">
-            <button mat-menu-item routerLink="blocks">
-                <mat-icon>widgets</mat-icon>
-                <span>{{ 'Motion blocks' | translate }}</span>
-            </button>
-        </div>
-
-        <mat-divider
-            *ngIf="
+    @if (!isMultiSelect) {
+        <div>
+            <!-- Multiselect -->
+            @if (perms.isAllowed('change_metadata') && selectedView === 'list') {
+                <div>
+                    <button mat-menu-item (click)="toggleMultiSelect()">
+                        <mat-icon>library_add</mat-icon>
+                        <span>{{ 'Multiselect' | translate }}</span>
+                    </button>
+                    <mat-divider></mat-divider>
+                </div>
+            }
+            <!-- Amendments -->
+            @if (amendmentsEnabled && (perms.isAllowed('manage') || hasAmendments)) {
+                <div>
+                    <button mat-menu-item routerLink="amendments">
+                        <!-- color_lens -->
+                        <!-- format_paint -->
+                        <mat-icon>color_lens</mat-icon>
+                        <span>{{ 'Amendments' | translate }}</span>
+                    </button>
+                </div>
+            }
+            <!-- Categories -->
+            @if (perms.isAllowed('manage') || hasCategories) {
+                <div>
+                    <button mat-menu-item routerLink="categories">
+                        <mat-icon>category</mat-icon>
+                        <span>{{ 'Categories' | translate }}</span>
+                    </button>
+                </div>
+            }
+            <!-- Motion blocks -->
+            @if (perms.isAllowed('manage') || hasMotionBlocks) {
+                <div>
+                    <button mat-menu-item routerLink="blocks">
+                        <mat-icon>widgets</mat-icon>
+                        <span>{{ 'Motion blocks' | translate }}</span>
+                    </button>
+                </div>
+            }
+            @if (
                 (hasCategories || hasMotionBlocks || hasAmendments || perms.isAllowed('manage')) &&
                 (perms.isAllowed('manage') || selectedView === 'list' || perms.isAllowed('can_manage_config'))
-            "
-        ></mat-divider>
-
-        <div *ngIf="perms.isAllowed('manage')">
-            <!-- Call list -->
-            <button mat-menu-item routerLink="call-list">
-                <mat-icon>sort</mat-icon>
-                <span>{{ 'Call list' | translate }}</span>
-            </button>
-
-            <!-- Statutes -->
-            <button mat-menu-item routerLink="statute-paragraphs" *ngIf="statutesEnabled">
-                <mat-icon>gavel</mat-icon>
-                <span>{{ 'Statute' | translate }}</span>
-            </button>
-
-            <!-- Comments -->
-            <button mat-menu-item routerLink="comment-sections">
-                <mat-icon>speaker_notes</mat-icon>
-                <span>{{ 'Comment fields' | translate }}</span>
-            </button>
-
-            <!-- Workflows -->
-            <button mat-menu-item routerLink="workflows">
-                <mat-icon>build</mat-icon>
-                <span>{{ 'Workflows' | translate }}</span>
-            </button>
-
-            <!-- Tags -->
-            <button mat-menu-item routerLink="tags" *osPerms="permission.tagCanManage">
-                <mat-icon>local_offer</mat-icon>
-                <span>{{ 'Tags' | translate }}</span>
-            </button>
-
-            <mat-divider></mat-divider>
-        </div>
-
-        <!-- Export -->
-        <button mat-menu-item *ngIf="selectedView === 'list'" (click)="openExportDialog()">
-            <mat-icon>archive</mat-icon>
-            <span>{{ 'Export' | translate }}</span>
-        </button>
-
-        <!-- Import -->
-        <div *ngIf="perms.isAllowed('manage')">
-            <button mat-menu-item routerLink="import">
-                <mat-icon>cloud_upload</mat-icon>
-                <span>{{ 'Import' | translate }}</span>
-            </button>
-        </div>
-
-        <div *osPerms="permission.meetingCanManageSettings">
-            <mat-divider></mat-divider>
-
-            <!-- Settings -->
-            <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'motions']">
-                <mat-icon>settings</mat-icon>
-                <span>{{ 'Settings' | translate }}</span>
-            </button>
-        </div>
-    </div>
-    <div *ngIf="isMultiSelect">
-        <button mat-menu-item (click)="selectAll()">
-            <mat-icon>done_all</mat-icon>
-            <span>{{ 'Select all' | translate }}</span>
-        </button>
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
-            <mat-icon>clear</mat-icon>
-            <span>{{ 'Deselect all' | translate }}</span>
-        </button>
-        <ng-container *ngIf="perms.isAllowed('change_metadata')">
-            <mat-divider></mat-divider>
-            <os-motion-multiselect-actions [selectedMotions]="selectedRows">
-                <button
-                    mat-menu-item
-                    [disabled]="!selectedRows.length"
-                    (click)="multiselectService.moveInAgenda(selectedRows)"
-                >
-                    <mat-icon>sort</mat-icon>
-                    <span>{{ 'Move to agenda item' | translate }} ...</span>
+            ) {
+                <mat-divider></mat-divider>
+            }
+            @if (perms.isAllowed('manage')) {
+                <div>
+                    <!-- Call list -->
+                    <button mat-menu-item routerLink="call-list">
+                        <mat-icon>sort</mat-icon>
+                        <span>{{ 'Call list' | translate }}</span>
+                    </button>
+                    <!-- Comments -->
+                    <button mat-menu-item routerLink="comment-sections">
+                        <mat-icon>speaker_notes</mat-icon>
+                        <span>{{ 'Comment fields' | translate }}</span>
+                    </button>
+                    <!-- Workflows -->
+                    <button mat-menu-item routerLink="workflows">
+                        <mat-icon>build</mat-icon>
+                        <span>{{ 'Workflows' | translate }}</span>
+                    </button>
+                    <!-- Tags -->
+                    <button *osPerms="permission.tagCanManage" mat-menu-item routerLink="tags">
+                        <mat-icon>local_offer</mat-icon>
+                        <span>{{ 'Tags' | translate }}</span>
+                    </button>
+                    <mat-divider></mat-divider>
+                </div>
+            }
+            <!-- Export -->
+            @if (selectedView === 'list') {
+                <button mat-menu-item (click)="openExportDialog()">
+                    <mat-icon>archive</mat-icon>
+                    <span>{{ 'Export' | translate }}</span>
                 </button>
-                <button
-                    mat-menu-item
-                    [disabled]="!selectedRows.length"
-                    (click)="multiselectService.moveInCallList(selectedRows)"
-                >
-                    <mat-icon>format_indent_increase</mat-icon>
-                    <span>{{ 'Move in call list' | translate }} ...</span>
+            }
+            <!-- Import -->
+            @if (perms.isAllowed('manage')) {
+                <div>
+                    <button mat-menu-item routerLink="import">
+                        <mat-icon>cloud_upload</mat-icon>
+                        <span>{{ 'Import' | translate }}</span>
+                    </button>
+                </div>
+            }
+            <div *osPerms="permission.meetingCanManageSettings">
+                <mat-divider></mat-divider>
+                <!-- Settings -->
+                <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'motions']">
+                    <mat-icon>settings</mat-icon>
+                    <span>{{ 'Settings' | translate }}</span>
                 </button>
-                <button
-                    *ngIf="canForward"
-                    mat-menu-item
-                    [disabled]="!selectedRows.length"
-                    (click)="forwardMotionsToMeetings(selectedRows)"
-                >
-                    <mat-icon>forward</mat-icon>
-                    <span>{{ 'Forward' | translate }} ...</span>
-                </button>
-            </os-motion-multiselect-actions>
-        </ng-container>
-    </div>
+            </div>
+        </div>
+    }
+    @if (isMultiSelect) {
+        <div>
+            <button mat-menu-item (click)="selectAll()">
+                <mat-icon>done_all</mat-icon>
+                <span>{{ 'Select all' | translate }}</span>
+            </button>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+                <mat-icon>clear</mat-icon>
+                <span>{{ 'Deselect all' | translate }}</span>
+            </button>
+            @if (perms.isAllowed('change_metadata')) {
+                <mat-divider></mat-divider>
+                <os-motion-multiselect-actions [selectedMotions]="selectedRows">
+                    <button
+                        mat-menu-item
+                        [disabled]="!selectedRows.length"
+                        (click)="multiselectService.moveInAgenda(selectedRows)"
+                    >
+                        <mat-icon>sort</mat-icon>
+                        <span>{{ 'Move to agenda item' | translate }} ...</span>
+                    </button>
+                    <button
+                        mat-menu-item
+                        [disabled]="!selectedRows.length"
+                        (click)="multiselectService.moveInCallList(selectedRows)"
+                    >
+                        <mat-icon>format_indent_increase</mat-icon>
+                        <span>{{ 'Move in call list' | translate }} ...</span>
+                    </button>
+                    @if (canForward) {
+                        <button
+                            mat-menu-item
+                            [disabled]="!selectedRows.length"
+                            (click)="forwardMotionsToMeetings(selectedRows)"
+                        >
+                            <mat-icon>forward</mat-icon>
+                            <span>{{ 'Forward' | translate }} ...</span>
+                        </button>
+                    }
+                </os-motion-multiselect-actions>
+            }
+        </div>
+    }
 </mat-menu>

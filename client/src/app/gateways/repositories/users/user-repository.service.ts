@@ -107,7 +107,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `is_physical_person`,
             `is_active`,
             `meeting_ids`,
-            `saml_id`
+            `saml_id`,
+            `member_number`
         ];
 
         const filterableListFields: TypedFieldset<User> = listFields.concat([
@@ -250,6 +251,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             first_name: partialUser.first_name,
             last_name: partialUser.last_name,
             username: partialUser.username,
+            member_number: partialUser.member_number,
             is_active: partialUser.is_active,
             is_physical_person: partialUser.is_physical_person,
             default_password: partialUser.default_password,
@@ -263,7 +265,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return partialPayload;
     }
 
-    public getTitle = (viewUser: ViewUser) => this.getFullName(viewUser);
+    public getTitle = (viewUser: ViewUser): string => this.getFullName(viewUser);
 
     /**
      * getter for the name
@@ -287,9 +289,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return `${title} ${name}`.trim();
     }
 
-    private getFullName(user: FullNameInformation, structureLevel?: ViewStructureLevel): string {
+    private getFullName(user: ViewUser, structureLevel?: ViewStructureLevel): string {
         let fullName = this.getShortName(user);
         const additions: string[] = [];
+        const meetingUser = user.getMeetingUser();
 
         // addition: add pronoun, structure level and number
         if (user.pronoun) {
@@ -298,11 +301,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         if (structureLevel) {
             additions.push(structureLevel.getTitle());
-        } else if (structureLevel !== null && user.structureLevels?.()) {
-            additions.push(user.structureLevels());
+        } else if (structureLevel !== null && meetingUser) {
+            const structureLevels = meetingUser.structureLevels();
+            if (structureLevels) {
+                additions.push(structureLevels);
+            }
         }
 
-        const number = user.number ? user.number() : null;
+        const number = meetingUser?.number ? meetingUser.number : null;
         if (number) {
             additions.push(`${this.translate.instant(`No.`)} ${number}`);
         }
@@ -323,11 +329,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     }
 
     private getLevelAndNumber(user: LevelAndNumberInformation): string {
-        if (user.number()) {
-            return `${this.translate.instant(`No.`)} ${user.number()}`;
-        } else {
-            return ``;
+        const strings: string[] = [];
+        if (user.structureLevels()) {
+            strings.push(user.structureLevels());
         }
+        if (user.number()) {
+            strings.push(`${this.translate.instant(`No.`)} ${user.number()}`);
+        }
+        return strings.join(` · `);
     }
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Participants` : `Participant`);
@@ -338,26 +347,17 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     protected override createViewModel(model: User): ViewUser {
         const viewModel = super.createViewModel(model);
 
-        const meetingUserIdMap = new Map<Id, Id>();
-        const getMeetingUserId = (meetingId: Id) => {
-            if (!meetingUserIdMap.has(meetingId)) {
-                for (const meetingUser of this.relationManager.handleRelation(
-                    viewModel.getModel(),
-                    this.relationsByKey[`meeting_users`]
-                )) {
-                    meetingUserIdMap.set(meetingUser.meeting_id, meetingUser.id);
-                }
-            }
-
-            return meetingUserIdMap.get(meetingId);
-        };
-
-        viewModel.getName = () => this.getName(viewModel);
-        viewModel.getShortName = () => this.getShortName(viewModel);
-        viewModel.getFullName = (structureLevel?: ViewStructureLevel) => this.getFullName(viewModel, structureLevel);
-        viewModel.getMeetingUser = (meetingId: Id) => this.getMeetingUser(getMeetingUserId, meetingId);
-        viewModel.getLevelAndNumber = () => this.getLevelAndNumber(viewModel);
-        viewModel.getEnsuredActiveMeetingId = () => this.activeMeetingIdService.meetingId;
+        viewModel.getName = (): string => this.getName(viewModel);
+        viewModel.getShortName = (): string => this.getShortName(viewModel);
+        viewModel.getFullName = (structureLevel?: ViewStructureLevel): string =>
+            this.getFullName(viewModel, structureLevel);
+        viewModel.getMeetingUser = (meetingId: Id): ViewMeetingUser =>
+            this.getMeetingUser(
+                (meetingId: Id): Id => this.meetingUserRepo.getMeetingUserId(model.id, meetingId),
+                meetingId
+            );
+        viewModel.getLevelAndNumber = (): string => this.getLevelAndNumber(viewModel);
+        viewModel.getEnsuredActiveMeetingId = (): Id => this.activeMeetingIdService.meetingId;
         return viewModel;
     }
 
@@ -508,6 +508,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction<BackendImportRawPreview | void>(UserAction.PARTICIPANT_IMPORT, payload);
     }
 
+    public mergeTogether(payload: { id: number; user_ids: number[] }[]): Action<void> {
+        return this.createAction(UserAction.MERGE_TOGETHER, payload);
+    }
+
     private sanitizePayload(payload: any): any {
         const temp = { ...payload };
         for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field))) {
@@ -534,7 +538,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `comment`,
             `about_me`,
             `number`,
-            `structure_level`
+            `structure_level`,
+            `member_number`
         ];
         return fields.includes(field);
     }

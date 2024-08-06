@@ -1,7 +1,7 @@
 <os-head-bar
-    [nav]="false"
     [hasMainButton]="canEdit"
     [mainActionTooltip]="'New category' | translate"
+    [nav]="false"
     (mainEvent)="onPlusButton()"
 >
     <!-- Title -->
@@ -10,20 +10,20 @@
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot" *osPerms="permission.motionCanManage">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="categoryMenu">
+    <ng-container *osPerms="permission.motionCanManage" class="menu-slot">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="categoryMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 </os-head-bar>
 
 <os-projectable-list
-    [vScrollFixed]="64"
-    [listObservable]="categoriesObservable"
     [allowProjector]="false"
-    [showListOfSpeakers]="false"
     [filterProps]="filterProps"
     [hiddenInMobile]="['menu']"
+    [listObservable]="categoriesObservable"
+    [showListOfSpeakers]="false"
+    [vScrollFixed]="64"
 >
     <!-- Title -->
     <div *osScrollingTableCell="'title'; row as category; rowContext as rowContext" class="cell-slot fill">
@@ -33,7 +33,7 @@
 
     <!-- Amount -->
     <div *osScrollingTableCell="'amount'; row as category; config: { width: 45 }" class="cell-slot fill">
-        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}" matTooltipPosition="left">
+        <span class="os-amount-chip" matTooltipPosition="left" matTooltip="{{ 'Motions' | translate }}">
             {{ getMotionAmount(category) }}
         </span>
     </div>
@@ -52,7 +52,7 @@
         <span>{{ 'New category' | translate }}</span>
     </h1>
     <mat-dialog-content class="os-form-card-mobile">
-        <form [formGroup]="createForm" (keydown)="onKeyDown($event)">
+        <form tabindex="-1" [formGroup]="createForm" (keydown)="onKeyDown($event)">
             <!-- Prefix -->
             <p>
                 <mat-form-field>

@@ -23,6 +23,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
+import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
 import {
     getLosFirstContributionSubscriptionConfig,
     LOS_FIRST_CONTRIBUTION_SUBSCRIPTION
@@ -46,6 +47,9 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     @Input({ required: true })
     public speaker: ViewSpeaker;
 
+    @Input({ required: true })
+    public meetingUser: ViewMeetingUser;
+
     @Input()
     public speakerIndex: number = null;
 
@@ -66,7 +70,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     }
 
     public get showInterposedQuestions(): Observable<boolean> {
-        return this.meetingSettingService.get(`list_of_speakers_enable_interposed_question`);
+        return this.meetingSettingsService.get(`list_of_speakers_enable_interposed_question`);
     }
 
     public get showSpeakerNoteForEveryoneObservable(): Observable<boolean> {
@@ -89,7 +93,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         return this.canManage && this.isCallEnabled;
     }
 
-    public isPointOfOrderFn = () => this.speaker.point_of_order;
+    public isPointOfOrderFn = (): boolean => this.speaker.point_of_order;
 
     public isCallEnabled = false;
     public pointOfOrderCategoriesEnabled = false;

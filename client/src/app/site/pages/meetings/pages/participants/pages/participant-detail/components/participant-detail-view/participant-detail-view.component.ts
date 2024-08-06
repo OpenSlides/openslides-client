@@ -9,7 +9,10 @@ import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import {
+    MEETING_RELATED_FORM_CONTROLS,
+    ParticipantControllerService
+} from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -72,7 +75,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             if (this._isUserInScope || (this.newUser && canUpdateUsers)) {
                 return true;
             } else if (canUpdateUsers) {
-                return controlName === `is_present` ? this.operator.hasPerms(Permission.userCanManagePresence) : true;
+                return controlName === `is_present`
+                    ? this.operator.hasPerms(Permission.userCanManagePresence)
+                    : MEETING_RELATED_FORM_CONTROLS.includes(controlName);
             } else {
                 return PERSONAL_FORM_CONTROLS.includes(controlName);
             }
@@ -340,6 +345,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     private async createUser(): Promise<void> {
         const partialUser = { ...this.personalInfoFormValue };
 
+        if (partialUser.member_number === ``) {
+            delete partialUser.member_number;
+        }
         if (partialUser.is_present) {
             partialUser.is_present_in_meeting_ids = [this.activeMeetingId];
         }
@@ -367,6 +375,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                           .filter(id => !!id)
                     : []
             };
+            if (payload.member_number === ``) {
+                payload.member_number = null;
+            }
             const title = _(`This action will remove you from one or more groups.`);
             const content = _(
                 `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`
@@ -378,7 +389,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 ) ||
                 (await this.promptService.open(title, content))
             ) {
-                if (this.operator.hasPerms(Permission.userCanManagePresence)) {
+                if (
+                    this.operator.hasPerms(Permission.userCanManagePresence) &&
+                    this.personalInfoFormValue.is_present !== undefined
+                ) {
                     await this.repo
                         .update(payload, this.user!)
                         .concat(this.repo.setPresent(isPresent, this.user!))

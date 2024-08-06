@@ -90,7 +90,10 @@ export class MotionDiffService {
     // @TODO Decide on a more sophisticated implementation
     private diffCache = new DiffCache();
 
-    public constructor(private lineNumberingService: LineNumberingService, private translate: TranslateService) {}
+    public constructor(
+        private lineNumberingService: LineNumberingService,
+        private translate: TranslateService
+    ) {}
 
     /**
      * Searches for the line breaking node within the given Document specified by the given lineNumber.
@@ -236,6 +239,7 @@ export class MotionDiffService {
      */
     public normalizeHtmlForDiff(html: string): string {
         html = DomHelpers.sortHtmlAttributes(html);
+        html = DomHelpers.normalizeStyleAttributes(html);
         html = DomHelpers.htmlToUppercase(html);
 
         // remove whitespaces infront of closing tags

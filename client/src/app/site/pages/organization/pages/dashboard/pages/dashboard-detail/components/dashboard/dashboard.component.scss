@@ -119,6 +119,7 @@ os-dashboard {
 
     .show-committee-icon,
     .show-committee-link {
+        color: inherit;
         @media (max-width: 960px) and (min-width: 701px) {
             display: inline-block !important;
             padding-right: 20px;
@@ -150,7 +151,10 @@ os-dashboard {
     }
 
     .meeting-list {
-        box-shadow: 0 8px 10px 1px rgb(0 0 0 / 14%), 0 3px 14px 2px rgb(0 0 0 / 12%), 0 5px 5px -3px rgb(0 0 0 / 40%);
+        box-shadow:
+            0 8px 10px 1px rgb(0 0 0 / 14%),
+            0 3px 14px 2px rgb(0 0 0 / 12%),
+            0 5px 5px -3px rgb(0 0 0 / 40%);
         height: 240px;
         display: block;
         overflow: hidden;

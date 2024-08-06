@@ -1,17 +1,21 @@
 <os-head-bar
-    [hasMainButton]="true"
+    [goBack]="meeting !== null"
+    [hasMainButton]="isUserManager && meeting === null"
     [mainActionTooltip]="'New account' | translate"
-    (mainEvent)="createNewMember()"
     [multiSelectMode]="isMultiSelect"
+    [nav]="meeting === null"
+    (mainEvent)="createNewMember()"
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ 'Accounts' | translate }}</h2>
+        <h2>
+            {{ 'Accounts' | translate }}
+        </h2>
     </div>
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="memberMenu"><mat-icon>more_vert</mat-icon></button>
+        <button mat-icon-button type="button" [matMenuTriggerFor]="memberMenu"><mat-icon>more_vert</mat-icon></button>
     </ng-container>
 
     <!-- Multiselect info -->
@@ -22,20 +26,24 @@
 </os-head-bar>
 
 <os-list
-    [listObservableProvider]="controller"
-    [(selectedRows)]="selectedRows"
-    [multiSelect]="isMultiSelect"
     listStorageKey="member"
+    [alwaysShowMenu]="true"
+    [fakeFilters]="fakeFilters"
     [filterProps]="['full_name']"
     [filterService]="filterService"
+    [listObservableProvider]="controller"
+    [multiSelect]="isMultiSelect"
     [searchService]="searchService"
     [sortService]="sortService"
-    [alwaysShowMenu]="true"
+    [totalCount]="controller.getViewModelList().length"
     [vScrollFixed]="60"
+    [(selectedRows)]="selectedRows"
 >
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
+        @if (!isMultiSelect) {
+            <a class="detail-link" [routerLink]="[user.id]"></a>
+        }
         <div class="flex-vertical-center overflow-hidden">
             <div class="nameCell overflow-hidden">
                 <div class="title-line title-box">
@@ -44,26 +52,34 @@
                     </span>
                     <div style="float: right; display: inline-flex">
                         &nbsp;
-                        <os-icon-container
-                            icon="account_balance"
-                            *ngIf="!user.is_physical_person"
-                            matTooltip="{{ 'Is no natural person' | translate }}"
-                        ></os-icon-container>
-                        <os-icon-container
-                            icon="block"
-                            *ngIf="!user.is_active"
-                            matTooltip="{{ 'Inactive' | translate }}"
-                        ></os-icon-container>
-                        <os-icon-container
-                            icon="fingerprint"
-                            *ngIf="user.hasSamlId"
-                            matTooltip="{{ 'Has SSO identification' | translate }}"
-                        ></os-icon-container>
+                        @if (!user.is_physical_person) {
+                            <os-icon-container
+                                icon="account_balance"
+                                matTooltip="{{ 'Is no natural person' | translate }}"
+                            ></os-icon-container>
+                        }
+                        @if (!user.is_active) {
+                            <os-icon-container
+                                icon="block"
+                                matTooltip="{{ 'Inactive' | translate }}"
+                            ></os-icon-container>
+                        }
+                        @if (user.hasSamlId) {
+                            <os-icon-container
+                                icon="fingerprint"
+                                matTooltip="{{ 'Has SSO identification' | translate }}"
+                            ></os-icon-container>
+                        }
                     </div>
                 </div>
                 <div class="meta-info user-subtitle ellipsis-overflow">
                     {{ user.saml_id || user.username }}
-                    <ng-container *ngIf="user.email">· {{ user.email }}</ng-container>
+                    @if (user.email) {
+                        &middot; {{ user.email }}&nbsp;
+                    }
+                    @if (user.member_number) {
+                        &middot; {{ user.member_number }}
+                    }
                 </div>
             </div>
         </div>
@@ -71,45 +87,47 @@
     <!-- Info column -->
     <div *osScrollingTableCell="'info'; row as user; config: { width: isMobile ? 55 : 160 }" class="committee-wrapper">
         <div class="flex-center">
-            <os-icon-container
-                *ngIf="!!user.meetings?.length"
-                icon="event_available"
-                matTooltip="{{ 'Meetings' | translate }}"
-                matTooltipPosition="left"
-                [showIcon]="true"
-                [noWrap]="true"
-            >
-                {{ user.meetings.length }}
-            </os-icon-container>
+            @if (!!user.meetings?.length) {
+                <os-icon-container
+                    icon="event_available"
+                    matTooltipPosition="left"
+                    matTooltip="{{ 'Meetings' | translate }}"
+                    [noWrap]="true"
+                    [showIcon]="true"
+                >
+                    {{ user.meetings.length }}
+                </os-icon-container>
+            }
+        </div>
+        <div class="flex-center">
+            @if (user.isLastEmailSent) {
+                <os-icon-container
+                    icon="mail"
+                    matTooltipPosition="left"
+                    matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
+                ></os-icon-container>
+            }
         </div>
         <div class="flex-center">
             <os-icon-container
-                icon="mail"
-                *ngIf="user.isLastEmailSent"
-                matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
-                matTooltipPosition="left"
-            ></os-icon-container>
-        </div>
-        <div class="flex-center">
-            <os-icon-container
+                *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true; and: !!getOmlByUser(user)"
                 icon="engineering"
-                *osOmlPerms="OML.can_manage_users; and: !!getOmlByUser(user)"
-                [matTooltipDisabled]="!isMobile"
                 matTooltipPosition="left"
                 matTooltip="{{ getOmlByUser(user) | translate }}"
+                [matTooltipDisabled]="!isMobile"
             >
-                <ng-container *ngIf="!isMobile">
+                @if (!isMobile) {
                     {{ getOmlByUser(user) | translate }}
-                </ng-container>
+                }
             </os-icon-container>
         </div>
     </div>
 
     <!-- Menu column -->
-    <ng-container *osOmlPerms="OML.can_manage_users">
+    <ng-container *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
         <div *osScrollingTableCell="'menu'; row as user; config: { width: 40 }" class="cell-slot fill">
-            <div>
-                <button mat-icon-button [matMenuTriggerFor]="singleMenu" [matMenuTriggerData]="{ member: user }">
+            <div *osOmlPerms="user.organization_management_level">
+                <button mat-icon-button [matMenuTriggerData]="{ member: user }" [matMenuTriggerFor]="singleMenu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
             </div>
@@ -118,16 +136,16 @@
 </os-list>
 
 <mat-menu #singleMenu="matMenu">
-    <ng-template matMenuContent let-member="member">
+    <ng-template let-member="member" matMenuContent>
         <a mat-menu-item [routerLink]="[member.id, 'edit']">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <a mat-menu-item [routerLink]="[member.id, 'meetings']" *osOmlPerms="OML.can_manage_users">
+        <a *osOmlPerms="OML.can_manage_users" mat-menu-item [routerLink]="[member.id, 'meetings']">
             <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </a>
-        <button mat-menu-item class="red-warning-text" (click)="deleteUsers([member])">
+        <button class="red-warning-text" mat-menu-item (click)="deleteUsers([member])">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>
@@ -135,42 +153,60 @@
 </mat-menu>
 
 <mat-menu #memberMenu="matMenu">
-    <div *ngIf="!isMultiSelect">
-        <button mat-menu-item (click)="toggleMultiSelect()">
-            <mat-icon>library_add</mat-icon>
-            <span>{{ 'Multiselect' | translate }}</span>
-        </button>
-        <ng-container *osOmlPerms="OML.can_manage_users">
-            <button mat-menu-item (click)="csvExportMemberList()">
+    @if (!isMultiSelect) {
+        <div>
+            <button mat-menu-item (click)="toggleMultiSelect()">
+                <mat-icon>library_add</mat-icon>
+                <span>{{ 'Multiselect' | translate }}</span>
+            </button>
+            <button
+                *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true"
+                mat-menu-item
+                (click)="csvExportMemberList()"
+            >
                 <mat-icon>archive</mat-icon>
                 <span>{{ 'Export as CSV' | translate }}</span>
             </button>
-
-            <button mat-menu-item routerLink="import">
+            <button
+                *osOmlPerms="OML.can_manage_users; and: meeting === null"
+                mat-menu-item
+                routerLink="/accounts/import"
+            >
                 <mat-icon>cloud_upload</mat-icon>
                 <span>{{ 'Import' | translate }}</span>
             </button>
-        </ng-container>
-    </div>
-    <div *ngIf="isMultiSelect">
-        <os-user-multiselect-actions
-            [(selectedUsers)]="selectedRows"
-            (selectAll)="selectAll()"
-            (deselectAll)="deselectAll()"
-            (deleting)="deleteUsers()"
-        >
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="csvExportMemberList(selectedRows)">
-                <mat-icon>archive</mat-icon>
-                <span>{{ 'Export as CSV' | translate }}</span>
-            </button>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignMeetingToUsers()">
-                <mat-icon>event_available</mat-icon>
-                <span>{{ 'Set/remove meeting' | translate }} ...</span>
-            </button>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveState()">
-                <mat-icon>block</mat-icon>
-                <span>{{ 'Enable/disable accounts' | translate }} ...</span>
-            </button>
-        </os-user-multiselect-actions>
-    </div>
+        </div>
+    }
+    @if (isMultiSelect) {
+        <div>
+            <os-user-multiselect-actions
+                [(selectedUsers)]="selectedRows"
+                (deleting)="deleteUsers()"
+                (deselectAll)="deselectAll()"
+                (selectAll)="selectAll()"
+            >
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="csvExportMemberList(selectedRows)">
+                    <mat-icon>archive</mat-icon>
+                    <span>{{ 'Export as CSV' | translate }}</span>
+                </button>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignMeetingToUsers()">
+                    <mat-icon>event_available</mat-icon>
+                    <span>{{ 'Set/remove meeting' | translate }} ...</span>
+                </button>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveState()">
+                    <mat-icon>block</mat-icon>
+                    <span>{{ 'Enable/disable accounts' | translate }} ...</span>
+                </button>
+                <button
+                    *osOmlPerms="OML.can_manage_users"
+                    mat-menu-item
+                    [disabled]="selectedRows.length < 2"
+                    (click)="mergeUsersTogether()"
+                >
+                    <mat-icon>merge</mat-icon>
+                    <span>{{ 'Merge accounts' | translate }} ...</span>
+                </button>
+            </os-user-multiselect-actions>
+        </div>
+    }
 </mat-menu>

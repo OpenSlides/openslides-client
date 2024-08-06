@@ -13,7 +13,10 @@ import { ProjectionDialogModule } from '../projection-dialog.module';
 
 @Injectable({ providedIn: ProjectionDialogModule })
 export class ProjectionDialogService {
-    public constructor(private dialog: MatDialog, private projectorRepo: ProjectorControllerService) {}
+    public constructor(
+        private dialog: MatDialog,
+        private projectorRepo: ProjectorControllerService
+    ) {}
 
     /**
      * Opens the projection dialog for the given projectable. After the user's choice,
@@ -32,12 +35,18 @@ export class ProjectionDialogService {
             restoreFocus: false
         });
         const response = await firstValueFrom(dialogRef.afterClosed());
+        console.log(response);
         if (response) {
-            const { action, resultDescriptor, projectors, options }: ProjectionDialogReturnType = response;
+            const { action, resultDescriptor, projectors, options, keepActiveProjections }: ProjectionDialogReturnType =
+                response;
             if (action === `project`) {
-                await this.projectorRepo.project(resultDescriptor, projectors, options);
+                await this.projectorRepo.project(resultDescriptor, projectors, options, keepActiveProjections);
             } else if (action === `addToPreview`) {
                 await this.projectorRepo.addToPreview(resultDescriptor, projectors, options);
+            } else if (action === `hide`) {
+                if (this.projectorRepo.isProjectedOn(resultDescriptor, projectors[0])) {
+                    await this.projectorRepo.toggle(resultDescriptor, projectors, options);
+                }
             } else {
                 throw new Error(`Unknown projector action ` + action);
             }

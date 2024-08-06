@@ -73,19 +73,35 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public isNewUser = false;
     public committeeSubscriptionConfig = getCommitteeListMinimalSubscriptionConfig();
 
+    public get numCommittees(): number {
+        return this._numCommittees;
+    }
+
     public get tableData(): ParticipationTableData {
         return this._tableData;
     }
 
     public get canSeeParticipationTable(): boolean {
         return (
-            this.operator.hasOrganizationPermissions(OML.can_manage_organization) &&
+            (this.operator.hasOrganizationPermissions(OML.can_manage_organization) ||
+                this.operator.isAnyCommitteeAdmin()) &&
             (!!this.user.committee_ids?.length || !!this.user.meeting_ids?.length)
         );
     }
 
     public get comitteeAdministrationAmount(): number {
         return Object.values(this._tableData).filter(row => row[`is_manager`] === true).length;
+    }
+
+    public get userOML(): OML {
+        return this.user?.organization_management_level as OML;
+    }
+
+    public get canEdit(): boolean {
+        if (!this.userOML) {
+            return true;
+        }
+        return this.operator.hasOrganizationPermissions(this.userOML);
     }
 
     public tableDataAscOrderCompare = <T>(a: KeyValue<string, T>, b: KeyValue<string, T>): number => {
@@ -95,6 +111,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     };
 
     private _tableData: ParticipationTableData = {};
+    private _numCommittees: number = 0;
 
     public constructor(
         protected override translate: TranslateService,
@@ -227,6 +244,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             };
         });
         this._tableData = tableData;
+        this._numCommittees = Object.keys(this.tableData).length;
     }
 
     private getUserByUrl(): void {
@@ -279,13 +297,13 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     private async createUser(): Promise<void> {
-        const payload = this.getPartialUserPayload();
+        const payload = this.getPartialUserPayload(true);
         const identifiable = (await this.userController.create(payload))[0];
         this.router.navigate([`..`, identifiable.id], { relativeTo: this.route });
     }
 
     private async updateUser(): Promise<void> {
-        const payload = this.getPartialUserPayload();
+        const payload = this.getPartialUserPayload(false);
         if (
             !(
                 this.user.id === this.operator.operatorId &&
@@ -303,10 +321,17 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         }
     }
 
-    private getPartialUserPayload(): any {
+    private getPartialUserPayload(isCreate: boolean): any {
         const payload = this.personalInfoFormValue;
         if (!this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
             payload[`committee_management_ids`] = undefined;
+        }
+        if (payload.member_number === ``) {
+            if (isCreate) {
+                delete payload.member_number;
+            } else {
+                payload.member_number = null;
+            }
         }
         return payload;
     }

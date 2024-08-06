@@ -1,15 +1,15 @@
-<os-head-bar [nav]="false" [editMode]="hasChanged" (mainEvent)="onCancel()" (saveEvent)="onSave()">
+<os-head-bar [editMode]="hasChanged" [nav]="false" (mainEvent)="onCancel()" (saveEvent)="onSave()">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Call list' | translate }}</h2>
     </div>
 
     <!-- Export menu -->
-    <div class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="mainMenu">
+    <ng-container class="menu-slot">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="mainMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 </os-head-bar>
 
 <div class="custom-table-header flex-spaced">
@@ -18,57 +18,71 @@
         <span>{{ 'of' | translate }}</span>
         <span>&nbsp;{{ seenNodes[1] }}</span>
     </div>
-    <div class="current-filters" *ngIf="hasActiveFilter">
-        <div>
-            <button mat-button (click)="resetFilters()">
-                <mat-icon inline>cancel</mat-icon>
-                <span>{{ 'Clear all filters' | translate }}</span>
-            </button>
+    @if (hasActiveFilter) {
+        <div class="current-filters">
+            <div>
+                <button mat-button (click)="resetFilters()">
+                    <mat-icon inline>cancel</mat-icon>
+                    <span>{{ 'Clear all filters' | translate }}</span>
+                </button>
+            </div>
         </div>
-    </div>
+    }
     <div class="flex-spaced margin-right-5">
-        <div *ngIf="categoryFilterOptions.length">
-            <button mat-button [matMenuTriggerFor]="catFilterMenu">
-                <span
-                    class="upper"
-                    [matBadge]="activeCatFilterCount > 0 ? activeCatFilterCount : null"
-                    matBadgeColor="accent"
-                    [matBadgeOverlap]="false"
-                >
-                    {{ 'Categories' | translate }}
-                </span>
-            </button>
-        </div>
-        <div *ngIf="tagFilterOptions.length">
-            <button mat-button [matMenuTriggerFor]="tagFilterMenu">
-                <span
-                    class="upper"
-                    [matBadge]="activeTagFilterCount > 0 ? activeTagFilterCount : null"
-                    matBadgeColor="accent"
-                    [matBadgeOverlap]="false"
-                >
-                    {{ 'Tags' | translate }}
-                </span>
-            </button>
-        </div>
+        @if (categoryFilterOptions.length) {
+            <div>
+                <button mat-button [matMenuTriggerFor]="catFilterMenu">
+                    <span
+                        class="upper"
+                        matBadgeColor="accent"
+                        [matBadge]="activeCatFilterCount > 0 ? activeCatFilterCount : null"
+                        [matBadgeOverlap]="false"
+                    >
+                        {{ 'Categories' | translate }}
+                    </span>
+                </button>
+            </div>
+        }
+        @if (tagFilterOptions.length) {
+            <div>
+                <button mat-button [matMenuTriggerFor]="tagFilterMenu">
+                    <span
+                        class="upper"
+                        matBadgeColor="accent"
+                        [matBadge]="activeTagFilterCount > 0 ? activeTagFilterCount : null"
+                        [matBadgeOverlap]="false"
+                    >
+                        {{ 'Tags' | translate }}
+                    </span>
+                </button>
+            </div>
+        }
     </div>
 </div>
 
 <mat-menu #catFilterMenu="matMenu">
-    <div *ngFor="let catOption of categoryFilterOptions">
-        <button mat-menu-item (click)="onFilterChange('category', catOption.id)">
-            <mat-icon *ngIf="catOption.state">checked</mat-icon>
-            <span>{{ catOption.label }}</span>
-        </button>
-    </div>
+    @for (catOption of categoryFilterOptions; track catOption) {
+        <div>
+            <button mat-menu-item (click)="onFilterChange('category', catOption.id)">
+                @if (catOption.state) {
+                    <mat-icon>checked</mat-icon>
+                }
+                <span>{{ catOption.label }}</span>
+            </button>
+        </div>
+    }
 </mat-menu>
 <mat-menu #tagFilterMenu="matMenu">
-    <div *ngFor="let tagOption of tagFilterOptions">
-        <button mat-menu-item (click)="onFilterChange('tag', tagOption.id)">
-            <mat-icon *ngIf="tagOption.state">checked</mat-icon>
-            <span>{{ tagOption.label }}</span>
-        </button>
-    </div>
+    @for (tagOption of tagFilterOptions; track tagOption) {
+        <div>
+            <button mat-menu-item (click)="onFilterChange('tag', tagOption.id)">
+                @if (tagOption.state) {
+                    <mat-icon>checked</mat-icon>
+                }
+                <span>{{ tagOption.label }}</span>
+            </button>
+        </div>
+    }
 </mat-menu>
 
 <mat-card class="spacer-bottom-60">
@@ -77,11 +91,11 @@
             #osSortedTree
             parentKey="sort_parent_id"
             weightKey="sort_weight"
-            (visibleNodes)="onChangeAmountOfItems($event)"
-            (hasChanged)="receiveChanges($event)"
-            [model]="motionsObservable"
             [filterChange]="changeFilter"
+            [model]="motionsObservable"
             [sortingDefinition]="forceSort"
+            (hasChanged)="receiveChanges($event)"
+            (visibleNodes)="onChangeAmountOfItems($event)"
         >
             <ng-template #innerNode let-item="item">
                 <div class="line">
@@ -89,10 +103,12 @@
                         {{ item.getTitle() }}
                     </div>
                     <div class="right">
-                        <span *ngFor="let tag of getTags(item)" class="tag">
-                            <mat-icon inline>local_offer</mat-icon>
-                            {{ tag.getTitle() }}
-                        </span>
+                        @for (tag of getTags(item); track tag) {
+                            <span class="tag">
+                                <mat-icon inline>local_offer</mat-icon>
+                                {{ tag.getTitle() }}
+                            </span>
+                        }
                     </div>
                 </div>
             </ng-template>

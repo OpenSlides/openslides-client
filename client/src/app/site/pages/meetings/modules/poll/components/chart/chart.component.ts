@@ -108,7 +108,6 @@ export class ChartComponent {
                     },
                     y: {
                         grid: {
-                            drawBorder: false,
                             drawOnChartArea: false,
                             drawTicks: false
                         },

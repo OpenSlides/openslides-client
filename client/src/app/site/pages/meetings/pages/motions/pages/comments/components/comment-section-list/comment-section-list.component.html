@@ -1,7 +1,7 @@
 <os-head-bar
-    [nav]="false"
     [hasMainButton]="true"
     [mainActionTooltip]="'New comment field' | translate"
+    [nav]="false"
     (mainEvent)="openDialog()"
 >
     <!-- Title -->
@@ -10,76 +10,90 @@
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="commentListMenu">
+    <ng-container class="menu-slot">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="commentListMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
+    </ng-container>
 </os-head-bar>
 
 <div class="head-spacer"></div>
 <div class="spacer-bottom-60">
     <mat-accordion class="os-card">
-        <mat-expansion-panel *ngFor="let section of this.commentSections" multiple="false">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <div class="header-container">
-                        <div class="name ellipsis-overflow">
-                            {{ section.name }}
+        @for (section of this.commentSections; track section) {
+            <mat-expansion-panel multiple="false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <div class="header-container">
+                            <div class="name ellipsis-overflow">
+                                {{ section.name }}
+                            </div>
+                            <div class="read">
+                                <os-icon-container icon="visibility">
+                                    @if (section.read_groups?.length) {
+                                        <ng-container
+                                            *ngTemplateOutlet="groupList; context: { groups: section.read_groups }"
+                                        ></ng-container>
+                                    }
+                                    @if (section.read_groups.length === 0) {
+                                        &ndash;
+                                    }
+                                </os-icon-container>
+                            </div>
+                            <div class="write">
+                                <os-icon-container icon="edit">
+                                    @if (section.write_groups?.length) {
+                                        <ng-container
+                                            *ngTemplateOutlet="groupList; context: { groups: section.write_groups }"
+                                        ></ng-container>
+                                    }
+                                    @if (section.write_groups.length === 0) {
+                                        &ndash;
+                                    }
+                                </os-icon-container>
+                            </div>
+                            <div class="submitter-write">
+                                @if (section.submitter_can_write) {
+                                    <i>{{ 'Allow submitter edit' | translate }}</i>
+                                }
+                            </div>
                         </div>
-                        <div class="read">
-                            <os-icon-container icon="visibility">
-                                <ng-container *ngIf="section.read_groups?.length">
-                                    <ng-container
-                                        *ngTemplateOutlet="groupList; context: { groups: section.read_groups }"
-                                    ></ng-container>
-                                </ng-container>
-                                <ng-container *ngIf="section.read_groups.length === 0">&ndash;</ng-container>
-                            </os-icon-container>
-                        </div>
-                        <div class="write">
-                            <os-icon-container icon="edit">
-                                <ng-container *ngIf="section.write_groups?.length">
-                                    <ng-container
-                                        *ngTemplateOutlet="groupList; context: { groups: section.write_groups }"
-                                    ></ng-container>
-                                </ng-container>
-                                <ng-container *ngIf="section.write_groups.length === 0">&ndash;</ng-container>
-                            </os-icon-container>
-                        </div>
-                        <div class="submitter-write">
-                            <ng-container *ngIf="section.submitter_can_write">
-                                <i>{{ 'Allow submitter edit' | translate }}</i>
-                            </ng-container>
-                        </div>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <h3>{{ 'Name' | translate }}</h3>
+                <div class="spacer-left">{{ section.name }}</div>
+                <h3>{{ 'Groups with read permissions' | translate }}</h3>
+                @for (group of section.read_groups; track group) {
+                    <ul>
+                        <li>{{ group.getTitle() }}</li>
+                    </ul>
+                }
+                @if (section.read_groups.length === 0) {
+                    <div class="spacer-left">
+                        {{ 'No groups selected' | translate }}
                     </div>
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <h3>{{ 'Name' | translate }}</h3>
-            <div class="spacer-left">{{ section.name }}</div>
-            <h3>{{ 'Groups with read permissions' | translate }}</h3>
-            <ul *ngFor="let group of section.read_groups">
-                <li>{{ group.getTitle() }}</li>
-            </ul>
-            <div class="spacer-left" *ngIf="section.read_groups.length === 0">
-                {{ 'No groups selected' | translate }}
-            </div>
-            <h3>{{ 'Groups with write permissions' | translate }}</h3>
-            <ul *ngFor="let group of section.write_groups">
-                <li>{{ group.getTitle() }}</li>
-            </ul>
-            <div class="spacer-left" *ngIf="section.write_groups.length === 0">
-                {{ 'No groups selected' | translate }}
-            </div>
-            <mat-action-row>
-                <button mat-button (click)="openDialog(section)" mat-icon-button>
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-button (click)="onDeleteButton(section)" mat-icon-button>
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </mat-action-row>
-        </mat-expansion-panel>
+                }
+                <h3>{{ 'Groups with write permissions' | translate }}</h3>
+                @for (group of section.write_groups; track group) {
+                    <ul>
+                        <li>{{ group.getTitle() }}</li>
+                    </ul>
+                }
+                @if (section.write_groups.length === 0) {
+                    <div class="spacer-left">
+                        {{ 'No groups selected' | translate }}
+                    </div>
+                }
+                <mat-action-row>
+                    <button mat-icon-button (click)="openDialog(section)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="onDeleteButton(section)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-action-row>
+            </mat-expansion-panel>
+        }
     </mat-accordion>
 </div>
 
@@ -99,18 +113,24 @@
 <!-- Template for motion comment dialog -->
 <ng-template #motionCommentDialog>
     <h1 mat-dialog-title>
-        <span *ngIf="currentComment">{{ 'Edit comment field' | translate }}</span>
-        <span *ngIf="!currentComment">{{ 'New comment field' | translate }}</span>
+        @if (currentComment) {
+            <span>{{ 'Edit comment field' | translate }}</span>
+        }
+        @if (!currentComment) {
+            <span>{{ 'New comment field' | translate }}</span>
+        }
     </h1>
     <mat-dialog-content class="os-form-card-mobile">
-        <form [formGroup]="commentFieldForm" (keydown)="onKeyDown($event)">
+        <form tabindex="-1" [formGroup]="commentFieldForm" (keydown)="onKeyDown($event)">
             <p>
                 <mat-form-field>
                     <mat-label>{{ 'Name' | translate }}</mat-label>
                     <input formControlName="name" matInput required />
-                    <mat-error *ngIf="!commentFieldForm.controls['name'].valid">
-                        <span>{{ 'Required' | translate }}</span>
-                    </mat-error>
+                    @if (!commentFieldForm.controls['name'].valid) {
+                        <mat-error>
+                            <span>{{ 'Required' | translate }}</span>
+                        </mat-error>
+                    }
                 </mat-form-field>
             </p>
             <p>
@@ -118,8 +138,8 @@
                     <mat-label>{{ 'Groups with read permissions' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="read_group_ids"
-                        [multiple]="true"
                         [inputListValues]="groups"
+                        [multiple]="true"
                         [sortFn]="sortFn"
                     ></os-list-search-selector>
                 </mat-form-field>
@@ -129,8 +149,8 @@
                     <mat-label>{{ 'Groups with write permissions' | translate }}</mat-label>
                     <os-list-search-selector
                         formControlName="write_group_ids"
-                        [multiple]="true"
                         [inputListValues]="groups"
+                        [multiple]="true"
                         [sortFn]="sortFn"
                     ></os-list-search-selector>
                 </mat-form-field>
@@ -143,7 +163,7 @@
         </form>
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button [disabled]="commentFieldForm.invalid" mat-button [mat-dialog-close]="true">
+        <button mat-button [disabled]="commentFieldForm.invalid" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
         <button mat-button [mat-dialog-close]="false">

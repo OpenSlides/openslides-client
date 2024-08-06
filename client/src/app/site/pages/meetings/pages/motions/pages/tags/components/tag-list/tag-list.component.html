@@ -2,9 +2,9 @@
     [goBack]="true"
     [hasMainButton]="true"
     [mainActionTooltip]="'New tag' | translate"
+    [multiSelectMode]="isMultiSelect"
     [nav]="false"
     (mainEvent)="openTagDialog()"
-    [multiSelectMode]="isMultiSelect"
 >
     <div class="title-slot">
         <h2>{{ 'Tags' | translate }}</h2>
@@ -12,11 +12,11 @@
 </os-head-bar>
 
 <os-list
-    [listObservableProvider]="repo"
-    [hiddenInMobile]="['menu']"
-    [(selectedRows)]="selectedRows"
-    [filterProps]="['name']"
     [addBottomSpacer]="hasInteractionState | async"
+    [filterProps]="['name']"
+    [hiddenInMobile]="['menu']"
+    [listObservableProvider]="repo"
+    [(selectedRows)]="selectedRows"
 >
     <!-- Name column -->
     <div *osScrollingTableCell="'name'; value as name" class="cell-slot fill">
@@ -32,7 +32,7 @@
     </div>
     <!-- delete column -->
     <div *osScrollingTableCell="'delete'; row as tag; config: { width: 45 }" class="cell-slot fill">
-        <button mat-icon-button color="warn" (click)="onDeleteButton(tag)">
+        <button color="warn" mat-icon-button (click)="onDeleteButton(tag)">
             <mat-icon>delete</mat-icon>
         </button>
     </div>
@@ -41,23 +41,27 @@
 <!-- Template for dialog for quick editing -->
 <ng-template #tagDialog>
     <h1 mat-dialog-title>
-        <span *ngIf="currentTag">{{ 'Edit tag' | translate }}</span>
-        <span *ngIf="!currentTag">{{ 'New tag' | translate }}</span>
+        @if (currentTag) {
+            <span>{{ 'Edit tag' | translate }}</span>
+        }
+        @if (!currentTag) {
+            <span>{{ 'New tag' | translate }}</span>
+        }
     </h1>
     <mat-dialog-content class="os-form-card-mobile">
-        <form [formGroup]="tagForm" (keydown)="onKeyDown($event)">
+        <form tabindex="-1" [formGroup]="tagForm" (keydown)="onKeyDown($event)">
             <mat-form-field>
                 <mat-label>{{ 'Name' | translate }}</mat-label>
-                <input required type="text" matInput formControlName="name" />
+                <input formControlName="name" matInput required type="text" />
             </mat-form-field>
         </form>
     </mat-dialog-content>
 
     <mat-dialog-actions>
-        <button type="submit" mat-button [mat-dialog-close]="true" color="accent">
+        <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
             <span>{{ 'Save' | translate }}</span>
         </button>
-        <button type="button" mat-button [mat-dialog-close]="false">
+        <button mat-button type="button" [mat-dialog-close]="false">
             <span>{{ 'Cancel' | translate }}</span>
         </button>
     </mat-dialog-actions>

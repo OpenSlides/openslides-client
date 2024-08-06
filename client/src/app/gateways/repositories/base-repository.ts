@@ -501,8 +501,8 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     protected createViewModel(model?: M): V {
         const viewModel = this.createViewModelProxy(model);
 
-        viewModel.getTitle = () => this.getTitle(viewModel);
-        viewModel.getListTitle = () => this.getListTitle(viewModel);
+        viewModel.getTitle = (): string => this.getTitle(viewModel);
+        viewModel.getListTitle = (): string => this.getListTitle(viewModel);
         viewModel.getVerboseName = this.getVerboseName;
 
         this.onCreateViewModel(viewModel);
@@ -588,7 +588,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     private resortAndUpdateForeignBaseKeys(key: string): void {
         const resortAction = {
-            funct: async () => {
+            funct: async (): Promise<void> => {
                 const sortListService = this.sortListServices[key];
                 this.updateForeignBaseKeys(key);
                 await sortListService.hasLoaded;
@@ -612,7 +612,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                 if (this.foreignSortBaseKeys[key][collection].some(key => keys.includes(key))) {
                     this.sortedViewModelLists[key] = await sortListService.sort(this.sortedViewModelLists[key]);
                     const resortAction = {
-                        funct: async () => {
+                        funct: async (): Promise<void> => {
                             this.sortedViewModelLists[key] = await sortListService.sort(this.sortedViewModelLists[key]);
                         },
                         type: PipelineActionType.Resort,
@@ -680,7 +680,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     private createViewModelProxy(model?: M): V {
         let viewModel = new this.baseViewModelCtor(model);
         viewModel = new Proxy(viewModel, {
-            get: (target: V, property) => {
+            get: (target: V, property): any => {
                 // target is our viewModel and property the requested value: viewModel[property]
                 let result: any; // This is what we have to resolve: viewModel[property] -> result
                 const _model: M = target.getModel();

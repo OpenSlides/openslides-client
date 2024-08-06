@@ -1,9 +1,9 @@
 <os-file-upload
     [addFileFn]="getAddFileFn()"
-    [uploadFileFn]="getUploadFileFn()"
     [parallel]="parallel"
-    (uploadSucceeded)="uploadSucceeded($event)"
+    [uploadFileFn]="getUploadFileFn()"
     (uploadFailured)="errorEvent.emit($event)"
+    (uploadSucceeded)="uploadSucceeded($event)"
 >
     <ng-template #additionalContent>
         <!-- Directory selector-->
@@ -12,9 +12,9 @@
                 <mat-label>{{ 'Upload to' | translate }}</mat-label>
                 <os-list-search-selector
                     formControlName="directoryId"
-                    [multiple]="false"
                     [includeNone]="true"
                     [inputListValues]="directories"
+                    [multiple]="false"
                 ></os-list-search-selector>
             </mat-form-field>
         </div>

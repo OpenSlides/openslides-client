@@ -32,8 +32,6 @@ interface WorkflowFilterDesc {
 }
 
 interface WorkflowConfiguration {
-    statuteEnabled: boolean;
-    statute: Id | null;
     motion: Id | null;
     amendment: Id | null;
 }
@@ -54,8 +52,6 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
      * Listen to the configuration for change in defined/used workflows
      */
     protected enabledWorkflows: WorkflowConfiguration = {
-        statuteEnabled: false,
-        statute: null,
         motion: null,
         amendment: null
     };
@@ -277,20 +273,12 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
     }
 
     private getWorkflowConfig(): void {
-        this.meetingSettingsService.get(`motions_default_statute_amendment_workflow_id`).subscribe(id => {
-            this.enabledWorkflows.statute = +id;
-        });
-
         this.meetingSettingsService.get(`motions_default_workflow_id`).subscribe(id => {
             this.enabledWorkflows.motion = +id;
         });
 
         this.meetingSettingsService.get(`motions_default_amendment_workflow_id`).subscribe(id => {
             this.enabledWorkflows.amendment = +id;
-        });
-
-        this.meetingSettingsService.get(`motions_statutes_enabled`).subscribe(bool => {
-            this.enabledWorkflows.statuteEnabled = bool;
         });
     }
 
@@ -440,9 +428,6 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
     }
 
     protected isWorkflowEnabled(workflowId: number): boolean {
-        return (
-            workflowId === this.enabledWorkflows.motion ||
-            (this.enabledWorkflows.statuteEnabled && workflowId === this.enabledWorkflows.statute)
-        );
+        return workflowId === this.enabledWorkflows.motion;
     }
 }

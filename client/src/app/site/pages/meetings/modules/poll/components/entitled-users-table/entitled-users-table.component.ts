@@ -44,7 +44,14 @@ export class EntitledUsersTableComponent {
 
     public readonly permission = Permission;
 
-    public filterPropsEntitledUsersTable = [`user.full_name`, `vote_delegated_to.full_name`, `voted_verbose`];
+    public filterPropsEntitledUsersTable = [
+        `user.full_name`,
+        `vote_delegated_to.full_name`,
+        `user_merged_into`,
+        `delegation_user_merged_into`,
+        `voted_verbose`
+    ];
+
     public constructor(
         private controller: ParticipantControllerService,
         public filter: EntitledUsersListFilterService

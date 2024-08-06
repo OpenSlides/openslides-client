@@ -34,6 +34,9 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
     public disableFinished = false;
 
     @Input()
+    public displayInAutopilot = true;
+
+    @Input()
     public set currentProjection(viewModel: (Partial<HasPolls<C>> & { readonly fqid: string }) | null) {
         this._currentProjection = viewModel;
         this.updateLastPublished();
@@ -106,7 +109,7 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         const model = contentObject.getVerboseName();
         const pollTitle = poll.getTitle();
 
-        if (this.showExtendedTitle && contentObject.fqid !== this.currentProjection.fqid) {
+        if (this.showExtendedTitle && contentObject?.fqid !== this.currentProjection?.fqid) {
             return `(${model}) ${listTitle} - ${pollTitle}`;
         } else {
             return pollTitle;

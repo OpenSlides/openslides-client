@@ -1,47 +1,51 @@
-<ng-container *ngIf="cellDefinitionsObservable | async as definitions">
-    <ng-container *ngIf="hasDataObservable | async; else noDataTemplate">
+@if (cellDefinitionsObservable | async; as definitions) {
+    @if (hasDataObservable | async) {
         <div #cdkContainer [style.height]="calculateContainerHeight()">
             <cdk-virtual-scroll-viewport class="virtual-scroll-viewport background-card" [itemSize]="rowHeight">
-                <div
-                    *ngIf="showHeader"
-                    class="flex-vertical-center placeholder divider-bottom scrolling-table-header"
-                    [ngStyle]="getNgStyle()"
-                >
-                    <ng-container *ngFor="let definition of definitions; let first = first">
-                        <div
-                            class="scrolling-table-cell flex-vertical-center subtitle"
-                            [ngClass]="{ 'divider-left': !first }"
-                            [ngStyle]="{
-                                flexBasis: definition.width || defaultColumnWidth,
-                                width: definition.width || defaultColumnWidth,
-                                minWidth: definition.minWidth || defaultColumnWidth,
-                                maxWidth: definition.maxWidth || defaultColumnWidth
-                            }"
-                        >
-                            <ng-template [ngIf]="definition.labelTemplate">
-                                <ng-template [cdkPortalOutlet]="definition.labelTemplate"></ng-template>
-                            </ng-template>
-                            <ng-template [ngIf]="!definition.labelTemplate">
-                                <ng-template>{{ definition.labelString }}</ng-template>
-                            </ng-template>
-                        </div>
-                    </ng-container>
-                </div>
+                @if (showHeader) {
+                    <div
+                        class="flex-vertical-center placeholder divider-bottom scrolling-table-header"
+                        [ngStyle]="getNgStyle()"
+                    >
+                        @for (definition of definitions; track definition; let first = $first) {
+                            <div
+                                class="scrolling-table-cell flex-vertical-center subtitle"
+                                [ngClass]="{ 'divider-left': !first }"
+                                [ngStyle]="{
+                                    flexBasis: definition.width || defaultColumnWidth,
+                                    width: definition.width || defaultColumnWidth,
+                                    minWidth: definition.minWidth || defaultColumnWidth,
+                                    maxWidth: definition.maxWidth || defaultColumnWidth
+                                }"
+                            >
+                                @if (definition.labelTemplate) {
+                                    <ng-template [cdkPortalOutlet]="definition.labelTemplate"></ng-template>
+                                } @else {
+                                    <ng-template>{{ definition.labelString }}</ng-template>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
                 <ng-container *cdkVirtualFor="let item of dataSource; last as isLast">
                     <div
                         class="scrolling-table-row divider-bottom flex-vertical-center"
+                        role="none"
+                        tabindex="-1"
                         [ngClass]="rowClass"
                         [ngStyle]="getNgStyle(isLast)"
                         (click)="onRowClick($event, item)"
                     >
-                        <div *ngIf="isSelectionMode" class="selection-cell scrolling-table-cell flex-vertical-center">
-                            <mat-checkbox
-                                [class.mat-checkbox-disabled]="false"
-                                [checked]="isSelected(item)"
-                                disabled
-                            ></mat-checkbox>
-                        </div>
-                        <ng-container *ngFor="let definition of definitions">
+                        @if (isSelectionMode) {
+                            <div class="selection-cell scrolling-table-cell flex-vertical-center">
+                                <mat-checkbox
+                                    disabled
+                                    [checked]="isSelected(item)"
+                                    [class.mat-checkbox-disabled]="false"
+                                ></mat-checkbox>
+                            </div>
+                        }
+                        @for (definition of definitions; track definition) {
                             <div
                                 class="scrolling-table-cell flex-vertical-center"
                                 [ngStyle]="{
@@ -62,16 +66,14 @@
                                     "
                                 ></ng-container>
                             </div>
-                        </ng-container>
+                        }
                     </div>
                 </ng-container>
             </cdk-virtual-scroll-viewport>
         </div>
-    </ng-container>
-</ng-container>
-
-<ng-template #noDataTemplate>
-    <div #cdkContainer class="scrolling-table--no-data-wrapper" [style.height]="calculateContainerHeight()">
-        <ng-template [cdkPortalOutlet]="noDataTemplateObservable | async"></ng-template>
-    </div>
-</ng-template>
+    } @else {
+        <div #cdkContainer class="scrolling-table--no-data-wrapper" [style.height]="calculateContainerHeight()">
+            <ng-template [cdkPortalOutlet]="noDataTemplateObservable | async"></ng-template>
+        </div>
+    }
+}

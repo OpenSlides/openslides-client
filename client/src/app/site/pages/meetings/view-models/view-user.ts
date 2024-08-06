@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { User } from 'src/app/domain/models/users/user';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
@@ -48,7 +49,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get numberOfMeetings(): number {
-        return this.meeting_ids.length;
+        return this.meetings.length;
     }
 
     public get name(): string {
@@ -102,6 +103,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public get is_present(): boolean {
         return this.isPresentInMeeting();
+    }
+
+    public get hasMemberNumber(): boolean {
+        return !!this.member_number;
     }
 
     // Will be set by the repository
@@ -245,9 +250,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public structureLevels(meetingId?: Id): string {
-        return this.structure_levels(meetingId)
-            .map(sl => sl.name)
-            .join(`, `);
+        return this.getMeetingUser(meetingId)?.structureLevels();
     }
 
     public get isVoteWeightOne(): boolean {
@@ -283,7 +286,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         if (!user) {
             return false;
         }
-        return this.vote_delegations_from_ids().includes(user.id);
+        return this.vote_delegations_from_ids()?.includes(user.id);
     }
 
     public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser {
@@ -333,6 +336,7 @@ interface IUserRelations {
     meeting_users: ViewMeetingUser[];
     poll_voted: ViewPoll[];
     committee_managements: ViewCommittee[];
+    committee_managements_as_observable: Observable<ViewCommittee[]>;
     options: ViewOption[];
     votes: ViewVote[];
     poll_candidates: ViewPollCandidate[];

@@ -65,6 +65,18 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
 
     public additionalInputControl: UntypedFormControl;
 
+    @Input()
+    public secondSelectorLabel: string;
+
+    @Input()
+    public loadSecondSelectorValues: () => Promise<Selectable[]>;
+
+    public secondSelectorValues: Selectable[] = [];
+
+    public secondSelectorFormControl: UntypedFormControl;
+
+    private secondSelectorDisabledIds: number[] = [];
+
     public get intermediateModels(): V[] {
         return this.getIntermediateModels(this.motion);
     }
@@ -88,6 +100,11 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         this._editMode = value;
         this._addUsersSet.clear();
         this._removeUsersMap = {};
+        if (value && this.loadSecondSelectorValues) {
+            this.loadSecondSelectorValues().then(items => {
+                this.secondSelectorValues = items;
+            });
+        }
     }
 
     public get isEditMode(): boolean {
@@ -117,8 +134,16 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
 
     public ngOnInit(): void {
         this.additionalInputControl = this.fb.control(``);
+        this.secondSelectorFormControl = this.fb.control(``);
         this.subscriptions.push(
             this.editSubject.subscribe(ids => (this.editUserIds = ids.map(model => model.user_id ?? model.id)))
+        );
+        this.subscriptions.push(
+            this.secondSelectorFormControl.valueChanges.subscribe(value => {
+                if (value) {
+                    this.changeSecondSelector();
+                }
+            })
         );
     }
 
@@ -151,12 +176,9 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
             )
         );
         if (this.useAdditionalInput) {
-            actions.push(
-                this.motionController.update(
-                    { [this.additionalInputField]: this.additionalInputControl.value },
-                    this.motion
-                )
-            );
+            const value = this.additionalInputControl.value;
+            actions.push(this.motionController.update({ [this.additionalInputField]: value }, this.motion));
+            this.secondSelectorFormControl.setValue(null);
         }
 
         await Action.from(...actions).resolve();
@@ -220,6 +242,20 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         }
     }
 
+    public getDisabledFn(): (v: Selectable) => boolean {
+        return (value: Selectable) => this.secondSelectorDisabledIds.includes(value.id);
+    }
+
+    public openedChange(opened: boolean): void {
+        if (!opened) {
+            this.secondSelectorDisabledIds = [];
+        }
+    }
+
+    public get isSecondSelectorValuesFilled(): boolean {
+        return this.secondSelectorValues && this.secondSelectorValues.length > 0;
+    }
+
     private updateData(models: V[]): void {
         if (!this.isEditMode) {
             this.editSubject.next(models);
@@ -269,5 +305,26 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         }
         const models = this.editSubject.value;
         this.editSubject.next(models.concat(model));
+    }
+
+    /**
+     * helpers for second Selector
+     */
+    private get secondSelectorSelectedValue(): string {
+        if (!this.secondSelectorFormControl.value) {
+            return ``;
+        }
+        const searchId = +this.secondSelectorFormControl.value;
+        const foundEntry = this.secondSelectorValues.find(entry => entry.id === searchId);
+        return !!foundEntry ? foundEntry.getTitle() : ``;
+    }
+
+    private changeSecondSelector(): void {
+        const value = this.additionalInputControl.value
+            ? this.additionalInputControl.value + ` · ` + this.secondSelectorSelectedValue
+            : this.secondSelectorSelectedValue;
+        this.secondSelectorDisabledIds.push(+this.secondSelectorFormControl.value);
+        this.secondSelectorFormControl.setValue(null);
+        this.additionalInputControl.setValue(value);
     }
 }

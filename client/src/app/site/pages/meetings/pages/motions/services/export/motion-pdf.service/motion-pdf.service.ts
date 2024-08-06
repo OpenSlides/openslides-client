@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentTable, ContentText, TableCell } from 'pdfmake/interfaces';
@@ -21,7 +22,6 @@ import { MotionChangeRecommendationControllerService } from '../../../modules/ch
 import { LineNumberingService } from '../../../modules/change-recommendations/services';
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
 import { MotionPollService } from '../../../modules/motion-poll/services';
-import { MotionStatuteParagraphControllerService } from '../../../modules/statute-paragraphs/services';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { MotionFormatService } from '../../common/motion-format.service';
@@ -80,7 +80,6 @@ export class MotionPdfService {
         private translate: TranslateService,
         private motionService: MotionControllerService,
         private motionLineNumbering: MotionLineNumberingService,
-        private statuteRepo: MotionStatuteParagraphControllerService,
         private changeRecoRepo: MotionChangeRecommendationControllerService,
         private meetingSettingsService: MeetingSettingsService,
         private pdfDocumentService: MeetingPdfExportService,
@@ -116,12 +115,6 @@ export class MotionPdfService {
         )!;
 
         let motionPdfContent: any[] = [];
-
-        // Enforces that statutes should always have Diff Mode and no line numbers
-        if (motion.isStatuteAmendment()) {
-            lnMode = LineNumberingMode.None;
-            crMode = ChangeRecoMode.Diff;
-        }
 
         // determine the default lnMode if not explicitly given
         if (!lnMode) {
@@ -278,10 +271,10 @@ export class MotionPdfService {
         }
 
         // supporters
-        if (!infoToExport || infoToExport.includes(`supporter_users`)) {
+        if (!infoToExport || infoToExport.includes(`supporters`)) {
             const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
-            if (minSupporters && motion.supporter_users.length > 0) {
-                const supporters = motion.supporter_users
+            if (minSupporters && motion.supporters.length > 0) {
+                const supporters = motion.supporters
                     .naturalSort(this.translate.currentLang, [`first_name`, `last_name`])
                     .map(supporter => supporter.full_name)
                     .join(`, `);
@@ -352,13 +345,7 @@ export class MotionPdfService {
 
         // recommendation
         if (motion.recommendation && (!infoToExport || infoToExport.includes(`recommendation`))) {
-            let recommendationByText: string;
-
-            if (motion.isStatuteAmendment()) {
-                recommendationByText = this.meetingSettingsService.instant(`motions_statute_recommendations_by`)!;
-            } else {
-                recommendationByText = this.meetingSettingsService.instant(`motions_recommendations_by`)!;
-            }
+            const recommendationByText = this.meetingSettingsService.instant(`motions_recommendations_by`)!;
 
             metaTableBody.push([
                 {
@@ -672,10 +659,6 @@ export class MotionPdfService {
             } catch (e: any) {
                 htmlText += `<em style="color: red; font-weight: bold;">` + e.toString() + `</em>`;
             }
-        } else if (motion.isStatuteAmendment()) {
-            // statute amendments
-            const statutes = this.statuteRepo.getViewModelList();
-            htmlText = this.motionLineNumbering.formatStatuteAmendment(statutes, motion, lineLength);
         } else {
             // lead motion or normal amendments
 
@@ -743,7 +726,7 @@ export class MotionPdfService {
     private createAttachments(motion: ViewMotion): object {
         let width = this.pdfDocumentService.pageSize === `A5` ? PDF_A5_POINTS_WIDTH : PDF_A4_POINTS_WIDTH;
         width = width - this.pdfDocumentService.pageMarginPointsLeft - this.pdfDocumentService.pageMarginPointsRight;
-        const instancUrl = this.organizationSettingsService.instant(`url`);
+        const instanceUrl = this.organizationSettingsService.instant(`url`);
 
         const attachments = [];
         attachments.push({
@@ -763,11 +746,12 @@ export class MotionPdfService {
                     margin: [0, 0, 0, 10]
                 });
             } else {
+                const link = Location.joinWithSlash(instanceUrl, fileUrl);
                 attachments.push({
                     ul: [
                         {
-                            text: attachment.getTitle() + `: ` + instancUrl + fileUrl,
-                            link: instancUrl + fileUrl,
+                            text: attachment.getTitle() + `: ` + link,
+                            link: link,
                             margin: [0, 0, 0, 5]
                         }
                     ]
