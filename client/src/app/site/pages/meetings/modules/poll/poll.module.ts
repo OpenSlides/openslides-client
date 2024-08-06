@@ -21,6 +21,7 @@ import { ChartComponent } from './components/chart/chart.component';
 import { CheckInputComponent } from './components/check-input/check-input.component';
 import { EntitledUsersTableComponent } from './components/entitled-users-table/entitled-users-table.component';
 import { PollCannotVoteMessageComponent } from './components/poll-cannot-vote-message/poll-cannot-vote-message.component';
+import { PollFilteredVotesChartComponent } from './components/poll-filtered-votes-chart/poll-filtered-votes-chart.component';
 import { PollProgressComponent } from './components/poll-progress/poll-progress.component';
 import { SingleOptionChartTableComponent } from './components/single-option-chart-table/single-option-chart-table.component';
 import { VotesTableComponent } from './components/votes-table/votes-table.component';
@@ -32,6 +33,7 @@ const MODULES = [PollServiceModule, VotingPrivacyDialogModule];
 const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollParseNumberPipe];
 const COMPONENTS = [
     PollProgressComponent,
+    PollFilteredVotesChartComponent,
     ChartComponent,
     CheckInputComponent,
     EntitledUsersTableComponent,
