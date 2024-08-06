@@ -4,8 +4,8 @@
         [data]="pollData"
         [percentBases]="PercentBaseVerbose"
         [pollClassType]="pollClassType.Motion"
-        [pollService]="motionPollService"
         [pollMethods]="MotionPollMethodsVerbose"
+        [pollService]="motionPollService"
     ></os-motion-poll-form>
     @if (pollForm.contentForm.get('type')!.value === 'analog') {
         <div class="os-form-card-mobile">
