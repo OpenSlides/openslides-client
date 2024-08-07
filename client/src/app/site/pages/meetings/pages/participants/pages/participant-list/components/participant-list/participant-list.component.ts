@@ -227,19 +227,21 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     public isLockedOutToggleDisabled(user: ViewUser): boolean {
         if (this.isMultiSelect) {
             return true;
-        } else if (this.operator.operatorId === user.id) {
-            return true;
-        } else if (user.organization_management_level) {
-            return true;
-        } else if (user.group_ids().includes(this.activeMeeting.admin_group_id)) {
-            return true;
-        } else if (user.committee_management_ids?.includes(this.activeMeeting.committee_id)) {
-            return true;
-        } else if (user.groups().some(group => group.permissions.includes(Permission.userCanManage))) {
+        } else if (!this.filterForLockedOut(user)) {
             return true;
         } else {
             return !this.operator.hasPerms(Permission.userCanManage);
         }
+    }
+
+    private filterForLockedOut(user: ViewUser): boolean {
+        return (
+            this.operator.operatorId !== user.id &&
+            !user.organization_management_level &&
+            !user.group_ids().includes(this.activeMeeting.admin_group_id) &&
+            !user.committee_management_ids?.includes(this.activeMeeting.committee_id) &&
+            !user.groups().some(group => group.permissions.includes(Permission.userCanManage))
+        );
     }
 
     /**
@@ -545,6 +547,21 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             const value = selectedChoice.action === actions[0];
             if (field === `is_present_in_meetings`) {
                 await this.repo.setPresent(value, ...this.selectedRows).resolve();
+            } else if (field === `locked_out`) {
+                const filteredRows = this.selectedRows.filter(user => this.filterForLockedOut(user));
+                if (filteredRows.length > 0) {
+                    await this.repo.setState(field, value, ...filteredRows);
+                }
+                const missing = this.selectedRows.length - filteredRows.length;
+                if (missing > 0) {
+                    this.matSnackBar.open(
+                        this.translate
+                            .instant(`%num% participants could not be locked out, because of missing permissions.`)
+                            .replace(`%num%`, missing),
+                        this.translate.instant(`Ok`),
+                        { duration: 3000 }
+                    );
+                }
             } else {
                 await this.repo.setState(field, value, ...this.selectedRows);
             }
