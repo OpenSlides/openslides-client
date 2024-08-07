@@ -35,6 +35,8 @@
             </span>
         </div>
         <os-motion-poll-detail-content [poll]="poll"></os-motion-poll-detail-content>
+
+        <os-poll-filted-votes-chart></os-poll-filted-votes-chart>
         <!-- Named table: only show if votes are present -->
         @if (showResults && poll.stateHasVotes && poll.isEVoting) {
             <mat-tab-group (selectedTabChange)="onTabChange()">

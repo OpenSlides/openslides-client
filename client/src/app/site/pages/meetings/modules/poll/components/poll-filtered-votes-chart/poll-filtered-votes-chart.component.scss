@@ -1,0 +1,30 @@
+.vote-chart-bar {
+    display: flex;
+    align-items: center;
+    height: 70px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    .segment {
+        position: relative;
+        text-align: center;
+        height: 50px;
+        .below {
+            position: absolute;
+            width: 100%;
+            top: 58px;
+        }
+    }
+}
+
+.results {
+    display: grid;
+    grid-gap: 10px;
+    padding: 10px;
+    margin: 0 10px;
+    grid-template-areas: 'name name';
+    grid-template-columns: auto auto;
+}
+
+.margin-right-20 {
+    margin-right: 20px;
+}
