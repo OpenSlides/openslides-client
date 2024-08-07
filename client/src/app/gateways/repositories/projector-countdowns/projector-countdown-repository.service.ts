@@ -3,7 +3,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
 import { ViewProjectorCountdown } from 'src/app/site/pages/meetings/pages/projectors';
 
-import { ServerTimePresenterService } from '../../presenter/server-time-presenter.service';
+import { ServerTimeService } from '../../server-time.service';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorCountdownAction } from './projector-countdown.action';
@@ -17,7 +17,7 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
 > {
     public constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        private serverTimePresenter: ServerTimePresenterService
+        private serverTime: ServerTimeService
     ) {
         super(repositoryServiceCollector, ProjectorCountdown);
     }
@@ -56,7 +56,7 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
      * @param countdown The countdown to start.
      */
     public async start(countdown: ViewProjectorCountdown): Promise<void> {
-        const endTime = this.serverTimePresenter.getServertime() / 1000 + countdown.countdown_time;
+        const endTime = this.serverTime.getServertime() / 1000 + countdown.countdown_time;
         await this.update({ running: true, countdown_time: endTime }, countdown);
     }
 
@@ -76,7 +76,7 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
      * @param countdown The countdown to pause.
      */
     public async pause(countdown: ViewProjectorCountdown): Promise<void> {
-        const endTime = countdown.countdown_time - this.serverTimePresenter.getServertime() / 1000;
+        const endTime = countdown.countdown_time - this.serverTime.getServertime() / 1000;
         await this.update({ running: false, countdown_time: endTime }, countdown);
     }
 }
