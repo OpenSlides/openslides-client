@@ -21,6 +21,7 @@ export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCo
         return {
             content_object_id: this.fqid,
             stable: true,
+            stableToggle: `fullscreen`,
             slideOptions: [
                 {
                     key: `fullscreen`,
