@@ -36,7 +36,7 @@
                         @if (isSettingsInput(setting) && !setting.hide) {
                             <os-meeting-settings-group-detail-field
                                 #settingsFields
-                                [disabled]="isSettingDisabled(setting)"
+                                [disabled]="isSettingDisabled(setting) || isForbidden(setting)"
                                 [setting]="setting"
                                 [value]="meeting && getDetailFieldValue(meeting, setting)"
                                 (update)="updateSetting($event)"
