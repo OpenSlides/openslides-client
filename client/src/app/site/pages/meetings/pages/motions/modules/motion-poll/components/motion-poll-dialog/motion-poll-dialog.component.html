@@ -4,6 +4,7 @@
         [data]="pollData"
         [percentBases]="PercentBaseVerbose"
         [pollClassType]="pollClassType.Motion"
+        [pollMethods]="MotionPollMethodsVerbose"
         [pollService]="motionPollService"
     ></os-motion-poll-form>
     @if (pollForm.contentForm.get('type')!.value === 'analog') {
