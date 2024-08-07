@@ -166,6 +166,19 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
         return this._scrollingTableComponent.source;
     }
 
+    public get entriesInViewport(): V[] {
+        const entries = [];
+        if (this.scrollViewport) {
+            const range = this.scrollViewport.getRenderedRange();
+            for (let i = range.start; i < range.end; i++) {
+                if (this.source[i]) {
+                    entries.push(this.source[i]);
+                }
+            }
+        }
+        return entries;
+    }
+
     /**
      * Observable to the raw data
      */

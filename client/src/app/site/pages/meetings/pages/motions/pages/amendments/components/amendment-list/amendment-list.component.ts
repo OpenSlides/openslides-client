@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { distinctUntilChanged, firstValueFrom, Observable, of, switchMap } from 'rxjs';
+import { firstValueFrom, Observable, of, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
+import { ProjectableListComponent } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projectable-list/components/projectable-list/projectable-list.component';
 
 import { ChangeRecoMode } from '../../../../../../../../../domain/models/motions/motions.constants';
 import { MotionExportDialogService } from '../../../../components/motion-export-dialog/services/motion-export-dialog.service';
@@ -29,6 +30,9 @@ const AMENDMENT_LIST_STORAGE_INDEX = `amendment_list`;
     encapsulation: ViewEncapsulation.None
 })
 export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
+    @ViewChild(ProjectableListComponent)
+    private readonly _projectableTableComponent: ProjectableListComponent<ViewMotion> | undefined;
+
     /**
      * Hold the Id of the parent motion
      */
@@ -93,13 +97,21 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         }
 
         this.subscriptions.push(
-            this.amendmentFilterService.outputObservable
-                .pipe(distinctUntilChanged((x, y) => x.length === y.length))
-                .subscribe(amendments => {
-                    for (const amendment of amendments) {
-                        this._amendmentDiffLinesMap[amendment.id] = this.getAmendmentDiffLines(amendment);
+            this.amendmentFilterService.outputObservable.subscribe(amendments => {
+                const viewList = this._projectableTableComponent?.viewListComponent;
+                if (!viewList) {
+                    return;
+                }
+
+                const entriesInViewport = viewList.entriesInViewport.map(e => e.id);
+                for (const amendment of amendments) {
+                    if (this._amendmentDiffLinesMap[amendment.id]) {
+                        this._amendmentDiffLinesMap[amendment.id] = entriesInViewport.includes(amendment.id)
+                            ? this.getAmendmentDiffLines(amendment)
+                            : undefined;
                     }
-                }),
+                }
+            }),
             this.meetingSettingsService
                 .get(`motions_show_sequential_number`)
                 .subscribe(show => (this.showSequentialNumber = show))
@@ -113,7 +125,11 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
      * @returns the amendments as string, if they are multiple they gonna be separated by `[...]`
      */
     public getAmendmentSummary(amendment: ViewMotion): string {
-        return this._amendmentDiffLinesMap[amendment.id];
+        if (!this._amendmentDiffLinesMap[amendment.id]) {
+            this._amendmentDiffLinesMap[amendment.id] = this.getAmendmentDiffLines(amendment);
+        }
+
+        return this._amendmentDiffLinesMap[amendment.id] || ``;
     }
 
     // todo put in own file
