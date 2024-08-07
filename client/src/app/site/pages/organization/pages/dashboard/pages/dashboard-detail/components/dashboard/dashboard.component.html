@@ -151,34 +151,64 @@
 
 <ng-template #meetingTemplate let-context="context" let-meeting="meeting">
     <div class="meeting-box" [ngClass]="context?.wrapperCssClass">
-        <a
-            class="meeting-box-left flex-vertical-center"
-            matRipple
-            [ngClass]="context?.cssClass"
-            [routerLink]="meeting.id"
-        >
-            <div class="one-line">
-                <div class="meeting-box--mid one-line">
-                    {{ meeting.name }}
-                </div>
+        @if (meeting.canBeEnteredBy(operator.user)) {
+            <a
+                class="meeting-box-left flex-vertical-center"
+                matRipple
+                [ngClass]="context?.cssClass"
+                [routerLink]="meeting.id"
+            >
+                @if (meeting.locked_from_inside) {
+                    <mat-icon>lock</mat-icon>
+                }
                 <div class="one-line">
-                    @if (meeting.location) {
-                        <span [ngClass]="context?.subtitleCssClass">{{ meeting.location }}</span>
-                    }
-                    @if (meeting.location && (meeting.start_time || meeting.end_time)) {
-                        <span [ngClass]="context?.subtitleCssClass">&nbsp;&middot;&nbsp;</span>
-                    }
-                    @if (meeting.start_time || meeting.end_time) {
-                        <span>
-                            <os-meeting-time
-                                [cssClass]="context?.subtitleCssClass"
-                                [meeting]="meeting"
-                            ></os-meeting-time>
-                        </span>
-                    }
+                    <div class="meeting-box--mid one-line">{{ meeting.name }}</div>
+                    <div class="one-line">
+                        @if (meeting.location) {
+                            <span [ngClass]="context?.subtitleCssClass">{{ meeting.location }}</span>
+                        }
+                        @if (meeting.location && (meeting.start_time || meeting.end_time)) {
+                            <span [ngClass]="context?.subtitleCssClass">&nbsp;&middot;&nbsp;</span>
+                        }
+                        @if (meeting.start_time || meeting.end_time) {
+                            <span>
+                                <os-meeting-time
+                                    [cssClass]="context?.subtitleCssClass"
+                                    [meeting]="meeting"
+                                ></os-meeting-time>
+                            </span>
+                        }
+                    </div>
+                </div>
+            </a>
+        } @else {
+            <div class="meeting-box-left meeting-box-readonly flex-vertical-center" [ngClass]="context?.cssClass">
+                @if (meeting.locked_from_inside) {
+                    <mat-icon>lock</mat-icon>
+                }
+                <div class="one-line">
+                    <div class="meeting-box--mid one-line">
+                        {{ meeting.name }}
+                    </div>
+                    <div class="one-line">
+                        @if (meeting.location) {
+                            <span [ngClass]="context?.subtitleCssClass">{{ meeting.location }}</span>
+                        }
+                        @if (meeting.location && (meeting.start_time || meeting.end_time)) {
+                            <span [ngClass]="context?.subtitleCssClass">&nbsp;&middot;&nbsp;</span>
+                        }
+                        @if (meeting.start_time || meeting.end_time) {
+                            <span>
+                                <os-meeting-time
+                                    [cssClass]="context?.subtitleCssClass"
+                                    [meeting]="meeting"
+                                ></os-meeting-time>
+                            </span>
+                        }
+                    </div>
                 </div>
             </div>
-        </a>
+        }
         @if (meeting.isArchived) {
             <mat-icon matTooltip="{{ 'This meeting is archived' | translate }}">archive</mat-icon>
         }
