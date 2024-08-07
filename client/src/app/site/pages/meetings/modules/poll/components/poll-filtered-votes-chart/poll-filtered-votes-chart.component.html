@@ -1,5 +1,22 @@
-@if (filtersEnabled) {
+@if (filtersEnabled && totalAmount > 0) {
     <div class="vote-char-container">
+        <div class="vote-chart-bar">
+            @for (cat of voteAmounts; track cat.value) {
+                @if (cat.amount > 0) {
+                    <div
+                        class="segment"
+                        [style.width.%]="cat.weightedAmount / totalAmountWeighted * 100"
+                        [style.background]="cat.backgroundColor">
+                        <div class="above">
+                            {{ cat.weightedAmount }} ({{ (cat.weightedAmount / totalAmountWeighted * 100).toFixed(2) }} %)
+                        </div>
+                        <div class="below">
+                            {{ cat.amount }}
+                        </div>
+                    </div>
+                }
+            }
+        </div>
         <div>{{ 'Votes in total:' | translate }} {{ totalAmount }}</div>
     </div>
 }

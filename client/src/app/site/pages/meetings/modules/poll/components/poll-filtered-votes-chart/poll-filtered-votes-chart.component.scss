@@ -1,0 +1,20 @@
+.vote-chart-bar {
+    display: flex;
+    align-items: center;
+    height: 70px;
+    .segment {
+        position: relative;
+        text-align: center;
+        height: 3px;
+        .above, .below {
+            position: absolute;
+            width: 100%;
+        }
+        .above {
+            bottom: 8px;
+        }
+        .below {
+            top: 8px;
+        }
+    }
+}

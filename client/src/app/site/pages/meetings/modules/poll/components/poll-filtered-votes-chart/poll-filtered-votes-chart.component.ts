@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { VoteValue } from 'src/app/domain/models/poll';
+import { VoteValue, VoteValueVerbose } from 'src/app/domain/models/poll';
+import { ThemeService } from 'src/app/site/services/theme.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { ViewVote } from '../../../../pages/polls';
@@ -9,6 +10,7 @@ interface VoteAmount {
     value: VoteValue;
     amount: number;
     weightedAmount: number;
+    backgroundColor: string;
 }
 
 @Component({
@@ -27,6 +29,7 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
     }
 
     public constructor(
+        private themeService: ThemeService,
         private filterService: VotesFilterService,
         private cd: ChangeDetectorRef
     ) {
@@ -45,7 +48,8 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
             this.voteAmounts.push({
                 value: voteValue,
                 amount: votes.reduce((acc, curr) => acc + +(curr.value === voteValue), 0),
-                weightedAmount: votes.reduce((acc, curr) => acc + (curr.value === voteValue ? +curr.weight : 0), 0)
+                weightedAmount: votes.reduce((acc, curr) => acc + (curr.value === voteValue ? +curr.weight : 0), 0),
+                backgroundColor: this.themeService.getPollColor(VoteValueVerbose[voteValue].toLowerCase())
             });
         }
 
