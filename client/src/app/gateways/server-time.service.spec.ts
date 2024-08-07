@@ -4,7 +4,7 @@ import fetchMock from 'fetch-mock';
 import { firstValueFrom, lastValueFrom, skip, take } from 'rxjs';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 
-import { ServerTimePresenterService } from './server-time-presenter.service';
+import { ServerTimeService } from './server-time.service';
 
 class MockLifecycleService {
     public readonly appLoaded = new EventEmitter<void>();
@@ -18,16 +18,16 @@ class MockLifecycleService {
     }
 }
 
-describe(`ServerTimePresenterService`, () => {
-    let service: ServerTimePresenterService;
+describe(`ServerTimeService`, () => {
+    let service: ServerTimeService;
 
     beforeEach(() => {
         jasmine.clock().install();
         TestBed.configureTestingModule({
-            providers: [ServerTimePresenterService, { provide: LifecycleService, useClass: MockLifecycleService }]
+            providers: [ServerTimeService, { provide: LifecycleService, useClass: MockLifecycleService }]
         });
 
-        service = TestBed.inject(ServerTimePresenterService);
+        service = TestBed.inject(ServerTimeService);
         spyOn(console, `error`);
     });
 
