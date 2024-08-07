@@ -56,9 +56,11 @@ export class ServerTimePresenterService {
      */
     private async refreshServertime(): Promise<void> {
         // servertime is the time in seconds.
-        const servertimeResponse = await fetch(`/assets/time.txt`, {
+        const servertimeResponse = await fetch(`/assets/time.txt?${Date.now()}`, {
+            credentials: `omit`,
             headers: {
-                'ngsw-bypass': `true`
+                'ngsw-bypass': `true`,
+                cache: `no-store`
             }
         });
         const date = new Date(servertimeResponse.headers.get(`Date`));
