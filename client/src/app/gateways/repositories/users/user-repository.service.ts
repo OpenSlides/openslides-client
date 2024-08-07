@@ -25,9 +25,10 @@ export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid:
 export type GeneralUser = ViewUser & ViewMeetingUser;
 
 /**
- * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.
+ * Unified type name for state fields like `is_active`, `is_physical_person`, `is_present_in_meetings`
+ * and 'locked_out'.
  */
-export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person';
+export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person' | 'locked_out';
 
 export interface AssignMeetingsPayload {
     meeting_ids: Id[];
@@ -123,7 +124,11 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `committee_management_ids`
         ]);
 
-        const participantListFieldsMinimal: TypedFieldset<User> = listFields.concat([`meeting_user_ids`]);
+        const participantListFieldsMinimal: TypedFieldset<User> = listFields.concat([
+            `meeting_user_ids`,
+            `committee_ids`,
+            `committee_management_ids`
+        ]);
 
         const participantListFields: TypedFieldset<User> = participantListFieldsMinimal
             .concat(filterableListFields)
@@ -539,7 +544,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `about_me`,
             `number`,
             `structure_level`,
-            `member_number`
+            `member_number`,
+            `locked_out`
         ];
         return fields.includes(field);
     }

@@ -179,17 +179,28 @@
     </div>
 
     <!-- Presence column -->
-    <div *osScrollingTableCell="'presence'; row as user; config: { width: 130 }" class="cell-slot fill">
-        <mat-checkbox
-            class="checkbox-ripple-padding"
-            [checked]="isUserPresent(user)"
-            [disabled]="isPresentToggleDisabled(user)"
-            (change)="setPresent(user)"
-        >
-            <span>{{ 'Present' | translate }}</span>
-        </mat-checkbox>
+    <div *osScrollingTableCell="'presence'; row as user; config: { width: 140 }" class="cell-slot fill">
+        <div class="icon-group">
+            <mat-checkbox
+                class="checkbox-ripple-padding"
+                [checked]="isUserPresent(user)"
+                [disabled]="isPresentToggleDisabled(user)"
+                (change)="setPresent(user)"
+            >
+                <span>{{ 'Present' | translate }}</span>
+            </mat-checkbox>
+            <div style="padding-left: 22px">
+                <os-icon-container
+                    color="warn"
+                    icon="event_busy"
+                    [hide]="!user.is_locked_out"
+                    [showIcon]="user.is_locked_out"
+                >
+                    {{ 'Locked out' | translate }}
+                </os-icon-container>
+            </div>
+        </div>
     </div>
-
     <!-- Menu -->
     <div
         *osScrollingTableCell="
@@ -230,6 +241,16 @@
         <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="openEditInfo(user)">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit details' | translate }}</span>
+        </button>
+
+        <button
+            *osPerms="permission.userCanManage"
+            mat-menu-item
+            [disabled]="isLockedOutToggleDisabled(user)"
+            (click)="toggleLockout(user)"
+        >
+            <mat-icon>event_busy</mat-icon>
+            <span>{{ 'Toggle lockout' | translate }}</span>
         </button>
 
         <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="switchParticipants(user)">
@@ -349,6 +370,10 @@
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="changePhysicalStateOfSelectedUsers()">
                     <mat-icon>sync</mat-icon>
                     <span>{{ 'Set natural person ...' | translate }}</span>
+                </button>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeLockedOutStateOfSelectedUsers()">
+                    <mat-icon>event_busy</mat-icon>
+                    <span>{{ 'Set lockout ...' | translate }}</span>
                 </button>
                 <mat-divider></mat-divider>
             </os-user-multiselect-actions>

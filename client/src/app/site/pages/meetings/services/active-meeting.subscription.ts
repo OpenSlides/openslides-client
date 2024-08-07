@@ -28,6 +28,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 `welcome_title`,
                 `welcome_text`,
                 `enable_anonymous`,
+                `committee_id`,
                 ...MEETING_MEDIAFILE_USAGE_ID_KEYS,
                 ...settingsKeys
             ],
