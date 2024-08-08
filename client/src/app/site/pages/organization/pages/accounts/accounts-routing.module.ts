@@ -40,7 +40,7 @@ const routes: Routes = [
                     import(`./pages/account-import/account-import.module`).then(m => m.AccountImportModule)
             },
             {
-                path: `gender`,
+                path: `genders`,
                 loadChildren: () =>
                     import(`./pages/gender/pages/gender-list/gender-list.module`).then(m => m.GenderListModule)
             },
