@@ -127,7 +127,7 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
         if (options) {
             payload.options = options;
         }
-        if (descriptor.stable) {
+        if (descriptor.stable === true || descriptor.stable === false) {
             payload.stable = descriptor.stable;
         }
         if (descriptor.type) {

@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ServerTimePresenterService } from 'src/app/gateways/presenter/server-time-presenter.service';
+import { ServerTimeService } from 'src/app/gateways/server-time.service';
 
 @Component({
     selector: `os-projector-clock`,
@@ -17,7 +17,7 @@ export class ProjectorClockComponent implements OnInit, OnDestroy {
 
     private clockInterval: any;
 
-    public constructor(private servertimeService: ServerTimePresenterService) {}
+    public constructor(private servertimeService: ServerTimeService) {}
 
     public ngOnInit(): void {
         // Update clock, when the server offset changes.
