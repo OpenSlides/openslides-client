@@ -1,3 +1,4 @@
+@import 'src/assets/styles/variables.scss';
 .projector {
     border: 1px solid #d3d3d3;
 }
@@ -8,6 +9,11 @@
         display: flex;
         max-width: 1320px;
         margin: 0 auto;
+    }
+    @include phone {
+        .col-wrapper {
+            display: block;
+        }
     }
     .col-main {
         flex-grow: 1;
