@@ -44,7 +44,7 @@
     [isMultiSelect]="isMultiSelect"
     [shouldShowFileMenuFn]="shouldShowFileMenuFn"
     [sourceFiles]="directoryObservable"
-    (beforeEditing)="onEditFile($event.file)"
+    (beforeEditing)="onEditFile($event.file, isOrgaLevel)"
     (deleted)="onDeleteFile($event.file)"
     (directoryChanged)="changeDirectory($event.directoryId)"
     (saved)="onSaveFile($event.update)"
@@ -55,7 +55,7 @@
 <ng-template #breadcrumbManageTemplate>
     @if (canEdit && directory && directory.has_inherited_access_groups) {
         <span class="visibility">
-            <button class="visible-for" mat-button (click)="onEditFile(directory)">
+            <button class="visible-for" mat-button (click)="onEditFile(directory, isOrgaLevel)">
                 <os-icon-container
                     icon="group"
                     matTooltip="{{ 'Allowed access groups for this directory' | translate }}"
@@ -73,7 +73,7 @@
 <ng-template #manageButton let-mediafile="mediafile" let-place="place">
     <button mat-menu-item (click)="toggleMediafileUsage($event, mediafile, place)">
         <mat-icon color="accent">
-            {{ isMediafileUsed(mediafile, place) ? 'check_box' : 'check_box_outline_blank' }}
+            {{ isMediafileUsed(mediafile, place, isOrgaLevel) ? 'check_box' : 'check_box_outline_blank' }}
         </mat-icon>
         <span>{{ getDisplayNameForPlace(place) | translate }}</span>
     </button>
@@ -124,7 +124,7 @@
                 <mat-icon>library_add</mat-icon>
                 <span>{{ 'Multiselect' | translate }}</span>
             </button>
-            <button mat-menu-item (click)="downloadMultiple()">
+            <button mat-menu-item (click)="downloadMultiple(isOrgaLevel)">
                 <mat-icon>cloud_download</mat-icon>
                 <span>{{ 'Download folder' | translate }}</span>
             </button>
@@ -141,7 +141,11 @@
                 <span>{{ 'Deselect all' | translate }}</span>
             </button>
             <mat-divider *osPerms="permission.mediafileCanManage"></mat-divider>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadMultiple(selectedRows)">
+            <button
+                mat-menu-item
+                [disabled]="!selectedRows.length"
+                (click)="downloadMultiple(isOrgaLevel, selectedRows)"
+            >
                 <mat-icon>cloud_download</mat-icon>
                 <span>{{ 'Download' | translate }}</span>
             </button>

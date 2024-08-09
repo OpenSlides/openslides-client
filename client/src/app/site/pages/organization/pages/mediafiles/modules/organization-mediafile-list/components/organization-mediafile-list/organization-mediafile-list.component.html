@@ -60,7 +60,7 @@
                 <mat-icon>library_add</mat-icon>
                 <span>{{ 'Multiselect' | translate }}</span>
             </button>
-            <button mat-menu-item (click)="downloadMultiple()">
+            <button mat-menu-item (click)="downloadMultiple(isOrgaLevel)">
                 <mat-icon>cloud_download</mat-icon>
                 <span>{{ 'Download folder' | translate }}</span>
             </button>
@@ -77,7 +77,11 @@
                 <span>{{ 'Deselect all' | translate }}</span>
             </button>
             <mat-divider *osOmlPerms="OML.can_manage_organization"></mat-divider>
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadMultiple(selectedRows)">
+            <button
+                mat-menu-item
+                [disabled]="!selectedRows.length"
+                (click)="downloadMultiple(isOrgaLevel, selectedRows)"
+            >
                 <mat-icon>cloud_download</mat-icon>
                 <span>{{ 'Download' | translate }}</span>
             </button>
@@ -142,7 +146,7 @@
         (click)="toggleMediafileUsage($event, mediafile, place)"
     >
         <mat-icon color="accent">
-            {{ isMediafileUsed(mediafile, place) ? 'check_box' : 'check_box_outline_blank' }}
+            {{ isMediafileUsed(mediafile, place, isOrgaLevel) ? 'check_box' : 'check_box_outline_blank' }}
         </mat-icon>
         <span>{{ getDisplayNameForPlace(place) | translate }}</span>
     </button>
