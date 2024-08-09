@@ -1,8 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ChipModule } from 'src/app/ui/modules/chip';
@@ -26,7 +30,12 @@ import { GenderListRoutingModule } from './gender-list-routing.module';
         MatIconModule,
         MatMenuModule,
         MatButtonModule,
-        MatDividerModule
+        MatDividerModule,
+        MatDialogModule,
+        MatInputModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule
     ]
 })
 export class GenderListModule {}
