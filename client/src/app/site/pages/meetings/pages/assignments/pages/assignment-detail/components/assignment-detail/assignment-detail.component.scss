@@ -48,7 +48,11 @@ mat-card mat-card-content h3 {
 }
 
 .candidates-list {
-    padding: 10px 25px 0 25px;
+    padding: 15px 25px 0 25px;
+
+    @include phone {
+        padding: 15px 0 0 0;
+    }
 
     .single-candidate-line {
         display: grid;
@@ -112,6 +116,11 @@ mat-card mat-card-content h3 {
 
 .search-new-speaker-form {
     padding: 15px 25px 0 25px;
+
+    @include phone {
+        padding: 15px 0 0 0;
+    }
+
     width: auto;
 }
 
