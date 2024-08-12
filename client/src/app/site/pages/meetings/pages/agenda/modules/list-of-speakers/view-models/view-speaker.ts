@@ -1,5 +1,6 @@
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
 import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 
@@ -13,7 +14,7 @@ import { ViewPointOfOrderCategory } from './view-point-of-order-category';
 /**
  * Provides "safe" access to a speaker with all it's components
  */
-export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker, ISpeakerRelations> {
+export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
     public static COLLECTION = Speaker.COLLECTION;
     protected _collection = Speaker.COLLECTION;
 
@@ -174,4 +175,4 @@ interface ISpeakerRelations {
     point_of_order_category: ViewPointOfOrderCategory;
     structure_level_list_of_speakers: ViewStructureLevelListOfSpeakers;
 }
-export interface ViewSpeaker extends Speaker, ISpeakerRelations, HasMeeting {}
+export interface ViewSpeaker extends Speaker, ViewModelRelations<ISpeakerRelations>, HasMeeting {}

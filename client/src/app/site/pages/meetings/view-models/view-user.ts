@@ -1,6 +1,5 @@
-import { Observable } from 'rxjs';
 import { User } from 'src/app/domain/models/users/user';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { Id } from '../../../../domain/definitions/key-types';
 import { ViewCommittee } from '../../organization/pages/committees';
@@ -25,7 +24,7 @@ export enum DuplicateStatus {
  */
 export const PERSONAL_FORM_CONTROLS = [`gender`, `username`, `email`, `about_me`, `pronoun`];
 
-export class ViewUser extends BaseViewModel<User, IUserRelations> /* implements Searchable */ {
+export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public static COLLECTION = User.COLLECTION;
 
     public get user(): User {
@@ -336,10 +335,9 @@ interface IUserRelations {
     meeting_users: ViewMeetingUser[];
     poll_voted: ViewPoll[];
     committee_managements: ViewCommittee[];
-    committee_managements_as_observable: Observable<ViewCommittee[]>;
     options: ViewOption[];
     votes: ViewVote[];
     poll_candidates: ViewPollCandidate[];
 }
 
-export interface ViewUser extends User, IUserRelations {}
+export interface ViewUser extends User, ViewModelRelations<IUserRelations> {}

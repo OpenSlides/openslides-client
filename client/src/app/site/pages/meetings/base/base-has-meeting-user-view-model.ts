@@ -1,21 +1,16 @@
+import { Observable } from 'rxjs';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { ViewMeetingUser } from '../view-models/view-meeting-user';
 import { ViewUser } from '../view-models/view-user';
 
-interface IHasMeetingUserRelation {
-    meeting_user: ViewMeetingUser;
-}
-
 /**
  * Can be extended instead of BaseViewModel if a ViewModel should contain a single ViewMeetingUser.
  */
-export abstract class BaseHasMeetingUserViewModel<M extends BaseModel<any> = any, R = any> extends BaseViewModel<
-    M,
-    R & IHasMeetingUserRelation
-> {
+export abstract class BaseHasMeetingUserViewModel<M extends BaseModel<any> = any> extends BaseViewModel<M> {
     public meeting_user: ViewMeetingUser;
+    public meeting_user$: Observable<ViewMeetingUser>;
     public get user(): ViewUser {
         return this.meeting_user?.user;
     }
@@ -28,11 +23,9 @@ export abstract class BaseHasMeetingUserViewModel<M extends BaseModel<any> = any
 /**
  * Can be extended instead of BaseViewModel if a ViewModel should contain multiple ViewMeetingUsers.
  */
-export abstract class BaseHasMeetingUsersViewModel<M extends BaseModel<any> = any, R = any> extends BaseViewModel<
-    M,
-    R & IHasMeetingUserRelation
-> {
+export abstract class BaseHasMeetingUsersViewModel<M extends BaseModel<any> = any> extends BaseViewModel<M> {
     public meeting_users: ViewMeetingUser[];
+    public meeting_users$: Observable<ViewMeetingUser>;
     public get calculated_users(): ViewUser[] {
         return this.meeting_users?.flatMap(user => user.user ?? []);
     }

@@ -1,5 +1,5 @@
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { ViewSpeaker } from '../pages/agenda';
 import { ViewAssignmentCandidate } from '../pages/assignments';
@@ -13,7 +13,7 @@ import { ViewVote } from '../pages/polls';
 import { ViewMeeting } from './view-meeting';
 import { ViewUser } from './view-user';
 
-export class ViewMeetingUser extends BaseViewModel<MeetingUser, IMeetingUserRelations> {
+export class ViewMeetingUser extends BaseViewModel<MeetingUser> {
     public static COLLECTION = MeetingUser.COLLECTION;
 
     public get meeting_user(): MeetingUser {
@@ -41,4 +41,4 @@ interface IMeetingUserRelations {
     vote_delegated_votes: ViewVote[];
     structure_levels: ViewStructureLevel[];
 }
-export interface ViewMeetingUser extends MeetingUser, IMeetingUserRelations {}
+export interface ViewMeetingUser extends MeetingUser, ViewModelRelations<IMeetingUserRelations> {}

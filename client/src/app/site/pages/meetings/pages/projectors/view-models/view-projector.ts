@@ -1,9 +1,8 @@
-import { Observable } from 'rxjs';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
 import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { Projector } from 'src/app/domain/models/projector/projector';
 import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/projector.constants';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { Follow } from 'src/app/site/services/model-request-builder';
@@ -38,13 +37,12 @@ export class ViewProjector extends BaseViewModel<Projector> {
 }
 interface IProjectorRelations {
     current_projections: ViewProjection[];
-    current_projections_as_observable: Observable<ViewProjection[]>;
     preview_projections: ViewProjection[];
     history_projections: ViewProjection[];
     used_as_reference_projector_in_meeting?: ViewMeeting;
 }
 export interface ViewProjector
     extends Projector,
-        IProjectorRelations,
+        ViewModelRelations<IProjectorRelations>,
         HasMeeting,
         HasProperties<ViewProjectorMeetingUsageKey, ViewMeeting> {}

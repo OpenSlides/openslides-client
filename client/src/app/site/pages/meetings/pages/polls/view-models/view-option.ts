@@ -1,9 +1,8 @@
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { Observable } from 'rxjs';
 
 import { OptionData, OptionTitle } from '../../../../../../domain/models/poll/generic-poll';
 import { Option } from '../../../../../../domain/models/poll/option';
-import { BaseViewModel } from '../../../../../base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewUser } from '../../../view-models/view-user';
 import { UnknownUserLabel } from '../../assignments/modules/assignment-poll/services/assignment-poll.service';
@@ -60,10 +59,9 @@ export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Opt
 
 interface IViewOptionRelations<C extends BaseViewModel = any> {
     content_object?: C;
-    content_object_as_observable?: Observable<C>;
     votes: ViewVote[];
     poll: ViewPoll;
     used_as_global_option_in_poll: ViewPoll;
 }
 
-export interface ViewOption extends HasMeeting, IViewOptionRelations, Option {}
+export interface ViewOption extends HasMeeting, ViewModelRelations<IViewOptionRelations>, Option {}

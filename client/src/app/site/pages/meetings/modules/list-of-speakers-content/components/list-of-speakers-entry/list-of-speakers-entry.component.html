@@ -52,7 +52,7 @@
 
     <div class="speaker-info">
         @if (meetingUser$ | async; as meetingUser) {
-            @if (meetingUser.relationAsObservable('user') | async; as user) {
+            @if (meetingUser.user$ | async; as user) {
                 <div class="speaker-name">
                     {{ user.short_name }}
                     @if (user.pronoun) {

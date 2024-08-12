@@ -47,7 +47,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     @Input({ required: true })
     public set speaker(speaker: ViewSpeaker) {
         this._speaker = speaker;
-        this.meetingUser$ = this._speaker.relationAsObservable(`meeting_user`);
+        this.meetingUser$ = speaker.meeting_user$;
     }
 
     public get speaker(): ViewSpeaker {

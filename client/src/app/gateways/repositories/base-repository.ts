@@ -20,7 +20,7 @@ import { Action, ActionService } from '../actions';
 import { ActionRequest } from '../actions/action-utils';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 
-const RELATION_AS_OBSERVABLE_SUFFIX = `_as_observable`;
+const RELATION_AS_OBSERVABLE_SUFFIX = `$`;
 
 export interface CreateResponse extends Identifiable, HasSequentialNumber {}
 
@@ -693,11 +693,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                 ) {
                     relationAsObservable =
                         this.relationsByKey[property.substr(0, property.length - RELATION_AS_OBSERVABLE_SUFFIX.length)];
-                }
-
-                if (property === `relationAsObservable`) {
-                    return (key: string) =>
-                        this.relationManager.getObservableForRelation(_model, this.relationsByKey[key]);
                 }
 
                 // try to find a getter for property

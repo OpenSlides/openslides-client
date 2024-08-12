@@ -8,6 +8,12 @@ import { HasCollection } from '../../domain/interfaces/has-collection';
 import { Identifiable } from '../../domain/interfaces/identifiable';
 import { BaseModel } from '../../domain/models/base/base-model';
 
+export type ViewModelRelations<T> = {
+    [R in keyof T]: T[R];
+} & {
+    [R in keyof T as `${string & R}$`]: Observable<T[R]>;
+};
+
 export interface ViewModelConstructor<T extends BaseViewModel> {
     COLLECTION: string;
     new (...args: any[]): T;
@@ -16,7 +22,7 @@ export interface ViewModelConstructor<T extends BaseViewModel> {
 /**
  * Base class for view models.
  */
-export abstract class BaseViewModel<M extends BaseModel = any, N = any> implements DetailNavigable {
+export abstract class BaseViewModel<M extends BaseModel = any> implements DetailNavigable {
     public get fqid(): Fqid {
         return this.getModel().fqid;
     }
@@ -56,9 +62,8 @@ export abstract class BaseViewModel<M extends BaseModel = any, N = any> implemen
     public getDetailStateUrl(): string {
         return ``;
     }
-
-    public relationAsObservable: <S extends keyof N>(relation: S) => Observable<N[S]>;
 }
+
 export interface BaseViewModel extends Displayable, Identifiable, HasCollection {
     getTitle: () => string;
     getListTitle: () => string;
