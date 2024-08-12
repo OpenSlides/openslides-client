@@ -235,7 +235,7 @@
                 </div>
             </div>
             <ng-container *osPerms="permission.listOfSpeakersCanManage">
-                @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && speaker.meeting_user_id) {
+                @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id) {
                     <button
                         mat-icon-button
                         matTooltipPosition="left"
