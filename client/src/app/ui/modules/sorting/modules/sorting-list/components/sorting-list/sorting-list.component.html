@@ -4,7 +4,7 @@
             <span>{{ 'No data' | translate }}</span>
         </div>
     }
-    @for (item of sortedItems; track item.id; let i = $index) {
+    @for (item of sortedItems; track item; let i = $index) {
         <div
             cdkDrag
             class="line margin-bottom-5"

@@ -51,7 +51,7 @@
     }
 
     <div class="speaker-info">
-        @if (meetingUser) {
+        @if (speaker.meeting_user_id) {
             <div class="speaker-name">
                 {{ speaker.user_short_name }}
                 @if (speaker.user_pronoun) {

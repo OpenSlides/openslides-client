@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Collection } from 'src/app/domain/definitions/key-types';
 
 import { Fqid, Id } from '../../domain/definitions/key-types';
@@ -56,7 +57,7 @@ export abstract class BaseViewModel<M extends BaseModel = any, N = any> implemen
         return ``;
     }
 
-    public relationAsObservable: <S extends keyof N>(relation: S) => N[S];
+    public relationAsObservable: <S extends keyof N>(relation: S) => Observable<N[S]>;
 }
 export interface BaseViewModel extends Displayable, Identifiable, HasCollection {
     getTitle: () => string;
