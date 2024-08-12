@@ -289,8 +289,10 @@ button.mat-mdc-menu-item.selected {
     font-size: 16px;
 }
 
-.mat-expansion-panel-body {
-    padding: 0 !important;
+.queue {
+    .mat-expansion-panel-body {
+        padding: 0 !important;
+    }
 }
 
 .fake-button-no-touch {
