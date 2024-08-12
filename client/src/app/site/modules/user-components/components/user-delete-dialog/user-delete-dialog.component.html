@@ -77,10 +77,12 @@
 <ng-template #userRowTemplate let-user="user">
     <div
         class="user padding-left-8 pointer"
+        tabindex="0"
         [ngClass]="{
             'background-primary': selectedUser === user
         }"
         (click)="selectedUser = user"
+        (keyup.enter)="selectedUser = user"
     >
         <div class="flex-vertical-center">
             @if (willBeRemoved(user)) {
@@ -139,6 +141,11 @@
                         @if (meeting.speaker_ids?.length) {
                             <li>
                                 {{ 'Is speaker' | translate }}
+                            </li>
+                        }
+                        @if (meeting.is_locked) {
+                            <li>
+                                {{ 'Meeting is locked' | translate }}
                             </li>
                         }
                     </ul>

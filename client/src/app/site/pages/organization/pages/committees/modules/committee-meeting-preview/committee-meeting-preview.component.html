@@ -4,6 +4,11 @@
         [ngClass]="{ 'background-accent': meeting.isActive, 'background-dark-brighter': meeting.isArchived }"
     >
         <mat-card-title class="break-word">
+            @if (meeting.locked_from_inside) {
+                <div class="template-indicator">
+                    <mat-icon [matTooltip]="'Locked' | translate">lock</mat-icon>
+                </div>
+            }
             {{ title }}
         </mat-card-title>
 
@@ -121,13 +126,13 @@
 
 <mat-menu #meetingMenu="matMenu">
     <ng-template matMenuContent>
-        @if (!meeting.isArchived) {
+        @if (!meeting.isArchived && (meeting?.canBeEnteredBy(operator.user) || operator.isSuperAdmin)) {
             <a mat-menu-item [routerLink]="['meeting', 'edit', meeting.id]">
                 <mat-icon>edit</mat-icon>
                 <span>{{ 'Edit' | translate }}</span>
             </a>
         }
-        @if (!meeting.isArchived) {
+        @if (!meeting.isArchived && !isCMAndRequireDuplicateFrom && !isLockedFromInside) {
             <button mat-menu-item (click)="toggleTemplateMeeting()">
                 <mat-icon color="accent">
                     {{ isTemplateMeeting ? 'check_box' : 'check_box_outline_blank' }}
@@ -135,10 +140,12 @@
                 <span>{{ 'Public template' | translate }}</span>
             </button>
         }
-        <button mat-menu-item (click)="onDuplicate()">
-            <mat-icon>file_copy</mat-icon>
-            <span>{{ 'Duplicate' | translate }}</span>
-        </button>
+        @if (!isCMAndRequireDuplicateFrom && !isLockedFromInside) {
+            <button mat-menu-item (click)="onDuplicate()">
+                <mat-icon>file_copy</mat-icon>
+                <span>{{ 'Duplicate' | translate }}</span>
+            </button>
+        }
         @if (meeting.isActive) {
             <button mat-menu-item (click)="onArchive()">
                 <mat-icon>archive</mat-icon>
@@ -149,10 +156,12 @@
             <mat-icon>unarchive</mat-icon>
             <span>{{ 'Activate' | translate }}</span>
         </button>
-        <button *osOmlPerms="OML.superadmin" mat-menu-item (click)="exportMeeting()">
-            <mat-icon>file_download</mat-icon>
-            <span>{{ 'Export' | translate }}</span>
-        </button>
+        @if (!isLockedFromInside) {
+            <button *osOmlPerms="OML.superadmin" mat-menu-item (click)="exportMeeting()">
+                <mat-icon>file_download</mat-icon>
+                <span>{{ 'Export' | translate }}</span>
+            </button>
+        }
         <mat-divider></mat-divider>
         <button class="red-warning-text" mat-menu-item (click)="onDeleteMeeting()">
             <mat-icon>delete</mat-icon>

@@ -26,9 +26,10 @@
                     <mat-panel-title>{{ 'Last speakers' | translate }}</mat-panel-title>
                 </mat-expansion-panel-header>
                 <mat-list>
-                    @for (speaker of finishedSpeakers; track speaker; let number = $index) {
+                    @for (speaker of finishedSpeakers; track speaker.id; let number = $index) {
                         <mat-list-item>
                             <os-list-of-speakers-entry
+                                [meetingUser]="speaker.meeting_user"
                                 [speaker]="speaker"
                                 [speakerIndex]="number"
                                 (pauseSpeech)="onPauseButton(activeSpeaker)"
@@ -53,6 +54,7 @@
         @if (activeSpeaker) {
             <div class="current-speaker background-accent">
                 <os-list-of-speakers-entry
+                    [meetingUser]="activeSpeaker.meeting_user"
                     [showcolor]="false"
                     [speaker]="activeSpeaker"
                     (pauseSpeech)="onPauseButton(activeSpeaker)"
@@ -63,7 +65,7 @@
         }
         @if (interposedQuestions.length) {
             <div class="interposed-questions">
-                @for (speaker of interposedQuestions; track speaker; let i = $index) {
+                @for (speaker of interposedQuestions; track speaker.id; let i = $index) {
                     <div
                         class="speaker"
                         [ngClass]="{
@@ -72,6 +74,7 @@
                         }"
                     >
                         <os-list-of-speakers-entry
+                            [meetingUser]="speaker.meeting_user"
                             [speaker]="speaker"
                             (pauseSpeech)="onPauseButton(speaker)"
                             (startSpeech)="onStartButton(speaker)"
@@ -95,6 +98,7 @@
                     <!-- implicit speaker references into the component using ng-template slot -->
                     <ng-template let-index="index" let-speaker>
                         <os-list-of-speakers-entry
+                            [meetingUser]="speaker.meeting_user"
                             [speaker]="speaker"
                             [speakerIndex]="index"
                             (pauseSpeech)="onPauseButton(speaker)"

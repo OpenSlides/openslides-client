@@ -21,6 +21,7 @@ export class OrganizationSetting {
     public limit_of_meetings!: number;
     public limit_of_users!: number;
     public default_language!: string;
+    public require_duplicate_from!: boolean;
 
     public users_email_sender!: string; // default: OpenSlides
     public users_email_subject!: string; // default: OpenSlides access data
@@ -70,6 +71,7 @@ export class Organization extends BaseModel<Organization> {
         `limit_of_meetings`,
         `limit_of_users`,
         `default_language`,
+        `require_duplicate_from`,
         `saml_enabled`,
         `saml_login_button_text`,
         `saml_attr_mapping`,

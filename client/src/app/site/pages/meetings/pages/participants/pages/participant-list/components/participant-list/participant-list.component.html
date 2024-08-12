@@ -103,8 +103,10 @@
     <div
         *osScrollingTableCell="'group'; row as user; config: { width: 200 }"
         class="cell-slot fill"
+        tabindex="0"
         [ngClass]="isMultiSelect ? '' : 'clickable'"
         (click)="openEditInfo(user, $event)"
+        (keyup.space)="openEditInfo(user)"
     >
         <div class="groupsCell">
             @if (user.groups()?.length) {

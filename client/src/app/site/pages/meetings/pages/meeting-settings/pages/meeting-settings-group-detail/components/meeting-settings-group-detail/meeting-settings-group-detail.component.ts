@@ -282,6 +282,10 @@ export class MeetingSettingsGroupDetailComponent
         return setting.disable?.({ ...this.originalSettings, ...this.changedSettings });
     }
 
+    public isForbidden(setting: SettingsInput): boolean {
+        return setting.forbidden?.(this.meeting);
+    }
+
     private getValueForKey(meeting: ViewMeeting, key: keyof Settings, setting: SettingsInput): any {
         let newKey: keyof ViewMeeting = key;
         if (setting.useRelation) {
