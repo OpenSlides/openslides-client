@@ -45,10 +45,14 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     public listElement!: SortingListComponent;
 
     @Input({ required: true })
-    public speaker: ViewSpeaker;
+    public set speaker(speaker: ViewSpeaker) {
+        this._speaker = speaker;
+        this.meetingUser$ = speaker.meeting_user$;
+    }
 
-    @Input({ required: true })
-    public meetingUser: ViewMeetingUser;
+    public get speaker(): ViewSpeaker {
+        return this._speaker;
+    }
 
     @Input()
     public speakerIndex: number = null;
@@ -64,6 +68,8 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
 
     @Output()
     public stopSpeech = new EventEmitter<void>();
+
+    public meetingUser$: Observable<ViewMeetingUser>;
 
     public get showFirstContributionHintObservable(): Observable<boolean> {
         return this.meetingSettingsService.get(`list_of_speakers_show_first_contribution`);
@@ -106,6 +112,8 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     private interventionEnabled = false;
 
     private canMarkSelf = false;
+
+    private _speaker: ViewSpeaker;
 
     public constructor(
         protected override translate: TranslateService,

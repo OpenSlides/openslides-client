@@ -1,10 +1,11 @@
-import { Observable } from 'rxjs';
 import { HasPersonalNoteIds } from 'src/app/domain/interfaces';
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { ViewPersonalNote } from './view-personal-note';
 
-export interface HasPersonalNote extends HasPersonalNoteIds {
-    personal_notes?: ViewPersonalNote[];
-    personal_notes_as_observable: Observable<ViewPersonalNote[]>;
-    getPersonalNote: () => ViewPersonalNote | null;
-}
+export type HasPersonalNote = HasPersonalNoteIds &
+    ViewModelRelations<{
+        personal_notes?: ViewPersonalNote[];
+    }> & {
+        getPersonalNote: () => ViewPersonalNote | null;
+    };

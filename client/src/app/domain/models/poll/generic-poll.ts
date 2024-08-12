@@ -25,7 +25,7 @@ export interface PollData {
     type: PollType;
     entitled_users_at_stop: EntitledUsersEntry[];
     options: OptionData[];
-    options_as_observable: Observable<OptionData[]>;
+    options$: Observable<OptionData[]>;
     global_option: OptionData;
     content_object?: PollContentObject;
     getContentObjectTitle: () => string | null;

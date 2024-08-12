@@ -75,9 +75,7 @@ export class MotionPollService extends PollService {
 
     public generateTableDataAsObservable(poll: PollData): Observable<PollTableData[]> {
         // The "of(...)"-observable is used to fire the current state the first time.
-        return merge(of(poll?.options), poll.options_as_observable).pipe(
-            map(options => this.createTableData(poll, options))
-        );
+        return merge(of(poll?.options), poll.options$).pipe(map(options => this.createTableData(poll, options)));
     }
 
     public override generateTableData(poll: PollData): PollTableData[] {

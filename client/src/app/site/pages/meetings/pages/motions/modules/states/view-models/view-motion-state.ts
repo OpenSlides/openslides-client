@@ -1,5 +1,5 @@
 import { MotionState } from '../../../../../../../../domain/models/motions/motion-state';
-import { BaseViewModel } from '../../../../../../../base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from '../../../../../../../base/base-view-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewMotion } from '../../../view-models/view-motion';
 import { ViewMotionWorkflow } from '../../workflows/view-models/view-motion-workflow';
@@ -26,4 +26,4 @@ interface IStateRelations {
     workflow: ViewMotionWorkflow;
     first_state_of_workflow?: ViewMotionWorkflow;
 }
-export interface ViewMotionState extends MotionState, IStateRelations, HasMeeting {}
+export interface ViewMotionState extends MotionState, ViewModelRelations<IStateRelations>, HasMeeting {}
