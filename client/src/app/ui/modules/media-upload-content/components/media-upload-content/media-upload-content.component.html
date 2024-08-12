@@ -7,7 +7,7 @@
 >
     <ng-template #additionalContent>
         <!-- Directory selector-->
-        <div [formGroup]="directorySelectionForm">
+        <mat-dialog-content class="os-form-card-mobile" [formGroup]="directorySelectionForm">
             <mat-form-field>
                 <mat-label>{{ 'Upload to' | translate }}</mat-label>
                 <os-list-search-selector
@@ -17,7 +17,7 @@
                     [multiple]="false"
                 ></os-list-search-selector>
             </mat-form-field>
-        </div>
+        </mat-dialog-content>
     </ng-template>
 
     <div *osScrollingTableCell="'title'; row as file" class="cell-slot">
