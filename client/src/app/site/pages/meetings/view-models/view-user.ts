@@ -25,7 +25,7 @@ export enum DuplicateStatus {
  */
 export const PERSONAL_FORM_CONTROLS = [`gender`, `username`, `email`, `about_me`, `pronoun`];
 
-export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
+export class ViewUser extends BaseViewModel<User, IUserRelations> /* implements Searchable */ {
     public static COLLECTION = User.COLLECTION;
 
     public get user(): User {

@@ -13,7 +13,7 @@ import { ViewVote } from '../pages/polls';
 import { ViewMeeting } from './view-meeting';
 import { ViewUser } from './view-user';
 
-export class ViewMeetingUser extends BaseViewModel<MeetingUser> {
+export class ViewMeetingUser extends BaseViewModel<MeetingUser, IMeetingUserRelations> {
     public static COLLECTION = MeetingUser.COLLECTION;
 
     public get meeting_user(): MeetingUser {

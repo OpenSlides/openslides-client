@@ -15,7 +15,7 @@ export interface ViewModelConstructor<T extends BaseViewModel> {
 /**
  * Base class for view models.
  */
-export abstract class BaseViewModel<M extends BaseModel = any> implements DetailNavigable {
+export abstract class BaseViewModel<M extends BaseModel = any, N = any> implements DetailNavigable {
     public get fqid(): Fqid {
         return this.getModel().fqid;
     }
@@ -55,6 +55,8 @@ export abstract class BaseViewModel<M extends BaseModel = any> implements Detail
     public getDetailStateUrl(): string {
         return ``;
     }
+
+    public relationAsObservable: <S extends keyof N>(relation: S) => N[S];
 }
 export interface BaseViewModel extends Displayable, Identifiable, HasCollection {
     getTitle: () => string;

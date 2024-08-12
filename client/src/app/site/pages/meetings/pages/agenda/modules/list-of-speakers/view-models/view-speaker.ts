@@ -13,7 +13,7 @@ import { ViewPointOfOrderCategory } from './view-point-of-order-category';
 /**
  * Provides "safe" access to a speaker with all it's components
  */
-export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
+export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker, ISpeakerRelations> {
     public static COLLECTION = Speaker.COLLECTION;
     protected _collection = Speaker.COLLECTION;
 

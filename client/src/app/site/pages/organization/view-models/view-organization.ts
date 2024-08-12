@@ -10,7 +10,7 @@ import { ViewTheme } from '../pages/designs';
 import { ViewOrganizationTag } from '../pages/organization-tags';
 import { ViewResource } from '../pages/resources';
 
-export class ViewOrganization extends BaseViewModel<Organization> {
+export class ViewOrganization extends BaseViewModel<Organization, IOrganizationRelations> {
     public static COLLECTION = Organization.COLLECTION;
 
     public get organization(): Organization {

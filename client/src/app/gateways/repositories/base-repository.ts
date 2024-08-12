@@ -695,6 +695,11 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                         this.relationsByKey[property.substr(0, property.length - RELATION_AS_OBSERVABLE_SUFFIX.length)];
                 }
 
+                if (property === `relationAsObservable`) {
+                    return (key: string) =>
+                        this.relationManager.getObservableForRelation(_model, this.relationsByKey[key]);
+                }
+
                 // try to find a getter for property
                 if (property in target) {
                     // iterate over prototype chain

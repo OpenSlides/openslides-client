@@ -52,7 +52,7 @@ export enum RelatedTime {
     Dateless
 }
 
-export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
+export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting, IMeetingRelations> {
     public get meeting(): Meeting {
         return this._model;
     }
