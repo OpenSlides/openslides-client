@@ -1,3 +1,4 @@
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
 import { MotionSubmitter } from '../../../../../../../../domain/models/motions/motion-submitter';
@@ -15,4 +16,7 @@ export class ViewMotionSubmitter extends BaseHasMeetingUserViewModel<MotionSubmi
 interface IMotionSubmitterRelations {
     motion: ViewMotion;
 }
-export interface ViewMotionSubmitter extends MotionSubmitter, IMotionSubmitterRelations, HasMeeting {}
+export interface ViewMotionSubmitter
+    extends MotionSubmitter,
+        ViewModelRelations<IMotionSubmitterRelations>,
+        HasMeeting {}
