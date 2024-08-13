@@ -150,7 +150,7 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
 
         const trigger$ = merge(
             this.projectorSubject,
-            this.projectorSubject.pipe(mergeMap(projector => projector?.current_projections_as_observable || []))
+            this.projectorSubject.pipe(mergeMap(projector => projector?.current_projections$ || []))
         );
 
         this.slides = combineLatest([this.projectorSubject, trigger$])

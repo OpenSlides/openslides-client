@@ -1,3 +1,4 @@
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { BaseHasMeetingUsersViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
 import { Permission } from '../../../../../../../../domain/definitions/permission';
@@ -37,4 +38,4 @@ interface IGroupRelations {
     used_as_assignment_poll_default?: ViewMeeting;
     used_as_topic_poll_default?: ViewMeeting;
 }
-export interface ViewGroup extends Group, IGroupRelations, HasMeeting {}
+export interface ViewGroup extends Group, ViewModelRelations<IGroupRelations>, HasMeeting {}
