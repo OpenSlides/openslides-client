@@ -140,7 +140,7 @@
                 <span>{{ 'Public template' | translate }}</span>
             </button>
         }
-        @if (!isCMAndRequireDuplicateFrom && !isLockedFromInside) {
+        @if (!isLockedFromInside) {
             <button mat-menu-item (click)="onDuplicate()">
                 <mat-icon>file_copy</mat-icon>
                 <span>{{ 'Duplicate' | translate }}</span>
