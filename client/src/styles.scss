@@ -322,8 +322,16 @@ button.mat-mdc-menu-item.selected {
 }
 
 /* Custom hint and error classes. Same values as .mat-hint and -mat-error */
-.hint,
 .error {
     font-size: 75%;
     display: block;
+}
+mat-hint, .hint {
+    font-size: 10.5px;
+    display: block;
+    line-height: 1.5;
+}
+.hint-checkbox {
+    padding-left: 45px;
+    margin-top: -10px;
 }
