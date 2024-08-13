@@ -190,7 +190,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `locked_from_inside`,
                         label: _(`Activate closed meeting`),
                         helpText: _(
-                            `Access only possible for participants of this event. All other accounts (including organization and committee admins) may not open the closed event. It is locked from the inside.`
+                            `Access only possible for participants of this meeting. All other accounts (including organization and committee admins) may not open the closed meeting. It is locked from the inside.`
                         ),
                         type: `boolean`,
                         forbidden: meetingView => meetingView.isTemplate
