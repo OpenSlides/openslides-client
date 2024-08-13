@@ -10,16 +10,16 @@ import { getMeetingUserIdsSubscriptionConfig } from '../../../../accounts.subscr
 })
 export class AccountListMainComponent extends BaseModelRequestHandlerComponent {
     protected override onShouldCreateModelRequests(params?: any): void {
-        if (params[`id`]) {
-            this.subscribeTo(getMeetingUserIdsSubscriptionConfig(+params[`id`]), {
+        if (params[`id`] || params[`meetingId`]) {
+            this.subscribeTo(getMeetingUserIdsSubscriptionConfig(+(params[`id`] || params[`meetingId`])), {
                 hideWhenDestroyed: true
             });
         }
     }
 
     protected override onParamsChanged(params: any): void {
-        if (params[`id`]) {
-            this.updateSubscribeTo(getMeetingUserIdsSubscriptionConfig(+params[`id`]), {
+        if (params[`id`] || params[`meetingId`]) {
+            this.updateSubscribeTo(getMeetingUserIdsSubscriptionConfig(+(params[`id`] || params[`meetingId`])), {
                 hideWhenDestroyed: true
             });
         }
