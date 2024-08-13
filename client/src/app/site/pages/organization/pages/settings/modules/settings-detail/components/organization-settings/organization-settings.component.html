@@ -41,14 +41,8 @@
                     <!-- require_duplicate_from -->
                     <section>
                         <mat-checkbox formControlName="require_duplicate_from">
-                            {{ 'Enable meeting creation from templates only' | translate }}
+                            {{ 'Public template required for creating new meeting' | translate }}
                         </mat-checkbox>
-                        <div class="checkbox-hint">
-                            {{
-                                'If this setting is activated, public meeting templates must have been created, as committee administrators can only create meetings based on public templates.'
-                                    | translate
-                            }}
-                        </div>
                     </section>
                 </div>
             </mat-card-content>
