@@ -544,7 +544,7 @@ export class OperatorService {
     private calcPermissions(): Permission[] {
         const permissionSet = new Set<Permission>();
         if (this.isAnonymous) {
-            this.activeMeeting?.anonymous_group?.permissions.forEach(perm => permissionSet.add(perm));
+            this.activeMeeting?.anonymous_group?.permissions?.forEach(perm => permissionSet.add(perm));
         } else {
             if (this._groupIds?.length) {
                 this.DS.getMany(Group, this._groupIds).forEach(group => {
