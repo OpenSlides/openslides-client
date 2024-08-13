@@ -7,7 +7,7 @@ import { collectionIdFromFqid } from 'src/app/infrastructure/utils/transform-fun
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
 import { Mediafile } from '../../../../../../domain/models/mediafiles/mediafile';
-import { BaseViewModel } from '../../../../../base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeeting } from '../../../view-models/view-meeting';
@@ -142,7 +142,7 @@ interface IMediafileRelations {
 }
 export interface ViewMediafile
     extends Mediafile,
-        IMediafileRelations,
+        ViewModelRelations<IMediafileRelations>,
         /*  Searchable, */ HasMeeting,
         HasListOfSpeakers,
         HasProperties<ViewMediafileMeetingUsageKey, ViewMeeting> {}

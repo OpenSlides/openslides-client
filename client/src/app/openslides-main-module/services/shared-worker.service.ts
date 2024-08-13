@@ -106,6 +106,7 @@ export class SharedWorkerService {
         if (environment.autoupdateOnSharedWorker) {
             try {
                 const worker = new SharedWorker(new URL(`../../worker/default-shared-worker.worker`, import.meta.url), {
+                    type: `module`,
                     name: `openslides-shared-worker`
                 });
 

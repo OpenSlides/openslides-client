@@ -13,6 +13,7 @@ import { createEmailValidator } from 'src/app/infrastructure/utils/validators/em
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
+import { ViewMeeting } from '../../view-models/view-meeting';
 
 export type SettingsValueMap = { [key in keyof Settings]?: any };
 
@@ -79,6 +80,14 @@ export interface SettingsInput<V = any> {
      * @returns whether to disable the setting or not
      */
     disable?: (settings: SettingsValueMap) => boolean;
+    /**
+     * Another function to conditionally disable the setting.
+     *
+     * @param meetingView the current meeting view
+     * @returns whether to disable the setting or not
+     */
+    forbidden?: (meetingView: ViewMeeting) => boolean;
+
     hide?: boolean; // Hide the setting in the settings view
 }
 
@@ -186,6 +195,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `external_id`,
                         label: _(`External ID`)
+                    },
+                    {
+                        key: `locked_from_inside`,
+                        label: _(`Close your meeting from the inside`),
+                        type: `boolean`,
+                        forbidden: meetingView => meetingView.isTemplate
                     }
                 ]
             },

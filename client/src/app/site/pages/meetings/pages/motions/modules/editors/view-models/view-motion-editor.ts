@@ -1,4 +1,5 @@
 import { MotionEditor } from 'src/app/domain/models/motions/motion-editor';
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
 import { HasMeeting } from '../../../../../view-models/has-meeting';
@@ -15,4 +16,4 @@ export class ViewMotionEditor extends BaseHasMeetingUserViewModel<MotionEditor> 
 interface IMotionEditorRelations {
     motion: ViewMotion;
 }
-export interface ViewMotionEditor extends MotionEditor, IMotionEditorRelations, HasMeeting {}
+export interface ViewMotionEditor extends MotionEditor, ViewModelRelations<IMotionEditorRelations>, HasMeeting {}
