@@ -185,6 +185,7 @@ interface IMeetingRelations {
     reference_projector: ViewProjector;
     projections: ViewProjection[];
     default_group: ViewGroup;
+    anonymous_group: ViewGroup;
     admin_group: ViewGroup;
     is_active_in_organization: ViewOrganization;
     is_archived_in_organization: ViewOrganization;

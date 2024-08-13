@@ -252,6 +252,7 @@ export class Meeting extends BaseModel<Meeting> {
 
     public default_group_id!: Id; // group/default_group_for_meeting_id;
     public admin_group_id!: Id; // group/admin_group_for_meeting_id;
+    public anonymous_group_id!: Id; // group/anonymous_group_for_meeting_id;
 
     public list_of_speakers_countdown_id: Id; // projector_countdown/used_as_list_of_speakers_meeting_id;
     public poll_countdown_id: Id; // projector_countdown/used_as_poll_countdown_meeting_id;
@@ -511,7 +512,8 @@ export class Meeting extends BaseModel<Meeting> {
         `default_projector_motion_poll_ids`,
         `default_projector_poll_ids`,
         `default_group_id`,
-        `admin_group_id`
+        `admin_group_id`,
+        `anonymous_group_id`
     ];
 }
 export interface Meeting

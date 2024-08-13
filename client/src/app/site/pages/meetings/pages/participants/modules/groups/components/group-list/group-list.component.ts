@@ -239,7 +239,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
      * @param group ViewGroup
      */
     public isProtected(group: ViewGroup): boolean {
-        return group.isAdminGroup || group.isDefaultGroup;
+        return group.isAdminGroup || group.isDefaultGroup || group.isAnonymousGroup;
     }
 
     /**

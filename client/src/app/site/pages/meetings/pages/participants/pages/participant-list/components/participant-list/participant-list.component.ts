@@ -53,7 +53,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     /**
      * All available groups, where the user can be in.
      */
-    public groupsObservable: Observable<ViewGroup[]> = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
+    public groupsObservable: Observable<ViewGroup[]> = this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
 
     /**
      * All available structure level, where the user can be in.

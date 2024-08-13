@@ -67,7 +67,7 @@ export class CommentSectionListComponent extends BaseComponent implements OnInit
     public ngOnInit(): void {
         super.setTitle(`Comment fields`);
 
-        this.groups = this.groupRepo.getViewModelListObservable();
+        this.groups = this.groupRepo.getViewModelListWithoutAnonymousGroupObservable();
         this.subscriptions.push(
             this.repo
                 .getViewModelListObservable()

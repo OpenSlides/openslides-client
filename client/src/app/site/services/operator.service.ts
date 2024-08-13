@@ -200,6 +200,11 @@ export class OperatorService {
         return activeMeeting ? activeMeeting.default_group_id : null;
     }
 
+    private get anonymousGroupId(): number | null {
+        const activeMeeting = this.activeMeetingService.meeting;
+        return activeMeeting ? activeMeeting.anonymous_group_id : null;
+    }
+
     private get adminGroupId(): number | null {
         const activeMeeting = this.activeMeetingService.meeting;
         return activeMeeting ? activeMeeting.admin_group_id : null;
@@ -338,7 +343,7 @@ export class OperatorService {
             if (!this.activeMeetingId || !group) {
                 return;
             }
-            if (this.isAnonymous && group.id === this.defaultGroupId) {
+            if (this.isAnonymous && group.id === this.anonymousGroupId) {
                 this._groupIds = this._groupIds || [];
                 this._permissions = this.calcPermissions();
                 this._operatorUpdatedSubject.next();
@@ -539,8 +544,7 @@ export class OperatorService {
     private calcPermissions(): Permission[] {
         const permissionSet = new Set<Permission>();
         if (this.isAnonymous) {
-            // Anonymous is always in the default group.
-            this.activeMeeting?.default_group?.permissions.forEach(perm => permissionSet.add(perm));
+            this.activeMeeting?.anonymous_group?.permissions.forEach(perm => permissionSet.add(perm));
         } else {
             if (this._groupIds?.length) {
                 this.DS.getMany(Group, this._groupIds).forEach(group => {
@@ -760,7 +764,7 @@ export class OperatorService {
             return false;
         }
         if (this.isAnonymous) {
-            return !!groupIds.find(id => id === this.defaultGroupId); // any anonymous is in the default group.
+            return !!groupIds.find(id => id === this.anonymousGroupId);
         }
         return groupIds.some(id => this._groupIds?.includes(id));
     }

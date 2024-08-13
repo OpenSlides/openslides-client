@@ -191,7 +191,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public ngOnInit(): void {
         // TODO: Fetch groups for repo search selection
-        this.groupsObservable = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
+        this.groupsObservable = this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
 
         this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
 
