@@ -90,9 +90,9 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
 msgid ""
-"Access only possible for participants of this event. All other accounts "
+"Access only possible for participants of this meeting. All other accounts "
 "(including organization and committee admins) may not open the closed "
-"event. It is locked from the inside."
+"meeting. It is locked from the inside."
 msgstr ""
 
 msgid "Access-data"
