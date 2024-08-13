@@ -93,7 +93,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
         return this._videoUrl;
     }
 
-    public posterAlt: string = _(`Video player preview poster`);
+    public posterAlt: string = _(`Livestream poster image`);
     public posterUrl!: string;
     public vjsPlayer: any | null = null;
     public videoId!: string;

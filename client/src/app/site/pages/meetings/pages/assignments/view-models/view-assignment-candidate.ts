@@ -1,3 +1,5 @@
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
+
 import { AssignmentCandidate } from '../../../../../../domain/models/assignments/assignment-candidate';
 import { BaseHasMeetingUserViewModel } from '../../../base/base-has-meeting-user-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
@@ -15,4 +17,7 @@ export class ViewAssignmentCandidate extends BaseHasMeetingUserViewModel<Assignm
 interface IAssignmentCandidateRelations {
     assignment: ViewAssignment;
 }
-export interface ViewAssignmentCandidate extends AssignmentCandidate, IAssignmentCandidateRelations, HasMeeting {}
+export interface ViewAssignmentCandidate
+    extends AssignmentCandidate,
+        ViewModelRelations<IAssignmentCandidateRelations>,
+        HasMeeting {}

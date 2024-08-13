@@ -167,7 +167,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 this.operatingUser = user;
                 this.onAfterCreateForm();
             }),
-            this.operator.user.committee_managements_as_observable.subscribe(committees => {
+            this.operator.user.committee_managements$.subscribe(committees => {
                 this._committee_users_set = new Set(committees.flatMap(committee => committee.user_ids ?? []));
             })
         );

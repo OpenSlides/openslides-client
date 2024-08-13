@@ -122,7 +122,11 @@ export class CountdownControlsComponent {
      * Brings the projection dialog
      */
     public onBringDialog(): void {
-        this.projectionDialogService.openProjectDialogFor(this.countdown.getProjectionBuildDescriptor());
+        this.projectionDialogService.openProjectDialogFor({
+            descriptor: this.countdown.getProjectionBuildDescriptor(),
+            allowReferenceProjector: true,
+            projector: this.projector
+        });
     }
 
     /**

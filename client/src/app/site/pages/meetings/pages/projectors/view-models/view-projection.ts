@@ -1,3 +1,5 @@
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
+
 import { HasProjectorTitle, ProjectorTitle } from '../../../../../../domain/interfaces/has-projector-title';
 import { Projection } from '../../../../../../domain/models/projector/projection';
 import { ProjectiondefaultValue } from '../../../../../../domain/models/projector/projection-default';
@@ -20,7 +22,7 @@ export class ViewProjection extends BaseProjectableViewModel<Projection> {
         }
         return (
             this.content_object_id === descriptor.content_object_id &&
-            !!this.stable === !!descriptor.stable &&
+            (!!this.stable === !!descriptor.stable || descriptor.stableToggle) &&
             ((!this.type && !descriptor.type) || this.type === descriptor.type)
         );
     }
@@ -58,4 +60,4 @@ interface IProjectionRelations {
     history_projector?: ViewProjector;
     content_object: BaseProjectableViewModel & HasProjectorTitle;
 }
-export interface ViewProjection extends Projection, IProjectionRelations, HasMeeting {}
+export interface ViewProjection extends Projection, ViewModelRelations<IProjectionRelations>, HasMeeting {}

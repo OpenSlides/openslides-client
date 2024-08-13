@@ -171,9 +171,9 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 label: _(`Administration roles`),
                 options: [
                     { condition: `superadmin`, label: _(`Superadmin`) },
-                    { condition: `can_manage_organization`, label: `Organization admin` },
-                    { condition: `can_manage_users`, label: `Account admin` },
-                    { condition: null, label: `No admin role` }
+                    { condition: `can_manage_organization`, label: _(`Organization admin`) },
+                    { condition: `can_manage_users`, label: _(`Account admin`) },
+                    { condition: null, label: _(`No admin role`) }
                 ]
             },
             {

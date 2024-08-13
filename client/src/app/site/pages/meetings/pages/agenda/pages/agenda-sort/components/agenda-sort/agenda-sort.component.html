@@ -26,7 +26,7 @@
     <div class="button-menu right">
         <button mat-button [matMenuTriggerFor]="menu">Filter</button>
         <mat-menu #menu>
-            <div class="filter-hint hint">{{ 'Visibility' | translate }}</div>
+            <div class="filter-hint">{{ 'Visibility' | translate }}</div>
             <mat-selection-list #visibilities (selectionChange)="onFilterChange(visibilities.selectedOptions.selected)">
                 @for (option of filterOptions; track option) {
                     <mat-list-option [selected]="option.state" [value]="option.id">
