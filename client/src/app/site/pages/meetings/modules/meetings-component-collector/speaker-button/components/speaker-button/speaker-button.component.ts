@@ -66,8 +66,8 @@ export class SpeakerButtonComponent implements OnDestroy {
     }
 
     private setupLosObservable(model: HasListOfSpeakers): void {
-        if (model?.list_of_speakers_as_observable) {
-            this._losObservable = model.list_of_speakers_as_observable;
+        if (model?.list_of_speakers$) {
+            this._losObservable = model.list_of_speakers$;
         } else {
             this._losObservable = of(model?.list_of_speakers);
         }

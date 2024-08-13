@@ -71,7 +71,7 @@ const testPollData: { [key: string]: PollData } = {
             { getOptionTitle: () => ({ title: `A woman` }) },
             { getOptionTitle: () => ({ title: `A child` }) }
         ],
-        options_as_observable: new Observable<OptionData[]>(),
+        options$: new Observable<OptionData[]>(),
         global_option: { getOptionTitle: () => ({ title: `Global yes` }) },
         getContentObjectTitle: () => `An assignment`
     },
@@ -90,7 +90,7 @@ const testPollData: { [key: string]: PollData } = {
             { getOptionTitle: () => ({ title: `Dolphins` }) },
             { getOptionTitle: () => ({ title: `Mice` }) }
         ],
-        options_as_observable: new Observable<OptionData[]>(),
+        options$: new Observable<OptionData[]>(),
         global_option: undefined,
         getContentObjectTitle: () => `On intelligence`
     },
@@ -105,7 +105,7 @@ const testPollData: { [key: string]: PollData } = {
         type: PollType.Analog,
         entitled_users_at_stop: [],
         options: [{ getOptionTitle: () => ({ title: `option` }) }],
-        options_as_observable: new Observable<OptionData[]>(),
+        options$: new Observable<OptionData[]>(),
         global_option: undefined,
         getContentObjectTitle: () => `A motion`
     }
@@ -134,13 +134,13 @@ describe(`PollPercentBasePipe`, () => {
         const poll = testPollData[`assignmentPoll`];
         const options = poll.options;
         expect(pipe.transform(0, poll, options[0])).toBe(
-            `(assignment: 0, "{"pollClassType":"assignment","pollmethod":"YN","state":"created","onehundred_percent_base":"entitled","votesvalid":1,"votesinvalid":2,"votescast":3,"type":"named","entitled_users_at_stop":[],"options":[{},{},{}],"options_as_observable":{},"global_option":{}}", "{}")`
+            `(assignment: 0, "{"pollClassType":"assignment","pollmethod":"YN","state":"created","onehundred_percent_base":"entitled","votesvalid":1,"votesinvalid":2,"votescast":3,"type":"named","entitled_users_at_stop":[],"options":[{},{},{}],"options$":{},"global_option":{}}", "{}")`
         );
         expect(pipe.transform(2, poll, options[1])).toBe(
-            `(assignment: 2, "{"pollClassType":"assignment","pollmethod":"YN","state":"created","onehundred_percent_base":"entitled","votesvalid":1,"votesinvalid":2,"votescast":3,"type":"named","entitled_users_at_stop":[],"options":[{},{},{}],"options_as_observable":{},"global_option":{}}", "{}")`
+            `(assignment: 2, "{"pollClassType":"assignment","pollmethod":"YN","state":"created","onehundred_percent_base":"entitled","votesvalid":1,"votesinvalid":2,"votescast":3,"type":"named","entitled_users_at_stop":[],"options":[{},{},{}],"options$":{},"global_option":{}}", "{}")`
         );
         expect(pipe.transform(5, poll, options[6])).toBe(
-            `(assignment: 5, "{"pollClassType":"assignment","pollmethod":"YN","state":"created","onehundred_percent_base":"entitled","votesvalid":1,"votesinvalid":2,"votescast":3,"type":"named","entitled_users_at_stop":[],"options":[{},{},{}],"options_as_observable":{},"global_option":{}}", "undefined")`
+            `(assignment: 5, "{"pollClassType":"assignment","pollmethod":"YN","state":"created","onehundred_percent_base":"entitled","votesvalid":1,"votesinvalid":2,"votescast":3,"type":"named","entitled_users_at_stop":[],"options":[{},{},{}],"options$":{},"global_option":{}}", "undefined")`
         );
     });
 
@@ -152,13 +152,13 @@ describe(`PollPercentBasePipe`, () => {
             { votingOption: `Mice`, value: [] }
         ];
         expect(pipe.transform(0, poll, options[0])).toBe(
-            `(topic: 0, "{"pollClassType":"topic","pollmethod":"Y","state":"finished","onehundred_percent_base":"Y","votesvalid":40,"votesinvalid":2,"votescast":42,"type":"pseudoanonymous","entitled_users_at_stop":[],"options":[{},{},{}],"options_as_observable":{}}", "{"votingOption":"Humans","value":[]}")`
+            `(topic: 0, "{"pollClassType":"topic","pollmethod":"Y","state":"finished","onehundred_percent_base":"Y","votesvalid":40,"votesinvalid":2,"votescast":42,"type":"pseudoanonymous","entitled_users_at_stop":[],"options":[{},{},{}],"options$":{}}", "{"votingOption":"Humans","value":[]}")`
         );
         expect(pipe.transform(2, poll, options[1])).toBe(
-            `(topic: 2, "{"pollClassType":"topic","pollmethod":"Y","state":"finished","onehundred_percent_base":"Y","votesvalid":40,"votesinvalid":2,"votescast":42,"type":"pseudoanonymous","entitled_users_at_stop":[],"options":[{},{},{}],"options_as_observable":{}}", "{"votingOption":"Dolphins","value":[]}")`
+            `(topic: 2, "{"pollClassType":"topic","pollmethod":"Y","state":"finished","onehundred_percent_base":"Y","votesvalid":40,"votesinvalid":2,"votescast":42,"type":"pseudoanonymous","entitled_users_at_stop":[],"options":[{},{},{}],"options$":{}}", "{"votingOption":"Dolphins","value":[]}")`
         );
         expect(pipe.transform(5, poll, options[6])).toBe(
-            `(topic: 5, "{"pollClassType":"topic","pollmethod":"Y","state":"finished","onehundred_percent_base":"Y","votesvalid":40,"votesinvalid":2,"votescast":42,"type":"pseudoanonymous","entitled_users_at_stop":[],"options":[{},{},{}],"options_as_observable":{}}", "undefined")`
+            `(topic: 5, "{"pollClassType":"topic","pollmethod":"Y","state":"finished","onehundred_percent_base":"Y","votesvalid":40,"votesinvalid":2,"votescast":42,"type":"pseudoanonymous","entitled_users_at_stop":[],"options":[{},{},{}],"options$":{}}", "undefined")`
         );
     });
 
@@ -166,13 +166,13 @@ describe(`PollPercentBasePipe`, () => {
         const poll = testPollData[`motionPoll`];
         const options = poll.options;
         expect(pipe.transform(0, poll, options[0])).toBe(
-            `(default: 0, "{"pollClassType":"motion","pollmethod":"YNA","state":"published","onehundred_percent_base":"Y","votesvalid":5,"votesinvalid":6,"votescast":11,"type":"analog","entitled_users_at_stop":[],"options":[{}],"options_as_observable":{}}", "{}")`
+            `(default: 0, "{"pollClassType":"motion","pollmethod":"YNA","state":"published","onehundred_percent_base":"Y","votesvalid":5,"votesinvalid":6,"votescast":11,"type":"analog","entitled_users_at_stop":[],"options":[{}],"options$":{}}", "{}")`
         );
         expect(pipe.transform(2, poll, options[1])).toBe(
-            `(default: 2, "{"pollClassType":"motion","pollmethod":"YNA","state":"published","onehundred_percent_base":"Y","votesvalid":5,"votesinvalid":6,"votescast":11,"type":"analog","entitled_users_at_stop":[],"options":[{}],"options_as_observable":{}}", "undefined")`
+            `(default: 2, "{"pollClassType":"motion","pollmethod":"YNA","state":"published","onehundred_percent_base":"Y","votesvalid":5,"votesinvalid":6,"votescast":11,"type":"analog","entitled_users_at_stop":[],"options":[{}],"options$":{}}", "undefined")`
         );
         expect(pipe.transform(5, poll, options[6])).toBe(
-            `(default: 5, "{"pollClassType":"motion","pollmethod":"YNA","state":"published","onehundred_percent_base":"Y","votesvalid":5,"votesinvalid":6,"votescast":11,"type":"analog","entitled_users_at_stop":[],"options":[{}],"options_as_observable":{}}", "undefined")`
+            `(default: 5, "{"pollClassType":"motion","pollmethod":"YNA","state":"published","onehundred_percent_base":"Y","votesvalid":5,"votesinvalid":6,"votescast":11,"type":"analog","entitled_users_at_stop":[],"options":[{}],"options$":{}}", "undefined")`
         );
     });
 

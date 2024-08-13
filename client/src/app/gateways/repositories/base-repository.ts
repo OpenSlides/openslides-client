@@ -20,7 +20,7 @@ import { Action, ActionService } from '../actions';
 import { ActionRequest } from '../actions/action-utils';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 
-const RELATION_AS_OBSERVABLE_SUFFIX = `_as_observable`;
+const RELATION_AS_OBSERVABLE_SUFFIX = `$`;
 
 export interface CreateResponse extends Identifiable, HasSequentialNumber {}
 

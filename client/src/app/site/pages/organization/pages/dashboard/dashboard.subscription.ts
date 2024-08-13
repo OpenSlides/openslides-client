@@ -16,7 +16,8 @@ export const meetingFields: (keyof Meeting)[] = [
     `enable_anonymous`,
     `description`,
     `location`,
-    `organization_tag_ids`
+    `organization_tag_ids`,
+    `locked_from_inside`
 ];
 
 export const getDashboardMeetingListSubscriptionConfig: SubscriptionConfigGenerator = () => ({

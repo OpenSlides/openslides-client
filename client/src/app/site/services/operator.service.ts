@@ -574,7 +574,7 @@ export class OperatorService {
             // console.warn(`has perms: Usage outside of meeting!`);
             return false;
         }
-        if (this.isSuperAdmin) {
+        if (this.isSuperAdmin && !this.activeMeeting.locked_from_inside) {
             return true;
         }
 
@@ -598,7 +598,7 @@ export class OperatorService {
             // console.warn(`has perms: Operator is not ready!`);
             return false;
         }
-        if (this.isSuperAdmin) {
+        if (this.isSuperAdmin && !this.activeMeeting.locked_from_inside) {
             return true;
         }
         const groups = this.user.groups(meetingId);

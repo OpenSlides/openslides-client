@@ -1,7 +1,7 @@
 import { Observable, of } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Committee } from 'src/app/domain/models/comittees/committee';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
@@ -51,10 +51,9 @@ interface ICommitteeRelations {
     meetings: ViewMeeting[];
     default_meeting: ViewMeeting;
     users: ViewUser[];
-    users_as_observable: Observable<ViewUser[]>;
     forward_to_committees: ViewCommittee[];
     receive_forwardings_from_committees: ViewCommittee[];
     organization: ViewOrganization;
     managers: ViewUser[];
 }
-export interface ViewCommittee extends Committee, ICommitteeRelations, HasOrganizationTags {}
+export interface ViewCommittee extends Committee, ViewModelRelations<ICommitteeRelations>, HasOrganizationTags {}

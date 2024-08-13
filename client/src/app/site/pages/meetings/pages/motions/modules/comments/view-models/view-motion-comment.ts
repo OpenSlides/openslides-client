@@ -1,5 +1,5 @@
 import { MotionComment } from '../../../../../../../../domain/models/motions/motion-comment';
-import { BaseViewModel } from '../../../../../../../base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from '../../../../../../../base/base-view-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewMotion } from '../../../view-models/view-motion';
 import { ViewMotionCommentSection } from './view-motion-comment-section';
@@ -15,4 +15,4 @@ interface ICommentRelations {
     motion: ViewMotion;
     section: ViewMotionCommentSection;
 }
-export interface ViewMotionComment extends MotionComment, ICommentRelations, HasMeeting {}
+export interface ViewMotionComment extends MotionComment, ViewModelRelations<ICommentRelations>, HasMeeting {}
