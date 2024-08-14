@@ -1,7 +1,7 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 
 import { Vote } from '../../../../../../domain/models/poll/vote';
-import { BaseViewModel } from '../../../../../base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
@@ -30,4 +30,4 @@ interface IViewVoteRelations {
     option: ViewOption;
 }
 
-export interface ViewVote extends HasMeeting, IViewVoteRelations, Vote {}
+export interface ViewVote extends HasMeeting, ViewModelRelations<IViewVoteRelations>, Vote {}

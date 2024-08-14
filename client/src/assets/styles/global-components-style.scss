@@ -291,7 +291,7 @@
         color: mat.m2-get-color-from-palette($foreground, text);
     }
 
-    .hint {
+    mat-hint, .hint {
         color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
 

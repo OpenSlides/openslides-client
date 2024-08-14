@@ -182,7 +182,8 @@ os-dashboard {
         box-sizing: border-box;
         height: 60px;
 
-        > a {
+        > a,
+        .meeting-box-readonly {
             text-decoration: none;
 
             &:first-child {
@@ -196,7 +197,8 @@ os-dashboard {
         }
 
         @media (max-width: 960px) {
-            > a {
+            > a,
+            .meeting-box-readonly {
                 text-decoration: none;
 
                 &:first-child {
@@ -215,7 +217,8 @@ os-dashboard {
         }
 
         @media (max-width: 700px) {
-            > a {
+            > a,
+            .meeting-box-readonly {
                 text-decoration: none;
 
                 &:first-child {
@@ -248,6 +251,10 @@ os-dashboard {
         @media (max-width: 960px) {
             width: 90%;
         }
+    }
+
+    .meeting-box-readonly {
+        cursor: auto;
     }
 
     #active-meetings {

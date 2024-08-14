@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
@@ -14,7 +15,7 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
 
     private orgaTagFilterOptions: OsFilter<ViewCommittee> = {
         property: `organization_tag_ids`,
-        label: `Tags`,
+        label: _(`Tags`),
         isAndConnected: true,
         options: []
     };
@@ -24,7 +25,7 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
         this.updateFilterForRepo({
             repo: organizationTagRepo,
             filter: this.orgaTagFilterOptions,
-            noneOptionLabel: `not specified`
+            noneOptionLabel: _(`not specified`)
         });
     }
 
@@ -32,18 +33,18 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
         return [
             {
                 property: `hasForwardings`,
-                label: `Forward motions`,
+                label: _(`Forward motions`),
                 options: [
-                    { label: `Can forward motions`, condition: true },
-                    { label: `Cannot forward motions`, condition: [false, null] }
+                    { label: _(`Can forward motions`), condition: true },
+                    { label: _(`Cannot forward motions`), condition: [false, null] }
                 ]
             },
             {
                 property: `hasReceivings`,
-                label: `Receive motions`,
+                label: _(`Receive motions`),
                 options: [
-                    { label: `Can receive motions`, condition: true },
-                    { label: `Cannot receive motions`, condition: [false, null] }
+                    { label: _(`Can receive motions`), condition: true },
+                    { label: _(`Cannot receive motions`), condition: [false, null] }
                 ]
             },
             this.orgaTagFilterOptions

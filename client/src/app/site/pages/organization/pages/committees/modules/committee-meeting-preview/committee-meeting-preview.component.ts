@@ -57,7 +57,11 @@ export class CommitteeMeetingPreviewComponent {
     }
 
     public get canEnter(): boolean {
-        return this.operator.isInMeetingIds(this.meeting.id);
+        return this.operator.isInMeetingIds(this.meeting.id) && this.meeting.canBeEnteredBy(this.operator.user);
+    }
+
+    public get isLockedFromInside(): boolean {
+        return this.meeting?.locked_from_inside;
     }
 
     public constructor(
@@ -65,7 +69,7 @@ export class CommitteeMeetingPreviewComponent {
         private meetingRepo: MeetingControllerService,
         private meetingService: MeetingService,
         private promptService: PromptService,
-        private operator: OperatorService
+        public operator: OperatorService
     ) {}
 
     public async onArchive(): Promise<void> {

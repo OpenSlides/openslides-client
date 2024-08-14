@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs';
 import { DetailNavigable } from 'src/app/domain/interfaces';
 import {
     PollClassType,
@@ -13,6 +12,7 @@ import {
 } from 'src/app/domain/models/poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { BaseProjectableViewModel, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
@@ -138,7 +138,9 @@ interface IPollRelations<C extends PollContentObject = any> {
     voted: ViewUser[];
     entitled_groups: ViewGroup[];
     options: ViewOption[];
-    options_as_observable: Observable<ViewOption[]>;
     global_option: ViewOption;
 }
-export interface ViewPoll<C extends PollContentObject = any> extends HasMeeting, IPollRelations<C>, Poll {}
+export interface ViewPoll<C extends PollContentObject = any>
+    extends HasMeeting,
+        ViewModelRelations<IPollRelations<C>>,
+        Poll {}
