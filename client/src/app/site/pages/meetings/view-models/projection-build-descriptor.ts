@@ -10,6 +10,7 @@ export function isProjectionBuildDescriptor(obj: any): obj is ProjectionBuildDes
 export interface ProjectionBuildDescriptor {
     content_object_id: Fqid;
     stable?: boolean;
+    stableToggle?: string;
     type?: string;
     slideOptions?: SlideOptions;
     projectionDefault: ProjectiondefaultValue | null;

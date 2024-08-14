@@ -4,13 +4,15 @@
             <span>{{ 'No data' | translate }}</span>
         </div>
     }
-    @for (item of sortedItems; track item; let i = $index) {
+    @for (item of sortedItems; track item.id; let i = $index) {
         <div
             cdkDrag
             class="line margin-bottom-5"
             [ngClass]="isSelectedRow(i) ? 'backgroundColorSelected' : 'backgroundColorLight'"
+            [tabindex]="0"
             (cdkDragStarted)="dragStarted(i)"
             (click)="onItemClick($event, i)"
+            (keyup)="onItemClick($event, i)"
         >
             <!-- drag handle -->
             @if (enable) {

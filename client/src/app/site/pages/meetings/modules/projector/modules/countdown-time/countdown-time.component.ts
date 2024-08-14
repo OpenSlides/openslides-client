@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
-import { ServerTimePresenterService } from 'src/app/gateways/presenter/server-time-presenter.service';
+import { ServerTimeService } from 'src/app/gateways/server-time.service';
 
 interface CountdownData {
     running: boolean;
@@ -121,7 +121,7 @@ export class CountdownTimeComponent implements OnDestroy {
     private _countdown!: CountdownData;
 
     public constructor(
-        private servertimeService: ServerTimePresenterService,
+        private servertimeService: ServerTimeService,
         private cd: ChangeDetectorRef
     ) {}
 

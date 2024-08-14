@@ -15,7 +15,7 @@ export class PresentationControlsComponent {
     public set projectorObservable(projector$: Observable<ViewProjector | null>) {
         const trigger$ = merge(
             projector$,
-            projector$.pipe(mergeMap(projector => projector?.current_projections_as_observable || []))
+            projector$.pipe(mergeMap(projector => projector?.current_projections$ || []))
         );
 
         this.projections$ = combineLatest([projector$, trigger$]).pipe(

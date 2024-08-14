@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
@@ -44,7 +45,7 @@ export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAg
         this.updateFilterForRepo({
             repo: tagRepo,
             filter: this.tagFilterOptions,
-            noneOptionLabel: `not specified`
+            noneOptionLabel: _(`not specified`)
         });
     }
 
@@ -54,27 +55,27 @@ export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAg
     protected getFilterDefinitions(): OsFilter<ViewAgendaItem>[] {
         return [
             {
-                label: `Status`,
+                label: _(`Status`),
                 property: `closed`,
                 options: [
-                    { label: `Open items`, condition: [false, null] },
-                    { label: `Closed items`, condition: true }
+                    { label: _(`Open items`), condition: [false, null] },
+                    { label: _(`Closed items`), condition: true }
                 ]
             },
             this.tagFilterOptions,
             {
-                label: `Visibility`,
+                label: _(`Visibility`),
                 property: `type`,
                 options: this.createVisibilityFilterOptions()
             },
             {
-                label: `Module`,
+                label: _(`Module`),
                 property: `getContentObjectCollection`,
                 options: [
-                    { label: `Topics`, condition: Topic.COLLECTION },
-                    { label: `Motions`, condition: Motion.COLLECTION },
-                    { label: `Motion blocks`, condition: MotionBlock.COLLECTION },
-                    { label: `Elections`, condition: Assignment.COLLECTION }
+                    { label: _(`Topics`), condition: Topic.COLLECTION },
+                    { label: _(`Motions`), condition: Motion.COLLECTION },
+                    { label: _(`Motion blocks`), condition: MotionBlock.COLLECTION },
+                    { label: _(`Elections`), condition: Assignment.COLLECTION }
                 ]
             }
         ];

@@ -40,7 +40,7 @@
 }
 
 #chyron_speaker {
-    font-size: 32px;
+    font-size: 24px;
     .inner {
         .name {
             font-family: customChyronNameFont, $font-chyronname;
@@ -54,7 +54,7 @@
 }
 
 #chyron_new {
-    #chyron_speaker {
+    #chyron_agenda_item {
         min-height: 80px;
     }
 }
