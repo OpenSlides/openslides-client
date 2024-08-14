@@ -1,4 +1,4 @@
-@if (totalAmount > 0) {
+@if (filtersEnabled && totalAmount > 0) {
     <div class="vote-char-container">
         <div class="vote-chart-bar">
             @for (cat of voteAmounts; track cat.value) {
