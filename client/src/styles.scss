@@ -126,14 +126,17 @@
 .file-drop-zone-style {
     border: 2px dotted #0782d0 !important;
     height: 100px;
+    display: flex;
+    justify-content: center;
 }
 
 .file-drop-content-style {
     height: 100px;
+    align-content: center;
 
     .ngx-file-drop__drop-zone-label {
         color: #0782d0;
-        line-height: 100px;
+        line-height: 24px;
     }
 }
 
@@ -322,8 +325,16 @@ button.mat-mdc-menu-item.selected {
 }
 
 /* Custom hint and error classes. Same values as .mat-hint and -mat-error */
-.hint,
 .error {
     font-size: 75%;
     display: block;
+}
+mat-hint, .hint {
+    font-size: 10.5px;
+    display: block;
+    line-height: 1.5;
+}
+.hint-checkbox {
+    padding-left: 45px;
+    margin-top: -10px;
 }

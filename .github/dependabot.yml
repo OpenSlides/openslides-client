@@ -45,6 +45,7 @@ updates:
       - "bastianjoel"
     assignees:
       - "bastianjoel"
+      - "rrenkert"
 
   - package-ecosystem: "github-actions"
     directory: "/"

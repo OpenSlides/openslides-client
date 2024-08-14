@@ -51,16 +51,26 @@
     }
 
     <div class="speaker-info">
-        @if (speaker.meeting_user_id) {
-            <div class="speaker-name">
-                {{ speaker.user_short_name }}
-                @if (speaker.user_pronoun) {
-                    <span class="pronoun">{{ speaker.user_pronoun }}</span>
-                }
-            </div>
-        }
-        @if (!speaker.meeting_user_id && canManage) {
-            <span class="select-speaker-button" translate (click)="updateSpeakerMeetingUser()">Select speaker</span>
+        @if (meetingUser$ | async; as meetingUser) {
+            @if (meetingUser.user$ | async; as user) {
+                <div class="speaker-name">
+                    {{ user.short_name }}
+                    @if (user.pronoun) {
+                        <span class="pronoun">{{ user.pronoun }}</span>
+                    }
+                </div>
+            }
+        } @else if (canManage) {
+            <span
+                class="select-speaker-button"
+                role="button"
+                tabindex="0"
+                translate
+                (click)="updateSpeakerMeetingUser()"
+                (keyup.enter)="updateSpeakerMeetingUser()"
+            >
+                Select speaker
+            </span>
         }
 
         <div class="speaker-additional-info">
@@ -163,8 +173,8 @@
                             </button>
                         }
                         <mat-menu #structureLevelsMenu="matMenu">
-                            @if (speaker.meeting_user_id) {
-                                @for (structureLevel of speaker.meeting_user.structure_levels; track structureLevel) {
+                            @if (meetingUser$ | async; as meetingUser) {
+                                @for (structureLevel of meetingUser.structure_levels; track structureLevel) {
                                     <button mat-menu-item (click)="setStructureLevel(structureLevel.id)">
                                         @if (speaker.structure_level_list_of_speakers?.structure_level_id) {
                                             <mat-icon>
@@ -334,8 +344,8 @@
                 </button>
             }
             <mat-menu #structureLevelsMenu="matMenu">
-                @if (speaker.meeting_user_id) {
-                    @for (structureLevel of speaker.meeting_user.structure_levels; track structureLevel) {
+                @if (meetingUser$ | async; as meetingUser) {
+                    @for (structureLevel of meetingUser.structure_levels; track structureLevel) {
                         <button mat-menu-item (click)="setStructureLevel(structureLevel.id)">
                             @if (speaker.structure_level_list_of_speakers?.structure_level_id) {
                                 <mat-icon>

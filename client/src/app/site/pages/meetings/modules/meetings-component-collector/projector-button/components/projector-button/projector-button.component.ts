@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { distinctUntilChanged, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { ViewProjection, ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import {
     isProjectable,
@@ -66,6 +66,9 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     public disabled = false;
 
     @Input()
+    public ignoreStable = false;
+
+    @Input()
     public allowReferenceProjector = true;
 
     @Input()
@@ -87,6 +90,9 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
                 allowReferenceProjector: true
             });
         } else if (this.projector) {
+            if (this.ignoreStable && this._projection) {
+                descriptor.stable = this._projection.stable;
+            }
             this.projectorService.toggle(descriptor, [this.projector]);
         } else {
             // open the projection dialog
@@ -97,6 +103,7 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         }
     };
 
+    private _projection: ViewProjection = null;
     private _isProjected = false;
 
     public get isProjected(): boolean {
@@ -156,8 +163,14 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         if (!this.object) {
             this._isProjected = false;
         }
-        this._isProjected = this.projector
-            ? this.projectorService.isProjectedOn(this.object, this.projector)
-            : this.projectorService.isProjected(this.object);
+
+        if (this.projector) {
+            const projections = this.projectorService.getMatchingProjectionsFromProjector(this.object, this.projector);
+            this._isProjected = !!projections.length;
+            this._projection = this._isProjected ? projections[0] : null;
+        } else {
+            this._isProjected = this.projectorService.isProjected(this.object);
+            this._projection = null;
+        }
     }
 }

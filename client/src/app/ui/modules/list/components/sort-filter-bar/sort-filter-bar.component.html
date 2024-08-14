@@ -121,8 +121,8 @@
 
 <!-- Header for the filter side bar -->
 <mat-drawer #filterMenu autoFocus="false" mode="push" position="end">
-    <div class="custom-table-header filter-menu-head" (click)="this.filterMenu.toggle()">
-        <span>
+    <div class="custom-table-header filter-menu-head" role="none" (click)="this.filterMenu.toggle()">
+        <span tabindex="0" (keyup.enter)="this.filterMenu.toggle()">
             <mat-icon>keyboard_arrow_right</mat-icon>
         </span>
 

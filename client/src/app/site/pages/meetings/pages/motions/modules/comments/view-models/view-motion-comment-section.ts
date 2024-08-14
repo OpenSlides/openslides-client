@@ -1,5 +1,5 @@
 import { MotionCommentSection } from '../../../../../../../../domain/models/motions/motion-comment-section';
-import { BaseViewModel } from '../../../../../../../base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from '../../../../../../../base/base-view-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewGroup } from '../../../../participants/modules/groups/view-models/view-group';
 import { ViewMotionComment } from './view-motion-comment';
@@ -17,4 +17,7 @@ interface IMotionCommentSectionRelations {
     read_groups: ViewGroup[];
     write_groups: ViewGroup[];
 }
-export interface ViewMotionCommentSection extends MotionCommentSection, IMotionCommentSectionRelations, HasMeeting {}
+export interface ViewMotionCommentSection
+    extends MotionCommentSection,
+        ViewModelRelations<IMotionCommentSectionRelations>,
+        HasMeeting {}
