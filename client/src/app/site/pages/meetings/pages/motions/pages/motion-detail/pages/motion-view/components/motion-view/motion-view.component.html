@@ -2,40 +2,26 @@
     @if (hasLoaded | async) {
         <os-head-bar
             mainActionTooltip="New amendment"
-            [editMode]="editMotion"
             [goBack]="motion?.hasLeadMotion"
             [hasMainButton]="perms.isAllowed('can_create_amendments', motion)"
-            [isSaveButtonEnabled]="canSave"
             [nav]="false"
-            [saveAction]="getSaveAction()"
-            (cancelEditEvent)="leaveEditMotion()"
             (mainEvent)="createAmendment()"
         >
             <!-- Title -->
             <div class="title-slot">
-                @if (motion && !newMotion) {
+                @if (motion) {
                     <h2>
                         @if (!vp.isMobile) {
                             <span>{{ 'Motion' | translate }}</span>
-                        }
-                        <!-- Whitespace between "Motion" and number -->
-                        @if (!vp.isMobile) {
+                            <!-- Whitespace between "Motion" and number -->
                             <span>&nbsp;</span>
                         }
-                        @if (!editMotion) {
-                            <span>{{ motion.number }}</span>
-                        }
+                        <span>{{ motion.number }}</span>
                     </h2>
-                }
-                @if (newMotion && !amendmentEdit) {
-                    <h2>{{ 'New motion' | translate }}</h2>
-                }
-                @if (amendmentEdit) {
-                    <h2>{{ 'New amendment' | translate }}</h2>
                 }
             </div>
             <!-- Back and forth buttons -->
-            @if (!editMotion && showNavigateButtons) {
+            @if (showNavigateButtons) {
                 <div class="extra-controls-slot prev-next-motion-controls">
                     <button
                         class="nav-button-overflow"
@@ -146,68 +132,49 @@
                 (swipeRight)="navigateToMotion(nextMotion)"
             >
                 <!-- Title -->
-                @if (!editMotion) {
-                    <div class="title">
-                        <os-motion-manage-title [motion]="motion"></os-motion-manage-title>
-                    </div>
-                }
-                @if (editMotion) {
-                    <div>
-                        <mat-card [ngClass]="vp.isMobile ? 'os-form-card-mobile' : 'os-card'">
+                <div class="title">
+                    <os-motion-manage-title [motion]="motion"></os-motion-manage-title>
+                </div>
+                @if (vp.isMobile) {
+                    <div class="mobile-view">
+                        <!-- Meta info -->
+                        <div>
+                            <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
+                        </div>
+                        <!-- Content -->
+                        <mat-card class="os-card">
                             <mat-card-content>
                                 <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
                             </mat-card-content>
                         </mat-card>
+                        <!-- Comments -->
+                        <os-motion-comments [motion]="motion"></os-motion-comments>
+                        <!-- Personal note -->
+                        @if (!operator.isAnonymous) {
+                            <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
+                        }
                     </div>
-                }
-                @if (!editMotion) {
-                    @if (vp.isMobile) {
-                        <div class="mobile-view">
-                            <!-- Meta info -->
-                            @if (!newMotion) {
-                                <div>
-                                    <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
-                                </div>
+                } @else if (motion) {
+                    <div class="desktop-view">
+                        <div class="desktop-left">
+                            <!-- Meta Info -->
+                            <div>
+                                <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
+                            </div>
+                            <os-motion-comments [motion]="motion"></os-motion-comments>
+                            @if (!operator.isAnonymous) {
+                                <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
                             }
+                        </div>
+                        <div class="desktop-right">
                             <!-- Content -->
                             <mat-card class="os-card">
                                 <mat-card-content>
                                     <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
                                 </mat-card-content>
                             </mat-card>
-                            <!-- Comments -->
-                            <os-motion-comments [motion]="motion"></os-motion-comments>
-                            <!-- Personal note -->
-                            @if (!operator.isAnonymous) {
-                                <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
-                            }
                         </div>
-                    } @else {
-                        @if (motion || newMotion) {
-                            <div class="desktop-view">
-                                <div class="desktop-left" [ngClass]="{ 'spacer-bottom-60': !editMotion }">
-                                    <!-- Meta Info -->
-                                    @if (!newMotion) {
-                                        <div>
-                                            <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
-                                        </div>
-                                    }
-                                    <os-motion-comments [motion]="motion"></os-motion-comments>
-                                    @if (!operator.isAnonymous) {
-                                        <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
-                                    }
-                                </div>
-                                <div class="desktop-right">
-                                    <!-- Content -->
-                                    <mat-card class="os-card">
-                                        <mat-card-content>
-                                            <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-                                        </mat-card-content>
-                                    </mat-card>
-                                </div>
-                            </div>
-                        }
-                    }
+                    </div>
                 }
             </div>
         }
@@ -221,21 +188,15 @@
 </ng-template>
 
 <ng-template #contentTemplate>
-    @if (!newMotion && !editMotion) {
-        <os-motion-highlight-form #highlightForm [motion]="motion"></os-motion-highlight-form>
-    }
+    <os-motion-highlight-form #highlightForm [motion]="motion"></os-motion-highlight-form>
+
     <os-motion-content
         #content
-        [editMotion]="editMotion"
         [motion]="motion"
-        [newMotion]="newMotion"
         [osListenEditing]="{
-            editMode: editMotion,
+            editMode: false,
             model: motion,
-            listen: !newMotion
+            listen: true
         }"
-        (formChanged)="temporaryMotion = $event"
-        (save)="saveMotion($event)"
-        (validStateChanged)="canSave = $event"
     ></os-motion-content>
 </ng-template>

@@ -10,13 +10,13 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { AmendmentParagraphs } from '../../../../../../../../../domain/models/motions/motion';
-import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
+import { AmendmentParagraphs } from '../../../../../../../../../../../domain/models/motions/motion';
+import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
 import {
     MotionLineNumberingService,
     ParagraphToChoose
-} from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
+} from '../../../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
 
 @Component({
     selector: `os-amendment-create-wizard`,

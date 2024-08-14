@@ -1,0 +1,40 @@
+<os-detail-view [collection]="collection" (idFound)="onIdFound($event)">
+    @if (hasLoaded | async) {
+        <os-head-bar
+            [editMode]="true"
+            [isSaveButtonEnabled]="canSave"
+            [nav]="false"
+            [saveAction]="getSaveAction()"
+            (cancelEditEvent)="leaveEditMotion()"
+        >
+            <!-- Title -->
+            <div class="title-slot">
+                @if (motion && !newMotion && !vp.isMobile) {
+                    <h2>{{ 'Motion' | translate }}</h2>
+                }
+                @if (newMotion && !amendmentEdit) {
+                    <h2>{{ 'New motion' | translate }}</h2>
+                }
+                @if (amendmentEdit) {
+                    <h2>{{ 'New amendment' | translate }}</h2>
+                }
+            </div>
+        </os-head-bar>
+        @if (motion) {
+            <div
+                class="content-container spacer-bottom-60"
+                osSwipe
+                (swipeLeft)="navigateToMotion(previousMotion)"
+                (swipeRight)="navigateToMotion(nextMotion)"
+            >
+                <div>
+                    <mat-card [ngClass]="vp.isMobile ? 'os-form-card-mobile' : 'os-card'">
+                        <mat-card-content>
+                            <!-- TODO: Add motion form -->
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        }
+    }
+</os-detail-view>

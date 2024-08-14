@@ -14,50 +14,34 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
-import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
-import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
-import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
-import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
-import { AmendmentListFilterService } from '../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';
-import { AmendmentListSortService } from '../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
-import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service/motion-list-filter.service';
-import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
-import { MotionDetailViewService } from '../../services/motion-detail-view.service';
-import { MotionDetailViewOriginUrlService } from '../../services/motion-detail-view-originurl.service';
+import { AgendaItemControllerService } from '../../../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
+import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
+import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
+import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
+import { MotionPdfExportService } from '../../../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
+import { AmendmentListFilterService } from '../../../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';
+import { AmendmentListSortService } from '../../../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
+import { MotionListFilterService } from '../../../../../../services/list/motion-list-filter.service/motion-list-filter.service';
+import { MotionListSortService } from '../../../../../../services/list/motion-list-sort.service/motion-list-sort.service';
+import { MotionDetailViewService } from '../../../../services/motion-detail-view.service';
+import { MotionDetailViewOriginUrlService } from '../../../../services/motion-detail-view-originurl.service';
 
 @Component({
-    selector: `os-motion-detail-view`,
-    templateUrl: `./motion-detail-view.component.html`,
-    styleUrls: [`./motion-detail-view.component.scss`],
+    selector: `os-motion-view`,
+    templateUrl: `./motion-view.component.html`,
+    styleUrls: [`./motion-view.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class MotionDetailViewComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
+export class MotionViewComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
     public readonly collection = ViewMotion.COLLECTION;
-
-    /**
-     * Determine if the motion is edited
-     */
-    public editMotion = false;
-
-    /**
-     * Determine if the motion is a new (unsent) amendment to another motion
-     */
-    public amendmentEdit = false;
-
-    /**
-     * Determine if the motion is new
-     */
-    public newMotion = false;
 
     /**
      * Sets the motions, e.g. via an autoupdate. Reload important things here:
@@ -75,8 +59,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     }
 
     public temporaryMotion: any = {};
-
-    public canSave = false;
 
     /**
      * preload the next motion for direct navigation
@@ -195,10 +177,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this.motionSortService.exitSortService();
     }
 
-    public getSaveAction(): () => Promise<void> {
-        return () => this.saveMotion();
-    }
-
     /**
      * Sets @var this._navigatedFromAmendmentList on navigation from either of both lists.
      * Does nothing on navigation between two motions.
@@ -216,19 +194,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     public goToHistory(): void {
         this.router.navigate([this.activeMeetingId!, `history`], { queryParams: { fqid: this.motion.fqid } });
-    }
-
-    /**
-     * In the ui are no distinct buttons for update or create. This is decided here.
-     */
-    public async saveMotion(event?: any): Promise<void> {
-        const update = event || this.temporaryMotion;
-        if (this.newMotion) {
-            await this.createMotion(update);
-        } else {
-            await this.updateMotion(update, this.motion);
-            this.leaveEditMotion();
-        }
     }
 
     /**
@@ -283,19 +248,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     public get showForwardButton(): boolean {
         return !!this.motion.state?.allow_motion_forwarding && this._forwardingAvailable;
-    }
-
-    public enterEditMotion(): void {
-        this.editMotion = true;
-        this.showMotionEditConflictWarningIfNecessary();
-    }
-
-    public leaveEditMotion(): void {
-        if (this.newMotion) {
-            this.router.navigate([this.activeMeetingId, `motions`]);
-        } else {
-            this.editMotion = false;
-        }
     }
 
     /**
@@ -375,19 +327,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this.raiseError(error);
     }
 
-    /**
-     * Function to prevent automatically closing the window/tab,
-     * if the user is editing a motion.
-     *
-     * @param event The event object from 'onUnbeforeUnload'.
-     */
-    @HostListener(`window:beforeunload`, [`$event`])
-    public stopClosing(event: Event): void {
-        if (this.editMotion) {
-            event.returnValue = false;
-        }
-    }
-
     public addToAgenda(): void {
         this.itemRepo.addToAgenda({}, this.motion).resolve().catch(this.raiseError);
     }
@@ -403,8 +342,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this._motionId = id;
         if (id) {
             this.loadMotionById();
-        } else {
-            this.initNewMotion();
         }
         this.hasLoaded.next(true);
     }
@@ -418,17 +355,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
                 this.cd.markForCheck();
             })
         );
-    }
-
-    private initNewMotion(): void {
-        // new motion
-        super.setTitle(`New motion`);
-        this.newMotion = true;
-        this.editMotion = true;
-        this.motion = {} as any;
-        if (this.route.snapshot.queryParams[`parent`]) {
-            this.initializeAmendment();
-        }
     }
 
     private loadMotionById(motionId: Id | null = this._motionId): void {
@@ -484,43 +410,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         }
     }
 
-    private async updateMotion(newMotionValues: any, motion: ViewMotion): Promise<void> {
-        await this.repo.update(newMotionValues, motion).resolve();
-    }
-
-    private async ensureParentIsAvailable(parentId: Id): Promise<void> {
-        if (!this.repo.getViewModel(parentId)) {
-            const loaded = new Deferred();
-            this.subscriptions.push(
-                this.repo.getViewModelObservable(parentId).subscribe(parent => {
-                    if (parent && !loaded.wasResolved) {
-                        loaded.resolve();
-                    }
-                })
-            );
-            return loaded;
-        }
-    }
-
-    private async initializeAmendment(): Promise<void> {
-        const motion: any = {};
-        this._parentId = +this.route.snapshot.queryParams[`parent`] || null;
-        this.amendmentEdit = true;
-        await this.ensureParentIsAvailable(this._parentId!);
-        const parentMotion = this.repo.getViewModel(this._parentId!);
-        motion.lead_motion_id = this._parentId;
-        if (parentMotion) {
-            const defaultTitle = `${this.translate.instant(`Amendment to`)} ${parentMotion.numberOrTitle}`;
-            motion.title = defaultTitle;
-            motion.category_id = parentMotion.category_id;
-            const amendmentTextMode = this.meetingSettingsService.instant(`motions_amendments_text_mode`);
-            if (amendmentTextMode === `fulltext`) {
-                motion.text = parentMotion.text;
-            }
-            this.motion = motion;
-        }
-    }
-
     /**
      * Lifecycle routine for motions to initialize.
      */
@@ -568,15 +457,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
                 this.cd.markForCheck();
             })
         );
-    }
-
-    private showMotionEditConflictWarningIfNecessary(): void {
-        if (this.motion.amendments?.filter(amend => amend.isParagraphBasedAmendment()).length > 0) {
-            const msg = this.translate.instant(
-                `Warning: Amendments exist for this motion. Editing this text will likely impact them negatively. Particularily, amendments might become unusable if the paragraph they affect is deleted.`
-            );
-            this.raiseWarning(msg);
-        }
     }
 
     /**
