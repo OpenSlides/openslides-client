@@ -106,6 +106,14 @@
                         <span>{{ 'locked out' | translate }}</span>
                     </mat-checkbox>
                 </div>
+                @if (lockedOutAndCanManage()) {
+                    <p class="red-warning-text padding-left-12">
+                        {{
+                            'It is not allowed to set the permisson UserCanManage to a locked out user. Please unset the lockout before adding a group with UserCanManage.'
+                                | translate
+                        }}
+                    </p>
+                }
                 <div>
                     <!-- Strucuture Level -->
                     <mat-form-field

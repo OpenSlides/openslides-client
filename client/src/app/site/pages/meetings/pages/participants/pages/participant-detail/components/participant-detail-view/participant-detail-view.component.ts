@@ -347,8 +347,12 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     public enableSaveButton(): boolean {
+        return this.isFormValid && !this.lockedOutAndCanManage();
+    }
+
+    public lockedOutAndCanManage(): boolean {
         const lockedOutHelper = this.personalInfoFormValue?.locked_out ?? this.user?.is_locked_out;
-        return this.isFormValid && (!lockedOutHelper || !this.checkSelectedGroupsCanManage());
+        return lockedOutHelper && this.checkSelectedGroupsCanManage();
     }
 
     private async createUser(): Promise<void> {
