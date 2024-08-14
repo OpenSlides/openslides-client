@@ -18,13 +18,25 @@
 
 .results {
     display: grid;
-    grid-gap: 10px;
+    grid-gap: 10px !important;
     padding: 10px;
     margin: 0 10px;
-    grid-template-areas: 'name name';
+    grid-template-areas: 'votes options';
     grid-template-columns: auto auto;
+    @media (max-width: 700px) {
+        grid-template-areas: 'votes .' '. options';
+        grid-template-columns: max-content;
+    }
 }
 
 .margin-right-20 {
     margin-right: 20px;
+}
+
+.grid-all-votes-area {
+    grid-area: votes;
+}
+
+.grid-options-area {
+    grid-area: options;
 }
