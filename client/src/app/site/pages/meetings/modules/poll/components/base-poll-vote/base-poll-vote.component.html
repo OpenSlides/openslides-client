@@ -99,6 +99,55 @@
                                 }
                             </div>
                         }
+                        @if (poll.isMethodN && poll.hasGlobalOptionEnabled && poll.global_yes) {
+                            @if (!settings.hideGlobalOptions) {
+                                @for (option of globalVoteActions; track option) {
+                                    @if (option.vote === 'Y') {
+                                        <div class="single-vote-grid">
+                                            <div class="vote-option-title">
+                                                <span>
+                                                    {{ getGlobalOptionName(option) | translate }}
+                                                </span>
+                                            </div>
+                                            <div class="vote-button-area">
+                                                <button
+                                                    class="vote-button"
+                                                    mat-raised-button
+                                                    [disabled]="isDeliveringVote(delegation)"
+                                                    (click)="saveGlobalVote(option.vote, delegation)"
+                                                >
+                                                    <div
+                                                        class="vote-button-content"
+                                                        [ngClass]="getGlobalButtonContentClass(option, delegation)"
+                                                    >
+                                                        <os-custom-icon
+                                                            class="vote-button-cross"
+                                                            [customIcon]="drawnCross"
+                                                            [ngClass]="getGlobalCSSClass(option, delegation)"
+                                                        ></os-custom-icon>
+                                                        <mat-icon class="vote-button-circle">
+                                                            radio_button_unchecked
+                                                        </mat-icon>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                            @if (!settings.hideLeftoverVotes) {
+                                <div class="or-divider-grid">
+                                    <div class="hr-wrapper">
+                                        <hr />
+                                    </div>
+                                    <div translate>OR</div>
+                                    <div class="hr-wrapper">
+                                        <hr />
+                                    </div>
+                                </div>
+                            }
+                        }
+
                         @for (option of poll.options; track option; let i = $index) {
                             <div
                                 [ngClass]="{
@@ -242,54 +291,57 @@
                             </div>
                         }
                         @if (
-                            !settings.hideLeftoverVotes &&
                             (poll.isMethodY || poll.isMethodN || poll.isMethodYN) &&
-                            poll.hasGlobalOptionEnabled
+                            poll.hasGlobalOptionEnabled &&
+                            (!poll.isMethodN || poll.global_no || poll.global_abstain)
                         ) {
-                            <div class="or-divider-grid">
-                                <div class="hr-wrapper">
-                                    <hr />
-                                </div>
-                                <div translate>OR</div>
-                                <div class="hr-wrapper">
-                                    <hr />
-                                </div>
-                            </div>
-                        }
-                        <!-- global yes/no/abstain -->
-                        @if (
-                            !settings.hideGlobalOptions &&
-                            (poll.isMethodY || poll.isMethodN || poll.isMethodYN) &&
-                            poll.hasGlobalOptionEnabled
-                        ) {
-                            @for (option of globalVoteActions; track option) {
-                                <div class="single-vote-grid">
-                                    <div class="vote-option-title">
-                                        <span>
-                                            {{ getGlobalOptionName(option) | translate }}
-                                        </span>
+                            @if (!settings.hideLeftoverVotes) {
+                                <div class="or-divider-grid">
+                                    <div class="hr-wrapper">
+                                        <hr />
                                     </div>
-                                    <div class="vote-button-area">
-                                        <button
-                                            class="vote-button"
-                                            mat-raised-button
-                                            [disabled]="isDeliveringVote(delegation)"
-                                            (click)="saveGlobalVote(option.vote, delegation)"
-                                        >
-                                            <div
-                                                class="vote-button-content"
-                                                [ngClass]="getGlobalButtonContentClass(option, delegation)"
-                                            >
-                                                <os-custom-icon
-                                                    class="vote-button-cross"
-                                                    [customIcon]="drawnCross"
-                                                    [ngClass]="getGlobalCSSClass(option, delegation)"
-                                                ></os-custom-icon>
-                                                <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
+                                    <div translate>OR</div>
+                                    <div class="hr-wrapper">
+                                        <hr />
+                                    </div>
+                                </div>
+                            }
+
+                            <!-- global yes/no/abstain -->
+                            @if (!settings.hideGlobalOptions) {
+                                @for (option of globalVoteActions; track option) {
+                                    @if (!poll.isMethodN || option.vote !== 'Y') {
+                                        <div class="single-vote-grid">
+                                            <div class="vote-option-title">
+                                                <span>
+                                                    {{ getGlobalOptionName(option) | translate }}
+                                                </span>
                                             </div>
-                                        </button>
-                                    </div>
-                                </div>
+                                            <div class="vote-button-area">
+                                                <button
+                                                    class="vote-button"
+                                                    mat-raised-button
+                                                    [disabled]="isDeliveringVote(delegation)"
+                                                    (click)="saveGlobalVote(option.vote, delegation)"
+                                                >
+                                                    <div
+                                                        class="vote-button-content"
+                                                        [ngClass]="getGlobalButtonContentClass(option, delegation)"
+                                                    >
+                                                        <os-custom-icon
+                                                            class="vote-button-cross"
+                                                            [customIcon]="drawnCross"
+                                                            [ngClass]="getGlobalCSSClass(option, delegation)"
+                                                        ></os-custom-icon>
+                                                        <mat-icon class="vote-button-circle">
+                                                            radio_button_unchecked
+                                                        </mat-icon>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+                                }
                             }
                         }
                     </div>

@@ -1,5 +1,5 @@
 import { PollCandidateList } from 'src/app/domain/models/poll-candidate-lists/poll-candidate-list';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { SortedList, SortedListEntry } from './sorted-list';
@@ -32,4 +32,7 @@ interface IPollCandidateListRelations {
     poll_candidates: ViewPollCandidate[];
     option: ViewOption;
 }
-export interface ViewPollCandidateList extends HasMeeting, IPollCandidateListRelations, PollCandidateList {}
+export interface ViewPollCandidateList
+    extends HasMeeting,
+        ViewModelRelations<IPollCandidateListRelations>,
+        PollCandidateList {}

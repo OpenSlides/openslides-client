@@ -110,8 +110,8 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         const result = await this.choiceService.open<ViewMeeting>({
             title,
             choices: this.operator.isSuperAdmin
-                ? meetings
-                : meetings.filter(meeting => this.operator.isInMeeting(meeting.id)),
+                ? meetings.filter(meeting => !meeting.locked_from_inside)
+                : meetings.filter(meeting => this.operator.isInMeeting(meeting.id) && !meeting.locked_from_inside),
             multiSelect: true,
             actions,
             content: this.translate.instant(

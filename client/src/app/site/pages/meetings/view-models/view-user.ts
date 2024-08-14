@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { User } from 'src/app/domain/models/users/user';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { Id } from '../../../../domain/definitions/key-types';
 import { ViewCommittee } from '../../organization/pages/committees';
@@ -342,4 +342,4 @@ interface IUserRelations {
     poll_candidates: ViewPollCandidate[];
 }
 
-export interface ViewUser extends User, IUserRelations {}
+export interface ViewUser extends User, ViewModelRelations<IUserRelations> {}

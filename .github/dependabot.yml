@@ -18,6 +18,8 @@ updates:
        angular:
           patterns:
             - "@angular/*"
+            - "@angular-devkit/build-angular"
+            - "@schematics/angular"
        angular-eslint:
           patterns:
             - "@angular-eslint/*"
@@ -43,6 +45,7 @@ updates:
       - "bastianjoel"
     assignees:
       - "bastianjoel"
+      - "rrenkert"
 
   - package-ecosystem: "github-actions"
     directory: "/"

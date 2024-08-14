@@ -32,7 +32,7 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
         private operator: OperatorService
     ) {
         super(controllerServiceCollector, User, repo);
-        this.operator.user.committee_managements_as_observable.subscribe(committees => {
+        this.operator.user.committee_managements$.subscribe(committees => {
             this._committee_users_set = new Set(committees.flatMap(committee => committee.user_ids ?? []));
         });
     }
@@ -43,9 +43,9 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
             .pipe(map(accounts => this.filterAccountsForCommitteeAdmins(accounts)));
     }
 
-    public override getSortedViewModelListObservable(): Observable<ViewUser[]> {
+    public override getSortedViewModelListObservable(key?: string): Observable<ViewUser[]> {
         return super
-            .getSortedViewModelListObservable()
+            .getSortedViewModelListObservable(key)
             .pipe(map(accounts => this.filterAccountsForCommitteeAdmins(accounts)));
     }
 

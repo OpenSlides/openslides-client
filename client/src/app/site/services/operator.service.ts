@@ -85,6 +85,10 @@ export class OperatorService {
         return this.hasOrganizationPermissions(OML.can_manage_organization);
     }
 
+    public get isAccountAdmin(): boolean {
+        return this.hasOrganizationPermissions(OML.can_manage_users);
+    }
+
     private get isCommitteeManager(): boolean {
         return !!(this.user.committee_management_ids || []).length;
     }
@@ -537,7 +541,7 @@ export class OperatorService {
             // console.warn(`has perms: Usage outside of meeting!`);
             return false;
         }
-        if (this.isSuperAdmin) {
+        if (this.isSuperAdmin && !this.activeMeeting.locked_from_inside) {
             return true;
         }
 
@@ -561,7 +565,7 @@ export class OperatorService {
             // console.warn(`has perms: Operator is not ready!`);
             return false;
         }
-        if (this.isSuperAdmin) {
+        if (this.isSuperAdmin && !this.activeMeeting.locked_from_inside) {
             return true;
         }
         const groups = this.user.groups(meetingId);
