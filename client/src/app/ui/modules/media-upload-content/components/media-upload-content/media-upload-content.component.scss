@@ -2,3 +2,9 @@
     display: flex;
     flex-direction: column;
 }
+
+mat-form-field {
+    mat-label {
+        color: var(--mdc-filled-text-field-label-text-color);
+    }
+}
