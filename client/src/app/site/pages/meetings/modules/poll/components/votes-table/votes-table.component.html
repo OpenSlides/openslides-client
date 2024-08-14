@@ -3,7 +3,7 @@
         <div>
             <os-list
                 [filterProps]="filterProps"
-                [filterService]="filter"
+                [filterService]="parent.poll.type === 'named' ? filter : null"
                 [fullScreen]="false"
                 [listObservable]="votesDataObservable"
             >
