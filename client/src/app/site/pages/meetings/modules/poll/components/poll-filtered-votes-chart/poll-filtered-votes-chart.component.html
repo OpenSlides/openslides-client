@@ -23,7 +23,7 @@
                         <span [ngClass]="{ 'margin-right-20': !isLast }">
                             {{ ((cat.weightedAmount / totalAmountWeighted) * 100).toFixed(2) }}% ({{
                                 cat.weightedAmount
-                            }}) voted {{ cat.value }}
+                            }}) voted {{ cat.name | translate }}
                         </span>
                     }
                 }

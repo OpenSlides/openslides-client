@@ -8,6 +8,7 @@ import { VotesFilterService } from '../../services/votes-filter.service';
 
 interface VoteAmount {
     value: VoteValue;
+    name: string;
     amount: number;
     weightedAmount: number;
     backgroundColor: string;
@@ -47,6 +48,7 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
             const voteValue = voteValues[i];
             this.voteAmounts.push({
                 value: voteValue,
+                name: VoteValueVerbose[voteValue],
                 amount: votes.reduce((acc, curr) => acc + +(curr.value === voteValue), 0),
                 weightedAmount: votes.reduce((acc, curr) => acc + (curr.value === voteValue ? +curr.weight : 0), 0),
                 backgroundColor: this.themeService.getPollColor(VoteValueVerbose[voteValue].toLowerCase())
