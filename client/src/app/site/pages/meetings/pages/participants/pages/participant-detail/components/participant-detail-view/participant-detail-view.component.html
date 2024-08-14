@@ -3,7 +3,7 @@
     [editMode]="isEditingSubject.value"
     [goBack]="!isAllowed('seeOtherUsers')"
     [hasMainButton]="isAllowed('changePersonal') && !!user"
-    [isSaveButtonEnabled]="isFormValid"
+    [isSaveButtonEnabled]="enableSaveButton()"
     [mainActionTooltip]="'Edit' | translate"
     [nav]="false"
     [saveAction]="getSaveAction()"
