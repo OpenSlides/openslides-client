@@ -47,7 +47,7 @@
                 </div>
             </div>
         }
-        @for (change of getAllTextChangingObjects(); track change; let i = $index) {
+        @for (change of allTextChangingObjects; track change; let i = $index) {
             <div>
                 <div
                     class="motion-text"
@@ -57,16 +57,16 @@
                 >
                     <os-motion-detail-original-change-recommendations
                         [changeRecommendations]="[]"
-                        [html]="getTextBetweenChanges(getAllTextChangingObjects()[i - 1], change)"
+                        [html]="getTextBetweenChanges(allTextChangingObjects[i - 1], change)"
                         [motionId]="motion.id"
                         (createChangeRecommendation)="onCreateChangeRecommendation($event)"
                     ></os-motion-detail-original-change-recommendations>
                 </div>
                 <div
                     class="diff-box diff-box-{{ change.getChangeId() }} clearfix outlined-hover outlined-border"
-                    [class.collides]="hasCollissions(change, getAllTextChangingObjects())"
+                    [class.collides]="hasCollissions(change, allTextChangingObjects)"
                 >
-                    @if (hasCollissions(change, getAllTextChangingObjects())) {
+                    @if (hasCollissions(change, allTextChangingObjects)) {
                         <div class="collission-hint">
                             <mat-icon matTooltip="{{ 'This change collides with another one.' | translate }}">
                                 warning

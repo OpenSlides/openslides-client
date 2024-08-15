@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,13 +15,13 @@ import { ViewMotion, ViewMotionCategory, ViewMotionWorkflow } from 'src/app/site
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 
-import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
-import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service';
-import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
-import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
-import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
+import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
+import { getParticipantMinimalSubscriptionConfig } from '../../../../../../../participants/participants.subscription';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
+import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
+import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
+import { MotionContentChangeRecommendationDialogComponentData } from '../../../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
+import { MotionChangeRecommendationDialogService } from '../../../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
 
 /**
  * fields that are required for the motion form but are not part of any motion payload
@@ -44,12 +44,11 @@ type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [k
 };
 
 @Component({
-    selector: `os-motion-content`,
-    templateUrl: `./motion-content.component.html`,
-    styleUrls: [`./motion-content.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector: `os-motion-form-content`,
+    templateUrl: `./motion-form-content.component.html`,
+    styleUrls: [`./motion-form-content.component.scss`]
 })
-export class MotionContentComponent extends BaseMotionDetailChildComponent {
+export class MotionFormContentComponent extends BaseMotionDetailChildComponent {
     @Output()
     public save = new EventEmitter<ViewMotion>();
 

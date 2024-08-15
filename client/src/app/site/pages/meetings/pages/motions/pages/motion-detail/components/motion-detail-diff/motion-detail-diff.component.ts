@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    Output,
+    ViewEncapsulation
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -52,7 +61,8 @@ import { MotionChangeRecommendationDialogService } from '../../modules/motion-ch
     selector: `os-motion-detail-diff`,
     templateUrl: `./motion-detail-diff.component.html`,
     styleUrls: [`./motion-detail-diff.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionDetailDiffComponent extends BaseMeetingComponent implements AfterViewInit {
     /**
@@ -63,8 +73,16 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     @Input()
     public motion!: ViewMotion;
 
+    private _changes: ViewUnifiedChange[] = [];
     @Input()
-    public changes: ViewUnifiedChange[] = [];
+    public set changes(changes: ViewUnifiedChange[]) {
+        this._changes = changes;
+        this.updateAllTextChangingObjects();
+    }
+
+    public get changes(): ViewUnifiedChange[] {
+        return this._changes;
+    }
 
     @Input()
     public scrollToChange: ViewUnifiedChange | null = null;
@@ -121,8 +139,13 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         private dialog: MotionChangeRecommendationDialogService
     ) {
         super();
-        this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => (this.lineLength = lineLength));
-        this.meetingSettingsService.get(`motions_preamble`).subscribe(preamble => (this.preamble = preamble));
+
+        this.subscriptions.push(
+            this.meetingSettingsService
+                .get(`motions_line_length`)
+                .subscribe(lineLength => (this.lineLength = lineLength)),
+            this.meetingSettingsService.get(`motions_preamble`).subscribe(preamble => (this.preamble = preamble))
+        );
     }
 
     /**
@@ -179,7 +202,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public getDiff(change: ViewUnifiedChange): string {
         let motionHtml: string;
         if (this.motion.isParagraphBasedAmendment()) {
-            const parentMotion = this.motionRepo.getViewModel(this.motion.lead_motion_id)!;
+            const parentMotion = this.motion.lead_motion;
             motionHtml = parentMotion.text;
         } else {
             motionHtml = this.motion.text;
@@ -219,7 +242,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
         return this.diff.getTextRemainderAfterLastChange(
             baseText,
-            this.getAllTextChangingObjects(),
+            this.allTextChangingObjects,
             this.lineLength,
             this.highlightedLine,
             this.lineRange
@@ -294,7 +317,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         return change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION;
     }
 
-    public getAllTextChangingObjects(): ViewUnifiedChange[] {
+    private updateAllTextChangingObjects(): void {
         const inRange = (from: number, to: number): boolean => {
             if (!this.lineRange) {
                 return true;
@@ -306,9 +329,14 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             );
         };
 
-        return this.changes.filter(
+        this._allTextChangingObjects = this.changes.filter(
             (obj: ViewUnifiedChange) => !obj.isTitleChange() && inRange(obj.getLineFrom(), obj.getLineTo())
         );
+    }
+
+    private _allTextChangingObjects: ViewUnifiedChange[] = [];
+    public get allTextChangingObjects(): ViewUnifiedChange[] {
+        return this._allTextChangingObjects;
     }
 
     public getTitleChangingObject(): ViewUnifiedChange {
