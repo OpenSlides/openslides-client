@@ -1,7 +1,7 @@
+<mat-divider class="margin-top-bottom"></mat-divider>
 @if (filtersEnabled && totalAmount > 0) {
     <div class="vote-char-container">
-        <mat-divider class="margin-top-bottom"></mat-divider>
-        <div>{{ 'Filtered single votes:' | translate }}</div>
+        <h2 class="margin-bottom-10">{{ 'Filtered single votes:' | translate }}</h2>
         <div class="vote-chart-bar">
             @for (cat of voteAmounts; track cat.value) {
                 @if (cat.amount > 0) {
@@ -14,9 +14,7 @@
             }
         </div>
         <div class="results">
-            <div class="grid-all-votes-area">
-                {{ 'Sum of weighted (and percental) votes: ' | translate }} {{ totalAmountWeighted }}
-            </div>
+            <div class="grid-all-votes-area">{{ 'Weighted votes: ' | translate }} {{ totalAmountWeighted }}</div>
             <div class="grid-options-area">
                 @for (cat of voteAmounts; track cat.value; let isLast = $last) {
                     @if (cat.amount > 0) {
