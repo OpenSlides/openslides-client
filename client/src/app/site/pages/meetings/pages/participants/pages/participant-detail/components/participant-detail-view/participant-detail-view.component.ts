@@ -355,6 +355,12 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return lockedOutHelper && this.checkSelectedGroupsCanManage();
     }
 
+    public disableLockoutCheckbox(): boolean {
+        const notChanged = (this.personalInfoFormValue?.locked_out ?? null) === null;
+        const isLockedOut = this.user?.is_locked_out;
+        return notChanged && !isLockedOut && this.checkSelectedGroupsCanManage();
+    }
+
     private async createUser(): Promise<void> {
         const partialUser = { ...this.personalInfoFormValue };
 
