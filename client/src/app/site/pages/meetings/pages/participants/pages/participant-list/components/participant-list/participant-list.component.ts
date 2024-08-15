@@ -485,10 +485,16 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     /**
      * Toggles the lockout
      */
-    public toggleLockout(viewUser: ViewUser): void {
+    public async toggleLockout(viewUser: ViewUser): Promise<void> {
         const isAllowed = this.operator.hasPerms(Permission.userCanManage);
         if (isAllowed) {
-            this.repo.setState(`locked_out`, !this.isUserLockedOut(viewUser), viewUser);
+            const title = this.isUserLockedOut(viewUser)
+                ? this.translate.instant(`Do you really want to include the participant back into the meeting?`)
+                : this.translate.instant(`Do you really want to lock this participant out of the meeting?`);
+            const content = viewUser.full_name;
+            if (await this.prompt.open(title, content)) {
+                this.repo.setState(`locked_out`, !this.isUserLockedOut(viewUser), viewUser);
+            }
         }
     }
 

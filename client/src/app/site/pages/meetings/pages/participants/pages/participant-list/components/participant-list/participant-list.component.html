@@ -248,11 +248,12 @@
         <button
             *osPerms="permission.userCanManage"
             mat-menu-item
+            [class.red-warning-text]="user.is_locked_out"
             [disabled]="isLockedOutToggleDisabled(user)"
             (click)="toggleLockout(user)"
         >
             <mat-icon>event_busy</mat-icon>
-            <span>{{ 'Toggle lockout' | translate }}</span>
+            <span>{{ 'Locked out' | translate }}</span>
         </button>
 
         <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="switchParticipants(user)">
