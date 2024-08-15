@@ -26,7 +26,7 @@
     [alwaysShowMenu]="true"
     [filterProps]="filterProps"
     [filterService]="filterService"
-    [hiddenInMobile]="['group', 'presence']"
+    [hiddenInMobile]="['group']"
     [listObservableProvider]="repo"
     [multiSelect]="isMultiSelect"
     [sortService]="sortService"
@@ -181,20 +181,22 @@
     <!-- Presence column -->
     <div *osScrollingTableCell="'presence'; row as user; config: { width: 140 }" class="cell-slot fill">
         <div class="icon-group">
-            <mat-checkbox
-                class="checkbox-ripple-padding"
-                [checked]="isUserPresent(user)"
-                [disabled]="isPresentToggleDisabled(user)"
-                (change)="setPresent(user)"
-            >
-                <span>{{ 'Present' | translate }}</span>
-            </mat-checkbox>
+            @if (!viewport.isMobile) {
+                <mat-checkbox
+                    class="checkbox-ripple-padding"
+                    [checked]="isUserPresent(user)"
+                    [disabled]="isPresentToggleDisabled(user)"
+                    (change)="setPresent(user)"
+                >
+                    <span>{{ 'Present' | translate }}</span>
+                </mat-checkbox>
+            }
             <div style="padding-left: 22px">
                 <os-icon-container
-                    color="warn"
                     icon="event_busy"
                     [hide]="!user.is_locked_out"
                     [showIcon]="user.is_locked_out"
+                    [style.color]="'red'"
                 >
                     {{ 'Locked out' | translate }}
                 </os-icon-container>
