@@ -1,5 +1,5 @@
 <os-detail-view [collection]="collection" (idFound)="onIdFound($event)">
-    @if (motion && hasLoaded | async) {
+    @if (hasLoaded | async) {
         <os-head-bar
             mainActionTooltip="New amendment"
             [goBack]="motion?.hasLeadMotion"
@@ -8,8 +8,8 @@
             (mainEvent)="createAmendment()"
         >
             <!-- Title -->
-            <div class="title-slot">
-                @if (motion) {
+            @if (motion) {
+                <div class="title-slot">
                     <h2>
                         @if (!vp.isMobile) {
                             <span>{{ 'Motion' | translate }}</span>
@@ -18,8 +18,8 @@
                         }
                         <span>{{ motion.number }}</span>
                     </h2>
-                }
-            </div>
+                </div>
+            }
             <!-- Back and forth buttons -->
             @if (showNavigateButtons) {
                 <div class="extra-controls-slot prev-next-motion-controls">
@@ -31,7 +31,7 @@
                         [ngClass]="{ 'motion-detail-nav-button': isMobile === false }"
                         (click)="navigateToMotion(previousMotion)"
                     >
-                        <os-icon-container icon="chevron_left" [hide]="vp.isMobileSubject | async">
+                        <os-icon-container icon="chevron_left" [hide]="isMobile">
                             {{ previousMotion ? previousMotion.number : '' }}
                         </os-icon-container>
                     </button>
@@ -42,20 +42,20 @@
                         [ngClass]="{ 'motion-detail-nav-button': isMobile === false }"
                         (click)="navigateToMotion(nextMotion)"
                     >
-                        <os-icon-container icon="chevron_right" [hide]="vp.isMobileSubject | async" [swap]="true">
+                        <os-icon-container icon="chevron_right" [hide]="isMobile" [swap]="true">
                             {{ nextMotion ? nextMotion.number : '' }}
                         </os-icon-container>
                     </button>
                 </div>
             }
             <!-- Menu -->
-            <ng-container class="menu-slot">
-                @if (motion) {
+            @if (motion) {
+                <ng-container class="menu-slot">
                     <button mat-icon-button type="button" [matMenuTriggerFor]="motionExtraMenu">
                         <mat-icon>more_vert</mat-icon>
                     </button>
-                }
-            </ng-container>
+                </ng-container>
+            }
             <mat-menu #motionExtraMenu="matMenu">
                 <!-- List of speakers -->
                 <os-speaker-button [menuItem]="true" [object]="motion"></os-speaker-button>
@@ -188,8 +188,5 @@
 <ng-template #contentTemplate>
     <os-motion-highlight-form #highlightForm [motion]="motion"></os-motion-highlight-form>
 
-    <os-motion-content
-        #content
-        [motion]="motion"
-    ></os-motion-content>
+    <os-motion-content #content [motion]="motion"></os-motion-content>
 </ng-template>

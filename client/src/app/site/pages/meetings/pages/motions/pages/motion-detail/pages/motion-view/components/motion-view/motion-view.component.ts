@@ -362,7 +362,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
      */
     private destroy(): void {
         this.cd.detach();
-        this.motion = null;
         this._hasModelSubscriptionInitiated = false;
         this.subscriptions.delete(`sorted-motions`);
         this.viewService.reset();

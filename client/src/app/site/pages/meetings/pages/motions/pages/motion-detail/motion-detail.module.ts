@@ -43,7 +43,6 @@ import { MotionForwardDialogModule } from '../../components/motion-forward-dialo
 import { MotionPollModule } from '../../modules/motion-poll';
 import { MotionsExportModule } from '../../services/export/motions-export.module';
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
-import { AmendmentCreateWizardComponent } from './pages/motion-form/components/amendment-create-wizard/amendment-create-wizard.component';
 import { MotionAddPollButtonComponent } from './components/motion-add-poll-button/motion-add-poll-button.component';
 import { MotionCommentComponent } from './components/motion-comment/motion-comment.component';
 import { MotionCommentsComponent } from './components/motion-comments/motion-comments.component';
@@ -52,7 +51,6 @@ import { MotionDetailComponent } from './components/motion-detail/motion-detail.
 import { MotionDetailDiffComponent } from './components/motion-detail-diff/motion-detail-diff.component';
 import { MotionDetailDiffSummaryComponent } from './components/motion-detail-diff-summary/motion-detail-diff-summary.component';
 import { MotionDetailOriginalChangeRecommendationsComponent } from './components/motion-detail-original-change-recommendations/motion-detail-original-change-recommendations.component';
-import { MotionViewComponent } from './pages/motion-view/components/motion-view/motion-view.component';
 import { MotionExtensionFieldComponent } from './components/motion-extension-field/motion-extension-field.component';
 import { MotionFinalVersionComponent } from './components/motion-final-version/motion-final-version.component';
 import { MotionHighlightFormComponent } from './components/motion-highlight-form/motion-highlight-form.component';
@@ -67,6 +65,8 @@ import { ParagraphBasedAmendmentComponent } from './components/paragraph-based-a
 import { MotionDetailDirectivesModule } from './modules/directives/motion-detail-directives.module';
 import { MotionChangeRecommendationDialogModule } from './modules/motion-change-recommendation-dialog/motion-change-recommendation-dialog.module';
 import { MotionDetailRoutingModule } from './motion-detail-routing.module';
+import { AmendmentCreateWizardComponent } from './pages/motion-form/components/amendment-create-wizard/amendment-create-wizard.component';
+import { MotionViewComponent } from './pages/motion-view/components/motion-view/motion-view.component';
 import { MotionDetailServiceModule } from './services/motion-detail-service.module';
 
 @NgModule({
