@@ -9,23 +9,35 @@
                         class="segment"
                         [style.background]="cat.backgroundColor"
                         [style.width.%]="(cat.weightedAmount / totalAmountWeighted) * 100"
-                    >
-                        <div class="below">
-                            {{ cat.amount }}
-                        </div>
-                    </div>
+                    ></div>
                 }
             }
         </div>
         <div class="results">
-            <div class="grid-all-votes-area">{{ 'Filtered single votes:' | translate }} {{ totalAmount }}</div>
+            <div class="grid-all-votes-area">
+                {{ 'Sum of weighted (and percental) votes: ' | translate }} {{ totalAmountWeighted }}
+            </div>
             <div class="grid-options-area">
                 @for (cat of voteAmounts; track cat.value; let isLast = $last) {
                     @if (cat.amount > 0) {
                         <span [ngClass]="{ 'margin-right-20': !isLast }">
-                            {{ ((cat.weightedAmount / totalAmountWeighted) * 100).toFixed(2) }}% ({{
-                                cat.weightedAmount
-                            }}) voted {{ cat.name | translate }}
+                            <div class="box" [style.background]="cat.backgroundColor"></div>
+                            {{ cat.name | translate }}: {{ cat.weightedAmount }} ({{
+                                ((cat.weightedAmount / totalAmountWeighted) * 100).toFixed(2)
+                            }}%)
+                        </span>
+                    }
+                }
+            </div>
+        </div>
+        <div class="results">
+            <div class="grid-all-votes-area">{{ 'Total ballots:' | translate }} {{ totalAmount }}</div>
+            <div class="grid-options-area">
+                @for (cat of voteAmounts; track cat.value; let isLast = $last) {
+                    {{ isLast }}
+                    @if (cat.amount > 0) {
+                        <span [ngClass]="{ 'margin-right-20': !isLast }">
+                            {{ cat.amount }} {{ 'voted' | translate }} {{ cat.name | translate }}
                         </span>
                     }
                 }

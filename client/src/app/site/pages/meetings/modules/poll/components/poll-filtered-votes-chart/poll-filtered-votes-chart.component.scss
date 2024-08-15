@@ -27,13 +27,13 @@
     }
 }
 
-.margin-right-20 {
-    margin-right: 20px;
-}
-
 .margin-top-bottom {
     margin-top: 50px;
     margin-bottom: 20px;
+}
+
+.margin-bottom-30 {
+    margin-bottom: 30px;
 }
 
 .grid-all-votes-area {
@@ -42,4 +42,12 @@
 
 .grid-options-area {
     grid-area: options;
+    display: flex ;
+    justify-content: end
+}
+
+.box {
+    height: 15px;
+    width: 15px;
+    display: inline-block;
   }
