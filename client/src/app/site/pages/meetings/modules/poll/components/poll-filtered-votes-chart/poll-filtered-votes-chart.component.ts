@@ -46,13 +46,15 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
         const voteValues: VoteValue[] = [`Y`, `N`, `A`];
         for (const i in voteValues) {
             const voteValue = voteValues[i];
-            this.voteAmounts.push({
-                value: voteValue,
-                name: VoteValueVerbose[voteValue],
-                amount: votes.reduce((acc, curr) => acc + +(curr.value === voteValue), 0),
-                weightedAmount: votes.reduce((acc, curr) => acc + (curr.value === voteValue ? +curr.weight : 0), 0),
-                backgroundColor: this.themeService.getPollColor(VoteValueVerbose[voteValue].toLowerCase())
-            });
+            if (votes.reduce((acc, curr) => acc + +(curr.value === voteValue), 0) > 0) {
+                this.voteAmounts.push({
+                    value: voteValue,
+                    name: VoteValueVerbose[voteValue],
+                    amount: votes.reduce((acc, curr) => acc + +(curr.value === voteValue), 0),
+                    weightedAmount: votes.reduce((acc, curr) => acc + (curr.value === voteValue ? +curr.weight : 0), 0),
+                    backgroundColor: this.themeService.getPollColor(VoteValueVerbose[voteValue].toLowerCase())
+                });
+            }
         }
 
         this.totalAmount = votes.length;

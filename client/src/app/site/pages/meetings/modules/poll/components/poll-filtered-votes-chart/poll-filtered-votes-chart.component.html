@@ -34,11 +34,9 @@
             <div class="grid-all-votes-area">{{ 'Total ballots:' | translate }} {{ totalAmount }}</div>
             <div class="grid-options-area">
                 @for (cat of voteAmounts; track cat.value; let isLast = $last) {
-                    @if (cat.amount > 0) {
-                        <span [ngClass]="{ 'margin-right-20': !isLast }">
-                            {{ cat.amount }} {{ 'voted' | translate }} {{ cat.name | translate }}
-                        </span>
-                    }
+                    <span [ngClass]="{ 'margin-right-20': !isLast }">
+                        {{ cat.amount }} {{ 'voted' | translate }} {{ cat.name | translate }}
+                    </span>
                 }
             </div>
         </div>
