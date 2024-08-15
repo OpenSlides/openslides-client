@@ -1,5 +1,5 @@
 <os-detail-view [collection]="collection" (idFound)="onIdFound($event)">
-    @if (hasLoaded | async) {
+    @if (motion && hasLoaded | async) {
         <os-head-bar
             mainActionTooltip="New amendment"
             [goBack]="motion?.hasLeadMotion"
@@ -23,11 +23,12 @@
             <!-- Back and forth buttons -->
             @if (showNavigateButtons) {
                 <div class="extra-controls-slot prev-next-motion-controls">
+                    @let isMobile = vp.isMobileSubject | async;
                     <button
                         class="nav-button-overflow"
                         mat-button
                         [disabled]="!previousMotion"
-                        [ngClass]="{ 'motion-detail-nav-button': (vp.isMobileSubject | async) === false }"
+                        [ngClass]="{ 'motion-detail-nav-button': isMobile === false }"
                         (click)="navigateToMotion(previousMotion)"
                     >
                         <os-icon-container icon="chevron_left" [hide]="vp.isMobileSubject | async">
@@ -38,7 +39,7 @@
                         class="nav-button-overflow"
                         mat-button
                         [disabled]="!nextMotion"
-                        [ngClass]="{ 'motion-detail-nav-button': (vp.isMobileSubject | async) === false }"
+                        [ngClass]="{ 'motion-detail-nav-button': isMobile === false }"
                         (click)="navigateToMotion(nextMotion)"
                     >
                         <os-icon-container icon="chevron_right" [hide]="vp.isMobileSubject | async" [swap]="true">
@@ -78,17 +79,18 @@
                 ></os-projector-button>
                 <!-- Add/remove to/from agenda -->
                 <div *osPerms="permission.agendaItemCanManage">
-                    @if (motion && !motion.agenda_item_id) {
-                        <button mat-menu-item (click)="addToAgenda()">
-                            <mat-icon>add</mat-icon>
-                            <span>{{ 'Add to agenda' | translate }}</span>
-                        </button>
-                    }
-                    @if (motion && motion.agenda_item_id) {
-                        <button mat-menu-item (click)="removeFromAgenda()">
-                            <mat-icon>remove</mat-icon>
-                            <span>{{ 'Remove from agenda' | translate }}</span>
-                        </button>
+                    @if (motion) {
+                        @if (!motion.agenda_item_id) {
+                            <button mat-menu-item (click)="addToAgenda()">
+                                <mat-icon>add</mat-icon>
+                                <span>{{ 'Add to agenda' | translate }}</span>
+                            </button>
+                        } @else {
+                            <button mat-menu-item (click)="removeFromAgenda()">
+                                <mat-icon>remove</mat-icon>
+                                <span>{{ 'Remove from agenda' | translate }}</span>
+                            </button>
+                        }
                     }
                 </div>
                 <!-- Go to the history -->
@@ -99,7 +101,7 @@
                     </button>
                 </div>
                 <!-- Forward motion -->
-                <div *osPerms="permission.motionCanForward; and: motion.state?.allow_motion_forwarding">
+                <div *osPerms="permission.motionCanForward; and: (motion.state$ | async)?.allow_motion_forwarding">
                     <button mat-menu-item (click)="forwardMotionToMeetings()">
                         <mat-icon>forward</mat-icon>
                         <span>{{ 'Forward' | translate }}</span>
@@ -107,20 +109,20 @@
                 </div>
                 @if (perms.isAllowed('update', motion) || perms.isAllowed('manage')) {
                     <mat-divider></mat-divider>
-                }
-                <!-- Edit-->
-                @if (perms.isAllowed('update', motion)) {
-                    <button mat-menu-item (click)="enterEditMotion()">
-                        <mat-icon>edit</mat-icon>
-                        <span>{{ 'Edit' | translate }}</span>
-                    </button>
-                }
-                <!-- Delete -->
-                @if (perms.isAllowed('manage')) {
-                    <button class="red-warning-text" mat-menu-item (click)="deleteMotionButton()">
-                        <mat-icon>delete</mat-icon>
-                        <span>{{ 'Delete' | translate }}</span>
-                    </button>
+                    <!-- Edit-->
+                    @if (perms.isAllowed('update', motion)) {
+                        <button mat-menu-item [routerLink]="['edit']">
+                            <mat-icon>edit</mat-icon>
+                            <span>{{ 'Edit' | translate }}</span>
+                        </button>
+                    }
+                    <!-- Delete -->
+                    @if (perms.isAllowed('manage')) {
+                        <button class="red-warning-text" mat-menu-item (click)="deleteMotionButton()">
+                            <mat-icon>delete</mat-icon>
+                            <span>{{ 'Delete' | translate }}</span>
+                        </button>
+                    }
                 }
             </mat-menu>
         </os-head-bar>
@@ -138,9 +140,7 @@
                 @if (vp.isMobile) {
                     <div class="mobile-view">
                         <!-- Meta info -->
-                        <div>
-                            <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
-                        </div>
+                        <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
                         <!-- Content -->
                         <mat-card class="os-card">
                             <mat-card-content>
@@ -154,13 +154,11 @@
                             <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
                         }
                     </div>
-                } @else if (motion) {
+                } @else {
                     <div class="desktop-view">
                         <div class="desktop-left">
                             <!-- Meta Info -->
-                            <div>
-                                <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
-                            </div>
+                            <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
                             <os-motion-comments [motion]="motion"></os-motion-comments>
                             @if (!operator.isAnonymous) {
                                 <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
@@ -193,10 +191,5 @@
     <os-motion-content
         #content
         [motion]="motion"
-        [osListenEditing]="{
-            editMode: false,
-            model: motion,
-            listen: true
-        }"
     ></os-motion-content>
 </ng-template>

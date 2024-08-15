@@ -11,8 +11,6 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { HasSequentialNumber } from 'src/app/domain/interfaces';
-import { Motion } from 'src/app/domain/models/motions/motion';
 import { LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
@@ -95,11 +93,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     private _previousMotion: ViewMotion | null = null;
 
     /**
-     * Subject for (other) motions
-     */
-    private _motionObserver: Observable<ViewMotion[]> = of([]);
-
-    /**
      * List of presorted motions. Filles by sort service
      * and filter service.
      * To navigate back and forth
@@ -113,11 +106,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     private _motion: ViewMotion | null = null;
     private _motionId: Id | null = null;
-    private _parentId: Id | null = null;
 
     private _hasModelSubscriptionInitiated = false;
-
-    private _forwardingAvailable = false;
 
     private _amendmentsInMainList = false;
 
@@ -144,14 +134,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         private originUrlService: MotionDetailViewOriginUrlService
     ) {
         super();
-
-        this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
-            this._forwardingAvailable = forwardingAvailable;
-        });
-
-        this.meetingSettingsService
-            .get(`motions_amendments_in_main_list`)
-            .subscribe(enabled => (this._amendmentsInMainList = enabled));
     }
 
     /**
@@ -160,9 +142,12 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
      */
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.activeMeetingIdService.meetingIdObservable.subscribe(() => {
-                this.hasLoaded.next(false);
-            })
+            this.vp.isMobileSubject.subscribe(() => {
+                this.cd.markForCheck();
+            }),
+            this.meetingSettingsService
+                .get(`motions_amendments_in_main_list`)
+                .subscribe(enabled => (this._amendmentsInMainList = enabled))
         );
     }
 
@@ -178,17 +163,17 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     /**
-     * Sets @var this._navigatedFromAmendmentList on navigation from either of both lists.
-     * Does nothing on navigation between two motions.
+     * Using Shift, Alt + the arrow keys will navigate between the motions
+     *
+     * @param event has the key code
      */
-    private isNavigatedFromAmendments(): void {
-        const previousUrl = this.originUrlService.getPreviousUrl();
-        if (!!previousUrl) {
-            if (previousUrl.endsWith(`amendments`)) {
-                this._navigatedFromAmendmentList = true;
-            } else if (previousUrl.endsWith(`motions`)) {
-                this._navigatedFromAmendmentList = false;
-            }
+    @HostListener(`document:keydown`, [`$event`])
+    public onKeyNavigation(event: KeyboardEvent): void {
+        if (event.key === `ArrowLeft` && event.altKey && event.shiftKey) {
+            this.navigateToMotion(this.previousMotion);
+        }
+        if (event.key === `ArrowRight` && event.altKey && event.shiftKey) {
+            this.navigateToMotion(this.nextMotion);
         }
     }
 
@@ -246,10 +231,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         await this.motionForwardingService.forwardMotionsToMeetings(this.motion);
     }
 
-    public get showForwardButton(): boolean {
-        return !!this.motion.state?.allow_motion_forwarding && this._forwardingAvailable;
-    }
-
     /**
      * Navigates the user to the given ViewMotion
      *
@@ -284,26 +265,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     /**
-     * Finds the next suitable motion.
-     * If @var this._amendmentsInMainList as well as @var this._navigatedFromAmendmentList collide
-     * iterates over the next or previous motions to find the first with lead motion.
-     * @param indexOfCurrent The index from the active motion.
-     * @param step Stepwidth to iterate eiter over the previous or next motions.
-     */
-    private findNextSuitableMotion(indexOfCurrent: number, step: number): ViewMotion {
-        if (!this._amendmentsInMainList || !this._navigatedFromAmendmentList) {
-            return this._sortedMotions[indexOfCurrent + step];
-        }
-
-        for (let i = indexOfCurrent + step; 0 <= i && i <= this._sortedMotions.length - 1; i += step) {
-            if (!!this._sortedMotions[i].hasLeadMotion) {
-                return this._sortedMotions[i];
-            }
-        }
-        return null;
-    }
-
-    /**
      * Click handler for the pdf button
      */
     public onDownloadPdf(): void {
@@ -316,15 +277,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             // export all comment fields as well as personal note
             comments: this.motion.usedCommentSectionIds.concat([PERSONAL_NOTE_ID])
         });
-    }
-
-    /**
-     * Handler for upload errors
-     *
-     * @param error the error message passed by the upload component
-     */
-    public showUploadError(error: string): void {
-        this.raiseError(error);
     }
 
     public addToAgenda(): void {
@@ -346,24 +298,14 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         this.hasLoaded.next(true);
     }
 
-    private registerSubjects(): void {
-        this._motionObserver = this.repo.getViewModelListObservable();
-        // since updates are usually not commig at the same time, every change to
-        // any subject has to mark the view for chekcing
-        this.subscriptions.push(
-            this._motionObserver.subscribe(() => {
-                this.cd.markForCheck();
-            })
-        );
-    }
-
     private loadMotionById(motionId: Id | null = this._motionId): void {
         if (this._hasModelSubscriptionInitiated || !motionId) {
             return; // already fired!
         }
         this._hasModelSubscriptionInitiated = true;
 
-        this.subscriptions.push(
+        this.subscriptions.updateSubscription(
+            `motion`,
             this.repo.getViewModelObservable(motionId).subscribe(motion => {
                 if (motion) {
                     const title = motion.getTitle();
@@ -376,48 +318,10 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     /**
-     * Using Shift, Alt + the arrow keys will navigate between the motions
-     *
-     * @param event has the key code
-     */
-    @HostListener(`document:keydown`, [`$event`])
-    public onKeyNavigation(event: KeyboardEvent): void {
-        if (event.key === `ArrowLeft` && event.altKey && event.shiftKey) {
-            this.navigateToMotion(this.previousMotion);
-        }
-        if (event.key === `ArrowRight` && event.altKey && event.shiftKey) {
-            this.navigateToMotion(this.nextMotion);
-        }
-    }
-
-    /**
-     * Creates a motion. Calls the "patchValues" function in the MotionObject
-     */
-    public async createMotion(newMotionValues: Partial<Motion>): Promise<void> {
-        try {
-            let response: HasSequentialNumber;
-            if (this._parentId) {
-                response = await this.amendmentRepo.createTextBased({
-                    ...newMotionValues,
-                    lead_motion_id: this._parentId
-                });
-            } else {
-                response = (await this.repo.create(newMotionValues))[0];
-            }
-            await this.navigateAfterCreation(response);
-        } catch (e) {
-            this.raiseError(e);
-        }
-    }
-
-    /**
      * Lifecycle routine for motions to initialize.
      */
     private init(): void {
-        this.cd.reattach();
-
         this.isNavigatedFromAmendments();
-        this.registerSubjects();
 
         // use the filter and the search service to get the current sorting
         if (this.motion && this.motion.lead_motion_id && !this._amendmentsInMainList) {
@@ -439,7 +343,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         }
 
         if (this._sortedMotionsObservable) {
-            this.subscriptions.push(
+            this.subscriptions.updateSubscription(
+                `sorted-motions`,
                 this._sortedMotionsObservable.subscribe(motions => {
                     if (motions) {
                         this._sortedMotions = motions;
@@ -449,24 +354,18 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             );
         }
 
-        this.subscriptions.push(
-            /**
-             * Check for changes of the viewport subject changes
-             */
-            this.vp.isMobileSubject.subscribe(() => {
-                this.cd.markForCheck();
-            })
-        );
+        this.cd.reattach();
     }
 
     /**
      * Lifecycle routine for motions to get destroyed.
      */
     private destroy(): void {
-        this._hasModelSubscriptionInitiated = false;
-        this.cleanSubscriptions();
-        this.viewService.reset();
         this.cd.detach();
+        this.motion = null;
+        this._hasModelSubscriptionInitiated = false;
+        this.subscriptions.delete(`sorted-motions`);
+        this.viewService.reset();
     }
 
     private onRouteChanged(): void {
@@ -474,7 +373,38 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         this.init();
     }
 
-    private async navigateAfterCreation(motion: HasSequentialNumber): Promise<void> {
-        this.router.navigate([this.activeMeetingId, `motions`, motion!.sequential_number]);
+    /**
+     * Sets @var this._navigatedFromAmendmentList on navigation from either of both lists.
+     * Does nothing on navigation between two motions.
+     */
+    private isNavigatedFromAmendments(): void {
+        const previousUrl = this.originUrlService.getPreviousUrl();
+        if (!!previousUrl) {
+            if (previousUrl.endsWith(`amendments`)) {
+                this._navigatedFromAmendmentList = true;
+            } else if (previousUrl.endsWith(`motions`)) {
+                this._navigatedFromAmendmentList = false;
+            }
+        }
+    }
+
+    /**
+     * Finds the next suitable motion.
+     * If @var this._amendmentsInMainList as well as @var this._navigatedFromAmendmentList collide
+     * iterates over the next or previous motions to find the first with lead motion.
+     * @param indexOfCurrent The index from the active motion.
+     * @param step Stepwidth to iterate eiter over the previous or next motions.
+     */
+    private findNextSuitableMotion(indexOfCurrent: number, step: number): ViewMotion {
+        if (!this._amendmentsInMainList || !this._navigatedFromAmendmentList) {
+            return this._sortedMotions[indexOfCurrent + step];
+        }
+
+        for (let i = indexOfCurrent + step; 0 <= i && i <= this._sortedMotions.length - 1; i += step) {
+            if (!!this._sortedMotions[i].hasLeadMotion) {
+                return this._sortedMotions[i];
+            }
+        }
+        return null;
     }
 }
