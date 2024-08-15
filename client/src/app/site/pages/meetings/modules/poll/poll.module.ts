@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -53,6 +54,7 @@ const COMPONENTS = [
         MatInputModule,
         MatIconModule,
         MatCheckboxModule,
+        MatDividerModule,
         MatRadioModule,
         ReactiveFormsModule,
         MatTooltipModule,
