@@ -22,7 +22,7 @@
     grid-template-areas: 'votes options';
     grid-template-columns: auto auto;
     @media (max-width: 700px) {
-        grid-template-areas: 'votes .' '. options';
+        grid-template-areas: 'votes votes' 'options options';
         grid-template-columns: max-content;
     }
 }
@@ -42,4 +42,4 @@
 
 .grid-options-area {
     grid-area: options;
-}
+  }
