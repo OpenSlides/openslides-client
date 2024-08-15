@@ -10,7 +10,7 @@ import {
     PROJECTIONDEFAULT,
     ProjectiondefaultValue
 } from '../../../../../../domain/models/projector/projection-default';
-import { BaseViewModel } from '../../../../../base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { SlideOptions } from '../../../view-models/slide-options';
@@ -404,7 +404,7 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
 
 export interface ViewMotion
     extends Motion,
-        IMotionRelations,
+        ViewModelRelations<IMotionRelations>,
         HasMeeting,
         HasAttachment,
         HasPersonalNote,

@@ -2,17 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 
-import { Presenter } from './presenter';
-import { PresenterService } from './presenter.service';
-
-interface ServerTimeResponse {
-    server_time: number;
-}
-
 @Injectable({
     providedIn: `root`
 })
-export class ServerTimePresenterService {
+export class ServerTimeService {
     // TODO: couple this with the offlineService: Just retry often, if we are online.
     // When we are offline, this is not necessary.
     private static readonly FAILURE_TIMEOUT = 30;
@@ -23,10 +16,7 @@ export class ServerTimePresenterService {
      */
     private readonly _serverOffsetSubject = new BehaviorSubject<number>(0);
 
-    public constructor(
-        lifecycleService: LifecycleService,
-        private presenter: PresenterService
-    ) {
+    public constructor(lifecycleService: LifecycleService) {
         lifecycleService.appLoaded.subscribe(() => this.startScheduler());
     }
 
@@ -51,11 +41,11 @@ export class ServerTimePresenterService {
      */
     private scheduleNextRefresh(seconds: number): void {
         setTimeout(async () => {
-            let timeout = ServerTimePresenterService.NORMAL_TIMEOUT;
+            let timeout = ServerTimeService.NORMAL_TIMEOUT;
             try {
                 await this.refreshServertime();
             } catch (e) {
-                timeout = ServerTimePresenterService.FAILURE_TIMEOUT;
+                timeout = ServerTimeService.FAILURE_TIMEOUT;
             }
             this.scheduleNextRefresh(timeout);
         }, 1000 * seconds);
@@ -66,13 +56,21 @@ export class ServerTimePresenterService {
      */
     private async refreshServertime(): Promise<void> {
         // servertime is the time in seconds.
-        const servertimeResponse = await this.presenter.call<ServerTimeResponse>(Presenter.SERVERTIME);
-        if (typeof servertimeResponse?.server_time !== `number`) {
+        const servertimeResponse = await fetch(`/assets/time.txt?${Date.now()}`, {
+            credentials: `omit`,
+            headers: {
+                'ngsw-bypass': `true`,
+                cache: `no-store`
+            }
+        });
+        const date = new Date(servertimeResponse.headers.get(`Date`));
+        if (servertimeResponse.headers.get(`Date`) && !isNaN(date.valueOf())) {
+            const serverTime = date.getTime();
+            this._serverOffsetSubject.next(Math.floor(Date.now() - serverTime));
+        } else {
             console.error(`The returned servertime has a wrong format:`, servertimeResponse);
-            throw new Error();
+            throw new Error(`Could not fetch server time`);
         }
-        const servertime = servertimeResponse.server_time;
-        this._serverOffsetSubject.next(Math.floor(Date.now() - servertime * 1000));
     }
 
     /**

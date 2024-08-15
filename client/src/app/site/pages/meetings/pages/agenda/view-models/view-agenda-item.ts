@@ -2,7 +2,7 @@ import { Collection } from 'src/app/domain/definitions/key-types';
 import { AgendaItem, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { Projection } from 'src/app/domain/models/projector/projection';
 import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { HasAgendaItem, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { BaseProjectableViewModel, isProjectable } from 'src/app/site/pages/meetings/view-models';
@@ -91,5 +91,5 @@ interface AgendaItemRelations<C extends BaseViewModel & HasAgendaItem> {
 }
 export interface ViewAgendaItem<C extends BaseViewModel & HasAgendaItem = any>
     extends AgendaItem,
-        AgendaItemRelations<C>,
+        ViewModelRelations<AgendaItemRelations<C>>,
         HasTags {}
