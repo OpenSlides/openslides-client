@@ -60,4 +60,16 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
 
         this.cd.markForCheck();
     }
+
+    protected get castedBallots(): string {
+        let verbatimCastedBallots = `Ballots cast: ` + this.totalAmount + ` (`;
+        this.voteAmounts.forEach((vote, index) => {
+            verbatimCastedBallots += vote.name + `: ` + vote.amount;
+            if (this.voteAmounts.length - 1 > index) {
+                verbatimCastedBallots += ` · `;
+            }
+        });
+        verbatimCastedBallots += `)`;
+        return verbatimCastedBallots;
+    }
 }
