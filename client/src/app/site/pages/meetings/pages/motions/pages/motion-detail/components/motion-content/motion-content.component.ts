@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -147,7 +147,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         private fb: UntypedFormBuilder,
         private dialog: MotionChangeRecommendationDialogService,
         private route: ActivatedRoute,
-        private cd: ChangeDetectorRef,
         private perms: MotionPermissionService,
         private motionController: MotionControllerService,
         public participantSortService: ParticipantListSortService

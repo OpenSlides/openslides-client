@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Selectable } from 'src/app/domain/interfaces';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
@@ -26,14 +26,13 @@ import { SearchListDefinition } from '../motion-extension-field/motion-extension
 @Component({
     selector: `os-motion-meta-data`,
     templateUrl: `./motion-meta-data.component.html`,
-    styleUrls: [`./motion-meta-data.component.scss`]
+    styleUrls: [`./motion-meta-data.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnInit, OnDestroy {
-    public motionBlocks: MotionBlock[] = [];
-
-    public categories: ViewMotionCategory[] = [];
-
-    public tags: ViewTag[] = [];
+    public categories$: Observable<ViewMotionCategory[]> = this.categoryRepo.getViewModelListObservable();
+    public tags$: Observable<ViewTag[]> = this.tagRepo.getViewModelListObservable();
+    public motionBlocks$: Observable<MotionBlock[]> = this.blockRepo.getViewModelListObservable();
 
     /**
      * Determine if the name of supporters are visible
@@ -89,7 +88,28 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     /**
      * All amendments to this motion
      */
-    public override amendments: ViewMotion[] = [];
+    public amendments$: Observable<ViewMotion[]> = null;
+
+    public get referencingMotions$(): Observable<ViewMotion[]> {
+        return this.motion?.referenced_in_motion_recommendation_extensions$.pipe(
+            map(motions => motions.naturalSort(this.translate.currentLang, [`number`, `title`]))
+        );
+    }
+
+    public get referencedMotions$(): Observable<ViewMotion[]> {
+        return this.motion?.recommendation_extension_references$.pipe(
+            map(motions => (motions as ViewMotion[]).naturalSort(this.translate.currentLang, [`number`, `title`]))
+        );
+    }
+
+    public get originMotions$(): Observable<ViewMotion[] | ViewMeeting[]> {
+        if (this.motion.origin_id) {
+            return this.motion.all_origins$.pipe(map(origins => origins?.reverse()));
+        } else if (this.motion.origin_meeting_id) {
+            return this.motion.origin_meeting$.pipe(map(origin => [origin]));
+        }
+        return null;
+    }
 
     public override set showAllAmendments(is: boolean) {
         this.viewService.showAllAmendmentsStateSubject.next(is);
@@ -104,19 +124,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         );
     }
 
-    public get referencingMotions(): ViewMotion[] {
-        return this._referencingMotions;
-    }
-
-    public get referencedMotions(): ViewMotion[] {
-        return this._referencedMotions;
-    }
-
     public loadForwardingCommittees: () => Promise<Selectable[]>;
-
-    private _referencingMotions: ViewMotion[];
-
-    private _referencedMotions: ViewMotion[];
 
     private _forwardingAvailable = false;
 
@@ -168,6 +176,16 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public override ngOnDestroy(): void {
         this.participantSort.exitSortService();
         super.ngOnDestroy();
+    }
+
+    protected override onAfterInit(): void {
+        this.setupRecommender();
+    }
+
+    protected override onAfterSetMotion(previous: ViewMotion, current: ViewMotion): void {
+        super.onAfterSetMotion(previous, current);
+        this.amendments$ = this.amendmentRepo.getViewModelListObservableFor(current);
+        this.updateSupportersSubject();
     }
 
     /**
@@ -297,15 +315,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return allStates.filter(state => state.recommendation_label).sort((a, b) => a.weight - b.weight);
     }
 
-    public getOriginMotions(): (ViewMotion | ViewMeeting)[] {
-        const copy = this.motion.origin_id
-            ? [...(this.motion.all_origins || [])]
-            : this.motion.origin_meeting
-              ? [this.motion.origin_meeting]
-              : [];
-        return copy.reverse();
-    }
-
     public getMeetingName(origin: ViewMotion | ViewMeeting): string {
         if (this.isViewMotion(origin)) {
             const motion = origin as ViewMotion;
@@ -330,43 +339,12 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return origin?.canAccess();
     }
 
-    protected override onAfterSetMotion(previous: ViewMotion, current: ViewMotion): void {
-        super.onAfterSetMotion(previous, current);
-        this.updateSupportersSubject();
-    }
-
     private async updateSupportersSubject(): Promise<void> {
         this._supportersSubject.next(await this.participantSort.sort(this.motion.supporters));
     }
 
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
         return toTest.COLLECTION === Motion.COLLECTION;
-    }
-
-    protected override getSubscriptions(): Subscription[] {
-        return [
-            this.amendmentRepo.getViewModelListObservableFor(this.motion).subscribe(value => (this.amendments = value)),
-            this.tagRepo.getViewModelListObservable().subscribe(value => (this.tags = value)),
-            this.categoryRepo.getViewModelListObservable().subscribe(value => (this.categories = value)),
-            this.blockRepo.getViewModelListObservable().subscribe(value => (this.motionBlocks = value)),
-            this.repo
-                .getViewModelObservable(this.motion.id)
-                .pipe(
-                    map(motion => [
-                        motion?.referenced_in_motion_recommendation_extensions,
-                        motion?.recommendation_extension_references as ViewMotion[]
-                    ]),
-                    distinctUntilChanged((p, c) => [...Array(2).keys()].every(i => p[i].equals(c[i]))),
-                    map(arr =>
-                        arr.map(motions => (motions || []).naturalSort(this.translate.currentLang, [`number`, `title`]))
-                    )
-                )
-                .subscribe(value => ([this._referencingMotions, this._referencedMotions] = value))
-        ];
-    }
-
-    protected override onAfterInit(): void {
-        this.setupRecommender();
     }
 
     /**

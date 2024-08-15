@@ -1,4 +1,4 @@
-import { Directive, inject, Input } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Subscription } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -21,6 +21,8 @@ import { MotionDetailViewService } from '../services/motion-detail-view.service'
 
 @Directive()
 export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponent {
+    protected cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+
     @Input()
     public set motion(motion: ViewMotion) {
         const previousMotion = this._motion;
@@ -34,6 +36,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
         }
 
         this.onAfterSetMotion(previousMotion, motion);
+        this.cd.markForCheck();
     }
 
     public get motion(): ViewMotion {

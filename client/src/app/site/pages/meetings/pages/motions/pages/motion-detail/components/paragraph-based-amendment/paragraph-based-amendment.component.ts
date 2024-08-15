@@ -1,12 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    Output
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
@@ -76,7 +68,6 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
     public constructor(
         protected override translate: TranslateService,
         private fb: UntypedFormBuilder,
-        private cd: ChangeDetectorRef,
         private el: ElementRef
     ) {
         super();

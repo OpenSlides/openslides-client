@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
@@ -60,8 +60,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
 
     public constructor(
         protected override translate: TranslateService,
-        private fb: UntypedFormBuilder,
-        private cd: ChangeDetectorRef
+        private fb: UntypedFormBuilder
     ) {
         super();
     }
