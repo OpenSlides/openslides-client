@@ -14,14 +14,14 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
-import { ParticipantListSortService } from '../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
-import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
-import { MotionEditorControllerService } from '../../../../modules/editors/services';
-import { MotionSubmitterControllerService } from '../../../../modules/submitters/services';
-import { MotionWorkingGroupSpeakerControllerService } from '../../../../modules/working-group-speakers/services';
-import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
-import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
+import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
+import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
+import { MotionEditorControllerService } from '../../../../../../modules/editors/services';
+import { MotionSubmitterControllerService } from '../../../../../../modules/submitters/services';
+import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../modules/working-group-speakers/services';
+import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
+import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
+import { SearchListDefinition } from '../../../../components/motion-extension-field/motion-extension-field.component';
 
 @Component({
     selector: `os-motion-meta-data`,

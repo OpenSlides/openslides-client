@@ -58,7 +58,7 @@ import { MotionManageMotionMeetingUsersComponent } from './components/motion-man
 import { MotionManagePollsComponent } from './components/motion-manage-polls/motion-manage-polls.component';
 import { MotionManageTimestampComponent } from './components/motion-manage-timestamp/motion-manage-timestamp.component';
 import { MotionManageTitleComponent } from './components/motion-manage-title/motion-manage-title.component';
-import { MotionMetaDataComponent } from './components/motion-meta-data/motion-meta-data.component';
+import { MotionMetaDataComponent } from './pages/motion-view/components/motion-meta-data/motion-meta-data.component';
 import { MotionParagraphbasedAmendmentComponent } from './components/motion-paragraphbased-amendment/motion-paragraphbased-amendment.component';
 import { MotionPersonalNoteComponent } from './components/motion-personal-note/motion-personal-note.component';
 import { ParagraphBasedAmendmentComponent } from './components/paragraph-based-amendment/paragraph-based-amendment.component';
