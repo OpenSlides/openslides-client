@@ -89,9 +89,6 @@
                 @if (!user.is_physical_person) {
                     <mat-icon matTooltip="{{ 'Is no natural person' | translate }}">account_balance</mat-icon>
                 }
-                @if (!user.is_active && canSeeSensitiveData) {
-                    <mat-icon matTooltip="{{ 'Inactive' | translate }}">block</mat-icon>
-                }
                 @if (user.hasSamlId && canSeeSensitiveData) {
                     <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}">fingerprint</mat-icon>
                 }
@@ -201,6 +198,11 @@
                     {{ 'Locked out' | translate }}
                 </os-icon-container>
             </div>
+            @if (!user.is_active && canSeeSensitiveData && !viewport.isMobile) {
+                <div style="padding-left: 22px; margin-top: 4px">
+                    <os-icon-container icon="block">{{ 'Inactive' | translate }}</os-icon-container>
+                </div>
+            }
         </div>
     </div>
     <!-- Menu -->
