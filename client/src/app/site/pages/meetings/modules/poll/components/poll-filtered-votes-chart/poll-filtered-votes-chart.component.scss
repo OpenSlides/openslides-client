@@ -31,7 +31,7 @@
 }
 
 .margin-top-bottom {
-    margin-top: 50px;
+    //margin-top: 50px;
     margin-bottom: 10px;
 }
 
@@ -61,4 +61,8 @@
     height: 15px;
     width: 15px;
     display: inline-block;
+}
+
+.no-space {
+    white-space: pre;
 }

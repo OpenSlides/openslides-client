@@ -16,7 +16,7 @@
         <div class="results">
             <div class="grid-all-votes-area">{{ 'Weighted votes: ' | translate }} {{ totalAmountWeighted }}</div>
             <div class="grid-options-area">
-                @for (cat of voteAmounts; track cat.value; let isLast = $last) {
+                @for (cat of voteAmounts; track cat.value) {
                     @if (cat.amount > 0) {
                         <span class="one-option">
                             <div class="box" [style.background]="cat.backgroundColor"></div>
@@ -30,7 +30,14 @@
         </div>
         <div class="results margin-bottom-10">
             <div class="user-subtitle">
-                {{ castedBallots }}
+                <span class="no-space">{{ 'Ballots cast' | translate }}: {{ totalAmount }} (</span>
+                @for (cat of voteAmounts; track cat.value; let isLast = $last) {
+                    <span>{{ cat.name | translate }}: {{ cat.amount }}</span>
+                    @if (!isLast) {
+                        &middot;
+                    }
+                }
+                <span class="no-space">)</span>
             </div>
         </div>
     </div>
