@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, Subscription } from 'rxjs';
+import { filter, Observable, Subscription } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
@@ -62,8 +62,16 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
         return this.viewService.currentLineNumberingMode;
     }
 
+    public get lineNumberingMode$(): Observable<LineNumberingMode> {
+        return this.viewService.lineNumberingModeSubject;
+    }
+
     public get changeRecoMode(): ChangeRecoMode {
         return this.viewService.currentChangeRecommendationMode;
+    }
+
+    public get changeRecoMode$(): Observable<ChangeRecoMode> {
+        return this.viewService.changeRecommendationModeSubject;
     }
 
     public get hasChangingObjects(): boolean {
@@ -86,6 +94,10 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
      */
     public get showAllAmendments(): boolean {
         return this.viewService.currentShowAllAmendmentsState;
+    }
+
+    public get showAllAmendments$(): Observable<boolean> {
+        return this.viewService.showAllAmendmentsStateSubject;
     }
 
     ///////////////////////////////////////////////
@@ -156,12 +168,19 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
      * All change recommendations to this motion
      */
     public changeRecommendations: ViewUnifiedChange[] = [];
+    public get changeRecommendations$(): Observable<ViewUnifiedChange[]> {
+        return this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).pipe(filter(value => !!value));
+    }
+
     /**
      * Value for os-motion-detail-diff: when this is set, that component scrolls to the given change
      */
     public scrollToChange: ViewUnifiedChange | null = null;
 
     protected amendments: ViewMotion[] = [];
+    protected get amendments$(): Observable<ViewMotion[]> {
+        return this.amendmentRepo.getViewModelListObservableFor(this.motion).pipe(filter(value => !!value));
+    }
 
     private _isEditing = false;
     private _motion: ViewMotion | null = null;
@@ -233,21 +252,17 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
 
     private getSharedSubscriptionsToRepositories(): Subscription[] {
         return [
-            this.changeRecoRepo
-                .getChangeRecosOfMotionObservable(this.motion.id)
-                .pipe(filter(value => !!value))
-                .subscribe(changeRecos => {
-                    this.changeRecommendations = changeRecos;
-                    this.sortedChangingObjects = null;
-                }),
-            this.amendmentRepo
-                .getViewModelListObservableFor(this.motion)
-                .pipe(filter(value => !!value))
-                .subscribe((amendments: ViewMotion[]): void => {
-                    this.amendments = amendments;
-                    this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
-                    this.sortedChangingObjects = null;
-                })
+            this.changeRecommendations$.subscribe(changeRecos => {
+                console.log(`crs updated`);
+                this.changeRecommendations = changeRecos;
+                this.sortedChangingObjects = null;
+            }),
+            this.amendments$.subscribe((amendments: ViewMotion[]): void => {
+                console.log(`amendments updated`);
+                this.amendments = amendments;
+                this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
+                this.sortedChangingObjects = null;
+            })
         ];
     }
 

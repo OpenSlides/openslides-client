@@ -85,11 +85,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public motionTransformFn = (value: ViewMotion): string => `[${value.fqid}]`;
 
-    /**
-     * All amendments to this motion
-     */
-    public amendments$: Observable<ViewMotion[]> = null;
-
     public get referencingMotions$(): Observable<ViewMotion[]> {
         return this.motion?.referenced_in_motion_recommendation_extensions$.pipe(
             map(motions => motions.naturalSort(this.translate.currentLang, [`number`, `title`]))
@@ -184,7 +179,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     protected override onAfterSetMotion(previous: ViewMotion, current: ViewMotion): void {
         super.onAfterSetMotion(previous, current);
-        this.amendments$ = this.amendmentRepo.getViewModelListObservableFor(current);
         this.updateSupportersSubject();
     }
 

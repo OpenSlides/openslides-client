@@ -1,12 +1,16 @@
 <!-- Regular motions or traditional amendments -->
-@if (!motion.isParagraphBasedAmendment()) {
-    <!-- Text (hide preamble, if diff mode. The preample is included in the motion-detail-diff component) -->
-    @if (showPreamble && changeRecoMode !== ChangeRecoMode.Diff) {
-        <span class="text-prefix-label">
-            {{ preamble }}
-        </span>
-    }
-    @if (changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit) {
+@if (!isParagraphBasedAmendment) {
+    @let changeRecoMode = changeRecoMode$ | async;
+    @let lineNumberingMode = lineNumberingMode$ | async;
+
+    @if (changeRecoMode !== ChangeRecoMode.Diff) {
+        <!-- Text (hide preamble, if diff mode. The preample is included in the motion-detail-diff component) -->
+        @if (showPreamble) {
+            <span class="text-prefix-label">
+                {{ preamble }}
+            </span>
+        }
+
         <div
             class="motion-text underlined-links"
             [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
@@ -21,16 +25,14 @@
                     (createChangeRecommendation)="createChangeRecommendation($event)"
                     (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
                 ></os-motion-detail-original-change-recommendations>
-            }
-            @if (lineNumberingMode !== LineNumberingMode.Outside || changeRecoMode !== ChangeRecoMode.Original) {
+            } @else {
                 <os-motion-final-version
                     [formattedText]="getFormattedTextPlain()"
                     [motion]="motion"
                 ></os-motion-final-version>
             }
         </div>
-    }
-    @if (changeRecoMode === ChangeRecoMode.Diff) {
+    } @else {
         <os-motion-detail-diff
             [changes]="getChangesForDiffMode()"
             [highlightedLine]="highlightedLine"
@@ -41,16 +43,13 @@
             (createChangeRecommendation)="createChangeRecommendation($event)"
         ></os-motion-detail-diff>
     }
-} @else if (isParagraphBasedAmendment) {
+} @else {
     <!-- Paragraph-based amendments -->
     <os-paragraph-based-amendment
         [changesForDiffMode]="getChangesForDiffMode()"
         [highlightedLine]="highlightedLine"
-        [isFinalEdit]="isFinalEdit"
         [motion]="motion"
         (createChangeRecommendation)="createChangeRecommendation($event)"
-        (formChanged)="paragraphBasedAmendmentContent = $event"
-        (validStateChanged)="canSaveParagraphBasedAmendment = $event"
     ></os-paragraph-based-amendment>
 }
 
