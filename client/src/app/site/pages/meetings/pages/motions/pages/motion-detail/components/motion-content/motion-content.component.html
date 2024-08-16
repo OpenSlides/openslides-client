@@ -34,7 +34,7 @@
         </div>
     } @else {
         <os-motion-detail-diff
-            [changes]="getChangesForDiffMode()"
+            [changes]="changesForDiffMode$ | async"
             [highlightedLine]="highlightedLine"
             [lineNumberingMode]="lineNumberingMode"
             [motion]="motion"
@@ -46,7 +46,7 @@
 } @else {
     <!-- Paragraph-based amendments -->
     <os-paragraph-based-amendment
-        [changesForDiffMode]="getChangesForDiffMode()"
+        [changesForDiffMode]="changesForDiffMode$ | async"
         [highlightedLine]="highlightedLine"
         [motion]="motion"
         (createChangeRecommendation)="createChangeRecommendation($event)"

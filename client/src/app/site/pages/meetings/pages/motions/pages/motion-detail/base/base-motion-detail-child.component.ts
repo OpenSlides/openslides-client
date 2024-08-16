@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, Observable, Subscription } from 'rxjs';
+import { auditTime, BehaviorSubject, combineLatest, filter, Observable, Subscription } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
@@ -160,6 +160,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     public showSequentialNumber = false;
     protected lineLength = 0;
     protected sortedChangingObjects: ViewUnifiedChange[] | null = null;
+    protected readonly sortedChangingObjectsSubject: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
 
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
@@ -195,6 +196,16 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     public gotoChangeRecommendation(changeRecommendation: ViewUnifiedChange): void {
         this.scrollToChange = changeRecommendation;
         this.viewService.changeRecommendationModeSubject.next(ChangeRecoMode.Diff);
+    }
+
+    protected updateAllChangingObjectsSorted(): void {
+        const sortedChangingObjects = this.motionLineNumbering.recalcUnifiedChanges(
+            this.lineLength,
+            this.changeRecommendations as ViewMotionChangeRecommendation[],
+            this.amendments
+        );
+        this.sortedChangingObjectsSubject.next(sortedChangingObjects);
+        this.sortedChangingObjects = sortedChangingObjects;
     }
 
     protected getAllChangingObjectsSorted(): ViewUnifiedChange[] {
@@ -252,17 +263,15 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
 
     private getSharedSubscriptionsToRepositories(): Subscription[] {
         return [
-            this.changeRecommendations$.subscribe(changeRecos => {
-                console.log(`crs updated`);
-                this.changeRecommendations = changeRecos;
-                this.sortedChangingObjects = null;
-            }),
-            this.amendments$.subscribe((amendments: ViewMotion[]): void => {
-                console.log(`amendments updated`);
-                this.amendments = amendments;
-                this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
-                this.sortedChangingObjects = null;
-            })
+            combineLatest([this.changeRecommendations$, this.amendments$])
+                .pipe(auditTime(500))
+                .subscribe(([changeRecos, amendments]) => {
+                    this.sortedChangingObjects = null;
+                    this.changeRecommendations = changeRecos;
+                    this.amendments = amendments;
+                    this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
+                    this.updateAllChangingObjectsSorted();
+                })
         ];
     }
 

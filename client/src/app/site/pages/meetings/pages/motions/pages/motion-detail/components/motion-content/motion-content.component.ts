@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { combineLatest, map, Observable } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
@@ -112,15 +113,20 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.dialog.openContentChangeRecommendationDialog(data);
     }
 
-    public getChangesForDiffMode(): ViewUnifiedChange[] {
-        return this.getAllChangingObjectsSorted().filter(change => {
-            if (this.showAllAmendments) {
-                return true;
-            } else {
-                return change.showInDiffView();
-            }
-        });
-    }
+    public changesForDiffMode$: Observable<ViewUnifiedChange[]> = combineLatest([
+        this.showAllAmendments$,
+        this.sortedChangingObjectsSubject
+    ]).pipe(
+        map(([_, changes]) =>
+            changes.filter(change => {
+                if (this.showAllAmendments) {
+                    return true;
+                } else {
+                    return change.showInDiffView();
+                }
+            })
+        )
+    );
 
     private getAllTextChangingObjects(): ViewUnifiedChange[] {
         return this.getAllChangingObjectsSorted().filter((obj: ViewUnifiedChange) => !obj.isTitleChange());
