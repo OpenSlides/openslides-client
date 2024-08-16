@@ -3,36 +3,53 @@ import {
     ChangeDetectorRef,
     Component,
     HostListener,
-    OnDestroy,
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { BehaviorSubject, distinctUntilChanged, filter, firstValueFrom, map, Subscription } from 'rxjs';
+import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { HasSequentialNumber } from 'src/app/domain/interfaces';
+import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { Motion } from 'src/app/domain/models/motions/motion';
-import { LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { RawUser } from 'src/app/gateways/repositories/users';
+import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
+import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique-among';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { AgendaItemControllerService } from '../../../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
-import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
+import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
+import { getParticipantMinimalSubscriptionConfig } from '../../../../../../../participants/participants.subscription';
+import { MotionCategoryControllerService } from '../../../../../../modules/categories/services';
+import { MotionWorkflowControllerService } from '../../../../../../modules/workflows/services';
+import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
-import { MotionPdfExportService } from '../../../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
-import { AmendmentListFilterService } from '../../../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';
-import { AmendmentListSortService } from '../../../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
-import { MotionListFilterService } from '../../../../../../services/list/motion-list-filter.service/motion-list-filter.service';
-import { MotionListSortService } from '../../../../../../services/list/motion-list-sort.service/motion-list-sort.service';
-import { MotionDetailViewService } from '../../../../services/motion-detail-view.service';
-import { MotionDetailViewOriginUrlService } from '../../../../services/motion-detail-view-originurl.service';
+
+/**
+ * fields that are required for the motion form but are not part of any motion payload
+ */
+interface MotionFormFields {
+    // from update payload
+    modified_final_version: string;
+    // apparently from no payload
+    parent_id: string;
+
+    // For agenda creations
+    agenda_parent_id: Id;
+
+    // Motion
+    workflow_id: Id;
+}
+
+type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any } & {
+    supporter_ids?: any;
+};
 
 @Component({
     selector: `os-motion-form`,
@@ -41,13 +58,8 @@ import { MotionDetailViewOriginUrlService } from '../../../../services/motion-de
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class MotionFormComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
+export class MotionFormComponent extends BaseMeetingComponent implements OnInit {
     public readonly collection = ViewMotion.COLLECTION;
-
-    /**
-     * Determine if the motion is edited
-     */
-    public editMotion = false;
 
     /**
      * Determine if the motion is a new (unsent) amendment to another motion
@@ -65,111 +77,99 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit,
      */
     public set motion(motion: ViewMotion) {
         this._motion = motion;
-        if (motion) {
-            this.init();
-        }
     }
 
     public get motion(): ViewMotion {
         return this._motion;
     }
 
+    public get canChangeMetadata(): boolean {
+        return this.perms.isAllowed(`change_metadata`, this.motion);
+    }
+
+    public get isParagraphBasedAmendment(): boolean {
+        return this.isExisting && this.motion.isParagraphBasedAmendment();
+    }
+
+    public get isExisting(): boolean {
+        return this.motion instanceof ViewMotion;
+    }
+
+    public get hasCategories(): boolean {
+        return this.categoryRepo.getViewModelList().length > 0;
+    }
+
+    /**
+     * Constant to identify the notification-message.
+     */
+    public NOTIFICATION_EDIT_MOTION = `notifyEditMotion`;
+
+    public contentForm!: UntypedFormGroup;
+
+    public set canSaveParagraphBasedAmendment(can: boolean) {
+        this._canSaveParagraphBasedAmendment = can;
+        this.propagateChanges();
+    }
+
+    public set paragraphBasedAmendmentContent(content: {
+        amendment_paragraphs: { [paragraph_number: number]: UnsafeHtml };
+    }) {
+        this._paragraphBasedAmendmentContent = content;
+        this.propagateChanges();
+    }
+
+    public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
+
+    public preamble = ``;
+    public reasonRequired = false;
+    public minSupporters = 0;
+
     public temporaryMotion: any = {};
 
     public canSave = false;
 
-    /**
-     * preload the next motion for direct navigation
-     */
-    public set nextMotion(motion: ViewMotion | null) {
-        this._nextMotion = motion;
-        this.cd.markForCheck();
-    }
-
-    public get nextMotion(): ViewMotion | null {
-        return this._nextMotion;
-    }
-
-    /**
-     * preload the previous motion for direct navigation
-     */
-    public set previousMotion(motion: ViewMotion | null) {
-        this._previousMotion = motion;
-        this.cd.markForCheck();
-    }
-
-    public get previousMotion(): ViewMotion | null {
-        return this._previousMotion;
-    }
-
-    public get showNavigateButtons(): boolean {
-        return !!this.previousMotion || !!this.nextMotion;
-    }
-
     public hasLoaded = new BehaviorSubject(false);
 
-    private _nextMotion: ViewMotion | null = null;
+    private titleFieldUpdateSubscription: Subscription;
 
-    private _previousMotion: ViewMotion | null = null;
+    private _canSaveParagraphBasedAmendment = true;
+    private _paragraphBasedAmendmentContent: any = {};
+    private _motionContent: any = {};
+    private _initialState: any = {};
 
-    /**
-     * Subject for (other) motions
-     */
-    private _motionObserver: Observable<ViewMotion[]> = of([]);
+    private _editSubscriptions: Subscription[] = [];
 
-    /**
-     * List of presorted motions. Filles by sort service
-     * and filter service.
-     * To navigate back and forth
-     */
-    private _sortedMotions: ViewMotion[] = [];
-
-    /**
-     * The observable for the list of motions. Set in OnInit
-     */
-    private _sortedMotionsObservable: Observable<ViewMotion[]> = of([]);
+    private _motionNumbersSubject = new BehaviorSubject<string[]>([]);
 
     private _motion: ViewMotion | null = null;
     private _motionId: Id | null = null;
     private _parentId: Id | null = null;
 
-    private _hasModelSubscriptionInitiated = false;
-
-    private _forwardingAvailable = false;
-
-    private _amendmentsInMainList = false;
-
-    private _navigatedFromAmendmentList = false;
-
     public constructor(
         protected override translate: TranslateService,
         public vp: ViewPortService,
-        public operator: OperatorService,
-        public perms: MotionPermissionService,
+        public participantRepo: ParticipantControllerService,
+        public participantSortService: ParticipantListSortService,
+        public categoryRepo: MotionCategoryControllerService,
+        public workflowRepo: MotionWorkflowControllerService,
+        private fb: UntypedFormBuilder,
         private route: ActivatedRoute,
-        public repo: MotionControllerService,
-        private viewService: MotionDetailViewService,
-        private promptService: PromptService,
-        private itemRepo: AgendaItemControllerService,
-        private motionSortService: MotionListSortService,
-        private motionFilterService: MotionListFilterService,
-        private motionForwardingService: MotionForwardDialogService,
+        private motionController: MotionControllerService,
         private amendmentRepo: AmendmentControllerService,
-        private amendmentSortService: AmendmentListSortService,
-        private amendmentFilterService: AmendmentListFilterService,
-        private cd: ChangeDetectorRef,
-        private pdfExport: MotionPdfExportService,
-        private originUrlService: MotionDetailViewOriginUrlService
+        private perms: MotionPermissionService,
+        private cd: ChangeDetectorRef
     ) {
         super();
 
-        this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
-            this._forwardingAvailable = forwardingAvailable;
-        });
-
-        this.meetingSettingsService
-            .get(`motions_amendments_in_main_list`)
-            .subscribe(enabled => (this._amendmentsInMainList = enabled));
+        this.subscriptions.push(
+            this.meetingSettingsService.get(`motions_preamble`).subscribe(value => (this.preamble = value)),
+            this.meetingSettingsService
+                .get(`motions_reason_required`)
+                .subscribe(value => (this.reasonRequired = value)),
+            this.meetingSettingsService
+                .get(`motions_supporters_min_amount`)
+                .subscribe(value => (this.minSupporters = value))
+        );
     }
 
     /**
@@ -180,199 +180,34 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit,
         this.subscriptions.push(
             this.activeMeetingIdService.meetingIdObservable.subscribe(() => {
                 this.hasLoaded.next(false);
+            }),
+            this.vp.isMobileSubject.subscribe(() => {
+                this.cd.markForCheck();
             })
         );
     }
 
     /**
-     * Called during view destruction.
-     * Sends a notification to user editors of the motion was edited
-     */
-    public override ngOnDestroy(): void {
-        super.ngOnDestroy();
-        this.destroy();
-        this.amendmentSortService.exitSortService();
-        this.motionSortService.exitSortService();
-    }
-
-    public getSaveAction(): () => Promise<void> {
-        return () => this.saveMotion();
-    }
-
-    /**
-     * Sets @var this._navigatedFromAmendmentList on navigation from either of both lists.
-     * Does nothing on navigation between two motions.
-     */
-    private isNavigatedFromAmendments(): void {
-        const previousUrl = this.originUrlService.getPreviousUrl();
-        if (!!previousUrl) {
-            if (previousUrl.endsWith(`amendments`)) {
-                this._navigatedFromAmendmentList = true;
-            } else if (previousUrl.endsWith(`motions`)) {
-                this._navigatedFromAmendmentList = false;
-            }
-        }
-    }
-
-    public goToHistory(): void {
-        this.router.navigate([this.activeMeetingId!, `history`], { queryParams: { fqid: this.motion.fqid } });
-    }
-
-    /**
      * In the ui are no distinct buttons for update or create. This is decided here.
      */
-    public async saveMotion(event?: any): Promise<void> {
-        const update = event || this.temporaryMotion;
-        if (this.newMotion) {
-            await this.createMotion(update);
-        } else {
-            await this.updateMotion(update, this.motion);
-            this.leaveEditMotion();
-        }
-    }
-
-    /**
-     * Trigger to delete the motion.
-     */
-    public async deleteMotionButton(): Promise<void> {
-        let title = this.translate.instant(`Are you sure you want to delete this motion? `);
-        let content = this.motion.getTitle();
-        if (this.motion.amendments.length) {
-            title = this.translate.instant(
-                `Warning: Amendments exist for this motion. Are you sure you want to delete this motion regardless?`
-            );
-            content =
-                `<i>` +
-                this.translate.instant(`Motion`) +
-                ` ` +
-                this.motion.getTitle() +
-                `</i>` +
-                `<br>` +
-                this.translate.instant(`Deleting this motion will also delete the amendments.`) +
-                `<br>` +
-                this.translate.instant(`List of amendments: `) +
-                `<br>` +
-                this.motion.amendments
-                    .map(amendment => (amendment.number ? amendment.number : amendment.title))
-                    .join(`, `);
-        }
-        if (await this.promptService.open(title, content)) {
-            await this.repo.delete(this.motion);
-            this.router.navigate([this.activeMeetingId, `motions`]);
-        }
-    }
-
-    /**
-     * Goes to the amendment creation wizard. Executed via click.
-     */
-    public createAmendment(): void {
-        const amendmentTextMode = this.meetingSettingsService.instant(`motions_amendments_text_mode`);
-        if (amendmentTextMode === `paragraph`) {
-            this.router.navigate([`create-amendment`], { relativeTo: this.route });
-        } else {
-            this.router.navigate([this.activeMeetingId, `motions`, `new-amendment`], {
-                relativeTo: this.route.snapshot.params[`relativeTo`],
-                queryParams: { parent: this.motion.id || null }
-            });
-        }
-    }
-
-    public async forwardMotionToMeetings(): Promise<void> {
-        await this.motionForwardingService.forwardMotionsToMeetings(this.motion);
-    }
-
-    public get showForwardButton(): boolean {
-        return !!this.motion.state?.allow_motion_forwarding && this._forwardingAvailable;
-    }
-
-    public enterEditMotion(): void {
-        this.editMotion = true;
-        this.showMotionEditConflictWarningIfNecessary();
-    }
-
-    public leaveEditMotion(): void {
-        if (this.newMotion) {
-            this.router.navigate([this.activeMeetingId, `motions`]);
-        } else {
-            this.editMotion = false;
-        }
-    }
-
-    /**
-     * Navigates the user to the given ViewMotion
-     *
-     * @param motion target
-     */
-    public navigateToMotion(motion: ViewMotion | null): void {
-        if (motion) {
-            this.router.navigate([this.activeMeetingId, `motions`, motion.sequential_number]);
-            // update the current motion
-            this.motion = motion;
-            this.setSurroundingMotions();
-        }
-    }
-
-    /**
-     * Sets the previous and next motion. Sorts by the current sorting as used
-     * in the {@link MotionSortListService} or {@link AmendmentSortListService},
-     * respectively
-     */
-    public setSurroundingMotions(): void {
-        const indexOfCurrent = this._sortedMotions.findIndex(motion => motion === this.motion);
-        if (indexOfCurrent > 0) {
-            this.previousMotion = this.findNextSuitableMotion(indexOfCurrent, -1);
-        } else {
-            this.previousMotion = null;
-        }
-        if (indexOfCurrent > -1 && indexOfCurrent < this._sortedMotions.length - 1) {
-            this.nextMotion = this.findNextSuitableMotion(indexOfCurrent, 1);
-        } else {
-            this.nextMotion = null;
-        }
-    }
-
-    /**
-     * Finds the next suitable motion.
-     * If @var this._amendmentsInMainList as well as @var this._navigatedFromAmendmentList collide
-     * iterates over the next or previous motions to find the first with lead motion.
-     * @param indexOfCurrent The index from the active motion.
-     * @param step Stepwidth to iterate eiter over the previous or next motions.
-     */
-    private findNextSuitableMotion(indexOfCurrent: number, step: number): ViewMotion {
-        if (!this._amendmentsInMainList || !this._navigatedFromAmendmentList) {
-            return this._sortedMotions[indexOfCurrent + step];
-        }
-
-        for (let i = indexOfCurrent + step; 0 <= i && i <= this._sortedMotions.length - 1; i += step) {
-            if (!!this._sortedMotions[i].hasLeadMotion) {
-                return this._sortedMotions[i];
+    public saveMotion(event?: any): () => Promise<void> {
+        return async () => {
+            const update = event || this.temporaryMotion;
+            if (this.newMotion) {
+                await this.createMotion(update);
+            } else {
+                await this.updateMotion(update, this.motion);
+                this.leaveEditMotion();
             }
+        };
+    }
+
+    public leaveEditMotion(motion: HasSequentialNumber | null = this.motion): void {
+        if (motion?.sequential_number) {
+            this.router.navigate([this.activeMeetingId, `motions`, motion.sequential_number]);
+        } else {
+            this.router.navigate([this.activeMeetingId, `motions`]);
         }
-        return null;
-    }
-
-    /**
-     * Click handler for the pdf button
-     */
-    public onDownloadPdf(): void {
-        this.pdfExport.exportSingleMotion(this.motion, {
-            lnMode:
-                this.viewService.currentLineNumberingMode === LineNumberingMode.Inside
-                    ? LineNumberingMode.Outside
-                    : this.viewService.currentLineNumberingMode,
-            crMode: this.viewService.currentChangeRecommendationMode,
-            // export all comment fields as well as personal note
-            comments: this.motion.usedCommentSectionIds.concat([PERSONAL_NOTE_ID])
-        });
-    }
-
-    /**
-     * Handler for upload errors
-     *
-     * @param error the error message passed by the upload component
-     */
-    public showUploadError(error: string): void {
-        this.raiseError(error);
     }
 
     /**
@@ -383,85 +218,53 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit,
      */
     @HostListener(`window:beforeunload`, [`$event`])
     public stopClosing(event: Event): void {
-        if (this.editMotion) {
+        if (Object.keys(this._motionContent).length) {
             event.returnValue = false;
         }
     }
 
-    public addToAgenda(): void {
-        this.itemRepo.addToAgenda({}, this.motion).resolve().catch(this.raiseError);
-    }
-
-    public removeFromAgenda(): void {
-        this.itemRepo.removeFromAgenda(this.motion.agenda_item_id!).catch(this.raiseError);
-    }
-
-    public onIdFound(id: Id | null): void {
-        if (this._motionId !== id) {
-            this.onRouteChanged();
-        }
+    public async onIdFound(id: Id | null): Promise<void> {
         this._motionId = id;
         if (id) {
-            this.loadMotionById();
+            await this.loadMotionById();
         } else {
-            this.initNewMotion();
+            await this.initNewMotion();
         }
+
+        this.patchForm();
+        this.initContentFormSubscription();
+        this.propagateChanges();
+        this.attachMotionNumbersSubject();
+
         this.hasLoaded.next(true);
     }
 
-    private registerSubjects(): void {
-        this._motionObserver = this.repo.getViewModelListObservable();
-        // since updates are usually not commig at the same time, every change to
-        // any subject has to mark the view for chekcing
-        this.subscriptions.push(
-            this._motionObserver.subscribe(() => {
-                this.cd.markForCheck();
-            })
-        );
-    }
-
-    private initNewMotion(): void {
-        // new motion
-        super.setTitle(`New motion`);
-        this.newMotion = true;
-        this.editMotion = true;
-        this.motion = {} as any;
-        if (this.route.snapshot.queryParams[`parent`]) {
-            this.initializeAmendment();
-        }
-    }
-
-    private loadMotionById(motionId: Id | null = this._motionId): void {
-        if (this._hasModelSubscriptionInitiated || !motionId) {
-            return; // already fired!
-        }
-        this._hasModelSubscriptionInitiated = true;
-
-        this.subscriptions.push(
-            this.repo.getViewModelObservable(motionId).subscribe(motion => {
-                if (motion) {
-                    const title = motion.getTitle();
-                    super.setTitle(title);
-                    this.motion = motion;
-                    this.cd.markForCheck();
-                }
-            })
-        );
+    /**
+     * Click handler for attachments
+     *
+     * @param attachment the selected file
+     */
+    public onClickAttachment(attachment: Mediafile): void {
+        window.open(attachment.url);
     }
 
     /**
-     * Using Shift, Alt + the arrow keys will navigate between the motions
+     * Handler for upload errors
      *
-     * @param event has the key code
+     * @param error the error message passed by the upload component
      */
-    @HostListener(`document:keydown`, [`$event`])
-    public onKeyNavigation(event: KeyboardEvent): void {
-        if (event.key === `ArrowLeft` && event.altKey && event.shiftKey) {
-            this.navigateToMotion(this.previousMotion);
-        }
-        if (event.key === `ArrowRight` && event.altKey && event.shiftKey) {
-            this.navigateToMotion(this.nextMotion);
-        }
+    public showUploadError(error: any): void {
+        this.raiseError(error);
+    }
+
+    public async createNewSubmitter(username: string): Promise<void> {
+        const newUserObj = await this.createNewUser(username);
+        this.addNewUserToFormCtrl(newUserObj, `submitter_ids`);
+    }
+
+    public async createNewSupporter(username: string): Promise<void> {
+        const newUserObj = await this.createNewUser(username);
+        this.addNewUserToFormCtrl(newUserObj, `supporters_id`);
     }
 
     /**
@@ -476,38 +279,125 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit,
                     lead_motion_id: this._parentId
                 });
             } else {
-                response = (await this.repo.create(newMotionValues))[0];
+                response = (await this.motionController.create(newMotionValues))[0];
             }
-            await this.navigateAfterCreation(response);
+            this.leaveEditMotion(response);
         } catch (e) {
             this.raiseError(e);
         }
     }
 
-    private async updateMotion(newMotionValues: any, motion: ViewMotion): Promise<void> {
-        await this.repo.update(newMotionValues, motion).resolve();
+    /**
+     * Async load the values of the motion in the Form.
+     */
+    protected patchForm(): void {
+        if (!this.contentForm) {
+            this.contentForm = this.createForm();
+        }
+        const contentPatch: { [key: string]: any } = {};
+        Object.keys(this.contentForm.controls).forEach(ctrl => {
+            contentPatch[ctrl] = this.motion[ctrl];
+        });
+
+        if (this.isParagraphBasedAmendment) {
+            this.contentForm.get(`text`)?.clearValidators(); // manually adjust validators
+        }
+
+        this._initialState = deepCopy(contentPatch);
+        this.contentForm.patchValue(contentPatch);
+
+        if (this.amendmentEdit) {
+            const parentId = Number(this.route.snapshot.queryParams[`parent`]);
+            if (parentId && !Number.isNaN(parentId)) {
+                if (!this.titleFieldUpdateSubscription) {
+                    this.titleFieldUpdateSubscription = this.motionController
+                        .getViewModelObservable(parentId)
+                        .pipe(
+                            map(parent => {
+                                return { number: parent?.number, text: parent?.text };
+                            }),
+                            distinctUntilChanged()
+                        )
+                        .subscribe(() => {
+                            // TODO: Notify user that text changed
+                        });
+                    this.subscriptions.push(this.titleFieldUpdateSubscription);
+                }
+            }
+        }
     }
 
-    private async ensureParentIsAvailable(parentId: Id): Promise<void> {
-        if (!this.repo.getViewModel(parentId)) {
-            const loaded = new Deferred();
-            this.subscriptions.push(
-                this.repo.getViewModelObservable(parentId).subscribe(parent => {
-                    if (parent && !loaded.wasResolved) {
-                        loaded.resolve();
-                    }
-                })
-            );
-            return loaded;
+    private async initNewMotion(): Promise<void> {
+        // new motion
+        super.setTitle(`New motion`);
+        this.newMotion = true;
+        this.motion = {} as any;
+        if (this.route.snapshot.queryParams[`parent`]) {
+            await this.initializeAmendment();
         }
+
+        this.cd.markForCheck();
+    }
+
+    private async loadMotionById(motionId: Id | null = this._motionId): Promise<void> {
+        await this.modelRequestService.waitSubscriptionReady(MOTION_DETAIL_SUBSCRIPTION);
+        const motion = await firstValueFrom(this.motionController.getViewModelObservable(motionId));
+        if (motion) {
+            const title = motion.getTitle();
+            super.setTitle(title);
+            this.motion = motion;
+
+            this.newMotion = false;
+            this.showMotionEditConflictWarningIfNecessary();
+        }
+
+        this.cd.markForCheck();
+
+        this.subscriptions.push(
+            this.motionController.getViewModelObservable(motionId).subscribe(motion => {
+                if (motion) {
+                    // TODO: Check if relevant form fields were changed
+                    // TODO: Maybe update pristine form fields
+                    // TODO: Notify user that motion has changed
+                }
+            })
+        );
+    }
+
+    private async updateMotion(newMotionValues: any, motion: ViewMotion): Promise<void> {
+        try {
+            await this.motionController.update(newMotionValues, motion).resolve();
+        } catch (e) {
+            this.raiseError(e);
+        }
+    }
+
+    private async ensureParentIsAvailable(parentId: Id): Promise<ViewMotion> {
+        let motion: ViewMotion;
+        if (!(motion = this.motionController.getViewModel(parentId))) {
+            motion = await firstValueFrom(
+                this.motionController
+                    .getViewModelObservable(parentId)
+                    .pipe(
+                        filter(
+                            motion =>
+                                !!motion?.id &&
+                                (motion.text !== undefined ||
+                                    this.meetingSettingsService.instant(`motions_amendments_text_mode`) !== `fulltext`)
+                        )
+                    )
+            );
+            console.log(`wait for`, parentId, motion.numberOrTitle);
+        }
+
+        return motion;
     }
 
     private async initializeAmendment(): Promise<void> {
         const motion: any = {};
         this._parentId = +this.route.snapshot.queryParams[`parent`] || null;
         this.amendmentEdit = true;
-        await this.ensureParentIsAvailable(this._parentId!);
-        const parentMotion = this.repo.getViewModel(this._parentId!);
+        const parentMotion = await this.ensureParentIsAvailable(this._parentId!);
         motion.lead_motion_id = this._parentId;
         if (parentMotion) {
             const defaultTitle = `${this.translate.instant(`Amendment to`)} ${parentMotion.numberOrTitle}`;
@@ -521,52 +411,41 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit,
         }
     }
 
-    /**
-     * Lifecycle routine for motions to initialize.
-     */
-    private init(): void {
-        this.cd.reattach();
-
-        this.isNavigatedFromAmendments();
-        this.registerSubjects();
-
-        // use the filter and the search service to get the current sorting
-        if (this.motion && this.motion.lead_motion_id && !this._amendmentsInMainList) {
-            // only use the amendments for this motion
-            this.amendmentSortService.initSorting();
-            this.amendmentFilterService.initFilters(
-                this.amendmentRepo.getSortedViewModelListObservableFor(
-                    { id: this.motion.lead_motion_id },
-                    this.amendmentSortService.repositorySortingKey
-                )
-            );
-            this._sortedMotionsObservable = this.amendmentFilterService.outputObservable;
-        } else {
-            this.motionSortService.initSorting();
-            this.motionFilterService.initFilters(
-                this.repo.getSortedViewModelListObservable(this.motionSortService.repositorySortingKey)
-            );
-            this._sortedMotionsObservable = this.motionFilterService.outputObservable;
+    private initContentFormSubscription(): void {
+        for (const subscription of this._editSubscriptions) {
+            subscription.unsubscribe();
         }
-
-        if (this._sortedMotionsObservable) {
-            this.subscriptions.push(
-                this._sortedMotionsObservable.subscribe(motions => {
-                    if (motions) {
-                        this._sortedMotions = motions;
-                        this.setSurroundingMotions();
-                    }
-                })
-            );
+        this._editSubscriptions = [];
+        for (const controlName of Object.keys(this.contentForm.controls)) {
+            const subscription = this.contentForm.get(controlName)!.valueChanges.subscribe(value => {
+                if (JSON.stringify(value) !== JSON.stringify(this._initialState[controlName])) {
+                    this._motionContent[controlName] = value;
+                } else {
+                    delete this._motionContent[controlName];
+                }
+                this.propagateChanges();
+            });
+            this._editSubscriptions.push(subscription);
+            this.subscriptions.push(subscription);
         }
+    }
 
+    private attachMotionNumbersSubject(): void {
         this.subscriptions.push(
-            /**
-             * Check for changes of the viewport subject changes
-             */
-            this.vp.isMobileSubject.subscribe(() => {
-                this.cd.markForCheck();
-            })
+            this.motionController
+                .getViewModelListObservable()
+                .pipe(
+                    map(motions =>
+                        motions
+                            .filter(
+                                motion =>
+                                    motion.number !== this.motion?.number &&
+                                    (!motion.id || motion.id !== this.motion?.id)
+                            )
+                            .map(motion => motion.number)
+                    )
+                )
+                .subscribe(this._motionNumbersSubject)
         );
     }
 
@@ -579,22 +458,54 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit,
         }
     }
 
+    private propagateChanges(): void {
+        this.canSave = this.contentForm.valid && this._canSaveParagraphBasedAmendment;
+        this.temporaryMotion = { ...this._motionContent, ...this._paragraphBasedAmendmentContent };
+    }
+
+    private addNewUserToFormCtrl(newUserObj: RawUser, controlName: string): void {
+        const control = this.contentForm.get(controlName)!;
+        let currentSubmitters: number[] = control.value;
+        if (currentSubmitters?.length) {
+            currentSubmitters.push(newUserObj.id);
+        } else {
+            currentSubmitters = [newUserObj.id];
+        }
+        control.setValue(currentSubmitters);
+    }
+
+    private createNewUser(username: string): Promise<RawUser> {
+        return this.participantRepo.createFromString(username);
+    }
+
     /**
-     * Lifecycle routine for motions to get destroyed.
+     * Creates the forms for the Motion and the MotionVersion
      */
-    private destroy(): void {
-        this._hasModelSubscriptionInitiated = false;
-        this.cleanSubscriptions();
-        this.viewService.reset();
-        this.cd.detach();
-    }
+    private createForm(): UntypedFormGroup {
+        const motionFormControls: MotionFormControlsConfig = {
+            title: [``, Validators.required],
+            text: [``, this.isParagraphBasedAmendment ? null : Validators.required],
+            reason: [``, this.meetingSettingsService.instant(`motions_reason_required`) ? Validators.required : null],
+            category_id: [],
+            attachment_ids: [[]],
+            agenda_parent_id: [],
+            submitter_ids: [[]],
+            supporter_ids: [[]],
+            workflow_id: [+this.meetingSettingsService.instant(`motions_default_workflow_id`)],
+            tag_ids: [[]],
+            block_id: [],
+            parent_id: [],
+            modified_final_version: [``],
+            ...(this.canChangeMetadata && {
+                number: [
+                    ``,
+                    isUniqueAmong<string>(this._motionNumbersSubject, (a, b) => a === b, [``, null, undefined])
+                ],
+                agenda_create: [``],
+                agenda_type: [``]
+            })
+        };
 
-    private onRouteChanged(): void {
-        this.destroy();
-        this.init();
-    }
-
-    private async navigateAfterCreation(motion: HasSequentialNumber): Promise<void> {
-        this.router.navigate([this.activeMeetingId, `motions`, motion!.sequential_number]);
+        return this.fb.group(motionFormControls);
     }
 }

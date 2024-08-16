@@ -220,7 +220,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         if (amendmentTextMode === `paragraph`) {
             this.router.navigate([`create-amendment`], { relativeTo: this.route });
         } else {
-            this.router.navigate([this.activeMeetingId, `motions`, `new-amendment`], {
+            this.router.navigate([this.activeMeetingId, `motions`, `new`], {
                 relativeTo: this.route.snapshot.params[`relativeTo`],
                 queryParams: { parent: this.motion.id || null }
             });

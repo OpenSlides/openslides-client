@@ -29,14 +29,18 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
     }
 
     protected override onShouldCreateModelRequests(params: any, meetingId: Id): void {
-        if (params[`id`] && meetingId) {
-            this.loadMotionDetail(meetingId, +params[`id`]);
+        const id = params[`id`] || params[`parent`];
+        console.log(id, params);
+        if (id && meetingId) {
+            this.loadMotionDetail(meetingId, +id);
         }
     }
 
     protected override onParamsChanged(params: any, oldParams: any): void {
-        if (params[`id`] !== oldParams[`id`] || params[`meetingId`] !== oldParams[`meetingId`]) {
-            this.loadMotionDetail(+params[`meetingId`], +params[`id`]);
+        const oldId = oldParams[`id`] || oldParams[`parent`];
+        const newId = params[`id`] || params[`parent`];
+        if (newId !== oldId || params[`meetingId`] !== oldParams[`meetingId`]) {
+            this.loadMotionDetail(+params[`meetingId`], +newId);
         }
     }
 

@@ -4,33 +4,202 @@
             [editMode]="true"
             [isSaveButtonEnabled]="canSave"
             [nav]="false"
-            [saveAction]="getSaveAction()"
+            [saveAction]="saveMotion()"
             (cancelEditEvent)="leaveEditMotion()"
         >
             <!-- Title -->
             <div class="title-slot">
                 @if (motion && !newMotion && !vp.isMobile) {
                     <h2>{{ 'Motion' | translate }}</h2>
-                }
-                @if (newMotion && !amendmentEdit) {
+                } @else if (newMotion && !amendmentEdit) {
                     <h2>{{ 'New motion' | translate }}</h2>
-                }
-                @if (amendmentEdit) {
+                } @else if (amendmentEdit) {
                     <h2>{{ 'New amendment' | translate }}</h2>
                 }
             </div>
         </os-head-bar>
         @if (motion) {
-            <div
-                class="content-container spacer-bottom-60"
-                osSwipe
-                (swipeLeft)="navigateToMotion(previousMotion)"
-                (swipeRight)="navigateToMotion(nextMotion)"
-            >
+            <div class="content-container spacer-bottom-60">
                 <div>
                     <mat-card [ngClass]="vp.isMobile ? 'os-form-card-mobile' : 'os-card'">
                         <mat-card-content>
-                            <!-- TODO: Add motion form -->
+                            <form class="motion-content" tabindex="-1" [formGroup]="contentForm">
+                                <!-- Submitter -->
+                                @if (newMotion) {
+                                    <div class="content-field">
+                                        @if (canChangeMetadata) {
+                                            <mat-form-field>
+                                                <mat-label>{{ 'Submitters' | translate }}</mat-label>
+                                                <os-repo-search-selector
+                                                    formControlName="submitter_ids"
+                                                    [multiple]="true"
+                                                    [repo]="participantRepo"
+                                                    [sortService]="participantSortService"
+                                                    [subscriptionConfig]="participantSubscriptionConfig"
+                                                    (clickNotFound)="createNewSubmitter($event)"
+                                                >
+                                                    <ng-template
+                                                        osSearchSelectorNotFoundTemplate
+                                                        *osPerms="permission.userCanManage"
+                                                    >
+                                                        <mat-icon>add</mat-icon>
+                                                        {{ 'Create user' | translate }}
+                                                    </ng-template>
+                                                </os-repo-search-selector>
+                                            </mat-form-field>
+                                        }
+                                    </div>
+                                }
+
+                                <div class="form-id-title">
+                                    <!-- number -->
+                                    @if (!newMotion && canChangeMetadata) {
+                                        <div class="content-field form-number">
+                                            <mat-form-field>
+                                                <mat-label>{{ 'Number' | translate }}</mat-label>
+                                                <input formControlName="number" matInput osAutofocus />
+                                                <mat-error>{{ 'already exists' | translate }}</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    }
+
+                                    <!-- Title -->
+                                    <div class="content-field form-title">
+                                        <mat-form-field>
+                                            <mat-label>{{ 'Title' | translate }}</mat-label>
+                                            <input formControlName="title" matInput required />
+                                            <mat-error>{{ 'The title is required' | translate }}</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <!-- The HTML Editor for motions and traditional amendments -->
+                                @if (!isParagraphBasedAmendment) {
+                                    @if (preamble) {
+                                        <h3>
+                                            <span>{{ preamble }}</span>
+                                        </h3>
+                                    }
+                                    <os-editor
+                                        formControlName="text"
+                                        [required]="!isParagraphBasedAmendment"
+                                    ></os-editor>
+                                    @if (
+                                        contentForm.get('text')?.invalid &&
+                                        (contentForm.get('text')?.dirty || contentForm.get('text')?.touched)
+                                    ) {
+                                        <div class="red-warning-text">
+                                            {{ 'This field is required.' | translate }}
+                                        </div>
+                                    }
+                                } @else {
+                                    <os-paragraph-based-amendment-editor
+                                        [motion]="motion"
+                                        (formChanged)="paragraphBasedAmendmentContent = $event"
+                                        (validStateChanged)="canSaveParagraphBasedAmendment = $event"
+                                    ></os-paragraph-based-amendment-editor>
+                                }
+
+                                <!-- Reason -->
+                                <div>
+                                    <h3
+                                        [ngClass]="
+                                            reasonRequired &&
+                                            contentForm.get('reason')?.invalid &&
+                                            (contentForm.get('reason')?.dirty || contentForm.get('reason')?.touched)
+                                                ? 'red-warning-text'
+                                                : ''
+                                        "
+                                    >
+                                        <span>{{ 'Reason' | translate }}</span>
+                                        &nbsp;
+                                        @if (reasonRequired) {
+                                            <span>*</span>
+                                        }
+                                    </h3>
+                                    <!-- The HTML Editor -->
+                                    <os-editor formControlName="reason" [required]="reasonRequired"></os-editor>
+                                    @if (
+                                        reasonRequired &&
+                                        contentForm.get('reason')?.invalid &&
+                                        (contentForm.get('reason')?.dirty || contentForm.get('reason')?.touched)
+                                    ) {
+                                        <div class="red-warning-text">
+                                            {{ 'This field is required.' | translate }}
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="extra-data">
+                                    <!-- Category form -->
+                                    @if (newMotion && hasCategories) {
+                                        <div class="content-field">
+                                            <mat-form-field>
+                                                <mat-label>{{ 'Category' | translate }}</mat-label>
+                                                <os-repo-search-selector
+                                                    formControlName="category_id"
+                                                    [addClearSelection]="true"
+                                                    [excludeIds]="true"
+                                                    [repo]="categoryRepo"
+                                                ></os-repo-search-selector>
+                                            </mat-form-field>
+                                        </div>
+                                    }
+
+                                    <!-- Attachments -->
+                                    <div class="content-field">
+                                        <div *osPerms="permission.mediafileCanManage">
+                                            <os-attachment-control
+                                                formControlName="attachment_ids"
+                                                (errorHandler)="showUploadError($event)"
+                                            ></os-attachment-control>
+                                        </div>
+                                    </div>
+
+                                    @if (canChangeMetadata) {
+                                        @if (newMotion) {
+                                            <div>
+                                                <os-agenda-content-object-form
+                                                    [form]="contentForm"
+                                                ></os-agenda-content-object-form>
+                                            </div>
+                                        }
+
+                                        <!-- Supporter form -->
+                                        @if (minSupporters) {
+                                            <div class="content-field">
+                                                <mat-form-field>
+                                                    <mat-label>{{ 'Supporters' | translate }}</mat-label>
+                                                    <os-repo-search-selector
+                                                        formControlName="supporter_ids"
+                                                        [multiple]="true"
+                                                        [repo]="participantRepo"
+                                                        [sortService]="participantSortService"
+                                                        [subscriptionConfig]="participantSubscriptionConfig"
+                                                        (clickNotFound)="createNewSupporter($event)"
+                                                    >
+                                                        <ng-template osNotFoundDescription>
+                                                            <mat-icon>add</mat-icon>
+                                                            {{ 'Create user' | translate }}
+                                                        </ng-template>
+                                                    </os-repo-search-selector>
+                                                </mat-form-field>
+                                            </div>
+                                        }
+
+                                        <!-- Workflow -->
+                                        <div class="content-field">
+                                            <mat-form-field>
+                                                <mat-label>{{ 'Workflow' | translate }}</mat-label>
+                                                <os-repo-search-selector
+                                                    formControlName="workflow_id"
+                                                    [repo]="workflowRepo"
+                                                ></os-repo-search-selector>
+                                            </mat-form-field>
+                                        </div>
+                                    }
+                                </div>
+                            </form>
                         </mat-card-content>
                     </mat-card>
                 </div>
