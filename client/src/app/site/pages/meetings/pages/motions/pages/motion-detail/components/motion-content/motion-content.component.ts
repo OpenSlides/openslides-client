@@ -50,34 +50,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     }
 
     /**
-     * get the formatted motion text from the repository.
-     *
-     * @returns formatted motion texts
-     */
-    public getFormattedTextPlain(): string {
-        // Prevent this.sortedChangingObjects to be reordered from within formatMotion
-        let changes: ViewUnifiedChange[];
-        if (this.changeRecoMode === ChangeRecoMode.Original) {
-            changes = [];
-        } else {
-            changes = Object.assign([], this.getAllTextChangingObjects());
-        }
-        if (this.lineLength) {
-            const formattedText = this.motionFormatService.formatMotion({
-                targetMotion: this.motion,
-                crMode: this.changeRecoMode,
-                changes,
-                lineLength: this.lineLength,
-                highlightedLine: this.highlightedLine,
-                firstLine: this.motion.firstLine
-            });
-            return formattedText;
-        } else {
-            return this.motion.text;
-        }
-    }
-
-    /**
      * In the original version, a line number range has been selected in order to create a new change recommendation
      *
      * @param lineRange
@@ -128,7 +100,24 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         )
     );
 
-    private getAllTextChangingObjects(): ViewUnifiedChange[] {
-        return this.getAllChangingObjectsSorted().filter((obj: ViewUnifiedChange) => !obj.isTitleChange());
-    }
+    public formattedTextPlain$: Observable<string> = combineLatest([
+        this.viewService.changeRecommendationModeSubject,
+        this.meetingSettingsService.get(`motions_line_length`),
+        this.sortedChangingObjectsSubject
+    ]).pipe(
+        map(([changeRecoMode, lineLength, changes]) => {
+            if (lineLength) {
+                return this.motionFormatService.formatMotion({
+                    targetMotion: this.motion,
+                    crMode: this.changeRecoMode,
+                    changes: changeRecoMode === ChangeRecoMode.Original ? [] : changes,
+                    lineLength: this.lineLength,
+                    highlightedLine: this.highlightedLine,
+                    firstLine: this.motion.firstLine
+                });
+            }
+
+            return this.motion.text;
+        })
+    );
 }

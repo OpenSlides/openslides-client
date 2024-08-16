@@ -20,14 +20,14 @@
             @if (lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original) {
                 <os-motion-detail-original-change-recommendations
                     [changeRecommendations]="changeRecommendations"
-                    [html]="getFormattedTextPlain()"
+                    [html]="formattedTextPlain$ | async"
                     [motionId]="motion.id"
                     (createChangeRecommendation)="createChangeRecommendation($event)"
                     (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
                 ></os-motion-detail-original-change-recommendations>
             } @else {
                 <os-motion-final-version
-                    [formattedText]="getFormattedTextPlain()"
+                    [formattedText]="formattedTextPlain$ | async"
                     [motion]="motion"
                 ></os-motion-final-version>
             }
