@@ -30,15 +30,6 @@
     }
 }
 
-.margin-top-bottom {
-    //margin-top: 50px;
-    margin-bottom: 10px;
-}
-
-.margin-bottom-10 {
-    margin-bottom: 10px;
-}
-
 .grid-all-votes-area {
     grid-area: votes;
 }
@@ -49,18 +40,27 @@
     justify-content: end;
 }
 
+.box {
+    height: 15px;
+    width: 15px;
+    display: inline-block;
+}
+
+.margin-top-bottom {
+    margin-top: 50px;
+    margin-bottom: 10px;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px;
+}
+
 .one-option {
     margin-right: 20px;
 }
 
 .one-option:last-of-type {
     margin-right: 0;
-}
-
-.box {
-    height: 15px;
-    width: 15px;
-    display: inline-block;
 }
 
 .no-space {
