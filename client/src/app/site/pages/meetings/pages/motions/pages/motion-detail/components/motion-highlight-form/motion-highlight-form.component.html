@@ -20,7 +20,6 @@
                 @if (highlightedLineTyping) {
                     <button
                         aria-label="Go to line"
-                        mat-button
                         mat-icon-button
                         matSuffix
                         type="submit"
@@ -30,8 +29,6 @@
                     </button>
                 }
             </mat-form-field>
-        }
-        @if (highlightedLineOpened) {
             <button mat-icon-button (click)="highlightedLineOpened = false">
                 <mat-icon>cancel</mat-icon>
             </button>
@@ -85,9 +82,8 @@
                     >
                         <mat-icon>edit</mat-icon>
                     </button>
-                }
-                <!-- save final version -->
-                @if (isEditingFinalVersion) {
+                } @else {
+                    <!-- save final version -->
                     <button
                         mat-icon-button
                         type="button"
@@ -96,9 +92,8 @@
                     >
                         <mat-icon>done</mat-icon>
                     </button>
-                }
-                <!-- cancel final version edit -->
-                @if (isEditingFinalVersion) {
+
+                    <!-- cancel final version edit -->
                     <button
                         mat-icon-button
                         type="button"
@@ -107,9 +102,8 @@
                     >
                         <mat-icon>close</mat-icon>
                     </button>
-                }
-                <!-- delete final version edit -->
-                @if (!isEditingFinalVersion) {
+
+                    <!-- delete final version edit -->
                     <button
                         class="red-warning-text"
                         mat-icon-button
@@ -199,8 +193,6 @@ For paragraph-based amendments, only the original and the diff version is availa
         >
             {{ 'Changed version' | translate }}
         </button>
-    }
-    @if (hasChangingObjects) {
         <button
             mat-menu-item
             [ngClass]="{ selected: crMode === ChangeRecoMode.Diff }"
@@ -208,15 +200,15 @@ For paragraph-based amendments, only the original and the diff version is availa
         >
             {{ 'Diff version' | translate }}
         </button>
-    }
-    @if (!isParagraphBasedAmendment && hasChangingObjects) {
-        <button
-            mat-menu-item
-            [ngClass]="{ selected: crMode === ChangeRecoMode.Final }"
-            (click)="setChangeRecoMode(ChangeRecoMode.Final)"
-        >
-            {{ 'Final version' | translate }}
-        </button>
+        @if (!isParagraphBasedAmendment) {
+            <button
+                mat-menu-item
+                [ngClass]="{ selected: crMode === ChangeRecoMode.Final }"
+                (click)="setChangeRecoMode(ChangeRecoMode.Final)"
+            >
+                {{ 'Final version' | translate }}
+            </button>
+        }
     }
     @if (motion && motion.modified_final_version && !motion.isParagraphBasedAmendment()) {
         <button

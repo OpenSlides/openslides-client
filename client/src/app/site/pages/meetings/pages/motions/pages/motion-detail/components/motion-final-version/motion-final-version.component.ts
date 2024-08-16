@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,8 @@ import { ModifiedFinalVersionAction } from '../../services/motion-detail-view.se
     selector: `os-motion-final-version`,
     templateUrl: `./motion-final-version.component.html`,
     styleUrls: [`./motion-final-version.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent {
     @Input()
@@ -48,6 +49,7 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
                 this.saveModifiedFinalVersion();
                 break;
         }
+        this.cd.markForCheck();
     }
 
     private enterEditMode(): void {
