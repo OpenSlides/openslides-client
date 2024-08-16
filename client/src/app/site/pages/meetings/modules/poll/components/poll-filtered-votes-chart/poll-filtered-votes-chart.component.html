@@ -18,7 +18,7 @@
             <div class="grid-options-area">
                 @for (cat of voteAmounts; track cat.value; let isLast = $last) {
                     @if (cat.amount > 0) {
-                        <span [ngClass]="{ 'margin-right-20': !isLast }">
+                        <span class="one-option">
                             <div class="box" [style.background]="cat.backgroundColor"></div>
                             {{ cat.name | translate }}: {{ cat.weightedAmount }} ({{
                                 ((cat.weightedAmount / totalAmountWeighted) * 100).toFixed(2)

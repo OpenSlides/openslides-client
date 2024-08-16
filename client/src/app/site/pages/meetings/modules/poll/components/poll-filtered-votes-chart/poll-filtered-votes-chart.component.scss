@@ -49,6 +49,14 @@
     justify-content: end;
 }
 
+.one-option {
+    margin-right: 20px;
+}
+
+.one-option:last-of-type {
+    margin-right: 0;
+}
+
 .box {
     height: 15px;
     width: 15px;
