@@ -11,14 +11,12 @@
         @if (!isEditing) {
             @if (comment) {
                 <div [innerHTML]="comment.comment | trust: 'html'"></div>
-            }
-            @if (!comment) {
+            } @else {
                 <div class="no-content">
                     {{ 'No comment' | translate }}
                 </div>
             }
-        }
-        @if (isEditing) {
+        } @else {
             <form [formGroup]="formGroup">
                 <!-- The HTML Editor -->
                 <os-editor formControlName="text" [id]="sectionId"></os-editor>
@@ -34,25 +32,25 @@
     </ng-container>
 
     <ng-container class="meta-text-block-action-row">
-        @if (!isEditing && (canBeEdited || hasSubmitterEditRights)) {
-            <button mat-icon-button matTooltip="{{ 'Edit' | translate }}" (click)="editComment()">
-                <mat-icon>edit</mat-icon>
-            </button>
-        }
-        @if (!isEditing && hasComment()) {
-            <button mat-icon-button matTooltip="{{ 'Export comment' | translate }}" (click)="exportCommentAsPDf()">
-                <mat-icon>picture_as_pdf</mat-icon>
-            </button>
-        }
         @if (isEditing) {
             <button color="warn" mat-icon-button matTooltip="{{ 'Save' | translate }}" (click)="saveComment()">
                 <mat-icon>done</mat-icon>
             </button>
-        }
-        @if (isEditing) {
+
             <button mat-icon-button matTooltip="{{ 'Cancel edit' | translate }}" (click)="leaveEditMode()">
                 <mat-icon>close</mat-icon>
             </button>
+        } @else {
+            @if (canBeEdited || hasSubmitterEditRights) {
+                <button mat-icon-button matTooltip="{{ 'Edit' | translate }}" (click)="editComment()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            }
+            @if (hasComment()) {
+                <button mat-icon-button matTooltip="{{ 'Export comment' | translate }}" (click)="exportCommentAsPDf()">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                </button>
+            }
         }
     </ng-container>
 </os-action-card>

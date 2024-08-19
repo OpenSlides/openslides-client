@@ -5,9 +5,9 @@ import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
 import { ViewMotionComment, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
-import { MotionCommentControllerService } from '../../../../modules/comments/services/motion-comment-controller.service';
-import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
-import { BaseMotionDetailActionCardComponent } from '../../base/base-motion-detail-action-card.component';
+import { MotionCommentControllerService } from '../../../../../../modules/comments/services/motion-comment-controller.service';
+import { MotionPdfExportService } from '../../../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
+import { BaseMotionDetailActionCardComponent } from '../../../../base/base-motion-detail-action-card.component';
 
 @Component({
     selector: `os-motion-comment`,

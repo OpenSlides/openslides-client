@@ -100,8 +100,7 @@
                         <h4>
                             @if (paragraph.lineFrom >= paragraph.lineTo) {
                                 <span class="line-number">{{ 'Line' | translate }} {{ paragraph.lineFrom }}:</span>
-                            }
-                            @if (paragraph.lineFrom < paragraph.lineTo) {
+                            } @else {
                                 <span class="line-number">
                                     {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}:
                                 </span>

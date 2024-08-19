@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Observable } from 'rxjs';
 import { ViewMotion, ViewMotionComment, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { MotionCommentSectionControllerService } from '../../../../modules/comments/services/motion-comment-section-controller.service';
+import { MotionCommentSectionControllerService } from '../../../../../../modules/comments/services/motion-comment-section-controller.service';
 
 @Component({
     selector: `os-motion-comments`,
@@ -11,11 +12,11 @@ import { MotionCommentSectionControllerService } from '../../../../modules/comme
     styleUrls: [`./motion-comments.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotionCommentsComponent extends BaseUiComponent implements OnInit {
+export class MotionCommentsComponent extends BaseUiComponent {
     /**
      * An array of all sections the operator can see.
      */
-    public sections: ViewMotionCommentSection[] = [];
+    public sections$: Observable<ViewMotionCommentSection[]> = this.commentSectionRepo.getViewModelListObservable();
 
     /**
      * The motion, which these comments belong to.
@@ -25,39 +26,16 @@ export class MotionCommentsComponent extends BaseUiComponent implements OnInit {
 
     public constructor(
         private commentSectionRepo: MotionCommentSectionControllerService,
-        private operator: OperatorService,
-        private cd: ChangeDetectorRef
+        private operator: OperatorService
     ) {
         super();
-    }
-
-    public ngOnInit(): void {
-        this.subscriptions.push(
-            this.commentSectionRepo.getViewModelListObservable().subscribe(sections => {
-                if (sections && sections.length) {
-                    this.sections = sections;
-                    this.filterSections();
-                    this.cd.detectChanges();
-                }
-            })
-        );
     }
 
     public getCommentForSection(section: ViewMotionCommentSection): ViewMotionComment {
         return this.motion.getCommentForSection(section)!;
     }
 
-    /**
-     * sets the `sections` member with sections, if the operator has reading permissions.
-     */
-    private filterSections(): void {
-        if (this.sections?.length) {
-            this.sections = this.sections.filter(section => this.canReadSection(section));
-            this.cd.markForCheck();
-        }
-    }
-
-    private canReadSection(section: ViewMotionCommentSection): boolean {
+    public canReadSection(section: ViewMotionCommentSection): boolean {
         return (
             this.operator.isInGroupIds(...(section.read_group_ids || []), ...(section.write_group_ids || [])) ||
             (section.submitter_can_write &&
