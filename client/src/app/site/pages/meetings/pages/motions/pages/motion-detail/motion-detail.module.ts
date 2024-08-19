@@ -56,7 +56,6 @@ import { MotionManageMotionMeetingUsersComponent } from './components/motion-man
 import { MotionManagePollsComponent } from './components/motion-manage-polls/motion-manage-polls.component';
 import { MotionManageTimestampComponent } from './components/motion-manage-timestamp/motion-manage-timestamp.component';
 import { MotionManageTitleComponent } from './components/motion-manage-title/motion-manage-title.component';
-import { MotionPersonalNoteComponent } from './components/motion-personal-note/motion-personal-note.component';
 import { MotionDetailDirectivesModule } from './modules/directives/motion-detail-directives.module';
 import { MotionChangeRecommendationDialogModule } from './modules/motion-change-recommendation-dialog/motion-change-recommendation-dialog.module';
 import { MotionDetailRoutingModule } from './motion-detail-routing.module';
@@ -64,6 +63,7 @@ import { AmendmentCreateWizardComponent } from './pages/motion-form/components/a
 import { MotionCommentComponent } from './pages/motion-view/components/motion-comment/motion-comment.component';
 import { MotionCommentsComponent } from './pages/motion-view/components/motion-comments/motion-comments.component';
 import { MotionMetaDataComponent } from './pages/motion-view/components/motion-meta-data/motion-meta-data.component';
+import { MotionPersonalNoteComponent } from './pages/motion-view/components/motion-personal-note/motion-personal-note.component';
 import { MotionViewComponent } from './pages/motion-view/components/motion-view/motion-view.component';
 import { ParagraphBasedAmendmentComponent } from './pages/motion-view/components/paragraph-based-amendment/paragraph-based-amendment.component';
 import { MotionDetailServiceModule } from './services/motion-detail-service.module';

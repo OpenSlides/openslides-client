@@ -6,29 +6,26 @@
 
     <!-- Actions -->
     <ng-container class="meta-text-block-action-row">
-        @if (!isEditing) {
-            <button mat-icon-button matTooltip="{{ 'Edit' | translate }}" (click)="editPersonalNote()">
-                <mat-icon>edit</mat-icon>
-            </button>
-        }
-        @if (!isEditing && (personalNoteObservable | async)) {
-            <button
-                mat-icon-button
-                matTooltip="{{ 'Export personal note only' | translate }}"
-                (click)="printPersonalNote()"
-            >
-                <mat-icon>picture_as_pdf</mat-icon>
-            </button>
-        }
         @if (isEditing) {
             <button color="warn" mat-icon-button matTooltip="{{ 'Save' | translate }}" (click)="savePersonalNote()">
                 <mat-icon>done</mat-icon>
             </button>
-        }
-        @if (isEditing) {
             <button mat-icon-button matTooltip="{{ 'Cancel edit' | translate }}" (click)="leaveEditMode()">
                 <mat-icon>close</mat-icon>
             </button>
+        } @else {
+            <button mat-icon-button matTooltip="{{ 'Edit' | translate }}" (click)="editPersonalNote()">
+                <mat-icon>edit</mat-icon>
+            </button>
+            @if (personalNoteObservable | async) {
+                <button
+                    mat-icon-button
+                    matTooltip="{{ 'Export personal note only' | translate }}"
+                    (click)="printPersonalNote()"
+                >
+                    <mat-icon>picture_as_pdf</mat-icon>
+                </button>
+            }
         }
     </ng-container>
 
@@ -37,14 +34,12 @@
         @if (!isEditing) {
             @if ((personalNoteObservable | async)?.note; as note) {
                 <div [innerHTML]="note | trust: 'html'"></div>
-            }
-            @if ((hasPersonalNoteObservable | async) === false) {
+            } @else {
                 <div class="no-content">
                     {{ 'No personal note' | translate }}
                 </div>
             }
-        }
-        @if (isEditing) {
+        } @else {
             <form [formGroup]="formGroup">
                 <!-- The HTML Editor -->
                 <os-editor formControlName="text"></os-editor>
