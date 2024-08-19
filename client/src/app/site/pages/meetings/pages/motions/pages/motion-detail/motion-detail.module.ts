@@ -60,13 +60,13 @@ import { MotionManageTimestampComponent } from './components/motion-manage-times
 import { MotionManageTitleComponent } from './components/motion-manage-title/motion-manage-title.component';
 import { MotionParagraphbasedAmendmentComponent } from './components/motion-paragraphbased-amendment/motion-paragraphbased-amendment.component';
 import { MotionPersonalNoteComponent } from './components/motion-personal-note/motion-personal-note.component';
-import { ParagraphBasedAmendmentComponent } from './components/paragraph-based-amendment/paragraph-based-amendment.component';
 import { MotionDetailDirectivesModule } from './modules/directives/motion-detail-directives.module';
 import { MotionChangeRecommendationDialogModule } from './modules/motion-change-recommendation-dialog/motion-change-recommendation-dialog.module';
 import { MotionDetailRoutingModule } from './motion-detail-routing.module';
 import { AmendmentCreateWizardComponent } from './pages/motion-form/components/amendment-create-wizard/amendment-create-wizard.component';
 import { MotionMetaDataComponent } from './pages/motion-view/components/motion-meta-data/motion-meta-data.component';
 import { MotionViewComponent } from './pages/motion-view/components/motion-view/motion-view.component';
+import { ParagraphBasedAmendmentComponent } from './pages/motion-view/components/paragraph-based-amendment/paragraph-based-amendment.component';
 import { MotionDetailServiceModule } from './services/motion-detail-service.module';
 
 @NgModule({
