@@ -1,6 +1,6 @@
 <div class="spacer-top-10">
     <button
-        *osPerms="permission.motionCanManagePolls; and: canStateHavePolls"
+        *osPerms="permission.motionCanManagePolls; and: canStateHavePolls$ | async"
         class="create-poll-button"
         create-poll-button
         mat-stroked-button

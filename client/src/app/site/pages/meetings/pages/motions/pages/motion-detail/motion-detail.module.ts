@@ -43,8 +43,6 @@ import { MotionForwardDialogModule } from '../../components/motion-forward-dialo
 import { MotionPollModule } from '../../modules/motion-poll';
 import { MotionsExportModule } from '../../services/export/motions-export.module';
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
-import { MotionAddPollButtonComponent } from './components/motion-add-poll-button/motion-add-poll-button.component';
-import { MotionContentComponent } from './components/motion-content/motion-content.component';
 import { MotionDetailComponent } from './components/motion-detail/motion-detail.component';
 import { MotionDetailDiffComponent } from './components/motion-detail-diff/motion-detail-diff.component';
 import { MotionDetailDiffSummaryComponent } from './components/motion-detail-diff-summary/motion-detail-diff-summary.component';
@@ -56,8 +54,10 @@ import { MotionDetailDirectivesModule } from './modules/directives/motion-detail
 import { MotionChangeRecommendationDialogModule } from './modules/motion-change-recommendation-dialog/motion-change-recommendation-dialog.module';
 import { MotionDetailRoutingModule } from './motion-detail-routing.module';
 import { AmendmentCreateWizardComponent } from './pages/motion-form/components/amendment-create-wizard/amendment-create-wizard.component';
+import { MotionAddPollButtonComponent } from './pages/motion-view/components/motion-add-poll-button/motion-add-poll-button.component';
 import { MotionCommentComponent } from './pages/motion-view/components/motion-comment/motion-comment.component';
 import { MotionCommentsComponent } from './pages/motion-view/components/motion-comments/motion-comments.component';
+import { MotionContentComponent } from './pages/motion-view/components/motion-content/motion-content.component';
 import { MotionManageMotionMeetingUsersComponent } from './pages/motion-view/components/motion-manage-motion-meeting-users/motion-manage-motion-meeting-users.component';
 import { MotionManagePollsComponent } from './pages/motion-view/components/motion-manage-polls/motion-manage-polls.component';
 import { MotionManageTimestampComponent } from './pages/motion-view/components/motion-manage-timestamp/motion-manage-timestamp.component';

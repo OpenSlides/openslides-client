@@ -5,10 +5,10 @@ import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 
-import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
-import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
-import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
+import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
+import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
+import { MotionContentChangeRecommendationDialogComponentData } from '../../../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
+import { MotionChangeRecommendationDialogService } from '../../../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
 
 @Component({
     selector: `os-motion-content`,
