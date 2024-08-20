@@ -360,7 +360,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             );
         viewModel.getLevelAndNumber = (): string => this.getLevelAndNumber(viewModel);
         viewModel.getEnsuredActiveMeetingId = (): Id => this.activeMeetingIdService.meetingId;
-        viewModel.getDelegationIsActivated = (): boolean =>
+        viewModel.getDelegationSettingEnabled = (): boolean =>
             this.meetingSettingsService.instant(`users_enable_vote_delegations`);
         return viewModel;
     }
