@@ -266,10 +266,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public get isVoteCountable(): boolean {
         const delegate = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
-        if (this.getDelegationSettingEnabled()) {
-            if (!delegate) {
-                return this.isPresentInMeeting();
-            }
+        if (this.getDelegationSettingEnabled() && delegate) {
             return delegate.isPresentInMeeting();
         }
         return this.isPresentInMeeting();
