@@ -1,20 +1,21 @@
 <h4>
     <span class="title-font">{{ title }}</span>
-    @if (!isEditMode && perms.isAllowed('change_metadata')) {
-        <button class="small-button" disableRipple mat-icon-button type="button" (click)="onEdit()">
-            <mat-icon>edit</mat-icon>
-        </button>
-    }
-    @if (isEditMode && perms.isAllowed('change_metadata')) {
-        <button class="small-button" disableRipple mat-icon-button type="button" (click)="onCancel()">
-            <mat-icon>close</mat-icon>
-        </button>
+    @if (perms.isAllowed('change_metadata')) {
+        @if (isEditMode) {
+            <button class="small-button" disableRipple mat-icon-button type="button" (click)="onCancel()">
+                <mat-icon>close</mat-icon>
+            </button>
+        } @else {
+            <button class="small-button" disableRipple mat-icon-button type="button" (click)="onEdit()">
+                <mat-icon>edit</mat-icon>
+            </button>
+        }
     }
 </h4>
 
 @if (!isEditMode || !perms.isAllowed('change_metadata')) {
     <div>
-        @for (model of intermediateModels; track model) {
+        @for (model of intermediateModels$ | async; track model.id) {
             <mat-chip-listbox class="user">
                 <mat-basic-chip disableRipple>{{ model.user?.getTitle() }}</mat-basic-chip>
             </mat-chip-listbox>
@@ -25,8 +26,7 @@
             </mat-chip-listbox>
         }
     </div>
-}
-@if (isEditMode && perms.isAllowed('change_metadata')) {
+} @else {
     <div>
         <os-sorting-list [count]="false" [input]="editObservable" [live]="true" (sortEvent)="onSortingChange($event)">
             <!-- implicit user references into the component using ng-template slot -->
@@ -62,20 +62,20 @@
                     <input matInput [formControl]="additionalInputControl" [value]="additionalInputValue" />
                 </mat-form-field>
             </div>
-        }
-        @if (useAdditionalInput && loadSecondSelectorValues) {
-            <div class="text-field-container">
-                <mat-form-field>
-                    <mat-label>{{ secondSelectorLabel }}</mat-label>
-                    <os-list-search-selector
-                        [disableOptionWhenFn]="getDisabledFn()"
-                        [formControl]="secondSelectorFormControl"
-                        [inputListValues]="secondSelectorValues"
-                        [keepOpen]="true"
-                        (openedChange)="openedChange($event)"
-                    ></os-list-search-selector>
-                </mat-form-field>
-            </div>
+            @if (loadSecondSelectorValues) {
+                <div class="text-field-container">
+                    <mat-form-field>
+                        <mat-label>{{ secondSelectorLabel }}</mat-label>
+                        <os-list-search-selector
+                            [disableOptionWhenFn]="getDisabledFn()"
+                            [formControl]="secondSelectorFormControl"
+                            [inputListValues]="secondSelectorValues"
+                            [keepOpen]="true"
+                            (openedChange)="openedChange($event)"
+                        ></os-list-search-selector>
+                    </mat-form-field>
+                </div>
+            }
         }
         <p>
             <button mat-button type="button" (click)="onSave()">

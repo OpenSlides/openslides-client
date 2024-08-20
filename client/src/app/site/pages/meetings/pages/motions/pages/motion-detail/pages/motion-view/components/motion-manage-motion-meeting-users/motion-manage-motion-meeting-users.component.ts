@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { BehaviorSubject, filter, firstValueFrom, map, Observable } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
@@ -13,9 +13,9 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { BaseMotionMeetingUserControllerService } from '../../../../modules/util';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service';
-import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
+import { BaseMotionMeetingUserControllerService } from '../../../../../../modules/util';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
+import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 
 type MotionMeetingUser = Selectable & { fqid?: Fqid; user_id?: Id };
 
@@ -26,7 +26,8 @@ interface IdMap {
 @Component({
     selector: `os-motion-manage-motion-meeting-users`,
     templateUrl: `./motion-manage-motion-meeting-users.component.html`,
-    styleUrls: [`./motion-manage-motion-meeting-users.component.scss`]
+    styleUrls: [`./motion-manage-motion-meeting-users.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUserViewModel<M>, M extends BaseModel>
     extends BaseUiComponent
@@ -79,6 +80,10 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
 
     public get intermediateModels(): V[] {
         return this.getIntermediateModels(this.motion);
+    }
+
+    public get intermediateModels$(): Observable<V[]> {
+        return this.motion[this.field + `$`] as unknown as Observable<V[]>;
     }
 
     /**

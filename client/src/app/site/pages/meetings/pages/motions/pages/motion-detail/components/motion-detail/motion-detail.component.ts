@@ -30,7 +30,6 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
 
     protected override onShouldCreateModelRequests(params: any, meetingId: Id): void {
         const id = params[`id`] || params[`parent`];
-        console.log(id, params);
         if (id && meetingId) {
             this.loadMotionDetail(meetingId, +id);
         }

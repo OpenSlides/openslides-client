@@ -52,13 +52,13 @@ import { MotionDetailOriginalChangeRecommendationsComponent } from './components
 import { MotionExtensionFieldComponent } from './components/motion-extension-field/motion-extension-field.component';
 import { MotionFinalVersionComponent } from './components/motion-final-version/motion-final-version.component';
 import { MotionHighlightFormComponent } from './components/motion-highlight-form/motion-highlight-form.component';
-import { MotionManageMotionMeetingUsersComponent } from './components/motion-manage-motion-meeting-users/motion-manage-motion-meeting-users.component';
 import { MotionDetailDirectivesModule } from './modules/directives/motion-detail-directives.module';
 import { MotionChangeRecommendationDialogModule } from './modules/motion-change-recommendation-dialog/motion-change-recommendation-dialog.module';
 import { MotionDetailRoutingModule } from './motion-detail-routing.module';
 import { AmendmentCreateWizardComponent } from './pages/motion-form/components/amendment-create-wizard/amendment-create-wizard.component';
 import { MotionCommentComponent } from './pages/motion-view/components/motion-comment/motion-comment.component';
 import { MotionCommentsComponent } from './pages/motion-view/components/motion-comments/motion-comments.component';
+import { MotionManageMotionMeetingUsersComponent } from './pages/motion-view/components/motion-manage-motion-meeting-users/motion-manage-motion-meeting-users.component';
 import { MotionManagePollsComponent } from './pages/motion-view/components/motion-manage-polls/motion-manage-polls.component';
 import { MotionManageTimestampComponent } from './pages/motion-view/components/motion-manage-timestamp/motion-manage-timestamp.component';
 import { MotionManageTitleComponent } from './pages/motion-view/components/motion-manage-title/motion-manage-title.component';
