@@ -7,9 +7,9 @@ import {
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, skip } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -20,6 +20,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
+import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
@@ -86,7 +87,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         return !!this.previousMotion || !!this.nextMotion;
     }
 
-    public hasLoaded = new BehaviorSubject(false);
+    public hasLoaded$ = new BehaviorSubject(false);
 
     private _nextMotion: ViewMotion | null = null;
 
@@ -134,6 +135,25 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         private originUrlService: MotionDetailViewOriginUrlService
     ) {
         super();
+
+        this.subscriptions.push(
+            this.activeMeetingIdService.meetingIdObservable.pipe(skip(1)).subscribe(id => {
+                if (this.motion && this.motion.meeting_id !== id) {
+                    this.motion = null;
+                    if (this.hasLoaded$.value) {
+                        this.hasLoaded$.next(false);
+                    }
+                }
+            }),
+            this.route.params.pipe(skip(1)).subscribe((params: Params) => {
+                if (+params[`id`] !== this.motion.id) {
+                    this.motion = null;
+                    if (this.hasLoaded$.value) {
+                        this.hasLoaded$.next(false);
+                    }
+                }
+            })
+        );
     }
 
     /**
@@ -294,8 +314,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         this._motionId = id;
         if (id) {
             this.loadMotionById();
+        } else {
+            this.hasLoaded$.next(true);
         }
-        this.hasLoaded.next(true);
     }
 
     private loadMotionById(motionId: Id | null = this._motionId): void {
@@ -311,6 +332,13 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                     const title = motion.getTitle();
                     super.setTitle(title);
                     this.motion = motion;
+                    if (!this.hasLoaded$.value) {
+                        this.modelRequestService.waitSubscriptionReady(MOTION_DETAIL_SUBSCRIPTION).then(() => {
+                            if (this.motion.id === motionId) {
+                                this.hasLoaded$.next(true);
+                            }
+                        });
+                    }
                     this.cd.markForCheck();
                 }
             })
@@ -353,15 +381,12 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 })
             );
         }
-
-        this.cd.reattach();
     }
 
     /**
      * Lifecycle routine for motions to get destroyed.
      */
     private destroy(): void {
-        this.cd.detach();
         this._hasModelSubscriptionInitiated = false;
         this.subscriptions.delete(`sorted-motions`);
         this.viewService.reset();
