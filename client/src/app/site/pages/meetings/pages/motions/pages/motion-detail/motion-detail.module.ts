@@ -13,9 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
@@ -47,17 +45,16 @@ import { MotionDetailComponent } from './components/motion-detail/motion-detail.
 import { MotionDetailDiffComponent } from './components/motion-detail-diff/motion-detail-diff.component';
 import { MotionDetailDiffSummaryComponent } from './components/motion-detail-diff-summary/motion-detail-diff-summary.component';
 import { MotionDetailOriginalChangeRecommendationsComponent } from './components/motion-detail-original-change-recommendations/motion-detail-original-change-recommendations.component';
-import { MotionExtensionFieldComponent } from './components/motion-extension-field/motion-extension-field.component';
 import { MotionFinalVersionComponent } from './components/motion-final-version/motion-final-version.component';
 import { MotionHighlightFormComponent } from './components/motion-highlight-form/motion-highlight-form.component';
 import { MotionDetailDirectivesModule } from './modules/directives/motion-detail-directives.module';
 import { MotionChangeRecommendationDialogModule } from './modules/motion-change-recommendation-dialog/motion-change-recommendation-dialog.module';
 import { MotionDetailRoutingModule } from './motion-detail-routing.module';
-import { AmendmentCreateWizardComponent } from './pages/motion-form/components/amendment-create-wizard/amendment-create-wizard.component';
 import { MotionAddPollButtonComponent } from './pages/motion-view/components/motion-add-poll-button/motion-add-poll-button.component';
 import { MotionCommentComponent } from './pages/motion-view/components/motion-comment/motion-comment.component';
 import { MotionCommentsComponent } from './pages/motion-view/components/motion-comments/motion-comments.component';
 import { MotionContentComponent } from './pages/motion-view/components/motion-content/motion-content.component';
+import { MotionExtensionFieldComponent } from './pages/motion-view/components/motion-extension-field/motion-extension-field.component';
 import { MotionManageMotionMeetingUsersComponent } from './pages/motion-view/components/motion-manage-motion-meeting-users/motion-manage-motion-meeting-users.component';
 import { MotionManagePollsComponent } from './pages/motion-view/components/motion-manage-polls/motion-manage-polls.component';
 import { MotionManageTimestampComponent } from './pages/motion-view/components/motion-manage-timestamp/motion-manage-timestamp.component';
@@ -73,7 +70,6 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MotionAddPollButtonComponent,
         MotionDetailComponent,
         MotionViewComponent,
-        AmendmentCreateWizardComponent,
         MotionContentComponent,
         MotionMetaDataComponent,
         MotionManageTitleComponent,
@@ -139,11 +135,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         // Detail view
         ScrollingModule,
         ChipSelectModule,
-        MatBadgeModule,
-
-        // Amendment create wizard
-        MatStepperModule,
-        MatRadioModule
+        MatBadgeModule
     ]
 })
 export class MotionDetailModule {}

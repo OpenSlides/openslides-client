@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output
+} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { distinctUntilChanged, Observable, Subscription } from 'rxjs';
@@ -14,7 +23,8 @@ export interface SearchListDefinition {
 @Component({
     selector: `os-motion-extension-field`,
     templateUrl: `./motion-extension-field.component.html`,
-    styleUrls: [`./motion-extension-field.component.scss`]
+    styleUrls: [`./motion-extension-field.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     /**
@@ -123,7 +133,8 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      */
     public constructor(
         private formBuilder: UntypedFormBuilder,
-        private router: Router
+        private router: Router,
+        private cd: ChangeDetectorRef
     ) {}
 
     /**
@@ -137,6 +148,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
                 if (this.extensionFieldForm) {
                     this.extensionFieldForm.reset();
                 }
+                this.cd.markForCheck();
             }
         });
 
@@ -179,6 +191,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
                         }
                     }
                     this.extensionFieldForm.reset();
+                    this.cd.markForCheck();
                 });
         }
     }

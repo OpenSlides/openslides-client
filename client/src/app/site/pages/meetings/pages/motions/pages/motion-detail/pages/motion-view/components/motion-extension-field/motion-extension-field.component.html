@@ -18,8 +18,7 @@
             <mat-basic-chip class="pointer" disableRipple [matMenuTriggerFor]="triggerMenu" [ngClass]="classes">
                 {{ chipValue || '–' | translate }}
             </mat-basic-chip>
-        }
-        @if (!canBeEdited) {
+        } @else {
             <mat-basic-chip disableRipple [ngClass]="classes">
                 {{ chipValue | translate }}
             </mat-basic-chip>
@@ -44,7 +43,7 @@
                 (keydown)="keyDownFunction($event)"
             />
         </mat-form-field>
-        @for (list of searchLists; track list; let i = $index) {
+        @for (list of searchLists; track list.label; let i = $index) {
             <mat-form-field [formGroup]="extensionFieldForm">
                 <mat-label>{{ list.label ?? '' | translate }}</mat-label>
                 <os-list-search-selector

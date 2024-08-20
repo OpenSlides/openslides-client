@@ -21,7 +21,7 @@ import { MotionSubmitterControllerService } from '../../../../../../modules/subm
 import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../modules/working-group-speakers/services';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
-import { SearchListDefinition } from '../../../../components/motion-extension-field/motion-extension-field.component';
+import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
 
 @Component({
     selector: `os-motion-meta-data`,
