@@ -3,8 +3,10 @@ import { Fqid } from 'src/app/domain/definitions/key-types';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
+import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
 import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
@@ -80,12 +82,21 @@ export type FullNameInformation = ShortNameInformation & LevelAndNumberInformati
     providedIn: `root`
 })
 export class UserRepositoryService extends BaseRepository<ViewUser, User> {
+    private subscriptions = new SubscriptionMap();
+    private delegationEnabled = false;
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollectorService,
         private activeMeetingIdService: ActiveMeetingIdService,
+        private meetingSettingsService: MeetingSettingsService,
         private meetingUserRepo: MeetingUserRepositoryService
     ) {
         super(repositoryServiceCollector, User);
+
+        this.subscriptions.push(
+            this.meetingSettingsService
+                .get(`users_enable_vote_delegations`)
+                .subscribe(enabled => (this.delegationEnabled = enabled))
+        );
     }
 
     /**
@@ -289,6 +300,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return `${title} ${name}`.trim();
     }
 
+    private getDelegationIsActivated(): boolean {
+        return this.delegationEnabled;
+    }
+
     private getFullName(user: ViewUser, structureLevel?: ViewStructureLevel): string {
         let fullName = this.getShortName(user);
         const additions: string[] = [];
@@ -358,6 +373,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             );
         viewModel.getLevelAndNumber = (): string => this.getLevelAndNumber(viewModel);
         viewModel.getEnsuredActiveMeetingId = (): Id => this.activeMeetingIdService.meetingId;
+        viewModel.getDelegationIsActivated = (): boolean => this.delegationEnabled;
         return viewModel;
     }
 

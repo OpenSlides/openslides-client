@@ -10,7 +10,6 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { getParticipantVoteInfoSubscriptionConfig } from '../../../../pages/participants/participants.subscription';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
-import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 
 @Component({
     selector: `os-poll-progress`,
@@ -22,6 +21,8 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
     @Input()
     public poll!: ViewPoll;
 
+    public getDelegationIsActivated!: () => boolean;
+
     @Input()
     public canManagePoll = false;
 
@@ -30,8 +31,6 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
     public get votescast(): number {
         return this.poll?.vote_count || 0;
     }
-
-    private _isVoteDelegationEnabled = false;
 
     public get canSeeProgressBar(): boolean {
         if (!this.canSeeNames) {
@@ -54,8 +53,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
         private operator: OperatorService,
         private activeMeeting: ActiveMeetingService,
         private modelRequestBuilder: ModelRequestBuilderService,
-        private cd: ChangeDetectorRef,
-        private meetingSettingsService: MeetingSettingsService
+        private cd: ChangeDetectorRef
     ) {
         super();
     }
@@ -63,9 +61,6 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
     public ngOnInit(): void {
         if (this.poll) {
             this.subscriptions.push(
-                this.meetingSettingsService
-                    .get(`users_enable_vote_delegations`)
-                    .subscribe(enabled => (this._isVoteDelegationEnabled = enabled)),
                 this.userRepo
                     .getViewModelListObservable()
                     .pipe(
@@ -78,7 +73,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
                              */
                             return users.filter(user => {
                                 let countable = user.isVoteCountable;
-                                if (this._isVoteDelegationEnabled) {
+                                if (this.getDelegationIsActivated) {
                                     countable = user.isVoteCountableWithDelegation;
                                 }
                                 const inVoteGroup = this.poll.entitled_group_ids.intersect(user.group_ids()).length;
