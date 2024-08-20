@@ -21,8 +21,6 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
     @Input()
     public poll!: ViewPoll;
 
-    public getDelegationIsActivated!: () => boolean;
-
     @Input()
     public canManagePoll = false;
 
@@ -72,10 +70,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
                              * They are in one of the voting groups
                              */
                             return users.filter(user => {
-                                let countable = user.isVoteCountable;
-                                if (this.getDelegationIsActivated) {
-                                    countable = user.isVoteCountableWithDelegation;
-                                }
+                                const countable = user.isVoteCountable;
                                 const inVoteGroup = this.poll.entitled_group_ids.intersect(user.group_ids()).length;
 
                                 return countable && inVoteGroup;
