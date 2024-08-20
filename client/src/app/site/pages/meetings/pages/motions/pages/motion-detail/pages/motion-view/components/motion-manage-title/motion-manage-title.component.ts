@@ -1,19 +1,20 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { distinctUntilChanged, Subscription } from 'rxjs';
+import { distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
 import { ProjectableTitleComponent } from 'src/app/site/pages/meetings/modules/meetings-component-collector/detail-view/components/projectable-title/projectable-title.component';
-import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 
-import { PersonalNoteControllerService } from '../../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
-import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
+import { PersonalNoteControllerService } from '../../../../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
+import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
+import { MotionChangeRecommendationDialogService } from '../../../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
 
 @Component({
     selector: `os-motion-manage-title`,
     templateUrl: `./motion-manage-title.component.html`,
-    styleUrls: [`./motion-manage-title.component.scss`]
+    styleUrls: [`./motion-manage-title.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
     @ViewChild(ProjectableTitleComponent)
@@ -21,14 +22,18 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
 
     public titleChangeRecommendation: ViewMotionChangeRecommendation | null = null;
 
-    public override get parent(): ViewMotion | null {
-        return this.motion.lead_motion!;
-    }
-
     public getTitleFn = (): string => this.getTitleWithChanges();
 
     private get personalNote(): PersonalNote | null {
         return this.motion.getPersonalNote();
+    }
+
+    public get isFavorite(): boolean {
+        return this.personalNote?.star || false;
+    }
+
+    public get isFavorite$(): Observable<boolean> {
+        return this.motion.personal_notes$.pipe(map(notes => (notes?.length ? notes[0]?.star : false)));
     }
 
     public constructor(
@@ -69,11 +74,7 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
      * Toggles the favorite status
      */
     public toggleFavorite(): void {
-        this.personalNoteRepo.setPersonalNote({ star: !this.isFavorite() }, this.motion);
-    }
-
-    public isFavorite(): boolean {
-        return this.personalNote?.star || false;
+        this.personalNoteRepo.setPersonalNote({ star: !this.isFavorite }, this.motion);
     }
 
     protected override getSubscriptions(): Subscription[] {

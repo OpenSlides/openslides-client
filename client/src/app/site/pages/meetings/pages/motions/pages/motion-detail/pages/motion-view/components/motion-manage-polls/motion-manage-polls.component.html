@@ -1,7 +1,7 @@
 <div class="spacer-top-20 spacer-bottom-20">
-    @if (motion && motion.poll_ids) {
-        @for (id of motion.poll_ids | reverse; track id) {
-            <os-motion-poll [pollId]="id" (dialogOpened)="onEditPoll(id)"></os-motion-poll>
+    @if (motion && motion.polls$; as polls) {
+        @for (poll of polls | async | reverse; track poll.id) {
+            <os-motion-poll [pollViewModel]="poll" (dialogOpened)="onEditPoll(poll)"></os-motion-poll>
         }
     }
     @if (!hideAdd) {

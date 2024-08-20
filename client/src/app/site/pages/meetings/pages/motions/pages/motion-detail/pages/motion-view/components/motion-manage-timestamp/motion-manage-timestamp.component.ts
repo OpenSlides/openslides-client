@@ -4,9 +4,9 @@ import { fromUnixTime, getHours, getMinutes, isDate } from 'date-fns';
 import { KeyOfType } from 'src/app/infrastructure/utils/keyof-type';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { MotionControllerService } from '../../../../services/common/motion-controller.service';
-import { MotionPermissionService } from '../../../../services/common/motion-permission.service';
-import { ViewMotion } from '../../../../view-models';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
+import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service';
+import { ViewMotion } from '../../../../../../view-models';
 
 @Component({
     selector: `os-motion-manage-timestamp`,
@@ -59,16 +59,18 @@ export class MotionManageTimestampComponent extends BaseUiComponent {
             time: [``]
         });
 
-        this.form.get(`date`).valueChanges.subscribe(currDate => {
-            if (isDate(currDate) !== !!this.form.get(`time`).value) {
-                this.form.get(`time`).setValue(isDate(currDate) ? `00:00` : ``);
-            }
-        });
-        this.form.get(`time`).valueChanges.subscribe(currTime => {
-            if (!!currTime !== isDate(this.form.get(`date`).value)) {
-                this.form.get(`date`).setValue(!!currTime ? new Date() : null);
-            }
-        });
+        this.subscriptions.push(
+            this.form.get(`date`).valueChanges.subscribe(currDate => {
+                if (isDate(currDate) !== !!this.form.get(`time`).value) {
+                    this.form.get(`time`).setValue(isDate(currDate) ? `00:00` : ``);
+                }
+            }),
+            this.form.get(`time`).valueChanges.subscribe(currTime => {
+                if (!!currTime !== isDate(this.form.get(`date`).value)) {
+                    this.form.get(`date`).setValue(!!currTime ? new Date() : null);
+                }
+            })
+        );
     }
 
     public async onSave(): Promise<void> {

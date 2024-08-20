@@ -28,7 +28,7 @@
                 matTooltip="{{ 'Mark as personal favorite' | translate }}"
                 (click)="toggleFavorite()"
             >
-                <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
+                <mat-icon>{{ (isFavorite$ | async) ? 'star' : 'star_border' }}</mat-icon>
             </button>
         </os-projectable-title>
         <!-- Sequential number -->
@@ -39,10 +39,10 @@
                     &nbsp;{{ motion.sequential_number }}
                 </span>
             }
-            @if (showSequentialNumber && parent) {
-                <span>&#xb7;&nbsp;</span>
-            }
-            @if (parent) {
+            @if (motion.lead_motion$ | async; as parent) {
+                @if (showSequentialNumber) {
+                    <span>&#xb7;&nbsp;</span>
+                }
                 <span>
                     <span>
                         <span>{{ 'Amendment to' | translate }}</span>
