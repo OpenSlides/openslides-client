@@ -5,6 +5,7 @@ import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
@@ -83,6 +84,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollectorService,
         private activeMeetingIdService: ActiveMeetingIdService,
+        private meetingSettingsService: MeetingSettingsService,
         private meetingUserRepo: MeetingUserRepositoryService
     ) {
         super(repositoryServiceCollector, User);
@@ -358,6 +360,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             );
         viewModel.getLevelAndNumber = (): string => this.getLevelAndNumber(viewModel);
         viewModel.getEnsuredActiveMeetingId = (): Id => this.activeMeetingIdService.meetingId;
+        viewModel.getDelegationSettingEnabled = (): boolean =>
+            this.meetingSettingsService.instant(`users_enable_vote_delegations`);
         return viewModel;
     }
 
