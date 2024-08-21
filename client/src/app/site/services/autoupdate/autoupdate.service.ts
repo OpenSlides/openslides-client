@@ -44,6 +44,7 @@ interface AutoupdateSubscriptionMap {
 
 interface AutoupdateIncomingMessage {
     autoupdateData: AutoupdateModelData;
+    autoupdateDataId: Id;
     id: Id;
     description?: string;
 }
@@ -73,6 +74,7 @@ export class AutoupdateService {
     private _mutex = new Mutex();
     private _currentQueryParams: QueryParams | null = null;
     private _resolveDataReceived: ((value: ModelData) => void)[] = [];
+    private _lastHandeledDataId: Id;
 
     public constructor(
         private httpEndpointService: HttpStreamEndpointService,
@@ -90,7 +92,12 @@ export class AutoupdateService {
 
         this.communication.setEndpoint(AUTOUPDATE_DEFAULT_ENDPOINT);
         this.communication.listen().subscribe(data => {
-            this.handleAutoupdate({ autoupdateData: data.data, id: data.streamId, description: data.description });
+            this.handleAutoupdate({
+                autoupdateData: data.data,
+                autoupdateDataId: data.dataId,
+                id: data.streamId,
+                description: data.description
+            });
         });
         this.communication.listenShouldReconnect().subscribe(() => {
             this.pauseUntilVisible();
@@ -246,13 +253,28 @@ export class AutoupdateService {
         };
     }
 
-    private async handleAutoupdate({ autoupdateData, id, description }: AutoupdateIncomingMessage): Promise<void> {
+    private async handleAutoupdate({
+        autoupdateData,
+        autoupdateDataId,
+        id,
+        description
+    }: AutoupdateIncomingMessage): Promise<void> {
         if (!this._activeRequestObjects || !this._activeRequestObjects[id]) {
             return;
         }
 
         const modelData = autoupdateFormatToModelData(autoupdateData);
         console.debug(`[autoupdate] from stream:`, description, id, [modelData, autoupdateData]);
+        if (this._lastHandeledDataId === autoupdateDataId) {
+            const unlock = await this._mutex.lock();
+            if (this._resolveDataReceived[id]) {
+                this._resolveDataReceived[id](modelData);
+                delete this._resolveDataReceived[id];
+            }
+            return unlock();
+        }
+        this._lastHandeledDataId = autoupdateDataId;
+
         const fullListUpdateCollections: {
             [collection: string]: Ids;
         } = {};
