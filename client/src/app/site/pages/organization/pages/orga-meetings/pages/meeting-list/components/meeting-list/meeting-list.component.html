@@ -38,7 +38,11 @@
         [class.no-access]="isMultiSelect || !meeting.canAccess() || !meeting.canBeEnteredBy(operator.user)"
     >
         @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnteredBy(operator.user)) {
-            <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
+            <a
+                class="stretch-to-fill-parent"
+                [ariaLabel]="ariaLabel(meeting)"
+                [routerLink]="getMeetingUrl(meeting)"
+            ></a>
         }
         <div class="flex-vertical-center overflow-hidden">
             <div class="nameCell overflow-hidden">
@@ -99,6 +103,7 @@
                     @if (!this.isMultiSelect && meeting.committee?.canAccess()) {
                         <a
                             class="stretch-to-fill-parent committee-link"
+                            [ariaLabel]="ariaLabel(meeting, true)"
                             [routerLink]="getCommitteeForMeetingUrl(meeting)"
                         ></a>
                     }
@@ -128,7 +133,11 @@
         [class.no-access]="isMultiSelect || !meeting.canAccess() || !meeting.canBeEnteredBy(operator.user)"
     >
         @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnteredBy(operator.user)) {
-            <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
+            <a
+                class="stretch-to-fill-parent"
+                [ariaLabel]="ariaLabel(meeting)"
+                [routerLink]="getMeetingUrl(meeting)"
+            ></a>
         }
         <div>
             @if (meeting.userAmount) {

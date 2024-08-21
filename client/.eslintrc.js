@@ -103,8 +103,11 @@ module.exports = {
                     alphabetical: true
                 }],
                 '@angular-eslint/template/prefer-control-flow': ['error'],
-                // Should be switched to error
-                '@angular-eslint/template/elements-content': ['warn']
+                '@angular-eslint/template/elements-content': ['error', {
+                    "allowList": [
+                      "ariaLabel"
+                    ]
+                  }]
             }
         },
         {

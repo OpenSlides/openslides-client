@@ -85,6 +85,10 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         );
     }
 
+    public ariaLabel(user: ViewUser): string {
+        return this.translate.instant(`Navigate to user page from `) + user.short_name;
+    }
+
     public createNewMember(): void {
         this.router.navigate([`create`], { relativeTo: this.route });
     }

@@ -65,7 +65,11 @@
                         <ng-container matColumnDef="anchor">
                             <mat-header-cell *matHeaderCellDef></mat-header-cell>
                             <mat-cell *matCellDef="let motion">
-                                <a [routerLink]="motion.getDetailStateUrl()" [state]="{ back: 'true' }"></a>
+                                <a
+                                    [ariaLabel]="ariaLabel(motion)"
+                                    [routerLink]="motion.getDetailStateUrl()"
+                                    [state]="{ back: 'true' }"
+                                ></a>
                             </mat-cell>
                         </ng-container>
                         <mat-header-row *matHeaderRowDef="getColumnDefinition()"></mat-header-row>

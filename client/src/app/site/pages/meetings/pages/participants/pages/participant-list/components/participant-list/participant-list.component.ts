@@ -511,4 +511,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             }
         }
     }
+
+    public ariaLabel(user: ViewUser): string {
+        return this.translate.instant(`Navigate to participant page from `) + user.short_name;
+    }
 }

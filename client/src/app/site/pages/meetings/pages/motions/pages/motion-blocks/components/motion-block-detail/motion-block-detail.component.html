@@ -57,7 +57,12 @@
         <!-- Title column -->
         <div *osScrollingTableCell="'title'; row as motion; rowContext as rowContext" class="cell-slot fill">
             @if (!isMultiSelect) {
-                <a class="detail-link" [routerLink]="motion.getDetailStateUrl()" [state]="{ back: 'true' }"></a>
+                <a
+                    class="detail-link"
+                    [ariaLabel]="ariaLabel(motion)"
+                    [routerLink]="motion.getDetailStateUrl()"
+                    [state]="{ back: 'true' }"
+                ></a>
             }
             <div class="column-title innerTable overflow-hidden">
                 <div class="title-line ellipsis-overflow">

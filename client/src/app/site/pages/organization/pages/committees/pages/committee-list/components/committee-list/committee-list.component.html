@@ -36,7 +36,7 @@
 >
     <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
         @if (!isMultiSelect && committee.canAccess()) {
-            <a class="stretch-to-fill-parent" [routerLink]="committee.id"></a>
+            <a class="stretch-to-fill-parent" [ariaLabel]="ariaLabel(committee)" [routerLink]="committee.id"></a>
         }
         <div class="overflow-hidden">
             <div class="title-line ellipsis-overflow">
