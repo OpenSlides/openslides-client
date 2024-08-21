@@ -4,14 +4,12 @@ import { auditTime, BehaviorSubject, combineLatest, filter, Observable, Subscrip
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
 import { ViewUnifiedChange } from '../../../modules/change-recommendations/view-models/view-unified-change';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { TagControllerService } from '../../../modules/tags/services';
-import { MotionWorkflowControllerService } from '../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
 import { AmendmentControllerService } from '../../../services/common/amendment-controller.service';
 import { MotionControllerService } from '../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionFormatService } from '../../../services/common/motion-format.service/motion-format.service';
@@ -30,10 +28,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
             this.doUpdate();
         }
 
-        if (!Object.keys(previousMotion || {}).length && Object.keys(motion).length) {
-            this.onInitTextBasedAmendment(); // Assuming that it's an amendment
-        }
-
         this.onAfterSetMotion(previousMotion, motion);
         this.cd.markForCheck();
     }
@@ -42,31 +36,8 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
         return this._motion!;
     }
 
-    @Input()
-    public newMotion = false;
-
-    @Input()
-    public set editMotion(isEditing: boolean) {
-        this._isEditing = isEditing;
-        if (isEditing) {
-            this.onEnterEditMode();
-        }
-    }
-
-    public get editMotion(): boolean {
-        return this._isEditing;
-    }
-
-    public get lineNumberingMode(): LineNumberingMode {
-        return this.viewService.currentLineNumberingMode;
-    }
-
     public get lineNumberingMode$(): Observable<LineNumberingMode> {
         return this.viewService.lineNumberingModeSubject;
-    }
-
-    public get changeRecoMode(): ChangeRecoMode {
-        return this.viewService.currentChangeRecommendationMode;
     }
 
     public get changeRecoMode$(): Observable<ChangeRecoMode> {
@@ -82,10 +53,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
             (this.changeRecommendations && this.changeRecommendations.length > 0) ||
             (this.amendments && this.amendments.filter(amendment => amendment.isParagraphBasedAmendment()).length > 0)
         );
-    }
-
-    public get parent(): ViewMotion | null {
-        return this.motion?.lead_motion || null;
     }
 
     /**
@@ -104,8 +71,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     ///////////////////////////////////////////////
 
     public categoryRepo = inject(MotionCategoryControllerService);
-    public workflowRepo = inject(MotionWorkflowControllerService);
-    public participantRepo = inject(ParticipantControllerService);
 
     protected repo = inject(MotionControllerService);
     protected amendmentRepo = inject(AmendmentControllerService);
@@ -116,16 +81,12 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     protected motionFormatService = inject(MotionFormatService);
     protected viewService = inject(MotionDetailViewService);
 
+    protected override translate = inject(TranslateService);
+
     ///////////////////////////////////////////////
     /////// Settings variables
     ///////////////////////////////////////////////
 
-    public multipleParagraphsAllowed = false;
-    public reasonRequired = false;
-    public minSupporters = 0;
-    public preamble = ``;
-    public showReferringMotions = false;
-    public showSequentialNumber = false;
     protected lineLength = 0;
     protected sortedChangingObjects: ViewUnifiedChange[] | null = null;
     protected readonly sortedChangingObjectsSubject: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
@@ -136,7 +97,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     /**
      * All change recommendations to this motion
      */
-    public changeRecommendations: ViewUnifiedChange[] = [];
+    private changeRecommendations: ViewUnifiedChange[] = [];
     public get changeRecommendations$(): Observable<ViewUnifiedChange[]> {
         return this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).pipe(filter(value => !!value));
     }
@@ -146,15 +107,12 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
      */
     public scrollToChange: ViewUnifiedChange | null = null;
 
-    protected amendments: ViewMotion[] = [];
+    private amendments: ViewMotion[] = [];
     protected get amendments$(): Observable<ViewMotion[]> {
         return this.amendmentRepo.getViewModelListObservableFor(this.motion).pipe(filter(value => !!value));
     }
 
-    private _isEditing = false;
     private _motion: ViewMotion | null = null;
-
-    protected override translate = inject(TranslateService);
 
     /**
      * In the original version, a change-recommendation-annotation has been clicked
@@ -185,16 +143,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
         }
         return this.sortedChangingObjects!;
     }
-
-    /**
-     * Function called when the edit-mode is set to `true`
-     */
-    protected onEnterEditMode(): void {}
-
-    /**
-     * Function called when a new motion is passed and it's an text-based amendment
-     */
-    protected onInitTextBasedAmendment(): void {}
 
     /**
      * Function called after all eventual updates whenever the motion setter is called
@@ -247,23 +195,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
             this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => {
                 this.lineLength = lineLength;
                 this.sortedChangingObjects = null;
-            }),
-            this.meetingSettingsService
-                .get(`motions_reason_required`)
-                .subscribe(required => (this.reasonRequired = required)),
-            this.meetingSettingsService
-                .get(`motions_supporters_min_amount`)
-                .subscribe(value => (this.minSupporters = value)),
-            this.meetingSettingsService.get(`motions_preamble`).subscribe(value => (this.preamble = value)),
-            this.meetingSettingsService.get(`motions_amendments_multiple_paragraphs`).subscribe(allowed => {
-                this.multipleParagraphsAllowed = allowed;
-            }),
-            this.meetingSettingsService
-                .get(`motions_show_referring_motions`)
-                .subscribe(show => (this.showReferringMotions = show)),
-            this.meetingSettingsService
-                .get(`motions_show_sequential_number`)
-                .subscribe(shown => (this.showSequentialNumber = shown))
+            })
         ];
     }
 }

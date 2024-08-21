@@ -45,7 +45,7 @@
                                     changeRecoMode === ChangeRecoMode.Changed)
                             ) {
                                 <os-motion-detail-original-change-recommendations
-                                    [changeRecommendations]="changeRecommendations"
+                                    [changeRecommendations]="changeRecommendations$ | async"
                                     [html]="getAmendmentDiffTextWithContext(paragraph)"
                                     [motionId]="motion.id"
                                     (createChangeRecommendation)="createChangeRecommendation.emit($event)"

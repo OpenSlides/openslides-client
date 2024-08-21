@@ -1,13 +1,13 @@
+@let changeRecoMode = changeRecoMode$ | async;
+@let lineNumberingMode = lineNumberingMode$ | async;
+
 <!-- Regular motions or traditional amendments -->
 @if (!isParagraphBasedAmendment) {
-    @let changeRecoMode = changeRecoMode$ | async;
-    @let lineNumberingMode = lineNumberingMode$ | async;
-
     @if (changeRecoMode !== ChangeRecoMode.Diff) {
         <!-- Text (hide preamble, if diff mode. The preample is included in the motion-detail-diff component) -->
         @if (showPreamble) {
             <span class="text-prefix-label">
-                {{ preamble }}
+                {{ preamble$ | async }}
             </span>
         }
 
@@ -19,7 +19,7 @@
         >
             @if (lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original) {
                 <os-motion-detail-original-change-recommendations
-                    [changeRecommendations]="changeRecommendations"
+                    [changeRecommendations]="changeRecommendations$ | async"
                     [html]="formattedTextPlain$ | async"
                     [motionId]="motion.id"
                     (createChangeRecommendation)="createChangeRecommendation($event)"
@@ -46,8 +46,10 @@
 } @else {
     <!-- Paragraph-based amendments -->
     <os-paragraph-based-amendment
+        [changeRecoMode]="changeRecoMode"
         [changesForDiffMode]="changesForDiffMode$ | async"
         [highlightedLine]="highlightedLine"
+        [lineNumberingMode]="lineNumberingMode"
         [motion]="motion"
         (createChangeRecommendation)="createChangeRecommendation($event)"
     ></os-paragraph-based-amendment>

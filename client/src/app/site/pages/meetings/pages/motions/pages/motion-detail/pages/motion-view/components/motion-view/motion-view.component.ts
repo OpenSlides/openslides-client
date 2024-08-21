@@ -146,7 +146,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 }
             }),
             this.route.params.pipe(skip(1)).subscribe((params: Params) => {
-                if (+params[`id`] !== this.motion.id) {
+                if (+params[`id`] !== this.motion?.id) {
                     this.motion = null;
                     if (this.hasLoaded$.value) {
                         this.hasLoaded$.next(false);

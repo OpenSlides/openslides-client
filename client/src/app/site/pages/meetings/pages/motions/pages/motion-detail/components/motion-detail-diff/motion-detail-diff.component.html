@@ -47,7 +47,7 @@
                 </div>
             </div>
         }
-        @for (change of allTextChangingObjects; track change; let i = $index) {
+        @for (change of allTextChangingObjects; track change.getChangeId(); let i = $index) {
             <div>
                 <div
                     class="motion-text"
@@ -157,7 +157,7 @@
                 @if (change.amendment.state.next_states.length > 0) {
                     <mat-divider></mat-divider>
                 }
-                @for (state of change.amendment.state.next_states; track state) {
+                @for (state of change.amendment.state.next_states; track state.id) {
                     <button mat-menu-item (click)="setAmendmentState(change, state.id)">
                         {{ state.name }}
                         @if (state.show_state_extension_field) {
@@ -168,7 +168,7 @@
                 @if (change.amendment.state.next_states.length > 0) {
                     <mat-divider></mat-divider>
                 }
-                @for (state of change.amendment.state.previous_states; track state) {
+                @for (state of change.amendment.state.previous_states; track state.id) {
                     <button mat-menu-item (click)="setAmendmentState(change, state.id)">
                         <mat-icon>arrow_back</mat-icon>
                         {{ state.name }}

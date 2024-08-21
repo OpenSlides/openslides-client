@@ -6,7 +6,7 @@
 }
 @if (showChangeRecommendations) {
     <ul class="change-recommendation-list">
-        @for (reco of textChangeRecommmendations; track reco) {
+        @for (reco of textChangeRecommmendations; track reco.getChangeId()) {
             <li
                 tabindex="0"
                 [class.delete]="isDeletionChangeRecommendation(reco)"

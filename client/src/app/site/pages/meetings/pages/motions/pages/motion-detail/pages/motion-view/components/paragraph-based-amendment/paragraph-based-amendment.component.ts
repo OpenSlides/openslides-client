@@ -27,6 +27,12 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
     @Input()
     public isFinalEdit = false;
 
+    @Input()
+    public lineNumberingMode: LineNumberingMode;
+
+    @Input()
+    public changeRecoMode: ChangeRecoMode;
+
     @Output()
     public createChangeRecommendation = new EventEmitter<LineRange>();
 

@@ -39,6 +39,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      */
     public showSupporters = false;
 
+    public minSupporters$ = this.meetingSettingsService.get(`motions_supporters_min_amount`);
+    public showReferringMotions$ = this.meetingSettingsService.get(`motions_show_referring_motions`);
+
     /**
      * @returns the current recommendation label (with extension)
      */

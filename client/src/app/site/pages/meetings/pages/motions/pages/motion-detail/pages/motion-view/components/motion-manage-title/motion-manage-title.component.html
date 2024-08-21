@@ -33,6 +33,7 @@
         </os-projectable-title>
         <!-- Sequential number -->
         <span class="main-nav-color title-font">
+            @let showSequentialNumber = showSequentialNumber$ | async;
             @if (showSequentialNumber) {
                 <span>
                     <span>{{ 'Sequential number' | translate }}</span>

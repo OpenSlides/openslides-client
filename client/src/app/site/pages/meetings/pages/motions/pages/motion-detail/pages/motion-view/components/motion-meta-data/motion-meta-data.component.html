@@ -19,7 +19,7 @@
 }
 
 <!-- do Support -->
-@if (minSupporters) {
+@if (minSupporters$ | async) {
     <div>
         @if (perms.isAllowed('support', motion) || motion.hasSupporters()) {
             <h4>{{ 'Supporters' | translate }}</h4>
@@ -149,6 +149,7 @@
     </div>
 }
 
+@let showReferringMotions = showReferringMotions$ | async;
 <!-- Recommendation -->
 @if (isRecommendationEnabled) {
     <div>

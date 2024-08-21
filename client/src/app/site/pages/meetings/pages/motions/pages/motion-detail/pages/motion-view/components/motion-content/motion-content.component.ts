@@ -20,6 +20,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public readonly ChangeRecoMode = ChangeRecoMode;
     public readonly LineNumberingMode = LineNumberingMode;
 
+    public preamble$ = this.meetingSettingsService.get(`motions_preamble`);
+
     public get showPreamble(): boolean {
         return this.motion.showPreamble;
     }
@@ -109,7 +111,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             if (lineLength) {
                 return this.motionFormatService.formatMotion({
                     targetMotion: this.motion,
-                    crMode: this.changeRecoMode,
+                    crMode: this.viewService.currentChangeRecommendationMode,
                     changes: changeRecoMode === ChangeRecoMode.Original ? [] : changes,
                     lineLength: this.lineLength,
                     highlightedLine: this.highlightedLine,

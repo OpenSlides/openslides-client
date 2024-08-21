@@ -36,6 +36,8 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         return this.motion.personal_notes$.pipe(map(notes => (notes?.length ? notes[0]?.star : false)));
     }
 
+    public showSequentialNumber$ = this.meetingSettingsService.get(`motions_show_sequential_number`);
+
     public constructor(
         protected override translate: TranslateService,
         private personalNoteRepo: PersonalNoteControllerService,
@@ -59,14 +61,17 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         if (this.motion.isAmendment()) {
             return false;
         }
-        return this.changeRecoMode === ChangeRecoMode.Original || this.changeRecoMode === ChangeRecoMode.Diff;
+        return (
+            this.viewService.currentChangeRecommendationMode === ChangeRecoMode.Original ||
+            this.viewService.currentChangeRecommendationMode === ChangeRecoMode.Diff
+        );
     }
 
     public getTitleWithChanges(): string {
         return this.changeRecoRepo.getTitleWithChanges(
             this.motion.title,
             this.titleChangeRecommendation!,
-            this.changeRecoMode
+            this.viewService.currentChangeRecommendationMode
         );
     }
 
