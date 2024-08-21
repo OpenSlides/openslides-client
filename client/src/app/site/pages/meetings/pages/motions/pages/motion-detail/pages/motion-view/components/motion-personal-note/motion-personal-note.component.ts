@@ -6,7 +6,7 @@ import { ViewPersonalNote } from 'src/app/site/pages/meetings/pages/motions';
 
 import { PersonalNoteControllerService } from '../../../../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
 import { MotionPdfExportService } from '../../../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
-import { BaseMotionDetailActionCardComponent } from '../../../../base/base-motion-detail-action-card.component';
+import { BaseMotionDetailActionCardComponent } from '../../base/base-motion-detail-action-card.component';
 
 const SUBSCRIPTION_NAME = `personal_note_subscription`;
 

@@ -7,7 +7,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionCommentControllerService } from '../../../../../../modules/comments/services/motion-comment-controller.service';
 import { MotionPdfExportService } from '../../../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
-import { BaseMotionDetailActionCardComponent } from '../../../../base/base-motion-detail-action-card.component';
+import { BaseMotionDetailActionCardComponent } from '../../base/base-motion-detail-action-card.component';
 
 @Component({
     selector: `os-motion-comment`,

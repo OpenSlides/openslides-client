@@ -35,6 +35,7 @@ export abstract class BaseMotionDetailActionCardComponent extends BaseComponent 
     protected override translate = inject(TranslateService);
     protected cd = inject(ChangeDetectorRef);
     protected fb = inject(FormBuilder);
+
     public constructor() {
         super();
         this.formGroup = this.fb.group({ text: `` });

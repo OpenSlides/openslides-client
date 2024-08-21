@@ -16,7 +16,6 @@ import { AmendmentControllerService } from '../../../services/common/amendment-c
 import { MotionControllerService } from '../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionFormatService } from '../../../services/common/motion-format.service/motion-format.service';
 import { MotionLineNumberingService } from '../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
-import { MotionDetailServiceCollectorService } from '../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 import { MotionDetailViewService } from '../services/motion-detail-view.service';
 
 @Directive()
@@ -101,52 +100,21 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     }
 
     ///////////////////////////////////////////////
-    /////// Getter to repos & services
+    /////// Repos & services
     ///////////////////////////////////////////////
 
-    protected get repo(): MotionControllerService {
-        return this.motionServiceCollector.motionRepo;
-    }
+    public categoryRepo = inject(MotionCategoryControllerService);
+    public workflowRepo = inject(MotionWorkflowControllerService);
+    public participantRepo = inject(ParticipantControllerService);
 
-    public get categoryRepo(): MotionCategoryControllerService {
-        return this.motionServiceCollector.categoryRepo;
-    }
-
-    public get workflowRepo(): MotionWorkflowControllerService {
-        return this.motionServiceCollector.workflowRepo;
-    }
-
-    public get participantRepo(): ParticipantControllerService {
-        return this.motionServiceCollector.participantRepo;
-    }
-
-    protected get amendmentRepo(): AmendmentControllerService {
-        return this.motionServiceCollector.amendmentRepo;
-    }
-
-    protected get blockRepo(): MotionBlockControllerService {
-        return this.motionServiceCollector.blockRepo;
-    }
-
-    protected get tagRepo(): TagControllerService {
-        return this.motionServiceCollector.tagRepo;
-    }
-
-    protected get changeRecoRepo(): MotionChangeRecommendationControllerService {
-        return this.motionServiceCollector.changeRecoRepo;
-    }
-
-    protected get motionLineNumbering(): MotionLineNumberingService {
-        return this.motionServiceCollector.motionLineNumbering;
-    }
-
-    protected get motionFormatService(): MotionFormatService {
-        return this.motionServiceCollector.motionFormatService;
-    }
-
-    protected get viewService(): MotionDetailViewService {
-        return this.motionServiceCollector.motionViewService;
-    }
+    protected repo = inject(MotionControllerService);
+    protected amendmentRepo = inject(AmendmentControllerService);
+    protected blockRepo = inject(MotionBlockControllerService);
+    protected tagRepo = inject(TagControllerService);
+    protected changeRecoRepo = inject(MotionChangeRecommendationControllerService);
+    protected motionLineNumbering = inject(MotionLineNumberingService);
+    protected motionFormatService = inject(MotionFormatService);
+    protected viewService = inject(MotionDetailViewService);
 
     ///////////////////////////////////////////////
     /////// Settings variables
@@ -187,7 +155,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     private _motion: ViewMotion | null = null;
 
     protected override translate = inject(TranslateService);
-    protected motionServiceCollector = inject(MotionDetailServiceCollectorService);
 
     /**
      * In the original version, a change-recommendation-annotation has been clicked
