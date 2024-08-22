@@ -116,16 +116,18 @@ export class MotionFormatService {
      */
     public formatMotionForForward(motion: ViewMotion, useOriginal?: boolean): MotionFormatResult {
         const lineLength = this.settings.instant(`motions_line_length`);
+        let title = motion.title;
         let text = motion.text;
         if (!useOriginal) {
+            title = this.getFinalTitle(motion, lineLength);
             const finalMotionText = this.getFinalMotionText(motion, lineLength!);
             text = this.lineNumberingService.stripLineNumbers(finalMotionText);
         }
 
         return {
             origin_id: motion.id,
-            title: this.getFinalTitle(motion, lineLength),
             reason: motion.reason || ``,
+            title,
             text
         };
     }
