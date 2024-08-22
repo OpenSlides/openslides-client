@@ -43,7 +43,7 @@
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
         @if (!isMultiSelect) {
-            <a class="detail-link" [ariaLabel]="ariaLabel(user)" [routerLink]="user.id"></a>
+            <a class="detail-link" [attr.aria-label]="ariaLabel(user)" [routerLink]="user.id"></a>
         }
         <div class="nameCell">
             <div>

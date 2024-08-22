@@ -70,7 +70,7 @@
             <a
                 class="detail-link"
                 target="_blank"
-                [ariaLabel]="ariaLabel(mediafile)"
+                [attr.aria-label]="ariaLabel(mediafile)"
                 [routerLink]="getMediaUrl(mediafile)"
             ></a>
         }
@@ -78,7 +78,7 @@
             <a
                 class="detail-link"
                 tabindex="0"
-                [ariaLabel]="ariaLabel(mediafile)"
+                [attr.aria-label]="ariaLabel(mediafile)"
                 (click)="changeDirectory(mediafile.id)"
                 (keydown.enter)="changeDirectory(mediafile.id)"
             ></a>
@@ -92,7 +92,7 @@
             <a
                 class="detail-link"
                 target="_blank"
-                [ariaLabel]="ariaLabel(mediafile)"
+                [attr.aria-label]="ariaLabel(mediafile)"
                 [routerLink]="getMediaUrl(mediafile)"
             ></a>
         }
@@ -100,7 +100,7 @@
             <a
                 class="detail-link"
                 tabindex="0"
-                [ariaLabel]="ariaLabel(mediafile)"
+                [attr.aria-label]="ariaLabel(mediafile)"
                 (click)="changeDirectory(mediafile.id)"
                 (keydown.enter)="changeDirectory(mediafile.id)"
             ></a>

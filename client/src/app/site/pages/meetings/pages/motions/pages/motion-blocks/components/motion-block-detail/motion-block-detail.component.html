@@ -59,7 +59,7 @@
             @if (!isMultiSelect) {
                 <a
                     class="detail-link"
-                    [ariaLabel]="ariaLabel(motion)"
+                    [attr.aria-label]="ariaLabel(motion)"
                     [routerLink]="motion.getDetailStateUrl()"
                     [state]="{ back: 'true' }"
                 ></a>

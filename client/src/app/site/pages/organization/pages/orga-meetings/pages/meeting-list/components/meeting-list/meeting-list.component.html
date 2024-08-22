@@ -40,7 +40,7 @@
         @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnteredBy(operator.user)) {
             <a
                 class="stretch-to-fill-parent"
-                [ariaLabel]="ariaLabel(meeting)"
+                [attr.aria-label]="ariaLabel(meeting)"
                 [routerLink]="getMeetingUrl(meeting)"
             ></a>
         }
@@ -103,7 +103,7 @@
                     @if (!this.isMultiSelect && meeting.committee?.canAccess()) {
                         <a
                             class="stretch-to-fill-parent committee-link"
-                            [ariaLabel]="ariaLabel(meeting, true)"
+                            [attr.aria-label]="ariaLabel(meeting, true)"
                             [routerLink]="getCommitteeForMeetingUrl(meeting)"
                         ></a>
                     }
@@ -135,7 +135,7 @@
         @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnteredBy(operator.user)) {
             <a
                 class="stretch-to-fill-parent"
-                [ariaLabel]="ariaLabel(meeting)"
+                [attr.aria-label]="ariaLabel(meeting)"
                 [routerLink]="getMeetingUrl(meeting)"
             ></a>
         }

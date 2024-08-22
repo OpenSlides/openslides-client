@@ -66,7 +66,7 @@
                             <mat-header-cell *matHeaderCellDef></mat-header-cell>
                             <mat-cell *matCellDef="let motion">
                                 <a
-                                    [ariaLabel]="ariaLabel(motion)"
+                                    [attr.aria-label]="ariaLabel(motion)"
                                     [routerLink]="motion.getDetailStateUrl()"
                                     [state]="{ back: 'true' }"
                                 ></a>
