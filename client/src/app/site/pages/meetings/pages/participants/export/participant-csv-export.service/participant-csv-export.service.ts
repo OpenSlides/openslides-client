@@ -63,10 +63,10 @@ export class ParticipantCsvExportService {
      */
     public translateSelectedCSVRows(rows: UserExport[], columns: string[]): UserExport[] {
         rows.map(row => {
-            for (let column of columns) {
+            for (const column of columns) {
                 row[column] = this.translate.instant(row[column]);
             }
-        })
+        });
         return rows;
     }
 

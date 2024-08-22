@@ -18,15 +18,15 @@ export class AccountExportService {
     ) {}
 
     /**
-    * Translates values of the given columns in example file
-    * to the currently used lang.
-    */
+     * Translates values of the given columns in example file
+     * to the currently used lang.
+     */
     public translateSelectedCSVRows(rows: UserExport[], columns: string[]): UserExport[] {
         rows.map(row => {
-            for (let column of columns) {
+            for (const column of columns) {
                 row[column] = this.translate.instant(row[column]);
             }
-        })
+        });
         return rows;
     }
 
