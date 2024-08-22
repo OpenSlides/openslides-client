@@ -76,4 +76,11 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
             await this.meetingController.delete(...toDelete);
         }
     }
+
+    public ariaLabel(meeting: ViewMeeting, isCommittee?: boolean): string {
+        if (isCommittee) {
+            return this.translate.instant(`Navigate to committee detail view from `) + meeting.committeeName;
+        }
+        return this.translate.instant(`Navigate to meeting `) + meeting.name;
+    }
 }
