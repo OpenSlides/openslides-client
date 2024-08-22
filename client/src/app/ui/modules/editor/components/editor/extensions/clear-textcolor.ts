@@ -3,6 +3,7 @@ import { Plugin } from '@tiptap/pm/state';
 import tinycolor from 'tinycolor2';
 
 export const ClearTextcolorPaste = Extension.create({
+    name: `clear-textcolor-paste`,
     addProseMirrorPlugins() {
         return [ClearTextcolorPastePlugin];
     }

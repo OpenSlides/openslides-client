@@ -186,4 +186,8 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
             ...committees.map(committee => this.committeeController.update({ organization_tag_ids: [] }, committee))
         ).resolve();
     }
+
+    public ariaLabel(committee: ViewCommittee): string {
+        return this.translate.instant(`Navigate to committee detail view from `) + committee.name;
+    }
 }

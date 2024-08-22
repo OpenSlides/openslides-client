@@ -126,14 +126,17 @@
 .file-drop-zone-style {
     border: 2px dotted #0782d0 !important;
     height: 100px;
+    display: flex;
+    justify-content: center;
 }
 
 .file-drop-content-style {
     height: 100px;
+    align-content: center;
 
     .ngx-file-drop__drop-zone-label {
         color: #0782d0;
-        line-height: 100px;
+        line-height: 24px;
     }
 }
 
