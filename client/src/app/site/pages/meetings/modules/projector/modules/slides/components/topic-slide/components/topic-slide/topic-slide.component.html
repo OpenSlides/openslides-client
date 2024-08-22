@@ -6,6 +6,6 @@
             }
             {{ data.data.title }}
         </h1>
-        <div [innerHTML]="data.data.text | trust: 'html'"></div>
+        <div class="detail-view-text" [innerHTML]="data.data.text | trust: 'html'"></div>
     </div>
 }
