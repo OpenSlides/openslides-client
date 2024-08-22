@@ -44,7 +44,6 @@ import { MotionsExportModule } from '../../services/export/motions-export.module
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
 import { MotionDetailComponent } from './components/motion-detail/motion-detail.component';
 import { MotionDetailDiffComponent } from './components/motion-detail-diff/motion-detail-diff.component';
-import { MotionDetailDiffSummaryComponent } from './components/motion-detail-diff-summary/motion-detail-diff-summary.component';
 import { MotionDetailOriginalChangeRecommendationsComponent } from './components/motion-detail-original-change-recommendations/motion-detail-original-change-recommendations.component';
 import { MotionFinalVersionComponent } from './components/motion-final-version/motion-final-version.component';
 import { MotionHighlightFormComponent } from './components/motion-highlight-form/motion-highlight-form.component';
@@ -55,6 +54,7 @@ import { MotionAddPollButtonComponent } from './pages/motion-view/components/mot
 import { MotionCommentComponent } from './pages/motion-view/components/motion-comment/motion-comment.component';
 import { MotionCommentsComponent } from './pages/motion-view/components/motion-comments/motion-comments.component';
 import { MotionContentComponent } from './pages/motion-view/components/motion-content/motion-content.component';
+import { MotionDetailDiffSummaryComponent } from './pages/motion-view/components/motion-detail-diff-summary/motion-detail-diff-summary.component';
 import { MotionExtensionFieldComponent } from './pages/motion-view/components/motion-extension-field/motion-extension-field.component';
 import { MotionManageMotionMeetingUsersComponent } from './pages/motion-view/components/motion-manage-motion-meeting-users/motion-manage-motion-meeting-users.component';
 import { MotionManagePollsComponent } from './pages/motion-view/components/motion-manage-polls/motion-manage-polls.component';

@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, Input, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 
-import { getRecommendationTypeName } from '../../../../definitions/recommendation-type-names';
-import { ViewUnifiedChangeType } from '../../../../modules/change-recommendations/definitions/index';
-import { ViewMotion } from '../../../../view-models';
-import { ViewMotionAmendedParagraph } from '../../../../view-models/view-motion-amended-paragraph';
+import { getRecommendationTypeName } from '../../../../../../definitions/recommendation-type-names';
+import { ViewUnifiedChangeType } from '../../../../../../modules/change-recommendations/definitions/index';
+import { ViewMotion } from '../../../../../../view-models';
+import { ViewMotionAmendedParagraph } from '../../../../../../view-models/view-motion-amended-paragraph';
 
 /**
  * This component displays a summary of the given change requests.
@@ -24,7 +24,8 @@ import { ViewMotionAmendedParagraph } from '../../../../view-models/view-motion-
     selector: `os-motion-detail-diff-summary`,
     templateUrl: `./motion-detail-diff-summary.component.html`,
     styleUrls: [`./motion-detail-diff-summary.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent implements AfterViewInit {
     /**

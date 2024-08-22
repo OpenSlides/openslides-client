@@ -16,15 +16,13 @@
                         <a href="" (click)="scrollToChangeClicked(change, $event)">
                             @if (!change.isTitleChange()) {
                                 <span>{{ 'Line' | translate }} {{ formatLineRange(change) }}</span>
-                            }
-                            @if (change.isTitleChange()) {
+                            } @else {
                                 <span>{{ 'Title' | translate }}</span>
-                            }
-                            @if (isChangeRecommendation(change)) {
-                                <span>&ensp;({{ 'Change recommendation' | translate }})</span>
                             }
                             @if (isAmendment(change)) {
                                 <span>&ensp;({{ 'Amendment' | translate }} {{ change.getIdentifier() }})</span>
+                            } @else {
+                                <span>&ensp;({{ 'Change recommendation' | translate }})</span>
                             }
                         </a>
                         @if (isChangeRecommendation(change)) {
@@ -39,8 +37,7 @@
                             @if (change.isRejected() && !isAmendment(change)) {
                                 –
                                 <span>{{ 'Rejected' | translate }}</span>
-                            }
-                            @if ((change.isAccepted() || isAmendment(change)) && change.stateName) {
+                            } @else if (change.stateName) {
                                 –
                                 {{ change.stateName }}
                             }
@@ -59,8 +56,5 @@
                 </li>
             </ul>
         </cdk-virtual-scroll-viewport>
-        @if (changes.length === 0) {
-            <div class="no-changes">{{ 'No change recommendations yet' | translate }}</div>
-        }
     </div>
 }
