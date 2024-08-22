@@ -69,6 +69,7 @@ export abstract class BaseViewModel<M extends BaseModel = any> implements Detail
 export interface BaseViewModel extends Displayable, Identifiable, HasCollection {
     getTitle: () => string;
     getListTitle: () => string;
+    getDelegationSettingEnabled: () => boolean;
 
     /**
      * Returns the verbose name.

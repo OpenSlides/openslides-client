@@ -24,10 +24,10 @@ import HardBreak from '@tiptap/extension-hard-break';
 import Heading from '@tiptap/extension-heading';
 import { Level as HeadingLevel } from '@tiptap/extension-heading';
 import History from '@tiptap/extension-history';
-import Image from '@tiptap/extension-image';
 import Italic from '@tiptap/extension-italic';
 import Link from '@tiptap/extension-link';
 import ListItem from '@tiptap/extension-list-item';
+import OrderedList from '@tiptap/extension-ordered-list';
 import Paragraph from '@tiptap/extension-paragraph';
 import Strike from '@tiptap/extension-strike';
 import Subscript from '@tiptap/extension-subscript';
@@ -59,7 +59,6 @@ import { Highlight } from './extensions/highlight';
 import IFrame from './extensions/iframe';
 import { ImageResize } from './extensions/image-resize';
 import { MSOfficePaste } from './extensions/office';
-import { OrderedList } from './extensions/ordered-list';
 
 const DEFAULT_COLOR_PALETE = [
     `#BFEDD2`,
@@ -172,9 +171,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 BulletList,
                 HardBreak,
                 Heading,
-                Image.configure({
-                    inline: true
-                }),
                 ImageResize.configure({
                     inline: true
                 }),
@@ -209,6 +205,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                     types: [`heading`, `paragraph`]
                 }),
                 Extension.create({
+                    name: `angular-component-ext`,
                     onCreate: () => {
                         this.editorReady = true;
                         this.cd.detectChanges();
