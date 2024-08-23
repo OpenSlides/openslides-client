@@ -14,10 +14,6 @@ export enum ModifiedFinalVersionAction {
     providedIn: MotionDetailServiceModule
 })
 export class MotionDetailViewService {
-    public get currentLineNumberingMode(): LineNumberingMode {
-        return this.lineNumberingModeSubject.value;
-    }
-
     public get currentChangeRecommendationMode(): ChangeRecoMode {
         return this.changeRecommendationModeSubject.value;
     }

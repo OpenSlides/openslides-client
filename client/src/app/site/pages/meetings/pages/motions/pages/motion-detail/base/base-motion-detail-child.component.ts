@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, BehaviorSubject, combineLatest, filter, Observable, Subscription } from 'rxjs';
-import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 
@@ -34,14 +34,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
 
     public get motion(): ViewMotion {
         return this._motion!;
-    }
-
-    public get lineNumberingMode$(): Observable<LineNumberingMode> {
-        return this.viewService.lineNumberingModeSubject;
-    }
-
-    public get changeRecoMode$(): Observable<ChangeRecoMode> {
-        return this.viewService.changeRecommendationModeSubject;
     }
 
     public get hasChangingObjects(): boolean {

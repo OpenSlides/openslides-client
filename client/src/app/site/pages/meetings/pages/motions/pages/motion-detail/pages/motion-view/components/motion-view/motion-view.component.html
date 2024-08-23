@@ -197,7 +197,19 @@
 </ng-template>
 
 <ng-template #contentTemplate>
-    <os-motion-highlight-form #highlightForm [motion]="motion"></os-motion-highlight-form>
+    <os-motion-highlight-form
+        #highlightForm
+        [changeRecoMode]="changeRecoMode"
+        [lineNumberingMode]="lineNumberingMode"
+        [motion]="motion"
+        (updateCrMode)="changeRecoMode = $event"
+        (updateLnMode)="lineNumberingMode = $event"
+    ></os-motion-highlight-form>
 
-    <os-motion-content #content [motion]="motion"></os-motion-content>
+    <os-motion-content
+        #content
+        [changeRecoMode]="changeRecoMode"
+        [lineNumberingMode]="lineNumberingMode"
+        [motion]="motion"
+    ></os-motion-content>
 </ng-template>

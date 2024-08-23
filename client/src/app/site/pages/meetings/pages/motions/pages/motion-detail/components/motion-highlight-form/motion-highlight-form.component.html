@@ -39,7 +39,7 @@
             @if (!isMobile) {
                 &nbsp;
                 <span>{{ 'Line numbering' | translate }}</span>
-                @if (lnMode === LineNumberingMode.None) {
+                @if (lineNumberingMode === LineNumberingMode.None) {
                     <span>
                         &nbsp;(
                         <span>{{ 'none' | translate }}</span>
@@ -53,7 +53,7 @@
                 <mat-icon>rate_review</mat-icon>
                 @if (!isMobile) {
                     &nbsp;
-                    <span>{{ verboseChangeRecoMode[crMode] | translate }}</span>
+                    <span>{{ verboseChangeRecoMode[changeRecoMode] | translate }}</span>
                 }
             </button>
         }
@@ -71,7 +71,7 @@
                     <mat-icon>file_copy</mat-icon>
                 </button>
             }
-            @if (crMode === ChangeRecoMode.ModifiedFinal) {
+            @if (changeRecoMode === ChangeRecoMode.ModifiedFinal) {
                 <!-- edit final version -->
                 @if (!isEditingFinalVersion) {
                     <button
@@ -126,21 +126,21 @@
             <div>
                 <button
                     mat-menu-item
-                    [ngClass]="{ selected: lnMode === LineNumberingMode.None }"
+                    [ngClass]="{ selected: lineNumberingMode === LineNumberingMode.None }"
                     (click)="setLineNumberingMode(LineNumberingMode.None)"
                 >
                     {{ 'none' | translate }}
                 </button>
                 <button
                     mat-menu-item
-                    [ngClass]="{ selected: lnMode === LineNumberingMode.Inside }"
+                    [ngClass]="{ selected: lineNumberingMode === LineNumberingMode.Inside }"
                     (click)="setLineNumberingMode(LineNumberingMode.Inside)"
                 >
                     {{ 'inline' | translate }}
                 </button>
                 <button
                     mat-menu-item
-                    [ngClass]="{ selected: lnMode === LineNumberingMode.Outside }"
+                    [ngClass]="{ selected: lineNumberingMode === LineNumberingMode.Outside }"
                     (click)="setLineNumberingMode(LineNumberingMode.Outside)"
                 >
                     {{ 'outside' | translate }}
@@ -180,7 +180,7 @@ For paragraph-based amendments, only the original and the diff version is availa
 <mat-menu #changeRecoMenu="matMenu">
     <button
         mat-menu-item
-        [ngClass]="{ selected: crMode === ChangeRecoMode.Original }"
+        [ngClass]="{ selected: changeRecoMode === ChangeRecoMode.Original }"
         (click)="setChangeRecoMode(ChangeRecoMode.Original)"
     >
         {{ 'Original version' | translate }}
@@ -188,14 +188,14 @@ For paragraph-based amendments, only the original and the diff version is availa
     @if (hasChangingObjects) {
         <button
             mat-menu-item
-            [ngClass]="{ selected: crMode === ChangeRecoMode.Changed }"
+            [ngClass]="{ selected: changeRecoMode === ChangeRecoMode.Changed }"
             (click)="setChangeRecoMode(ChangeRecoMode.Changed)"
         >
             {{ 'Changed version' | translate }}
         </button>
         <button
             mat-menu-item
-            [ngClass]="{ selected: crMode === ChangeRecoMode.Diff }"
+            [ngClass]="{ selected: changeRecoMode === ChangeRecoMode.Diff }"
             (click)="setChangeRecoMode(ChangeRecoMode.Diff)"
         >
             {{ 'Diff version' | translate }}
@@ -203,7 +203,7 @@ For paragraph-based amendments, only the original and the diff version is availa
         @if (!isParagraphBasedAmendment) {
             <button
                 mat-menu-item
-                [ngClass]="{ selected: crMode === ChangeRecoMode.Final }"
+                [ngClass]="{ selected: changeRecoMode === ChangeRecoMode.Final }"
                 (click)="setChangeRecoMode(ChangeRecoMode.Final)"
             >
                 {{ 'Final version' | translate }}
@@ -213,7 +213,7 @@ For paragraph-based amendments, only the original and the diff version is availa
     @if (motion && motion.modified_final_version && !motion.isParagraphBasedAmendment()) {
         <button
             mat-menu-item
-            [ngClass]="{ selected: crMode === ChangeRecoMode.ModifiedFinal }"
+            [ngClass]="{ selected: changeRecoMode === ChangeRecoMode.ModifiedFinal }"
             (click)="setChangeRecoMode(ChangeRecoMode.ModifiedFinal)"
         >
             {{ 'Editorial final version' | translate }}

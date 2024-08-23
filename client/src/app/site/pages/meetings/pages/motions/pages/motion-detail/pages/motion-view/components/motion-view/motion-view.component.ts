@@ -9,17 +9,18 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, of, skip } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, Observable, of, skip } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
+import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion, ViewMotionChangeRecommendation, ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
+import { MotionChangeRecommendationControllerService } from '../../../../../../modules/change-recommendations/services';
 import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
@@ -29,8 +30,8 @@ import { AmendmentListFilterService } from '../../../../../../services/list/amen
 import { AmendmentListSortService } from '../../../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
 import { MotionListFilterService } from '../../../../../../services/list/motion-list-filter.service/motion-list-filter.service';
 import { MotionListSortService } from '../../../../../../services/list/motion-list-sort.service/motion-list-sort.service';
-import { MotionDetailViewService } from '../../../../services/motion-detail-view.service';
 import { MotionDetailViewOriginUrlService } from '../../../../services/motion-detail-view-originurl.service';
+import { MotionLineNumberingService } from '../../../../../../services/common/motion-line-numbering.service';
 
 @Component({
     selector: `os-motion-view`,
@@ -57,41 +58,40 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         return this._motion;
     }
 
-    public temporaryMotion: any = {};
+    public hasChangeRecommendations: boolean = false;
+    public unifiedChanges: ViewUnifiedChange[] = [];
 
     /**
-     * preload the next motion for direct navigation
+     * preloaded next motion for direct navigation
      */
-    public set nextMotion(motion: ViewMotion | null) {
-        this._nextMotion = motion;
-        this.cd.markForCheck();
-    }
-
-    public get nextMotion(): ViewMotion | null {
-        return this._nextMotion;
-    }
-
-    /**
-     * preload the previous motion for direct navigation
-     */
-    public set previousMotion(motion: ViewMotion | null) {
-        this._previousMotion = motion;
-        this.cd.markForCheck();
-    }
-
-    public get previousMotion(): ViewMotion | null {
-        return this._previousMotion;
-    }
+    public nextMotion: ViewMotion | null = null;
+    public previousMotion: ViewMotion | null = null;
 
     public get showNavigateButtons(): boolean {
         return !!this.previousMotion || !!this.nextMotion;
     }
 
+    private _changeRecoMode: ChangeRecoMode = ChangeRecoMode.Original;
+    public get changeRecoMode(): ChangeRecoMode {
+        return this._changeRecoMode;
+    }
+
+    public set changeRecoMode(value: ChangeRecoMode) {
+        this._changeRecoMode = value;
+        this.cd.markForCheck();
+    }
+
+    private _lineNumberingMode: LineNumberingMode = LineNumberingMode.None;
+    public get lineNumberingMode(): LineNumberingMode {
+        return this._lineNumberingMode;
+    }
+
+    public set lineNumberingMode(value: LineNumberingMode) {
+        this._lineNumberingMode = value;
+        this.cd.markForCheck();
+    }
+
     public hasLoaded$ = new BehaviorSubject(false);
-
-    private _nextMotion: ViewMotion | null = null;
-
-    private _previousMotion: ViewMotion | null = null;
 
     /**
      * List of presorted motions. Filles by sort service
@@ -121,15 +121,16 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         public perms: MotionPermissionService,
         private route: ActivatedRoute,
         public repo: MotionControllerService,
-        private viewService: MotionDetailViewService,
         private promptService: PromptService,
         private itemRepo: AgendaItemControllerService,
         private motionSortService: MotionListSortService,
         private motionFilterService: MotionListFilterService,
         private motionForwardingService: MotionForwardDialogService,
+        private motionLineNumbering: MotionLineNumberingService,
         private amendmentRepo: AmendmentControllerService,
         private amendmentSortService: AmendmentListSortService,
         private amendmentFilterService: AmendmentListFilterService,
+        private changeRecoRepo: MotionChangeRecommendationControllerService,
         private cd: ChangeDetectorRef,
         private pdfExport: MotionPdfExportService,
         private originUrlService: MotionDetailViewOriginUrlService
@@ -212,16 +213,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 `Warning: Amendments exist for this motion. Are you sure you want to delete this motion regardless?`
             );
             content =
-                `<i>` +
-                this.translate.instant(`Motion`) +
-                ` ` +
-                this.motion.getTitle() +
-                `</i>` +
-                `<br>` +
-                this.translate.instant(`Deleting this motion will also delete the amendments.`) +
-                `<br>` +
-                this.translate.instant(`List of amendments: `) +
-                `<br>` +
+                `<i>${this.translate.instant(`Motion`)} ${this.motion.getTitle()}</i><br>` +
+                `${this.translate.instant(`Deleting this motion will also delete the amendments.`)}<br>` +
+                `${this.translate.instant(`List of amendments: `)}<br>` +
                 this.motion.amendments
                     .map(amendment => (amendment.number ? amendment.number : amendment.title))
                     .join(`, `);
@@ -247,10 +241,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         }
     }
 
-    public async forwardMotionToMeetings(): Promise<void> {
-        await this.motionForwardingService.forwardMotionsToMeetings(this.motion);
-    }
-
     /**
      * Navigates the user to the given ViewMotion
      *
@@ -265,23 +255,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         }
     }
 
-    /**
-     * Sets the previous and next motion. Sorts by the current sorting as used
-     * in the {@link MotionSortListService} or {@link AmendmentSortListService},
-     * respectively
-     */
-    public setSurroundingMotions(): void {
-        const indexOfCurrent = this._sortedMotions.findIndex(motion => motion === this.motion);
-        if (indexOfCurrent > 0) {
-            this.previousMotion = this.findNextSuitableMotion(indexOfCurrent, -1);
-        } else {
-            this.previousMotion = null;
-        }
-        if (indexOfCurrent > -1 && indexOfCurrent < this._sortedMotions.length - 1) {
-            this.nextMotion = this.findNextSuitableMotion(indexOfCurrent, 1);
-        } else {
-            this.nextMotion = null;
-        }
+    public async forwardMotionToMeetings(): Promise<void> {
+        await this.motionForwardingService.forwardMotionsToMeetings(this.motion);
     }
 
     /**
@@ -290,10 +265,10 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     public onDownloadPdf(): void {
         this.pdfExport.exportSingleMotion(this.motion, {
             lnMode:
-                this.viewService.currentLineNumberingMode === LineNumberingMode.Inside
+                this.lineNumberingMode === LineNumberingMode.Inside
                     ? LineNumberingMode.Outside
-                    : this.viewService.currentLineNumberingMode,
-            crMode: this.viewService.currentChangeRecommendationMode,
+                    : this.lineNumberingMode,
+            crMode: this.changeRecoMode,
             // export all comment fields as well as personal note
             comments: this.motion.usedCommentSectionIds.concat([PERSONAL_NOTE_ID])
         });
@@ -335,12 +310,33 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                     if (!this.hasLoaded$.value) {
                         this.modelRequestService.waitSubscriptionReady(MOTION_DETAIL_SUBSCRIPTION).then(() => {
                             if (this.motion.id === motionId) {
+                                this.nextMotionLoaded();
                                 this.hasLoaded$.next(true);
                             }
                         });
                     }
                     this.cd.markForCheck();
                 }
+            })
+        );
+    }
+
+    private nextMotionLoaded(): void {
+        this.subscriptions.updateSubscription(
+            `sorted-changes`,
+            combineLatest([
+                this.meetingSettingsService.get(`motions_line_length`),
+                this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).pipe(filter(value => !!value)),
+                this.amendmentRepo.getViewModelListObservableFor(this.motion).pipe(filter(value => !!value))
+            ]).subscribe(([lineLength, changeRecos, amendments]) => {
+                this.hasChangeRecommendations = !!changeRecos?.length;
+                this.unifiedChanges = this.motionLineNumbering.recalcUnifiedChanges(
+                    lineLength,
+                    changeRecos as ViewMotionChangeRecommendation[],
+                    amendments
+                );
+                this.changeRecoMode = this.determineCrMode(this.changeRecoMode);
+                this.cd.markForCheck();
             })
         );
     }
@@ -370,6 +366,17 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             this._sortedMotionsObservable = this.motionFilterService.outputObservable;
         }
 
+        this.lineNumberingMode = this.meetingSettingsService.instant(`motions_default_line_numbering`);
+        this.changeRecoMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
+        /**
+        if (!previous?.amendment_paragraphs && !!current?.amendment_paragraphs) {
+            const recoMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
+            if (recoMode) {
+                this.setChangeRecoMode(this.determineCrMode(recoMode as ChangeRecoMode));
+            }
+        }
+        **/
+
         if (this._sortedMotionsObservable) {
             this.subscriptions.updateSubscription(
                 `sorted-motions`,
@@ -389,12 +396,32 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     private destroy(): void {
         this._hasModelSubscriptionInitiated = false;
         this.subscriptions.delete(`sorted-motions`);
-        this.viewService.reset();
+        this.subscriptions.delete(`sorted-changes`);
     }
 
     private onRouteChanged(): void {
         this.destroy();
         this.init();
+    }
+
+    /**
+     * Sets the previous and next motion. Sorts by the current sorting as used
+     * in the {@link MotionSortListService} or {@link AmendmentSortListService},
+     * respectively
+     */
+    private setSurroundingMotions(): void {
+        const indexOfCurrent = this._sortedMotions.findIndex(motion => motion === this.motion);
+        if (indexOfCurrent > 0) {
+            this.previousMotion = this.findNextSuitableMotion(indexOfCurrent, -1);
+        } else {
+            this.previousMotion = null;
+        }
+        if (indexOfCurrent > -1 && indexOfCurrent < this._sortedMotions.length - 1) {
+            this.nextMotion = this.findNextSuitableMotion(indexOfCurrent, 1);
+        } else {
+            this.nextMotion = null;
+        }
+        this.cd.markForCheck();
     }
 
     /**
@@ -430,5 +457,39 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             }
         }
         return null;
+    }
+
+    /**
+     * Tries to determine the realistic CR-Mode from a given CR mode
+     */
+    private determineCrMode(mode: ChangeRecoMode): ChangeRecoMode {
+        if (mode === ChangeRecoMode.Final) {
+            if (this.motion?.modified_final_version) {
+                return ChangeRecoMode.ModifiedFinal;
+                /**
+                 * Because without change recos you cannot escape the final version anymore
+                 */
+            } else if (!this.unifiedChanges.some(change => change.showInFinalView())) {
+                return ChangeRecoMode.Original;
+            }
+        } else if (mode === ChangeRecoMode.Changed && !this.hasChangeRecommendations) {
+            /**
+             * Because without change recos you cannot escape the changed version view
+             * You will not be able to automatically change to the Changed view after creating
+             * a change reco. The autoupdate has to come "after" this routine
+             */
+            return ChangeRecoMode.Original;
+        } else if (
+            mode === ChangeRecoMode.Diff &&
+            !this.hasChangeRecommendations &&
+            this.motion?.isParagraphBasedAmendment()
+        ) {
+            /**
+             * The Diff view for paragraph-based amendments is only relevant for change recommendations;
+             * the regular amendment changes are shown in the "original" view.
+             */
+            return ChangeRecoMode.Original;
+        }
+        return mode;
     }
 }

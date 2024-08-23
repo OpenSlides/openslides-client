@@ -1,6 +1,3 @@
-@let changeRecoMode = changeRecoMode$ | async;
-@let lineNumberingMode = lineNumberingMode$ | async;
-
 <!-- Regular motions or traditional amendments -->
 @if (!isParagraphBasedAmendment) {
     @if (changeRecoMode !== ChangeRecoMode.Diff) {

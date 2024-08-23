@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, Observable } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -19,6 +19,12 @@ import { MotionChangeRecommendationDialogService } from '../../../../modules/mot
 export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public readonly ChangeRecoMode = ChangeRecoMode;
     public readonly LineNumberingMode = LineNumberingMode;
+
+    @Input()
+    public changeRecoMode: ChangeRecoMode;
+
+    @Input()
+    public lineNumberingMode: LineNumberingMode;
 
     public preamble$ = this.meetingSettingsService.get(`motions_preamble`);
 
@@ -103,16 +109,15 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     );
 
     public formattedTextPlain$: Observable<string> = combineLatest([
-        this.viewService.changeRecommendationModeSubject,
         this.meetingSettingsService.get(`motions_line_length`),
         this.sortedChangingObjectsSubject
     ]).pipe(
-        map(([changeRecoMode, lineLength, changes]) => {
+        map(([lineLength, changes]) => {
             if (lineLength) {
                 return this.motionFormatService.formatMotion({
                     targetMotion: this.motion,
-                    crMode: this.viewService.currentChangeRecommendationMode,
-                    changes: changeRecoMode === ChangeRecoMode.Original ? [] : changes,
+                    crMode: this.changeRecoMode,
+                    changes: this.changeRecoMode === ChangeRecoMode.Original ? [] : changes,
                     lineLength: this.lineLength,
                     highlightedLine: this.highlightedLine,
                     firstLine: this.motion.firstLine

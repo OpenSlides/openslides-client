@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, Subscription, takeUntil, timer } from 'rxjs';
+import { combineLatest, filter, firstValueFrom, Subscription, takeUntil, timer } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -27,13 +27,17 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     @ViewChild(MatMenuTrigger)
     private readonly lineNumberMenuTrigger!: MatMenuTrigger;
 
-    public get crMode(): ChangeRecoMode {
-        return this.viewService.currentChangeRecommendationMode;
-    }
+    @Input()
+    public lineNumberingMode: LineNumberingMode;
 
-    public get lnMode(): LineNumberingMode {
-        return this.viewService.currentLineNumberingMode;
-    }
+    @Input()
+    public changeRecoMode: ChangeRecoMode;
+
+    @Output()
+    public updateLnMode = new EventEmitter<LineNumberingMode>();
+
+    @Output()
+    public updateCrMode = new EventEmitter<ChangeRecoMode>();
 
     public get hasChangeRecommendations(): boolean {
         if (!this.motion) {
@@ -162,9 +166,19 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
             throw new Error(`Cannot create a final version of an amendment.`);
         }
         // Get the final version and remove line numbers
-        const changes: ViewUnifiedChange[] = this.getAllChangingObjectsSorted().filter(changingObject =>
-            changingObject.showInFinalView()
+        const changeRecommendations = await firstValueFrom(
+            this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).pipe(filter(value => !!value))
         );
+        const amendments = await firstValueFrom(
+            this.amendmentRepo.getViewModelListObservableFor(this.motion).pipe(filter(value => !!value))
+        );
+        const changes: ViewUnifiedChange[] = this.motionLineNumbering
+            .recalcUnifiedChanges(
+                this.lineLength,
+                changeRecommendations as ViewMotionChangeRecommendation[],
+                amendments
+            )
+            .filter(changingObject => changingObject.showInFinalView());
         let finalVersion = this.motionFormatService.formatMotion({
             targetMotion: this.motion,
             crMode: ChangeRecoMode.Final,
@@ -191,7 +205,8 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         if (await this.promptService.open(title)) {
             try {
                 await this.repo.update({ modified_final_version: `` }, this.motion).resolve();
-                this.setChangeRecoMode(this.determineCrMode(ChangeRecoMode.Diff));
+                // TODO: Do in view
+                // this.setChangeRecoMode(this.determineCrMode(ChangeRecoMode.Diff));
             } catch (e) {
                 this.raiseError(e);
             }
@@ -230,11 +245,11 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     public setChangeRecoMode(mode: ChangeRecoMode): void {
-        this.viewService.changeRecommendationModeSubject.next(mode);
+        this.updateCrMode.emit(mode);
     }
 
     public isRecoMode(mode: ChangeRecoMode): boolean {
-        return this.crMode === mode;
+        return this.changeRecoMode === mode;
     }
 
     /**
@@ -243,7 +258,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
      * @param mode Needs to got the enum defined in ViewMotion
      */
     public setLineNumberingMode(mode: LineNumberingMode): void {
-        this.viewService.lineNumberingModeSubject.next(mode);
+        this.updateLnMode.emit(mode);
     }
 
     public onKeyDown(event: KeyboardEvent): void {
@@ -257,60 +272,14 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         this.startLineNumber = this.motion?.start_line_number || 1;
     }
 
-    protected override onAfterSetMotion(previous: ViewMotion, current: ViewMotion): void {
-        if (!previous?.amendment_paragraphs && !!current?.amendment_paragraphs) {
-            const recoMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
-            if (recoMode) {
-                this.setChangeRecoMode(this.determineCrMode(recoMode as ChangeRecoMode));
-            }
-        }
-    }
-
-    /**
-     * Tries to determine the realistic CR-Mode from a given CR mode
-     */
-    private determineCrMode(mode: ChangeRecoMode): ChangeRecoMode {
-        if (mode === ChangeRecoMode.Final) {
-            if (this.motion?.modified_final_version) {
-                return ChangeRecoMode.ModifiedFinal;
-                /**
-                 * Because without change recos you cannot escape the final version anymore
-                 */
-            } else if (!this.getAllChangingObjectsSorted().some(change => change.showInFinalView())) {
-                return ChangeRecoMode.Original;
-            }
-        } else if (mode === ChangeRecoMode.Changed && !this.hasChangeRecommendations) {
-            /**
-             * Because without change recos you cannot escape the changed version view
-             * You will not be able to automatically change to the Changed view after creating
-             * a change reco. The autoupdate has to come "after" this routine
-             */
-            return ChangeRecoMode.Original;
-        } else if (
-            mode === ChangeRecoMode.Diff &&
-            !this.hasChangeRecommendations &&
-            this.motion?.isParagraphBasedAmendment()
-        ) {
-            /**
-             * The Diff view for paragraph-based amendments is only relevant for change recommendations;
-             * the regular amendment changes are shown in the "original" view.
-             */
-            return ChangeRecoMode.Original;
-        }
-        return mode;
-    }
-
     protected override getSubscriptions(): Subscription[] {
         return [
-            this.meetingSettingsService
-                .get(`motions_default_line_numbering`)
-                .subscribe(mode => this.setLineNumberingMode(mode)),
             combineLatest([
                 this.changeRecoRepo.getViewModelListObservable().pipe(takeUntil(timer(1000))),
                 this.meetingSettingsService.get(`motions_recommendation_text_mode`)
             ]).subscribe(([_, mode]) => {
                 if (!this.isEditingFinalVersion && mode) {
-                    this.setChangeRecoMode(this.determineCrMode(mode as ChangeRecoMode));
+                    // TODO: Remove
                 }
             })
         ];
