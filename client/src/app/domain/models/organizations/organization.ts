@@ -22,6 +22,7 @@ export class OrganizationSetting {
     public limit_of_users!: number;
     public default_language!: string;
     public require_duplicate_from!: boolean;
+    public published_mediafile_ids!: Id[];
 
     public users_email_sender!: string; // default: OpenSlides
     public users_email_subject!: string; // default: OpenSlides access data
@@ -86,6 +87,7 @@ export class Organization extends BaseModel<Organization> {
         `theme_id`,
         `theme_ids`,
         `mediafile_ids`,
+        `published_mediafile_ids`,
         `user_ids`,
         `users_email_sender`,
         `users_email_replyto`,

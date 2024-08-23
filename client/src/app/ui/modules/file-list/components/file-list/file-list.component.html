@@ -145,12 +145,21 @@
     </div>
 
     <!-- Indicator column -->
-    <div *osScrollingTableCell="'indicator'; row as mediafile; config: { width: 40 }" class="fill clickable">
+    <div *osScrollingTableCell="'indicator'; row as mediafile; config: { width: 60 }" class="fill clickable">
         @if (mediafile.isFont() && isUsedAsFontFn(mediafile)) {
             <mat-icon class="foreground-icon" [matTooltip]="'File is being used' | translate">text_fields</mat-icon>
         }
         @if (mediafile.isImage() && isUsedAsLogoFn(mediafile)) {
             <mat-icon class="foreground-icon" [matTooltip]="'File is being used' | translate">insert_photo</mat-icon>
+        }
+        @if (mediafile.is_public) {
+            <mat-icon
+                class="foreground-icon"
+                [matTooltip]="'File is public' | translate"
+                [ngClass]="isUsedAsLogoFn(mediafile) ? 'margin-left-5' : 'margin-left-0'"
+            >
+                public
+            </mat-icon>
         }
     </div>
 
@@ -185,6 +194,12 @@
                     <mat-icon>near_me</mat-icon>
                     <span>{{ 'Move' | translate }}</span>
                 </button>
+                @if (isOrgaLevel) {
+                    <button mat-menu-item (click)="publicize(publicDialog, mediafile)">
+                        <mat-icon>public</mat-icon>
+                        <span>{{ 'Publicize' | translate }}</span>
+                    </button>
+                }
                 <button class="red-warning-text" mat-menu-item (click)="onDelete(mediafile)">
                     <mat-icon>delete</mat-icon>
                     <span>{{ 'Delete' | translate }}</span>
@@ -244,6 +259,29 @@
     <mat-dialog-actions>
         <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
             <span>{{ 'Move' | translate }}</span>
+        </button>
+        <button mat-button type="button" [mat-dialog-close]="null">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </mat-dialog-actions>
+</ng-template>
+
+<!-- Public dialog -->
+<ng-template #publicDialog>
+    <h1 mat-dialog-title>
+        <span>{{ 'Make file/directory public' | translate }}</span>
+    </h1>
+    <mat-dialog-content class="os-form-card-mobile">
+        <p>
+            {{
+                "Do you want to publicize this file/directory? Every admin in every meeting will be able to see this file/ directory and all it's contents."
+                    | translate
+            }}
+        </p>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
+            <span>{{ 'Publicize' | translate }}</span>
         </button>
         <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>

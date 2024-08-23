@@ -1,12 +1,13 @@
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
+import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { ViewMediafileMeetingUsageKey } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { collectionIdFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
-import { Mediafile } from '../../../../../../domain/models/mediafiles/mediafile';
+import { MeetingMediafile } from '../../../../../../domain/models/meeting-mediafile/meeting-mediafile';
 import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
@@ -16,13 +17,13 @@ import { ViewGroup } from '../../participants/modules/groups/view-models/view-gr
 import { FONT_MIMETYPES, IMAGE_MIMETYPES, PDF_MIMETYPES } from '../definitions';
 import { VIDEO_MIMETYPES } from '../definitions/index';
 import { HasAttachment } from './has-attachment';
-import { ViewMeetingMediafile } from './view-meeting-mediafile';
+import { ViewMediafile } from './view-mediafile';
 
-export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
-    public static COLLECTION = Mediafile.COLLECTION;
-    protected _collection = Mediafile.COLLECTION;
+export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediafile> {
+    public static COLLECTION = MeetingMediafile.COLLECTION;
+    protected _collection = MeetingMediafile.COLLECTION;
 
-    public get mediafile(): Mediafile {
+    public get meeting_mediafile(): MeetingMediafile {
         return this._model;
     }
 
@@ -71,7 +72,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         return PROJECTIONDEFAULT.mediafile;
     }
 
-    public getDirectoryChain(): ViewMediafile[] {
+    public getDirectoryChain(): ViewMeetingMediafile[] {
         const parentChain = this.parent ? this.parent.getDirectoryChain() : [];
         parentChain.push(this);
         return parentChain;
@@ -128,23 +129,25 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
             return `text_fields`;
         } else if (this.isVideo()) {
             return `movie`;
+        } else if (this.is_public) {
+            return `public`;
         } else {
             return `insert_drive_file`;
         }
     }
 }
-interface IMediafileRelations {
+interface IMeetingMediafileRelations {
     access_groups: ViewGroup[];
     inherited_access_groups: ViewGroup[];
-    parent?: ViewMediafile;
-    children: ViewMediafile[];
+    parent?: ViewMeetingMediafile;
+    children: ViewMeetingMediafile[];
     attachments: (BaseViewModel & HasAttachment)[];
     organization?: ViewOrganization;
-    meeting_mediafiles: ViewMeetingMediafile[];
+    mediafile?: ViewMediafile;
 }
-export interface ViewMediafile
+export interface ViewMeetingMediafile
     extends Mediafile,
-        ViewModelRelations<IMediafileRelations>,
+        ViewModelRelations<IMeetingMediafileRelations>,
         /*  Searchable, */ HasMeeting,
         HasListOfSpeakers,
         HasProperties<ViewMediafileMeetingUsageKey, ViewMeeting> {}

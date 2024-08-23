@@ -76,6 +76,9 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     @Input()
     public canAccessFileMenu = false;
 
+    @Input()
+    public isOrgaLevel = false;
+
     private _hiddenInMobile: string[] = [`indicator`];
 
     public get hiddenInMobile(): string[] {
@@ -254,6 +257,17 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
             if (result) {
                 this.repo.move(files, this.moveForm.value.directory_id || null);
                 this.moved.emit({ files, directoryId: this.moveForm.value.directory_id });
+                this.cd.markForCheck();
+            }
+        });
+    }
+
+    public publicize(templateRef: TemplateRef<any>, file: ViewMediafile): void {
+        const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.repo.publicize(file, file.published_to_meetings_in_organization_id === 1 ? false : true);
                 this.cd.markForCheck();
             }
         });

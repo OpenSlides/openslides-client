@@ -63,6 +63,14 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         return this.sendActionToBackend(MediafileAction.MOVE, payload);
     }
 
+    public async publicize(mediafile: Identifiable, togglePublish: boolean): Promise<void> {
+        const payload = {
+            id: mediafile.id,
+            publish: togglePublish
+        };
+        return this.sendActionToBackend(MediafileAction.PUBLISH, payload);
+    }
+
     public async uploadFile(partialMediafile: any): Promise<Identifiable> {
         const variables: { [key: string]: any } = this.activeMeetingId
             ? { access_group_ids: partialMediafile.access_group_ids }
@@ -111,6 +119,10 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
 
     private getOwnerId(): string {
         return this.activeMeetingId ? `meeting/${this.activeMeetingId}` : `organization/${ORGANIZATION_ID}`;
+    }
+
+    private getOwnerIdAsId(): null | number {
+        return this.activeMeetingId ? null : ORGANIZATION_ID;
     }
 
     /**

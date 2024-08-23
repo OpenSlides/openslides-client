@@ -4,7 +4,13 @@ import { HasOwnerId } from '../../interfaces/has-owner-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { HasProperties } from '../../interfaces/has-properties';
 import { BaseModel } from '../base/base-model';
-import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace, MediafileMeetingUsageIdKey } from './mediafile.constants';
+import {
+    FONT_PLACES,
+    FontPlace,
+    LOGO_PLACES,
+    LogoPlace,
+    MediafileMeetingUsageIdKey
+} from '../mediafiles/mediafile.constants';
 
 interface PdfInformation {
     pages?: number;
@@ -12,35 +18,36 @@ interface PdfInformation {
 }
 
 /**
- * Representation of MediaFile. Has the nested property "File"
+ * Representation of MeetingMediaFile. Has the nested property "File"
  * @ignore
  */
-export class Mediafile extends BaseModel<Mediafile> {
-    public static COLLECTION = `mediafile`;
-    public static MEDIA_URL_PREFIX = `/media/`;
+export class MeetingMediafile extends BaseModel<MeetingMediafile> {
+    public static COLLECTION = `meeting_mediafile`;
 
-    public title!: string;
-    public is_directory!: boolean;
-    public is_public!: boolean;
+    public mediafile_id: Id;
+    public meeting_id: string;
+    public is_public: boolean;
+    public inherited_access_group_ids!: Id[]; // (group/meeting_mediafile_inherited_access_group_ids)[];  // Note: calculated
+    public has_inherited_access_groups!: boolean;
+    public access_group_ids!: Id[]; // (group/meeting_mediafile_access_group_ids)[];
+    public attachment_ids!: Fqid[]; // (*/attachment_ids)[];
+
+    public published_to_meetings_in_organization_id!: Id;
     public is_published_to_meetings!: boolean;
-    public published_to_meetings_in_organization_id!: number;
-    public meeting_mediafile_ids!: Id[];
+
     public filesize!: string;
     public filename!: string;
     public mimetype!: string;
     public pdf_information!: PdfInformation;
     public create_timestamp!: string;
-    public has_inherited_access_groups!: boolean;
-    public token: string;
 
-    public access_group_ids!: Id[]; // (group/mediafile_access_group_ids)[];
-    public inherited_access_group_ids!: Id[]; // (group/mediafile_inherited_access_group_ids)[];  // Note: calculated
-    public parent_id!: Id; // mediafile/child_ids;
-    public child_ids!: Id[]; // (mediafile/parent_id)[];
-    public attachment_ids!: Fqid[]; // (*/attachment_ids)[];
+    public title!: string;
+    public is_directory!: boolean;
+    public parent_id!: Id; // meeting_mediafile/child_ids;
+    public child_ids!: Id[]; // (meeting_mediafile/parent_id)[];
 
     public constructor(input?: any) {
-        super(Mediafile.COLLECTION, input);
+        super(MeetingMediafile.COLLECTION, input);
     }
 
     /**
@@ -97,7 +104,7 @@ export class Mediafile extends BaseModel<Mediafile> {
     }
 
     private getSpecificUsedInMeetingId(type: string, place: LogoPlace | FontPlace): Id {
-        const path = `used_as_${type}_${place}_in_meeting_id` as keyof Mediafile;
+        const path = `used_as_${type}_${place}_in_meeting_id` as keyof MeetingMediafile;
         return this[path] as Id;
     }
 
@@ -110,25 +117,35 @@ export class Mediafile extends BaseModel<Mediafile> {
         return this.is_directory ? `/mediafiles/${this.id}` : `/system/media/get/${this.id}`;
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Mediafile)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MeetingMediafile)[] = [
         `id`,
-        `title`,
-        `is_directory`,
-        `filesize`,
-        `filename`,
-        `mimetype`,
-        `pdf_information`,
-        `create_timestamp`,
-        `token`,
-        `is_published_to_meetings`,
-        `published_to_meetings_in_organization_id`,
-        `parent_id`,
-        `child_ids`,
-        `owner_id`,
-        `meeting_mediafile_ids`
+        `mediafile_id`,
+        `meeting_id`,
+        `is_public`,
+        `inherited_access_group_ids`,
+        `access_group_ids`,
+        `list_of_speakers_id`,
+        `projection_ids`,
+        `attachment_ids`,
+        `used_as_logo_projector_main_in_meeting_id`,
+        `used_as_logo_projector_header_in_meeting_id`,
+        `used_as_logo_web_header_in_meeting_id`,
+        `used_as_logo_pdf_header_l_in_meeting_id`,
+        `used_as_logo_pdf_header_r_in_meeting_id`,
+        `used_as_logo_pdf_footer_l_in_meeting_id`,
+        `used_as_logo_pdf_footer_r_in_meeting_id`,
+        `used_as_logo_pdf_ballot_paper_in_meeting_id`,
+        `used_as_font_regular_in_meeting_id`,
+        `used_as_font_italic_in_meeting_id`,
+        `used_as_font_bold_in_meeting_id`,
+        `used_as_font_bold_italic_in_meeting_id`,
+        `used_as_font_monospace_in_meeting_id`,
+        `used_as_font_chyron_speaker_name_in_meeting_id`,
+        `used_as_font_projector_h1_in_meeting_id`,
+        `used_as_font_projector_h2_in_meeting_id`
     ];
 }
-export interface Mediafile
+export interface MeetingMediafile
     extends HasOwnerId,
         HasProjectionIds,
         HasListOfSpeakersId,
