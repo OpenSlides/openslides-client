@@ -93,7 +93,10 @@ export class MotionForwardDialogService extends BaseDialogService<
                 const motionIds = toForward.map(motion => motion.id);
                 await this.modelRequest.fetch(getMotionForwardDataSubscriptionConfig(...motionIds));
                 const forwardMotions = toForward.map(motion =>
-                    this.formatService.formatMotionForForward(this.repo.getViewModel(motion.id))
+                    this.formatService.formatMotionForForward(
+                        this.repo.getViewModel(motion.id),
+                        dialogData.useOriginalVersion
+                    )
                 );
                 const result = await this.repo.createForwarded(
                     toMeetingIds,
