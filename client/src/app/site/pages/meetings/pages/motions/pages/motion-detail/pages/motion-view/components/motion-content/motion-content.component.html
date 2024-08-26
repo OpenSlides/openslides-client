@@ -49,6 +49,7 @@
         [lineNumberingMode]="lineNumberingMode"
         [motion]="motion"
         (createChangeRecommendation)="createChangeRecommendation($event)"
+        (updateCrMode)="updateCrMode.emit($event)"
     ></os-paragraph-based-amendment>
 }
 

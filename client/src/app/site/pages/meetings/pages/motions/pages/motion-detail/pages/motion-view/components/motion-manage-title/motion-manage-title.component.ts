@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable, Subscription } from 'rxjs';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
@@ -30,6 +30,9 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
     public get changeRecoMode(): ChangeRecoMode {
         return this._changeRecoMode;
     }
+
+    @Output()
+    public updateCrMode = new EventEmitter<ChangeRecoMode>();
 
     private _changeRecoMode: ChangeRecoMode;
 
@@ -87,6 +90,10 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
 
     public setFavorite(value: boolean): void {
         this.personalNoteRepo.setPersonalNote({ star: value }, this.motion);
+    }
+
+    public emitDiffModeSwitch(): void {
+        this.updateCrMode.emit(ChangeRecoMode.Diff);
     }
 
     protected override getSubscriptions(): Subscription[] {

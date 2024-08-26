@@ -30,11 +30,25 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
     @Input()
     public lineNumberingMode: LineNumberingMode;
 
+    private _changeRecoMode: ChangeRecoMode;
+
     @Input()
-    public changeRecoMode: ChangeRecoMode;
+    public set changeRecoMode(value: ChangeRecoMode) {
+        this._changeRecoMode = value;
+        this.showAmendmentContext = false;
+    }
+
+    public get changeRecoMode(): ChangeRecoMode {
+        return this._changeRecoMode;
+    }
 
     @Output()
     public createChangeRecommendation = new EventEmitter<LineRange>();
+
+    @Output()
+    public updateCrMode = new EventEmitter<ChangeRecoMode>();
+
+    public scrollToChange: ViewUnifiedChange | null = null;
 
     public showAmendmentContext = false;
 
@@ -90,5 +104,14 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
         return this.motion?.getParagraphTitleByParagraph(paragraph) || ``;
+    }
+
+    /**
+     * In the original version, a change-recommendation-annotation has been clicked
+     * -> Go to the diff view and scroll to the change recommendation
+     */
+    public gotoChangeRecommendation(changeRecommendation: ViewUnifiedChange): void {
+        this.scrollToChange = changeRecommendation;
+        this.updateCrMode.emit(ChangeRecoMode.Diff);
     }
 }

@@ -7,8 +7,8 @@
                         <span
                             class="title-change-indicator"
                             tabindex="0"
-                            (click)="gotoChangeRecommendation(titleChangeRecommendation)"
-                            (keyup.enter)="gotoChangeRecommendation(titleChangeRecommendation)"
+                            (click)="emitDiffModeSwitch()"
+                            (keyup.enter)="emitDiffModeSwitch()"
                         ></span>
                     }
                     <span

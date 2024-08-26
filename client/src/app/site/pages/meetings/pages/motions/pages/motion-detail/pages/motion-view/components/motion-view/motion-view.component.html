@@ -137,7 +137,11 @@
         >
             <!-- Title -->
             <div class="title">
-                <os-motion-manage-title [changeRecoMode]="changeRecoMode" [motion]="motion"></os-motion-manage-title>
+                <os-motion-manage-title
+                    [changeRecoMode]="changeRecoMode"
+                    [motion]="motion"
+                    (updateCrMode)="changeRecoMode = $event"
+                ></os-motion-manage-title>
             </div>
             @if (vp.isMobile) {
                 <div class="mobile-view">
@@ -213,5 +217,6 @@
         [lineNumberingMode]="lineNumberingMode"
         [motion]="motion"
         [unifiedChanges]="unifiedChanges"
+        (updateCrMode)="changeRecoMode = $event"
     ></os-motion-content>
 </ng-template>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -46,6 +46,11 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public get unifiedChanges(): ViewUnifiedChange[] | Observable<ViewUnifiedChange[]> {
         return this.unifiedChanges$.value;
     }
+
+    @Output()
+    public updateCrMode = new EventEmitter<ChangeRecoMode>();
+
+    public scrollToChange: ViewUnifiedChange | null = null;
 
     public changesForDiffMode$: Observable<ViewUnifiedChange[]> = null;
     public formattedTextPlain$: Observable<string> = null;
@@ -115,6 +120,15 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             );
         }
         this.dialog.openContentChangeRecommendationDialog(data);
+    }
+
+    /**
+     * In the original version, a change-recommendation-annotation has been clicked
+     * -> Go to the diff view and scroll to the change recommendation
+     */
+    public gotoChangeRecommendation(changeRecommendation: ViewUnifiedChange): void {
+        this.scrollToChange = changeRecommendation;
+        this.updateCrMode.emit(ChangeRecoMode.Diff);
     }
 
     private updateObservables(): void {

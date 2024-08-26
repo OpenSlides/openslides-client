@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Observable, Subscription } from 'rxjs';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
@@ -86,21 +85,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
         return this.amendmentRepo.getViewModelListObservableFor(this.motion).pipe(filter(value => !!value));
     }
 
-    /**
-     * Value for os-motion-detail-diff: when this is set, that component scrolls to the given change
-     */
-    public scrollToChange: ViewUnifiedChange | null = null;
-
     private _motion: ViewMotion | null = null;
-
-    /**
-     * In the original version, a change-recommendation-annotation has been clicked
-     * -> Go to the diff view and scroll to the change recommendation
-     */
-    public gotoChangeRecommendation(changeRecommendation: ViewUnifiedChange): void {
-        this.scrollToChange = changeRecommendation;
-        this.viewService.changeRecommendationModeSubject.next(ChangeRecoMode.Diff);
-    }
 
     /**
      * Function called after all eventual updates whenever the motion setter is called
