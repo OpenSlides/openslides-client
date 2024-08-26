@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -34,6 +34,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public tags$: Observable<ViewTag[]> = this.tagRepo.getViewModelListObservable();
     public motionBlocks$: Observable<MotionBlock[]> = this.blockRepo.getViewModelListObservable();
 
+    @Input()
+    public changeRecoMode: ChangeRecoMode;
+
     /**
      * Determine if the name of supporters are visible
      */
@@ -65,7 +68,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     public get isDifferedChangeRecoMode(): boolean {
-        return this.viewService.currentChangeRecommendationMode === ChangeRecoMode.Diff;
+        return this.changeRecoMode === ChangeRecoMode.Diff;
     }
 
     /**

@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
 import { ProjectableTitleComponent } from 'src/app/site/pages/meetings/modules/meetings-component-collector/detail-view/components/projectable-title/projectable-title.component';
 import { ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 
@@ -20,17 +19,23 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
     @ViewChild(ProjectableTitleComponent)
     protected readonly titleComponent: ProjectableTitleComponent | undefined;
 
+    @Input()
+    public set changeRecoMode(value: ChangeRecoMode) {
+        this._changeRecoMode = value;
+        if (this.titleComponent) {
+            this.titleComponent.update();
+        }
+    }
+
+    public get changeRecoMode(): ChangeRecoMode {
+        return this._changeRecoMode;
+    }
+
+    private _changeRecoMode: ChangeRecoMode;
+
     public titleChangeRecommendation: ViewMotionChangeRecommendation | null = null;
 
     public getTitleFn = (): string => this.getTitleWithChanges();
-
-    private get personalNote(): PersonalNote | null {
-        return this.motion.getPersonalNote();
-    }
-
-    public get isFavorite(): boolean {
-        return this.personalNote?.star || false;
-    }
 
     public get isFavorite$(): Observable<boolean> {
         return this.motion.personal_notes$.pipe(map(notes => (notes?.length ? notes[0]?.star : false)));
@@ -61,37 +66,34 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         if (this.motion.isAmendment()) {
             return false;
         }
-        return (
-            this.viewService.currentChangeRecommendationMode === ChangeRecoMode.Original ||
-            this.viewService.currentChangeRecommendationMode === ChangeRecoMode.Diff
-        );
+        return this.changeRecoMode === ChangeRecoMode.Original || this.changeRecoMode === ChangeRecoMode.Diff;
     }
 
     public getTitleWithChanges(): string {
-        return this.changeRecoRepo.getTitleWithChanges(
+        const title = this.changeRecoRepo.getTitleWithChanges(
             this.motion.title,
             this.titleChangeRecommendation!,
-            this.viewService.currentChangeRecommendationMode
+            this.changeRecoMode
         );
+
+        if ([`I like trains`, `Ich mag Züge`].indexOf(title) !== -1 && document.querySelector(`.global-headbar`)) {
+            try {
+                document.querySelector(`.global-headbar`).classList.add(`train`);
+            } catch (e) {}
+        }
+
+        return title;
     }
 
-    /**
-     * Toggles the favorite status
-     */
-    public toggleFavorite(): void {
-        this.personalNoteRepo.setPersonalNote({ star: !this.isFavorite }, this.motion);
+    public setFavorite(value: boolean): void {
+        this.personalNoteRepo.setPersonalNote({ star: value }, this.motion);
     }
 
     protected override getSubscriptions(): Subscription[] {
         return [
             this.changeRecoRepo
                 .getTitleChangeRecoOfMotionObservable(this.motion?.id)
-                ?.subscribe(changeReco => (this.titleChangeRecommendation = changeReco)),
-            this.viewService.changeRecommendationModeSubject.pipe(distinctUntilChanged()).subscribe(() => {
-                if (this.titleComponent) {
-                    this.titleComponent.update();
-                }
-            })
+                ?.subscribe(changeReco => (this.titleChangeRecommendation = changeReco))
         ];
     }
 }

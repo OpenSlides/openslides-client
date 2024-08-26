@@ -13,7 +13,11 @@ import { BehaviorSubject, combineLatest, filter, Observable, of, skip } from 'rx
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotion, ViewMotionChangeRecommendation, ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions';
+import {
+    ViewMotion,
+    ViewMotionChangeRecommendation,
+    ViewUnifiedChange
+} from 'src/app/site/pages/meetings/pages/motions';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -24,6 +28,7 @@ import { MotionChangeRecommendationControllerService } from '../../../../../../m
 import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
+import { MotionLineNumberingService } from '../../../../../../services/common/motion-line-numbering.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { MotionPdfExportService } from '../../../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
 import { AmendmentListFilterService } from '../../../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';
@@ -31,7 +36,6 @@ import { AmendmentListSortService } from '../../../../../../services/list/amendm
 import { MotionListFilterService } from '../../../../../../services/list/motion-list-filter.service/motion-list-filter.service';
 import { MotionListSortService } from '../../../../../../services/list/motion-list-sort.service/motion-list-sort.service';
 import { MotionDetailViewOriginUrlService } from '../../../../services/motion-detail-view-originurl.service';
-import { MotionLineNumberingService } from '../../../../../../services/common/motion-line-numbering.service';
 
 @Component({
     selector: `os-motion-view`,

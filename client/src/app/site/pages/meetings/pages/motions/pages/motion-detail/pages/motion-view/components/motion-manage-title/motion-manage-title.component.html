@@ -20,15 +20,16 @@
                     ></span>
                 </span>
             }
+            @let isFavorite = isFavorite$ | async;
             <button
                 append
                 class="primary-accent-by-theme"
                 mat-icon-button
                 matTooltipPosition="right"
                 matTooltip="{{ 'Mark as personal favorite' | translate }}"
-                (click)="toggleFavorite()"
+                (click)="setFavorite(!isFavorite)"
             >
-                <mat-icon>{{ (isFavorite$ | async) ? 'star' : 'star_border' }}</mat-icon>
+                <mat-icon>{{ isFavorite ? 'star' : 'star_border' }}</mat-icon>
             </button>
         </os-projectable-title>
         <!-- Sequential number -->
