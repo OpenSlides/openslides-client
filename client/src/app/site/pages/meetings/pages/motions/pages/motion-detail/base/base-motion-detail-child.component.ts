@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { auditTime, BehaviorSubject, combineLatest, filter, Observable, Subscription } from 'rxjs';
+import { filter, Observable, Subscription } from 'rxjs';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
@@ -34,17 +34,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
 
     public get motion(): ViewMotion {
         return this._motion!;
-    }
-
-    public get hasChangingObjects(): boolean {
-        if (this.sortedChangingObjects !== null) {
-            return this.sortedChangingObjects.length > 0;
-        }
-
-        return (
-            (this.changeRecommendations && this.changeRecommendations.length > 0) ||
-            (this.amendments && this.amendments.filter(amendment => amendment.isParagraphBasedAmendment()).length > 0)
-        );
     }
 
     /**
@@ -79,9 +68,9 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     /////// Settings variables
     ///////////////////////////////////////////////
 
-    protected lineLength = 0;
-    protected sortedChangingObjects: ViewUnifiedChange[] | null = null;
-    protected readonly sortedChangingObjectsSubject: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
+    protected get lineLength(): number {
+        return this.meetingSettingsService.instant(`motions_line_length`);
+    }
 
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
@@ -89,20 +78,18 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     /**
      * All change recommendations to this motion
      */
-    private changeRecommendations: ViewUnifiedChange[] = [];
     public get changeRecommendations$(): Observable<ViewUnifiedChange[]> {
         return this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).pipe(filter(value => !!value));
+    }
+
+    protected get amendments$(): Observable<ViewMotion[]> {
+        return this.amendmentRepo.getViewModelListObservableFor(this.motion).pipe(filter(value => !!value));
     }
 
     /**
      * Value for os-motion-detail-diff: when this is set, that component scrolls to the given change
      */
     public scrollToChange: ViewUnifiedChange | null = null;
-
-    private amendments: ViewMotion[] = [];
-    protected get amendments$(): Observable<ViewMotion[]> {
-        return this.amendmentRepo.getViewModelListObservableFor(this.motion).pipe(filter(value => !!value));
-    }
 
     private _motion: ViewMotion | null = null;
 
@@ -113,27 +100,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     public gotoChangeRecommendation(changeRecommendation: ViewUnifiedChange): void {
         this.scrollToChange = changeRecommendation;
         this.viewService.changeRecommendationModeSubject.next(ChangeRecoMode.Diff);
-    }
-
-    protected updateAllChangingObjectsSorted(): void {
-        const sortedChangingObjects = this.motionLineNumbering.recalcUnifiedChanges(
-            this.lineLength,
-            this.changeRecommendations as ViewMotionChangeRecommendation[],
-            this.amendments
-        );
-        this.sortedChangingObjectsSubject.next(sortedChangingObjects);
-        this.sortedChangingObjects = sortedChangingObjects;
-    }
-
-    protected getAllChangingObjectsSorted(): ViewUnifiedChange[] {
-        if (!this.sortedChangingObjects) {
-            this.sortedChangingObjects = this.motionLineNumbering.recalcUnifiedChanges(
-                this.lineLength,
-                this.changeRecommendations as ViewMotionChangeRecommendation[],
-                this.amendments
-            );
-        }
-        return this.sortedChangingObjects!;
     }
 
     /**
@@ -156,38 +122,11 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     }
 
     private init(): void {
-        this.subscriptions.push(
-            ...this.getSharedSubscriptionsToSettings(),
-            ...this.getSharedSubscriptionsToRepositories(),
-            ...this.getSubscriptions()
-        );
+        this.subscriptions.push(...this.getSubscriptions());
         this.onAfterInit();
     }
 
     private destroy(): void {
         this.cleanSubscriptions();
-    }
-
-    private getSharedSubscriptionsToRepositories(): Subscription[] {
-        return [
-            combineLatest([this.changeRecommendations$, this.amendments$])
-                .pipe(auditTime(500))
-                .subscribe(([changeRecos, amendments]) => {
-                    this.sortedChangingObjects = null;
-                    this.changeRecommendations = changeRecos;
-                    this.amendments = amendments;
-                    this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
-                    this.updateAllChangingObjectsSorted();
-                })
-        ];
-    }
-
-    private getSharedSubscriptionsToSettings(): Subscription[] {
-        return [
-            this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => {
-                this.lineLength = lineLength;
-                this.sortedChangingObjects = null;
-            })
-        ];
     }
 }

@@ -63,7 +63,11 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     public hasChangeRecommendations: boolean = false;
-    public unifiedChanges: ViewUnifiedChange[] = [];
+    public unifiedChanges$: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
+
+    public get unifiedChanges(): ViewUnifiedChange[] {
+        return this.unifiedChanges$.value;
+    }
 
     /**
      * preloaded next motion for direct navigation
@@ -144,7 +148,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         this.subscriptions.push(
             this.activeMeetingIdService.meetingIdObservable.pipe(skip(1)).subscribe(id => {
                 if (this.motion && this.motion.meeting_id !== id) {
-                    this.motion = null;
+                    this.destroy();
                     if (this.hasLoaded$.value) {
                         this.hasLoaded$.next(false);
                     }
@@ -152,7 +156,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             }),
             this.route.params.pipe(skip(1)).subscribe((params: Params) => {
                 if (+params[`id`] !== this.motion?.id) {
-                    this.motion = null;
+                    this.destroy();
                     if (this.hasLoaded$.value) {
                         this.hasLoaded$.next(false);
                     }
@@ -253,8 +257,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     public navigateToMotion(motion: ViewMotion | null): void {
         if (motion) {
             this.router.navigate([this.activeMeetingId, `motions`, motion.sequential_number]);
-            // update the current motion
-            this.motion = motion;
             this.setSurroundingMotions();
         }
     }
@@ -326,6 +328,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     private nextMotionLoaded(): void {
+        let previousAmendments: ViewMotion[] = null;
         this.subscriptions.updateSubscription(
             `sorted-changes`,
             combineLatest([
@@ -333,16 +336,27 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).pipe(filter(value => !!value)),
                 this.amendmentRepo.getViewModelListObservableFor(this.motion).pipe(filter(value => !!value))
             ]).subscribe(([lineLength, changeRecos, amendments]) => {
+                if (previousAmendments !== amendments) {
+                    this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
+                    previousAmendments = amendments;
+                }
                 this.hasChangeRecommendations = !!changeRecos?.length;
-                this.unifiedChanges = this.motionLineNumbering.recalcUnifiedChanges(
-                    lineLength,
-                    changeRecos as ViewMotionChangeRecommendation[],
-                    amendments
+                this.unifiedChanges$.next(
+                    this.motionLineNumbering.recalcUnifiedChanges(
+                        lineLength,
+                        changeRecos as ViewMotionChangeRecommendation[],
+                        amendments
+                    )
                 );
                 this.changeRecoMode = this.determineCrMode(this.changeRecoMode);
                 this.cd.markForCheck();
             })
         );
+
+        const recoMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
+        if (recoMode) {
+            this.changeRecoMode = this.determineCrMode(recoMode as ChangeRecoMode);
+        }
     }
 
     /**
@@ -372,14 +386,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
         this.lineNumberingMode = this.meetingSettingsService.instant(`motions_default_line_numbering`);
         this.changeRecoMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
-        /**
-        if (!previous?.amendment_paragraphs && !!current?.amendment_paragraphs) {
-            const recoMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
-            if (recoMode) {
-                this.setChangeRecoMode(this.determineCrMode(recoMode as ChangeRecoMode));
-            }
-        }
-        **/
 
         if (this._sortedMotionsObservable) {
             this.subscriptions.updateSubscription(
@@ -398,6 +404,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
      * Lifecycle routine for motions to get destroyed.
      */
     private destroy(): void {
+        this.unifiedChanges$.next([]);
+        this.motion = null;
         this._hasModelSubscriptionInitiated = false;
         this.subscriptions.delete(`sorted-motions`);
         this.subscriptions.delete(`sorted-changes`);

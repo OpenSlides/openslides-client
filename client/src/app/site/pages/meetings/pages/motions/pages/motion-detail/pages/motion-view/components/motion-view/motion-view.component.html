@@ -200,6 +200,7 @@
     <os-motion-highlight-form
         #highlightForm
         [changeRecoMode]="changeRecoMode"
+        [hasChangingObjects]="!!(unifiedChanges$ | async)?.length"
         [lineNumberingMode]="lineNumberingMode"
         [motion]="motion"
         (updateCrMode)="changeRecoMode = $event"
@@ -211,5 +212,6 @@
         [changeRecoMode]="changeRecoMode"
         [lineNumberingMode]="lineNumberingMode"
         [motion]="motion"
+        [unifiedChanges]="unifiedChanges"
     ></os-motion-content>
 </ng-template>

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
@@ -25,6 +25,30 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     @Input()
     public lineNumberingMode: LineNumberingMode;
+
+    private unifiedChanges$: Observable<ViewUnifiedChange[]> & { value: ViewUnifiedChange[] };
+
+    @Input()
+    public set unifiedChanges(
+        value: ViewUnifiedChange[] | (Observable<ViewUnifiedChange[]> & { value: ViewUnifiedChange[] })
+    ) {
+        if (value !== this.unifiedChanges$) {
+            if (value instanceof Observable) {
+                this.unifiedChanges$ = value;
+            } else {
+                this.unifiedChanges$ = new BehaviorSubject(value);
+            }
+
+            this.updateObservables();
+        }
+    }
+
+    public get unifiedChanges(): ViewUnifiedChange[] | Observable<ViewUnifiedChange[]> {
+        return this.unifiedChanges$.value;
+    }
+
+    public changesForDiffMode$: Observable<ViewUnifiedChange[]> = null;
+    public formattedTextPlain$: Observable<string> = null;
 
     public preamble$ = this.meetingSettingsService.get(`motions_preamble`);
 
@@ -93,38 +117,37 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.dialog.openContentChangeRecommendationDialog(data);
     }
 
-    public changesForDiffMode$: Observable<ViewUnifiedChange[]> = combineLatest([
-        this.showAllAmendments$,
-        this.sortedChangingObjectsSubject
-    ]).pipe(
-        map(([_, changes]) =>
-            changes.filter(change => {
-                if (this.showAllAmendments) {
-                    return true;
-                } else {
-                    return change.showInDiffView();
+    private updateObservables(): void {
+        this.formattedTextPlain$ = combineLatest([
+            this.meetingSettingsService.get(`motions_line_length`),
+            this.unifiedChanges$
+        ]).pipe(
+            map(([lineLength, changes]) => {
+                if (lineLength) {
+                    return this.motionFormatService.formatMotion({
+                        targetMotion: this.motion,
+                        crMode: this.changeRecoMode,
+                        changes: this.changeRecoMode === ChangeRecoMode.Original ? [] : changes,
+                        lineLength: this.lineLength,
+                        highlightedLine: this.highlightedLine,
+                        firstLine: this.motion.firstLine
+                    });
                 }
+
+                return this.motion.text;
             })
-        )
-    );
+        );
 
-    public formattedTextPlain$: Observable<string> = combineLatest([
-        this.meetingSettingsService.get(`motions_line_length`),
-        this.sortedChangingObjectsSubject
-    ]).pipe(
-        map(([lineLength, changes]) => {
-            if (lineLength) {
-                return this.motionFormatService.formatMotion({
-                    targetMotion: this.motion,
-                    crMode: this.changeRecoMode,
-                    changes: this.changeRecoMode === ChangeRecoMode.Original ? [] : changes,
-                    lineLength: this.lineLength,
-                    highlightedLine: this.highlightedLine,
-                    firstLine: this.motion.firstLine
-                });
-            }
-
-            return this.motion.text;
-        })
-    );
+        this.changesForDiffMode$ = combineLatest([this.showAllAmendments$, this.unifiedChanges$]).pipe(
+            map(([_, changes]) =>
+                changes.filter(change => {
+                    if (this.showAllAmendments) {
+                        return true;
+                    } else {
+                        return change.showInDiffView();
+                    }
+                })
+            )
+        );
+    }
 }

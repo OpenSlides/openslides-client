@@ -3,7 +3,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, filter, firstValueFrom, Subscription, takeUntil, timer } from 'rxjs';
+import { filter, firstValueFrom } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -33,6 +33,9 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
 
     @Input()
     public changeRecoMode: ChangeRecoMode;
+
+    @Input()
+    public hasChangingObjects: boolean = false;
 
     @Output()
     public updateLnMode = new EventEmitter<LineNumberingMode>();
@@ -206,8 +209,6 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         if (await this.promptService.open(title)) {
             try {
                 await this.repo.update({ modified_final_version: `` }, this.motion).resolve();
-                // TODO: Do in view
-                // this.setChangeRecoMode(this.determineCrMode(ChangeRecoMode.Diff));
             } catch (e) {
                 this.raiseError(e);
             }
@@ -271,18 +272,5 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
 
     protected override onAfterInit(): void {
         this.startLineNumber = this.motion?.start_line_number || 1;
-    }
-
-    protected override getSubscriptions(): Subscription[] {
-        return [
-            combineLatest([
-                this.changeRecoRepo.getViewModelListObservable().pipe(takeUntil(timer(1000))),
-                this.meetingSettingsService.get(`motions_recommendation_text_mode`)
-            ]).subscribe(([_, mode]) => {
-                if (!this.isEditingFinalVersion && mode) {
-                    // TODO: Remove
-                }
-            })
-        ];
     }
 }
