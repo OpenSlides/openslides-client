@@ -17,8 +17,8 @@ import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/mod
 import { AutoupdateCommunicationService } from 'src/app/site/services/autoupdate/autoupdate-communication.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
-import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../motions.subscription';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service';
+import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
 
 /**
  * This component displays either the original motion text or the original amendment diff text

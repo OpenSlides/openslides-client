@@ -18,21 +18,21 @@ import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/mod
 import { HEAD_BAR_HEIGHT } from 'src/app/ui/modules/head-bar/components/head-bar/head-bar.component';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { getRecommendationTypeName } from '../../../../definitions/recommendation-type-names';
-import { ViewUnifiedChangeType } from '../../../../modules/change-recommendations/definitions/index';
+import { getRecommendationTypeName } from '../../../../../../definitions/recommendation-type-names';
+import { ViewUnifiedChangeType } from '../../../../../../modules/change-recommendations/definitions/index';
 import {
     LineNumberedString,
     LineNumberingService
-} from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
-import { MotionChangeRecommendationControllerService } from '../../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
-import { MotionDiffService } from '../../../../modules/change-recommendations/services/motion-diff.service/motion-diff.service';
-import { ViewMotionChangeRecommendation } from '../../../../modules/change-recommendations/view-models/view-motion-change-recommendation';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
-import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
-import { ViewMotionAmendedParagraph } from '../../../../view-models/view-motion-amended-paragraph';
-import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
-import { MotionTitleChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
-import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
+} from '../../../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
+import { MotionChangeRecommendationControllerService } from '../../../../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
+import { MotionDiffService } from '../../../../../../modules/change-recommendations/services/motion-diff.service/motion-diff.service';
+import { ViewMotionChangeRecommendation } from '../../../../../../modules/change-recommendations/view-models/view-motion-change-recommendation';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
+import { MotionLineNumberingService } from '../../../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
+import { ViewMotionAmendedParagraph } from '../../../../../../view-models/view-motion-amended-paragraph';
+import { MotionContentChangeRecommendationDialogComponentData } from '../../../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
+import { MotionTitleChangeRecommendationDialogComponentData } from '../../../../modules/motion-change-recommendation-dialog/components/motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
+import { MotionChangeRecommendationDialogService } from '../../../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
 
 /**
  * This component displays the original motion text with the change blocks inside.
