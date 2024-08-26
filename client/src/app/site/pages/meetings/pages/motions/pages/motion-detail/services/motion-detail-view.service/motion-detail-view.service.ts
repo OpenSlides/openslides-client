@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 
 import { MotionDetailServiceModule } from '../motion-detail-service.module';
 
@@ -18,7 +17,6 @@ export class MotionDetailViewService {
         return this.showAllAmendmentsStateSubject.value;
     }
 
-    public readonly changeRecommendationModeSubject = new BehaviorSubject<ChangeRecoMode>(ChangeRecoMode.Original);
     public readonly showAllAmendmentsStateSubject = new BehaviorSubject<boolean>(false);
     public readonly modifiedFinalVersionActionSubject = new Subject<ModifiedFinalVersionAction>();
 
@@ -27,6 +25,5 @@ export class MotionDetailViewService {
      */
     public reset(): void {
         this.showAllAmendmentsStateSubject.next(false);
-        this.changeRecommendationModeSubject.next(ChangeRecoMode.Original);
     }
 }
