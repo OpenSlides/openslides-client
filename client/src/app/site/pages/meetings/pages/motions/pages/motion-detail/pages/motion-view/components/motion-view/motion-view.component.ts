@@ -9,7 +9,15 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, RoutesRecognized } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, firstValueFrom, Observable } from 'rxjs';
+import {
+    auditTime,
+    BehaviorSubject,
+    combineLatest,
+    distinctUntilChanged,
+    filter,
+    firstValueFrom,
+    Observable
+} from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -336,22 +344,24 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 this.meetingSettingsService.get(`motions_line_length`),
                 this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).pipe(filter(value => !!value)),
                 this.amendmentRepo.getViewModelListObservableFor(this.motion).pipe(filter(value => !!value))
-            ]).subscribe(([lineLength, changeRecos, amendments]) => {
-                if (previousAmendments !== amendments) {
-                    this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
-                    previousAmendments = amendments;
-                }
-                this.hasChangeRecommendations = !!changeRecos?.length;
-                this.unifiedChanges$.next(
-                    this.motionLineNumbering.recalcUnifiedChanges(
-                        lineLength,
-                        changeRecos as ViewMotionChangeRecommendation[],
-                        amendments
-                    )
-                );
-                this.changeRecoMode = this.determineCrMode(this.changeRecoMode);
-                this.cd.markForCheck();
-            })
+            ])
+                .pipe(auditTime(1)) // Needed to replicate behaviour of base-repository list updates
+                .subscribe(([lineLength, changeRecos, amendments]) => {
+                    if (previousAmendments !== amendments) {
+                        this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
+                        previousAmendments = amendments;
+                    }
+                    this.hasChangeRecommendations = !!changeRecos?.length;
+                    this.unifiedChanges$.next(
+                        this.motionLineNumbering.recalcUnifiedChanges(
+                            lineLength,
+                            changeRecos as ViewMotionChangeRecommendation[],
+                            amendments
+                        )
+                    );
+                    this.changeRecoMode = this.determineCrMode(this.changeRecoMode);
+                    this.cd.markForCheck();
+                })
         );
     }
 
