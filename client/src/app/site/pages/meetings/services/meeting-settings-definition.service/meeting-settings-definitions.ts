@@ -153,16 +153,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
         icon: `home`,
         subgroups: [
             {
-                label: _(`System`),
-                settings: [
-                    {
-                        key: `enable_anonymous`,
-                        label: _(`Allow access for anonymous guest users`),
-                        type: `boolean`
-                    }
-                ]
-            },
-            {
                 label: _(`Meeting information`),
                 settings: [
                     {
@@ -195,12 +185,22 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `external_id`,
                         label: _(`External ID`)
-                    },
+                    }
+                ]
+            },
+            {
+                label: _(`System`),
+                settings: [
                     {
                         key: `locked_from_inside`,
                         label: _(`Close your meeting from the inside`),
                         type: `boolean`,
                         forbidden: meetingView => meetingView.isTemplate
+                    },
+                    {
+                        key: `enable_anonymous`,
+                        label: _(`Allow access for anonymous guest users`),
+                        type: `boolean`
                     }
                 ]
             },

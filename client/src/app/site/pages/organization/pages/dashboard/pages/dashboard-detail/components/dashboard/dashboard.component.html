@@ -214,13 +214,15 @@
         @if (meeting.isArchived) {
             <mat-icon matTooltip="{{ 'This meeting is archived' | translate }}">archive</mat-icon>
         }
-        <a
-            class="show-committee-link"
-            mat-icon-button
-            matTooltip="{{ 'Show committee' | translate }}"
-            [routerLink]="['/', 'committees', meeting.committee_id]"
-        >
-            <mat-icon class="show-committee-icon">layers</mat-icon>
-        </a>
+        @if (meeting.committee_id) {
+            <a
+                class="show-committee-link"
+                mat-icon-button
+                matTooltip="{{ 'Show committee' | translate }}"
+                [routerLink]="['/', 'committees', meeting.committee_id]"
+            >
+                <mat-icon class="show-committee-icon">layers</mat-icon>
+            </a>
+        }
     </div>
 </ng-template>
