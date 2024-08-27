@@ -75,6 +75,7 @@ export class AutoupdateService {
     private _currentQueryParams: QueryParams | null = null;
     private _resolveDataReceived: ((value: ModelData) => void)[] = [];
     private _lastHandeledDataId: Id;
+    private _lastHandeledDataRequestId: Id;
 
     public constructor(
         private httpEndpointService: HttpStreamEndpointService,
@@ -268,12 +269,14 @@ export class AutoupdateService {
         if (this._lastHandeledDataId === autoupdateDataId) {
             const unlock = await this._mutex.lock();
             if (this._resolveDataReceived[id]) {
+                await this._activeRequestObjects[this._lastHandeledDataRequestId]?.modelSubscription?.receivedData;
                 this._resolveDataReceived[id](modelData);
                 delete this._resolveDataReceived[id];
             }
             return unlock();
         }
         this._lastHandeledDataId = autoupdateDataId;
+        this._lastHandeledDataRequestId = id;
 
         const fullListUpdateCollections: {
             [collection: string]: Ids;
