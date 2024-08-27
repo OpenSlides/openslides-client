@@ -7,9 +7,9 @@ import {
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, RoutesRecognized } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest, filter, Observable, of, skip } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, firstValueFrom, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -53,9 +53,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
      */
     public set motion(motion: ViewMotion) {
         this._motion = motion;
-        if (motion) {
-            this.init();
-        }
     }
 
     public get motion(): ViewMotion {
@@ -65,7 +62,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     public hasChangeRecommendations: boolean = false;
     public unifiedChanges$: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
 
-    public get unifiedChanges(): ViewUnifiedChange[] {
+    private get unifiedChanges(): ViewUnifiedChange[] {
         return this.unifiedChanges$.value;
     }
 
@@ -111,12 +108,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     /**
      * The observable for the list of motions. Set in OnInit
      */
-    private _sortedMotionsObservable: Observable<ViewMotion[]> = of([]);
+    private _sortedMotionsObservable: Observable<ViewMotion[]> = null;
 
     private _motion: ViewMotion | null = null;
-    private _motionId: Id | null = null;
-
-    private _hasModelSubscriptionInitiated = false;
 
     private _amendmentsInMainList = false;
 
@@ -146,22 +140,12 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         super();
 
         this.subscriptions.push(
-            this.activeMeetingIdService.meetingIdObservable.pipe(skip(1)).subscribe(id => {
-                if (this.motion && this.motion.meeting_id !== id) {
-                    this.destroy();
-                    if (this.hasLoaded$.value) {
-                        this.hasLoaded$.next(false);
-                    }
-                }
-            }),
-            this.route.params.pipe(skip(1)).subscribe((params: Params) => {
-                if (+params[`id`] !== this.motion?.id) {
-                    this.destroy();
-                    if (this.hasLoaded$.value) {
-                        this.hasLoaded$.next(false);
-                    }
-                }
-            })
+            this.router.events
+                .pipe(
+                    filter((event): boolean => event instanceof RoutesRecognized),
+                    distinctUntilChanged((p: RoutesRecognized, c: RoutesRecognized) => p?.url === c?.url)
+                )
+                .subscribe(() => this.onMotionChange())
         );
     }
 
@@ -170,13 +154,18 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
      * Sets all required subjects and fills in the required information
      */
     public ngOnInit(): void {
+        this.isNavigatedFromAmendments();
+
         this.subscriptions.push(
-            this.vp.isMobileSubject.subscribe(() => {
-                this.cd.markForCheck();
-            }),
             this.meetingSettingsService
                 .get(`motions_amendments_in_main_list`)
-                .subscribe(enabled => (this._amendmentsInMainList = enabled))
+                .subscribe(enabled => (this._amendmentsInMainList = enabled)),
+            this.meetingSettingsService
+                .get(`motions_default_line_numbering`)
+                .subscribe(val => (this.lineNumberingMode = val)),
+            this.meetingSettingsService
+                .get(`motions_recommendation_text_mode`)
+                .subscribe(val => (this.changeRecoMode = val))
         );
     }
 
@@ -186,9 +175,57 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
      */
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
-        this.destroy();
         this.amendmentSortService.exitSortService();
         this.motionSortService.exitSortService();
+    }
+
+    public onMotionChange(): void {
+        if (this.hasLoaded$.value) {
+            this.hasLoaded$.next(false);
+        }
+
+        this.unifiedChanges$.next([]);
+        this.subscriptions.delete(`motion`);
+        this.subscriptions.delete(`sorted-changes`);
+    }
+
+    public async onMotionIdFound(id: Id | null): Promise<void> {
+        if (id) {
+            const lastMeetingId = this.motion?.meeting_id;
+            const motionSubscription = this.repo.getViewModelObservable(id).pipe(filter(m => !!m));
+            this.subscriptions.updateSubscription(
+                `motion`,
+                motionSubscription.subscribe(motion => this.onMotionUpdated(motion))
+            );
+
+            const motion = await firstValueFrom(motionSubscription);
+            if (lastMeetingId !== motion.meeting_id) {
+                this.isNavigatedFromAmendments();
+                this._sortedMotionsObservable = null;
+                this.subscriptions.delete(`sorted-motions`);
+            }
+            await this.modelRequestService.waitSubscriptionReady(MOTION_DETAIL_SUBSCRIPTION);
+            if (motion.id !== id) {
+                return;
+            }
+            this.onMotionLoaded();
+        }
+
+        this.hasLoaded$.next(true);
+    }
+
+    public onMotionLoaded(): void {
+        if (!this._sortedMotionsObservable) {
+            this.updateSortedMotionsObservable();
+        }
+        this.nextMotionLoaded();
+    }
+
+    public onMotionUpdated(motion: ViewMotion): void {
+        const title = motion.getTitle();
+        super.setTitle(title);
+        this.motion = motion;
+        this.cd.markForCheck();
     }
 
     /**
@@ -268,7 +305,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     /**
      * Click handler for the pdf button
      */
-    public onDownloadPdf(): void {
+    public downloadPdf(): void {
         this.pdfExport.exportSingleMotion(this.motion, {
             lnMode:
                 this.lineNumberingMode === LineNumberingMode.Inside
@@ -288,46 +325,10 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         this.itemRepo.removeFromAgenda(this.motion.agenda_item_id!).catch(this.raiseError);
     }
 
-    public onIdFound(id: Id | null): void {
-        if (this._motionId !== id) {
-            this.onRouteChanged();
-        }
-        this._motionId = id;
-        if (id) {
-            this.loadMotionById();
-        } else {
-            this.hasLoaded$.next(true);
-        }
-    }
-
-    private loadMotionById(motionId: Id | null = this._motionId): void {
-        if (this._hasModelSubscriptionInitiated || !motionId) {
-            return; // already fired!
-        }
-        this._hasModelSubscriptionInitiated = true;
-
-        this.subscriptions.updateSubscription(
-            `motion`,
-            this.repo.getViewModelObservable(motionId).subscribe(motion => {
-                if (motion) {
-                    const title = motion.getTitle();
-                    super.setTitle(title);
-                    this.motion = motion;
-                    if (!this.hasLoaded$.value) {
-                        this.modelRequestService.waitSubscriptionReady(MOTION_DETAIL_SUBSCRIPTION).then(() => {
-                            if (this.motion.id === motionId) {
-                                this.nextMotionLoaded();
-                                this.hasLoaded$.next(true);
-                            }
-                        });
-                    }
-                    this.cd.markForCheck();
-                }
-            })
-        );
-    }
-
     private nextMotionLoaded(): void {
+        this.changeRecoMode =
+            this.meetingSettingsService.instant(`motions_recommendation_text_mode`) || ChangeRecoMode.Original;
+
         let previousAmendments: ViewMotion[] = null;
         this.subscriptions.updateSubscription(
             `sorted-changes`,
@@ -352,19 +353,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 this.cd.markForCheck();
             })
         );
-
-        const recoMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
-        if (recoMode) {
-            this.changeRecoMode = this.determineCrMode(recoMode as ChangeRecoMode);
-        }
     }
 
-    /**
-     * Lifecycle routine for motions to initialize.
-     */
-    private init(): void {
-        this.isNavigatedFromAmendments();
-
+    private updateSortedMotionsObservable(): void {
         // use the filter and the search service to get the current sorting
         if (this.motion && this.motion.lead_motion_id && !this._amendmentsInMainList) {
             // only use the amendments for this motion
@@ -384,9 +375,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             this._sortedMotionsObservable = this.motionFilterService.outputObservable;
         }
 
-        this.lineNumberingMode = this.meetingSettingsService.instant(`motions_default_line_numbering`);
-        this.changeRecoMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
-
         if (this._sortedMotionsObservable) {
             this.subscriptions.updateSubscription(
                 `sorted-motions`,
@@ -398,22 +386,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 })
             );
         }
-    }
-
-    /**
-     * Lifecycle routine for motions to get destroyed.
-     */
-    private destroy(): void {
-        this.unifiedChanges$.next([]);
-        this.motion = null;
-        this._hasModelSubscriptionInitiated = false;
-        this.subscriptions.delete(`sorted-motions`);
-        this.subscriptions.delete(`sorted-changes`);
-    }
-
-    private onRouteChanged(): void {
-        this.destroy();
-        this.init();
     }
 
     /**

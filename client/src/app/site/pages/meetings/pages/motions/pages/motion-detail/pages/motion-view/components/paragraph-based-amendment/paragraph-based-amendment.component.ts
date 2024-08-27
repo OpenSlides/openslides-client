@@ -46,7 +46,7 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
     public createChangeRecommendation = new EventEmitter<LineRange>();
 
     @Output()
-    public updateCrMode = new EventEmitter<ChangeRecoMode>();
+    public gotoChangeRecommendation = new EventEmitter<ViewUnifiedChange>();
 
     public scrollToChange: ViewUnifiedChange | null = null;
 
@@ -104,14 +104,5 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
         return this.motion?.getParagraphTitleByParagraph(paragraph) || ``;
-    }
-
-    /**
-     * In the original version, a change-recommendation-annotation has been clicked
-     * -> Go to the diff view and scroll to the change recommendation
-     */
-    public gotoChangeRecommendation(changeRecommendation: ViewUnifiedChange): void {
-        this.scrollToChange = changeRecommendation;
-        this.updateCrMode.emit(ChangeRecoMode.Diff);
     }
 }

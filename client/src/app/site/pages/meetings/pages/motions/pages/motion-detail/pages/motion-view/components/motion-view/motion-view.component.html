@@ -1,5 +1,6 @@
-<os-detail-view [collection]="collection" (idFound)="onIdFound($event)">
+<os-detail-view [collection]="collection" (idFound)="onMotionIdFound($event)">
     @let hasLoaded = hasLoaded$ | async;
+    @let isMobile = vp.isMobileSubject | async;
     <os-head-bar
         mainActionTooltip="New amendment"
         [goBack]="motion?.hasLeadMotion"
@@ -11,7 +12,7 @@
         @if (motion && hasLoaded) {
             <div class="title-slot">
                 <h2>
-                    @if (!vp.isMobile) {
+                    @if (!isMobile) {
                         <span>{{ 'Motion' | translate }}</span>
                         <!-- Whitespace between "Motion" and number -->
                         <span>&nbsp;</span>
@@ -23,7 +24,6 @@
         <!-- Back and forth buttons -->
         @if (showNavigateButtons) {
             <div class="extra-controls-slot prev-next-motion-controls">
-                @let isMobile = vp.isMobileSubject | async;
                 <button
                     class="nav-button-overflow"
                     mat-button
@@ -61,7 +61,7 @@
                 <!-- List of speakers -->
                 <os-speaker-button [menuItem]="true" [object]="motion"></os-speaker-button>
                 <!-- PDF -->
-                <button mat-menu-item (click)="onDownloadPdf()">
+                <button mat-menu-item (click)="downloadPdf()">
                     <mat-icon>picture_as_pdf</mat-icon>
                     <span>{{ 'PDF' | translate }}</span>
                 </button>
@@ -143,7 +143,7 @@
                     (updateCrMode)="changeRecoMode = $event"
                 ></os-motion-manage-title>
             </div>
-            @if (vp.isMobile) {
+            @if (isMobile) {
                 <div class="mobile-view">
                     <!-- Meta info -->
                     <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
@@ -216,7 +216,7 @@
         [changeRecoMode]="changeRecoMode"
         [lineNumberingMode]="lineNumberingMode"
         [motion]="motion"
-        [unifiedChanges]="unifiedChanges"
+        [unifiedChanges]="unifiedChanges$"
         (updateCrMode)="changeRecoMode = $event"
     ></os-motion-content>
 </ng-template>
