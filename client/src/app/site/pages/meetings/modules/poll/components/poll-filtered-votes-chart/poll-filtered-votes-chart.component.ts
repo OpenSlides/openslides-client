@@ -55,8 +55,9 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
             });
         }
 
-        this.totalAmount = votes.length;
-        this.totalAmountWeighted = votes.reduce((acc, curr) => acc + +curr.weight, 0);
+        const countedVotes = votes.filter(v => voteValues.indexOf(v.value) !== -1);
+        this.totalAmount = countedVotes.length;
+        this.totalAmountWeighted = countedVotes.reduce((acc, curr) => acc + +curr.weight, 0);
 
         this.cd.markForCheck();
     }
