@@ -239,11 +239,13 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
             personalInfoPatch[ctrl] = this.getFormValuePatch(ctrl as keyof ViewUser);
         });
+        const isActiveExists = typeof this.user?.is_active === `boolean` || this.user?.id;
+        const isPersonExists = typeof this.user?.is_physical_person === `boolean` || this.user?.id;
         this.personalInfoForm.patchValue(
             {
                 ...personalInfoPatch,
-                ...(this.user?.id ? {} : { is_active: true }),
-                ...(this.user?.id ? {} : { is_physical_person: true })
+                ...(isActiveExists ? {} : { is_active: true }),
+                ...(isPersonExists ? {} : { is_physical_person: true })
             },
             { emitEvent: false }
         );
