@@ -774,10 +774,9 @@ export class PdfDocumentService {
                 progressBarRef.onAction().subscribe(() => {
                     this.cancelPdfCreation();
                 });
+                this.progressService.message = this.translate.instant(`Creating PDF file ...`);
+                this.progressService.progressMode = `determinate`;
             });
-
-        this.progressService.message = this.translate.instant(`Creating PDF file ...`);
-        this.progressService.progressMode = `determinate`;
     }
 
     /**

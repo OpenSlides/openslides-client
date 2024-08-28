@@ -214,4 +214,8 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
             })
         );
     }
+
+    public ariaLabel(motion: ViewMotion): string {
+        return this.translate.instant(`Navigate to motion`) + ` '` + motion.title + `'`;
+    }
 }

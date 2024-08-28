@@ -308,4 +308,11 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         const nextFileList = nextFiles.slice().sort((a, b) => this.sortFn?.(a, b) || defaultSortFn(a, b));
         this._directoryBehaviorSubject.next(nextFileList);
     }
+
+    public ariaLabel(mediafile: ViewMediafile): string {
+        if (mediafile.is_directory) {
+            return this.translate.instant(`Navigate to the folder`) + ` '` + mediafile + `'`;
+        }
+        return this.translate.instant(`Download the file`) + ` '` + mediafile + `'`;
+    }
 }
