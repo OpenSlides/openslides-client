@@ -31,12 +31,12 @@
         <div class="results margin-bottom-10">
             <div class="user-subtitle">
                 <span class="no-space">{{ 'Ballots cast' | translate }}: {{ totalAmount }} (</span>
-                @for (cat of voteAmounts; track cat.value; let isLast = $last) {
-                    <span>{{ cat.name | translate }}: {{ cat.amount }}</span>
-                    @if (!isLast) {
-                        &middot;
+                <div class="categories">
+                    @for (cat of voteAmounts; track cat.value) {
+                        <span>{{ cat.name | translate }}: {{ cat.amount }}</span>
+                        <span class="seperator">&middot;</span>
                     }
-                }
+                </div>
                 <span class="no-space">)</span>
             </div>
         </div>

@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
 import { VoteValue, VoteValueVerbose } from 'src/app/domain/models/poll';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { ViewVote } from '../../../../pages/polls';
+import { ViewPoll, ViewVote } from '../../../../pages/polls';
 import { VotesFilterService } from '../../services/votes-filter.service';
 
 interface VoteAmount {
@@ -21,6 +21,9 @@ interface VoteAmount {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollFilteredVotesChartComponent extends BaseUiComponent implements OnInit {
+    @Input()
+    public poll: ViewPoll;
+
     public totalAmount = 0;
     public totalAmountWeighted = 0;
     public voteAmounts: VoteAmount[] = [];
@@ -29,13 +32,9 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
         return this.filterService.filterStack.length > 0;
     }
 
-    public constructor(
-        private themeService: ThemeService,
-        private filterService: VotesFilterService,
-        private cd: ChangeDetectorRef
-    ) {
-        super();
-    }
+    private themeService: ThemeService = inject(ThemeService);
+    private filterService: VotesFilterService = inject(VotesFilterService);
+    private cd: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         this.subscriptions.push(this.filterService.outputObservable.subscribe(votes => this.onVotesUpdated(votes)));
@@ -43,7 +42,7 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
 
     private onVotesUpdated(votes: ViewVote[]): void {
         this.voteAmounts = [];
-        const voteValues: VoteValue[] = [`Y`, `N`, `A`];
+        const voteValues: VoteValue[] = this.poll.isMethodYN ? [`Y`, `N`] : [`Y`, `N`, `A`];
         for (const i in voteValues) {
             const voteValue = voteValues[i];
             this.voteAmounts.push({
@@ -59,17 +58,5 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
         this.totalAmountWeighted = votes.reduce((acc, curr) => acc + +curr.weight, 0);
 
         this.cd.markForCheck();
-    }
-
-    protected get castedBallots(): string {
-        let verbatimCastedBallots = `Ballots cast: ` + this.totalAmount + ` (`;
-        this.voteAmounts.forEach((vote, index) => {
-            verbatimCastedBallots += vote.name + `: ` + vote.amount;
-            if (this.voteAmounts.length - 1 > index) {
-                verbatimCastedBallots += ` · `;
-            }
-        });
-        verbatimCastedBallots += `)`;
-        return verbatimCastedBallots;
     }
 }
