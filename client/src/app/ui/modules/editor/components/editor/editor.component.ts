@@ -244,6 +244,13 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         this.editor?.destroy();
     }
 
+    public override writeValue(value: string): void {
+        super.writeValue(value);
+        if (this.editor) {
+            this.editor.commands.setContent(value);
+        }
+    }
+
     public updateColorSets(): void {
         // Safari and Firefox have their own color paletes so no presets necessary
         if (navigator.userAgent.search(`Firefox`) > -1 || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
