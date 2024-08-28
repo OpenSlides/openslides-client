@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
-import { VoteValue, VoteValueVerbose } from 'src/app/domain/models/poll';
+import { PollPercentBase, VoteValue, VoteValueVerbose } from 'src/app/domain/models/poll';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
@@ -42,7 +42,8 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
 
     private onVotesUpdated(votes: ViewVote[]): void {
         this.voteAmounts = [];
-        const voteValues: VoteValue[] = this.poll.isMethodYN ? [`Y`, `N`] : [`Y`, `N`, `A`];
+        const voteValues: VoteValue[] =
+            this.poll.onehundred_percent_base === PollPercentBase.YN ? [`Y`, `N`] : [`Y`, `N`, `A`];
         for (const i in voteValues) {
             const voteValue = voteValues[i];
             this.voteAmounts.push({
