@@ -19,6 +19,7 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
+import { MotionDetailDirectivesModule } from '../../modules/directives/motion-detail-directives.module';
 import { AmendmentCreateWizardComponent } from './components/amendment-create-wizard/amendment-create-wizard.component';
 import { MotionFormComponent } from './components/motion-form/motion-form.component';
 import { ParagraphBasedAmendmentEditorComponent } from './components/paragraph-based-amendment-editor/paragraph-based-amendment-editor.component';
@@ -31,6 +32,7 @@ import { MotionFormRoutingModule } from './motion-form-routing.module';
         MotionFormRoutingModule,
         DirectivesModule,
         PipesModule,
+        MotionDetailDirectivesModule,
         AgendaContentObjectFormModule,
         HeadBarModule,
         DetailViewModule,

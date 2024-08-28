@@ -9,7 +9,17 @@ import {
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, distinctUntilChanged, filter, firstValueFrom, map, Subscription } from 'rxjs';
+import {
+    auditTime,
+    BehaviorSubject,
+    distinctUntilChanged,
+    filter,
+    firstValueFrom,
+    map,
+    skip,
+    Subscription,
+    tap
+} from 'rxjs';
 import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
@@ -21,6 +31,7 @@ import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meet
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../../../participants/participants.subscription';
@@ -157,6 +168,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         private motionController: MotionControllerService,
         private amendmentRepo: AmendmentControllerService,
         private perms: MotionPermissionService,
+        private prompt: PromptService,
         private cd: ChangeDetectorRef
     ) {
         super();
@@ -306,23 +318,33 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         this._initialState = deepCopy(contentPatch);
         this.contentForm.patchValue(contentPatch);
 
-        if (this.amendmentEdit) {
+        if (this.amendmentEdit && !this.titleFieldUpdateSubscription) {
             const parentId = Number(this.route.snapshot.queryParams[`parent`]);
             if (parentId && !Number.isNaN(parentId)) {
-                if (!this.titleFieldUpdateSubscription) {
-                    this.titleFieldUpdateSubscription = this.motionController
-                        .getViewModelObservable(parentId)
-                        .pipe(
-                            map(parent => {
-                                return { number: parent?.number, text: parent?.text };
-                            }),
-                            distinctUntilChanged()
-                        )
-                        .subscribe(() => {
-                            // TODO: Notify user that text changed
-                        });
-                    this.subscriptions.push(this.titleFieldUpdateSubscription);
-                }
+                this.titleFieldUpdateSubscription = this.motionController
+                    .getViewModelObservable(parentId)
+                    .pipe(
+                        map(parent => {
+                            return { number: parent?.number, text: parent?.text };
+                        }),
+                        distinctUntilChanged((p, c) => p.text === c.text),
+                        skip(1)
+                    )
+                    .subscribe(value => {
+                        this.prompt
+                            .open(
+                                this.translate.instant(`Parent motion text changed`),
+                                this.translate.instant(
+                                    `Do you want to update the amendment text? Your changes will be lost.`
+                                )
+                            )
+                            .then(choice => {
+                                if (choice) {
+                                    this.contentForm.patchValue({ text: value.text });
+                                }
+                            });
+                    });
+                this.subscriptions.push(this.titleFieldUpdateSubscription);
             }
         }
     }
@@ -354,13 +376,47 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         this.cd.markForCheck();
 
         this.subscriptions.push(
-            this.motionController.getViewModelObservable(motionId).subscribe(motion => {
-                if (motion) {
-                    // TODO: Check if relevant form fields were changed
-                    // TODO: Maybe update pristine form fields
-                    // TODO: Notify user that motion has changed
-                }
-            })
+            this.motionController
+                .getViewModelObservable(motionId)
+                .pipe(
+                    tap(motion => {
+                        if (this.contentForm) {
+                            for (const ctrl of Object.keys(this.contentForm.controls)) {
+                                if (this.contentForm.get(ctrl).pristine) {
+                                    this.contentForm.get(ctrl).setValue(motion[ctrl]);
+                                }
+                            }
+                        }
+                    }),
+                    distinctUntilChanged((_, c) => {
+                        for (const ctrl of Object.keys(this.contentForm.controls)) {
+                            if (JSON.stringify(c[ctrl]) !== JSON.stringify(this.contentForm.get(ctrl).value)) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }),
+                    auditTime(2000),
+                    skip(1)
+                )
+                .subscribe(motion => {
+                    if (motion) {
+                        const title = motion.getTitle();
+                        super.setTitle(title);
+                        this.motion = motion;
+                        this.prompt
+                            .open(
+                                this.translate.instant(`Motion changed`),
+                                this.translate.instant(`Discard changes and update form?`)
+                            )
+                            .then(choice => {
+                                if (choice) {
+                                    this.patchForm();
+                                }
+                            });
+                    }
+                })
         );
     }
 

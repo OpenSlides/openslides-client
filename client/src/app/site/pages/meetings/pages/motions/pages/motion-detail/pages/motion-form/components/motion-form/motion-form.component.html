@@ -23,7 +23,16 @@
                 <div>
                     <mat-card [ngClass]="vp.isMobile ? 'os-form-card-mobile' : 'os-card'">
                         <mat-card-content>
-                            <form class="motion-content" tabindex="-1" [formGroup]="contentForm">
+                            <form
+                                class="motion-content"
+                                tabindex="-1"
+                                [formGroup]="contentForm"
+                                [osListenEditing]="{
+                                    editMode: true,
+                                    model: motion,
+                                    listen: !newMotion
+                                }"
+                            >
                                 <!-- Submitter -->
                                 @if (newMotion) {
                                     <div class="content-field">

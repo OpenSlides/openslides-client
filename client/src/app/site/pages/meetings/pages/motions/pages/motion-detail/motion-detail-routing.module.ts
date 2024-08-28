@@ -17,17 +17,6 @@ const routes: Routes = [
             {
                 path: `:id`,
                 loadChildren: () => import(`./pages/motion-view/motion-view.module`).then(m => m.MotionViewModule)
-                /*children: [
-                    {
-                        path: ``,
-                        pathMatch: `full`,
-                        component: MotionViewComponent
-                    },
-                    {
-                        path: `create-amendment`,
-                        component: AmendmentCreateWizardComponent
-                    }
-                ]*/
             }
         ]
     }
