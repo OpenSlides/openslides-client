@@ -342,8 +342,20 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         if (typeof meeting_mediafile === `undefined`) {
             // Note: this needs to be the group from the parent and if the parent has no group then it needs to be admin
             //console.log(mediafile.is_published_to_meetings)
-            return [] as ViewGroup[];
+            //console.log(mediafile.getTitle())
+            //console.log(mediafile.parent_id)
+            if (!mediafile.parent_id) {
+                // return admin
+                console.log(mediafile.access_groups)
+                if (!mediafile.access_groups) {
+                    return [] as ViewGroup[];
+                }
+                return mediafile.access_groups
+                return [] as ViewGroup[];
+            }
+            return this.getGroups(mediafile.parent);
         }
+        console.log(meeting_mediafile.inherited_access_groups[0])
         return meeting_mediafile.inherited_access_groups;
     }
 

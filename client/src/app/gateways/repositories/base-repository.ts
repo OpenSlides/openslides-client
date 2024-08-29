@@ -513,6 +513,9 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     protected onCreateViewModel(_viewModel: V): void {}
 
     private updateViewModelListSubject(viewModels: V[]): void {
+        this.viewModelListSubject.next(
+            viewModels?.filter(m => (m.collection === `mediafile` ? console.log(m.getTitle()) : null))
+        );
         this.viewModelListSubject.next(viewModels?.filter(m => m.canAccess())?.sort(this.viewModelSortFn));
     }
 
