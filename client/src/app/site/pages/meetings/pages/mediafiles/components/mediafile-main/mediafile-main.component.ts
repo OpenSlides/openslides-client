@@ -12,7 +12,6 @@ import { getMediafilesSubscriptionConfig } from '../../mediafiles.subscription';
 })
 export class MediafileMainComponent extends BaseMeetingModelRequestHandler {
     protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {
-        console.log(`lalalalalalalala`);
         return [getMediafilesSubscriptionConfig(id)];
     }
 }

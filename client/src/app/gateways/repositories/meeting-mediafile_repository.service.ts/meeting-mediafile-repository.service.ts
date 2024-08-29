@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MeetingMediafile } from 'src/app/domain/models/meeting-mediafile/meeting-mediafile';
 import { ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles/view-models/view-meeting-mediafile';
+import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 
 import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
 import { BaseRepository } from '../base-repository';
@@ -39,5 +40,9 @@ export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetin
         viewModel.getProjectedContentObjects = (): string[] =>
             this.projectionRepo.getViewModelList().map(p => p.content_object_id);
         return viewModel;
+    }
+
+    public getOwnerIdAsId(): null | number {
+        return this.activeMeetingId ? null : ORGANIZATION_ID;
     }
 }

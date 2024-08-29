@@ -127,7 +127,7 @@
             >
                 @if (isInMeeting) {
                     <os-icon-container icon="group">
-                        <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
+                        <os-comma-separated-listing [list]="getGroups(mediafile)" [showElementsAmount]="3">
                             <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
                         </os-comma-separated-listing>
                     </os-icon-container>
@@ -152,11 +152,11 @@
         @if (mediafile.isImage() && isUsedAsLogoFn(mediafile)) {
             <mat-icon class="foreground-icon" [matTooltip]="'File is being used' | translate">insert_photo</mat-icon>
         }
-        @if (mediafile.is_public) {
+        @if (mediafile.published_to_meetings_in_organization_id === 1) {
             <mat-icon
                 class="foreground-icon"
                 [matTooltip]="'File is public' | translate"
-                [ngClass]="isUsedAsLogoFn(mediafile) ? 'margin-left-5' : 'margin-left-0'"
+                [ngClass]="mediafile.published_to_meetings_in_organization_id === 1 ? 'margin-left-5' : 'margin-left-0'"
             >
                 public
             </mat-icon>
@@ -190,20 +190,24 @@
                     <mat-icon>edit</mat-icon>
                     <span>{{ 'Edit' | translate }}</span>
                 </button>
-                <button mat-menu-item (click)="move(moveDialog, [mediafile])">
-                    <mat-icon>near_me</mat-icon>
-                    <span>{{ 'Move' | translate }}</span>
-                </button>
-                @if (isOrgaLevel) {
+                @if (fileCanBeModified(mediafile)) {
+                    @if (fileCanBeMoved(mediafile)) {
+                        <button mat-menu-item (click)="move(moveDialog, [mediafile])">
+                            <mat-icon>near_me</mat-icon>
+                            <span>{{ 'Move' | translate }}</span>
+                        </button>
+                    }
+                    <button class="red-warning-text" mat-menu-item (click)="onDelete(mediafile)">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{ 'Delete' | translate }}</span>
+                    </button>
+                }
+                @if (isOrgaLevelAndRootLevel) {
                     <button mat-menu-item (click)="publicize(publicDialog, mediafile)">
                         <mat-icon>public</mat-icon>
                         <span>{{ 'Publicize' | translate }}</span>
                     </button>
                 }
-                <button class="red-warning-text" mat-menu-item (click)="onDelete(mediafile)">
-                    <mat-icon>delete</mat-icon>
-                    <span>{{ 'Delete' | translate }}</span>
-                </button>
             </div>
         }
     </ng-template>

@@ -11,8 +11,9 @@ import {
     LogoDisplayNames,
     LogoPlace
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
+import { MeetingMediafileRepositoryService } from 'src/app/gateways/repositories/meeting-mediafile_repository.service.ts/meeting-mediafile-repository.service';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -50,6 +51,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      * Holds the file to edit
      */
     public fileToEdit!: ViewMediafile;
+    public meetingFileToEdit!: ViewMeetingMediafile;
 
     public newDirectoryForm: UntypedFormGroup;
     public groupsBehaviorSubject: Observable<ViewGroup[]>;
@@ -108,7 +110,8 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         private groupRepo: MediafileListGroupService,
         private cd: ChangeDetectorRef,
         private commonService: MediafileCommonService,
-        private interactionService: InteractionService
+        private interactionService: InteractionService,
+        private viewMeetingMediafileRepo: MeetingMediafileRepositoryService
     ) {
         super();
         this.canMultiSelect = true;
@@ -172,12 +175,12 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     }
 
     public isMediafileUsed(file: ViewMediafile, place: string): boolean {
-        const mediafile = this.repo.getViewModel(file.id)!;
-        if (mediafile.isFont()) {
-            return mediafile.used_as_font_in_meeting_id(place as FontPlace) === this.activeMeetingId;
+        const meetingFile = file.getMeetingMediafile();
+        if (file.isFont()) {
+            return meetingFile.used_as_font_in_meeting_id(place as FontPlace) === this.activeMeetingId;
         }
-        if (mediafile.isImage()) {
-            return mediafile.used_as_logo_in_meeting_id(place as LogoPlace) === this.activeMeetingId;
+        if (file.isImage()) {
+            return meetingFile.used_as_logo_in_meeting_id(place as LogoPlace) === this.activeMeetingId;
         }
         return false;
     }
@@ -230,12 +233,28 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     public onEditFile(file: ViewMediafile): void {
         if (!this.isMultiSelect) {
             this.fileToEdit = file;
+            this.meetingFileToEdit = file.getMeetingMediafile();
 
             this.fileEditForm = this.formBuilder.group({
                 title: [file.title, Validators.required],
-                access_group_ids: [[...file.access_group_ids]]
+                access_group_ids: [
+                    this.meetingFileToEdit !== undefined
+                        ? [...this.meetingFileToEdit.inherited_access_group_ids]
+                        : this.getInheritedGroups(file)
+                ],
+                meeting_id: this.activeMeetingId
             });
         }
+    }
+
+    private getInheritedGroups(file: ViewMediafile): number[] {
+        if (file.inherited_access_group_ids) {
+            return file.inherited_access_group_ids;
+        } else if (file.parent) {
+            this.getInheritedGroups(file.parent);
+        }
+        // 2 is the id for admin
+        return [2];
     }
 
     /**

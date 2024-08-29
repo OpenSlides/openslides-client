@@ -52,13 +52,21 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
      */
     public getEnsuredActiveMeetingId!: () => Id;
     public getProjectedContentObjects!: () => Fqid[];
+    public getMeetingMediafile!: (meetingId?: Id) => ViewMeetingMediafile;
+    public hasCreatedMeetingMediafile!: () => boolean;
 
     public override canAccess(): boolean {
         if (this.owner_id === `organization/1`) {
+            if (this.is_published_to_meetings) {
+                return true;
+            }
             return !this.getEnsuredActiveMeetingId();
         } else if (this.getProjectedContentObjects().indexOf(`mediafile/${this.id}`) !== -1) {
             return true;
         } else {
+            if (typeof this.mediafile.owner_id === `undefined`) {
+                return false;
+            }
             return this.getEnsuredActiveMeetingId() === this.meeting_id;
         }
     }
@@ -96,6 +104,10 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
      * @returns true or false
      */
     public isFont(): boolean {
+        return FONT_MIMETYPES.includes(this.mimetype);
+    }
+
+    public isPublic(): boolean {
         return FONT_MIMETYPES.includes(this.mimetype);
     }
 
@@ -141,6 +153,7 @@ interface IMediafileRelations {
     attachments: (BaseViewModel & HasAttachment)[];
     organization?: ViewOrganization;
     meeting_mediafiles: ViewMeetingMediafile[];
+    published_to_meetings_in_organization: ViewOrganization;
 }
 export interface ViewMediafile
     extends Mediafile,

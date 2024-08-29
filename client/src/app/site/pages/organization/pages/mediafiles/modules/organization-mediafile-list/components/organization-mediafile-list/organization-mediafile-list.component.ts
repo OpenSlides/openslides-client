@@ -70,7 +70,7 @@ export class OrganizationMediafileListComponent
     }
 
     public get isOrgaLevelAndRootLevel(): boolean {
-        return true && this.directoryChain.length == 0;
+        return this.directoryChain.length == 0;
     }
 
     /**

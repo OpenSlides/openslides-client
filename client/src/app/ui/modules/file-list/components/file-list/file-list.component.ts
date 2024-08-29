@@ -16,9 +16,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
+import { MeetingMediafileRepositoryService } from 'src/app/gateways/repositories/meeting-mediafile_repository.service.ts/meeting-mediafile-repository.service';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ListComponent } from 'src/app/ui/modules/list/components';
 
@@ -77,7 +79,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     public canAccessFileMenu = false;
 
     @Input()
-    public isOrgaLevel = false;
+    public isOrgaLevelAndRootLevel = false;
 
     private _hiddenInMobile: string[] = [`indicator`];
 
@@ -139,11 +141,11 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     @Input()
     public isUsedAsFontFn: (file: ViewMediafile) => boolean = (file: ViewMediafile) =>
-        !!file.mediafile.used_as_font_in_meeting_id();
+        !!file.getMeetingMediafile().used_as_font_in_meeting_id();
 
     @Input()
     public isUsedAsLogoFn: (file: ViewMediafile) => boolean = (file: ViewMediafile) =>
-        !!file.mediafile.used_as_logo_in_meeting_id();
+        !!file.getMeetingMediafile().used_as_logo_in_meeting_id();
 
     @Output()
     public beforeEditing = new EventEmitter<BeforeEditingEvent>();
@@ -205,7 +207,8 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         private cd: ChangeDetectorRef,
         private fb: UntypedFormBuilder,
         private translate: TranslateService,
-        private repo: MediafileControllerService
+        private repo: MediafileControllerService,
+        private meetingMediaRepo: MeetingMediafileRepositoryService
     ) {
         super();
         this.moveForm = fb.group({ directory_id: [] });
@@ -274,8 +277,12 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     }
 
     public onEditFile(file: ViewMediafile, template: TemplateRef<any>): void {
+        let mediafile: ViewMediafile | ViewMeetingMediafile = file;
+        if (this.isInMeeting && file.getMeetingMediafile() !== undefined) {
+            mediafile = file.getMeetingMediafile();
+        }
         this.beforeEditing.emit({ file });
-        this.fileEditForm = this.fb.group({ title: [file.title, Validators.required] });
+        this.fileEditForm = this.fb.group({ title: [mediafile.title, Validators.required] });
         const useTemplate = this.editFolderTemplate ?? template;
         this.dialog
             .open(useTemplate, infoDialogSettings)
@@ -328,5 +335,23 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
             return this.translate.instant(`Navigate to the folder`) + ` '` + mediafile + `'`;
         }
         return this.translate.instant(`Download the file`) + ` '` + mediafile + `'`;
+    }
+
+    protected getGroups(mediafile: ViewMediafile): ViewGroup[] {
+        const meeting_mediafile = mediafile.getMeetingMediafile(mediafile.getEnsuredActiveMeetingId());
+        if (typeof meeting_mediafile === `undefined`) {
+            // Note: this needs to be the group from the parent and if the parent has no group then it needs to be admin
+            //console.log(mediafile.is_published_to_meetings)
+            return [] as ViewGroup[];
+        }
+        return meeting_mediafile.inherited_access_groups;
+    }
+
+    protected fileCanBeModified(mediafile: ViewMediafile): boolean {
+        return !(this.isInMeeting && mediafile.published_to_meetings_in_organization_id === 1);
+    }
+
+    protected fileCanBeMoved(mediafile: ViewMediafile): boolean {
+        return !(this.isOrgaLevelAndRootLevel && mediafile.published_to_meetings_in_organization_id === 1);
     }
 }

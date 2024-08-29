@@ -14,7 +14,6 @@ import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeeting } from '../../../view-models/view-meeting';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { ViewGroup } from '../../participants/modules/groups/view-models/view-group';
-import { FONT_MIMETYPES, IMAGE_MIMETYPES, PDF_MIMETYPES } from '../definitions';
 import { VIDEO_MIMETYPES } from '../definitions/index';
 import { HasAttachment } from './has-attachment';
 import { ViewMediafile } from './view-mediafile';
@@ -55,7 +54,9 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
     public getProjectedContentObjects!: () => Fqid[];
 
     public override canAccess(): boolean {
-        if (this.owner_id === `organization/1`) {
+        if (this.is_published_to_meetings) {
+            return true;
+        } else if (this.mediafile.owner_id === `organization/1`) {
             return !this.getEnsuredActiveMeetingId();
         } else if (this.getProjectedContentObjects().indexOf(`mediafile/${this.id}`) !== -1) {
             return true;
@@ -78,37 +79,6 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
         return parentChain;
     }
 
-    public isProjectable(): boolean {
-        return this.isImage() || this.isPdf();
-    }
-
-    /**
-     * Determine if the file is an image
-     *
-     * @returns true or false
-     */
-    public isImage(): boolean {
-        return IMAGE_MIMETYPES.includes(this.mimetype);
-    }
-
-    /**
-     * Determine if the file is a font
-     *
-     * @returns true or false
-     */
-    public isFont(): boolean {
-        return FONT_MIMETYPES.includes(this.mimetype);
-    }
-
-    /**
-     * Determine if the file is a pdf
-     *
-     * @returns true or false
-     */
-    public isPdf(): boolean {
-        return PDF_MIMETYPES.includes(this.mimetype);
-    }
-
     /**
      * Determine if the file is a video
      *
@@ -121,12 +91,6 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
     public getIcon(): string {
         if (this.is_directory) {
             return `folder`;
-        } else if (this.isPdf()) {
-            return `picture_as_pdf`;
-        } else if (this.isImage()) {
-            return `insert_photo`;
-        } else if (this.isFont()) {
-            return `text_fields`;
         } else if (this.isVideo()) {
             return `movie`;
         } else if (this.is_public) {

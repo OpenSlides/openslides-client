@@ -22,7 +22,6 @@ export class OrganizationSetting {
     public limit_of_users!: number;
     public default_language!: string;
     public require_duplicate_from!: boolean;
-    public published_mediafile_ids!: Id[];
 
     public users_email_sender!: string; // default: OpenSlides
     public users_email_subject!: string; // default: OpenSlides access data
@@ -53,6 +52,7 @@ export class Organization extends BaseModel<Organization> {
     public archived_meeting_ids!: Id[]; // (meeting/is_archived_in_organization_id)[];
     public template_meeting_ids!: Id[]; // (meeting/template_for_organization_id)[];
     public mediafile_ids!: Id[];
+    public published_mediafile_ids!: Id[];
 
     public constructor(input?: any) {
         super(Organization.COLLECTION, input);

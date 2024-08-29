@@ -10,6 +10,6 @@ export const getOrganizationMediafileListSubscriptionConfig: SubscriptionConfigG
     modelRequest: {
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
-        follow: [{ idField: `mediafile_ids`, fieldset: `organizationDetail` }, { idField: `meeting_mediafile_ids` }]
+        follow: [{ idField: `mediafile_ids`, fieldset: `organizationDetail` }]
     }
 });
