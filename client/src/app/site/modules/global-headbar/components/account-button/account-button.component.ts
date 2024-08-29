@@ -185,7 +185,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     private onOperatorUpdate(): void {
         this.isLoggedIn = !this.operator.isAnonymous;
-        this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant(`Guest`);
+        this.username = this.operator.shortName;
         const userId = this.operator.operatorId;
         if (this._userId !== userId) {
             this._userId = userId;

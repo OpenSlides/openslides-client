@@ -1,7 +1,11 @@
 <div class="flex-center" data-cy="accountButton" [matMenuTriggerFor]="userMenu">
     <div class="operator-information flex-center">
         <div class="first-line one-line">
-            {{ username }}
+            @if (isLoggedIn) {
+                {{ username }}
+            } @else {
+                {{ 'Public' | translate }}
+            }
         </div>
     </div>
     <div class="fake-fab-button flex-center">
