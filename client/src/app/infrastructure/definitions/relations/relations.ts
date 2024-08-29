@@ -130,7 +130,7 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMediafile,
         OField: `mediafiles`,
         MField: `organization`,
-        isFullList: true
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
@@ -451,13 +451,14 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMediafile,
         OField: `mediafiles`,
         MField: `meeting`,
-        isFullList: true
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMeetingMediafile,
         OField: `meeting_mediafiles`,
-        MField: `meeting`
+        MField: `meeting`,
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
@@ -469,8 +470,7 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewMediafile,
         MViewModel: ViewMeetingMediafile,
         OField: `meeting_mediafiles`,
-        MField: `mediafile`,
-        isFullList: true
+        MField: `mediafile`
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,

@@ -11,7 +11,6 @@ import {
     LogoDisplayNames,
     LogoPlace
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
-import { MeetingMediafileRepositoryService } from 'src/app/gateways/repositories/meeting-mediafile_repository.service.ts/meeting-mediafile-repository.service';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
@@ -110,8 +109,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         private groupRepo: MediafileListGroupService,
         private cd: ChangeDetectorRef,
         private commonService: MediafileCommonService,
-        private interactionService: InteractionService,
-        private viewMeetingMediafileRepo: MeetingMediafileRepositoryService
+        private interactionService: InteractionService
     ) {
         super();
         this.canMultiSelect = true;

@@ -12,13 +12,12 @@ import { MeetingMediafileRepositoryService } from '../meeting-mediafile_reposito
 import { ProjectionRepositoryService } from '../projections/projection-repository.service';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { MediafileAction } from './mediafile.action';
-import { Id } from 'src/app/domain/definitions/key-types';
 
 @Injectable({
     providedIn: `root`
 })
 export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Mediafile> {
-    public get activeMeetingId(): number {
+    private get activeMeetingId(): number {
         return this.activeMeetingIdService.meetingId!;
     }
 
@@ -127,16 +126,9 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         return this.activeMeetingId ? `meeting/${this.activeMeetingId}` : `organization/${ORGANIZATION_ID}`;
     }
 
-    public getOwnerIdAsId(): null | number {
-        return this.activeMeetingId ? null : ORGANIZATION_ID;
-    }
-
-    private helpFunction(model: Mediafile, meetingId: Id): ViewMeetingMediafile {
-        if (model.is_published_to_meetings) {
-            //console.log(model.meeting_mediafile_ids);
-            // this needs to return the correct meeting_mediafile
-            // -> it needs to return the meeting_mediafile from the model from the current meeting
-            return undefined;
+    private getMeetingMediafile(model: Mediafile): ViewMeetingMediafile {
+        if (model.published_to_meetings_in_organization_id) {
+            return this.meetingMediaRepo.getViewModel(model.meeting_mediafile_ids[0]);
         }
         return this.meetingMediaRepo.getViewModel(model.meeting_mediafile_ids[0]);
     }
@@ -149,8 +141,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         viewModel.getEnsuredActiveMeetingId = (): number => this.activeMeetingIdService.meetingId;
         viewModel.getProjectedContentObjects = (): string[] =>
             this.projectionRepo.getViewModelList().map(p => p.content_object_id);
-        viewModel.getMeetingMediafile = (meetingId: Id): ViewMeetingMediafile => this.helpFunction(model, meetingId);
-        viewModel.hasCreatedMeetingMediafile = (): boolean => viewModel.getMeetingMediafile !== undefined;
+        viewModel.getMeetingMediafile = (): ViewMeetingMediafile => this.getMeetingMediafile(model);
         return viewModel;
     }
 }

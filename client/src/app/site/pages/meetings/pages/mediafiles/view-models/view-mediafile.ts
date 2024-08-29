@@ -38,7 +38,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
      * Only use this if you are sure that you have a meeting mediafile
      */
     public get meeting_id(): Id {
-        const [collection, id] = collectionIdFromFqid(this.mediafile.owner_id);
+        const [collection, id] = collectionIdFromFqid(this.owner_id);
         if (collection != Meeting.COLLECTION) {
             throw Error(`Mediafile's owner_id is not a meeting`);
         }
@@ -52,21 +52,18 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
      */
     public getEnsuredActiveMeetingId!: () => Id;
     public getProjectedContentObjects!: () => Fqid[];
-    public getMeetingMediafile!: (meetingId?: Id) => ViewMeetingMediafile;
-    public hasCreatedMeetingMediafile!: () => boolean;
+    public getMeetingMediafile!: () => ViewMeetingMediafile;
 
     public override canAccess(): boolean {
+        //console.log(this.owner_id)
         if (this.owner_id === `organization/1`) {
-            if (this.is_published_to_meetings) {
+            if (this.published_to_meetings_in_organization_id) {
                 return true;
             }
             return !this.getEnsuredActiveMeetingId();
         } else if (this.getProjectedContentObjects().indexOf(`mediafile/${this.id}`) !== -1) {
             return true;
         } else {
-            if (typeof this.mediafile.owner_id === `undefined`) {
-                return false;
-            }
             return this.getEnsuredActiveMeetingId() === this.meeting_id;
         }
     }
@@ -104,10 +101,6 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
      * @returns true or false
      */
     public isFont(): boolean {
-        return FONT_MIMETYPES.includes(this.mimetype);
-    }
-
-    public isPublic(): boolean {
         return FONT_MIMETYPES.includes(this.mimetype);
     }
 

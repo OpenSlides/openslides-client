@@ -54,12 +54,13 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
     public getProjectedContentObjects!: () => Fqid[];
 
     public override canAccess(): boolean {
-        console.log(this.mediafile.getTitle())
-        if (this.is_published_to_meetings) {
+        if (this.published_to_meetings_in_organization_id) {
             return true;
-        } else if (!!this.mediafile.owner_id && this.mediafile.owner_id === `organization/1`) {
+        } else if (this.mediafile?.owner_id === `organization/1`) {
             return !this.getEnsuredActiveMeetingId();
         } else if (this.getProjectedContentObjects().indexOf(`mediafile/${this.id}`) !== -1) {
+            return true;
+        } else if (this.mediafile === null) {
             return true;
         } else {
             return this.getEnsuredActiveMeetingId() === this.meeting_id;
