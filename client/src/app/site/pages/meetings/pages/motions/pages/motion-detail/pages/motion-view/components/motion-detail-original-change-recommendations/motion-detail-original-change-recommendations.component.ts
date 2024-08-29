@@ -258,7 +258,12 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
             await firstValueFrom(
                 this.autoupdateCommunications
                     .listen()
-                    .pipe(filter(data => data && data.description?.includes(MOTION_DETAIL_SUBSCRIPTION)))
+                    .pipe(
+                        filter(
+                            data =>
+                                data && Object.values(data.streamIdDescriptions)?.includes(MOTION_DETAIL_SUBSCRIPTION)
+                        )
+                    )
             );
             this.dataLoaded = true;
             this.update();
