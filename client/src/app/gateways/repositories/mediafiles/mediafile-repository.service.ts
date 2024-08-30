@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
@@ -67,7 +68,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         return this.sendActionToBackend(MediafileAction.MOVE, payload);
     }
 
-    public async publicize(mediafile: Identifiable, publish: boolean): Promise<void> {
+    public async publish(mediafile: Identifiable, publish: boolean): Promise<void> {
         const payload = {
             id: mediafile.id,
             publish: publish
@@ -91,9 +92,8 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     }
 
     public async createDirectory(partialMediafile: Partial<Mediafile>): Promise<Identifiable> {
-        const variables: { [key: string]: any } = this.activeMeetingId
-            ? { access_group_ids: partialMediafile.access_group_ids || [] }
-            : {};
+        // TODO: Read access groups from meeting mediafile
+        const variables: { [key: string]: any } = this.activeMeetingId ? { access_group_ids: [] } : {};
         const payload = {
             owner_id: this.getOwnerId(),
             title: partialMediafile.title,
@@ -122,11 +122,11 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         return this.sendBulkActionToBackend(MediafileAction.DELETE, payload);
     }
 
-    private getOwnerId(): string {
-        return this.activeMeetingId ? `meeting/${this.activeMeetingId}` : `organization/${ORGANIZATION_ID}`;
-    }
-
-    private getMeetingMediafile(model: Mediafile): ViewMeetingMediafile {
+    public getMeetingMediafile(
+        model: Mediafile,
+        _meetingId: Id = this.activeMeetingIdService.meetingId
+    ): ViewMeetingMediafile {
+        // TODO: Retrieve correct meeting mediafile
         if (model.meeting_mediafile_ids) {
             if (model.published_to_meetings_in_organization_id === 1) {
                 return this.meetingMediaRepo.getViewModel(model.meeting_mediafile_ids[0]);
@@ -137,6 +137,10 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         return null;
     }
 
+    private getOwnerId(): string {
+        return this.activeMeetingId ? `meeting/${this.activeMeetingId}` : `organization/${ORGANIZATION_ID}`;
+    }
+
     /**
      * Adds the a meeting id function to the view mediafile.
      */
@@ -145,7 +149,8 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         viewModel.getEnsuredActiveMeetingId = (): number => this.activeMeetingIdService.meetingId;
         viewModel.getProjectedContentObjects = (): string[] =>
             this.projectionRepo.getViewModelList().map(p => p.content_object_id);
-        viewModel.getMeetingMediafile = (): ViewMeetingMediafile => this.getMeetingMediafile(model);
+        viewModel.getMeetingMediafile = (meeting = viewModel.getEnsuredActiveMeetingId()): ViewMeetingMediafile =>
+            this.getMeetingMediafile(model, meeting);
         return viewModel;
     }
 }

@@ -9,6 +9,7 @@ import { BaseController } from 'src/app/site/base/base-controller';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
+import { ActiveMeetingService } from '../../../services/active-meeting.service';
 import { ViewMediafile } from '../view-models';
 import { MediafileCommonServiceModule } from './mediafile-common-service.module';
 
@@ -17,7 +18,8 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
     public constructor(
         protected override controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MediafileRepositoryService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private activeMeeting: ActiveMeetingService
     ) {
         super(controllerServiceCollector, Mediafile, repo);
     }
@@ -26,8 +28,8 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
         return this.repo.move(files, directoryId);
     }
 
-    public publicize(file: Identifiable, publish: boolean): Promise<void> {
-        return this.repo.publicize(file, publish);
+    public publish(file: Identifiable, publish: boolean): Promise<void> {
+        return this.repo.publish(file, publish);
     }
 
     public createDirectory(mediafile: Partial<Mediafile>): Promise<Identifiable> {
@@ -50,11 +52,13 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
         return this.getViewModelListObservable().pipe(
             map(mediafiles =>
                 mediafiles.filter(mediafile => {
+                    const meetingMediafile = this.repo.getMeetingMediafile(mediafile, this.activeMeeting.meetingId);
+                    // TODO: Take published into meetings into account
                     if (
-                        (mediafile.access_group_ids?.length &&
-                            !this.operator.isInGroupIds(...mediafile.access_group_ids)) ||
-                        (mediafile.inherited_access_groups?.length &&
-                            !this.operator.isInGroupIds(...mediafile.inherited_access_group_ids))
+                        (meetingMediafile?.access_group_ids?.length &&
+                            !this.operator.isInGroupIds(...meetingMediafile.access_group_ids)) ||
+                        (meetingMediafile?.inherited_access_group_ids?.length &&
+                            !this.operator.isInGroupIds(...meetingMediafile.inherited_access_group_ids))
                     ) {
                         return false;
                     }

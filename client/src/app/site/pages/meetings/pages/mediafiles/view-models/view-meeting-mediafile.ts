@@ -1,6 +1,5 @@
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { ViewMediafileMeetingUsageKey } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
@@ -25,6 +24,10 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
         return this._model;
     }
 
+    public get title(): string {
+        return this.mediafile.title;
+    }
+
     /**
      * Only use this if you are sure that you have a meeting mediafile
      */
@@ -45,7 +48,7 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
     public getProjectedContentObjects!: () => Fqid[];
 
     public override canAccess(): boolean {
-        if (this.published_to_meetings_in_organization_id === 1) {
+        if (this.mediafile.isPubishedOrganizationWide) {
             return true;
         } else if (this.mediafile?.owner_id === `organization/1`) {
             return !this.getEnsuredActiveMeetingId();
@@ -72,7 +75,7 @@ interface IMeetingMediafileRelations {
     mediafile?: ViewMediafile;
 }
 export interface ViewMeetingMediafile
-    extends Mediafile,
+    extends MeetingMediafile,
         ViewModelRelations<IMeetingMediafileRelations>,
         /*  Searchable, */ HasMeeting,
         HasListOfSpeakers,

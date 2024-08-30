@@ -172,12 +172,12 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     }
 
     public isMediafileUsed(file: ViewMediafile, place: string): boolean {
-        const meetingFile = file.getMeetingMediafile();
+        // const meetingFile = file.getMeetingMediafile();
         if (file.isFont()) {
-            return meetingFile.used_as_font_in_meeting_id(place as FontPlace) === this.activeMeetingId;
+            return file.used_as_font_in_meeting_id(place as FontPlace) === this.activeMeetingId;
         }
         if (file.isImage()) {
-            return meetingFile.used_as_logo_in_meeting_id(place as LogoPlace) === this.activeMeetingId;
+            return file.used_as_logo_in_meeting_id(place as LogoPlace) === this.activeMeetingId;
         }
         return false;
     }

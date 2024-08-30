@@ -1,4 +1,5 @@
 import { Fqid, Id } from '../../definitions/key-types';
+import { HasMeetingId } from '../../interfaces';
 import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { HasProperties } from '../../interfaces/has-properties';
@@ -13,7 +14,6 @@ export class MeetingMediafile extends BaseModel<MeetingMediafile> {
     public static COLLECTION = `meeting_mediafile`;
 
     public mediafile_id: Id;
-    public meeting_id: string;
     public is_public: boolean;
     public inherited_access_group_ids!: Id[]; // (group/meeting_mediafile_inherited_access_group_ids)[];  // Note: calculated
     public access_group_ids!: Id[]; // (group/meeting_mediafile_access_group_ids)[];
@@ -54,4 +54,5 @@ export class MeetingMediafile extends BaseModel<MeetingMediafile> {
 export interface MeetingMediafile
     extends HasProjectionIds,
         HasListOfSpeakersId,
+        HasMeetingId,
         HasProperties<MediafileMeetingUsageIdKey, number> {}

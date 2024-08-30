@@ -54,7 +54,8 @@
 
 <!-- Visibility as button -->
 <ng-template #breadcrumbManageTemplate>
-    @if (canEdit && directory && directory.has_inherited_access_groups) {
+    <!-- TODO: Add check: `&& directory.has_inherited_access_groups` -->
+    @if (canEdit && directory) {
         <span class="visibility">
             <button class="visible-for" mat-button (click)="onEditFile(directory)">
                 <os-icon-container

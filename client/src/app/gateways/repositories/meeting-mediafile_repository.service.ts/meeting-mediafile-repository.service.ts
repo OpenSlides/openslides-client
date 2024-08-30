@@ -23,10 +23,10 @@ export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetin
         super(repositoryServiceCollector, MeetingMediafile);
 
         this.viewModelSortFn = (a: ViewMeetingMediafile, b: ViewMeetingMediafile): number =>
-            this.languageCollator.compare(a.title, b.title);
+            this.languageCollator.compare(a.mediafile?.title, b.mediafile?.title);
     }
 
-    public getTitle = (viewMeetingMediafile: ViewMeetingMediafile): string => viewMeetingMediafile.title;
+    public getTitle = (viewMeetingMediafile: ViewMeetingMediafile): string => viewMeetingMediafile.mediafile?.title;
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Files` : `File`);
 

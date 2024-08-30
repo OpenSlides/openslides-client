@@ -141,11 +141,11 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     @Input()
     public isUsedAsFontFn: (file: ViewMediafile) => boolean = (file: ViewMediafile) =>
-        !!file.getMeetingMediafile()?.used_as_font_in_meeting_id();
+        !!file?.used_as_font_in_meeting_id();
 
     @Input()
     public isUsedAsLogoFn: (file: ViewMediafile) => boolean = (file: ViewMediafile) =>
-        !!file.getMeetingMediafile()?.used_as_logo_in_meeting_id();
+        !!file?.used_as_logo_in_meeting_id();
 
     @Output()
     public beforeEditing = new EventEmitter<BeforeEditingEvent>();
@@ -270,7 +270,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.repo.publicize(file, file.published_to_meetings_in_organization_id === 1 ? false : true);
+                this.repo.publish(file, file.isPubishedOrganizationWide ? false : true);
                 this.cd.markForCheck();
             }
         });

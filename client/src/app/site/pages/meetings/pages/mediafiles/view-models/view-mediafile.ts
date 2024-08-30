@@ -26,6 +26,14 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         return this._model;
     }
 
+    public get inherited_access_group_ids(): Id[] {
+        return this.getMeetingMediafile().inherited_access_group_ids;
+    }
+
+    public get inherited_access_groups(): ViewGroup[] {
+        return this.getMeetingMediafile().inherited_access_groups;
+    }
+
     public get pages(): number | null {
         return this.mediafile.pdf_information?.pages || null;
     }
@@ -52,7 +60,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
      */
     public getEnsuredActiveMeetingId!: () => Id;
     public getProjectedContentObjects!: () => Fqid[];
-    public getMeetingMediafile!: () => ViewMeetingMediafile;
+    public getMeetingMediafile!: (meetingId?: Id) => ViewMeetingMediafile;
 
     public override canAccess(): boolean {
         if (this.owner_id === `organization/1`) {
