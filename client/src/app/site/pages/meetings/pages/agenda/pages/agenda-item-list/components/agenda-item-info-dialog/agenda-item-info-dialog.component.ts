@@ -87,13 +87,7 @@ export class AgendaItemInfoDialogComponent implements OnInit {
     }
 
     /**
-     * clicking Shift and Enter will save the form
-     *
      * @param event the key that was clicked
      */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.saveItemInfo();
-        }
-    }
+    public onKeyDown(_event: KeyboardEvent): void {}
 }
