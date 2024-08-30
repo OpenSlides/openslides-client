@@ -235,7 +235,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
             this.fileEditForm = this.formBuilder.group({
                 title: [file.title, Validators.required],
                 access_group_ids: [
-                    meetingFileToEdit !== undefined
+                    meetingFileToEdit
                         ? [...meetingFileToEdit.inherited_access_group_ids]
                         : this.getInheritedGroups(file)
                 ],

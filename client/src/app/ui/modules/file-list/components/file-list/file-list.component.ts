@@ -277,10 +277,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     }
 
     public onEditFile(file: ViewMediafile, template: TemplateRef<any>): void {
-        let mediafile: ViewMediafile | ViewMeetingMediafile = file;
-        if (this.isInMeeting && file.getMeetingMediafile() !== undefined) {
-            mediafile = file.getMeetingMediafile();
-        }
+        const mediafile: ViewMediafile | ViewMeetingMediafile = file;
         this.beforeEditing.emit({ file });
         this.fileEditForm = this.fb.group({ title: [mediafile.title, Validators.required] });
         const useTemplate = this.editFolderTemplate ?? template;

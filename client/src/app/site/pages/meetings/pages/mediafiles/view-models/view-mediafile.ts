@@ -27,11 +27,11 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     }
 
     public get inherited_access_group_ids(): Id[] {
-        return this.getMeetingMediafile().inherited_access_group_ids;
+        return this.getMeetingMediafile()?.inherited_access_group_ids;
     }
 
     public get inherited_access_groups(): ViewGroup[] {
-        return this.getMeetingMediafile().inherited_access_groups;
+        return this.getMeetingMediafile()?.inherited_access_groups;
     }
 
     public get pages(): number | null {
