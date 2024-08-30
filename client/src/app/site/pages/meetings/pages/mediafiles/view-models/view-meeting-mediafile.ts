@@ -48,7 +48,7 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
     public getProjectedContentObjects!: () => Fqid[];
 
     public override canAccess(): boolean {
-        if (this.mediafile.isPubishedOrganizationWide) {
+        if (this.mediafile?.isPubishedOrganizationWide) {
             return true;
         } else if (this.mediafile?.owner_id === `organization/1`) {
             return !this.getEnsuredActiveMeetingId();
@@ -56,9 +56,9 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
             return true;
         } else if (this.mediafile === null) {
             return true;
-        } else {
-            return this.getEnsuredActiveMeetingId() === this.meeting_id;
         }
+
+        return this.getEnsuredActiveMeetingId() === this.meeting_id;
     }
 
     public getProjectiondefault(): ProjectiondefaultValue {
