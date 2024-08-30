@@ -183,11 +183,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         }
     }
 
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.submitEvent.emit();
-        }
-    }
+    public onKeyDown(_event: KeyboardEvent): void {}
 
     public markAsPristine(): void {
         this._initialState = this.personalInfoForm.value;
