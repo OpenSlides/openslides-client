@@ -1,10 +1,9 @@
-import { Fqid, Id } from '../../definitions/key-types';
-import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
+import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+
+import { Id } from '../../definitions/key-types';
 import { HasOwnerId } from '../../interfaces/has-owner-id';
-import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
-import { HasProperties } from '../../interfaces/has-properties';
 import { BaseModel } from '../base/base-model';
-import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace, MediafileMeetingUsageIdKey } from './mediafile.constants';
+import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from './mediafile.constants';
 
 interface PdfInformation {
     pages?: number;
@@ -21,7 +20,6 @@ export class Mediafile extends BaseModel<Mediafile> {
 
     public title!: string;
     public is_directory!: boolean;
-    public is_public!: boolean;
     public published_to_meetings_in_organization_id!: number;
     public meeting_mediafile_ids!: Id[];
     public filesize!: string;
@@ -29,17 +27,17 @@ export class Mediafile extends BaseModel<Mediafile> {
     public mimetype!: string;
     public pdf_information!: PdfInformation;
     public create_timestamp!: string;
-    public has_inherited_access_groups!: boolean;
     public token: string;
 
-    public access_group_ids!: Id[]; // (group/mediafile_access_group_ids)[];
-    public inherited_access_group_ids!: Id[]; // (group/mediafile_inherited_access_group_ids)[];  // Note: calculated
     public parent_id!: Id; // mediafile/child_ids;
     public child_ids!: Id[]; // (mediafile/parent_id)[];
-    public attachment_ids!: Fqid[]; // (*/attachment_ids)[];
 
     public constructor(input?: any) {
         super(Mediafile.COLLECTION, input);
+    }
+
+    public get isPubishedOrganizationWide(): boolean {
+        return this.published_to_meetings_in_organization_id === ORGANIZATION_ID;
     }
 
     /**
@@ -126,8 +124,4 @@ export class Mediafile extends BaseModel<Mediafile> {
         `meeting_mediafile_ids`
     ];
 }
-export interface Mediafile
-    extends HasOwnerId,
-        HasProjectionIds,
-        HasListOfSpeakersId,
-        HasProperties<MediafileMeetingUsageIdKey, number> {}
+export interface Mediafile extends HasOwnerId {}

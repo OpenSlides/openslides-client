@@ -16,16 +16,15 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { MeetingMediafileRepositoryService } from 'src/app/gateways/repositories/meeting-mediafile_repository.service.ts/meeting-mediafile-repository.service';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ListComponent } from 'src/app/ui/modules/list/components';
 
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 
 interface MoveEvent {
     files: ViewMediafile[];
@@ -209,8 +208,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         private fb: UntypedFormBuilder,
         private translate: TranslateService,
         private repo: MediafileControllerService,
-        private activeMeeting: ActiveMeetingService,
-        private meetingMediaRepo: MeetingMediafileRepositoryService
+        private activeMeeting: ActiveMeetingService
     ) {
         super();
         this.moveForm = fb.group({ directory_id: [] });
@@ -341,23 +339,24 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     protected getGroups(mediafile: ViewMediafile): ViewGroup[] {
         const meeting_mediafile = mediafile?.getMeetingMediafile();
-        if (!meeting_mediafile) {
-            if (!mediafile.parent_id) {
-                if (!mediafile.access_groups) {
-                    return [] as ViewGroup[];
-                }
-                return mediafile.access_groups;
-            }
+        if (meeting_mediafile) {
+            return meeting_mediafile.inherited_access_groups;
+        } else if (mediafile.parent_id) {
             return this.getGroups(mediafile.parent);
+        } else if (mediafile.access_groups) {
+            return mediafile.access_groups;
+        } else if (mediafile.isPubishedOrganizationWide) {
+            return [this.activeMeeting.meeting.admin_group];
         }
-        return meeting_mediafile?.inherited_access_groups;
+
+        return [] as ViewGroup[];
     }
 
     protected fileCanBeModified(mediafile: ViewMediafile): boolean {
-        return !(this.isInMeeting && mediafile.published_to_meetings_in_organization_id === 1);
+        return !(this.isInMeeting && mediafile.isPubishedOrganizationWide);
     }
 
     protected fileCanBeMoved(mediafile: ViewMediafile): boolean {
-        return !(this.isOrgaLevelAndRootLevel && mediafile.published_to_meetings_in_organization_id === 1);
+        return !(this.isOrgaLevelAndRootLevel && mediafile.isPubishedOrganizationWide);
     }
 }
