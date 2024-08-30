@@ -265,7 +265,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         });
     }
 
-    public publicize(templateRef: TemplateRef<any>, file: ViewMediafile): void {
+    public publish(templateRef: TemplateRef<any>, file: ViewMediafile): void {
         const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
 
         dialogRef.afterClosed().subscribe(result => {
