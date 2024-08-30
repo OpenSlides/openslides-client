@@ -12,7 +12,7 @@ import {
     LogoPlace
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -50,7 +50,6 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      * Holds the file to edit
      */
     public fileToEdit!: ViewMediafile;
-    public meetingFileToEdit!: ViewMeetingMediafile;
 
     public newDirectoryForm: UntypedFormGroup;
     public groupsBehaviorSubject: Observable<ViewGroup[]>;
@@ -231,13 +230,13 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     public onEditFile(file: ViewMediafile): void {
         if (!this.isMultiSelect) {
             this.fileToEdit = file;
-            this.meetingFileToEdit = file.getMeetingMediafile();
+            const meetingFileToEdit = file.getMeetingMediafile();
 
             this.fileEditForm = this.formBuilder.group({
                 title: [file.title, Validators.required],
                 access_group_ids: [
-                    this.meetingFileToEdit !== undefined
-                        ? [...this.meetingFileToEdit.inherited_access_group_ids]
+                    meetingFileToEdit !== undefined
+                        ? [...meetingFileToEdit.inherited_access_group_ids]
                         : this.getInheritedGroups(file)
                 ],
                 meeting_id: this.activeMeetingId

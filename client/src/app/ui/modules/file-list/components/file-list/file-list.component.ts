@@ -345,7 +345,6 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
                     return [] as ViewGroup[];
                 }
                 return mediafile.access_groups;
-                return [] as ViewGroup[];
             }
             return this.getGroups(mediafile.parent);
         }

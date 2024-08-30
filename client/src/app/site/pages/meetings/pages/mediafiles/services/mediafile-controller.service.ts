@@ -26,8 +26,8 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
         return this.repo.move(files, directoryId);
     }
 
-    public publicize(file: Identifiable, tooglePublish: boolean): Promise<void> {
-        return this.repo.publicize(file, tooglePublish);
+    public publicize(file: Identifiable, publish: boolean): Promise<void> {
+        return this.repo.publicize(file, publish);
     }
 
     public createDirectory(mediafile: Partial<Mediafile>): Promise<Identifiable> {

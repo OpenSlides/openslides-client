@@ -22,7 +22,6 @@ export class Mediafile extends BaseModel<Mediafile> {
     public title!: string;
     public is_directory!: boolean;
     public is_public!: boolean;
-    public is_published_to_meetings!: boolean;
     public published_to_meetings_in_organization_id!: number;
     public meeting_mediafile_ids!: Id[];
     public filesize!: string;
@@ -120,7 +119,6 @@ export class Mediafile extends BaseModel<Mediafile> {
         `pdf_information`,
         `create_timestamp`,
         `token`,
-        `is_published_to_meetings`,
         `published_to_meetings_in_organization_id`,
         `parent_id`,
         `child_ids`,

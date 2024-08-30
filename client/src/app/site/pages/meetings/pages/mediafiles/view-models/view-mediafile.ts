@@ -55,9 +55,8 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     public getMeetingMediafile!: () => ViewMeetingMediafile;
 
     public override canAccess(): boolean {
-        //console.log(this.owner_id)
         if (this.owner_id === `organization/1`) {
-            if (this.published_to_meetings_in_organization_id) {
+            if (this.published_to_meetings_in_organization_id === 1) {
                 return true;
             }
             return !this.getEnsuredActiveMeetingId();

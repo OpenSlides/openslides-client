@@ -67,10 +67,10 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         return this.sendActionToBackend(MediafileAction.MOVE, payload);
     }
 
-    public async publicize(mediafile: Identifiable, togglePublish: boolean): Promise<void> {
+    public async publicize(mediafile: Identifiable, publish: boolean): Promise<void> {
         const payload = {
             id: mediafile.id,
-            publish: togglePublish
+            publish: publish
         };
         return this.sendActionToBackend(MediafileAction.PUBLISH, payload);
     }
@@ -127,7 +127,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     }
 
     private getMeetingMediafile(model: Mediafile): ViewMeetingMediafile {
-        if (model.published_to_meetings_in_organization_id) {
+        if (model.published_to_meetings_in_organization_id === 1) {
             return this.meetingMediaRepo.getViewModel(model.meeting_mediafile_ids[0]);
         }
         return this.meetingMediaRepo.getViewModel(model.meeting_mediafile_ids[0]);

@@ -14,7 +14,6 @@ import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeeting } from '../../../view-models/view-meeting';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { ViewGroup } from '../../participants/modules/groups/view-models/view-group';
-import { VIDEO_MIMETYPES } from '../definitions/index';
 import { HasAttachment } from './has-attachment';
 import { ViewMediafile } from './view-mediafile';
 
@@ -24,14 +23,6 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
 
     public get meeting_mediafile(): MeetingMediafile {
         return this._model;
-    }
-
-    public get pages(): number | null {
-        return this.mediafile.pdf_information?.pages || null;
-    }
-
-    public get timestamp(): string | null {
-        return this.mediafile.create_timestamp ? this.mediafile.create_timestamp : null;
     }
 
     /**
@@ -54,7 +45,7 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
     public getProjectedContentObjects!: () => Fqid[];
 
     public override canAccess(): boolean {
-        if (this.published_to_meetings_in_organization_id) {
+        if (this.published_to_meetings_in_organization_id === 1) {
             return true;
         } else if (this.mediafile?.owner_id === `organization/1`) {
             return !this.getEnsuredActiveMeetingId();
@@ -67,39 +58,8 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
         }
     }
 
-    public override getDetailStateUrl(): string {
-        return this.url;
-    }
-
     public getProjectiondefault(): ProjectiondefaultValue {
         return PROJECTIONDEFAULT.mediafile;
-    }
-
-    public getDirectoryChain(): ViewMeetingMediafile[] {
-        const parentChain = this.parent ? this.parent.getDirectoryChain() : [];
-        parentChain.push(this);
-        return parentChain;
-    }
-
-    /**
-     * Determine if the file is a video
-     *
-     * @returns true or false
-     */
-    public isVideo(): boolean {
-        return VIDEO_MIMETYPES.includes(this.mimetype);
-    }
-
-    public getIcon(): string {
-        if (this.is_directory) {
-            return `folder`;
-        } else if (this.isVideo()) {
-            return `movie`;
-        } else if (this.is_public) {
-            return `public`;
-        } else {
-            return `insert_drive_file`;
-        }
     }
 }
 interface IMeetingMediafileRelations {
