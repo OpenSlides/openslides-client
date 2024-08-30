@@ -25,6 +25,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ListComponent } from 'src/app/ui/modules/list/components';
 
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 
 interface MoveEvent {
     files: ViewMediafile[];
@@ -141,11 +142,11 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     @Input()
     public isUsedAsFontFn: (file: ViewMediafile) => boolean = (file: ViewMediafile) =>
-        !!file.getMeetingMediafile().used_as_font_in_meeting_id();
+        !!file.getMeetingMediafile()?.used_as_font_in_meeting_id();
 
     @Input()
     public isUsedAsLogoFn: (file: ViewMediafile) => boolean = (file: ViewMediafile) =>
-        !!file.getMeetingMediafile().used_as_logo_in_meeting_id();
+        !!file.getMeetingMediafile()?.used_as_logo_in_meeting_id();
 
     @Output()
     public beforeEditing = new EventEmitter<BeforeEditingEvent>();
@@ -208,6 +209,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         private fb: UntypedFormBuilder,
         private translate: TranslateService,
         private repo: MediafileControllerService,
+        private activeMeeting: ActiveMeetingService,
         private meetingMediaRepo: MeetingMediafileRepositoryService
     ) {
         super();
@@ -339,7 +341,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     protected getGroups(mediafile: ViewMediafile): ViewGroup[] {
         const meeting_mediafile = mediafile?.getMeetingMediafile();
-        if (typeof meeting_mediafile === `undefined`) {
+        if (!meeting_mediafile) {
             if (!mediafile.parent_id) {
                 if (!mediafile.access_groups) {
                     return [] as ViewGroup[];
@@ -348,7 +350,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
             }
             return this.getGroups(mediafile.parent);
         }
-        return meeting_mediafile.inherited_access_groups;
+        return meeting_mediafile?.inherited_access_groups;
     }
 
     protected fileCanBeModified(mediafile: ViewMediafile): boolean {
