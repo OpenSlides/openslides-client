@@ -250,8 +250,8 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         } else if (file.parent) {
             this.getInheritedGroups(file.parent);
         }
-        // 2 is the id for admin
-        return [2];
+
+        return [this.activeMeeting.admin_group_id];
     }
 
     /**
