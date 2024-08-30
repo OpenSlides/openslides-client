@@ -172,12 +172,12 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     }
 
     public isMediafileUsed(file: ViewMediafile, place: string): boolean {
-        // const meetingFile = file.getMeetingMediafile();
+        const meetingFile = file.getMeetingMediafile();
         if (file.isFont()) {
-            return file.used_as_font_in_meeting_id(place as FontPlace) === this.activeMeetingId;
+            return meetingFile.used_as_font_in_meeting_id(place as FontPlace) === this.activeMeetingId;
         }
         if (file.isImage()) {
-            return file.used_as_logo_in_meeting_id(place as LogoPlace) === this.activeMeetingId;
+            return meetingFile.used_as_logo_in_meeting_id(place as LogoPlace) === this.activeMeetingId;
         }
         return false;
     }
@@ -283,7 +283,8 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      * @returns getNameOfAction with formated strings.
      */
     public formatIndicatorTooltip(file: ViewMediafile): string {
-        const settings = this.mediaManage.getPlacesDisplayNames(file);
+        const meetingFile = file.getMeetingMediafile();
+        const settings = this.mediaManage.getPlacesDisplayNames(meetingFile);
         const optionNames = settings.map(displayName => this.translate.instant(displayName));
         return optionNames.join(`\n`);
     }

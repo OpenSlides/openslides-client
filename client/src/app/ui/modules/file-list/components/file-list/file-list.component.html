@@ -165,7 +165,7 @@
 
     <!-- Menu column -->
     <div *osScrollingTableCell="'menu'; row as mediafile; config: { width: 40 }" class="fill">
-        @if (shouldShowFileMenuFn(mediafile) && fileCanBeModified(mediafile)) {
+        @if (shouldShowFileMenuFn(mediafile)) {
             <button
                 mat-icon-button
                 [disabled]="isMultiSelect"

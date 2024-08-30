@@ -14,7 +14,7 @@ import { MeetingMediaAdapterService } from 'src/app/gateways/meeting-media-adapt
 import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
 import { MeetingMediafileRepositoryService } from 'src/app/gateways/repositories/meeting-mediafile_repository.service.ts/meeting-mediafile-repository.service';
 
-import { ViewMediafile } from '../pages/mediafiles';
+import { ViewMediafile, ViewMeetingMediafile } from '../pages/mediafiles';
 import { ActiveMeetingService } from './active-meeting.service';
 
 @Injectable({
@@ -86,7 +86,7 @@ export class MediaManageService {
         }
     }
 
-    public getPlacesDisplayNames(mediafile: ViewMediafile): string[] {
+    public getPlacesDisplayNames(mediafile: ViewMeetingMediafile): string[] {
         let uses: string[] = [];
         uses = uses.concat(mediafile.getLogoPlaces().map(place => (<any>LogoDisplayNames)[place]));
         uses = uses.concat(mediafile.getFontPlaces().map(place => (<any>FontDisplayNames)[place]));
@@ -94,7 +94,7 @@ export class MediaManageService {
     }
 
     public async setLogo(place: LogoPlace, mediafile: ViewMediafile): Promise<void> {
-        await this.mediaAdapter.setLogo(place, mediafile);
+        await this.mediaAdapter.setLogo(place, this.activeMeetingService.meetingId, mediafile);
     }
 
     public async unsetLogo(place: LogoPlace): Promise<void> {
@@ -102,7 +102,7 @@ export class MediaManageService {
     }
 
     public async setFont(place: FontPlace, mediafile: ViewMediafile): Promise<void> {
-        await this.mediaAdapter.setFont(place, mediafile);
+        await this.mediaAdapter.setFont(place, this.activeMeetingService.meetingId, mediafile);
     }
 
     public async unsetFont(place: FontPlace): Promise<void> {
