@@ -57,27 +57,11 @@ export class ParticipantCsvExportService {
         );
     }
 
-    /**
-     * Translates values of the given columns in example file
-     * to the currently used lang.
-     */
-    public translateSelectedCSVRows(rows: UserExport[], columns: string[]): UserExport[] {
-        rows.map(row => {
-            for (const column of columns) {
-                row[column] = this.translate.instant(row[column]);
-            }
-        });
-        return rows;
-    }
-
     public exportCsvExample(): void {
         const rows: UserExport[] = participantsExportExample;
-        const columnsToTranslate: string[] = [`groups`, `gender`];
-        const translatedRows: UserExport[] = this.translateSelectedCSVRows(rows, columnsToTranslate);
-
         this.csvExport.dummyCSVExport<UserExport>(
             participantColumns,
-            translatedRows,
+            rows,
             `${this.translate.instant(`participants-example`)}.csv`
         );
     }

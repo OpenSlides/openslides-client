@@ -17,27 +17,11 @@ export class AccountExportService {
         private translate: TranslateService
     ) {}
 
-    /**
-     * Translates values of the given columns in example file
-     * to the currently used lang.
-     */
-    public translateSelectedCSVRows(rows: UserExport[], columns: string[]): UserExport[] {
-        rows.map(row => {
-            for (const column of columns) {
-                row[column] = this.translate.instant(row[column]);
-            }
-        });
-        return rows;
-    }
-
     public downloadCsvImportExample(): void {
         const rows: UserExport[] = AccountCsvExportExample;
-        const columnsToTranslate: string[] = [`gender`];
-        const translatedRows: UserExport[] = this.translateSelectedCSVRows(rows, columnsToTranslate);
-
         this.csvExportService.dummyCSVExport<UserExport>(
             accountColumns,
-            translatedRows,
+            rows,
             `${this.translate.instant(`account-example`)}.csv`
         );
     }
