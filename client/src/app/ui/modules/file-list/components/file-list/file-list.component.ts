@@ -189,6 +189,9 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     public fileEditForm!: UntypedFormGroup;
     public moveForm!: UntypedFormGroup;
 
+    public movingToPublicFolder: boolean = false;
+    public movingFromPublicFolder: boolean = false;
+
     public directory: ViewMediafile | null = null;
 
     public selectedRows: ViewMediafile[] = [];
@@ -212,6 +215,11 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     ) {
         super();
         this.moveForm = fb.group({ directory_id: [] });
+        this.subscriptions.push(
+            this.moveForm.get(`directory_id`).valueChanges.subscribe(id => {
+                this.movingToPublicFolder = !id || this.repo.getViewModel(id).isPubishedOrganizationWide;
+            })
+        );
     }
 
     public ngOnInit(): void {
@@ -248,6 +256,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         this.filteredDirectoryBehaviorSubject.next(
             this.repo.getViewModelList().filter(dir => dir.canMoveFilesTo(files))
         );
+        this.movingFromPublicFolder = files.some(f => f.parent?.isPubishedOrganizationWide);
 
         const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
 
@@ -284,10 +293,6 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     public onDelete(file: ViewMediafile): void {
         this.deleted.emit({ file });
-    }
-
-    public getMediaUrl(file: ViewMediafile): (number | string)[] {
-        return [`/system`, `media`, `get`, file.id];
     }
 
     /**

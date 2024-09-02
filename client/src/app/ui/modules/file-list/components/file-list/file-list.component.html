@@ -71,7 +71,7 @@
                 class="detail-link"
                 target="_blank"
                 [attr.aria-label]="ariaLabel(mediafile)"
-                [routerLink]="getMediaUrl(mediafile)"
+                [routerLink]="mediafile.url"
             ></a>
         }
         @if (mediafile.is_directory && !isMultiSelect) {
@@ -93,7 +93,7 @@
                 class="detail-link"
                 target="_blank"
                 [attr.aria-label]="ariaLabel(mediafile)"
-                [routerLink]="getMediaUrl(mediafile)"
+                [routerLink]="mediafile.url"
             ></a>
         }
         @if (mediafile.is_directory && !isMultiSelect) {
@@ -270,6 +270,19 @@
                 noneTitle="{{ 'Base folder' | translate }}"
             ></os-list-search-selector>
         </mat-form-field>
+
+        @if (movingFromPublicFolder && !movingToPublicFolder) {
+            <p translate>
+                You are movin a file from a public folder into an not published folder. The file will not be accessible
+                in meetings afterwards.
+            </p>
+        }
+        @if (movingToPublicFolder && !movingFromPublicFolder) {
+            <p translate>
+                You are movin an Unpublished file to a public folder. The file will not be accessible in all meetings
+                afterwards.
+            </p>
+        }
     </mat-dialog-content>
     <mat-dialog-actions>
         <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
