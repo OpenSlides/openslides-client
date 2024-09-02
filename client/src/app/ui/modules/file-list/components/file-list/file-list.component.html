@@ -203,9 +203,20 @@
                     </button>
                 }
                 @if (isOrgaLevelAndRootLevel) {
-                    <button mat-menu-item (click)="publish(publicDialog, mediafile)">
+                    <button
+                        mat-menu-item
+                        (click)="
+                            publish(mediafile.isPubishedOrganizationWide ? unpublishDialog : publishDialog, mediafile)
+                        "
+                    >
                         <mat-icon>public</mat-icon>
-                        <span>{{ 'Publish' | translate }}</span>
+                        <span>
+                            {{
+                                mediafile.isPubishedOrganizationWide
+                                    ? ('Unpublish' | translate)
+                                    : ('Publish' | translate)
+                            }}
+                        </span>
                     </button>
                 }
             </div>
@@ -271,7 +282,7 @@
 </ng-template>
 
 <!-- Public dialog -->
-<ng-template #publicDialog>
+<ng-template #publishDialog>
     <h1 mat-dialog-title>
         <span>{{ 'Make file/directory public' | translate }}</span>
     </h1>
@@ -286,6 +297,21 @@
     <mat-dialog-actions>
         <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
             <span>{{ 'Publish' | translate }}</span>
+        </button>
+        <button mat-button type="button" [mat-dialog-close]="null">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </mat-dialog-actions>
+</ng-template>
+
+<!-- Public dialog -->
+<ng-template #unpublishDialog>
+    <h1 mat-dialog-title>
+        <span>{{ 'Unpublish file/directory' | translate }}</span>
+    </h1>
+    <mat-dialog-actions>
+        <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
+            <span>{{ 'Unpublish' | translate }}</span>
         </button>
         <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
