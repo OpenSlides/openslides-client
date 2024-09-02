@@ -346,19 +346,19 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         }
     }
 
-    public get enableSaveButton(): boolean {
-        return this.isFormValid && !this.lockedOutAndCanManage;
+    public get shouldSaveButtonBeEnabled(): boolean {
+        return this.isFormValid && !this.isLockedOutAndCanManage;
     }
 
-    public get lockedOutAndCanManage(): boolean {
+    public get isLockedOutAndCanManage(): boolean {
         const lockedOutHelper = this.personalInfoFormValue?.locked_out ?? this.user?.is_locked_out;
-        return lockedOutHelper && this.checkSelectedGroupsCanManage();
+        return lockedOutHelper && this.checkSelectedGroupsCanManage;
     }
 
-    public get disableLockoutCheckbox(): boolean {
+    public get shouldLockoutCheckboxBeDisabled(): boolean {
         const notChanged = (this.personalInfoFormValue?.locked_out ?? null) === null;
         const isLockedOut = this.user?.is_locked_out;
-        return notChanged && !isLockedOut && this.checkSelectedGroupsCanManage();
+        return notChanged && !isLockedOut && this.checkSelectedGroupsCanManage;
     }
 
     private async createUser(): Promise<void> {
@@ -448,7 +448,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         this.router.navigate([this.activeMeetingId, `participants`]);
     }
 
-    private checkSelectedGroupsCanManage(): boolean {
+    private get checkSelectedGroupsCanManage(): boolean {
         return this.usersGroups.some(group => group.hasPermission(Permission.userCanManage));
     }
 }
