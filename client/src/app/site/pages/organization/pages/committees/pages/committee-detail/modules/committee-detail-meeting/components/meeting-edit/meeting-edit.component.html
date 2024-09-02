@@ -65,7 +65,7 @@
 
             <os-daterangepicker formControlName="daterange" title="{{ 'Meeting date' }}"></os-daterangepicker>
 
-            <mat-form-field>
+            <mat-form-field [floatLabel]="hasAdminIdsAndNotCreate ? 'always' : 'auto'">
                 <mat-label>{{ 'Administrators' | translate }}</mat-label>
                 <os-account-search-selector
                     formControlName="admin_ids"

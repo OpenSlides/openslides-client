@@ -66,6 +66,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         return true;
     }
 
+    public get hasAdminIdsAndNotCreate(): boolean {
+        return !this.isCreateView && !!this.meetingForm?.get(`admin_ids`).value.length;
+    }
+
     private get isJitsiManipulationAllowed(): boolean {
         return !this.isCreateView && this.operator.isSuperAdmin;
     }
