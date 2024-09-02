@@ -2,6 +2,11 @@
 @mixin detail-view-appearance {
     h1 {
         color: inherit;
+        font-weight: 400 !important;
+    }
+
+    h2 {
+        font-weight: 700 !important;
     }
 
     h3 {

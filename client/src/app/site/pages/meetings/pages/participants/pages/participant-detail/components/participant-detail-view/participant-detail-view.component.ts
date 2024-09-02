@@ -259,11 +259,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      *
      * @param event has the code
      */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.saveUser();
-        }
-    }
+    public onKeyDown(_event: KeyboardEvent): void {}
 
     public getSaveAction(): () => Promise<void> {
         return () => this.saveUser();
