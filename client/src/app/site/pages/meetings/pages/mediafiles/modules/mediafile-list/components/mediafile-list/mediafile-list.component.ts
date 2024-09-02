@@ -88,6 +88,8 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         return this.interactionService.isConfStateNone.pipe(map(isNone => !isNone));
     }
 
+    public hasPublicFilesSelected = false;
+
     private folderSubscription: Subscription | null = null;
     private directorySubscription: Subscription | null = null;
     public directory: ViewMediafile | null = null;
@@ -151,6 +153,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
 
     public onSelect(files: ViewMediafile[]): void {
         this.selectedRows = files;
+        this.hasPublicFilesSelected = files.some(f => f.isPubishedOrganizationWide);
     }
 
     public onMove(files: ViewMediafile[]): void {
