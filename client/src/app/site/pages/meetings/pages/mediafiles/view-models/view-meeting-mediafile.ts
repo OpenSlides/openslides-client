@@ -29,14 +29,14 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
     }
 
     /**
-     * Only use this if you are sure that you have a meeting mediafile
+     * Determine the downloadURL
+     *
+     * @returns the download URL for the specific file as string
      */
-    public get meeting_id(): Id {
-        const [collection, id] = collectionIdFromFqid(this.mediafile.owner_id);
-        if (collection != Meeting.COLLECTION) {
-            throw Error(`Mediafile's owner_id is not a meeting`);
-        }
-        return id;
+    public get url(): string {
+        return this.mediafile?.is_directory
+            ? `/mediafiles/${this.mediafile_id}`
+            : `/system/media/get/${this.mediafile_id}`;
     }
 
     /**
@@ -68,10 +68,7 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
 interface IMeetingMediafileRelations {
     access_groups: ViewGroup[];
     inherited_access_groups: ViewGroup[];
-    parent?: ViewMeetingMediafile;
-    children: ViewMeetingMediafile[];
     attachments: (BaseViewModel & HasAttachment)[];
-    organization?: ViewOrganization;
     mediafile?: ViewMediafile;
 }
 export interface ViewMeetingMediafile
