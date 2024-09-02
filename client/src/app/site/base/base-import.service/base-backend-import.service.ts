@@ -176,7 +176,7 @@ export abstract class BaseBackendImportService implements BackendImportService {
             header: true,
             skipEmptyLines: `greedy`,
             quoteChar: this.textSeparator,
-            transform: value => (!value ? undefined : value.trim())
+            transform: value => (!value.trim() ? undefined : value.trim())
         };
         if (this.columnSeparator) {
             papaConfig.delimiter = this.columnSeparator;
