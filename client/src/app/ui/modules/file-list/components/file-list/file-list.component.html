@@ -205,7 +205,7 @@
                 @if (isOrgaLevelAndRootLevel) {
                     <button mat-menu-item (click)="publish(publicDialog, mediafile)">
                         <mat-icon>public</mat-icon>
-                        <span>{{ 'Publicize' | translate }}</span>
+                        <span>{{ 'Publish' | translate }}</span>
                     </button>
                 }
             </div>
@@ -278,14 +278,14 @@
     <mat-dialog-content class="os-form-card-mobile">
         <p>
             {{
-                "Do you want to publicize this file/directory? Every admin in every meeting will be able to see this file/ directory and all it's contents."
+                "Do you want to publish this file/directory? Every admin in every meeting will be able to see this file/ directory and all it's contents."
                     | translate
             }}
         </p>
     </mat-dialog-content>
     <mat-dialog-actions>
         <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
-            <span>{{ 'Publicize' | translate }}</span>
+            <span>{{ 'Publish' | translate }}</span>
         </button>
         <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>

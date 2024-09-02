@@ -75,6 +75,24 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         }
     }
 
+    public canMoveFilesTo(files: ViewMediafile[]): boolean {
+        if (!this.is_directory) {
+            return false;
+        }
+
+        // Check if moving folder into itself
+        if (files.some(file => this.id === file.id)) {
+            return false;
+        }
+
+        // Check if moving meeting mediafile into published folder
+        if (files.some(file => file.owner_id.startsWith(`meeting`)) && this.isPubishedOrganizationWide) {
+            return false;
+        }
+
+        return true;
+    }
+
     public override getDetailStateUrl(): string {
         return this.url;
     }

@@ -245,15 +245,10 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     public move(templateRef: TemplateRef<any>, files: ViewMediafile[]): void {
         this.moveForm.reset();
 
-        if (files.some(file => file.is_directory)) {
-            this.filteredDirectoryBehaviorSubject.next(
-                this.repo
-                    .getViewModelList()
-                    .filter(dir => dir.is_directory && !files.some(file => dir.url.startsWith(file.url)))
-            );
-        } else {
-            this.filteredDirectoryBehaviorSubject.next(this.repo.getViewModelList().filter(dir => dir.is_directory));
-        }
+        this.filteredDirectoryBehaviorSubject.next(
+            this.repo.getViewModelList().filter(dir => dir.canMoveFilesTo(files))
+        );
+
         const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
 
         dialogRef.afterClosed().subscribe(result => {
