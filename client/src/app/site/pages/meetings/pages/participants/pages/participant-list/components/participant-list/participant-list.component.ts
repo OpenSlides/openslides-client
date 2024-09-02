@@ -238,9 +238,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return (
             this.operator.operatorId !== user.id &&
             !user.organization_management_level &&
-            !user.group_ids().includes(this.activeMeeting.admin_group_id) &&
             !user.committee_management_ids?.includes(this.activeMeeting.committee_id) &&
-            !user.groups().some(group => group.permissions.includes(Permission.userCanManage))
+            !user.groups().some(group => group.hasPermission(Permission.userCanManage))
         );
     }
 
