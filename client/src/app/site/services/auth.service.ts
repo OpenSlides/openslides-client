@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 
 import { AuthToken } from '../../domain/interfaces/auth-token';
@@ -9,6 +9,7 @@ import { ProcessError } from '../../infrastructure/errors';
 import { AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 @Injectable({
     providedIn: `root`
@@ -43,6 +44,9 @@ export class AuthService {
     private readonly _logoutEvent = new EventEmitter<void>();
     private readonly _loginEvent = new EventEmitter<void>();
 
+    private _authTokenSubscription: Subscription | null = null;
+    private _authTokenRefreshTimeout: any | null = null;
+
     public constructor(
         private lifecycleService: LifecycleService,
         private router: Router,
@@ -66,6 +70,13 @@ export class AuthService {
                     break;
             }
         });
+    }
+
+    public redirectUser(meetingId: number | null): void {
+        if (this.isAuthenticated()) {
+            const baseRoute = meetingId ? `${meetingId}/` : `/`;
+            this.router.navigate([baseRoute]);
+        }
     }
 
     /**

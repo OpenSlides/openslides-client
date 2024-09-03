@@ -4,4 +4,5 @@ export interface AuthToken {
     sessionId: string;
     iat: number;
     exp: number;
+    accessToken: string;
 }

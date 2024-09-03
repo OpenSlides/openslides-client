@@ -3,6 +3,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { DateFnsConfigurationService } from 'ngx-date-fns';
 import { first, firstValueFrom, tap } from 'rxjs';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
@@ -13,10 +14,14 @@ import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-fu
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
+import { AuthService } from 'src/app/site/services/auth.service';
+import { AuthTokenService } from 'src/app/site/services/auth-token.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
+
+import { authCodeFlowConfig } from './oidc-config';
 
 const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
 
@@ -43,8 +48,29 @@ export class OpenSlidesMainComponent implements OnInit {
         private config: DateFnsConfigurationService,
         private updateService: UpdateService,
         private router: Router,
-        private modelStore: ViewModelStoreService
+        private modelStore: ViewModelStoreService,
+        private oauthService: OAuthService,
+        private authService: AuthService,
+        private authTokenService: AuthTokenService
     ) {
+        oauthService.events.subscribe(async event => {
+            if (event.type.substring(event.type.length - `_error`.length) === `_error`) {
+                console.error(`OAuth error: ${event.type}`, event);
+                await this.authService.logout();
+            }
+        });
+        this.oauthService.configure(authCodeFlowConfig);
+        this.oauthService.loadDiscoveryDocumentAndLogin();
+        this.oauthService.setupAutomaticSilentRefresh();
+        const accessToken = this.oauthService.getAccessToken();
+        if (accessToken) {
+            this.authTokenService.setRawAccessToken(accessToken);
+            this.authService.redirectUser(null);
+        }
+        this.oauthService.events.subscribe(event => {
+            console.log(event.type);
+        });
+
         overloadJsFunctions();
         this.addDebugFunctions();
         this.waitForAppLoaded();
