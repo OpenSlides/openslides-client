@@ -8,7 +8,6 @@ export const participantsExportExample: any = [
         gender: `male`,
         pronoun: `he`,
         structure_level: `Berlin`,
-        groups: `Delegates`,
         member_number: `123456`,
         number: `D001`
     }
