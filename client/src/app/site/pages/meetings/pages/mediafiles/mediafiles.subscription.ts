@@ -13,7 +13,11 @@ export const getMediafilesSubscriptionConfig: SubscriptionConfigGenerator = (id:
         ids: [id],
         follow: [
             { idField: `mediafile_ids`, fieldset: DEFAULT_FIELDSET },
-            { idField: `meeting_mediafile_ids`, fieldset: DEFAULT_FIELDSET },
+            {
+                idField: `meeting_mediafile_ids`,
+                fieldset: DEFAULT_FIELDSET,
+                follow: [{ idField: `mediafile_id`, fieldset: DEFAULT_FIELDSET }]
+            },
             {
                 idField: `committee_id`,
                 fieldset: [],

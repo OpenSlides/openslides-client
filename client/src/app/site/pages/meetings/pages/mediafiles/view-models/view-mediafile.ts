@@ -64,15 +64,23 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
 
     public override canAccess(): boolean {
         if (this.owner_id === `organization/1`) {
-            if (this.published_to_meetings_in_organization_id === 1) {
+            if (
+                this.published_to_meetings_in_organization_id === 1 ||
+                this.meeting_mediafiles.some(mm => mm.meeting_id === this.getEnsuredActiveMeetingId())
+            ) {
                 return true;
             }
+
             return !this.getEnsuredActiveMeetingId();
-        } else if (this.getProjectedContentObjects().indexOf(`mediafile/${this.id}`) !== -1) {
+        } else if (
+            this.meeting_mediafiles.some(
+                mm => this.getProjectedContentObjects().indexOf(`meeting_mediafile/${mm.id}`) !== -1
+            )
+        ) {
             return true;
-        } else {
-            return this.getEnsuredActiveMeetingId() === this.meeting_id;
         }
+
+        return this.getEnsuredActiveMeetingId() === this.meeting_id;
     }
 
     public canMoveFilesTo(files: ViewMediafile[]): boolean {
