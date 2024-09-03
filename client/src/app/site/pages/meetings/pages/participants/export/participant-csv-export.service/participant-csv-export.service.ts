@@ -59,10 +59,10 @@ export class ParticipantCsvExportService {
     }
 
     /**
-     * @param meeting 
+     * @param meeting
      * @returns participants csv-example with added 'groups' value:
      * - 2 custom group (not default or admin) names separated by comma by default
-     * - 1 custom group name if meeting has only 1 custom group 
+     * - 1 custom group name if meeting has only 1 custom group
      * - default group name if meeting has no custom groups
      */
     public addParticipantGroups(meeting: ViewMeeting): UserExport[] {
@@ -70,7 +70,7 @@ export class ParticipantCsvExportService {
             return !group.isAdminGroup && !group.isDefaultGroup;
         });
         let groupsToExport;
-        
+
         switch (customGroupNames.length) {
             case 0:
                 groupsToExport = meeting.default_group.name;
