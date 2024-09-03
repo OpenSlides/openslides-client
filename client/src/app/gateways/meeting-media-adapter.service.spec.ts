@@ -33,34 +33,34 @@ describe(`MeetingMediaAdapterService`, () => {
     let service: MeetingMediaAdapterService;
     let actionService: MockActionService;
 
-    const mediafile = { meeting_id: 2, id: 42 } as ViewMediafile;
+    const mediafile = { id: 42, meeting_id: 2 } as ViewMediafile;
 
     const testCases = [
         {
             functionName: `setLogo`,
             place: LOGO_PLACES[0],
-            restPayload: mediafile,
+            restPayload: [2, mediafile],
             expectedAction: MeetingAction.SET_LOGO,
             expectedData: { id: 2, mediafile_id: 42 }
         },
         {
             functionName: `unsetLogo`,
             place: LOGO_PLACES[1 % LOGO_PLACES.length],
-            restPayload: 1,
+            restPayload: [1],
             expectedAction: MeetingAction.UNSET_LOGO,
             expectedData: { id: 1 }
         },
         {
             functionName: `setFont`,
             place: FONT_PLACES[2 % FONT_PLACES.length],
-            restPayload: mediafile,
+            restPayload: [2, mediafile],
             expectedAction: MeetingAction.SET_FONT,
             expectedData: { id: 2, mediafile_id: 42 }
         },
         {
             functionName: `unsetFont`,
             place: FONT_PLACES[3 % FONT_PLACES.length],
-            restPayload: 123,
+            restPayload: [123],
             expectedAction: MeetingAction.UNSET_FONT,
             expectedData: { id: 123 }
         }
@@ -77,7 +77,7 @@ describe(`MeetingMediaAdapterService`, () => {
 
     for (const test of testCases) {
         it(`test ${test.functionName} function`, async () => {
-            await expectAsync(service[test.functionName](test.place, test.restPayload)).toBeResolved();
+            await expectAsync(service[test.functionName](test.place, ...test.restPayload)).toBeResolved();
             expect(actionService.lastActions.length).toBe(1);
             expect(actionService.lastActions[0].requests).toEqual([
                 { action: test.expectedAction, data: [{ ...test.expectedData, place: test.place }] }
