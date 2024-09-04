@@ -124,14 +124,11 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
 
     public getMeetingMediafile(
         model: Mediafile,
-        _meetingId: Id = this.activeMeetingIdService.meetingId
+        meetingId: Id = this.activeMeetingIdService.meetingId
     ): ViewMeetingMediafile {
-        // TODO: Retrieve correct meeting mediafile
-        if (model.meeting_mediafile_ids) {
-            if (model.published_to_meetings_in_organization_id === 1) {
-                return this.meetingMediaRepo.getViewModel(model.meeting_mediafile_ids[0]);
-            }
-            return this.meetingMediaRepo.getViewModel(model.meeting_mediafile_ids[0]);
+        const meetingMediafileId = this.meetingMediaRepo.getIdByMediafile(meetingId, model.id);
+        if (meetingMediafileId) {
+            return this.meetingMediaRepo.getViewModel(meetingMediafileId);
         }
 
         return null;
