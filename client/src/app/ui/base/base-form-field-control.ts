@@ -35,7 +35,7 @@ export abstract class BaseFormFieldControlComponent<T>
     @HostBinding() public id = `base-form-control-${BaseFormFieldControlComponent.nextId++}`;
 
     @HostBinding(`class.floating`) public get shouldLabelFloat(): boolean {
-        return (this.focused || !this.empty) && !this.disabled;
+        return (this.focused && !this.disabled) || !this.empty;
     }
 
     @HostBinding(`attr.aria-describedby`) public describedBy = ``;
