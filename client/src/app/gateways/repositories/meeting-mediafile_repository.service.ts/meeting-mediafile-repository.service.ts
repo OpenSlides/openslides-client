@@ -51,7 +51,7 @@ export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetin
                 this.mediafileMap.set(meetingMediafile.meeting_id, new Map());
             }
 
-            this.mediafileMap.get(meetingMediafile.meeting_id).set(meetingMediafile.meeting_id, meetingMediafile.id);
+            this.mediafileMap.get(meetingMediafile.meeting_id).set(meetingMediafile.mediafile_id, meetingMediafile.id);
         }
     }
 

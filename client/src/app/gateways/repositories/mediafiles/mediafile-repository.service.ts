@@ -149,8 +149,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         viewModel.getEnsuredActiveMeetingId = (): number => this.activeMeetingIdService.meetingId;
         viewModel.getProjectedContentObjects = (): string[] =>
             this.projectionRepo.getViewModelList().map(p => p.content_object_id);
-        viewModel.getMeetingMediafile = (meeting = viewModel.getEnsuredActiveMeetingId()): ViewMeetingMediafile =>
-            this.getMeetingMediafile(model, meeting);
+        viewModel.getMeetingMediafile = (): ViewMeetingMediafile => this.getMeetingMediafile(model);
         return viewModel;
     }
 }
