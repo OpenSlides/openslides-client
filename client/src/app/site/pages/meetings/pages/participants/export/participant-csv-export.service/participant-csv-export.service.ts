@@ -65,7 +65,7 @@ export class ParticipantCsvExportService {
      * - 1 custom group name if meeting has only 1 custom group
      * - default group name if meeting has no custom groups
      */
-    public addParticipantGroups(meeting: ViewMeeting): UserExport[] {
+    private addParticipantGroups(meeting: ViewMeeting): UserExport[] {
         const customGroupNames = meeting.groups.filter(group => {
             return !group.isAdminGroup && !group.isDefaultGroup;
         });
