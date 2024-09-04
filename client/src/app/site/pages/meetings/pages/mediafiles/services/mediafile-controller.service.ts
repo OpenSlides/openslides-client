@@ -33,7 +33,7 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
         return this.repo.publish(file, publish);
     }
 
-    public createDirectory(mediafile: Partial<Mediafile>): Promise<Identifiable> {
+    public createDirectory(mediafile: Partial<Mediafile> & { access_group_ids: Id[] }): Promise<Identifiable> {
         return this.repo.createDirectory(mediafile);
     }
 

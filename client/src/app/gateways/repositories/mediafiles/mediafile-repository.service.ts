@@ -91,9 +91,12 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         return this.sendActionToBackend(MediafileAction.CREATE_FILE, payload);
     }
 
-    public async createDirectory(partialMediafile: Partial<Mediafile>): Promise<Identifiable> {
-        // TODO: Read access groups from meeting mediafile
-        const variables: { [key: string]: any } = this.activeMeetingId ? { access_group_ids: [] } : {};
+    public async createDirectory(
+        partialMediafile: Partial<Mediafile> & { access_group_ids: Id[] }
+    ): Promise<Identifiable> {
+        const variables: { [key: string]: any } = this.activeMeetingId
+            ? { access_group_ids: partialMediafile.access_group_ids }
+            : {};
         const payload = {
             owner_id: this.getOwnerId(),
             title: partialMediafile.title,
