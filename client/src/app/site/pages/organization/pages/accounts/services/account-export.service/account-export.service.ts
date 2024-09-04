@@ -18,10 +18,9 @@ export class AccountExportService {
     ) {}
 
     public downloadCsvImportExample(): void {
-        const rows: UserExport[] = AccountCsvExportExample;
         this.csvExportService.dummyCSVExport<UserExport>(
             accountColumns,
-            rows,
+            AccountCsvExportExample,
             `${this.translate.instant(`account-example`)}.csv`
         );
     }
