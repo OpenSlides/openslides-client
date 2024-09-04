@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { UserExport } from 'src/app/domain/models/users/user.export';
 import { CsvColumnDefinitionProperty, CsvColumnsDefinition } from 'src/app/gateways/export/csv-export.service';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
@@ -43,6 +44,7 @@ export class ParticipantCsvExportService {
 
     public constructor(
         private csvExport: MeetingCsvExportForBackendService,
+        private activeMeeting: ActiveMeetingService,
         private translate: TranslateService
     ) {}
 
@@ -65,34 +67,30 @@ export class ParticipantCsvExportService {
      * - 1 custom group name if meeting has only 1 custom group
      * - default group name if meeting has no custom groups
      */
-    private addParticipantGroups(meeting: ViewMeeting): UserExport[] {
+    private addParticipantGroups(): UserExport[] {
+        const meeting: ViewMeeting = this.activeMeeting.meeting;
+        const rows: UserExport[] = participantsExportExample;
+        let groupsToExport;
         const customGroupNames = meeting.groups.filter(group => {
             return !group.isAdminGroup && !group.isDefaultGroup;
         });
-        let groupsToExport;
 
-        switch (customGroupNames.length) {
-            case 0:
-                groupsToExport = meeting.default_group.name;
-                break;
-            case 1:
-                groupsToExport = customGroupNames[0].name;
-                break;
-            default:
-                groupsToExport = customGroupNames
-                    .slice(0, 2)
-                    .map(group => group.name)
-                    .join(`, `);
+        if (!customGroupNames.length) {
+            groupsToExport = meeting.default_group.name;
+        } else {
+            groupsToExport = customGroupNames
+                .slice(0, 2)
+                .map(group => group.name)
+                .join(`, `);
         }
 
-        const rows: UserExport[] = participantsExportExample;
         rows[0][`groups`] = groupsToExport;
 
         return rows;
     }
 
-    public exportCsvExample(meeting: ViewMeeting): void {
-        const rows: UserExport[] = this.addParticipantGroups(meeting);
+    public exportCsvExample(): void {
+        const rows: UserExport[] = this.addParticipantGroups();
         this.csvExport.dummyCSVExport<UserExport>(
             participantColumns,
             rows,
