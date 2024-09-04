@@ -34,6 +34,10 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         return this.getMeetingMediafile()?.inherited_access_groups;
     }
 
+    public get has_inherited_access_groups(): boolean {
+        return !!this.getMeetingMediafile()?.inherited_access_group_ids.length;
+    }
+
     public get pages(): number | null {
         return this.mediafile.pdf_information?.pages || null;
     }
