@@ -19,7 +19,7 @@ export class Mediafile extends BaseModel<Mediafile> {
 
     public title!: string;
     public is_directory!: boolean;
-    public published_to_meetings_in_organization_id!: number;
+    public published_to_meetings_in_organization_id!: Id;
     public meeting_mediafile_ids!: Id[];
     public filesize!: string;
     public filename!: string;

@@ -9,7 +9,8 @@ import {
     FontPlace,
     LOGO_PLACES,
     LogoPlace,
-    MediafileMeetingUsageIdKey
+    MediafileMeetingUsageIdKey,
+    MediafileUsageType
 } from '../mediafiles/mediafile.constants';
 
 /**
@@ -51,7 +52,7 @@ export class MeetingMediafile extends BaseModel<MeetingMediafile> {
         return this.used_in_meeting(`font`, place);
     }
 
-    private used_in_meeting(type: string, place?: LogoPlace | FontPlace): Id | null {
+    private used_in_meeting(type: MediafileUsageType, place?: LogoPlace | FontPlace): Id | null {
         if (!place) {
             const list = this.getPlaces();
             for (let i = 0; i < list?.length; i++) {
@@ -82,7 +83,7 @@ export class MeetingMediafile extends BaseModel<MeetingMediafile> {
         return [...this.getFontPlaces(), ...this.getLogoPlaces()];
     }
 
-    private getSpecificUsedInMeetingId(type: string, place: LogoPlace | FontPlace): Id {
+    private getSpecificUsedInMeetingId(type: MediafileUsageType, place: LogoPlace | FontPlace): Id {
         const path = `used_as_${type}_${place}_in_meeting_id` as keyof MeetingMediafile;
         return this[path] as Id;
     }
