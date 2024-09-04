@@ -342,7 +342,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         }
     }
 
-    public get shouldSaveButtonBeEnabled(): boolean {
+    public get saveButtonEnabled(): boolean {
         return this.isFormValid && !this.isLockedOutAndCanManage;
     }
 
@@ -351,7 +351,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return lockedOutHelper && this.checkSelectedGroupsCanManage;
     }
 
-    public get shouldLockoutCheckboxBeDisabled(): boolean {
+    public get lockoutCheckboxDisabled(): boolean {
         const notChanged = (this.personalInfoFormValue?.locked_out ?? null) === null;
         const isLockedOut = this.user?.is_locked_out;
         return notChanged && !isLockedOut && this.checkSelectedGroupsCanManage;

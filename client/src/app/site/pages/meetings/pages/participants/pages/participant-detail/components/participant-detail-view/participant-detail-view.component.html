@@ -3,7 +3,7 @@
     [editMode]="isEditingSubject.value"
     [goBack]="!isAllowed('seeOtherUsers')"
     [hasMainButton]="isAllowed('changePersonal') && !!user"
-    [isSaveButtonEnabled]="shouldSaveButtonBeEnabled"
+    [isSaveButtonEnabled]="saveButtonEnabled"
     [mainActionTooltip]="'Edit' | translate"
     [nav]="false"
     [saveAction]="getSaveAction()"
@@ -101,7 +101,7 @@
                     <mat-checkbox
                         formControlName="locked_out"
                         matTooltipPosition="right"
-                        [disabled]="shouldLockoutCheckboxBeDisabled"
+                        [disabled]="lockoutCheckboxDisabled"
                         matTooltip="{{ 'Lock out user from this meeting.' | translate }}"
                     >
                         <span>{{ 'locked out' | translate }}</span>
