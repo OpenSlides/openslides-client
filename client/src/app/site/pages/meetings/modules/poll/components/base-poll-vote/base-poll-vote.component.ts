@@ -42,8 +42,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     @Input()
     public set poll(value: ViewPoll<C>) {
+        const pollChanged = this._poll?.id !== value?.id;
         this._poll = value;
-        this.updatePoll();
+        this.updatePoll(pollChanged);
     }
 
     public get poll(): ViewPoll<C> {
@@ -430,8 +431,10 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         }
     }
 
-    protected updatePoll(): void {
-        this.setupHasVotedSubscription();
+    protected updatePoll(pollChanged: boolean): void {
+        if (pollChanged) {
+            this.setupHasVotedSubscription();
+        }
         this.defineVoteOptions();
         this.cd.markForCheck();
     }
