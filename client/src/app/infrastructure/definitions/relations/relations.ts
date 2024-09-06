@@ -1002,13 +1002,13 @@ export const RELATIONS: Relation[] = [
         AViewModel: ViewMeetingMediafile,
         BViewModel: ViewGroup,
         AField: `access_groups`,
-        BField: `mediafile_access_groups`
+        BField: `meeting_mediafile_access_groups`
     }),
     ...makeM2M({
         AViewModel: ViewMeetingMediafile,
         BViewModel: ViewGroup,
         AField: `inherited_access_groups`,
-        BField: `mediafile_inherited_access_groups`
+        BField: `meeting_mediafile_inherited_access_groups`
     }),
     ...makeGenericM2M<ViewMeetingMediafile, HasAttachmentMeetingMediafiles>({
         viewModel: ViewMeetingMediafile,

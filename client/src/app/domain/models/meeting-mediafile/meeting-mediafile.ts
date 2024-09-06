@@ -97,6 +97,7 @@ export class MeetingMediafile extends BaseModel<MeetingMediafile> {
         `access_group_ids`,
         `list_of_speakers_id`,
         `projection_ids`,
+        `attachment_ids`,
         `used_as_logo_projector_main_in_meeting_id`,
         `used_as_logo_projector_header_in_meeting_id`,
         `used_as_logo_web_header_in_meeting_id`,
