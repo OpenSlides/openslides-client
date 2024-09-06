@@ -1,5 +1,5 @@
 <os-head-bar
-    [hasMainButton]="canEdit"
+    [hasMainButton]="canEdit && !isPublishedDirectory"
     [mainActionTooltip]="'New file' | translate"
     [multiSelectMode]="isMultiSelect"
     (mainEvent)="onMainEvent()"
@@ -11,15 +11,17 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button
-            *osPerms="permission.mediafileCanManage; and: !isMultiSelect"
-            mat-icon-button
-            type="button"
-            [matTooltip]="'New folder' | translate"
-            (click)="createNewFolder(newFolderDialog)"
-        >
-            <mat-icon>create_new_folder</mat-icon>
-        </button>
+        @if (!isPublishedDirectory) {
+            <button
+                *osPerms="permission.mediafileCanManage; and: !isMultiSelect"
+                mat-icon-button
+                type="button"
+                [matTooltip]="'New folder' | translate"
+                (click)="createNewFolder(newFolderDialog)"
+            >
+                <mat-icon>create_new_folder</mat-icon>
+            </button>
+        }
         <button mat-icon-button type="button" [matMenuTriggerFor]="mediafilesMenu">
             <mat-icon>more_vert</mat-icon>
         </button>

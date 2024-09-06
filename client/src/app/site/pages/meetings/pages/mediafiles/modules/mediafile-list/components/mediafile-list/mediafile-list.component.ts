@@ -25,6 +25,7 @@ import { MEDIAFILES_SUBSCRIPTION } from '../../../../mediafiles.subscription';
 import { MediafileCommonService } from '../../../../services/mediafile-common.service';
 import { MediafileListExportService } from '../../services/mediafile-list-export.service/mediafile-list-export.service';
 import { MediafileListGroupService } from '../../services/mediafile-list-group.service';
+import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 
 @Component({
     selector: `os-mediafile-list`,
@@ -94,6 +95,14 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     private directorySubscription: Subscription | null = null;
     public directory: ViewMediafile | null = null;
     public directoryChain: ViewMediafile[] = [];
+
+    public get isPublishedDirectory(): boolean {
+        if (!this.directory?.owner_id) {
+            return false;
+        }
+
+        return collectionFromFqid(this.directory.owner_id) === `organization`;
+    }
 
     public directoryObservable: Observable<ViewMediafile[]>;
     private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
