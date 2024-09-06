@@ -84,11 +84,11 @@
                 <mat-label>{{ 'Gender' | translate }}</mat-label>
                 <mat-select formControlName="gender">
                     <mat-option [value]="null">-</mat-option>
-                    @for (gender of genders; track gender) {
+                    <!--   @for (gender of genders; track gender) {
                         <mat-option [value]="gender">
                             {{ gender | translate }}
                         </mat-option>
-                    }
+                    }-->
                 </mat-select>
             </mat-form-field>
             <!-- Pronoun -->

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
 import { OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
 import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
@@ -131,7 +130,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                     { condition: true, label: _(`Has unchanged vote weight`) }
                 ]
             },
-            {
+            /* TODO-G {
                 property: `gender`,
                 label: _(`Gender`),
                 options: [
@@ -141,7 +140,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                     { condition: GENDER_FITLERABLE[3], label: GENDERS[3] },
                     { condition: null, label: _(`not specified`) }
                 ]
-            },
+            }, */
             {
                 property: `hasSamlId`,
                 label: _(`SSO`),

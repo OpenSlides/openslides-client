@@ -9,7 +9,7 @@ export const userHeadersAndVerboseNames: { [key in keyof User]?: any } = {
     email: _(`Email`),
     member_number: _(`Member number`),
     pronoun: _(`Pronoun`),
-    gender: _(`Gender`),
+    // TODO-G gender: _(`Gender`),
     username: _(`Username`),
     default_password: _(`Initial password`),
     is_active: _(`Active`),

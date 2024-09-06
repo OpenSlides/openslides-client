@@ -131,7 +131,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                     { condition: [false, null], label: _(`Is no natural person`) }
                 ]
             },
-            {
+            /* TODO-G {
                 property: `gender`,
                 label: _(`Gender`),
                 options: [
@@ -141,7 +141,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                     { condition: `non-binary`, label: _(`non-binary`) },
                     { condition: null, label: _(`not specified`) }
                 ]
-            },
+            }, */
             {
                 property: `hasEmail`,
                 label: _(`Email address`),

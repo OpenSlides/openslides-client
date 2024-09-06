@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { Gender } from 'src/app/domain/models/gender/gender';
 import { GenderRepositoryService } from 'src/app/gateways/repositories/gender/gender-repository.service';
 import { BaseController } from 'src/app/site/base/base-controller';
@@ -19,15 +18,15 @@ export class GenderControllerService extends BaseController<ViewGender, Gender> 
         super(controllerServiceCollector, Gender, repo);
     }
 
-    public create(...models: Partial<Gender>[]): Promise<Identifiable[]> {
-        return this.repo.create(...models);
+    public create(...models: Partial<Gender>[]): void {
+        this.repo.create(...models).resolve();
     }
 
-    public update(update: Partial<Gender>, viewGenderId: Id): Promise<void> {
-        return this.repo.update(update, viewGenderId);
+    public update(update: Partial<Gender>, viewGenderId: Id): void {
+        this.repo.update(update, viewGenderId).resolve();
     }
 
-    public delete(...ids: Id[]): Promise<void> {
-        return this.repo.delete(...ids);
+    public delete(...ids: Id[]): void {
+        this.repo.delete(...ids).resolve();
     }
 }

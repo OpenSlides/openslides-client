@@ -14,7 +14,7 @@ export const accountColumns: (keyof User)[] = [
     `email`,
     `member_number`,
     `default_vote_weight`,
-    `gender`,
+    // TODO-G `gender`,
     `pronoun`,
     `username`,
     `default_password`,

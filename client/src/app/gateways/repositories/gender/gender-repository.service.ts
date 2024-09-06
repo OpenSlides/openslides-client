@@ -6,6 +6,7 @@ import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { ViewGender } from 'src/app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
+import { Action } from '../../actions';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { GenderAction } from './gender.action';
 
@@ -28,21 +29,21 @@ export class GenderRepositoryService extends BaseRepository<ViewGender, Gender> 
         };
     }
 
-    public create(...genders: any[]): Promise<Identifiable[]> {
+    public create(...genders: any[]): Action<Identifiable[]> {
         const payload = genders;
-        return this.sendBulkActionToBackend(GenderAction.CREATE, payload);
+        return this.createAction(GenderAction.CREATE, payload);
     }
 
-    public update(update: any, id: Id): Promise<void> {
+    public update(update: any, id: Id): Action<void> {
         const payload = {
             id,
             ...update
         };
-        return this.sendActionToBackend(GenderAction.UPDATE, payload);
+        return this.createAction(GenderAction.UPDATE, payload);
     }
 
-    public delete(...ids: Id[]): Promise<void> {
+    public delete(...ids: Id[]): Action<void> {
         const payload = ids.map(id => ({ id }));
-        return this.sendBulkActionToBackend(GenderAction.DELETE, payload);
+        return this.createAction(GenderAction.DELETE, payload);
     }
 }

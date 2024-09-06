@@ -87,19 +87,17 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
     private updateGenderHelper(): void {
         if (this.currentGender) {
             const data = this.genderForm.value;
-            this.repo.update(data, this.currentGender.id).catch(this.raiseError);
+            this.repo.update(data, this.currentGender.id);
         }
     }
 
     private createGenderHelper(): void {
-        this.repo.create(this.genderForm.value).catch(this.raiseError);
+        this.repo.create(this.genderForm.value);
     }
 
-    private deleteStructureLevel(gender: ViewGender): void {
-        this.repo
-            .delete(gender.id)
-            //.then(() => this.cd.detectChanges())
-            .catch(this.raiseError);
+    private deleteGender(gender: ViewGender): void {
+        this.repo.delete(gender.id);
+        //.then(() => this.cd.detectChanges())
     }
 
     private save(): void {

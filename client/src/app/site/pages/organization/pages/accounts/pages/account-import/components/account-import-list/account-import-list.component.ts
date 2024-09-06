@@ -19,8 +19,8 @@ export class AccountImportListComponent extends BaseViaBackendImportListComponen
     public columns: ImportListHeaderDefinition[] = this.possibleFields.map(header => ({
         property: header,
         label: (<any>accountHeadersAndVerboseNames)[header],
-        isTableColumn: true,
-        customInfo: header === `gender` ? this.getTranslatedGenderInfoObservable() : undefined
+        isTableColumn: true
+        // TODO-G customInfo: header === `gender` ? this.getTranslatedGenderInfoObservable() : undefined
     }));
 
     public constructor(
@@ -32,8 +32,6 @@ export class AccountImportListComponent extends BaseViaBackendImportListComponen
     }
 
     private getTranslatedGenderInfoObservable(): Observable<string> {
-        return this.translate
-            .get(`Possible options`)
-            .pipe(map(framework => framework + `: ` + this.orgaSettings.instant(`genders`).join(`, `)));
+        return this.translate.get(`Possible options`).pipe(map(framework => framework)); // TODO-G + `: ` + this.orgaSettings.instant(`genders`).join(`, `)));
     }
 }

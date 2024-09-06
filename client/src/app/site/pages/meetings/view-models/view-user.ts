@@ -76,6 +76,11 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         }
     }
 
+    public get gender(): string {
+        // TODO-G
+        return `TEST`;
+    }
+
     public get delegationType(): DelegationType {
         if (this.isVoteRightDelegated) {
             return DelegationType.Transferred;
