@@ -80,6 +80,11 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                                         fieldset: [`name`]
                                     }
                                 ]
+                            },
+                            {
+                                idField: `gender_ids`,
+                                fieldset: [`name`],
+                                isFulllist: true
                             }
                         ]
                     },
@@ -103,6 +108,10 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                                     fieldset: [`name`]
                                 }
                             ]
+                        },
+                        {
+                            idField: `gender_id`,
+                            fieldset: [`name`]
                         }
                     ]
                 },

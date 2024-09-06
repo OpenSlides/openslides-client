@@ -16,6 +16,7 @@ import { MotionsAppConfig } from 'src/app/site/pages/meetings/pages/motions';
 import { PollsAppConfig } from 'src/app/site/pages/meetings/pages/polls/polls.config';
 import { ProjectorAppConfig } from 'src/app/site/pages/meetings/pages/projectors/projector.config';
 import { MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
+import { GendersAppConfig } from 'src/app/site/pages/organization/pages/accounts/pages/gender/genders.config';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 import { FallbackRoutesService } from 'src/app/site/services/fallback-routes.service';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
@@ -53,7 +54,8 @@ const appConfigs: AppConfig[] = [
     MeetingSettingsAppConfig,
     ChatAppConfig,
     ActionWorkerAppConfig,
-    MeetingUserAppConfig
+    MeetingUserAppConfig,
+    GendersAppConfig
 ];
 
 @Injectable({

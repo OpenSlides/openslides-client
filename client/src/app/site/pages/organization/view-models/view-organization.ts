@@ -4,6 +4,7 @@ import { BaseViewModel, ViewModelRelations } from '../../../base/base-view-model
 import { ViewMediafile } from '../../meetings/pages/mediafiles';
 import { ViewMeeting } from '../../meetings/view-models/view-meeting';
 import { ViewUser } from '../../meetings/view-models/view-user';
+import { ViewGender } from '../pages/accounts/pages/gender/view-models/view-gender';
 import { ViewCommittee } from '../pages/committees';
 import { ViewTheme } from '../pages/designs';
 import { ViewOrganizationTag } from '../pages/organization-tags';
@@ -27,5 +28,6 @@ interface IOrganizationRelations {
     theme: ViewTheme;
     themes: ViewTheme[];
     users: ViewUser[];
+    genders: ViewGender[];
 }
 export interface ViewOrganization extends Organization, ViewModelRelations<IOrganizationRelations> {}
