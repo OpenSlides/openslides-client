@@ -7,7 +7,7 @@ export const userHeadersAndVerboseNames: { [key in keyof User]?: any } = {
     first_name: _(`Given name`),
     last_name: _(`Surname`),
     email: _(`Email`),
-    member_number: _(`Member number`),
+    member_number: _(`Membership number`),
     pronoun: _(`Pronoun`),
     // TODO-G gender: _(`Gender`),
     username: _(`Username`),

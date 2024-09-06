@@ -6,7 +6,7 @@
         <mat-card-title class="break-word">
             @if (meeting.locked_from_inside) {
                 <div class="template-indicator">
-                    <mat-icon [matTooltip]="'Locked' | translate">lock</mat-icon>
+                    <mat-icon [matTooltip]="'Closed' | translate">lock</mat-icon>
                 </div>
             }
             {{ title }}
@@ -140,7 +140,7 @@
                 <span>{{ 'Public template' | translate }}</span>
             </button>
         }
-        @if (!isCMAndRequireDuplicateFrom && !isLockedFromInside) {
+        @if (!isLockedFromInside) {
             <button mat-menu-item (click)="onDuplicate()">
                 <mat-icon>file_copy</mat-icon>
                 <span>{{ 'Duplicate' | translate }}</span>

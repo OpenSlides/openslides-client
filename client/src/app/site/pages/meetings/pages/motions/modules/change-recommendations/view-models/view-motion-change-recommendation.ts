@@ -1,6 +1,6 @@
 import { MotionChangeRecommendation } from '../../../../../../../../domain/models/motions/motion-change-recommendation';
 import { ModificationType } from '../../../../../../../../domain/models/motions/motions.constants';
-import { BaseViewModel } from '../../../../../../../base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from '../../../../../../../base/base-view-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewMotion } from '../../../view-models/view-motion';
 import { ViewUnifiedChangeType } from '../definitions';
@@ -76,5 +76,5 @@ interface IMotionChangeRecommendationRelations {
 }
 export interface ViewMotionChangeRecommendation
     extends MotionChangeRecommendation,
-        IMotionChangeRecommendationRelations,
+        ViewModelRelations<IMotionChangeRecommendationRelations>,
         HasMeeting {}

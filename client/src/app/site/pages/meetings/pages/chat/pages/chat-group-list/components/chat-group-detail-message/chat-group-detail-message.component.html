@@ -16,7 +16,7 @@
         <div class="timestamp">{{ date | localizedDate }}</div>
         @if (isOwnMessage || canBeDeleted) {
             @if (isMobile) {
-                <a class="stretch-to-fill-parent" [matMenuTriggerFor]="singleChatMenu"></a>
+                <a aria-hidden="true" class="stretch-to-fill-parent" [matMenuTriggerFor]="singleChatMenu"></a>
             }
             @if (!isMobile) {
                 <button mat-icon-button [matMenuTriggerFor]="singleChatMenu">

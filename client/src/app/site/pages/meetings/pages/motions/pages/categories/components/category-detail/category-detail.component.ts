@@ -218,4 +218,8 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
             await this.repo.numberMotionsInCategory(this.selectedCategory).catch(this.raiseError);
         }
     }
+
+    public ariaLabel(motion: ViewMotion): string {
+        return this.translate.instant(`Navigate to motion`) + ` '` + motion.title + `'`;
+    }
 }

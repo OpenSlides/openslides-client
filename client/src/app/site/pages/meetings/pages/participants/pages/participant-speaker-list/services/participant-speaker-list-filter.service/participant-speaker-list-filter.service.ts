@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
 import { OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
@@ -30,7 +31,7 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
         this.updateFilterForRepo({
             repo: structureRepo,
             filter: this.speakerStructureLevelFilterOptions,
-            noneOptionLabel: `No structure level`
+            noneOptionLabel: _(`No structure level`)
         });
     }
 
@@ -41,46 +42,46 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
         const staticFilterOptions: OsFilter<ViewSpeaker>[] = [
             {
                 property: `gender`,
-                label: `Gender`,
+                label: _(`Gender`),
                 options: [
                     { condition: GENDER_FITLERABLE[0], label: GENDERS[0] },
                     { condition: GENDER_FITLERABLE[1], label: GENDERS[1] },
                     { condition: GENDER_FITLERABLE[2], label: GENDERS[2] },
                     { condition: GENDER_FITLERABLE[3], label: GENDERS[3] },
-                    { condition: null, label: `not specified` }
+                    { condition: null, label: _(`not specified`) }
                 ]
             },
             {
                 property: `speech_state`,
-                label: `Speech type`,
+                label: _(`Speech type`),
                 options: [
-                    { condition: SpeechState.PRO, label: `Forspeech` },
-                    { condition: SpeechState.CONTRA, label: `Contra speech` },
-                    { condition: SpeechState.CONTRIBUTION, label: `Contribution` },
-                    { condition: SpeechState.INTERVENTION, label: `Intervention` },
+                    { condition: SpeechState.PRO, label: _(`Forspeech`) },
+                    { condition: SpeechState.CONTRA, label: _(`Contra speech`) },
+                    { condition: SpeechState.CONTRIBUTION, label: _(`Contribution`) },
+                    { condition: SpeechState.INTERVENTION, label: _(`Intervention`) },
                     {
                         condition: SpeechState.INTERPOSED_QUESTION,
-                        label: `Interposed question`
+                        label: _(`Interposed question`)
                     },
-                    { condition: null, label: `not specified` }
+                    { condition: null, label: _(`not specified`) }
                 ]
             },
             {
                 property: `contentType`,
-                label: `Module`,
+                label: _(`Module`),
                 options: [
-                    { condition: `topic`, label: `Agenda` },
-                    { condition: `motion`, label: `Motions` },
-                    { condition: `motion_block`, label: `Motion blocks` },
-                    { condition: `assignment`, label: `Elections` }
+                    { condition: `topic`, label: _(`Agenda`) },
+                    { condition: `motion`, label: _(`Motions`) },
+                    { condition: `motion_block`, label: _(`Motion blocks`) },
+                    { condition: `assignment`, label: _(`Elections`) }
                 ]
             },
             {
                 property: `hasSpoken`,
-                label: `Speaker`,
+                label: _(`Speaker`),
                 options: [
-                    { condition: true, label: `Has spoken` },
-                    { condition: [false, null], label: `Has not spoken` }
+                    { condition: true, label: _(`Has spoken`) },
+                    { condition: [false, null], label: _(`Has not spoken`) }
                 ]
             }
         ];

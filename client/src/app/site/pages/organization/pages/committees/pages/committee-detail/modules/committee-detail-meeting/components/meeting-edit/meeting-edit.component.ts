@@ -32,27 +32,6 @@ const EDIT_MEETING_LABEL = _(`Edit meeting`);
 const ORGA_ADMIN_ALLOWED_CONTROLNAMES = [`admin_ids`];
 const SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES = [`jitsi_domain`, `jitsi_room_name`, `jitsi_room_password`];
 
-const TEMPLATE_MEETINGS_LABEL: Selectable = {
-    id: -1,
-    getTitle: () => `Template meetings`,
-    getListTitle: () => `Template meetings`,
-    disabled: true
-};
-
-const ACTIVE_MEETINGS_LABEL: Selectable = {
-    id: -2,
-    getTitle: () => `Active meetings`,
-    getListTitle: () => `Active meetings`,
-    disabled: true
-};
-
-const ARCHIVED_MEETINGS_LABEL: Selectable = {
-    id: -3,
-    getTitle: () => `Archived meetings`,
-    getListTitle: () => `Archived meetings`,
-    disabled: true
-};
-
 @Component({
     selector: `os-meeting-edit`,
     templateUrl: `./meeting-edit.component.html`,
@@ -167,7 +146,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 this.operatingUser = user;
                 this.onAfterCreateForm();
             }),
-            this.operator.user.committee_managements_as_observable.subscribe(committees => {
+            this.operator.user.committee_managements$.subscribe(committees => {
                 this._committee_users_set = new Set(committees.flatMap(committee => committee.user_ids ?? []));
             })
         );
@@ -179,17 +158,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
         this.availableMeetingsObservable = this.orga.organizationObservable.pipe(
             map(organization => {
-                if (this.isCommitteeManagerAndRequireDuplicateFrom) {
-                    return [TEMPLATE_MEETINGS_LABEL, ...organization.template_meetings.sort(this.sortFn)];
-                }
-                return [
-                    TEMPLATE_MEETINGS_LABEL,
-                    ...organization.template_meetings.sort(this.sortFn),
-                    ACTIVE_MEETINGS_LABEL,
-                    ...organization.active_meetings.sort(this.sortFn),
-                    ARCHIVED_MEETINGS_LABEL,
-                    ...organization.archived_meetings.sort(this.sortFn)
-                ];
+                return [...organization.template_meetings.sort(this.sortFn)];
             })
         );
         this.availableAdmins = this.filterAccountsForCommitteeAdmins(this.userRepo.getViewModelList());

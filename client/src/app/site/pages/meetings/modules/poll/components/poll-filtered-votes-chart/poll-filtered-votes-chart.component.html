@@ -1,0 +1,45 @@
+<mat-divider class="margin-top-bottom"></mat-divider>
+@if (filtersEnabled && totalAmount > 0) {
+    <div class="vote-char-container">
+        <h2 class="margin-bottom-10">{{ 'Filtered single votes' | translate }}</h2>
+        <div class="vote-chart-bar">
+            @for (cat of voteAmounts; track cat.value) {
+                @if (cat.amount > 0 && !cat.hiddenInBase) {
+                    <div
+                        class="segment"
+                        [style.background]="cat.backgroundColor"
+                        [style.width.%]="(cat.weightedAmount / totalAmountWeighted) * 100"
+                    ></div>
+                }
+            }
+        </div>
+        <div class="results">
+            <div class="grid-all-votes-area">{{ 'Valid votes' | translate }}: {{ validAmount }}</div>
+            <div class="grid-options-area">
+                @for (cat of voteAmounts; track cat.value) {
+                    <span class="one-option">
+                        <div class="box" [style.background]="cat.backgroundColor"></div>
+                        {{ cat.name | translate }}: {{ cat.weightedAmount }}
+                        @if (cat.amount > 0 && !cat.hiddenInBase) {
+                            ({{ ((cat.weightedAmount / totalAmountWeighted) * 100).toFixed(2) }}%)
+                        }
+                    </span>
+                }
+            </div>
+        </div>
+        @if (usesVoteWeight) {
+            <div class="results margin-bottom-10">
+                <div class="user-subtitle">
+                    <span class="no-space">{{ 'Ballots cast' | translate }}: {{ totalAmount }} (</span>
+                    <div class="categories">
+                        @for (cat of voteAmounts; track cat.value) {
+                            <span>{{ cat.name | translate }}: {{ cat.amount }}</span>
+                            <span class="seperator">&middot;</span>
+                        }
+                    </div>
+                    <span class="no-space">)</span>
+                </div>
+            </div>
+        }
+    </div>
+}
