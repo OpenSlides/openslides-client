@@ -1,5 +1,6 @@
 import { AutoupdateSetEndpointParams } from './autoupdate/interfaces-autoupdate';
 import { ICCStreamPool } from './icc/icc-stream-pool';
+import { ICCMessage } from './sw-icc.interfaces';
 
 const iccPool = new ICCStreamPool({
     url: `/system/icc`,
@@ -11,16 +12,14 @@ export function initIccSw(broadcast: (s: string, a: string, c?: any) => void): v
     iccPool.registerBroadcast(broadcast);
 }
 
-export function iccMessageHandler(_ctx: any, e: any): void {
-    const msg = e.data?.msg;
-    const params = msg?.params;
-    const action = msg?.action;
-    switch (action) {
+export function iccMessageHandler(_ctx: any, e: MessageEvent<ICCMessage>): void {
+    const msg = e.data.msg;
+    switch (msg.action) {
         case `connect`:
-            iccPool.openNewStream(params);
+            iccPool.openNewStream(msg.params);
             break;
         case `disconnect`:
-            iccPool.closeStream(params);
+            iccPool.closeStream(msg.params);
             break;
     }
 }

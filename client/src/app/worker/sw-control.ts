@@ -1,27 +1,26 @@
-import { WorkerMessage } from './interfaces';
+import { Broadcaster, WorkerMessage } from './interfaces';
+import { ControlAcknowledgement, ControlMessage, ControlPong, ControlTerminateRejected } from './sw-control.interfaces';
 
 const startedAt = Date.now();
 const RESTART_LIMIT_TIME = 30 * 1000;
-let broadcast: (s: string, a: string, c?: any) => void;
+let broadcast: Broadcaster;
 
-export function initControlMessageHandler(b: (s: string, a: string, c?: any) => void): void {
+export function initControlMessageHandler(b: Broadcaster): void {
     broadcast = b;
 }
 
-export function controlGeneralMessageHandler(ctx: any, e: MessageEvent<WorkerMessage>): void {
+export function controlGeneralMessageHandler(ctx: any, e: MessageEvent<WorkerMessage<any>>): void {
     if (e.data?.nonce) {
-        ctx.postMessage({ sender: `control`, action: `ack`, content: e.data.nonce });
+        ctx.postMessage({ sender: `control`, action: `ack`, content: e.data.nonce } as ControlAcknowledgement);
     }
 }
 
-export function controlMessageHandler(ctx: any, e: any): void {
-    const msg = e.data?.msg;
-    const params = msg?.params;
-    const action = msg?.action;
-    switch (action) {
+export function controlMessageHandler(ctx: any, e: MessageEvent<ControlMessage>): void {
+    const msg = e.data.msg;
+    switch (msg.action) {
         case `terminate`:
             if (startedAt > Date.now() - RESTART_LIMIT_TIME) {
-                ctx.postMessage({ sender: `control`, action: `terminate-rejected` });
+                ctx.postMessage({ sender: `control`, action: `terminate-rejected` } as ControlTerminateRejected);
             } else {
                 broadcast(`control`, `terminating`);
                 if (!((<any>self).Window && self instanceof (<any>self).Window)) {
@@ -30,7 +29,7 @@ export function controlMessageHandler(ctx: any, e: any): void {
             }
             break;
         case `ping`:
-            ctx.postMessage({ sender: `control`, action: `pong`, content: params });
+            ctx.postMessage({ sender: `control`, action: `pong`, content: msg.params } as ControlPong);
             break;
     }
 }

@@ -74,7 +74,7 @@ export class SharedWorkerService {
     public async sendMessage<T extends WorkerMessageContent>(receiver: string, msg: T): Promise<void> {
         const nonce = Math.random() * 100000000;
         let ack: Promise<any>;
-        await this.sendRawMessage({ receiver, msg, nonce } as WorkerMessage, true, () => {
+        await this.sendRawMessage({ receiver, msg, nonce }, true, () => {
             ack = firstValueFrom(
                 this.listenTo(`control`).pipe(
                     filter(data => data?.action === `ack` && data?.content === nonce),
@@ -221,10 +221,14 @@ export class SharedWorkerService {
      * @param msg Content of the message
      */
     private async sendMessageForce<T extends WorkerMessageContent>(receiver: string, msg: T): Promise<void> {
-        return await this.sendRawMessage({ receiver, msg } as WorkerMessage, false);
+        return await this.sendRawMessage({ receiver, msg }, false);
     }
 
-    private async sendRawMessage(message: any, checkReady = true, beforeSend?: () => void): Promise<void> {
+    private async sendRawMessage(
+        message: WorkerMessage<any>,
+        checkReady = true,
+        beforeSend?: () => void
+    ): Promise<void> {
         if (this.ready || !checkReady) {
             if (beforeSend) {
                 beforeSend();

@@ -12,7 +12,7 @@ function registerMessageListener(ctx: any): void {
         control: controlMessageHandler
     };
 
-    ctx.addEventListener(`message`, (e: MessageEvent<WorkerMessage>) => {
+    ctx.addEventListener(`message`, (e: MessageEvent<WorkerMessage<any>>) => {
         controlGeneralMessageHandler(ctx, e);
 
         const receiver = e.data?.receiver;
