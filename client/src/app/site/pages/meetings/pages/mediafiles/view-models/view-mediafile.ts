@@ -15,7 +15,7 @@ import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { ViewGroup } from '../../participants/modules/groups/view-models/view-group';
 import { FONT_MIMETYPES, IMAGE_MIMETYPES, PDF_MIMETYPES } from '../definitions';
 import { VIDEO_MIMETYPES } from '../definitions/index';
-import { HasAttachment } from './has-attachment';
+import { HasAttachmentMeetingMediafiles } from './has-attachment';
 import { ViewMeetingMediafile } from './view-meeting-mediafile';
 
 export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
@@ -180,7 +180,7 @@ interface IMediafileRelations {
     inherited_access_groups: ViewGroup[];
     parent?: ViewMediafile;
     children: ViewMediafile[];
-    attachments: (BaseViewModel & HasAttachment)[];
+    attachments: (BaseViewModel & HasAttachmentMeetingMediafiles)[];
     organization?: ViewOrganization;
     meeting_mediafiles: ViewMeetingMediafile[];
     published_to_meetings_in_organization: ViewOrganization;

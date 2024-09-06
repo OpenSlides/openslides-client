@@ -18,7 +18,7 @@ test.describe(`motion history mode test`, () => {
             text: `<p>MotionHistoryTestText</p>`,
             submitter_ids: [],
             category_id: null,
-            attachment_ids: [],
+            attachment_meeting_mediafile_ids: [],
             reason: ``,
             supporter_meeting_user_ids: [],
             agenda_create: false,

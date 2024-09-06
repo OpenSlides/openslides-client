@@ -412,7 +412,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             text: [``, this.isParagraphBasedAmendment ? null : Validators.required],
             reason: [``, this.reasonRequired ? Validators.required : null],
             category_id: [],
-            attachment_ids: [[]],
+            attachment_meeting_mediafile_ids: [[]],
             agenda_parent_id: [],
             submitter_ids: [[]],
             supporter_ids: [[]],

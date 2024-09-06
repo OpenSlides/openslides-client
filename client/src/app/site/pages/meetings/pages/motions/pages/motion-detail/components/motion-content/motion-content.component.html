@@ -189,7 +189,7 @@
                             <mat-icon>attach_file</mat-icon>
                         </h3>
                         <mat-list dense>
-                            @for (file of motion?.attachments; track file) {
+                            @for (file of motion?.attachment_meeting_mediafiles; track file) {
                                 <mat-list-item>
                                     <a target="_blank" [routerLink]="file.url">{{ file.title }}</a>
                                 </mat-list-item>

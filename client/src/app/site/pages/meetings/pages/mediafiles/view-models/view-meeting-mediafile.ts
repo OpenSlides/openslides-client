@@ -10,7 +10,7 @@ import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeeting } from '../../../view-models/view-meeting';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { ViewGroup } from '../../participants/modules/groups/view-models/view-group';
-import { HasAttachment } from './has-attachment';
+import { HasAttachmentMeetingMediafiles } from './has-attachment';
 import { ViewMediafile } from './view-mediafile';
 
 export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediafile> {
@@ -55,7 +55,7 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
 interface IMeetingMediafileRelations {
     access_groups: ViewGroup[];
     inherited_access_groups: ViewGroup[];
-    attachments: (BaseViewModel & HasAttachment)[];
+    attachments: (BaseViewModel & HasAttachmentMeetingMediafiles)[];
     mediafile?: ViewMediafile;
 }
 export interface ViewMeetingMediafile

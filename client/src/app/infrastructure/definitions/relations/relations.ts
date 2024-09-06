@@ -34,7 +34,7 @@ import {
 } from '../../../site/pages/meetings/pages/agenda';
 import { ViewAssignment, ViewAssignmentCandidate } from '../../../site/pages/meetings/pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../../../site/pages/meetings/pages/chat';
-import { HasAttachment, ViewMediafile } from '../../../site/pages/meetings/pages/mediafiles';
+import { HasAttachmentMeetingMediafiles, ViewMediafile } from '../../../site/pages/meetings/pages/mediafiles';
 import {
     HasReferencedMotionsInExtension,
     HasTags,
@@ -1010,11 +1010,11 @@ export const RELATIONS: Relation[] = [
         AField: `inherited_access_groups`,
         BField: `mediafile_inherited_access_groups`
     }),
-    ...makeGenericM2M<ViewMeetingMediafile, HasAttachment>({
+    ...makeGenericM2M<ViewMeetingMediafile, HasAttachmentMeetingMediafiles>({
         viewModel: ViewMeetingMediafile,
         possibleViewModels: [ViewTopic, ViewMotion, ViewAssignment],
         viewModelField: `attachment_ids`,
-        possibleViewModelsField: `attachments`
+        possibleViewModelsField: `attachment_meeting_mediafiles`
     }),
     // ########## Chat
     ...makeM2O({
