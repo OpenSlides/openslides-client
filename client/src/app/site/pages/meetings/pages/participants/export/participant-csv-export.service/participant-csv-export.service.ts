@@ -61,16 +61,15 @@ export class ParticipantCsvExportService {
     }
 
     /**
-     * @param meeting
      * @returns participants csv-example with added 'groups' value:
      * - 2 custom group (not default or admin) names separated by comma by default
      * - 1 custom group name if meeting has only 1 custom group
      * - default group name if meeting has no custom groups
      */
-    private addParticipantGroups(): UserExport[] {
+    private provideExampleRow(): UserExport[] {
         const meeting: ViewMeeting = this.activeMeeting.meeting;
-        const rows: UserExport[] = participantsExportExample;
-        let groupsToExport;
+        const row: UserExport[] = participantsExportExample;
+        let groupsToExport: string;
         const customGroupNames = meeting.groups.filter(group => {
             return !group.isAdminGroup && !group.isDefaultGroup;
         });
@@ -84,16 +83,16 @@ export class ParticipantCsvExportService {
                 .join(`, `);
         }
 
-        rows[0][`groups`] = groupsToExport;
+        row[0][`groups`] = groupsToExport;
 
-        return rows;
+        return row;
     }
 
     public exportCsvExample(): void {
-        const rows: UserExport[] = this.addParticipantGroups();
+        const row: UserExport[] = this.provideExampleRow();
         this.csvExport.dummyCSVExport<UserExport>(
             participantColumns,
-            rows,
+            row,
             `${this.translate.instant(`participants-example`)}.csv`
         );
     }
