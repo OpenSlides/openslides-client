@@ -26,7 +26,7 @@ export class GenderControllerService extends BaseController<ViewGender, Gender> 
         this.repo.update(update, viewGenderId).resolve();
     }
 
-    public delete(...ids: Id[]): void {
-        this.repo.delete(...ids).resolve();
+    public delete(...ids: Id[]): Promise<void | void[]> {
+        return this.repo.delete(...ids).resolve();
     }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -30,7 +30,8 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
         protected override translate: TranslateService,
         public repo: GenderControllerService,
         private dialog: MatDialog,
-        private formBuilder: UntypedFormBuilder
+        private formBuilder: UntypedFormBuilder,
+        private cd: ChangeDetectorRef
     ) {
         super();
         this.setTitle(`Gender`);
@@ -60,8 +61,8 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
         });
     }
 
-    public async deleteGenders(...genders: ViewGender[]): Promise<void> {
-        console.log(`XXX delete Gender`, genders);
+    public async deleteGenders(...genders: ViewGender[]): Promise<void | void[]> {
+        return this.repo.delete(...genders.map(g => g.id)).then(() => this.cd.detectChanges());
     }
 
     public deleteSelectedGenders(): void {
