@@ -11,6 +11,7 @@ import {
     LogoDisplayNames,
     LogoPlace
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
+import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
@@ -25,7 +26,6 @@ import { MEDIAFILES_SUBSCRIPTION } from '../../../../mediafiles.subscription';
 import { MediafileCommonService } from '../../../../services/mediafile-common.service';
 import { MediafileListExportService } from '../../services/mediafile-list-export.service/mediafile-list-export.service';
 import { MediafileListGroupService } from '../../services/mediafile-list-group.service';
-import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 
 @Component({
     selector: `os-mediafile-list`,
@@ -247,9 +247,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
             this.fileEditForm = this.formBuilder.group({
                 title: [file.title, Validators.required],
                 access_group_ids: [
-                    meetingFileToEdit
-                        ? [...meetingFileToEdit.inherited_access_group_ids]
-                        : this.getInheritedGroups(file)
+                    meetingFileToEdit ? [...meetingFileToEdit.access_group_ids] : this.getInheritedGroups(file)
                 ],
                 meeting_id: this.activeMeetingId
             });
