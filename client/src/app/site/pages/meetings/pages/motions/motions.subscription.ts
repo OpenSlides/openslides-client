@@ -176,7 +176,8 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             },
             {
                 idField: `attachment_meeting_mediafile_ids`,
-                fieldset: FULL_FIELDSET
+                fieldset: FULL_FIELDSET,
+                follow: [{ idField: `mediafile_id`, fieldset: FULL_FIELDSET }]
             },
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
             { idField: `lead_motion_id`, fieldset: [`text`] },

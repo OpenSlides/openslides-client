@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
@@ -62,10 +63,9 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Elections` : `Election`);
 
-    private getPartialPayload(model: Partial<ViewAssignment>): any {
+    private getPartialPayload(model: Partial<ViewAssignment> & { attachment_mediafile_ids?: Id[] }): any {
         return {
-            attachment_meeting_mediafile_ids:
-                model.attachment_meeting_mediafile_ids === null ? [] : model.attachment_meeting_mediafile_ids,
+            attachment_mediafile_ids: model.attachment_mediafile_ids === null ? [] : model.attachment_mediafile_ids,
             default_poll_description: model.default_poll_description,
             description: model.description,
             number_poll_candidates: model.number_poll_candidates,

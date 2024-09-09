@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { ViewAgendaItem, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
@@ -27,12 +28,12 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
         return this.sendBulkActionToBackend(TopicAction.CREATE, payload);
     }
 
-    public update(update: Partial<Topic>, viewModel: ViewTopic): Promise<void> {
+    public update(update: Partial<Topic> & { attachment_mediafile_ids?: Id[] }, viewModel: ViewTopic): Promise<void> {
         const payload: any = {
             id: viewModel.id,
             text: update.text,
             title: update.title,
-            attachment_meeting_mediafile_ids: update.attachment_meeting_mediafile_ids || []
+            attachment_mediafile_ids: update.attachment_mediafile_ids || []
         };
         return this.sendActionToBackend(TopicAction.UPDATE, payload);
     }
@@ -92,7 +93,7 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
             meeting_id: this.activeMeetingId,
             title: partialTopic.title,
             text: partialTopic.text,
-            attachment_meeting_mediafile_ids: partialTopic.attachment_meeting_mediafile_ids,
+            attachment_mediafile_ids: partialTopic.attachment_mediafile_ids,
             ...createAgendaItem(partialTopic)
         };
     }

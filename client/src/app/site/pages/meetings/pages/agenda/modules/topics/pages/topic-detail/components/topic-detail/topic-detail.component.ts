@@ -184,7 +184,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         const controlsConfig = {
             agenda_type: [],
             agenda_parent_id: [],
-            attachment_meeting_mediafile_ids: [[]],
+            attachment_mediafile_ids: [[]],
             text: [``],
             title: [``, Validators.required]
         };
@@ -207,6 +207,11 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
                 topicPatch[ctrl] = topic[ctrl as keyof Topic];
             }
         });
+        if (this.topicForm.controls[`attachment_mediafile_ids`]) {
+            topicPatch[`attachment_mediafile_ids`] = this.topic.attachment_meeting_mediafiles?.map(
+                file => file.mediafile_id
+            );
+        }
         this.topicForm!.patchValue(topicPatch);
     }
 
