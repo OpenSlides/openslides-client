@@ -184,7 +184,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         const controlsConfig = {
             agenda_type: [],
             agenda_parent_id: [],
-            attachment_ids: [[]],
+            attachment_meeting_mediafile_ids: [[]],
             text: [``],
             title: [``, Validators.required]
         };

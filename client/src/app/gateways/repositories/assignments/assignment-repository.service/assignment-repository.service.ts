@@ -64,7 +64,7 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
 
     private getPartialPayload(model: Partial<ViewAssignment>): any {
         return {
-            attachment_ids:
+            attachment_meeting_mediafile_ids:
                 model.attachment_meeting_mediafile_ids === null ? [] : model.attachment_meeting_mediafile_ids,
             default_poll_description: model.default_poll_description,
             description: model.description,

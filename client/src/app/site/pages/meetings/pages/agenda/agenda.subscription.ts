@@ -96,7 +96,7 @@ export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (..
         ids,
         fieldset: FULL_FIELDSET,
         follow: [
-            `attachment_ids`,
+            `attachment_meeting_mediafile_ids`,
             {
                 idField: `poll_ids`,
                 ...pollModelRequest

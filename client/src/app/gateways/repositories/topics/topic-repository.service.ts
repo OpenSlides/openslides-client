@@ -92,7 +92,7 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
             meeting_id: this.activeMeetingId,
             title: partialTopic.title,
             text: partialTopic.text,
-            attachment_ids: partialTopic.attachment_ids,
+            attachment_meeting_mediafile_ids: partialTopic.attachment_meeting_mediafile_ids,
             ...createAgendaItem(partialTopic)
         };
     }

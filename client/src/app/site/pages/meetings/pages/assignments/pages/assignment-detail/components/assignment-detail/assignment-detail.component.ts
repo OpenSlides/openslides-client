@@ -163,7 +163,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         this.assignmentForm = formBuilder.group({
             phase: null,
             tag_ids: [[]],
-            attachment_ids: [[]],
+            attachment_meeting_mediafile_ids: [[]],
             title: [``, Validators.required],
             description: [``],
             default_poll_description: [``],
