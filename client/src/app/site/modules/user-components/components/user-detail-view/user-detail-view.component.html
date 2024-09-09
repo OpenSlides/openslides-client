@@ -82,13 +82,13 @@
             <!-- Gender -->
             <mat-form-field class="form58 force-min-width">
                 <mat-label>{{ 'Gender' | translate }}</mat-label>
-                <mat-select formControlName="gender">
+                <mat-select formControlName="gender_id">
                     <mat-option [value]="null">-</mat-option>
-                    <!--   @for (gender of genders; track gender) {
-                        <mat-option [value]="gender">
-                            {{ gender | translate }}
+                    @for (gender of genders; track gender.name) {
+                        <mat-option [value]="gender.id">
+                            {{ gender.name | translate }}
                         </mat-option>
-                    }-->
+                    }
                 </mat-select>
             </mat-form-field>
             <!-- Pronoun -->
@@ -230,7 +230,7 @@
         @if (user.gender) {
             <div>
                 <h4>{{ 'Gender' | translate }}</h4>
-                <span>{{ user.gender | translate }}</span>
+                <span>{{ user.gender?.name | translate }}</span>
             </div>
         }
         <!-- Mail -->

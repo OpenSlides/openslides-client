@@ -2,6 +2,7 @@ import { User } from 'src/app/domain/models/users/user';
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { Id } from '../../../../domain/definitions/key-types';
+import { ViewGender } from '../../organization/pages/accounts/pages/gender/view-models/view-gender';
 import { ViewCommittee } from '../../organization/pages/committees';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
@@ -73,11 +74,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         } else {
             return ``;
         }
-    }
-
-    public get gender(): string {
-        // TODO-G
-        return `TEST`;
     }
 
     public get delegationType(): DelegationType {
@@ -343,6 +339,7 @@ interface IUserRelations {
     options: ViewOption[];
     votes: ViewVote[];
     poll_candidates: ViewPollCandidate[];
+    gender?: ViewGender;
 }
 
 export interface ViewUser extends User, ViewModelRelations<IUserRelations> {}
