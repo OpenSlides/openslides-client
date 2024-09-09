@@ -89,7 +89,13 @@ export const getParticipantMinimalSubscriptionConfig: SubscriptionConfigGenerato
                     {
                         idField: `user_id`,
                         fieldset: `participantListMinimal`,
-                        additionalFields: [`is_present_in_meeting_ids`]
+                        additionalFields: [`is_present_in_meeting_ids`],
+                        follow: [
+                            {
+                                idField: `gender_id`,
+                                fieldset: [`name`]
+                            }
+                        ]
                     },
                     { idField: `structure_level_ids`, fieldset: [`name`] }
                 ]
@@ -108,6 +114,10 @@ export const getParticipantDetailSubscription: SubscriptionConfigGenerator = (id
             {
                 idField: `meeting_user_ids`,
                 fieldset: DEFAULT_FIELDSET
+            },
+            {
+                idField: `gender_id`,
+                fieldset: [`name`]
             }
         ]
     },
