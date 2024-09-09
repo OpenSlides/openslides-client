@@ -45,7 +45,7 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
     public getProjectedContentObjects!: () => Fqid[];
 
     public override canAccess(): boolean {
-        return this.getEnsuredActiveMeetingId() === this.meeting_id;
+        return this.getEnsuredActiveMeetingId() === this.meeting_id || !this.getEnsuredActiveMeetingId();
     }
 
     public getProjectiondefault(): ProjectiondefaultValue {
