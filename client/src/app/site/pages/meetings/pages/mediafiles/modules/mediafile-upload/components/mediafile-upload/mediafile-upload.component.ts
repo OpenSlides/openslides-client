@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
@@ -30,5 +30,8 @@ export class MediafileUploadComponent extends OrganizationMediafileUploadCompone
     public override ngOnInit(): void {
         super.ngOnInit();
         this.availableGroups = this.groupsRepo.getViewModelListObservable();
+        this.directoriesObservable = this.directoriesObservable.pipe(
+            map(dirs => dirs.filter(dir => !dir.isPubishedOrganizationWide))
+        );
     }
 }

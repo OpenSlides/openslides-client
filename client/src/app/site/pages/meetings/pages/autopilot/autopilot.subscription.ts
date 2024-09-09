@@ -46,6 +46,10 @@ export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfi
                 fieldset: [`title`, `owner_id`, ...MEETING_ROUTING_FIELDS],
                 follow: [
                     {
+                        idField: `mediafile_id`,
+                        fieldset: [`title`, `mimetype`]
+                    },
+                    {
                         idField: `poll_ids`,
                         ...pollModelRequest
                     },
