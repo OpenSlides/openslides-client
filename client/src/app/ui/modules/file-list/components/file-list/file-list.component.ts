@@ -220,7 +220,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         this.moveForm = fb.group({ directory_id: [] });
         this.subscriptions.push(
             this.moveForm.get(`directory_id`).valueChanges.subscribe(id => {
-                this.movingToPublicFolder = (!id || this.repo.getViewModel(id).isPubishedOrganizationWide) && id !== 0;
+                this.movingToPublicFolder = id && this.repo.getViewModel(id).isPubishedOrganizationWide;
             })
         );
     }
