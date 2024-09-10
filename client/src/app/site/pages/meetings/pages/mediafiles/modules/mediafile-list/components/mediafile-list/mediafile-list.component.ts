@@ -11,6 +11,7 @@ import {
     LogoDisplayNames,
     LogoPlace
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
+import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
@@ -88,10 +89,20 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         return this.interactionService.isConfStateNone.pipe(map(isNone => !isNone));
     }
 
+    public hasPublicFilesSelected = false;
+
     private folderSubscription: Subscription | null = null;
     private directorySubscription: Subscription | null = null;
     public directory: ViewMediafile | null = null;
     public directoryChain: ViewMediafile[] = [];
+
+    public get isPublishedDirectory(): boolean {
+        if (!this.directory?.owner_id) {
+            return false;
+        }
+
+        return collectionFromFqid(this.directory.owner_id) === `organization`;
+    }
 
     public directoryObservable: Observable<ViewMediafile[]>;
     private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
@@ -151,6 +162,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
 
     public onSelect(files: ViewMediafile[]): void {
         this.selectedRows = files;
+        this.hasPublicFilesSelected = files.some(f => f.isPublishedOrganizationWide);
     }
 
     public onMove(files: ViewMediafile[]): void {
@@ -171,13 +183,13 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         );
     }
 
-    public isMediafileUsed(file: ViewMediafile, place: string): boolean {
-        const mediafile = this.repo.getViewModel(file.id)!;
-        if (mediafile.isFont()) {
-            return mediafile.used_as_font_in_meeting_id(place as FontPlace) === this.activeMeetingId;
+    public isMediafileUsed(file: ViewMediafile, place: FontPlace | LogoPlace): boolean {
+        const meetingFile = file.getMeetingMediafile();
+        if (file.isFont()) {
+            return meetingFile?.used_as_font_in_meeting_id(place as FontPlace) === this.activeMeetingId;
         }
-        if (mediafile.isImage()) {
-            return mediafile.used_as_logo_in_meeting_id(place as LogoPlace) === this.activeMeetingId;
+        if (file.isImage()) {
+            return meetingFile?.used_as_logo_in_meeting_id(place as LogoPlace) === this.activeMeetingId;
         }
         return false;
     }
@@ -230,12 +242,28 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     public onEditFile(file: ViewMediafile): void {
         if (!this.isMultiSelect) {
             this.fileToEdit = file;
+            const meetingFileToEdit = file.getMeetingMediafile();
+            let accessGroups = file.parent_id ? [] : [this.activeMeeting.admin_group_id];
+            if (meetingFileToEdit?.access_group_ids) {
+                accessGroups = [...meetingFileToEdit.access_group_ids];
+            }
 
             this.fileEditForm = this.formBuilder.group({
                 title: [file.title, Validators.required],
-                access_group_ids: [[...file.access_group_ids]]
+                access_group_ids: [meetingFileToEdit ? [...accessGroups] : this.getInheritedGroups(file)],
+                meeting_id: this.activeMeetingId
             });
         }
+    }
+
+    private getInheritedGroups(file: ViewMediafile): number[] {
+        if (file.inherited_access_group_ids) {
+            return file.inherited_access_group_ids;
+        } else if (file.parent) {
+            this.getInheritedGroups(file.parent);
+        }
+
+        return [this.activeMeeting.admin_group_id];
     }
 
     /**
@@ -267,7 +295,8 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      * @returns getNameOfAction with formated strings.
      */
     public formatIndicatorTooltip(file: ViewMediafile): string {
-        const settings = this.mediaManage.getPlacesDisplayNames(file);
+        const meetingFile = file.getMeetingMediafile();
+        const settings = this.mediaManage.getPlacesDisplayNames(meetingFile);
         const optionNames = settings.map(displayName => this.translate.instant(displayName));
         return optionNames.join(`\n`);
     }
