@@ -267,13 +267,13 @@
         </mat-form-field>
 
         @if (movingFromPublicFolder && !movingToPublicFolder) {
-            <p translate>
+            <p class="warn" translate>
                 You are moving a file from a public folder into an not published folder. The file will not be accessible
                 in meetings afterwards.
             </p>
         }
         @if (movingToPublicFolder && !movingFromPublicFolder) {
-            <p translate>
+            <p class="warn" translate>
                 You are moving an Unpublished file to a public folder. The file will not be accessible in all meetings
                 afterwards.
             </p>
