@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -24,6 +25,7 @@ import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/activ
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ListComponent } from 'src/app/ui/modules/list/components';
 
+import { PromptService } from '../../../prompt-dialog';
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
 
 interface MoveEvent {
@@ -211,13 +213,14 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         private fb: UntypedFormBuilder,
         private translate: TranslateService,
         private repo: MediafileControllerService,
-        private activeMeeting: ActiveMeetingService
+        private activeMeeting: ActiveMeetingService,
+        private promptService: PromptService
     ) {
         super();
         this.moveForm = fb.group({ directory_id: [] });
         this.subscriptions.push(
             this.moveForm.get(`directory_id`).valueChanges.subscribe(id => {
-                this.movingToPublicFolder = !id || this.repo.getViewModel(id).isPubishedOrganizationWide;
+                this.movingToPublicFolder = (!id || this.repo.getViewModel(id).isPubishedOrganizationWide) && id !== 0;
             })
         );
     }
@@ -269,15 +272,26 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         });
     }
 
-    public publish(templateRef: TemplateRef<any>, file: ViewMediafile): void {
-        const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.repo.publish(file, file.isPubishedOrganizationWide ? false : true);
-                this.cd.markForCheck();
+    public async togglePublish(file: ViewMediafile): Promise<void> {
+        const publishing = !file.isPubishedOrganizationWide;
+        let title: string = _(`Make file/directory public`);
+        let content = this.translate.instant(
+            `Do you want to publish this file/directory? Every admin in every meeting will be able to see this file/directory and all it's contents.`
+        );
+        let confirm: string = _(`Publish`);
+        if (!publishing) {
+            title = _(`Unpublish file/directory`);
+            content = ``;
+            if (file.meeting_mediafiles?.length) {
+                content = this.translate.instant(`File is used in:`);
+                content = content + `<br>` + file.meeting_mediafiles.map(mm => mm.meeting?.name).join(`, `);
             }
-        });
+            confirm = _(`Unpublish`);
+        }
+
+        if (await this.promptService.open(title, content, confirm)) {
+            this.repo.publish(file, publishing);
+        }
     }
 
     public onEditFile(file: ViewMediafile, template: TemplateRef<any>): void {

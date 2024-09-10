@@ -203,12 +203,7 @@
                     </button>
                 }
                 @if (isOrgaLevelAndRootLevel) {
-                    <button
-                        mat-menu-item
-                        (click)="
-                            publish(mediafile.isPubishedOrganizationWide ? unpublishDialog : publishDialog, mediafile)
-                        "
-                    >
+                    <button mat-menu-item (click)="togglePublish(mediafile)">
                         <mat-icon>public</mat-icon>
                         <span>
                             {{
@@ -273,13 +268,13 @@
 
         @if (movingFromPublicFolder && !movingToPublicFolder) {
             <p translate>
-                You are movin a file from a public folder into an not published folder. The file will not be accessible
+                You are moving a file from a public folder into an not published folder. The file will not be accessible
                 in meetings afterwards.
             </p>
         }
         @if (movingToPublicFolder && !movingFromPublicFolder) {
             <p translate>
-                You are movin an Unpublished file to a public folder. The file will not be accessible in all meetings
+                You are moving an Unpublished file to a public folder. The file will not be accessible in all meetings
                 afterwards.
             </p>
         }
@@ -287,44 +282,6 @@
     <mat-dialog-actions>
         <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
             <span>{{ 'Move' | translate }}</span>
-        </button>
-        <button mat-button type="button" [mat-dialog-close]="null">
-            <span>{{ 'Cancel' | translate }}</span>
-        </button>
-    </mat-dialog-actions>
-</ng-template>
-
-<!-- Public dialog -->
-<ng-template #publishDialog>
-    <h1 mat-dialog-title>
-        <span>{{ 'Make file/directory public' | translate }}</span>
-    </h1>
-    <mat-dialog-content class="os-form-card-mobile">
-        <p>
-            {{
-                "Do you want to publish this file/directory? Every admin in every meeting will be able to see this file/ directory and all it's contents."
-                    | translate
-            }}
-        </p>
-    </mat-dialog-content>
-    <mat-dialog-actions>
-        <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
-            <span>{{ 'Publish' | translate }}</span>
-        </button>
-        <button mat-button type="button" [mat-dialog-close]="null">
-            <span>{{ 'Cancel' | translate }}</span>
-        </button>
-    </mat-dialog-actions>
-</ng-template>
-
-<!-- Public dialog -->
-<ng-template #unpublishDialog>
-    <h1 mat-dialog-title>
-        <span>{{ 'Unpublish file/directory' | translate }}</span>
-    </h1>
-    <mat-dialog-actions>
-        <button color="accent" mat-button type="submit" [mat-dialog-close]="true">
-            <span>{{ 'Unpublish' | translate }}</span>
         </button>
         <button mat-button type="button" [mat-dialog-close]="null">
             <span>{{ 'Cancel' | translate }}</span>
