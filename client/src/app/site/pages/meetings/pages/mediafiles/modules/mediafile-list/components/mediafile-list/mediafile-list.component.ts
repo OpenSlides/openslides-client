@@ -243,7 +243,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         if (!this.isMultiSelect) {
             this.fileToEdit = file;
             const meetingFileToEdit = file.getMeetingMediafile();
-            let accessGroups = [this.activeMeeting.admin_group_id];
+            let accessGroups = file.parent_id ? [] : [this.activeMeeting.admin_group_id];
             if (meetingFileToEdit?.access_group_ids) {
                 accessGroups = [...meetingFileToEdit.access_group_ids];
             }
