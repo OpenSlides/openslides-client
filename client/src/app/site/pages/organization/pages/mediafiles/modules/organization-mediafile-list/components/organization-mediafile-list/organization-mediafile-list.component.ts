@@ -69,6 +69,10 @@ export class OrganizationMediafileListComponent
         return this.canEdit;
     }
 
+    public get isOrgaLevelAndRootLevel(): boolean {
+        return this.directoryChain.length == 0;
+    }
+
     /**
      * The form to edit Files
      */
