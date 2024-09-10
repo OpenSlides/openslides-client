@@ -6,7 +6,7 @@ import { HasAgendaItem, HasListOfSpeakers } from 'src/app/site/pages/meetings/pa
 import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models/base-projectable-model';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 
-import { HasAttachment } from '../../../../mediafiles/view-models/has-attachment';
+import { HasAttachmentMeetingMediafiles } from '../../../../mediafiles/view-models/has-attachment';
 import { HasPolls, VotingTextContext } from '../../../../polls';
 
 export class ViewTopic extends BaseProjectableViewModel<Topic> {
@@ -37,7 +37,7 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
     }
 
     public hasAttachments(): boolean {
-        return this.attachments && this.attachments.length > 0;
+        return this.attachment_meeting_mediafiles && this.attachment_meeting_mediafiles.length > 0;
     }
 
     public override getProjectorTitle(_projection: Projection): ProjectorTitle {
@@ -46,7 +46,7 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
 }
 export interface ViewTopic
     extends Topic,
-        HasAttachment,
+        HasAttachmentMeetingMediafiles,
         HasAgendaItem,
         HasListOfSpeakers,
         HasMeeting,
