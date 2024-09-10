@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import { OAuthService } from 'angular-oauth2-oidc';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 
 import { AuthToken } from '../../domain/interfaces/auth-token';
@@ -9,16 +10,11 @@ import { ProcessError } from '../../infrastructure/errors';
 import { AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
-import { OAuthService } from 'angular-oauth2-oidc';
 
 @Injectable({
     providedIn: `root`
 })
 export class AuthService {
-    public get authTokenObservable(): Observable<AuthToken | null> {
-        return this._authTokenSubject;
-    }
-
     public get authToken(): AuthToken | null {
         return this._authTokenSubject.getValue();
     }
@@ -44,16 +40,14 @@ export class AuthService {
     private readonly _logoutEvent = new EventEmitter<void>();
     private readonly _loginEvent = new EventEmitter<void>();
 
-    private _authTokenSubscription: Subscription | null = null;
-    private _authTokenRefreshTimeout: any | null = null;
-
     public constructor(
         private lifecycleService: LifecycleService,
         private router: Router,
         private authAdapter: AuthAdapterService,
         private authTokenService: AuthTokenService,
         private sharedWorker: SharedWorkerService,
-        private DS: DataStoreService
+        private DS: DataStoreService,
+        private oauthService: OAuthService
     ) {
         this.authTokenService.accessTokenObservable.subscribe(token => {
             this._authTokenSubject.next(token);
