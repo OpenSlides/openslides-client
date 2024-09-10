@@ -109,6 +109,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return !!this.member_number;
     }
 
+    public get gender_name(): string {
+        return this.gender?.name ?? ``;
+    }
+
     // Will be set by the repository
     public getName!: () => string;
     public getShortName!: () => string;
