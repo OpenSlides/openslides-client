@@ -19,7 +19,7 @@ import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
-import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
+import { HasAttachmentMeetingMediafiles } from '../../mediafiles/view-models/has-attachment';
 import { HasPolls, VotingTextContext } from '../../polls';
 import { DiffLinesInParagraph } from '../definitions';
 import { ViewMotionChangeRecommendation, ViewMotionWorkflow } from '../modules';
@@ -317,7 +317,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public hasAttachments(): boolean {
-        return this.attachment_ids?.length > 0;
+        return this.attachment_meeting_mediafile_ids?.length > 0;
     }
 
     public hasTags(): boolean {
@@ -406,7 +406,7 @@ export interface ViewMotion
     extends Motion,
         ViewModelRelations<IMotionRelations>,
         HasMeeting,
-        HasAttachment,
+        HasAttachmentMeetingMediafiles,
         HasPersonalNote,
         HasTags,
         HasAgendaItem,
