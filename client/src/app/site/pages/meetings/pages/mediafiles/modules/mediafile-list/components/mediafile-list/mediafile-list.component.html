@@ -1,5 +1,5 @@
 <os-head-bar
-    [hasMainButton]="canEdit"
+    [hasMainButton]="canEdit && !isPublishedDirectory"
     [mainActionTooltip]="'New file' | translate"
     [multiSelectMode]="isMultiSelect"
     (mainEvent)="onMainEvent()"
@@ -11,15 +11,17 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button
-            *osPerms="permission.mediafileCanManage; and: !isMultiSelect"
-            mat-icon-button
-            type="button"
-            [matTooltip]="'New folder' | translate"
-            (click)="createNewFolder(newFolderDialog)"
-        >
-            <mat-icon>create_new_folder</mat-icon>
-        </button>
+        @if (!isPublishedDirectory) {
+            <button
+                *osPerms="permission.mediafileCanManage; and: !isMultiSelect"
+                mat-icon-button
+                type="button"
+                [matTooltip]="'New folder' | translate"
+                (click)="createNewFolder(newFolderDialog)"
+            >
+                <mat-icon>create_new_folder</mat-icon>
+            </button>
+        }
         <button mat-icon-button type="button" [matMenuTriggerFor]="mediafilesMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -42,6 +44,7 @@
     [fileMenuTemplate]="fileMenuTemplate"
     [hiddenInMobile]="['edit']"
     [isMultiSelect]="isMultiSelect"
+    [isOrgaLevelAndRootLevel]="false"
     [shouldShowFileMenuFn]="shouldShowFileMenuFn"
     [sourceFiles]="directoryObservable"
     (beforeEditing)="onEditFile($event.file)"
@@ -129,8 +132,7 @@
                 <span>{{ 'Download folder' | translate }}</span>
             </button>
         </div>
-    }
-    @if (isMultiSelect) {
+    } @else {
         <div>
             <button mat-menu-item (click)="selectAll()">
                 <mat-icon>done_all</mat-icon>
@@ -148,7 +150,8 @@
             <button
                 *osPerms="permission.mediafileCanManage"
                 mat-menu-item
-                [disabled]="!selectedRows.length"
+                [disabled]="!selectedRows.length || hasPublicFilesSelected"
+                [matTooltip]="hasPublicFilesSelected ? ('Cannot move published files' | translate) : ''"
                 (click)="onMove(selectedRows)"
             >
                 <mat-icon>near_me</mat-icon>
@@ -158,7 +161,8 @@
             <button
                 *osPerms="permission.mediafileCanManage"
                 mat-menu-item
-                [disabled]="!selectedRows.length"
+                [disabled]="!selectedRows.length || hasPublicFilesSelected"
+                [matTooltip]="hasPublicFilesSelected ? ('Cannot delete published files' | translate) : ''"
                 (click)="deleteSelected()"
             >
                 <mat-icon color="warn">delete</mat-icon>
@@ -173,13 +177,15 @@
     <h1 mat-dialog-title>{{ 'Edit details for' | translate }}</h1>
     <mat-dialog-content class="os-form-card-mobile padding-top-bottom-0">
         <form class="edit-file-form" [formGroup]="fileEditForm!">
-            <mat-form-field>
-                <mat-label>{{ 'New file name' | translate }}</mat-label>
-                <input formControlName="title" matInput osAutofocus required type="text" />
-                @if (fileEditForm?.invalid) {
-                    <mat-error>{{ 'Required' | translate }}</mat-error>
-                }
-            </mat-form-field>
+            @if (!fileToEdit.isPublishedOrganizationWide) {
+                <mat-form-field>
+                    <mat-label>{{ 'New file name' | translate }}</mat-label>
+                    <input formControlName="title" matInput osAutofocus required type="text" />
+                    @if (fileEditForm?.invalid) {
+                        <mat-error>{{ 'Required' | translate }}</mat-error>
+                    }
+                </mat-form-field>
+            }
 
             <mat-form-field>
                 <mat-label>{{ 'Access groups' | translate }}</mat-label>

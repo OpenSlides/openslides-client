@@ -18,8 +18,8 @@ export class Group extends BaseModel<Group> {
     public meeting_user_ids!: Id[]; // (meeting_user/group_ids)[];
     public default_group_for_meeting_id!: Id; // meeting/default_group_id;
     public admin_group_for_meeting_id!: Id; // meeting/admin_group_id;
-    public mediafile_access_group_ids!: Id[]; // (mediafile/access_group_ids)[];
-    public mediafile_inherited_access_group_ids!: Id[]; // (mediafile/inherited_access_group_ids)[];
+    public meeting_mediafile_access_group_ids!: Id[]; // (mediafile/access_group_ids)[];
+    public meeting_mediafile_inherited_access_group_ids!: Id[]; // (mediafile/inherited_access_group_ids)[];
     public read_comment_section_ids!: Id[]; // (motion_comment_section/read_group_ids)[];
     public write_comment_section_ids!: Id[]; // (motion_comment_section/write_group_ids)[];
     public read_chat_group_ids!: Id[]; // (chat_group/read_group_ids)[];
@@ -51,8 +51,8 @@ export class Group extends BaseModel<Group> {
         `meeting_user_ids`,
         `default_group_for_meeting_id`,
         `admin_group_for_meeting_id`,
-        `mediafile_access_group_ids`,
-        `mediafile_inherited_access_group_ids`,
+        `meeting_mediafile_access_group_ids`,
+        `meeting_mediafile_inherited_access_group_ids`,
         `read_comment_section_ids`,
         `write_comment_section_ids`,
         `read_chat_group_ids`,

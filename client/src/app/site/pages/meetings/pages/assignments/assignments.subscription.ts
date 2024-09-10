@@ -1,4 +1,5 @@
 import { Id } from 'src/app/domain/definitions/key-types';
+import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { MeetingUserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -17,6 +18,11 @@ export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id:
             {
                 idField: `assignment_ids`,
                 follow: [
+                    {
+                        idField: `attachment_meeting_mediafile_ids`,
+                        fieldset: FULL_FIELDSET,
+                        follow: [{ idField: `mediafile_id`, fieldset: FULL_FIELDSET }]
+                    },
                     { idField: `poll_ids`, ...pollModelRequest },
                     { idField: `list_of_speakers_id`, ...listOfSpeakersSpeakerCountSubscription }
                 ]

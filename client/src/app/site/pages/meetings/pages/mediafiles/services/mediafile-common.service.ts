@@ -68,7 +68,16 @@ export class MediafileCommonService {
         changeDirectoryFn: (directoryId: number) => void
     ): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this file?`);
-        const content = file.getTitle();
+        let content = file.getTitle();
+        if (file.isPublishedOrganizationWide) {
+            content = content + `<br>` + this.translate.instant(`This file will also be deleted from all meetings.`);
+        }
+
+        if (file.meeting_mediafiles?.length) {
+            content = content + `<br>` + this.translate.instant(`File is used in:`);
+            content = content + `<br>` + file.meeting_mediafiles.map(mm => mm.meeting?.name).join(`, `);
+        }
+
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(file);
             if (file.is_directory) {
