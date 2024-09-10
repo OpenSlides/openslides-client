@@ -31,7 +31,7 @@ export class MediafileUploadComponent extends OrganizationMediafileUploadCompone
         super.ngOnInit();
         this.availableGroups = this.groupsRepo.getViewModelListObservable();
         this.directoriesObservable = this.directoriesObservable.pipe(
-            map(dirs => dirs.filter(dir => !dir.isPubishedOrganizationWide))
+            map(dirs => dirs.filter(dir => !dir.isPublishedOrganizationWide))
         );
     }
 }

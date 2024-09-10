@@ -35,7 +35,7 @@ export class Mediafile extends BaseModel<Mediafile> {
         super(Mediafile.COLLECTION, input);
     }
 
-    public get isPubishedOrganizationWide(): boolean {
+    public get isPublishedOrganizationWide(): boolean {
         return this.published_to_meetings_in_organization_id === ORGANIZATION_ID;
     }
 

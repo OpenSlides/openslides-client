@@ -162,7 +162,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
 
     public onSelect(files: ViewMediafile[]): void {
         this.selectedRows = files;
-        this.hasPublicFilesSelected = files.some(f => f.isPubishedOrganizationWide);
+        this.hasPublicFilesSelected = files.some(f => f.isPublishedOrganizationWide);
     }
 
     public onMove(files: ViewMediafile[]): void {

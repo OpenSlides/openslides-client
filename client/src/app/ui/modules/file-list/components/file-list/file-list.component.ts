@@ -220,7 +220,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         this.moveForm = fb.group({ directory_id: [] });
         this.subscriptions.push(
             this.moveForm.get(`directory_id`).valueChanges.subscribe(id => {
-                this.movingToPublicFolder = id && this.repo.getViewModel(id).isPubishedOrganizationWide;
+                this.movingToPublicFolder = id && this.repo.getViewModel(id).isPublishedOrganizationWide;
             })
         );
     }
@@ -259,7 +259,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         this.filteredDirectoryBehaviorSubject.next(
             this.repo.getViewModelList().filter(dir => dir.canMoveFilesTo(files))
         );
-        this.movingFromPublicFolder = files.some(f => f.parent?.isPubishedOrganizationWide);
+        this.movingFromPublicFolder = files.some(f => f.parent?.isPublishedOrganizationWide);
 
         const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
 
@@ -273,7 +273,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     }
 
     public async togglePublish(file: ViewMediafile): Promise<void> {
-        const publishing = !file.isPubishedOrganizationWide;
+        const publishing = !file.isPublishedOrganizationWide;
         let title: string = _(`Make file/directory public`);
         let content = this.translate.instant(
             `Do you want to publish this file/directory? Every admin in every meeting will be able to see this file/directory and all it's contents.`
@@ -356,7 +356,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
             return this.getGroups(mediafile.parent);
         } else if (mediafile.access_groups) {
             return mediafile.access_groups;
-        } else if (mediafile.isPubishedOrganizationWide) {
+        } else if (mediafile.isPublishedOrganizationWide) {
             return [this.activeMeeting.meeting.admin_group];
         }
 
@@ -364,10 +364,10 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     }
 
     protected fileCanBeModified(mediafile: ViewMediafile): boolean {
-        return !(this.isInMeeting && mediafile.isPubishedOrganizationWide);
+        return !(this.isInMeeting && mediafile.isPublishedOrganizationWide);
     }
 
     protected fileCanBeMoved(mediafile: ViewMediafile): boolean {
-        return !(this.isOrgaLevelAndRootLevel && mediafile.isPubishedOrganizationWide);
+        return !(this.isOrgaLevelAndRootLevel && mediafile.isPublishedOrganizationWide);
     }
 }

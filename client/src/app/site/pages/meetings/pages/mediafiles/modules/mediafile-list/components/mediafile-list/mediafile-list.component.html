@@ -177,7 +177,7 @@
     <h1 mat-dialog-title>{{ 'Edit details for' | translate }}</h1>
     <mat-dialog-content class="os-form-card-mobile padding-top-bottom-0">
         <form class="edit-file-form" [formGroup]="fileEditForm!">
-            @if (!fileToEdit.isPubishedOrganizationWide) {
+            @if (!fileToEdit.isPublishedOrganizationWide) {
                 <mat-form-field>
                     <mat-label>{{ 'New file name' | translate }}</mat-label>
                     <input formControlName="title" matInput osAutofocus required type="text" />

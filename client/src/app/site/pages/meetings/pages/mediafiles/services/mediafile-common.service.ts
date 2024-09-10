@@ -69,7 +69,7 @@ export class MediafileCommonService {
     ): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this file?`);
         let content = file.getTitle();
-        if (file.isPubishedOrganizationWide) {
+        if (file.isPublishedOrganizationWide) {
             content = content + `<br>` + this.translate.instant(`This file will also be deleted from all meetings.`);
         }
 

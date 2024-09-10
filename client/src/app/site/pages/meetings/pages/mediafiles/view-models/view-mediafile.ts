@@ -109,7 +109,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         }
 
         // Check if moving meeting mediafile into published folder
-        if (files.some(file => file.owner_id.startsWith(`meeting`)) && this.isPubishedOrganizationWide) {
+        if (files.some(file => file.owner_id.startsWith(`meeting`)) && this.isPublishedOrganizationWide) {
             return false;
         }
 
