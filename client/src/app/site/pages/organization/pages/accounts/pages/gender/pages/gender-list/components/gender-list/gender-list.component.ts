@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { GenderControllerService } from '../../../../services/gender-controller.service';
 import { ViewGender } from '../../../../view-models/view-gender';
@@ -31,7 +32,8 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
         public repo: GenderControllerService,
         private dialog: MatDialog,
         private formBuilder: UntypedFormBuilder,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private promptService: PromptService
     ) {
         super();
         this.setTitle(`Gender`);
@@ -62,7 +64,14 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
     }
 
     public async deleteGenders(...genders: ViewGender[]): Promise<void | void[]> {
-        return this.repo.delete(...genders.map(g => g.id)).then(() => this.cd.detectChanges());
+        const title =
+            genders.length === 1
+                ? this.translate.instant(`Are you sure you want to delete this gender?`)
+                : this.translate.instant(`Are you sure you want to delete all selected genders?`);
+        const content = genders.length === 1 ? genders[0].name : ``;
+        if (await this.promptService.open(title, content)) {
+            return this.repo.delete(...genders.map(g => g.id)).then(() => this.cd.detectChanges());
+        }
     }
 
     public deleteSelectedGenders(): void {
@@ -94,11 +103,6 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
 
     private createGenderHelper(): void {
         this.repo.create(this.genderForm.value);
-    }
-
-    private deleteGender(gender: ViewGender): void {
-        this.repo.delete(gender.id);
-        //.then(() => this.cd.detectChanges())
     }
 
     private save(): void {
