@@ -25,7 +25,7 @@ export const getAutopilotSubscriptionConfig: SubscriptionConfigGenerator = (id: 
                         follow: [
                             {
                                 idField: `content_object_id`,
-                                fieldset: [`number`, `title`, `owner_id`, ...MEETING_ROUTING_FIELDS]
+                                fieldset: [`number`, `title`, `mediafile_id`, ...MEETING_ROUTING_FIELDS]
                             }
                         ]
                     }
@@ -47,7 +47,7 @@ export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfi
                 follow: [
                     {
                         idField: `mediafile_id`,
-                        fieldset: [`title`, `mimetype`]
+                        fieldset: [`title`, `mimetype`, `owner_id`]
                     },
                     {
                         idField: `poll_ids`,
