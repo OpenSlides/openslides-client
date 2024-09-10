@@ -87,15 +87,9 @@ export class UserPasswordFormComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * clicking Shift and Enter will save automatically
-     *
      * @param event has the code
      */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.save.emit();
-        }
-    }
+    public onKeyDown(_event: KeyboardEvent): void {}
 
     /**
      * Takes generated password and puts it into admin PW field

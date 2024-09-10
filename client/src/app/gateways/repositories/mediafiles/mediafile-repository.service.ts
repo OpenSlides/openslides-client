@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
-import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
 import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from '../base-repository';
+import { MeetingMediafileRepositoryService } from '../meeting-mediafile/meeting-mediafile-repository.service';
 import { ProjectionRepositoryService } from '../projections/projection-repository.service';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { MediafileAction } from './mediafile.action';
@@ -17,13 +20,14 @@ import { MediafileAction } from './mediafile.action';
 })
 export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Mediafile> {
     private get activeMeetingId(): number {
-        return this.activeMeetingIdService.meetingId!;
+        return this.activeMeetingService.meetingId!;
     }
 
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollectorService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private projectionRepo: ProjectionRepositoryService
+        private activeMeetingService: ActiveMeetingService,
+        private projectionRepo: ProjectionRepositoryService,
+        private meetingMediaRepo: MeetingMediafileRepositoryService
     ) {
         super(repositoryServiceCollector, Mediafile);
 
@@ -43,7 +47,9 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
             `mimetype`,
             `filesize`,
             `create_timestamp`,
-            `pdf_information`
+            `pdf_information`,
+            `published_to_meetings_in_organization_id`,
+            `filename`
         ]);
         const organizationListFields: TypedFieldset<Mediafile> = baseListFields.concat([`token`]);
         return {
@@ -63,6 +69,14 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         return this.sendActionToBackend(MediafileAction.MOVE, payload);
     }
 
+    public async publish(mediafile: Identifiable, publish: boolean): Promise<void> {
+        const payload = {
+            id: mediafile.id,
+            publish: publish
+        };
+        return this.sendActionToBackend(MediafileAction.PUBLISH, payload);
+    }
+
     public async uploadFile(partialMediafile: any): Promise<Identifiable> {
         const variables: { [key: string]: any } = this.activeMeetingId
             ? { access_group_ids: partialMediafile.access_group_ids }
@@ -78,9 +92,11 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         return this.sendActionToBackend(MediafileAction.CREATE_FILE, payload);
     }
 
-    public async createDirectory(partialMediafile: Partial<Mediafile>): Promise<Identifiable> {
+    public async createDirectory(
+        partialMediafile: Partial<Mediafile> & { access_group_ids: Id[] }
+    ): Promise<Identifiable> {
         const variables: { [key: string]: any } = this.activeMeetingId
-            ? { access_group_ids: partialMediafile.access_group_ids || [] }
+            ? { access_group_ids: partialMediafile.access_group_ids }
             : {};
         const payload = {
             owner_id: this.getOwnerId(),
@@ -99,6 +115,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
             id: viewMediafile.id,
             title: update.title,
             parent_id: update.parent_id,
+            meeting_id: this.activeMeetingId,
             ...variables
         };
         return this.sendActionToBackend(MediafileAction.UPDATE, payload);
@@ -107,6 +124,15 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     public async delete(...viewMediafiles: Identifiable[]): Promise<void> {
         const payload: Identifiable[] = viewMediafiles.map(file => ({ id: file.id }));
         return this.sendBulkActionToBackend(MediafileAction.DELETE, payload);
+    }
+
+    public getMeetingMediafile(model: Mediafile, meetingId: Id = this.activeMeetingId): ViewMeetingMediafile {
+        const meetingMediafileId = this.meetingMediaRepo.getIdByMediafile(meetingId, model.id);
+        if (meetingMediafileId) {
+            return this.meetingMediaRepo.getViewModel(meetingMediafileId);
+        }
+
+        return null;
     }
 
     private getOwnerId(): string {
@@ -118,9 +144,11 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
      */
     protected override createViewModel(model: Mediafile): ViewMediafile {
         const viewModel = super.createViewModel(model);
-        viewModel.getEnsuredActiveMeetingId = (): number => this.activeMeetingIdService.meetingId;
+        viewModel.getEnsuredActiveMeetingId = (): number => this.activeMeetingId;
+        viewModel.getEnsuredActiveMeeting = (): ViewMeeting => this.activeMeetingService.meeting;
         viewModel.getProjectedContentObjects = (): string[] =>
             this.projectionRepo.getViewModelList().map(p => p.content_object_id);
+        viewModel.getMeetingMediafile = (): ViewMeetingMediafile => this.getMeetingMediafile(model);
         return viewModel;
     }
 }

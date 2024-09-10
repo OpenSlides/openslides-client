@@ -1,29 +1,27 @@
 @if (poll) {
     <div class="result-wrapper">
-        @if (hasResults && canSeeResults) {
-            <os-single-option-chart-table
-                [iconSize]="iconSize"
-                [poll]="poll"
-                [pollService]="motionPollService"
-                [shouldShowEntitled]="isPercentBaseEntitled"
-                [shouldShowEntitledPresent]="isPercentBaseEntitledPresent"
-                [shouldShowHead]="true"
-                [tableData]="tableData"
-            ></os-single-option-chart-table>
-        }
-        <!-- No results yet -->
-        @if (!hasResults) {
+        @if (hasResults) {
+            @if (canSeeResults) {
+                <os-single-option-chart-table
+                    [iconSize]="iconSize"
+                    [poll]="poll"
+                    [pollService]="motionPollService"
+                    [shouldShowEntitled]="isPercentBaseEntitled"
+                    [shouldShowEntitledPresent]="isPercentBaseEntitledPresent"
+                    [shouldShowHead]="true"
+                    [tableData]="tableData"
+                ></os-single-option-chart-table>
+            } @else {
+                <div>
+                    <i>
+                        {{ 'Counting of votes is in progress ...' | translate }}
+                    </i>
+                </div>
+            }
+        } @else {
             <div>
                 <i>
                     {{ 'No results yet.' | translate }}
-                </i>
-            </div>
-        }
-        <!-- Has results, but user cannot see -->
-        @if (hasResults && !canSeeResults) {
-            <div>
-                <i>
-                    {{ 'Counting of votes is in progress ...' | translate }}
                 </i>
             </div>
         }

@@ -28,10 +28,13 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 `welcome_title`,
                 `welcome_text`,
                 `enable_anonymous`,
-                ...MEETING_MEDIAFILE_USAGE_ID_KEYS,
                 ...settingsKeys
             ],
             follow: [
+                ...MEETING_MEDIAFILE_USAGE_ID_KEYS.map(idField => ({
+                    idField,
+                    fieldset: [`mediafile_id`]
+                })),
                 { idField: `chat_group_ids` /*, fieldset: [`chat_message_ids`]*/ },
                 {
                     idField: `chat_message_ids`,
