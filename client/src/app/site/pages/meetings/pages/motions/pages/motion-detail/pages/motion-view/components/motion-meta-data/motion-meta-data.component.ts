@@ -157,6 +157,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         if (operator.hasPerms(Permission.motionCanManageMetadata)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
                 this._forwardingAvailable = forwardingAvailable;
+                this.cd.markForCheck();
                 this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
                     return (await this.checkPresenter()) as Selectable[];
                 };
