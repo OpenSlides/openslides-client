@@ -171,7 +171,7 @@ export class MotionPdfService {
             exportInfo &&
             exportInfo.pdfOptions &&
             exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Attachments) &&
-            motion.attachments.length > 0
+            motion.attachment_meeting_mediafiles.length > 0
         ) {
             motionPdfContent.push(this.createAttachments(motion));
         }
@@ -735,8 +735,8 @@ export class MotionPdfService {
             margin: [0, 10, 0, 10]
         });
 
-        for (const key of Object.keys(motion.attachments)) {
-            const attachment = motion.attachments[key];
+        for (const key of Object.keys(motion.attachment_meeting_mediafiles)) {
+            const attachment = motion.attachment_meeting_mediafiles[key];
             const fileUrl = attachment.getDetailStateUrl();
             if (this.pdfImagesService.isImageUsableForPdf(attachment.mimetype)) {
                 this.pdfImagesService.addImageUrl(fileUrl);
