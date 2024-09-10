@@ -36,6 +36,8 @@ export const FontDefaults: { [place in FontPlace]: string } = {
 };
 export const FONT_PLACES = Object.keys(FontDisplayNames) as FontPlace[];
 
+export type MediafileUsageType = `logo` | `font`;
+
 export type ViewMediafileMeetingUsageKey =
     | `used_as_logo_${LogoPlace}_in_meeting`
     | `used_as_font_${FontPlace}_in_meeting`;
