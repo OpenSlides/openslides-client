@@ -12,7 +12,7 @@ import {
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { MeetingMediaAdapterService } from 'src/app/gateways/meeting-media-adapter.service';
 import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
-import { MeetingMediafileRepositoryService } from 'src/app/gateways/repositories/meeting-mediafile_repository.service.ts/meeting-mediafile-repository.service';
+import { MeetingMediafileRepositoryService } from 'src/app/gateways/repositories/meeting-mediafile/meeting-mediafile-repository.service';
 
 import { ViewMediafile, ViewMeetingMediafile } from '../pages/mediafiles';
 import { ActiveMeetingService } from './active-meeting.service';

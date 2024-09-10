@@ -9,7 +9,7 @@ import { Fieldsets } from 'src/app/site/services/model-request-builder';
 import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
 import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from '../base-repository';
-import { MeetingMediafileRepositoryService } from '../meeting-mediafile_repository.service.ts/meeting-mediafile-repository.service';
+import { MeetingMediafileRepositoryService } from '../meeting-mediafile/meeting-mediafile-repository.service';
 import { ProjectionRepositoryService } from '../projections/projection-repository.service';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { MediafileAction } from './mediafile.action';
