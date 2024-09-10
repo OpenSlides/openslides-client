@@ -27,15 +27,25 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     }
 
     public get inherited_access_group_ids(): Id[] {
-        return this.getMeetingMediafile()?.inherited_access_group_ids;
+        const meetingMediafile = this.getMeetingMediafile();
+        if (!meetingMediafile && this.getEnsuredActiveMeeting()?.admin_group_id) {
+            return [this.getEnsuredActiveMeeting().admin_group_id];
+        }
+
+        return meetingMediafile?.inherited_access_group_ids;
     }
 
     public get inherited_access_groups(): ViewGroup[] {
-        return this.getMeetingMediafile()?.inherited_access_groups;
+        const meetingMediafile = this.getMeetingMediafile();
+        if (!meetingMediafile && this.getEnsuredActiveMeeting()?.admin_group) {
+            return [this.getEnsuredActiveMeeting().admin_group];
+        }
+
+        return meetingMediafile?.inherited_access_groups;
     }
 
     public get has_inherited_access_groups(): boolean {
-        return !!this.getMeetingMediafile()?.inherited_access_group_ids.length;
+        return !!this.inherited_access_group_ids?.length;
     }
 
     public get pages(): number | null {
@@ -63,6 +73,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
      * @returns The id of the currently active meeting
      */
     public getEnsuredActiveMeetingId!: () => Id;
+    public getEnsuredActiveMeeting!: () => ViewMeeting;
     public getProjectedContentObjects!: () => Fqid[];
     public getMeetingMediafile!: (meetingId?: Id) => ViewMeetingMediafile;
 
