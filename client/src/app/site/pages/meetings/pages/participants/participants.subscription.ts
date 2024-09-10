@@ -62,20 +62,28 @@ export const getParticipantIsPresentSubscriptionConfig: SubscriptionConfigGenera
     subscriptionName: PARTICIPANT_IS_PRESENT_LIST_SUBSCRIPTION
 });
 
-export const getParticipantListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
-    modelRequest: {
-        viewModelCtor: ViewMeeting,
-        ids: [id],
-        follow: [
-            {
-                idField: `meeting_user_ids`,
-                fieldset: `participantListMinimal`,
-                follow: [{ idField: `user_id`, fieldset: `participantList` }]
-            }
-        ]
-    },
-    subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION
-});
+export const getParticipantListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => {
+    return {
+        modelRequest: {
+            viewModelCtor: ViewMeeting,
+            ids: [id],
+            follow: [
+                {
+                    idField: `meeting_user_ids`,
+                    fieldset: `participantListMinimal`,
+                    follow: [
+                        {
+                            idField: `user_id`,
+                            fieldset: `participantList`,
+                            follow: [{ idField: `gender_id`, fieldset: [`name`] }]
+                        }
+                    ]
+                }
+            ]
+        },
+        subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION
+    };
+};
 
 export const getParticipantMinimalSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {

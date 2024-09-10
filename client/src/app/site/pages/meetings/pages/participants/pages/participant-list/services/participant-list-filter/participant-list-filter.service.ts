@@ -7,6 +7,7 @@ import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/service
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
@@ -34,6 +35,12 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         options: []
     };
 
+    private genderFilterOption: OsFilter<ViewUser> = {
+        property: `gender_id`,
+        label: _(`Gender`),
+        options: []
+    };
+
     private _voteWeightEnabled: boolean;
     private _voteDelegationEnabled: boolean;
 
@@ -41,6 +48,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         store: MeetingActiveFiltersService,
         groupRepo: GroupControllerService,
         structureRepo: StructureLevelControllerService,
+        genderRepo: GenderControllerService,
         private meetingSettings: MeetingSettingsService,
         private operator: OperatorService
     ) {
@@ -52,6 +60,11 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         this.updateFilterForRepo({
             repo: structureRepo,
             filter: this.userStructureLevelFilterOptions
+        });
+        this.updateFilterForRepo({
+            repo: genderRepo,
+            filter: this.genderFilterOption,
+            noneOptionLabel: _(`not specified`)
         });
         this.meetingSettings.get(`users_enable_vote_weight`).subscribe(value => (this._voteWeightEnabled = value));
         this.meetingSettings
@@ -128,17 +141,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                     { condition: true, label: _(`Has unchanged vote weight`) }
                 ]
             },
-            /* TODO-G {
-                property: `gender`,
-                label: _(`Gender`),
-                options: [
-                    { condition: GENDER_FITLERABLE[0], label: GENDERS[0] },
-                    { condition: GENDER_FITLERABLE[1], label: GENDERS[1] },
-                    { condition: GENDER_FITLERABLE[2], label: GENDERS[2] },
-                    { condition: GENDER_FITLERABLE[3], label: GENDERS[3] },
-                    { condition: null, label: _(`not specified`) }
-                ]
-            }, */
+            this.genderFilterOption,
             {
                 property: `hasSamlId`,
                 label: _(`SSO`),
