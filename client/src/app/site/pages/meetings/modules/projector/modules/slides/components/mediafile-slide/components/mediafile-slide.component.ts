@@ -47,6 +47,6 @@ export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideDa
 
     public constructor(private slideMediafileService: SlideMediafileService) {
         super();
-        (window as any).pdfWorkerSrc = `/assets/pdfworker/pdf.worker.min.mjs`;
+        (window as any).pdfWorkerSrc = `/assets/pdfworker/pdf.worker.min.js`;
     }
 }
