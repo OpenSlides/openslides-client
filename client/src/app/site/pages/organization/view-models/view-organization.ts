@@ -29,5 +29,6 @@ interface IOrganizationRelations {
     themes: ViewTheme[];
     users: ViewUser[];
     genders: ViewGender[];
+    published_mediafiles: ViewMediafile[];
 }
 export interface ViewOrganization extends Organization, ViewModelRelations<IOrganizationRelations> {}

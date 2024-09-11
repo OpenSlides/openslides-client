@@ -11,6 +11,7 @@ import { ChatAppConfig } from 'src/app/site/pages/meetings/pages/chat/chat.confi
 import { HistoryAppConfig } from 'src/app/site/pages/meetings/pages/history/history.config';
 import { HomeAppConfig } from 'src/app/site/pages/meetings/pages/home/home.config';
 import { MediafileAppConfig } from 'src/app/site/pages/meetings/pages/mediafiles/mediafiles.config';
+import { MeetingMediafileAppConfig } from 'src/app/site/pages/meetings/pages/mediafiles/meeting-mediafiles.config';
 import { MeetingSettingsAppConfig } from 'src/app/site/pages/meetings/pages/meeting-settings/meeting-settings.config';
 import { MotionsAppConfig } from 'src/app/site/pages/meetings/pages/motions';
 import { PollsAppConfig } from 'src/app/site/pages/meetings/pages/polls/polls.config';
@@ -49,6 +50,7 @@ const appConfigs: AppConfig[] = [
     ParticipantsAppConfig,
     PollsAppConfig,
     MediafileAppConfig,
+    MeetingMediafileAppConfig,
     ProjectorAppConfig,
     AutopilotAppConfig,
     MeetingSettingsAppConfig,

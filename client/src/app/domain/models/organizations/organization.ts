@@ -52,6 +52,7 @@ export class Organization extends BaseModel<Organization> {
     public template_meeting_ids!: Id[]; // (meeting/template_for_organization_id)[];
     public mediafile_ids!: Id[];
     public gender_ids!: Id[]; // (gender/organization_id);
+    public published_mediafile_ids!: Id[];
 
     public constructor(input?: any) {
         super(Organization.COLLECTION, input);
@@ -86,6 +87,7 @@ export class Organization extends BaseModel<Organization> {
         `theme_id`,
         `theme_ids`,
         `mediafile_ids`,
+        `published_mediafile_ids`,
         `user_ids`,
         `users_email_sender`,
         `users_email_replyto`,

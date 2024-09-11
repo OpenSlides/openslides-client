@@ -12,8 +12,9 @@ import {
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { MeetingMediaAdapterService } from 'src/app/gateways/meeting-media-adapter.service';
 import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
+import { MeetingMediafileRepositoryService } from 'src/app/gateways/repositories/meeting-mediafile/meeting-mediafile-repository.service';
 
-import { ViewMediafile } from '../pages/mediafiles';
+import { ViewMediafile, ViewMeetingMediafile } from '../pages/mediafiles';
 import { ActiveMeetingService } from './active-meeting.service';
 
 @Injectable({
@@ -30,7 +31,8 @@ export class MediaManageService {
     public constructor(
         private activeMeetingService: ActiveMeetingService,
         private mediaAdapter: MeetingMediaAdapterService,
-        private mediaRepo: MediafileRepositoryService
+        private mediaRepo: MediafileRepositoryService,
+        private meetingMediaRepo: MeetingMediafileRepositoryService
     ) {
         merge(this.activeMeetingService.meetingObservable, this.mediaRepo.getViewModelListUnsafeObservable()).subscribe(
             _ => {
@@ -52,8 +54,9 @@ export class MediaManageService {
     }
 
     public getLogoUrl(place: LogoPlace): string | null {
+        const meetingMediafileId = this.activeMeetingService.meeting?.logo_id(place);
         // Note: we are not fetching the mediafile view model at any place except when filtering for the defaults.
-        const mediafileId = this.activeMeetingService.meeting?.logo_id(place);
+        const mediafileId = this.meetingMediaRepo.getViewModelUnsafe(meetingMediafileId)?.mediafile_id;
         if (mediafileId && this.activeMeetingService.meeting?.getSpecifiedLogoPlaces().indexOf(place) !== -1) {
             return this.getUrlForId(mediafileId);
         }
@@ -73,8 +76,9 @@ export class MediaManageService {
     }
 
     public getFontUrl(place: FontPlace): string {
+        const meetingMediafileId = this.activeMeetingService.meeting?.font_id(place);
         // Note: we are not fetching the mediafile view model at any place.
-        const mediafileId = this.activeMeetingService.meeting?.font_id(place);
+        const mediafileId = this.meetingMediaRepo.getViewModelUnsafe(meetingMediafileId)?.mediafile_id;
         if (mediafileId && this.activeMeetingService.meeting?.getSpecifiedFontPlaces().indexOf(place) !== -1) {
             return this.getUrlForId(mediafileId);
         } else {
@@ -82,7 +86,7 @@ export class MediaManageService {
         }
     }
 
-    public getPlacesDisplayNames(mediafile: ViewMediafile): string[] {
+    public getPlacesDisplayNames(mediafile: ViewMeetingMediafile): string[] {
         let uses: string[] = [];
         uses = uses.concat(mediafile.getLogoPlaces().map(place => (<any>LogoDisplayNames)[place]));
         uses = uses.concat(mediafile.getFontPlaces().map(place => (<any>FontDisplayNames)[place]));
@@ -90,7 +94,7 @@ export class MediaManageService {
     }
 
     public async setLogo(place: LogoPlace, mediafile: ViewMediafile): Promise<void> {
-        await this.mediaAdapter.setLogo(place, mediafile);
+        await this.mediaAdapter.setLogo(place, this.activeMeetingService.meetingId, mediafile);
     }
 
     public async unsetLogo(place: LogoPlace): Promise<void> {
@@ -98,7 +102,7 @@ export class MediaManageService {
     }
 
     public async setFont(place: FontPlace, mediafile: ViewMediafile): Promise<void> {
-        await this.mediaAdapter.setFont(place, mediafile);
+        await this.mediaAdapter.setFont(place, this.activeMeetingService.meetingId, mediafile);
     }
 
     public async unsetFont(place: FontPlace): Promise<void> {
