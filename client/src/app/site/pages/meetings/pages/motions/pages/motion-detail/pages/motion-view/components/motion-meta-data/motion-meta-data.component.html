@@ -237,79 +237,84 @@
 }
 
 <!-- Category -->
-<!-- Disabled during "new motion" since changing has no effect -->
-@if (perms.isAllowed('change_metadata', motion) || motion.category) {
-    <div>
-        <h4>{{ 'Category' | translate }}</h4>
-        <os-chip-select chipClass="grey multi-line-chip" [canOpen]="perms.isAllowed('change_metadata', motion)">
-            @for (category of categories$ | async; track category.id) {
-                <button mat-menu-item menu (click)="setCategory(category.id)">
-                    @if (motion.category_id === category.id) {
-                        <mat-icon>check</mat-icon>
-                    }
-                    <span [ngStyle]="{ 'padding-left': getCategorySelectionMarginLeft(category) }">
-                        {{ category.prefixedNameWithParents }}
-                    </span>
-                </button>
-            }
-            @if (motion.category) {
-                <div>
-                    @if (motion.category.parent) {
-                        <div>
-                            {{ motion.category.parent }}
-                        </div>
-                        <span>{{ 'Subcategory' | translate }}:</span>
-                    }
-                    {{ motion.category }}
-                </div>
-            } @else {
-                <span>-</span>
-            }
-        </os-chip-select>
-    </div>
+@if (categories$ | async; as categories) {
+    @if (categories.length && (perms.isAllowed('change_metadata', motion) || motion.category)) {
+        <div>
+            <h4>{{ 'Category' | translate }}</h4>
+            <os-chip-select chipClass="grey multi-line-chip" [canOpen]="perms.isAllowed('change_metadata', motion)">
+                @for (category of categories; track category.id) {
+                    <button mat-menu-item menu (click)="setCategory(category.id)">
+                        @if (motion.category_id === category.id) {
+                            <mat-icon>check</mat-icon>
+                        }
+                        <span [ngStyle]="{ 'padding-left': getCategorySelectionMarginLeft(category) }">
+                            {{ category.prefixedNameWithParents }}
+                        </span>
+                    </button>
+                }
+                @if (motion.category) {
+                    <div>
+                        @if (motion.category.parent) {
+                            <div>
+                                {{ motion.category.parent }}
+                            </div>
+                            <span>{{ 'Subcategory' | translate }}:</span>
+                        }
+                        {{ motion.category }}
+                    </div>
+                } @else {
+                    <span>-</span>
+                }
+            </os-chip-select>
+        </div>
+    }
 }
 
 <!-- Tags -->
-@if (perms.isAllowed('change_metadata', motion) || motion.hasTags()) {
-    <div>
-        <h4>{{ 'Tags' | translate }}</h4>
-        <os-chip-select [canOpen]="perms.isAllowed('change_metadata', motion)">
-            @for (tag of tags$ | async; track tag.id) {
-                <button mat-menu-item menu (click)="setTag($event, tag.id)">
-                    @if (motion.tags.includes(tag)) {
-                        <mat-icon>check</mat-icon>
-                    }
-                    {{ tag }}
-                </button>
-            }
-            @for (tag of motion.tags$ | async; track tag.id) {
-                <os-chip-select-chip disableRipple disabled>
-                    {{ tag }}
-                </os-chip-select-chip>
-            }
-            {{ '–' }}
-        </os-chip-select>
-    </div>
+@if (tags$ | async; as tags) {
+    @if (tags.length && (perms.isAllowed('change_metadata', motion) || motion.hasTags())) {
+        <div>
+            <h4>{{ 'Tags' | translate }}</h4>
+            <os-chip-select [canOpen]="perms.isAllowed('change_metadata', motion)">
+                @for (tag of tags; track tag.id) {
+                    <button mat-menu-item menu (click)="setTag($event, tag.id)">
+                        @if (motion.tags.includes(tag)) {
+                            <mat-icon>check</mat-icon>
+                        }
+                        {{ tag }}
+                    </button>
+                }
+                @for (tag of motion.tags$ | async; track tag.id) {
+                    <os-chip-select-chip disableRipple disabled>
+                        {{ tag }}
+                    </os-chip-select-chip>
+                }
+                {{ '–' }}
+            </os-chip-select>
+        </div>
+    }
 }
 
 <!-- Block -->
-@if (perms.isAllowed('change_metadata', motion) || motion.block) {
-    <div>
-        <h4>
-            {{ 'Motion block' | translate }}
-        </h4>
-        <os-chip-select [canOpen]="perms.isAllowed('change_metadata', motion)">
-            @for (block of motionBlocks$ | async; track block.id) {
-                <button mat-menu-item menu (click)="setBlock(block.id)">
-                    @if (motion.block_id === block.id) {
-                        <mat-icon>check</mat-icon>
-                    }
-                    {{ block }}
-                </button>
-            }
-            {{ motion.block || '–' }}
-        </os-chip-select>
-    </div>
+@if (motionBlocks$ | async; as motionBlocks) {
+    @if (motionBlocks.length && (perms.isAllowed('change_metadata', motion) || motion.block)) {
+        <div>
+            <h4>
+                {{ 'Motion block' | translate }}
+            </h4>
+            <os-chip-select [canOpen]="perms.isAllowed('change_metadata', motion)">
+                @for (block of motionBlocks; track block.id) {
+                    <button mat-menu-item menu (click)="setBlock(block.id)">
+                        @if (motion.block_id === block.id) {
+                            <mat-icon>check</mat-icon>
+                        }
+                        {{ block }}
+                    </button>
+                }
+                {{ motion.block || '–' }}
+            </os-chip-select>
+        </div>
+    }
 }
 
 <!-- Workflow timestamp -->
