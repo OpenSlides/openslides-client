@@ -450,7 +450,6 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                         )
                     )
             );
-            console.log(`wait for`, parentId, motion.numberOrTitle);
         }
 
         return motion;
