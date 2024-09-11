@@ -1,7 +1,8 @@
 import { FieldDescriptor, Fields, HasFields, ModelRequest } from 'src/app/domain/interfaces/model-request';
 
+import { OsMessagePort as MessagePort } from '../interfaces';
+import { AutoupdateReceiveData, AutoupdateReceiveError, AutoupdateSetStreamId } from '../sw-autoupdate.interfaces';
 import { AutoupdateStream } from './autoupdate-stream';
-import { AutoupdateReceiveData, AutoupdateReceiveError, AutoupdateSetStreamId } from './interfaces-autoupdate';
 
 export class AutoupdateSubscription {
     /**

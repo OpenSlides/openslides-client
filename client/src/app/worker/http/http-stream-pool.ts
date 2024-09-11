@@ -1,4 +1,4 @@
-import { AutoupdateSetEndpointParams, AutoupdateStatusContent } from '../autoupdate/interfaces-autoupdate';
+import { AutoupdateSetEndpointParams, AutoupdateStatusContent } from '../sw-autoupdate.interfaces';
 import { HttpStream } from './http-stream';
 
 export const HTTP_POOL_CONFIG = {

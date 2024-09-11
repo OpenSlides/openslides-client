@@ -2,6 +2,7 @@ import * as fzstd from 'fzstd';
 
 import { HttpStream } from '../http/http-stream';
 import { ErrorDescription, ErrorType } from '../http/stream-utils';
+import { AutoupdateSetEndpointParams } from '../sw-autoupdate.interfaces';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 import { AutoupdateReceiveData, AutoupdateSetEndpointParams } from './interfaces-autoupdate';
 

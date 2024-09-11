@@ -4,9 +4,8 @@ import { filter, Observable } from 'rxjs';
 import { SharedWorkerService } from '../openslides-main-module/services/shared-worker.service';
 import { ActiveMeetingIdService } from '../site/pages/meetings/services/active-meeting-id.service';
 import { WorkerResponse } from '../worker/interfaces';
+import { ICC_ENDPOINT, ICCConnectMessage, ICCDisconnectMessage } from '../worker/sw-icc.interfaces';
 import { HttpService } from './http.service';
-
-const ICC_ENDPOINT = `icc`;
 
 export const ICC_PATH = `/system/icc`;
 
@@ -76,13 +75,16 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
             onReastartSub.unsubscribe();
             msgSub.unsubscribe();
             onClosedSub.unsubscribe();
-            this.sharedWorker.sendMessage(`icc`, {
-                action: `disconnect`,
-                params: {
-                    type: this.receivePath,
-                    meetingId
+            this.sharedWorker.sendMessage({
+                receiver: `icc`,
+                msg: {
+                    action: `disconnect`,
+                    params: {
+                        type: this.receivePath,
+                        meetingId
+                    }
                 }
-            } as any);
+            } as ICCDisconnectMessage);
         };
     }
 
@@ -116,13 +118,16 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
     }
 
     private sendConnectToWorker(meetingId: number): void {
-        this.sharedWorker.sendMessage(ICC_ENDPOINT, {
-            action: `connect`,
-            params: {
-                type: this.receivePath,
-                meetingId
+        this.sharedWorker.sendMessage({
+            receiver: ICC_ENDPOINT,
+            msg: {
+                action: `connect`,
+                params: {
+                    type: this.receivePath,
+                    meetingId
+                }
             }
-        } as any);
+        } as ICCConnectMessage);
     }
 
     private messageObservable(meetingId: number): Observable<WorkerResponse> {

@@ -9,20 +9,20 @@ import { formatQueryParams } from 'src/app/infrastructure/definitions/http';
 import { djb2hash } from 'src/app/infrastructure/utils';
 import { fqidFromCollectionAndId } from 'src/app/infrastructure/utils/transform-functions';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
+
 import {
-    AutoupdateCleanupCache,
-    AutoupdateCloseStream,
+    AutoupdateCleanupCacheMessage,
+    AutoupdateCloseStreamMessage,
     AutoupdateOpenStream,
     AutoupdateReceiveData,
     AutoupdateReceiveDataContent,
     AutoupdateReceiveError,
-    AutoupdateReconnectInactive,
-    AutoupdateSetConnectionStatus,
+    AutoupdateReconnectInactiveMessage,
+    AutoupdateSetConnectionStatusMessage,
     AutoupdateSetEndpoint,
     AutoupdateSetStreamId,
     AutoupdateStatus
-} from 'src/app/worker/autoupdate/interfaces-autoupdate';
-
+} from '../../../worker/sw-autoupdate.interfaces';
 import { GlobalHeadbarService } from '../../modules/global-headbar/global-headbar.service';
 import { SpinnerService } from '../../modules/global-spinner';
 import { UpdateService } from '../../modules/site-wrapper/services/update.service';
@@ -93,8 +93,11 @@ export class AutoupdateCommunicationService {
      * Enable the debug utilities of the shared worker
      */
     public enableDebugUtils(): void {
-        this.sharedWorker.sendMessage(`autoupdate`, {
-            action: `enable-debug`
+        this.sharedWorker.sendMessage({
+            receiver: `autoupdate`,
+            msg: {
+                action: `enable-debug`
+            }
         });
     }
 
@@ -109,14 +112,17 @@ export class AutoupdateCommunicationService {
         this.endpointName = name || this.endpointName;
         const config = this.endpointService.getEndpoint(this.endpointName);
 
-        this.sharedWorker.sendMessage(`autoupdate`, {
-            action: `set-endpoint`,
-            params: {
-                url: config.url,
-                healthUrl: config.healthUrl,
-                method: config.method
-            }
-        } as AutoupdateSetEndpoint);
+        this.sharedWorker.sendMessage({
+            receiver: `autoupdate`,
+            msg: {
+                action: `set-endpoint`,
+                params: {
+                    url: config.url,
+                    healthUrl: config.healthUrl,
+                    method: config.method
+                }
+            } as AutoupdateSetEndpoint
+        });
     }
 
     /**
@@ -132,16 +138,19 @@ export class AutoupdateCommunicationService {
             const requestHash = djb2hash(JSON.stringify(request));
             this.openResolvers.set(requestHash, resolve);
             this.sharedWorker
-                .sendMessage(`autoupdate`, {
-                    action: `open`,
-                    params: {
-                        streamId,
-                        description,
-                        queryParams: formatQueryParams(params),
-                        requestHash: requestHash,
-                        request
-                    }
-                } as AutoupdateOpenStream)
+                .sendMessage({
+                    receiver: `autoupdate`,
+                    msg: {
+                        action: `open`,
+                        params: {
+                            streamId,
+                            description,
+                            queryParams: formatQueryParams(params),
+                            requestHash: requestHash,
+                            request
+                        }
+                    } as AutoupdateOpenStream
+                })
                 .catch(reject);
         });
     }
@@ -152,12 +161,15 @@ export class AutoupdateCommunicationService {
      * @param streamId Id of the stream
      */
     public close(streamId: Id): void {
-        this.sharedWorker.sendMessage(`autoupdate`, {
-            action: `close`,
-            params: {
-                streamId
+        this.sharedWorker.sendMessage({
+            receiver: `autoupdate`,
+            msg: {
+                action: `close`,
+                params: {
+                    streamId
+                }
             }
-        } as AutoupdateCloseStream);
+        } as AutoupdateCloseStreamMessage);
     }
 
     /**
@@ -175,13 +187,16 @@ export class AutoupdateCommunicationService {
         }
 
         if (deletedFqids.length) {
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `cleanup-cache`,
-                params: {
-                    streamId,
-                    deletedFqids
+            this.sharedWorker.sendMessage({
+                receiver: `autoupdate`,
+                msg: {
+                    action: `cleanup-cache`,
+                    params: {
+                        streamId,
+                        deletedFqids
+                    }
                 }
-            } as AutoupdateCleanupCache);
+            } as AutoupdateCleanupCacheMessage);
         }
     }
 
@@ -205,17 +220,23 @@ export class AutoupdateCommunicationService {
 
     private registerConnectionStatusListener(): void {
         addEventListener(`offline`, () => {
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `set-connection-status`,
-                params: { status: `offline` }
-            } as AutoupdateSetConnectionStatus);
+            this.sharedWorker.sendMessage({
+                receiver: `autoupdate`,
+                msg: {
+                    action: `set-connection-status`,
+                    params: { status: `offline` }
+                }
+            } as AutoupdateSetConnectionStatusMessage);
         });
 
         addEventListener(`online`, () => {
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `set-connection-status`,
-                params: { status: `online` }
-            } as AutoupdateSetConnectionStatus);
+            this.sharedWorker.sendMessage({
+                receiver: `autoupdate`,
+                msg: {
+                    action: `set-connection-status`,
+                    params: { status: `online` }
+                }
+            } as AutoupdateSetConnectionStatusMessage);
         });
     }
 
@@ -252,9 +273,12 @@ export class AutoupdateCommunicationService {
                     .onAction()
                     .subscribe(() => {
                         this.tryReconnectOpen = false;
-                        this.sharedWorker.sendMessage(`autoupdate`, {
-                            action: `reconnect-inactive`
-                        } as AutoupdateReconnectInactive);
+                        this.sharedWorker.sendMessage({
+                            receiver: `autoupdate`,
+                            msg: {
+                                action: `reconnect-inactive`
+                            }
+                        } as AutoupdateReconnectInactiveMessage);
                     });
             }
         } else if (data.content.data?.reason === `HTTP error`) {

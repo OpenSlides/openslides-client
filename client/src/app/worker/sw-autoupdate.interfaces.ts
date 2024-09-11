@@ -1,10 +1,117 @@
-import {
-    AutoupdateCleanupCacheParams,
-    AutoupdateCloseStreamParams,
-    AutoupdateOpenStreamParams,
-    AutoupdateSetEndpointParams
-} from './autoupdate/interfaces-autoupdate';
-import { WorkerMessage, WorkerMessageContent } from './interfaces';
+import { Id } from '../domain/definitions/key-types';
+import { HttpMethod } from '../infrastructure/definitions/http';
+import { WorkerMessage, WorkerMessageContent, WorkerResponse } from './interfaces';
+
+export interface AutoupdateSetEndpointParams {
+    url: string;
+    healthUrl: string;
+    method: HttpMethod;
+}
+
+export interface AutoupdateSetEndpoint extends WorkerMessageContent {
+    action: 'set-endpoint';
+    params: AutoupdateSetEndpointParams;
+}
+
+export interface AutoupdateOpenStreamParams {
+    streamId?: number | null;
+    description?: string | null;
+    queryParams?: string;
+    requestHash: string;
+    request: any;
+}
+
+export interface AutoupdateOpenStream extends WorkerMessageContent {
+    action: 'open';
+    params: AutoupdateOpenStreamParams;
+}
+
+export interface AutoupdateCloseStreamParams {
+    streamId?: number | null;
+}
+
+export interface AutoupdateCloseStream extends WorkerMessageContent {
+    action: 'close';
+    params: AutoupdateCloseStreamParams;
+}
+
+export interface AutoupdateCloseStreamMessage extends WorkerMessage<AutoupdateCloseStream> {
+    receiver: 'autoupdate';
+}
+
+export interface AutoupdateCleanupCacheParams {
+    streamId: number;
+    deletedFqids: string[];
+}
+
+export interface AutoupdateCleanupCache extends WorkerMessageContent {
+    action: 'cleanup-cache';
+    params: AutoupdateCleanupCacheParams;
+}
+
+export interface AutoupdateSetConnectionStatus extends WorkerMessageContent {
+    action: 'set-connection-status';
+    params: {
+        status: 'online' | 'offline';
+    };
+}
+
+export interface AutoupdateReconnectInactive extends WorkerMessageContent {
+    action: 'reconnect-inactive';
+}
+
+export interface AutoupdateReconnectForce extends WorkerMessageContent {
+    action: 'reconnect-force';
+}
+
+export interface AutoupdateWorkerResponse extends WorkerResponse {
+    sender: 'autoupdate';
+    action: string;
+}
+
+export interface AutoupdateSetStreamIdContent {
+    requestHash: string;
+    streamId: Id;
+}
+
+export interface AutoupdateAuthChangeParams {
+    type: 'login' | 'logout';
+}
+
+export interface AutoupdateAuthChange extends WorkerMessageContent {
+    action: 'auth-change';
+    params: AutoupdateAuthChangeParams;
+}
+
+export interface AutoupdateSetStreamId extends AutoupdateWorkerResponse {
+    action: 'set-streamid';
+    content: AutoupdateSetStreamIdContent;
+}
+
+export interface AutoupdateReceiveDataContent {
+    streamId: Id;
+    data: any;
+    description: string;
+}
+
+export interface AutoupdateReceiveData extends AutoupdateWorkerResponse {
+    action: 'receive-data';
+    content: AutoupdateReceiveDataContent;
+}
+
+export interface AutoupdateReceiveError extends AutoupdateWorkerResponse {
+    action: 'receive-error';
+    content: AutoupdateReceiveDataContent;
+}
+
+export interface AutoupdateStatusContent {
+    status: 'healthy' | 'unhealthy';
+}
+
+export interface AutoupdateStatus extends AutoupdateWorkerResponse {
+    action: 'status';
+    content: AutoupdateStatusContent;
+}
 
 export interface AutoupdateOpenMessageContent extends WorkerMessageContent {
     action: 'open';
@@ -26,25 +133,17 @@ export interface AutoupdateSetEndpointMessageContent extends WorkerMessageConten
     params: AutoupdateSetEndpointParams;
 }
 
-export interface AutoupdateOpenMessage extends WorkerMessage<AutoupdateOpenMessageContent> {
+export interface AutoupdateMessageType<T extends WorkerMessageContent> extends WorkerMessage<T> {
     receiver: 'autoupdate';
-    msg: AutoupdateOpenMessageContent;
 }
 
-export interface AutoupdateCloseMessage extends WorkerMessage<AutoupdateCloseMessageContent> {
-    receiver: 'autoupdate';
-    msg: AutoupdateCloseMessageContent;
-}
+export interface AutoupdateOpenMessage extends AutoupdateMessageType<AutoupdateOpenMessageContent> {}
 
-export interface AutoupdateCleanupCacheMessage extends WorkerMessage<AutoupdateCleanupCacheMessageContent> {
-    receiver: 'autoupdate';
-    msg: AutoupdateCleanupCacheMessageContent;
-}
+export interface AutoupdateCloseMessage extends AutoupdateMessageType<AutoupdateCloseMessageContent> {}
 
-export interface AutoupdateSetEndpointMessage extends WorkerMessage<AutoupdateSetEndpointMessageContent> {
-    receiver: 'autoupdate';
-    msg: AutoupdateSetEndpointMessageContent;
-}
+export interface AutoupdateCleanupCacheMessage extends AutoupdateMessageType<AutoupdateCleanupCacheMessageContent> {}
+
+export interface AutoupdateSetEndpointMessage extends AutoupdateMessageType<AutoupdateSetEndpointMessageContent> {}
 
 export interface AutoupdateSetConnectionStatusMessageContent extends WorkerMessageContent {
     action: 'set-connection-status';
@@ -70,30 +169,17 @@ export interface AutoupdateSetAuthTokenMessageContent extends WorkerMessageConte
 }
 
 export interface AutoupdateSetConnectionStatusMessage
-    extends WorkerMessage<AutoupdateSetConnectionStatusMessageContent> {
-    receiver: 'autoupdate';
-    msg: AutoupdateSetConnectionStatusMessageContent;
-}
+    extends AutoupdateMessageType<AutoupdateSetConnectionStatusMessageContent> {}
 
-export interface AutoupdateReconnectInactiveMessage extends WorkerMessage<AutoupdateReconnectInactiveMessageContent> {
-    receiver: 'autoupdate';
-    msg: AutoupdateReconnectInactiveMessageContent;
-}
+export interface AutoupdateReconnectInactiveMessage
+    extends AutoupdateMessageType<AutoupdateReconnectInactiveMessageContent> {}
 
-export interface AutoupdateReconnectForceMessage extends WorkerMessage<AutoupdateReconnectForceMessageContent> {
-    receiver: 'autoupdate';
-    msg: AutoupdateReconnectForceMessageContent;
-}
+export interface AutoupdateReconnectForceMessage
+    extends AutoupdateMessageType<AutoupdateReconnectForceMessageContent> {}
 
-export interface AutoupdateEnableDebugMessage extends WorkerMessage<AutoupdateEnableDebugMessageContent> {
-    receiver: 'autoupdate';
-    msg: AutoupdateEnableDebugMessageContent;
-}
+export interface AutoupdateEnableDebugMessage extends AutoupdateMessageType<AutoupdateEnableDebugMessageContent> {}
 
-export interface AutoupdateSetAuthTokenMessage extends WorkerMessage<AutoupdateSetAuthTokenMessageContent> {
-    receiver: 'autoupdate';
-    msg: AutoupdateSetAuthTokenMessageContent;
-}
+export interface AutoupdateSetAuthTokenMessage extends AutoupdateMessageType<AutoupdateSetAuthTokenMessageContent> {}
 
 export type AutoupdateMessage =
     | AutoupdateOpenMessage

@@ -1,5 +1,5 @@
-import { AutoupdateSetEndpointParams } from './autoupdate/interfaces-autoupdate';
 import { ICCStreamPool } from './icc/icc-stream-pool';
+import { AutoupdateSetEndpointParams } from './sw-autoupdate.interfaces';
 import { ICCMessage } from './sw-icc.interfaces';
 
 const iccPool = new ICCStreamPool({

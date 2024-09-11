@@ -18,3 +18,10 @@ export interface WorkerResponse {
 }
 
 export type Broadcaster = (sender: string, action: string, content?: any) => void;
+
+/**
+ * Overwrite MessagePort interface for more type safety
+ */
+export interface OsMessagePort extends Omit<MessagePort, 'postMessage'> {
+    postMessage(message: WorkerResponse): void;
+}

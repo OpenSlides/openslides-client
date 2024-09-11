@@ -27,6 +27,9 @@ export function authMessageHandler(ctx: any, e: MessageEvent<AuthMessage>): void
         case `stop-refresh`:
             WorkerHttpAuth.stopRefresh();
             break;
+        case `update`:
+            WorkerHttpAuth.update();
+            break;
         case `get-current-auth`:
             Promise.all([WorkerHttpAuth.currentUser(), WorkerHttpAuth.currentToken()]).then(([user, token]) => {
                 ctx.postMessage({

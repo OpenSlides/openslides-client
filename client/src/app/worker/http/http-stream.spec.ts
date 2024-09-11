@@ -1,6 +1,6 @@
 import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 
-import { AutoupdateSetEndpointParams } from '../autoupdate/interfaces-autoupdate';
+import { AutoupdateSetEndpointParams } from '../sw-autoupdate.interfaces';
 import { HttpStream } from './http-stream';
 import { HttpSubscription } from './http-subscription';
 import { ErrorDescription, ErrorType } from './stream-utils';

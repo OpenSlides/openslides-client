@@ -5,10 +5,10 @@ import { AutoupdateSubscription } from './autoupdate/autoupdate-subscription';
 import {
     AutoupdateCleanupCacheParams,
     AutoupdateCloseStreamParams,
+    AutoupdateMessage,
     AutoupdateOpenStreamParams,
     AutoupdateSetEndpointParams
-} from './autoupdate/interfaces-autoupdate';
-import { AutoupdateMessage } from './sw-autoupdate.interfaces';
+} from './sw-autoupdate.interfaces';
 
 const autoupdatePool = new AutoupdateStreamPool({
     url: `/system/autoupdate`,

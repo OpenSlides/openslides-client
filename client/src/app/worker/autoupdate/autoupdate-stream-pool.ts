@@ -4,9 +4,9 @@ import { ModelRequest } from '../../domain/interfaces/model-request';
 import { WorkerHttpAuth } from '../http/auth';
 import { HTTP_POOL_CONFIG, HttpStreamPool } from '../http/http-stream-pool';
 import { ErrorDescription, ErrorType, isCommunicationError, isCommunicationErrorWrapper } from '../http/stream-utils';
+import { AutoupdateSetEndpointParams } from '../sw-autoupdate.interfaces';
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
-import { AutoupdateSetEndpointParams } from './interfaces-autoupdate';
 
 export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
     protected readonly messageSenderName: string = `autoupdate`;

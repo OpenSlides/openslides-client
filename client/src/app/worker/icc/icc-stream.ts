@@ -1,7 +1,7 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 
-import { AutoupdateSetEndpointParams } from '../autoupdate/interfaces-autoupdate';
 import { HttpStream } from '../http/http-stream';
+import { AutoupdateSetEndpointParams } from '../sw-autoupdate.interfaces';
 
 export class ICCStream extends HttpStream {
     private users = 1;
