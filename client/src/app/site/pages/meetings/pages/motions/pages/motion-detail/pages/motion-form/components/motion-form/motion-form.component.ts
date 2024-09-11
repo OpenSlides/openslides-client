@@ -360,9 +360,10 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         // new motion
         super.setTitle(`New motion`);
         this.newMotion = true;
-        this.motion = {} as any;
         if (this.route.snapshot.queryParams[`parent`]) {
             await this.initializeAmendment();
+        } else {
+            this.motion = {} as any;
         }
 
         this.cd.markForCheck();
@@ -436,8 +437,8 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     }
 
     private async ensureParentIsAvailable(parentId: Id): Promise<ViewMotion> {
-        let motion: ViewMotion;
-        if (!(motion = this.motionController.getViewModel(parentId))) {
+        let motion: ViewMotion = this.motionController.getViewModel(parentId);
+        if (!motion || motion.text === undefined) {
             motion = await firstValueFrom(
                 this.motionController
                     .getViewModelObservable(parentId)
@@ -470,6 +471,8 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                 motion.text = parentMotion.text;
             }
             this.motion = motion;
+        } else {
+            this.motion = {} as any;
         }
     }
 
