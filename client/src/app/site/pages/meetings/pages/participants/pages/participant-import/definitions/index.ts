@@ -21,7 +21,7 @@ export const participantColumns: (keyof GeneralUser)[] = [
     `groups`,
     `number`,
     `vote_weight`,
-    // TODO-G  `gender`,
+    `gender`,
     `pronoun`,
     `username`,
     `default_password`,

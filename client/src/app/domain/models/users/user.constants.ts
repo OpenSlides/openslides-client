@@ -2,14 +2,14 @@ import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 
 import { User } from './user';
 
-export const userHeadersAndVerboseNames: { [key in keyof User]?: any } = {
+export const userHeadersAndVerboseNames: { [key in keyof User | 'gender']?: any } = {
     title: _(`Title`),
     first_name: _(`Given name`),
     last_name: _(`Surname`),
     email: _(`Email`),
     member_number: _(`Membership number`),
     pronoun: _(`Pronoun`),
-    // TODO-G gender: _(`Gender`),
+    gender: _(`Gender`),
     username: _(`Username`),
     default_password: _(`Initial password`),
     is_active: _(`Active`),
