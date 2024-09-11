@@ -17,6 +17,7 @@ import {
     firstValueFrom,
     map,
     skip,
+    startWith,
     Subscription,
     tap
 } from 'rxjs';
@@ -307,9 +308,12 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         if (!this.contentForm) {
             this.contentForm = this.createForm();
         }
+
         const contentPatch: { [key: string]: any } = {};
         Object.keys(this.contentForm.controls).forEach(ctrl => {
-            contentPatch[ctrl] = this.motion[ctrl];
+            if (this.isExisting || this.motion[ctrl]) {
+                contentPatch[ctrl] = this.motion[ctrl];
+            }
         });
 
         if (this.contentForm.controls[`attachment_mediafile_ids`]) {
@@ -322,7 +326,9 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
             this.contentForm.get(`text`)?.clearValidators(); // manually adjust validators
         }
 
-        this._initialState = deepCopy(contentPatch);
+        if (this.isExisting) {
+            this._initialState = deepCopy(contentPatch);
+        }
         this.contentForm.patchValue(contentPatch);
 
         if (this.amendmentEdit && !this.titleFieldUpdateSubscription) {
@@ -466,6 +472,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
             const defaultTitle = `${this.translate.instant(`Amendment to`)} ${parentMotion.numberOrTitle}`;
             motion.title = defaultTitle;
             motion.category_id = parentMotion.category_id;
+            motion.workflow_id = +this.meetingSettingsService.instant(`motions_default_amendment_workflow_id`);
             const amendmentTextMode = this.meetingSettingsService.instant(`motions_amendments_text_mode`);
             if (amendmentTextMode === `fulltext`) {
                 motion.text = parentMotion.text;
@@ -482,14 +489,17 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         }
         this._editSubscriptions = [];
         for (const controlName of Object.keys(this.contentForm.controls)) {
-            const subscription = this.contentForm.get(controlName)!.valueChanges.subscribe(value => {
-                if (JSON.stringify(value) !== JSON.stringify(this._initialState[controlName])) {
-                    this._motionContent[controlName] = value;
-                } else {
-                    delete this._motionContent[controlName];
-                }
-                this.propagateChanges();
-            });
+            const subscription = this.contentForm
+                .get(controlName)!
+                .valueChanges.pipe(startWith(this.contentForm.get(controlName).getRawValue()))
+                .subscribe(value => {
+                    if (JSON.stringify(value) !== JSON.stringify(this._initialState[controlName])) {
+                        this._motionContent[controlName] = value;
+                    } else {
+                        delete this._motionContent[controlName];
+                    }
+                    this.propagateChanges();
+                });
             this._editSubscriptions.push(subscription);
             this.subscriptions.push(subscription);
         }
@@ -556,7 +566,11 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
             agenda_parent_id: [],
             submitter_ids: [[]],
             supporter_ids: [[]],
-            workflow_id: [+this.meetingSettingsService.instant(`motions_default_workflow_id`)],
+            workflow_id: [
+                +this.meetingSettingsService.instant(
+                    this.amendmentEdit ? `motions_default_amendment_workflow_id` : `motions_default_workflow_id`
+                )
+            ],
             tag_ids: [[]],
             block_id: [],
             parent_id: [],
