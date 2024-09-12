@@ -41,6 +41,7 @@ interface MotionFormFields {
 
 type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any } & {
     supporter_ids?: any;
+    attachment_mediafile_ids?: any;
 };
 
 @Component({
@@ -287,6 +288,12 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
                 contentPatch[ctrl] = this.motion[ctrl];
             });
 
+            if (this.contentForm.controls[`attachment_mediafile_ids`]) {
+                contentPatch[`attachment_mediafile_ids`] = this.motion.attachment_meeting_mediafiles?.map(
+                    file => file.mediafile_id
+                );
+            }
+
             if (this.isParagraphBasedAmendment) {
                 this.contentForm.get(`text`)?.clearValidators(); // manually adjust validators
             }
@@ -412,7 +419,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             text: [``, this.isParagraphBasedAmendment ? null : Validators.required],
             reason: [``, this.reasonRequired ? Validators.required : null],
             category_id: [],
-            attachment_ids: [[]],
+            attachment_mediafile_ids: [[]],
             agenda_parent_id: [],
             submitter_ids: [[]],
             supporter_ids: [[]],

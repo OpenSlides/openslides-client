@@ -2,7 +2,7 @@ import { HasPollIds } from 'src/app/domain/interfaces/has-poll-ids';
 
 import { HasSequentialNumber } from '../../interfaces';
 import { HasAgendaItemId } from '../../interfaces/has-agenda-item-id';
-import { HasAttachmentIds } from '../../interfaces/has-attachment-ids';
+import { HasAttachmentMeetingMediafileIds } from '../../interfaces/has-attachment-ids';
 import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { BaseModel } from '../base/base-model';
@@ -26,7 +26,7 @@ export class Topic extends BaseModel<Topic> {
         `title`,
         `text`,
         `sequential_number`,
-        `attachment_ids`,
+        `attachment_meeting_mediafile_ids`,
         `agenda_item_id`,
         `list_of_speakers_id`,
         `meeting_id`
@@ -36,6 +36,6 @@ export interface Topic
     extends HasMeetingId,
         HasAgendaItemId,
         HasListOfSpeakersId,
-        HasAttachmentIds,
+        HasAttachmentMeetingMediafileIds,
         HasSequentialNumber,
         HasPollIds {}

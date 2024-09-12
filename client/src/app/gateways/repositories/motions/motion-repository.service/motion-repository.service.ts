@@ -190,7 +190,9 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.sendBulkActionToBackend(MotionAction.FOLLOW_RECOMMENDATION, payload);
     }
 
-    public createTextBased(partialMotion: Partial<Motion & { workflow_id: Id }>): Action<CreateResponse> {
+    public createTextBased(
+        partialMotion: Partial<Motion & { workflow_id: Id; attachment_mediafile_ids?: Id[] }>
+    ): Action<CreateResponse> {
         const payload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             lead_motion_id: partialMotion.lead_motion_id,
@@ -200,7 +202,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             submitter_ids: partialMotion.submitter_ids,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
-            attachment_ids: partialMotion.attachment_ids,
+            attachment_mediafile_ids: partialMotion.attachment_mediafile_ids,
             reason: partialMotion.reason,
             number: partialMotion.number,
             state_extension: partialMotion.state_extension,
@@ -211,7 +213,9 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.createAction(AmendmentAction.CREATE_TEXTBASED_AMENDMENT, payload);
     }
 
-    public createParagraphBased(partialMotion: Partial<Motion & { workflow_id: Id }>): Action<CreateResponse> {
+    public createParagraphBased(
+        partialMotion: Partial<Motion & { workflow_id: Id; attachment_mediafile_ids?: Id[] }>
+    ): Action<CreateResponse> {
         const payload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             lead_motion_id: partialMotion.lead_motion_id,
@@ -220,7 +224,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             submitter_ids: partialMotion.submitter_ids === null ? [] : partialMotion.submitter_ids,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
-            attachment_ids: partialMotion.attachment_ids === null ? [] : partialMotion.attachment_ids,
+            attachment_mediafile_ids:
+                partialMotion.attachment_mediafile_ids === null ? [] : partialMotion.attachment_mediafile_ids,
             reason: partialMotion.reason,
             number: partialMotion.number,
             state_extension: partialMotion.state_extension,
@@ -314,7 +319,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             submitter_ids: partialMotion.submitter_ids,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
-            attachment_ids: partialMotion.attachment_ids === null ? [] : partialMotion.attachment_ids,
+            attachment_mediafile_ids:
+                partialMotion.attachment_mediafile_ids === null ? [] : partialMotion.attachment_mediafile_ids,
             reason: partialMotion.reason,
             number: partialMotion.number,
             block_id: partialMotion.block_id,
@@ -341,7 +347,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             supporter_meeting_user_ids:
                 update[`supporter_meeting_user_ids`] === null ? [] : update[`supporter_meeting_user_ids`],
             tag_ids: update[`tag_ids`] === null ? [] : update[`tag_ids`],
-            attachment_ids: update[`attachment_ids`] === null ? [] : update[`attachment_ids`]
+            attachment_mediafile_ids:
+                update[`attachment_mediafile_ids`] === null ? [] : update[`attachment_mediafile_ids`]
         };
     }
 

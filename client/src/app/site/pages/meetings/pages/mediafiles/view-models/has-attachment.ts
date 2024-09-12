@@ -1,9 +1,9 @@
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
-import { HasAttachmentIds } from '../../../../../../domain/interfaces/has-attachment-ids';
-import { ViewMediafile } from './view-mediafile';
+import { HasAttachmentMeetingMediafileIds } from '../../../../../../domain/interfaces/has-attachment-ids';
+import { ViewMeetingMediafile } from './view-meeting-mediafile';
 
-export type HasAttachment = HasAttachmentIds &
+export type HasAttachmentMeetingMediafiles = HasAttachmentMeetingMediafileIds &
     ViewModelRelations<{
-        attachments: ViewMediafile[];
+        attachment_meeting_mediafiles: ViewMeetingMediafile[];
     }>;
