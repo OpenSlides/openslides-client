@@ -148,6 +148,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get hasMultipleMeetings(): boolean {
+        if (this.meeting_users?.length) {
+            return this.meeting_users.filter(mu => !mu.locked_out).length !== 1;
+        }
+
         return this.meeting_ids?.length !== 1; // In case of `0` it should not return `true`
     }
 
