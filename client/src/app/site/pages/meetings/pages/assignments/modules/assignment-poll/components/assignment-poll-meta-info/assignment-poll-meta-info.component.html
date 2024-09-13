@@ -8,14 +8,14 @@
                         {{ poll.options.length ? poll.options.length + ' ' : '' }}{{ 'Candidates' | translate }}:
                         @if (enumerateCandidates) {
                             <ol>
-                                @for (option of poll.options; track option) {
+                                @for (option of poll.options; track option.id) {
                                     <li>{{ getOptionTitle(option) | translate }}</li>
                                 }
                             </ol>
                         }
                         @if (!enumerateCandidates) {
                             <ul>
-                                @for (option of poll.options; track option) {
+                                @for (option of poll.options; track option.id) {
                                     <li>{{ getOptionTitle(option) | translate }}</li>
                                 }
                             </ul>
@@ -28,14 +28,14 @@
                         {{ 'Candidates' | translate }}):
                         @if (enumerateCandidates) {
                             <ol>
-                                @for (title of poll.options[0]?.contentTitlesAsSortedArray; track title) {
+                                @for (title of poll.options[0]?.contentTitlesAsSortedArray; track title.title) {
                                     <li>{{ title.title }}{{ title.subtitle ? ' (' + title.subtitle + ')' : '' }}</li>
                                 }
                             </ol>
                         }
                         @if (!enumerateCandidates) {
                             <ul>
-                                @for (title of poll.options[0]?.contentTitlesAsSortedArray; track title) {
+                                @for (title of poll.options[0]?.contentTitlesAsSortedArray; track title.title) {
                                     <li>{{ title.title }}{{ title.subtitle ? ' (' + title.subtitle + ')' : '' }}</li>
                                 }
                             </ul>
