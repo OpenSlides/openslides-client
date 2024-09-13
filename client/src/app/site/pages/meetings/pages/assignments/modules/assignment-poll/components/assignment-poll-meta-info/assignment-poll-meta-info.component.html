@@ -28,14 +28,14 @@
                         {{ 'Candidates' | translate }}):
                         @if (enumerateCandidates) {
                             <ol>
-                                @for (title of poll.options[0]?.contentTitlesAsSortedArray; track title.title) {
+                                @for (title of poll.options[0]?.contentTitlesAsSortedArray; track $index) {
                                     <li>{{ title.title }}{{ title.subtitle ? ' (' + title.subtitle + ')' : '' }}</li>
                                 }
                             </ol>
                         }
                         @if (!enumerateCandidates) {
                             <ul>
-                                @for (title of poll.options[0]?.contentTitlesAsSortedArray; track title.title) {
+                                @for (title of poll.options[0]?.contentTitlesAsSortedArray; track $index) {
                                     <li>{{ title.title }}{{ title.subtitle ? ' (' + title.subtitle + ')' : '' }}</li>
                                 }
                             </ul>
