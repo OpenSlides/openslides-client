@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { getGenderListSubscriptionConfig } from 'src/app/site/pages/organization/pages/accounts/pages/gender/gender.subscription';
 
 import { getParticipantDetailSubscription } from '../../../../participants.subscription';
 
@@ -14,7 +13,6 @@ export class ParticipantDetailComponent extends BaseModelRequestHandlerComponent
         if (params[`id`]) {
             this.subscribeTo(getParticipantDetailSubscription(+params[`id`]), { hideWhenDestroyed: true });
         }
-        this.subscribeTo(getGenderListSubscriptionConfig());
     }
 
     protected override onParamsChanged(params: any, oldParams: any): void {

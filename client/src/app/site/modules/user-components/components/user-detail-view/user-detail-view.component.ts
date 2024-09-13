@@ -21,8 +21,8 @@ import {
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
+import { getGenderListSubscriptionConfig } from 'src/app/site/pages/organization/pages/accounts/pages/gender/gender.subscription';
 import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
-import { ViewGender } from 'src/app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
@@ -128,9 +128,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         return this.operator.operatorId === this._user?.id;
     }
 
-    public get genders(): ViewGender[] {
-        return this.genderRepo.getViewModelList();
-    }
+    public genderListSubscriptionConfig = getGenderListSubscriptionConfig();
 
     private set _initialState(state: any | null) {
         this._initialStateString = JSON.stringify(state);
@@ -156,7 +154,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public constructor(
         private fb: UntypedFormBuilder,
         private operator: OperatorService,
-        private genderRepo: GenderControllerService,
+        public genderRepo: GenderControllerService,
         private cd: ChangeDetectorRef
     ) {
         super();

@@ -82,14 +82,12 @@
             <!-- Gender -->
             <mat-form-field class="form58 force-min-width">
                 <mat-label>{{ 'Gender' | translate }}</mat-label>
-                <mat-select formControlName="gender_id">
-                    <mat-option [value]="null">-</mat-option>
-                    @for (gender of genders; track gender.name) {
-                        <mat-option [value]="gender.id">
-                            {{ gender.name | translate }}
-                        </mat-option>
-                    }
-                </mat-select>
+                <os-repo-search-selector
+                    formControlName="gender_id"
+                    [includeNone]="true"
+                    [repo]="genderRepo"
+                    [subscriptionConfig]="genderListSubscriptionConfig"
+                ></os-repo-search-selector>
             </mat-form-field>
             <!-- Pronoun -->
             <mat-form-field class="form38 force-min-width">

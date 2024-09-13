@@ -53,6 +53,11 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
     ) {
         super(ngControl);
         this.shouldPropagateOnRegistering = false;
+        this.noneItem = {
+            getListTitle: (): string => this.noneTitle,
+            getTitle: (): string => this.noneTitle,
+            id: null
+        };
     }
 
     public override ngOnInit(): void {
