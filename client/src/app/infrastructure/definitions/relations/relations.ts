@@ -477,7 +477,7 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMotion,
         OField: `motions`,
         MField: `meeting`,
-        isFullList: true
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,

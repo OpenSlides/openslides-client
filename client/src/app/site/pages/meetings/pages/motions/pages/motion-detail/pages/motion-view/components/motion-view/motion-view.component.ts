@@ -16,7 +16,9 @@ import {
     distinctUntilChanged,
     filter,
     firstValueFrom,
-    Observable
+    Observable,
+    Subject,
+    Subscription
 } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
@@ -69,6 +71,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     public hasChangeRecommendations: boolean = false;
     public unifiedChanges$: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
+    public originUnifiedChanges$: { [key: Id]: BehaviorSubject<ViewUnifiedChange[]> };
 
     private get unifiedChanges(): ViewUnifiedChange[] {
         return this.unifiedChanges$.value;
@@ -337,32 +340,37 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         this.changeRecoMode =
             this.meetingSettingsService.instant(`motions_recommendation_text_mode`) || ChangeRecoMode.Original;
 
-        let previousAmendments: ViewMotion[] = null;
         this.subscriptions.updateSubscription(
             `sorted-changes`,
-            combineLatest([
-                this.meetingSettingsService.get(`motions_line_length`),
-                this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).pipe(filter(value => !!value)),
-                this.amendmentRepo.getViewModelListObservableFor(this.motion).pipe(filter(value => !!value))
-            ])
-                .pipe(auditTime(1)) // Needed to replicate behaviour of base-repository list updates
-                .subscribe(([lineLength, changeRecos, amendments]) => {
-                    if (previousAmendments !== amendments) {
-                        this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
-                        previousAmendments = amendments;
-                    }
-                    this.hasChangeRecommendations = !!changeRecos?.length;
-                    this.unifiedChanges$.next(
-                        this.motionLineNumbering.recalcUnifiedChanges(
-                            lineLength,
-                            changeRecos as ViewMotionChangeRecommendation[],
-                            amendments
-                        )
-                    );
-                    this.changeRecoMode = this.determineCrMode(this.changeRecoMode);
-                    this.cd.markForCheck();
-                })
+            this.sortedChangesSubscription(this.motion, this.unifiedChanges$)
         );
+    }
+
+    private sortedChangesSubscription(motion: ViewMotion, subject: Subject<ViewUnifiedChange[]>): Subscription {
+        let previousAmendments: ViewMotion[] = null;
+
+        return combineLatest([
+            this.meetingSettingsService.get(`motions_line_length`),
+            this.changeRecoRepo.getChangeRecosOfMotionObservable(motion.id).pipe(filter(value => !!value)),
+            this.amendmentRepo.getViewModelListObservableFor(motion).pipe(filter(value => !!value))
+        ])
+            .pipe(auditTime(1)) // Needed to replicate behaviour of base-repository list updates
+            .subscribe(([lineLength, changeRecos, amendments]) => {
+                if (previousAmendments !== amendments) {
+                    this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
+                    previousAmendments = amendments;
+                }
+                this.hasChangeRecommendations = !!changeRecos?.length;
+                subject.next(
+                    this.motionLineNumbering.recalcUnifiedChanges(
+                        lineLength,
+                        changeRecos as ViewMotionChangeRecommendation[],
+                        amendments
+                    )
+                );
+                this.changeRecoMode = this.determineCrMode(this.changeRecoMode);
+                this.cd.markForCheck();
+            });
     }
 
     private updateSortedMotionsObservable(): void {

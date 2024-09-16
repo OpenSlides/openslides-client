@@ -196,6 +196,17 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                     }
                 ],
                 fieldset: `participantListMinimal`
+            },
+            {
+                idField: `origin_id`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    {
+                        idField: `amendment_ids`,
+                        fieldset: [`text`, `modified_final_version`, `amendment_paragraphs`],
+                        follow: [{ idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET }]
+                    }
+                ]
             }
         ],
         fieldset: [
@@ -207,7 +218,6 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             `origin_meeting_id`,
             `derived_motion_ids`,
             `identical_motion_ids`,
-            `amendment_ids`,
             `amendment_paragraphs`
         ]
     },

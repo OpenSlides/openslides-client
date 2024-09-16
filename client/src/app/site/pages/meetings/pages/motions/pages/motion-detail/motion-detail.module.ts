@@ -65,6 +65,7 @@ import { MotionPersonalNoteComponent } from './pages/motion-view/components/moti
 import { MotionViewComponent } from './pages/motion-view/components/motion-view/motion-view.component';
 import { ParagraphBasedAmendmentComponent } from './pages/motion-view/components/paragraph-based-amendment/paragraph-based-amendment.component';
 import { MotionDetailServiceModule } from './services/motion-detail-service.module';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
     declarations: [
@@ -121,6 +122,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MatMenuModule,
         MatDividerModule,
         MatFormFieldModule,
+        MatTabsModule,
         MatTooltipModule,
         MatChipsModule,
         MatCheckboxModule,
