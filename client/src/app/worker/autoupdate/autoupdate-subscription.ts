@@ -51,16 +51,13 @@ export class AutoupdateSubscription {
      * @param data The data to be processed
      */
     public updateData(data: any): void {
-        const dataId = Date.now();
         for (const port of this.ports) {
             port.postMessage({
                 sender: `autoupdate`,
                 action: `receive-data`,
                 content: {
-                    streamId: this.id,
-                    dataId,
-                    data: data,
-                    description: this.description
+                    streamIdDescriptions: { [this.id]: this.description },
+                    data: data
                 }
             } as AutoupdateReceiveData);
         }
@@ -77,9 +74,8 @@ export class AutoupdateSubscription {
                 sender: `autoupdate`,
                 action: `receive-error`,
                 content: {
-                    streamId: this.id,
-                    data: data,
-                    description: this.description
+                    streamIdDescriptions: { [this.id]: this.description },
+                    data: data
                 }
             } as AutoupdateReceiveError);
         }
@@ -124,16 +120,13 @@ export class AutoupdateSubscription {
      * @param port The MessagePort the data should be send to
      */
     public resendTo(port: MessagePort): void {
-        const dataId = Date.now();
         if (this.stream && this.stream.currentData !== null) {
             port.postMessage({
                 sender: `autoupdate`,
                 action: `receive-data`,
                 content: {
-                    streamId: this.id,
-                    dataId,
-                    data: this.stream.currentData,
-                    description: this.description
+                    streamIdDescriptions: { [this.id]: this.description },
+                    data: this.stream.currentData
                 }
             } as AutoupdateReceiveData);
         }

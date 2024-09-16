@@ -221,8 +221,10 @@ export class AutoupdateCommunicationService {
 
     private handleReceiveData(data: AutoupdateReceiveData, dataSubscription: Subscriber<any>): void {
         dataSubscription.next(data.content);
-        if (data.content?.description) {
-            this.subscriptionsWithData.add(data.content.description.replace(SUBSCRIPTION_SUFFIX, ``));
+        if (data.content?.streamIdDescriptions) {
+            for (const id of Object.keys(data.content.streamIdDescriptions)) {
+                this.subscriptionsWithData.add(data.content.streamIdDescriptions[id].replace(SUBSCRIPTION_SUFFIX, ``));
+            }
         }
         if (this.tryReconnectOpen) {
             this.matSnackBar.dismiss();
