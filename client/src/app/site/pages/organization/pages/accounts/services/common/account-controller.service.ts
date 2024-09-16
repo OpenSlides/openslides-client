@@ -73,9 +73,10 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
                 return {
                     id: user.id,
                     meeting_id: meeting.id,
-                    group_ids: groupIds?.includes(meeting.default_group_id)
+                    group_ids: (groupIds?.includes(meeting.default_group_id)
                         ? groupIds
                         : (groupIds ?? []).concat(meeting.default_group_id)
+                    ).filter(id => !!id)
                 };
             });
         };
