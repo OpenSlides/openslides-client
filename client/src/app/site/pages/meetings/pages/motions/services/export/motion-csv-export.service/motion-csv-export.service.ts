@@ -105,7 +105,7 @@ export class MotionCsvExportService {
                 if (option === `submitters`) {
                     return {
                         label: `submitters`,
-                        map: motion => motion.mapSubmittersWithAdditional(s => s.short_name).join(`, `)
+                        map: motion => motion.mapSubmittersWithAdditional(s => s.full_name).join(`, `)
                     };
                 } else if (option === `recommendation`) {
                     return {
