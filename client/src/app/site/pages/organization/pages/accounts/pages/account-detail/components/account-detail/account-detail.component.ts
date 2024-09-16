@@ -333,6 +333,13 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 payload.member_number = null;
             }
         }
+        if (payload.gender_id === 0) {
+            if (isCreate) {
+                delete payload.gender_id;
+            } else {
+                payload.gender_id = null;
+            }
+        }
         return payload;
     }
 

@@ -274,6 +274,9 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                           .filter((id: Id | undefined) => !!id)
                     : []
             };
+            if (payload.gender_id === 0) {
+                payload.gender_id = null;
+            }
             if (this._accountId) {
                 this.repo
                     .update(payload, {
