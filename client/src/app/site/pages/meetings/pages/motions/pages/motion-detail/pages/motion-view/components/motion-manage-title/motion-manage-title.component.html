@@ -1,0 +1,60 @@
+@if (motion) {
+    <div class="title">
+        <os-projectable-title [getTitleFn]="getTitleFn" [model]="motion">
+            @if (titleCanBeChanged()) {
+                <span class="motion-title" prepend>
+                    @if (titleChangeRecommendation) {
+                        <span
+                            class="title-change-indicator"
+                            tabindex="0"
+                            (click)="emitDiffModeSwitch()"
+                            (keyup.enter)="emitDiffModeSwitch()"
+                        ></span>
+                    }
+                    <span
+                        *osPerms="permission.motionCanManage; and: !titleChangeRecommendation"
+                        class="change-title"
+                        tabindex="0"
+                        (click)="createTitleChangeRecommendation()"
+                        (keyup.enter)="createTitleChangeRecommendation()"
+                    ></span>
+                </span>
+            }
+            @let isFavorite = isFavorite$ | async;
+            <button
+                append
+                class="primary-accent-by-theme"
+                mat-icon-button
+                matTooltipPosition="right"
+                matTooltip="{{ 'Mark as personal favorite' | translate }}"
+                (click)="setFavorite(!isFavorite)"
+            >
+                <mat-icon>{{ isFavorite ? 'star' : 'star_border' }}</mat-icon>
+            </button>
+        </os-projectable-title>
+        <!-- Sequential number -->
+        <span class="main-nav-color title-font">
+            @let showSequentialNumber = showSequentialNumber$ | async;
+            @if (showSequentialNumber) {
+                <span>
+                    <span>{{ 'Sequential number' | translate }}</span>
+                    &nbsp;{{ motion.sequential_number }}
+                </span>
+            }
+            @if (motion.lead_motion$ | async; as parent) {
+                @if (showSequentialNumber) {
+                    <span>&#xb7;&nbsp;</span>
+                }
+                <span>
+                    <span>
+                        <span>{{ 'Amendment to' | translate }}</span>
+                        &nbsp;
+                        <a [routerLink]="parent?.getDetailStateUrl()" [state]="{ back: 'true' }">
+                            {{ parent.number || parent.title }}
+                        </a>
+                    </span>
+                </span>
+            }
+        </span>
+    </div>
+}

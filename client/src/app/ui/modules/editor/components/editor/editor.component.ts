@@ -241,7 +241,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
-        this.editor.destroy();
+        this.editor?.destroy();
+    }
+
+    public override writeValue(value: string): void {
+        super.writeValue(value);
+        if (this.editor) {
+            this.editor.commands.setContent(value);
+        }
     }
 
     public updateColorSets(): void {

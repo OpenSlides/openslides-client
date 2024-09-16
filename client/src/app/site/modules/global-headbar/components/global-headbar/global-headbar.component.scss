@@ -44,3 +44,26 @@
     margin-top: -3px;
     transform: scale(0.75);
 }
+
+@keyframes train {
+    0% {
+        right: 0;
+    }
+    99% {
+        right: 100%;
+    }
+    100% {
+        right: 100%;
+        display: none;
+    }
+}
+
+.global-headbar.train:after {
+    content: '🚂 🚃 🚃 🚃';
+    position: absolute;
+    overflow: hidden;
+    animation-name: train;
+    animation-duration: 15s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+}
