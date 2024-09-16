@@ -88,10 +88,8 @@ export interface AutoupdateSetStreamId extends AutoupdateWorkerResponse {
 }
 
 export interface AutoupdateReceiveDataContent {
-    streamId: Id;
-    dataId: Id;
+    streamIdDescriptions: { [id: Id]: string };
     data: any;
-    description: string;
 }
 
 export interface AutoupdateReceiveData extends AutoupdateWorkerResponse {
