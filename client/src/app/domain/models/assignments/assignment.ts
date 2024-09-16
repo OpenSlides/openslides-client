@@ -1,7 +1,7 @@
 import { Id } from '../../definitions/key-types';
 import { HasSequentialNumber } from '../../interfaces';
 import { HasAgendaItemId } from '../../interfaces/has-agenda-item-id';
-import { HasAttachmentIds } from '../../interfaces/has-attachment-ids';
+import { HasAttachmentMeetingMediafileIds } from '../../interfaces/has-attachment-ids';
 import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasPollIds } from '../../interfaces/has-poll-ids';
@@ -44,7 +44,7 @@ export class Assignment extends BaseModel<Assignment> {
         `agenda_item_id`,
         `list_of_speakers_id`,
         `tag_ids`,
-        `attachment_ids`,
+        `attachment_meeting_mediafile_ids`,
         `projection_ids`,
         `meeting_id`
     ];
@@ -52,7 +52,7 @@ export class Assignment extends BaseModel<Assignment> {
 export interface Assignment
     extends HasMeetingId,
         HasProjectionIds,
-        HasAttachmentIds,
+        HasAttachmentMeetingMediafileIds,
         HasTagIds,
         HasAgendaItemId,
         HasListOfSpeakersId,

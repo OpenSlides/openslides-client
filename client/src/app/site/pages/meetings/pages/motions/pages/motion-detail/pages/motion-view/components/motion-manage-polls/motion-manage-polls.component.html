@@ -1,0 +1,10 @@
+<div class="spacer-top-20 spacer-bottom-20">
+    @if (motion && motion.polls$ | async; as polls) {
+        @for (poll of polls | reverse; track poll.id) {
+            <os-motion-poll [pollViewModel]="poll" (dialogOpened)="onEditPoll(poll)"></os-motion-poll>
+        }
+    }
+    @if (!hideAdd) {
+        <os-motion-add-poll-button class="spacer-top-10 spacer-bottom-20" [motion]="motion"></os-motion-add-poll-button>
+    }
+</div>

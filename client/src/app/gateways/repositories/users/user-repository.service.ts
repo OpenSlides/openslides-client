@@ -151,7 +151,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const data = usersToCreate.map(user => {
             const meetingUsers = user.meeting_users as Partial<ViewMeetingUser>[];
             return {
-                user: this.sanitizePayload(this.getBaseUserPayload(user)),
+                user: this.sanitizePayload(this.getBaseUserPayload(user), true),
                 ...(meetingUsers && meetingUsers.length
                     ? {
                           first_meeting_user: this.sanitizePayload(
@@ -521,9 +521,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction(UserAction.MERGE_TOGETHER, payload);
     }
 
-    private sanitizePayload(payload: any): any {
+    private sanitizePayload(payload: any, create: boolean = false): any {
         const temp = { ...payload };
-        for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field))) {
+        for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field, create))) {
             if (typeof temp[key] === `string` && !temp[key].trim().length) {
                 payload[key] = undefined;
             } else if (Array.isArray(temp[key])) {
@@ -538,7 +538,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return { ...payload };
     }
 
-    private isFieldAllowedToBeEmpty(field: string): boolean {
+    private isFieldAllowedToBeEmpty(field: string, create?: boolean): boolean {
         const fields: string[] = [
             `title`,
             `email`,
@@ -548,9 +548,12 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `about_me`,
             `number`,
             `structure_level`,
-            `member_number`,
             `locked_out`
         ];
+        if (!create) {
+            fields.push(`member_number`);
+        }
+
         return fields.includes(field);
     }
 

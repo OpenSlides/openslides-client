@@ -14,6 +14,7 @@ import {
     AutoupdateCloseStream,
     AutoupdateOpenStream,
     AutoupdateReceiveData,
+    AutoupdateReceiveDataContent,
     AutoupdateReceiveError,
     AutoupdateReconnectInactive,
     AutoupdateSetConnectionStatus,
@@ -34,7 +35,7 @@ import { SUBSCRIPTION_SUFFIX } from '../model-request.service';
     providedIn: `root`
 })
 export class AutoupdateCommunicationService {
-    private autoupdateDataObservable: Observable<any>;
+    private autoupdateDataObservable: Observable<AutoupdateReceiveDataContent>;
     private openResolvers = new Map<string, (value: number | PromiseLike<number>) => void>();
     private endpointName: string;
     private autoupdateEndpointStatus: 'healthy' | 'unhealthy' = `healthy`;
@@ -187,7 +188,7 @@ export class AutoupdateCommunicationService {
     /**
      * @returns Observable containing messages from autoupdate
      */
-    public listen(): Observable<any> {
+    public listen(): Observable<AutoupdateReceiveDataContent> {
         return this.autoupdateDataObservable;
     }
 

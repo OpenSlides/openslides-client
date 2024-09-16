@@ -11,9 +11,27 @@ describe(`SearchUsersPresenterService`, () => {
     let presenter: MockPresenterService;
 
     const testUsers = [
-        { id: 2, username: `johnDoe`, email: `john.doe@email.en`, first_name: `John`, last_name: `Doe` },
-        { id: 3, username: `jd`, email: `joanna.doe@email.en`, first_name: `Joanna`, last_name: `Doe` },
-        { id: 4, username: `johnsSecondAccount`, email: `john.doe@email.en`, first_name: `John`, last_name: `Doe` },
+        {
+            id: 2,
+            username: `johnDoe`,
+            email: `john.doe@email.en`,
+            first_name: `John`,
+            last_name: `Doe`
+        },
+        {
+            id: 3,
+            username: `jd`,
+            email: `joanna.doe@email.en`,
+            first_name: `Joanna`,
+            last_name: `Doe`
+        },
+        {
+            id: 4,
+            username: `johnsSecondAccount`,
+            email: `john.doe@email.en`,
+            first_name: `John`,
+            last_name: `Doe`
+        },
         { id: 5, username: `rando`, first_name: `Rando`, last_name: `Mized` }
     ];
 
@@ -37,7 +55,10 @@ describe(`SearchUsersPresenterService`, () => {
                         !search ||
                         typeof search !== `object` ||
                         Object.keys(search).some(
-                            key => ![`username`, `saml_id`, `first_name`, `last_name`, `email`].includes(key)
+                            key =>
+                                ![`username`, `saml_id`, `first_name`, `last_name`, `email`, `member_number`].includes(
+                                    key
+                                )
                         )
                 )
             ) {

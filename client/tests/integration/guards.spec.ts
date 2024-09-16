@@ -1,4 +1,5 @@
-import { test, expect, BrowserContext } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+
 import { login, logout } from './helpers/auth';
 import { createAccount, createMeeting, deleteAccounts, deleteCommittees, deleteMeetings } from './helpers/request';
 
@@ -33,8 +34,8 @@ test.describe(`Testing permission- and auth-guards`, () => {
     test.afterAll(async ({ browser }) => {
         const context = await browser.newContext();
         await login(context);
-        await deleteAccounts(context, secondAccountId);
         await deleteMeetings(context, meetingId);
+        await deleteAccounts(context, secondAccountId);
         await deleteCommittees(context, committeeId);
         await logout(context);
     });
