@@ -168,7 +168,7 @@ export class ModelRequestBuilderService {
         }
     }
 
-    private addFollowedRelations(modelRequestObject: ModelRequestObject): void {
+    private addFollowedRelations(modelRequestObject: ModelRequestObject, skipUnknownRelations = false): void {
         for (const entry of modelRequestObject.simplifiedRequest.follow || []) {
             let follow: Follow;
             if (typeof entry === `string`) {
@@ -178,7 +178,13 @@ export class ModelRequestBuilderService {
             } else {
                 follow = entry;
             }
-            this.getFollowedRelation(modelRequestObject, follow);
+            try {
+                this.getFollowedRelation(modelRequestObject, follow);
+            } catch (e) {
+                if (!skipUnknownRelations) {
+                    throw e;
+                }
+            }
         }
     }
 
@@ -291,7 +297,7 @@ export class ModelRequestBuilderService {
                 try {
                     // The last to write to fields will win...
                     const modelRequestObject = new ModelRequestObject(viewModel.COLLECTION, request, fields);
-                    this.addFollowedRelations(modelRequestObject);
+                    this.addFollowedRelations(modelRequestObject, true);
                 } catch (e) {
                     if (e instanceof UnknownRelationError) {
                         // Explicitly allow following relations for only a subset of foreign models
