@@ -85,6 +85,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         return this.unifiedChanges$.value;
     }
 
+    public showAllAmendments = false;
+
     /**
      * preloaded next motion for direct navigation
      */

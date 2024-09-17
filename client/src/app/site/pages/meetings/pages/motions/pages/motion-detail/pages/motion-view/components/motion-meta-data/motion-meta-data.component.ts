@@ -41,6 +41,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     @Output()
     public enableOriginMotion = new EventEmitter<Id>();
 
+    @Output()
+    public setShowAllAmendments = new EventEmitter<boolean>();
+
     /**
      * Determine if the name of supporters are visible
      */
@@ -116,8 +119,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return null;
     }
 
-    public override set showAllAmendments(is: boolean) {
-        this.viewService.showAllAmendmentsStateSubject.next(is);
+    public set showAllAmendments(is: boolean) {
+        this.setShowAllAmendments.emit(is);
     }
 
     public get showForwardButton(): boolean {

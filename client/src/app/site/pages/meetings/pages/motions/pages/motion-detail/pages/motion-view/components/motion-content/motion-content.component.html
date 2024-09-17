@@ -48,6 +48,7 @@
         [highlightedLine]="highlightedLine"
         [lineNumberingMode]="lineNumberingMode"
         [motion]="motion"
+        [showAllAmendments]="showAllAmendments$ | async"
         (createChangeRecommendation)="createChangeRecommendation($event)"
         (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
     ></os-paragraph-based-amendment>

@@ -192,6 +192,7 @@
             [changeRecoMode]="changeRecoMode"
             [motion]="motion"
             (enableOriginMotion)="toggleOrigin($event)"
+            (setShowAllAmendments)="showAllAmendments = $event"
         ></os-motion-meta-data>
     </div>
 </ng-template>
@@ -213,6 +214,7 @@
                                 [changeRecoMode]="changeRecoMode"
                                 [lineNumberingMode]="lineNumberingMode"
                                 [motion]="originMotion"
+                                [showAllAmendments]="true"
                                 [unifiedChanges]="originUnifiedChanges$[originMotion.id]"
                             ></os-motion-content>
                         </mat-card-content>
@@ -243,6 +245,7 @@
                 [changeRecoMode]="changeRecoMode"
                 [lineNumberingMode]="lineNumberingMode"
                 [motion]="motion"
+                [showAllAmendments]="showAllAmendments"
                 [unifiedChanges]="unifiedChanges$"
                 (updateCrMode)="changeRecoMode = $event"
             ></os-motion-content>

@@ -95,10 +95,6 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
         );
     }
 
-    public override set showAllAmendments(is: boolean) {
-        this.viewService.showAllAmendmentsStateSubject.next(is);
-    }
-
     public loadForwardingCommittees: () => Promise<Selectable[]>;
 
     public get supportersObservable(): Observable<ViewUser[]> {
