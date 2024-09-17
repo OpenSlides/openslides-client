@@ -181,7 +181,7 @@ export class ModelRequestBuilderService {
             try {
                 this.getFollowedRelation(modelRequestObject, follow);
             } catch (e) {
-                if (!skipUnknownRelations) {
+                if (!skipUnknownRelations || !(e instanceof UnknownRelationError)) {
                     throw e;
                 }
             }
@@ -294,19 +294,9 @@ export class ModelRequestBuilderService {
         // Add relations
         if (request.follow) {
             for (const viewModel of possibleViewModels) {
-                try {
-                    // The last to write to fields will win...
-                    const modelRequestObject = new ModelRequestObject(viewModel.COLLECTION, request, fields);
-                    this.addFollowedRelations(modelRequestObject, true);
-                } catch (e) {
-                    if (e instanceof UnknownRelationError) {
-                        // Explicitly allow following relations for only a subset of foreign models
-                        // of this relation. If a specific relation cannot be found, just do not request it.
-                        // This will succeed for the subset of models, that do have the requested relation.
-                        continue;
-                    }
-                    throw e;
-                }
+                // The last to write to fields will win...
+                const modelRequestObject = new ModelRequestObject(viewModel.COLLECTION, request, fields);
+                this.addFollowedRelations(modelRequestObject, true);
             }
         }
     }
