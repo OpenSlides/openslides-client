@@ -15,6 +15,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
@@ -63,9 +65,9 @@ import { MotionManageTitleComponent } from './pages/motion-view/components/motio
 import { MotionMetaDataComponent } from './pages/motion-view/components/motion-meta-data/motion-meta-data.component';
 import { MotionPersonalNoteComponent } from './pages/motion-view/components/motion-personal-note/motion-personal-note.component';
 import { MotionViewComponent } from './pages/motion-view/components/motion-view/motion-view.component';
+import { OriginMotionMetaDataComponent } from './pages/motion-view/components/origin-motion-meta-data/origin-motion-meta-data.component';
 import { ParagraphBasedAmendmentComponent } from './pages/motion-view/components/paragraph-based-amendment/paragraph-based-amendment.component';
 import { MotionDetailServiceModule } from './services/motion-detail-service.module';
-import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
     declarations: [
@@ -87,7 +89,8 @@ import { MatTabsModule } from '@angular/material/tabs';
         MotionCommentComponent,
         MotionFinalVersionComponent,
         ParagraphBasedAmendmentComponent,
-        MotionManageTimestampComponent
+        MotionManageTimestampComponent,
+        OriginMotionMetaDataComponent
     ],
     imports: [
         CommonModule,
@@ -127,6 +130,7 @@ import { MatTabsModule } from '@angular/material/tabs';
         MatChipsModule,
         MatCheckboxModule,
         MatSelectModule,
+        MatSlideToggleModule,
         MatListModule,
         MatInputModule,
         MatProgressBarModule,

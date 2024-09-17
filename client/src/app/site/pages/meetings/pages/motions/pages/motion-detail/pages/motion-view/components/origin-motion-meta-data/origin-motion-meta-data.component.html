@@ -1,5 +1,7 @@
+<os-motion-manage-title [motion]="motion"></os-motion-manage-title>
+
 <!-- Submitters -->
-@if (motion?.submitters) {
+@if (motion?.submitters?.length || motion?.additional_submitter) {
     <div>
         <div class="remove-top-margin">
             <os-motion-manage-motion-meeting-users
@@ -7,6 +9,7 @@
                 field="submitters"
                 additionalInputLabel="{{ 'Extension' | translate }}"
                 [additionalInputValue]="motion?.additional_submitter"
+                [disableEdit]="true"
                 [loadSecondSelectorValues]="loadForwardingCommittees"
                 [motion]="motion"
                 [repo]="motionSubmitterRepo"
@@ -18,119 +21,18 @@
     </div>
 }
 
-<!-- do Support -->
-@if (minSupporters$ | async) {
-    <div>
-        @if (perms.isAllowed('support', motion) || motion.hasSupporters()) {
-            <h4>{{ 'Supporters' | translate }}</h4>
-            <!-- support button -->
-            @if (perms.isAllowed('support', motion)) {
-                <button color="accent" mat-stroked-button type="button" (click)="support()">
-                    <mat-icon>thumb_up</mat-icon>
-                    {{ 'Support' | translate }}
-                </button>
-            }
-            <!-- unsupport button -->
-            @if (perms.isAllowed('unsupport', motion)) {
-                <button color="accent" mat-stroked-button type="button" (click)="unsupport()">
-                    <mat-icon>thumb_down</mat-icon>
-                    {{ 'Unsupport' | translate }}
-                </button>
-            }
-        }
-        <!-- show supporters (TODO: open in dialog) -->
-        @if (motion.hasSupporters()) {
-            <button mat-button type="button" (click)="openSupportersDialog()">
-                {{ motion.supporters.length }} {{ 'supporters' | translate }}
-            </button>
-            @if (showSupporters) {
-                <p class="supporters">
-                    <os-comma-separated-listing [list]="supportersObservable | async">
-                        <ng-template let-supporter>{{ supporter.full_name }}</ng-template>
-                    </os-comma-separated-listing>
-                </p>
-            }
-        }
-    </div>
-}
-
-<div *osMeetingSetting="'motions_enable_editor'; and: perms.isAllowed('change_metadata')">
-    <os-motion-manage-motion-meeting-users
-        field="editors"
-        [motion]="motion"
-        [repo]="motionEditorRepo"
-        title="{{ 'Motion editor' | translate }}"
-    ></os-motion-manage-motion-meeting-users>
-</div>
-
-<div *osMeetingSetting="'motions_enable_working_group_speaker'; and: perms.isAllowed('change_metadata')">
-    <os-motion-manage-motion-meeting-users
-        field="working_group_speakers"
-        [motion]="motion"
-        [repo]="motionWorkingGroupSpeakerRepo"
-        title="{{ 'Spokesperson' | translate }}"
-    ></os-motion-manage-motion-meeting-users>
-</div>
-
 <!-- Set State -->
 @if (motion.state$ | async; as motionState) {
     <div>
         <os-motion-extension-field
-            [canBeEdited]="perms.isAllowed('change_state', motion) || !!motionState.submitter_withdraw_state"
+            [canBeEdited]="false"
             [chipValue]="stateLabel | translate"
             [classes]="motion.stateCssColor"
             extensionLabel="{{ 'Extension' | translate }}"
             [hasExtension]="!!motionState && motionState.show_state_extension_field"
             [inputValue]="motion?.state_extension"
             title="{{ 'State' | translate }}"
-            (succeeded)="setStateExtension($event)"
-        >
-            <span class="trigger-menu">
-                @if (perms.isAllowed('change_state', motion)) {
-                    @for (state of motionState.next_states; track state.id) {
-                        <button mat-menu-item (click)="setState(state.id)">
-                            {{ state.name }}
-                            @if (state.show_state_extension_field) {
-                                <span>&nbsp;...</span>
-                            }
-                        </button>
-                    }
-                    <div>
-                        @if (motionState.previous_states.length > 0) {
-                            <mat-divider></mat-divider>
-                            @for (state of motionState.previous_states; track state.id) {
-                                <button mat-menu-item (click)="setState(state.id)">
-                                    <mat-icon>arrow_back</mat-icon>
-                                    {{ state.name }}
-                                    @if (state.show_state_extension_field) {
-                                        <span>&nbsp;...</span>
-                                    }
-                                </button>
-                            }
-                        }
-                        @if (perms.isAllowed('change_metadata', motion)) {
-                            <mat-divider></mat-divider>
-                            <button mat-menu-item (click)="resetState()">
-                                <mat-icon>replay</mat-icon>
-                                {{ 'Reset state' | translate }}
-                            </button>
-                        }
-                    </div>
-                } @else if (!!motionState.submitter_withdraw_state) {
-                    <button mat-menu-item (click)="setState(motion.state.submitter_withdraw_state.id)">
-                        {{ motion.state.submitter_withdraw_state.name }}
-                    </button>
-                }
-            </span>
-        </os-motion-extension-field>
-        <!-- Forward to meeting -->
-        @if (showForwardButton) {
-            <button class="spacer-top-10" mat-stroked-button (click)="forwardMotionToMeetings()">
-                <mat-icon>forward</mat-icon>
-                <span>{{ 'Forward' | translate }}</span>
-            </button>
-        }
-        <os-motion-add-poll-button [motion]="motion"></os-motion-add-poll-button>
+        ></os-motion-extension-field>
     </div>
 }
 
@@ -341,10 +243,6 @@
                 @for (origin of originMotions; track origin.id; let last = $last) {
                     <div>
                         <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
-                        <mat-slide-toggle
-                            [aria-label]="'Load origin motion' | translate"
-                            (change)="toggleOriginMotion($event, origin.id)"
-                        ></mat-slide-toggle>
                     </div>
                     <div class="flex-center">
                         @if (!last) {

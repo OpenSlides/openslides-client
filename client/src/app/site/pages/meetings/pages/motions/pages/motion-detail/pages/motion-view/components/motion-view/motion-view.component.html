@@ -188,29 +188,37 @@
 
 <ng-template #metaInfoTemplate>
     <div>
-        <os-motion-meta-data [changeRecoMode]="changeRecoMode" [motion]="motion"></os-motion-meta-data>
+        <os-motion-meta-data
+            [changeRecoMode]="changeRecoMode"
+            [motion]="motion"
+            (enableOriginMotion)="toggleOrigin($event)"
+        ></os-motion-meta-data>
     </div>
 </ng-template>
 
 <ng-template #contentTemplate>
-    @if (motion.origin$ | async; as originMotion) {
+    @if (originMotionsLoaded.length) {
         <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false">
             <mat-tab [label]="motion?.meeting?.name">
                 <ng-container *ngTemplateOutlet="motionContentTemplate"></ng-container>
             </mat-tab>
-            <mat-tab [label]="originMotion?.meeting?.name || ('Original motion' | translate)">
-                <mat-card class="os-card">
-                    <mat-card-content>
-                        <os-motion-content
-                            #content
-                            [changeRecoMode]="changeRecoMode"
-                            [lineNumberingMode]="lineNumberingMode"
-                            [motion]="originMotion"
-                            [unifiedChanges]="[]"
-                        ></os-motion-content>
-                    </mat-card-content>
-                </mat-card>
-            </mat-tab>
+            @for (originMotion of originMotionsLoaded; track originMotion.id) {
+                <mat-tab [label]="originMotion?.meeting?.name">
+                    <mat-card class="os-card original-motion-card">
+                        <mat-card-content>
+                            <os-origin-motion-meta-data [motion]="originMotion"></os-origin-motion-meta-data>
+
+                            <os-motion-content
+                                #content
+                                [changeRecoMode]="changeRecoMode"
+                                [lineNumberingMode]="lineNumberingMode"
+                                [motion]="originMotion"
+                                [unifiedChanges]="originUnifiedChanges$[originMotion.id]"
+                            ></os-motion-content>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-tab>
+            }
         </mat-tab-group>
     } @else {
         <ng-container *ngTemplateOutlet="motionContentTemplate"></ng-container>

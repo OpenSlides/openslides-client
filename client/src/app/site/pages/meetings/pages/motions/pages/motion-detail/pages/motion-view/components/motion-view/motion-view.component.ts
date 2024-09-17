@@ -28,6 +28,8 @@ import {
     ViewMotionChangeRecommendation,
     ViewUnifiedChange
 } from 'src/app/site/pages/meetings/pages/motions';
+import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -35,7 +37,11 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { AgendaItemControllerService } from '../../../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionChangeRecommendationControllerService } from '../../../../../../modules/change-recommendations/services';
-import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
+import {
+    getMotionOriginDetailSubscriptionConfig,
+    MOTION_DETAIL_SUBSCRIPTION,
+    MOTION_ORIGIN_DETAIL_SUBSCRIPTION
+} from '../../../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionLineNumberingService } from '../../../../../../services/common/motion-line-numbering.service';
@@ -71,7 +77,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     public hasChangeRecommendations: boolean = false;
     public unifiedChanges$: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
-    public originUnifiedChanges$: { [key: Id]: BehaviorSubject<ViewUnifiedChange[]> };
+
+    public originMotionsLoaded = [];
+    public originUnifiedChanges$: { [key: Id]: BehaviorSubject<ViewUnifiedChange[]> } = {};
 
     private get unifiedChanges(): ViewUnifiedChange[] {
         return this.unifiedChanges$.value;
@@ -146,7 +154,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         private changeRecoRepo: MotionChangeRecommendationControllerService,
         private cd: ChangeDetectorRef,
         private pdfExport: MotionPdfExportService,
-        private originUrlService: MotionDetailViewOriginUrlService
+        private originUrlService: MotionDetailViewOriginUrlService,
+        private modelRequestBuilder: ModelRequestBuilderService,
+        private autoupdateService: AutoupdateService
     ) {
         super();
 
@@ -196,6 +206,11 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         }
 
         this.unifiedChanges$.next([]);
+        for (const oMotionId of Object.keys(this.originUnifiedChanges$)) {
+            this.originUnifiedChanges$[oMotionId].complete();
+            this.subscriptions.delete(`sorted-changes-${oMotionId}`);
+            delete this.originUnifiedChanges$[oMotionId];
+        }
         this.subscriptions.delete(`motion`);
         this.subscriptions.delete(`sorted-changes`);
     }
@@ -336,6 +351,23 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         this.itemRepo.removeFromAgenda(this.motion.agenda_item_id!).catch(this.raiseError);
     }
 
+    public async toggleOrigin(id: Id): Promise<void> {
+        await this.autoupdateService.single(
+            await this.modelRequestBuilder.build(getMotionOriginDetailSubscriptionConfig(id).modelRequest),
+            MOTION_ORIGIN_DETAIL_SUBSCRIPTION
+        );
+
+        const originMotion = this.repo.getViewModelUnsafe(id);
+        if (!this.originMotionsLoaded.find(m => m.id === id)) {
+            this.originMotionsLoaded.push(originMotion);
+            this.originUnifiedChanges$[id] = new BehaviorSubject([]);
+            this.subscriptions.updateSubscription(
+                `sorted-changes-${this.motion.origin_id}`,
+                this.sortedChangesSubscription(originMotion, this.originUnifiedChanges$[id])
+            );
+        }
+    }
+
     private nextMotionLoaded(): void {
         this.changeRecoMode =
             this.meetingSettingsService.instant(`motions_recommendation_text_mode`) || ChangeRecoMode.Original;
@@ -352,15 +384,17 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         return combineLatest([
             this.meetingSettingsService.get(`motions_line_length`),
             this.changeRecoRepo.getChangeRecosOfMotionObservable(motion.id).pipe(filter(value => !!value)),
-            this.amendmentRepo.getViewModelListObservableFor(motion).pipe(filter(value => !!value))
+            motion.amendments$
         ])
             .pipe(auditTime(1)) // Needed to replicate behaviour of base-repository list updates
             .subscribe(([lineLength, changeRecos, amendments]) => {
-                if (previousAmendments !== amendments) {
-                    this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
-                    previousAmendments = amendments;
+                if (motion.id === this.motion.id) {
+                    if (previousAmendments !== amendments) {
+                        this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
+                        previousAmendments = amendments;
+                    }
+                    this.hasChangeRecommendations = !!changeRecos?.length;
                 }
-                this.hasChangeRecommendations = !!changeRecos?.length;
                 subject.next(
                     this.motionLineNumbering.recalcUnifiedChanges(
                         lineLength,
@@ -368,7 +402,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                         amendments
                     )
                 );
-                this.changeRecoMode = this.determineCrMode(this.changeRecoMode);
+                if (motion.id === this.motion.id) {
+                    this.changeRecoMode = this.determineCrMode(this.changeRecoMode);
+                }
                 this.cd.markForCheck();
             });
     }

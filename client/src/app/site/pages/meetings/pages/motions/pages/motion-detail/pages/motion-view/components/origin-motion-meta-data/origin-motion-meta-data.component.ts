@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Selectable } from 'src/app/domain/interfaces';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
@@ -25,12 +24,12 @@ import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-det
 import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
 
 @Component({
-    selector: `os-motion-meta-data`,
-    templateUrl: `./motion-meta-data.component.html`,
-    styleUrls: [`./motion-meta-data.component.scss`],
+    selector: `os-origin-motion-meta-data`,
+    templateUrl: `./origin-motion-meta-data.component.html`,
+    styleUrls: [`./origin-motion-meta-data.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnInit, OnDestroy {
+export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnInit, OnDestroy {
     public categories$: Observable<ViewMotionCategory[]> = this.categoryRepo.getViewModelListObservable();
     public tags$: Observable<ViewTag[]> = this.tagRepo.getViewModelListObservable();
     public motionBlocks$: Observable<MotionBlock[]> = this.blockRepo.getViewModelListObservable();
@@ -38,15 +37,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     @Input()
     public changeRecoMode: ChangeRecoMode;
 
-    @Output()
-    public enableOriginMotion = new EventEmitter<Id>();
-
-    /**
-     * Determine if the name of supporters are visible
-     */
-    public showSupporters = false;
-
-    public minSupporters$ = this.meetingSettingsService.get(`motions_supporters_min_amount`);
     public showReferringMotions$ = this.meetingSettingsService.get(`motions_show_referring_motions`);
 
     /**
@@ -120,18 +110,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         this.viewService.showAllAmendmentsStateSubject.next(is);
     }
 
-    public get showForwardButton(): boolean {
-        return (
-            !!this.motion.state?.allow_motion_forwarding &&
-            this.operator.hasPerms(Permission.motionCanForward) &&
-            this._forwardingAvailable &&
-            !this.motion.derived_motions.length
-        );
-    }
-
     public loadForwardingCommittees: () => Promise<Selectable[]>;
-
-    private _forwardingAvailable = false;
 
     public get supportersObservable(): Observable<ViewUser[]> {
         return this._supportersSubject;
@@ -157,18 +136,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         private presenter: GetForwardingCommitteesPresenterService
     ) {
         super();
-
-        if (operator.hasPerms(Permission.motionCanManageMetadata)) {
-            this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
-                this._forwardingAvailable = forwardingAvailable;
-                this.cd.markForCheck();
-                this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
-                    return (await this.checkPresenter()) as Selectable[];
-                };
-            });
-        } else {
-            this._forwardingAvailable = false;
-        }
     }
 
     public ngOnInit(): void {
@@ -204,13 +171,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public resetState(): void {
         this.repo.resetState(this.motion).resolve();
-    }
-
-    /**
-     * triggers the update this motion's state extension according to the current string
-     */
-    public setStateExtension(nextExtension: string): void {
-        this.repo.setStateExtension(this.motion, nextExtension);
     }
 
     /**
@@ -269,34 +229,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         this.repo.setBlock(id, this.motion);
     }
 
-    /**
-     * Supports the motion (as requested user)
-     */
-    public support(): void {
-        this.repo.support(this.motion).catch(this.raiseError);
-    }
-
-    /**
-     * Unsupports the motion
-     */
-    public unsupport(): void {
-        this.repo.unsupport(this.motion).catch(this.raiseError);
-    }
-
-    /**
-     * Opens the dialog with all supporters.
-     * TODO: open dialog here!
-     */
-    public openSupportersDialog(): void {
-        this.showSupporters = !this.showSupporters;
-    }
-
-    public toggleOriginMotion(e: { checked: boolean }, id: Id): void {
-        if (e.checked) {
-            this.enableOriginMotion.emit(id);
-        }
-    }
-
     public getCategorySelectionMarginLeft(category: ViewMotionCategory): string {
         return (
             (!this.motion.category_id || this.motion.category_id === category.id ? 0 : 32) + category.level * 5 + `px`
@@ -308,10 +240,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      */
     public canFollowRecommendation(): boolean {
         return this.perms.isAllowed(`createpoll`, this.motion) && !!this.motion.recommendation?.recommendation_label;
-    }
-
-    public async forwardMotionToMeetings(): Promise<void> {
-        await this.motionForwardingService.forwardMotionsToMeetings(this.motion);
     }
 
     /**
