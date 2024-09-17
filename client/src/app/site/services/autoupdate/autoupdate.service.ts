@@ -260,7 +260,6 @@ export class AutoupdateService {
             [collection: string]: { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id };
         } = {};
 
-<<<<<<< HEAD
         const { modelRequest } = this._activeRequestObjects[id];
         if (modelRequest) {
             for (const key of Object.keys(autoupdateData)) {
@@ -276,27 +275,6 @@ export class AutoupdateService {
                         parentField: data[FIELD_INDEX],
                         parentId: +data[ID_INDEX]
                     };
-=======
-        for (const id of requestIds) {
-            const modelRequest = this._activeRequestObjects[id]?.modelRequest;
-            if (modelRequest) {
-                for (const key of Object.keys(autoupdateData)) {
-                    const data = key.split(`/`);
-                    const collectionRelation = `${data[COLLECTION_INDEX]}/${data[FIELD_INDEX]}`;
-                    if (modelRequest.getFullListUpdateCollectionRelations().includes(collectionRelation)) {
-                        fullListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] =
-                            autoupdateData[key];
-                    } else if (modelRequest.getExclusiveListUpdateCollectionRelations().includes(collectionRelation)) {
-                        exclusiveListUpdateCollections[
-                            modelRequest.getForeignCollectionByRelation(collectionRelation)
-                        ] = {
-                            ids: autoupdateData[key],
-                            parentCollection: data[COLLECTION_INDEX],
-                            parentField: data[FIELD_INDEX],
-                            parentId: +data[ID_INDEX]
-                        };
-                    }
->>>>>>> c0883b1db (Fix follow generic relation subset (#4141))
                 }
             }
         }
