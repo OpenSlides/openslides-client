@@ -18,13 +18,20 @@ import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 import { getMotionForwardDataSubscriptionConfig } from '../../../motions.subscription';
 import { MotionFormatService } from '../../../services/common/motion-format.service';
 import { ViewMotion } from '../../../view-models';
-import { MotionForwardDialogComponent } from '../components/motion-forward-dialog/motion-forward-dialog.component';
+import {
+    MotionForwardDialogComponent,
+    MotionForwardDialogReturnData
+} from '../components/motion-forward-dialog/motion-forward-dialog.component';
 import { MotionForwardDialogModule } from '../motion-forward-dialog.module';
 
 @Injectable({
     providedIn: MotionForwardDialogModule
 })
-export class MotionForwardDialogService extends BaseDialogService<MotionForwardDialogComponent, ViewMotion[], Ids> {
+export class MotionForwardDialogService extends BaseDialogService<
+    MotionForwardDialogComponent,
+    ViewMotion[],
+    MotionForwardDialogReturnData
+> {
     public get forwardingCommitteesObservable(): Observable<(Partial<ViewCommittee> & Selectable)[]> {
         return this._forwardingCommitteesSubject;
     }
@@ -57,7 +64,9 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         return !!this._forwardingMeetings.length;
     }
 
-    public async open(data: ViewMotion[]): Promise<MatDialogRef<MotionForwardDialogComponent, Ids>> {
+    public async open(
+        data: ViewMotion[]
+    ): Promise<MatDialogRef<MotionForwardDialogComponent, MotionForwardDialogReturnData>> {
         await this.updateForwardMeetings();
 
         const module = await import(`../motion-forward-dialog.module`).then(m => m.MotionForwardDialogModule);
@@ -77,15 +86,25 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
             return;
         }
         const dialogRef = await this.open(toForward);
-        const toMeetingIds = (await firstValueFrom(dialogRef.afterClosed())) as Ids;
+        const dialogData = (await firstValueFrom(dialogRef.afterClosed())) as MotionForwardDialogReturnData;
+        const toMeetingIds = dialogData?.meetingIds as Ids;
         if (toMeetingIds) {
             try {
                 const motionIds = toForward.map(motion => motion.id);
                 await this.modelRequest.fetch(getMotionForwardDataSubscriptionConfig(...motionIds));
                 const forwardMotions = toForward.map(motion =>
-                    this.formatService.formatMotionForForward(this.repo.getViewModel(motion.id))
+                    this.formatService.formatMotionForForward(
+                        this.repo.getViewModel(motion.id),
+                        dialogData.useOriginalVersion
+                    )
                 );
-                const result = await this.repo.createForwarded(toMeetingIds, ...forwardMotions);
+                const result = await this.repo.createForwarded(
+                    toMeetingIds,
+                    dialogData.useOriginalSubmitter,
+                    dialogData.useOriginalNumber,
+                    dialogData.useOriginalVersion,
+                    ...forwardMotions
+                );
                 this.snackbar.open(this.createForwardingSuccessMessage(motions.length, result), `Ok`);
             } catch (e: any) {
                 this.snackbar.open(e.toString(), `Ok`);
