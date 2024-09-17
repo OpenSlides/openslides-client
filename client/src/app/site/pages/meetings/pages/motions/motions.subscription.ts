@@ -241,7 +241,7 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
             },
             {
                 idField: `state_id`,
-                fieldset: [`name`, `meeting_id`]
+                fieldset: [`name`, `css_class`]
             },
             {
                 idField: `poll_ids`,
@@ -259,6 +259,7 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
         fieldset: [
             `workflow_timestamp`,
             `reason`,
+            `number`,
             `title`,
             `text`,
             `modified_final_version`,

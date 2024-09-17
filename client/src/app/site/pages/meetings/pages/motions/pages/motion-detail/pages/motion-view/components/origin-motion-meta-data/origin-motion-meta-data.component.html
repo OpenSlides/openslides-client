@@ -1,14 +1,20 @@
-<os-motion-manage-title [motion]="motion"></os-motion-manage-title>
+<h1>
+    @if (motion.number) {
+        {{ motion.number }}
+        <span>-</span>
+    }
+    {{ motion.title }}
+</h1>
 
 <!-- Submitters -->
-@if (motion?.submitters?.length || motion?.additional_submitter) {
+@if (motion.submitters?.length || motion.additional_submitter) {
     <div>
         <div class="remove-top-margin">
             <os-motion-manage-motion-meeting-users
                 additionalInputField="additional_submitter"
                 field="submitters"
                 additionalInputLabel="{{ 'Extension' | translate }}"
-                [additionalInputValue]="motion?.additional_submitter"
+                [additionalInputValue]="motion.additional_submitter"
                 [disableEdit]="true"
                 [loadSecondSelectorValues]="loadForwardingCommittees"
                 [motion]="motion"
@@ -30,143 +36,27 @@
             [classes]="motion.stateCssColor"
             extensionLabel="{{ 'Extension' | translate }}"
             [hasExtension]="!!motionState && motionState.show_state_extension_field"
-            [inputValue]="motion?.state_extension"
+            [inputValue]="motion.state_extension"
             title="{{ 'State' | translate }}"
         ></os-motion-extension-field>
     </div>
 }
 
-<!-- Forwardings - display only -->
-@if (motion?.derived_motion_ids?.length) {
-    <div>
-        <h4>{{ 'Motion forwarded to' | translate }}</h4>
-        <div>
-            @for (derived of motion.derived_motions$ | async; track derived.id; let last = $last) {
-                <div>
-                    <ng-container *ngTemplateOutlet="meetingLink; context: { motion: derived }"></ng-container>
-                    <span>({{ derived.forwarded | localizedDate }})</span>
-                </div>
-            }
-        </div>
-    </div>
-}
-
-@let showReferringMotions = showReferringMotions$ | async;
-<!-- Recommendation -->
-@if (isRecommendationEnabled) {
-    <div>
-        <os-motion-extension-field
-            [canBeEdited]="perms.isAllowed('change_metadata', motion)"
-            [chipValue]="recommendationLabel | translate"
-            extensionLabel="{{ 'Extension' | translate }}"
-            [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
-            [inputValue]="motion?.recommendation_extension"
-            [internal]="motion?.state?.is_internal"
-            [listValueTransformFns]="[motionTransformFn]"
-            [searchLists]="searchLists"
-            title="{{ recommender }}"
-            (succeeded)="setRecommendationExtension($event)"
-        >
-            <span class="trigger-menu">
-                @for (recommendation of getPossibleRecommendations(); track recommendation.id) {
-                    <button mat-menu-item (click)="setRecommendation(recommendation.id)">
-                        @if (motion.recommendation_id === recommendation.id) {
-                            <mat-icon>check</mat-icon>
-                        }
-                        {{ recommendation.recommendation_label }}
-                        @if (recommendation.show_recommendation_extension_field) {
-                            <span>&nbsp;...</span>
-                        }
-                    </button>
-                }
-                <mat-divider></mat-divider>
-                <button mat-menu-item (click)="resetRecommendation()">
-                    <mat-icon>replay</mat-icon>
-                    {{ 'Reset recommendation' | translate }}
-                </button>
-            </span>
-        </os-motion-extension-field>
-        <!-- recommendation referenced motions -->
-        @if (showReferringMotions && motion.recommendation_extension_reference_ids?.length) {
-            @if (referencedMotions$ | async; as referencedMotions) {
-                <div class="spacer-top-10">
-                    @for (motion of referencedMotions; track motion.id; let last = $last) {
-                        <span>
-                            <a [routerLink]="motion.getDetailStateUrl()">{{ motion.numberOrTitle }}</a>
-                            @if (!last) {
-                                <span class="referencelist">&nbsp;·&nbsp;</span>
-                            }
-                        </span>
-                    }
-                </div>
-            }
-        }
-        @if (canFollowRecommendation()) {
-            <button class="spacer-top-10" mat-stroked-button (click)="onFollowRecButton()">
-                <span>{{ 'Follow recommendation' | translate }}</span>
-            </button>
-        }
-    </div>
-}
-
-<!-- recommendation referencing motions -->
-@if (showReferringMotions && motion?.referenced_in_motion_recommendation_extension_ids?.length) {
-    <div>
-        <h4>{{ 'Referring motions' | translate }}</h4>
-        @for (motion of referencingMotions$ | async; track motion.id; let last = $last) {
-            <span>
-                <a [routerLink]="motion.getDetailStateUrl()">{{ motion.numberOrTitle }}</a>
-                @if (!last) {
-                    <span class="referencelist">&nbsp;·&nbsp;</span>
-                }
-            </span>
-        }
-    </div>
-}
-
-<!-- Identical motions -->
-@if (motion?.identical_motions?.length) {
-    <div>
-        <h4>{{ 'Identical with' | translate }}</h4>
-        <os-comma-separated-listing [list]="motion?.identical_motions" [useMidpoint]="true">
-            <ng-template let-view>
-                <a [routerLink]="['/', activeMeetingId, 'motions', view.sequential_number]" [state]="{ back: 'true' }">
-                    <span>{{ view.numberOrTitle }}</span>
-                </a>
-            </ng-template>
-        </os-comma-separated-listing>
-    </div>
-}
-
 <!-- Category -->
 @if (categories$ | async; as categories) {
-    @if (categories.length && (perms.isAllowed('change_metadata', motion) || motion.category)) {
+    @if (categories.length && motion.category) {
         <div>
             <h4>{{ 'Category' | translate }}</h4>
-            <os-chip-select chipClass="grey multi-line-chip" [canOpen]="perms.isAllowed('change_metadata', motion)">
-                @for (category of categories; track category.id) {
-                    <button mat-menu-item menu (click)="setCategory(category.id)">
-                        @if (motion.category_id === category.id) {
-                            <mat-icon>check</mat-icon>
-                        }
-                        <span [ngStyle]="{ 'padding-left': getCategorySelectionMarginLeft(category) }">
-                            {{ category.prefixedNameWithParents }}
-                        </span>
-                    </button>
-                }
-                @if (motion.category) {
-                    <div>
-                        @if (motion.category.parent) {
-                            <div>
-                                {{ motion.category.parent }}
-                            </div>
-                            <span>{{ 'Subcategory' | translate }}:</span>
-                        }
-                        {{ motion.category }}
-                    </div>
-                } @else {
-                    <span>-</span>
-                }
+            <os-chip-select chipClass="grey multi-line-chip">
+                <div>
+                    @if (motion.category.parent) {
+                        <div>
+                            {{ motion.category.parent }}
+                        </div>
+                        <span>{{ 'Subcategory' | translate }}:</span>
+                    }
+                    {{ motion.category }}
+                </div>
             </os-chip-select>
         </div>
     }
@@ -174,24 +64,15 @@
 
 <!-- Tags -->
 @if (tags$ | async; as tags) {
-    @if (tags.length && (perms.isAllowed('change_metadata', motion) || motion.hasTags())) {
+    @if (tags.length && motion.hasTags()) {
         <div>
             <h4>{{ 'Tags' | translate }}</h4>
-            <os-chip-select [canOpen]="perms.isAllowed('change_metadata', motion)">
-                @for (tag of tags; track tag.id) {
-                    <button mat-menu-item menu (click)="setTag($event, tag.id)">
-                        @if (motion.tags.includes(tag)) {
-                            <mat-icon>check</mat-icon>
-                        }
-                        {{ tag }}
-                    </button>
-                }
+            <os-chip-select>
                 @for (tag of motion.tags$ | async; track tag.id) {
                     <os-chip-select-chip disableRipple disabled>
                         {{ tag }}
                     </os-chip-select-chip>
                 }
-                {{ '–' }}
             </os-chip-select>
         </div>
     }
@@ -199,97 +80,33 @@
 
 <!-- Block -->
 @if (motionBlocks$ | async; as motionBlocks) {
-    @if (motionBlocks.length && (perms.isAllowed('change_metadata', motion) || motion.block)) {
+    @if (motionBlocks.length && motion.block) {
         <div>
             <h4>
                 {{ 'Motion block' | translate }}
             </h4>
-            <os-chip-select [canOpen]="perms.isAllowed('change_metadata', motion)">
-                @for (block of motionBlocks; track block.id) {
-                    <button mat-menu-item menu (click)="setBlock(block.id)">
-                        @if (motion.block_id === block.id) {
-                            <mat-icon>check</mat-icon>
-                        }
-                        {{ block }}
-                    </button>
-                }
-                {{ motion.block || '–' }}
+            <os-chip-select>
+                {{ motion.block }}
             </os-chip-select>
         </div>
     }
 }
 
-<!-- Workflow timestamp -->
-<os-motion-manage-timestamp
-    field="workflow_timestamp"
-    [motion]="motion"
-    title="{{ 'Submission date' | translate }}"
-></os-motion-manage-timestamp>
+<!-- Created timestamp -->
+@if (motion.workflow_timestamp) {
+    <div>
+        <h4>{{ 'Submission date' | translate }}</h4>
+        <div>{{ motion.workflow_timestamp | localizedDate }}</div>
+    </div>
+}
 
 <!-- Created timestamp -->
-@if (motion?.created && perms.isAllowed('change_metadata', motion)) {
+@if (motion.created) {
     <div>
         <h4>{{ 'Creation date' | translate }}</h4>
         <div>{{ motion.created | localizedDate }}</div>
     </div>
 }
 
-<!-- Origins - display only -->
-@if (originMotions$ | async; as originMotions) {
-    @if (originMotions.length) {
-        <div>
-            <h4>{{ 'Origin' | translate }}</h4>
-            <div class="origin-view">
-                @for (origin of originMotions; track origin.id; let last = $last) {
-                    <div>
-                        <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
-                    </div>
-                    <div class="flex-center">
-                        @if (!last) {
-                            <mat-icon>north</mat-icon>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-    }
-}
-
-<!-- Amendments -->
-@if ((amendments$ | async).length; as amendmentAmount) {
-    <div>
-        <h4>{{ 'Amendments' | translate }}</h4>
-        <a [routerLink]="['/', activeMeetingId, 'motions', 'amendments', motion.id]" [state]="{ back: 'true' }">
-            {{ amendmentAmount }}
-            @if (amendmentAmount === 1) {
-                <span>{{ 'Amendment' | translate }}</span>
-            } @else {
-                <span>{{ 'Amendments' | translate }}</span>
-            }
-        </a>
-        <br />
-        @if (isDifferedChangeRecoMode) {
-            <mat-checkbox [(ngModel)]="showAllAmendments">
-                {{ 'Show all changes' | translate }}
-            </mat-checkbox>
-        }
-    </div>
-}
-
 <!-- motion polls -->
 <os-motion-manage-polls [hideAdd]="true" [motion]="motion"></os-motion-manage-polls>
-
-<ng-template #meetingLink let-motion="motion">
-    »
-    @if (canAccess(motion)) {
-        <span>
-            <a [routerLink]="getUrl(motion)">
-                {{ getMeetingName(motion) }}
-            </a>
-        </span>
-    } @else {
-        <span>
-            {{ getMeetingName(motion) }}
-        </span>
-    }
-</ng-template>

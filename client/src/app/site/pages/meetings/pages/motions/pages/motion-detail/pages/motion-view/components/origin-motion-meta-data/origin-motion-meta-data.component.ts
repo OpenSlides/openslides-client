@@ -37,8 +37,6 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
     @Input()
     public changeRecoMode: ChangeRecoMode;
 
-    public showReferringMotions$ = this.meetingSettingsService.get(`motions_show_referring_motions`);
-
     /**
      * @returns the current recommendation label (with extension)
      */
@@ -95,15 +93,6 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
         return this.motion?.recommendation_extension_references$.pipe(
             map(motions => (motions as ViewMotion[]).naturalSort(this.translate.currentLang, [`number`, `title`]))
         );
-    }
-
-    public get originMotions$(): Observable<ViewMotion[] | ViewMeeting[]> {
-        if (this.motion.origin_id) {
-            return this.motion.all_origins$.pipe(map(origins => origins?.reverse()));
-        } else if (this.motion.origin_meeting_id) {
-            return this.motion.origin_meeting$.pipe(map(origin => [origin]));
-        }
-        return null;
     }
 
     public override set showAllAmendments(is: boolean) {
