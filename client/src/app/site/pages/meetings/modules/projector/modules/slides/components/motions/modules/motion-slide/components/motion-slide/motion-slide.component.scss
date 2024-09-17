@@ -1,7 +1,16 @@
 @import 'src/app/site/pages/meetings/pages/motions/styles/motion-common-styles';
+@import 'src/assets/styles/mixins/detail-view-appearance.scss';
 
 .paragraph-context {
     opacity: 0.5;
+}
+
+.motion-text,
+.motion-text-diff,
+.reason-text {
+    .detail-view-text {
+        @include detail-view-appearance;
+    }
 }
 
 #sidebox {

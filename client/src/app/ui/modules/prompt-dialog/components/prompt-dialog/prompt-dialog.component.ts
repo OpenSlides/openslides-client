@@ -4,6 +4,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 interface PromptDialogData {
     title: string;
     content: string;
+    confirm?: string;
+    decline?: string;
 }
 
 @Component({

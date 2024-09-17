@@ -7,6 +7,7 @@ import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
+import { ViewPoll } from '../../../../../polls';
 import { MotionPollService } from '../../services';
 import { MotionPollPdfService } from '../../services/motion-poll-pdf.service/motion-poll-pdf.service';
 
@@ -16,6 +17,11 @@ import { MotionPollPdfService } from '../../services/motion-poll-pdf.service/mot
     styleUrls: [`./motion-poll.component.scss`]
 })
 export class MotionPollComponent extends BasePollComponent {
+    @Input()
+    public set pollViewModel(poll: ViewPoll) {
+        this.poll = poll;
+    }
+
     @Input()
     public set pollId(id: Id) {
         this.initializePoll(id);

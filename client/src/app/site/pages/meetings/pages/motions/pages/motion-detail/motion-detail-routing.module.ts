@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Permission } from 'src/app/domain/definitions/permission';
 
-import { AmendmentCreateWizardComponent } from './components/amendment-create-wizard/amendment-create-wizard.component';
 import { MotionDetailComponent } from './components/motion-detail/motion-detail.component';
-import { MotionDetailViewComponent } from './components/motion-detail-view/motion-detail-view.component';
 
 const routes: Routes = [
     {
@@ -12,38 +10,13 @@ const routes: Routes = [
         component: MotionDetailComponent,
         children: [
             {
-                path: `new`,
-                component: MotionDetailViewComponent,
+                path: ``,
+                loadChildren: () => import(`./pages/motion-form/motion-form.module`).then(m => m.MotionFormModule),
                 data: { meetingPermissions: [Permission.motionCanCreate] }
             },
             {
-                path: `edit`,
-                data: { meetingPermissions: [Permission.motionCanManage] },
-                children: [
-                    {
-                        path: `:id`,
-                        component: MotionDetailViewComponent
-                    }
-                ]
-            },
-            {
-                path: `new-amendment`,
-                component: MotionDetailViewComponent,
-                data: { meetingPermissions: [Permission.motionCanCreateAmendments] }
-            },
-            {
                 path: `:id`,
-                children: [
-                    {
-                        path: ``,
-                        pathMatch: `full`,
-                        component: MotionDetailViewComponent
-                    },
-                    {
-                        path: `create-amendment`,
-                        component: AmendmentCreateWizardComponent
-                    }
-                ]
+                loadChildren: () => import(`./pages/motion-view/motion-view.module`).then(m => m.MotionViewModule)
             }
         ]
     }

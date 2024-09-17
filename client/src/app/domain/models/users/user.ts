@@ -64,8 +64,8 @@ export class User extends BaseDecimalModel<User> {
     public static readonly REQUESTABLE_FIELDS: (keyof User)[] = [
         `id`,
         `username`,
-        `saml_id`,
         `member_number`,
+        `saml_id`,
         `pronoun`,
         `title`,
         `first_name`,

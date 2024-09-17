@@ -66,6 +66,8 @@ export class AssignmentPollDetailComponent
                 if (!votes[token]) {
                     votes[token] = {
                         user: vote.user,
+                        groupIds: vote.user?.group_ids(),
+                        structureLevelIds: vote.user?.structure_level_ids(),
                         votes: []
                     };
                 }

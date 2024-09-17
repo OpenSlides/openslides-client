@@ -44,8 +44,7 @@ interface AutoupdateSubscriptionMap {
 
 interface AutoupdateIncomingMessage {
     autoupdateData: AutoupdateModelData;
-    id: Id;
-    description?: string;
+    idDescriptionMap: { [id: Id]: string };
 }
 
 class AutoupdateEndpoint extends EndpointConfiguration {
@@ -90,7 +89,10 @@ export class AutoupdateService {
 
         this.communication.setEndpoint(AUTOUPDATE_DEFAULT_ENDPOINT);
         this.communication.listen().subscribe(data => {
-            this.handleAutoupdate({ autoupdateData: data.data, id: data.streamId, description: data.description });
+            this.handleAutoupdate({
+                autoupdateData: data.data,
+                idDescriptionMap: data.streamIdDescriptions
+            });
         });
         this.communication.listenShouldReconnect().subscribe(() => {
             this.pauseUntilVisible();
@@ -246,13 +248,19 @@ export class AutoupdateService {
         };
     }
 
-    private async handleAutoupdate({ autoupdateData, id, description }: AutoupdateIncomingMessage): Promise<void> {
-        if (!this._activeRequestObjects || !this._activeRequestObjects[id]) {
+    private async handleAutoupdate({ autoupdateData, idDescriptionMap }: AutoupdateIncomingMessage): Promise<void> {
+        const requestIds = Object.keys(idDescriptionMap).map(id => +id);
+        if (!this._activeRequestObjects || !requestIds.some(id => this._activeRequestObjects[id])) {
             return;
         }
 
         const modelData = autoupdateFormatToModelData(autoupdateData);
-        console.debug(`[autoupdate] from stream:`, description, id, [modelData, autoupdateData]);
+        console.debug(
+            `[autoupdate] from streams:`,
+            requestIds.map(id => `${id} - ${idDescriptionMap[id]}`).join(`, `),
+            [modelData, autoupdateData]
+        );
+
         const fullListUpdateCollections: {
             [collection: string]: Ids;
         } = {};
@@ -260,26 +268,35 @@ export class AutoupdateService {
             [collection: string]: { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id };
         } = {};
 
-        const { modelRequest } = this._activeRequestObjects[id];
-        if (modelRequest) {
-            for (const key of Object.keys(autoupdateData)) {
-                const data = key.split(`/`);
-                const collectionRelation = `${data[COLLECTION_INDEX]}/${data[FIELD_INDEX]}`;
-                if (modelRequest.getFullListUpdateCollectionRelations().includes(collectionRelation)) {
-                    fullListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] =
-                        autoupdateData[key];
-                } else if (modelRequest.getExclusiveListUpdateCollectionRelations().includes(collectionRelation)) {
-                    exclusiveListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] = {
-                        ids: autoupdateData[key],
-                        parentCollection: data[COLLECTION_INDEX],
-                        parentField: data[FIELD_INDEX],
-                        parentId: +data[ID_INDEX]
-                    };
+        for (const id of requestIds) {
+            const { modelRequest } = this._activeRequestObjects[id];
+            if (modelRequest) {
+                for (const key of Object.keys(autoupdateData)) {
+                    const data = key.split(`/`);
+                    const collectionRelation = `${data[COLLECTION_INDEX]}/${data[FIELD_INDEX]}`;
+                    if (modelRequest.getFullListUpdateCollectionRelations().includes(collectionRelation)) {
+                        fullListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] =
+                            autoupdateData[key];
+                    } else if (modelRequest.getExclusiveListUpdateCollectionRelations().includes(collectionRelation)) {
+                        exclusiveListUpdateCollections[
+                            modelRequest.getForeignCollectionByRelation(collectionRelation)
+                        ] = {
+                            ids: autoupdateData[key],
+                            parentCollection: data[COLLECTION_INDEX],
+                            parentField: data[FIELD_INDEX],
+                            parentId: +data[ID_INDEX]
+                        };
+                    }
                 }
             }
         }
 
-        await this.prepareCollectionUpdates(modelData, fullListUpdateCollections, exclusiveListUpdateCollections, id);
+        await this.prepareCollectionUpdates(
+            modelData,
+            fullListUpdateCollections,
+            exclusiveListUpdateCollections,
+            requestIds
+        );
     }
 
     private async prepareCollectionUpdates(
@@ -290,7 +307,7 @@ export class AutoupdateService {
         exclusiveListUpdateCollections: {
             [collection: string]: { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id };
         },
-        requestId: number
+        requestIds: number[]
     ): Promise<void> {
         const unlock = await this._mutex.lock();
 
@@ -302,11 +319,13 @@ export class AutoupdateService {
                 deletedModels: {}
             })
             .then(deletedModels => {
-                this.communication.cleanupCollections(requestId, deletedModels);
+                for (const requestId of requestIds) {
+                    this.communication.cleanupCollections(requestId, deletedModels);
 
-                if (this._resolveDataReceived[requestId]) {
-                    this._resolveDataReceived[requestId](modelData);
-                    delete this._resolveDataReceived[requestId];
+                    if (this._resolveDataReceived[requestId]) {
+                        this._resolveDataReceived[requestId](modelData);
+                        delete this._resolveDataReceived[requestId];
+                    }
                 }
             });
 

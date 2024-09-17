@@ -21,6 +21,11 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
         return this._poll;
     }
 
+    protected set poll(poll: ViewPoll) {
+        this._poll = poll;
+        this.onAfterUpdatePoll(poll);
+    }
+
     public pollStateActions = {
         [PollState.Created]: {
             icon: `play_arrow`,
@@ -110,8 +115,7 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
         this.subscriptions.push(
             this.repo.getViewModelObservable(this._id).subscribe(poll => {
                 if (poll) {
-                    this._poll = poll;
-                    this.onAfterUpdatePoll(poll);
+                    this.poll = poll;
                 }
             })
         );
