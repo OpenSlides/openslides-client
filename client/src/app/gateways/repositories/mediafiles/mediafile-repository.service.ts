@@ -115,7 +115,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
             id: viewMediafile.id,
             title: update.title,
             parent_id: update.parent_id,
-            meeting_id: this.activeMeetingId,
+            meeting_id: this.activeMeetingId ?? undefined,
             ...variables
         };
         return this.sendActionToBackend(MediafileAction.UPDATE, payload);
