@@ -73,6 +73,9 @@ export class MotionBlockListComponent extends BaseMeetingListViewComponent<ViewM
         const dialogRef = await this.dialog.open();
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                if (result[`agenda_parent_id`] === 0) {
+                    result[`agenda_parent_id`] = null;
+                }
                 this.repo.create(result);
             }
         });

@@ -107,7 +107,7 @@ export class SharedWorkerService {
             try {
                 const worker = new SharedWorker(new URL(`../../worker/default-shared-worker.worker`, import.meta.url), {
                     type: `module`,
-                    name: `openslides-shared-worker`
+                    name: `openslides-shared-worker-module`
                 });
 
                 this.conn = worker.port;
