@@ -31,6 +31,10 @@ export class SubscriptionMap {
         this._subscriptions = {};
     }
 
+    public size(): number {
+        return Object.keys(this._subscriptions).length;
+    }
+
     private nextRandomId(): string {
         const id = Math.floor(Math.random() * (900000 - 1) + 100000);
         return id.toString();

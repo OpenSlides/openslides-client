@@ -168,7 +168,7 @@ export class ModelRequestBuilderService {
         }
     }
 
-    private addFollowedRelations(modelRequestObject: ModelRequestObject): void {
+    private addFollowedRelations(modelRequestObject: ModelRequestObject, skipUnknownRelations = false): void {
         for (const entry of modelRequestObject.simplifiedRequest.follow || []) {
             let follow: Follow;
             if (typeof entry === `string`) {
@@ -178,7 +178,13 @@ export class ModelRequestBuilderService {
             } else {
                 follow = entry;
             }
-            this.getFollowedRelation(modelRequestObject, follow);
+            try {
+                this.getFollowedRelation(modelRequestObject, follow);
+            } catch (e) {
+                if (!skipUnknownRelations || !(e instanceof UnknownRelationError)) {
+                    throw e;
+                }
+            }
         }
     }
 
@@ -288,19 +294,9 @@ export class ModelRequestBuilderService {
         // Add relations
         if (request.follow) {
             for (const viewModel of possibleViewModels) {
-                try {
-                    // The last to write to fields will win...
-                    const modelRequestObject = new ModelRequestObject(viewModel.COLLECTION, request, fields);
-                    this.addFollowedRelations(modelRequestObject);
-                } catch (e) {
-                    if (e instanceof UnknownRelationError) {
-                        // Explicitly allow following relations for only a subset of foreign models
-                        // of this relation. If a specific relation cannot be found, just do not request it.
-                        // This will succeed for the subset of models, that do have the requested relation.
-                        continue;
-                    }
-                    throw e;
-                }
+                // The last to write to fields will win...
+                const modelRequestObject = new ModelRequestObject(viewModel.COLLECTION, request, fields);
+                this.addFollowedRelations(modelRequestObject, true);
             }
         }
     }

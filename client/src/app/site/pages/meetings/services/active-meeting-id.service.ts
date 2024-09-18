@@ -54,13 +54,20 @@ export class ActiveMeetingIdService {
                 distinctUntilChanged()
             )
             .subscribe(event => {
-                const parts = (event as RoutesRecognized).url.split(`/`);
-                let meetingId = null;
-                if (parts.length >= 2) {
-                    meetingId = parts[1];
-                }
-                this.setMeetingId(meetingId);
+                this.setMeetingId(this.parseUrlMeetingId((event as RoutesRecognized).url));
             });
+    }
+
+    /**
+     * Returns the meeting id from the current route
+     */
+    public parseUrlMeetingId(url: string): Id | null {
+        const parts = url.split(`/`);
+        if (parts.length >= 2) {
+            return +parts[1];
+        }
+
+        return null;
     }
 
     private setMeetingId(nextMeetingId: number | null | undefined): void {
