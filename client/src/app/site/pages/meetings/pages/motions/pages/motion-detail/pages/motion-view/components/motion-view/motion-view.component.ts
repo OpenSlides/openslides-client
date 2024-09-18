@@ -207,11 +207,11 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             this.hasLoaded$.next(false);
         }
 
+        this.originMotionsLoaded = [];
         this.unifiedChanges$.next([]);
         for (const oMotionId of Object.keys(this.originUnifiedChanges$)) {
             this.originUnifiedChanges$[oMotionId].complete();
             this.subscriptions.delete(`sorted-changes-${oMotionId}`);
-            delete this.originUnifiedChanges$[oMotionId];
         }
         this.subscriptions.delete(`motion`);
         this.subscriptions.delete(`sorted-changes`);
