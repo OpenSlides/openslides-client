@@ -79,7 +79,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     public unifiedChanges$: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
 
     public originMotionsLoaded = [];
-    public originUnifiedChanges$: { [key: Id]: BehaviorSubject<ViewUnifiedChange[]> } = {};
+    public originUnifiedChanges: { [key: Id]: ViewUnifiedChange[] } = {};
 
     private get unifiedChanges(): ViewUnifiedChange[] {
         return this.unifiedChanges$.value;
@@ -209,10 +209,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
         this.originMotionsLoaded = [];
         this.unifiedChanges$.next([]);
-        for (const oMotionId of Object.keys(this.originUnifiedChanges$)) {
-            this.originUnifiedChanges$[oMotionId].complete();
-            this.subscriptions.delete(`sorted-changes-${oMotionId}`);
-        }
         this.subscriptions.delete(`motion`);
         this.subscriptions.delete(`sorted-changes`);
     }
@@ -362,10 +358,13 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         const originMotion = this.repo.getViewModelUnsafe(id);
         if (!this.originMotionsLoaded.find(m => m.id === id)) {
             this.originMotionsLoaded.push(originMotion);
-            this.originUnifiedChanges$[id] = new BehaviorSubject([]);
-            this.subscriptions.updateSubscription(
-                `sorted-changes-${this.motion.origin_id}`,
-                this.sortedChangesSubscription(originMotion, this.originUnifiedChanges$[id])
+            const changeRecos = await firstValueFrom(
+                this.changeRecoRepo.getChangeRecosOfMotionObservable(originMotion.id).pipe(filter(value => !!value))
+            );
+            this.originUnifiedChanges[id] = this.motionLineNumbering.recalcUnifiedChanges(
+                originMotion.meeting.motions_line_length,
+                changeRecos as ViewMotionChangeRecommendation[],
+                originMotion.amendments
             );
         }
     }
