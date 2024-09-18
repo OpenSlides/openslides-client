@@ -42,8 +42,8 @@ test.describe(`Testing the internal sign in process with saml enabled`, () => {
     test.afterAll(async ({ browser }) => {
         const context = await browser.newContext();
         await login(context);
-        await deleteAccounts(context, secondAccountId);
         await deleteMeetings(context, meetingId);
+        await deleteAccounts(context, secondAccountId);
         await deleteCommittees(context, committeeId);
         await logout(context);
     });
@@ -113,8 +113,8 @@ test.describe(`Testing the sign in and out process`, () => {
     test.afterAll(async ({ browser }) => {
         const context = await browser.newContext();
         await login(context);
-        await deleteAccounts(context, secondAccountId);
         await deleteMeetings(context, meetingId);
+        await deleteAccounts(context, secondAccountId);
         await deleteCommittees(context, committeeId);
         await logout(context);
     });

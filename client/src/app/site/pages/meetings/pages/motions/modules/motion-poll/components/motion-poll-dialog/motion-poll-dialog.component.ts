@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { PollPercentBaseVerbose, VoteValue } from 'src/app/domain/models/poll';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
@@ -7,6 +8,11 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 import { MotionPollService } from '../../services';
+
+export const MotionPollMethodsVerbose = {
+    YN: _(`Yes/No`),
+    YNA: _(`Yes/No/Abstain`)
+};
 
 @Component({
     selector: `os-motion-poll-dialog`,
@@ -16,6 +22,8 @@ import { MotionPollService } from '../../services';
 export class MotionPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {
     public PercentBaseVerbose = PollPercentBaseVerbose;
     public majority: string;
+
+    public MotionPollMethodsVerbose = MotionPollMethodsVerbose;
 
     public constructor(
         public motionPollService: MotionPollService,

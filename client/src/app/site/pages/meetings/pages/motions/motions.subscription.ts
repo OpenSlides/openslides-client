@@ -37,7 +37,7 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     `category_weight`,
                     `change_recommendation_ids`,
                     `comment_ids`,
-                    `attachment_ids`,
+                    `attachment_meeting_mediafile_ids`,
                     `created`,
                     `derived_motion_ids`,
                     `forwarded`,
@@ -175,8 +175,9 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                 ...pollModelRequest
             },
             {
-                idField: `attachment_ids`,
-                fieldset: FULL_FIELDSET
+                idField: `attachment_meeting_mediafile_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [{ idField: `mediafile_id`, fieldset: FULL_FIELDSET }]
             },
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
             { idField: `lead_motion_id`, fieldset: [`text`] },

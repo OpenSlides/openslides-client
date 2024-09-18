@@ -64,9 +64,6 @@ export class ActiveMeetingService {
         this.lifecycle.openslidesBooted.subscribe();
     }
 
-    /**
-     * Only used in the `OperatorService`
-     */
     public async ensureActiveMeetingIsAvailable(): Promise<ViewMeeting | null> {
         if (!!this.meetingId) {
             return await firstValueFrom(

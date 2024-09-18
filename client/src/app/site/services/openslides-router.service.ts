@@ -214,6 +214,9 @@ export class OpenSlidesRouterService {
     }
 
     private _toParamMap(currentRoute: ActivatedRouteSnapshot, paramMap: { [paramName: string]: any }): void {
+        for (const [key, value] of Object.entries(currentRoute.queryParams ?? {})) {
+            paramMap[key] = value;
+        }
         for (const [key, value] of Object.entries(currentRoute.params ?? {})) {
             paramMap[key] = value;
         }

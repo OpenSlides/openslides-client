@@ -4,10 +4,10 @@ import { Id } from '../domain/definitions/key-types';
 import { ViewMediafile } from '../site/pages/meetings/pages/mediafiles';
 import { ActionService } from './actions';
 
-type MediaAdapterActionParameters = (
-    | { action: `set`; mediafile: ViewMediafile }
-    | { action: `unset`; meetingId: Id }
-) & { type: `logo` | `font`; place: string };
+type MediaAdapterActionParameters = ({ action: `set`; mediafile: ViewMediafile } | { action: `unset` }) & {
+    type: `logo` | `font`;
+    place: string;
+};
 
 @Injectable({
     providedIn: `root`
@@ -15,31 +15,31 @@ type MediaAdapterActionParameters = (
 export class MeetingMediaAdapterService {
     public constructor(private actionService: ActionService) {}
 
-    public setLogo(place: string, mediafile: ViewMediafile): Promise<void> {
-        return this.performAction({ action: `set`, type: `logo`, place, mediafile });
+    public setLogo(place: string, meetingId: Id, mediafile: ViewMediafile): Promise<void> {
+        return this.performAction(meetingId, { action: `set`, type: `logo`, place, mediafile });
     }
 
     public unsetLogo(place: string, meetingId: Id): Promise<void> {
-        return this.performAction({ action: `unset`, type: `logo`, place, meetingId });
+        return this.performAction(meetingId, { action: `unset`, type: `logo`, place });
     }
 
-    public setFont(place: string, mediafile: ViewMediafile): Promise<void> {
-        return this.performAction({ action: `set`, type: `font`, place, mediafile });
+    public setFont(place: string, meetingId: Id, mediafile: ViewMediafile): Promise<void> {
+        return this.performAction(meetingId, { action: `set`, type: `font`, place, mediafile });
     }
 
     public unsetFont(place: string, meetingId: Id): Promise<void> {
-        return this.performAction({ action: `unset`, type: `font`, place, meetingId });
+        return this.performAction(meetingId, { action: `unset`, type: `font`, place });
     }
 
-    private async performAction(param: MediaAdapterActionParameters): Promise<void> {
+    private async performAction(meetingId: Id, param: MediaAdapterActionParameters): Promise<void> {
         const data: any[] = [
             {
                 ...(param.action === `set`
                     ? {
-                          id: param.mediafile.meeting_id,
+                          id: meetingId,
                           mediafile_id: param.mediafile.id
                       }
-                    : { id: param.meetingId }),
+                    : { id: meetingId }),
                 place: param.place
             }
         ];
