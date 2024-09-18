@@ -71,7 +71,10 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         if (!defaultDef || !current) {
             return false;
         }
-        return defaultDef.sortAscending !== current.sortAscending || defaultDef.sortProperty !== current.sortProperty;
+        return (
+            defaultDef.sortAscending !== current.sortAscending ||
+            !this.isSameProperty(defaultDef.sortProperty, current.sortProperty)
+        );
     }
 
     /**

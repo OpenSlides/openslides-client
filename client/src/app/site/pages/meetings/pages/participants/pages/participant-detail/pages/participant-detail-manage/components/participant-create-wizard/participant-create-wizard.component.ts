@@ -173,6 +173,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                 username: [``],
                 first_name: [``],
                 last_name: [``],
+                member_number: [``],
                 email: [``, createEmailValidator()]
             },
             {

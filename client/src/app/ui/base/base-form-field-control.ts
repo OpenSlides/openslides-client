@@ -35,7 +35,7 @@ export abstract class BaseFormFieldControlComponent<T>
     @HostBinding() public id = `base-form-control-${BaseFormFieldControlComponent.nextId++}`;
 
     @HostBinding(`class.floating`) public get shouldLabelFloat(): boolean {
-        return (this.focused || !this.empty) && !this.disabled;
+        return (this.focused && !this.disabled) || !this.empty;
     }
 
     @HostBinding(`attr.aria-describedby`) public describedBy = ``;
@@ -96,7 +96,9 @@ export abstract class BaseFormFieldControlComponent<T>
 
     public stateChanges = new Subject<void>();
 
-    public errorState = false;
+    public get errorState(): boolean {
+        return false;
+    }
 
     public focused = false;
 

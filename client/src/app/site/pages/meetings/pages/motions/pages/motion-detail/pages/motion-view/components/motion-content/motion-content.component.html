@@ -1,0 +1,85 @@
+<!-- Regular motions or traditional amendments -->
+@if (!isParagraphBasedAmendment) {
+    @if (changeRecoMode !== ChangeRecoMode.Diff) {
+        <!-- Text (hide preamble, if diff mode. The preample is included in the motion-detail-diff component) -->
+        @if (showPreamble) {
+            <span class="text-prefix-label">
+                {{ preamble$ | async }}
+            </span>
+        }
+
+        <div
+            class="motion-text underlined-links"
+            [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
+            [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
+            [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
+        >
+            @if (lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original) {
+                <os-motion-detail-original-change-recommendations
+                    [changeRecommendations]="changeRecommendations$ | async"
+                    [html]="formattedTextPlain$ | async"
+                    [motionId]="motion.id"
+                    (createChangeRecommendation)="createChangeRecommendation($event)"
+                    (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
+                ></os-motion-detail-original-change-recommendations>
+            } @else {
+                <os-motion-final-version
+                    [formattedText]="formattedTextPlain$ | async"
+                    [motion]="motion"
+                ></os-motion-final-version>
+            }
+        </div>
+    } @else {
+        <os-motion-detail-diff
+            [changes]="changesForDiffMode$ | async"
+            [highlightedLine]="highlightedLine"
+            [lineNumberingMode]="lineNumberingMode"
+            [motion]="motion"
+            [scrollToChange]="scrollToChange"
+            [showAllAmendments]="showAllAmendments$ | async"
+            (createChangeRecommendation)="createChangeRecommendation($event)"
+        ></os-motion-detail-diff>
+    }
+} @else {
+    <!-- Paragraph-based amendments -->
+    <os-paragraph-based-amendment
+        [changeRecoMode]="changeRecoMode"
+        [changesForDiffMode]="changesForDiffMode$ | async"
+        [highlightedLine]="highlightedLine"
+        [lineNumberingMode]="lineNumberingMode"
+        [motion]="motion"
+        (createChangeRecommendation)="createChangeRecommendation($event)"
+        (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
+    ></os-paragraph-based-amendment>
+}
+
+<div class="motion-content">
+    <!-- Reason -->
+    @if (motion.reason) {
+        <div>
+            <h3>{{ 'Reason' | translate }}</h3>
+            <div class="motion-text underlined-links" [innerHtml]="motion.reason | trust: 'html'"></div>
+        </div>
+    }
+
+    <div class="extra-data">
+        <!-- Attachments -->
+        @if (hasAttachments) {
+            <div class="content-field">
+                <div>
+                    <h3>
+                        {{ 'Attachments' | translate }}
+                        <mat-icon>attach_file</mat-icon>
+                    </h3>
+                    <mat-list dense>
+                        @for (file of motion.attachment_meeting_mediafiles$ | async; track file.id) {
+                            <mat-list-item>
+                                <a target="_blank" [routerLink]="file.url">{{ file.title }}</a>
+                            </mat-list-item>
+                        }
+                    </mat-list>
+                </div>
+            </div>
+        }
+    </div>
+</div>

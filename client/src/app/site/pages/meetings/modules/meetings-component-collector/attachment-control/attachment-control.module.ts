@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
@@ -20,6 +21,7 @@ const DECLARATIONS = [AttachmentControlComponent];
     exports: DECLARATIONS,
     imports: [
         CommonModule,
+        MatCardModule,
         MatFormFieldModule,
         MatIconModule,
         MatButtonModule,

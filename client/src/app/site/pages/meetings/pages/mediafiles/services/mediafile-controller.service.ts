@@ -7,8 +7,10 @@ import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
 import { BaseController } from 'src/app/site/base/base-controller';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
+import { ActiveMeetingService } from '../../../services/active-meeting.service';
 import { ViewMediafile } from '../view-models';
 import { MediafileCommonServiceModule } from './mediafile-common-service.module';
 
@@ -17,7 +19,8 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
     public constructor(
         protected override controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MediafileRepositoryService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private activeMeeting: ActiveMeetingService
     ) {
         super(controllerServiceCollector, Mediafile, repo);
     }
@@ -26,7 +29,11 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
         return this.repo.move(files, directoryId);
     }
 
-    public createDirectory(mediafile: Partial<Mediafile>): Promise<Identifiable> {
+    public publish(file: Identifiable, publish: boolean): Promise<void> {
+        return this.repo.publish(file, publish);
+    }
+
+    public createDirectory(mediafile: Partial<Mediafile> & { access_group_ids: Id[] }): Promise<Identifiable> {
         return this.repo.createDirectory(mediafile);
     }
 
@@ -46,11 +53,20 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
         return this.getViewModelListObservable().pipe(
             map(mediafiles =>
                 mediafiles.filter(mediafile => {
-                    if (
-                        (mediafile.access_group_ids?.length &&
-                            !this.operator.isInGroupIds(...mediafile.access_group_ids)) ||
-                        (mediafile.inherited_access_groups?.length &&
-                            !this.operator.isInGroupIds(...mediafile.inherited_access_group_ids))
+                    const meetingMediafile = this.repo.getMeetingMediafile(mediafile, this.activeMeeting.meetingId);
+                    if (meetingMediafile) {
+                        if (
+                            (meetingMediafile?.access_group_ids?.length &&
+                                !this.operator.isInGroupIds(...meetingMediafile.access_group_ids)) ||
+                            (meetingMediafile?.inherited_access_group_ids?.length &&
+                                !this.operator.isInGroupIds(...meetingMediafile.inherited_access_group_ids))
+                        ) {
+                            return false;
+                        }
+                    } else if (
+                        this.activeMeeting.meetingId &&
+                        (mediafile.published_to_meetings_in_organization_id !== ORGANIZATION_ID ||
+                            !this.operator.isMeetingAdmin)
                     ) {
                         return false;
                     }

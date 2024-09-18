@@ -183,11 +183,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         }
     }
 
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.submitEvent.emit();
-        }
-    }
+    public onKeyDown(_event: KeyboardEvent): void {}
 
     public markAsPristine(): void {
         this._initialState = this.personalInfoForm.value;
@@ -239,8 +235,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
             personalInfoPatch[ctrl] = this.getFormValuePatch(ctrl as keyof ViewUser);
         });
-        const isActiveExists = typeof this.user?.is_active === `boolean`;
-        const isPersonExists = typeof this.user?.is_physical_person === `boolean`;
+        const isActiveExists = typeof this.user?.is_active === `boolean` || this.user?.id;
+        const isPersonExists = typeof this.user?.is_physical_person === `boolean` || this.user?.id;
         this.personalInfoForm.patchValue(
             {
                 ...personalInfoPatch,

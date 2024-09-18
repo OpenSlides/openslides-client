@@ -1,3 +1,5 @@
+@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+
 .editor {
     .editor-menu {
         display: flex;
@@ -84,6 +86,8 @@
                     border: 1px dashed #bbb;
                 }
             }
+
+            @include detail-view-appearance;
         }
         &:focus-within {
             border-bottom-color: var(--mdc-filled-text-field-focus-active-indicator-color);

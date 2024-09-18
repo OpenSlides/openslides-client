@@ -18,7 +18,7 @@ import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker, ViewTopic } from '../p
 import { ViewPointOfOrderCategory } from '../pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
-import { ViewMediafile } from '../pages/mediafiles';
+import { ViewMediafile, ViewMeetingMediafile } from '../pages/mediafiles';
 import {
     ViewMotion,
     ViewMotionBlock,
@@ -157,6 +157,7 @@ interface IMeetingRelations {
     groups: ViewGroup[];
     personal_notes: ViewPersonalNote[];
     mediafiles: ViewMediafile[];
+    meeting_mediafiles: ViewMeetingMediafile[];
     motions: ViewMotion[];
     motion_comment_sections: ViewMotionCommentSection[];
     motion_comments: ViewMotionComment[];

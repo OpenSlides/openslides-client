@@ -1,0 +1,80 @@
+.vote-chart-bar {
+    display: flex;
+    align-items: center;
+    height: 70px;
+    .segment {
+        position: relative;
+        text-align: center;
+        height: 50px;
+        border: 1px solid white;
+        transition: 0.3s;
+        .below {
+            position: absolute;
+            width: 100%;
+            top: 58px;
+        }
+    }
+    .segment:hover {
+        border-color: transparent;
+        border-right-width: 0;
+        border-left-width: 0;
+    }
+}
+
+.results {
+    display: grid;
+    grid-gap: 10px !important;
+    margin: 0;
+    grid-template-areas: 'votes options';
+    grid-template-columns: auto auto;
+    @media (max-width: 700px) {
+        grid-template-areas: 'votes votes' 'options options';
+        grid-template-columns: max-content;
+    }
+    .categories {
+        display: inline-block;
+        span:last-of-type {
+            display: none;
+        }
+        .seperator {
+            padding: 0 4px;
+        }
+    }
+}
+
+.grid-all-votes-area {
+    grid-area: votes;
+}
+
+.grid-options-area {
+    grid-area: options;
+    display: flex;
+    justify-content: end;
+}
+
+.box {
+    height: 15px;
+    width: 15px;
+    display: inline-block;
+}
+
+.margin-top-bottom {
+    margin-top: 50px;
+    margin-bottom: 10px;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px;
+}
+
+.one-option {
+    margin-right: 20px;
+}
+
+.one-option:last-of-type {
+    margin-right: 0;
+}
+
+.no-space {
+    white-space: pre;
+}

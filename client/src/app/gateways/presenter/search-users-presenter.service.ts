@@ -71,6 +71,7 @@ export class SearchUsersPresenterService {
                 permissionScope,
                 permissionRelatedId,
                 searchCriteria: users.map(entry => ({
+                    member_number: entry.member_number,
                     username: entry.username,
                     first_name: entry.first_name,
                     last_name: entry.last_name,

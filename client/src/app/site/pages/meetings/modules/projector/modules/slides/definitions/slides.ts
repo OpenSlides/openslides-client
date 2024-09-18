@@ -92,7 +92,7 @@ export const Slides: SlideManifest[] = [
         scrollable: true
     },
     {
-        path: `mediafile`,
+        path: `meeting_mediafile`,
         loadChildren: () =>
             import(`../components/mediafile-slide/mediafile-slide.module`).then(m => m.MediafileSlideModule),
         verboseName: _(`File`),

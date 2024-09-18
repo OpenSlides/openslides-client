@@ -56,9 +56,8 @@ export class AutoupdateSubscription {
                 sender: `autoupdate`,
                 action: `receive-data`,
                 content: {
-                    streamId: this.id,
-                    data: data,
-                    description: this.description
+                    streamIdDescriptions: { [this.id]: this.description },
+                    data: data
                 }
             } as AutoupdateReceiveData);
         }
@@ -75,9 +74,8 @@ export class AutoupdateSubscription {
                 sender: `autoupdate`,
                 action: `receive-error`,
                 content: {
-                    streamId: this.id,
-                    data: data,
-                    description: this.description
+                    streamIdDescriptions: { [this.id]: this.description },
+                    data: data
                 }
             } as AutoupdateReceiveError);
         }
@@ -127,9 +125,8 @@ export class AutoupdateSubscription {
                 sender: `autoupdate`,
                 action: `receive-data`,
                 content: {
-                    streamId: this.id,
-                    data: this.stream.currentData,
-                    description: this.description
+                    streamIdDescriptions: { [this.id]: this.description },
+                    data: this.stream.currentData
                 }
             } as AutoupdateReceiveData);
         }

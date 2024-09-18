@@ -158,6 +158,9 @@ export class MotionXlsxExportService {
             data.push(
                 ...properties.map(property => {
                     const motionProp = motion[property as keyof ViewMotion];
+                    if (property === `submitters`) {
+                        return motion.mapSubmittersWithAdditional(s => s.full_name).join(`, `);
+                    }
                     if (property === `speakers`) {
                         return motion.list_of_speakers && motion.list_of_speakers.waitingSpeakerAmount > 0
                             ? motion.list_of_speakers.waitingSpeakerAmount
