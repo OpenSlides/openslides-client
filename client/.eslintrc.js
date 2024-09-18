@@ -11,7 +11,11 @@ module.exports = {
                 sourceType: 'module',
                 createDefaultProgram: true
             },
-            plugins: ['simple-import-sort', 'unused-imports'],
+            plugins: [
+                'simple-import-sort',
+                'unused-imports',
+                '@stylistic/ts'
+            ],
             extends: [
                 'plugin:@typescript-eslint/recommended',
                 'plugin:@angular-eslint/recommended',
@@ -51,8 +55,13 @@ module.exports = {
                         'format': ['camelCase', 'PascalCase', 'snake_case', 'UPPER_CASE']
                     }
                 ],
-                '@typescript-eslint/quotes': ['error', 'backtick', { 'avoidEscape': false }],
-                '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'varsIgnorePattern': '^_' }],
+                '@stylistic/ts/quotes': ['error', 'backtick', { 'avoidEscape': false }],
+                '@typescript-eslint/no-unused-vars': ['error', {
+                    'argsIgnorePattern': '^_',
+                    'varsIgnorePattern': '^_',
+                    'caughtErrorsIgnorePattern': '^_',
+                    'destructuredArrayIgnorePattern': '^_'
+                }],
                 'simple-import-sort/imports': 'error',
                 'simple-import-sort/exports': 'error',
                 'unused-imports/no-unused-imports': 'error',
@@ -63,8 +72,9 @@ module.exports = {
                 'lines-between-class-members': ['error', 'always', { 'exceptAfterSingleLine': true }],
                 '@typescript-eslint/no-unnecessary-type-constraint': ['error'],
                 '@typescript-eslint/no-this-alias': ['error'],
+                '@typescript-eslint/no-unsafe-function-type': ['error'],
+                '@typescript-eslint/no-wrapper-object-types': ['error'],
                 '@typescript-eslint/adjacent-overload-signatures': ['error'],
-                '@typescript-eslint/ban-types': ['error'],
                 '@typescript-eslint/explicit-member-accessibility': ['error'],
                 '@typescript-eslint/explicit-function-return-type': ['error'],
                 '@typescript-eslint/ban-ts-comment': ['error'],
