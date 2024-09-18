@@ -273,15 +273,11 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     /**
-     * clicking Shift and Enter will save automatically
      * Hitting escape while in the edit form should cancel editing
      *
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.saveAssignment();
-        }
         if (event.key === `Escape`) {
             this.setEditMode(false);
         }

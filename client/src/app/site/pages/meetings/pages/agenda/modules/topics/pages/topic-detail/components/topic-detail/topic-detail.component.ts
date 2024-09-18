@@ -327,10 +327,6 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.saveTopic();
-        }
-
         if (event.key === `Escape`) {
             this.setEditMode(false);
         }
