@@ -7,13 +7,17 @@
                 <div class="poll-title-area">
                     <!-- Title -->
                     <span class="poll-title break-word">
-                        <a [routerLink]="getDetailLink()">
+                        @if (isSameMeeting) {
+                            <a [routerLink]="getDetailLink()">
+                                {{ poll.title | translate }}
+                            </a>
+                        } @else {
                             {{ poll.title | translate }}
-                        </a>
+                        }
                     </span>
                 </div>
                 <!-- Dot Menu -->
-                <span *osPerms="permission.motionCanManagePolls" class="poll-actions">
+                <span *osPerms="permission.motionCanManagePolls; and: isSameMeeting" class="poll-actions">
                     <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
                         <mat-icon class="icon-18">more_horiz</mat-icon>
                     </button>
@@ -81,13 +85,13 @@
                 </span>
             }
             <!-- Detail link -->
-            <div class="poll-detail-button-wrapper">
-                @if (poll.isPublished) {
+            @if (poll.isPublished && isSameMeeting) {
+                <div class="poll-detail-button-wrapper">
                     <a mat-icon-button matTooltip="{{ 'More' | translate }}" [routerLink]="getDetailLink()">
                         <mat-icon class="icon-18">visibility</mat-icon>
                     </a>
-                }
-            </div>
+                </div>
+            }
         </mat-card-content>
     </mat-card>
 }

@@ -59,6 +59,10 @@ export class MotionPollComponent extends BasePollComponent {
         return this.poll.state === PollState.Published;
     }
 
+    public get isSameMeeting(): boolean {
+        return !this.poll.meeting_id || this.activeMeetingId === this.poll.meeting_id;
+    }
+
     public constructor(
         protected override translate: TranslateService,
         private pollService: MotionPollService,
