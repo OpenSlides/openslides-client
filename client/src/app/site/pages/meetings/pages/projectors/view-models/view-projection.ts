@@ -22,7 +22,7 @@ export class ViewProjection extends BaseProjectableViewModel<Projection> {
         }
         return (
             this.content_object_id === descriptor.content_object_id &&
-            !!this.stable === !!descriptor.stable &&
+            (!!this.stable === !!descriptor.stable || descriptor.stableToggle) &&
             ((!this.type && !descriptor.type) || this.type === descriptor.type)
         );
     }

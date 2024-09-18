@@ -1,6 +1,6 @@
 import { Fqid, Id } from '../../definitions/key-types';
 import { HasAgendaItemId } from '../../interfaces/has-agenda-item-id';
-import { HasAttachmentIds } from '../../interfaces/has-attachment-ids';
+import { HasAttachmentMeetingMediafileIds } from '../../interfaces/has-attachment-ids';
 import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasPersonalNoteIds } from '../../interfaces/has-personal-note-ids';
@@ -148,7 +148,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `agenda_item_id`,
         `list_of_speakers_id`,
         `tag_ids`,
-        `attachment_ids`,
+        `attachment_meeting_mediafile_ids`,
         `projection_ids`,
         `personal_note_ids`,
         `meeting_id`
@@ -159,7 +159,7 @@ export interface Motion
         HasAgendaItemId,
         HasListOfSpeakersId,
         HasTagIds,
-        HasAttachmentIds,
+        HasAttachmentMeetingMediafileIds,
         HasPersonalNoteIds,
         HasProjectionIds,
         HasReferencedMotionInExtensionIds,

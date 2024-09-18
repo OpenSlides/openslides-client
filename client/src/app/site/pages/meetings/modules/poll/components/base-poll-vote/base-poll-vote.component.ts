@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Directive, inject, Input, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import {
     GlobalVote,
@@ -147,6 +147,8 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     protected cd = inject(ChangeDetectorRef);
     private pollRepo = inject(PollControllerService);
     private operator = inject(OperatorService);
+    private votedSubscription: Subscription;
+    private votedSubscriptionPollId: Id;
 
     public constructor(private meetingSettingsService: MeetingSettingsService) {
         super();
@@ -160,21 +162,28 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                     this.user = user;
                     this.delegations = user.vote_delegations_from();
                     this.voteRequestData[this.user.id] = { value: {} } as VotingData;
-                    this.alreadyVoted[this.user.id] = this.poll.hasVoted;
-                    if (this.delegations) {
-                        this.setupDelegations();
+                    if (this.poll.hasVoted !== undefined) {
+                        this.alreadyVoted[this.user.id] = this.poll.hasVoted;
+                    }
+                    if (this.delegations && this.poll.user_has_voted_for_delegations !== undefined) {
+                        this.setupDelegations(this.poll.user_has_voted_for_delegations);
                     }
 
-                    for (const key of Object.keys(this._canVoteForSubjectMap)) {
-                        this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
-                    }
-
+                    this.setupHasVotedSubscription();
                     this._isReady = true;
                     this.cd.markForCheck();
                 }
             }),
             this.translate.onLangChange.subscribe(() => {
                 this.updatePollOptionTitleWidth();
+            }),
+            combineLatest([
+                this.meetingSettingsService.get(`users_enable_vote_delegations`).pipe(distinctUntilChanged()),
+                this.meetingSettingsService.get(`users_forbid_delegator_to_vote`).pipe(distinctUntilChanged())
+            ]).subscribe(_ => {
+                for (const key of Object.keys(this._canVoteForSubjectMap)) {
+                    this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
+                }
             })
         );
     }
@@ -430,19 +439,30 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         }
     }
 
-    protected updatePoll(): void {
-        this.setupHasVotedSubscription();
+    private updatePoll(): void {
+        if (this._isReady) {
+            this.setupHasVotedSubscription();
+        }
         this.defineVoteOptions();
         this.cd.markForCheck();
     }
 
     private setupHasVotedSubscription(): void {
-        this.subscriptions.push(
-            this.voteRepo.subscribeVoted(this.poll).subscribe(() => {
+        if (!this.votedSubscription || this.votedSubscription.closed || this.votedSubscriptionPollId !== this.poll.id) {
+            if (this.votedSubscription) {
+                this.votedSubscription.unsubscribe();
+            }
+
+            this.votedSubscription = this.voteRepo.subscribeVoted(this.poll).subscribe(votedFor => {
+                if (votedFor[this.poll.id] === undefined) {
+                    return;
+                }
+
+                const votes = votedFor[this.poll.id] || [];
                 if (this.user) {
-                    this.alreadyVoted[this.user.id] = this.poll.hasVoted;
+                    this.alreadyVoted[this.user.id] = votes.includes(this.user.id);
                     if (this.delegations) {
-                        this.setupDelegations();
+                        this.setupDelegations(votes);
                     }
                 }
 
@@ -451,24 +471,16 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                 }
 
                 this.cd.markForCheck();
-            })
-        );
-        this.subscriptions.push(
-            combineLatest([
-                this.meetingSettingsService.get(`users_enable_vote_delegations`).pipe(distinctUntilChanged()),
-                this.meetingSettingsService.get(`users_forbid_delegator_to_vote`).pipe(distinctUntilChanged())
-            ]).subscribe(_ => {
-                for (const key of Object.keys(this._canVoteForSubjectMap)) {
-                    this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
-                }
-            })
-        );
+            });
+            this.votedSubscriptionPollId = this.poll.id;
+            this.subscriptions.push(this.votedSubscription);
+        }
     }
 
-    private setupDelegations(): void {
+    private setupDelegations(votedFor: Id[]): void {
         for (const delegation of this.delegations) {
             this._delegationsMap[delegation.id] = delegation;
-            this.alreadyVoted[delegation.id] = this.poll.hasVotedForDelegations(delegation.id);
+            this.alreadyVoted[delegation.id] = votedFor.includes(delegation.id);
             if (!this.voteRequestData[delegation.id]) {
                 this.voteRequestData[delegation.id] = { value: {} } as VotingData;
                 this.deliveringVote[delegation.id] = false;

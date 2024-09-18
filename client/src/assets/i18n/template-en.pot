@@ -766,6 +766,10 @@ msgstr ""
 msgid "Ballots"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/modules/poll/components/poll-filtered-votes-chart/poll-filtered-votes-chart.component.html
+msgid "Ballots cast"
+msgstr ""
+
 msgid "Base folder"
 msgstr ""
 
@@ -1750,6 +1754,10 @@ msgstr ""
 msgid "Download folder"
 msgstr ""
 
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.ts
+msgid "Download the file"
+msgstr ""
+
 msgid "Drop files into this area OR click here to select files"
 msgstr ""
 
@@ -2121,6 +2129,10 @@ msgid "Files"
 msgstr ""
 
 msgid "Filter"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/modules/poll/components/poll-filtered-votes-chart/poll-filtered-votes-chart.component.html
+msgid "Filtered single votes"
 msgstr ""
 
 msgid "Final version"
@@ -3114,6 +3126,30 @@ msgid "Name of the new category"
 msgstr ""
 
 msgid "Natural person"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.ts
+msgid "Navigate to account page from "
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/committees/pages/committee-list/components/committee-list/committee-list.component.ts
+msgid "Navigate to committee detail view from "
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/orga-meetings/pages/meeting-list/components/meeting-list/meeting-list.component.ts
+msgid "Navigate to meeting "
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/motions/pages/categories/components/category-detail/category-detail.component.ts
+msgid "Navigate to motion"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.ts
+msgid "Navigate to participant page from "
+msgstr ""
+
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.ts
+msgid "Navigate to the folder"
 msgstr ""
 
 msgid "Negative votes are not allowed."

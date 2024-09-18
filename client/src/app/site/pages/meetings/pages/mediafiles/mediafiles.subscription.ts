@@ -1,5 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ViewMeeting } from '../../view-models/view-meeting';
 
@@ -10,7 +11,30 @@ export const getMediafilesSubscriptionConfig: SubscriptionConfigGenerator = (id:
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [`mediafile_ids`]
+        follow: [
+            { idField: `mediafile_ids`, fieldset: DEFAULT_FIELDSET },
+            {
+                idField: `meeting_mediafile_ids`,
+                fieldset: DEFAULT_FIELDSET,
+                follow: [{ idField: `mediafile_id`, fieldset: DEFAULT_FIELDSET }]
+            },
+            {
+                idField: `committee_id`,
+                fieldset: [],
+                follow: [
+                    {
+                        idField: `organization_id`,
+                        fieldset: [],
+                        follow: [
+                            {
+                                idField: `published_mediafile_ids`,
+                                fieldset: DEFAULT_FIELDSET
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     },
     subscriptionName: MEDIAFILES_SUBSCRIPTION
 });
@@ -19,7 +43,7 @@ export const getMediafilesListMinimalSubscriptionConfig: SubscriptionConfigGener
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [`mediafile_ids`]
+        follow: [`mediafile_ids`, `meeting_mediafile_ids`]
     },
     subscriptionName: MEDIAFILES_LIST_MINIMAL_SUBSCRIPTION
 });

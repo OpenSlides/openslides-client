@@ -12,16 +12,20 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ListComponent } from 'src/app/ui/modules/list/components';
 
+import { PromptService } from '../../../prompt-dialog';
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
 
 interface MoveEvent {
@@ -75,6 +79,9 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     @Input()
     public canAccessFileMenu = false;
+
+    @Input()
+    public isOrgaLevelAndRootLevel = false;
 
     private _hiddenInMobile: string[] = [`indicator`];
 
@@ -136,11 +143,11 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     @Input()
     public isUsedAsFontFn: (file: ViewMediafile) => boolean = (file: ViewMediafile) =>
-        !!file.mediafile.used_as_font_in_meeting_id();
+        !!file.getMeetingMediafile()?.used_as_font_in_meeting_id();
 
     @Input()
     public isUsedAsLogoFn: (file: ViewMediafile) => boolean = (file: ViewMediafile) =>
-        !!file.mediafile.used_as_logo_in_meeting_id();
+        !!file.getMeetingMediafile()?.used_as_logo_in_meeting_id();
 
     @Output()
     public beforeEditing = new EventEmitter<BeforeEditingEvent>();
@@ -184,6 +191,9 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     public fileEditForm!: UntypedFormGroup;
     public moveForm!: UntypedFormGroup;
 
+    public movingToPublicFolder: boolean = false;
+    public movingFromPublicFolder: boolean = false;
+
     public directory: ViewMediafile | null = null;
 
     public selectedRows: ViewMediafile[] = [];
@@ -202,10 +212,17 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         private cd: ChangeDetectorRef,
         private fb: UntypedFormBuilder,
         private translate: TranslateService,
-        private repo: MediafileControllerService
+        private repo: MediafileControllerService,
+        private activeMeeting: ActiveMeetingService,
+        private promptService: PromptService
     ) {
         super();
         this.moveForm = fb.group({ directory_id: [] });
+        this.subscriptions.push(
+            this.moveForm.get(`directory_id`).valueChanges.subscribe(id => {
+                this.movingToPublicFolder = id && this.repo.getViewModel(id).isPublishedOrganizationWide;
+            })
+        );
     }
 
     public ngOnInit(): void {
@@ -239,15 +256,11 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     public move(templateRef: TemplateRef<any>, files: ViewMediafile[]): void {
         this.moveForm.reset();
 
-        if (files.some(file => file.is_directory)) {
-            this.filteredDirectoryBehaviorSubject.next(
-                this.repo
-                    .getViewModelList()
-                    .filter(dir => dir.is_directory && !files.some(file => dir.url.startsWith(file.url)))
-            );
-        } else {
-            this.filteredDirectoryBehaviorSubject.next(this.repo.getViewModelList().filter(dir => dir.is_directory));
-        }
+        this.filteredDirectoryBehaviorSubject.next(
+            this.repo.getViewModelList().filter(dir => dir.canMoveFilesTo(files))
+        );
+        this.movingFromPublicFolder = files.some(f => f.parent?.isPublishedOrganizationWide);
+
         const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
 
         dialogRef.afterClosed().subscribe(result => {
@@ -259,9 +272,32 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         });
     }
 
+    public async togglePublish(file: ViewMediafile): Promise<void> {
+        const publishing = !file.isPublishedOrganizationWide;
+        let title: string = _(`Make file/directory public`);
+        let content = this.translate.instant(
+            `Do you want to publish this file/directory? Every admin in every meeting will be able to see this file/directory and all it's contents.`
+        );
+        let confirm: string = _(`Publish`);
+        if (!publishing) {
+            title = _(`Unpublish file/directory`);
+            content = ``;
+            if (file.meeting_mediafiles?.length) {
+                content = this.translate.instant(`File is used in:`);
+                content = content + `<br>` + file.meeting_mediafiles.map(mm => mm.meeting?.name).join(`, `);
+            }
+            confirm = _(`Unpublish`);
+        }
+
+        if (await this.promptService.open(title, content, confirm)) {
+            this.repo.publish(file, publishing);
+        }
+    }
+
     public onEditFile(file: ViewMediafile, template: TemplateRef<any>): void {
+        const mediafile: ViewMediafile | ViewMeetingMediafile = file;
         this.beforeEditing.emit({ file });
-        this.fileEditForm = this.fb.group({ title: [file.title, Validators.required] });
+        this.fileEditForm = this.fb.group({ title: [mediafile.title, Validators.required] });
         const useTemplate = this.editFolderTemplate ?? template;
         this.dialog
             .open(useTemplate, infoDialogSettings)
@@ -271,10 +307,6 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     public onDelete(file: ViewMediafile): void {
         this.deleted.emit({ file });
-    }
-
-    public getMediaUrl(file: ViewMediafile): (number | string)[] {
-        return [`/system`, `media`, `get`, file.id];
     }
 
     /**
@@ -307,5 +339,35 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         };
         const nextFileList = nextFiles.slice().sort((a, b) => this.sortFn?.(a, b) || defaultSortFn(a, b));
         this._directoryBehaviorSubject.next(nextFileList);
+    }
+
+    public ariaLabel(mediafile: ViewMediafile): string {
+        if (mediafile.is_directory) {
+            return this.translate.instant(`Navigate to the folder`) + ` '` + mediafile + `'`;
+        }
+        return this.translate.instant(`Download the file`) + ` '` + mediafile + `'`;
+    }
+
+    protected getGroups(mediafile: ViewMediafile): ViewGroup[] {
+        const meeting_mediafile = mediafile?.getMeetingMediafile();
+        if (meeting_mediafile) {
+            return meeting_mediafile.inherited_access_groups;
+        } else if (mediafile.parent_id) {
+            return this.getGroups(mediafile.parent);
+        } else if (mediafile.access_groups) {
+            return mediafile.access_groups;
+        } else if (mediafile.isPublishedOrganizationWide) {
+            return [this.activeMeeting.meeting.admin_group];
+        }
+
+        return [] as ViewGroup[];
+    }
+
+    protected fileCanBeModified(mediafile: ViewMediafile): boolean {
+        return !(this.isInMeeting && mediafile.isPublishedOrganizationWide);
+    }
+
+    protected fileCanBeMoved(mediafile: ViewMediafile): boolean {
+        return !(this.isOrgaLevelAndRootLevel && mediafile.isPublishedOrganizationWide);
     }
 }

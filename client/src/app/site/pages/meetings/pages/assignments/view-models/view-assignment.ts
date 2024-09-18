@@ -9,7 +9,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
-import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
+import { HasAttachmentMeetingMediafiles } from '../../mediafiles/view-models/has-attachment';
 import { HasTags } from '../../motions/modules/tags/view-models/has-tags';
 import { HasPolls, VotingTextContext } from '../../polls/view-models/has-polls';
 import { ViewPoll } from '../../polls/view-models/view-poll';
@@ -77,7 +77,7 @@ export interface ViewAssignment
     extends Assignment,
         ViewModelRelations<IAssignmentRelations>,
         HasMeeting,
-        HasAttachment,
+        HasAttachmentMeetingMediafiles,
         HasTags,
         HasAgendaItem,
         HasListOfSpeakers,

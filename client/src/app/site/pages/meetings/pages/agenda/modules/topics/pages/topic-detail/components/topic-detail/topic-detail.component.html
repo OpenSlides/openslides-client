@@ -80,7 +80,7 @@
                                 :
                             </h3>
                             <mat-list dense>
-                                @for (file of topic.attachments; track file) {
+                                @for (file of topic.attachment_meeting_mediafiles; track file) {
                                     <mat-list-item>
                                         <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
                                     </mat-list-item>
@@ -109,7 +109,7 @@
                         </div>
 
                         <!-- Attachments -->
-                        <os-attachment-control formControlName="attachment_ids"></os-attachment-control>
+                        <os-attachment-control formControlName="attachment_mediafile_ids"></os-attachment-control>
 
                         @if (newTopic) {
                             <div>

@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs';
 import { User } from 'src/app/domain/models/users/user';
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
@@ -267,10 +266,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public get isVoteCountable(): boolean {
         const delegate = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
-        if (!delegate) {
-            return this.isPresentInMeeting();
+        if (this.getDelegationSettingEnabled() && delegate) {
+            return delegate.isPresentInMeeting();
         }
-        return delegate.isPresentInMeeting();
+        return this.isPresentInMeeting();
     }
     // ### block end.
 
@@ -336,7 +335,6 @@ interface IUserRelations {
     meeting_users: ViewMeetingUser[];
     poll_voted: ViewPoll[];
     committee_managements: ViewCommittee[];
-    committee_managements_as_observable: Observable<ViewCommittee[]>;
     options: ViewOption[];
     votes: ViewVote[];
     poll_candidates: ViewPollCandidate[];

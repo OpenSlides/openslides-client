@@ -163,7 +163,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         this.assignmentForm = formBuilder.group({
             phase: null,
             tag_ids: [[]],
-            attachment_ids: [[]],
+            attachment_mediafile_ids: [[]],
             title: [``, Validators.required],
             description: [``],
             default_poll_description: [``],
@@ -273,15 +273,11 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     /**
-     * clicking Shift and Enter will save automatically
      * Hitting escape while in the edit form should cancel editing
      *
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.saveAssignment();
-        }
         if (event.key === `Escape`) {
             this.setEditMode(false);
         }
@@ -297,6 +293,11 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         Object.keys(this.assignmentForm.controls).forEach(control => {
             contentPatch[control] = assignment[control as keyof ViewAssignment];
         });
+        if (this.assignmentForm.controls[`attachment_mediafile_ids`]) {
+            contentPatch[`attachment_mediafile_ids`] = assignment.attachment_meeting_mediafiles?.map(
+                file => file.mediafile_id
+            );
+        }
         this.assignmentForm.patchValue(contentPatch);
     }
 

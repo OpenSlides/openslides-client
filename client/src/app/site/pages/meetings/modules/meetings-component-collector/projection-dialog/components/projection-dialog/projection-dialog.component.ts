@@ -41,7 +41,23 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     private selectedProjectors: Id[] = null;
     public optionValues: any = {};
     public options!: SlideOptions;
-    public descriptor: ProjectionBuildDescriptor;
+    private _descriptor: ProjectionBuildDescriptor;
+    public get descriptor(): ProjectionBuildDescriptor {
+        if (this._descriptor.stableToggle && this.optionValues) {
+            return Object.assign({}, this._descriptor, {
+                stable: this.optionValues[this._descriptor.stableToggle]
+                    ? !this._descriptor.stable
+                    : !!this._descriptor.stable
+            });
+        }
+
+        return this._descriptor;
+    }
+
+    public set descriptor(descriptor: ProjectionBuildDescriptor) {
+        this._descriptor = descriptor;
+    }
+
     public allowReferenceProjector = true;
     public projectorSelectable = false;
     private currentProjectionOptions: { [key: string]: any } = {};

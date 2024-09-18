@@ -143,11 +143,11 @@
                         </os-chip-select>
                     </div>
                 </div>
-                @if (assignment.attachments?.length) {
+                @if (assignment.attachment_meeting_mediafiles?.length) {
                     <div>
                         <h4>{{ 'Election documents' | translate }}</h4>
                         <mat-list class="election-document-list" dense>
-                            @for (file of assignment.attachments; track file) {
+                            @for (file of assignment.attachment_meeting_mediafiles; track file) {
                                 <mat-list-item>
                                     <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
                                 </mat-list-item>
@@ -273,7 +273,7 @@
                 }
 
                 <os-attachment-control
-                    formControlName="attachment_ids"
+                    formControlName="attachment_mediafile_ids"
                     (errorHandler)="raiseError($event)"
                 ></os-attachment-control>
 

@@ -272,7 +272,7 @@ export abstract class PollService {
     }
 
     public getVoteTableKeys(poll: PollData): VotingResult[] {
-        return [
+        const keys: VotingResult[] = [
             {
                 vote: YES_KEY,
                 icon: `thumb_up`,
@@ -282,13 +282,18 @@ export abstract class PollService {
                 vote: NO_KEY,
                 icon: `thumb_down`,
                 showPercent: true
-            },
-            {
+            }
+        ];
+
+        if (poll.pollmethod !== PollMethod.YN) {
+            keys.push({
                 vote: ABSTAIN_KEY,
                 icon: `trip_origin`,
                 showPercent: this.showAbstainPercent(poll)
-            }
-        ];
+            });
+        }
+
+        return keys;
     }
 
     private showAbstainPercent(poll: PollData): boolean {
@@ -330,7 +335,7 @@ export abstract class PollService {
 
     public generateChartData(poll: PollData): ChartData {
         let fields = this.getPollDataFields(poll);
-        if (poll?.onehundred_percent_base === PollPercentBase.YN) {
+        if (poll?.onehundred_percent_base === PollPercentBase.YN || poll?.pollmethod === PollMethod.YN) {
             fields = fields.filter(key => key === YES_KEY || key === NO_KEY);
         }
 
