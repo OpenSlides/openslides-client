@@ -191,7 +191,8 @@
         <os-motion-meta-data
             [changeRecoMode]="changeRecoMode"
             [motion]="motion"
-            (enableOriginMotion)="toggleOrigin($event)"
+            (disableOriginMotion)="hideOriginMotion($event)"
+            (enableOriginMotion)="displayOriginMotion($event)"
             (setShowAllAmendments)="showAllAmendments = $event"
         ></os-motion-meta-data>
     </div>
@@ -214,6 +215,7 @@
                                 [changeRecoMode]="changeRecoMode"
                                 [lineNumberingMode]="lineNumberingMode"
                                 [motion]="originMotion"
+                                [noEditMode]="true"
                                 [showAllAmendments]="true"
                                 [unifiedChanges]="originUnifiedChanges$[originMotion.id]"
                             ></os-motion-content>

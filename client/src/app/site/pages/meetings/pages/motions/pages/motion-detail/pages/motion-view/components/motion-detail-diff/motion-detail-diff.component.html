@@ -17,7 +17,7 @@
         @if (getTitleChangingObject(); as changedTitle) {
             <div>
                 <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix outlined-hover outlined-border">
-                    <div *osPerms="permission.motionCanManage" class="action-row">
+                    <div *osPerms="permission.motionCanManage; and: !noEditMode" class="action-row">
                         @if (isRecommendation(changedTitle)) {
                             <button
                                 mat-icon-button
@@ -75,7 +75,7 @@
                     }
                     <div class="action-row">
                         <button
-                            *osPerms="permission.motionCanManage; and: isRecommendation(change)"
+                            *osPerms="permission.motionCanManage; and: isRecommendation(change) && !noEditMode"
                             mat-icon-button
                             type="button"
                             [matMenuTriggerData]="{ change: change }"
@@ -153,7 +153,7 @@
             </a>
 
             <!-- perms.isAllowed('change_state', motion) (which does not exist)-->
-            <ng-container *osPerms="permission.motionCanManage">
+            <ng-container *osPerms="permission.motionCanManage; and: !noEditMode">
                 @if (change.amendment.state.next_states.length > 0) {
                     <mat-divider></mat-divider>
                 }

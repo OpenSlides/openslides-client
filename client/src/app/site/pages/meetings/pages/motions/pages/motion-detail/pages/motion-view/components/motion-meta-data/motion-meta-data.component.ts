@@ -42,6 +42,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public enableOriginMotion = new EventEmitter<Id>();
 
     @Output()
+    public disableOriginMotion = new EventEmitter<Id>();
+
+    @Output()
     public setShowAllAmendments = new EventEmitter<boolean>();
 
     /**
@@ -297,6 +300,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public toggleOriginMotion(e: { checked: boolean }, id: Id): void {
         if (e.checked) {
             this.enableOriginMotion.emit(id);
+        } else {
+            this.disableOriginMotion.emit(id);
         }
     }
 

@@ -353,7 +353,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         this.itemRepo.removeFromAgenda(this.motion.agenda_item_id!).catch(this.raiseError);
     }
 
-    public async toggleOrigin(id: Id): Promise<void> {
+    public async displayOriginMotion(id: Id): Promise<void> {
         await this.autoupdateService.single(
             await this.modelRequestBuilder.build(getMotionOriginDetailSubscriptionConfig(id).modelRequest),
             MOTION_ORIGIN_DETAIL_SUBSCRIPTION
@@ -367,6 +367,13 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 `sorted-changes-${this.motion.origin_id}`,
                 this.sortedChangesSubscription(originMotion, this.originUnifiedChanges$[id])
             );
+        }
+    }
+
+    public hideOriginMotion(id: Id): void {
+        const idx = this.originMotionsLoaded.findIndex(m => m.id === id);
+        if (idx !== -1) {
+            this.originMotionsLoaded.splice(idx, 1);
         }
     }
 

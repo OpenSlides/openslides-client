@@ -21,6 +21,9 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public readonly LineNumberingMode = LineNumberingMode;
 
     @Input()
+    public noEditMode = false;
+
+    @Input()
     public changeRecoMode: ChangeRecoMode;
 
     @Input()

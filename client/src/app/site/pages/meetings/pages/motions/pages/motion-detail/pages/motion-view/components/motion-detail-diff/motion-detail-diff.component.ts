@@ -111,6 +111,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     @Input()
     public lineRange: LineRange | null = null;
 
+    @Input()
+    public noEditMode = false;
+
     @Output()
     public createChangeRecommendation: EventEmitter<LineRange> = new EventEmitter<LineRange>();
 
