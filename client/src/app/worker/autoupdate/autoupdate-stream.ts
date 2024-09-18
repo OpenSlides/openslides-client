@@ -3,7 +3,7 @@ import * as fzstd from 'fzstd';
 import { HttpStream } from '../http/http-stream';
 import { ErrorDescription, ErrorType } from '../http/stream-utils';
 import { AutoupdateSubscription } from './autoupdate-subscription';
-import { AutoupdateSetEndpointParams } from './interfaces-autoupdate';
+import { AutoupdateReceiveData, AutoupdateSetEndpointParams } from './interfaces-autoupdate';
 
 export class AutoupdateStream extends HttpStream {
     private activeSubscriptions: AutoupdateSubscription[] = null;
@@ -179,10 +179,31 @@ export class AutoupdateStream extends HttpStream {
     }
 
     private sendToSubscriptions(data: any): void {
+        const portMap = new Map<MessagePort, Set<AutoupdateSubscription>>();
         for (const subscription of this.subscriptions) {
-            // TODO: It might be possible to only send data to
-            // the subscriptions that actually need it
-            subscription.updateData(data);
+            for (const port of subscription.ports) {
+                if (portMap.has(port)) {
+                    portMap.get(port).add(subscription);
+                } else {
+                    portMap.set(port, new Set([subscription]));
+                }
+            }
+        }
+
+        for (const port of portMap.keys()) {
+            const streamIdDescriptions = {};
+            for (const sub of portMap.get(port).values()) {
+                streamIdDescriptions[sub.id] = sub.description;
+            }
+
+            port.postMessage({
+                sender: `autoupdate`,
+                action: `receive-data`,
+                content: {
+                    streamIdDescriptions,
+                    data: data
+                }
+            } as AutoupdateReceiveData);
         }
     }
 

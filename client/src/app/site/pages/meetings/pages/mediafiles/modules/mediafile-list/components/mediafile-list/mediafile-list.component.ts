@@ -248,11 +248,14 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
                 accessGroups = [...meetingFileToEdit.access_group_ids];
             }
 
-            this.fileEditForm = this.formBuilder.group({
-                title: [file.title, Validators.required],
+            const formData = {
                 access_group_ids: [meetingFileToEdit ? [...accessGroups] : this.getInheritedGroups(file)],
                 meeting_id: this.activeMeetingId
-            });
+            };
+            if (!file.isPublishedOrganizationWide) {
+                formData[`title`] = [file.title, Validators.required];
+            }
+            this.fileEditForm = this.formBuilder.group(formData);
         }
     }
 

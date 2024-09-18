@@ -39,6 +39,11 @@
                                 "glob": "**/*",
                                 "input": "node_modules/cm-chessboard/assets/",
                                 "output": "/chess/"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/pdfjs-dist/legacy/build/",
+                                "output": "/pdfjs/"
                             }
                         ],
                         "styles": ["src/styles.scss"],
