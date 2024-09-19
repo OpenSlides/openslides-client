@@ -78,7 +78,17 @@
                 </div>
 
                 @if (meeting.location || meeting.start_time || meeting.end_time) {
-                    <div class="subtitle ellipsis-overflow">
+                    <div
+                        class="subtitle ellipsis-overflow"
+                        [ngClass]="{
+                            'align-w-title-w-one-icon': xor(
+                                xor(meeting.isTemplate, meeting.locked_from_inside),
+                                meeting.isArchived
+                            ),
+                            'align-w-title-w-two-icon':
+                                meeting.isArchived && (meeting.isTemplate || meeting.locked_from_inside)
+                        }"
+                    >
                         @if (meeting.location) {
                             <span>{{ meeting.location }}</span>
                         }

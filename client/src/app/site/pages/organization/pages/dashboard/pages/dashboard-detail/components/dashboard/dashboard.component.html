@@ -160,11 +160,17 @@
             >
                 <div class="one-line">
                     <div class="meeting-box--mid one-line">
-                        <os-icon-container icon="lock" [showIcon]="meeting.locked_from_inside">
+                        <os-icon-container class="show-lock-icon" icon="lock" [showIcon]="meeting.locked_from_inside">
                             <div class="meeting-box--mid">{{ meeting.name }}</div>
                         </os-icon-container>
                     </div>
-                    <div class="one-line">
+                    <div
+                        class="one-line"
+                        [ngClass]="{
+                            'align-w-title-if-locked': meeting.locked_from_inside,
+                            'align-w-title-if-not-locked': !meeting.locked_from_inside
+                        }"
+                    >
                         @if (meeting.location) {
                             <span [ngClass]="context?.subtitleCssClass">{{ meeting.location }}</span>
                         }

@@ -83,4 +83,8 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         }
         return this.translate.instant(`Navigate to meeting `) + meeting.name;
     }
+
+    protected xor(a: boolean, b: boolean): boolean {
+        return (a && !b) || (!a && b);
+    }
 }
