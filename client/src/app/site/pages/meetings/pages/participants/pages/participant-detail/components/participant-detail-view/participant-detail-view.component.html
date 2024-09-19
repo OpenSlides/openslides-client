@@ -80,7 +80,7 @@
         [patchFormValueFn]="patchFormValueFn"
         [shouldEnableFormControlFn]="shouldEnableFormControlFn"
         [user]="user"
-        (changeEvent)="personalInfoFormValue = $event"
+        (changeEvent)="personalInfoFormValue = $event; updateLockout()"
         (errorEvent)="formErrors = $event"
         (submitEvent)="saveUser()"
         (validEvent)="isFormValid = $event"
@@ -101,7 +101,6 @@
                     <mat-checkbox
                         formControlName="locked_out"
                         matTooltipPosition="right"
-                        [disabled]="lockoutCheckboxDisabled"
                         matTooltip="{{ 'Lock out user from this meeting.' | translate }}"
                     >
                         <span>{{ 'locked out' | translate }}</span>

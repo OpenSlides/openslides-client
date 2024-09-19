@@ -246,7 +246,7 @@
         </button>
 
         <button
-            *osPerms="permission.userCanManage"
+            *osPerms="permission.userCanUpdate"
             mat-menu-item
             [class.red-warning-text]="user.is_locked_out"
             [disabled]="isLockedOutToggleDisabled(user)"

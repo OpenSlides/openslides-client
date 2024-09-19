@@ -50,7 +50,8 @@ export const MEETING_RELATED_FORM_CONTROLS = [
     `group_ids`,
     `vote_delegations_from_ids`,
     `vote_delegated_to_id`,
-    `is_present`
+    `is_present`,
+    `locked_out`
 ];
 
 @Injectable({
