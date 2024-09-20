@@ -36,14 +36,18 @@
         </div>
     </div>
     <div *osScrollingTableCell="'edit'; row as gender; config: { width: 40 }" class="cell-slot fill">
-        <button mat-icon-button (click)="editGender(gender)">
-            <mat-icon>edit</mat-icon>
-        </button>
+        @if (gender.id > 4) {
+            <button mat-icon-button (click)="editGender(gender)">
+                <mat-icon>edit</mat-icon>
+            </button>
+        }
     </div>
     <div *osScrollingTableCell="'delete'; row as gender; config: { width: 40 }" class="cell-slot fill">
-        <button color="warn" mat-icon-button (click)="deleteGenders(gender)">
-            <mat-icon>delete</mat-icon>
-        </button>
+        @if (gender.id > 4) {
+            <button color="warn" mat-icon-button (click)="deleteGenders(gender)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        }
     </div>
 </os-list>
 

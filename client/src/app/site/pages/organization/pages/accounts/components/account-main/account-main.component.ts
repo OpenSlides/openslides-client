@@ -84,6 +84,10 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                                         fieldset: [`name`]
                                     }
                                 ]
+                            },
+                            {
+                                idField: `gender_ids`,
+                                fieldset: [`name`]
                             }
                         ]
                     },
