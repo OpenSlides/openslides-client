@@ -81,10 +81,6 @@ export class CommentSectionListComponent extends BaseComponent implements OnInit
      * @param event the keyboard event
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.save();
-            this.dialogRef.close();
-        }
         if (event.key === `Escape`) {
             this.dialogRef.close();
         }

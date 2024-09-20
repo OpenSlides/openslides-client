@@ -1,5 +1,5 @@
 import { MotionCategory } from 'src/app/domain/models/motions/motion-category';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 
 import { ViewMotion } from '../../../view-models';
@@ -80,4 +80,4 @@ interface IMotionCategoryRelations {
     children: ViewMotionCategory[];
     motions: ViewMotion[];
 }
-export interface ViewMotionCategory extends MotionCategory, IMotionCategoryRelations, HasMeeting {}
+export interface ViewMotionCategory extends MotionCategory, ViewModelRelations<IMotionCategoryRelations>, HasMeeting {}

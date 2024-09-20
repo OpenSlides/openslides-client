@@ -102,7 +102,12 @@ export class MotionCsvExportService {
         const properties = sortMotionPropertyList([`number`, `title`].concat(contentToExport));
         const exportProperties: (CsvColumnDefinitionProperty<ViewMotion> | CsvColumnDefinitionMap<ViewMotion>)[] =
             properties.map(option => {
-                if (option === `recommendation`) {
+                if (option === `submitters`) {
+                    return {
+                        label: `submitters`,
+                        map: motion => motion.mapSubmittersWithAdditional(s => s.full_name).join(`, `)
+                    };
+                } else if (option === `recommendation`) {
                     return {
                         label: `recommendation`,
                         map: motion => this.motionService.getExtendedRecommendationLabel(motion)

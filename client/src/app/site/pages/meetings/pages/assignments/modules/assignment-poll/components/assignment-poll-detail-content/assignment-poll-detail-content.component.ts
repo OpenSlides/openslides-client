@@ -144,18 +144,16 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     public ngOnInit(): void {
         combineLatest([
-            this.poll.options_as_observable,
+            this.poll.options$,
             iif(
                 () => this.poll instanceof ViewPoll,
-                (this.poll as ViewPoll).options_as_observable.pipe(
-                    map(options =>
-                        options.filter(option => !!option.content_object_id && !!option.content_object_as_observable)
-                    ),
+                (this.poll as ViewPoll).options$.pipe(
+                    map(options => options.filter(option => !!option.content_object_id && !!option.content_object$)),
                     filter(options => !!options.length),
                     switchMap(options =>
                         combineLatest(
                             options.map(option =>
-                                option.content_object_as_observable.pipe(filter(content_object => !!content_object))
+                                option.content_object$.pipe(filter(content_object => !!content_object))
                             )
                         ).pipe(auditTime(1))
                     )

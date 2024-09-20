@@ -1,6 +1,9 @@
-import { HasAttachmentIds } from '../../../../../../domain/interfaces/has-attachment-ids';
-import { ViewMediafile } from './view-mediafile';
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
-export interface HasAttachment extends HasAttachmentIds {
-    attachments: ViewMediafile[];
-}
+import { HasAttachmentMeetingMediafileIds } from '../../../../../../domain/interfaces/has-attachment-ids';
+import { ViewMeetingMediafile } from './view-meeting-mediafile';
+
+export type HasAttachmentMeetingMediafiles = HasAttachmentMeetingMediafileIds &
+    ViewModelRelations<{
+        attachment_meeting_mediafiles: ViewMeetingMediafile[];
+    }>;

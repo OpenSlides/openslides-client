@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { distinctUntilChanged, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
@@ -47,7 +47,13 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
      */
     public getChangeRecosOfMotionObservable(motionId: Id): Observable<ViewMotionChangeRecommendation[]> {
         return this.getViewModelListObservable().pipe(
-            map((recos: ViewMotionChangeRecommendation[]) => recos.filter(reco => reco.motion_id === motionId))
+            map((recos: ViewMotionChangeRecommendation[]) => recos.filter(reco => reco.motion_id === motionId)),
+            distinctUntilChanged(
+                (prev, curr) =>
+                    prev?.length === curr?.length &&
+                    Math.max(...prev.map(e => e.viewModelUpdateTimestamp)) ===
+                        Math.max(...curr.map(e => e.viewModelUpdateTimestamp))
+            )
         );
     }
 

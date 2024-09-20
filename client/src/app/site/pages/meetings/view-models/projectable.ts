@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 import { Displayable } from '../../../../domain/interfaces/displayable';
 import { HasProjectionIds } from '../../../../domain/interfaces/has-projectable-ids';
 import { HasProjectorTitle } from '../../../../domain/interfaces/has-projector-title';
@@ -14,6 +16,7 @@ export function isProjectable(obj: any): obj is Projectable {
  */
 export interface Projectable extends Displayable, HasProjectionIds, HasProjectorTitle {
     projections: ViewProjection[];
+    projections$: Observable<ViewProjection[]>;
 
     getProjectionBuildDescriptor(meetingSettingsService?: MeetingSettingsService): ProjectionBuildDescriptor | null;
 }

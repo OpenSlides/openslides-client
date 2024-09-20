@@ -57,12 +57,26 @@
                                     <input formControlName="last_name" matInput type="text" />
                                 </mat-form-field>
                             </div>
-                            <!-- E-Mail -->
-                            <mat-form-field class="full-width">
-                                <mat-label>{{ 'Email' | translate }}</mat-label>
-                                <input autocomplete="off" formControlName="email" matInput name="email" type="email" />
-                                <mat-error>{{ 'Please enter a valid email address!' | translate }}</mat-error>
-                            </mat-form-field>
+                            <div class="full-width first-line">
+                                <!-- E-Mail -->
+                                <mat-form-field>
+                                    <mat-label>{{ 'Email' | translate }}</mat-label>
+                                    <input
+                                        autocomplete="off"
+                                        formControlName="email"
+                                        matInput
+                                        name="email"
+                                        type="email"
+                                    />
+                                    <mat-error>{{ 'Please enter a valid email address!' | translate }}</mat-error>
+                                </mat-form-field>
+
+                                <!-- Membership number -->
+                                <mat-form-field>
+                                    <mat-label>{{ 'Membership number' | translate }}</mat-label>
+                                    <input formControlName="member_number" matInput type="text" />
+                                </mat-form-field>
+                            </div>
                             <!-- username -->
                             <mat-form-field class="full-width">
                                 <mat-label>{{ 'Username' | translate }}</mat-label>

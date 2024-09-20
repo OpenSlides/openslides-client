@@ -199,6 +199,9 @@ export class Settings {
 
     // Structure Level
     public structure_level_ids: Id[]; // (structure_level/meeting_id)
+
+    // lock meeting
+    public locked_from_inside: boolean;
 }
 
 export class Meeting extends BaseModel<Meeting> {
@@ -219,6 +222,7 @@ export class Meeting extends BaseModel<Meeting> {
     public group_ids!: Id[]; // (group/meeting_id)[];
     public personal_note_ids!: Id[]; // (personal_note/meeting_id)[];
     public mediafile_ids!: Id[]; // (mediafile/meeting_id)[];
+    public meeting_mediafile_ids!: Id[]; // (mediafile/meeting_id)[];
     public motion_ids!: Id[]; // (motion/meeting_id)[];
     public motion_comment_section_ids!: Id[]; // (motion_comment_section/meeting_id)[];
     public motion_comment_ids!: Id[]; // (motion_comment/meeting_id)[];
@@ -291,6 +295,7 @@ export class Meeting extends BaseModel<Meeting> {
         `location`,
         `start_time`,
         `end_time`,
+        `locked_from_inside`,
         `imported_at`,
         `language`,
         `jitsi_domain`,
@@ -445,6 +450,7 @@ export class Meeting extends BaseModel<Meeting> {
         `speaker_ids`,
         `topic_ids`,
         `group_ids`,
+        `meeting_mediafile_ids`,
         `mediafile_ids`,
         `motion_ids`,
         `forwarded_motion_ids`,

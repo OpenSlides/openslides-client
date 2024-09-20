@@ -10,7 +10,7 @@ import {
     PROJECTIONDEFAULT,
     ProjectiondefaultValue
 } from '../../../../../../domain/models/projector/projection-default';
-import { BaseViewModel } from '../../../../../base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { SlideOptions } from '../../../view-models/slide-options';
@@ -19,7 +19,7 @@ import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
-import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
+import { HasAttachmentMeetingMediafiles } from '../../mediafiles/view-models/has-attachment';
 import { HasPolls, VotingTextContext } from '../../polls';
 import { DiffLinesInParagraph } from '../definitions';
 import { ViewMotionChangeRecommendation, ViewMotionWorkflow } from '../modules';
@@ -35,10 +35,11 @@ import { ViewMotionSubmitter } from '../modules/submitters';
 import { HasTags } from '../modules/tags/view-models/has-tags';
 import { ViewMotionWorkingGroupSpeaker } from '../modules/working-group-speakers';
 
-export interface HasReferencedMotionsInExtension extends HasReferencedMotionInExtensionIds {
-    referenced_in_motion_state_extensions: ViewMotion[];
-    referenced_in_motion_recommendation_extensions: ViewMotion[];
-}
+export type HasReferencedMotionsInExtension = HasReferencedMotionInExtensionIds &
+    ViewModelRelations<{
+        referenced_in_motion_state_extensions: ViewMotion[];
+        referenced_in_motion_recommendation_extensions: ViewMotion[];
+    }>;
 
 export enum ForwardingStatus {
     none = `none`,
@@ -317,7 +318,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public hasAttachments(): boolean {
-        return this.attachment_ids?.length > 0;
+        return this.attachment_meeting_mediafile_ids?.length > 0;
     }
 
     public hasTags(): boolean {
@@ -404,9 +405,9 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
 
 export interface ViewMotion
     extends Motion,
-        IMotionRelations,
+        ViewModelRelations<IMotionRelations>,
         HasMeeting,
-        HasAttachment,
+        HasAttachmentMeetingMediafiles,
         HasPersonalNote,
         HasTags,
         HasAgendaItem,

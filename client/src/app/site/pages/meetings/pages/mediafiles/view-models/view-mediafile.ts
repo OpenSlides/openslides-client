@@ -7,7 +7,7 @@ import { collectionIdFromFqid } from 'src/app/infrastructure/utils/transform-fun
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
 import { Mediafile } from '../../../../../../domain/models/mediafiles/mediafile';
-import { BaseViewModel } from '../../../../../base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeeting } from '../../../view-models/view-meeting';
@@ -15,7 +15,8 @@ import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { ViewGroup } from '../../participants/modules/groups/view-models/view-group';
 import { FONT_MIMETYPES, IMAGE_MIMETYPES, PDF_MIMETYPES } from '../definitions';
 import { VIDEO_MIMETYPES } from '../definitions/index';
-import { HasAttachment } from './has-attachment';
+import { HasAttachmentMeetingMediafiles } from './has-attachment';
+import { ViewMeetingMediafile } from './view-meeting-mediafile';
 
 export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     public static COLLECTION = Mediafile.COLLECTION;
@@ -23,6 +24,28 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
 
     public get mediafile(): Mediafile {
         return this._model;
+    }
+
+    public get inherited_access_group_ids(): Id[] {
+        const meetingMediafile = this.getMeetingMediafile();
+        if (!meetingMediafile && this.getEnsuredActiveMeeting()?.admin_group_id) {
+            return [this.getEnsuredActiveMeeting().admin_group_id];
+        }
+
+        return meetingMediafile?.inherited_access_group_ids;
+    }
+
+    public get inherited_access_groups(): ViewGroup[] {
+        const meetingMediafile = this.getMeetingMediafile();
+        if (!meetingMediafile && this.getEnsuredActiveMeeting()?.admin_group) {
+            return [this.getEnsuredActiveMeeting().admin_group];
+        }
+
+        return meetingMediafile?.inherited_access_groups;
+    }
+
+    public get has_inherited_access_groups(): boolean {
+        return !!this.inherited_access_group_ids?.length;
     }
 
     public get pages(): number | null {
@@ -37,7 +60,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
      * Only use this if you are sure that you have a meeting mediafile
      */
     public get meeting_id(): Id {
-        const [collection, id] = collectionIdFromFqid(this.mediafile.owner_id);
+        const [collection, id] = collectionIdFromFqid(this.owner_id);
         if (collection != Meeting.COLLECTION) {
             throw Error(`Mediafile's owner_id is not a meeting`);
         }
@@ -50,16 +73,47 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
      * @returns The id of the currently active meeting
      */
     public getEnsuredActiveMeetingId!: () => Id;
+    public getEnsuredActiveMeeting!: () => ViewMeeting;
     public getProjectedContentObjects!: () => Fqid[];
+    public getMeetingMediafile!: (meetingId?: Id) => ViewMeetingMediafile;
 
     public override canAccess(): boolean {
         if (this.owner_id === `organization/1`) {
+            if (
+                this.published_to_meetings_in_organization_id === 1 ||
+                this.meeting_mediafiles.some(mm => mm.meeting_id === this.getEnsuredActiveMeetingId())
+            ) {
+                return true;
+            }
+
             return !this.getEnsuredActiveMeetingId();
-        } else if (this.getProjectedContentObjects().indexOf(`mediafile/${this.id}`) !== -1) {
+        } else if (
+            this.meeting_mediafiles.some(
+                mm => this.getProjectedContentObjects().indexOf(`meeting_mediafile/${mm.id}`) !== -1
+            )
+        ) {
             return true;
-        } else {
-            return this.getEnsuredActiveMeetingId() === this.meeting_id;
         }
+
+        return this.getEnsuredActiveMeetingId() === this.meeting_id;
+    }
+
+    public canMoveFilesTo(files: ViewMediafile[]): boolean {
+        if (!this.is_directory) {
+            return false;
+        }
+
+        // Check if moving folder into itself
+        if (files.some(file => this.id === file.id)) {
+            return false;
+        }
+
+        // Check if moving meeting mediafile into published folder
+        if (files.some(file => file.owner_id.startsWith(`meeting`)) && this.isPublishedOrganizationWide) {
+            return false;
+        }
+
+        return true;
     }
 
     public override getDetailStateUrl(): string {
@@ -137,12 +191,14 @@ interface IMediafileRelations {
     inherited_access_groups: ViewGroup[];
     parent?: ViewMediafile;
     children: ViewMediafile[];
-    attachments: (BaseViewModel & HasAttachment)[];
+    attachments: (BaseViewModel & HasAttachmentMeetingMediafiles)[];
     organization?: ViewOrganization;
+    meeting_mediafiles: ViewMeetingMediafile[];
+    published_to_meetings_in_organization: ViewOrganization;
 }
 export interface ViewMediafile
     extends Mediafile,
-        IMediafileRelations,
+        ViewModelRelations<IMediafileRelations>,
         /*  Searchable, */ HasMeeting,
         HasListOfSpeakers,
         HasProperties<ViewMediafileMeetingUsageKey, ViewMeeting> {}

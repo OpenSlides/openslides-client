@@ -1,5 +1,4 @@
 import { endOfDay, fromUnixTime, startOfDay } from 'date-fns';
-import { Observable } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
 import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
@@ -9,6 +8,7 @@ import {
     ViewMeetingMediafileUsageKey
 } from 'src/app/domain/models/meetings/meeting.constants';
 import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { ViewCommittee } from '../../organization/pages/committees';
 import { HasOrganizationTags } from '../../organization/pages/organization-tags';
@@ -18,7 +18,7 @@ import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker, ViewTopic } from '../p
 import { ViewPointOfOrderCategory } from '../pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
-import { ViewMediafile } from '../pages/mediafiles';
+import { ViewMediafile, ViewMeetingMediafile } from '../pages/mediafiles';
 import {
     ViewMotion,
     ViewMotionBlock,
@@ -133,6 +133,10 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     public default_projectors(place: ProjectiondefaultValue): ViewProjector[] {
         return this[`default_projectors_${place}`];
     }
+
+    public canBeEnteredBy(user: ViewUser): boolean {
+        return !this.locked_from_inside || user.group_ids(this.id).length > 0;
+    }
 }
 interface IMeetingRelations {
     motions_default_workflow: ViewMotionWorkflow;
@@ -153,6 +157,7 @@ interface IMeetingRelations {
     groups: ViewGroup[];
     personal_notes: ViewPersonalNote[];
     mediafiles: ViewMediafile[];
+    meeting_mediafiles: ViewMeetingMediafile[];
     motions: ViewMotion[];
     motion_comment_sections: ViewMotionCommentSection[];
     motion_comments: ViewMotionComment[];
@@ -188,12 +193,11 @@ interface IMeetingRelations {
     poll_countdown: ViewProjectorCountdown;
     list_of_speakers_countdown: ViewProjectorCountdown;
     point_of_order_categories: ViewPointOfOrderCategory[];
-    point_of_order_categories_as_observable: Observable<ViewPointOfOrderCategory[]>;
     structure_levels: ViewStructureLevel[];
 }
 export interface ViewMeeting
     extends Meeting,
-        IMeetingRelations,
+        ViewModelRelations<IMeetingRelations>,
         HasProjectorTitle,
         HasOrganizationTags,
         HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,

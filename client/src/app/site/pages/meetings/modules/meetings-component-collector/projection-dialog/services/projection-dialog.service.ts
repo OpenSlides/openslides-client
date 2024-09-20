@@ -35,7 +35,6 @@ export class ProjectionDialogService {
             restoreFocus: false
         });
         const response = await firstValueFrom(dialogRef.afterClosed());
-        console.log(response);
         if (response) {
             const { action, resultDescriptor, projectors, options, keepActiveProjections }: ProjectionDialogReturnType =
                 response;

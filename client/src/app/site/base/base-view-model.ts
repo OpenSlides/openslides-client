@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Collection } from 'src/app/domain/definitions/key-types';
 
 import { Fqid, Id } from '../../domain/definitions/key-types';
@@ -6,6 +7,12 @@ import { Displayable } from '../../domain/interfaces/displayable';
 import { HasCollection } from '../../domain/interfaces/has-collection';
 import { Identifiable } from '../../domain/interfaces/identifiable';
 import { BaseModel } from '../../domain/models/base/base-model';
+
+export type ViewModelRelations<T> = {
+    [R in keyof T]: T[R];
+} & {
+    [R in keyof T as `${string & R}$`]: Observable<T[R]>;
+};
 
 export interface ViewModelConstructor<T extends BaseViewModel> {
     COLLECTION: string;
@@ -16,6 +23,8 @@ export interface ViewModelConstructor<T extends BaseViewModel> {
  * Base class for view models.
  */
 export abstract class BaseViewModel<M extends BaseModel = any> implements DetailNavigable {
+    public viewModelUpdateTimestamp = Date.now();
+
     public get fqid(): Fqid {
         return this.getModel().fqid;
     }
@@ -56,9 +65,11 @@ export abstract class BaseViewModel<M extends BaseModel = any> implements Detail
         return ``;
     }
 }
+
 export interface BaseViewModel extends Displayable, Identifiable, HasCollection {
     getTitle: () => string;
     getListTitle: () => string;
+    getDelegationSettingEnabled: () => boolean;
 
     /**
      * Returns the verbose name.

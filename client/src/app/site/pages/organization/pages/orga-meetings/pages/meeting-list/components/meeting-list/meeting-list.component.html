@@ -32,9 +32,17 @@
     [vScrollFixed]="70"
     [(selectedRows)]="selectedRows"
 >
-    <div *osScrollingTableCell="'name'; row as meeting" class="cell-slot fill">
-        @if (!isMultiSelect && meeting.canAccess()) {
-            <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
+    <div
+        *osScrollingTableCell="'name'; row as meeting"
+        class="cell-slot fill"
+        [class.no-access]="isMultiSelect || !meeting.canAccess() || !meeting.canBeEnteredBy(operator.user)"
+    >
+        @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnteredBy(operator.user)) {
+            <a
+                class="stretch-to-fill-parent"
+                [attr.aria-label]="ariaLabel(meeting)"
+                [routerLink]="getMeetingUrl(meeting)"
+            ></a>
         }
         <div class="flex-vertical-center overflow-hidden">
             <div class="nameCell overflow-hidden">
@@ -43,6 +51,13 @@
                     @if (meeting.isArchived) {
                         <span class="icon-prefix">
                             <mat-icon [matTooltip]="'Archived' | translate">archive</mat-icon>
+                        </span>
+                    }
+
+                    <!--- Is locked from inside-->
+                    @if (meeting.locked_from_inside) {
+                        <span class="icon-prefix">
+                            <mat-icon [matTooltip]="'Closed' | translate">lock</mat-icon>
                         </span>
                     }
 
@@ -88,6 +103,7 @@
                     @if (!this.isMultiSelect && meeting.committee?.canAccess()) {
                         <a
                             class="stretch-to-fill-parent committee-link"
+                            [attr.aria-label]="ariaLabel(meeting, true)"
                             [routerLink]="getCommitteeForMeetingUrl(meeting)"
                         ></a>
                     }
@@ -112,9 +128,16 @@
         </div>
     </div>
 
-    <div *osScrollingTableCell="'meta'; row as meeting; config: { width: 60 }">
-        @if (!isMultiSelect && meeting.canAccess()) {
-            <a class="stretch-to-fill-parent" [routerLink]="getMeetingUrl(meeting)"></a>
+    <div
+        *osScrollingTableCell="'meta'; row as meeting; config: { width: 60 }"
+        [class.no-access]="isMultiSelect || !meeting.canAccess() || !meeting.canBeEnteredBy(operator.user)"
+    >
+        @if (!isMultiSelect && meeting.canAccess() && meeting.canBeEnteredBy(operator.user)) {
+            <a
+                class="stretch-to-fill-parent"
+                [attr.aria-label]="ariaLabel(meeting)"
+                [routerLink]="getMeetingUrl(meeting)"
+            ></a>
         }
         <div>
             @if (meeting.userAmount) {

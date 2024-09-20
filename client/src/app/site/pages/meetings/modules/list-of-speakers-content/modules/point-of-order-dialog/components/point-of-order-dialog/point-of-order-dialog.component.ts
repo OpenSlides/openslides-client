@@ -36,7 +36,7 @@ export class PointOfOrderDialogComponent {
         private meetingSettings: MeetingSettingsService,
         private activeMeeting: ActiveMeetingService
     ) {
-        this.activeMeeting.meeting.point_of_order_categories_as_observable
+        this.activeMeeting.meeting.point_of_order_categories$
             .pipe(
                 map(categories =>
                     categories.sort((a, b) => {

@@ -20,7 +20,7 @@ import { Action, ActionService } from '../actions';
 import { ActionRequest } from '../actions/action-utils';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 
-const RELATION_AS_OBSERVABLE_SUFFIX = `_as_observable`;
+const RELATION_AS_OBSERVABLE_SUFFIX = `$`;
 
 export interface CreateResponse extends Identifiable, HasSequentialNumber {}
 
@@ -721,6 +721,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                     result = this.relationManager.handleRelation(_model, relation);
                 }
                 return result;
+            },
+            set: (obj, ...args): any => {
+                obj.viewModelUpdateTimestamp = Date.now();
+                return Reflect.set(obj, ...args);
             }
         });
         this._createViewModelPipes.forEach(fn => fn(viewModel));

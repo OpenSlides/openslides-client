@@ -85,6 +85,10 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         );
     }
 
+    public ariaLabel(user: ViewUser): string {
+        return this.translate.instant(`Navigate to account page from `) + user.short_name;
+    }
+
     public createNewMember(): void {
         this.router.navigate([`create`], { relativeTo: this.route });
     }
@@ -110,8 +114,8 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         const result = await this.choiceService.open<ViewMeeting>({
             title,
             choices: this.operator.isSuperAdmin
-                ? meetings
-                : meetings.filter(meeting => this.operator.isInMeeting(meeting.id)),
+                ? meetings.filter(meeting => !meeting.locked_from_inside)
+                : meetings.filter(meeting => this.operator.isInMeeting(meeting.id) && !meeting.locked_from_inside),
             multiSelect: true,
             actions,
             content: this.translate.instant(

@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs';
-
 import { ChatGroup } from '../../../../../../domain/models/chat/chat-group';
 import { BaseViewModel } from '../../../../../base/base-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
@@ -19,5 +17,4 @@ interface ViewChatGroupRelations extends HasMeeting {
     read_groups: ViewGroup[];
     write_groups: ViewGroup[];
     chat_messages: ViewChatMessage[];
-    chat_messages_as_observable: Observable<ViewChatMessage[]>;
 }

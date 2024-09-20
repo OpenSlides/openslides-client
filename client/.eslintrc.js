@@ -102,9 +102,7 @@ module.exports = {
                 '@angular-eslint/template/attributes-order': ['error', {
                     alphabetical: true
                 }],
-                '@angular-eslint/template/prefer-control-flow': ['error'],
-                // Should be switched to error
-                '@angular-eslint/template/elements-content': ['warn']
+                '@angular-eslint/template/prefer-control-flow': ['error']
             }
         },
         {

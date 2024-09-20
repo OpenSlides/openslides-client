@@ -33,6 +33,7 @@
                             [inputListValues]="availableMeetingsObservable"
                             [ngModel]="theDuplicateFromId"
                             [ngModelOptions]="{ standalone: true }"
+                            [required]="isCommitteeManagerAndRequireDuplicateFrom"
                             [sortFn]="false"
                             (ngModelChange)="onUpdateDuplicateFrom($event)"
                         ></os-list-search-selector>

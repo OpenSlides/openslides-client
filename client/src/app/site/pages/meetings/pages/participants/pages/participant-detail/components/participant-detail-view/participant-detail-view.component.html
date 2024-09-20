@@ -263,7 +263,9 @@
             @if (showVoteDelegations && user!.vote_delegations_from().length > 0) {
                 <div>
                     <h4>{{ 'Voting right received from (principals)' | translate }}</h4>
-                    <span>{{ user!.vote_delegations_from() }}</span>
+                    <os-comma-separated-listing [list]="user!.vote_delegations_from()">
+                        <ng-template let-voteDelegationsFrom>{{ voteDelegationsFrom }}</ng-template>
+                    </os-comma-separated-listing>
                 </div>
             }
             <!-- Vote weight -->

@@ -2,13 +2,14 @@ import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
-import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
+import { HasAttachmentMeetingMediafiles } from '../../mediafiles/view-models/has-attachment';
 import { HasTags } from '../../motions/modules/tags/view-models/has-tags';
 import { HasPolls, VotingTextContext } from '../../polls/view-models/has-polls';
 import { ViewPoll } from '../../polls/view-models/view-poll';
@@ -74,9 +75,9 @@ interface IAssignmentRelations extends HasPolls<ViewAssignment> {
 }
 export interface ViewAssignment
     extends Assignment,
-        IAssignmentRelations,
+        ViewModelRelations<IAssignmentRelations>,
         HasMeeting,
-        HasAttachment,
+        HasAttachmentMeetingMediafiles,
         HasTags,
         HasAgendaItem,
         HasListOfSpeakers,
