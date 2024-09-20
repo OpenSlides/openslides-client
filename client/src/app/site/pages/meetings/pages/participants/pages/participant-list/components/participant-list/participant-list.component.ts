@@ -542,7 +542,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 actions = [_(`natural person`), _(`no natural person`)];
                 break;
             case `locked_out`:
-                actions = [_(`locked out`), _(`no locked out`)];
+                actions = [_(`Locked out`), _(`Not locked out`)];
                 break;
         }
         const content = _(`Set status for selected participants:`);
