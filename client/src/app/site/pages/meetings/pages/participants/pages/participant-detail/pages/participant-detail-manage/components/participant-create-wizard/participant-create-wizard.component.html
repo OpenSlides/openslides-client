@@ -136,7 +136,7 @@
                     [patchFormValueFn]="patchFormValueFn"
                     [shouldEnableFormControlFn]="shouldEnableFormControlFn"
                     [user]="user"
-                    (changeEvent)="personalInfoFormValue = $event"
+                    (changeEvent)="personalInfoFormValue = $event; updateLockout()"
                     (errorEvent)="formErrors = $event"
                     (validEvent)="isFormValid = $event"
                 >
@@ -153,7 +153,23 @@
                                     >
                                         <span>{{ 'present' | translate }}</span>
                                     </mat-checkbox>
+                                    <!-- Locked out? -->
+                                    <mat-checkbox
+                                        formControlName="locked_out"
+                                        matTooltipPosition="right"
+                                        matTooltip="{{ 'Lock out user from this meeting.' | translate }}"
+                                    >
+                                        <span>{{ 'locked out' | translate }}</span>
+                                    </mat-checkbox>
                                 </div>
+                                @if (isLockedOutAndCanManage) {
+                                    <p class="red-warning-text padding-left-12">
+                                        {{
+                                            'It is not allowed to set the permisson UserCanManage to a locked out user. Please unset the lockout before adding a group with UserCanManage.'
+                                                | translate
+                                        }}
+                                    </p>
+                                }
                                 <div>
                                     <!-- Strucuture Level -->
                                     <mat-form-field class="form100 force-min-width">
