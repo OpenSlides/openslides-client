@@ -94,4 +94,12 @@ export class ListOfSpeakersRepositoryService extends BaseMeetingRelatedRepositor
         const payload = listOfSpeakers.finishedSpeakers.map(speaker => ({ id: speaker.id }));
         return await this.sendBulkActionToBackend(SpeakerAction.DELETE, payload);
     }
+
+    public async update(update: Partial<ListOfSpeakers>, viewModel: ViewListOfSpeakers): Promise<void> {
+        const payload: any = {
+            id: viewModel.id,
+            moderator_notes: update.moderator_notes
+        };
+        await this.createAction(ListOfSpeakersAction.UPDATE, payload).resolve();
+    }
 }
