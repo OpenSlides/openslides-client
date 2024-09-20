@@ -1,26 +1,24 @@
-import { Directive, inject, Input } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, Subscription } from 'rxjs';
-import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+import { filter, Observable, Subscription } from 'rxjs';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
 import { ViewUnifiedChange } from '../../../modules/change-recommendations/view-models/view-unified-change';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { TagControllerService } from '../../../modules/tags/services';
-import { MotionWorkflowControllerService } from '../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
 import { AmendmentControllerService } from '../../../services/common/amendment-controller.service';
 import { MotionControllerService } from '../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionFormatService } from '../../../services/common/motion-format.service/motion-format.service';
 import { MotionLineNumberingService } from '../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
-import { MotionDetailServiceCollectorService } from '../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 import { MotionDetailViewService } from '../services/motion-detail-view.service';
 
 @Directive()
 export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponent {
+    protected cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+
     @Input()
     public set motion(motion: ViewMotion) {
         const previousMotion = this._motion;
@@ -29,53 +27,12 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
             this.doUpdate();
         }
 
-        if (!Object.keys(previousMotion || {}).length && Object.keys(motion).length) {
-            this.onInitTextBasedAmendment(); // Assuming that it's an amendment
-        }
-
         this.onAfterSetMotion(previousMotion, motion);
+        this.cd.markForCheck();
     }
 
     public get motion(): ViewMotion {
         return this._motion!;
-    }
-
-    @Input()
-    public newMotion = false;
-
-    @Input()
-    public set editMotion(isEditing: boolean) {
-        this._isEditing = isEditing;
-        if (isEditing) {
-            this.onEnterEditMode();
-        }
-    }
-
-    public get editMotion(): boolean {
-        return this._isEditing;
-    }
-
-    public get lineNumberingMode(): LineNumberingMode {
-        return this.viewService.currentLineNumberingMode;
-    }
-
-    public get changeRecoMode(): ChangeRecoMode {
-        return this.viewService.currentChangeRecommendationMode;
-    }
-
-    public get hasChangingObjects(): boolean {
-        if (this.sortedChangingObjects !== null) {
-            return this.sortedChangingObjects.length > 0;
-        }
-
-        return (
-            (this.changeRecommendations && this.changeRecommendations.length > 0) ||
-            (this.amendments && this.amendments.filter(amendment => amendment.isParagraphBasedAmendment()).length > 0)
-        );
-    }
-
-    public get parent(): ViewMotion | null {
-        return this.motion?.lead_motion || null;
     }
 
     /**
@@ -85,66 +42,34 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
         return this.viewService.currentShowAllAmendmentsState;
     }
 
+    public get showAllAmendments$(): Observable<boolean> {
+        return this.viewService.showAllAmendmentsStateSubject;
+    }
+
     ///////////////////////////////////////////////
-    /////// Getter to repos & services
+    /////// Repos & services
     ///////////////////////////////////////////////
 
-    protected get repo(): MotionControllerService {
-        return this.motionServiceCollector.motionRepo;
-    }
+    public categoryRepo = inject(MotionCategoryControllerService);
 
-    public get categoryRepo(): MotionCategoryControllerService {
-        return this.motionServiceCollector.categoryRepo;
-    }
+    protected repo = inject(MotionControllerService);
+    protected amendmentRepo = inject(AmendmentControllerService);
+    protected blockRepo = inject(MotionBlockControllerService);
+    protected tagRepo = inject(TagControllerService);
+    protected changeRecoRepo = inject(MotionChangeRecommendationControllerService);
+    protected motionLineNumbering = inject(MotionLineNumberingService);
+    protected motionFormatService = inject(MotionFormatService);
+    protected viewService = inject(MotionDetailViewService);
 
-    public get workflowRepo(): MotionWorkflowControllerService {
-        return this.motionServiceCollector.workflowRepo;
-    }
-
-    public get participantRepo(): ParticipantControllerService {
-        return this.motionServiceCollector.participantRepo;
-    }
-
-    protected get amendmentRepo(): AmendmentControllerService {
-        return this.motionServiceCollector.amendmentRepo;
-    }
-
-    protected get blockRepo(): MotionBlockControllerService {
-        return this.motionServiceCollector.blockRepo;
-    }
-
-    protected get tagRepo(): TagControllerService {
-        return this.motionServiceCollector.tagRepo;
-    }
-
-    protected get changeRecoRepo(): MotionChangeRecommendationControllerService {
-        return this.motionServiceCollector.changeRecoRepo;
-    }
-
-    protected get motionLineNumbering(): MotionLineNumberingService {
-        return this.motionServiceCollector.motionLineNumbering;
-    }
-
-    protected get motionFormatService(): MotionFormatService {
-        return this.motionServiceCollector.motionFormatService;
-    }
-
-    protected get viewService(): MotionDetailViewService {
-        return this.motionServiceCollector.motionViewService;
-    }
+    protected override translate = inject(TranslateService);
 
     ///////////////////////////////////////////////
     /////// Settings variables
     ///////////////////////////////////////////////
 
-    public multipleParagraphsAllowed = false;
-    public reasonRequired = false;
-    public minSupporters = 0;
-    public preamble = ``;
-    public showReferringMotions = false;
-    public showSequentialNumber = false;
-    protected lineLength = 0;
-    protected sortedChangingObjects: ViewUnifiedChange[] | null = null;
+    protected get lineLength(): number {
+        return this.meetingSettingsService.instant(`motions_line_length`);
+    }
 
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
@@ -152,49 +77,15 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     /**
      * All change recommendations to this motion
      */
-    public changeRecommendations: ViewUnifiedChange[] = [];
-    /**
-     * Value for os-motion-detail-diff: when this is set, that component scrolls to the given change
-     */
-    public scrollToChange: ViewUnifiedChange | null = null;
+    public get changeRecommendations$(): Observable<ViewUnifiedChange[]> {
+        return this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).pipe(filter(value => !!value));
+    }
 
-    protected amendments: ViewMotion[] = [];
+    protected get amendments$(): Observable<ViewMotion[]> {
+        return this.amendmentRepo.getViewModelListObservableFor(this.motion).pipe(filter(value => !!value));
+    }
 
-    private _isEditing = false;
     private _motion: ViewMotion | null = null;
-
-    protected override translate = inject(TranslateService);
-    protected motionServiceCollector = inject(MotionDetailServiceCollectorService);
-
-    /**
-     * In the original version, a change-recommendation-annotation has been clicked
-     * -> Go to the diff view and scroll to the change recommendation
-     */
-    public gotoChangeRecommendation(changeRecommendation: ViewUnifiedChange): void {
-        this.scrollToChange = changeRecommendation;
-        this.viewService.changeRecommendationModeSubject.next(ChangeRecoMode.Diff);
-    }
-
-    protected getAllChangingObjectsSorted(): ViewUnifiedChange[] {
-        if (!this.sortedChangingObjects) {
-            this.sortedChangingObjects = this.motionLineNumbering.recalcUnifiedChanges(
-                this.lineLength,
-                this.changeRecommendations as ViewMotionChangeRecommendation[],
-                this.amendments
-            );
-        }
-        return this.sortedChangingObjects!;
-    }
-
-    /**
-     * Function called when the edit-mode is set to `true`
-     */
-    protected onEnterEditMode(): void {}
-
-    /**
-     * Function called when a new motion is passed and it's an text-based amendment
-     */
-    protected onInitTextBasedAmendment(): void {}
 
     /**
      * Function called after all eventual updates whenever the motion setter is called
@@ -216,60 +107,11 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     }
 
     private init(): void {
-        this.subscriptions.push(
-            ...this.getSharedSubscriptionsToSettings(),
-            ...this.getSharedSubscriptionsToRepositories(),
-            ...this.getSubscriptions()
-        );
+        this.subscriptions.push(...this.getSubscriptions());
         this.onAfterInit();
     }
 
     private destroy(): void {
         this.cleanSubscriptions();
-    }
-
-    private getSharedSubscriptionsToRepositories(): Subscription[] {
-        return [
-            this.changeRecoRepo
-                .getChangeRecosOfMotionObservable(this.motion.id)
-                .pipe(filter(value => !!value))
-                .subscribe(changeRecos => {
-                    this.changeRecommendations = changeRecos;
-                    this.sortedChangingObjects = null;
-                }),
-            this.amendmentRepo
-                .getViewModelListObservableFor(this.motion)
-                .pipe(filter(value => !!value))
-                .subscribe((amendments: ViewMotion[]): void => {
-                    this.amendments = amendments;
-                    this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
-                    this.sortedChangingObjects = null;
-                })
-        ];
-    }
-
-    private getSharedSubscriptionsToSettings(): Subscription[] {
-        return [
-            this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => {
-                this.lineLength = lineLength;
-                this.sortedChangingObjects = null;
-            }),
-            this.meetingSettingsService
-                .get(`motions_reason_required`)
-                .subscribe(required => (this.reasonRequired = required)),
-            this.meetingSettingsService
-                .get(`motions_supporters_min_amount`)
-                .subscribe(value => (this.minSupporters = value)),
-            this.meetingSettingsService.get(`motions_preamble`).subscribe(value => (this.preamble = value)),
-            this.meetingSettingsService.get(`motions_amendments_multiple_paragraphs`).subscribe(allowed => {
-                this.multipleParagraphsAllowed = allowed;
-            }),
-            this.meetingSettingsService
-                .get(`motions_show_referring_motions`)
-                .subscribe(show => (this.showReferringMotions = show)),
-            this.meetingSettingsService
-                .get(`motions_show_sequential_number`)
-                .subscribe(shown => (this.showSequentialNumber = shown))
-        ];
     }
 }

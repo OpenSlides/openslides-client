@@ -71,7 +71,7 @@
                 class="detail-link"
                 target="_blank"
                 [attr.aria-label]="ariaLabel(mediafile)"
-                [routerLink]="getMediaUrl(mediafile)"
+                [routerLink]="mediafile.url"
             ></a>
         }
         @if (mediafile.is_directory && !isMultiSelect) {
@@ -93,7 +93,7 @@
                 class="detail-link"
                 target="_blank"
                 [attr.aria-label]="ariaLabel(mediafile)"
-                [routerLink]="getMediaUrl(mediafile)"
+                [routerLink]="mediafile.url"
             ></a>
         }
         @if (mediafile.is_directory && !isMultiSelect) {
@@ -127,7 +127,7 @@
             >
                 @if (isInMeeting) {
                     <os-icon-container icon="group">
-                        <os-comma-separated-listing [list]="mediafile.access_groups" [showElementsAmount]="3">
+                        <os-comma-separated-listing [list]="getGroups(mediafile)" [showElementsAmount]="3">
                             <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
                         </os-comma-separated-listing>
                     </os-icon-container>
@@ -145,12 +145,21 @@
     </div>
 
     <!-- Indicator column -->
-    <div *osScrollingTableCell="'indicator'; row as mediafile; config: { width: 40 }" class="fill clickable">
+    <div *osScrollingTableCell="'indicator'; row as mediafile; config: { width: 60 }" class="fill clickable">
         @if (mediafile.isFont() && isUsedAsFontFn(mediafile)) {
             <mat-icon class="foreground-icon" [matTooltip]="'File is being used' | translate">text_fields</mat-icon>
         }
         @if (mediafile.isImage() && isUsedAsLogoFn(mediafile)) {
             <mat-icon class="foreground-icon" [matTooltip]="'File is being used' | translate">insert_photo</mat-icon>
+        }
+        @if (mediafile.published_to_meetings_in_organization_id === 1) {
+            <mat-icon
+                class="foreground-icon"
+                [matTooltip]="'File is public' | translate"
+                [ngClass]="mediafile.published_to_meetings_in_organization_id === 1 ? 'margin-left-5' : 'margin-left-0'"
+            >
+                public
+            </mat-icon>
         }
     </div>
 
@@ -181,14 +190,30 @@
                     <mat-icon>edit</mat-icon>
                     <span>{{ 'Edit' | translate }}</span>
                 </button>
-                <button mat-menu-item (click)="move(moveDialog, [mediafile])">
-                    <mat-icon>near_me</mat-icon>
-                    <span>{{ 'Move' | translate }}</span>
-                </button>
-                <button class="red-warning-text" mat-menu-item (click)="onDelete(mediafile)">
-                    <mat-icon>delete</mat-icon>
-                    <span>{{ 'Delete' | translate }}</span>
-                </button>
+                @if (fileCanBeModified(mediafile)) {
+                    @if (fileCanBeMoved(mediafile)) {
+                        <button mat-menu-item (click)="move(moveDialog, [mediafile])">
+                            <mat-icon>near_me</mat-icon>
+                            <span>{{ 'Move' | translate }}</span>
+                        </button>
+                    }
+                    <button class="red-warning-text" mat-menu-item (click)="onDelete(mediafile)">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{ 'Delete' | translate }}</span>
+                    </button>
+                }
+                @if (isOrgaLevelAndRootLevel) {
+                    <button mat-menu-item (click)="togglePublish(mediafile)">
+                        <mat-icon>public</mat-icon>
+                        <span>
+                            {{
+                                mediafile.isPublishedOrganizationWide
+                                    ? ('Unpublish' | translate)
+                                    : ('Publish' | translate)
+                            }}
+                        </span>
+                    </button>
+                }
             </div>
         }
     </ng-template>
@@ -240,6 +265,19 @@
                 noneTitle="{{ 'Base folder' | translate }}"
             ></os-list-search-selector>
         </mat-form-field>
+
+        @if (movingFromPublicFolder && !movingToPublicFolder) {
+            <p class="warn" translate>
+                You are moving a file from a public folder into an not published folder. The file will not be accessible
+                in meetings afterwards.
+            </p>
+        }
+        @if (movingToPublicFolder && !movingFromPublicFolder) {
+            <p class="warn" translate>
+                You are moving an Unpublished file to a public folder. The file will not be accessible in all meetings
+                afterwards.
+            </p>
+        }
     </mat-dialog-content>
     <mat-dialog-actions>
         <button color="accent" mat-button type="submit" [mat-dialog-close]="true">

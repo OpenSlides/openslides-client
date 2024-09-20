@@ -1,0 +1,31 @@
+@if (contentForm) {
+    <form [formGroup]="contentForm">
+        @for (paragraph of selectedParagraphs; track paragraph.paragraphNo) {
+            <section>
+                <h3>
+                    @if (paragraph.lineFrom >= paragraph.lineTo - 1) {
+                        <span class="line-number">{{ 'Line' | translate }} {{ paragraph.lineFrom }}</span>
+                    } @else {
+                        <span class="line-number">
+                            {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}
+                        </span>
+                    }
+                </h3>
+                <os-editor [formControlName]="paragraph.paragraphNo"></os-editor>
+                @if (isControlInvalid(paragraph.paragraphNo)) {
+                    <div class="red-warning-text">
+                        {{ 'This field is required.' | translate }}
+                    </div>
+                }
+            </section>
+        }
+        @for (paragraph of brokenParagraphs; track paragraph) {
+            <section>
+                <em class="red-warning-text">
+                    {{ 'This paragraph does not exist in the main motion anymore:' | translate }}
+                </em>
+                <div class="motion-text" [innerHTML]="paragraph | trust: 'html'"></div>
+            </section>
+        }
+    </form>
+}

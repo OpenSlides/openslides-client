@@ -23,6 +23,8 @@ export interface ViewModelConstructor<T extends BaseViewModel> {
  * Base class for view models.
  */
 export abstract class BaseViewModel<M extends BaseModel = any> implements DetailNavigable {
+    public viewModelUpdateTimestamp = Date.now();
+
     public get fqid(): Fqid {
         return this.getModel().fqid;
     }

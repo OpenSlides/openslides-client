@@ -7,7 +7,7 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import { combineLatest, map, Observable, startWith } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, Observable, startWith } from 'rxjs';
 import {
     FormPollMethod,
     PollBackendDurationChoices,
@@ -216,7 +216,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 this.pollTypeControl.valueChanges.pipe(startWith(``))
             ]).subscribe(([contentFormCh]) => {
                 this.updateFormControls(contentFormCh);
-            })
+            }),
+            this.pollMethodControl.valueChanges
+                .pipe(distinctUntilChanged())
+                .subscribe(method => this.updatePollMethod(method))
         );
 
         // TODO: Fetch groups for repo search selection
@@ -232,6 +235,14 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         this.updateGlobalVoteControls(update);
         this.updatePercentBases();
         this.setWarning();
+    }
+
+    private updatePollMethod(method: PollMethod): void {
+        if (method === `Y` || method === `N`) {
+            this.contentForm.addControl(`votes_amount`, this.getVotesAmountControl());
+        } else {
+            this.contentForm.removeControl(`votes_amount`);
+        }
     }
 
     /**
@@ -444,25 +455,29 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             type: [``, Validators.required],
             pollmethod: [``, Validators.required],
             onehundred_percent_base: [``, Validators.required],
-            votes_amount: this.fb.group(
-                {
-                    max_votes_amount: [1, [Validators.required, Validators.min(1)]],
-                    min_votes_amount: [1, [Validators.required, Validators.min(1)]],
-                    max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
-                },
-                {
-                    validators: [
-                        isNumberRange(`min_votes_amount`, `max_votes_amount`),
-                        this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`)
-                    ]
-                }
-            ),
+            votes_amount: this.getVotesAmountControl(),
             entitled_group_ids: [],
             backend: [],
             global_yes: [false],
             global_no: [false],
             global_abstain: [false]
         });
+    }
+
+    private getVotesAmountControl(): UntypedFormGroup {
+        return this.fb.group(
+            {
+                max_votes_amount: [1, [Validators.required, Validators.min(1)]],
+                min_votes_amount: [1, [Validators.required, Validators.min(1)]],
+                max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
+            },
+            {
+                validators: [
+                    isNumberRange(`min_votes_amount`, `max_votes_amount`),
+                    this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`)
+                ]
+            }
+        );
     }
 
     private enableGlobalVoteControls(): void {

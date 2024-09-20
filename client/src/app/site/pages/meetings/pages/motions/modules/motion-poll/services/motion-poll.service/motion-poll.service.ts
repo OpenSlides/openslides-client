@@ -56,19 +56,27 @@ export class MotionPollService extends PollService {
 
     public getDefaultPollData(contentObject?: Motion): Partial<Poll> {
         const poll: Partial<Poll> = {
-            title: this.translate.instant(`Vote`),
             onehundred_percent_base: this.defaultPercentBase,
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog,
             pollmethod: PollMethod.YNA
         };
 
+        let titlePrefix = this.translate.instant(`Motion`);
+        let title = this.translate.instant(`Vote`);
+
         if (contentObject) {
+            if (contentObject.number) {
+                titlePrefix += ` ${contentObject.number}`;
+            }
+
             const length = this.repo.getViewModelListByContentObject(contentObject.fqid).length;
             if (length) {
-                poll.title += ` (${length + 1})`;
+                title += ` (${length + 1})`;
             }
         }
+
+        poll.title = `${titlePrefix} ${title}:`;
 
         return poll;
     }
