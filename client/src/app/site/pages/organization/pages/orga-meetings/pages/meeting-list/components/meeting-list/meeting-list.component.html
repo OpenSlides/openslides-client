@@ -78,15 +78,15 @@
                 </div>
 
                 @if (meeting.location || meeting.start_time || meeting.end_time) {
+                    @let numIcons =
+                        meeting.isArchived +
+                        meeting.isTemplate +
+                        (meeting.locked_from_inside ? meeting.locked_from_inside : false);
                     <div
                         class="subtitle ellipsis-overflow"
                         [ngClass]="{
-                            'align-w-title-w-one-icon': xor(
-                                xor(meeting.isTemplate, meeting.locked_from_inside),
-                                meeting.isArchived
-                            ),
-                            'align-w-title-w-two-icon':
-                                meeting.isArchived && (meeting.isTemplate || meeting.locked_from_inside)
+                            'align-w-title-w-one-icon': numIcons === 1,
+                            'align-w-title-w-two-icon': numIcons === 2
                         }"
                     >
                         @if (meeting.location) {
