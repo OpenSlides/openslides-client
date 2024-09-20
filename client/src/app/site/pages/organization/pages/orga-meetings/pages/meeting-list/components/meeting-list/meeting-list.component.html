@@ -78,10 +78,7 @@
                 </div>
 
                 @if (meeting.location || meeting.start_time || meeting.end_time) {
-                    @let numIcons =
-                        meeting.isArchived +
-                        meeting.isTemplate +
-                        (meeting.locked_from_inside ? meeting.locked_from_inside : false);
+                    @let numIcons = meeting.isArchived + meeting.isTemplate + !!meeting.locked_from_inside;
                     <div
                         class="subtitle ellipsis-overflow"
                         [ngClass]="{
