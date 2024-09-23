@@ -12,8 +12,10 @@ import {
 import { filter, firstValueFrom } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { AutoupdateCommunicationService } from 'src/app/site/services/autoupdate/autoupdate-communication.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -129,6 +131,8 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         private el: ElementRef,
         private cd: ChangeDetectorRef,
         private operator: OperatorService,
+        private motionRepo: MotionRepositoryService,
+        private activeMeetingIdService: ActiveMeetingIdService,
         private autoupdateCommunications: AutoupdateCommunicationService,
         private controller: MotionControllerService
     ) {
@@ -287,7 +291,10 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      * The permissions of the user have changed -> activate / deactivate editing functionality
      */
     private checkPermissions(): void {
-        if (this.operator.hasPerms(Permission.motionCanManage)) {
+        if (
+            this.operator.hasPerms(Permission.motionCanManage) &&
+            this.motionRepo.getViewModel(this.motionId).meeting_id === this.activeMeetingIdService.meetingId
+        ) {
             this.can_manage = true;
             if (this.selectedFrom === null) {
                 this.startCreating();
