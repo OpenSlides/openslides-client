@@ -255,7 +255,7 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
             { idField: `category_id`, fieldset: [`name`, `parent_id`, `meeting_id`] },
             { idField: `block_id`, fieldset: [`title`, `meeting_id`] },
-            { idField: `meeting_id`, fieldset: [`name`, `motions_line_length`] }
+            { idField: `meeting_id`, fieldset: [`name`, `motions_line_length`, `motions_default_line_numbering`] }
         ],
         fieldset: [
             `workflow_timestamp`,
