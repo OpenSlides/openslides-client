@@ -241,7 +241,7 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
             },
             {
                 idField: `state_id`,
-                fieldset: [`name`, `css_class`]
+                fieldset: [`name`, `css_class`, `meeting_id`]
             },
             {
                 idField: `poll_ids`,
@@ -253,8 +253,8 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
                 follow: [{ idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET }]
             },
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
-            { idField: `category_id`, fieldset: [`name`] },
-            { idField: `block_id`, fieldset: [`title`] },
+            { idField: `category_id`, fieldset: [`name`, `parent_id`, `meeting_id`] },
+            { idField: `block_id`, fieldset: [`title`, `meeting_id`] },
             { idField: `meeting_id`, fieldset: [`name`, `motions_line_length`] }
         ],
         fieldset: [

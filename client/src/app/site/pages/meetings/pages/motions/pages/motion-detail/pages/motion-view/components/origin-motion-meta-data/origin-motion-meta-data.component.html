@@ -43,53 +43,47 @@
 }
 
 <!-- Category -->
-@if (categories$ | async; as categories) {
-    @if (categories.length && motion.category) {
-        <div>
-            <h4>{{ 'Category' | translate }}</h4>
-            <os-chip-select chipClass="grey multi-line-chip">
-                <div>
-                    @if (motion.category.parent) {
-                        <div>
-                            {{ motion.category.parent }}
-                        </div>
-                        <span>{{ 'Subcategory' | translate }}:</span>
-                    }
-                    {{ motion.category }}
-                </div>
-            </os-chip-select>
-        </div>
-    }
+@if (motion.category) {
+    <div>
+        <h4>{{ 'Category' | translate }}</h4>
+        <os-chip-select chipClass="grey multi-line-chip">
+            <div>
+                @if (motion.category.parent) {
+                    <div>
+                        {{ motion.category.parent }}
+                    </div>
+                    <span>{{ 'Subcategory' | translate }}:</span>
+                }
+                {{ motion.category }}
+            </div>
+        </os-chip-select>
+    </div>
 }
 
 <!-- Tags -->
-@if (tags$ | async; as tags) {
-    @if (tags.length && motion.hasTags()) {
-        <div>
-            <h4>{{ 'Tags' | translate }}</h4>
-            <os-chip-select>
-                @for (tag of motion.tags$ | async; track tag.id) {
-                    <os-chip-select-chip disableRipple disabled>
-                        {{ tag }}
-                    </os-chip-select-chip>
-                }
-            </os-chip-select>
-        </div>
-    }
+@if (motion.hasTags()) {
+    <div>
+        <h4>{{ 'Tags' | translate }}</h4>
+        <os-chip-select>
+            @for (tag of motion.tags$ | async; track tag.id) {
+                <os-chip-select-chip disableRipple disabled>
+                    {{ tag }}
+                </os-chip-select-chip>
+            }
+        </os-chip-select>
+    </div>
 }
 
 <!-- Block -->
-@if (motionBlocks$ | async; as motionBlocks) {
-    @if (motionBlocks.length && motion.block) {
-        <div>
-            <h4>
-                {{ 'Motion block' | translate }}
-            </h4>
-            <os-chip-select>
-                {{ motion.block }}
-            </os-chip-select>
-        </div>
-    }
+@if (motion.block) {
+    <div>
+        <h4>
+            {{ 'Motion block' | translate }}
+        </h4>
+        <os-chip-select>
+            {{ motion.block }}
+        </os-chip-select>
+    </div>
 }
 
 <!-- Created timestamp -->
