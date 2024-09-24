@@ -13,7 +13,7 @@ import { createEmailValidator } from 'src/app/infrastructure/utils/validators/em
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
-import { MotionPollMethodVerbose } from '../../pages/motions/modules/motion-poll';
+import { MotionPollMethodVerbose } from '../../pages/motions/modules/motion-poll/definitions';
 import { ViewMeeting } from '../../view-models/view-meeting';
 
 export type SettingsValueMap = { [key in keyof Settings]?: any };
