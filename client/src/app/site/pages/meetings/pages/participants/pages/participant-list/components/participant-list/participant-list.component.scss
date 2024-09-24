@@ -32,3 +32,12 @@
     margin-left: 1em;
     z-index: 3;
 }
+
+.icon-part {
+    display: flex;
+
+    span {
+        margin-top: 1px;
+        margin-left: 11px;
+    }
+}

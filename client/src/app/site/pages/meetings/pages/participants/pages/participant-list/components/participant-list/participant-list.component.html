@@ -186,19 +186,20 @@
             >
                 <span>{{ 'Present' | translate }}</span>
             </mat-checkbox>
-            <div style="padding-left: 22px">
-                <os-icon-container
-                    icon="event_busy"
-                    [hide]="!user.is_locked_out"
-                    [showIcon]="user.is_locked_out"
-                    [style.color]="'red'"
-                >
-                    {{ 'Locked out' | translate }}
-                </os-icon-container>
-            </div>
+            @if (user.is_locked_out) {
+                <div style="padding-left: 20px">
+                    <div class="icon-part">
+                        <mat-icon class="red-warning-text">event_busy</mat-icon>
+                        <span>{{ 'Locked out' | translate }}</span>
+                    </div>
+                </div>
+            }
             @if (!user.is_active && canSeeSensitiveData) {
-                <div style="padding-left: 22px; margin-top: 4px">
-                    <os-icon-container icon="block">{{ 'Inactive' | translate }}</os-icon-container>
+                <div style="padding-left: 20px; margin-top: 6px">
+                    <div class="icon-part">
+                        <mat-icon>block</mat-icon>
+                        <span>{{ 'Inactive' | translate }}</span>
+                    </div>
                 </div>
             }
         </div>
