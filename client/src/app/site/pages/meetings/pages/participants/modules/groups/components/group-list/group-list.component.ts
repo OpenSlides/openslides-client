@@ -95,7 +95,12 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
 
         this.repo.getViewModelListObservable().subscribe(newViewGroups => {
             if (newViewGroups) {
-                this.groups = newViewGroups.slice().sort((groupA, groupB) => groupA.weight - groupB.weight);
+                if (!this.meetingSettingsService.instant(`enable_anonymous`)) {
+                    newViewGroups = newViewGroups.filter(group => !group.anonymous_group_for_meeting_id);
+                } else {
+                    newViewGroups = newViewGroups.slice();
+                }
+                this.groups = newViewGroups.sort((groupA, groupB) => groupA.weight - groupB.weight);
                 this.updateRowDef();
             }
         });
