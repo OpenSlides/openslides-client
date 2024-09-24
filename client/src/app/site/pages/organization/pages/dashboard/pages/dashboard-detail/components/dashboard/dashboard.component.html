@@ -160,61 +160,17 @@
                 [ngClass]="context?.cssClass"
                 [routerLink]="meeting.id"
             >
-                <div class="one-line">
-                    <div class="meeting-box--mid one-line">
-                        <os-icon-container class="show-lock-icon" icon="lock" [showIcon]="meeting.locked_from_inside">
-                            <div class="meeting-box--mid">{{ meeting.name }}</div>
-                        </os-icon-container>
-                    </div>
-                    <div
-                        class="one-line"
-                        [ngClass]="{
-                            'align-w-title-if-locked': meeting.locked_from_inside,
-                            'align-w-title-if-not-locked': !meeting.locked_from_inside
-                        }"
-                    >
-                        @if (meeting.location) {
-                            <span [ngClass]="context?.subtitleCssClass">{{ meeting.location }}</span>
-                        }
-                        @if (meeting.location && (meeting.start_time || meeting.end_time)) {
-                            <span [ngClass]="context?.subtitleCssClass">&nbsp;&middot;&nbsp;</span>
-                        }
-                        @if (meeting.start_time || meeting.end_time) {
-                            <span>
-                                <os-meeting-time
-                                    [cssClass]="context?.subtitleCssClass"
-                                    [meeting]="meeting"
-                                ></os-meeting-time>
-                            </span>
-                        }
-                    </div>
-                </div>
+                <ng-container
+                    [ngTemplateOutlet]="meetingEntry"
+                    [ngTemplateOutletContext]="{ meeting, context }"
+                ></ng-container>
             </a>
         } @else {
             <div class="meeting-box-left meeting-box-readonly flex-vertical-center" [ngClass]="context?.cssClass">
-                <div class="one-line">
-                    <div class="meeting-box--mid one-line">
-                        <os-icon-container icon="lock" [showIcon]="meeting.locked_from_inside">
-                            <div class="meeting-box--mid">{{ meeting.name }}</div>
-                        </os-icon-container>
-                    </div>
-                    <div class="one-line">
-                        @if (meeting.location) {
-                            <span [ngClass]="context?.subtitleCssClass">{{ meeting.location }}</span>
-                        }
-                        @if (meeting.location && (meeting.start_time || meeting.end_time)) {
-                            <span [ngClass]="context?.subtitleCssClass">&nbsp;&middot;&nbsp;</span>
-                        }
-                        @if (meeting.start_time || meeting.end_time) {
-                            <span>
-                                <os-meeting-time
-                                    [cssClass]="context?.subtitleCssClass"
-                                    [meeting]="meeting"
-                                ></os-meeting-time>
-                            </span>
-                        }
-                    </div>
-                </div>
+                <ng-container
+                    [ngTemplateOutlet]="meetingEntry"
+                    [ngTemplateOutletContext]="{ meeting, context }"
+                ></ng-container>
             </div>
         }
         @if (meeting.isArchived) {
@@ -230,5 +186,39 @@
                 <mat-icon class="show-committee-icon">layers</mat-icon>
             </a>
         }
+    </div>
+</ng-template>
+
+<ng-template #meetingEntry let-context="context" let-meeting="meeting">
+    <div class="one-line">
+        <div class="meeting-box--mid one-line">
+            @let meetingIcon = meeting.locked_from_inside ? 'lock' : 'public';
+            <os-icon-container
+                class="show-lock-icon"
+                [icon]="meetingIcon"
+                [showIcon]="meeting.enable_anonymous || meeting.locked_from_inside"
+            >
+                <div class="meeting-box--mid">{{ meeting.name }}</div>
+            </os-icon-container>
+        </div>
+        <div
+            class="one-line"
+            [ngClass]="{
+                'align-w-title-if-locked': meeting.locked_from_inside,
+                'align-w-title-if-not-locked': !meeting.locked_from_inside
+            }"
+        >
+            @if (meeting.location) {
+                <span [ngClass]="context?.subtitleCssClass">{{ meeting.location }}</span>
+            }
+            @if (meeting.location && (meeting.start_time || meeting.end_time)) {
+                <span [ngClass]="context?.subtitleCssClass">&nbsp;&middot;&nbsp;</span>
+            }
+            @if (meeting.start_time || meeting.end_time) {
+                <span>
+                    <os-meeting-time [cssClass]="context?.subtitleCssClass" [meeting]="meeting"></os-meeting-time>
+                </span>
+            }
+        </div>
     </div>
 </ng-template>

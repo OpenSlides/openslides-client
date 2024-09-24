@@ -73,7 +73,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `committee_id`,
             `group_ids`,
             `language`,
-            `locked_from_inside`
+            `locked_from_inside`,
+            `enable_anonymous`
         ]);
         const detailEditFields: TypedFieldset<Meeting> = [
             `default_meeting_for_committee_id`,
