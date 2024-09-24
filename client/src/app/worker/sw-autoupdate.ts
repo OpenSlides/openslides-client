@@ -1,20 +1,20 @@
 import { environment } from 'src/environments/environment';
 
+import { HttpMethod } from '../infrastructure/definitions/http';
 import { AutoupdateStreamPool } from './autoupdate/autoupdate-stream-pool';
 import { AutoupdateSubscription } from './autoupdate/autoupdate-subscription';
 import {
     AutoupdateCleanupCacheParams,
     AutoupdateCloseStreamParams,
     AutoupdateMessage,
-    AutoupdateOpenStreamParams,
-    AutoupdateSetEndpointParams
+    AutoupdateOpenStreamParams
 } from './sw-autoupdate.interfaces';
 
 const autoupdatePool = new AutoupdateStreamPool({
     url: `/system/autoupdate`,
     healthUrl: `/system/autoupdate/health`,
-    method: `post`
-} as AutoupdateSetEndpointParams);
+    method: HttpMethod.POST
+});
 
 const subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
     required: [],

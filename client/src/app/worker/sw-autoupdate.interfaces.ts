@@ -64,7 +64,7 @@ export interface AutoupdateReconnectForce extends WorkerMessageContent {
     action: 'reconnect-force';
 }
 
-export interface AutoupdateWorkerResponse extends WorkerResponse {
+export interface AutoupdateWorkerResponse<C> extends WorkerResponse<C> {
     sender: 'autoupdate';
     action: string;
 }
@@ -83,9 +83,8 @@ export interface AutoupdateAuthChange extends WorkerMessageContent {
     params: AutoupdateAuthChangeParams;
 }
 
-export interface AutoupdateSetStreamId extends AutoupdateWorkerResponse {
+export interface AutoupdateSetStreamId extends AutoupdateWorkerResponse<AutoupdateSetStreamIdContent> {
     action: 'set-streamid';
-    content: AutoupdateSetStreamIdContent;
 }
 
 export interface AutoupdateReceiveDataContent {
@@ -94,23 +93,20 @@ export interface AutoupdateReceiveDataContent {
     description: string;
 }
 
-export interface AutoupdateReceiveData extends AutoupdateWorkerResponse {
+export interface AutoupdateReceiveData extends AutoupdateWorkerResponse<AutoupdateReceiveDataContent> {
     action: 'receive-data';
-    content: AutoupdateReceiveDataContent;
 }
 
-export interface AutoupdateReceiveError extends AutoupdateWorkerResponse {
+export interface AutoupdateReceiveError extends AutoupdateWorkerResponse<AutoupdateReceiveDataContent> {
     action: 'receive-error';
-    content: AutoupdateReceiveDataContent;
 }
 
 export interface AutoupdateStatusContent {
     status: 'healthy' | 'unhealthy';
 }
 
-export interface AutoupdateStatus extends AutoupdateWorkerResponse {
+export interface AutoupdateStatus extends AutoupdateWorkerResponse<AutoupdateStatusContent> {
     action: 'status';
-    content: AutoupdateStatusContent;
 }
 
 export interface AutoupdateOpenMessageContent extends WorkerMessageContent {

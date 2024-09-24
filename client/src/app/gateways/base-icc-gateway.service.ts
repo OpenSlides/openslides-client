@@ -4,6 +4,7 @@ import { filter, Observable } from 'rxjs';
 import { SharedWorkerService } from '../openslides-main-module/services/shared-worker.service';
 import { ActiveMeetingIdService } from '../site/pages/meetings/services/active-meeting-id.service';
 import { WorkerResponse } from '../worker/interfaces';
+import { AutoupdateReceiveData } from '../worker/sw-autoupdate.interfaces';
 import { ICC_ENDPOINT, ICCConnectMessage, ICCDisconnectMessage } from '../worker/sw-icc.interfaces';
 import { HttpService } from './http.service';
 
@@ -118,7 +119,7 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
     }
 
     private sendConnectToWorker(meetingId: number): void {
-        this.sharedWorker.sendMessage({
+        this.sharedWorker.sendMessage(<ICCConnectMessage>{
             receiver: ICC_ENDPOINT,
             msg: {
                 action: `connect`,
@@ -127,10 +128,10 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
                     meetingId
                 }
             }
-        } as ICCConnectMessage);
+        });
     }
 
-    private messageObservable(meetingId: number): Observable<WorkerResponse> {
+    private messageObservable(meetingId: number): Observable<AutoupdateReceiveData> {
         return this.sharedWorker
             .listenTo(ICC_ENDPOINT)
             .pipe(
@@ -140,10 +141,10 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
                         data.content?.type === this.receivePath &&
                         data.content?.meeting_id === meetingId
                 )
-            );
+            ) as Observable<AutoupdateReceiveData>;
     }
 
-    private closedObservable(meetingId: number): Observable<WorkerResponse> {
+    private closedObservable(meetingId: number): Observable<WorkerResponse<any>> {
         return this.sharedWorker
             .listenTo(ICC_ENDPOINT)
             .pipe(

@@ -18,18 +18,17 @@ export interface ControlTerminateMessage extends WorkerMessage<ControlTerminateM
     msg: ControlTerminateMessageContent;
 }
 
-export interface ControlTerminateRejected extends WorkerResponse {
+export interface ControlTerminateRejected extends WorkerResponse<undefined> {
     action: 'terminate-rejected';
     sender: 'control';
 }
 
-export interface ControlAcknowledgement extends WorkerResponse {
+export interface ControlAcknowledgement extends WorkerResponse<string | number> {
     action: 'ack';
     sender: 'control';
-    content: string | number;
 }
 
-export interface ControlPong extends WorkerResponse {
+export interface ControlPong extends WorkerResponse<any> {
     action: 'pong';
     sender: 'control';
     content: any;

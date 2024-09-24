@@ -11,10 +11,10 @@ export interface WorkerMessageContent {
     params?: any;
 }
 
-export interface WorkerResponse {
+export interface WorkerResponse<C> {
     sender: string;
     action: string;
-    content?: any;
+    content?: C;
 }
 
 export type Broadcaster = (sender: string, action: string, content?: any) => void;
@@ -23,5 +23,5 @@ export type Broadcaster = (sender: string, action: string, content?: any) => voi
  * Overwrite MessagePort interface for more type safety
  */
 export interface OsMessagePort extends Omit<MessagePort, 'postMessage'> {
-    postMessage(message: WorkerResponse): void;
+    postMessage(message: WorkerResponse<any>): void;
 }

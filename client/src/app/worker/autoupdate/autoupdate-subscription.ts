@@ -53,14 +53,14 @@ export class AutoupdateSubscription {
      */
     public updateData(data: any): void {
         for (const port of this.ports) {
-            port.postMessage({
+            port.postMessage(<AutoupdateReceiveData>{
                 sender: `autoupdate`,
                 action: `receive-data`,
                 content: {
                     streamIdDescriptions: { [this.id]: this.description },
                     data: data
                 }
-            } as AutoupdateReceiveData);
+            });
         }
     }
 
