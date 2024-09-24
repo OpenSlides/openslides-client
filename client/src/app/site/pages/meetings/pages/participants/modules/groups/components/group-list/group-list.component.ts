@@ -11,6 +11,7 @@ import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { GroupControllerService } from '../../services';
@@ -80,6 +81,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
         private dialog: MatDialog,
         private repo: GroupControllerService,
         private promptService: PromptService,
+        private operator: OperatorService,
         private formBuilder: UntypedFormBuilder
     ) {
         super();
@@ -118,7 +120,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
         const name = this.selectedGroup ? this.selectedGroup.name : ``;
         const external_id = this.selectedGroup?.external_id ?? ``;
 
-        this.groupForm = this.formBuilder.group({
+        const formConfig = {
             name: [
                 name,
                 [
@@ -131,7 +133,12 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
                 ]
             ],
             external_id: [external_id]
-        });
+        };
+        if (!this.allowExternalId) {
+            delete formConfig.external_id;
+        }
+
+        this.groupForm = this.formBuilder.group(formConfig);
 
         this.dialogRef = this.dialog.open(this.groupEditDialog!, infoDialogSettings);
 
@@ -281,5 +288,12 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
             return await this.promptService.discardChangesConfirmation();
         }
         return true;
+    }
+
+    /**
+     * Function to allow to edit the external_id
+     */
+    public get allowExternalId(): boolean {
+        return this.operator.isMeetingAdmin || this.operator.isSuperAdmin;
     }
 }

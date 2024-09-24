@@ -134,6 +134,12 @@ os-dashboard {
         }
     }
 
+    .show-lock-icon {
+        mat-icon {
+            display: inline-block !important;
+        }
+    }
+
     .orga-information {
         width: calc(100% - 128px);
 
@@ -298,5 +304,13 @@ os-dashboard {
                 color: #8f8f8f;
             }
         }
+    }
+
+    .align-w-title-if-locked {
+        padding-left: 25px;
+    }
+
+    .align-w-title-if-not-locked {
+        padding-left: 6px;
     }
 }

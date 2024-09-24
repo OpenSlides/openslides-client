@@ -109,10 +109,12 @@
                     </mat-error>
                 }
             </mat-form-field>
-            <mat-form-field>
-                <mat-label>{{ 'External ID' | translate }}</mat-label>
-                <input formControlName="external_id" matInput type="text" />
-            </mat-form-field>
+            @if (allowExternalId) {
+                <mat-form-field>
+                    <mat-label>{{ 'External ID' | translate }}</mat-label>
+                    <input formControlName="external_id" matInput type="text" />
+                </mat-form-field>
+            }
         </form>
     </mat-dialog-content>
     <mat-dialog-actions>
