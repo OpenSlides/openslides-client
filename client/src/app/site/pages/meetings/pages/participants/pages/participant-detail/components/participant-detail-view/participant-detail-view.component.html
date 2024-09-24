@@ -97,6 +97,8 @@
                     >
                         <span>{{ 'present' | translate }}</span>
                     </mat-checkbox>
+                </div>
+                <div [formGroup]="form">
                     <!-- Locked out? -->
                     <mat-checkbox
                         formControlName="locked_out"
@@ -313,18 +315,20 @@
             }
             @if (isAllowed('seeName')) {
                 <div class="flex-vertical-center margin-top-12">
-                    <span>{{ (user?.isPresentInMeeting() ? 'Is present' : 'Is not present') | translate }}</span>
                     <mat-icon class="margin-4">
                         {{ user!.isPresentInMeeting() ? 'check_box' : 'check_box_outline_blank' }}
                     </mat-icon>
+                    <span>{{ (user?.isPresentInMeeting() ? 'Is present' : 'Is not present') | translate }}</span>
+                </div>
+                <div class="flex-vertical-center margin-top-12">
                     <!-- Locked out? -->
                     @if (isAllowed('seeSensitiveData')) {
+                        <mat-icon class="margin-4" [class.red-warning-text]="user!.isLockedOutOfMeeting()">
+                            {{ user!.isLockedOutOfMeeting() ? 'event_busy' : 'check_box_outline_blank' }}
+                        </mat-icon>
                         <span>
                             {{ (user?.isLockedOutOfMeeting() ? 'Is locked out' : 'Is not locked out') | translate }}
                         </span>
-                        <mat-icon class="margin-4">
-                            {{ user!.isLockedOutOfMeeting() ? 'event_busy' : 'check_box_outline_blank' }}
-                        </mat-icon>
                     }
                 </div>
             }
