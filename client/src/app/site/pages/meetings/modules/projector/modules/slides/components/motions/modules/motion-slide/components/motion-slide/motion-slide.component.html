@@ -1,7 +1,11 @@
 @if (data && projector) {
     <div>
         @if (data.data.show_sidebox) {
-            <div id="sidebox" [ngStyle]="{ 'margin-top': projector.show_header_footer ? '144px' : '94px' }">
+            <div
+                id="sidebox"
+                [ngClass]="{ 'metatable-background': !hideMetadataBackground }"
+                [ngStyle]="{ 'margin-top': projector.show_header_footer ? '144px' : '94px' }"
+            >
                 <!-- Submitters -->
                 @if (getSubmittersObservable() | async; as submitters) {
                     @if (submitters.length > 0) {
@@ -40,7 +44,12 @@
                 }
                 <!-- Metainfo as table -->
                 @if (showMetaTable) {
-                    <table cellpadding="0" cellspacing="0" class="metatable spacer-top-20">
+                    <table
+                        cellpadding="0"
+                        cellspacing="0"
+                        class="metatable spacer-top-20"
+                        [ngClass]="{ 'metatable-background': !hideMetadataBackground }"
+                    >
                         <!-- Submitters -->
                         @if (getSubmittersObservable() | async; as submitters) {
                             @if (submitters.length > 0) {

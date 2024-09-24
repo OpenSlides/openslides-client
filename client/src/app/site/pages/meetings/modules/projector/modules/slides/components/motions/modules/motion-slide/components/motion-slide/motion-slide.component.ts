@@ -154,6 +154,15 @@ export class MotionSlideComponent
 
     private _showText = false;
 
+    protected get hideMetadataBackground(): boolean | undefined {
+        if (this._hideMetadataBackground === undefined) {
+            return false;
+        }
+        return this._hideMetadataBackground;
+    }
+
+    private _hideMetadataBackground = false;
+
     public constructor(
         protected override translate: TranslateService,
         private motionFormatService: MotionFormatService,
@@ -164,6 +173,9 @@ export class MotionSlideComponent
     ) {
         super();
         this.meetingSettings.get(`motions_enable_text_on_projector`).subscribe(val => (this._showText = val));
+        this.meetingSettings
+            .get(`motions_hide_metadata_background`)
+            .subscribe(val => (this._hideMetadataBackground = val));
     }
 
     protected override setData(value: SlideData<MotionSlideData>): void {

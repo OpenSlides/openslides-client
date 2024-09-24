@@ -44,6 +44,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     motions_enable_reason_on_projector: false,
     motions_enable_recommendation_on_projector: true,
     motions_show_referring_motions: true,
+    motions_hide_metadata_background: false,
     motions_enable_sidebox_on_projector: false,
     motions_show_sequential_number: true,
     motions_recommendation_text_mode: `diff`,
