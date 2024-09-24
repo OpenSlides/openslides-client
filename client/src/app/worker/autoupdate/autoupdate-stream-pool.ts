@@ -141,9 +141,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
     }
 
     protected async connectStream(stream: AutoupdateStream, force?: boolean): Promise<void> {
-        if (WorkerHttpAuth.updating()) {
-            await WorkerHttpAuth.updating();
-        }
+        await WorkerHttpAuth.updating();
 
         const streamHandle = stream.start(force);
         if (
@@ -225,7 +223,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
                 cb = async (s: AutoupdateStream): Promise<void> => {
                     await this.connectStream(s);
                 };
-            } else if (await WorkerHttpAuth.update()) {
+            } else if (await this.handleStreamResolvedWhenHealthy()) {
                 cb = async (s: AutoupdateStream): Promise<void> => {
                     s.failedCounter++;
                     await this.connectStream(s);
@@ -254,12 +252,12 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
 
         if (stream.failedConnects <= HTTP_POOL_CONFIG.RETRY_AMOUNT && error?.type !== ErrorType.CLIENT) {
             if (error?.error.content?.type === `auth`) {
-                await WorkerHttpAuth.update();
+                await this.tryReAuth();
             }
 
             await this.connectStream(stream);
         } else if (stream.failedConnects <= HTTP_POOL_CONFIG.RETRY_AMOUNT && error?.error.content?.type === `auth`) {
-            if (await WorkerHttpAuth.update()) {
+            if (await this.tryReAuth()) {
                 await this.connectStream(stream);
             } else {
                 for (const subscription of stream.subscriptions) {

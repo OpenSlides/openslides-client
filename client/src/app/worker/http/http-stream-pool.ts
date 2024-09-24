@@ -1,4 +1,5 @@
 import { AutoupdateSetEndpointParams, AutoupdateStatusContent } from '../sw-autoupdate.interfaces';
+import { WorkerHttpAuth } from './auth';
 import { HttpStream } from './http-stream';
 
 export const HTTP_POOL_CONFIG = {
@@ -111,14 +112,12 @@ export abstract class HttpStreamPool<T extends HttpStream> {
     /**
      * Return true if the endpoint was unhealty.
      */
-    public waitUntilEndpointHealthy(): Promise<boolean> {
+    protected waitUntilEndpointHealthy(): Promise<boolean> {
         if (!this._waitEndpointHealthyPromise) {
             this.sendToAll(`status`, {
                 status: `unhealthy`
             } as AutoupdateStatusContent);
-        }
 
-        if (!this._waitEndpointHealthyPromise) {
             this._waitEndpointHealthyPromise = (async (): Promise<boolean> => {
                 let wasUnhealty = false;
                 let timeout = 0;
@@ -138,5 +137,24 @@ export abstract class HttpStreamPool<T extends HttpStream> {
         }
 
         return this._waitEndpointHealthyPromise;
+    }
+
+    /**
+     * Try to re-authenticate after auth error occured.
+     * @protected
+     */
+    protected tryReAuth(): Promise<boolean> {
+        return this.handleStreamResolvedWhenHealthy();
+    }
+
+    /**
+     * Handles the stream when it is resolved but not because the endpoint was unhealthy.
+     * This might be an expired session or similar.
+     * @protected
+     */
+    protected async handleStreamResolvedWhenHealthy(): Promise<boolean> {
+        this.sendToAll(`check-auth`, {});
+        const status = await WorkerHttpAuth.waitForAuthStatus();
+        return status === `token-refreshed`;
     }
 }

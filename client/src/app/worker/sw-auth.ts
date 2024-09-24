@@ -24,11 +24,11 @@ export function initAuthWorker(broadcast: Broadcaster): void {
 export function authMessageHandler(ctx: any, e: MessageEvent<AuthMessage>): void {
     const msg = e.data.msg;
     switch (msg.action) {
-        case `stop-refresh`:
-            WorkerHttpAuth.stopRefresh();
-            break;
         case `update`:
-            WorkerHttpAuth.update();
+            WorkerHttpAuth.update(msg.params);
+            break;
+        case `auth-error`:
+            WorkerHttpAuth.authError(msg.params.reason);
             break;
     }
 }

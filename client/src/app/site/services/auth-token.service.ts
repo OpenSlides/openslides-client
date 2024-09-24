@@ -36,7 +36,10 @@ export class AuthTokenService {
 
         try {
             const payload = atob(rawToken.split(`.`)[1]);
-            return JSON.parse(payload) as AuthToken;
+            const parsedToken = JSON.parse(payload) as AuthToken;
+            parsedToken.rawAccessToken = rawToken;
+            parsedToken.userId = parseInt(`${parsedToken.userId}`);
+            return parsedToken;
         } catch (e) {
             return null;
         }

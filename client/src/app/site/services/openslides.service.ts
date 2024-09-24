@@ -25,11 +25,11 @@ export class OpenSlidesService {
      * {@method afterLoginBootup}. If not, redirect the user to the login page.
      */
     public async bootup(): Promise<void> {
-        const online = await this.authService.doWhoAmIRequest();
+        const online = await this.authService.checkOnline();
         if (!online) {
             this.offlineService.goOffline({
                 reason: this.translate.instant(`Request "WhoAmI" failed`),
-                isOnlineFn: async () => this.authService.doWhoAmIRequest()
+                isOnlineFn: async () => this.authService.checkOnline()
             });
             return;
         }

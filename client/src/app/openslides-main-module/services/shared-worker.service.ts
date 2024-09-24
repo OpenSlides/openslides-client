@@ -37,7 +37,7 @@ const SHARED_WORKER_HEALTH_RETRIES = 2;
     providedIn: `root`
 })
 export class SharedWorkerService {
-    public messages: Subject<WorkerResponse> = new Subject();
+    public messages: Subject<WorkerResponse<any>> = new Subject();
 
     public get restartObservable(): Observable<void> {
         return this.restartSubject;
@@ -60,8 +60,8 @@ export class SharedWorkerService {
      *
      * @param sender Name of the sender
      */
-    public listenTo(sender: string): Observable<WorkerResponse> {
-        return this.messages.pipe(filter(data => data?.sender === sender));
+    public listenTo<T extends WorkerResponse<any>>(sender: string): Observable<T> {
+        return this.messages.pipe(filter(data => data?.sender === sender)) as Observable<T>;
     }
 
     /**
@@ -283,11 +283,11 @@ export class SharedWorkerService {
         }
     }
 
-    private async waitForMessage(
+    private async waitForMessage<C>(
         timeoutDuration: number,
         isMessage: (data?: any) => boolean,
         doBefore?: () => void
-    ): Promise<MessageEvent<WorkerResponse>> {
+    ): Promise<MessageEvent<WorkerResponse<C>>> {
         const eventListener = this.windowMode
             ? fromEvent(this.conn, `message`)
             : merge(fromEvent(this.conn, `message`), fromEvent(this.broadcastChannel, `message`));

@@ -1,5 +1,8 @@
 import { Id } from 'src/app/domain/definitions/key-types';
-import { environment } from 'src/environments/environment';
+import { AuthToken } from 'src/app/domain/interfaces/auth-token';
+
+import { Deferred } from '../../infrastructure/utils/promises';
+import { AuthErrorReason, AuthStatus } from '../sw-auth.interfaces';
 
 export class WorkerHttpAuth {
     private static subscriptions: Map<string, (token: string, newUserId?: Id) => void> = new Map();
@@ -19,133 +22,81 @@ export class WorkerHttpAuth {
         this.subscriptions.delete(id);
 
         if (!this.subscriptions.size) {
-            this.workerHttpAuth.destroy();
             this.workerHttpAuth = null;
         }
     }
 
     public static async currentToken(): Promise<string> {
-        if (this.workerHttpAuth?.updateAuthPromise) {
-            await this.workerHttpAuth?.updateAuthPromise;
+        if (this.workerHttpAuth?.authStatus) {
+            await this.workerHttpAuth?.authStatus;
         }
 
-        return this.workerHttpAuth?.authToken || ``;
+        return this.workerHttpAuth?.accessToken || ``;
     }
 
     public static async currentUser(): Promise<number> {
-        if (this.workerHttpAuth?.updateAuthPromise) {
-            await this.workerHttpAuth?.updateAuthPromise;
-        }
-
         return this.workerHttpAuth?.currentUserId || null;
+    }
+
+    /**
+     * Returns whether an auth update is in progress
+     */
+    public static async updating(): Promise<boolean> {
+        if(!this.workerHttpAuth?.authStatus) {
+            return false;
+        }
+        return !!(await this.workerHttpAuth.authStatus);
     }
 
     /**
      * Updates the auth token
      */
-    public static async update(): Promise<boolean> {
-        return this.workerHttpAuth && (await this.workerHttpAuth.updateAuthentication());
+    public static update(token: AuthToken): boolean {
+        this.workerHttpAuth.setAuthToken(token.rawAccessToken);
+        return !!this.workerHttpAuth;
     }
 
-    /**
-     * Returns wether an auth update is in progress
-     */
-    public static async updating(): Promise<boolean> | undefined {
-        return this.workerHttpAuth && (await this.workerHttpAuth.updateAuthPromise);
-    }
-
-    public static stopRefresh(): void {
+    public static authError(reason: AuthErrorReason): void {
         if (this.workerHttpAuth) {
-            clearTimeout(this.workerHttpAuth._authTokenRefreshTimeout);
-            this.workerHttpAuth.updateAuthPromise = new Promise(r => r(false));
+            this.workerHttpAuth.setAuthToken(null);
+            this.workerHttpAuth.authStatus?.resolve(reason);
         }
     }
 
-    /**
-     * Only for usage in unit tests
-     */
-    public static reset(): void {
-        this.subscriptions.clear();
-        if (this.workerHttpAuth) {
-            this.workerHttpAuth.destroy();
-            this.workerHttpAuth = null;
+    public static async waitForAuthStatus(): Promise<AuthStatus> {
+        if (!this.workerHttpAuth) {
+            throw new Error(`WorkerHttpAuth not initialized`);
         }
+
+        if (!this.workerHttpAuth.authStatus) {
+            this.workerHttpAuth.authStatus = new Deferred<AuthStatus>();
+            // set timer to resolve the deferred after 5 seconds
+            setTimeout(() => {
+                if (this.workerHttpAuth.authStatus) {
+                    this.workerHttpAuth.authStatus.resolve(`update-expired`);
+                }
+            }, 5000);
+        }
+
+        return this.workerHttpAuth.authStatus;
     }
 
     private currentUserId: number = undefined;
-    private authToken: string = undefined;
-    private updateAuthPromise: Promise<boolean> | undefined;
+    private accessToken: string = undefined;
+    private authStatus?: Deferred<AuthStatus>;
 
-    private _authTokenRefreshTimeout: any | null = null;
-    private _waitingForUpdateAuthPromise = false;
+    public constructor() {}
 
-    public constructor() {
-        this.updateAuthentication();
-    }
-
-    private destroy(): void {
-        clearTimeout(this._authTokenRefreshTimeout);
-    }
-
-    private async updateAuthentication(): Promise<boolean> {
-        const currentPromise = this.updateAuthPromise;
-
-        if (this._waitingForUpdateAuthPromise) {
-            return await this.updateAuthPromise;
-        }
-
-        this.updateAuthPromise = new Promise(async resolve => {
-            if (currentPromise) {
-                this._waitingForUpdateAuthPromise = true;
-                await currentPromise;
-                this._waitingForUpdateAuthPromise = false;
-            }
-
-            try {
-                clearTimeout(this._authTokenRefreshTimeout);
-                const res = await fetch(`/${environment.authUrlPrefix}/who-am-i/`, {
-                    method: `POST`,
-                    headers: {
-                        'ngsw-bypass': true
-                    } as any
-                });
-                const json = await res.json();
-                if (json?.success) {
-                    this.setAuthToken(res.headers.get(`authentication`) || null);
-                } else if (!res.ok && json?.message === `Not signed in`) {
-                    this.setAuthToken(null);
-                    resolve(false);
-                    return;
-                }
-                resolve(true);
-            } catch (e) {}
-        });
-
-        return await this.updateAuthPromise;
-    }
-
-    private setAuthToken(token: string | null): void {
+    private setAuthToken(accessToken: string | null): void {
         const lastUserId = this.currentUserId;
-        this.authToken = token;
+        this.accessToken = accessToken;
+
+        if (accessToken && this.authStatus) {
+            this.authStatus.resolve(`token-refreshed`);
+        }
 
         for (const subscr of WorkerHttpAuth.subscriptions.keys()) {
             this.notifyTokenChange(subscr);
-        }
-
-        if (this.authToken) {
-            const payload = atob(this.authToken.split(`.`)[1]);
-            const token = JSON.parse(payload);
-            const issuedAt = new Date().getTime(); // in ms
-            const expiresAt = token.exp; // in sec
-            this.currentUserId = token.userId;
-            this._authTokenRefreshTimeout = setTimeout(
-                () => {
-                    this.updateAuthentication();
-                },
-                expiresAt * 1000 - issuedAt - 100
-            ); // 100ms before token is invalid
-        } else {
-            this.currentUserId = null;
         }
 
         if (lastUserId !== undefined && this.currentUserId !== lastUserId) {
@@ -156,10 +107,10 @@ export class WorkerHttpAuth {
     }
 
     private notifyTokenChange(subscription: string): void {
-        WorkerHttpAuth.subscriptions.get(subscription)(this.authToken);
+        WorkerHttpAuth.subscriptions.get(subscription)(this.accessToken);
     }
 
     private notifyUserChange(subscription: string): void {
-        WorkerHttpAuth.subscriptions.get(subscription)(this.authToken, this.currentUserId);
+        WorkerHttpAuth.subscriptions.get(subscription)(this.accessToken, this.currentUserId);
     }
 }

@@ -7,5 +7,5 @@ export const authCodeFlowConfig: AuthConfig = {
     responseType: `code`,
     scope: `profile email offline_access`,
     showDebugInformation: true,
-    timeoutFactor: 0.01
+    timeoutFactor: 0.75
 };
