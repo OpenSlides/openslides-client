@@ -9,10 +9,6 @@ const routes: Routes = [
         component: LoginWrapperComponent,
         children: [
             {
-                path: ``,
-                loadChildren: () => import(`./pages/login-mask/login-mask.module`).then(m => m.LoginMaskModule)
-            },
-            {
                 path: `legalnotice`,
                 loadChildren: () => import(`./pages/legal-notice/legal-notice.module`).then(m => m.LegalNoticeModule)
             },
