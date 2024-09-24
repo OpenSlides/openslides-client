@@ -122,7 +122,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         const accountListFields: TypedFieldset<User> = filterableListFields.concat([
             `committee_ids`,
-            `committee_management_ids`
+            `committee_management_ids`,
+            `default_password`
         ]);
 
         const participantListFieldsMinimal: TypedFieldset<User> = listFields.concat([`meeting_user_ids`]);
