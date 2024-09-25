@@ -129,6 +129,16 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
     @ViewChild(MOTION_PDF_OPTIONS.ContinuousText)
     public continuousTextButton!: MatButtonToggle;
 
+    private _isCSVExport = false;
+
+    protected set isCSVExport(format: ExportFileFormat) {
+        this._isCSVExport = format === ExportFileFormat.CSV;
+    }
+
+    protected get isCSVExport(): boolean {
+        return this._isCSVExport;
+    }
+
     /**
      * Constructor
      * Sets the default values for the lineNumberingMode and changeRecoMode and creates the form.
@@ -178,6 +188,8 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
      * @param format
      */
     private onFormatChange(format: ExportFileFormat): void {
+        this.isCSVExport = format;
+
         // XLSX cannot have "content"
         if (format === ExportFileFormat.XLSX) {
             this.disableControl(`content`);
@@ -195,7 +207,6 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
 
         if (format === ExportFileFormat.CSV || format === ExportFileFormat.XLSX) {
             this.disableControl(`lnMode`);
-            this.disableControl(`crMode`);
             this.disableControl(`pdfOptions`);
 
             // remove the selection of "votingResult"
@@ -203,6 +214,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
                 this.disableMetaInfoControl(`polls`, `speakers`);
             } else {
                 this.disableMetaInfoControl(`polls`);
+                this.disableControl(`crMode`);
             }
             this.votingResultButton.disabled = true;
             this.referringMotionsButton.disabled = true;
@@ -214,6 +226,10 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
             this.enableControl(`pdfOptions`);
             this.votingResultButton.disabled = false;
             this.referringMotionsButton.disabled = false;
+        }
+
+        if (format === ExportFileFormat.CSV) {
+            this.enableControl(`crMode`);
         }
     }
 
