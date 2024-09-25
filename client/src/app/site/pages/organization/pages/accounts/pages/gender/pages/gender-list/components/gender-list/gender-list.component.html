@@ -74,8 +74,8 @@
             <button
                 class="red-warning-text"
                 mat-menu-item
-                [disabled]="!amountDeletedGenders"
-                matTooltip="{{ 'Default genders cannot be deleted.' | translate }}"
+                [disabled]="!selectedRows.length || hasDefaultGenderSelected"
+                [matTooltip]="hasDefaultGenderSelected ? translate.instant('Default genders cannot be deleted.') : ''"
                 (click)="deleteSelectedGenders()"
             >
                 <mat-icon>delete</mat-icon>

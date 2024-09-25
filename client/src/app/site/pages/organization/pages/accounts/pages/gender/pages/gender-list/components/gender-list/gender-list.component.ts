@@ -26,8 +26,11 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
      */
     public genderForm: UntypedFormGroup;
 
-    public get amountDeletedGenders(): number {
-        return this.selectedRows.filter(view => view.id > 4).length;
+    /**
+     * Check in multiselect if a default gender is selected
+     */
+    public get hasDefaultGenderSelected(): boolean {
+        return this.selectedRows.filter(view => view.id <= 4).length > 0;
     }
 
     private currentGender: ViewGender;
