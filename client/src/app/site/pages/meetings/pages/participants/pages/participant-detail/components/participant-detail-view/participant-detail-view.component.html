@@ -324,7 +324,7 @@
                     <!-- Locked out? -->
                     @if (isAllowed('seeSensitiveData')) {
                         <mat-icon class="margin-4" [class.red-warning-text]="user!.isLockedOutOfMeeting()">
-                            {{ user!.isLockedOutOfMeeting() ? 'event_busy' : 'check_box_outline_blank' }}
+                            {{ user!.isLockedOutOfMeeting() ? 'visibility_off' : 'check_box_outline_blank' }}
                         </mat-icon>
                         <span>
                             {{ (user?.isLockedOutOfMeeting() ? 'Is locked out' : 'Is not locked out') | translate }}

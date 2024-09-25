@@ -189,7 +189,7 @@
             @if (user.is_locked_out) {
                 <div style="padding-left: 20px">
                     <div class="icon-part">
-                        <mat-icon class="red-warning-text">event_busy</mat-icon>
+                        <mat-icon class="red-warning-text">visibility_off</mat-icon>
                         <span>{{ 'Locked out' | translate }}</span>
                     </div>
                 </div>
@@ -270,7 +270,7 @@
             [disabled]="isLockedOutToggleDisabled(user)"
             (click)="toggleLockout(user)"
         >
-            <mat-icon>event_busy</mat-icon>
+            <mat-icon>visibility_off</mat-icon>
             <span>{{ 'Locked out' | translate }}</span>
         </button>
 
@@ -376,7 +376,7 @@
                     <span>{{ 'Set natural person ...' | translate }}</span>
                 </button>
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeLockedOutStateOfSelectedUsers()">
-                    <mat-icon>event_busy</mat-icon>
+                    <mat-icon>visibility_off</mat-icon>
                     <span>{{ 'Set lockout ...' | translate }}</span>
                 </button>
                 <mat-divider></mat-divider>
