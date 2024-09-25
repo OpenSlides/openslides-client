@@ -229,6 +229,9 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
         }
 
         if (format === ExportFileFormat.CSV) {
+            if (this.exportForm.get(`crMode`)!.getRawValue() === (this.crMode.Changed || this.crMode.Diff)) {
+                this.exportForm.get(`crMode`)!.setValue(this.getOffState(`crMode`));
+            }
             this.enableControl(`crMode`);
         }
     }

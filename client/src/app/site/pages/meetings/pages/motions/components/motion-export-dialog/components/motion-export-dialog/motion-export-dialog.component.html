@@ -37,11 +37,8 @@
                     <mat-button-toggle #diffVersionButton [disabled]="isCSVExport" [value]="crMode.Diff">
                         <span>{{ 'Diff version' | translate }}</span>
                     </mat-button-toggle>
-                    <mat-button-toggle [disabled]="isCSVExport" [value]="crMode.Final">
-                        <span>{{ 'Final version' | translate }}</span>
-                    </mat-button-toggle>
                     <mat-button-toggle [value]="crMode.ModifiedFinal">
-                        <span>{{ 'Editorial final version' | translate }}</span>
+                        <span>{{ 'Final version' | translate }}</span>
                     </mat-button-toggle>
                 </mat-button-toggle-group>
             </div>
