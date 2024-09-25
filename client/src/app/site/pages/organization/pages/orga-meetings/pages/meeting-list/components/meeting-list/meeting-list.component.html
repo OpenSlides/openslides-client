@@ -147,7 +147,7 @@
             ></a>
         }
         <div>
-            @if (meeting.userAmount) {
+            @if (meeting.userAmount && showParticipantAmount(meeting)) {
                 <div>
                     <os-icon-container
                         icon="group"
