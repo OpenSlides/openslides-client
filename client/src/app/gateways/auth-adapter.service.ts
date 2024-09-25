@@ -34,9 +34,4 @@ export class AuthAdapterService {
     public whoAmI(): Promise<AuthServiceResponse> {
         return this.http.post<AuthServiceResponse>(`${this.authUrl}/who-am-i/`);
     }
-
-    public async startSamlLogin(): Promise<string> {
-        const { message } = await this.http.get<AuthServiceResponse>(`/system/saml/getUrl`);
-        return message;
-    }
 }

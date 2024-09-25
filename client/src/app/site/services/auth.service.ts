@@ -94,10 +94,6 @@ export class AuthService {
         }
     }
 
-    public async startSamlLogin(): Promise<string> {
-        return this.authAdapter.startSamlLogin();
-    }
-
     public async updateUser(userId: number): Promise<void> {
         if (userId) {
             this._loginEvent.emit();
