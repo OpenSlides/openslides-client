@@ -102,27 +102,29 @@
                     </os-icon-container>
                 </div>
             }
-            @if (committee.memberAmount) {
-                <div>
-                    <os-icon-container
-                        icon="group"
-                        iconTooltipPosition="right"
-                        iconTooltip="{{ 'Accounts' | translate }}"
-                    >
-                        {{ committee.memberAmount }}
-                    </os-icon-container>
-                </div>
-            }
-            @if (committee.managerAmount) {
-                <div>
-                    <os-icon-container
-                        icon="engineering"
-                        iconTooltipPosition="right"
-                        iconTooltip="{{ 'Committee management' | translate }}"
-                    >
-                        {{ committee.managerAmount }}
-                    </os-icon-container>
-                </div>
+            @if (canSeeMemberAmounts(committee)) {
+                @if (committee.memberAmount) {
+                    <div>
+                        <os-icon-container
+                            icon="group"
+                            iconTooltipPosition="right"
+                            iconTooltip="{{ 'Accounts' | translate }}"
+                        >
+                            {{ committee.memberAmount }}
+                        </os-icon-container>
+                    </div>
+                }
+                @if (committee.managerAmount) {
+                    <div>
+                        <os-icon-container
+                            icon="engineering"
+                            iconTooltipPosition="right"
+                            iconTooltip="{{ 'Committee management' | translate }}"
+                        >
+                            {{ committee.managerAmount }}
+                        </os-icon-container>
+                    </div>
+                }
             }
         </div>
     </div>

@@ -28,6 +28,10 @@ const COMMITTEE_LIST_STORAGE_INDEX = `committee_list`;
     styleUrls: [`./committee-list.component.scss`]
 })
 export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee> {
+    public canSeeMemberAmounts(committee: ViewCommittee): boolean {
+        return this.operator.isAccountAdmin || committee.manager_ids?.includes(this.operator.operatorId);
+    }
+
     private get messageForSpinner(): string {
         return this.translate.instant(`Agenda items are in process. Please wait ...`);
     }
