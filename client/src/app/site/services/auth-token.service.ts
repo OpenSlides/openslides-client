@@ -29,6 +29,20 @@ export class AuthTokenService {
         this._accessTokenSubject.next(token);
     }
 
+    public async waitForValidToken(): Promise<void> {
+        return new Promise<void>(resolve => {
+            if(this.accessToken) {
+                resolve();
+            }
+            const subscription = this._accessTokenSubject.subscribe(token => {
+                if (token) {
+                    resolve();
+                    subscription.unsubscribe();
+                }
+            });
+        })
+    }
+
     private parseToken(rawToken: string | null): AuthToken | null {
         if (!rawToken) {
             return null;

@@ -1,11 +1,8 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { MediaManageService } from './media-manage.service';
-
-/**
- * Enables the usage of the FontFace constructor
- */
-declare let FontFace: any;
+import {MediaManageService} from './media-manage.service';
+import {AuthTokenService} from "../../../services/auth-token.service";
+import { HttpService } from 'src/app/gateways/http.service';
 
 /**
  * The linter refuses to allow Document['fonts'].
@@ -25,7 +22,17 @@ interface FontDocument extends Document {
     providedIn: `root`
 })
 export class LoadFontService {
-    public constructor(private mediaManageService: MediaManageService) {
+    private accessToken: string | null = null;
+
+    public constructor(private mediaManageService: MediaManageService,
+                       private authTokenService: AuthTokenService,
+                       private httpService: HttpService) {
+        this.authTokenService.accessTokenObservable.subscribe(token => {
+            if (token) {
+                console.log(`Access token: ${token.rawAccessToken}`);
+                this.accessToken = token.rawAccessToken;
+            }
+        });
         this.loadCustomFont();
     }
 
@@ -87,10 +94,17 @@ export class LoadFontService {
         this.setNewFontFace(`customProjectorFont`, fonturl, weight);
     }
 
+    private async loadFont(url: string, fontName: string, descriptors:  FontFaceDescriptors) {
+        const fontUrl = await this.httpService.getBlobUrl(url);
+        const fontFace = new FontFace(fontName, `url(${fontUrl})`, descriptors);
+
+        // Load and add the font to the document
+        return await fontFace.load();
+    };
+
+
     private setNewFontFace(fontName: string, fontPath: string, weight = 400): void {
-        const customFont = new FontFace(fontName, `url(${fontPath})`, { weight });
-        customFont
-            .load()
+        this.loadFont(fontPath, fontName, {weight: `${weight}`})
             .then((res: any) => {
                 (document as FontDocument).fonts.add(res);
             })
