@@ -137,12 +137,13 @@
                 </mat-card-content>
             </mat-card>
         }
-        @for (meeting of getMeetingsSorted(committee); track meeting) {
+        @for (meeting of getMeetingsSorted(committee); track meeting.id) {
             <os-committee-meeting-preview
                 class="meeting-preview-card"
                 [committee]="committee"
                 [isCMAndRequireDuplicateFrom]="isCMandRequireDuplicateFrom()"
                 [meeting]="meeting"
+                [showParticipants]="canSeeParticipantAmount(meeting)"
             ></os-committee-meeting-preview>
         }
     </div>

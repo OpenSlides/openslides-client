@@ -80,18 +80,20 @@
     </mat-card-actions>
 
     <mat-card-content>
-        <!-- users -->
-        <div class="user-footer">
-            <ng-container
-                *osCmlPerms="
-                    CML.can_manage;
-                    committeeId: committee.id;
-                    orOML: OML.can_manage_users;
-                    then: canManageUsersTemplate;
-                    else: canNotManageUsersTemplate
-                "
-            ></ng-container>
-        </div>
+        @if (showParticipants) {
+            <!-- users -->
+            <div class="user-footer">
+                <ng-container
+                    *osCmlPerms="
+                        CML.can_manage;
+                        committeeId: committee.id;
+                        orOML: OML.can_manage_users;
+                        then: canManageUsersTemplate;
+                        else: canNotManageUsersTemplate
+                    "
+                ></ng-container>
+            </div>
+        }
     </mat-card-content>
 </mat-card>
 
