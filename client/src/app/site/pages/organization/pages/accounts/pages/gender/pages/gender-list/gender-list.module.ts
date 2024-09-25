@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ChipModule } from 'src/app/ui/modules/chip';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar/head-bar.module';
@@ -35,7 +36,8 @@ import { GenderListRoutingModule } from './gender-list-routing.module';
         MatInputModule,
         FormsModule,
         ReactiveFormsModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        MatTooltipModule
     ]
 })
 export class GenderListModule {}

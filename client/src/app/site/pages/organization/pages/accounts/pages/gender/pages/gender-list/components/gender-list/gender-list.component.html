@@ -36,14 +36,14 @@
         </div>
     </div>
     <div *osScrollingTableCell="'edit'; row as gender; config: { width: 40 }" class="cell-slot fill">
-        @if (gender.id > 4) {
+        @if (gender.id > 4 && !isMultiSelect) {
             <button mat-icon-button (click)="editGender(gender)">
                 <mat-icon>edit</mat-icon>
             </button>
         }
     </div>
     <div *osScrollingTableCell="'delete'; row as gender; config: { width: 40 }" class="cell-slot fill">
-        @if (gender.id > 4) {
+        @if (gender.id > 4 && !isMultiSelect) {
             <button color="warn" mat-icon-button (click)="deleteGenders(gender)">
                 <mat-icon>delete</mat-icon>
             </button>
@@ -74,7 +74,8 @@
             <button
                 class="red-warning-text"
                 mat-menu-item
-                [disabled]="!selectedRows.length"
+                [disabled]="!amountDeletedGenders"
+                matTooltip="{{ 'Default genders cannot be deleted.' | translate }}"
                 (click)="deleteSelectedGenders()"
             >
                 <mat-icon>delete</mat-icon>

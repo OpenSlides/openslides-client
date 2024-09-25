@@ -25,6 +25,11 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
      * Holds the create form
      */
     public genderForm: UntypedFormGroup;
+
+    public get amountDeletedGenders(): number {
+        return this.selectedRows.filter(view => view.id > 4).length;
+    }
+
     private currentGender: ViewGender;
 
     public constructor(
@@ -70,7 +75,10 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
                 : this.translate.instant(`Are you sure you want to delete all selected genders?`);
         const content = genders.length === 1 ? genders[0].name : ``;
         if (await this.promptService.open(title, content)) {
-            return this.repo.delete(...genders.map(g => g.id).filter(id => id > 4)).then(() => this.cd.detectChanges());
+            const deleteGenderIds = genders.map(g => g.id).filter(id => id > 4);
+            if (deleteGenderIds) {
+                return this.repo.delete(...deleteGenderIds).then(() => this.cd.detectChanges());
+            }
         }
     }
 
