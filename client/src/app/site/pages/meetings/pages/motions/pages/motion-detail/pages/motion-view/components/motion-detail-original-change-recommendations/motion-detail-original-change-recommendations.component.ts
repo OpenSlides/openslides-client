@@ -293,7 +293,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
     private checkPermissions(): void {
         if (
             this.operator.hasPerms(Permission.motionCanManage) &&
-            this.motionRepo.getViewModel(this.motionId).meeting_id === this.activeMeetingIdService.meetingId
+            this.motionRepo.getViewModel(this.motionId)?.meeting_id === this.activeMeetingIdService.meetingId
         ) {
             this.can_manage = true;
             if (this.selectedFrom === null) {
