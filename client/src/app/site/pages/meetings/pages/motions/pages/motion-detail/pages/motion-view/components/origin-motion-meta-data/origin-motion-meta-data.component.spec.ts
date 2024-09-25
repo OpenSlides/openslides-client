@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MotionMetaDataComponent } from './motion-meta-data.component';
+import { OriginMotionMetaDataComponent } from './origin-motion-meta-data.component';
 
 xdescribe(`MotionMetaDataComponent`, () => {
-    let component: MotionMetaDataComponent;
-    let fixture: ComponentFixture<MotionMetaDataComponent>;
+    let component: OriginMotionMetaDataComponent;
+    let fixture: ComponentFixture<OriginMotionMetaDataComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [MotionMetaDataComponent]
+            declarations: [OriginMotionMetaDataComponent]
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(MotionMetaDataComponent);
+        fixture = TestBed.createComponent(OriginMotionMetaDataComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
