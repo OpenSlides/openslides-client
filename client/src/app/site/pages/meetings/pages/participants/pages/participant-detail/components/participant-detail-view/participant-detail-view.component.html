@@ -80,7 +80,7 @@
         [patchFormValueFn]="patchFormValueFn"
         [shouldEnableFormControlFn]="shouldEnableFormControlFn"
         [user]="user"
-        (changeEvent)="personalInfoFormValue = $event; updateLockout()"
+        (changeEvent)="updateByValueChange($event)"
         (errorEvent)="formErrors = $event"
         (submitEvent)="saveUser()"
         (validEvent)="isFormValid = $event"

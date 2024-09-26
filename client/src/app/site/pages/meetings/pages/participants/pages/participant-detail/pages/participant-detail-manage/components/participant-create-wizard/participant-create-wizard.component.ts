@@ -333,9 +333,9 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         return notChanged && !isLockedOut && this.checkSelectedGroupsCanManage;
     }
 
-    public updateLockout(): void {
-        const check = this.detailView.personalInfoForm.get(`locked_out`).disabled !== this.lockoutCheckboxDisabled;
-        if (check) {
+    public updateByValueChange(event: any): void {
+        this.personalInfoFormValue = event;
+        if (this.detailView.personalInfoForm.get(`locked_out`).disabled !== this.lockoutCheckboxDisabled) {
             if (this.lockoutCheckboxDisabled) {
                 this.detailView.personalInfoForm.get(`locked_out`).disable();
             } else {

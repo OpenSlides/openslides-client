@@ -362,7 +362,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return notChanged && !isLockedOut && (this.checkSelectedGroupsCanManage || !other);
     }
 
-    public updateLockout(): void {
+    public updateByValueChange(event: any): void {
+        this.personalInfoFormValue = event;
         const check = this.userDetailView.personalInfoForm.get(`locked_out`).disabled !== this.lockoutCheckboxDisabled;
         if (check) {
             if (this.lockoutCheckboxDisabled) {
