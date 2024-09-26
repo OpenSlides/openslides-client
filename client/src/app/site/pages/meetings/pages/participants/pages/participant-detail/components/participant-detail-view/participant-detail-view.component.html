@@ -109,11 +109,9 @@
                     </mat-checkbox>
                 </div>
                 @if (isLockedOutAndCanManage) {
-                    <p class="red-warning-text padding-left-12">
-                        {{
-                            'It is not allowed to set the permisson UserCanManage to a locked out user. Please unset the lockout before adding a group with UserCanManage.'
-                                | translate
-                        }}
+                    <p class="red-warning-text padding-left-12" translate>
+                        It is not allowed to set the permisson UserCanManage to a locked out user. Please unset the
+                        lockout before adding a group with UserCanManage.
                     </p>
                 }
                 <div>
