@@ -165,6 +165,22 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return this._isVoteDelegationEnabled;
     }
 
+    public get saveButtonEnabled(): boolean {
+        return this.isFormValid && !this.isLockedOutAndCanManage;
+    }
+
+    public get isLockedOutAndCanManage(): boolean {
+        const lockedOutHelper = this.personalInfoFormValue?.locked_out ?? this.user?.is_locked_out;
+        return lockedOutHelper && this.checkSelectedGroupsCanManage();
+    }
+
+    public get lockoutCheckboxDisabled(): boolean {
+        const other = this.user?.id !== this.operator.operatorId;
+        const notChanged = (this.personalInfoFormValue?.locked_out ?? null) === null;
+        const isLockedOut = this.user?.is_locked_out;
+        return notChanged && !isLockedOut && (this.checkSelectedGroupsCanManage() || !other);
+    }
+
     private _userId: Id | undefined = undefined; // Not initialized
     private _isVoteWeightEnabled = false;
     private _isVoteDelegationEnabled = false;
@@ -344,22 +360,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 .sendInvitationEmails([this.user!], this.activeMeetingId)
                 .then(this.raiseError, this.raiseError);
         }
-    }
-
-    public get saveButtonEnabled(): boolean {
-        return this.isFormValid && !this.isLockedOutAndCanManage;
-    }
-
-    public get isLockedOutAndCanManage(): boolean {
-        const lockedOutHelper = this.personalInfoFormValue?.locked_out ?? this.user?.is_locked_out;
-        return lockedOutHelper && this.checkSelectedGroupsCanManage();
-    }
-
-    public get lockoutCheckboxDisabled(): boolean {
-        const other = this.user?.id !== this.operator.operatorId;
-        const notChanged = (this.personalInfoFormValue?.locked_out ?? null) === null;
-        const isLockedOut = this.user?.is_locked_out;
-        return notChanged && !isLockedOut && (this.checkSelectedGroupsCanManage() || !other);
     }
 
     public updateByValueChange(event: any): void {
