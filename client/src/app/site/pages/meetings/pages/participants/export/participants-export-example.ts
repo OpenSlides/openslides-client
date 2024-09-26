@@ -14,7 +14,8 @@ export const participantsExportExample: any = [
         default_structure_level: `Berlin`,
         default_vote_weight: 1.0,
         group_ids: `Delegates, Staff`,
-        member_number: `123`
+        member_number: `123`,
+        locked_out: false
     },
     {
         first_name: `John`,
@@ -37,7 +38,8 @@ export const participantsExportExample: any = [
         username: `jbloggs`,
         gender: `female`,
         default_vote_weight: 1.5,
-        member_number: `234`
+        member_number: `234`,
+        locked_out: true
     },
     {
         last_name: `Executive Board`,
