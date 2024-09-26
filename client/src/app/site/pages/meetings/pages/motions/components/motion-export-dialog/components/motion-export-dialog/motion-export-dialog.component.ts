@@ -129,15 +129,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
     @ViewChild(MOTION_PDF_OPTIONS.ContinuousText)
     public continuousTextButton!: MatButtonToggle;
 
-    private _isCSVExport = false;
-
-    protected set isCSVExport(format: ExportFileFormat) {
-        this._isCSVExport = format === ExportFileFormat.CSV;
-    }
-
-    protected get isCSVExport(): boolean {
-        return this._isCSVExport;
-    }
+    public isCSVExport = false;
 
     /**
      * Constructor
@@ -188,7 +180,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
      * @param format
      */
     private onFormatChange(format: ExportFileFormat): void {
-        this.isCSVExport = format;
+        this.isCSVExport = format === ExportFileFormat.CSV;
 
         // XLSX cannot have "content"
         if (format === ExportFileFormat.XLSX) {
