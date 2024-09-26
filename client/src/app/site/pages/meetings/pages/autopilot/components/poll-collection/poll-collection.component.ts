@@ -2,8 +2,10 @@ import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { PollContentObject } from 'src/app/domain/models/poll';
 import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
+import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
@@ -106,11 +108,15 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
     public getPollVoteTitle(poll: ViewPoll): string {
         const contentObject = poll.getContentObject();
         const listTitle = contentObject.getListTitle();
-        const model = contentObject.getVerboseName();
+        const objectCollection = contentObject.COLLECTION;
         const pollTitle = poll.getTitle();
 
-        if (this.showExtendedTitle && contentObject?.fqid !== this.currentProjection?.fqid) {
-            return `(${model}) ${listTitle} - ${pollTitle}`;
+        if (
+            this.showExtendedTitle &&
+            contentObject?.fqid !== this.currentProjection?.fqid &&
+            [Topic.COLLECTION, Assignment.COLLECTION].includes(objectCollection)
+        ) {
+            return `${listTitle}: ${pollTitle}`;
         } else {
             return pollTitle;
         }
