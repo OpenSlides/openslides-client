@@ -2,11 +2,11 @@
     [hasMainButton]="true"
     [mainActionTooltip]="'New gender' | translate"
     [multiSelectMode]="isMultiSelect"
-    (mainEvent)="createGender()"
+    (mainEvent)="openGenderDialog()"
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ 'Gender' | translate }}</h2>
+        <h2>{{ 'Genders' | translate }}</h2>
     </div>
 
     <!-- Menu -->
@@ -37,7 +37,7 @@
     </div>
     <div *osScrollingTableCell="'edit'; row as gender; config: { width: 40 }" class="cell-slot fill">
         @if (gender.id > 4 && !isMultiSelect) {
-            <button mat-icon-button (click)="editGender(gender)">
+            <button mat-icon-button (click)="openGenderDialog(gender)">
                 <mat-icon>edit</mat-icon>
             </button>
         }
@@ -59,8 +59,7 @@
                 <span>{{ 'Multiselect' | translate }}</span>
             </button>
         </div>
-    }
-    @if (isMultiSelect) {
+    } @else {
         <div>
             <button mat-menu-item (click)="selectAll()">
                 <mat-icon>done_all</mat-icon>

@@ -44,19 +44,11 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
         private promptService: PromptService
     ) {
         super();
-        this.setTitle(`Gender`);
+        this.setTitle(`Genders`);
         this.canMultiSelect = true;
         this.genderForm = this.formBuilder.group({
             name: [``, Validators.required]
         });
-    }
-
-    public createGender(): void {
-        this.editGender();
-    }
-
-    public editGender(genderView?: ViewGender): void {
-        this.openGenderDialog(genderView);
     }
 
     public openGenderDialog(gender?: ViewGender): void {
