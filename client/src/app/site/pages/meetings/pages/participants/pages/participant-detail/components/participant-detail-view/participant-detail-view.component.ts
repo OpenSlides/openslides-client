@@ -352,14 +352,14 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
     public get isLockedOutAndCanManage(): boolean {
         const lockedOutHelper = this.personalInfoFormValue?.locked_out ?? this.user?.is_locked_out;
-        return lockedOutHelper && this.checkSelectedGroupsCanManage;
+        return lockedOutHelper && this.checkSelectedGroupsCanManage();
     }
 
     public get lockoutCheckboxDisabled(): boolean {
         const other = this.user?.id !== this.operator.operatorId;
         const notChanged = (this.personalInfoFormValue?.locked_out ?? null) === null;
         const isLockedOut = this.user?.is_locked_out;
-        return notChanged && !isLockedOut && (this.checkSelectedGroupsCanManage || !other);
+        return notChanged && !isLockedOut && (this.checkSelectedGroupsCanManage() || !other);
     }
 
     public updateByValueChange(event: any): void {
@@ -461,7 +461,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         this.router.navigate([this.activeMeetingId, `participants`]);
     }
 
-    private get checkSelectedGroupsCanManage(): boolean {
+    private checkSelectedGroupsCanManage(): boolean {
         return this.usersGroups.some(group => group.hasPermission(Permission.userCanManage));
     }
 }

@@ -324,13 +324,13 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public get isLockedOutAndCanManage(): boolean {
         const lockedOutHelper = this.personalInfoFormValue?.locked_out ?? this.user?.is_locked_out;
-        return lockedOutHelper && this.checkSelectedGroupsCanManage;
+        return lockedOutHelper && this.checkSelectedGroupsCanManage();
     }
 
     public get lockoutCheckboxDisabled(): boolean {
         const notChanged = (this.personalInfoFormValue?.locked_out ?? null) === null;
         const isLockedOut = this.user?.is_locked_out;
-        return notChanged && !isLockedOut && this.checkSelectedGroupsCanManage;
+        return notChanged && !isLockedOut && this.checkSelectedGroupsCanManage();
     }
 
     public updateByValueChange(event: any): void {
@@ -344,7 +344,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         }
     }
 
-    private get checkSelectedGroupsCanManage(): boolean {
+    private checkSelectedGroupsCanManage(): boolean {
         return (this.detailView.personalInfoForm.get(`group_ids`).value ?? [])
             .map((id: Id): ViewGroup => this.groupRepo.getViewModel(id))
             .some(group => group.hasPermission(Permission.userCanManage));
