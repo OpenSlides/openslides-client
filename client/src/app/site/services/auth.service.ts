@@ -108,16 +108,16 @@ export class AuthService {
         }
     }
 
-    public async invalidateSessionAfter(callback: () => Promise<any>): Promise<void> {
+    public async invalidateSessionAfter(callback?: () => Promise<any>): Promise<void> {
         try {
-            const response = await callback();
+            const response = callback ? await callback() : {success: true};
             if (response?.success) {
                 this.authTokenService.setRawAccessToken(null);
                 this._logoutEvent.emit();
-                this.sharedWorker.sendMessage({
+                await this.sharedWorker.sendMessage(<AuthUpdateMessage>{
                     receiver: `auth`,
                     msg: { action: `update`, params: null }
-                } as AuthUpdateMessage);
+                });
                 this.DS.deleteCollections(...this.DS.getCollections());
                 await this.DS.clear();
                 this.lifecycleService.bootup();
@@ -170,7 +170,6 @@ export class AuthService {
 
             if (event.type.substring(event.type.length - `_error`.length) === `_error`) {
                 console.error(`OAuth error: ${event.type}`, event);
-                await this.logout();
             }
         });
         this.oauthService.configure(authCodeFlowConfig);

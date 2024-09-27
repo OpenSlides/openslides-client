@@ -246,7 +246,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
     }
 
     private async handleError(stream: AutoupdateStream, error: any): Promise<void> {
-        if (error?.error.content?.type !== `auth`) {
+        if (error?.error.content?.type !== `auth` && error?.error.type !== `auth`) {
             await this.waitUntilEndpointHealthy();
         }
 
@@ -256,7 +256,10 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
             }
 
             await this.connectStream(stream);
-        } else if (stream.failedConnects <= HTTP_POOL_CONFIG.RETRY_AMOUNT && error?.error.content?.type === `auth`) {
+        } else if (
+            stream.failedConnects <= HTTP_POOL_CONFIG.RETRY_AMOUNT &&
+            (error?.error.content?.type === `auth` || error?.error.type === `auth`)
+        ) {
             if (await this.tryReAuth()) {
                 await this.connectStream(stream);
             } else {

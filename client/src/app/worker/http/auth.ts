@@ -51,8 +51,9 @@ export class WorkerHttpAuth {
     /**
      * Updates the auth token
      */
-    public static update(token: AuthToken): boolean {
-        this.workerHttpAuth.setAuthToken(token.rawAccessToken);
+    public static update(token: AuthToken | null): boolean {
+        console.log(`WorkerHttpAuth.update`, token?.rawAccessToken);
+        this.workerHttpAuth.setAuthToken(token?.rawAccessToken);
         return !!this.workerHttpAuth;
     }
 

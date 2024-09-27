@@ -72,6 +72,9 @@ export class AutoupdateCommunicationService {
                     case `set-connection-mode`:
                         this.handleSetConnectionMode(<string>msg.content);
                         break;
+                    case `check-auth`:
+                        this.authService.invalidateSessionAfter()
+                        break;
                 }
             });
         });
@@ -256,7 +259,7 @@ export class AutoupdateCommunicationService {
     private handleReceiveError(data: AutoupdateReceiveError): void {
         if (data.content.data?.reason === `Logout`) {
             if (this.authService.isAuthenticated) {
-                this.authService.logout();
+                this.authService.invalidateSessionAfter();
             }
             return;
         } else if (data.content.data?.terminate) {
