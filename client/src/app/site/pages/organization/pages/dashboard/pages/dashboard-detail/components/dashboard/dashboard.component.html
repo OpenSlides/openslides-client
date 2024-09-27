@@ -176,6 +176,9 @@
         @if (meeting.isArchived) {
             <mat-icon matTooltip="{{ 'This meeting is archived' | translate }}">archive</mat-icon>
         }
+        @if (meeting.enable_anonymous && !operator.isAnonymous) {
+            <mat-icon matTooltip="{{ 'This meeting is public' | translate }}">public</mat-icon>
+        }
         @if (meeting.committee_id) {
             <a
                 class="show-committee-link"
@@ -192,12 +195,7 @@
 <ng-template #meetingEntry let-context="context" let-meeting="meeting">
     <div class="one-line">
         <div class="meeting-box--mid one-line">
-            @let meetingIcon = meeting.locked_from_inside ? 'lock' : 'public';
-            <os-icon-container
-                class="show-lock-icon"
-                [icon]="meetingIcon"
-                [showIcon]="meeting.enable_anonymous || meeting.locked_from_inside"
-            >
+            <os-icon-container class="show-lock-icon" icon="lock" [showIcon]="meeting.locked_from_inside">
                 <div class="meeting-box--mid">{{ meeting.name }}</div>
             </os-icon-container>
         </div>
