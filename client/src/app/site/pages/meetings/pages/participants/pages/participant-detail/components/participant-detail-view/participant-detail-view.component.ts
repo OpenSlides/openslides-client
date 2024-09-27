@@ -409,6 +409,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             if (payload.member_number === ``) {
                 payload.member_number = null;
             }
+            if (payload.gender_id === 0) {
+                payload.gender_id = null;
+            }
             const title = _(`This action will remove you from one or more groups.`);
             const content = _(
                 `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`

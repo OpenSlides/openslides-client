@@ -105,7 +105,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `last_name`,
             `pronoun`,
             `username` /* Required! To getShortName */,
-            `gender`,
+            `gender_id`,
             `default_vote_weight`,
             `is_physical_person`,
             `is_active`,
@@ -226,7 +226,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             email: update.email,
             username: update.username,
             pronoun: update.pronoun,
-            gender: update.gender
+            gender_id: update.gender_id
         };
         return this.sendActionToBackend(UserAction.UPDATE_SELF, payload);
     }
@@ -259,7 +259,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             is_active: partialUser.is_active,
             is_physical_person: partialUser.is_physical_person,
             default_password: partialUser.default_password,
-            gender: partialUser.gender,
+            gender_id: partialUser.gender_id,
             email: partialUser.email,
             default_vote_weight: toDecimal(partialUser.default_vote_weight, false) as any,
             organization_management_level: partialUser.organization_management_level,
