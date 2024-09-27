@@ -146,6 +146,7 @@ export class Settings {
     public motion_poll_default_onehundred_percent_base!: PollPercentBase;
     public motion_poll_default_group_ids!: Id[]; // (group/used_as_motion_poll_default_id)[];
     public motion_poll_default_backend!: PollBackendDurationType;
+    public motion_poll_default_method!: PollMethod;
 
     // Users
     public users_enable_presence_view!: boolean;
@@ -394,6 +395,7 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_poll_ballot_paper_selection`,
         `motion_poll_ballot_paper_number`,
         `motion_poll_default_type`,
+        `motion_poll_default_method`,
         `motion_poll_default_onehundred_percent_base`,
         `motion_poll_default_group_ids`,
         `motion_poll_default_backend`,
