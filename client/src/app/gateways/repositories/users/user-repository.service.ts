@@ -26,9 +26,10 @@ export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid:
 export type GeneralUser = ViewUser & ViewMeetingUser;
 
 /**
- * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.
+ * Unified type name for state fields like `is_active`, `is_physical_person`, `is_present_in_meetings`
+ * and 'locked_out'.
  */
-export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person';
+export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person' | 'locked_out';
 
 export interface AssignMeetingsPayload {
     meeting_ids: Id[];
@@ -122,14 +123,15 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         const accountListFields: TypedFieldset<User> = filterableListFields.concat([
             `committee_ids`,
-            `committee_management_ids`
+            `committee_management_ids`,
+            `default_password`
         ]);
 
         const participantListFieldsMinimal: TypedFieldset<User> = listFields.concat([`meeting_user_ids`]);
 
         const participantListFields: TypedFieldset<User> = participantListFieldsMinimal
             .concat(filterableListFields)
-            .concat([`is_present_in_meeting_ids`, `default_password`]);
+            .concat([`is_present_in_meeting_ids`, `default_password`, `committee_ids`, `committee_management_ids`]);
 
         const detailFields: TypedFieldset<User> = [`default_password`, `can_change_own_password`];
 
@@ -542,7 +544,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `comment`,
             `about_me`,
             `number`,
-            `structure_level`
+            `structure_level`,
+            `locked_out`
         ];
         if (!create) {
             fields.push(`member_number`);

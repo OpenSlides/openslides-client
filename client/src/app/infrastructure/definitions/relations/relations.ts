@@ -151,8 +151,7 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
         OField: `template_meetings`,
-        MField: `template_for_organization`,
-        isExclusiveList: true
+        MField: `template_for_organization`
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
