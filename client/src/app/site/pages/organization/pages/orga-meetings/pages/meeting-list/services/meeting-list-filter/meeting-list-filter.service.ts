@@ -50,7 +50,7 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
                 label: _(`Public`),
                 options: [
                     { label: _(`Is public`), condition: true },
-                    { label: _(`Is closed`), condition: [false, null] }
+                    { label: _(`Is not public`), condition: [false, null] }
                 ]
             },
             {
