@@ -2,9 +2,8 @@ import * as fzstd from 'fzstd';
 
 import { HttpStream } from '../http/http-stream';
 import { ErrorDescription, ErrorType } from '../http/stream-utils';
-import { AutoupdateSetEndpointParams } from '../sw-autoupdate.interfaces';
+import { AutoupdateReceiveData, AutoupdateSetEndpointParams } from '../sw-autoupdate.interfaces';
 import { AutoupdateSubscription } from './autoupdate-subscription';
-import { AutoupdateReceiveData, AutoupdateSetEndpointParams } from './interfaces-autoupdate';
 
 export class AutoupdateStream extends HttpStream {
     private activeSubscriptions: AutoupdateSubscription[] = null;
@@ -197,14 +196,14 @@ export class AutoupdateStream extends HttpStream {
                 streamIdDescriptions[sub.id] = sub.description;
             }
 
-            port.postMessage({
+            port.postMessage(<AutoupdateReceiveData>{
                 sender: `autoupdate`,
                 action: `receive-data`,
                 content: {
                     streamIdDescriptions,
                     data: data
                 }
-            } as AutoupdateReceiveData);
+            });
         }
     }
 

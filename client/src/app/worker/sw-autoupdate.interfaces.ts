@@ -90,7 +90,7 @@ export interface AutoupdateSetStreamId extends AutoupdateWorkerResponse<Autoupda
 export interface AutoupdateReceiveDataContent {
     streamId: Id;
     data: any;
-    description: string;
+    streamIdDescriptions: { [streamId: number]: string };
 }
 
 export interface AutoupdateReceiveData extends AutoupdateWorkerResponse<AutoupdateReceiveDataContent> {

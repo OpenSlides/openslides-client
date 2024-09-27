@@ -73,7 +73,7 @@ export class AutoupdateCommunicationService {
                         this.handleSetConnectionMode(<string>msg.content);
                         break;
                     case `check-auth`:
-                        this.authService.invalidateSessionAfter()
+                        this.authService.invalidateSessionAfter();
                         break;
                 }
             });
