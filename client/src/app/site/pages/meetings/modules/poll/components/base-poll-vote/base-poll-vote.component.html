@@ -65,9 +65,12 @@
                             <div
                                 [ngClass]="{
                                     'yna-grid':
-                                        poll.isMethodYNA || (settings.isSplitSingleOption && displayed_in_autopilot),
+                                        poll.isMethodYNA ||
+                                        (settings.isSplitSingleOption && displayed_in_autopilot && poll.isMethodYNA),
                                     'remove-grid-gap': settings.isSplitSingleOption && displayed_in_autopilot,
-                                    'yn-grid': poll.isMethodYN,
+                                    'yn-grid':
+                                        poll.isMethodYN ||
+                                        (settings.isSplitSingleOption && displayed_in_autopilot && poll.isMethodYN),
                                     'single-vote-grid':
                                         (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option <= 1,
                                     'single-multi-vote-grid':
@@ -151,12 +154,17 @@
                         @for (option of poll.options; track option.id; let i = $index) {
                             <div
                                 [ngClass]="{
-                                    'split-grid': settings.isSplitSingleOption && !displayed_in_autopilot,
+                                    'yna-split-grid':
+                                        settings.isSplitSingleOption && !displayed_in_autopilot && poll.isMethodYNA,
+                                    'yn-split-grid':
+                                        settings.isSplitSingleOption && !displayed_in_autopilot && poll.isMethodYN,
                                     'remove-grid-gap': settings.isSplitSingleOption && displayed_in_autopilot,
                                     'yna-grid':
                                         (!settings.isSplitSingleOption && poll.isMethodYNA) ||
-                                        (settings.isSplitSingleOption && displayed_in_autopilot),
-                                    'yn-grid': !settings.isSplitSingleOption && poll.isMethodYN,
+                                        (settings.isSplitSingleOption && displayed_in_autopilot && poll.isMethodYNA),
+                                    'yn-grid':
+                                        (!settings.isSplitSingleOption && poll.isMethodYN) ||
+                                        (settings.isSplitSingleOption && displayed_in_autopilot && poll.isMethodYN),
                                     'single-vote-grid':
                                         !settings.isSplitSingleOption &&
                                         (poll.isMethodY || poll.isMethodN) &&
