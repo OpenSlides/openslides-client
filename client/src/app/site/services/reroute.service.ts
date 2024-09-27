@@ -38,7 +38,7 @@ export class RerouteService {
             const fallbackRoute = this.fallbackRoutesService.getFallbackRoute();
             if (fallbackRoute && (this.operator.user || fallbackMeetingId)) {
                 return this.router.createUrlTree([
-                    fallbackMeetingId ?? this.operator.user.meeting_ids[0],
+                    fallbackMeetingId ?? this.operator.user.ensuredMeetingIds[0],
                     fallbackRoute
                 ]);
             }

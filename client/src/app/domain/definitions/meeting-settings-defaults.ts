@@ -61,6 +61,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     motions_supporters_min_amount: 0,
     motions_block_slide_columns: 3,
     motion_poll_default_type: `pseudoanonymous`,
+    motion_poll_default_method: `YNA`,
     motion_poll_default_onehundred_percent_base: `YNA`,
     motion_poll_ballot_paper_selection: `CUSTOM_NUMBER`,
     motion_poll_ballot_paper_number: 8,
