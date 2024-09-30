@@ -358,6 +358,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         const originMotion = this.repo.getViewModelUnsafe(id);
         if (!this.originMotionsLoaded.find(m => m.id === id)) {
             this.originMotionsLoaded.push(originMotion);
+            this.originMotionsLoaded.sort((a, b) => b.id - a.id);
             const changeRecos = await firstValueFrom(
                 this.changeRecoRepo.getChangeRecosOfMotionObservable(originMotion.id).pipe(filter(value => !!value))
             );
