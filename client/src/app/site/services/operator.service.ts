@@ -364,7 +364,7 @@ export class OperatorService {
     }
 
     public isInMeeting(meetingId: Id): boolean {
-        return this.user.meeting_ids?.includes(meetingId) || false;
+        return this.user.ensuredMeetingIds?.includes(meetingId) || false;
     }
 
     private updateUser(user: ViewUser): void {

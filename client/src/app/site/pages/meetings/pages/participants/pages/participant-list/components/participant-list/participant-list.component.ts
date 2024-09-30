@@ -210,6 +210,10 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return user.isPresentInMeeting();
     }
 
+    public isUserLockedOut(user: ViewUser): boolean {
+        return user.isLockedOutOfMeeting();
+    }
+
     public isPresentToggleDisabled(user: ViewUser): boolean {
         if (this.isMultiSelect) {
             return true;
@@ -218,6 +222,25 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         } else {
             return !this.operator.hasPerms(Permission.userCanManagePresence);
         }
+    }
+
+    public isLockedOutToggleDisabled(user: ViewUser): boolean {
+        if (this.isMultiSelect) {
+            return true;
+        } else if (!this.filterForLockedOut(user)) {
+            return true;
+        } else {
+            return !this.canUpdate;
+        }
+    }
+
+    private filterForLockedOut(user: ViewUser): boolean {
+        return (
+            this.operator.operatorId !== user.id &&
+            !user.organization_management_level &&
+            !user.committee_management_ids?.includes(this.activeMeeting.committee_id) &&
+            !user.groups().some(group => group.hasPermission(Permission.userCanManage))
+        );
     }
 
     /**
@@ -440,6 +463,10 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         await this.setStateSelected(`is_physical_person`);
     }
 
+    public async changeLockedOutStateOfSelectedUsers(): Promise<void> {
+        await this.setStateSelected(`locked_out`);
+    }
+
     /**
      * Sets the user present
      *
@@ -451,6 +478,22 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             (this._allowSelfSetPresent && this.operator.operatorId === viewUser.id);
         if (isAllowed) {
             this.repo.setPresent(!this.isUserPresent(viewUser), viewUser).resolve();
+        }
+    }
+
+    /**
+     * Toggles the lockout
+     */
+    public async toggleLockout(viewUser: ViewUser): Promise<void> {
+        const isAllowed = this.canUpdate;
+        if (isAllowed) {
+            const title = this.isUserLockedOut(viewUser)
+                ? this.translate.instant(`Do you really want to include the participant back into the meeting?`)
+                : this.translate.instant(`Do you really want to lock this participant out of the meeting?`);
+            const content = viewUser.full_name;
+            if (await this.prompt.open(title, content)) {
+                this.repo.setState(`locked_out`, !this.isUserLockedOut(viewUser), viewUser);
+            }
         }
     }
 
@@ -498,6 +541,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             case `is_physical_person`:
                 actions = [_(`natural person`), _(`no natural person`)];
                 break;
+            case `locked_out`:
+                actions = [_(`Locked out`), _(`Not locked out`)];
+                break;
         }
         const content = _(`Set status for selected participants:`);
 
@@ -506,6 +552,21 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             const value = selectedChoice.action === actions[0];
             if (field === `is_present_in_meetings`) {
                 await this.repo.setPresent(value, ...this.selectedRows).resolve();
+            } else if (field === `locked_out`) {
+                const filteredRows = this.selectedRows.filter(user => this.filterForLockedOut(user));
+                if (filteredRows.length > 0) {
+                    await this.repo.setState(field, value, ...filteredRows);
+                }
+                const missing = this.selectedRows.length - filteredRows.length;
+                if (missing > 0) {
+                    this.matSnackBar.open(
+                        this.translate
+                            .instant(`%num% participants could not be locked out, because of missing permissions.`)
+                            .replace(`%num%`, missing),
+                        this.translate.instant(`Ok`),
+                        { duration: 3000 }
+                    );
+                }
             } else {
                 await this.repo.setState(field, value, ...this.selectedRows);
             }

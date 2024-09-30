@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -8,6 +8,7 @@ import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-model
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ColumnRestriction, ListComponent } from 'src/app/ui/modules/list';
 import { BaseListComponent } from 'src/app/ui/modules/list/base/base-list.component';
+import { ViewListComponent } from 'src/app/ui/modules/list/components/view-list/view-list.component';
 import {
     END_POSITION,
     START_POSITION
@@ -32,6 +33,9 @@ export interface CssClassDefinition {
 export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableViewModel> extends BaseListComponent<V> {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
+
+    @ViewChild(ViewListComponent, { static: true })
+    public viewListComponent: ViewListComponent<V> | undefined;
 
     /**
      * If a Projector column should be shown (at all)
