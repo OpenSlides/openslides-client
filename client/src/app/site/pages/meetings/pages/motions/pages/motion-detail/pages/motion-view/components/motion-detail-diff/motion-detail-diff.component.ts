@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion, ViewMotionSubmitter } from 'src/app/site/pages/meetings/pages/motions';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 import { HEAD_BAR_HEIGHT } from 'src/app/ui/modules/head-bar/components/head-bar/head-bar.component';
@@ -447,19 +447,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             .catch(this.raiseError);
     }
 
-    /**
-     * Scrolls to the native element specified by [scrollToChange]
-     */
-    private scrollToChangeElement(change: ViewUnifiedChange): void {
-        const element = <HTMLElement>this.el.nativeElement;
-        const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
-        const containerElement = document.querySelector(`mat-sidenav-content`);
-        containerElement!.scrollTo({
-            top: target!.getBoundingClientRect().top - HEAD_BAR_HEIGHT,
-            behavior: `smooth`
-        });
-    }
-
     public scrollToChangeClicked(change: ViewUnifiedChange, $event: MouseEvent): void {
         $event.preventDefault();
         $event.stopPropagation();
@@ -481,5 +468,18 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 this.scrollToChangeElement(this.scrollToChange!);
             }, 50);
         }
+    }
+
+    /**
+     * Scrolls to the native element specified by [scrollToChange]
+     */
+    private scrollToChangeElement(change: ViewUnifiedChange): void {
+        const element = <HTMLElement>this.el.nativeElement;
+        const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
+        const containerElement = document.querySelector(`mat-sidenav-content`);
+        containerElement!.scrollTo({
+            top: target!.getBoundingClientRect().top - HEAD_BAR_HEIGHT,
+            behavior: `smooth`
+        });
     }
 }

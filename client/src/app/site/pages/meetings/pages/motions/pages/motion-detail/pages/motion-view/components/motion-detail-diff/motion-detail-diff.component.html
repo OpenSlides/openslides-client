@@ -105,7 +105,9 @@
           even if it's accepted -->
                     @if (isAmendment(change) && showAllAmendments) {
                         <div class="status-row">
-                            <i class="grey">{{ change.amendment.number }} - {{ change.amendment.state!.name }}</i>
+                            <i class="grey">{{ change.amendment.number }}</i>
+                            <i class="grey">&nbsp;- {{ change.amendment.state!.name }}</i>
+                            <i class="grey">&nbsp;- {{ change.amendment.submitterNames }}</i>
                         </div>
                     }
                     <div
