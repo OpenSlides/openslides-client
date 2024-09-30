@@ -83,7 +83,7 @@
                         >
                             <mat-icon>more_horiz</mat-icon>
                         </button>
-                        @if (isAmendment(change)) {
+                        @if (isAmendment(change) && !noEditMode) {
                             <button
                                 mat-icon-button
                                 type="button"
@@ -153,7 +153,7 @@
             </a>
 
             <!-- perms.isAllowed('change_state', motion) (which does not exist)-->
-            <ng-container *osPerms="permission.motionCanManage; and: !noEditMode">
+            <ng-container *osPerms="permission.motionCanManage">
                 @if (change.amendment.state.next_states.length > 0) {
                     <mat-divider></mat-divider>
                 }
