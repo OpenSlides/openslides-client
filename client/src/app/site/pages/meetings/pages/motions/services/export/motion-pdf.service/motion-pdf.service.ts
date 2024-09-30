@@ -737,7 +737,7 @@ export class MotionPdfService {
 
         for (const key of Object.keys(motion.attachment_meeting_mediafiles)) {
             const attachment = motion.attachment_meeting_mediafiles[key];
-            const fileUrl = attachment.getDetailStateUrl();
+            const fileUrl = attachment.url;
             if (this.pdfImagesService.isImageUsableForPdf(attachment.mimetype)) {
                 this.pdfImagesService.addImageUrl(fileUrl);
                 attachments.push({
