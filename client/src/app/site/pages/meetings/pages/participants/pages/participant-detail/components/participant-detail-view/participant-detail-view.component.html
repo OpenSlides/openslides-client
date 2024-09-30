@@ -3,7 +3,7 @@
     [editMode]="isEditingSubject.value"
     [goBack]="!isAllowed('seeOtherUsers')"
     [hasMainButton]="isAllowed('changePersonal') && !!user"
-    [isSaveButtonEnabled]="isFormValid"
+    [isSaveButtonEnabled]="saveButtonEnabled"
     [mainActionTooltip]="'Edit' | translate"
     [nav]="false"
     [saveAction]="getSaveAction()"
@@ -80,7 +80,7 @@
         [patchFormValueFn]="patchFormValueFn"
         [shouldEnableFormControlFn]="shouldEnableFormControlFn"
         [user]="user"
-        (changeEvent)="personalInfoFormValue = $event"
+        (changeEvent)="updateByValueChange($event)"
         (errorEvent)="formErrors = $event"
         (submitEvent)="saveUser()"
         (validEvent)="isFormValid = $event"
@@ -98,6 +98,22 @@
                         <span>{{ 'present' | translate }}</span>
                     </mat-checkbox>
                 </div>
+                <div [formGroup]="form">
+                    <!-- Locked out? -->
+                    <mat-checkbox
+                        formControlName="locked_out"
+                        matTooltipPosition="right"
+                        matTooltip="{{ 'Lock out user from this meeting.' | translate }}"
+                    >
+                        <span>{{ 'locked out' | translate }}</span>
+                    </mat-checkbox>
+                </div>
+                @if (isLockedOutAndCanManage) {
+                    <p class="red-warning-text padding-left-12" translate>
+                        It is not allowed to set the permisson UserCanManage to a locked out user. Please unset the
+                        lockout before adding a group with UserCanManage.
+                    </p>
+                }
                 <div>
                     <!-- Strucuture Level -->
                     <mat-form-field
@@ -263,7 +279,9 @@
             @if (showVoteDelegations && user!.vote_delegations_from().length > 0) {
                 <div>
                     <h4>{{ 'Voting right received from (principals)' | translate }}</h4>
-                    <span>{{ user!.vote_delegations_from() }}</span>
+                    <os-comma-separated-listing [list]="user!.vote_delegations_from()">
+                        <ng-template let-voteDelegationsFrom>{{ voteDelegationsFrom }}</ng-template>
+                    </os-comma-separated-listing>
                 </div>
             }
             <!-- Vote weight -->
@@ -297,10 +315,21 @@
             }
             @if (isAllowed('seeName')) {
                 <div class="flex-vertical-center margin-top-12">
-                    <span>{{ (user?.isPresentInMeeting() ? 'Is present' : 'Is not present') | translate }}</span>
                     <mat-icon class="margin-4">
                         {{ user!.isPresentInMeeting() ? 'check_box' : 'check_box_outline_blank' }}
                     </mat-icon>
+                    <span>{{ (user?.isPresentInMeeting() ? 'Is present' : 'Is not present') | translate }}</span>
+                </div>
+                <div class="flex-vertical-center margin-top-12">
+                    <!-- Locked out? -->
+                    @if (isAllowed('seeSensitiveData')) {
+                        <mat-icon class="margin-4" [class.red-warning-text]="user!.isLockedOutOfMeeting()">
+                            {{ user!.isLockedOutOfMeeting() ? 'visibility_off' : 'check_box_outline_blank' }}
+                        </mat-icon>
+                        <span>
+                            {{ (user?.isLockedOutOfMeeting() ? 'Is locked out' : 'Is not locked out') | translate }}
+                        </span>
+                    }
                 </div>
             }
         </ng-template>

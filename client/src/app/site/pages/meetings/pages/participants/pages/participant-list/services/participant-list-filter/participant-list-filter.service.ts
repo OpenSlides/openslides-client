@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
 import { OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
 import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
@@ -35,6 +35,12 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         options: []
     };
 
+    private genderFilterOption: OsFilter<ViewUser> = {
+        property: `gender_id`,
+        label: _(`Gender`),
+        options: []
+    };
+
     private _voteWeightEnabled: boolean;
     private _voteDelegationEnabled: boolean;
 
@@ -42,6 +48,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         store: MeetingActiveFiltersService,
         groupRepo: GroupControllerService,
         structureRepo: StructureLevelControllerService,
+        genderRepo: GenderControllerService,
         private meetingSettings: MeetingSettingsService,
         private operator: OperatorService
     ) {
@@ -53,6 +60,11 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         this.updateFilterForRepo({
             repo: structureRepo,
             filter: this.userStructureLevelFilterOptions
+        });
+        this.updateFilterForRepo({
+            repo: genderRepo,
+            filter: this.genderFilterOption,
+            noneOptionLabel: _(`not specified`)
         });
         this.meetingSettings.get(`users_enable_vote_weight`).subscribe(value => (this._voteWeightEnabled = value));
         this.meetingSettings
@@ -71,6 +83,14 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 options: [
                     { condition: true, label: _(`Is present`) },
                     { condition: [false, null], label: _(`Is not present`) }
+                ]
+            },
+            {
+                property: `isLockedOutOfMeeting`,
+                label: `Locked Out`,
+                options: [
+                    { condition: true, label: `Is locked out` },
+                    { condition: [false, null], label: `Is not locked out` }
                 ]
             },
             {
@@ -129,17 +149,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                     { condition: true, label: _(`Has unchanged vote weight`) }
                 ]
             },
-            {
-                property: `gender`,
-                label: _(`Gender`),
-                options: [
-                    { condition: GENDER_FITLERABLE[0], label: GENDERS[0] },
-                    { condition: GENDER_FITLERABLE[1], label: GENDERS[1] },
-                    { condition: GENDER_FITLERABLE[2], label: GENDERS[2] },
-                    { condition: GENDER_FITLERABLE[3], label: GENDERS[3] },
-                    { condition: null, label: _(`not specified`) }
-                ]
-            },
+            this.genderFilterOption,
             {
                 property: `hasSamlId`,
                 label: _(`SSO`),

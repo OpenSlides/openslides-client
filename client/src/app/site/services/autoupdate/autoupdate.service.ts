@@ -269,7 +269,7 @@ export class AutoupdateService {
         } = {};
 
         for (const id of requestIds) {
-            const { modelRequest } = this._activeRequestObjects[id];
+            const modelRequest = this._activeRequestObjects[id]?.modelRequest;
             if (modelRequest) {
                 for (const key of Object.keys(autoupdateData)) {
                     const data = key.split(`/`);

@@ -19,8 +19,9 @@ export class ViewGroup extends BaseHasMeetingUsersViewModel<Group> {
     }
 
     public hasPermission(perm: Permission): boolean {
-        return this.permissions?.some(
-            permission => permission === perm || permissionChildren[permission]?.includes(perm)
+        return (
+            this.isAdminGroup ||
+            this.permissions?.some(permission => permission === perm || permissionChildren[permission]?.includes(perm))
         );
     }
 }

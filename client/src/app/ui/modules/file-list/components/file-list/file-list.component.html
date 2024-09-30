@@ -118,7 +118,7 @@
     </div>
 
     <div *osScrollingTableCell="'edit'; row as mediafile" class="fill detail-link">
-        @if (canEdit) {
+        @if (canEdit && !isMultiSelect) {
             <div
                 class="fill detail-link"
                 tabindex="0"
