@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
 
@@ -21,6 +22,14 @@ export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeaker
     ) {
         super(repositoryServiceCollector, MotionBlock, agendaItemRepo);
         this.initSorting();
+    }
+
+    public override getViewModelList(): ViewMotionBlock[] {
+        return this.filterForeignMeetingModelsFromList(super.getViewModelList());
+    }
+
+    public override getViewModelListObservable(): Observable<ViewMotionBlock[]> {
+        return super.getViewModelListObservable().pipe(map(block => this.filterForeignMeetingModelsFromList(block)));
     }
 
     public create(...blocks: any[]): Promise<Identifiable[]> {

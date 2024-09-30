@@ -16,7 +16,9 @@ import {
     distinctUntilChanged,
     filter,
     firstValueFrom,
-    Observable
+    Observable,
+    Subject,
+    Subscription
 } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
@@ -26,6 +28,8 @@ import {
     ViewMotionChangeRecommendation,
     ViewUnifiedChange
 } from 'src/app/site/pages/meetings/pages/motions';
+import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -33,7 +37,11 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { AgendaItemControllerService } from '../../../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionChangeRecommendationControllerService } from '../../../../../../modules/change-recommendations/services';
-import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
+import {
+    getMotionOriginDetailSubscriptionConfig,
+    MOTION_DETAIL_SUBSCRIPTION,
+    MOTION_ORIGIN_DETAIL_SUBSCRIPTION
+} from '../../../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionLineNumberingService } from '../../../../../../services/common/motion-line-numbering.service';
@@ -70,9 +78,14 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     public hasChangeRecommendations: boolean = false;
     public unifiedChanges$: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
 
+    public originMotionsLoaded = [];
+    public originUnifiedChanges: { [key: Id]: ViewUnifiedChange[] } = {};
+
     private get unifiedChanges(): ViewUnifiedChange[] {
         return this.unifiedChanges$.value;
     }
+
+    public showAllAmendments = false;
 
     /**
      * preloaded next motion for direct navigation
@@ -143,7 +156,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         private changeRecoRepo: MotionChangeRecommendationControllerService,
         private cd: ChangeDetectorRef,
         private pdfExport: MotionPdfExportService,
-        private originUrlService: MotionDetailViewOriginUrlService
+        private originUrlService: MotionDetailViewOriginUrlService,
+        private modelRequestBuilder: ModelRequestBuilderService,
+        private autoupdateService: AutoupdateService
     ) {
         super();
 
@@ -192,6 +207,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             this.hasLoaded$.next(false);
         }
 
+        this.originMotionsLoaded = [];
         this.unifiedChanges$.next([]);
         this.subscriptions.delete(`motion`);
         this.subscriptions.delete(`sorted-changes`);
@@ -333,36 +349,73 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         this.itemRepo.removeFromAgenda(this.motion.agenda_item_id!).catch(this.raiseError);
     }
 
+    public async displayOriginMotion(id: Id): Promise<void> {
+        await this.autoupdateService.single(
+            await this.modelRequestBuilder.build(getMotionOriginDetailSubscriptionConfig(id).modelRequest),
+            MOTION_ORIGIN_DETAIL_SUBSCRIPTION
+        );
+
+        const originMotion = this.repo.getViewModelUnsafe(id);
+        if (!this.originMotionsLoaded.find(m => m.id === id)) {
+            this.originMotionsLoaded.push(originMotion);
+            this.originMotionsLoaded.sort((a, b) => b.id - a.id);
+            const changeRecos = await firstValueFrom(
+                this.changeRecoRepo.getChangeRecosOfMotionObservable(originMotion.id).pipe(filter(value => !!value))
+            );
+            this.originUnifiedChanges[id] = this.motionLineNumbering.recalcUnifiedChanges(
+                originMotion.meeting.motions_line_length,
+                changeRecos as ViewMotionChangeRecommendation[],
+                originMotion.amendments
+            );
+        }
+    }
+
+    public hideOriginMotion(id: Id): void {
+        const idx = this.originMotionsLoaded.findIndex(m => m.id === id);
+        if (idx !== -1) {
+            this.originMotionsLoaded.splice(idx, 1);
+        }
+    }
+
     private nextMotionLoaded(): void {
         this.changeRecoMode =
             this.meetingSettingsService.instant(`motions_recommendation_text_mode`) || ChangeRecoMode.Original;
 
-        let previousAmendments: ViewMotion[] = null;
         this.subscriptions.updateSubscription(
             `sorted-changes`,
-            combineLatest([
-                this.meetingSettingsService.get(`motions_line_length`),
-                this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).pipe(filter(value => !!value)),
-                this.amendmentRepo.getViewModelListObservableFor(this.motion).pipe(filter(value => !!value))
-            ])
-                .pipe(auditTime(1)) // Needed to replicate behaviour of base-repository list updates
-                .subscribe(([lineLength, changeRecos, amendments]) => {
+            this.sortedChangesSubscription(this.motion, this.unifiedChanges$)
+        );
+    }
+
+    private sortedChangesSubscription(motion: ViewMotion, subject: Subject<ViewUnifiedChange[]>): Subscription {
+        let previousAmendments: ViewMotion[] = null;
+
+        return combineLatest([
+            this.meetingSettingsService.get(`motions_line_length`),
+            this.changeRecoRepo.getChangeRecosOfMotionObservable(motion.id).pipe(filter(value => !!value)),
+            motion.amendments$
+        ])
+            .pipe(auditTime(1)) // Needed to replicate behaviour of base-repository list updates
+            .subscribe(([lineLength, changeRecos, amendments]) => {
+                if (motion.id === this.motion.id) {
                     if (previousAmendments !== amendments) {
                         this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
                         previousAmendments = amendments;
                     }
                     this.hasChangeRecommendations = !!changeRecos?.length;
-                    this.unifiedChanges$.next(
-                        this.motionLineNumbering.recalcUnifiedChanges(
-                            lineLength,
-                            changeRecos as ViewMotionChangeRecommendation[],
-                            amendments
-                        )
-                    );
+                }
+                subject.next(
+                    this.motionLineNumbering.recalcUnifiedChanges(
+                        lineLength,
+                        changeRecos as ViewMotionChangeRecommendation[],
+                        amendments
+                    )
+                );
+                if (motion.id === this.motion.id) {
                     this.changeRecoMode = this.determineCrMode(this.changeRecoMode);
-                    this.cd.markForCheck();
-                })
-        );
+                }
+                this.cd.markForCheck();
+            });
     }
 
     private updateSortedMotionsObservable(): void {
