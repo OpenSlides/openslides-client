@@ -66,13 +66,22 @@
                     class="diff-box diff-box-{{ change.getChangeId() }} clearfix outlined-hover outlined-border"
                     [class.collides]="hasCollissions(change, allTextChangingObjects)"
                 >
-                    @if (hasCollissions(change, allTextChangingObjects)) {
-                        <div class="collission-hint">
+                    <div class="collission-hint">
+                        @if (
+                            isAmendment(change) &&
+                            showAllAmendments &&
+                            change.amendment.change_recommendation_ids?.length
+                        ) {
+                            <mat-icon matTooltip="{{ 'This amendment has change recommendations.' | translate }}">
+                                warning
+                            </mat-icon>
+                        }
+                        @if (hasCollissions(change, allTextChangingObjects)) {
                             <mat-icon matTooltip="{{ 'This change collides with another one.' | translate }}">
                                 warning
                             </mat-icon>
-                        </div>
-                    }
+                        }
+                    </div>
                     <div class="action-row">
                         <button
                             *osPerms="permission.motionCanManage; and: isRecommendation(change) && !noEditMode"
