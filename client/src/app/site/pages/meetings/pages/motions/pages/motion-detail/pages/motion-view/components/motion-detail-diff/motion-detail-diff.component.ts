@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotion, ViewMotionSubmitter } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 import { HEAD_BAR_HEIGHT } from 'src/app/ui/modules/head-bar/components/head-bar/head-bar.component';
