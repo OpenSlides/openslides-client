@@ -42,6 +42,39 @@
     </div>
 }
 
+<!-- Recommendation -->
+@if (isRecommendationEnabled) {
+    <div>
+        <os-motion-extension-field
+            [canBeEdited]="false"
+            [chipValue]="recommendationLabel | translate"
+            extensionLabel="{{ 'Extension' | translate }}"
+            [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
+            [inputValue]="motion?.recommendation_extension"
+            [internal]="motion?.state?.is_internal"
+            [listValueTransformFns]="[motionTransformFn]"
+            [searchLists]="searchLists"
+            [title]="motion.meeting.motions_recommendations_by"
+            (succeeded)="setRecommendationExtension($event)"
+        ></os-motion-extension-field>
+        <!-- recommendation referenced motions -->
+        @if (motion.recommendation_extension_reference_ids?.length) {
+            @if (referencedMotions$ | async; as referencedMotions) {
+                <div class="spacer-top-10">
+                    @for (motion of referencedMotions; track motion.id; let last = $last) {
+                        <span>
+                            <a [routerLink]="motion.getDetailStateUrl()">{{ motion.numberOrTitle }}</a>
+                            @if (!last) {
+                                <span class="referencelist">&nbsp;·&nbsp;</span>
+                            }
+                        </span>
+                    }
+                </div>
+            }
+        }
+    </div>
+}
+
 <!-- Category -->
 @if (motion.category) {
     <div>

@@ -1,14 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presenter/get-forwarding-committees-presenter.service';
-import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion, ViewMotionCategory, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -45,11 +43,7 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
     }
 
     public get isRecommendationEnabled(): boolean {
-        return (
-            (this.perms.isAllowed(`change_metadata`) || !!this.motion.recommendation) &&
-            !!this.recommender &&
-            !!this.getPossibleRecommendations().length
-        );
+        return !!this.motion.recommendation;
     }
 
     /**
@@ -62,11 +56,6 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
     public get isDifferedChangeRecoMode(): boolean {
         return this.changeRecoMode === ChangeRecoMode.Diff;
     }
-
-    /**
-     * Custom recommender as set in the settings
-     */
-    public recommender: string | null = null;
 
     public searchLists: SearchListDefinition[] = [
         {
@@ -103,11 +92,6 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
 
     private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
 
-    /**
-     * The subscription to the recommender config variable.
-     */
-    private recommenderSubscription: Subscription | null = null;
-
     public constructor(
         protected override translate: TranslateService,
         public perms: MotionPermissionService,
@@ -134,10 +118,6 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
     public override ngOnDestroy(): void {
         this.participantSort.exitSortService();
         super.ngOnDestroy();
-    }
-
-    protected override onAfterInit(): void {
-        this.setupRecommender();
     }
 
     protected override onAfterSetMotion(previous: ViewMotion, current: ViewMotion): void {
@@ -234,11 +214,6 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
         this.repo.followRecommendation(this.motion);
     }
 
-    public getPossibleRecommendations(): ViewMotionState[] {
-        const allStates = this.motion.state?.workflow?.states || [];
-        return allStates.filter(state => state.recommendation_label).sort((a, b) => a.weight - b.weight);
-    }
-
     public getMeetingName(origin: ViewMotion | ViewMeeting): string {
         if (this.isViewMotion(origin)) {
             const motion = origin as ViewMotion;
@@ -269,40 +244,5 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
 
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
         return toTest.COLLECTION === Motion.COLLECTION;
-    }
-
-    /**
-     * Observes the repository for changes in the motion recommender
-     */
-    private setupRecommender(): void {
-        if (this.motion) {
-            const configKey: keyof Settings = `motions_recommendations_by`;
-            if (this.recommenderSubscription) {
-                this.recommenderSubscription.unsubscribe();
-            }
-            this.recommenderSubscription = this.meetingSettingsService.get(configKey).subscribe(recommender => {
-                this.recommender = recommender;
-            });
-        }
-    }
-
-    private async checkPresenter(): Promise<(Selectable & { name: string; toString: any })[]> {
-        const meetingId = this.activeMeetingService.meetingId;
-        const committees =
-            this.operator.hasPerms(Permission.motionCanManageMetadata) && !!meetingId
-                ? await this.presenter.call({ meeting_id: meetingId })
-                : [];
-        const forwardingCommittees: (Selectable & { name: string; toString: any })[] = [];
-        for (let n = 0; n < committees.length; n++) {
-            forwardingCommittees.push({
-                id: n + 1,
-                name: committees[n],
-                getTitle: () => committees[n],
-                getListTitle: () => ``,
-                toString: () => committees[n]
-            });
-        }
-
-        return forwardingCommittees;
     }
 }

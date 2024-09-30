@@ -241,7 +241,14 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
             },
             {
                 idField: `state_id`,
-                fieldset: [`name`, `css_class`, `meeting_id`]
+                fieldset: [
+                    `name`,
+                    `css_class`,
+                    `meeting_id`,
+                    `show_state_extension_field`,
+                    `show_recommendation_extension_field`,
+                    `recommendation_label`
+                ]
             },
             {
                 idField: `poll_ids`,
@@ -258,9 +265,23 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
             { idField: `category_id`, fieldset: [`name`, `parent_id`, `meeting_id`] },
             { idField: `block_id`, fieldset: [`title`, `meeting_id`] },
-            { idField: `meeting_id`, fieldset: [`name`, `motions_line_length`, `motions_default_line_numbering`] }
+            { idField: `recommendation_id`, fieldset: [`name`] },
+            {
+                idField: `meeting_id`,
+                fieldset: [
+                    `name`,
+                    `motions_line_length`,
+                    `motions_default_line_numbering`,
+                    `motions_recommendations_by`
+                ]
+            },
+            { idField: `state_extension_reference_ids`, fieldset: [`number`, `title`, `meeting_id`] },
+            { idField: `recommendation_extension_reference_ids`, fieldset: [`number`, `title`, `meeting_id`] }
         ],
         fieldset: [
+            `state_extension`,
+            `recommendation_extension`,
+            `additional_submitter`,
             `workflow_timestamp`,
             `reason`,
             `number`,
