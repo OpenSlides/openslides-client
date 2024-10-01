@@ -45,3 +45,7 @@ os-user-detail-view h2 {
 :host ::ng-deep .detail-view {
     @include detail-view-appearance;
 }
+
+.padding-left-12 {
+    padding-left: 12px;
+}

@@ -402,7 +402,9 @@ export class OperatorService {
 
     public isInMeeting(meetingId: Id): boolean {
         const meeting = this.meetingRepo.getViewModel(meetingId);
-        return (meeting?.enable_anonymous && this.isAnonymous) || this.user.meeting_ids?.includes(meetingId) || false;
+        return (
+            (meeting?.enable_anonymous && this.isAnonymous) || this.user.ensuredMeetingIds?.includes(meetingId) || false
+        );
     }
 
     private updateUser(user: ViewUser): void {

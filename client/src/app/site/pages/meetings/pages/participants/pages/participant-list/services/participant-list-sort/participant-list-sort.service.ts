@@ -27,7 +27,9 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
         { property: [`first_name`, `last_name`], label: _(`Given name`) },
         { property: [`last_name`, `first_name`], label: _(`Surname`) },
         { property: `is_present_in_meeting_ids`, label: _(`Presence`) },
+        { property: `is_locked_out`, label: _(`Locked Out`) },
         { property: `member_number`, label: _(`Membership number`) },
+        { property: `gender_name`, label: _(`Gender`) },
         { property: `is_active`, label: _(`Is active`) },
         { property: `is_physical_person`, label: _(`Is a natural person`) },
         { property: `number`, label: _(`Participant number`), foreignBaseKeys: { meeting_user: [`number`] } },
@@ -83,6 +85,10 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
             {
                 property: `last_login`,
                 shouldHideFn: () => !this.operator.hasPerms(Permission.userCanUpdate)
+            },
+            {
+                property: `is_locked_out`,
+                shouldHideFn: () => !this.operator.hasPerms(Permission.userCanSeeSensitiveData)
             }
         ];
     }

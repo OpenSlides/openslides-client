@@ -2,12 +2,12 @@ import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { User } from 'src/app/domain/models/users/user';
 import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 
-export const accountHeadersAndVerboseNames: { [key in keyof User]?: any } = {
+export const accountHeadersAndVerboseNames: { [key in keyof User | 'gender']?: any } = {
     ...userHeadersAndVerboseNames,
     default_vote_weight: _(`Vote weight`)
 };
 
-export const accountColumns: (keyof User)[] = [
+export const accountColumns: (keyof User | 'gender')[] = [
     `title`,
     `first_name`,
     `last_name`,

@@ -76,6 +76,11 @@ export class OpenSlidesRouterService {
             .subscribe(event => this._currentParamMap.next(event));
         activeMeetingIdService.meetingIdChanged.subscribe(event => console.log(`has meeting changed?`, event));
 
+        this.operator.operatorUpdated.subscribe(() => {
+            if (!this.operator.knowsMultipleMeetings && !this.activeMeetingIdService.meetingId) {
+                this.checkCurrentRouteGuards();
+            }
+        });
         this.operator.permissionsObservable
             .pipe(
                 filter(v => !!v),

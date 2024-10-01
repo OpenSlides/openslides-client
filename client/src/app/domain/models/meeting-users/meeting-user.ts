@@ -11,6 +11,7 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
     public readonly number!: string;
     public readonly about_me!: string;
     public readonly vote_weight!: number;
+    public readonly locked_out!: boolean;
 
     public user_id!: Id;
     public meeting_id!: Id;
@@ -42,6 +43,7 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
         `number`,
         `about_me`,
         `vote_weight`,
+        `locked_out`,
         `user_id`,
         `meeting_id`,
         `personal_note_ids`,
