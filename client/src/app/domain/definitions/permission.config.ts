@@ -7,6 +7,7 @@ export type PermissionsMap = { [key in Permission]?: Permission[] };
 export interface DisplayPermission {
     display_name: string;
     help_text?: string;
+    anon_allowed?: boolean;
     value: Permission;
 }
 
@@ -24,6 +25,7 @@ export const PERMISSIONS: AppPermission[] = [
                 help_text: _(
                     `Can see the Autopilot menu item with all content for which appropriate permissions are set.`
                 ),
+                anon_allowed: true,
                 value: Permission.meetingCanSeeAutopilot
             },
             {
@@ -31,6 +33,7 @@ export const PERMISSIONS: AppPermission[] = [
                 help_text: _(
                     `Can see the Projector menu item and all projectors (in the Autopilot as well as in the Projector menu item)`
                 ),
+                anon_allowed: true,
                 value: Permission.projectorCanSee
             },
             {
@@ -46,11 +49,13 @@ export const PERMISSIONS: AppPermission[] = [
             {
                 display_name: _(`Can see agenda`),
                 help_text: _(`Can see the Agenda menu item and all public topics in the agenda.`),
+                anon_allowed: true,
                 value: Permission.agendaItemCanSee
             },
             {
                 display_name: _(`Can see internal items and time scheduling of agenda`),
                 help_text: _(`Can see all internal topics, schedules and comments.`),
+                anon_allowed: true,
                 value: Permission.agendaItemCanSeeInternal
             },
             {
@@ -63,6 +68,7 @@ export const PERMISSIONS: AppPermission[] = [
             {
                 display_name: _(`Can see list of speakers`),
                 help_text: _(`Can see all lists of speakers`),
+                anon_allowed: true,
                 value: Permission.listOfSpeakersCanSee
             },
             {
@@ -74,7 +80,7 @@ export const PERMISSIONS: AppPermission[] = [
             },
             {
                 display_name: _(`Can put oneself on the list of speakers`),
-                help_text: _(`Is allowed to add himself/herself to the list of speakers. 
+                help_text: _(`Is allowed to add himself/herself to the list of speakers.
 
 Note:
 Optional combination of requests to speak with presence status is possible. ( > [Settings] > [List of speakers] > [General] )`),
@@ -88,6 +94,7 @@ Optional combination of requests to speak with presence status is possible. ( > 
             {
                 display_name: _(`Can see moderation notes`),
                 help_text: _(`Can see all moderation notes in each list of speakers.`),
+                anon_allowed: true,
                 value: Permission.agendaItemCanSeeModeratorNotes
             },
             {
@@ -105,6 +112,7 @@ Optional combination of requests to speak with presence status is possible. ( > 
                 help_text: _(
                     `Can see the Motions menu item and all motions unless they are limited by access restrictions in the workflow.`
                 ),
+                anon_allowed: true,
                 value: Permission.motionCanSee
             },
             {
@@ -114,6 +122,7 @@ Optional combination of requests to speak with presence status is possible. ( > 
 
 Tip: Cross-check desired visibility of motions with test delegate account. `
                 ),
+                anon_allowed: true,
                 value: Permission.motionCanSeeInternal
             },
             {
@@ -133,10 +142,10 @@ Tip: Cross-check desired visibility of motions with test delegate account. `
             {
                 display_name: _(`Can forward motions`),
                 help_text: _(
-                    `Can forward motions to other meetings within the OpenSlides instance. 
+                    `Can forward motions to other meetings within the OpenSlides instance.
 
 Further requirements:
-1. forwarding hierarchy must be set at the organizational level in the committee. 
+1. forwarding hierarchy must be set at the organizational level in the committee.
 2. target meeting must be created.
 3. forwarding must be activated in the workflow in the state.`
                 ),
@@ -176,10 +185,11 @@ Further requirements:
             {
                 display_name: _(`Can see elections`),
                 help_text: _(
-                    `Can see the menu item Elections, including the list of candidates and results. 
+                    `Can see the menu item Elections, including the list of candidates and results.
 
 Note: The right to vote is defined directly in the ballot.`
                 ),
+                anon_allowed: true,
                 value: Permission.assignmentCanSee
             },
             {
@@ -191,7 +201,7 @@ Note: The right to vote is defined directly in the ballot.`
             },
             {
                 display_name: _(`Can nominate another participant`),
-                help_text: _(`Can nominate other participants as candidates. 
+                help_text: _(`Can nominate other participants as candidates.
 
 Requires group permission: [Can see participants]`),
                 value: Permission.assignmentCanNominateOther
@@ -209,10 +219,11 @@ Requires group permission: [Can see participants]`),
             {
                 display_name: _(`Can see participants`),
                 help_text: _(
-                    `Can see the menu item Participants and therefore the following data from all participants: 
-Personal data: Name, pronoun, gender. 
+                    `Can see the menu item Participants and therefore the following data from all participants:
+Personal data: Name, pronoun, gender.
 Meeting specific information: Structure level, Group, Participant number, About me, Presence status.`
                 ),
+                anon_allowed: true,
                 value: Permission.userCanSee
             },
             {
@@ -220,6 +231,7 @@ Meeting specific information: Structure level, Group, Participant number, About 
                 help_text: _(
                     `Can see email, username, membership number, SSO identification and locked out state of all participants.`
                 ),
+                anon_allowed: true,
                 value: Permission.userCanSeeSensitiveData
             },
             {
@@ -247,6 +259,7 @@ Meeting specific information: Structure level, Group, Participant number, About 
                 help_text: _(`Can see the Files menu item and all shared folders and files.
 
 Note: Sharing of folders and files may be restricted by group assignment.`),
+                anon_allowed: true,
                 value: Permission.mediafileCanSee
             },
             {
@@ -269,6 +282,7 @@ Note: Sharing of folders and files may be restricted by group assignment.`),
             {
                 display_name: _(`Can see the front page`),
                 help_text: _(`Can see the Home menu item.`),
+                anon_allowed: true,
                 value: Permission.meetingCanSeeFrontpage
             },
             {
@@ -276,15 +290,17 @@ Note: Sharing of folders and files may be restricted by group assignment.`),
                 help_text: _(
                     `Can see the livestream if there is a livestream URL entered in > [Settings] > [Livestream].`
                 ),
+                anon_allowed: true,
                 value: Permission.meetingCanSeeLivestream
             },
             {
                 display_name: _(`Can see history`),
                 help_text: _(
-                    `Can see the History menu item with the history of processing timestamps for motions, elections and participants. 
+                    `Can see the History menu item with the history of processing timestamps for motions, elections and participants.
 
 Note: For privacy reasons, it is recommended to limit the rights to view the History significantly.`
                 ),
+                anon_allowed: true,
                 value: Permission.meetingCanSeeHistory
             },
             {

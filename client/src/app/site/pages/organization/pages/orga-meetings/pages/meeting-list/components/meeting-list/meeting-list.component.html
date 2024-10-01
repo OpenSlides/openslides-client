@@ -54,7 +54,14 @@
                         </span>
                     }
 
-                    <!--- Is locked from inside-->
+                    <!--- Is public -->
+                    @if (meeting.enable_anonymous) {
+                        <span class="icon-prefix">
+                            <mat-icon [matTooltip]="'Public' | translate">public</mat-icon>
+                        </span>
+                    }
+
+                    <!--- Is locked from inside -->
                     @if (meeting.locked_from_inside) {
                         <span class="icon-prefix">
                             <mat-icon [matTooltip]="'Closed' | translate">lock</mat-icon>

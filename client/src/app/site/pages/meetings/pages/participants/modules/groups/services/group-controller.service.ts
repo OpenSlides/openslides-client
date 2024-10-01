@@ -62,11 +62,26 @@ export class GroupControllerService extends BaseMeetingControllerService<ViewGro
         return map(groups => groups.filter(group => !group.isDefaultGroup));
     }
 
+    public getFilterSystemGroupFn(): OperatorFunction<ViewGroup[], ViewGroup[]> {
+        return map(groups => groups.filter(group => !group.isDefaultGroup && !group.isAnonymousGroup));
+    }
+
+    public getFilterAnonymousGroupFn(): OperatorFunction<ViewGroup[], ViewGroup[]> {
+        return map(groups => groups.filter(group => !group.isAnonymousGroup));
+    }
+
     /**
-     * Returns an Observable for all groups except the default group.
+     * Returns an Observable for all groups except the default and anonymous group.
      */
-    public getViewModelListWithoutDefaultGroupObservable(): Observable<ViewGroup[]> {
-        return this.getViewModelListObservable().pipe(this.getFilterDefaultGroupFn());
+    public getViewModelListWithoutSystemGroupsObservable(): Observable<ViewGroup[]> {
+        return this.getViewModelListObservable().pipe(this.getFilterSystemGroupFn());
+    }
+
+    /**
+     * Returns an Observable for all groups except the anonymous group.
+     */
+    public getViewModelListWithoutAnonymousGroupObservable(): Observable<ViewGroup[]> {
+        return this.getViewModelListObservable().pipe(this.getFilterAnonymousGroupFn());
     }
 
     public getNameForIds(...ids: number[]): string {

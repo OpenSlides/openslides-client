@@ -194,7 +194,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     public ngOnInit(): void {
         // filter out empty results in group observable. We never have no groups and it messes up
         // the settings change detection
-        this.groupObservable = this.groupRepo.getViewModelListWithoutDefaultGroupObservable().pipe(
+        this.groupObservable = this.groupRepo.getViewModelListWithoutSystemGroupsObservable().pipe(
             filter(groups => !!groups.length),
             map(groups => this.getRestrictedValue(groups))
         );
