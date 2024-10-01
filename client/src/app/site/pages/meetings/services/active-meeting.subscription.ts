@@ -70,6 +70,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                     idField: `group_ids`,
                     fieldset: [
                         `admin_group_for_meeting_id`,
+                        `anonymous_group_for_meeting_id`,
                         `default_group_for_meeting_id`,
                         `name`,
                         `permissions`,
@@ -122,6 +123,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 `jitsi_room_name`,
                 `jitsi_room_password`,
                 `admin_group_id`,
+                `anonymous_group_id`,
                 `default_group_id`
             ]
         },

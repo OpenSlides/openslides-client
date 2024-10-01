@@ -135,7 +135,11 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     public async login(): Promise<void> {
         await this.authService.logoutAnonymous();
-        this.router.navigate([`/`, this.activeMeetingId, `login`]);
+        if (this.activeMeetingId) {
+            this.router.navigate([`/`, this.activeMeetingId, `login`]);
+        } else {
+            this.router.navigate([`/`, `login`]);
+        }
     }
 
     public async logout(): Promise<void> {
@@ -181,7 +185,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     private onOperatorUpdate(): void {
         this.isLoggedIn = !this.operator.isAnonymous;
-        this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant(`Guest`);
+        this.username = this.operator.shortName;
         const userId = this.operator.operatorId;
         if (this._userId !== userId) {
             this._userId = userId;

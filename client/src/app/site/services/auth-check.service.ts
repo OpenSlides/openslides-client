@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Data } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -39,6 +40,7 @@ export class AuthCheckService {
         private meetingRepo: MeetingRepositoryService,
         private meetingSettingsService: MeetingSettingsService,
         private autoupdate: AutoupdateService,
+        private cookie: CookieService,
         private modelRequestBuilder: ModelRequestBuilderService,
         private osRouter: OpenSlidesRouterService
     ) {}
@@ -69,7 +71,11 @@ export class AuthCheckService {
             meeting = this.meetingRepo.getViewModel(+meetingIdString);
         }
 
-        return (this.operator.isAnonymous && meeting?.enable_anonymous) || this.operator.isAuthenticated;
+        return (
+            (!meeting && this.cookie.check(`anonymous-auth`)) ||
+            (this.operator.isAnonymous && meeting?.enable_anonymous) ||
+            this.operator.isAuthenticated
+        );
     }
 
     public async isAuthorizedToSeeOrganization(): Promise<boolean> {

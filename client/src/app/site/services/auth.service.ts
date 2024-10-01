@@ -96,7 +96,8 @@ export class AuthService {
 
     public async anonLogin(): Promise<void> {
         this.cookie.set(`anonymous-auth`, ``, {
-            sameSite: `Strict`
+            sameSite: `Strict`,
+            path: `/`
         });
         return;
     }
@@ -150,7 +151,7 @@ export class AuthService {
     }
 
     public async logoutAnonymous(): Promise<void> {
-        this.cookie.delete(`anonymous-auth`);
+        this.cookie.delete(`anonymous-auth`, `/`);
     }
 
     public isAuthenticated(): boolean {
