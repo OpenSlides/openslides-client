@@ -155,7 +155,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         ]).pipe(
             map(([lineLength, changes]) => {
                 if (lineLength) {
-                    const text = this.motionFormatService.formatMotion({
+                    return this.motionFormatService.formatMotion({
                         targetMotion: this.motion,
                         crMode: this.changeRecoMode,
                         changes: this.changeRecoMode === ChangeRecoMode.Original ? [] : changes,
@@ -163,7 +163,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
                         highlightedLine: this.highlightedLine,
                         firstLine: this.motion.firstLine
                     });
-                    return text;
                 }
 
                 return this.motion.text;
