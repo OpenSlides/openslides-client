@@ -239,9 +239,21 @@ export class MotionFormatService {
                     )
                 );
             }
-
+            text.push(`<div class="amendment-nr">`);
+            if (this.hasCollissions(changesToShow[0], changesToShow)) {
+                text.push(`<mat-icon class="margin-right-10">warning</mat-icon>`);
+            }
+            const current_text = changesToShow[i];
+            if (`amend_nr` in current_text) {
+                text.push(`<span>`, current_text.amend_nr);
+                if (current_text.amend_nr === `` && !this.hasCollissions(changesToShow[0], changesToShow)) {
+                    text.push(`Amendment`);
+                }
+                text.push(`</span></div>`);
+            }
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
             lastLineTo = changesToShow[i].getLineTo();
+            console.log(`outside if `);
         }
 
         text.push(
@@ -249,4 +261,8 @@ export class MotionFormatService {
         );
         return text.join(``);
     };
+
+    public hasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
+        return this.diffService.changeHasCollissions(change, changes);
+    }
 }
