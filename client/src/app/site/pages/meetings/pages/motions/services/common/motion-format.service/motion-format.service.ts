@@ -215,7 +215,7 @@ export class MotionFormatService {
 
     private getDiffView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
         const { changes, lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
-        const text = [];
+        const text: string[] = [];
         const changesToShow = changes.filter(change => change.showInDiffView());
         const motionText = this.lineNumberingService.insertLineNumbers({
             html: targetMotion.text,
@@ -239,26 +239,29 @@ export class MotionFormatService {
                     )
                 );
             }
-            text.push(`<div class="amendment-nr">`);
-            if (this.hasCollissions(changesToShow[0], changesToShow)) {
+            text[text.length - 1] = text[text.length - 1].replace(`os-line-number `, ``);
+            text.push(`<span class="amendment-nr-n-icon">`);
+            if (this.hasCollissions(changesToShow[i], changesToShow)) {
                 text.push(`<mat-icon class="margin-right-10">warning</mat-icon>`);
             }
             const current_text = changesToShow[i];
             if (`amend_nr` in current_text) {
-                text.push(`<span>`, current_text.amend_nr);
-                if (current_text.amend_nr === `` && !this.hasCollissions(changesToShow[0], changesToShow)) {
+                if (typeof current_text.amend_nr === `string`) {
+                    text.push(`<span class="amendment-nr">`, current_text.amend_nr);
+                }
+                if (current_text.amend_nr === ``) {
                     text.push(`Amendment`);
                 }
-                text.push(`</span></div>`);
+                text.push(`:</span></span>`);
             }
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
             lastLineTo = changesToShow[i].getLineTo();
-            console.log(`outside if `);
         }
 
         text.push(
             this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
         );
+        //console.log(text, text.join(``));
         return text.join(``);
     };
 
