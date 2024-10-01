@@ -536,6 +536,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     private propagateChanges(): void {
         this.canSave = this.contentForm.valid && this._canSaveParagraphBasedAmendment;
         this.temporaryMotion = { ...this._motionContent, ...this._paragraphBasedAmendmentContent };
+        this.cd.markForCheck();
     }
 
     private addNewUserToFormCtrl(newUserObj: RawUser, controlName: string): void {
