@@ -635,6 +635,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         helpText: _(`If deactivated it is displayed below the title`)
                     },
                     {
+                        key: `motions_hide_metadata_background`,
+                        label: _(`Hide the background from meta information box on the projector`),
+                        type: `boolean`
+                    },
+                    {
                         key: `motions_block_slide_columns`,
                         label: _(`Maximum number of columns on motion block slide`),
                         type: `integer`,
