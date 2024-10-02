@@ -139,6 +139,7 @@ export class Settings {
     public motions_export_preamble!: string;
     public motions_export_submitter_recommendation!: boolean;
     public motions_export_follow_recommendation!: boolean;
+    public motions_hide_metadata_background: boolean;
 
     public motion_poll_ballot_paper_selection!: BallotPaperSelection;
     public motion_poll_ballot_paper_number!: number;
@@ -254,6 +255,7 @@ export class Meeting extends BaseModel<Meeting> {
 
     public default_group_id!: Id; // group/default_group_for_meeting_id;
     public admin_group_id!: Id; // group/admin_group_for_meeting_id;
+    public anonymous_group_id!: Id; // group/anonymous_group_for_meeting_id;
 
     public list_of_speakers_countdown_id: Id; // projector_countdown/used_as_list_of_speakers_meeting_id;
     public poll_countdown_id: Id; // projector_countdown/used_as_poll_countdown_meeting_id;
@@ -372,6 +374,7 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_enable_recommendation_on_projector`,
         `motions_show_referring_motions`,
         `motions_show_sequential_number`,
+        `motions_hide_metadata_background`,
         `motions_recommendations_by`,
         `motions_block_slide_columns`,
         `motions_recommendation_text_mode`,
@@ -515,7 +518,8 @@ export class Meeting extends BaseModel<Meeting> {
         `default_projector_motion_poll_ids`,
         `default_projector_poll_ids`,
         `default_group_id`,
-        `admin_group_id`
+        `admin_group_id`,
+        `anonymous_group_id`
     ];
 }
 export interface Meeting

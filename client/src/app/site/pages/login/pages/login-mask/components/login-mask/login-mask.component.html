@@ -1,13 +1,13 @@
 <div class="form-wrapper">
-    @if ({ meeting: meetingObservable | async, organization: organizationObservable | async }; as observables) {
-        @if (observables.meeting || observables.organization) {
+    @if ({ organization: organizationObservable | async }; as observables) {
+        @if (meeting || observables.organization) {
             <div class="header-name" [@fadeIn]>
                 <!-- Meeting's name -->
-                @if (observables.meeting) {
-                    <h1>{{ observables.meeting.name }}</h1>
+                @if (meeting && meeting.name) {
+                    <h1>{{ meeting.name }}</h1>
                 }
                 <!-- Organization's name -->
-                @if (observables.organization && !observables.meeting) {
+                @if (observables.organization && !meeting) {
                     <h1>
                         {{ observables.organization.name }}
                     </h1>
@@ -24,12 +24,12 @@
             </mat-card>
         </div>
     }
-    @if (!samlEnabled && !loading) {
-        <ng-container *ngTemplateOutlet="loginform; context: { showExtra: true }"></ng-container>
-    }
-    @if (samlEnabled && !loading) {
-        <div class="login-container">
-            @if (samlEnabled) {
+
+    @if (!loading) {
+        @if (!samlEnabled) {
+            <ng-container *ngTemplateOutlet="loginform; context: { showExtra: true }"></ng-container>
+        } @else {
+            <div class="login-container">
                 <button
                     class="login-button"
                     color="primary"
@@ -40,32 +40,32 @@
                 >
                     {{ samlLoginButtonText || 'SAML Login' | translate }}
                 </button>
-            }
-            <br />
-            @if (guestsEnabled) {
-                <button class="login-button" mat-stroked-button type="button" (click)="guestLogin()">
-                    {{ 'Login as guest' | translate }}
-                </button>
-            }
-            <br />
-            <mat-expansion-panel
-                class="spacer-bottom-10"
-                style="border-radius: 4px !important"
-                (afterCollapse)="setLoginAreaExpansion(false)"
-                (afterExpand)="setLoginAreaExpansion(true)"
-            >
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        {{ 'Internal login' | translate }}
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                @if (loginAreaExpanded) {
-                    <div>
-                        <ng-container *ngTemplateOutlet="loginform; context: { showExtra: false }"></ng-container>
-                    </div>
+                <br />
+                @if (guestsEnabled) {
+                    <button class="login-button" mat-stroked-button type="button" (click)="guestLogin()">
+                        {{ 'Public access' | translate }}
+                    </button>
                 }
-            </mat-expansion-panel>
-        </div>
+                <br />
+                <mat-expansion-panel
+                    class="spacer-bottom-10"
+                    style="border-radius: 4px !important"
+                    (afterCollapse)="setLoginAreaExpansion(false)"
+                    (afterExpand)="setLoginAreaExpansion(true)"
+                >
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{ 'Internal login' | translate }}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    @if (loginAreaExpanded) {
+                        <div>
+                            <ng-container *ngTemplateOutlet="loginform; context: { showExtra: false }"></ng-container>
+                        </div>
+                    }
+                </mat-expansion-panel>
+            </div>
+        }
     }
 </div>
 
@@ -93,7 +93,6 @@
 
         <!-- login button -->
         <br />
-        <!-- TODO: Next to each other...-->
         <button
             class="login-button"
             color="primary"
@@ -104,14 +103,13 @@
         >
             @if (!isWaitingOnLogin) {
                 <span>{{ 'Login' | translate }}</span>
-            }
-            @if (isWaitingOnLogin) {
+            } @else {
                 <os-spinner [height]="20" [showText]="false" [width]="20"></os-spinner>
             }
         </button>
         @if (guestsEnabled && showExtra) {
             <button class="login-button" mat-stroked-button type="button" (click)="guestLogin()">
-                {{ 'Login as guest' | translate }}
+                {{ 'Public access' | translate }}
             </button>
         }
 

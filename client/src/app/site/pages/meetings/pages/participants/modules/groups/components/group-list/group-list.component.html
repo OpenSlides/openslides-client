@@ -57,15 +57,19 @@
                                         </mat-header-cell>
                                         <mat-cell *matCellDef="let perm">
                                             <div class="inner-table">
-                                                @if (!group.isAdminGroup) {
+                                                @if (
+                                                    group.isAdminGroup || (group.isAnonymousGroup && !perm.anon_allowed)
+                                                ) {
+                                                    <mat-checkbox
+                                                        [checked]="group.isAdminGroup"
+                                                        [disabled]="true"
+                                                    ></mat-checkbox>
+                                                } @else {
                                                     <mat-checkbox
                                                         name="cb-{{ group.id }}-{{ perm.value }}"
                                                         [(ngModel)]="currentPermissions[group.id][perm.value]"
                                                         (change)="onChange(group, perm.value, $event.checked)"
                                                     ></mat-checkbox>
-                                                }
-                                                @if (group.isAdminGroup) {
-                                                    <mat-checkbox [checked]="true" [disabled]="true"></mat-checkbox>
                                                 }
                                             </div>
                                         </mat-cell>
