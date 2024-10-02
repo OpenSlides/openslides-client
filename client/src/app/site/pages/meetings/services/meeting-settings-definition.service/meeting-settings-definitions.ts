@@ -207,7 +207,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`,
                         helpText: _(
                             `Enables public access to this meeting without login data. Permissions can be set after activation in the new group 'Public'.`
-                        ),
+                        )
                     }
                 ]
             },

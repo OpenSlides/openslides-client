@@ -561,7 +561,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 if (missing > 0) {
                     this.matSnackBar.open(
                         this.translate
-                            .instant(`%num% participants could not be locked out because they have administrative permissions.`)
+                            .instant(
+                                `%num% participants could not be locked out because they have administrative permissions.`
+                            )
                             .replace(`%num%`, missing),
                         this.translate.instant(`Ok`),
                         { duration: 3000 }

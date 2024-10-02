@@ -422,7 +422,9 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                         this.prompt
                             .open(
                                 this.translate.instant(`Motion changed`),
-                                this.translate.instant(`Are you sure you want to discard all changes and update this form?`)
+                                this.translate.instant(
+                                    `Are you sure you want to discard all changes and update this form?`
+                                )
                             )
                             .then(choice => {
                                 if (choice) {
