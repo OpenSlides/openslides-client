@@ -82,6 +82,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             const canUpdateUsers = this.isAllowed(`update`);
             if (this._isUserInScope || (this.newUser && canUpdateUsers)) {
                 return true;
+            } else if (this._isUserEditable && controlName !== `default_password`) {
+                return true;
             } else if (canUpdateUsers) {
                 return controlName === `is_present`
                     ? this.operator.hasPerms(Permission.userCanManagePresence)
@@ -186,6 +188,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     private _isVoteDelegationEnabled = false;
     private _isElectronicVotingEnabled = false;
     private _isUserInScope = false;
+    private _isUserEditable = false;
 
     public constructor(
         protected override translate: TranslateService,
@@ -268,6 +271,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 async () => (this._isUserInScope = await this.userService.hasScopeManagePerms(this._userId!))
             )
         );
+        this._isUserEditable = await this.userService.isEditable(this._userId);
     }
 
     public getRandomPassword(): string {

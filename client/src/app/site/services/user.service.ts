@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { GetUserScopePresenterService } from 'src/app/gateways/presenter';
+import { GetUserEditablePresenterService, GetUserScopePresenterService } from 'src/app/gateways/presenter';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -22,7 +22,8 @@ export class UserService {
         private activeMeetingService: ActiveMeetingService,
         private presenter: GetUserScopePresenterService,
         private operator: OperatorService,
-        private meetingRepo: MeetingControllerService
+        private meetingRepo: MeetingControllerService,
+        private getUserEditablePresenter: GetUserEditablePresenterService
     ) {}
 
     /**
@@ -107,5 +108,25 @@ export class UserService {
                 }
                 return hasPerms;
             });
+    }
+
+    /**
+     * Check editablity of standard personal info fields of a user
+     *
+     * @param userId The id of the user to check
+     *
+     * @returns boolean Is it allowed to change these fields of the user by the operator
+     */
+    public async isEditable(userId: Id): Promise<boolean> {
+        const result = await this.getUserEditablePresenter.call({
+            user_ids: [userId],
+            fields: [`first_name`]
+        });
+        if (!result[userId.toString()]?.editable) {
+            // useful for debugging
+            // console.log(result[userId.toString()]?.message);
+            return false;
+        }
+        return true;
     }
 }
