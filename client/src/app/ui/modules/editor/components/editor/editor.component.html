@@ -289,23 +289,27 @@
 
             <div class="button-group">
                 <button
+                    #btn
                     mat-ripple
                     tabindex="-1"
                     type="button"
                     [disabled]="!editor.can().undo()"
                     [matTooltip]="'Undo' | translate"
                     (click)="editor.chain().focus().undo().run()"
+                    (keydown)="navigate($event, 12)"
                 >
                     <mat-icon>undo</mat-icon>
                 </button>
 
                 <button
+                    #btn
                     mat-ripple
                     tabindex="-1"
                     type="button"
                     [disabled]="!editor.can().redo()"
                     [matTooltip]="'Redo' | translate"
                     (click)="editor.chain().focus().redo().run()"
+                    (keydown)="navigate($event, 13)"
                 >
                     <mat-icon>redo</mat-icon>
                 </button>
@@ -318,7 +322,7 @@
                 type="button"
                 [matTooltip]="'Source code' | translate"
                 (click)="editCode()"
-                (keydown)="navigate($event, 12)"
+                (keydown)="navigate($event, 14)"
             >
                 <mat-icon>code</mat-icon>
             </button>

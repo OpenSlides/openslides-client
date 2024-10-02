@@ -428,10 +428,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     public navigate(event: KeyboardEvent, currentIndex: number): void {
         const key = event.key;
         let newIndex = currentIndex;
+        const buttons = this.buttonElements.toArray();
 
         switch (key) {
             case `ArrowRight`:
                 if (currentIndex < this.buttonElements.length - 1) {
+                    newIndex++;
+                }
+                while (buttons[newIndex].nativeElement.disabled) {
                     newIndex++;
                 }
                 break;
@@ -439,12 +443,16 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 if (currentIndex > 0) {
                     newIndex--;
                 }
+                while (buttons[newIndex].nativeElement.disabled) {
+                    newIndex--;
+                }
                 break;
             default:
                 return;
         }
-        const buttons = this.buttonElements.toArray();
+
         const buttonToFocus = buttons[newIndex];
+
         if (buttonToFocus) {
             (buttonToFocus.nativeElement as HTMLElement).focus();
         }
