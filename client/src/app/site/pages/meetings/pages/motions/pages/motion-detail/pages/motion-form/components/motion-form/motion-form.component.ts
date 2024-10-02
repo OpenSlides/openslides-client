@@ -348,7 +348,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                             .open(
                                 this.translate.instant(`Parent motion text changed`),
                                 this.translate.instant(
-                                    `Do you want to update the amendment text? Your changes will be lost.`
+                                    `Do you want to update the amendment text? All changes will be lost.`
                                 )
                             )
                             .then(choice => {
@@ -422,7 +422,9 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                         this.prompt
                             .open(
                                 this.translate.instant(`Motion changed`),
-                                this.translate.instant(`Discard changes and update form?`)
+                                this.translate.instant(
+                                    `Are you sure you want to discard all changes and update this form?`
+                                )
                             )
                             .then(choice => {
                                 if (choice) {
