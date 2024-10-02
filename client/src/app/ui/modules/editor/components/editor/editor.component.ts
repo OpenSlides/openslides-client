@@ -9,7 +9,9 @@ import {
     Input,
     OnDestroy,
     Output,
-    ViewChild
+    QueryList,
+    ViewChild,
+    ViewChildren
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -96,6 +98,9 @@ const DEFAULT_COLOR_PALETE = [
 })
 export class EditorComponent extends BaseFormControlComponent<string> implements AfterViewInit, OnDestroy {
     @ViewChild(`editorEl`) private editorEl: ElementRef;
+
+    @ViewChildren(`btn`)
+    private buttonElements!: QueryList<ElementRef>;
 
     @Input()
     public customSettings: object = {};
@@ -418,6 +423,36 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                     this.editor.commands.setContent(result.html, true);
                 }
             });
+    }
+
+    public navigate(event: KeyboardEvent, currentIndex: number): void {
+        const key = event.key;
+        let newIndex = currentIndex;
+
+        switch (key) {
+            case `ArrowRight`:
+                if (currentIndex < this.buttonElements.length - 1) {
+                    newIndex++;
+                }
+                break;
+            case `ArrowLeft`:
+                if (currentIndex > 0) {
+                    newIndex--;
+                }
+                break;
+            default:
+                return;
+        }
+        const buttons = this.buttonElements.toArray();
+        const buttonToFocus = buttons[newIndex];
+        if (buttonToFocus) {
+            (buttonToFocus.nativeElement as HTMLElement).focus();
+        }
+
+        for (const button of buttons) {
+            (button.nativeElement as HTMLElement).setAttribute(`tabindex`, `-1`);
+        }
+        (buttonToFocus.nativeElement as HTMLElement).setAttribute(`tabindex`, `0`);
     }
 
     protected createForm(): UntypedFormControl {
