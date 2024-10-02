@@ -488,7 +488,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         const isAllowed = this.canUpdate;
         if (isAllowed) {
             const title = this.isUserLockedOut(viewUser)
-                ? this.translate.instant(`Do you really want to include the participant back into the meeting?`)
+                ? this.translate.instant(`Do you really want to undo the lock out of the participant?`)
                 : this.translate.instant(`Do you really want to lock this participant out of the meeting?`);
             const content = viewUser.full_name;
             if (await this.prompt.open(title, content)) {
@@ -561,7 +561,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 if (missing > 0) {
                     this.matSnackBar.open(
                         this.translate
-                            .instant(`%num% participants could not be locked out, because of missing permissions.`)
+                            .instant(`%num% participants could not be locked out because they have administrative permissions.`)
                             .replace(`%num%`, missing),
                         this.translate.instant(`Ok`),
                         { duration: 3000 }

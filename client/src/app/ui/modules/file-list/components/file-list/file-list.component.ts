@@ -274,13 +274,13 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     public async togglePublish(file: ViewMediafile): Promise<void> {
         const publishing = !file.isPublishedOrganizationWide;
-        let title: string = _(`Make file/directory public`);
+        let title: string = _(`Are you sure you want to make this file/folder public?`);
         let content = this.translate.instant(
-            `Do you want to publish this file/directory? Every admin in every meeting will be able to see this file/directory and all it's contents.`
+            `Every admin in every meeting will be able to see this content.`
         );
         let confirm: string = _(`Publish`);
         if (!publishing) {
-            title = _(`Unpublish file/directory`);
+            title = _(`Are you sure you want to unpublish this file/folder?`);
             content = ``;
             if (file.meeting_mediafiles?.length) {
                 content = this.translate.instant(`File is used in:`);

@@ -60,7 +60,8 @@
                         }
                         @if (!user.is_active) {
                             <os-icon-container
-                                icon="block"
+                                icon="do_not_disturb_on"
+                                class="red-warning-text"
                                 matTooltip="{{ 'Inactive' | translate }}"
                             ></os-icon-container>
                         }
@@ -198,7 +199,7 @@
                     <span>{{ 'Set/remove meeting' | translate }} ...</span>
                 </button>
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveState()">
-                    <mat-icon>block</mat-icon>
+                    <mat-icon class="red-warning-text">do_not_disturb_on</mat-icon>
                     <span>{{ 'Enable/disable accounts' | translate }} ...</span>
                 </button>
                 <button

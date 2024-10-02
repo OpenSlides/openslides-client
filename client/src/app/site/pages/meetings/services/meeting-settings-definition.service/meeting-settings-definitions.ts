@@ -203,8 +203,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `enable_anonymous`,
-                        label: _(`Allow access for anonymous guest users`),
-                        type: `boolean`
+                        label: _(`Activate public access`),
+                        type: `boolean`,
+                        helpText: _(
+                            `Enables public access to this meeting without login data. Permissions can be set after activation in the new group 'Public'.`
+                        ),
                     }
                 ]
             },
@@ -646,7 +649,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_hide_metadata_background`,
-                        label: _(`Hide the background from meta information box on the projector`),
+                        label: _(`Make background color from meta information box on the projector transparent`),
                         type: `boolean`
                     },
                     {
