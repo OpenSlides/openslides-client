@@ -13,6 +13,12 @@ msgstr ""
 msgid "%num% emails were send sucessfully."
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.ts
+msgid ""
+"%num% participants could not be locked out because they have administrative "
+"permissions."
+msgstr ""
+
 msgid "-Ä"
 msgstr ""
 
@@ -139,6 +145,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/designs/pages/theme-list/components/theme-list/theme-list.component.html
 msgid "Activate design"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Activate public access"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
@@ -476,6 +486,10 @@ msgstr ""
 msgid "Are you sure you want to delete all selected files and folders?"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/gender/pages/gender-list/components/gender-list/gender-list.component.ts
+msgid "Are you sure you want to delete all selected genders?"
+msgstr ""
+
 msgid "Are you sure you want to delete all selected meetings?"
 msgstr ""
 
@@ -524,6 +538,10 @@ msgstr ""
 msgid "Are you sure you want to delete this file?"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/gender/pages/gender-list/components/gender-list/gender-list.component.ts
+msgid "Are you sure you want to delete this gender?"
+msgstr ""
+
 msgid "Are you sure you want to delete this group?"
 msgstr ""
 
@@ -562,6 +580,10 @@ msgstr ""
 msgid "Are you sure you want to delete this workflow?"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-form/components/motion-form/motion-form.component.ts
+msgid "Are you sure you want to discard all changes and update this form?"
+msgstr ""
+
 msgid "Are you sure you want to discard this amendment?"
 msgstr ""
 
@@ -580,6 +602,10 @@ msgid ""
 msgstr ""
 
 msgid "Are you sure you want to irrevocably remove your point of order?"
+msgstr ""
+
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.ts
+msgid "Are you sure you want to make this file/folder public?"
 msgstr ""
 
 msgid "Are you sure you want to number all agenda items?"
@@ -648,6 +674,10 @@ msgid "Are you sure you want to stop this voting?"
 msgstr ""
 
 msgid "Are you sure you want to submit a point of order?"
+msgstr ""
+
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.ts
+msgid "Are you sure you want to unpublish this file/folder?"
 msgstr ""
 
 msgid "As of"
@@ -896,12 +926,13 @@ msgstr ""
 msgid "Can forward motions to committee"
 msgstr ""
 
+#: /app/src/app/domain/definitions/permission.config.ts
 msgid ""
-"Can forward motions to other meetings within the OpenSlides instance. \n"
+"Can forward motions to other meetings within the OpenSlides instance.\n"
 "\n"
 "Further requirements:\n"
 "1. forwarding hierarchy must be set at the organizational level in the "
-"committee. \n"
+"committee.\n"
 "2. target meeting must be created.\n"
 "3. forwarding must be activated in the workflow in the state."
 msgstr ""
@@ -965,8 +996,9 @@ msgstr ""
 msgid "Can nominate oneself"
 msgstr ""
 
+#: /app/src/app/domain/definitions/permission.config.ts
 msgid ""
-"Can nominate other participants as candidates. \n"
+"Can nominate other participants as candidates.\n"
 "\n"
 "Requires group permission: [Can see participants]"
 msgstr ""
@@ -1001,7 +1033,9 @@ msgid "Can see elections"
 msgstr ""
 
 #: /app/src/app/domain/definitions/permission.config.ts
-msgid "Can see email, username and SSO identification of all participants."
+msgid ""
+"Can see email, username, membership number, SSO identification and locked "
+"out state of all participants."
 msgstr ""
 
 #: /app/src/app/domain/definitions/permission.config.ts
@@ -1055,9 +1089,10 @@ msgid ""
 "Note: Sharing of folders and files may be restricted by group assignment."
 msgstr ""
 
+#: /app/src/app/domain/definitions/permission.config.ts
 msgid ""
 "Can see the History menu item with the history of processing timestamps for "
-"motions, elections and participants. \n"
+"motions, elections and participants.\n"
 "\n"
 "Note: For privacy reasons, it is recommended to limit the rights to view "
 "the History significantly."
@@ -1095,17 +1130,19 @@ msgid ""
 "> [Livestream]."
 msgstr ""
 
+#: /app/src/app/domain/definitions/permission.config.ts
 msgid ""
 "Can see the menu item Elections, including the list of candidates and "
-"results. \n"
+"results.\n"
 "\n"
 "Note: The right to vote is defined directly in the ballot."
 msgstr ""
 
+#: /app/src/app/domain/definitions/permission.config.ts
 msgid ""
 "Can see the menu item Participants and therefore the following data from "
-"all participants: \n"
-"Personal data: Name, pronoun, gender. \n"
+"all participants:\n"
+"Personal data: Name, pronoun, gender.\n"
 "Meeting specific information: Structure level, Group, Participant number, "
 "About me, Presence status."
 msgstr ""
@@ -1151,11 +1188,21 @@ msgstr ""
 msgid "Candidates"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/components/mediafile-list/mediafile-list.component.html
+#: /app/src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/components/mediafile-list/mediafile-list.component.html
+msgid "Cannot delete published files"
+msgstr ""
+
 msgid "Cannot do that in demo mode!"
 msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/committees/pages/committee-list/services/committee-list-filter.service/committee-filter.service.ts
 msgid "Cannot forward motions"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/components/mediafile-list/mediafile-list.component.html
+#: /app/src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/components/mediafile-list/mediafile-list.component.html
+msgid "Cannot move published files"
 msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/committees/pages/committee-list/services/committee-list-filter.service/committee-filter.service.ts
@@ -1592,6 +1639,10 @@ msgstr ""
 msgid "Default visibility for new agenda items (except topics)"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Default vote method"
+msgstr ""
+
 msgid "Default vote weight"
 msgstr ""
 
@@ -1730,6 +1781,10 @@ msgstr ""
 msgid "Do you really want to go ahead?"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.ts
+msgid "Do you really want to lock this participant out of the meeting?"
+msgstr ""
+
 msgid "Do you really want to make available this meeting as a public template?"
 msgstr ""
 
@@ -1737,6 +1792,14 @@ msgid "Do you really want to save your changes?"
 msgstr ""
 
 msgid "Do you really want to stop sharing this meeting as a public template?"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.ts
+msgid "Do you really want to undo the lock out of the participant?"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-form/components/motion-form/motion-form.component.ts
+msgid "Do you want to update the amendment text? All changes will be lost."
 msgstr ""
 
 msgid "Does not have notes"
@@ -1954,6 +2017,12 @@ msgid ""
 "state of the motion. Other administrative functions are excluded."
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid ""
+"Enables public access to this meeting without login data. Permissions can "
+"be set after activation in the new group 'Public'."
+msgstr ""
+
 msgid "Enables the ability to create votings for motions in this state."
 msgstr ""
 
@@ -2054,6 +2123,10 @@ msgstr ""
 msgid "Event location"
 msgstr ""
 
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.ts
+msgid "Every admin in every meeting will be able to see this content."
+msgstr ""
+
 msgid ""
 "Everyone can see the request of a point of order (instead of managers for "
 "list of speakers only)"
@@ -2120,6 +2193,10 @@ msgstr ""
 #: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.html
 #: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.html
 msgid "File is being used"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service.ts
+msgid "File is used in:"
 msgstr ""
 
 msgid "Filename"
@@ -2243,6 +2320,10 @@ msgstr ""
 msgid "Gender"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.html
+msgid "Genders"
+msgstr ""
+
 msgid "General"
 msgstr ""
 
@@ -2305,9 +2386,6 @@ msgid "Groups with read permissions"
 msgstr ""
 
 msgid "Groups with write permissions"
-msgstr ""
-
-msgid "Guest"
 msgstr ""
 
 msgid "Has SSO identification"
@@ -2624,8 +2702,9 @@ msgstr ""
 msgid "Is active"
 msgstr ""
 
+#: /app/src/app/domain/definitions/permission.config.ts
 msgid ""
-"Is allowed to add himself/herself to the list of speakers. \n"
+"Is allowed to add himself/herself to the list of speakers.\n"
 "\n"
 "Note:\n"
 "Optional combination of requests to speak with presence status is possible. "
@@ -2662,6 +2741,10 @@ msgstr ""
 msgid "Is in archived meetings"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-detail/components/participant-detail-view/participant-detail-view.component.html
+msgid "Is locked out"
+msgstr ""
+
 msgid "Is manager"
 msgstr ""
 
@@ -2696,10 +2779,22 @@ msgstr ""
 msgid "Is not in archived meetings"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-detail/components/participant-detail-view/participant-detail-view.component.html
+msgid "Is not locked out"
+msgstr ""
+
 msgid "Is not present"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/orga-meetings/pages/meeting-list/services/meeting-list-filter/meeting-list-filter.service.ts
+msgid "Is not public"
+msgstr ""
+
 msgid "Is present"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/orga-meetings/pages/meeting-list/services/meeting-list-filter/meeting-list-filter.service.ts
+msgid "Is public"
 msgstr ""
 
 msgid "Is speaker"
@@ -2709,6 +2804,13 @@ msgid "Is submitter"
 msgstr ""
 
 msgid "It is not allowed to delete countdowns used for list of speakers or polls"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-detail/components/participant-detail-view/participant-detail-view.component.html
+msgid ""
+"It is not allowed to set the permisson 'Can manage participants' to a "
+"locked out user. Please unset the lockout state before adding a group with "
+"this permission."
 msgstr ""
 
 #: /app/src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component.ts
@@ -2858,6 +2960,14 @@ msgstr ""
 msgid "Loading data. Please wait ..."
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-detail/components/participant-detail-view/participant-detail-view.component.html
+msgid "Lock out user from this meeting."
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.ts
+msgid "Locked out"
+msgstr ""
+
 msgid "Logged-in users"
 msgstr ""
 
@@ -2865,9 +2975,6 @@ msgid "Login"
 msgstr ""
 
 msgid "Login anyway"
-msgstr ""
-
-msgid "Login as guest"
 msgstr ""
 
 msgid "Login button text"
@@ -2880,6 +2987,10 @@ msgid "Lowest applause amount"
 msgstr ""
 
 msgid "Main motion and line number"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Make background color from meta information box on the projector transparent"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.ts
@@ -3033,6 +3144,10 @@ msgid "Motion change recommendation deleted"
 msgstr ""
 
 msgid "Motion change recommendation updated"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-form/components/motion-form/motion-form.component.ts
+msgid "Motion changed"
 msgstr ""
 
 msgid "Motion created"
@@ -3205,6 +3320,10 @@ msgstr ""
 msgid "New folder"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/accounts/pages/gender/pages/gender-list/components/gender-list/gender-list.component.html
+msgid "New gender"
+msgstr ""
+
 #: /app/src/app/site/pages/meetings/pages/participants/modules/groups/components/group-list/group-list.component.html
 #: /app/src/app/site/pages/meetings/pages/participants/modules/groups/components/group-list/group-list.component.html
 msgid "New group"
@@ -3266,9 +3385,6 @@ msgid "No admin role"
 msgstr ""
 
 msgid "No category"
-msgstr ""
-
-msgid "No change recommendations yet"
 msgstr ""
 
 msgid "No changes at the text."
@@ -3361,6 +3477,10 @@ msgid "Normal (http/2)"
 msgstr ""
 
 msgid "Not found"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.ts
+msgid "Not locked out"
 msgstr ""
 
 msgid "Note, that the default password will be changed to the new generated one."
@@ -3647,6 +3767,10 @@ msgstr ""
 msgid "Parent agenda item"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-form/components/motion-form/motion-form.component.ts
+msgid "Parent motion text changed"
+msgstr ""
+
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
 msgid "Parliament options"
 msgstr ""
@@ -3817,10 +3941,6 @@ msgstr ""
 msgid "Polls"
 msgstr ""
 
-#: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/components/account-import-list/account-import-list.component.ts
-msgid "Possible options"
-msgstr ""
-
 msgid "Possible points of order"
 msgstr ""
 
@@ -3922,6 +4042,11 @@ msgid "Proxy holders"
 msgstr ""
 
 msgid "Public"
+msgstr ""
+
+#: /app/src/app/site/pages/login/pages/login-mask/components/login-mask/login-mask.component.html
+#: /app/src/app/site/pages/login/pages/login-mask/components/login-mask/login-mask.component.html
+msgid "Public access"
 msgstr ""
 
 msgid "Public item"
@@ -4319,6 +4444,10 @@ msgid "Set internal"
 msgstr ""
 
 msgid "Set it manually"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.html
+msgid "Set lock out ..."
 msgstr ""
 
 msgid "Set motion block"
@@ -4736,6 +4865,10 @@ msgstr ""
 msgid "Switch"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "System"
+msgstr ""
+
 msgid "Table of contents"
 msgstr ""
 
@@ -4936,6 +5069,10 @@ msgstr ""
 msgid "This field is required."
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service.ts
+msgid "This file will also be deleted from all meetings."
+msgstr ""
+
 msgid "This is not a number."
 msgstr ""
 
@@ -4948,6 +5085,10 @@ msgid "This meeting"
 msgstr ""
 
 msgid "This meeting is archived"
+msgstr ""
+
+#: /app/src/app/site/pages/organization/pages/dashboard/pages/dashboard-detail/components/dashboard/dashboard.component.html
+msgid "This meeting is public"
 msgstr ""
 
 msgid "This paragraph does not exist in the main motion anymore:"
@@ -5152,6 +5293,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/modules/projector/modules/slides/components/list-of-speakers/modules/common-list-of-speakers-slide/components/common-list-of-speakers-slide.component.html
 msgid "Unknown user"
+msgstr ""
+
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.ts
+msgid "Unpublish"
 msgstr ""
 
 msgid "Unsaved changes will not be applied."
@@ -5439,6 +5584,18 @@ msgid "Yes/No/Abstain per candidate"
 msgstr ""
 
 msgid "Yes/No/Abstain per list"
+msgstr ""
+
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.html
+msgid ""
+"You are moving a file from a public folder into an not published folder. "
+"The file will not be accessible in meetings afterwards."
+msgstr ""
+
+#: /app/src/app/ui/modules/file-list/components/file-list/file-list.component.html
+msgid ""
+"You are moving an unpublished file to a public folder. The file will be "
+"accessible in ALL meetings afterwards."
 msgstr ""
 
 msgid "You are not allowed to see all entitled users."
@@ -5732,6 +5889,10 @@ msgstr ""
 msgid "lightblue"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-detail/components/participant-detail-view/participant-detail-view.component.html
+msgid "locked out"
+msgstr ""
+
 msgid "logged-in users"
 msgstr ""
 
@@ -5815,6 +5976,10 @@ msgid "remove"
 msgstr ""
 
 msgid "remove group(s)"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/chat/pages/chat-group-list/components/chat-group-detail-message/chat-group-detail-message.component.ts
+msgid "removed user"
 msgstr ""
 
 msgid "represented by"

@@ -5,6 +5,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { User } from 'src/app/domain/models/users/user';
 import { SearchUsersPresenterService } from 'src/app/gateways/presenter/search-users-presenter.service';
 import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
@@ -51,7 +52,8 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         group_ids: [``],
         vote_delegations_from_ids: [``],
         vote_delegated_to_id: [``],
-        is_present: [``]
+        is_present: [``],
+        locked_out: [``]
     };
 
     public get randomPasswordFn(): (() => string) | null {
@@ -192,7 +194,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public ngOnInit(): void {
         // TODO: Fetch groups for repo search selection
-        this.groupsObservable = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
+        this.groupsObservable = this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
 
         this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
 
@@ -274,6 +276,9 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                           .filter((id: Id | undefined) => !!id)
                     : []
             };
+            if (payload.gender_id === 0) {
+                payload.gender_id = null;
+            }
             if (this._accountId) {
                 this.repo
                     .update(payload, {
@@ -318,5 +323,33 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                 this.account = null;
             }
         }
+    }
+
+    public get isLockedOutAndCanManage(): boolean {
+        const lockedOutHelper = this.personalInfoFormValue?.locked_out ?? this.user?.is_locked_out;
+        return lockedOutHelper && this.checkSelectedGroupsCanManage();
+    }
+
+    public get lockoutCheckboxDisabled(): boolean {
+        const notChanged = (this.personalInfoFormValue?.locked_out ?? null) === null;
+        const isLockedOut = this.user?.is_locked_out;
+        return notChanged && !isLockedOut && this.checkSelectedGroupsCanManage();
+    }
+
+    public updateByValueChange(event: any): void {
+        this.personalInfoFormValue = event;
+        if (this.detailView.personalInfoForm.get(`locked_out`).disabled !== this.lockoutCheckboxDisabled) {
+            if (this.lockoutCheckboxDisabled) {
+                this.detailView.personalInfoForm.get(`locked_out`).disable();
+            } else {
+                this.detailView.personalInfoForm.get(`locked_out`).enable();
+            }
+        }
+    }
+
+    private checkSelectedGroupsCanManage(): boolean {
+        return (this.detailView.personalInfoForm.get(`group_ids`).value ?? [])
+            .map((id: Id): ViewGroup => this.groupRepo.getViewModel(id))
+            .some(group => group.hasPermission(Permission.userCanManage));
     }
 }

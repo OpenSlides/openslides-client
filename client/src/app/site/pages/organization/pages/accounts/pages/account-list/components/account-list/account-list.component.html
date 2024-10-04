@@ -60,7 +60,8 @@
                         }
                         @if (!user.is_active) {
                             <os-icon-container
-                                icon="block"
+                                class="red-warning-text"
+                                icon="do_not_disturb_on"
                                 matTooltip="{{ 'Inactive' | translate }}"
                             ></os-icon-container>
                         }
@@ -175,6 +176,10 @@
                 <mat-icon>cloud_upload</mat-icon>
                 <span>{{ 'Import' | translate }}</span>
             </button>
+            <button *osOmlPerms="OML.can_manage_users" mat-menu-item routerLink="/accounts/genders">
+                <mat-icon>face</mat-icon>
+                <span>{{ 'Genders' | translate }}</span>
+            </button>
         </div>
     }
     @if (isMultiSelect) {
@@ -194,7 +199,7 @@
                     <span>{{ 'Set/remove meeting' | translate }} ...</span>
                 </button>
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveState()">
-                    <mat-icon>block</mat-icon>
+                    <mat-icon class="red-warning-text">do_not_disturb_on</mat-icon>
                     <span>{{ 'Enable/disable accounts' | translate }} ...</span>
                 </button>
                 <button
